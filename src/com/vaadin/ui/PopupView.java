@@ -42,6 +42,40 @@ public class PopupView extends AbstractComponentContainer {
         }
     }
 
+    /**
+     * Iterator for the visible components (zero or one components), used by
+     * {@link PopupView#getComponentIterator()}.
+     */
+    private static class SingleComponentIterator implements
+            Iterator<Component>,
+            Serializable {
+
+        private final Component component;
+        private boolean first;
+
+        public SingleComponentIterator(Component component) {
+            this.component = component;
+            first = (component == null);
+        }
+
+        public boolean hasNext() {
+            return !first;
+        }
+
+        public Component next() {
+            if (!first) {
+                first = true;
+                return component;
+            } else {
+                return null;
+            }
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
+
     /* Constructors */
 
     /**
@@ -190,28 +224,7 @@ public class PopupView extends AbstractComponentContainer {
      * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
      */
     public Iterator<Component> getComponentIterator() {
-        return new Iterator<Component>() {
-
-            private boolean first = visibleComponent == null;
-
-            public boolean hasNext() {
-                return !first;
-            }
-
-            public Component next() {
-                if (!first) {
-                    first = true;
-                    return visibleComponent;
-                } else {
-                    return null;
-                }
-            }
-
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
-
+        return new SingleComponentIterator(visibleComponent);
     }
 
     /**

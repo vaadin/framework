@@ -6,6 +6,7 @@ package com.vaadin.ui;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,7 +101,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
          * computer if appropriate HTML 5 features are supported on client side.
          * This class wraps information about dragged file on server side.
          */
-        public class Html5File {
+        public class Html5File implements Serializable {
 
             public String name;
             private int size;

@@ -4,6 +4,7 @@
 
 package com.vaadin.ui;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
@@ -62,6 +63,51 @@ public class SplitPanel extends AbstractLayout {
     private boolean locked = false;
 
     private static final String SPLITTER_CLICK_EVENT = VSplitPanel.SPLITTER_CLICK_EVENT_IDENTIFIER;
+
+    /**
+     * Modifiable and Serializable Iterator for the components, used by
+     * {@link SplitPanel#getComponentIterator()}.
+     */
+    private class ComponentIterator implements Iterator<Component>,
+            Serializable {
+
+        int i = 0;
+
+        public boolean hasNext() {
+            if (i < (firstComponent == null ? 0 : 1)
+                    + (secondComponent == null ? 0 : 1)) {
+                return true;
+            }
+            return false;
+        }
+
+        public Component next() {
+            if (!hasNext()) {
+                return null;
+            }
+            i++;
+            if (i == 1) {
+                return firstComponent == null ? secondComponent
+                        : firstComponent;
+            } else if (i == 2) {
+                return secondComponent;
+            }
+            return null;
+        }
+
+        public void remove() {
+            if (i == 1) {
+                if (firstComponent != null) {
+                    setFirstComponent(null);
+                    i = 0;
+                } else {
+                    setSecondComponent(null);
+                }
+            } else if (i == 2) {
+                setSecondComponent(null);
+            }
+        }
+    }
 
     /**
      * Creates a new split panel. The orientation of the panels is
@@ -165,50 +211,13 @@ public class SplitPanel extends AbstractLayout {
     }
 
     /**
-     * Gets the component container iterator for going trough all the components
-     * in the container.
+     * Gets the component container iterator for going through all the
+     * components in the container.
      * 
      * @return the Iterator of the components inside the container.
      */
     public Iterator<Component> getComponentIterator() {
-        return new Iterator<Component>() {
-            int i = 0;
-
-            public boolean hasNext() {
-                if (i < (firstComponent == null ? 0 : 1)
-                        + (secondComponent == null ? 0 : 1)) {
-                    return true;
-                }
-                return false;
-            }
-
-            public Component next() {
-                if (!hasNext()) {
-                    return null;
-                }
-                i++;
-                if (i == 1) {
-                    return firstComponent == null ? secondComponent
-                            : firstComponent;
-                } else if (i == 2) {
-                    return secondComponent;
-                }
-                return null;
-            }
-
-            public void remove() {
-                if (i == 1) {
-                    if (firstComponent != null) {
-                        setFirstComponent(null);
-                        i = 0;
-                    } else {
-                        setSecondComponent(null);
-                    }
-                } else if (i == 2) {
-                    setSecondComponent(null);
-                }
-            }
-        };
+        return new ComponentIterator();
     }
 
     /**

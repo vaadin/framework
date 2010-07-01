@@ -4099,7 +4099,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Interface for listening to column resize events.
      */
-    public interface ColumnResizeListener {
+    public interface ColumnResizeListener extends Serializable {
 
         /**
          * This method is triggered when the column has been resized

@@ -5,6 +5,7 @@
 package com.vaadin.terminal;
 
 import java.io.InputStream;
+import java.io.Serializable;
 
 import com.vaadin.Application;
 import com.vaadin.service.FileTypeResolver;
@@ -166,7 +167,7 @@ public class StreamResource implements ApplicationResource {
      * @VERSION@
      * @since 3.0
      */
-    public interface StreamSource {
+    public interface StreamSource extends Serializable {
 
         /**
          * Returns new input stream that is used for reading the resource.
