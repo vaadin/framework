@@ -633,6 +633,14 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void attach() {
         requestRepaint();
+        if (!visible) {
+            /*
+             * Bypass the repaint optimization in childRequestedRepaint method
+             * when attaching. When reattaching (possibly moving) -> must
+             * repaint
+             */
+            fireRequestRepaintEvent(null);
+        }
         if (delayedFocus) {
             focus();
         }
