@@ -67,6 +67,15 @@ public class DateFieldEmptyValid extends TestBase {
             }
         });
         addComponent(b);
+
+        b = new Button("Check value");
+        b.addListener(new ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                checkEmpty();
+            }
+        });
+        addComponent(b);
     }
 
     private void checkEmpty() {
