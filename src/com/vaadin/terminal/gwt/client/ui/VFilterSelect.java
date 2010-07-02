@@ -1166,7 +1166,15 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      */
     private void updateSelectedIconPosition() {
         // Position icon vertically to middle
-        int availableHeight = getOffsetHeight();
+        int availableHeight = 0;
+        if (BrowserInfo.get().isIE6()) {
+            getElement().getStyle().setOverflow(Overflow.HIDDEN);
+            availableHeight = getOffsetHeight();
+            getElement().getStyle().setProperty("overflow", "");
+        } else {
+            availableHeight = getOffsetHeight();
+        }
+
         int iconHeight = Util.getRequiredHeight(selectedItemIcon);
         int marginTop = (availableHeight - iconHeight) / 2;
         DOM.setStyleAttribute(selectedItemIcon.getElement(), "marginTop",
