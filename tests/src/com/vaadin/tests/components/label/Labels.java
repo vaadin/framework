@@ -53,6 +53,9 @@ public class Labels extends ComponentTestCase<Label> {
         l.setWidth("200px");
         addTestComponent(l);
 
+        l = createLabel("Some UTF8 characters: äöÄÖ≤≠∉Ġå2²");
+        addTestComponent(l);
+
     }
 
     private Label createLabel(String text, String caption) {
