@@ -8,6 +8,8 @@ import com.vaadin.ui.VerticalLayout;
 
 public class Log extends VerticalLayout {
     List<Label> eventLabels = new ArrayList<Label>();
+    private boolean numberLogRows = false;
+    private int nextLogNr = 1;
 
     public Log(int nr) {
         for (int i = 0; i < nr; i++) {
@@ -30,7 +32,12 @@ public class Log extends VerticalLayout {
         for (int i = nr - 1; i > 0; i--) {
             eventLabels.get(i).setValue(eventLabels.get(i - 1).getValue());
         }
-        eventLabels.get(0).setValue(event);
+        String msg = event;
+        if (numberLogRows) {
+            msg = nextLogNr + ". " + msg;
+            nextLogNr++;
+        }
+        eventLabels.get(0).setValue(msg);
         System.out.println(event);
     }
 
@@ -40,9 +47,8 @@ public class Log extends VerticalLayout {
         return l;
     }
 
-    public void setNumberLogRows(boolean b) {
-        // TODO Auto-generated method stub
-
+    public void setNumberLogRows(boolean numberLogRows) {
+        this.numberLogRows = numberLogRows;
     }
 
 }
