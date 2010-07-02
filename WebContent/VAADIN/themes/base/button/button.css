@@ -138,6 +138,13 @@
 	vertical-align: middle;
 	white-space: nowrap;
 }
+
+/* Fix for IE6/IE7 issue where checkbox moves 1 pixel down after selection (#4636) */
+.v-ie6 .v-checkbox,
+.v-ie7 .v-checkbox {
+	vertical-align: baseline;
+}
+
 .v-checkbox .v-icon {
 	margin: 0 2px;
 }
