@@ -1146,7 +1146,7 @@
     <!-- Automated tests.                                                   -->
     <!-- ================================================================== -->
 
-    <target name="tests">
+    <target name="tests" depends="compile-java, internal-package-war">
     	<!-- Run all different types of tests in parallel to decrease testing time -->
     	<parallel threadcount="3">
     		<antcall target="integration-tests"></antcall>
@@ -1155,7 +1155,8 @@
     	</parallel>
     </target>
 	
-    <target name="server-side-tests" depends="compile-java" unless="tests.serverside.skip">
+	<!-- Assumes java classes have been compiled but depends does not work out well as this is run from a <parallel> task-->
+    <target name="server-side-tests" unless="tests.serverside.skip">
 		<junit printsummary="yes"> 
 			<classpath> 
 				<pathelement path="${result-path}/classes" />
@@ -1168,7 +1169,8 @@
 		</junit>
     </target>
 
-    <target name="generate-sampler-tests" depends="compile-java" if="build.include.tests">
+	<!-- Assumes java classes have been compiled but depends does not work out well as this is run from a <parallel> task-->
+	<target name="generate-sampler-tests" if="build.include.tests"> 
         <java classname="com.vaadin.demo.tools.GenerateSamplerTest"
         	  output="tests/scripts/sampler-all-samples.html">
             <classpath> 
@@ -1178,7 +1180,8 @@
         </java>
     </target>
     
-    <target name="testbench-tests" depends="init, generate-sampler-tests" unless="tests.testbench.skip">
+	<!-- Assumes java classes have been compiled but depends does not work out well as this is run from a <parallel> task-->
+    <target name="testbench-tests" unless="tests.testbench.skip">
         <fail unless="product-file" message="The 'product-file' property must be defined."/>
         <fail unless="version" message="The 'version' property must be defined."/>
 
@@ -1211,7 +1214,8 @@
         </ant>
     </target>
 
-    <target name="integration-tests" depends="internal-package-war" unless="tests.integration.skip">
+	<!-- Assumes java classes have been compiled but depends does not work out well as this is run from a <parallel> task-->
+    <target name="integration-tests" unless="tests.integration.skip">
         <!-- Parameters for the test.xml script. -->
         <fail unless="com.vaadin.testbench.tester.host" message="The 'com.vaadin.testbench.tester.host' property must be defined."/>
         <fail unless="com.vaadin.testbench.lib.dir" message="The 'com.vaadin.testbench.lib.dir' property must be defined."/>
