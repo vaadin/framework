@@ -386,7 +386,6 @@ public class DateField extends AbstractField implements
                      */
                     parsingSucceeded = false;
                     setInternalValue(null);
-                    fireValueChange(true);
                 }
             } else if (newDate != oldDate
                     && (newDate == null || !newDate.equals(oldDate))) {
@@ -469,10 +468,26 @@ public class DateField extends AbstractField implements
     public void setValue(Object newValue, boolean repaintIsNotNeeded)
             throws Property.ReadOnlyException, Property.ConversionException {
 
+        dateString = null;
+
         // Allows setting dates directly
         if (newValue == null || newValue instanceof Date) {
             try {
-                super.setValue(newValue, repaintIsNotNeeded);
+                dateString = newValue == null ? null : newValue.toString();
+                if (dateString == null && super.getValue() == null) {
+                    /*
+                     * AbstractField cannot handle invalid changes in client
+                     * side so we have to repaint the component manually. No
+                     * value change event is also fired.
+                     */
+                    requestRepaint();
+
+                } else {
+                    super.setValue(newValue, repaintIsNotNeeded);
+                }
+
+                setComponentError(null);
+
                 parsingSucceeded = true;
             } catch (InvalidValueException ive) {
                 // Thrown if validator fails
@@ -487,6 +502,7 @@ public class DateField extends AbstractField implements
                 final Date val = parser.parse(newValue.toString());
                 super.setValue(val, repaintIsNotNeeded);
                 parsingSucceeded = true;
+                dateString = newValue.toString();
             } catch (final ParseException e) {
                 parsingSucceeded = false;
                 throw new Property.ConversionException(
