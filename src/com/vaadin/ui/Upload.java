@@ -108,6 +108,14 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     /* TODO: Add a default constructor, receive to temp file. */
 
     /**
+     * Creates a new instance of Upload.
+     * 
+     * The receiver must be set before performing an upload.
+     */
+    public Upload() {
+    }
+
+    /**
      * Creates a new instance of Upload that redirects the uploaded data to
      * stream given by the Receiver.
      * 
@@ -131,6 +139,11 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * @param upload
      */
     public void receiveUpload(UploadStream upload) throws UploadException {
+        if (receiver == null) {
+            throw new IllegalStateException(
+                    "Receiver not set for the Upload component");
+        }
+
         if (!isUploading) {
             throw new IllegalStateException("uploading not started");
         }
