@@ -92,6 +92,8 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
                 DOM.appendChild(getElement(), errorIndicatorElement);
                 DOM.sinkEvents(errorIndicatorElement, VTooltip.TOOLTIP_EVENTS
                         | Event.ONCLICK);
+            } else {
+                DOM.setStyleAttribute(errorIndicatorElement, "display", "");
             }
         } else if (errorIndicatorElement != null) {
             DOM.setStyleAttribute(errorIndicatorElement, "display", "none");
