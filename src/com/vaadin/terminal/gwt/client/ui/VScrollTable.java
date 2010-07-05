@@ -1375,9 +1375,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             scrollBody.reLayoutComponents();
         }
 
-        if (enabled && isVisible()) {
-            updatePageLength();
-        }
+        updatePageLength();
 
         /*
          * Fix "natural" height if height is not set. This must be after width
@@ -4233,6 +4231,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * Determines the pagelength when the table height is fixed.
      */
     public void updatePageLength() {
+        // Only update if visible and enabled
+        if (!isVisible() || !enabled) {
+            return;
+        }
+
         if (scrollBody == null) {
             return;
         }
@@ -4469,7 +4472,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         this.height = height;
         super.setHeight(height);
         setContainerHeight();
-        if (initializedAndAttached && isVisible() && enabled) {
+        if (initializedAndAttached) {
             updatePageLength();
         }
         if (!rendering) {
