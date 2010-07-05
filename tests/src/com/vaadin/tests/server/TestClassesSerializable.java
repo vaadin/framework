@@ -26,6 +26,7 @@ public class TestClassesSerializable extends TestCase {
 
     private static String[] EXCLUDED_PATTERNS = {
             "com\\.vaadin\\.demo\\..*", //
+            "com\\.vaadin\\.external\\.org\\.apache\\.commons\\.fileupload\\..*", //
             "com\\.vaadin\\.launcher\\..*", //
             "com\\.vaadin\\.terminal\\.gwt\\.client\\..*", //
             "com\\.vaadin\\.terminal\\.gwt\\.widgetsetutils\\..*", //
