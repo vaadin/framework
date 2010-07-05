@@ -1304,3 +1304,8 @@ padding:2px;
    	white-space: normal;
 }
 
+.v-checkbox-large {
+    font-size: 40px;
+    line-height: normal;  
+}
+
