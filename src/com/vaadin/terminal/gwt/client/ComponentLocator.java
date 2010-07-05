@@ -336,16 +336,20 @@ public class ComponentLocator {
         }
         String simpleName = Util.getSimpleName(w);
 
-        if (!(parent instanceof HasWidgets)) {
-            /*
-             * Parent does not implement HasWidgets so we cannot find out which
-             * child this is.
-             */
+        /*
+         * Check if the parent implements Iterable. At least VPopupView does not
+         * implement HasWdgets so we cannot check for that.
+         */
+        if (!(parent instanceof Iterable<?>)) {
+            // Parent does not implement Iterable so we cannot find out which
+            // child this is
             return null;
         }
 
+        Iterator<?> i = ((Iterable<?>) parent).iterator();
         int pos = 0;
-        for (Widget child : ((HasWidgets) parent)) {
+        while (i.hasNext()) {
+            Object child = i.next();
             if (child == w) {
                 return basePath + PARENTCHILD_SEPARATOR + simpleName + "["
                         + pos + "]";
@@ -385,10 +389,10 @@ public class ComponentLocator {
                 // The target widget has been found and the rest identifies the
                 // element
                 break;
-            } else if (w instanceof HasWidgets) {
+            } else if (w instanceof Iterable) {
                 // W identifies a widget that contains other widgets, as it
                 // should. Try to locate the child
-                HasWidgets parent = (HasWidgets) w;
+                Iterable<?> parent = (Iterable<?>) w;
 
                 // Part is of type "VVerticalLayout[0]", split this into
                 // VVerticalLayout and 0
@@ -410,7 +414,7 @@ public class ComponentLocator {
                 } else if (widgetClassName.equals("VContextMenu")) {
                     return client.getContextMenu();
                 } else {
-                    iterator = parent.iterator();
+                    iterator = (Iterator<? extends Widget>) parent.iterator();
                 }
 
                 boolean ok = false;
