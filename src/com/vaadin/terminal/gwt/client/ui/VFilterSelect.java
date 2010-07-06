@@ -28,6 +28,7 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
@@ -36,9 +37,9 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
+import com.google.gwt.user.client.ui.TextBox;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventId;
@@ -260,9 +261,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         private void setPrevButtonActive(boolean active) {
             if (active) {
                 DOM.sinkEvents(up, Event.ONCLICK);
-                DOM
-                        .setElementProperty(up, "className", CLASSNAME
-                                + "-prevpage");
+                DOM.setElementProperty(up, "className", CLASSNAME + "-prevpage");
             } else {
                 DOM.sinkEvents(up, 0);
                 DOM.setElementProperty(up, "className", CLASSNAME
@@ -283,8 +282,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 menu.selectItem(newSelectedItem);
                 tb.setText(newSelectedItem.getText());
                 tb.setSelectionRange(lastFilter.length(), newSelectedItem
-                        .getText().length()
-                        - lastFilter.length());
+                        .getText().length() - lastFilter.length());
 
             } else if (hasNextPage()) {
                 lastIndex = index - 1; // save for paging
@@ -304,8 +302,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 menu.selectItem(newSelectedItem);
                 tb.setText(newSelectedItem.getText());
                 tb.setSelectionRange(lastFilter.length(), newSelectedItem
-                        .getText().length()
-                        - lastFilter.length());
+                        .getText().length() - lastFilter.length());
             } else if (index == -1) {
                 if (currentPage > 0) {
                     lastIndex = index + 1; // save for paging
@@ -317,8 +314,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 menu.selectItem(newSelectedItem);
                 tb.setText(newSelectedItem.getText());
                 tb.setSelectionRange(lastFilter.length(), newSelectedItem
-                        .getText().length()
-                        - lastFilter.length());
+                        .getText().length() - lastFilter.length());
             }
         }
 
@@ -388,8 +384,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             offsetHeight = getOffsetHeight();
 
             final int desiredWidth = getMainWidth();
-            int naturalMenuWidth = DOM.getElementPropertyInt(DOM
-                    .getFirstChild(menu.getElement()), "offsetWidth");
+            int naturalMenuWidth = DOM.getElementPropertyInt(
+                    DOM.getFirstChild(menu.getElement()), "offsetWidth");
 
             if (popupOuterPadding == -1) {
                 popupOuterPadding = Util.measureHorizontalPaddingAndBorder(
@@ -433,8 +429,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
 
             // fetch real width (mac FF bugs here due GWT popups overflow:auto )
-            offsetWidth = DOM.getElementPropertyInt(DOM.getFirstChild(menu
-                    .getElement()), "offsetWidth");
+            offsetWidth = DOM.getElementPropertyInt(
+                    DOM.getFirstChild(menu.getElement()), "offsetWidth");
             if (offsetWidth + getPopupLeft() > Window.getClientWidth()
                     + Window.getScrollLeft()) {
                 left = VFilterSelect.this.getAbsoluteLeft()
@@ -532,10 +528,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                         .getFirstChildElement();
                 while (child != null) {
                     if (child.getNodeName().toLowerCase().equals("img")) {
-                        DOM
-                                .sinkEvents((Element) child.cast(),
-                                        (DOM.getEventsSunk((Element) child
-                                                .cast()) | Event.ONLOAD));
+                        DOM.sinkEvents(
+                                (Element) child.cast(),
+                                (DOM.getEventsSunk((Element) child.cast()) | Event.ONLOAD));
                         client.addPngFix((Element) child.cast());
                     }
                     child = child.getNextSiblingElement();
@@ -620,9 +615,10 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             } else if (item != null
                     && !"".equals(lastFilter)
                     && (filteringmode == FILTERINGMODE_CONTAINS ? item
-                            .getText().toLowerCase().contains(
-                                    lastFilter.toLowerCase()) : item.getText()
-                            .toLowerCase().startsWith(lastFilter.toLowerCase()))) {
+                            .getText().toLowerCase()
+                            .contains(lastFilter.toLowerCase()) : item
+                            .getText().toLowerCase()
+                            .startsWith(lastFilter.toLowerCase()))) {
                 doItemAction(item, true);
             } else {
                 // currentSuggestion has key="" for nullselection
@@ -1039,10 +1035,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                     suggestionPopup.menu.selectItem(activeMenuItem);
                 }
 
-                tb.setText(activeMenuItem.getText());
+                setTextboxText(activeMenuItem.getText());
                 tb.setSelectionRange(lastFilter.length(), activeMenuItem
-                        .getText().length()
-                        - lastFilter.length());
+                        .getText().length() - lastFilter.length());
 
                 lastIndex = -1; // reset
             }
@@ -1061,6 +1056,25 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
 
         initDone = true;
+    }
+
+    /**
+     * Sets the text in the text box using a deferred command if on Gecko. This
+     * is required for performance reasons (see #3663).
+     * 
+     * @param text
+     *            the text to set in the text box
+     */
+    private void setTextboxText(final String text) {
+        if (BrowserInfo.get().isGecko()) {
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    tb.setText(text);
+                }
+            });
+        } else {
+            tb.setText(text);
+        }
     }
 
     /*
@@ -1088,7 +1102,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             prompting = true;
             addStyleDependentName(CLASSNAME_PROMPT);
         }
-        tb.setText(inputPrompt);
+        setTextboxText(inputPrompt);
     }
 
     /**
@@ -1099,7 +1113,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      *            The text the text box should contain.
      */
     private void setPromptingOff(String text) {
-        tb.setText(text);
+        setTextboxText(text);
         if (prompting) {
             prompting = false;
             removeStyleDependentName(CLASSNAME_PROMPT);
@@ -1580,8 +1594,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      */
     private int getTextboxPadding() {
         if (textboxPadding < 0) {
-            textboxPadding = Util.measureHorizontalPaddingAndBorder(tb
-                    .getElement(), 4);
+            textboxPadding = Util.measureHorizontalPaddingAndBorder(
+                    tb.getElement(), 4);
         }
         return textboxPadding;
     }
