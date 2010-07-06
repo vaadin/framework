@@ -66,8 +66,8 @@ public class TestClassesSerializable extends TestCase {
         List<Class> nonSerializableClasses = new ArrayList<Class>();
         for (String className : classes) {
             Class<?> cls = Class.forName(className);
-            // skip annotations
-            if (cls.isAnnotation()) {
+            // skip annotations and synthetic classes
+            if (cls.isAnnotation() || cls.isSynthetic()) {
                 continue;
             }
             // report non-serializable classes and interfaces
