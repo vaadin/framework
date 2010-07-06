@@ -31,7 +31,7 @@ public class MenuBar extends AbstractComponent {
     private final List<MenuItem> menuItems;
 
     // Number of items in this menu
-    private static int numberOfItems = 0;
+    private int numberOfItems = 0;
 
     /**
      * @deprecated
