@@ -166,7 +166,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
     private class PropertySetChangeEvent extends EventObject implements
             Item.PropertySetChangeEvent {
 
-        public PropertySetChangeEvent(Item source) {
+        private PropertySetChangeEvent(Item source) {
             super(source);
         }
 

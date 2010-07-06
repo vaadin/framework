@@ -156,11 +156,6 @@ public class CustomComponent extends AbstractComponentContainer {
             Serializable {
         boolean first = getCompositionRoot() != null;
 
-        public ComponentIterator() {
-            // needed to prevent generation of non-serializable access
-            // constructor classes as this nested class is private
-        }
-
         public boolean hasNext() {
             return first;
         }

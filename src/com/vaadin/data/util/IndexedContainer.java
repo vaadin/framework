@@ -747,7 +747,7 @@ public class IndexedContainer implements Container.Indexed,
     private class PropertySetChangeEvent extends EventObject implements
             Container.PropertySetChangeEvent, Serializable {
 
-        public PropertySetChangeEvent(IndexedContainer source) {
+        private PropertySetChangeEvent(IndexedContainer source) {
             super(source);
         }
 
@@ -813,7 +813,7 @@ public class IndexedContainer implements Container.Indexed,
     private class PropertyValueChangeEvent extends EventObject implements
             Property.ValueChangeEvent, Serializable {
 
-        public PropertyValueChangeEvent(Property source) {
+        private PropertyValueChangeEvent(Property source) {
             super(source);
         }
 
@@ -1068,7 +1068,7 @@ public class IndexedContainer implements Container.Indexed,
          * @param itemId
          *            the Item ID of the new Item.
          */
-        IndexedContainerItem(Object itemId) {
+        private IndexedContainerItem(Object itemId) {
 
             // Gets the item contents from the host
             if (itemId == null) {
@@ -1212,7 +1212,7 @@ public class IndexedContainer implements Container.Indexed,
          *            the list that contains the Item to contain the new
          *            Property.
          */
-        public IndexedContainerProperty(Object itemId, Object propertyId) {
+        private IndexedContainerProperty(Object itemId, Object propertyId) {
             if (itemId == null || propertyId == null) {
                 // Null ids are not accepted
                 throw new NullPointerException(

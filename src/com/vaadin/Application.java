@@ -1347,7 +1347,7 @@ public abstract class Application implements URIHandler,
         /**
          * Use {@link CustomizedSystemMessages} to customize
          */
-        SystemMessages() {
+        private SystemMessages() {
 
         }
 

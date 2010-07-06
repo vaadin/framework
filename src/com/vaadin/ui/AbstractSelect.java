@@ -1891,7 +1891,7 @@ public abstract class AbstractSelect extends AbstractField implements
         public static VerticalLocationIs MIDDLE = new VerticalLocationIs(
                 VerticalDropLocation.MIDDLE);
 
-        VerticalLocationIs(VerticalDropLocation l) {
+        private VerticalLocationIs(VerticalDropLocation l) {
             super("detail", l.name());
         }
     }

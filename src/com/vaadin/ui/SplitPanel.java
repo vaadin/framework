@@ -73,11 +73,6 @@ public class SplitPanel extends AbstractLayout {
 
         int i = 0;
 
-        public ComponentIterator() {
-            // needed to prevent generation of non-serializable access
-            // constructor classes as this nested class is private
-        }
-
         public boolean hasNext() {
             if (i < (firstComponent == null ? 0 : 1)
                     + (secondComponent == null ? 0 : 1)) {

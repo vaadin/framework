@@ -67,7 +67,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             Comparator<Object>, Serializable {
         private final Collection<?> itemIds;
 
-        public ListedItemsFirstComparator(Collection<?> itemIds) {
+        private ListedItemsFirstComparator(Collection<?> itemIds) {
             this.itemIds = itemIds;
         }
 
