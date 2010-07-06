@@ -1309,3 +1309,8 @@ padding:2px;
     line-height: normal;  
 }
 
+
+.redblueborders {
+	border-right: 10px solid red;
+	border-left: 10px solid blue;
+}
