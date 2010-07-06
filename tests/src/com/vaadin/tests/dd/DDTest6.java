@@ -353,8 +353,9 @@ public class DDTest6 extends TestBase {
                 FileIcon fileIcon = new FileIcon((File) object);
                 l.addComponent(fileIcon);
                 ComponentPosition position = l.getPosition(fileIcon);
-                position.setTop((y++ / 5) % 5 * 100, UNITS_PIXELS);
-                position.setLeft(x++ % 5 * 100, UNITS_PIXELS);
+                position.setTop(Float.valueOf((y++ / 5) % 5 * 100),
+                        UNITS_PIXELS);
+                position.setLeft(Float.valueOf(x++ % 5 * 100), UNITS_PIXELS);
             }
 
         }

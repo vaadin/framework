@@ -86,8 +86,10 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
                 int clientY = eventDetails.getClientY();
 
                 try {
-                    root.getPosition(component).setTopValue(clientY - top);
-                    root.getPosition(component).setLeftValue(clientX - left);
+                    root.getPosition(component).setTopValue(
+                            Float.valueOf(clientY - top));
+                    root.getPosition(component).setLeftValue(
+                            Float.valueOf(clientX - left));
                 } catch (Exception e) {
                     // TODO: handle exception
                 }
