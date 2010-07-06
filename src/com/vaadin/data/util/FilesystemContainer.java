@@ -596,7 +596,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         /**
          * Constructs a FileItem from a existing file.
          */
-        private FileItem(File file) {
+        FileItem(File file) {
             this.file = file;
         }
 

@@ -596,7 +596,7 @@ public class ListenerMethod implements EventListener, Serializable {
 
         private String message;
 
-        private MethodException(String message, Throwable cause) {
+        MethodException(String message, Throwable cause) {
             super(message);
             this.cause = cause;
         }

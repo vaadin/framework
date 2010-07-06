@@ -498,7 +498,7 @@ public class QueryContainer implements Container, Container.Ordered,
 
         Object id;
 
-        private Row(Object rowId) {
+        Row(Object rowId) {
             id = rowId;
         }
 

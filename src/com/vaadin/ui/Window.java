@@ -994,7 +994,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
          * @param border
          *            The border style of the target window
          */
-        private OpenResource(Resource resource, String name, int width,
+        public OpenResource(Resource resource, String name, int width,
                 int height, int border) {
             this.resource = resource;
             this.name = name;
