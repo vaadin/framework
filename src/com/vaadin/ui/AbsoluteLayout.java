@@ -14,6 +14,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout;
 
@@ -129,9 +130,8 @@ public class AbsoluteLayout extends AbstractLayout {
 
     /**
      * The CompontPosition class represents a components position within the
-     * absolute layout. It contains the CSS attributes for left, right, top and
-     * bottom and the units used to specify them. *
-     * 
+     * absolute layout. It contains the attributes for left, right, top and
+     * bottom and the units used to specify them.
      */
     public class ComponentPosition implements Serializable {
 
@@ -147,7 +147,8 @@ public class AbsoluteLayout extends AbstractLayout {
         private int leftUnits;
 
         /**
-         * Sets the position attributes using CSS syntax. Example usage:
+         * Sets the position attributes using CSS syntax. Attributes not
+         * included in the string are reset to their unset states.
          * 
          * <code><pre>
          * setCSSString("top:10px;left:20%;z-index:16;");
@@ -156,6 +157,9 @@ public class AbsoluteLayout extends AbstractLayout {
          * @param css
          */
         public void setCSSString(String css) {
+            topValue = rightValue = bottomValue = leftValue = null;
+            topUnits = rightUnits = bottomUnits = leftUnits = 0;
+            zIndex = -1;
             if (css == null) {
                 return;
             }
@@ -243,7 +247,8 @@ public class AbsoluteLayout extends AbstractLayout {
         }
 
         /**
-         * Sets the 'top' CSS-attribute
+         * Sets the 'top' attribute; distance from the top of the component to
+         * the top edge of the layout.
          * 
          * @param topValue
          *            The value of the 'top' attribute
@@ -251,14 +256,15 @@ public class AbsoluteLayout extends AbstractLayout {
          *            The unit of the 'top' attribute. See UNIT_SYMBOLS for a
          *            description of the available units.
          */
-        public void setTop(float topValue, int topUnits) {
+        public void setTop(Float topValue, int topUnits) {
             this.topValue = topValue;
             this.topUnits = topUnits;
             requestRepaint();
         }
 
         /**
-         * Sets the 'right' CSS-attribute
+         * Sets the 'right' attribute; distance from the right of the component
+         * to the right edge of the layout.
          * 
          * @param rightValue
          *            The value of the 'right' attribute
@@ -266,14 +272,15 @@ public class AbsoluteLayout extends AbstractLayout {
          *            The unit of the 'right' attribute. See UNIT_SYMBOLS for a
          *            description of the available units.
          */
-        public void setRight(float rightValue, int rightUnits) {
+        public void setRight(Float rightValue, int rightUnits) {
             this.rightValue = rightValue;
             this.rightUnits = rightUnits;
             requestRepaint();
         }
 
         /**
-         * Sets the 'bottom' CSS-attribute
+         * Sets the 'bottom' attribute; distance from the bottom of the
+         * component to the bottom edge of the layout.
          * 
          * @param bottomValue
          *            The value of the 'bottom' attribute
@@ -281,14 +288,15 @@ public class AbsoluteLayout extends AbstractLayout {
          *            The unit of the 'bottom' attribute. See UNIT_SYMBOLS for a
          *            description of the available units.
          */
-        public void setBottom(float bottomValue, int bottomUnits) {
+        public void setBottom(Float bottomValue, int bottomUnits) {
             this.bottomValue = bottomValue;
             this.bottomUnits = bottomUnits;
             requestRepaint();
         }
 
         /**
-         * Sets the 'left' CSS-attribute
+         * Sets the 'left' attribute; distance from the left of the component to
+         * the left edge of the layout.
          * 
          * @param leftValue
          *            The value of the 'left' attribute
@@ -296,14 +304,14 @@ public class AbsoluteLayout extends AbstractLayout {
          *            The unit of the 'left' attribute. See UNIT_SYMBOLS for a
          *            description of the available units.
          */
-        public void setLeft(float leftValue, int leftUnits) {
+        public void setLeft(Float leftValue, int leftUnits) {
             this.leftValue = leftValue;
             this.leftUnits = leftUnits;
             requestRepaint();
         }
 
         /**
-         * Sets the 'z-index' CSS-attribute
+         * Sets the 'z-index' attribute; the visual stacking order
          * 
          * @param zIndex
          *            The z-index for the component.
@@ -314,99 +322,115 @@ public class AbsoluteLayout extends AbstractLayout {
         }
 
         /**
-         * Sets the value of the 'top' CSS-attribute
+         * Sets the value of the 'top' attribute; distance from the top of the
+         * component to the top edge of the layout.
          * 
          * @param topValue
          *            The value of the 'left' attribute
          */
-        public void setTopValue(float topValue) {
+        public void setTopValue(Float topValue) {
             this.topValue = topValue;
             requestRepaint();
         }
 
         /**
-         * Gets the 'top' CSS-attributes value in specified units.
+         * Gets the 'top' attributes value in current units.
          * 
-         * @return The value of the 'top' CSS-attribute
+         * @see #getTopUnits()
+         * @return The value of the 'top' attribute, null if not set
          */
-        public float getTopValue() {
-            return topValue == null ? 0 : topValue.floatValue();
+        public Float getTopValue() {
+            return topValue;
         }
 
         /**
-         * Gets the 'right' CSS-attributes value in specified units.
+         * Gets the 'right' attributes value in current units.
          * 
-         * @return The value of the 'right' CSS-attribute
+         * @return The value of the 'right' attribute, null if not set
+         * @see #getRightUnits()
          */
-        public float getRightValue() {
-            return rightValue == null ? 0 : rightValue.floatValue();
+        public Float getRightValue() {
+            return rightValue;
         }
 
         /**
-         * Sets the 'right' CSS-attributes value in specified units.
+         * Sets the 'right' attribute value (distance from the right of the
+         * component to the right edge of the layout). Currently active units
+         * are maintained.
          * 
          * @param rightValue
-         *            The value of the 'right' CSS-attribute
+         *            The value of the 'right' attribute
+         * @see #setRightUnits(int)
          */
-        public void setRightValue(float rightValue) {
+        public void setRightValue(Float rightValue) {
             this.rightValue = rightValue;
             requestRepaint();
         }
 
         /**
-         * Gets the 'bottom' CSS-attributes value in specified units.
+         * Gets the 'bottom' attributes value using current units.
          * 
-         * @return The value of the 'bottom' CSS-attribute
+         * @return The value of the 'bottom' attribute, null if not set
+         * @see #getBottomUnits()
          */
-        public float getBottomValue() {
-            return bottomValue == null ? 0 : bottomValue.floatValue();
+        public Float getBottomValue() {
+            return bottomValue;
         }
 
         /**
-         * Sets the 'bottom' CSS-attributes value in specified units.
+         * Sets the 'bottom' attribute value (distance from the bottom of the
+         * component to the bottom edge of the layout). Currently active units
+         * are maintained.
          * 
          * @param bottomValue
-         *            The value of the 'bottom' CSS-attribute
+         *            The value of the 'bottom' attribute
+         * @see #setBottomUnits(int)
          */
-        public void setBottomValue(float bottomValue) {
+        public void setBottomValue(Float bottomValue) {
             this.bottomValue = bottomValue;
             requestRepaint();
         }
 
         /**
-         * Gets the 'left' CSS-attributes value in specified units.
+         * Gets the 'left' attributes value using current units.
          * 
-         * @return The value of the 'left' CSS-attribute
+         * @return The value of the 'left' attribute, null if not set
+         * @see #getLeftUnits()
          */
-        public float getLeftValue() {
-            return leftValue == null ? 0 : leftValue.floatValue();
+        public Float getLeftValue() {
+            return leftValue;
         }
 
         /**
-         * Sets the 'left' CSS-attributes value in specified units.
+         * Sets the 'left' attribute value (distance from the left of the
+         * component to the left edge of the layout). Currently active units are
+         * maintained.
          * 
          * @param leftValue
          *            The value of the 'left' CSS-attribute
+         * @see #setLeftUnits(int)
          */
-        public void setLeftValue(float leftValue) {
+        public void setLeftValue(Float leftValue) {
             this.leftValue = leftValue;
             requestRepaint();
         }
 
         /**
-         * Gets the unit for the 'top' CSS-attribute
+         * Gets the unit for the 'top' attribute
          * 
-         * @return See UNIT_SYMBOLS for a description of the available units.
+         * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
+         *         available units.
          */
         public int getTopUnits() {
             return topUnits;
         }
 
         /**
-         * Sets the unit for the 'top' CSS-attribute
+         * Sets the unit for the 'top' attribute
          * 
          * @param topUnits
-         *            See UNIT_SYMBOLS for a description of the available units.
+         *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
+         *            available units.
          */
         public void setTopUnits(int topUnits) {
             this.topUnits = topUnits;
@@ -414,19 +438,21 @@ public class AbsoluteLayout extends AbstractLayout {
         }
 
         /**
-         * Gets the unit for the 'right' CSS-attribute
+         * Gets the unit for the 'right' attribute
          * 
-         * @return See UNIT_SYMBOLS for a description of the available units.
+         * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
+         *         available units.
          */
         public int getRightUnits() {
             return rightUnits;
         }
 
         /**
-         * Sets the unit for the 'right' CSS-attribute
+         * Sets the unit for the 'right' attribute
          * 
          * @param rightUnits
-         *            See UNIT_SYMBOLS for a description of the available units.
+         *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
+         *            available units.
          */
         public void setRightUnits(int rightUnits) {
             this.rightUnits = rightUnits;
@@ -434,19 +460,21 @@ public class AbsoluteLayout extends AbstractLayout {
         }
 
         /**
-         * Gets the unit for the 'bottom' CSS-attribute
+         * Gets the unit for the 'bottom' attribute
          * 
-         * @return See UNIT_SYMBOLS for a description of the available units.
+         * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
+         *         available units.
          */
         public int getBottomUnits() {
             return bottomUnits;
         }
 
         /**
-         * Sets the unit for the 'bottom' CSS-attribute
+         * Sets the unit for the 'bottom' attribute
          * 
          * @param bottomUnits
-         *            See UNIT_SYMBOLS for a description of the available units.
+         *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
+         *            available units.
          */
         public void setBottomUnits(int bottomUnits) {
             this.bottomUnits = bottomUnits;
@@ -454,19 +482,21 @@ public class AbsoluteLayout extends AbstractLayout {
         }
 
         /**
-         * Gets the unit for the 'left' CSS-attribute
+         * Gets the unit for the 'left' attribute
          * 
-         * @return See UNIT_SYMBOLS for a description of the available units.
+         * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
+         *         available units.
          */
         public int getLeftUnits() {
             return leftUnits;
         }
 
         /**
-         * Sets the unit for the 'left' CSS-attribute
+         * Sets the unit for the 'left' attribute
          * 
          * @param leftUnits
-         *            See UNIT_SYMBOLS for a description of the available units.
+         *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
+         *            available units.
          */
         public void setLeftUnits(int leftUnits) {
             this.leftUnits = leftUnits;
@@ -474,7 +504,7 @@ public class AbsoluteLayout extends AbstractLayout {
         }
 
         /**
-         * Gets the 'z-index' CSS-attribute.
+         * Gets the 'z-index' attribute.
          * 
          * @return the zIndex The z-index attribute
          */
