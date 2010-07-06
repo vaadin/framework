@@ -132,9 +132,6 @@ public class AbsoluteLayout extends AbstractLayout {
      * absolute layout. It contains the CSS attributes for left, right, top and
      * bottom and the units used to specify them. *
      * 
-     * TODO symmetric getters and setters for fields to make this simpler to use
-     * in generic java tools
-     * 
      */
     public class ComponentPosition implements Serializable {
 
@@ -255,7 +252,6 @@ public class AbsoluteLayout extends AbstractLayout {
          *            description of the available units.
          */
         public void setTop(float topValue, int topUnits) {
-            validateLength(topValue, topUnits);
             this.topValue = topValue;
             this.topUnits = topUnits;
             requestRepaint();
@@ -271,7 +267,6 @@ public class AbsoluteLayout extends AbstractLayout {
          *            description of the available units.
          */
         public void setRight(float rightValue, int rightUnits) {
-            validateLength(rightValue, rightUnits);
             this.rightValue = rightValue;
             this.rightUnits = rightUnits;
             requestRepaint();
@@ -286,10 +281,9 @@ public class AbsoluteLayout extends AbstractLayout {
          *            The unit of the 'bottom' attribute. See UNIT_SYMBOLS for a
          *            description of the available units.
          */
-        public void setBottom(float bottomValue, int units) {
-            validateLength(bottomValue, units);
+        public void setBottom(float bottomValue, int bottomUnits) {
             this.bottomValue = bottomValue;
-            bottomUnits = units;
+            this.bottomUnits = bottomUnits;
             requestRepaint();
         }
 
@@ -302,10 +296,9 @@ public class AbsoluteLayout extends AbstractLayout {
          *            The unit of the 'left' attribute. See UNIT_SYMBOLS for a
          *            description of the available units.
          */
-        public void setLeft(float leftValue, int units) {
-            validateLength(leftValue, units);
+        public void setLeft(float leftValue, int leftUnits) {
             this.leftValue = leftValue;
-            leftUnits = units;
+            this.leftUnits = leftUnits;
             requestRepaint();
         }
 
@@ -327,7 +320,6 @@ public class AbsoluteLayout extends AbstractLayout {
          *            The value of the 'left' attribute
          */
         public void setTopValue(float topValue) {
-            validateLength(topValue, topUnits);
             this.topValue = topValue;
             requestRepaint();
         }
@@ -357,7 +349,6 @@ public class AbsoluteLayout extends AbstractLayout {
          *            The value of the 'right' CSS-attribute
          */
         public void setRightValue(float rightValue) {
-            validateLength(rightValue, rightUnits);
             this.rightValue = rightValue;
             requestRepaint();
         }
@@ -378,7 +369,6 @@ public class AbsoluteLayout extends AbstractLayout {
          *            The value of the 'bottom' CSS-attribute
          */
         public void setBottomValue(float bottomValue) {
-            validateLength(bottomValue, bottomUnits);
             this.bottomValue = bottomValue;
             requestRepaint();
         }
@@ -399,7 +389,6 @@ public class AbsoluteLayout extends AbstractLayout {
          *            The value of the 'left' CSS-attribute
          */
         public void setLeftValue(float leftValue) {
-            validateLength(leftValue, leftUnits);
             this.leftValue = leftValue;
             requestRepaint();
         }
@@ -420,7 +409,6 @@ public class AbsoluteLayout extends AbstractLayout {
          *            See UNIT_SYMBOLS for a description of the available units.
          */
         public void setTopUnits(int topUnits) {
-            validateLength(topValue, topUnits);
             this.topUnits = topUnits;
             requestRepaint();
         }
@@ -441,7 +429,6 @@ public class AbsoluteLayout extends AbstractLayout {
          *            See UNIT_SYMBOLS for a description of the available units.
          */
         public void setRightUnits(int rightUnits) {
-            validateLength(rightValue, rightUnits);
             this.rightUnits = rightUnits;
             requestRepaint();
         }
@@ -462,7 +449,6 @@ public class AbsoluteLayout extends AbstractLayout {
          *            See UNIT_SYMBOLS for a description of the available units.
          */
         public void setBottomUnits(int bottomUnits) {
-            validateLength(bottomValue, bottomUnits);
             this.bottomUnits = bottomUnits;
             requestRepaint();
         }
@@ -483,7 +469,6 @@ public class AbsoluteLayout extends AbstractLayout {
          *            See UNIT_SYMBOLS for a description of the available units.
          */
         public void setLeftUnits(int leftUnits) {
-            validateLength(leftValue, leftUnits);
             this.leftUnits = leftUnits;
             requestRepaint();
         }
@@ -525,19 +510,6 @@ public class AbsoluteLayout extends AbstractLayout {
             component.paint(target);
             target.endTag("cc");
         }
-    }
-
-    /**
-     * Validates a value with the unit
-     * 
-     * @param topValue
-     *            The value to validate
-     * @param topUnits2
-     *            The unit to validate
-     */
-    private static void validateLength(float topValue, int topUnits2) {
-        // TODO throw on invalid value
-
     }
 
     /*
