@@ -4,8 +4,11 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Table.HeaderClickEvent;
 
 @SuppressWarnings("serial")
@@ -14,6 +17,7 @@ public class HeaderClick extends TestBase {
     @Override
     protected void setup() {
         final Table table = new Table();
+        table.setColumnReorderingAllowed(true);
         table.setContainerDataSource(createContainer());
         table.setWidth("400px");
         table.setHeight("400px");
@@ -29,6 +33,41 @@ public class HeaderClick extends TestBase {
             }
         });
 
+        CheckBox immediateCheckbox = new CheckBox("Immediate");
+        immediateCheckbox.setImmediate(true);
+        immediateCheckbox.setValue(table.isImmediate());
+        immediateCheckbox.addListener(new ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                table.setImmediate(event.getButton().booleanValue());
+            }
+        });
+
+        CheckBox sortEnabledCheckbox = new CheckBox("Sortable");
+        sortEnabledCheckbox.setImmediate(true);
+        sortEnabledCheckbox.setValue(!table.isSortDisabled());
+        sortEnabledCheckbox.addListener(new ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                table.setSortDisabled(!event.getButton().booleanValue());
+            }
+        });
+
+        CheckBox columnReorderingCheckbox = new CheckBox(
+                "Column reordering allowed");
+        columnReorderingCheckbox.setImmediate(true);
+        columnReorderingCheckbox.setValue(table.isColumnReorderingAllowed());
+        columnReorderingCheckbox.addListener(new ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                table.setColumnReorderingAllowed(event.getButton()
+                        .booleanValue());
+            }
+        });
+
+        addComponent(immediateCheckbox);
+        addComponent(sortEnabledCheckbox);
+        addComponent(columnReorderingCheckbox);
         addComponent(table);
         addComponent(columnField);
 
