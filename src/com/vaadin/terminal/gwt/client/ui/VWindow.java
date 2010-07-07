@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -148,6 +151,16 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
 
     private Element wrapper, wrapper2;
 
+    private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
+            VPanel.CLICK_EVENT_IDENTIFIER) {
+
+        @Override
+        protected <H extends EventHandler> HandlerRegistration registerHandler(
+                H handler, Type<H> type) {
+            return addDomHandler(handler, type);
+        }
+    };
+
     private boolean visibilityChangesDisabled;
 
     public VWindow() {
@@ -277,6 +290,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
             return;
         }
         visibilityChangesDisabled = false;
+
+        clickEventHandler.handleEventHandlerRegistration(client);
 
         immediate = uidl.hasAttribute("immediate");
 
@@ -793,6 +808,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
 
     @Override
     public void onBrowserEvent(final Event event) {
+        boolean bubble = true;
+
         if (event != null) {
             final int type = event.getTypeInt();
 
@@ -810,15 +827,15 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
 
             if (resizing || resizeBox == target) {
                 onResizeEvent(event);
-                event.cancelBubble(true);
+                bubble = false;
             } else if (target == closeBox) {
                 if (type == Event.ONCLICK && isClosable()) {
                     onCloseClick();
-                    event.cancelBubble(true);
+                    bubble = false;
                 }
             } else if (dragging || !DOM.isOrHasChild(contents, target)) {
                 onDragEvent(event);
-                event.cancelBubble(true);
+                bubble = false;
 
             } else if (type == Event.ONCLICK) {
                 // clicked inside window, ensure to be on top
@@ -831,6 +848,14 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
                     && !DOM.isOrHasChild(contentPanel.getElement(), target)) {
                 Util.focus(contentPanel.getElement());
             }
+        }
+
+        if (!bubble) {
+            event.cancelBubble(true);
+        } else {
+            // Super.onBrowserEvent takes care of Handlers added by the
+            // ClickEventHandler
+            super.onBrowserEvent(event);
         }
     }
 
