@@ -352,6 +352,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 PortletApplicationContext2 applicationContext = PortletApplicationContext2
                         .getApplicationContext(request.getPortletSession());
                 applicationContext.setResponse(response);
+                applicationContext.setPortletConfig(getPortletConfig());
 
                 PortletCommunicationManager applicationManager = applicationContext
                         .getApplicationManager(application);

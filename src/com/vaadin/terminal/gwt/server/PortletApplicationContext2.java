@@ -16,6 +16,7 @@ import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.MimeResponse;
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletModeException;
 import javax.portlet.PortletResponse;
@@ -49,6 +50,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
     protected Map<Application, Set<PortletListener>> portletListeners = new HashMap<Application, Set<PortletListener>>();
 
     protected transient PortletSession session;
+    protected transient PortletConfig portletConfig;
 
     protected HashMap<String, Application> portletWindowIdToApplicationMap = new HashMap<String, Application>();
 
@@ -124,6 +126,14 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
 
     public PortletSession getPortletSession() {
         return session;
+    }
+
+    public PortletConfig getPortletConfig() {
+        return portletConfig;
+    }
+
+    public void setPortletConfig(PortletConfig config) {
+        portletConfig = config;
     }
 
     public void addPortletListener(Application app, PortletListener listener) {
