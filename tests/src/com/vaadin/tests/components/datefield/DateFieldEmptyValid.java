@@ -5,15 +5,17 @@ import java.util.Locale;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupDateField;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
+@SuppressWarnings("serial")
 public class DateFieldEmptyValid extends TestBase {
 
     private Log log;
@@ -64,6 +66,29 @@ public class DateFieldEmptyValid extends TestBase {
 
             public void buttonClick(ClickEvent event) {
                 df.setValue(new Date(1990 - 1900, 5 - 1, 4));
+            }
+        });
+        addComponent(b);
+
+        b = new Button("Set date to 5.6.2000 using a property data source");
+        b.addListener(new ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                ObjectProperty dfProp = new ObjectProperty(new Date(
+                        2000 - 1900, 6 - 1, 5), Date.class);
+                df.setPropertyDataSource(dfProp);
+            }
+        });
+        addComponent(b);
+
+        b = new Button(
+                "Set date to 27.8.2005 by changing a property data source from null");
+        b.addListener(new ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                ObjectProperty dfProp = new ObjectProperty(null, Date.class);
+                df.setPropertyDataSource(dfProp);
+                dfProp.setValue(new Date(2005 - 1900, 8 - 1, 27));
             }
         });
         addComponent(b);

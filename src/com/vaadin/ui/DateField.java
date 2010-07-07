@@ -238,24 +238,35 @@ public class DateField extends AbstractField implements
         for (int r = resolution; r <= largestModifiable; r++) {
             switch (r) {
             case RESOLUTION_MSEC:
-                target.addVariable(this, "msec", currentDate != null ? calendar
-                        .get(Calendar.MILLISECOND) : -1);
+                target.addVariable(
+                        this,
+                        "msec",
+                        currentDate != null ? calendar
+                                .get(Calendar.MILLISECOND) : -1);
                 break;
             case RESOLUTION_SEC:
-                target.addVariable(this, "sec", currentDate != null ? calendar
-                        .get(Calendar.SECOND) : -1);
+                target.addVariable(this, "sec",
+                        currentDate != null ? calendar.get(Calendar.SECOND)
+                                : -1);
                 break;
             case RESOLUTION_MIN:
-                target.addVariable(this, "min", currentDate != null ? calendar
-                        .get(Calendar.MINUTE) : -1);
+                target.addVariable(this, "min",
+                        currentDate != null ? calendar.get(Calendar.MINUTE)
+                                : -1);
                 break;
             case RESOLUTION_HOUR:
-                target.addVariable(this, "hour", currentDate != null ? calendar
-                        .get(Calendar.HOUR_OF_DAY) : -1);
+                target.addVariable(
+                        this,
+                        "hour",
+                        currentDate != null ? calendar
+                                .get(Calendar.HOUR_OF_DAY) : -1);
                 break;
             case RESOLUTION_DAY:
-                target.addVariable(this, "day", currentDate != null ? calendar
-                        .get(Calendar.DAY_OF_MONTH) : -1);
+                target.addVariable(
+                        this,
+                        "day",
+                        currentDate != null ? calendar
+                                .get(Calendar.DAY_OF_MONTH) : -1);
                 break;
             case RESOLUTION_MONTH:
                 target.addVariable(this, "month",
@@ -263,8 +274,8 @@ public class DateField extends AbstractField implements
                                 : -1);
                 break;
             case RESOLUTION_YEAR:
-                target.addVariable(this, "year", currentDate != null ? calendar
-                        .get(Calendar.YEAR) : -1);
+                target.addVariable(this, "year",
+                        currentDate != null ? calendar.get(Calendar.YEAR) : -1);
                 break;
             }
         }
@@ -527,6 +538,15 @@ public class DateField extends AbstractField implements
         }
     }
 
+    @Override
+    protected void setInternalValue(Object newValue) {
+        // Also set the internal dateString
+        if (newValue != null) {
+            dateString = newValue.toString();
+        }
+        super.setInternalValue(newValue);
+    }
+
     /**
      * Gets the resolution.
      * 
@@ -684,7 +704,24 @@ public class DateField extends AbstractField implements
          * Logically isEmpty() should return false also in the case that the
          * entered value is invalid.
          */
-        return dateString == null || dateString.equals("");
+        boolean empty = (dateString == null || dateString.equals(""));
+        return empty;
+    }
+
+    @Override
+    public void valueChange(Property.ValueChangeEvent event) {
+        /*
+         * We also need to update the dateString if the value of the property
+         * data source changes. This has to be done before super fires the value
+         * change event in case someone checks isEmpty in a value change
+         * listener.
+         */
+        Object value = getValue();
+        if (value != null) {
+            dateString = value.toString();
+        }
+
+        super.valueChange(event);
     }
 
     /*
