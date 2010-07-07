@@ -98,13 +98,15 @@ public class WidgetSet {
             if (uidl.hasAttribute("type")) {
                 // TODO check if all type checks are really needed
                 final String type = uidl.getStringAttribute("type").intern();
-                if (type == "twincol") {
+                if ("twincol".equals(type)) {
                     return VTwinColSelect.class;
-                } else if (type == "optiongroup") {
+                } else if ("optiongroup".equals(type)) {
                     return VOptionGroup.class;
-                } else if (type == "native") {
+                } else if ("native".equals(type)) {
                     return VNativeSelect.class;
-                } else if (type == "list") {
+                } else if ("list".equals(type)) {
+                    return VListSelect.class;
+                } else if ("legacy-multi".equals(type)) {
                     return VListSelect.class;
                 } else if (uidl.hasAttribute("selectmode")
                         && uidl.getStringAttribute("selectmode")
@@ -158,8 +160,34 @@ public class WidgetSet {
      */
     public Class<? extends Paintable> getImplementationByClassName(
             String fullyqualifiedName) {
+        if (fullyqualifiedName == null) {
+            return VUnknownComponent.class;
+        }
         Class<? extends Paintable> implementationByServerSideClassName = widgetMap
                 .getImplementationByServerSideClassName(fullyqualifiedName);
+
+        /*
+         * Also ensure that our historical quirks have their instantiators
+         * loaded. Without these, legacy code will throw NPEs when e.g. a Select
+         * is in multiselect mode, causing the clientside implementation to
+         * *actually* be VListSelect, when the annotation says VFilterSelect
+         */
+        if (fullyqualifiedName.equals("com.vaadin.ui.Button")) {
+            loadImplementation(VCheckBox.class);
+        } else if (fullyqualifiedName.equals("com.vaadin.ui.Select")) {
+            loadImplementation(VTwinColSelect.class);
+            loadImplementation(VOptionGroup.class);
+            loadImplementation(VNativeSelect.class);
+            loadImplementation(VListSelect.class);
+        } else if (fullyqualifiedName.equals("com.vaadin.ui.TextField")) {
+            loadImplementation(VTextArea.class);
+            loadImplementation(VPasswordField.class);
+        } else if (fullyqualifiedName.equals("com.vaadin.ui.DateField")) {
+            loadImplementation(VDateFieldCalendar.class);
+        } else if (fullyqualifiedName.equals("com.vaadin.ui.SplitPanel")) {
+            loadImplementation(VSplitPanelVertical.class);
+        }
+
         return implementationByServerSideClassName;
 
     }
