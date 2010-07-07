@@ -382,10 +382,6 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private MultiSelectMode multiSelectMode = MultiSelectMode.DEFAULT;
 
-    private HeaderClickHandler headerClickHandler;
-
-    private FooterClickHandler footerClickHandler;
-
     /* Table constructors */
 
     /**
@@ -3761,8 +3757,8 @@ public class Table extends AbstractSelect implements Action.Container,
         static {
             try {
                 // Set the header click method
-                HEADER_CLICK_METHOD = HeaderClickHandler.class
-                        .getDeclaredMethod("handleHeaderClick",
+                HEADER_CLICK_METHOD = HeaderClickListener.class
+                        .getDeclaredMethod("headerClick",
                                 new Class[] { HeaderClickEvent.class });
             } catch (final java.lang.NoSuchMethodException e) {
                 // This should never happen
@@ -3801,8 +3797,8 @@ public class Table extends AbstractSelect implements Action.Container,
         static {
             try {
                 // Set the header click method
-                FOOTER_CLICK_METHOD = FooterClickHandler.class
-                        .getDeclaredMethod("handleFooterClick",
+                FOOTER_CLICK_METHOD = FooterClickListener.class
+                        .getDeclaredMethod("footerClick",
                                 new Class[] { FooterClickEvent.class });
             } catch (final java.lang.NoSuchMethodException e) {
                 // This should never happen
@@ -3840,11 +3836,10 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Interface for the handler listening to column header mouse click events.
-     * The handleHeaderClick method is called when the user presses a header
-     * column cell.
+     * Interface for the listener for column header mouse click events. The
+     * headerClick method is called when the user presses a header column cell.
      */
-    public interface HeaderClickHandler extends Serializable {
+    public interface HeaderClickListener extends Serializable {
 
         /**
          * Called when a user clicks a header column cell
@@ -3853,15 +3848,14 @@ public class Table extends AbstractSelect implements Action.Container,
          *            The event which contains information about the column and
          *            the mouse click event
          */
-        public void handleHeaderClick(HeaderClickEvent event);
+        public void headerClick(HeaderClickEvent event);
     }
 
     /**
-     * Interface for the handler listening to column footer mouse click events.
-     * The handleHeaderClick method is called when the user presses a footer
-     * column cell.
+     * Interface for the listener for column footer mouse click events. The
+     * footerClick method is called when the user presses a footer column cell.
      */
-    public interface FooterClickHandler extends Serializable {
+    public interface FooterClickListener extends Serializable {
 
         /**
          * Called when a user clicks a footer column cell
@@ -3870,102 +3864,61 @@ public class Table extends AbstractSelect implements Action.Container,
          *            The event which contains information about the column and
          *            the mouse click event
          */
-        public void handleFooterClick(FooterClickEvent event);
+        public void footerClick(FooterClickEvent event);
     }
 
     /**
-     * Sets the header click handler which handles the click events when the
-     * user clicks on a column header cell in the Table.
+     * Adds a header click listener which handles the click events when the user
+     * clicks on a column header cell in the Table.
      * <p>
-     * The handler will receive events which contains information about which
+     * The listener will receive events which contain information about which
      * column was clicked and some details about the mouse event.
      * </p>
      * 
-     * @param handler
+     * @param listener
      *            The handler which should handle the header click events.
      */
-    public void setHeaderClickHandler(HeaderClickHandler handler) {
-        if (headerClickHandler != handler) {
-            if (handler == null && headerClickHandler != null) {
-                // Remove header click handler
-                removeListener(VScrollTable.HEADER_CLICK_EVENT_ID,
-                        HeaderClickEvent.class, headerClickHandler);
-
-                headerClickHandler = handler;
-            } else if (headerClickHandler != null) {
-                // Replace header click handler
-                removeListener(VScrollTable.HEADER_CLICK_EVENT_ID,
-                        HeaderClickEvent.class, headerClickHandler);
-
-                headerClickHandler = handler;
-
-                addListener(VScrollTable.HEADER_CLICK_EVENT_ID,
-                        HeaderClickEvent.class, headerClickHandler,
-                        HeaderClickEvent.HEADER_CLICK_METHOD);
-            } else if (handler != null) {
-                // Set a new header click handler
-                headerClickHandler = handler;
-                addListener(VScrollTable.HEADER_CLICK_EVENT_ID,
-                        HeaderClickEvent.class, headerClickHandler,
-                        HeaderClickEvent.HEADER_CLICK_METHOD);
-            }
-        }
+    public void addListener(HeaderClickListener listener) {
+        addListener(VScrollTable.HEADER_CLICK_EVENT_ID, HeaderClickEvent.class,
+                listener, HeaderClickEvent.HEADER_CLICK_METHOD);
     }
 
     /**
-     * Sets the footer click handler which handles the click events when the
-     * user clicks on a column footer cell in the Table.
+     * Removes a header click listener
+     * 
+     * @param listener
+     *            The listener to remove.
+     */
+    public void removeListener(HeaderClickListener listener) {
+        removeListener(VScrollTable.HEADER_CLICK_EVENT_ID,
+                HeaderClickEvent.class, listener);
+    }
+
+    /**
+     * Adds a footer click listener which handles the click events when the user
+     * clicks on a column footer cell in the Table.
      * <p>
-     * The handler will recieve events which contains information about which
+     * The listener will receive events which contain information about which
      * column was clicked and some details about the mouse event.
      * </p>
      * 
-     * @param handler
-     *            The handler which should handle the footer click events
+     * @param listener
+     *            The handler which should handle the footer click events.
      */
-    public void setFooterClickHandler(FooterClickHandler handler) {
-        if (footerClickHandler != handler) {
-            if (handler == null && footerClickHandler != null) {
-                // Remove header click handler
-                removeListener(VScrollTable.FOOTER_CLICK_EVENT_ID,
-                        FooterClickEvent.class, footerClickHandler);
-                footerClickHandler = handler;
-            } else if (footerClickHandler != null) {
-                // Replace footer click handler
-                removeListener(VScrollTable.FOOTER_CLICK_EVENT_ID,
-                        FooterClickEvent.class, footerClickHandler);
-                footerClickHandler = handler;
-                addListener(VScrollTable.FOOTER_CLICK_EVENT_ID,
-                        FooterClickEvent.class, footerClickHandler,
-                        FooterClickEvent.FOOTER_CLICK_METHOD);
-            } else if (handler != null) {
-                // Set a new footer click handler
-                footerClickHandler = handler;
-                addListener(VScrollTable.FOOTER_CLICK_EVENT_ID,
-                        FooterClickEvent.class, footerClickHandler,
-                        FooterClickEvent.FOOTER_CLICK_METHOD);
-            }
-        }
+    public void addListener(FooterClickListener listener) {
+        addListener(VScrollTable.FOOTER_CLICK_EVENT_ID, FooterClickEvent.class,
+                listener, FooterClickEvent.FOOTER_CLICK_METHOD);
     }
 
     /**
-     * Returns the header click handler which receives click events from the
-     * columns header cells when they are clicked on.
+     * Removes a footer click listener
      * 
-     * @return
+     * @param listener
+     *            The listener to remove.
      */
-    public HeaderClickHandler getHeaderClickHandler() {
-        return headerClickHandler;
-    }
-
-    /**
-     * Returns the footer click handler which recieves click events from the
-     * columns footer cells when they are clicked on.
-     * 
-     * @return
-     */
-    public FooterClickHandler getFooterClickHandler() {
-        return footerClickHandler;
+    public void removeListener(FooterClickListener listener) {
+        removeListener(VScrollTable.FOOTER_CLICK_EVENT_ID,
+                FooterClickEvent.class, listener);
     }
 
     /**

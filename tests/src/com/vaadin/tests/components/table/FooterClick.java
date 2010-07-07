@@ -35,9 +35,9 @@ public class FooterClick extends TestBase {
         final TextField columnField = new TextField(
                 "ProperyId of clicked column");
 
-        // Set the footer click handler
-        table.setFooterClickHandler(new Table.FooterClickHandler() {
-            public void handleFooterClick(FooterClickEvent event) {
+        // Add a footer click listener
+        table.addListener(new Table.FooterClickListener() {
+            public void footerClick(FooterClickEvent event) {
                 columnField.setValue(event.getPropertyId());
             }
         });

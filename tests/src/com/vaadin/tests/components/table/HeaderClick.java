@@ -26,9 +26,9 @@ public class HeaderClick extends TestBase {
         final TextField columnField = new TextField(
                 "ProperyId of clicked column");
 
-        // Add header click handler
-        table.setHeaderClickHandler(new Table.HeaderClickHandler() {
-            public void handleHeaderClick(HeaderClickEvent event) {
+        // Add a header click listener
+        table.addListener(new Table.HeaderClickListener() {
+            public void headerClick(HeaderClickEvent event) {
                 columnField.setValue(event.getPropertyId());
             }
         });
@@ -75,7 +75,7 @@ public class HeaderClick extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "Tests the header click handler";
+        return "Tests the header click listener";
     }
 
     @Override
