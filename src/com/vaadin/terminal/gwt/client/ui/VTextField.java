@@ -113,19 +113,11 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             setColumns(new Integer(uidl.getStringAttribute("cols")).intValue());
         }
 
-        String text = uidl.hasVariable("text") ? uidl.getStringVariable("text")
-                : null;
+        final String text = uidl.hasVariable("text") ? uidl
+                .getStringVariable("text") : null;
         setPrompting(inputPrompt != null && focusedTextField != this
                 && (text == null || text.equals("")));
 
-        final String fieldValue;
-        if (prompting) {
-            fieldValue = isReadOnly() ? "" : inputPrompt;
-            addStyleDependentName(CLASSNAME_PROMPT);
-        } else {
-            fieldValue = text;
-            removeStyleDependentName(CLASSNAME_PROMPT);
-        }
         if (BrowserInfo.get().isGecko()) {
             /*
              * Gecko is really sluggish when updating input attached to dom.
@@ -136,10 +128,26 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
              */
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
+                    String fieldValue;
+                    if (prompting) {
+                        fieldValue = isReadOnly() ? "" : inputPrompt;
+                        addStyleDependentName(CLASSNAME_PROMPT);
+                    } else {
+                        fieldValue = text;
+                        removeStyleDependentName(CLASSNAME_PROMPT);
+                    }
                     setText(fieldValue);
                 }
             });
         } else {
+            String fieldValue;
+            if (prompting) {
+                fieldValue = isReadOnly() ? "" : inputPrompt;
+                addStyleDependentName(CLASSNAME_PROMPT);
+            } else {
+                fieldValue = text;
+                removeStyleDependentName(CLASSNAME_PROMPT);
+            }
             setText(fieldValue);
         }
 
