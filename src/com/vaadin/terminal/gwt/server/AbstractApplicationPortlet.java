@@ -555,9 +555,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     private void updateBrowserProperties(WebBrowser browser,
             PortletRequest request) {
+        String userAgent = getHTTPHeader(request, "user-agent");
         browser.updateBrowserProperties(request.getLocale(), null, request
-                .isSecure(), request.getProperty("user-agent"), request
-                .getParameter("sw"), request.getParameter("sh"));
+                .isSecure(), userAgent, getHTTPRequestParameter(request, "sw"),
+                getHTTPRequestParameter(request, "sh"));
     }
 
     @Override
@@ -1435,6 +1436,27 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     /**
+     * Try to get an HTTP header value from a request using portal specific
+     * APIs.
+     * 
+     * @param name
+     *            HTTP header name
+     * @return the value of the header (empty string if defined without a value,
+     *         null if the parameter is not present or retrieving it failed)
+     */
+    private static String getHTTPHeader(PortletRequest request, String name) {
+        String value = null;
+        String portalInfo = request.getPortalContext().getPortalInfo()
+                .toLowerCase();
+        if (portalInfo.contains("liferay")) {
+            value = getLiferayHTTPHeader(request, name);
+        } else if (portalInfo.contains("gatein")) {
+            value = getGateInHTTPHeader(request, name);
+        }
+        return value;
+    }
+
+    /**
      * Try to get the value of a HTTP request parameter from a portlet request
      * using portal specific APIs. It is not possible to get the HTTP request
      * parameters using the official Portlet 2.0 API.
@@ -1489,6 +1511,42 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     "getOriginalServletRequest", httpRequest);
             if (httpRequest != null) {
                 return httpRequest.getParameter(name);
+            }
+        } catch (Exception e) {
+            // ignore and return null - unable to get the original request
+        }
+        return null;
+    }
+
+    private static String getGateInHTTPHeader(PortletRequest request,
+            String name) {
+        String value = null;
+        try {
+            Method getRealReq = request.getClass().getMethod("getRealRequest");
+            HttpServletRequestWrapper origRequest = (HttpServletRequestWrapper) getRealReq
+                    .invoke(request);
+            value = origRequest.getHeader(name);
+        } catch (Exception e) {
+            // do nothing - not on GateIn simple-portal
+        }
+        return value;
+    }
+
+    private static String getLiferayHTTPHeader(PortletRequest request,
+            String name) {
+        try {
+            // httpRequest = PortalUtil.getHttpServletRequest(request);
+            HttpServletRequest httpRequest = (HttpServletRequest) PortalClassInvoker
+                    .invoke("com.liferay.portal.util.PortalUtil",
+                            "getHttpServletRequest", request);
+
+            // httpRequest =
+            // PortalUtil.getOriginalServletRequest(httpRequest);
+            httpRequest = (HttpServletRequest) PortalClassInvoker.invoke(
+                    "com.liferay.portal.util.PortalUtil",
+                    "getOriginalServletRequest", httpRequest);
+            if (httpRequest != null) {
+                return httpRequest.getHeader(name);
             }
         } catch (Exception e) {
             // ignore and return null - unable to get the original request
