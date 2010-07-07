@@ -121,8 +121,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public static final String ALIGN_RIGHT = "e";
 
     /**
-     * Column header mode: Column headers are hidden. <b>This is the default
-     * behavior. </b>
+     * Column header mode: Column headers are hidden.
      */
     public static final int COLUMN_HEADER_MODE_HIDDEN = -1;
 
@@ -139,7 +138,10 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Column header mode: Column headers are explicitly specified with
-     * {@link #setColumnHeaders(String[])}
+     * {@link #setColumnHeaders(String[])}. If a header is not specified for a
+     * given property, its property id is used instead.
+     * <p>
+     * <b>This is the default behavior. </b>
      */
     public static final int COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID = 2;
 
