@@ -36,10 +36,6 @@
 	border-color: #c2c3c4;
 }
 
-.v-table-footer td:last-child {
-	border-right-color: transparent;
-}
-
 .v-table-footer-container {
 	padding-right: 7px;
 }
