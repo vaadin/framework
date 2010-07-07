@@ -848,10 +848,17 @@ public class ApplicationConnection {
                                                 + ", but there is no such paintable ("
                                                 + uidl.getId() + ") rendered.");
                             } else {
-                                if (!idToPaintableDetail.containsKey(uidl
-                                        .getId())) {
-                                    registerPaintable(uidl.getId(), view);
+                                String pid = uidl.getId();
+                                if (!idToPaintableDetail.containsKey(pid)) {
+                                    registerPaintable(pid, view);
                                 }
+                                // VView does not call updateComponent so we
+                                // register any event listeners here
+                                ComponentDetail cd = idToPaintableDetail
+                                        .get(pid);
+                                cd.registerEventListenersFromUIDL(uidl);
+
+                                // Finally allow VView to update itself
                                 view.updateFromUIDL(uidl,
                                         ApplicationConnection.this);
                             }
