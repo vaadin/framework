@@ -133,13 +133,13 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Column header mode: Column headers are explicitly specified with
-     * <code>setColumnHeaders</code>.
+     * {@link #setColumnHeaders(String[])}.
      */
     public static final int COLUMN_HEADER_MODE_EXPLICIT = 1;
 
     /**
      * Column header mode: Column headers are explicitly specified with
-     * <code>setColumnHeaders</code>
+     * {@link #setColumnHeaders(String[])}
      */
     public static final int COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID = 2;
 
@@ -173,7 +173,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Row caption mode: Item captions are read from property specified with
-     * <code>setItemCaptionPropertyId</code>.
+     * {@link #setItemCaptionPropertyId(Object)}.
      */
     public static final int ROW_HEADER_MODE_PROPERTY = AbstractSelect.ITEM_CAPTION_MODE_PROPERTY;
 
@@ -504,8 +504,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * <p>
      * The headers match the property id:s given my the set visible column
      * headers. The table must be set in either
-     * <code>COLUMN_HEADER_MODE_EXPLICIT</code> or
-     * <code>COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID</code> mode to show the
+     * {@link #COLUMN_HEADER_MODE_EXPLICIT} or
+     * {@link #COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID} mode to show the
      * headers. In the defaults mode any nulls in the headers array are replaced
      * with id.toString() outputs when rendering.
      * </p>
@@ -531,15 +531,15 @@ public class Table extends AbstractSelect implements Action.Container,
      * <p>
      * The headers match the property id:s given my the set visible column
      * headers. The table must be set in either
-     * <code>COLUMN_HEADER_MODE_EXPLICIT</code> or
-     * <code>COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID</code> mode to show the
+     * {@link #COLUMN_HEADER_MODE_EXPLICIT} or
+     * {@link #COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID} mode to show the
      * headers. In the defaults mode any nulls in the headers array are replaced
      * with id.toString() outputs when rendering.
      * </p>
      * 
      * @param columnHeaders
      *            the Array of column headers that match the
-     *            <code>getVisibleColumns</code> method.
+     *            {@link #getVisibleColumns()} method.
      */
     public void setColumnHeaders(String[] columnHeaders) {
 
@@ -569,12 +569,12 @@ public class Table extends AbstractSelect implements Action.Container,
      * <p>
      * The icons in headers match the property id:s given my the set visible
      * column headers. The table must be set in either
-     * <code>COLUMN_HEADER_MODE_EXPLICIT</code> or
-     * <code>COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID</code> mode to show the
-     * headers with icons.
+     * {@link #COLUMN_HEADER_MODE_EXPLICIT} or
+     * {@link #COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID} mode to show the headers
+     * with icons.
      * </p>
      * 
-     * @return the Array of icons that match the <code>getVisibleColumns</code>.
+     * @return the Array of icons that match the {@link #getVisibleColumns()}.
      */
     public Resource[] getColumnIcons() {
         if (columnIcons == null) {
@@ -596,14 +596,14 @@ public class Table extends AbstractSelect implements Action.Container,
      * <p>
      * The icons in headers match the property id:s given my the set visible
      * column headers. The table must be set in either
-     * <code>COLUMN_HEADER_MODE_EXPLICIT</code> or
-     * <code>COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID</code> mode to show the
-     * headers with icons.
+     * {@link #COLUMN_HEADER_MODE_EXPLICIT} or
+     * {@link #COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID} mode to show the headers
+     * with icons.
      * </p>
      * 
      * @param columnIcons
-     *            the Array of icons that match the
-     *            <code>getVisibleColumns</code>.
+     *            the Array of icons that match the {@link #getVisibleColumns()}
+     *            .
      */
     public void setColumnIcons(Resource[] columnIcons) {
 
@@ -630,14 +630,14 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * <p>
      * The items in the array must match the properties identified by
-     * <code>getVisibleColumns()</code>. The possible values for the alignments
+     * {@link #getVisibleColumns()}. The possible values for the alignments
      * include:
      * <ul>
-     * <li><code>ALIGN_LEFT</code>: Left alignment</li>
-     * <li><code>ALIGN_CENTER</code>: Centered</li>
-     * <li><code>ALIGN_RIGHT</code>: Right alignment</li>
+     * <li>{@link #ALIGN_LEFT}: Left alignment</li>
+     * <li>{@link #ALIGN_CENTER}: Centered</li>
+     * <li>{@link #ALIGN_RIGHT}: Right alignment</li>
      * </ul>
-     * The alignments default to <code>ALIGN_LEFT</code>: any null values are
+     * The alignments default to {@link #ALIGN_LEFT}: any null values are
      * rendered as align lefts.
      * </p>
      * 
@@ -662,14 +662,14 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * <p>
      * The items in the array must match the properties identified by
-     * <code>getVisibleColumns()</code>. The possible values for the alignments
+     * {@link #getVisibleColumns()}. The possible values for the alignments
      * include:
      * <ul>
-     * <li><code>ALIGN_LEFT</code>: Left alignment</li>
-     * <li><code>ALIGN_CENTER</code>: Centered</li>
-     * <li><code>ALIGN_RIGHT</code>: Right alignment</li>
+     * <li>{@link #ALIGN_LEFT}: Left alignment</li>
+     * <li>{@link #ALIGN_CENTER}: Centered</li>
+     * <li>{@link #ALIGN_RIGHT}: Right alignment</li>
      * </ul>
-     * The alignments default to <code>ALIGN_LEFT</code>
+     * The alignments default to {@link #ALIGN_LEFT}
      * </p>
      * 
      * @param columnAlignments
@@ -1057,7 +1057,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * <p>
      * Throws IllegalArgumentException if the alignment is not one of the
-     * following: ALIGN_LEFT, ALIGN_CENTER or ALIGN_RIGHT
+     * following: {@link #ALIGN_LEFT}, {@link #ALIGN_CENTER} or
+     * {@link #ALIGN_RIGHT}
      * </p>
      * 
      * @param propertyId
@@ -1678,23 +1679,23 @@ public class Table extends AbstractSelect implements Action.Container,
      * <p>
      * The mode can be one of the following ones:
      * <ul>
-     * <li><code>ROW_HEADER_MODE_HIDDEN</code>: The row captions are hidden.</li>
-     * <li><code>ROW_HEADER_MODE_ID</code>: Items Id-objects
-     * <code>toString()</code> is used as row caption.
-     * <li><code>ROW_HEADER_MODE_ITEM</code>: Item-objects
-     * <code>toString()</code> is used as row caption.
-     * <li><code>ROW_HEADER_MODE_PROPERTY</code>: Property set with
-     * <code>setItemCaptionPropertyId()</code> is used as row header.
-     * <li><code>ROW_HEADER_MODE_EXPLICIT_DEFAULTS_ID</code>: Items Id-objects
+     * <li>{@link #ROW_HEADER_MODE_HIDDEN}: The row captions are hidden.</li>
+     * <li>{@link #ROW_HEADER_MODE_ID}: Items Id-objects <code>toString()</code>
+     * is used as row caption.
+     * <li>{@link #ROW_HEADER_MODE_ITEM}: Item-objects <code>toString()</code>
+     * is used as row caption.
+     * <li>{@link #ROW_HEADER_MODE_PROPERTY}: Property set with
+     * {@link #setItemCaptionPropertyId(Object)} is used as row header.
+     * <li>{@link #ROW_HEADER_MODE_EXPLICIT_DEFAULTS_ID}: Items Id-objects
      * <code>toString()</code> is used as row header. If caption is explicitly
      * specified, it overrides the id-caption.
-     * <li><code>ROW_HEADER_MODE_EXPLICIT</code>: The row headers must be
-     * explicitly specified.</li>
-     * <li><code>ROW_HEADER_MODE_INDEX</code>: The index of the item is used as
-     * row caption. The index mode can only be used with the containers
-     * implementing <code>Container.Indexed</code> interface.</li>
+     * <li>{@link #ROW_HEADER_MODE_EXPLICIT}: The row headers must be explicitly
+     * specified.</li>
+     * <li>{@link #ROW_HEADER_MODE_INDEX}: The index of the item is used as row
+     * caption. The index mode can only be used with the containers implementing
+     * <code>Container.Indexed</code> interface.</li>
      * </ul>
-     * The default value is <code>ROW_HEADER_MODE_HIDDEN</code>
+     * The default value is {@link #ROW_HEADER_MODE_HIDDEN}
      * </p>
      * 
      * @param mode
