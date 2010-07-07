@@ -479,9 +479,10 @@
 				<antcall target="run-integration-test">
 					<param name="target-server" value="liferay"/>
 				</antcall>
-				<antcall target="run-integration-test">
+<!--				<antcall target="run-integration-test">
 					<param name="target-server" value="gatein3"/>
 				</antcall>
+				-->
 				<antcall target="run-integration-test">
 					<param name="target-server" value="weblogic9"/>
 				</antcall>
