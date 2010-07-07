@@ -60,6 +60,14 @@ public class WidgetSetBuilder {
         File widgetsetFile = new File(widgetsetfilename);
         if (!widgetsetFile.exists()) {
             // create empty gwt module file
+            File parent = widgetsetFile.getParentFile();
+            if (parent != null && !parent.exists()) {
+                if (!parent.mkdirs()) {
+                    throw new IOException(
+                            "Could not create directory for the widgetset: "
+                                    + parent.getCanonicalPath());
+                }
+            }
             widgetsetFile.createNewFile();
             PrintStream printStream = new PrintStream(new FileOutputStream(
                     widgetsetFile));
