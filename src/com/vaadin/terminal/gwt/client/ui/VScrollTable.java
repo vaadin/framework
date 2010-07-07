@@ -17,13 +17,13 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.TableCellElement;
+import com.google.gwt.dom.client.TableRowElement;
+import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
-import com.google.gwt.dom.client.TableCellElement;
-import com.google.gwt.dom.client.TableRowElement;
-import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -1834,8 +1834,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 MouseEventDetails details = new MouseEventDetails(event);
                 client.updateVariable(paintableId, "headerClickEvent",
                         details.toString(), false);
-                client.updateVariable(paintableId, "headerClickCID", cid,
-                        immediate);
+                client.updateVariable(paintableId, "headerClickCID", cid, true);
             }
         }
 
@@ -2713,8 +2712,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 MouseEventDetails details = new MouseEventDetails(event);
                 client.updateVariable(paintableId, "footerClickEvent",
                         details.toString(), false);
-                client.updateVariable(paintableId, "footerClickCID", cid,
-                        immediate);
+                client.updateVariable(paintableId, "footerClickCID", cid, true);
             }
         }
 
