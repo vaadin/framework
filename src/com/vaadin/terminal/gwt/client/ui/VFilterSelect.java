@@ -1327,7 +1327,11 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             setPromptingOff(text);
             selectedOptionKey = currentSuggestion.key;
         } else {
-            setPromptingOn();
+            if (focused) {
+                setPromptingOff("");
+            } else {
+                setPromptingOn();
+            }
             selectedOptionKey = null;
         }
         lastFilter = "";
