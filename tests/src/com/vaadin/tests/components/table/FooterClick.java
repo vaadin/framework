@@ -4,8 +4,11 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Table.FooterClickEvent;
 
 @SuppressWarnings("serial")
@@ -23,6 +26,7 @@ public class FooterClick extends TestBase {
         table.setHeight("400px");
         table.setImmediate(true);
         table.setFooterVisible(true);
+        table.setColumnReorderingAllowed(true);
 
         table.setColumnFooter(COLUMN1_PROPERTY_ID, "fuu");
         table.setColumnFooter(COLUMN2_PROPERTY_ID, "bar");
@@ -37,6 +41,31 @@ public class FooterClick extends TestBase {
                 columnField.setValue(event.getPropertyId());
             }
         });
+
+        CheckBox immediateCheckbox = new CheckBox("Immediate");
+        immediateCheckbox.setImmediate(true);
+        immediateCheckbox.setValue(table.isImmediate());
+        immediateCheckbox.addListener(new ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                table.setImmediate(event.getButton().booleanValue());
+            }
+        });
+
+        CheckBox columnReorderingCheckbox = new CheckBox(
+                "Column reordering allowed");
+        columnReorderingCheckbox.setImmediate(true);
+        columnReorderingCheckbox.setValue(table.isColumnReorderingAllowed());
+        columnReorderingCheckbox.addListener(new ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                table.setColumnReorderingAllowed(event.getButton()
+                        .booleanValue());
+            }
+        });
+
+        addComponent(immediateCheckbox);
+        addComponent(columnReorderingCheckbox);
 
         addComponent(table);
         addComponent(columnField);
