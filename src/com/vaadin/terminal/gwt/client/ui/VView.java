@@ -12,8 +12,11 @@ import java.util.Set;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -82,6 +85,16 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      * or if the application and parent frame are in different domains.
      */
     private Element parentFrame;
+
+    private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
+            VPanel.CLICK_EVENT_IDENTIFIER) {
+
+        @Override
+        protected <H extends EventHandler> HandlerRegistration registerHandler(
+                H handler, Type<H> type) {
+            return addDomHandler(handler, type);
+        }
+    };
 
     public VView(String elementId) {
         super();
@@ -186,6 +199,8 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         if (uidl.hasAttribute("name")) {
             client.setWindowName(uidl.getStringAttribute("name"));
         }
+
+        clickEventHandler.handleEventHandlerRegistration(client);
 
         if (!isEmbedded()) {
             // only change window title if we're in charge of the whole page
