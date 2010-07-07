@@ -112,6 +112,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
 
         GridLayout gl = new GridLayout(4, 4);
         gl.setHeight("400px");
+        gl.setWidth("564px");
         gl.setStyleName("borders");
         gl.setSpacing(true);
         addContent(gl, 4);
