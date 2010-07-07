@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_4_0_dev-20100607";}
-.v-theme-version-6_4_0_dev-20100607 {display: none;}
+.v-theme-version:after {content:"6_4_0_dev-20100707";}
+.v-theme-version-6_4_0_dev-20100707 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -175,6 +175,13 @@
 	vertical-align: middle;
 	white-space: nowrap;
 }
+
+/* Fix for IE6/IE7 issue where checkbox moves 1 pixel down after selection (#4636) */
+.v-ie6 .v-checkbox,
+.v-ie7 .v-checkbox {
+	vertical-align: baseline;
+}
+
 .v-checkbox .v-icon {
 	margin: 0 2px;
 }
@@ -506,6 +513,9 @@ div.v-app-loading {
 .v-datefield-calendarpanel td {
 	padding: 0;
 	margin: 0;
+}
+.v-datefield-calendarpanel:focus{
+	outline:none;	
 }
 .v-datefield-calendarpanel-header td {
 	text-align: center;
