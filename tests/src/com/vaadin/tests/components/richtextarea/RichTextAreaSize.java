@@ -26,8 +26,8 @@ public class RichTextAreaSize extends TestBase {
         RichTextArea second = new RichTextArea();
         RichTextArea third = new RichTextArea();
 
-        first.setWidth("100px");
-        first.setHeight("100px");
+        first.setWidth("150px");
+        first.setHeight("400px");
         second.setSizeFull();
         third.setSizeUndefined();
 
