@@ -50,30 +50,16 @@ contains a number of significant enhancements.</p>
 
     <ul>
       <li>Footer - great for calculating sums, etc. Use <tt>setFooterVisible(true)</tt> to enable the footer and <tt>setColumnFooter()</tt> to set the footer text for a specific column. (<a href="http://dev.vaadin.com/ticket/1553">#1553</a>)</li>
-      <li>Header (<a href="http://dev.vaadin.com/ticket/4515">#4515</a>) and footer (<a href="http://dev.vaadin.com/ticket/4516">#4516</a>) click handlers</li>
+      <li>Header (<a href="http://dev.vaadin.com/ticket/4515">#4515</a>) and footer (<a href="http://dev.vaadin.com/ticket/4516">#4516</a>) click listeners</li>
       <li><p>Column resize events (<b>ColumnResizeEvent</b>), which can be handled with <b>ColumnResizeListener</b></p></li>
     </ul>
   </li>
   
-  <li><p>Possibility for lazy loading of client-side components (aka GWT code splitting), which speeds up load times; see <a href="http://dev.vaadin.com/wiki/WidgetSet">more details</a></p>
-  
-  <ul>
-    <li>In the rare case that you have extended the <b>DefaultWidgetSet</b> class, please notice that earlier, the custom entry point was defined in the <tt>.gwt.xml</tt> file as follows:
-    
-    <pre>    &lt;entry-point class="com.example.MyExtendedWidgetSet" /&gt;</pre>
-    
-    Now you need to write as follows:
-       <pre>    &lt;replace-with class="com.example.MyExtendedWidgetSet"&gt;
-        &lt;when-type-is class="com.vaadin.terminal.gwt.client.WidgetSet" /&gt;
-    &lt;/replace-with&gt;</pre>
-    </li>
-  </ul>
-  
-  </li>
+  <li><p>Possibility for lazy loading of client-side components (aka GWT code splitting), which speeds up load times; see <a href="http://dev.vaadin.com/wiki/WidgetSet">more details</a></p></li>
 
   <li><p>HTTP-level tester compatibility (JMeter, etc)</p></li>
 
-  <li><p><b>DateField</b> enhancements: input prompt and tab behavior</p></li>
+  <li><p><b>DateField</b> enhancements: input prompt, tab behavior and invalid date handling</p></li>
   
   <li><p>Indexed access to contained components in ordered layouts (<b>VerticalLayout</b>, <b>HorizontalLayout</b>, and <b>FormLayout</b>) with <tt>getComponentIndex()</tt> and <tt>getComponent(int index)</tt> (<a href="http://dev.vaadin.com/ticket/4609">#4609</a>)</p></li>
 
@@ -81,12 +67,15 @@ contains a number of significant enhancements.</p>
 
   <li><p>Ability to disable items in an <b>OptionGroup</b> with <tt>setItemEnabled()</tt> (<a href="http://dev.vaadin.com/ticket/3720">#3720</a>)</p></li>
 
-  <li>Added <tt>getPortletConfig()</tt> access method to <b>PortletApplicationContext2</b>.
+  <li><p>Added <tt>getPortletConfig()</tt> access method to <b>PortletApplicationContext2</b>.
 	It allows obtaining the portlet configuration, which provides access to resource
-	bundles, portlet init parameters, etc. (<a href="http://dev.vaadin.com/ticket/3988">#3988</a>)</li>
+	bundles, portlet init parameters, etc. (<a href="http://dev.vaadin.com/ticket/3988">#3988</a>)</p></li>
+	
+  <li><p>There is a new <b>TreeTable</b> component (<a href="http://dev.vaadin.com/ticket/955">#955</a>). It is not yet included in the core library, but is <a href="http://vaadin.com/directory#addon/vaadin-treetable">available for download</a> from the Vaadin Directory.</p></li>
 </ul>
 
-<p>In addition, there is a new <b>TreeTable</b> component (<a href="http://dev.vaadin.com/ticket/955">#955</a>). It is not yet included in the core library, but is <a href="http://vaadin.com/directory#addon/vaadin-treetable">available for download</a> from the Vaadin Directory.</p>
+<p>In addition, a significant number of bug fixes and javadoc improvements have been made.<br />
+Quality has been ensured by extensive automated testing: 910/910 tests passed for this release.</p>
 
 <h3>Backward Incompatible API Changes</h3>
 
@@ -105,6 +94,17 @@ contains a number of significant enhancements.</p>
 		application behavior without causing any compile- or runtime-errors.</p></li>
 	</ul>
   </li>
+  
+  <li>In the rare case that you have extended the <b>DefaultWidgetSet</b> class, please notice that earlier, the custom entry point was defined in the <tt>.gwt.xml</tt> file as follows:
+    
+    <pre>    &lt;entry-point class="com.example.MyExtendedWidgetSet" /&gt;</pre>
+    
+    Now you need to write as follows:
+       <pre>    &lt;replace-with class="com.example.MyExtendedWidgetSet"&gt;
+        &lt;when-type-is class="com.vaadin.terminal.gwt.client.WidgetSet" /&gt;
+    &lt;/replace-with&gt;</pre>
+  </li>
+  
 </ul>
 
 <h3>Change Log, Future Releases, and Upgrading</h3>
@@ -299,7 +299,6 @@ under the Google App Engine.</p>
 <p>The following closed issues have been included in this release:</p>
 	
 <ul>
-  <li><a href="http://dev.vaadin.com/ticket/955">#955</a>: Tree table</li>
   <li><a href="http://dev.vaadin.com/ticket/1086">#1086</a>: Tree: Keyboard navigation</li>
   <li><a href="http://dev.vaadin.com/ticket/1553">#1553</a>: Table: add footer element</li>
   <li><a href="http://dev.vaadin.com/ticket/2228">#2228</a>: Cannot get multiple causes from InvalidValueException</li>
@@ -324,7 +323,6 @@ under the Google App Engine.</p>
   <li><a href="http://dev.vaadin.com/ticket/4515">#4515</a>: Add support for Table header click listener</li>
   <li><a href="http://dev.vaadin.com/ticket/4516">#4516</a>: Add support for Table footer click listener</li>
   <li><a href="http://dev.vaadin.com/ticket/4567">#4567</a>: FormLayout doesn't focus the fields when clicking on their caption</li>
-  <li><a href="http://dev.vaadin.com/ticket/4576">#4576</a>: "Building of 6.4 branch fails with ""An  exception has occurred in the compiler"""</li>
   <li><a href="http://dev.vaadin.com/ticket/4581">#4581</a>: Dropdowns in a table auto-close when clicked in IE</li>
   <li><a href="http://dev.vaadin.com/ticket/4595">#4595</a>: BeanItemContainer: no warning about use of Bean's hashCode</li>
   <li><a href="http://dev.vaadin.com/ticket/4609">#4609</a>: Retrieving an index of a component in an AbstractOrderedLayout</li>
