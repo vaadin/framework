@@ -86,9 +86,8 @@ public class WidgetSetBuilder {
                             + "     Multiple browsers can be specified for GWT 1.7 as a comma separated\n"
                             + "     list. The supported user agents at the moment of writing were:\n"
                             + "     ie6,ie8,gecko,gecko1_8,safari,opera\n\n"
-                            + "     The value gecko is used for Firefox 3 and later, gecko1_8 is for\n"
-                            + "     Firefox 2 and safari is used for  webkit based browsers including\n"
-                            + "     Google Chrome.\n"
+                            + "     The value gecko1_8 is used for Firefox 3 and later and safari is used for\n"
+                            + "     webkit based browsers including Google Chrome.\n"
                             + "    -->\n"
                             + "    <!-- <set-property name=\"user.agent\" value=\"gecko1_8\"/> -->\n");
             printStream.print("\n</module>\n");
