@@ -731,8 +731,8 @@ public class ApplicationConnection {
             json = parseJSONResponse(jsonText);
         } catch (final Exception e) {
             endRequest();
-            showCommunicationError(e.getMessage() + " - Original JSON-text:");
-            console.log(jsonText);
+            showCommunicationError(e.getMessage() + " - Original JSON-text:"
+                    + jsonText);
             return;
         }
 
