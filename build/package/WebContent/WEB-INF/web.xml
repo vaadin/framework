@@ -146,6 +146,16 @@
 			<param-value>com.vaadin.demo.themes.ReindeerThemeStyles</param-value>
 		</init-param>
 	</servlet>
+	
+	<!-- RunoTheme demo -->
+	<servlet>
+		<servlet-name>RunoTheme</servlet-name>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.vaadin.demo.themes.RunoTheme</param-value>
+		</init-param>
+	</servlet>
 
 	<!-- Servlet Mappings below - see servlets for comments -->
 	<servlet-mapping>
@@ -187,6 +197,10 @@
 	<servlet-mapping>
 		<servlet-name>ReindeerThemeStyles</servlet-name>
 		<url-pattern>/ReindeerTheme/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>RunoTheme</servlet-name>
+		<url-pattern>/RunoTheme/*</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
