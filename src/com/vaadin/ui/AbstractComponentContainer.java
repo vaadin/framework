@@ -259,7 +259,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
         if (childrenMayBecomeUndefined) {
             Collection<Component> previouslyInvalidComponents = invalidChildren;
             invalidChildren = getInvalidSizedChildren(vertical);
-            if (previouslyInvalidComponents != null) {
+            if (previouslyInvalidComponents != null && invalidChildren != null) {
                 for (Iterator<Component> iterator = invalidChildren.iterator(); iterator
                         .hasNext();) {
                     Component component = iterator.next();
