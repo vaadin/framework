@@ -96,43 +96,9 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         }
     };
 
-    public VView(String elementId) {
+    public VView() {
         super();
         setStyleName(CLASSNAME);
-
-        DOM.sinkEvents(getElement(), Event.ONKEYDOWN | Event.ONSCROLL);
-
-        // iview is focused when created so element needs tabIndex
-        // 1 due 0 is at the end of natural tabbing order
-        DOM.setElementProperty(getElement(), "tabIndex", "1");
-
-        RootPanel root = RootPanel.get(elementId);
-        root.add(this);
-        root.removeStyleName("v-app-loading");
-
-        BrowserInfo browser = BrowserInfo.get();
-
-        // set focus to iview element by default to listen possible keyboard
-        // shortcuts
-        if (browser.isOpera() || browser.isSafari()
-                && browser.getWebkitVersion() < 526) {
-            // old webkits don't support focusing div elements
-            Element fElem = DOM.createInputCheck();
-            DOM.setStyleAttribute(fElem, "margin", "0");
-            DOM.setStyleAttribute(fElem, "padding", "0");
-            DOM.setStyleAttribute(fElem, "border", "0");
-            DOM.setStyleAttribute(fElem, "outline", "0");
-            DOM.setStyleAttribute(fElem, "width", "1px");
-            DOM.setStyleAttribute(fElem, "height", "1px");
-            DOM.setStyleAttribute(fElem, "position", "absolute");
-            DOM.setStyleAttribute(fElem, "opacity", "0.1");
-            DOM.appendChild(getElement(), fElem);
-            Util.focus(fElem);
-        } else {
-            Util.focus(getElement());
-        }
-
-        parentFrame = getParentFrame();
     }
 
     public String getTheme() {
@@ -689,6 +655,42 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             windows.add(widget);
         }
         return windows;
+    }
+
+    public void init(String rootPanelId) {
+        DOM.sinkEvents(getElement(), Event.ONKEYDOWN | Event.ONSCROLL);
+
+        // iview is focused when created so element needs tabIndex
+        // 1 due 0 is at the end of natural tabbing order
+        DOM.setElementProperty(getElement(), "tabIndex", "1");
+
+        RootPanel root = RootPanel.get(rootPanelId);
+        root.add(this);
+        root.removeStyleName("v-app-loading");
+
+        BrowserInfo browser = BrowserInfo.get();
+
+        // set focus to iview element by default to listen possible keyboard
+        // shortcuts
+        if (browser.isOpera() || browser.isSafari()
+                && browser.getWebkitVersion() < 526) {
+            // old webkits don't support focusing div elements
+            Element fElem = DOM.createInputCheck();
+            DOM.setStyleAttribute(fElem, "margin", "0");
+            DOM.setStyleAttribute(fElem, "padding", "0");
+            DOM.setStyleAttribute(fElem, "border", "0");
+            DOM.setStyleAttribute(fElem, "outline", "0");
+            DOM.setStyleAttribute(fElem, "width", "1px");
+            DOM.setStyleAttribute(fElem, "height", "1px");
+            DOM.setStyleAttribute(fElem, "position", "absolute");
+            DOM.setStyleAttribute(fElem, "opacity", "0.1");
+            DOM.appendChild(getElement(), fElem);
+            Util.focus(fElem);
+        } else {
+            Util.focus(getElement());
+        }
+
+        parentFrame = getParentFrame();
     }
 
 }

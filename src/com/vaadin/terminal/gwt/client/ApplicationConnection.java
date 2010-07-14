@@ -166,7 +166,8 @@ public class ApplicationConnection {
 
         initializeClientHooks();
 
-        view = new VView(cnf.getRootPanelId());
+        view = new VView();
+        view.init(cnf.getRootPanelId());
         showLoadingIndicator();
 
     }
@@ -1580,15 +1581,19 @@ public class ApplicationConnection {
 
         // Switch to correct implementation if needed
         if (!widgetSet.isCorrectImplementation(component, uidl, configuration)) {
-            final Container parent = Util.getLayout(component);
-            if (parent != null) {
-                final Widget w = (Widget) widgetSet.createWidget(uidl,
-                        configuration);
-                parent.replaceChildComponent(component, w);
-                unregisterPaintable((Paintable) component);
-                registerPaintable(uidl.getId(), (Paintable) w);
-                ((Paintable) w).updateFromUIDL(uidl, this);
-                return true;
+            final Widget w = (Widget) widgetSet.createWidget(uidl,
+                    configuration);
+            // deferred binding check TODO change isCorrectImplementation to use
+            // stored detected class, making this innecessary
+            if (w.getClass() != component.getClass()) {
+                final Container parent = Util.getLayout(component);
+                if (parent != null) {
+                    parent.replaceChildComponent(component, w);
+                    unregisterPaintable((Paintable) component);
+                    registerPaintable(uidl.getId(), (Paintable) w);
+                    ((Paintable) w).updateFromUIDL(uidl, this);
+                    return true;
+                }
             }
         }
 
