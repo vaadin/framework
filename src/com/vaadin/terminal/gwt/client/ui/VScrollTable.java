@@ -442,7 +442,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // Arrows moves the selection and clears previous selections
             if (selectMode > SELECT_MODE_NONE && !ctrlSelect && !shiftSelect) {
                 deselectAll();
-                focusedRow.toggleSelection(!ctrlSelect);
+                focusedRow.toggleSelection();
                 selectionRangeStart = focusedRow;
             }
 
@@ -690,7 +690,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             for (String string : selectedKeys) {
                 VScrollTableRow row = getRenderedRowByKey(string);
                 if (row != null && !row.isSelected()) {
-                    row.toggleSelection(false);
+                    row.toggleSelection();
                 }
             }
         }
@@ -3616,7 +3616,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     }
                 }
                 if (uidl.hasAttribute("selected") && !isSelected()) {
-                    toggleSelection(true);
+                    toggleSelection();
                 }
             }
 
@@ -3799,7 +3799,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                         .getMetaKey())
                                         && selectMode == SELECT_MODE_MULTI
                                         && multiselectmode == MULTISELECT_MODE_DEFAULT) {
-                                    toggleSelection(true);
+                                    toggleSelection();
                                     setRowFocus(this);
 
                                     // Ctrl click (Single selection)
@@ -3813,7 +3813,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                             deselectAll();
                                         }
 
-                                        toggleSelection(true);
+                                        toggleSelection();
                                         setRowFocus(this);
                                     }
 
@@ -3830,7 +3830,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                     }
 
                                     selectionRangeStart = this;
-                                    toggleSelection(multiselectmode == MULTISELECT_MODE_DEFAULT);
+                                    toggleSelection();
                                     setRowFocus(this);
                                 }
 
@@ -4013,7 +4013,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             /**
              * Toggle the selection of the row
              */
-            public void toggleSelection(boolean ctrlSelect) {
+            public void toggleSelection() {
                 selected = !selected;
                 selectionChanged = true;
                 if (selected) {
@@ -4042,7 +4042,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 if (selectMode == SELECT_MODE_SINGLE) {
                     // No previous selection found
                     deselectAll();
-                    toggleSelection(true);
+                    toggleSelection();
                     return;
                 }
 
@@ -4090,7 +4090,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     if (row == startRow || startSelection) {
                         startSelection = true;
                         if (!row.isSelected()) {
-                            row.toggleSelection(false);
+                            row.toggleSelection();
                         }
                         selectedRowKeys.add(row.getKey());
                     }
@@ -4213,7 +4213,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         for (int i = 0; i < keys.length; i++) {
             final VScrollTableRow row = getRenderedRowByKey((String) keys[i]);
             if (row != null && row.isSelected()) {
-                row.toggleSelection(false);
+                row.toggleSelection();
                 removeKeyFromSelectedRange(Integer.parseInt(row.getKey()));
             }
         }
@@ -4916,11 +4916,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 boolean wasSelected = focusedRow.isSelected();
                 deselectAll();
                 if (!wasSelected || !nullSelectionAllowed) {
-                    focusedRow.toggleSelection(true);
+                    focusedRow.toggleSelection();
                 }
-
             } else {
-                focusedRow.toggleSelection(true);
+                focusedRow.toggleSelection();
             }
 
             sendSelectedRows();
