@@ -291,7 +291,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         if (getParent() == null) {
             return application;
         }
-        return ((Window) getParent()).getApplication();
+        return (getParent()).getApplication();
     }
 
     /**
@@ -306,8 +306,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * @see Component#getParent()
      */
     @Override
-    public final Component getParent() {
-        return super.getParent();
+    public final Window getParent() {
+        return (Window) super.getParent();
     }
 
     /*
@@ -334,7 +334,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         if (getParent() != null) {
             // this is subwindow, attach to main level instead
             // TODO hold internal list also and remove on detach
-            Window mainWindow = (Window) getParent();
+            Window mainWindow = getParent();
             mainWindow.addURIHandler(handler);
         } else {
             if (uriHandlerList == null) {
@@ -359,7 +359,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     public void removeURIHandler(URIHandler handler) {
         if (getParent() != null) {
             // this is subwindow
-            Window mainWindow = (Window) getParent();
+            Window mainWindow = getParent();
             mainWindow.removeURIHandler(handler);
         } else {
             if (handler == null || uriHandlerList == null) {
@@ -426,7 +426,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         if (getParent() != null) {
             // this is subwindow
             // TODO hold internal list also and remove on detach
-            Window mainWindow = (Window) getParent();
+            Window mainWindow = getParent();
             mainWindow.addParameterHandler(handler);
         } else {
             if (parameterHandlerList == null) {
@@ -452,7 +452,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     public void removeParameterHandler(ParameterHandler handler) {
         if (getParent() != null) {
             // this is subwindow
-            Window mainWindow = (Window) getParent();
+            Window mainWindow = getParent();
             mainWindow.removeParameterHandler(handler);
         } else {
             if (handler == null || parameterHandlerList == null) {
@@ -508,7 +508,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      */
     public String getTheme() {
         if (getParent() != null) {
-            return ((Window) getParent()).getTheme();
+            return (getParent()).getTheme();
         }
         if (theme != null) {
             return theme;
@@ -1110,7 +1110,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * </p>
      */
     protected void close() {
-        Window parent = (Window) getParent();
+        Window parent = getParent();
         if (parent == null) {
             fireClose();
         } else {
@@ -1607,7 +1607,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     void setFocusedComponent(Focusable focusable) {
         if (getParent() != null) {
             // focus is handled by main windows
-            ((Window) getParent()).setFocusedComponent(focusable);
+            (getParent()).setFocusedComponent(focusable);
         } else {
             pendingFocus = focusable;
             requestRepaint();
