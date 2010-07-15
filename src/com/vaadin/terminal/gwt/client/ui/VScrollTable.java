@@ -3825,12 +3825,23 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                                     // click
                                 } else {
-                                    if (multiselectmode == MULTISELECT_MODE_DEFAULT) {
-                                        deselectAll();
-                                    }
+                                    boolean currentlyJustThisRowSelected = selectedRowKeys
+                                            .size() == 1
+                                            && selectedRowKeys
+                                                    .contains(getKey());
+
+                                    if (!currentlyJustThisRowSelected) {
+                                        if (multiselectmode == MULTISELECT_MODE_DEFAULT) {
+                                            deselectAll();
+                                        }
+                                        toggleSelection();
+                                    } /*
+                                       * else NOP to avoid excessive server
+                                       * visits (selection is removed with
+                                       * CTRL/META click)
+                                       */
 
                                     selectionRangeStart = this;
-                                    toggleSelection();
                                     setRowFocus(this);
                                 }
 
