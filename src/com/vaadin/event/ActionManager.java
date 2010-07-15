@@ -129,7 +129,7 @@ public class ActionManager implements Action.Container, Action.Handler,
         HashSet<Action> actions = new HashSet<Action>();
         if (actionHandlers != null) {
             for (Action.Handler handler : actionHandlers) {
-                Action[] as = handler.getActions(actionTarget, this.viewer);
+                Action[] as = handler.getActions(actionTarget, viewer);
                 if (as != null) {
                     for (Action action : as) {
                         actions.add(action);
@@ -144,7 +144,7 @@ public class ActionManager implements Action.Container, Action.Handler,
         if (!actions.isEmpty()) {
             actionMapper = new KeyMapper();
 
-            paintTarget.addVariable(this.viewer, "action", "");
+            paintTarget.addVariable(viewer, "action", "");
             paintTarget.startTag("actions");
 
             for (final Action a : actions) {
@@ -210,8 +210,10 @@ public class ActionManager implements Action.Container, Action.Handler,
 
     public void handleAction(Action action, Object sender, Object target) {
         if (actionHandlers != null) {
-            for (Handler h : actionHandlers) {
-                h.handleAction(action, sender, target);
+            Handler[] array = actionHandlers.toArray(new Handler[actionHandlers
+                    .size()]);
+            for (Handler handler : array) {
+                handler.handleAction(action, sender, target);
             }
         }
         if (ownActions != null && ownActions.contains(action)
