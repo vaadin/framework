@@ -828,6 +828,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             if (!focusedRow.isAttached()) {
                 // focused row has orphaned, can't focus
                 focusedRow = null;
+                if (SELECT_MODE_SINGLE == selectMode
+                        && selectedRowKeys.size() > 0) {
+                    // try to focusa row currently selected and in viewport
+                    String selectedRowKey = selectedRowKeys.iterator().next();
+                    if (selectedRowKey != null) {
+                        setRowFocus(getRenderedRowByKey(selectedRowKey));
+                    }
+                }
+                // TODO what should happen in multiselect mode?
             } else {
                 setRowFocus(getRenderedRowByKey(focusedRow.getKey()));
             }
