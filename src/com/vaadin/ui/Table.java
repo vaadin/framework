@@ -1864,7 +1864,7 @@ public class Table extends AbstractSelect implements Action.Container,
         Object currentItemId = startItemId;
 
         Container.Ordered ordered = (Container.Ordered) items;
-        while ((currentItemId != null) && currentItemId.equals(endItemId)) {
+        while ((currentItemId != null) && !currentItemId.equals(endItemId)) {
             currentItemId = ordered.nextItemId(currentItemId);
             if (currentItemId != null) {
                 ids.add(currentItemId);
