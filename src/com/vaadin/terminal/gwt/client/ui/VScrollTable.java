@@ -687,10 +687,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (uidl.hasVariable("selected")) {
             final Set<String> selectedKeys = uidl
                     .getStringArrayVariableAsSet("selected");
-            for (String string : selectedKeys) {
-                VScrollTableRow row = getRenderedRowByKey(string);
-                if (row != null && !row.isSelected()) {
-                    row.toggleSelection();
+            if (scrollBody != null) {
+                Iterator<Widget> iterator = scrollBody.iterator();
+                while (iterator.hasNext()) {
+                    VScrollTableRow row = (VScrollTableRow) iterator.next();
+                    boolean selected = selectedKeys.contains(row.getKey());
+                    if (selected != row.isSelected()) {
+                        row.toggleSelection();
+                    }
                 }
             }
         }
@@ -792,6 +796,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         hideScrollPositionAnnotation();
         purgeUnregistryBag();
 
+        // selection is no in sync with server, avoid excessive server visits by
+        // clearing to flag used during the normal operation
+        selectionChanged = false;
+
         // This is called when the Home button has been pressed and the pages
         // changes
         if (selectFirstItemInNextRender) {
@@ -817,7 +825,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         if (focusedRow != null) {
-            setRowFocus(getRenderedRowByKey(focusedRow.getKey()));
+            if (!focusedRow.isAttached()) {
+                // focused row has orphaned, can't focus
+                focusedRow = null;
+            } else {
+                setRowFocus(getRenderedRowByKey(focusedRow.getKey()));
+            }
         }
 
         if (!isFocusable()) {
@@ -4838,20 +4851,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // Set new focused row
             focusedRow = row;
 
-            // Scroll up or down if needed
-            int rowTop = focusedRow.getElement().getAbsoluteTop();
-            int scrollTop = scrollBodyPanel.getElement().getAbsoluteTop();
-            int scrollBottom = scrollTop
-                    + scrollBodyPanel.getElement().getOffsetHeight();
-            if (rowTop > scrollBottom - focusedRow.getOffsetHeight()) {
-                scrollBodyPanel.setScrollPosition(scrollBodyPanel
-                        .getScrollPosition()
-                        + focusedRow.getOffsetHeight());
-            } else if (rowTop < scrollTop) {
-                scrollBodyPanel.setScrollPosition(scrollBodyPanel
-                        .getScrollPosition()
-                        - focusedRow.getOffsetHeight());
-            }
+            row.getElement().scrollIntoView();
 
             return true;
         }
