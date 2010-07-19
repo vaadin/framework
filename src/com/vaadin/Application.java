@@ -1532,8 +1532,8 @@ public abstract class Application implements URIHandler,
      * <p>
      * Vaadin gets the SystemMessages from your application by calling a static
      * getSystemMessages() method. By default the
-     * Application.getSystemMessages() is used. Your can customize this by
-     * defining the a static MyApplication.getSystemMessages() and returning
+     * Application.getSystemMessages() is used. You can customize this by
+     * defining a static MyApplication.getSystemMessages() and returning
      * CustomizedSystemMessages. Note that getSystemMessages() is static -
      * changing the system messages will by default change the message for all
      * users of the application.
