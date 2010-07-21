@@ -926,6 +926,9 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     public void attach() {
         super.attach();
         layout.attach();
+        if (formFooter != null) {
+            formFooter.attach();
+        }
     }
 
     /**
@@ -937,6 +940,9 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     public void detach() {
         super.detach();
         layout.detach();
+        if (formFooter != null) {
+            formFooter.detach();
+        }
     }
 
     /**
