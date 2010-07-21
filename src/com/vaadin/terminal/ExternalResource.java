@@ -19,12 +19,18 @@ import com.vaadin.service.FileTypeResolver;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class ExternalResource implements Resource, Serializable {
 
     /**
      * Url of the download.
      */
     private String sourceURL = null;
+
+    /**
+     * MIME Type for the resource
+     */
+    private String mimeType = null;
 
     /**
      * Creates a new download component for downloading directly from given URL.
@@ -45,6 +51,19 @@ public class ExternalResource implements Resource, Serializable {
      * 
      * @param sourceURL
      *            the source URL.
+     * @param mimeType
+     *            the MIME Type
+     */
+    public ExternalResource(URL sourceURL, String mimeType) {
+        this(sourceURL);
+        this.mimeType = mimeType;
+    }
+
+    /**
+     * Creates a new download component for downloading directly from given URL.
+     * 
+     * @param sourceURL
+     *            the source URL.
      */
     public ExternalResource(String sourceURL) {
         if (sourceURL == null) {
@@ -52,6 +71,19 @@ public class ExternalResource implements Resource, Serializable {
         }
 
         this.sourceURL = sourceURL.toString();
+    }
+
+    /**
+     * Creates a new download component for downloading directly from given URL.
+     * 
+     * @param sourceURL
+     *            the source URL.
+     * @param mimeType
+     *            the MIME Type
+     */
+    public ExternalResource(String sourceURL, String mimeType) {
+        this(sourceURL);
+        this.mimeType = mimeType;
     }
 
     /**
@@ -69,7 +101,17 @@ public class ExternalResource implements Resource, Serializable {
      * @see com.vaadin.terminal.Resource#getMIMEType()
      */
     public String getMIMEType() {
-        return FileTypeResolver.getMIMEType(getURL().toString());
+        if (mimeType == null) {
+            mimeType = FileTypeResolver.getMIMEType(getURL().toString());
+        }
+        return mimeType;
+    }
+
+    /**
+     * Sets the MIME type of the resource.
+     */
+    public void setMIMEType(String mimeType) {
+        this.mimeType = mimeType;
     }
 
 }
