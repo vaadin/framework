@@ -562,7 +562,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     public void updateCalendar() {
         updateCalendarOnly();
-        if (datefield instanceof VTextualDate) {
+        if (datefield instanceof VPopupCalendar) {
+            ((VPopupCalendar) datefield).buildDate(true);
+        } else if (datefield instanceof VTextualDate) {
             ((VTextualDate) datefield).buildDate();
         }
     }

@@ -274,6 +274,13 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         }
     }
 
+    protected void buildDate(boolean forceValid) {
+        if (forceValid) {
+            parsable = true;
+        }
+        buildDate();
+    }
+
     /*
      * (non-Javadoc)
      * 
