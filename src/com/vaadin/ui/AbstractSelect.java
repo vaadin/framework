@@ -1541,10 +1541,10 @@ public abstract class AbstractSelect extends AbstractField implements
     }
 
     /**
-     * Allow of disallow empty selection. If the select is in single-select
-     * mode, you can make an item represent the empty selection by calling
-     * <code>setNullSelectionItemId()</code>. This way you can for instance set
-     * an icon and caption for the null selection item.
+     * Allow or disallow empty selection by the user. If the select is in
+     * single-select mode, you can make an item represent the empty selection by
+     * calling <code>setNullSelectionItemId()</code>. This way you can for
+     * instance set an icon and caption for the null selection item.
      * 
      * @param nullSelectionAllowed
      *            whether or not to allow empty selection
@@ -1559,7 +1559,7 @@ public abstract class AbstractSelect extends AbstractField implements
     }
 
     /**
-     * Checks if null empty selection is allowed.
+     * Checks if null empty selection is allowed by the user.
      * 
      * @return whether or not empty selection is allowed
      * @see #setNullSelectionAllowed(boolean)
