@@ -5,7 +5,6 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -62,7 +61,10 @@ public class VFormLayout extends SimplePanel implements Container {
     private String[] getStylesFromUIDL(UIDL uidl) {
         List<String> styles = new ArrayList<String>();
         if (uidl.hasAttribute("style")) {
-            styles = Arrays.asList(uidl.getStringAttribute("style").split(" "));
+            String[] stylesnames = uidl.getStringAttribute("style").split(" ");
+            for (String name : stylesnames) {
+                styles.add(name);
+            }
         }
 
         if (uidl.hasAttribute("disabled")) {
