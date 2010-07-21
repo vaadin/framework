@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_4_0_dev-20100707";}
-.v-theme-version-6_4_0_dev-20100707 {display: none;}
+.v-theme-version:after {content:"6_4_1_dev-20100721";}
+.v-theme-version-6_4_1_dev-20100721 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1868,6 +1868,10 @@ textarea.v-textarea-readonly:focus {
 .v-richtextarea .gwt-RichTextToolbar .gwt-ListBox {
 	width: 24.5%;
 	margin-right: 2px;
+}
+
+.v-richtextarea-readonly {
+	border: none;
 }
 
 .v-tree {

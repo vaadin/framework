@@ -91,4 +91,15 @@ public class RichTextArea extends TextField {
                 "RichTextArea does not support inputPrompt");
     }
 
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        super.setReadOnly(readOnly);
+        // IE6 cannot support multi-classname selectors properly
+        if (readOnly) {
+            addStyleName("v-richtextarea-readonly");
+        } else {
+            removeStyleName("v-richtextarea-readonly");
+        }
+    }
+
 }

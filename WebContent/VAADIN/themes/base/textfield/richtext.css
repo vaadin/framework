@@ -50,3 +50,7 @@
 	width: 24.5%;
 	margin-right: 2px;
 }
+
+.v-richtextarea-readonly {
+	border: none;
+}

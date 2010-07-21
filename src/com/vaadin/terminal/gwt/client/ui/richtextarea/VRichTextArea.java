@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -53,9 +54,9 @@ public class VRichTextArea extends Composite implements Paintable, Field,
 
     private boolean immediate = false;
 
-    private RichTextArea rta = new RichTextArea();
+    private RichTextArea rta;
 
-    private VRichTextToolbar formatter = new VRichTextToolbar(rta);
+    private VRichTextToolbar formatter;
 
     private HTML html = new HTML();
 
@@ -76,13 +77,11 @@ public class VRichTextArea extends Composite implements Paintable, Field,
 
     private String currentValue = "";
 
+    private boolean readOnly = false;
+
     public VRichTextArea() {
+        createRTAComponents();
         fp.add(formatter);
-
-        rta.setWidth("100%");
-        rta.addBlurHandler(this);
-        rta.addKeyDownHandler(this);
-
         fp.add(rta);
 
         initWidget(fp);
@@ -90,18 +89,39 @@ public class VRichTextArea extends Composite implements Paintable, Field,
 
     }
 
+    private void createRTAComponents() {
+        rta = new RichTextArea();
+        rta.setWidth("100%");
+        rta.addBlurHandler(this);
+        rta.addKeyDownHandler(this);
+        formatter = new VRichTextToolbar(rta);
+    }
+
     public void setEnabled(boolean enabled) {
         if (this.enabled != enabled) {
-            rta.setEnabled(enabled);
-            if (enabled) {
-                fp.remove(html);
-                fp.add(rta);
-            } else {
-                html.setHTML(rta.getHTML());
-                fp.remove(rta);
-                fp.add(html);
-            }
+            // rta.setEnabled(enabled);
+            swapEditableArea();
             this.enabled = enabled;
+        }
+    }
+
+    /**
+     * Swaps html to rta and visa versa.
+     */
+    private void swapEditableArea() {
+        if (html.isAttached()) {
+            fp.remove(html);
+            if (BrowserInfo.get().isWebkit()) {
+                fp.remove(formatter);
+                createRTAComponents(); // recreate new RTA to bypass #5379
+                fp.add(formatter);
+            }
+            rta.setHTML(currentValue);
+            fp.add(rta);
+        } else {
+            html.setHTML(currentValue);
+            fp.remove(rta);
+            fp.add(html);
         }
     }
 
@@ -111,15 +131,21 @@ public class VRichTextArea extends Composite implements Paintable, Field,
 
         if (uidl.hasVariable("text")) {
             currentValue = uidl.getStringVariable("text");
-            rta.setHTML(currentValue);
-
+            if (rta.isAttached()) {
+                rta.setHTML(currentValue);
+            } else {
+                html.setHTML(currentValue);
+            }
         }
-        setEnabled(!uidl.getBooleanAttribute("disabled"));
+        if (!uidl.hasAttribute("cached")) {
+            setEnabled(!uidl.getBooleanAttribute("disabled"));
+        }
 
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
 
+        setReadOnly(uidl.getBooleanAttribute("readonly"));
         immediate = uidl.getBooleanAttribute("immediate");
         int newMaxLength = uidl.hasAttribute("maxLength") ? uidl
                 .getIntAttribute("maxLength") : -1;
@@ -133,6 +159,22 @@ public class VRichTextArea extends Composite implements Paintable, Field,
             maxLength = -1;
             keyPressHandler.removeHandler();
         }
+    }
+
+    private void setReadOnly(boolean b) {
+        if (isReadOnly() != b) {
+            swapEditableArea();
+            readOnly = b;
+            if (readOnly) {
+                formatter.setVisible(false);
+            } else {
+                formatter.setVisible(true);
+            }
+        }
+    }
+
+    private boolean isReadOnly() {
+        return readOnly;
     }
 
     // TODO is this really used, or does everything go via onBlur() only?
@@ -149,7 +191,13 @@ public class VRichTextArea extends Composite implements Paintable, Field,
             if (!html.equals(currentValue)) {
                 client.updateVariable(id, "text", html, immediate);
                 currentValue = html;
+            } else {
+                ApplicationConnection.getConsole().log(
+                        "RTE: Not updated: " + currentValue + "|" + html);
+
             }
+        } else {
+            ApplicationConnection.getConsole().log("RTE: No client or ID!");
         }
     }
 
