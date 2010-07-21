@@ -28,6 +28,8 @@ public class FormFieldCaptionsStyles extends TestBase {
 
         TextField field4 = new TextField("Disabled");
         field4.setEnabled(false);
+        field4.addStyleName("foobar"); // no visible change, but points out
+        // a regression #5377
         layout.addComponent(field4);
 
         addComponent(layout);
