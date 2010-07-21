@@ -191,13 +191,7 @@ public class VRichTextArea extends Composite implements Paintable, Field,
             if (!html.equals(currentValue)) {
                 client.updateVariable(id, "text", html, immediate);
                 currentValue = html;
-            } else {
-                ApplicationConnection.getConsole().log(
-                        "RTE: Not updated: " + currentValue + "|" + html);
-
             }
-        } else {
-            ApplicationConnection.getConsole().log("RTE: No client or ID!");
         }
     }
 
