@@ -24,8 +24,10 @@ import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
-public class VPanel extends SimplePanel implements Container {
+public class VPanel extends SimplePanel implements Container,
+        ShortcutActionHandlerOwner {
 
     public static final String CLICK_EVENT_IDENTIFIER = "click";
     public static final String CLASSNAME = "v-panel";
@@ -546,6 +548,10 @@ public class VPanel extends SimplePanel implements Container {
     protected void onAttach() {
         super.onAttach();
         detectContainerBorders();
+    }
+
+    public ShortcutActionHandler getShortcutActionHandler() {
+        return shortcutHandler;
     }
 
 }

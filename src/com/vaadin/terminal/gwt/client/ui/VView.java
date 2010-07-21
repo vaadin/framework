@@ -35,12 +35,13 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
 /**
  *
  */
 public class VView extends SimplePanel implements Container, ResizeHandler,
-        Window.ClosingHandler {
+        Window.ClosingHandler, ShortcutActionHandlerOwner {
 
     private static final String CLASSNAME = "v-view";
 
@@ -691,6 +692,10 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         }
 
         parentFrame = getParentFrame();
+    }
+
+    public ShortcutActionHandler getShortcutActionHandler() {
+        return actionHandler;
     }
 
 }

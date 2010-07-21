@@ -8,6 +8,8 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -15,15 +17,20 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RichTextArea;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.Field;
+import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
+import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
+import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
 /**
  * This class implements a basic client side rich text editor component.
@@ -32,7 +39,8 @@ import com.vaadin.terminal.gwt.client.ui.Field;
  * 
  */
 public class VRichTextArea extends Composite implements Paintable, Field,
-        ChangeHandler, BlurHandler, KeyPressHandler {
+        ChangeHandler, BlurHandler, KeyPressHandler, KeyDownHandler,
+        BeforeShortcutActionListener {
 
     /**
      * The input node CSS classname.
@@ -64,11 +72,16 @@ public class VRichTextArea extends Composite implements Paintable, Field,
 
     private HandlerRegistration keyPressHandler;
 
+    private ShortcutActionHandlerOwner hasShortcutActionHandler;
+
+    private String currentValue = "";
+
     public VRichTextArea() {
         fp.add(formatter);
 
         rta.setWidth("100%");
         rta.addBlurHandler(this);
+        rta.addKeyDownHandler(this);
 
         fp.add(rta);
 
@@ -97,7 +110,8 @@ public class VRichTextArea extends Composite implements Paintable, Field,
         id = uidl.getId();
 
         if (uidl.hasVariable("text")) {
-            rta.setHTML(uidl.getStringVariable("text"));
+            currentValue = uidl.getStringVariable("text");
+            rta.setHTML(currentValue);
 
         }
         setEnabled(!uidl.getBooleanAttribute("disabled"));
@@ -130,9 +144,12 @@ public class VRichTextArea extends Composite implements Paintable, Field,
      * Method is public to let popupview force synchronization on close.
      */
     public void synchronizeContentToServer() {
-        final String html = rta.getHTML();
         if (client != null && id != null) {
-            client.updateVariable(id, "text", html, immediate);
+            final String html = rta.getHTML();
+            if (!html.equals(currentValue)) {
+                client.updateVariable(id, "text", html, immediate);
+                currentValue = html;
+            }
         }
     }
 
@@ -249,6 +266,36 @@ public class VRichTextArea extends Composite implements Paintable, Field,
                 }
             });
         }
+    }
+
+    public void onKeyDown(KeyDownEvent event) {
+        // delegate to closest shortcut action handler
+        // throw event from the iframe forward to the shortcuthandler
+        ShortcutActionHandler shortcutHandler = getShortcutHandlerOwner()
+                .getShortcutActionHandler();
+        if (shortcutHandler != null) {
+            shortcutHandler
+                    .handleKeyboardEvent(com.google.gwt.user.client.Event
+                            .as(event.getNativeEvent()), this);
+        }
+    }
+
+    private ShortcutActionHandlerOwner getShortcutHandlerOwner() {
+        if (hasShortcutActionHandler == null) {
+            Widget parent = getParent();
+            while (parent != null) {
+                if (parent instanceof ShortcutActionHandlerOwner) {
+                    break;
+                }
+                parent = parent.getParent();
+            }
+            hasShortcutActionHandler = (ShortcutActionHandlerOwner) parent;
+        }
+        return hasShortcutActionHandler;
+    }
+
+    public void onBeforeShortcutAction(Event e) {
+        synchronizeContentToServer();
     }
 
 }

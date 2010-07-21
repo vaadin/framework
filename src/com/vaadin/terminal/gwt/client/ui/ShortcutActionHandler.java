@@ -12,12 +12,17 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.KeyboardListenerCollection;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
 
 /**
  * A helper class to implement keyboard shorcut handling. Keeps a list of owners
@@ -27,7 +32,45 @@ import com.vaadin.terminal.gwt.client.UIDL;
  * @author IT Mill ltd
  */
 public class ShortcutActionHandler {
-    private final ArrayList actions = new ArrayList();
+
+    /**
+     * An interface implemented by those users (most often {@link Container}s,
+     * but HasWidgets at least) of this helper class that want to support
+     * special components like {@link VRichTextArea} that don't properly
+     * propagate key down events. Those components can build support for
+     * shortcut actions by traversing the closest
+     * {@link ShortcutActionHandlerOwner} from the component hierarchy an
+     * passing keydown events to {@link ShortcutActionHandler}.
+     */
+    public interface ShortcutActionHandlerOwner extends HasWidgets {
+
+        /**
+         * Returns the ShortCutActionHandler currently used or null if there is
+         * currently no shortcutactionhandler
+         */
+        ShortcutActionHandler getShortcutActionHandler();
+    }
+
+    /**
+     * A focusable {@link Paintable} implementing this interface will be
+     * notified before shortcut actions are handled if it will be the target of
+     * the action (most commonly means it is the focused component during the
+     * keyboard combination is triggered by the user).
+     */
+    public interface BeforeShortcutActionListener extends Paintable {
+        /**
+         * This method is called by ShortcutActionHandler before firing the
+         * shortcut if the Paintable is currently focused (aka the target of the
+         * shortcut action). Eg. a field can update its possibly changed value
+         * to the server before shortcut action is fired.
+         * 
+         * @param e
+         *            the event that triggered the shortcut action
+         */
+        public void onBeforeShortcutAction(Event e);
+    }
+
+    private final ArrayList<ShortcutAction> actions = new ArrayList<ShortcutAction>();
     private ApplicationConnection client;
     private String paintableId;
 
@@ -68,38 +111,66 @@ public class ShortcutActionHandler {
         }
     }
 
-    public void handleKeyboardEvent(final Event event) {
+    public void handleKeyboardEvent(final Event event, Paintable target) {
         final int modifiers = KeyboardListenerCollection
                 .getKeyboardModifiers(event);
         final char keyCode = (char) DOM.eventGetKeyCode(event);
         final ShortcutKeyCombination kc = new ShortcutKeyCombination(keyCode,
                 modifiers);
-        final Iterator it = actions.iterator();
+        final Iterator<ShortcutAction> it = actions.iterator();
         while (it.hasNext()) {
-            final ShortcutAction a = (ShortcutAction) it.next();
+            final ShortcutAction a = it.next();
             if (a.getShortcutCombination().equals(kc)) {
-                final Element et = DOM.eventGetTarget(event);
-                final Paintable target = client.getPaintable(et);
-                DOM.eventPreventDefault(event);
-                shakeTarget(et);
-                DeferredCommand.addCommand(new Command() {
-                    public void execute() {
-                        shakeTarget(et);
-                    }
-                });
-                DeferredCommand.addCommand(new Command() {
-                    public void execute() {
-                        if (target != null) {
-                            client.updateVariable(paintableId, "actiontarget",
-                                    target, false);
-                        }
-                        client.updateVariable(paintableId, "action",
-                                a.getKey(), true);
-                    }
-                });
+                fireAction(event, a, target);
                 break;
             }
         }
+
+    }
+
+    public void handleKeyboardEvent(final Event event) {
+        handleKeyboardEvent(event, null);
+    }
+
+    private void fireAction(final Event event, final ShortcutAction a,
+            Paintable target) {
+        final Element et = DOM.eventGetTarget(event);
+        if (target == null) {
+            Widget w = Util.findWidget(et, null);
+            while (w != null && !(w instanceof Paintable)) {
+                w = w.getParent();
+            }
+            target = (Paintable) w;
+        }
+        final Paintable finalTarget = target;
+
+        event.preventDefault();
+
+        /*
+         * The target component might have unpublished changes, try to
+         * synchronize them before firing shortcut action.
+         */
+        if (finalTarget instanceof BeforeShortcutActionListener) {
+            ((BeforeShortcutActionListener) finalTarget)
+                    .onBeforeShortcutAction(event);
+        } else {
+            shakeTarget(et);
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    shakeTarget(et);
+                }
+            });
+        }
+
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                if (finalTarget != null) {
+                    client.updateVariable(paintableId, "actiontarget",
+                            finalTarget, false);
+                }
+                client.updateVariable(paintableId, "action", a.getKey(), true);
+            }
+        });
     }
 
     /**
@@ -108,9 +179,10 @@ public class ShortcutActionHandler {
      * sent to server. This is done by removing focus and then returning it
      * immediately back to target element.
      * <p>
-     * This is practically a hack and should be replaced with an interface via
-     * widgets could be notified when they should fire value change. Big task
-     * for TextFields, DateFields and various selects.
+     * This is practically a hack and should be replaced with an interface
+     * {@link BeforeShortcutActionListener} via widgets could be notified when
+     * they should fire value change. Big task for TextFields, DateFields and
+     * various selects.
      * 
      * <p>
      * TODO separate opera impl with generator

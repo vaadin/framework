@@ -32,6 +32,7 @@ import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VDebugConsole;
+import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
 /**
  * "Sub window" component.
@@ -40,7 +41,8 @@ import com.vaadin.terminal.gwt.client.VDebugConsole;
  * 
  * @author IT Mill Ltd
  */
-public class VWindow extends VOverlay implements Container, ScrollListener {
+public class VWindow extends VOverlay implements Container, ScrollListener,
+        ShortcutActionHandlerOwner {
 
     /**
      * Minimum allowed height of a window. This refers to the content area, not
@@ -1199,6 +1201,10 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
 
     public void updateCaption(Paintable component, UIDL uidl) {
         // NOP, window has own caption, layout captio not rendered
+    }
+
+    public ShortcutActionHandler getShortcutActionHandler() {
+        return shortcutHandler;
     }
 
 }

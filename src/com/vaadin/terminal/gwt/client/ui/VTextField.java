@@ -23,6 +23,7 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
+import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 
 /**
  * This class represents a basic text input field with one row.
@@ -31,7 +32,7 @@ import com.vaadin.terminal.gwt.client.VTooltip;
  * 
  */
 public class VTextField extends TextBoxBase implements Paintable, Field,
-        ChangeHandler, FocusHandler, BlurHandler {
+        ChangeHandler, FocusHandler, BlurHandler, BeforeShortcutActionListener {
 
     /**
      * The input node CSS classname.
@@ -379,6 +380,10 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         } else {
             super.setWidth(width);
         }
+    }
+
+    public void onBeforeShortcutAction(Event e) {
+        valueChange(false);
     }
 
 }
