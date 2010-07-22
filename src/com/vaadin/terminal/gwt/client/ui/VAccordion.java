@@ -446,7 +446,7 @@ public class VAccordion extends VTabsheetBase implements
             DOM.appendChild(captionNode, caption.getElement());
             DOM.appendChild(getElement(), captionNode);
             DOM.appendChild(getElement(), content);
-            setStylePrimaryName(CLASSNAME + "-item");
+            setStyleName(CLASSNAME + "-item");
             DOM.setElementProperty(content, "className", CLASSNAME
                     + "-item-content");
             DOM.setElementProperty(captionNode, "className", CLASSNAME

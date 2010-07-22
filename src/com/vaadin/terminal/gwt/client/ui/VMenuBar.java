@@ -99,9 +99,9 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         containerElement = getElement();
 
         if (!subMenu) {
-            setStylePrimaryName(CLASSNAME);
+            setStyleName(CLASSNAME);
         } else {
-            setStylePrimaryName(CLASSNAME + "-submenu");
+            setStyleName(CLASSNAME + "-submenu");
         }
         this.subMenu = subMenu;
 
@@ -526,7 +526,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         final int shadowSpace = 10;
 
         popup = new VOverlay(true, false, true);
-        popup.setStylePrimaryName(CLASSNAME + "-popup");
+        popup.setStyleName(CLASSNAME + "-popup");
         popup.setWidget(item.getSubMenu());
         popup.addCloseHandler(this);
         popup.addAutoHidePartner(item.getElement());
@@ -720,8 +720,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             setHTML(html);
             setCommand(cmd);
             setSelected(false);
-
-            setStylePrimaryName(CLASSNAME + "-menuitem");
+            setStyleName(CLASSNAME + "-menuitem");
 
         }
 

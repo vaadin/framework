@@ -51,7 +51,7 @@ public class VNotification extends VOverlay {
     private ArrayList<EventListener> listeners;
 
     public VNotification() {
-        setStylePrimaryName(STYLENAME);
+        setStyleName(STYLENAME);
         sinkEvents(Event.ONCLICK);
         DOM.setStyleAttribute(getElement(), "zIndex", "" + Z_INDEX_BASE);
     }

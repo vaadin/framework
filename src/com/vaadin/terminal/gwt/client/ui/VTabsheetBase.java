@@ -30,7 +30,7 @@ abstract class VTabsheetBase extends ComplexPanel implements Container {
 
     public VTabsheetBase(String classname) {
         setElement(DOM.createDiv());
-        setStylePrimaryName(classname);
+        setStyleName(classname);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

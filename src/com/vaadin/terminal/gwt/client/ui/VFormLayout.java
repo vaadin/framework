@@ -46,7 +46,7 @@ public class VFormLayout extends SimplePanel implements Container {
 
     public VFormLayout() {
         super();
-        setStylePrimaryName(CLASSNAME);
+        setStyleName(CLASSNAME);
         table = new VFormLayoutTable();
         setWidget(table);
     }

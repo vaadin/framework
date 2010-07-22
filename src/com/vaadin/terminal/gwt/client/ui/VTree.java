@@ -740,7 +740,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
             DOM.appendChild(wrapper, nodeCaptionSpan);
 
             childNodeContainer = new FlowPanel();
-            childNodeContainer.setStylePrimaryName(CLASSNAME + "-children");
+            childNodeContainer.setStyleName(CLASSNAME + "-children");
             setWidget(childNodeContainer);
         }
 

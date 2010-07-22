@@ -497,7 +497,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
                     // Actually write the day of month
                     InlineHTML html = new InlineHTML(String.valueOf(dayOfMonth));
-                    html.setStylePrimaryName(baseclass);
+                    html.setStyleName(baseclass);
                     html.setTitle(title);
 
                     // Add CSS classes according to state
