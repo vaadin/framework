@@ -716,6 +716,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             columnOrder = uidl.getStringArrayVariable("columnorder");
         } else {
             columnReordering = false;
+            columnOrder = null;
         }
 
         if (uidl.hasVariable("collapsedcolumns")) {
@@ -2434,7 +2435,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          */
         public Action[] getActions() {
             Object[] cols;
-            if (columnReordering) {
+            if (columnReordering && columnOrder != null) {
                 cols = columnOrder;
             } else {
                 // if columnReordering is disabled, we need different way to get
