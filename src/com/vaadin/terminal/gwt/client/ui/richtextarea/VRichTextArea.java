@@ -165,12 +165,10 @@ public class VRichTextArea extends Composite implements Paintable, Field,
         if (isReadOnly() != b) {
             swapEditableArea();
             readOnly = b;
-            if (readOnly) {
-                formatter.setVisible(false);
-            } else {
-                formatter.setVisible(true);
-            }
         }
+        // reset visibility in case enabled state changed and the formatter was
+        // recreated
+        formatter.setVisible(!readOnly);
     }
 
     private boolean isReadOnly() {
