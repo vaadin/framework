@@ -20,7 +20,6 @@ public class LayoutTesterApplication extends AbstractTestCase {
     private Window mainWindow;
     private NativeSelect layoutSelector;
 
-    @Override
     public void init() {
         mainWindow = new Window("LayoutTesterApplication");
         setMainWindow(mainWindow);
@@ -30,7 +29,6 @@ public class LayoutTesterApplication extends AbstractTestCase {
         nextButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = -1577298910202253538L;
 
-            @Override
             public void buttonClick(ClickEvent event) {
                 nextLaytout();
             }
@@ -101,7 +99,7 @@ public class LayoutTesterApplication extends AbstractTestCase {
             layoutSelector.addListener(new Property.ValueChangeListener() {
                 private static final long serialVersionUID = -605319614765838359L;
 
-                @Override
+                
                 public void valueChange(ValueChangeEvent event) {
                     layoutIndex = -1;
                     nextLaytout();
@@ -111,12 +109,12 @@ public class LayoutTesterApplication extends AbstractTestCase {
         return layoutSelector;
     }
 
-    @Override
+    
     protected String getDescription() {
         return "Test application for VerticalLayout, HorizontalLayout, and GridLayout";
     }
 
-    @Override
+    
     protected Integer getTicketNumber() {
         return 5334;
     }

@@ -36,7 +36,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         this.application = application;
     }
 
-    @Override
     protected Layout getAlignmentTests() {
         HorizontalLayout hlo = new HorizontalLayout();
         hlo.setSpacing(true);
@@ -73,7 +72,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return hlo;
     }
 
-    @Override
     protected Layout getCaptionsTests() {
         GridLayout glo = getTestGrid();
         glo.setWidth("600px");
@@ -108,7 +106,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return glo;
     }
 
-    @Override
     protected Layout getComponentAddReplaceMoveTests() {
         final GridLayout glo = getTestGrid();
         Layout baseLayout = getBaseLayout();
@@ -207,7 +204,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
-    @Override
     protected Layout getComponentSizingTests() {
         final GridLayout glo = getTestGrid();
         Layout baseLayout = getBaseLayout();
@@ -251,7 +247,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button3.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
             public void buttonClick(ClickEvent event) {
                 x22.setWidth("200px");
                 button3.setEnabled(false);
@@ -261,7 +256,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button4.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
             public void buttonClick(ClickEvent event) {
                 x22.setSizeUndefined();
                 ((Table) x22).addItem(new Object[] { "NEW ROW1" }, 3);
@@ -273,7 +267,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
-    @Override
+    
     protected Layout getExpandRatiosTests() {
         final GridLayout glo = getTestGrid();
         Layout baseLayout = getBaseLayout();
@@ -297,7 +291,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button1.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
+            
             public void buttonClick(ClickEvent event) {
                 glo.setColumnExpandRatio(3, 1);
                 button1.setEnabled(false);
@@ -307,7 +301,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button2.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
+            
             public void buttonClick(ClickEvent event) {
                 glo.setColumnExpandRatio(0, 0.25f);
                 glo.setColumnExpandRatio(1, 0.25f);
@@ -320,7 +314,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button3.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
+            
             public void buttonClick(ClickEvent event) {
                 glo.setRowExpandRatio(0, 0.5f);
                 button3.setEnabled(false);
@@ -330,7 +324,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button4.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
+            
             public void buttonClick(ClickEvent event) {
                 glo.setRowExpandRatio(3, 0.3f);
                 button4.setEnabled(false);
@@ -340,7 +334,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
-    @Override
+    
     protected Layout getIconsTests() {
         GridLayout glo = getTestGrid();
         glo.setWidth("600px");
@@ -378,7 +372,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return glo;
     }
 
-    @Override
+    
     protected Layout getLayoutSizingTests() {
         final GridLayout glo = getTestGrid();
         Layout baseLayout = getBaseLayout();
@@ -405,7 +399,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button1.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
+            
             public void buttonClick(ClickEvent event) {
                 glo.setHeight("350px");
                 button1.setEnabled(false);
@@ -415,7 +409,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button2.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
+            
             public void buttonClick(ClickEvent event) {
                 glo.setSizeUndefined();
                 glo.addComponent(new Label("--- NEW LABEL ---"));
@@ -426,7 +420,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button3.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
+            
             public void buttonClick(ClickEvent event) {
                 glo.setWidth("75%");
                 glo.setHeight("75%");
@@ -437,7 +431,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button4.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
+            
             public void buttonClick(ClickEvent event) {
                 glo.setSizeFull();
                 button4.setEnabled(false);
@@ -447,7 +441,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
-    @Override
+    
     protected Layout getMarginSpacingTests() {
         final GridLayout glo = getTestGrid();
         Layout baseLayout = getBaseLayout();
@@ -472,7 +466,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button1.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
+            
             public void buttonClick(ClickEvent event) {
                 glo.setMargin(true);
                 button1.setEnabled(false);
@@ -482,7 +476,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button2.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
+            
             public void buttonClick(ClickEvent event) {
                 glo.setSpacing(true);
                 button2.setEnabled(false);
@@ -492,7 +486,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button3.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
+            
             public void buttonClick(ClickEvent event) {
                 glo.setMargin(false);
                 button3.setEnabled(false);
@@ -502,7 +496,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button4.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
+            
             public void buttonClick(ClickEvent event) {
                 glo.setSpacing(false);
                 button4.setEnabled(false);
@@ -512,7 +506,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
-    @Override
+    
     protected Layout getRequiredErrorIndicatorsTests() {
         GridLayout glo = getTestGrid();
         glo.setWidth("600px");
