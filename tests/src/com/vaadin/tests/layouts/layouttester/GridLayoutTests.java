@@ -143,7 +143,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button1.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
+            
             public void buttonClick(ClickEvent event) {
                 glo.addComponent(cc1);
                 button1.setEnabled(false);
@@ -153,7 +153,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button2.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
             public void buttonClick(ClickEvent event) {
                 glo.replaceComponent(x22, cc2);
                 button2.setEnabled(false);
@@ -163,7 +162,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button3.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
             public void buttonClick(ClickEvent event) {
                 glo.moveComponentsFrom(source);
                 button3.setEnabled(false);
@@ -173,7 +171,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button4.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
             public void buttonClick(ClickEvent event) {
                 glo.removeComponent(1, 1);
                 button4.setEnabled(false);
@@ -184,7 +181,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button5.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
             public void buttonClick(ClickEvent event) {
                 glo.removeRow(0);
                 button5.setEnabled(false);
@@ -194,7 +190,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button6.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
             public void buttonClick(ClickEvent event) {
                 glo.removeComponent(row3);
                 button6.setEnabled(false);
@@ -227,7 +222,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button1.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
             public void buttonClick(ClickEvent event) {
                 x3.setSizeFull();
                 button1.setEnabled(false);
@@ -237,7 +231,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button2.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            @Override
             public void buttonClick(ClickEvent event) {
                 x3.setWidth("200px");
                 button2.setEnabled(false);
