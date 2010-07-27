@@ -108,6 +108,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
 
     protected Layout getComponentAddReplaceMoveTests() {
         final GridLayout glo = getTestGrid();
+        glo.setHeight("350px");
         Layout baseLayout = getBaseLayout();
         final Button button1 = new Button("Test add");
         final Button button2 = new Button("Test replace");
@@ -201,6 +202,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
 
     protected Layout getComponentSizingTests() {
         final GridLayout glo = getTestGrid();
+        glo.setHeight("350px");
         Layout baseLayout = getBaseLayout();
         final Button button1 = new Button("full size, 3x1");
         final Button button2 = new Button("200 px width, 3x1");
@@ -268,7 +270,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         final Button button2 = new Button("set all cols expand 0.25");
         final Button button3 = new Button("set row 0 expand 0.5");
         final Button button4 = new Button("set row 3 expand 0.2");
-
+        glo.setHeight("400px");
         glo.replaceComponent(x22, x22 = getTestTable());
 
         baseLayout.addComponent(button1);

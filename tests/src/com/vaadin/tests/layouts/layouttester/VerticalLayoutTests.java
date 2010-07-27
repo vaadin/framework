@@ -32,8 +32,9 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         this.application = application;
     }
 
-    
     protected Layout getAlignmentTests() {
+        Layout baseLayout = getBaseLayout();
+        ((HorizontalLayout)baseLayout).setSpacing(true);
         VerticalLayout vlo = getTestLaytout();
         AbstractComponent[] components = new AbstractComponent[9];
         Alignment[] alignments = new Alignment[] { Alignment.BOTTOM_CENTER,
@@ -42,19 +43,28 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
                 Alignment.MIDDLE_RIGHT, Alignment.TOP_CENTER,
                 Alignment.TOP_LEFT, Alignment.TOP_RIGHT };
 
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
-        for (int i = 0; i < components.length; i++) {
+        for (int i = 0; i < components.length / 2; i++) {
             components[i] = new TextField();
             ((TextField) components[i]).setValue("FIELD " + i);
             vlo.addComponent(components[i]);
             vlo.setComponentAlignment(components[i], alignments[i]);
             vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
         }
-        return vlo;
+        baseLayout.addComponent(vlo);
+        vlo = getTestLaytout();
+        for (int i = components.length / 2; i < components.length; i++) {
+            components[i] = new TextField();
+            ((TextField) components[i]).setValue("FIELD " + i);
+            vlo.addComponent(components[i]);
+            vlo.setComponentAlignment(components[i], alignments[i]);
+            vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+        }
+        baseLayout.addComponent(vlo);
+        return baseLayout;
     }
 
-    
     protected Layout getCaptionsTests() {
+        Layout baseLayout = getBaseLayout();
         VerticalLayout vlo = getTestLaytout();
         AbstractComponent component = null;
 
@@ -63,28 +73,26 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
                 "abcdefghijklmnopq",
                 "abc def hij klm nop qrs tuv xyz qaz wsx edc rfv tgb yhn ujm mko nji bhu vgy cft cde" };
 
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
         for (int i = 0; i < captions.length; i++) {
             component = new TextField();
             ((TextField) component).setValue("FIELD " + i);
             component.setCaption(captions[i]);
             vlo.addComponent(component);
         }
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
         for (int i = 0; i < captions.length; i++) {
             component = new Label();
             ((Label) component).setValue("Label " + i);
             component.setCaption(captions[i]);
             vlo.addComponent(component);
         }
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+        baseLayout.addComponent(vlo);
+        vlo = getTestLaytout();
         for (int i = 0; i < captions.length; i++) {
             component = new Select();
             component.setCaption(captions[i]);
             component.setIcon(new ClassResource("help.png", application));
             vlo.addComponent(component);
         }
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
         for (int i = 0; i < captions.length; i++) {
             component = getTestTabsheet();
             component.setCaption(captions[i]);
@@ -92,13 +100,14 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
                     "component error, user error"));
             vlo.addComponent(component);
         }
-        return vlo;
+        baseLayout.addComponent(vlo);
+        return baseLayout;
     }
 
-    
     protected Layout getComponentAddReplaceMoveTests() {
+        Layout baseLayout = getBaseLayout();
         final VerticalLayout vlo = getTestLaytout();
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+        final VerticalLayout vlo2 = getTestLaytout();
 
         final HorizontalLayout source = new HorizontalLayout();
         source.addComponent(new Label("OTHER LABEL 1"));
@@ -123,9 +132,8 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         addButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
-                vlo.addComponent(new TextField());
+                vlo2.addComponent(new TextField());
                 addButton.setEnabled(false);
                 replaceButton.setEnabled(true);
             }
@@ -133,9 +141,8 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         replaceButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
-                vlo.replaceComponent(c1, c3);
+                vlo2.replaceComponent(c1, c3);
                 replaceButton.setEnabled(false);
                 moveButton.setEnabled(true);
             }
@@ -143,9 +150,8 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         moveButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
-                vlo.moveComponentsFrom(source);
+                vlo2.moveComponentsFrom(source);
                 moveButton.setEnabled(false);
                 removeButton.setEnabled(true);
             }
@@ -153,10 +159,9 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         removeButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
-                vlo.removeComponent(c1);
-                vlo.removeComponent(c2);
+                vlo2.removeComponent(c1);
+                vlo2.removeComponent(c2);
                 removeButton.setEnabled(false);
             }
         });
@@ -165,19 +170,18 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         vlo.addComponent(replaceButton);
         vlo.addComponent(moveButton);
         vlo.addComponent(removeButton);
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
 
-        vlo.addComponent(c1);
-        vlo.addComponent(c2);
-        vlo.addComponent(c3);
-
-        return vlo;
+        baseLayout.addComponent(vlo);
+        vlo2.addComponent(c1);
+        vlo2.addComponent(c2);
+        vlo2.addComponent(c3);
+        baseLayout.addComponent(vlo2);
+        return baseLayout;
     }
 
-    
     protected Layout getComponentSizingTests() {
+        Layout baseLayout = getBaseLayout();
         final VerticalLayout vlo = getTestLaytout();
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
 
         final AbstractComponent c = getTestTable();
 
@@ -188,7 +192,10 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         vlo.addComponent(biggerButton);
         vlo.addComponent(smallerButton);
         vlo.addComponent(originalButton);
-        vlo.addComponent(c);
+        baseLayout.addComponent(vlo);
+        final VerticalLayout vlo2 = getTestLaytout();
+        vlo2.addComponent(c);
+        baseLayout.addComponent(vlo2);
 
         biggerButton.setEnabled(true);
         smallerButton.setEnabled(false);
@@ -197,7 +204,6 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         biggerButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 c.setSizeFull();
                 biggerButton.setEnabled(false);
@@ -207,7 +213,6 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         smallerButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 c.setWidth("200px");
                 smallerButton.setEnabled(false);
@@ -217,7 +222,6 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         originalButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 originalButton.setEnabled(false);
                 c.setSizeUndefined();
@@ -228,16 +232,16 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
             }
         });
 
-        return vlo;
+        return baseLayout;
     }
 
-    
     protected Layout getLayoutSizingTests() {
+        Layout baseLayout = getBaseLayout();
         final VerticalLayout vlo = getTestLaytout();
 
         vlo.setSpacing(false);
         vlo.setMargin(false);
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+
         final AbstractComponent c1 = getTestTable();
         c1.setSizeFull();
         final AbstractComponent c2 = getTestTable();
@@ -253,25 +257,26 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         vlo.addComponent(button2);
         vlo.addComponent(button3);
         vlo.addComponent(button4);
+        baseLayout.addComponent(vlo);
+        final VerticalLayout vlo2 = getTestLaytout();
+
         button1.setEnabled(true);
         button2.setEnabled(false);
         button3.setEnabled(false);
         button4.setEnabled(false);
 
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
-        vlo.addComponent(c1);
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
-        vlo.addComponent(c2);
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
-        vlo.setExpandRatio(c1, 0.5f);
-        vlo.setExpandRatio(c2, 0.5f);
+        vlo2.addComponent(c1);
+        vlo2.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+        vlo2.addComponent(c2);
+        vlo2.setExpandRatio(c1, 0.5f);
+        vlo2.setExpandRatio(c2, 0.5f);
+        baseLayout.addComponent(vlo2);
 
         button1.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
-                vlo.setHeight("350px");
+                vlo2.setHeight("350px");
                 button1.setEnabled(false);
                 button2.setEnabled(true);
             }
@@ -279,10 +284,9 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         button2.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
-                vlo.setSizeUndefined();
-                vlo.addComponent(new Label("--- NEW LABEL ---"));
+                vlo2.setSizeUndefined();
+                vlo2.addComponent(new Label("--- NEW LABEL ---"));
                 button2.setEnabled(false);
                 button3.setEnabled(true);
             }
@@ -290,10 +294,9 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         button3.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
-                vlo.setWidth("75%");
-                vlo.setHeight("75%");
+                vlo2.setWidth("75%");
+                vlo2.setHeight("75%");
                 button3.setEnabled(false);
                 button4.setEnabled(true);
             }
@@ -301,20 +304,19 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         button4.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
-                vlo.setSizeFull();
+                vlo2.setSizeFull();
                 button4.setEnabled(false);
             }
         });
 
-        return vlo;
+        return baseLayout;
     }
 
-    
     protected Layout getExpandRatiosTests() {
+        Layout baseLayout = getBaseLayout();
         final VerticalLayout vlo = getTestLaytout();
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+
         final AbstractComponent c1 = getTestTable();
         c1.setSizeFull();
         final AbstractComponent c2 = getTestTable();
@@ -331,15 +333,18 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         button2.setEnabled(false);
         button3.setEnabled(false);
 
-        vlo.addComponent(c1);
-        vlo.addComponent(c2);
+        baseLayout.addComponent(vlo);
+        final VerticalLayout vlo2 = getTestLaytout();
+
+        vlo2.addComponent(c1);
+        vlo2.addComponent(c2);
+        baseLayout.addComponent(vlo2);
 
         button1.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
-                vlo.setExpandRatio(c1, 1.0f);
+                vlo2.setExpandRatio(c1, 1.0f);
                 button1.setEnabled(false);
                 button2.setEnabled(true);
             }
@@ -347,10 +352,9 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         button2.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
-                vlo.setExpandRatio(c1, 0.5f);
-                vlo.setExpandRatio(c2, 0.5f);
+                vlo2.setExpandRatio(c1, 0.5f);
+                vlo2.setExpandRatio(c2, 0.5f);
                 button2.setEnabled(false);
                 button3.setEnabled(true);
             }
@@ -358,18 +362,17 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         button3.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
-                vlo.setExpandRatio(c1, 0.75f);
-                vlo.setExpandRatio(c2, 0.25f);
+                vlo2.setExpandRatio(c1, 0.75f);
+                vlo2.setExpandRatio(c2, 0.25f);
                 button3.setEnabled(false);
             }
         });
-        return vlo;
+        return baseLayout;
     }
 
-    
     protected Layout getIconsTests() {
+        Layout baseLayout = getBaseLayout();
         VerticalLayout vlo = getTestLaytout();
         AbstractComponent[] components = new AbstractComponent[2];
 
@@ -377,7 +380,6 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
                 new ClassResource("alert.png", application),
                 new ClassResource("help.png", application) };
 
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
         for (int i = 0; i < components.length; i++) {
             components[i] = new TextField();
             ((TextField) components[i]).setValue("FIELD " + i);
@@ -386,42 +388,44 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
                     .setCaption("long test caption bewucbwuebco or bmort b cbwecubw wbeucwe asdasd asdasda asdasd");
             vlo.addComponent(components[i]);
         }
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+
         for (int i = 0; i < components.length; i++) {
             components[i] = new Label();
             ((Label) components[i]).setValue("Label " + i);
             components[i].setIcon(icons[i]);
             vlo.addComponent(components[i]);
         }
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+
         for (int i = 0; i < components.length; i++) {
             components[i] = new Select();
             components[i].setIcon(icons[i]);
             vlo.addComponent(components[i]);
         }
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+        baseLayout.addComponent(vlo);
+        final VerticalLayout vlo2 = getTestLaytout();
         for (int i = 0; i < components.length; i++) {
             components[i] = new Button();
             components[i].setComponentError(new UserError(
                     "component error, user error"));
             components[i].setIcon(icons[i]);
-            vlo.addComponent(components[i]);
+            vlo2.addComponent(components[i]);
         }
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+
         for (int i = 0; i < components.length; i++) {
             components[i] = new Link("Link", null);
             components[i].setIcon(icons[i]);
-            vlo.addComponent(components[i]);
+            vlo2.addComponent(components[i]);
         }
-        return vlo;
+        baseLayout.addComponent(vlo2);
+        return baseLayout;
     }
 
-    
     protected Layout getMarginSpacingTests() {
+        Layout baseLayout = getBaseLayout();
         final VerticalLayout vlo = getTestLaytout();
         vlo.setSpacing(false);
         vlo.setMargin(false);
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+
         final AbstractComponent c1 = getTestTable();
         c1.setSizeFull();
         final AbstractComponent c2 = getTestTable();
@@ -441,20 +445,21 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         button3.setEnabled(false);
         button4.setEnabled(false);
 
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
-        vlo.addComponent(c1);
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
-        vlo.addComponent(c2);
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
-        vlo.setExpandRatio(c1, 0.5f);
-        vlo.setExpandRatio(c2, 0.5f);
+        baseLayout.addComponent(vlo);
+        final VerticalLayout vlo2 = getTestLaytout();
+
+        vlo2.addComponent(c1);
+        vlo2.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+        vlo2.addComponent(c2);
+        vlo2.setExpandRatio(c1, 0.5f);
+        vlo2.setExpandRatio(c2, 0.5f);
+        baseLayout.addComponent(vlo2);
 
         button1.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
-                vlo.setMargin(true);
+                vlo2.setMargin(true);
                 button1.setEnabled(false);
                 button2.setEnabled(true);
             }
@@ -462,9 +467,8 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         button2.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
-                vlo.setSpacing(true);
+                vlo2.setSpacing(true);
                 button2.setEnabled(false);
                 button3.setEnabled(true);
             }
@@ -472,9 +476,8 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         button3.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
-                vlo.setMargin(false);
+                vlo2.setMargin(false);
                 button3.setEnabled(false);
                 button4.setEnabled(true);
             }
@@ -482,18 +485,17 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         button4.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
-                vlo.setSpacing(false);
+                vlo2.setSpacing(false);
                 button4.setEnabled(false);
             }
         });
 
-        return vlo;
+        return baseLayout;
     }
 
-    
     protected Layout getRequiredErrorIndicatorsTests() {
+        Layout baseLayout = getBaseLayout();
         VerticalLayout vlo = getTestLaytout();
         AbstractComponent[] components = new AbstractComponent[4];
         components[0] = new Label("LABEL");
@@ -533,24 +535,30 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
                 .setComponentError(new UserError("component error, user error"));
         fields[5].setIcon(new ClassResource("alert.png", application));
 
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
         for (int i = 0; i < components.length; i++) {
             components[i].setComponentError(new UserError(
                     "component error, user error"));
             vlo.addComponent(components[i]);
         }
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+        baseLayout.addComponent(vlo);
+        final VerticalLayout vlo2 = getTestLaytout();
         for (int i = 0; i < fields.length; i++) {
-            vlo.addComponent(fields[i]);
+            vlo2.addComponent(fields[i]);
         }
-        vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
 
-        return vlo;
+        baseLayout.addComponent(vlo2);
+        return baseLayout;
+    }
+
+    private HorizontalLayout getBaseLayout() {
+        HorizontalLayout hlo = new HorizontalLayout();
+        hlo.setSizeUndefined();
+        return hlo;
     }
 
     private VerticalLayout getTestLaytout() {
         VerticalLayout vlo = new VerticalLayout();
-        vlo.setHeight("600px");
+        vlo.setHeight("500px");
         vlo.setWidth("400px");
         return vlo;
     }
