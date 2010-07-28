@@ -4,6 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.SystemError;
+import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
@@ -86,7 +87,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         col1.setCaption(captions[0]);
         col2.setCaption(captions[1]);
         col3.setCaption(captions[2]);
-        col3.setIcon(new ClassResource("help.png", application));
+        col3.setIcon(new ThemeResource("../runo/icons/16/lock.png"));
 
         glo.replaceComponent(row1, row1 = new Label());
         glo.replaceComponent(row2, row2 = new Label());
@@ -334,8 +335,8 @@ public class GridLayoutTests extends AbstractLayoutTests {
         GridLayout glo = getTestGrid();
         glo.setWidth("600px");
         Resource[] icons = new Resource[] {
-                new ClassResource("alert.png", application),
-                new ClassResource("help.png", application) };
+                new ThemeResource("../runo/icons/32/calendar.png"),
+                new ThemeResource("../runo/icons/16/lock.png") };
 
         glo.replaceComponent(col1, col1 = new TextField("TEXTFIELD"));
         glo.replaceComponent(col2, col2 = new Label("LABEL"));
@@ -359,7 +360,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
 
         glo.replaceComponent(x3, x3 = new CheckBox("CHECKBOX"));
         glo.replaceComponent(x22, x22 = new Panel("PANEL"));
-        x22.setIcon(new ClassResource("alert.png", application));
+        x22.setIcon(new ThemeResource("../runo/icons/32/calendar.png"));
 
         x3.setIcon(icons[0]);
         x22.setIcon(icons[1]);
@@ -506,8 +507,8 @@ public class GridLayoutTests extends AbstractLayoutTests {
         GridLayout glo = getTestGrid();
         glo.setWidth("600px");
         Resource[] icons = new Resource[] {
-                new ClassResource("alert.png", application),
-                new ClassResource("help.png", application) };
+                new ThemeResource("../runo/icons/32/calendar.png"),
+                new ThemeResource("../runo/icons/16/lock.png") };
 
         glo.replaceComponent(col1, col1 = new TextField("TEXTFIELD"));
         glo.replaceComponent(col2, col2 = new Label("LABEL"));
@@ -599,7 +600,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         t.setSizeUndefined();
         t.setPageLength(5);
         t.addContainerProperty("test", String.class, null);
-        t.addItem(new Object[] { "qwertyuiop asdfghjklöä zxccvbnm,m,." }, 1);
+        t.addItem(new Object[] { "qwertyuiop asdfghjklzxccvbnm,m,." }, 1);
         t.addItem(new Object[] { "YGVYTCTCTRXRXRXRX" }, 2);
         return t;
     }

@@ -4,6 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.SystemError;
+import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
@@ -92,7 +93,7 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         for (int i = 0; i < captions.length; i++) {
             component = new Select();
             component.setCaption(captions[i]);
-            component.setIcon(new ClassResource("help.png", application));
+            component.setIcon(new ThemeResource("../runo/icons/16/lock.png"));
             vlo.addComponent(component);
         }
         baseLayout.addComponent(vlo);
@@ -386,8 +387,8 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         AbstractComponent[] components = new AbstractComponent[2];
         Layout baseLayout = getBaseLayout();
         Resource[] icons = new Resource[] {
-                new ClassResource("alert.png", application),
-                new ClassResource("help.png", application) };
+                new ThemeResource("../runo/icons/32/calendar.png"),
+                new ThemeResource("../runo/icons/16/lock.png") };
 
         for (int i = 0; i < components.length; i++) {
             components[i] = new TextField();
@@ -510,7 +511,7 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         components[1] = new Button("BUTTON");
         components[2] = getTestTable();
         components[3] = getTestTabsheet();
-        components[3].setIcon(new ClassResource("help.png", application));
+        components[3].setIcon(new ThemeResource("../runo/icons/16/lock.png"));
 
         AbstractField[] fields = new AbstractField[6];
         fields[0] = new TextField();
@@ -540,7 +541,7 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         fields[5].setRequiredError("required error");
         fields[5]
                 .setComponentError(new UserError("component error, user error"));
-        fields[5].setIcon(new ClassResource("alert.png", application));
+        fields[5].setIcon(new ThemeResource("../runo/icons/32/calendar.png"));
 
         for (int i = 0; i < components.length; i++) {
             components[i].setComponentError(new UserError(
@@ -583,7 +584,7 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         t.setSizeUndefined();
         t.setPageLength(5);
         t.addContainerProperty("test", String.class, null);
-        t.addItem(new Object[] { "qwertyuiop asdfghjklöä zxccvbnm,m,." }, 1);
+        t.addItem(new Object[] { "qwertyuiop asdfghjkl zxccvbnm,m,." }, 1);
         t.addItem(new Object[] { "YGVYTCTCTRXRXRXRX" }, 2);
         return t;
     }
