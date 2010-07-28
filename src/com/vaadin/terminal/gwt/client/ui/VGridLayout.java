@@ -690,18 +690,17 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
                 // cell sizes will only stay still if only relatively
                 // sized components
                 // check if changed child affects min col widths
-                if (cell.cc != null) {
-                    cell.cc.setWidth("");
-                    cell.cc.setHeight("");
+                assert cell.cc != null;
+                cell.cc.setWidth("");
+                cell.cc.setHeight("");
 
-                    cell.cc.updateWidgetSize();
+                cell.cc.updateWidgetSize();
 
-                    /*
-                     * If this is the result of an caption icon onload event the
-                     * caption size may have changed
-                     */
-                    cell.cc.updateCaptionSize();
-                }
+                /*
+                 * If this is the result of an caption icon onload event the
+                 * caption size may have changed
+                 */
+                cell.cc.updateCaptionSize();
 
                 int width = cell.getWidth();
                 int allocated = columnWidths[cell.col];
@@ -857,16 +856,9 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         }
 
         public RenderSpace getAllocatedSpace() {
-            if (cc != null) {
-                return new RenderSpace(getAvailableWidth()
-                        - cc.getCaptionWidthAfterComponent(),
-                        getAvailableHeight()
-                                - cc.getCaptionHeightAboveComponent());
-            } else {
-                // this should not happen normally
-                return new RenderSpace(getAvailableWidth(),
-                        getAvailableHeight());
-            }
+            return new RenderSpace(getAvailableWidth()
+                    - cc.getCaptionWidthAfterComponent(), getAvailableHeight()
+                    - cc.getCaptionHeightAboveComponent());
         }
 
         public boolean hasContent() {
@@ -1004,16 +996,15 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
                 } else if (cc != null
                         && cc.getWidget() != client.getPaintable(c)) {
                     // content has changed
-                    Paintable newPaintable = client.getPaintable(c);
-                    if (widgetToComponentContainer.containsKey(newPaintable)) {
-                        // if a key in the map, newPaintable must be a widget
-                        replaceChildComponent(cc.getWidget(),
-                                (Widget) newPaintable);
-                        cc = widgetToComponentContainer.get(newPaintable);
+                    cc = null;
+                    Paintable paintable = client.getPaintable(c);
+                    if (widgetToComponentContainer.containsKey(paintable)) {
+                        // cc exist for this component (moved) use that for this
+                        // cell
+                        cc = widgetToComponentContainer.get(paintable);
                         cc.setWidth("");
                         cc.setHeight("");
-                    } else {
-                        cc = null;
+                        paintableToCell.put(paintable, this);
                     }
                 }
             }
