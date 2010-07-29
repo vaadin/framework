@@ -1,5 +1,7 @@
 package com.vaadin.tests.layouts.layouttester;
 
+import java.util.Date;
+
 import com.vaadin.Application;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.Resource;
@@ -574,6 +576,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         grid.addComponent(new Label("1x2 cell"), 1, 2, 1, 3);
         x22 = new InlineDateField("A 2x2 date field");
         ((InlineDateField) x22).setResolution(DateField.RESOLUTION_DAY);
+        ((InlineDateField) x22).setValue(new Date(128028960000l));
         grid.addComponent(x22, 2, 2, 3, 3);
         grid.setWidth("450px");
         grid.setHeight("450px");
