@@ -139,6 +139,13 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * {@link BeanItemContainer#BeanItemContainer(Class)} can be used for
      * creating an initially empty {@code BeanItemContainer}.
      * 
+     * Note that when using this constructor, the actual class of the first item
+     * in the collection is used to determine the bean properties supported by
+     * the container instance, and only beans of that class or its subclasses
+     * can be added to the collection. If this is problematic or empty
+     * collections need to be supported, use {@link #BeanItemContainer(Class)}
+     * and {@link #addAll(Collection)} instead.
+     * 
      * @param collection
      *            a non empty {@link Collection} of beans.
      * @throws IllegalArgumentException
