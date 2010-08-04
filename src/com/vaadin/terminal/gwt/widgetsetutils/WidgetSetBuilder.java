@@ -158,7 +158,9 @@ public class WidgetSetBuilder {
 
         while (matcher.find()) {
             String possibleWidgetSet = matcher.group(1);
-            hashSet.add(possibleWidgetSet);
+            if (possibleWidgetSet.toLowerCase().contains("widgetset")) {
+                hashSet.add(possibleWidgetSet);
+            }
         }
         return hashSet;
     }
