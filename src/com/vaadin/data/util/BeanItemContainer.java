@@ -18,11 +18,11 @@ import java.util.Map;
 import java.util.Set;
 
 import com.vaadin.data.Container;
-import com.vaadin.data.Property;
 import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.Container.ItemSetChangeNotifier;
 import com.vaadin.data.Container.Sortable;
+import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Property.ValueChangeNotifier;
@@ -145,7 +145,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      *             If the collection is null or empty.
      */
     @SuppressWarnings("unchecked")
-    public BeanItemContainer(Collection<BT> collection)
+    public BeanItemContainer(Collection<? extends BT> collection)
             throws IllegalArgumentException {
         if (collection == null || collection.isEmpty()) {
             throw new IllegalArgumentException(
@@ -164,7 +164,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * @param collection
      *            The collection of beans to add. Must not be null.
      */
-    private void addAll(Collection<BT> collection) {
+    private void addAll(Collection<? extends BT> collection) {
         // Pre-allocate space for the collection
         allItems.ensureCapacity(allItems.size() + collection.size());
 
