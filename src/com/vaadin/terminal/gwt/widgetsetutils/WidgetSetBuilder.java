@@ -16,6 +16,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -102,7 +103,9 @@ public class WidgetSetBuilder {
             Collection<String> oldInheritedWidgetsets = getCurrentGwtModules(content);
 
             // add widgetsets that do not exist
-            for (String ws : availableWidgetSets.keySet()) {
+            Iterator<String> i = availableWidgetSets.keySet().iterator();
+            while (i.hasNext()) {
+                String ws = i.next();
                 if (ws.equals(widgetset)) {
                     // do not inherit the module itself
                     continue;
