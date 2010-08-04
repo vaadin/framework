@@ -19,9 +19,9 @@ import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.Action;
-import com.vaadin.event.ActionManager;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.Action.ShortcutNotifier;
+import com.vaadin.event.ActionManager;
 import com.vaadin.terminal.CompositeErrorMessage;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
@@ -1097,17 +1097,28 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     }
 
     /**
-     * Gets the first field in form.
+     * Gets the first focusable field in form. If there are enabled,
+     * non-read-only fields, the first one of them is returned. Otherwise, the
+     * field for the first property (or null if none) is returned.
      * 
      * @return the Field.
      */
-    private Field getFirstField() {
-        Object id = null;
+    private Field getFirstFocusableField() {
         if (getItemPropertyIds() != null) {
-            id = getItemPropertyIds().iterator().next();
-        }
-        if (id != null) {
-            return getField(id);
+            for (Object id : getItemPropertyIds()) {
+                if (id != null) {
+                    Field field = getField(id);
+                    if (field.isEnabled() && !field.isReadOnly()) {
+                        return field;
+                    }
+                }
+            }
+            // fallback: first field if none of the fields is enabled and
+            // writable
+            Object id = getItemPropertyIds().iterator().next();
+            if (id != null) {
+                return getField(id);
+            }
         }
         return null;
     }
@@ -1185,7 +1196,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      */
     @Override
     public void focus() {
-        final Field f = getFirstField();
+        final Field f = getFirstFocusableField();
         if (f != null) {
             f.focus();
         }
