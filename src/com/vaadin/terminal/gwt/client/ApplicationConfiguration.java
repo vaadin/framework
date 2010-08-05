@@ -30,6 +30,9 @@ public class ApplicationConfiguration implements EntryPoint {
     private String communicationErrorCaption;
     private String communicationErrorMessage;
     private String communicationErrorUrl;
+    private String authorizationErrorCaption;
+    private String authorizationErrorMessage;
+    private String authorizationErrorUrl;
     private boolean useDebugIdInDom = true;
     private boolean usePortletURLs = false;
     private String portletUidlURLBase;
@@ -106,6 +109,18 @@ public class ApplicationConfiguration implements EntryPoint {
         return communicationErrorUrl;
     }
 
+    public String getAuthorizationErrorCaption() {
+        return authorizationErrorCaption;
+    }
+
+    public String getAuthorizationErrorMessage() {
+        return authorizationErrorMessage;
+    }
+
+    public String getAuthorizationErrorUrl() {
+        return authorizationErrorUrl;
+    }
+
     private native void loadFromDOM()
     /*-{
 
@@ -132,6 +147,11 @@ public class ApplicationConfiguration implements EntryPoint {
                 this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::communicationErrorCaption = jsobj.comErrMsg.caption;
                 this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::communicationErrorMessage = jsobj.comErrMsg.message;
                 this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::communicationErrorUrl = jsobj.comErrMsg.url;
+            }
+            if(jsobj.authErrMsg) {
+                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::authorizationErrorCaption = jsobj.authErrMsg.caption;
+                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::authorizationErrorMessage = jsobj.authErrMsg.message;
+                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::authorizationErrorUrl = jsobj.authErrMsg.url;
             }
             if (jsobj.usePortletURLs) {
                 this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::usePortletURLs = jsobj.usePortletURLs;

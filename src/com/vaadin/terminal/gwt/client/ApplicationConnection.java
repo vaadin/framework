@@ -415,19 +415,23 @@ public class ApplicationConnection {
                                         - requestStartTime.getTime()) + "ms");
 
                         int statusCode = response.getStatusCode();
-                        if ((statusCode / 100) == 4) {
-                            // Handle all 4xx errors the same way as (they are
-                            // all permanent errors)
-                            showCommunicationError("UIDL could not be read from server. Check servlets mappings. Error code: "
-                                    + statusCode);
-                            endRequest();
-                            return;
-                        }
+
                         switch (statusCode) {
                         case 0:
                             showCommunicationError("Invalid status code 0 (server down?)");
                             endRequest();
                             return;
+
+                        case 401:
+                            /*
+                             * Authorization has failed. Could be that the
+                             * session has timed out and the container is
+                             * redirecting to a login page.
+                             */
+                            showAuthenticationError("");
+                            endRequest();
+                            return;
+
                         case 503:
                             // We'll assume msec instead of the usual seconds
                             int delay = Integer.parseInt(response
@@ -443,6 +447,15 @@ public class ApplicationConnection {
                             }).schedule(delay);
                             return;
 
+                        }
+
+                        if ((statusCode / 100) == 4) {
+                            // Handle all 4xx errors the same way as (they are
+                            // all permanent errors)
+                            showCommunicationError("UIDL could not be read from server. Check servlets mappings. Error code: "
+                                    + statusCode);
+                            endRequest();
+                            return;
                         }
 
                         if (applicationRunning) {
@@ -508,15 +521,42 @@ public class ApplicationConnection {
      */
     private void showCommunicationError(String details) {
         console.error("Communication error: " + details);
+        showError(details, configuration.getCommunicationErrorCaption(),
+                configuration.getCommunicationErrorMessage(), configuration
+                        .getCommunicationErrorUrl());
+    }
+
+    /**
+     * Shows the authentication error notification.
+     * 
+     * @param details
+     *            Optional details for debugging.
+     */
+    private void showAuthenticationError(String details) {
+        console.error("Authentication error: " + details);
+        showError(details, configuration.getAuthorizationErrorCaption(),
+                configuration.getAuthorizationErrorMessage(), configuration
+                        .getAuthorizationErrorUrl());
+    }
+
+    /**
+     * Shows the error notification.
+     * 
+     * @param details
+     *            Optional details for debugging.
+     */
+    private void showError(String details, String caption, String message,
+            String url) {
+
         StringBuilder html = new StringBuilder();
-        if (configuration.getCommunicationErrorCaption() != null) {
+        if (caption != null) {
             html.append("<h1>");
-            html.append(configuration.getCommunicationErrorCaption());
+            html.append(caption);
             html.append("</h1>");
         }
-        if (configuration.getCommunicationErrorMessage() != null) {
+        if (message != null) {
             html.append("<p>");
-            html.append(configuration.getCommunicationErrorMessage());
+            html.append(message);
             html.append("</p>");
         }
 
@@ -528,12 +568,11 @@ public class ApplicationConnection {
             html.append("</I></p>");
 
             VNotification n = new VNotification(1000 * 60 * 45);
-            n.addEventListener(new NotificationRedirect(configuration
-                    .getCommunicationErrorUrl()));
+            n.addEventListener(new NotificationRedirect(url));
             n.show(html.toString(), VNotification.CENTERED_TOP,
                     VNotification.STYLE_SYSTEM);
         } else {
-            redirect(configuration.getCommunicationErrorUrl());
+            redirect(url);
         }
     }
 

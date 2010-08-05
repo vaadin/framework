@@ -1329,6 +1329,11 @@ public abstract class Application implements URIHandler,
         protected String communicationErrorCaption = "Communication problem";
         protected String communicationErrorMessage = "Take note of any unsaved data, and <u>click here</u> to continue.";
 
+        protected String authenticationErrorURL = null;
+        protected boolean authenticationErrorNotificationEnabled = true;
+        protected String authenticationErrorCaption = "Authentication problem";
+        protected String authenticationErrorMessage = "Take note of any unsaved data, and <u>click here</u> to continue.";
+
         protected String internalErrorURL = null;
         protected boolean internalErrorNotificationEnabled = true;
         protected String internalErrorCaption = "Internal error";
@@ -1412,6 +1417,38 @@ public abstract class Application implements URIHandler,
          */
         public String getCommunicationErrorMessage() {
             return (communicationErrorNotificationEnabled ? communicationErrorMessage
+                    : null);
+        }
+
+        /**
+         * @return null to reload the application after authentication error
+         *         message.
+         */
+        public String getAuthenticationErrorURL() {
+            return authenticationErrorURL;
+        }
+
+        /**
+         * @return true to show the authentication error message.
+         */
+        public boolean isAuthenticationErrorNotificationEnabled() {
+            return authenticationErrorNotificationEnabled;
+        }
+
+        /**
+         * @return "Authentication problem"
+         */
+        public String getAuthenticationErrorCaption() {
+            return (authenticationErrorNotificationEnabled ? authenticationErrorCaption
+                    : null);
+        }
+
+        /**
+         * @return 
+         *         "Take note of any unsaved data, and <u>click here</u> to continue."
+         */
+        public String getAuthenticationErrorMessage() {
+            return (authenticationErrorNotificationEnabled ? authenticationErrorMessage
                     : null);
         }
 
@@ -1614,6 +1651,52 @@ public abstract class Application implements URIHandler,
          */
         public void setSessionExpiredMessage(String sessionExpiredMessage) {
             this.sessionExpiredMessage = sessionExpiredMessage;
+        }
+
+        /**
+         * Sets the URL to go to when there is a authentication error.
+         * 
+         * @param authenticationErrorURL
+         *            the URL to go to, or null to reload current
+         */
+        public void setAuthenticationErrorURL(String authenticationErrorURL) {
+            this.authenticationErrorURL = authenticationErrorURL;
+        }
+
+        /**
+         * Enables or disables the notification. If disabled, the set URL (or
+         * current) is loaded directly.
+         * 
+         * @param authenticationErrorNotificationEnabled
+         *            true = enabled, false = disabled
+         */
+        public void setAuthenticationErrorNotificationEnabled(
+                boolean authenticationErrorNotificationEnabled) {
+            this.authenticationErrorNotificationEnabled = authenticationErrorNotificationEnabled;
+        }
+
+        /**
+         * Sets the caption of the notification. Set to null for no caption. If
+         * both caption and message is null, the notification is disabled;
+         * 
+         * @param authenticationErrorCaption
+         *            the caption
+         */
+        public void setAuthenticationErrorCaption(
+                String authenticationErrorCaption) {
+            this.authenticationErrorCaption = authenticationErrorCaption;
+        }
+
+        /**
+         * Sets the message of the notification. Set to null for no message. If
+         * both caption and message is null, the notification is disabled;
+         * 
+         * @param authenticationErrorMessage
+         *            the message
+         */
+        public void setAuthenticationErrorMessage(
+                String authenticationErrorMessage) {
+            this.authenticationErrorMessage = authenticationErrorMessage;
         }
 
         /**

@@ -1814,6 +1814,24 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             page.write(",\"comErrMsg\": {" + "\"caption\":" + caption + ","
                     + "\"message\" : " + message + "," + "\"url\" : " + url
                     + "}");
+
+            // Write the AuthenticationError -message to client
+            caption = systemMessages.getAuthenticationErrorCaption();
+            if (caption != null) {
+                caption = "\"" + caption + "\"";
+            }
+            message = systemMessages.getAuthenticationErrorMessage();
+            if (message != null) {
+                message = "\"" + message + "\"";
+            }
+            url = systemMessages.getAuthenticationErrorURL();
+            if (url != null) {
+                url = "\"" + url + "\"";
+            }
+
+            page.write(",\"authErrMsg\": {" + "\"caption\":" + caption + ","
+                    + "\"message\" : " + message + "," + "\"url\" : " + url
+                    + "}");
         }
         page.write("};\n//]]>\n</script>\n");
 
