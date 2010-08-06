@@ -6,6 +6,8 @@ package com.vaadin.terminal.gwt.client;
 
 import java.util.Date;
 
+import com.vaadin.terminal.gwt.client.ui.VDateField;
+
 /**
  * This class provides date/time parsing services to all components on the
  * client side.
@@ -15,13 +17,6 @@ import java.util.Date;
  */
 @SuppressWarnings("deprecation")
 public class DateTimeService {
-    public static int RESOLUTION_YEAR = 0;
-    public static int RESOLUTION_MONTH = 1;
-    public static int RESOLUTION_DAY = 2;
-    public static int RESOLUTION_HOUR = 3;
-    public static int RESOLUTION_MIN = 4;
-    public static int RESOLUTION_SEC = 5;
-    public static int RESOLUTION_MSEC = 6;
 
     private String currentLocale;
 
@@ -150,6 +145,18 @@ public class DateTimeService {
         return start;
     }
 
+    public static void setMilliseconds(Date date, int ms) {
+        date.setTime(date.getTime() / 1000 * 1000 + ms);
+    }
+
+    public static int getMilliseconds(Date date) {
+        if (date == null) {
+            return 0;
+        }
+    
+        return (int) (date.getTime() - date.getTime() / 1000 * 1000);
+    }
+
     public static int getNumberOfDaysInMonth(Date date) {
         final int month = date.getMonth();
         if (month == 1 && true == isLeapYear(date)) {
@@ -192,31 +199,31 @@ public class DateTimeService {
         long end = e.getYear() * 10000000000l;
         long target = date.getYear() * 10000000000l;
 
-        if (resolution == RESOLUTION_YEAR) {
+        if (resolution == VDateField.RESOLUTION_YEAR) {
             return (start <= target && end >= target);
         }
         start += s.getMonth() * 100000000l;
         end += e.getMonth() * 100000000l;
         target += date.getMonth() * 100000000l;
-        if (resolution == RESOLUTION_MONTH) {
+        if (resolution == VDateField.RESOLUTION_MONTH) {
             return (start <= target && end >= target);
         }
         start += s.getDate() * 1000000l;
         end += e.getDate() * 1000000l;
         target += date.getDate() * 1000000l;
-        if (resolution == RESOLUTION_DAY) {
+        if (resolution == VDateField.RESOLUTION_DAY) {
             return (start <= target && end >= target);
         }
         start += s.getHours() * 10000l;
         end += e.getHours() * 10000l;
         target += date.getHours() * 10000l;
-        if (resolution == RESOLUTION_HOUR) {
+        if (resolution == VDateField.RESOLUTION_HOUR) {
             return (start <= target && end >= target);
         }
         start += s.getMinutes() * 100l;
         end += e.getMinutes() * 100l;
         target += date.getMinutes() * 100l;
-        if (resolution == RESOLUTION_MIN) {
+        if (resolution == VDateField.RESOLUTION_MIN) {
             return (start <= target && end >= target);
         }
         start += s.getSeconds();

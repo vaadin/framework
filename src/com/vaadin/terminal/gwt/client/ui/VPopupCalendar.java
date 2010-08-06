@@ -4,8 +4,12 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.Date;
+
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -17,8 +21,12 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.DateTimeService;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusOutListener;
+import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.SubmitListener;
+import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.ValueChangeListener;
 
 /**
  * Represents a date selection component with a text field and a popup date
@@ -51,7 +59,28 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         calendarToggle.getElement().setTabIndex(-1);
         add(calendarToggle);
 
-        calendar = new VCalendarPanel(this);
+        calendar = GWT.create(VCalendarPanel.class);
+        calendar.setFocusOutListener(new FocusOutListener() {
+            public boolean onFocusOut(DomEvent event) {
+                ApplicationConnection.getConsole().log(
+                        "Focus out event, due to "
+                                + event.getNativeEvent().getType());
+                event.preventDefault();
+                closeCalendarPanel();
+                return true;
+            }
+        });
+
+        calendar.setSubmitListener(new SubmitListener() {
+            public void onSubmit() {
+                updateValue(calendar.getDate());
+                closeCalendarPanel();
+            }
+
+            public void onCancel() {
+                closeCalendarPanel();
+            }
+        });
 
         popup = new VOverlay(true, true, true);
         popup.setStyleName(VDateField.CLASSNAME + "-popup");
@@ -63,6 +92,46 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
 
         sinkEvents(Event.ONKEYDOWN);
 
+    }
+
+    private void updateValue(Date newDate) {
+        Date currentDate = getCurrentDate();
+        if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
+            setCurrentDate(newDate);
+            getClient().updateVariable(getId(), "year",
+                    newDate.getYear() + 1900, false);
+            if (getCurrentResolution() > VDateField.RESOLUTION_YEAR) {
+                getClient().updateVariable(getId(), "month",
+                        newDate.getMonth() + 1, false);
+                if (getCurrentResolution() > RESOLUTION_MONTH) {
+                    getClient().updateVariable(getId(), "day",
+                            newDate.getDate(), false);
+                    if (getCurrentResolution() > RESOLUTION_DAY) {
+                        getClient().updateVariable(getId(), "hour",
+                                newDate.getHours(), false);
+                        if (getCurrentResolution() > RESOLUTION_HOUR) {
+                            getClient().updateVariable(getId(), "min",
+                                    newDate.getMinutes(), false);
+                            if (getCurrentResolution() > RESOLUTION_MIN) {
+                                getClient().updateVariable(getId(), "sec",
+                                        newDate.getSeconds(), false);
+                                if (getCurrentResolution() == RESOLUTION_MSEC) {
+                                    getClient().updateVariable(
+                                            getId(),
+                                            "msec",
+                                            DateTimeService
+                                                    .getMilliseconds(newDate),
+                                            false);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (isImmediate()) {
+                getClient().sendPendingVariableChanges();
+            }
+        }
     }
 
     /*
@@ -83,10 +152,19 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         popup.setStyleName(VDateField.CLASSNAME + "-popup "
                 + VDateField.CLASSNAME + "-"
                 + resolutionToString(currentResolution));
-        if (date != null) {
-            calendar.updateCalendar();
-        }
+        calendar.setDateTimeService(getDateTimeService());
+        calendar.setShowISOWeekNumbers(isShowISOWeekNumbers());
+        calendar.setResolution(currentResolution);
         calendarToggle.setEnabled(enabled);
+
+        if (currentResolution <= RESOLUTION_MONTH) {
+            calendar.setValueChangeListener(new ValueChangeListener() {
+                public void changed(Date date) {
+                    setCurrentDate(date);
+                    buildDate();
+                }
+            });
+        }
 
         if (readonly) {
             calendarToggle.addStyleName(CLASSNAME + "-button-readonly");
@@ -114,28 +192,19 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
     }
 
     /**
-     * Set the popup panel to be displayed when clicking the calendar button.
-     * This is usually used when we want to extend the VCalendarPanel and use
-     * new keyboard bindings.
-     * 
-     * @param panel
-     *            The custom calendar panel
-     */
-    public void setCalendarPanel(VCalendarPanel panel) {
-        if (panel != null) {
-            calendar = panel;
-            calendar.updateCalendar();
-        }
-    }
-
-    /**
      * Opens the calendar panel popup
      */
     public void openCalendarPanel() {
 
         if (!open && !readonly) {
             open = true;
-            calendar.updateCalendar();
+            final Date start = new Date();
+
+            if (getCurrentDate() != null) {
+                calendar.setDate((Date) getCurrentDate().clone());
+            } else {
+                calendar.setDate(new Date());
+            }
 
             // clear previous values
             popup.setWidth("");
@@ -183,6 +252,12 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
                     popup.setPopupPosition(l, t
                             + calendarToggle.getOffsetHeight() + 2);
 
+                    Date end = new Date();
+
+                    ApplicationConnection.getConsole().log(
+                            "Rendering VCalendar took "
+                                    + (end.getTime() - start.getTime() + "ms"));
+
                     /*
                      * We have to wait a while before focusing since the popup
                      * needs to be opened before we can focus
@@ -197,6 +272,9 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
                     focusTimer.schedule(100);
                 }
             });
+        } else {
+            ApplicationConnection.getConsole().error(
+                    "Cannot reopen popup, it is already open!");
         }
     }
 
@@ -222,7 +300,15 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
      */
     public void onClose(CloseEvent<PopupPanel> event) {
         if (event.getSource() == popup) {
+            if (getCurrentResolution() <= VDateField.RESOLUTION_MONTH) {
+                // due to UI limitations always fetch date from popup if
+                // resolution is month or year
+                date = calendar.getDate();
+            }
             buildDate();
+            focus();
+
+            // TODO resolve what the "Sigh." is all about and document it here
             // Sigh.
             Timer t = new Timer() {
                 @Override

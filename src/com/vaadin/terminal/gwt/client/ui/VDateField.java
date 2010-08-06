@@ -20,19 +20,19 @@ public class VDateField extends FlowPanel implements Paintable, Field {
 
     public static final String CLASSNAME = "v-datefield";
 
-    protected String id;
+    private String id;
 
-    protected ApplicationConnection client;
+    private ApplicationConnection client;
 
     protected boolean immediate;
 
-    public static final int RESOLUTION_YEAR = 0;
-    public static final int RESOLUTION_MONTH = 1;
-    public static final int RESOLUTION_DAY = 2;
-    public static final int RESOLUTION_HOUR = 3;
-    public static final int RESOLUTION_MIN = 4;
-    public static final int RESOLUTION_SEC = 5;
-    public static final int RESOLUTION_MSEC = 6;
+    public static final int RESOLUTION_YEAR = 1;
+    public static final int RESOLUTION_MONTH = 2;
+    public static final int RESOLUTION_DAY = 4;
+    public static final int RESOLUTION_HOUR = 8;
+    public static final int RESOLUTION_MIN = 16;
+    public static final int RESOLUTION_SEC = 32;
+    public static final int RESOLUTION_MSEC = 64;
 
     public static final String WEEK_NUMBERS = "wn";
 
@@ -62,8 +62,6 @@ public class VDateField extends FlowPanel implements Paintable, Field {
      * specified.
      */
     protected Date date = null;
-    // e.g when paging a calendar, before actually selecting
-    protected Date showingDate = new Date();
 
     protected DateTimeService dts;
 
@@ -156,12 +154,9 @@ public class VDateField extends FlowPanel implements Paintable, Field {
         if (year > -1) {
             date = new Date((long) getTime(year, month, day, hour, min, sec,
                     msec));
-            showingDate.setTime(date.getTime());
         } else {
             date = null;
-            showingDate = new Date();
         }
-
     }
 
     /*
@@ -189,23 +184,11 @@ public class VDateField extends FlowPanel implements Paintable, Field {
     }-*/;
 
     public int getMilliseconds() {
-        if (date == null) {
-            return 0;
-        }
-
-        return (int) (date.getTime() - date.getTime() / 1000 * 1000);
+        return DateTimeService.getMilliseconds(date);
     }
 
     public void setMilliseconds(int ms) {
-        date.setTime(date.getTime() / 1000 * 1000 + ms);
-    }
-
-    public int getShowingMilliseconds() {
-        return (int) (showingDate.getTime() - showingDate.getTime() / 1000 * 1000);
-    }
-
-    public void setShowingMilliseconds(int ms) {
-        showingDate.setTime(showingDate.getTime() / 1000 * 1000 + ms);
+        DateTimeService.setMilliseconds(date, ms);
     }
 
     public int getCurrentResolution() {
@@ -230,14 +213,6 @@ public class VDateField extends FlowPanel implements Paintable, Field {
 
     public void setCurrentDate(Date date) {
         this.date = date;
-    }
-
-    public Date getShowingDate() {
-        return showingDate;
-    }
-
-    public void setShowingDate(Date date) {
-        showingDate = date;
     }
 
     public boolean isImmediate() {

@@ -57,6 +57,9 @@
 	background: #333;
 	color: #fff;
 }
+.v-datefield-calendarpanel-day-focused {
+	outline: 1px dotted black;
+}
 .v-datefield-time {
 	white-space: nowrap;
 }
