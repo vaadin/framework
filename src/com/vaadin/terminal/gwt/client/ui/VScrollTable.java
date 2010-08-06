@@ -1916,7 +1916,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     fireHeaderClickedEvent(event);
                     break;
                 }
-                fireHeaderClickedEvent(event);
                 break;
             case Event.ONMOUSEMOVE:
                 if (dragging) {
