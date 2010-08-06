@@ -4864,12 +4864,48 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // Set new focused row
             focusedRow = row;
 
-            row.getElement().scrollIntoView();
+            /*
+             * We can't use row.getElement.scrollIntoView() here. It will scroll
+             * the row right if the table has horizontal scrollbars. Using
+             * homegrown method instead. #5385
+             */
+            ensureRowIsVisible(row);
 
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Ensures that the row is visible
+     * 
+     * @param row
+     *            The row to ensure is visible
+     */
+    private void ensureRowIsVisible(VScrollTableRow row) {
+        boolean hasHorizontalScrollbars = scrollBody.getOffsetHeight() > scrollBodyPanel
+                .getOffsetHeight();
+        int rowTop = row.getElement().getOffsetTop();
+        int rowBottom = rowTop + row.getElement().getOffsetHeight();
+        int bodyTop = scrollBodyPanel.getScrollPosition();
+        int bodyBottom = bodyTop + getElement().getScrollHeight()
+                - tHead.getOffsetHeight();
+
+        // Take into account horizontal scrollbars
+        bodyBottom -= hasHorizontalScrollbars ? row.getOffsetHeight() : 0;
+
+        // Scrolling above body
+        if (rowTop < bodyTop) {
+            int diff = bodyTop - rowTop;
+            scrollBodyPanel.setScrollPosition(bodyTop - diff);
+        }
+
+        // Scrolling below body
+        if (rowBottom > bodyBottom) {
+            int diff = rowBottom - bodyBottom;
+            scrollBodyPanel.setScrollPosition(bodyTop + diff);
+        }
     }
 
     /**
