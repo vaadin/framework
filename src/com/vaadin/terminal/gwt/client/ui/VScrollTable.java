@@ -1811,6 +1811,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
                         scrollBodyPanel.setFocus(true);
                     }
+                    event.stopPropagation();
+                    event.preventDefault();
                 }
             }
         }
