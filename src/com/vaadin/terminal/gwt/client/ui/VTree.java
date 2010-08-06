@@ -23,7 +23,9 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
@@ -1450,11 +1452,23 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
             node.setFocused(true);
         }
 
-        if (node != null && scrollIntoView) {
-            node.scrollIntoView();
-        }
-
         focusedNode = node;
+
+        if (node != null && scrollIntoView) {
+            /*
+             * Delay scrolling the focused node into view if we are still
+             * rendering. #5396
+             */
+            if (!rendering) {
+                node.scrollIntoView();
+            } else {
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        focusedNode.scrollIntoView();
+                    }
+                });
+            }
+        }
     }
 
     /**
