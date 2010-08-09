@@ -358,10 +358,15 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
                 DOM.eventPreventDefault(event);
                 DOM.eventCancelBubble(event, true);
             }
-        } else if (DOM.eventGetType(event) == Event.ONFOCUS) {
+        } else if (targ.equals(getElement())
+                && DOM.eventGetType(event) == Event.ONFOCUS) {
             feedbackPopup.show();
-        } else if (DOM.eventGetType(event) == Event.ONBLUR) {
+        } else if (targ.equals(getElement())
+                && DOM.eventGetType(event) == Event.ONBLUR) {
+            ApplicationConnection.getConsole().error(targ.getClassName());
             feedbackPopup.hide();
+        } else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
+            feedbackPopup.show();
         }
     }
 
@@ -395,6 +400,7 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
         switch (DOM.eventGetType(event)) {
         case Event.ONMOUSEDOWN:
             if (!disabled && !readonly) {
+                focus();
                 feedbackPopup.show();
                 dragging = true;
                 DOM.setElementProperty(handle, "className", CLASSNAME
@@ -411,7 +417,7 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
             }
             break;
         case Event.ONMOUSEUP:
-            feedbackPopup.hide();
+            // feedbackPopup.hide();
             dragging = false;
             DOM.setElementProperty(handle, "className", CLASSNAME + "-handle");
             DOM.releaseCapture(getElement());
