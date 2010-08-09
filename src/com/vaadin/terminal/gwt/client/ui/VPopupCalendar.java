@@ -26,6 +26,7 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.SubmitListener;
+import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.TimeChangeListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.ValueChangeListener;
 
 /**
@@ -161,6 +162,24 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
             calendar.setValueChangeListener(new ValueChangeListener() {
                 public void changed(Date date) {
                     setCurrentDate(date);
+                    buildDate();
+                }
+            });
+        }
+
+        if (currentResolution > RESOLUTION_DAY) {
+            calendar.setTimeChangeListener(new TimeChangeListener() {
+                public void changed(int hour, int min, int sec, int msec) {
+                    Date d = (Date) date.clone();
+                    d.setHours(hour);
+                    d.setMinutes(min);
+                    d.setSeconds(sec);
+                    DateTimeService.setMilliseconds(d, msec);
+
+                    // Always update time changes to the server
+                    updateValue(d);
+
+                    // Update text field
                     buildDate();
                 }
             });

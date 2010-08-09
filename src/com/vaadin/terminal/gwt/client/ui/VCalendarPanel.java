@@ -82,6 +82,14 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
+     * Dispatches an event when the panel when time is changed
+     */
+    public interface TimeChangeListener {
+
+        void changed(int hour, int min, int sec, int msec);
+    }
+
+    /**
      * Represents a Date button in the calendar
      */
     private class VEventButton extends Button {
@@ -160,6 +168,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private SubmitListener submitListener;
 
     private ValueChangeListener valueChangeListener;
+
+    private TimeChangeListener timeChangeListener;
 
     private boolean hasFocus = false;
 
@@ -1481,7 +1491,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
         }
 
         /*
-         * (non-Javadoc)
+         * (non-Javadoc) VT
          * 
          * @see
          * com.google.gwt.event.dom.client.ChangeHandler#onChange(com.google.gwt
@@ -1498,19 +1508,53 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     h = h + ampm.getSelectedIndex() * 12;
                 }
                 value.setHours(h);
+                if (timeChangeListener != null) {
+                    timeChangeListener.changed(h, value.getMinutes(), value
+                            .getSeconds(), DateTimeService
+                            .getMilliseconds(value));
+                }
+                event.preventDefault();
+                event.stopPropagation();
             } else if (event.getSource() == mins) {
                 final int m = mins.getSelectedIndex();
                 value.setMinutes(m);
+                if (timeChangeListener != null) {
+                    timeChangeListener.changed(value.getHours(), m, value
+                            .getSeconds(), DateTimeService
+                            .getMilliseconds(value));
+                }
+                event.preventDefault();
+                event.stopPropagation();
             } else if (event.getSource() == sec) {
                 final int s = sec.getSelectedIndex();
                 value.setSeconds(s);
+                if (timeChangeListener != null) {
+                    timeChangeListener.changed(value.getHours(), value
+                            .getMinutes(), s, DateTimeService
+                            .getMilliseconds(value));
+                }
+                event.preventDefault();
+                event.stopPropagation();
             } else if (event.getSource() == msec) {
                 final int ms = msec.getSelectedIndex();
                 DateTimeService.setMilliseconds(value, ms);
+                if (timeChangeListener != null) {
+                    timeChangeListener.changed(value.getHours(), value
+                            .getMinutes(), value.getSeconds(), ms);
+                }
+                event.preventDefault();
+                event.stopPropagation();
             } else if (event.getSource() == ampm) {
                 final int h = hours.getSelectedIndex()
                         + (ampm.getSelectedIndex() * 12);
                 value.setHours(h);
+                if (timeChangeListener != null) {
+                    timeChangeListener.changed(h, value.getMinutes(), value
+                            .getSeconds(), DateTimeService
+                            .getMilliseconds(value));
+                }
+                event.preventDefault();
+                event.stopPropagation();
             }
         }
 
@@ -1582,6 +1626,15 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     public void setValueChangeListener(ValueChangeListener listener) {
         this.valueChangeListener = listener;
+    }
+
+    /**
+     * The time change listener is triggered when the user changes the time.
+     * 
+     * @param listener
+     */
+    public void setTimeChangeListener(TimeChangeListener listener) {
+        this.timeChangeListener = listener;
     }
 
     /**

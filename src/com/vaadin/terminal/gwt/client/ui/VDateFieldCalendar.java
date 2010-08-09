@@ -12,6 +12,7 @@ import com.vaadin.terminal.gwt.client.DateTimeService;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.SubmitListener;
+import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.TimeChangeListener;
 
 public class VDateFieldCalendar extends VDateField {
 
@@ -50,6 +51,22 @@ public class VDateFieldCalendar extends VDateField {
             caleandarPanel.setDate(new Date(currentDate.getTime()));
         } else {
             caleandarPanel.setDate(null);
+        }
+
+        if (currentResolution > RESOLUTION_DAY) {
+            caleandarPanel.setTimeChangeListener(new TimeChangeListener() {
+                public void changed(int hour, int min, int sec, int msec) {
+                    Date d = (Date) date.clone();
+                    d.setHours(hour);
+                    d.setMinutes(min);
+                    d.setSeconds(sec);
+                    DateTimeService.setMilliseconds(d, msec);
+
+                    // Always update time changes to the server
+                    caleandarPanel.setDate(d);
+                    updateValueFromPanel();
+                }
+            });
         }
 
         // Update possible changes
