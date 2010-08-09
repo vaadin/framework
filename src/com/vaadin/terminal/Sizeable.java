@@ -69,15 +69,15 @@ public interface Sizeable extends Serializable {
      * Textual representations of units symbols. Supported units and their
      * symbols are:
      * <ul>
-     * <li><code>UNITS_PIXELS</code>: "px"</li>
-     * <li><code>UNITS_POINTS</code>: "pt"</li>
-     * <li><code>UNITS_PICAS</code>: "pc"</li>
-     * <li><code>UNITS_EM</code>: "em"</li>
-     * <li><code>UNITS_EX</code>: "ex"</li>
-     * <li><code>UNITS_MM</code>: "mm"</li>
-     * <li><code>UNITS_CM</code>. "cm"</li>
-     * <li><code>UNITS_INCH</code>: "in"</li>
-     * <li><code>UNITS_PERCENTAGE</code>: "%"</li>
+     * <li>{@link #UNITS_PIXELS}: "px"</li>
+     * <li>{@link #UNITS_POINTS}: "pt"</li>
+     * <li>{@link #UNITS_PICAS}: "pc"</li>
+     * <li>{@link #UNITS_EM}: "em"</li>
+     * <li>{@link #UNITS_EX}: "ex"</li>
+     * <li>{@link #UNITS_MM}: "mm"</li>
+     * <li>{@link #UNITS_CM}. "cm"</li>
+     * <li>{@link #UNITS_INCH}: "in"</li>
+     * <li>{@link #UNITS_PERCENTAGE}: "%"</li>
      * </ul>
      * These can be used like <code>Sizeable.UNIT_SYMBOLS[UNITS_PIXELS]</code>.
      */
@@ -194,8 +194,10 @@ public interface Sizeable extends Serializable {
      *            the width of the object.
      * @param unit
      *            the unit used for the width. Possible values include
-     *            UNITS_PIXELS, UNITS_POINTS, UNITS_PICAS, UNITS_EM, UNITS_EX,
-     *            UNITS_MM, UNITS_CM, UNITS_INCH, UNITS_PERCENTAGE, UNITS_ROWS.
+     *            {@link #UNITS_PIXELS}, {@link #UNITS_POINTS},
+     *            {@link #UNITS_PICAS}, {@link #UNITS_EM}, {@link #UNITS_EX},
+     *            {@link #UNITS_MM}, {@link #UNITS_CM}, {@link #UNITS_INCH},
+     *            {@link #UNITS_PERCENTAGE}.
      */
     public void setWidth(float width, int unit);
 
@@ -207,8 +209,10 @@ public interface Sizeable extends Serializable {
      *            the height of the object.
      * @param unit
      *            the unit used for the width. Possible values include
-     *            UNITS_PIXELS, UNITS_POINTS, UNITS_PICAS, UNITS_EM, UNITS_EX,
-     *            UNITS_MM, UNITS_CM, UNITS_INCH, UNITS_PERCENTAGE, UNITS_ROWS.
+     *            {@link #UNITS_PIXELS}, {@link #UNITS_POINTS},
+     *            {@link #UNITS_PICAS}, {@link #UNITS_EM}, {@link #UNITS_EX},
+     *            {@link #UNITS_MM}, {@link #UNITS_CM}, {@link #UNITS_INCH},
+     *            {@link #UNITS_PERCENTAGE}.
      */
     public void setHeight(float height, int unit);
 
