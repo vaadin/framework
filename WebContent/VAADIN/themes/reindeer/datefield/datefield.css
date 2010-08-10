@@ -1,3 +1,6 @@
+input.v-textfield-readonly:focus{
+	background-color: transparent;	
+}
 .v-datefield-calendarpanel {
 	border-collapse: collapse;
 	margin: 0;
