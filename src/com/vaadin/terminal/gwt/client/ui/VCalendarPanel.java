@@ -527,10 +527,12 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     }
 
                     if (dayOfMonth == focusedDate.getDate()) {
-                        day.addStyleDependentName(CN_FOCUSED);
                         focusedDay = day;
                         focusedRow = weekOfMonth;
                         focusedColumn = firstWeekdayColumn + dayOfWeek;
+                        if (hasFocus) {
+                            day.addStyleDependentName(CN_FOCUSED);
+                        }
                     }
 
                     days.setWidget(weekOfMonth, firstWeekdayColumn + dayOfWeek,
