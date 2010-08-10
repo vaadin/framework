@@ -174,7 +174,37 @@ public class VTextualDate extends VDateField implements Paintable, Field,
         // Create the initial text for the textfield
         String dateText;
         if (date != null) {
-            dateText = DateTimeFormat.getFormat(getFormatString()).format(date);
+            String formatStr = getFormatString();
+
+            /*
+             * Check if format contains the month name. If it does we need to
+             * manually convert it to the month name since DateTimeFormat.format
+             * always uses the current locale and will replace the month name
+             * wrong if current locale is different from the locale set for the
+             * DateField. Does not support abbreviated month names.
+             */
+            if (formatStr.contains("MMM")) {
+                String monthName = getDateTimeService().getMonth(
+                        date.getMonth());
+                if (monthName != null) {
+                    // Capitalize month name
+                    monthName = Character.toUpperCase(monthName.charAt(0))
+                            + monthName.substring(1);
+
+                    /*
+                     * Replace all month occurrences with the month name. All
+                     * strings with 3 or more M's are converted to the month
+                     * name as defined in
+                     * http://www.docjar.com/docs/api/com/google
+                     * /gwt/i18n/client/DateTimeFormat.html
+                     */
+                    formatStr = formatStr.replaceAll("[M]{3,}", "'" + monthName
+                            + "'");
+                }
+            }
+
+            DateTimeFormat format = DateTimeFormat.getFormat(formatStr);
+            dateText = format.format(date);
         } else {
             dateText = "";
         }
