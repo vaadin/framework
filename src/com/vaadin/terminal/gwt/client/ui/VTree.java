@@ -124,7 +124,8 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
          * time we catch the mouse down and up events so we can apply the text
          * selection patch in IE
          */
-        sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEUP | Event.ONKEYUP);
+        sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEUP | Event.ONKEYUP
+                | Event.ONFOCUS);
     }
 
     /*
@@ -333,8 +334,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                                     VerticalDropLocation curDetail = (VerticalDropLocation) event
                                             .getDropDetails().get("detail");
                                     if (curDetail == detail
-                                            && newKey
-                                                    .equals(currentMouseOverKey)) {
+                                            && newKey.equals(currentMouseOverKey)) {
                                         keyToNode.get(newKey).emphasis(detail);
                                     }
                                     /*
@@ -427,8 +427,8 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
      * Sends the selection to the server
      */
     private void sendSelectionToServer() {
-        client.updateVariable(paintableId, "selected", selectedIds
-                .toArray(new String[selectedIds.size()]), immediate);
+        client.updateVariable(paintableId, "selected",
+                selectedIds.toArray(new String[selectedIds.size()]), immediate);
         selectionHasChanged = false;
     }
 
@@ -474,7 +474,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
         public TreeNode() {
             constructDom();
-            sinkEvents(Event.ONCLICK | Event.ONDBLCLICK | Event.MOUSEEVENTS
+            sinkEvents(Event.ONDBLCLICK | Event.MOUSEEVENTS
                     | Event.ONCONTEXTMENU | Event.ONMOUSEDOWN);
         }
 
@@ -622,25 +622,21 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                     && (type == Event.ONDBLCLICK || type == Event.ONMOUSEUP)) {
                 fireClick(event);
             }
-            if (type == Event.ONCLICK) {
-                if (getElement() == target || ie6compatnode == target) {
-                    // state change
-                    toggleState();
-                } else if (!readonly && inCaption && selectable) {
-                    // caption click = selection change && possible click event
 
-                    if (handleClickSelection(event.getCtrlKey()
-                            || event.getMetaKey(), event.getShiftKey())) {
-                        event.preventDefault();
-                    }
-                }
-                DOM.eventCancelBubble(event, true);
-            } else if (type == Event.ONCONTEXTMENU) {
+            if (type == Event.ONCONTEXTMENU) {
                 showContextMenu(event);
             }
 
             if (type == Event.ONMOUSEDOWN) {
-                event.preventDefault();
+                if (!BrowserInfo.get().isIE() && !BrowserInfo.get().isOpera()) {
+                    /*
+                     * TODO: There is a problem here with webkit. This have to
+                     * be called so that the tree gets keyboard focus but as a
+                     * side effect the tree will scroll up to its upper border.
+                     * #5400
+                     */
+                    setFocus(true);
+                }
 
                 /*
                  * Ensure that when we are clicking on an item when the tree
@@ -648,17 +644,30 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                  * #5269
                  */
                 if (inCaption) {
-                    // Focus node
-                    setFocusedNode(this, false);
+                    // caption click = selection change && possible click event
+                    if (getElement() == target || ie6compatnode == target) {
+                        // state change
+                        toggleState();
+                    } else if (!readonly && selectable) {
+                        if (handleClickSelection(
+                                event.getCtrlKey() || event.getMetaKey(),
+                                event.getShiftKey())) {
+
+                            DeferredCommand.addCommand(new Command() {
+                                public void execute() {
+                                    setFocusedNode(TreeNode.this, BrowserInfo
+                                            .get().isWebkit());
+                                }
+                            });
+
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                    }
 
                     // Need to cancel bubbling so only the item and not the
                     // ancestors get the event
                     event.stopPropagation();
-
-                    if (!BrowserInfo.get().isIE()
-                            && !BrowserInfo.get().isOpera()) {
-                        setFocus(true);
-                    }
                 }
             }
 
@@ -789,14 +798,14 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
             if (uidl.hasAttribute("icon")) {
                 if (icon == null) {
                     icon = new Icon(client);
-                    DOM.insertBefore(DOM.getFirstChild(nodeCaptionDiv), icon
-                            .getElement(), nodeCaptionSpan);
+                    DOM.insertBefore(DOM.getFirstChild(nodeCaptionDiv),
+                            icon.getElement(), nodeCaptionSpan);
                 }
                 icon.setUri(uidl.getStringAttribute("icon"));
             } else {
                 if (icon != null) {
-                    DOM.removeChild(DOM.getFirstChild(nodeCaptionDiv), icon
-                            .getElement());
+                    DOM.removeChild(DOM.getFirstChild(nodeCaptionDiv),
+                            icon.getElement());
                     icon = null;
                 }
             }
@@ -1489,7 +1498,6 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
      * .dom.client.FocusEvent)
      */
     public void onFocus(FocusEvent event) {
-
         // If no node has focus, focus the first item in the tree
         if (focusedNode == null && lastSelection == null && selectable) {
             setFocusedNode((TreeNode) body.getWidget(0), false);
@@ -1508,7 +1516,8 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
      * .dom.client.BlurEvent)
      */
     public void onBlur(BlurEvent event) {
-        focusedNode.setFocused(false);
+        if (focusedNode != null)
+            focusedNode.setFocused(false);
     }
 
     /*
@@ -1519,9 +1528,9 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
      * .gwt.event.dom.client.KeyPressEvent)
      */
     public void onKeyPress(KeyPressEvent event) {
-        if (handleKeyNavigation(event.getNativeEvent().getKeyCode(), event
-                .isControlKeyDown()
-                || event.isMetaKeyDown(), event.isShiftKeyDown())) {
+        if (handleKeyNavigation(event.getNativeEvent().getKeyCode(),
+                event.isControlKeyDown() || event.isMetaKeyDown(),
+                event.isShiftKeyDown())) {
             event.preventDefault();
             event.stopPropagation();
         }
@@ -1535,9 +1544,9 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
      * .event.dom.client.KeyDownEvent)
      */
     public void onKeyDown(KeyDownEvent event) {
-        if (handleKeyNavigation(event.getNativeEvent().getKeyCode(), event
-                .isControlKeyDown()
-                || event.isMetaKeyDown(), event.isShiftKeyDown())) {
+        if (handleKeyNavigation(event.getNativeEvent().getKeyCode(),
+                event.isControlKeyDown() || event.isMetaKeyDown(),
+                event.isShiftKeyDown())) {
             event.preventDefault();
             event.stopPropagation();
         }
