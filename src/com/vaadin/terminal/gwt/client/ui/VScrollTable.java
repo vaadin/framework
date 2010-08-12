@@ -3870,11 +3870,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                             deselectAll();
                                         }
                                         toggleSelection();
-                                    } /*
-                                       * else NOP to avoid excessive server
-                                       * visits (selection is removed with
-                                       * CTRL/META click)
-                                       */
+                                    } else if (selectMode == SELECT_MODE_SINGLE
+                                            && nullSelectionAllowed) {
+                                        toggleSelection();
+                                    }/*
+                                      * else NOP to avoid excessive server
+                                      * visits (selection is removed with
+                                      * CTRL/META click)
+                                      */
 
                                     selectionRangeStart = this;
                                     setRowFocus(this);
