@@ -17,13 +17,13 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.TableCellElement;
-import com.google.gwt.dom.client.TableRowElement;
-import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
+import com.google.gwt.dom.client.TableCellElement;
+import com.google.gwt.dom.client.TableRowElement;
+import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -1809,7 +1809,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             if (enabled && event != null) {
                 if (isResizing
                         || event.getEventTarget().cast() == colResizeWidget) {
-                    onResizeEvent(event);
+                    if (dragging && DOM.eventGetType(event) == Event.ONMOUSEUP) {
+                        // Handle releasing column header on spacer #5318
+                        handleCaptionEvent(event);
+                    } else {
+                        onResizeEvent(event);
+                    }
                 } else {
                     handleCaptionEvent(event);
                     if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
