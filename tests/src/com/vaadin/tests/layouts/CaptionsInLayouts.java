@@ -6,6 +6,7 @@ import java.util.List;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.UserError;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractField;
@@ -43,6 +44,7 @@ public class CaptionsInLayouts extends TestBase {
         addComponent(toggleRequired());
         // addComponent(toggleCaptions());
         addComponent(toggleError());
+        addComponent(toggleIcon());
         addComponent(addCaptionText());
         createComponents();
         layoutSelect.setValue(layoutSelect.getItemIds().iterator().next());
@@ -79,9 +81,33 @@ public class CaptionsInLayouts extends TestBase {
         return requiredToggle;
     }
 
+    private Component toggleIcon() {
+        CheckBox iconToggle = new CheckBox();
+        iconToggle.setImmediate(true);
+        iconToggle.setCaption("Icons");
+        iconToggle.addListener(new ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                setIcon((Boolean) event.getProperty().getValue());
+            }
+        });
+        return iconToggle;
+    }
+
     protected void setRequired(boolean value) {
         for (AbstractField c : components) {
             c.setRequired(value);
+        }
+
+    }
+
+    protected void setIcon(boolean value) {
+        for (AbstractField c : components) {
+            if (!value) {
+                c.setIcon(null);
+            } else {
+                c.setIcon(new ThemeResource("../runo/icons/16/ok.png"));
+            }
         }
 
     }
