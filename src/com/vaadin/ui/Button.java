@@ -11,14 +11,14 @@ import java.util.Map;
 
 import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents;
-import com.vaadin.event.ShortcutAction;
-import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VButton;
@@ -143,6 +143,10 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
             target.addAttribute("type", "switch");
         }
         target.addVariable(this, "state", booleanValue());
+
+        if (clickShortcut != null) {
+            target.addAttribute("keycode", clickShortcut.getKeyCode());
+        }
     }
 
     /**

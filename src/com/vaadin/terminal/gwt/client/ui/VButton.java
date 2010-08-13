@@ -13,6 +13,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -79,6 +80,8 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
 
     private HandlerRegistration focusHandlerRegistration;
     private HandlerRegistration blurHandlerRegistration;
+
+    private int clickShortcut = 0;
 
     public VButton() {
         super(DOM.createDiv());
@@ -149,6 +152,10 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
                 wrapper.removeChild(icon.getElement());
                 icon = null;
             }
+        }
+
+        if (uidl.hasAttribute("keycode")) {
+            clickShortcut = uidl.getIntAttribute("keycode");
         }
     }
 
@@ -270,24 +277,39 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
         // Synthesize clicks based on keyboard events AFTER the normal key
         // handling.
         if ((event.getTypeInt() & Event.KEYEVENTS) != 0) {
-            char keyCode = (char) DOM.eventGetKeyCode(event);
             switch (type) {
             case Event.ONKEYDOWN:
-                if (keyCode == ' ') {
+                if (event.getKeyCode() == 32 /* space */) {
                     isFocusing = true;
                     event.preventDefault();
                 }
                 break;
             case Event.ONKEYUP:
-                if (isFocusing && keyCode == ' ') {
+                if (isFocusing && event.getKeyCode() == 32 /* space */) {
                     isFocusing = false;
-                    onClick();
+
+                    /*
+                     * If click shortcut is space then the shortcut handler will
+                     * take care of the click.
+                     */
+                    if (clickShortcut != 32 /* space */) {
+                        onClick();
+                    }
+
                     event.preventDefault();
                 }
                 break;
             case Event.ONKEYPRESS:
-                if (keyCode == '\n' || keyCode == '\r') {
-                    onClick();
+                if (event.getKeyCode() == KeyCodes.KEY_ENTER) {
+
+                    /*
+                     * If click shortcut is enter then the shortcut handler will
+                     * take care of the click.
+                     */
+                    if (clickShortcut != KeyCodes.KEY_ENTER) {
+                        onClick();
+                    }
+
                     event.preventDefault();
                 }
                 break;
