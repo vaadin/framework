@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.table;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import com.vaadin.data.Container;
@@ -29,11 +30,14 @@ public class EditableModeChange extends TestBase {
         final TableFieldFactory fieldFactory = new ItemFieldFactory();
         items.setTableFieldFactory(fieldFactory);
 
+        Calendar cal = Calendar.getInstance();
+        cal.set(2010, 7, 12, 12, 7, 54);
+        Date date = cal.getTime();
+
         for (String name : names) {
             items.addItem(name);
             items.getItem(name).getItemProperty("name").setValue(name);
-            items.getItem(name).getItemProperty("birthday")
-                    .setValue(new Date());
+            items.getItem(name).getItemProperty("birthday").setValue(date);
         }
 
         items.addListener(new ItemClickEvent.ItemClickListener() {
