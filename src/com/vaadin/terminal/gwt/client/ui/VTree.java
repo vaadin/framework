@@ -643,12 +643,12 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                  * does not have focus that the item is selected and focused.
                  * #5269
                  */
-                if (inCaption) {
+                if (getElement() == target || ie6compatnode == target) {
+                    // state change
+                    toggleState();
+                } else if (inCaption) {
                     // caption click = selection change && possible click event
-                    if (getElement() == target || ie6compatnode == target) {
-                        // state change
-                        toggleState();
-                    } else if (!readonly && selectable) {
+                    if (!readonly && selectable) {
                         if (handleClickSelection(
                                 event.getCtrlKey() || event.getMetaKey(),
                                 event.getShiftKey())) {
@@ -1516,8 +1516,9 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
      * .dom.client.BlurEvent)
      */
     public void onBlur(BlurEvent event) {
-        if (focusedNode != null)
+        if (focusedNode != null) {
             focusedNode.setFocused(false);
+        }
     }
 
     /*
