@@ -1472,22 +1472,17 @@ public class IndexedContainer implements Container.Indexed,
         // Clone the shallow properties
         nc.itemIds = itemIds != null ? (ArrayList) itemIds.clone() : null;
         nc.itemSetChangeListeners = itemSetChangeListeners != null ? (LinkedList) itemSetChangeListeners
-                .clone()
-                : null;
+                .clone() : null;
         nc.propertyIds = propertyIds != null ? (ArrayList) propertyIds.clone()
                 : null;
         nc.propertySetChangeListeners = propertySetChangeListeners != null ? (LinkedList) propertySetChangeListeners
-                .clone()
-                : null;
+                .clone() : null;
         nc.propertyValueChangeListeners = propertyValueChangeListeners != null ? (LinkedList) propertyValueChangeListeners
-                .clone()
-                : null;
+                .clone() : null;
         nc.readOnlyProperties = readOnlyProperties != null ? (HashSet) readOnlyProperties
-                .clone()
-                : null;
+                .clone() : null;
         nc.singlePropertyValueChangeListeners = singlePropertyValueChangeListeners != null ? (Hashtable) singlePropertyValueChangeListeners
-                .clone()
-                : null;
+                .clone() : null;
 
         nc.types = types != null ? (Hashtable) types.clone() : null;
 

@@ -67,8 +67,8 @@ public class MyDynamicResource implements URIHandler, ParameterHandler {
             ImageIO.write(image, "png", imagebuffer);
 
             // Return a stream from the buffer.
-            ByteArrayInputStream istream = new ByteArrayInputStream(imagebuffer
-                    .toByteArray());
+            ByteArrayInputStream istream = new ByteArrayInputStream(
+                    imagebuffer.toByteArray());
             return new DownloadStream(istream, null, null);
         } catch (IOException e) {
             return null;

@@ -24,9 +24,9 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.ContainerOrderedWrapper;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.Action;
+import com.vaadin.event.Action.Handler;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickSource;
 import com.vaadin.event.MouseEvents.ClickEvent;
@@ -553,8 +553,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.columnHeaders.clear();
         int i = 0;
         for (final Iterator<Object> it = visibleColumns.iterator(); it
-                .hasNext()
-                && i < columnHeaders.length; i++) {
+                .hasNext() && i < columnHeaders.length; i++) {
             this.columnHeaders.put(it.next(), columnHeaders[i]);
         }
 
@@ -617,8 +616,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.columnIcons.clear();
         int i = 0;
         for (final Iterator<Object> it = visibleColumns.iterator(); it
-                .hasNext()
-                && i < columnIcons.length; i++) {
+                .hasNext() && i < columnIcons.length; i++) {
             this.columnIcons.put(it.next(), columnIcons[i]);
         }
 
@@ -698,8 +696,7 @@ public class Table extends AbstractSelect implements Action.Container,
         final HashMap<Object, String> newCA = new HashMap<Object, String>();
         int i = 0;
         for (final Iterator<Object> it = visibleColumns.iterator(); it
-                .hasNext()
-                && i < columnAlignments.length; i++) {
+                .hasNext() && i < columnAlignments.length; i++) {
             newCA.put(it.next(), columnAlignments[i]);
         }
         this.columnAlignments = newCA;
@@ -714,7 +711,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * small or very big values. Setting width to -1 (default) means that theme
      * will make decision of width.
      * 
-     *<p>
+     * <p>
      * Column can either have a fixed width or expand ratio. The latter one set
      * is used. See @link {@link #setColumnExpandRatio(Object, float)}.
      * 
@@ -2075,8 +2072,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Actions
         if (variables.containsKey("action")) {
-            final StringTokenizer st = new StringTokenizer((String) variables
-                    .get("action"), ",");
+            final StringTokenizer st = new StringTokenizer(
+                    (String) variables.get("action"), ",");
             if (st.countTokens() == 2) {
                 final Object itemId = itemIdMapper.get(st.nextToken());
                 final Action action = (Action) actionMapper.get(st.nextToken());
@@ -2337,8 +2334,7 @@ public class Table extends AbstractSelect implements Action.Container,
         final boolean[] iscomponent = new boolean[visibleColumns.size()];
         int iscomponentIndex = 0;
         for (final Iterator<Object> it = visibleColumns.iterator(); it
-                .hasNext()
-                && iscomponentIndex < iscomponent.length;) {
+                .hasNext() && iscomponentIndex < iscomponent.length;) {
             final Object columnId = it.next();
             if (columnGenerators.containsKey(columnId)) {
                 iscomponent[iscomponentIndex++] = true;
@@ -2383,8 +2379,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // The select variable is only enabled if selectable
         if (selectable) {
-            target.addVariable(this, "selected", selectedKeys
-                    .toArray(new String[selectedKeys.size()]));
+            target.addVariable(this, "selected",
+                    selectedKeys.toArray(new String[selectedKeys.size()]));
         }
 
         // The cursors are only shown on pageable table
@@ -2394,8 +2390,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Sorting
         if (getContainerDataSource() instanceof Container.Sortable) {
-            target.addVariable(this, "sortcolumn", columnIdMap
-                    .key(sortContainerPropertyId));
+            target.addVariable(this, "sortcolumn",
+                    columnIdMap.key(sortContainerPropertyId));
             target.addVariable(this, "sortascending", sortAscending);
         }
 
@@ -2429,8 +2425,7 @@ public class Table extends AbstractSelect implements Action.Container,
             final String[] colorder = new String[visibleColumns.size()];
             int i = 0;
             for (final Iterator<Object> it = visibleColumns.iterator(); it
-                    .hasNext()
-                    && i < colorder.length;) {
+                    .hasNext() && i < colorder.length;) {
                 colorder[i++] = columnIdMap.key(it.next());
             }
             target.addVariable(this, "columnorder", colorder);
@@ -2448,8 +2443,7 @@ public class Table extends AbstractSelect implements Action.Container,
             final String[] collapsedkeys = new String[ccs.size()];
             int nextColumn = 0;
             for (final Iterator<Object> it = visibleColumns.iterator(); it
-                    .hasNext()
-                    && nextColumn < collapsedkeys.length;) {
+                    .hasNext() && nextColumn < collapsedkeys.length;) {
                 final Object columnId = it.next();
                 if (isColumnCollapsed(columnId)) {
                     collapsedkeys[nextColumn++] = columnIdMap.key(columnId);
@@ -2485,8 +2479,8 @@ public class Table extends AbstractSelect implements Action.Container,
                 }
                 if (columnWidths.containsKey(columnId)) {
                     if (getColumnWidth(columnId) > -1) {
-                        target.addAttribute("width", String
-                                .valueOf(getColumnWidth(columnId)));
+                        target.addAttribute("width",
+                                String.valueOf(getColumnWidth(columnId)));
                     } else {
                         target.addAttribute("er",
                                 getColumnExpandRatio(columnId));
@@ -2542,8 +2536,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     c.paint(target);
                 }
             } else {
-                target
-                        .addText((String) cells[CELL_FIRSTCOL + currentColumn][indexInRowbuffer]);
+                target.addText((String) cells[CELL_FIRSTCOL + currentColumn][indexInRowbuffer]);
             }
         }
 
@@ -2557,8 +2550,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
         paintRowIcon(target, cells, indexInRowbuffer);
         paintRowHeader(target, cells, indexInRowbuffer);
-        target.addAttribute("key", Integer
-                .parseInt(cells[CELL_KEY][indexInRowbuffer].toString()));
+        target.addAttribute("key",
+                Integer.parseInt(cells[CELL_KEY][indexInRowbuffer].toString()));
 
         if (isSelected(itemId)) {
             target.addAttribute("selected", true);
@@ -3697,8 +3690,8 @@ public class Table extends AbstractSelect implements Action.Container,
             AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dragEvent
                     .getTargetDetails();
             table = (Table) dragEvent.getTargetDetails().getTarget();
-            ArrayList<Object> visibleItemIds = new ArrayList<Object>(table
-                    .getPageLength());
+            ArrayList<Object> visibleItemIds = new ArrayList<Object>(
+                    table.getPageLength());
             visibleItemIds.size();
             Object id = table.getCurrentPageFirstItemId();
             for (int i = 0; i < table.getPageLength() && id != null; i++) {

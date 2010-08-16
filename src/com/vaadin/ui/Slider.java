@@ -41,7 +41,7 @@ import com.vaadin.terminal.gwt.client.ui.VSlider;
  * 			setVolume(d.doubleValue());
  * 		}
  * 	}
- *
+ * 
  * </code>
  * 
  * @author IT Mill Ltd.
@@ -408,8 +408,8 @@ public class Slider extends AbstractField {
         target.addAttribute("resolution", resolution);
 
         if (resolution > 0) {
-            target.addVariable(this, "value", ((Double) getValue())
-                    .doubleValue());
+            target.addVariable(this, "value",
+                    ((Double) getValue()).doubleValue());
         } else {
             target.addVariable(this, "value", ((Double) getValue()).intValue());
         }

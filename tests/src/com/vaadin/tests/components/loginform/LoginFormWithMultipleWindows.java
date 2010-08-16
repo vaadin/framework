@@ -2,9 +2,9 @@ package com.vaadin.tests.components.loginform;
 
 import com.vaadin.Application;
 import com.vaadin.ui.LoginForm;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.LoginForm.LoginEvent;
 import com.vaadin.ui.LoginForm.LoginListener;
+import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
 public class LoginFormWithMultipleWindows extends Application {

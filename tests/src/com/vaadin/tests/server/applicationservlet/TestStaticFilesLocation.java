@@ -148,8 +148,7 @@ public class TestStaticFilesLocation extends TestCase {
         expect(request.getAttribute("javax.servlet.include.servlet_path"))
                 .andReturn(realServletPath).anyTimes();
         expect(
-                request
-                        .getAttribute(AbstractApplicationServlet.REQUEST_VAADIN_STATIC_FILE_PATH))
+                request.getAttribute(AbstractApplicationServlet.REQUEST_VAADIN_STATIC_FILE_PATH))
                 .andReturn(null).anyTimes();
 
         return request;
@@ -165,8 +164,7 @@ public class TestStaticFilesLocation extends TestCase {
         expect(request.getAttribute("javax.servlet.include.servlet_path"))
                 .andReturn(null).anyTimes();
         expect(
-                request
-                        .getAttribute(ApplicationServlet.REQUEST_VAADIN_STATIC_FILE_PATH))
+                request.getAttribute(ApplicationServlet.REQUEST_VAADIN_STATIC_FILE_PATH))
                 .andReturn(null).anyTimes();
 
         return request;

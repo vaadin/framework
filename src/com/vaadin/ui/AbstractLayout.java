@@ -59,9 +59,7 @@ public abstract class AbstractLayout extends AbstractComponentContainer
      */
     public void setMargin(boolean topEnabled, boolean rightEnabled,
             boolean bottomEnabled, boolean leftEnabled) {
-        margins
-                .setMargins(topEnabled, rightEnabled, bottomEnabled,
-                        leftEnabled);
+        margins.setMargins(topEnabled, rightEnabled, bottomEnabled, leftEnabled);
         requestRepaint();
     }
 

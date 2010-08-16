@@ -3,9 +3,9 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 /**
  */
@@ -48,9 +48,7 @@ public class Ticket1632 extends Application {
             public void buttonClick(ClickEvent event) {
                 visible = !visible;
                 if (visible) {
-                    t
-                            .setVisibleColumns(new Object[] { "col1", "col2",
-                                    "col3" });
+                    t.setVisibleColumns(new Object[] { "col1", "col2", "col3" });
 
                 } else {
                     t.setVisibleColumns(new Object[] { "col1", "col2" });

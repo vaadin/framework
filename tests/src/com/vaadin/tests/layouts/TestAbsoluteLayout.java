@@ -17,6 +17,7 @@ import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.BaseFieldFactory;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.FieldFactory;
@@ -26,7 +27,6 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class TestAbsoluteLayout extends TestBase {
 
@@ -208,8 +208,8 @@ public class TestAbsoluteLayout extends TestBase {
                             if (files[j].endsWith(".class")) {
                                 // removes the .class extension
                                 String p = resource.toString()
-                                        + files[j].substring(0, files[j]
-                                                .length() - 6);
+                                        + files[j].substring(0,
+                                                files[j].length() - 6);
                                 p = p.replaceAll(".*classes/", "");
                                 p = p.replaceAll("/", ".");
                                 Class c;
@@ -291,9 +291,9 @@ public class TestAbsoluteLayout extends TestBase {
             BeanItem beanItem = new BeanItem(value);
             String c = "Component properties for "
                     + value.getClass().getSimpleName();
-            ArrayList<String> fields = new ArrayList<String>(Arrays
-                    .asList(new String[] { "width", "widthUnits", "height",
-                            "heightUnits", "caption", "styleName" }));
+            ArrayList<String> fields = new ArrayList<String>(
+                    Arrays.asList(new String[] { "width", "widthUnits",
+                            "height", "heightUnits", "caption", "styleName" }));
             if (value instanceof Label) {
                 c += "(" + ((Label) value).getValue() + ")";
                 fields.add("value");

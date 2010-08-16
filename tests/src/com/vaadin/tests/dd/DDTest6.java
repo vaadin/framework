@@ -16,8 +16,8 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.event.Action;
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Action.Handler;
+import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -29,26 +29,26 @@ import com.vaadin.event.dd.acceptcriteria.SourceIsTarget;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.StreamResource;
-import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.StreamResource.StreamSource;
+import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DragAndDropWrapper;
+import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable.Html5File;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
-import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable.Html5File;
 import com.vaadin.ui.Tree.TreeDragMode;
 import com.vaadin.ui.Tree.TreeTargetDetails;
 import com.vaadin.ui.Upload.Receiver;
+import com.vaadin.ui.Window;
 
 public class DDTest6 extends TestBase {
 
@@ -384,8 +384,7 @@ public class DDTest6 extends TestBase {
                 ComponentPosition position = l.getPosition(transferable
                         .getSourceComponent());
                 position.setTop(position.getTopValue() + deltaY, UNITS_PIXELS);
-                position
-                        .setLeft(position.getLeftValue() + deltaX, UNITS_PIXELS);
+                position.setLeft(position.getLeftValue() + deltaX, UNITS_PIXELS);
 
             } else if (dropEvent.getTransferable().getSourceComponent() == tree1) {
 

@@ -150,10 +150,12 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
         // Fill the table
         for (int i = 0; i < pd.length; i++) {
-            allProperties.addItem(new Object[] { pd[i].getName(),
-                    pd[i].getPropertyType().getName(),
-                    (pd[i].getWriteMethod() == null ? "R" : "R/W"),
-                    (listed.contains(pd[i].getName()) ? "x" : "") }, pd[i]);
+            allProperties.addItem(
+                    new Object[] { pd[i].getName(),
+                            pd[i].getPropertyType().getName(),
+                            (pd[i].getWriteMethod() == null ? "R" : "R/W"),
+                            (listed.contains(pd[i].getName()) ? "x" : "") },
+                    pd[i]);
         }
     }
 
@@ -177,23 +179,22 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
         } catch (final NullPointerException e) {
             sampleException = e;
         }
-        set
-                .replaceWithSelect(
-                        "componentError",
-                        new Object[] {
-                                null,
-                                new UserError("Sample text error message."),
-                                new UserError(
-                                        "<h3>Error message formatting</h3><p>Error messages can "
-                                                + "contain any UIDL formatting, like: <ul><li><b>Bold"
-                                                + "</b></li><li><i>Italic</i></li></ul></p>",
-                                        UserError.CONTENT_UIDL,
-                                        ErrorMessage.INFORMATION),
-                                new SystemError(
-                                        "This is an example of exception error reposting",
-                                        sampleException) },
-                        new Object[] { "No error", "Sample text error",
-                                "Sample Formatted error", "Sample System Error" });
+        set.replaceWithSelect(
+                "componentError",
+                new Object[] {
+                        null,
+                        new UserError("Sample text error message."),
+                        new UserError(
+                                "<h3>Error message formatting</h3><p>Error messages can "
+                                        + "contain any UIDL formatting, like: <ul><li><b>Bold"
+                                        + "</b></li><li><i>Italic</i></li></ul></p>",
+                                UserError.CONTENT_UIDL,
+                                ErrorMessage.INFORMATION),
+                        new SystemError(
+                                "This is an example of exception error reposting",
+                                sampleException) }, new Object[] { "No error",
+                        "Sample text error", "Sample Formatted error",
+                        "Sample System Error" });
 
         // Style
         final String currentStyle = ((Component) objectToConfigure)
@@ -208,59 +209,50 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
         }
 
         // Set up descriptions
-        set
-                .getField("caption")
+        set.getField("caption")
                 .setDescription(
                         "Component caption is the title of the component. Usage of the caption is optional and the "
                                 + "exact behavior of the propery is defined by the component. Setting caption null "
                                 + "or empty disables the caption.");
-        set
-                .getField("enabled")
+        set.getField("enabled")
                 .setDescription(
                         "Enabled property controls the usage of the component. If the component is disabled (enabled=false),"
                                 + " it can not receive any events from the terminal. In most cases it makes the usage"
                                 + " of the component easier, if the component visually looks disbled (for example is grayed), "
                                 + "when it can not be used.");
-        set
-                .getField("icon")
+        set.getField("icon")
                 .setDescription(
                         "Icon of the component selects the main icon of the component. The usage of the icon is identical "
                                 + "to caption and in most components caption and icon are kept together. Icons can be "
                                 + "loaded from any resources (see Terminal/Resources for more information). Some components "
                                 + "contain more than just the captions icon. Those icons are controlled through their "
                                 + "own properties.");
-        set
-                .getField("visible")
+        set.getField("visible")
                 .setDescription(
                         "Visibility property says if the component is renreded or not. Invisible components are implicitly "
                                 + "disabled, as there is no visible user interface to send event.");
-        set
-                .getField("description")
+        set.getField("description")
                 .setDescription(
                         "Description is designed to allow easy addition of short tooltips, like this. Like the caption,"
                                 + " setting description null or empty disables the description.");
-        set
-                .getField("readOnly")
+        set.getField("readOnly")
                 .setDescription(
                         "Those components that have internal state that can be written are settable to readOnly-mode,"
                                 + " where the object can only be read, not written.");
-        set
-                .getField("componentError")
+        set.getField("componentError")
                 .setDescription(
                         "Vaadin supports extensive error reporting. One part of the error reporting are component"
                                 + " errors that can be controlled by the programmer. This example only contains couple of "
                                 + "sample errors; to get the full picture, read browse ErrorMessage-interface implementors "
                                 + "API documentation.");
-        set
-                .getField("immediate")
+        set.getField("immediate")
                 .setDescription(
                         "Not all terminals can send the events immediately to server from all action. Web is the most "
                                 + "typical environment where many events (like textfield changed) are not sent to server, "
                                 + "before they are explicitly submitted. Setting immediate property true (by default this "
                                 + "is false for most components), the programmer can assure that the application is"
                                 + " notified as soon as possible about the value change in this component.");
-        set
-                .getField("style")
+        set.getField("style")
                 .setDescription(
                         "Themes specify the overall looks of the user interface. In addition component can have a set of "
                                 + "styles, that can be visually very different (like datefield calendar- and text-styles), "
@@ -287,8 +279,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
         set.getField("multiSelect").setDescription(
                 "Specified if multiple items can be selected at once.");
-        set
-                .getField("newItemsAllowed")
+        set.getField("newItemsAllowed")
                 .setDescription(
                         "Select component (but not Tree or Table) can allow the user to directly "
                                 + "add new items to set of options. The new items are constrained to be "
@@ -352,7 +343,8 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
         // FIXME: navigation statistics
         try {
-            FeatureUtil.debug(getApplication().getUser().toString(),
+            FeatureUtil.debug(
+                    getApplication().getUser().toString(),
                     "valueChange "
                             + ((AbstractComponent) event.getProperty())
                                     .getTag() + ", " + event.getProperty());
@@ -374,8 +366,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
                 // DateField time style
                 if (value.equals("Time")) {
                     final DateField d = new DateField("Time", new Date());
-                    d
-                            .setDescription("This is a DateField-component with text-style");
+                    d.setDescription("This is a DateField-component with text-style");
                     d.setResolution(DateField.RESOLUTION_MIN);
                     d.setStyleName("text");
                     ((AbstractComponentContainer) objectToConfigure)
@@ -385,8 +376,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
                 // Date field calendar style
                 if (value.equals("Calendar")) {
                     final DateField c = new DateField("Calendar", new Date());
-                    c
-                            .setDescription("DateField-component with calendar-style and day-resolution");
+                    c.setDescription("DateField-component with calendar-style and day-resolution");
                     c.setStyleName("calendar");
                     c.setResolution(DateField.RESOLUTION_DAY);
                     ((AbstractComponentContainer) objectToConfigure)

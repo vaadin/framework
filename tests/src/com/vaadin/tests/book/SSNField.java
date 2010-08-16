@@ -5,8 +5,8 @@
 package com.vaadin.tests.book;
 
 import com.vaadin.data.Property;
-import com.vaadin.data.Validator;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Validator;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;

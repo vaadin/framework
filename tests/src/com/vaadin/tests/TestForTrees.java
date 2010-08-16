@@ -7,14 +7,14 @@ package com.vaadin.tests;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 /**
  * Some test cases for trees. Events panel logs events that happen server side.
@@ -47,9 +47,8 @@ public class TestForTrees extends CustomComponent implements Handler {
 
     public void createNewView() {
         main.removeAllComponents();
-        main
-                .addComponent(new Label(
-                        "Some test cases for trees. Events panel logs events that happen server side."));
+        main.addComponent(new Label(
+                "Some test cases for trees. Events panel logs events that happen server side."));
 
         main.addComponent(new Button("commit"));
 

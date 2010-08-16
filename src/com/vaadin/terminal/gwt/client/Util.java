@@ -406,8 +406,8 @@ public class Util {
             setHeight(widget, "");
             return paddingBorderGuess;
         } else if (height.endsWith("px")) {
-            int pixelHeight = Integer.parseInt(height.substring(0, height
-                    .length() - 2));
+            int pixelHeight = Integer.parseInt(height.substring(0,
+                    height.length() - 2));
             return setHeightExcludingPaddingAndBorder(widget.getElement(),
                     pixelHeight, paddingBorderGuess, false);
         } else {

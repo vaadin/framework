@@ -189,8 +189,7 @@ public class WidgetSetBuilder {
         o.println("    2. Give the widgetsetname (to be created or updated)"
                 + " as first parameter");
         o.println();
-        o
-                .println("All found vaadin widgetsets will be inherited in given widgetset");
+        o.println("All found vaadin widgetsets will be inherited in given widgetset");
 
     }
 

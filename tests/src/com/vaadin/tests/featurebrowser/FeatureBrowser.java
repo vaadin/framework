@@ -10,6 +10,8 @@ import java.util.StringTokenizer;
 import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
@@ -17,8 +19,6 @@ import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Tree;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 public class FeatureBrowser extends CustomComponent implements
         Property.ValueChangeListener, ClickListener, Layout {
@@ -166,7 +166,8 @@ public class FeatureBrowser extends CustomComponent implements
                             .equals("tree")) {
                 // ignore tree initialization
             } else {
-                FeatureUtil.debug(getApplication().getUser().toString(),
+                FeatureUtil.debug(
+                        getApplication().getUser().toString(),
                         "valueChange "
                                 + ((AbstractComponent) event.getProperty())
                                         .getTag() + ", " + event.getProperty());

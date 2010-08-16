@@ -18,6 +18,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout;
+import com.vaadin.ui.GridLayout.OverlapsException;
 
 /**
  * <p>
@@ -1074,8 +1075,9 @@ public class GridLayout extends AbstractLayout implements
             addComponent(newComponent);
         } else if (newLocation == null) {
             removeComponent(oldComponent);
-            addComponent(newComponent, oldLocation.getColumn1(), oldLocation
-                    .getRow1(), oldLocation.getColumn2(), oldLocation.getRow2());
+            addComponent(newComponent, oldLocation.getColumn1(),
+                    oldLocation.getRow1(), oldLocation.getColumn2(),
+                    oldLocation.getRow2());
         } else {
             oldLocation.setComponent(newComponent);
             newLocation.setComponent(oldComponent);

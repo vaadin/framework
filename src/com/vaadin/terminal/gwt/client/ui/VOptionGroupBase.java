@@ -197,9 +197,7 @@ abstract class VOptionGroupBase extends Composite implements Paintable, Field,
 
     public void onChange(ChangeEvent event) {
         if (multiselect) {
-            client
-                    .updateVariable(id, "selected", getSelectedItems(),
-                            immediate);
+            client.updateVariable(id, "selected", getSelectedItems(), immediate);
         } else {
             client.updateVariable(id, "selected", new String[] { ""
                     + getSelectedItem() }, immediate);

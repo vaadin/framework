@@ -341,8 +341,9 @@ public class VTabsheet extends VTabsheetBase {
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
                     previousVisibleWidget = tp.getWidget(tp.getVisibleWidget());
-                    DOM.setStyleAttribute(DOM.getParent(previousVisibleWidget
-                            .getElement()), "visibility", "hidden");
+                    DOM.setStyleAttribute(
+                            DOM.getParent(previousVisibleWidget.getElement()),
+                            "visibility", "hidden");
                     client.updateVariable(id, "selected", tabKeys.get(tabIndex)
                             .toString(), true);
                 }
@@ -387,9 +388,7 @@ public class VTabsheet extends VTabsheetBase {
 
         addStyleDependentName("loading"); // Indicate initial progress
         tb.setStyleName(CLASSNAME + "-tabs");
-        DOM
-                .setElementProperty(contentNode, "className", CLASSNAME
-                        + "-content");
+        DOM.setElementProperty(contentNode, "className", CLASSNAME + "-content");
         DOM.setElementProperty(deco, "className", CLASSNAME + "-deco");
 
         add(tb, tabs);
@@ -737,8 +736,9 @@ public class VTabsheet extends VTabsheetBase {
         updateOpenTabSize();
         VTabsheet.this.removeStyleDependentName("loading");
         if (previousVisibleWidget != null) {
-            DOM.setStyleAttribute(DOM.getParent(previousVisibleWidget
-                    .getElement()), "visibility", "");
+            DOM.setStyleAttribute(
+                    DOM.getParent(previousVisibleWidget.getElement()),
+                    "visibility", "");
             previousVisibleWidget = null;
         }
     }

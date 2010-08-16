@@ -25,9 +25,9 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.UriFragmentUtility;
+import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 
 /**
  * TestBench finds out testable classes within given java packages and adds them

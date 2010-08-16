@@ -36,8 +36,8 @@ import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.ui.Field;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
-import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
+import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 
@@ -481,16 +481,14 @@ public class ApplicationConnection {
                                     handleWhenCSSLoaded(response);
                                 }
                             }).schedule(50);
-                            console
-                                    .log("Assuming CSS loading is not complete, "
-                                            + "postponing render phase. "
-                                            + "(.v-loading-indicator height == 0)");
+                            console.log("Assuming CSS loading is not complete, "
+                                    + "postponing render phase. "
+                                    + "(.v-loading-indicator height == 0)");
                             cssWaits++;
                         } else {
                             handleReceivedJSONMessage(response);
                             if (cssWaits >= MAX_CSS_WAITS) {
-                                console
-                                        .error("CSS files may have not loaded properly.");
+                                console.error("CSS files may have not loaded properly.");
                             }
                         }
                     }
@@ -522,8 +520,8 @@ public class ApplicationConnection {
     private void showCommunicationError(String details) {
         console.error("Communication error: " + details);
         showError(details, configuration.getCommunicationErrorCaption(),
-                configuration.getCommunicationErrorMessage(), configuration
-                        .getCommunicationErrorUrl());
+                configuration.getCommunicationErrorMessage(),
+                configuration.getCommunicationErrorUrl());
     }
 
     /**
@@ -535,8 +533,8 @@ public class ApplicationConnection {
     private void showAuthenticationError(String details) {
         console.error("Authentication error: " + details);
         showError(details, configuration.getAuthorizationErrorCaption(),
-                configuration.getAuthorizationErrorMessage(), configuration
-                        .getAuthorizationErrorUrl());
+                configuration.getAuthorizationErrorMessage(),
+                configuration.getAuthorizationErrorUrl());
     }
 
     /**
@@ -925,8 +923,8 @@ public class ApplicationConnection {
                             .get(getPid(paintable));
                     Widget widget = (Widget) paintable;
                     Size oldSize = detail.getOffsetSize();
-                    Size newSize = new Size(widget.getOffsetWidth(), widget
-                            .getOffsetHeight());
+                    Size newSize = new Size(widget.getOffsetWidth(),
+                            widget.getOffsetHeight());
 
                     if (oldSize == null || !oldSize.equals(newSize)) {
                         sizeUpdatedWidgets.add(paintable);
@@ -1864,8 +1862,8 @@ public class ApplicationConnection {
         // Parent-less components (like sub-windows) are relative to browser
         // window.
         if (parent == null) {
-            renderSpace = new RenderSpace(Window.getClientWidth(), Window
-                    .getClientHeight());
+            renderSpace = new RenderSpace(Window.getClientWidth(),
+                    Window.getClientHeight());
         } else {
             renderSpace = parent.getAllocatedSpace(widget);
         }
@@ -1902,22 +1900,20 @@ public class ApplicationConnection {
 
                 if (debugSizes) {
                     getConsole()
-                            .log(
-                                    "Widget "
-                                            + Util.getSimpleName(widget)
-                                            + "/"
-                                            + getPid(widget.getElement())
-                                            + " relative height "
-                                            + relativeSize.getHeight()
-                                            + "% of "
-                                            + renderSpace.getHeight()
-                                            + "px (reported by "
+                            .log("Widget "
+                                    + Util.getSimpleName(widget)
+                                    + "/"
+                                    + getPid(widget.getElement())
+                                    + " relative height "
+                                    + relativeSize.getHeight()
+                                    + "% of "
+                                    + renderSpace.getHeight()
+                                    + "px (reported by "
 
-                                            + Util.getSimpleName(parent)
-                                            + "/"
-                                            + (parent == null ? "?" : parent
-                                                    .hashCode()) + ") : "
-                                            + height + "px");
+                                    + Util.getSimpleName(parent)
+                                    + "/"
+                                    + (parent == null ? "?" : parent.hashCode())
+                                    + ") : " + height + "px");
                 }
                 widget.setHeight(height + "px");
             } else {
@@ -2085,9 +2081,8 @@ public class ApplicationConnection {
         if (uidlUri.startsWith("theme://")) {
             final String themeUri = configuration.getThemeUri();
             if (themeUri == null) {
-                console
-                        .error("Theme not set: ThemeResource will not be found. ("
-                                + uidlUri + ")");
+                console.error("Theme not set: ThemeResource will not be found. ("
+                        + uidlUri + ")");
             }
             uidlUri = themeUri + uidlUri.substring(7);
         }

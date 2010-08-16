@@ -3,8 +3,8 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Window;
 
 public class Ticket1659 extends Application {
 

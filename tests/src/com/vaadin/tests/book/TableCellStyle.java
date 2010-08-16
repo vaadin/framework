@@ -18,8 +18,8 @@ public class TableCellStyle extends CustomComponent {
         table.addContainerProperty("0", String.class, null, "", null, null); // Row
         // header
         for (int i = 0; i < 8; i++) {
-            table.addContainerProperty("" + (i + 1), String.class, null, String
-                    .valueOf((char) (65 + i)), null, null);
+            table.addContainerProperty("" + (i + 1), String.class, null,
+                    String.valueOf((char) (65 + i)), null, null);
         }
 
         // Add some items in the table.

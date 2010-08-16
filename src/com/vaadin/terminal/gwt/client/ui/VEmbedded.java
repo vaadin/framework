@@ -121,8 +121,8 @@ public class VEmbedded extends HTML implements Paintable {
                             + uidl.getId() + "\"></iframe>");
                     browserElement = DOM.getFirstChild(getElement());
                 } else {
-                    DOM.setElementAttribute(browserElement, "src", getSrc(uidl,
-                            client));
+                    DOM.setElementAttribute(browserElement, "src",
+                            getSrc(uidl, client));
                 }
                 clearBrowserElement = false;
             } else {

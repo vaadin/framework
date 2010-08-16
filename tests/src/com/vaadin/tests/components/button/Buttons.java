@@ -6,10 +6,10 @@ import java.util.List;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class Buttons extends ComponentTestCase<Button> {
 
@@ -38,8 +38,9 @@ public class Buttons extends ComponentTestCase<Button> {
             l.setWidth("200px");
             addTestComponent(l);
 
-            l = createButton("This is a 100% wide simple button "
-                    + LoremIpsum.get(1500), nat);
+            l = createButton(
+                    "This is a 100% wide simple button " + LoremIpsum.get(1500),
+                    nat);
             l.setWidth("100%");
             addTestComponent(l);
 

@@ -7,9 +7,9 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class CheckBoxes extends ComponentTestCase<CheckBox> {
 

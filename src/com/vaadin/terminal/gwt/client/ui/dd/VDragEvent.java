@@ -8,9 +8,9 @@ import java.util.Map;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.dom.client.TableSectionElement;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.user.client.Element;
 import com.vaadin.terminal.gwt.client.BrowserInfo;

@@ -21,21 +21,18 @@ public class FeatureTabSheet extends Feature {
         final OrderedLayout l = new OrderedLayout();
 
         final TabSheet ts = new TabSheet();
-        ts
-                .addTab(
-                        new Label(
-                                "This is an example Label component that is added into Tab 1."),
-                        "Tab 1 caption", null);
-        ts
-                .addTab(
-                        new Label(
-                                "This is an example Label component that is added into Tab 2."),
-                        "Tab 2 caption", null);
-        ts
-                .addTab(
-                        new Label(
-                                "This is an example Label component that is added into Tab 3."),
-                        "Tab 3 caption", null);
+        ts.addTab(
+                new Label(
+                        "This is an example Label component that is added into Tab 1."),
+                "Tab 1 caption", null);
+        ts.addTab(
+                new Label(
+                        "This is an example Label component that is added into Tab 2."),
+                "Tab 2 caption", null);
+        ts.addTab(
+                new Label(
+                        "This is an example Label component that is added into Tab 3."),
+                "Tab 3 caption", null);
         l.addComponent(ts);
 
         // Properties

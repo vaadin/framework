@@ -220,8 +220,8 @@ public class ApplicationPortlet implements Portlet, Serializable {
     }
 
     private String getPortalProperty(String name, PortalContext context) {
-        boolean isLifeRay = context.getPortalInfo().toLowerCase().contains(
-                "liferay");
+        boolean isLifeRay = context.getPortalInfo().toLowerCase()
+                .contains("liferay");
 
         // TODO test on non-LifeRay platforms
 

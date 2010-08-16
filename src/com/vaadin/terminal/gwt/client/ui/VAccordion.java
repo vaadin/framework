@@ -238,9 +238,7 @@ public class VAccordion extends VTabsheetBase implements
         if (index != activeTabIndex && !disabled && !readonly
                 && !disabledTabKeys.contains(tabKeys.get(index))) {
             addStyleDependentName("loading");
-            client
-                    .updateVariable(id, "selected", "" + tabKeys.get(index),
-                            true);
+            client.updateVariable(id, "selected", "" + tabKeys.get(index), true);
         }
     }
 
@@ -367,9 +365,7 @@ public class VAccordion extends VTabsheetBase implements
             } else {
                 super.setHeight((height + getCaptionHeight()) + "px");
                 DOM.setStyleAttribute(content, "height", height + "px");
-                DOM
-                        .setStyleAttribute(content, "top", getCaptionHeight()
-                                + "px");
+                DOM.setStyleAttribute(content, "top", getCaptionHeight() + "px");
 
             }
         }
@@ -408,8 +404,8 @@ public class VAccordion extends VTabsheetBase implements
             }
 
             int captionWidth = caption.getRequiredWidth();
-            int padding = Util.measureHorizontalPaddingAndBorder(caption
-                    .getElement(), 18);
+            int padding = Util.measureHorizontalPaddingAndBorder(
+                    caption.getElement(), 18);
             return captionWidth + padding;
         }
 

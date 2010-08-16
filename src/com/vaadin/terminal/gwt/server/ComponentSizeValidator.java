@@ -21,6 +21,7 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.GridLayout.Area;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
@@ -28,7 +29,6 @@ import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.GridLayout.Area;
 
 @SuppressWarnings("serial")
 public class ComponentSizeValidator implements Serializable {
@@ -111,8 +111,7 @@ public class ComponentSizeValidator implements Serializable {
         err.append("Layout problem detected: ");
         err.append(msg);
         err.append("\n");
-        err
-                .append("Relative sizes were replaced by undefined sizes, components may not render as expected.\n");
+        err.append("Relative sizes were replaced by undefined sizes, components may not render as expected.\n");
         errorStream.println(err);
 
     }

@@ -2,9 +2,9 @@ package com.vaadin.tests.components.select;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Select;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Select;
 
 public class NullSelectionItemId extends TestBase implements ClickListener {
 

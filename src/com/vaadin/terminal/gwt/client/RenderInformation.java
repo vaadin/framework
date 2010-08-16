@@ -41,8 +41,8 @@ public class RenderInformation {
      * @return true if the size has changed since last update
      */
     public boolean updateSize(Element element) {
-        Size newSize = new Size(element.getOffsetWidth(), element
-                .getOffsetHeight());
+        Size newSize = new Size(element.getOffsetWidth(),
+                element.getOffsetHeight());
         if (newSize.equals(renderedSize)) {
             return false;
         } else {

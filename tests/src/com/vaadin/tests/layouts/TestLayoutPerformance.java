@@ -3,6 +3,7 @@ package com.vaadin.tests.layouts;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -12,7 +13,6 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class TestLayoutPerformance extends TestBase {
     private NativeSelect ns;

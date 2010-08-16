@@ -209,8 +209,9 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
             options.setFocus(true);
         }
 
-        client.updateVariable(id, "selected", selectedKeys
-                .toArray(new String[selectedKeys.size()]), isImmediate());
+        client.updateVariable(id, "selected",
+                selectedKeys.toArray(new String[selectedKeys.size()]),
+                isImmediate());
     }
 
     private void removeItem() {
@@ -242,8 +243,9 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
             selections.setFocus(true);
         }
 
-        client.updateVariable(id, "selected", selectedKeys
-                .toArray(new String[selectedKeys.size()]), isImmediate());
+        client.updateVariable(id, "selected",
+                selectedKeys.toArray(new String[selectedKeys.size()]),
+                isImmediate());
     }
 
     @Override

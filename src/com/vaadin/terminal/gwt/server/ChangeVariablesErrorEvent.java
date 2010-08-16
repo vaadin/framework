@@ -5,8 +5,8 @@ package com.vaadin.terminal.gwt.server;
 
 import java.util.Map;
 
-import com.vaadin.ui.Component;
 import com.vaadin.ui.AbstractComponent.ComponentErrorEvent;
+import com.vaadin.ui.Component;
 
 @SuppressWarnings("serial")
 public class ChangeVariablesErrorEvent implements ComponentErrorEvent {

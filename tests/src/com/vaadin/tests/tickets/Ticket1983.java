@@ -4,12 +4,12 @@ import com.vaadin.Application;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 /**
  * Test class for ticket 1983
@@ -52,10 +52,16 @@ public class Ticket1983 extends Application {
             dataSource.addContainerProperty(propId, String.class, null);
             dataSource.addContainerProperty(propId2, String.class, null);
             final Object itemId = dataSource.addItem();
-            dataSource.getItem(itemId).getItemProperty(propId).setValue(
-                    "Very long value that makes a scrollbar appear for sure");
-            dataSource.getItem(itemId).getItemProperty(propId2).setValue(
-                    "Very long value that makes a scrollbar appear for sure");
+            dataSource
+                    .getItem(itemId)
+                    .getItemProperty(propId)
+                    .setValue(
+                            "Very long value that makes a scrollbar appear for sure");
+            dataSource
+                    .getItem(itemId)
+                    .getItemProperty(propId2)
+                    .setValue(
+                            "Very long value that makes a scrollbar appear for sure");
 
             for (int i = 0; i < 150; i++) {
                 Object id = dataSource.addItem();
@@ -65,8 +71,8 @@ public class Ticket1983 extends Application {
                         .setValue(
                                 (i == 100 ? "Very long value that makes a scrollbar appear for sure"
                                         : "Short"));
-                dataSource.getItem(id).getItemProperty(propId2).setValue(
-                        "Short");
+                dataSource.getItem(id).getItemProperty(propId2)
+                        .setValue("Short");
             }
 
             table.setSizeFull();
@@ -113,9 +119,7 @@ public class Ticket1983 extends Application {
                 public void buttonClick(ClickEvent event) {
                     Button b = event.getButton();
                     if (((Boolean) b.getValue()).booleanValue()) {
-                        table
-                                .setVisibleColumns(new Object[] { propId,
-                                        propId2 });
+                        table.setVisibleColumns(new Object[] { propId, propId2 });
                     } else {
                         table.setVisibleColumns(new Object[] { propId });
                     }

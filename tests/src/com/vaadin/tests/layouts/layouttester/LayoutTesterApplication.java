@@ -2,12 +2,18 @@ package com.vaadin.tests.layouts.layouttester;
 
 import java.lang.reflect.Method;
 
-import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.tests.components.AbstractTestCase;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 
 @SuppressWarnings("serial")
@@ -99,7 +105,6 @@ public class LayoutTesterApplication extends AbstractTestCase {
             layoutSelector.addListener(new Property.ValueChangeListener() {
                 private static final long serialVersionUID = -605319614765838359L;
 
-                
                 public void valueChange(ValueChangeEvent event) {
                     layoutIndex = -1;
                     nextLaytout();
@@ -109,12 +114,10 @@ public class LayoutTesterApplication extends AbstractTestCase {
         return layoutSelector;
     }
 
-    
     protected String getDescription() {
         return "Test application for VerticalLayout, HorizontalLayout, and GridLayout";
     }
 
-    
     protected Integer getTicketNumber() {
         return 5334;
     }

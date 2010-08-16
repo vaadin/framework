@@ -2,9 +2,9 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class Ticket1806 extends com.vaadin.Application {
 
@@ -21,9 +21,8 @@ public class Ticket1806 extends com.vaadin.Application {
         tf1.setReadThrough(false);
         tf1.setPropertyDataSource(prop);
         main.addComponent(tf1);
-        main
-                .addComponent(new Button(
-                        "This button does nothing (but flushes queued variable changes)"));
+        main.addComponent(new Button(
+                "This button does nothing (but flushes queued variable changes)"));
         main.addComponent(new Button("Commit the field to property",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {

@@ -91,8 +91,7 @@ public class FormExample2 extends CustomComponent {
 
         // Set form caption and description texts
         form.setCaption("Contact Information");
-        form
-                .setDescription("Please specify name of the person and the city where the person lives in.");
+        form.setDescription("Please specify name of the person and the city where the person lives in.");
 
         // Use the custom field factory to create the fields in the form.
         form.setFieldFactory(new MyFieldFactory());

@@ -3,10 +3,10 @@ package com.vaadin.tests.components.table;
 import com.vaadin.data.Property;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class TableCacheBuildEfficiency extends TestBase {
 

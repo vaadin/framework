@@ -28,6 +28,7 @@ import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.StressComponentsInTable;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Embedded;
@@ -39,7 +40,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class RandomComponents {
 
@@ -79,8 +79,8 @@ public class RandomComponents {
             if (seededRandom.nextInt(1) > 0) {
                 gl = new GridLayout();
             } else {
-                gl = new GridLayout(seededRandom.nextInt(3) + 1, seededRandom
-                        .nextInt(3) + 1);
+                gl = new GridLayout(seededRandom.nextInt(3) + 1,
+                        seededRandom.nextInt(3) + 1);
             }
             gl.setCaption("GridLayout_" + caption);
             gl.setDescription(gl.getCaption());

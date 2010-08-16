@@ -2,9 +2,9 @@ package com.vaadin.tests.components.splitpanel;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.SplitPanel;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Window.Notification;
 
 public class SplitPanelSplitterWidth extends TestBase {

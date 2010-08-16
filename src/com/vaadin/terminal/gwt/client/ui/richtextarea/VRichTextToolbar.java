@@ -319,10 +319,10 @@ public class VRichTextToolbar extends Composite {
         setStyleName("gwt-RichTextToolbar");
 
         if (basic != null) {
-            topPanel.add(bold = createToggleButton(images.bold(), strings
-                    .bold()));
-            topPanel.add(italic = createToggleButton(images.italic(), strings
-                    .italic()));
+            topPanel.add(bold = createToggleButton(images.bold(),
+                    strings.bold()));
+            topPanel.add(italic = createToggleButton(images.italic(),
+                    strings.italic()));
             topPanel.add(underline = createToggleButton(images.underline(),
                     strings.underline()));
             topPanel.add(subscript = createToggleButton(images.subscript(),
@@ -331,19 +331,19 @@ public class VRichTextToolbar extends Composite {
                     strings.superscript()));
             topPanel.add(justifyLeft = createPushButton(images.justifyLeft(),
                     strings.justifyLeft()));
-            topPanel.add(justifyCenter = createPushButton(images
-                    .justifyCenter(), strings.justifyCenter()));
+            topPanel.add(justifyCenter = createPushButton(
+                    images.justifyCenter(), strings.justifyCenter()));
             topPanel.add(justifyRight = createPushButton(images.justifyRight(),
                     strings.justifyRight()));
         }
 
         if (extended != null) {
-            topPanel.add(strikethrough = createToggleButton(images
-                    .strikeThrough(), strings.strikeThrough()));
-            topPanel.add(indent = createPushButton(images.indent(), strings
-                    .indent()));
-            topPanel.add(outdent = createPushButton(images.outdent(), strings
-                    .outdent()));
+            topPanel.add(strikethrough = createToggleButton(
+                    images.strikeThrough(), strings.strikeThrough()));
+            topPanel.add(indent = createPushButton(images.indent(),
+                    strings.indent()));
+            topPanel.add(outdent = createPushButton(images.outdent(),
+                    strings.outdent()));
             topPanel.add(hr = createPushButton(images.hr(), strings.hr()));
             topPanel.add(ol = createPushButton(images.ol(), strings.ol()));
             topPanel.add(ul = createPushButton(images.ul(), strings.ul()));

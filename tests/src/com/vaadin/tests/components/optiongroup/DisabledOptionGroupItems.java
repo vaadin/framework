@@ -6,11 +6,11 @@ import java.util.List;
 
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 public class DisabledOptionGroupItems extends ComponentTestCase<OptionGroup> {
 
@@ -76,8 +76,8 @@ public class DisabledOptionGroupItems extends ComponentTestCase<OptionGroup> {
                     public void buttonClick(ClickEvent event) {
                         for (OptionGroup og : getTestComponents()) {
                             for (Object itemId : og.getItemIds()) {
-                                og.setItemEnabled(itemId, !og
-                                        .isItemEnabled(itemId));
+                                og.setItemEnabled(itemId,
+                                        !og.isItemEnabled(itemId));
                             }
                         }
                     }

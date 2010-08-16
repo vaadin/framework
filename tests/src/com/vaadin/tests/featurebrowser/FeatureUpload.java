@@ -83,9 +83,8 @@ public class FeatureUpload extends Feature implements Upload.FinishedListener {
             status.addComponent(new Label(
                     "Upload finished, but output buffer is null!!"));
         } else {
-            status
-                    .addComponent(new Label("<b>Name:</b> "
-                            + event.getFilename(), Label.CONTENT_XHTML));
+            status.addComponent(new Label(
+                    "<b>Name:</b> " + event.getFilename(), Label.CONTENT_XHTML));
             status.addComponent(new Label("<b>Mimetype:</b> "
                     + event.getMIMEType(), Label.CONTENT_XHTML));
             status.addComponent(new Label("<b>Size:</b> " + event.getLength()

@@ -2,9 +2,9 @@ package com.vaadin.tests.components.select;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.ComboBox;
 
 /**
  * TODO can't reproduce the issue with this test case, possibly need some

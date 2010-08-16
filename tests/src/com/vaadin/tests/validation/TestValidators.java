@@ -10,11 +10,11 @@ import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window.Notification;
 
 public class TestValidators extends TestBase {
@@ -36,9 +36,7 @@ public class TestValidators extends TestBase {
         // simple validators
 
         TextField tf = new TextField("A field, must contain 1-2 chars");
-        tf
-                .addValidator(new StringLengthValidator("Invalid length", 1, 2,
-                        false));
+        tf.addValidator(new StringLengthValidator("Invalid length", 1, 2, false));
         tf.setRequired(true);
         tf.setValue("ab");
         form.addField("a", tf);
@@ -101,10 +99,8 @@ public class TestValidators extends TestBase {
         CompositeValidator cv = new CompositeValidator(
                 CompositeValidator.MODE_AND,
                 "The field must contain a floating point number with 4-5 characters");
-        cv
-                .addValidator(new StringLengthValidator(
-                        "String length of '{0}' should be 4-5 characters", 4,
-                        5, false));
+        cv.addValidator(new StringLengthValidator(
+                "String length of '{0}' should be 4-5 characters", 4, 5, false));
         cv.addValidator(new DoubleValidator(
                 "{0} must be a floating point number"));
         tf.addValidator(cv);
@@ -115,10 +111,8 @@ public class TestValidators extends TestBase {
                 "A field, must be a floating point number or 4-5 chars");
         cv = new CompositeValidator(CompositeValidator.MODE_OR,
                 "The field must contain a floating point  or with 4-5 characters");
-        cv
-                .addValidator(new StringLengthValidator(
-                        "String length of '{0}' should be 4-5 characters", 4,
-                        5, false));
+        cv.addValidator(new StringLengthValidator(
+                "String length of '{0}' should be 4-5 characters", 4, 5, false));
         cv.addValidator(new DoubleValidator(
                 "{0} must be a floating point number"));
         tf.addValidator(cv);

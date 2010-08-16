@@ -31,20 +31,21 @@ public class FeatureSelect extends Feature {
 
         final Select s = new Select("Select employee");
         for (int i = 0; i < 50; i++) {
-            s
-                    .addItem(firstnames[(int) (Math.random() * (firstnames.length - 1))]
-                            + " "
-                            + lastnames[(int) (Math.random() * (lastnames.length - 1))]);
+            s.addItem(firstnames[(int) (Math.random() * (firstnames.length - 1))]
+                    + " "
+                    + lastnames[(int) (Math.random() * (lastnames.length - 1))]);
         }
         l.addComponent(s);
 
         // Properties
         propertyPanel = new PropertyPanel(s);
         final Select themes = (Select) propertyPanel.getField("style");
-        themes.addItem("optiongroup").getItemProperty(
-                themes.getItemCaptionPropertyId()).setValue("optiongroup");
-        themes.addItem("twincol").getItemProperty(
-                themes.getItemCaptionPropertyId()).setValue("twincol");
+        themes.addItem("optiongroup")
+                .getItemProperty(themes.getItemCaptionPropertyId())
+                .setValue("optiongroup");
+        themes.addItem("twincol")
+                .getItemProperty(themes.getItemCaptionPropertyId())
+                .setValue("twincol");
 
         setJavadocURL("ui/Select.html");
 

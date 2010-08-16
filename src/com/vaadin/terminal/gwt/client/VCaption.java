@@ -277,8 +277,7 @@ public class VCaption extends HTML {
             } else {
                 ApplicationConnection
                         .getConsole()
-                        .log(
-                                "Warning: Icon load event was not propagated because VCaption owner is unknown.");
+                        .log("Warning: Icon load event was not propagated because VCaption owner is unknown.");
             }
         }
     }

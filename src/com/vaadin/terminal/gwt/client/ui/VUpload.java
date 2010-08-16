@@ -247,8 +247,7 @@ public class VUpload extends SimplePanel implements Paintable {
         if (fu.getFilename().length() == 0 || submitted || !enabled) {
             ApplicationConnection
                     .getConsole()
-                    .log(
-                            "Submit cancelled (disabled, no file or already submitted)");
+                    .log("Submit cancelled (disabled, no file or already submitted)");
             return;
         }
         // flush possibly pending variable changes, so they will be handled
@@ -270,8 +269,7 @@ public class VUpload extends SimplePanel implements Paintable {
             public void run() {
                 ApplicationConnection
                         .getConsole()
-                        .log(
-                                "Visiting server to see if upload started event changed UI.");
+                        .log("Visiting server to see if upload started event changed UI.");
                 client.updateVariable(paintableId, "pollForStart",
                         nextUploadId, true);
             }

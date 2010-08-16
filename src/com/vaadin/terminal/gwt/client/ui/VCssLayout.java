@@ -99,8 +99,8 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
         }
         clickEventHandler.handleEventHandlerRegistration(client);
 
-        final VMarginInfo margins = new VMarginInfo(uidl
-                .getIntAttribute("margins"));
+        final VMarginInfo margins = new VMarginInfo(
+                uidl.getIntAttribute("margins"));
         setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
                 margins.hasTop());
         setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT,
@@ -110,8 +110,8 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
         setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT,
                 margins.hasLeft());
 
-        setStyleName(margin, CLASSNAME + "-" + "spacing", uidl
-                .hasAttribute("spacing"));
+        setStyleName(margin, CLASSNAME + "-" + "spacing",
+                uidl.hasAttribute("spacing"));
         panel.updateFromUIDL(uidl, client);
         rendering = false;
     }
@@ -184,8 +184,8 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
                                 continue;
                             } else {
                                 style.setProperty(
-                                        makeCamelCase(rule[0].trim()), rule[1]
-                                                .trim());
+                                        makeCamelCase(rule[0].trim()),
+                                        rule[1].trim());
                             }
                         }
                     } catch (Exception e) {

@@ -6,9 +6,9 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import com.vaadin.data.Container;
-import com.vaadin.data.Item;
 import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Container.Sortable;
+import com.vaadin.data.Item;
 
 public abstract class AbstractContainerTest extends TestCase {
 
@@ -58,8 +58,8 @@ public abstract class AbstractContainerTest extends TestCase {
             assertEquals(itemIdList.get(1), indexed.nextItemId(first));
 
             // prevItemId
-            assertEquals(itemIdList.get(itemIdList.size() - 2), indexed
-                    .prevItemId(last));
+            assertEquals(itemIdList.get(itemIdList.size() - 2),
+                    indexed.prevItemId(last));
 
             // isFirstId
             assertTrue(indexed.isFirstId(first));

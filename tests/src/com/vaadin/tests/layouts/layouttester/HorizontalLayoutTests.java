@@ -10,6 +10,7 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
@@ -22,7 +23,6 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.Reindeer;
 
 public class HorizontalLayoutTests extends AbstractLayoutTests {
@@ -34,7 +34,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         this.application = application;
     }
 
-    
     protected Layout getAlignmentTests() {
         Layout baseLayout = getBaseLayout();
         HorizontalLayout vlo = getTestLaytout();
@@ -63,7 +62,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
-    
     protected Layout getCaptionsTests() {
         Layout baseLayout = getBaseLayout();
         AbstractComponent component = null;
@@ -109,7 +107,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
-    
     protected Layout getComponentAddReplaceMoveTests() {
         final HorizontalLayout vlo = getTestLaytout();
         Layout baseLayout = getBaseLayout();
@@ -136,7 +133,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         addButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 vlo.addComponent(new TextField());
                 addButton.setEnabled(false);
@@ -146,7 +142,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         replaceButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 vlo.replaceComponent(c1, c3);
                 replaceButton.setEnabled(false);
@@ -156,7 +151,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         moveButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 vlo.moveComponentsFrom(source);
                 moveButton.setEnabled(false);
@@ -166,7 +160,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         removeButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 vlo.removeComponent(c1);
                 vlo.removeComponent(c2);
@@ -187,7 +180,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
-    
     protected Layout getComponentSizingTests() {
         final HorizontalLayout vlo = getTestLaytout();
         Layout baseLayout = getBaseLayout();
@@ -211,7 +203,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         biggerButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 c.setSizeFull();
                 biggerButton.setEnabled(false);
@@ -221,7 +212,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         smallerButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 c.setWidth("200px");
                 smallerButton.setEnabled(false);
@@ -231,7 +221,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         originalButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 originalButton.setEnabled(false);
                 c.setSizeUndefined();
@@ -245,7 +234,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
-    
     protected Layout getLayoutSizingTests() {
         final HorizontalLayout vlo = getTestLaytout();
         vlo.setSpacing(false);
@@ -281,7 +269,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         button1.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 vlo.setHeight("350px");
                 button1.setEnabled(false);
@@ -291,7 +278,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         button2.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 vlo.setSizeUndefined();
                 vlo.addComponent(new Label("--- NEW LABEL ---"));
@@ -302,7 +288,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         button3.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 vlo.setWidth("75%");
                 vlo.setHeight("75%");
@@ -313,7 +298,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         button4.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 vlo.setSizeFull();
                 button4.setEnabled(false);
@@ -323,7 +307,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
-    
     protected Layout getExpandRatiosTests() {
         final HorizontalLayout vlo = getTestLaytout();
         Layout baseLayout = getBaseLayout();
@@ -350,7 +333,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         button1.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 vlo.setExpandRatio(c1, 1.0f);
                 button1.setEnabled(false);
@@ -360,7 +342,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         button2.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 vlo.setExpandRatio(c1, 0.5f);
                 vlo.setExpandRatio(c2, 0.5f);
@@ -371,7 +352,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         button3.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 vlo.setExpandRatio(c1, 0.75f);
                 vlo.setExpandRatio(c2, 0.25f);
@@ -381,7 +361,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
-    
     protected Layout getIconsTests() {
         HorizontalLayout vlo = getTestLaytout();
         AbstractComponent[] components = new AbstractComponent[2];
@@ -427,7 +406,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
-    
     protected Layout getMarginSpacingTests() {
         final HorizontalLayout vlo = getTestLaytout();
         vlo.setSpacing(false);
@@ -461,7 +439,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         button1.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 vlo.setMargin(true);
                 button1.setEnabled(false);
@@ -471,7 +448,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         button2.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 vlo.setSpacing(true);
                 button2.setEnabled(false);
@@ -481,7 +457,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         button3.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 vlo.setMargin(false);
                 button3.setEnabled(false);
@@ -491,7 +466,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         button4.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 vlo.setSpacing(false);
                 button4.setEnabled(false);
@@ -501,7 +475,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
-    
     protected Layout getRequiredErrorIndicatorsTests() {
         HorizontalLayout vlo = getTestLaytout();
         Layout baseLayout = getBaseLayout();

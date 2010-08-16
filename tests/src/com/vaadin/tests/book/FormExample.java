@@ -163,8 +163,7 @@ public class FormExample extends CustomComponent {
 
         // Set form caption and description texts.
         form.setCaption("Contact Information");
-        form
-                .setDescription("Please enter valid name and address. Fields marked with * are required.");
+        form.setDescription("Please enter valid name and address. Fields marked with * are required.");
 
         // Use custom field factory to create the fields in the form.
         form.setFieldFactory(new MyFieldFactory());

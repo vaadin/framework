@@ -28,10 +28,10 @@ public class TestGridLayoutLastRowRemoval extends TestCase {
         assertEquals(1, grid.getRows());
 
         // There should be no component left in the grid layout
-        assertNull("A component should not be left in the layout", grid
-                .getComponent(0, 0));
-        assertNull("A component should not be left in the layout", grid
-                .getComponent(1, 0));
+        assertNull("A component should not be left in the layout",
+                grid.getComponent(0, 0));
+        assertNull("A component should not be left in the layout",
+                grid.getComponent(1, 0));
 
         // The cursor should be in the first cell
         assertEquals(0, grid.getCursorX());

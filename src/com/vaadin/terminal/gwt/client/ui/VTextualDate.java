@@ -240,8 +240,9 @@ public class VTextualDate extends VDateField implements Paintable, Field,
                     if (date != null) {
                         // if date value was leniently parsed, normalize text
                         // presentation
-                        text.setValue(DateTimeFormat.getFormat(
-                                getFormatString()).format(date), false);
+                        text.setValue(
+                                DateTimeFormat.getFormat(getFormatString())
+                                        .format(date), false);
                     }
                 } else {
                     date = format.parseStrict(text.getText());

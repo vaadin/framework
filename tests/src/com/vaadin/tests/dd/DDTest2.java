@@ -21,15 +21,15 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.AbstractSelect.AcceptItem;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.TableTransferable;
+import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.TargetItemAllowsChildren;
 import com.vaadin.ui.Tree.TreeDragMode;
+import com.vaadin.ui.Window;
 
 public class DDTest2 extends TestBase {
 
@@ -210,8 +210,8 @@ public class DDTest2 extends TestBase {
                                 .getItemProperty("Name").getValue();
                         tree2.setItemCaption(itemId, name);
                     } else if (tr.getSourceComponent() == tree2) {
-                        tree2.setItemCaption(itemId, tree2.getItemCaption(tr
-                                .getItemId()));
+                        tree2.setItemCaption(itemId,
+                                tree2.getItemCaption(tr.getItemId()));
                     }
                 }
             }

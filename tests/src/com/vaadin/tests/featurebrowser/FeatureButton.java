@@ -27,8 +27,9 @@ public class FeatureButton extends Feature {
         // Properties
         propertyPanel = new PropertyPanel(b);
         final Select themes = (Select) propertyPanel.getField("style");
-        themes.addItem("link").getItemProperty(
-                themes.getItemCaptionPropertyId()).setValue("link");
+        themes.addItem("link")
+                .getItemProperty(themes.getItemCaptionPropertyId())
+                .setValue("link");
         final Form ap = propertyPanel
                 .createBeanPropertySet(new String[] { "switchMode" });
         propertyPanel.addProperties("Button Properties", ap);

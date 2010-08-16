@@ -7,12 +7,12 @@ import com.vaadin.data.util.MethodProperty;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class Ticket736 extends Application {
 

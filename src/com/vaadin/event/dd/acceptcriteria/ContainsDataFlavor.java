@@ -42,8 +42,8 @@ public class ContainsDataFlavor extends ClientSideCriterion {
     }
 
     public boolean accept(DragAndDropEvent dragEvent) {
-        return dragEvent.getTransferable().getDataFlavors().contains(
-                dataFlavorId);
+        return dragEvent.getTransferable().getDataFlavors()
+                .contains(dataFlavorId);
     }
 
     @Override

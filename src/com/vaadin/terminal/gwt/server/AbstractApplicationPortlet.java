@@ -96,8 +96,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         for (final Enumeration e = config.getInitParameterNames(); e
                 .hasMoreElements();) {
             final String name = (String) e.nextElement();
-            applicationProperties.setProperty(name, config
-                    .getInitParameter(name));
+            applicationProperties.setProperty(name,
+                    config.getInitParameter(name));
         }
 
         // Overrides with server.xml parameters
@@ -105,8 +105,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         for (final Enumeration e = context.getInitParameterNames(); e
                 .hasMoreElements();) {
             final String name = (String) e.nextElement();
-            applicationProperties.setProperty(name, context
-                    .getInitParameter(name));
+            applicationProperties.setProperty(name,
+                    context.getInitParameter(name));
         }
         checkProductionMode();
         checkCrossSiteProtection();
@@ -181,8 +181,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             pkgName = pkg.getName();
         } else {
             final String className = getClass().getName();
-            pkgName = new String(className.toCharArray(), 0, className
-                    .lastIndexOf('.'));
+            pkgName = new String(className.toCharArray(), 0,
+                    className.lastIndexOf('.'));
         }
         val = System.getProperty(pkgName + "." + parameterName);
         if (val != null) {
@@ -235,8 +235,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     protected String getStaticFilesLocation(PortletRequest request) {
         // TODO allow overriding on portlet level?
         String staticFileLocation = getPortalProperty(
-                Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH, request
-                        .getPortalContext());
+                Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH,
+                request.getPortalContext());
         if (staticFileLocation != null) {
             // remove trailing slash if any
             while (staticFileLocation.endsWith(".")) {
@@ -557,8 +557,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     private void updateBrowserProperties(WebBrowser browser,
             PortletRequest request) {
         String userAgent = getHTTPHeader(request, "user-agent");
-        browser.updateBrowserProperties(request.getLocale(), null, request
-                .isSecure(), userAgent, getHTTPRequestParameter(request, "sw"),
+        browser.updateBrowserProperties(request.getLocale(), null,
+                request.isSecure(), userAgent,
+                getHTTPRequestParameter(request, "sw"),
                 getHTTPRequestParameter(request, "sh"));
     }
 
@@ -590,8 +591,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             ResourceResponse response) throws IOException {
 
         if (stream.getParameter("Location") != null) {
-            response.setProperty(ResourceResponse.HTTP_STATUS_CODE, Integer
-                    .toString(HttpServletResponse.SC_MOVED_TEMPORARILY));
+            response.setProperty(ResourceResponse.HTTP_STATUS_CODE,
+                    Integer.toString(HttpServletResponse.SC_MOVED_TEMPORARILY));
             response.setProperty("Location", stream.getParameter("Location"));
             return;
         }
@@ -676,8 +677,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         } else {
             System.err.println("Requested resource [" + resourceID
                     + "] could not be found");
-            response.setProperty(ResourceResponse.HTTP_STATUS_CODE, Integer
-                    .toString(HttpServletResponse.SC_NOT_FOUND));
+            response.setProperty(ResourceResponse.HTTP_STATUS_CODE,
+                    Integer.toString(HttpServletResponse.SC_NOT_FOUND));
         }
     }
 
@@ -1022,10 +1023,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             widgetset = DEFAULT_WIDGETSET;
         }
         String widgetsetURL = getWidgetsetURL(widgetset, request);
-        writer
-                .write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
-                        + "style=\"width:0;height:0;border:0;overflow:"
-                        + "hidden\" src=\"javascript:false\"></iframe>');\n");
+        writer.write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
+                + "style=\"width:0;height:0;border:0;overflow:"
+                + "hidden\" src=\"javascript:false\"></iframe>');\n");
         writer.write("document.write(\"<script language='javascript' src='"
                 + widgetsetURL + "'><\\/script>\");\n}\n");
     }
@@ -1177,14 +1177,12 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
 
         writer.write("if(!vaadin.themesLoaded['" + portalTheme + "']) {\n");
-        writer
-                .write("var defaultStylesheet = document.createElement('link');\n");
+        writer.write("var defaultStylesheet = document.createElement('link');\n");
         writer.write("defaultStylesheet.setAttribute('rel', 'stylesheet');\n");
         writer.write("defaultStylesheet.setAttribute('type', 'text/css');\n");
         writer.write("defaultStylesheet.setAttribute('href', '"
                 + getThemeURI(portalTheme, request) + "/styles.css');\n");
-        writer
-                .write("document.getElementsByTagName('head')[0].appendChild(defaultStylesheet);\n");
+        writer.write("document.getElementsByTagName('head')[0].appendChild(defaultStylesheet);\n");
         writer.write("vaadin.themesLoaded['" + portalTheme + "'] = true;\n}\n");
 
         if (!portalTheme.equals(themeName)) {
@@ -1194,8 +1192,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             writer.write("stylesheet.setAttribute('type', 'text/css');\n");
             writer.write("stylesheet.setAttribute('href', '" + themeURI
                     + "/styles.css');\n");
-            writer
-                    .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
+            writer.write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
             writer.write("vaadin.themesLoaded['" + themeName
                     + "'] = true;\n}\n");
         }
@@ -1252,8 +1249,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         if (themeName == null) {
             // no, is the default theme defined by the portal?
             themeName = getPortalProperty(
-                    Constants.PORTAL_PARAMETER_VAADIN_THEME, request
-                            .getPortalContext());
+                    Constants.PORTAL_PARAMETER_VAADIN_THEME,
+                    request.getPortalContext());
         }
 
         if (themeName == null) {
@@ -1326,8 +1323,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
             Application.SystemMessages ci = getSystemMessages();
-            criticalNotification(request, (ResourceResponse) response, ci
-                    .getInternalErrorCaption(), ci.getInternalErrorMessage(),
+            criticalNotification(request, (ResourceResponse) response,
+                    ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());
             if (application != null) {
                 application.getErrorHandler()
@@ -1429,8 +1426,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @return
      */
     protected static String getPortalProperty(String name, PortalContext context) {
-        boolean isLifeRay = context.getPortalInfo().toLowerCase().contains(
-                "liferay");
+        boolean isLifeRay = context.getPortalInfo().toLowerCase()
+                .contains("liferay");
 
         // TODO test on non-LifeRay platforms
 

@@ -3,9 +3,9 @@ package com.vaadin.tests.server.container;
 import java.util.Collection;
 
 import com.vaadin.data.Container;
-import com.vaadin.data.Item;
 import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.data.Container.Sortable;
+import com.vaadin.data.Item;
 
 public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
 

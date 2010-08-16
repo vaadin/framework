@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.AbstractTestCase;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 /**
  * Setting table height and setting column header mode as hidden leaves the body
@@ -36,11 +36,9 @@ public class TableHeightWhenHidingHeaders extends AbstractTestCase {
                         if (event.getButton().booleanValue()) {
                             // table body height is now 77px, which together
                             // with header makes 100px
-                            table
-                                    .setColumnHeaderMode(Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
+                            table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
                         } else {
-                            table
-                                    .setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
+                            table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
                             // header disappears, but table body height stays at
                             // 77px
                             // and below the body is an empty area (same height

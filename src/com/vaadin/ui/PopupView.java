@@ -47,8 +47,7 @@ public class PopupView extends AbstractComponentContainer {
      * {@link PopupView#getComponentIterator()}.
      */
     private static class SingleComponentIterator implements
-            Iterator<Component>,
-            Serializable {
+            Iterator<Component>, Serializable {
 
         private final Component component;
         private boolean first;

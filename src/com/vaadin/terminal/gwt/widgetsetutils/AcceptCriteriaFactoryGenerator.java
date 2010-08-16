@@ -10,8 +10,8 @@ import java.util.Date;
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.TreeLogger.Type;
+import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
@@ -77,8 +77,7 @@ public class AcceptCriteriaFactoryGenerator extends Generator {
         ClassSourceFileComposerFactory composer = null;
         composer = new ClassSourceFileComposerFactory(packageName, className);
         composer.addImport("com.google.gwt.core.client.GWT");
-        composer
-                .setSuperclass("com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterionFactory");
+        composer.setSuperclass("com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterionFactory");
         SourceWriter sourceWriter = composer.createSourceWriter(context,
                 printWriter);
 
@@ -89,8 +88,9 @@ public class AcceptCriteriaFactoryGenerator extends Generator {
         sourceWriter.println("}");
         // commit generated class
         context.commit(logger, printWriter);
-        logger.log(Type.INFO, "Done. ("
-                + (new Date().getTime() - date.getTime()) / 1000 + "seconds)");
+        logger.log(Type.INFO,
+                "Done. (" + (new Date().getTime() - date.getTime()) / 1000
+                        + "seconds)");
 
     }
 
@@ -106,8 +106,8 @@ public class AcceptCriteriaFactoryGenerator extends Generator {
                 .getCriterion();
 
         for (Class<? extends AcceptCriterion> class1 : clientSideVerifiableCriterion) {
-            logger.log(Type.INFO, "creating mapping for "
-                    + class1.getCanonicalName());
+            logger.log(Type.INFO,
+                    "creating mapping for " + class1.getCanonicalName());
             String canonicalName = class1.getCanonicalName();
             Class<? extends VAcceptCriterion> clientClass = class1
                     .getAnnotation(ClientCriterion.class).value();

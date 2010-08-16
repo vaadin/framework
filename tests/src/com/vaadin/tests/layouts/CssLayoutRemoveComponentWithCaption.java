@@ -2,10 +2,10 @@ package com.vaadin.tests.layouts;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.TextField;
 
 public class CssLayoutRemoveComponentWithCaption extends TestBase {
 

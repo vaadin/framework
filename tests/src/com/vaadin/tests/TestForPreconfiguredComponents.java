@@ -8,6 +8,8 @@ import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
@@ -18,8 +20,6 @@ import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.TwinColSelect;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 /**
  * @author IT Mill Ltd.
@@ -51,13 +51,12 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
 
     public void createNewView() {
         main.removeAllComponents();
-        main
-                .addComponent(new Label(
-                        "In Toolkit 5 we introduce new components. Previously we"
-                                + " usually used setStyle or some other methods on possibly "
-                                + "multiple steps to configure component for ones needs. These new "
-                                + "server side components are mostly just classes that in constructor "
-                                + "set base class to state that programmer wants."));
+        main.addComponent(new Label(
+                "In Toolkit 5 we introduce new components. Previously we"
+                        + " usually used setStyle or some other methods on possibly "
+                        + "multiple steps to configure component for ones needs. These new "
+                        + "server side components are mostly just classes that in constructor "
+                        + "set base class to state that programmer wants."));
 
         main.addComponent(new Button("commit"));
 
@@ -87,8 +86,7 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
         fillSelect(s, 20);
         s.setMultiSelect(true);
         test = createTestBench(s);
-        test
-                .setCaption("OptionGroup + multiselect manually (configured from select)");
+        test.setCaption("OptionGroup + multiselect manually (configured from select)");
         main.addComponent(test);
 
         final Button b = new Button("refresh view", this, "createNewView");

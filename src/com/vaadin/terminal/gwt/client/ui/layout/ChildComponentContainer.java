@@ -16,11 +16,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
+import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
-import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
 
 public class ChildComponentContainer extends Panel {
@@ -83,8 +83,7 @@ public class ChildComponentContainer extends Panel {
             // FF2 chokes on some floats very easily. Measuring size escpecially
             // becomes terribly slow
             TableElement tableEl = Document.get().createTableElement();
-            tableEl
-                    .setInnerHTML("<tbody><tr><td><div></div></td></tr></tbody>");
+            tableEl.setInnerHTML("<tbody><tr><td><div></div></td></tr></tbody>");
             DivElement div = (DivElement) tableEl.getFirstChildElement()
                     .getFirstChildElement().getFirstChildElement()
                     .getFirstChildElement();
@@ -268,8 +267,8 @@ public class ChildComponentContainer extends Panel {
         setMarginTop(containerMarginTop);
 
         if (caption != null) {
-            caption.getElement().getStyle().setPropertyPx("marginLeft",
-                    alignmentLeftOffsetForCaption);
+            caption.getElement().getStyle()
+                    .setPropertyPx("marginLeft", alignmentLeftOffsetForCaption);
         }
         widgetDIV.getStyle().setPropertyPx("marginLeft",
                 alignmentLeftOffsetForWidget);
@@ -326,8 +325,8 @@ public class ChildComponentContainer extends Panel {
                  * Take into account the rare case that the caption on the right
                  * side of the component AND is higher than the component
                  */
-                emptySpace -= Math.max(widgetSize.getHeight(), caption
-                        .getHeight());
+                emptySpace -= Math.max(widgetSize.getHeight(),
+                        caption.getHeight());
             } else {
                 emptySpace -= widgetSize.getHeight();
                 emptySpace -= getCaptionHeight();

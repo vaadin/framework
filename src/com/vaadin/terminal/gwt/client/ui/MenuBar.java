@@ -411,12 +411,12 @@ public class MenuBar extends Widget implements PopupListener {
         popup.addPopupListener(this);
 
         if (vertical) {
-            popup.setPopupPosition(item.getAbsoluteLeft()
-                    + item.getOffsetWidth(), item.getAbsoluteTop());
+            popup.setPopupPosition(
+                    item.getAbsoluteLeft() + item.getOffsetWidth(),
+                    item.getAbsoluteTop());
         } else {
-            popup.setPopupPosition(item.getAbsoluteLeft(), item
-                    .getAbsoluteTop()
-                    + item.getOffsetHeight());
+            popup.setPopupPosition(item.getAbsoluteLeft(),
+                    item.getAbsoluteTop() + item.getOffsetHeight());
         }
 
         shownChildMenu = item.getSubMenu();

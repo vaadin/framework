@@ -320,9 +320,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
                 return;
             }
 
-            DOM
-                    .setStyleAttribute(firstContainer, "width", pixelPosition
-                            + "px");
+            DOM.setStyleAttribute(firstContainer, "width", pixelPosition + "px");
             int secondContainerWidth = (wholeSize - pixelPosition - getSplitterSize());
             if (secondContainerWidth < 0) {
                 secondContainerWidth = 0;

@@ -15,10 +15,10 @@ import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
+import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 
 public class DDTest4 extends TestBase {
 

@@ -6,6 +6,7 @@ package com.vaadin.event;
 
 import java.lang.reflect.Method;
 
+import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Component;

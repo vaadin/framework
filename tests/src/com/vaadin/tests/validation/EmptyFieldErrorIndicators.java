@@ -6,6 +6,8 @@ import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.validator.AbstractValidator;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Field;
@@ -17,8 +19,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 public class EmptyFieldErrorIndicators extends TestBase {
 
@@ -81,13 +81,11 @@ public class EmptyFieldErrorIndicators extends TestBase {
                 field.setRequired(required);
                 field.setRequiredError("Missing required value!");
                 if (failValidator && !(field instanceof Button)) {
-                    field
-                            .addValidator(new AbstractValidator(
-                                    "Validation error") {
-                                public boolean isValid(Object value) {
-                                    return false;
-                                }
-                            });
+                    field.addValidator(new AbstractValidator("Validation error") {
+                        public boolean isValid(Object value) {
+                            return false;
+                        }
+                    });
                 }
             }
         };

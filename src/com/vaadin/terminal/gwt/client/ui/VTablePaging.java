@@ -154,8 +154,8 @@ public class VTablePaging extends Composite implements Table, Paintable,
             final UIDL col = (UIDL) it.next();
             final String cid = col.getStringAttribute("cid");
             if (!col.hasAttribute("collapsed")) {
-                tBody.setWidget(0, colIndex, new HeaderCell(cid, col
-                        .getStringAttribute("caption")));
+                tBody.setWidget(0, colIndex,
+                        new HeaderCell(cid, col.getStringAttribute("caption")));
 
             }
             colIndex++;
@@ -183,9 +183,9 @@ public class VTablePaging extends Composite implements Table, Paintable,
         int curRowIndex = 1;
         while (it.hasNext()) {
             final UIDL rowUidl = (UIDL) it.next();
-            final TableRow row = new TableRow(curRowIndex, String
-                    .valueOf(rowUidl.getIntAttribute("key")), rowUidl
-                    .hasAttribute("selected"));
+            final TableRow row = new TableRow(curRowIndex,
+                    String.valueOf(rowUidl.getIntAttribute("key")),
+                    rowUidl.hasAttribute("selected"));
             int colIndex = 0;
             if (rowHeaders) {
                 tBody.setWidget(curRowIndex, colIndex, new BodyCell(row,
@@ -363,13 +363,15 @@ public class VTablePaging extends Composite implements Table, Paintable,
             selected = sel;
             if (selected) {
                 selectedRowKeys.add(key);
-                DOM.setStyleAttribute(tBody.getRowFormatter().getElement(
-                        rowIndex), "background", "yellow");
+                DOM.setStyleAttribute(
+                        tBody.getRowFormatter().getElement(rowIndex),
+                        "background", "yellow");
 
             } else {
                 selectedRowKeys.remove(key);
-                DOM.setStyleAttribute(tBody.getRowFormatter().getElement(
-                        rowIndex), "background", "transparent");
+                DOM.setStyleAttribute(
+                        tBody.getRowFormatter().getElement(rowIndex),
+                        "background", "transparent");
             }
         }
 
@@ -391,8 +393,11 @@ public class VTablePaging extends Composite implements Table, Paintable,
                 }
                 setSelected(true);
             }
-            client.updateVariable(id, "selected", selectedRowKeys
-                    .toArray(new String[selectedRowKeys.size()]), immediate);
+            client.updateVariable(
+                    id,
+                    "selected",
+                    selectedRowKeys.toArray(new String[selectedRowKeys.size()]),
+                    immediate);
         }
 
         /**

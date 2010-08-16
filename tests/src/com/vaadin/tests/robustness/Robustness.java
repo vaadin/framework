@@ -2,10 +2,10 @@ package com.vaadin.tests.robustness;
 
 import com.vaadin.tests.util.RandomComponents;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 public abstract class Robustness extends com.vaadin.Application implements
         Button.ClickListener {

@@ -320,7 +320,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * InlineDateField date = new InlineDateField(&quot;Datum&quot;);
      * 
      * // German language specified with ISO 639-1 language
-     * // code and ISO 3166-1 alpha-2 country code. 
+     * // code and ISO 3166-1 alpha-2 country code.
      * date.setLocale(new Locale(&quot;de&quot;, &quot;DE&quot;));
      * 
      * date.setResolution(DateField.RESOLUTION_DAY);
@@ -735,8 +735,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
                 }
 
                 if (eventIdentifiers != null) {
-                    target.addAttribute("eventListeners", eventIdentifiers
-                            .toArray());
+                    target.addAttribute("eventListeners",
+                            eventIdentifiers.toArray());
                 }
 
                 paintContent(target);

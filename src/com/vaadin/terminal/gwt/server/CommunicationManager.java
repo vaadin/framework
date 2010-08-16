@@ -162,9 +162,10 @@ public class CommunicationManager extends AbstractCommunicationManager {
         public void criticalNotification(Request request, Response response,
                 String cap, String msg, String details, String outOfSyncURL)
                 throws IOException {
-            servlet.criticalNotification((HttpServletRequest) request
-                    .getWrappedRequest(), (HttpServletResponse) response
-                    .getWrappedResponse(), cap, msg, details, outOfSyncURL);
+            servlet.criticalNotification(
+                    (HttpServletRequest) request.getWrappedRequest(),
+                    (HttpServletResponse) response.getWrappedResponse(), cap,
+                    msg, details, outOfSyncURL);
         }
 
         public String getRequestPathInfo(Request request) {

@@ -10,6 +10,7 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
@@ -22,7 +23,6 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class VerticalLayoutTests extends AbstractLayoutTests {
 
@@ -35,7 +35,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
 
     protected Layout getAlignmentTests() {
         Layout baseLayout = getBaseLayout();
-        ((HorizontalLayout)baseLayout).setSpacing(true);
+        ((HorizontalLayout) baseLayout).setSpacing(true);
         VerticalLayout vlo = getTestLaytout();
         AbstractComponent[] components = new AbstractComponent[9];
         Alignment[] alignments = new Alignment[] { Alignment.BOTTOM_CENTER,

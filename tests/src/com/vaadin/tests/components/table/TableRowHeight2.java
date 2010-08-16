@@ -32,9 +32,8 @@ public class TableRowHeight2 extends TestBase {
         int COL_TITLE_W = 200;
         int COL_TEST_W = 98;
 
-        table
-                .setWidth((COL_TEST_W + COL_TITLE_W + 2 * COLEXTRASPACE + TABLE_EXTRA)
-                        + "px");
+        table.setWidth((COL_TEST_W + COL_TITLE_W + 2 * COLEXTRASPACE + TABLE_EXTRA)
+                + "px");
         table.setPageLength(0);
         table.setColumnWidth("title", COL_TITLE_W);
         table.setColumnWidth("test", COL_TEST_W);
@@ -48,8 +47,7 @@ public class TableRowHeight2 extends TestBase {
             b.setStyleName(Button.STYLE_LINK);
             b.addStyleName("nowraplink");
 
-            b
-                    .setCaption("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ullamcorper, elit quis elementum iaculis, dui est rutrum risus, at cursus sem leo eget arcu. Proin vel eros ut tortor luctus pretium. Nulla facilisi. Donec in dui. Proin ac diam vitae massa tempus faucibus. Fusce eu risus. Nunc ac risus. Cras libero.");
+            b.setCaption("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ullamcorper, elit quis elementum iaculis, dui est rutrum risus, at cursus sem leo eget arcu. Proin vel eros ut tortor luctus pretium. Nulla facilisi. Donec in dui. Proin ac diam vitae massa tempus faucibus. Fusce eu risus. Nunc ac risus. Cras libero.");
 
             item.getItemProperty("title").setValue(b);
 

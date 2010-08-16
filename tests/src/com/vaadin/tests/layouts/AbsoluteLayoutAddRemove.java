@@ -3,9 +3,9 @@ package com.vaadin.tests.layouts;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class AbsoluteLayoutAddRemove extends TestBase {
 

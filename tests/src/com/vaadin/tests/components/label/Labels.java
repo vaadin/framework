@@ -6,10 +6,10 @@ import java.util.List;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class Labels extends ComponentTestCase<Label> {
 

@@ -101,8 +101,9 @@ public class FeatureTree extends Feature implements Action.Handler {
         final Form ap = propertyPanel
                 .createBeanPropertySet(new String[] { "selectable" });
         final Select themes = (Select) propertyPanel.getField("style");
-        themes.addItem("menu").getItemProperty(
-                themes.getItemCaptionPropertyId()).setValue("menu");
+        themes.addItem("menu")
+                .getItemProperty(themes.getItemCaptionPropertyId())
+                .setValue("menu");
         propertyPanel.addProperties("Tree Properties", ap);
 
         setJavadocURL("ui/Tree.html");

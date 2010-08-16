@@ -14,9 +14,9 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -537,8 +537,8 @@ public class VDragAndDropManager {
 
         VTransferable transferable = currentDrag.getTransferable();
 
-        client.updateVariable(DD_SERVICE, "component", transferable
-                .getDragSource(), false);
+        client.updateVariable(DD_SERVICE, "component",
+                transferable.getDragSource(), false);
 
         client.updateVariable(DD_SERVICE, "type", drop.ordinal(), false);
 

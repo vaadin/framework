@@ -26,8 +26,8 @@ public class FeaturesApplication extends com.vaadin.Application {
     @Override
     public void terminalError(com.vaadin.terminal.Terminal.ErrorEvent event) {
         final Throwable e = event.getThrowable();
-        FeatureUtil.debug(getUser().toString(), "terminalError: "
-                + e.toString());
+        FeatureUtil.debug(getUser().toString(),
+                "terminalError: " + e.toString());
         e.printStackTrace();
     }
 

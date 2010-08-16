@@ -7,10 +7,10 @@ import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Layout.AlignmentHandler;
 
 public class Ticket1966 extends Application {
 

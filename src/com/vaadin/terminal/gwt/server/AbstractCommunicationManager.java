@@ -53,20 +53,20 @@ import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.URIHandler;
-import com.vaadin.terminal.UploadStream;
-import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.Paintable.RepaintRequestEvent;
 import com.vaadin.terminal.Terminal.ErrorEvent;
 import com.vaadin.terminal.Terminal.ErrorListener;
+import com.vaadin.terminal.URIHandler;
+import com.vaadin.terminal.UploadStream;
+import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.Upload.UploadException;
+import com.vaadin.ui.Window;
 
 /**
  * This is a common base class for the server-side implementations of the
@@ -1049,14 +1049,17 @@ public abstract class AbstractCommunicationManager implements
                             // we have more than one value changes in row for
                             // one variable owner, collect em in HashMap
                             m = new HashMap<String, Object>();
-                            m.put(variable[VAR_NAME], convertVariableValue(
-                                    variable[VAR_TYPE].charAt(0),
-                                    variable[VAR_VALUE]));
+                            m.put(variable[VAR_NAME],
+                                    convertVariableValue(
+                                            variable[VAR_TYPE].charAt(0),
+                                            variable[VAR_VALUE]));
                         } else {
                             // use optimized single value map
-                            m = Collections.singletonMap(variable[VAR_NAME],
-                                    convertVariableValue(variable[VAR_TYPE]
-                                            .charAt(0), variable[VAR_VALUE]));
+                            m = Collections.singletonMap(
+                                    variable[VAR_NAME],
+                                    convertVariableValue(
+                                            variable[VAR_TYPE].charAt(0),
+                                            variable[VAR_VALUE]));
                         }
 
                         // collect following variable changes for this owner
@@ -1070,9 +1073,10 @@ public abstract class AbstractCommunicationManager implements
                             } else {
                                 nextVariable = null;
                             }
-                            m.put(variable[VAR_NAME], convertVariableValue(
-                                    variable[VAR_TYPE].charAt(0),
-                                    variable[VAR_VALUE]));
+                            m.put(variable[VAR_NAME],
+                                    convertVariableValue(
+                                            variable[VAR_TYPE].charAt(0),
+                                            variable[VAR_VALUE]));
                         }
                         try {
                             owner.changeVariables(request, m);
@@ -1912,8 +1916,7 @@ public abstract class AbstractCommunicationManager implements
                     URL windowContext;
                     windowContext = new URL(context, prefix + "/");
                     final String windowUri = (uri.length() > prefix.length() + 1) ? uri
-                            .substring(prefix.length() + 1)
-                            : "";
+                            .substring(prefix.length() + 1) : "";
                     return window.handleURI(windowContext, windowUri);
                 } else {
                     return null;

@@ -106,8 +106,8 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
      *         context, runner, application classname
      */
     private static URIS getApplicationRunnerURIs(HttpServletRequest request) {
-        final String[] urlParts = request.getRequestURI().toString().split(
-                "\\/");
+        final String[] urlParts = request.getRequestURI().toString()
+                .split("\\/");
         String context = null;
         String runner = null;
         URIS uris = new URIS();

@@ -6,6 +6,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.AbstractSelect.NewItemHandler;
 import com.vaadin.ui.BaseFieldFactory;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -14,7 +15,6 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.FieldFactory;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.AbstractSelect.NewItemHandler;
 import com.vaadin.ui.Table.ColumnGenerator;
 
 public class PropertyValueChange extends TestBase {
@@ -92,10 +92,9 @@ public class PropertyValueChange extends TestBase {
 
         Table t2 = new Table(
                 "A clone of table1, but disabled. Properties are in components.");
-        t2
-                .setDescription("This table is in editable mode."
-                        + " Updates to common datasource should not affect redraw for this "
-                        + "table. Only the components inside table should get updated.");
+        t2.setDescription("This table is in editable mode."
+                + " Updates to common datasource should not affect redraw for this "
+                + "table. Only the components inside table should get updated.");
         t2.setFieldFactory(ff);
         t2.setEditable(true);
         t2.setEnabled(false);
@@ -105,9 +104,8 @@ public class PropertyValueChange extends TestBase {
         t2.setDebugId("disabled table");
 
         Table reader = new Table("Reader table");
-        reader
-                .setDescription("This table should be redrawn on container changes as container data is "
-                        + "displayed directly in cells.");
+        reader.setDescription("This table should be redrawn on container changes as container data is "
+                + "displayed directly in cells.");
         reader.setContainerDataSource(container);
         reader.addGeneratedColumn("integer x 3", multiplier);
         reader.setPageLength(0);

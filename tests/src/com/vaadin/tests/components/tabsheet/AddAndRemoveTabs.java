@@ -2,9 +2,9 @@ package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class AddAndRemoveTabs extends TestBase {
     private TabSheet tabSheet;

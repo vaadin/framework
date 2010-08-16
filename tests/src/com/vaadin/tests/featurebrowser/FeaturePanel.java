@@ -24,9 +24,8 @@ public class FeaturePanel extends Feature {
 
         // Example panel
         final Panel show = new Panel("Panel caption");
-        show
-                .addComponent(new Label(
-                        "This is an example Label component that is added into Panel."));
+        show.addComponent(new Label(
+                "This is an example Label component that is added into Panel."));
         l.addComponent(show);
 
         // Properties
@@ -34,10 +33,12 @@ public class FeaturePanel extends Feature {
         final Form ap = propertyPanel.createBeanPropertySet(new String[] {
                 "width", "height" });
         final Select themes = (Select) propertyPanel.getField("style");
-        themes.addItem("light").getItemProperty(
-                themes.getItemCaptionPropertyId()).setValue("light");
-        themes.addItem("strong").getItemProperty(
-                themes.getItemCaptionPropertyId()).setValue("strong");
+        themes.addItem("light")
+                .getItemProperty(themes.getItemCaptionPropertyId())
+                .setValue("light");
+        themes.addItem("strong")
+                .getItemProperty(themes.getItemCaptionPropertyId())
+                .setValue("strong");
         propertyPanel.addProperties("Panel Properties", ap);
 
         setJavadocURL("ui/Panel.html");

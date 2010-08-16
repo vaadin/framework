@@ -43,8 +43,7 @@ public class LabelEmbeddedClickThroughForTable extends TestBase {
         item = table.addItem("Item 2 (row 2)");
         item.getItemProperty("Column 1").setValue("String B");
         item.getItemProperty("Column 2").setValue(new Label("Label B"));
-        item
-                .getItemProperty("Column 3")
+        item.getItemProperty("Column 3")
                 .setValue(
                         new Label(
                                 "<a href=\"http://www.vaadin.com\" target=_blank>Label A</a>",

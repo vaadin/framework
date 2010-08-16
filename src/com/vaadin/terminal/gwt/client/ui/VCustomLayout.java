@@ -21,12 +21,12 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
-import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 
 /**
  * Custom Layout implements complex layout defined with HTML template.
@@ -530,9 +530,9 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
                 .getParentElement();
 
         FloatSize extra = locationToExtraSize.get(getLocation(child));
-        return new RenderSpace(pe.getOffsetWidth() - (int) extra.getWidth(), pe
-                .getOffsetHeight()
-                - (int) extra.getHeight(), Util.mayHaveScrollBars(pe));
+        return new RenderSpace(pe.getOffsetWidth() - (int) extra.getWidth(),
+                pe.getOffsetHeight() - (int) extra.getHeight(),
+                Util.mayHaveScrollBars(pe));
     }
 
     @Override
@@ -604,8 +604,8 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
                         || (relativeHeight && (relativeSize.getHeight() >= 0.0f))) {
 
                     relativeSizeWidgets.add(widget);
-                    widget.getElement().getStyle().setProperty("position",
-                            "absolute");
+                    widget.getElement().getStyle()
+                            .setProperty("position", "absolute");
                 }
             }
         }

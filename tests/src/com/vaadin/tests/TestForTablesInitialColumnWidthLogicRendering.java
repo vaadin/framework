@@ -9,12 +9,12 @@ import java.util.Vector;
 
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Button.ClickEvent;
 
 /**
  * 
@@ -36,9 +36,8 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
 
     public void createNewView() {
         main.removeAllComponents();
-        main
-                .addComponent(new Label(
-                        "Below are same tables that all should render somewhat nice. Also when testing, you might want to try resizing window."));
+        main.addComponent(new Label(
+                "Below are same tables that all should render somewhat nice. Also when testing, you might want to try resizing window."));
 
         Table t;
 
@@ -64,8 +63,7 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         main.addComponent(t);
 
         t = getTestTable(5, 5);
-        t
-                .setCaption("Table with  some cols and rows rows, some col widths fixed");
+        t.setCaption("Table with  some cols and rows rows, some col widths fixed");
 
         Iterator it = t.getContainerPropertyIds().iterator();
         it.next();
@@ -80,8 +78,7 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         main.addComponent(t);
 
         t = getTestTable(3, 40);
-        t
-                .setCaption("Table with some columns and wide explicit width. (Ought to widen columns to use all space)");
+        t.setCaption("Table with some columns and wide explicit width. (Ought to widen columns to use all space)");
         t.setWidth(1000);
         main.addComponent(t);
 
@@ -91,8 +88,7 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         main.addComponent(t);
 
         t = getTestTable(12, 100);
-        t
-                .setCaption("Table with  lot of rows and lot of columns, width == 50%");
+        t.setCaption("Table with  lot of rows and lot of columns, width == 50%");
         t.setWidth(50, Table.UNITS_PERCENTAGE);
         main.addComponent(t);
 

@@ -12,6 +12,7 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
@@ -26,7 +27,6 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.Reindeer;
 
 public class GridLayoutTests extends AbstractLayoutTests {
@@ -147,7 +147,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button1.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 glo.addComponent(cc1);
                 button1.setEnabled(false);
@@ -265,7 +264,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
-    
     protected Layout getExpandRatiosTests() {
         final GridLayout glo = getTestGrid();
         Layout baseLayout = getBaseLayout();
@@ -289,7 +287,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button1.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 glo.setColumnExpandRatio(3, 1);
                 button1.setEnabled(false);
@@ -299,7 +296,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button2.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 glo.setColumnExpandRatio(0, 0.25f);
                 glo.setColumnExpandRatio(1, 0.25f);
@@ -312,7 +308,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button3.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 glo.setRowExpandRatio(0, 0.5f);
                 button3.setEnabled(false);
@@ -322,7 +317,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button4.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 glo.setRowExpandRatio(3, 0.3f);
                 button4.setEnabled(false);
@@ -332,7 +326,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
-    
     protected Layout getIconsTests() {
         GridLayout glo = getTestGrid();
         glo.setWidth("600px");
@@ -348,8 +341,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         col2.setIcon(icons[1]);
         col3.setIcon(icons[0]);
         rc1.setIcon(icons[1]);
-        col3
-                .setCaption("long test caption bewucbwuebco or bmort b cbwecubw wbeucwe asdasd asdasda asdasd");
+        col3.setCaption("long test caption bewucbwuebco or bmort b cbwecubw wbeucwe asdasd asdasda asdasd");
         col3.setComponentError(new UserError("component error, user error"));
 
         glo.replaceComponent(row1, row1 = new DateField());
@@ -370,7 +362,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return glo;
     }
 
-    
     protected Layout getLayoutSizingTests() {
         final GridLayout glo = getTestGrid();
         Layout baseLayout = getBaseLayout();
@@ -397,7 +388,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button1.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 glo.setHeight("350px");
                 button1.setEnabled(false);
@@ -407,7 +397,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button2.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 glo.setSizeUndefined();
                 glo.addComponent(new Label("--- NEW LABEL ---"));
@@ -418,7 +407,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button3.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 glo.setWidth("75%");
                 glo.setHeight("75%");
@@ -429,7 +417,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button4.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 glo.setSizeFull();
                 button4.setEnabled(false);
@@ -439,7 +426,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
-    
     protected Layout getMarginSpacingTests() {
         final GridLayout glo = getTestGrid();
         Layout baseLayout = getBaseLayout();
@@ -464,7 +450,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button1.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 glo.setMargin(true);
                 button1.setEnabled(false);
@@ -474,7 +459,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button2.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 glo.setSpacing(true);
                 button2.setEnabled(false);
@@ -484,7 +468,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button3.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 glo.setMargin(false);
                 button3.setEnabled(false);
@@ -494,7 +477,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button4.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;
 
-            
             public void buttonClick(ClickEvent event) {
                 glo.setSpacing(false);
                 button4.setEnabled(false);
@@ -504,7 +486,6 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
-    
     protected Layout getRequiredErrorIndicatorsTests() {
         GridLayout glo = getTestGrid();
         glo.setWidth("600px");
@@ -518,9 +499,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
 
         col1.setIcon(icons[0]);
         col1.setComponentError(new UserError("component error, user error"));
-        col2
-                .setComponentError(new SystemError(
-                        "component error, system error"));
+        col2.setComponentError(new SystemError("component error, system error"));
         col3.setComponentError(new UserError("component error, user error"));
 
         glo.replaceComponent(row1, row1 = new DateField());
@@ -542,8 +521,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
 
         row3.setComponentError(new UserError("component error, user error"));
         row3.setIcon(icons[1]);
-        row3
-                .setCaption("long test caption bewucbwuebco or bmort b cbwecubw wbeucwe asdasd asdasda asdasd");
+        row3.setCaption("long test caption bewucbwuebco or bmort b cbwecubw wbeucwe asdasd asdasda asdasd");
 
         glo.replaceComponent(x3, x3 = new CheckBox("CHECKBOX"));
         glo.replaceComponent(x22, x22 = new Panel("PANEL"));

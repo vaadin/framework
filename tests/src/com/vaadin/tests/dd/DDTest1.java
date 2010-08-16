@@ -13,15 +13,15 @@ import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.AbstractSelect.AcceptItem;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.AbstractSelect.AcceptItem;
 import com.vaadin.ui.Table.TableDragMode;
+import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.TreeDragMode;
 import com.vaadin.ui.Tree.TreeTargetDetails;
 
@@ -55,8 +55,7 @@ public class DDTest1 extends TestBase {
         pane1.addComponent(label);
 
         DragDropPane pane2 = new DragDropPane();
-        pane2
-                .setCaption("Pane2 (accept needs server side visit, check for \"Bar\")");
+        pane2.setCaption("Pane2 (accept needs server side visit, check for \"Bar\")");
         final AcceptCriterion crit = new ServerSideCriterion() {
             /**
              * 
@@ -156,8 +155,8 @@ public class DDTest1 extends TestBase {
                 HierarchicalContainer hierarchicalContainer = new HierarchicalContainer();
                 Collection containerPropertyIds = idx.getContainerPropertyIds();
                 for (Object object : containerPropertyIds) {
-                    hierarchicalContainer.addContainerProperty(object, idx
-                            .getType(object), null);
+                    hierarchicalContainer.addContainerProperty(object,
+                            idx.getType(object), null);
                 }
                 hierarchicalContainer.addItem(itemId);
                 copyChildren(idx, hierarchicalContainer, itemId);

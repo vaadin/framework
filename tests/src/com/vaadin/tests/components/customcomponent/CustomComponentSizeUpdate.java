@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.customcomponent;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.NativeButton;
 
 public class CustomComponentSizeUpdate extends TestBase {
 

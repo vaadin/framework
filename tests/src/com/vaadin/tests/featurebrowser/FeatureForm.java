@@ -116,16 +116,14 @@ public class FeatureForm extends Feature implements
                 }
                 if (value.equals("Time")) {
                     final DateField d = new DateField("Time", new Date());
-                    d
-                            .setDescription("This is a DateField-component with text-style");
+                    d.setDescription("This is a DateField-component with text-style");
                     d.setResolution(DateField.RESOLUTION_MIN);
                     d.setStyle("text");
                     test.addField(new Object(), d);
                 }
                 if (value.equals("Calendar")) {
                     final DateField c = new DateField("Calendar", new Date());
-                    c
-                            .setDescription("DateField-component with calendar-style and day-resolution");
+                    c.setDescription("DateField-component with calendar-style and day-resolution");
                     c.setStyle("calendar");
                     c.setResolution(DateField.RESOLUTION_DAY);
                     test.addField(new Object(), c);

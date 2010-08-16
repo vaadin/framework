@@ -181,16 +181,16 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
 
     private void updateFeedbackPosition() {
         if (vertical) {
-            feedbackPopup.setPopupPosition(DOM.getAbsoluteLeft(handle)
-                    + handle.getOffsetWidth(), DOM.getAbsoluteTop(handle)
-                    + handle.getOffsetHeight() / 2
-                    - feedbackPopup.getOffsetHeight() / 2);
+            feedbackPopup.setPopupPosition(
+                    DOM.getAbsoluteLeft(handle) + handle.getOffsetWidth(),
+                    DOM.getAbsoluteTop(handle) + handle.getOffsetHeight() / 2
+                            - feedbackPopup.getOffsetHeight() / 2);
         } else {
-            feedbackPopup.setPopupPosition(DOM.getAbsoluteLeft(handle)
-                    + handle.getOffsetWidth() / 2
-                    - feedbackPopup.getOffsetWidth() / 2, DOM
-                    .getAbsoluteTop(handle)
-                    - feedbackPopup.getOffsetHeight());
+            feedbackPopup.setPopupPosition(
+                    DOM.getAbsoluteLeft(handle) + handle.getOffsetWidth() / 2
+                            - feedbackPopup.getOffsetWidth() / 2,
+                    DOM.getAbsoluteTop(handle)
+                            - feedbackPopup.getOffsetHeight());
         }
     }
 
@@ -279,8 +279,7 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
         final int handleSize = Integer.parseInt(DOM.getElementProperty(handle,
                 domProperty));
         final int baseSize = Integer.parseInt(DOM.getElementProperty(base,
-                domProperty))
-                - (2 * BASE_BORDER_WIDTH);
+                domProperty)) - (2 * BASE_BORDER_WIDTH);
 
         final int range = baseSize - handleSize;
         double v = value.doubleValue();
@@ -338,8 +337,8 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
         } else if ((BrowserInfo.get().isGecko() && DOM.eventGetType(event) == Event.ONKEYPRESS)
                 || (!BrowserInfo.get().isGecko() && DOM.eventGetType(event) == Event.ONKEYDOWN)) {
 
-            if (handleNavigation(event.getKeyCode(), event.getCtrlKey(), event
-                    .getShiftKey())) {
+            if (handleNavigation(event.getKeyCode(), event.getCtrlKey(),
+                    event.getShiftKey())) {
 
                 feedbackPopup.show();
 
@@ -465,7 +464,9 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
         final double baseOffset = vertical ? DOM.getAbsoluteTop(base)
                 - Window.getScrollTop() - handleSize / 2 : DOM
                 .getAbsoluteLeft(base)
-                - Window.getScrollLeft() + handleSize / 2;
+                - Window.getScrollLeft()
+                + handleSize
+                / 2;
 
         if (vertical) {
             v = ((baseSize - (coord - baseOffset)) / (baseSize - handleSize))

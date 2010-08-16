@@ -2,12 +2,12 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.data.Container;
-import com.vaadin.data.Item;
 import com.vaadin.data.Container.Filterable;
+import com.vaadin.data.Item;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class Ticket1995 extends Application {
 

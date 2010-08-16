@@ -3,12 +3,12 @@ package com.vaadin.tests.components.splitpanel;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 public class SplitPanelExtraScrollbars extends AbstractTestCase implements
         ClickListener {

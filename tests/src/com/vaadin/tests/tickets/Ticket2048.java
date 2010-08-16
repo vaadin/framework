@@ -3,6 +3,8 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -11,8 +13,6 @@ import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 public class Ticket2048 extends Application {
 
@@ -94,8 +94,7 @@ public class Ticket2048 extends Application {
                         .contains("folder-add")) {
                     img = "folder-delete";
                 }
-                embedded
-                        .setSource(new ThemeResource("icons/64/" + img + ".png"));
+                embedded.setSource(new ThemeResource("icons/64/" + img + ".png"));
 
             }
 

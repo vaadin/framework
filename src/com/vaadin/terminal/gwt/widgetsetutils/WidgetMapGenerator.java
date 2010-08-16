@@ -14,8 +14,8 @@ import java.util.TreeSet;
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.TreeLogger.Type;
+import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
@@ -107,9 +107,8 @@ public class WidgetMapGenerator extends Generator {
         if (printWriter == null) {
             return;
         }
-        logger
-                .log(Type.INFO,
-                        "Detecting Vaadin components in classpath to generate WidgetMapImpl.java ...");
+        logger.log(Type.INFO,
+                "Detecting Vaadin components in classpath to generate WidgetMapImpl.java ...");
         Date date = new Date();
 
         // init composer, set class properties, create source writer
@@ -136,8 +135,9 @@ public class WidgetMapGenerator extends Generator {
         sourceWriter.println("}");
         // commit generated class
         context.commit(logger, printWriter);
-        logger.log(Type.INFO, "Done. ("
-                + (new Date().getTime() - date.getTime()) / 1000 + "seconds)");
+        logger.log(Type.INFO,
+                "Done. (" + (new Date().getTime() - date.getTime()) / 1000
+                        + "seconds)");
 
     }
 
@@ -171,9 +171,8 @@ public class WidgetMapGenerator extends Generator {
             }
 
         }
-        logger
-                .log(Type.INFO,
-                        "Widget set will contain implementations for following components: ");
+        logger.log(Type.INFO,
+                "Widget set will contain implementations for following components: ");
 
         TreeSet<String> classNames = new TreeSet<String>();
         for (Class<? extends Paintable> class1 : paintablesHavingWidgetAnnotation) {

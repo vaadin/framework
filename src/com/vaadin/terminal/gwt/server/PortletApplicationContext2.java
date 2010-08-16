@@ -97,9 +97,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
                 .getAttribute(PortletApplicationContext2.class.getName());
         if (cx == null) {
             cx = new PortletApplicationContext2();
-            session
-                    .setAttribute(PortletApplicationContext2.class.getName(),
-                            cx);
+            session.setAttribute(PortletApplicationContext2.class.getName(), cx);
         }
         if (cx.session == null) {
             cx.session = session;

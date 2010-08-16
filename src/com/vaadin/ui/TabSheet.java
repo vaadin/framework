@@ -21,6 +21,8 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.VTabsheet;
 import com.vaadin.terminal.gwt.server.CommunicationManager;
+import com.vaadin.ui.TabSheet.CloseHandler;
+import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.Runo;
 

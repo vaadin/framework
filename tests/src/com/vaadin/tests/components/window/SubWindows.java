@@ -2,13 +2,13 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 public class SubWindows extends TestBase {
 
@@ -78,9 +78,8 @@ public class SubWindows extends TestBase {
             dialog.getContent().setWidth("100%");
 
             TextField tf = new TextField();
-            tf
-                    .setValue("The textfield should fill the window (except margins)."
-                            + "\n - Try to resize the window\n");
+            tf.setValue("The textfield should fill the window (except margins)."
+                    + "\n - Try to resize the window\n");
             tf.setRows(5);
             tf.setWidth("100%");
             dialog.addComponent(tf);
@@ -96,9 +95,8 @@ public class SubWindows extends TestBase {
             dialog.getContent().setWidth("100%");
 
             TextField tf = new TextField();
-            tf
-                    .setValue("The textfield should fill the window (except margins)."
-                            + "\n - Try to resize the window\n");
+            tf.setValue("The textfield should fill the window (except margins)."
+                    + "\n - Try to resize the window\n");
             tf.setWidth("100%");
             tf.setHeight("100%");
             tf.setRows(5);

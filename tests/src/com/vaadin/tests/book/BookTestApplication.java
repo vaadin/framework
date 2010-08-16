@@ -15,9 +15,9 @@ import java.util.Map;
 import java.util.Set;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.Validator;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.Validator;
 import com.vaadin.data.util.QueryContainer;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.terminal.ClassResource;
@@ -33,6 +33,7 @@ import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomLayout;
@@ -44,24 +45,22 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Select;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Layout.AlignmentHandler;
-import com.vaadin.ui.MenuBar.MenuItem;
 
 public class BookTestApplication extends com.vaadin.Application {
     Window main = new Window("Application window");
@@ -251,7 +250,7 @@ public class BookTestApplication extends com.vaadin.Application {
                 example_Layout(main, param);
             } else {
                 ; // main.addComponent(new
-                // Label("Unknown test '"+example+"'."));
+                  // Label("Unknown test '"+example+"'."));
             }
 
             return null;
@@ -444,8 +443,7 @@ public class BookTestApplication extends com.vaadin.Application {
         final Select select = new Select("Enter containing substring");
         main.addComponent(select);
 
-        select
-                .setFilteringMode(AbstractSelect.Filtering.FILTERINGMODE_CONTAINS);
+        select.setFilteringMode(AbstractSelect.Filtering.FILTERINGMODE_CONTAINS);
 
         /* Fill the component with some items. */
         final String[] planets = new String[] { "Mercury", "Venus", "Earth",
@@ -735,8 +733,8 @@ public class BookTestApplication extends com.vaadin.Application {
         form.addComponent(new TextField("Email"));
 
         // Add the panel to the main window
-        final ClassResource icon = new ClassResource("smiley.jpg", main
-                .getApplication());
+        final ClassResource icon = new ClassResource("smiley.jpg",
+                main.getApplication());
         form.addComponent(new Embedded("Image", icon));
         panel.setIcon(icon);
         panel.addComponent(form);
@@ -747,8 +745,8 @@ public class BookTestApplication extends com.vaadin.Application {
         if (param.equals("embedded")) {
             final GridLayout grid = new GridLayout(3, 3);
             for (int i = 0; i < 3 * 3; i++) {
-                ClassResource img = new ClassResource("smiley.jpg", main
-                        .getApplication());
+                ClassResource img = new ClassResource("smiley.jpg",
+                        main.getApplication());
                 Embedded embedded = new Embedded("", img);
                 grid.addComponent(embedded);
             }
@@ -879,10 +877,9 @@ public class BookTestApplication extends com.vaadin.Application {
         } else if (param != null && param.equals("layout")) {
             Form form = new Form();
             form.setCaption("Form Caption");
-            form
-                    .setDescription("This is a description of the Form that is "
-                            + "displayed in the upper part of the form. You normally enter some "
-                            + "descriptive text about the form and its use here.");
+            form.setDescription("This is a description of the Form that is "
+                    + "displayed in the upper part of the form. You normally enter some "
+                    + "descriptive text about the form and its use here.");
 
             // Add a field directly to the layout. This field will not be bound
             // to
@@ -897,8 +894,7 @@ public class BookTestApplication extends com.vaadin.Application {
 
             // Set the footer layout and add some text.
             form.setFooter(new VerticalLayout());
-            form
-                    .getFooter()
+            form.getFooter()
                     .addComponent(
                             new Label(
                                     "This is the footer area of the Form. "
@@ -1048,10 +1044,11 @@ public class BookTestApplication extends com.vaadin.Application {
             } else if (param.equals("icon")) {
                 final TabSheet tabsheet = new TabSheet();
 
-                tabsheet.addTab(new Label("Contents of the first tab"),
-                        "First Tab", new ClassResource(
-                                "images/Mercury_small.png", main
-                                        .getApplication()));
+                tabsheet.addTab(
+                        new Label("Contents of the first tab"),
+                        "First Tab",
+                        new ClassResource("images/Mercury_small.png", main
+                                .getApplication()));
                 tabsheet.addTab(new Label("Contents of the second tab"),
                         "Second Tab", new ClassResource(
                                 "images/Venus_small.png", this));
@@ -1606,10 +1603,9 @@ public class BookTestApplication extends com.vaadin.Application {
 
     void example_Print(final Window main, String param) {
         if (param != null && param.equals("simple")) {
-            main
-                    .addComponent(new Label(
-                            "<input type='button' onClick='print()' value='Click to Print'/>",
-                            Label.CONTENT_XHTML));
+            main.addComponent(new Label(
+                    "<input type='button' onClick='print()' value='Click to Print'/>",
+                    Label.CONTENT_XHTML));
             return;
         }
 
@@ -1652,8 +1648,7 @@ public class BookTestApplication extends com.vaadin.Application {
         // rtarea.setCaption("My Rich Text Area");
 
         // Set initial content as HTML
-        rtarea
-                .setValue("<h1>Hello</h1>\n<p>This rich text area contains some text.</p>");
+        rtarea.setValue("<h1>Hello</h1>\n<p>This rich text area contains some text.</p>");
 
         // Show the text edited in the rich text area as HTML.
         final Button show = new Button("Show HTML");
@@ -1684,8 +1679,7 @@ public class BookTestApplication extends com.vaadin.Application {
 
             // Create an example table and put some data in it.
             Statement st = connection.createStatement();
-            st
-                    .executeQuery("CREATE TABLE Prisoners (id INTEGER, name VARCHAR)");
+            st.executeQuery("CREATE TABLE Prisoners (id INTEGER, name VARCHAR)");
             st.close();
             for (int i = 0; i < 100; i++) {
                 st = connection.createStatement();

@@ -18,9 +18,7 @@ public class Ticket2095 extends Application {
 
         Embedded em = new Embedded();
         em.setType(Embedded.TYPE_BROWSER);
-        em
-                .setSource(new ExternalResource(
-                        "../statictestfiles/ticket2095.html"));
+        em.setSource(new ExternalResource("../statictestfiles/ticket2095.html"));
         em.setDebugId("MYIFRAME");
 
         em.setSizeFull();

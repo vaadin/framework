@@ -71,14 +71,13 @@ public class FeatureTable extends Feature implements Action.Handler {
 
         // Add random rows to table
         for (int j = 0; j < 300; j++) {
-            t
-                    .addItem(
-                            new Object[] {
-                                    firstnames[(int) (Math.random() * (firstnames.length - 1))],
-                                    lastnames[(int) (Math.random() * (lastnames.length - 1))],
-                                    title[(int) (Math.random() * title.length)],
-                                    unit[(int) (Math.random() * unit.length)] },
-                            new Integer(j));
+            t.addItem(
+                    new Object[] {
+                            firstnames[(int) (Math.random() * (firstnames.length - 1))],
+                            lastnames[(int) (Math.random() * (lastnames.length - 1))],
+                            title[(int) (Math.random() * title.length)],
+                            unit[(int) (Math.random() * unit.length)] },
+                    new Integer(j));
         }
 
         // Actions
@@ -109,10 +108,12 @@ public class FeatureTable extends Feature implements Action.Handler {
                 "ID", "Index", "Item", "Property" });
 
         final Select themes = (Select) propertyPanel.getField("style");
-        themes.addItem("list").getItemProperty(
-                themes.getItemCaptionPropertyId()).setValue("list");
-        themes.addItem("paging").getItemProperty(
-                themes.getItemCaptionPropertyId()).setValue("paging");
+        themes.addItem("list")
+                .getItemProperty(themes.getItemCaptionPropertyId())
+                .setValue("list");
+        themes.addItem("paging")
+                .getItemProperty(themes.getItemCaptionPropertyId())
+                .setValue("paging");
 
         propertyPanel.addProperties("Table Properties", ap);
 

@@ -117,8 +117,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * read by {@link AbstractApplicationServlet}.
      */
     public static final String REQUEST_FRAGMENT = ApplicationServlet.class
-            .getName()
-            + ".fragment";
+            .getName() + ".fragment";
     /**
      * This request attribute forces widgetsets to be loaded from under the
      * specified base path; e.g shared widgetset for all portlets in a portal.
@@ -128,8 +127,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * {@link AbstractApplicationServlet}.
      */
     public static final String REQUEST_VAADIN_STATIC_FILE_PATH = ApplicationServlet.class
-            .getName()
-            + ".widgetsetPath";
+            .getName() + ".widgetsetPath";
     /**
      * This request attribute forces widgetset used; e.g for portlets that can
      * not have different widgetsets.
@@ -139,8 +137,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * {@link AbstractApplicationServlet}.
      */
     public static final String REQUEST_WIDGETSET = ApplicationServlet.class
-            .getName()
-            + ".widgetset";
+            .getName() + ".widgetset";
     /**
      * This request attribute indicates the shared widgetset (e.g. portal-wide
      * default widgetset).
@@ -150,8 +147,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * {@link AbstractApplicationServlet}.
      */
     public static final String REQUEST_SHARED_WIDGETSET = ApplicationServlet.class
-            .getName()
-            + ".sharedWidgetset";
+            .getName() + ".sharedWidgetset";
     /**
      * If set, do not load the default theme but assume that loading it is
      * handled e.g. by ApplicationPortlet.
@@ -161,8 +157,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * {@link AbstractApplicationServlet}.
      */
     public static final String REQUEST_DEFAULT_THEME = ApplicationServlet.class
-            .getName()
-            + ".defaultThemeUri";
+            .getName() + ".defaultThemeUri";
     /**
      * This request attribute is used to add styles to the main element. E.g
      * "height:500px" generates a style="height:500px" to the main element,
@@ -173,8 +168,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * {@link AbstractApplicationServlet}.
      */
     public static final String REQUEST_APPSTYLE = ApplicationServlet.class
-            .getName()
-            + ".style";
+            .getName() + ".style";
 
     private Properties applicationProperties;
 
@@ -206,8 +200,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         for (final Enumeration e = servletConfig.getInitParameterNames(); e
                 .hasMoreElements();) {
             final String name = (String) e.nextElement();
-            applicationProperties.setProperty(name, servletConfig
-                    .getInitParameter(name));
+            applicationProperties.setProperty(name,
+                    servletConfig.getInitParameter(name));
         }
 
         // Overrides with server.xml parameters
@@ -215,8 +209,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         for (final Enumeration e = context.getInitParameterNames(); e
                 .hasMoreElements();) {
             final String name = (String) e.nextElement();
-            applicationProperties.setProperty(name, context
-                    .getInitParameter(name));
+            applicationProperties.setProperty(name,
+                    context.getInitParameter(name));
         }
         checkProductionMode();
         checkCrossSiteProtection();
@@ -305,8 +299,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             pkgName = pkg.getName();
         } else {
             final String className = getClass().getName();
-            pkgName = new String(className.toCharArray(), 0, className
-                    .lastIndexOf('.'));
+            pkgName = new String(className.toCharArray(), 0,
+                    className.lastIndexOf('.'));
         }
         val = System.getProperty(pkgName + "." + parameterName);
         if (val != null) {
@@ -570,10 +564,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
     private void updateBrowserProperties(WebBrowser browser,
             HttpServletRequest request) {
-        browser.updateBrowserProperties(request.getLocale(), request
-                .getRemoteAddr(), request.isSecure(), request
-                .getHeader("user-agent"), request.getParameter("sw"), request
-                .getParameter("sh"));
+        browser.updateBrowserProperties(request.getLocale(),
+                request.getRemoteAddr(), request.isSecure(),
+                request.getHeader("user-agent"), request.getParameter("sw"),
+                request.getParameter("sh"));
     }
 
     protected ClassLoader getClassLoader() throws ServletException {
@@ -946,8 +940,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
             Application.SystemMessages ci = getSystemMessages();
-            criticalNotification(request, response, ci
-                    .getInternalErrorCaption(), ci.getInternalErrorMessage(),
+            criticalNotification(request, response,
+                    ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());
             if (application != null) {
                 application.getErrorHandler()
@@ -1059,10 +1053,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 request.getSession().invalidate();
 
                 // send uidl redirect
-                criticalNotification(request, response, ci
-                        .getSessionExpiredCaption(), ci
-                        .getSessionExpiredMessage(), null, ci
-                        .getSessionExpiredURL());
+                criticalNotification(request, response,
+                        ci.getSessionExpiredCaption(),
+                        ci.getSessionExpiredMessage(), null,
+                        ci.getSessionExpiredURL());
 
             }
         } catch (SystemMessageException ee) {
@@ -1089,9 +1083,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 response.sendRedirect(ci.getCommunicationErrorURL());
             } else {
                 // send uidl redirect
-                criticalNotification(request, response, ci
-                        .getCommunicationErrorCaption(), ci
-                        .getCommunicationErrorMessage(),
+                criticalNotification(request, response,
+                        ci.getCommunicationErrorCaption(),
+                        ci.getCommunicationErrorMessage(),
                         INVALID_SECURITY_KEY_MSG, ci.getCommunicationErrorURL());
                 /*
                  * Invalidate session. Portal integration will fail otherwise
@@ -1169,8 +1163,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             return true;
         } else if (request.getRequestURI().startsWith(
                 request.getContextPath() + "/VAADIN/")) {
-            serveStaticResourcesInVAADIN(request.getRequestURI().substring(
-                    request.getContextPath().length()), request, response);
+            serveStaticResourcesInVAADIN(
+                    request.getRequestURI().substring(
+                            request.getContextPath().length()), request,
+                    response);
             return true;
         }
 
@@ -1248,8 +1244,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
              * cache timeout can be configured by setting the resourceCacheTime
              * parameter in web.xml
              */
-            response.setHeader("Cache-Control", "max-age: "
-                    + String.valueOf(resourceCacheTime));
+            response.setHeader("Cache-Control",
+                    "max-age: " + String.valueOf(resourceCacheTime));
         }
 
         // Write the resource to the client.
@@ -1770,10 +1766,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         if (!isProductionMode()) {
             page.write("vaadin.debug = true;\n");
         }
-        page
-                .write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
-                        + "style=\"position:absolute;width:0;height:0;border:0;overflow:"
-                        + "hidden;\" src=\"javascript:false\"></iframe>');\n");
+        page.write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
+                + "style=\"position:absolute;width:0;height:0;border:0;overflow:"
+                + "hidden;\" src=\"javascript:false\"></iframe>');\n");
         page.write("document.write(\"<script language='javascript' src='"
                 + widgetsetFilePath + "'><\\/script>\");\n}\n");
 
@@ -1848,8 +1843,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             page.write("stylesheet.setAttribute('type', 'text/css');\n");
             page.write("stylesheet.setAttribute('href', '" + themeUri
                     + "/styles.css');\n");
-            page
-                    .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
+            page.write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
             page.write("vaadin.themesLoaded['" + themeName + "'] = true;\n}\n");
             page.write("//]]>\n</script>\n");
         }
@@ -1858,12 +1852,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         // inactivity
         page.write("<script type=\"text/javascript\">\n");
         page.write("//<![CDATA[\n");
-        page
-                .write("setTimeout('if (typeof "
-                        + widgetset.replace('.', '_')
-                        + " == \"undefined\") {alert(\"Failed to load the widgetset: "
-                        + widgetsetFilePath + "\")};',15000);\n"
-                        + "//]]>\n</script>\n");
+        page.write("setTimeout('if (typeof " + widgetset.replace('.', '_')
+                + " == \"undefined\") {alert(\"Failed to load the widgetset: "
+                + widgetsetFilePath + "\")};',15000);\n" + "//]]>\n</script>\n");
     }
 
     /**
@@ -1897,18 +1888,15 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      */
     protected void writeAjaxPageHtmlHeader(final BufferedWriter page,
             String title, String themeUri) throws IOException {
-        page
-                .write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
+        page.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
         page.write("<style type=\"text/css\">"
                 + "html, body {height:100%;margin:0;}</style>");
 
         // Add favicon links
-        page
-                .write("<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\""
-                        + themeUri + "/favicon.ico\" />");
-        page
-                .write("<link rel=\"icon\" type=\"image/vnd.microsoft.icon\" href=\""
-                        + themeUri + "/favicon.ico\" />");
+        page.write("<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\""
+                + themeUri + "/favicon.ico\" />");
+        page.write("<link rel=\"icon\" type=\"image/vnd.microsoft.icon\" href=\""
+                + themeUri + "/favicon.ico\" />");
 
         page.write("<title>" + title + "</title>");
     }

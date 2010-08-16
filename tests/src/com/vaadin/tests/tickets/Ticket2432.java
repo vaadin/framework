@@ -6,9 +6,9 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.Layout.SpacingHandler;
+import com.vaadin.ui.Window;
 
 public class Ticket2432 extends Application {
 

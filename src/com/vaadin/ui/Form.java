@@ -682,8 +682,9 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * @see com.vaadin.data.Item.Viewer#setItemDataSource(Item)
      */
     public void setItemDataSource(Item newDataSource) {
-        setItemDataSource(newDataSource, newDataSource != null ? newDataSource
-                .getItemPropertyIds() : null);
+        setItemDataSource(newDataSource,
+                newDataSource != null ? newDataSource.getItemPropertyIds()
+                        : null);
     }
 
     /**
@@ -782,8 +783,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
                 Field f = getField(properties[i]);
                 layout.removeComponent(f);
                 if (newLayout instanceof CustomLayout) {
-                    ((CustomLayout) newLayout).addComponent(f, properties[i]
-                            .toString());
+                    ((CustomLayout) newLayout).addComponent(f,
+                            properties[i].toString());
                 } else {
                     newLayout.addComponent(f);
                 }
@@ -832,8 +833,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
                     + propertyId.toString() + "' can not be found.");
         }
         final Object value = oldField.getPropertyDataSource() == null ? oldField
-                .getValue()
-                : oldField.getPropertyDataSource().getValue();
+                .getValue() : oldField.getPropertyDataSource().getValue();
 
         // Checks that the value exists and check if the select should
         // be forced in multiselect mode

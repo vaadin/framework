@@ -20,9 +20,9 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
+import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
@@ -33,9 +33,9 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHtml5DragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VHtml5File;
+import com.vaadin.terminal.gwt.client.ui.dd.VHtml5File.Callback;
 import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
-import com.vaadin.terminal.gwt.client.ui.dd.VHtml5File.Callback;
 
 /**
  * 
@@ -77,8 +77,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                     if (dragStarMode == WRAPPER) {
                         startDrag.createDragImage(getElement(), true);
                     } else {
-                        startDrag.createDragImage(((Widget) paintable)
-                                .getElement(), true);
+                        startDrag.createDragImage(
+                                ((Widget) paintable).getElement(), true);
                     }
                     event.preventDefault(); // prevent text selection
 

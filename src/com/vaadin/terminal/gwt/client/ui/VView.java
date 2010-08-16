@@ -292,8 +292,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                     }
 
                     final String style = notification.hasAttribute("style") ? notification
-                            .getStringAttribute("style")
-                            : null;
+                            .getStringAttribute("style") : null;
                     final int position = notification
                             .getIntAttribute("position");
                     final int delay = notification.getIntAttribute("delay");
@@ -455,8 +454,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                         if (changed) {
                             ApplicationConnection
                                     .getConsole()
-                                    .log(
-                                            "Running layout functions due window resize");
+                                    .log("Running layout functions due window resize");
                             connection.runDescendentsLayout(VView.this);
 
                             sendClientResized();

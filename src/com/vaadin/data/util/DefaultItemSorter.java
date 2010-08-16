@@ -10,9 +10,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.vaadin.data.Container;
+import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.data.Container.Sortable;
 
 /**
  * Provides a default implementation of an ItemSorter. The
@@ -115,8 +115,8 @@ public class DefaultItemSorter implements ItemSorter {
      *            The second item to compare.
      * @return a negative, zero, or positive integer if the property value in
      *         the first item is less than, equal to, or greater than the
-     *         property value in the second item. Negated if {@code
-     *         sortDirection} is false.
+     *         property value in the second item. Negated if
+     *         {@code sortDirection} is false.
      */
     protected int compareProperty(Object propertyId, boolean sortDirection,
             Item item1, Item item2) {

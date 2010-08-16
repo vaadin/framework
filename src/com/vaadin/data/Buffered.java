@@ -247,8 +247,7 @@ public interface Buffered extends Serializable {
 
             for (int i = 0; i < causes.length; i++) {
                 final int causeLevel = (causes[i] instanceof ErrorMessage) ? ((ErrorMessage) causes[i])
-                        .getErrorLevel()
-                        : ErrorMessage.ERROR;
+                        .getErrorLevel() : ErrorMessage.ERROR;
                 if (causeLevel > level) {
                     level = causeLevel;
                 }

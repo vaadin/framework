@@ -93,11 +93,13 @@ public class TestContainerSorting extends TestCase {
                 "Might and Magic", "Natural languages", "PHP",
                 "Programming languages", "Python", "Red Alert", "Swedish",
                 "Toyota", "Volvo" });
-        assertArrays(hc.rootItemIds().toArray(), new Integer[] {
-                nameToId.get("Cars"), nameToId.get("Games"),
-                nameToId.get("Natural languages"),
-                nameToId.get("Programming languages") });
-        assertArrays(hc.getChildren(nameToId.get("Games")).toArray(),
+        assertArrays(
+                hc.rootItemIds().toArray(),
+                new Integer[] { nameToId.get("Cars"), nameToId.get("Games"),
+                        nameToId.get("Natural languages"),
+                        nameToId.get("Programming languages") });
+        assertArrays(
+                hc.getChildren(nameToId.get("Games")).toArray(),
                 new Integer[] { nameToId.get("Call of Duty"),
                         nameToId.get("Fallout"),
                         nameToId.get("Might and Magic"),
@@ -145,8 +147,8 @@ public class TestContainerSorting extends TestCase {
         item.getItemProperty("name").setValue(string);
 
         if (parent != null && container instanceof HierarchicalContainer) {
-            ((HierarchicalContainer) container).setParent(index, nameToId
-                    .get(parent));
+            ((HierarchicalContainer) container).setParent(index,
+                    nameToId.get(parent));
         }
 
         index++;

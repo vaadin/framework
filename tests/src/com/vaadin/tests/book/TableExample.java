@@ -40,14 +40,12 @@ public class TableExample extends CustomComponent {
         /* Add some items in the table and assign them an Item ID (IID). */
         for (int i = 0; i < 1000; i++) {
             /* Add a randomly generated item in the Table. */
-            table
-                    .addItem(
-                            new Object[] {
-                                    firstnames[(int) (Math.random() * (firstnames.length - 0.01))],
-                                    lastnames[(int) (Math.random() * (lastnames.length - 0.01))],
-                                    new Integer(
-                                            (int) (1900 + Math.random() * 100)) },
-                            new Integer(i));
+            table.addItem(
+                    new Object[] {
+                            firstnames[(int) (Math.random() * (firstnames.length - 0.01))],
+                            lastnames[(int) (Math.random() * (lastnames.length - 0.01))],
+                            new Integer((int) (1900 + Math.random() * 100)) },
+                    new Integer(i));
         }
 
         /* Set the number of items visible in the table. */

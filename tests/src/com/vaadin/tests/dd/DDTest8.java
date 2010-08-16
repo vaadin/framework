@@ -80,8 +80,8 @@ public class DDTest8 extends TestBase {
                 HierarchicalContainer hierarchicalContainer = new HierarchicalContainer();
                 Collection containerPropertyIds = idx.getContainerPropertyIds();
                 for (Object object : containerPropertyIds) {
-                    hierarchicalContainer.addContainerProperty(object, idx
-                            .getType(object), null);
+                    hierarchicalContainer.addContainerProperty(object,
+                            idx.getType(object), null);
                 }
                 hierarchicalContainer.addItem(itemId);
                 copyChildren(idx, hierarchicalContainer, itemId);

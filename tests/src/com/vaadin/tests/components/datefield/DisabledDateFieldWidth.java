@@ -2,9 +2,9 @@ package com.vaadin.tests.components.datefield;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class DisabledDateFieldWidth extends TestBase {
     @Override

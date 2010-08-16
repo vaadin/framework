@@ -2,8 +2,8 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.data.Property;
-import com.vaadin.data.Validator;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Validator;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
@@ -36,22 +36,18 @@ public class Ticket1900 extends Application {
 
         f[0].setDescription("Field is empty, requiredError(null): *");
 
-        f[1]
-                .setDescription("Field is empty, requiredError(\"foo\"): * (popup shows the validation error)");
+        f[1].setDescription("Field is empty, requiredError(\"foo\"): * (popup shows the validation error)");
         f[1].setRequiredError("The field must not be empty");
 
-        f[2]
-                .setDescription("Field is non-empty, validators do not give validation error: *");
+        f[2].setDescription("Field is non-empty, validators do not give validation error: *");
         f[2].setValue("valid 12");
 
-        f[3]
-                .setDescription("Field is non-empty, requiredError(null), validators "
-                        + "give validation error: * ! (popup shows the validation error)");
+        f[3].setDescription("Field is non-empty, requiredError(null), validators "
+                + "give validation error: * ! (popup shows the validation error)");
         f[3].setValue("invalid");
 
-        f[4]
-                .setDescription("Field is non-empty, requiredError(\"foo\"), validators "
-                        + "give validation error: * ! (popup shows the validation error)");
+        f[4].setDescription("Field is non-empty, requiredError(\"foo\"), validators "
+                + "give validation error: * ! (popup shows the validation error)");
         f[4].setValue("invalid");
         f[4].setRequiredError("The field must not be empty");
 

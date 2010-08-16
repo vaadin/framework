@@ -5,6 +5,7 @@ import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DefaultFieldFactory;
@@ -16,7 +17,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class GridLayoutCaptions extends TestBase {
 
@@ -39,24 +39,21 @@ public class GridLayoutCaptions extends TestBase {
                 } else if (propertyId.equals(DataPOJO.Fields.hp.name())) {
                     Field f = DefaultFieldFactory.get().createField(item,
                             propertyId, uiContext);
-                    f
-                            .setCaption("This is a long caption for the HP field, but it has a VL as a wrapper");
+                    f.setCaption("This is a long caption for the HP field, but it has a VL as a wrapper");
 
                     return f;
 
                 } else if (propertyId.equals(DataPOJO.Fields.place.name())) {
                     Field f = DefaultFieldFactory.get().createField(item,
                             propertyId, uiContext);
-                    f
-                            .setCaption("This is a long caption for the Place field, but it has a CSSLo as a wrapper");
+                    f.setCaption("This is a long caption for the Place field, but it has a CSSLo as a wrapper");
 
                     return f;
 
                 } else if (propertyId.equals(DataPOJO.Fields.price.name())) {
                     Field f = DefaultFieldFactory.get().createField(item,
                             propertyId, uiContext);
-                    f
-                            .setCaption("With size undefined the caption behaves like this...");
+                    f.setCaption("With size undefined the caption behaves like this...");
                     f.setSizeFull();
 
                     return f;

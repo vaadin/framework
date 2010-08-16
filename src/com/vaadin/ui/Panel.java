@@ -8,8 +8,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.vaadin.event.Action;
-import com.vaadin.event.ActionManager;
 import com.vaadin.event.Action.Handler;
+import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.PaintException;
@@ -191,10 +191,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         // detach old content if present
         if (content != null) {
             content.setParent(null);
-            content
-                    .removeListener((ComponentContainer.ComponentAttachListener) this);
-            content
-                    .removeListener((ComponentContainer.ComponentDetachListener) this);
+            content.removeListener((ComponentContainer.ComponentAttachListener) this);
+            content.removeListener((ComponentContainer.ComponentDetachListener) this);
         }
 
         // Sets the panel to be parent for the content

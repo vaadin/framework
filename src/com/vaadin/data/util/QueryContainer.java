@@ -134,8 +134,8 @@ public class QueryContainer implements Container, Container.Ordered,
             final String columnName = metadata.getColumnName(i);
             list.add(columnName);
             final Property p = getContainerProperty(new Integer(1), columnName);
-            propertyTypes.put(columnName, p == null ? Object.class : p
-                    .getType());
+            propertyTypes.put(columnName,
+                    p == null ? Object.class : p.getType());
         }
         propertyIds = Collections.unmodifiableCollection(list);
     }

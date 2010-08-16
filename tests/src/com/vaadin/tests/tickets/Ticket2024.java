@@ -23,9 +23,7 @@ public class Ticket2024 extends Application {
 
         layout.addComponent(new Label(
                 "This should NOT get stuck when scrolling down"));
-        layout
-                .addComponent(new TextField(
-                        "This should not get stuck either..."));
+        layout.addComponent(new TextField("This should not get stuck either..."));
 
         OrderedLayout ol = new OrderedLayout();
         ol.setHeight("1000");

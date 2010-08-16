@@ -7,10 +7,10 @@ import java.util.List;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.TabSheet.Tab;
 
 public class RemoveTabs extends TestBase {

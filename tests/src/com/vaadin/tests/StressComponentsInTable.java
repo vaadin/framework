@@ -8,10 +8,10 @@ import java.util.Date;
 import java.util.Vector;
 
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class StressComponentsInTable extends CustomComponent {
 

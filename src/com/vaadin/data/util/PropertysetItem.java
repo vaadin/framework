@@ -248,8 +248,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
 
         npsi.list = list != null ? (LinkedList) list.clone() : null;
         npsi.propertySetChangeListeners = propertySetChangeListeners != null ? (LinkedList) propertySetChangeListeners
-                .clone()
-                : null;
+                .clone() : null;
         npsi.map = (HashMap) map.clone();
 
         return npsi;

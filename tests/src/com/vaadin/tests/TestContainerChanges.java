@@ -9,6 +9,7 @@ import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.data.util.ContainerOrderedWrapper;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
@@ -17,7 +18,6 @@ import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
-import com.vaadin.ui.Button.ClickEvent;
 
 /**
  * @author marc
@@ -39,9 +39,8 @@ public class TestContainerChanges extends CustomComponent {
         OrderedLayout main = new OrderedLayout();
         setCompositionRoot(main);
 
-        main
-                .addComponent(new Label(
-                        "The same IndexedContainer is wrapped in a ordered/hierarchical wrapper and is set as data source for all components . The buttons only affect the 'original' IndexedContainer."));
+        main.addComponent(new Label(
+                "The same IndexedContainer is wrapped in a ordered/hierarchical wrapper and is set as data source for all components . The buttons only affect the 'original' IndexedContainer."));
 
         OrderedLayout h = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);

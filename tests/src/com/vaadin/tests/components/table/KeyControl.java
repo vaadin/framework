@@ -43,8 +43,7 @@ public class KeyControl extends TestBase {
         table1.addListener(new Table.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
                 Set<String> value = (Set<String>) table1.getValue();
-                selected1
-                        .setValue(value.toString() + " TOTAL: " + value.size());
+                selected1.setValue(value.toString() + " TOTAL: " + value.size());
             }
         });
 

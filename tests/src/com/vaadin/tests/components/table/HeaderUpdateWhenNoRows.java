@@ -1,9 +1,9 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class HeaderUpdateWhenNoRows extends TestBase {
 
@@ -20,11 +20,9 @@ public class HeaderUpdateWhenNoRows extends TestBase {
                 new CheckBox.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         if (event.getButton().booleanValue()) {
-                            table
-                                    .setColumnHeaderMode(Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
+                            table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
                         } else {
-                            table
-                                    .setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
+                            table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
                         }
                     }
                 });

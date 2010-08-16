@@ -9,14 +9,14 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DragAndDropWrapper;
+import com.vaadin.ui.DragAndDropWrapper.WrapperTargetDetails;
+import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
-import com.vaadin.ui.DragAndDropWrapper.WrapperTargetDetails;
-import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable;
 
 public class AcceptFromComponent extends Window {
 
@@ -75,10 +75,8 @@ public class AcceptFromComponent extends Window {
                             // Item id
                             Label l = new Label();
                             l.setSizeUndefined();
-                            l
-                                    .setValue("ItemId : "
-                                            + ((DataBoundTransferable) ctr)
-                                                    .getItemId());
+                            l.setValue("ItemId : "
+                                    + ((DataBoundTransferable) ctr).getItemId());
                             layout.addComponent(l);
                             component = l;
 

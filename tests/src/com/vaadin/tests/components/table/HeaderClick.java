@@ -4,12 +4,12 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.HeaderClickEvent;
+import com.vaadin.ui.TextField;
 
 @SuppressWarnings("serial")
 public class HeaderClick extends TestBase {

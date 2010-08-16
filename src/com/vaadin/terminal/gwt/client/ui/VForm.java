@@ -180,8 +180,8 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
             if (childUidl != null) {
                 if (shortcutHandler == null) {
                     shortcutHandler = new ShortcutActionHandler(id, client);
-                    keyDownRegistration = addDomHandler(this, KeyDownEvent
-                            .getType());
+                    keyDownRegistration = addDomHandler(this,
+                            KeyDownEvent.getType());
                 }
                 shortcutHandler.updateActionMap(childUidl);
             }
@@ -199,14 +199,12 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
         renderInformation.updateSize(getElement());
 
         renderInformation.setContentAreaHeight(renderInformation
-                .getRenderedSize().getHeight()
-                - getSpaceConsumedVertically());
+                .getRenderedSize().getHeight() - getSpaceConsumedVertically());
         if (BrowserInfo.get().isIE6()) {
             getElement().getStyle().setProperty("overflow", "hidden");
         }
         renderInformation.setContentAreaWidth(renderInformation
-                .getRenderedSize().getWidth()
-                - borderPaddingHorizontal);
+                .getRenderedSize().getWidth() - borderPaddingHorizontal);
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {

@@ -25,9 +25,9 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.Action;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.Transferable;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickSource;
+import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
@@ -436,8 +436,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         // Actions
         if (variables.containsKey("action")) {
 
-            final StringTokenizer st = new StringTokenizer((String) variables
-                    .get("action"), ",");
+            final StringTokenizer st = new StringTokenizer(
+                    (String) variables.get("action"), ",");
             if (st.countTokens() == 2) {
                 final Object itemId = itemIdMapper.get(st.nextToken());
                 final Action action = (Action) actionMapper.get(st.nextToken());
@@ -508,8 +508,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 target.addAttribute("selectmode", (isMultiSelect() ? "multi"
                         : "single"));
                 if (isMultiSelect()) {
-                    target.addAttribute("multiselectmode", multiSelectMode
-                            .ordinal());
+                    target.addAttribute("multiselectmode",
+                            multiSelectMode.ordinal());
                 }
             } else {
                 target.addAttribute("selectmode", "none");
@@ -661,8 +661,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             partialUpdate = false;
         } else {
             // Selected
-            target.addVariable(this, "selected", selectedKeys
-                    .toArray(new String[selectedKeys.size()]));
+            target.addVariable(this, "selected",
+                    selectedKeys.toArray(new String[selectedKeys.size()]));
 
             // Expand and collapse
             target.addVariable(this, "expand", new String[] {});

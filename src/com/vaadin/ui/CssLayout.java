@@ -33,7 +33,7 @@ import com.vaadin.terminal.gwt.client.ui.VCssLayout;
  * <li>noticeably faster rendering time in some situations as we rely more on
  * the browser's rendering engine.
  * </ul>
- *<p>
+ * <p>
  * With {@link CustomLayout} one can often achieve similar results (good looking
  * layouts with web technologies), but with CustomLayout developer needs to work
  * with fixed templates.

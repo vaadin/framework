@@ -2,9 +2,9 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Layout.AlignmentHandler;
 
 public class Ticket2294 extends Application {
 

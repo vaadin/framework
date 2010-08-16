@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.event.Action;
-import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.Action.Handler;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.TextField;
 
 public class WindowShouldRemoveActionHandler extends TestBase {
 

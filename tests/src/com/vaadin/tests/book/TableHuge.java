@@ -8,9 +8,9 @@ import java.util.Collection;
 import java.util.Vector;
 
 import com.vaadin.data.Container;
+import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertysetItem;

@@ -16,9 +16,8 @@ public class Ticket2319 extends Application {
         Window mainw = new Window();
         setMainWindow(mainw);
 
-        mainw
-                .addComponent(new Label(
-                        "This test has somewhat invalid layouts in it to detect analyzy layout function in debug dialog"));
+        mainw.addComponent(new Label(
+                "This test has somewhat invalid layouts in it to detect analyzy layout function in debug dialog"));
 
         HorizontalLayout hl = new HorizontalLayout();
         Panel panel = new Panel("p1");

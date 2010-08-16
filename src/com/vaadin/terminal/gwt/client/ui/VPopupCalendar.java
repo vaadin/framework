@@ -268,8 +268,8 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
                     popup.setWidth(w + "px");
                     popup.setHeight(h + "px");
 
-                    popup.setPopupPosition(l, t
-                            + calendarToggle.getOffsetHeight() + 2);
+                    popup.setPopupPosition(l,
+                            t + calendarToggle.getOffsetHeight() + 2);
 
                     Date end = new Date();
 

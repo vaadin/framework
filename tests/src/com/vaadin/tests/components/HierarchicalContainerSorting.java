@@ -89,8 +89,8 @@ public class HierarchicalContainerSorting extends TestBase {
         item.getItemProperty("name").setValue(string);
 
         if (parent != null && container instanceof HierarchicalContainer) {
-            ((HierarchicalContainer) container).setParent(index, nameToId
-                    .get(parent));
+            ((HierarchicalContainer) container).setParent(index,
+                    nameToId.get(parent));
         }
 
         index++;

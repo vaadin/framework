@@ -2,10 +2,10 @@ package com.vaadin.tests.components.abstractcomponent;
 
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class EnableState extends AbstractTestCase {
     @Override

@@ -5,8 +5,8 @@
 package com.vaadin.tests.book;
 
 import com.vaadin.event.Action;
-import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.Action.Handler;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
@@ -83,7 +83,7 @@ public class DefaultButtonExample extends CustomComponent implements Handler {
         // Do something: report the click
         formlayout.addComponent(new Label("OK clicked. " + "User="
                 + username.getValue() + ", password=" + password.getValue()));
-        //  
+        //
     }
 
     public void cancelHandler() {

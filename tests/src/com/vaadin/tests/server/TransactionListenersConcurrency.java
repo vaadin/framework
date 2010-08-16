@@ -141,8 +141,8 @@ public class TransactionListenersConcurrency extends TestCase {
                 session.getAttribute(WebApplicationContext.class.getName()))
                 .andReturn(null).anyTimes();
         session.setAttribute(
-                EasyMock.eq(WebApplicationContext.class.getName()), EasyMock
-                        .anyObject());
+                EasyMock.eq(WebApplicationContext.class.getName()),
+                EasyMock.anyObject());
 
         EasyMock.replay(session);
         return session;

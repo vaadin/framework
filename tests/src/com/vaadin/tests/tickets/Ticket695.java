@@ -6,8 +6,8 @@ import java.io.ObjectOutputStream;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
 public class Ticket695 extends Application {
@@ -31,8 +31,7 @@ public class Ticket695 extends Application {
                             + (System.currentTimeMillis() - t) + "ms");
                 } catch (IOException e) {
                     e.printStackTrace();
-                    w
-                            .showNotification("ApplicationContext serialization failed - see console for stacktrace");
+                    w.showNotification("ApplicationContext serialization failed - see console for stacktrace");
                 }
 
             }

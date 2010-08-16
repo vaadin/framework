@@ -3,8 +3,8 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.Layout.AlignmentHandler;
+import com.vaadin.ui.Window;
 
 public class Ticket2283 extends Application {
 

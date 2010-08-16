@@ -3,10 +3,10 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Window;
 
 public class Ticket2117 extends Application {
 
@@ -48,14 +48,13 @@ public class Ticket2117 extends Application {
 
     private Window createWindow() {
         final Window w = new Window();
-        w
-                .addComponent(new Label(
-                        "Click this link: <a target=\"_blank\" href='"
-                                + getURL().toExternalForm()
-                                + "'>"
-                                + getURL().toExternalForm()
-                                + "</a> which opens new windows to this uri. They should end up having a separate Window and URL.",
-                        Label.CONTENT_XHTML));
+        w.addComponent(new Label(
+                "Click this link: <a target=\"_blank\" href='"
+                        + getURL().toExternalForm()
+                        + "'>"
+                        + getURL().toExternalForm()
+                        + "</a> which opens new windows to this uri. They should end up having a separate Window and URL.",
+                Label.CONTENT_XHTML));
         return w;
     }
 }

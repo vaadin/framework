@@ -103,8 +103,8 @@ public class ShortcutActionHandler {
                 modifiers = action.getIntArrayAttribute("mk");
             }
 
-            final ShortcutKeyCombination kc = new ShortcutKeyCombination(action
-                    .getIntAttribute("kc"), modifiers);
+            final ShortcutKeyCombination kc = new ShortcutKeyCombination(
+                    action.getIntAttribute("kc"), modifiers);
             final String key = action.getStringAttribute("key");
             final String caption = action.getStringAttribute("caption");
             actions.add(new ShortcutAction(key, kc, caption));

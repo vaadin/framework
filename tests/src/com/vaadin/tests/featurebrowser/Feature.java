@@ -48,9 +48,8 @@ public abstract class Feature extends CustomComponent {
      * @param url
      */
     public void setJavadocURL(String url) {
-        javadoc
-                .setValue("<iframe width=\"100%\" src=\"http://www.vaadin.com/api/com/vaadin/"
-                        + url + "\"></iframe>");
+        javadoc.setValue("<iframe width=\"100%\" src=\"http://www.vaadin.com/api/com/vaadin/"
+                + url + "\"></iframe>");
     }
 
     /**

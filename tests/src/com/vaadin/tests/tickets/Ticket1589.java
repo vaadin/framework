@@ -29,15 +29,13 @@ public class Ticket1589 extends Application {
 
         w.addURIHandler(res);
 
-        w
-                .addComponent(new Link(
-                        "Test (without Content-Disposition, should suggest generatedFile.png when saving, browser default for actual disposition)",
-                        new ExternalResource("myresource")));
+        w.addComponent(new Link(
+                "Test (without Content-Disposition, should suggest generatedFile.png when saving, browser default for actual disposition)",
+                new ExternalResource("myresource")));
 
-        w
-                .addComponent(new Link(
-                        "Test (with Content-Disposition, should popup download dialog that suggests  filename downloadedPNG.png)",
-                        new ExternalResource("myresource_download")));
+        w.addComponent(new Link(
+                "Test (with Content-Disposition, should popup download dialog that suggests  filename downloadedPNG.png)",
+                new ExternalResource("myresource_download")));
     }
 }
 
@@ -79,8 +77,8 @@ class MyDynamicResource implements URIHandler {
             ImageIO.write(image, "png", imagebuffer);
 
             // Return a stream from the buffer.
-            ByteArrayInputStream istream = new ByteArrayInputStream(imagebuffer
-                    .toByteArray());
+            ByteArrayInputStream istream = new ByteArrayInputStream(
+                    imagebuffer.toByteArray());
             DownloadStream downloadStream = new DownloadStream(istream,
                     "image/png", "generatedFile.png");
 

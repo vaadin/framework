@@ -9,14 +9,14 @@ import java.io.File;
 import com.vaadin.data.util.FilesystemContainer;
 import com.vaadin.data.util.FilesystemContainer.FileItem;
 import com.vaadin.demo.util.SampleDirectory;
+import com.vaadin.ui.Component.Event;
+import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Component.Event;
-import com.vaadin.ui.Component.Listener;
 
 /**
  * Browsable file explorer using Vaadin Tree component. Demonstrates: how to use

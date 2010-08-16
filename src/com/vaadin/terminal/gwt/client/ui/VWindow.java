@@ -226,9 +226,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
         footer = DOM.createDiv();
         DOM.setElementProperty(footer, "className", CLASSNAME + "-footer");
         resizeBox = DOM.createDiv();
-        DOM
-                .setElementProperty(resizeBox, "className", CLASSNAME
-                        + "-resizebox");
+        DOM.setElementProperty(resizeBox, "className", CLASSNAME + "-resizebox");
         closeBox = DOM.createDiv();
         DOM.setElementProperty(closeBox, "className", CLASSNAME + "-closebox");
         DOM.appendChild(footer, resizeBox);
@@ -313,8 +311,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
         }
 
         if (uidl.hasAttribute("caption")) {
-            setCaption(uidl.getStringAttribute("caption"), uidl
-                    .getStringAttribute("icon"));
+            setCaption(uidl.getStringAttribute("caption"),
+                    uidl.getStringAttribute("icon"));
         }
 
         boolean showingUrl = false;
@@ -430,8 +428,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
                         }
 
                         final String style = notification.hasAttribute("style") ? notification
-                                .getStringAttribute("style")
-                                : null;
+                                .getStringAttribute("style") : null;
                         final int position = notification
                                 .getIntAttribute("position");
                         final int delay = notification.getIntAttribute("delay");
@@ -710,14 +707,15 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
 
     private void showModalityCurtain() {
         if (BrowserInfo.get().isFF2()) {
-            DOM.setStyleAttribute(modalityCurtain, "height", DOM
-                    .getElementPropertyInt(RootPanel.getBodyElement(),
-                            "offsetHeight")
-                    + "px");
+            DOM.setStyleAttribute(
+                    modalityCurtain,
+                    "height",
+                    DOM.getElementPropertyInt(RootPanel.getBodyElement(),
+                            "offsetHeight") + "px");
             DOM.setStyleAttribute(modalityCurtain, "position", "absolute");
         }
-        DOM.setStyleAttribute(modalityCurtain, "zIndex", ""
-                + (windowOrder.indexOf(this) + Z_INDEX));
+        DOM.setStyleAttribute(modalityCurtain, "zIndex",
+                "" + (windowOrder.indexOf(this) + Z_INDEX));
         DOM.appendChild(RootPanel.getBodyElement(), modalityCurtain);
     }
 
@@ -996,8 +994,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
                 rootPixelWidth = getElement().getOffsetWidth();
                 width = rootPixelWidth + "px";
             } else {
-                rootPixelWidth = Integer.parseInt(width.substring(0, width
-                        .indexOf("px")));
+                rootPixelWidth = Integer.parseInt(width.substring(0,
+                        width.indexOf("px")));
             }
 
             // "width" now contains the new width in pixels
@@ -1134,8 +1132,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
                 // debug window
                 Console console = ApplicationConnection.getConsole();
                 if (console instanceof VDebugConsole
-                        && DOM.isOrHasChild(((VDebugConsole) console)
-                                .getElement(), target)) {
+                        && DOM.isOrHasChild(
+                                ((VDebugConsole) console).getElement(), target)) {
                     return true; // allow debug-window clicks
                 }
                 return false;

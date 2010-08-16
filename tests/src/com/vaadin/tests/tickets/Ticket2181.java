@@ -9,12 +9,12 @@ import com.vaadin.Application;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class Ticket2181 extends Application implements Button.ClickListener {
 
@@ -91,8 +91,7 @@ public class Ticket2181 extends Application implements Button.ClickListener {
                 } else if (value.equals("Icon")) {
                     String timestamp = String.valueOf(new Date().getTime());
                     tf.setIcon(new ThemeResource(icons.get(random.nextInt(icons
-                            .size()))
-                            + "?" + timestamp));
+                            .size())) + "?" + timestamp));
                 } else if (value.equals("Required")) {
                     tf.setRequired(true);
                 } else if (value.equals("Error")) {

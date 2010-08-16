@@ -75,8 +75,7 @@ public class LayoutDemo extends com.vaadin.Application {
         // Create TabSheet
         //
         final TabSheet tabsheet = new TabSheet();
-        tabsheet
-                .setCaption("Tabsheet, above layouts are added to this component");
+        tabsheet.setCaption("Tabsheet, above layouts are added to this component");
         tabsheet.addTab(layoutA, "Horizontal ordered layout", null);
         tabsheet.addTab(layoutB, "Vertical ordered layout", null);
         tabsheet.addTab(layoutG, "First grid layout", null);
@@ -121,13 +120,12 @@ public class LayoutDemo extends com.vaadin.Application {
     private Component getExampleComponent(String caption) {
         final Panel panel = new Panel();
         panel.setCaption("Panel component " + caption);
-        panel
-                .addComponent(new Label(
-                        "Panel is a container for other components, by default it draws a frame around it's "
-                                + "extremities and may have a caption to clarify the nature of the contained components' purpose."
-                                + " Panel contains an layout where the actual contained components are added, "
-                                + "this layout may be switched on the fly.",
-                        Label.CONTENT_XHTML));
+        panel.addComponent(new Label(
+                "Panel is a container for other components, by default it draws a frame around it's "
+                        + "extremities and may have a caption to clarify the nature of the contained components' purpose."
+                        + " Panel contains an layout where the actual contained components are added, "
+                        + "this layout may be switched on the fly.",
+                Label.CONTENT_XHTML));
         panel.setWidth(222);
         return panel;
     }

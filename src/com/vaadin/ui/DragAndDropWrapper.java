@@ -266,8 +266,8 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
             throws UploadException {
         Html5File file = receivers.get(fileId);
         if (file != null && file.receiver != null) {
-            OutputStream receiveUpload = file.receiver.receiveUpload(file
-                    .getFileName(), "TODO");
+            OutputStream receiveUpload = file.receiver.receiveUpload(
+                    file.getFileName(), "TODO");
 
             InputStream stream = upstream.getStream();
             byte[] buf = new byte[AbstractApplicationServlet.MAX_BUFFER_SIZE];

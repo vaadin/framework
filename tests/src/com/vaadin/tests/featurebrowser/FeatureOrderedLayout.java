@@ -36,8 +36,9 @@ public class FeatureOrderedLayout extends Feature {
                 new Integer(OrderedLayout.ORIENTATION_VERTICAL) },
                 new Object[] { "Horizontal", "Vertical" });
         final Select themes = (Select) propertyPanel.getField("style");
-        themes.addItem("form").getItemProperty(
-                themes.getItemCaptionPropertyId()).setValue("form");
+        themes.addItem("form")
+                .getItemProperty(themes.getItemCaptionPropertyId())
+                .setValue("form");
         propertyPanel.addProperties("OrderedLayout Properties", ap);
 
         setJavadocURL("ui/OrderedLayout.html");

@@ -130,9 +130,9 @@ public class ClassResource implements ApplicationResource, Serializable {
      * @see com.vaadin.terminal.ApplicationResource#getStream()
      */
     public DownloadStream getStream() {
-        final DownloadStream ds = new DownloadStream(associatedClass
-                .getResourceAsStream(resourceName), getMIMEType(),
-                getFilename());
+        final DownloadStream ds = new DownloadStream(
+                associatedClass.getResourceAsStream(resourceName),
+                getMIMEType(), getFilename());
         ds.setBufferSize(getBufferSize());
         ds.setCacheTime(cacheTime);
         return ds;

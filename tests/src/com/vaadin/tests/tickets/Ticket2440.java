@@ -16,9 +16,8 @@ public class Ticket2440 extends Application {
     public void init() {
         final Window main = new MainWindow();
         setMainWindow(main);
-        main
-                .addComponent(new Label(
-                        "Clicking the link should open a new window that should receive the URI 'msg/hello' and add that a a Label to it's ui. Currently the Label ends up in this (main) window (try reloading). Console intentionally spams during the window finding/uri handling - looks, uhm, interesting."));
+        main.addComponent(new Label(
+                "Clicking the link should open a new window that should receive the URI 'msg/hello' and add that a a Label to it's ui. Currently the Label ends up in this (main) window (try reloading). Console intentionally spams during the window finding/uri handling - looks, uhm, interesting."));
     }
 
     @Override

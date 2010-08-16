@@ -13,8 +13,7 @@ public class Ticket1663 extends com.vaadin.Application {
         setMainWindow(main);
 
         TextField tf = new TextField("First name");
-        tf
-                .setDescription("The first name is used for the administration user interfaces only.");
+        tf.setDescription("The first name is used for the administration user interfaces only.");
         tf.setComponentError(new SystemError(
                 "You must enter only one first name."));
 

@@ -2,14 +2,14 @@ package com.vaadin.tests.components.loginform;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LoginForm;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.LoginForm.LoginEvent;
 import com.vaadin.ui.LoginForm.LoginListener;
+import com.vaadin.ui.VerticalLayout;
 
 public class LoginFormTest extends TestBase {
 
@@ -32,9 +32,9 @@ public class LoginFormTest extends TestBase {
             private static final long serialVersionUID = 1L;
 
             public void onLogin(LoginEvent event) {
-                login((LoginForm) event.getSource(), event
-                        .getLoginParameter("username"), event
-                        .getLoginParameter("password"));
+                login((LoginForm) event.getSource(),
+                        event.getLoginParameter("username"),
+                        event.getLoginParameter("password"));
 
             }
         });
@@ -90,8 +90,8 @@ public class LoginFormTest extends TestBase {
 
             public void buttonClick(ClickEvent event) {
                 Button b = event.getButton();
-                loginFormLayout.replaceComponent(b.getParent(), (LoginForm) b
-                        .getData());
+                loginFormLayout.replaceComponent(b.getParent(),
+                        (LoginForm) b.getData());
             }
 
         });

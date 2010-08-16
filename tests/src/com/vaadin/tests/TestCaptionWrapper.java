@@ -11,6 +11,7 @@ import com.vaadin.terminal.UserError;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Embedded;
@@ -33,7 +34,6 @@ import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Component.Listener;
 
 public class TestCaptionWrapper extends CustomComponent implements Listener {
 
@@ -57,11 +57,10 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
     public void createNewView() {
         main.removeAllComponents();
 
-        main
-                .addComponent(new Label(
-                        "Each Layout and their contained components should "
-                                + "have icon, caption, description, user error defined. "
-                                + "Eeach layout should contain similar components."));
+        main.addComponent(new Label(
+                "Each Layout and their contained components should "
+                        + "have icon, caption, description, user error defined. "
+                        + "Eeach layout should contain similar components."));
 
         main.addComponent(eventListenerFeedback);
 

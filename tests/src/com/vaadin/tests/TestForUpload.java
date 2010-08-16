@@ -20,6 +20,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.StreamResource;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
@@ -30,11 +31,10 @@ import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.StartedEvent;
 import com.vaadin.ui.Upload.StartedListener;
+import com.vaadin.ui.VerticalLayout;
 
 public class TestForUpload extends CustomComponent implements
         Upload.ProgressListener {
@@ -81,9 +81,8 @@ public class TestForUpload extends CustomComponent implements
                         + "tempfile receiver writes upload to file and "
                         + "should have low memory consumption."));
 
-        main
-                .addComponent(new Label(
-                        "Clicking on button b updates information about upload components status or same with garbage collector."));
+        main.addComponent(new Label(
+                "Clicking on button b updates information about upload components status or same with garbage collector."));
 
         textField = new TextField("Test field");
         textFieldValue = new Label();

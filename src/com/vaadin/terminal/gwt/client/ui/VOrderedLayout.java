@@ -16,12 +16,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
+import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ValueMap;
-import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
-import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.ui.layout.CellBasedLayout;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
@@ -106,8 +106,8 @@ public class VOrderedLayout extends CellBasedLayout {
 
         // IStopWatch w = new IStopWatch("OrderedLayout.updateFromUIDL");
 
-        ArrayList<Widget> uidlWidgets = new ArrayList<Widget>(uidl
-                .getChildCount());
+        ArrayList<Widget> uidlWidgets = new ArrayList<Widget>(
+                uidl.getChildCount());
         ArrayList<ChildComponentContainer> relativeSizeComponents = new ArrayList<ChildComponentContainer>();
         ArrayList<UIDL> relativeSizeComponentUIDL = new ArrayList<UIDL>();
 
@@ -266,8 +266,8 @@ public class VOrderedLayout extends CellBasedLayout {
     }
 
     private void layoutSizeMightHaveChanged() {
-        Size oldSize = new Size(activeLayoutSize.getWidth(), activeLayoutSize
-                .getHeight());
+        Size oldSize = new Size(activeLayoutSize.getWidth(),
+                activeLayoutSize.getHeight());
         calculateLayoutDimensions();
 
         /*

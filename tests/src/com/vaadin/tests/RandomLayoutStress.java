@@ -82,8 +82,7 @@ public class RandomLayoutStress extends com.vaadin.Application {
 
         // Create TabSheet
         final TabSheet tabsheet = new TabSheet();
-        tabsheet
-                .setCaption("Tabsheet, above layouts are added to this component");
+        tabsheet.setCaption("Tabsheet, above layouts are added to this component");
         layoutA = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
         // Add 4 random components
         fillLayout(layoutA, componentCountA);

@@ -129,8 +129,8 @@ public class DateTimeService {
     }
 
     public int getStartWeekDay(Date date) {
-        final Date dateForFirstOfThisMonth = new Date(date.getYear(), date
-                .getMonth(), 1);
+        final Date dateForFirstOfThisMonth = new Date(date.getYear(),
+                date.getMonth(), 1);
         int firstDay;
         try {
             firstDay = LocaleService.getFirstDayOfWeek(currentLocale);
@@ -153,7 +153,7 @@ public class DateTimeService {
         if (date == null) {
             return 0;
         }
-    
+
         return (int) (date.getTime() - date.getTime() / 1000 * 1000);
     }
 

@@ -15,10 +15,10 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
+import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 
 public class DDTest7 extends TestBase {
 
@@ -78,8 +78,9 @@ public class DDTest7 extends TestBase {
 
                     Object draggedItemId = ((Table.TableTransferable) dragEvent
                             .getTransferable()).getItemId();
-                    Integer weightOfDraggedRow = (Integer) table.getItem(
-                            draggedItemId).getItemProperty("Weight").getValue();
+                    Integer weightOfDraggedRow = (Integer) table
+                            .getItem(draggedItemId).getItemProperty("Weight")
+                            .getValue();
 
                     HashSet<Object> accepted = new HashSet<Object>();
                     for (Object itemId : visibleItemIds) {

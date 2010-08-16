@@ -37,12 +37,10 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
         addInfo();
 
         Button b = new Button("start test", this, "startTest");
-        b
-                .setDescription("Push this button to start test. A test label will be rendered above existing components.");
+        b.setDescription("Push this button to start test. A test label will be rendered above existing components.");
         main.addComponent(b);
         b = new Button("end test", this, "endTest");
-        b
-                .setDescription("Push this button as soon as test componenet is rendered.");
+        b.setDescription("Push this button as soon as test componenet is rendered.");
         main.addComponent(b);
 
         result = new Label();

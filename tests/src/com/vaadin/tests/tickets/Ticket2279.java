@@ -11,9 +11,9 @@ import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Layout.AlignmentHandler;
 
 public class Ticket2279 extends Application {
 

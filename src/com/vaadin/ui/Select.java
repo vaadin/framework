@@ -283,8 +283,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
                         int index = options.indexOf(selection);
                         if (index != -1 && (index < first || index >= last)) {
                             int newPage = (index + (needNullSelectOption ? 1
-                                    : 0))
-                                    / pageLength;
+                                    : 0)) / pageLength;
                             currentPage = newPage;
                             return sanitetizeList(options, needNullSelectOption);
                         }

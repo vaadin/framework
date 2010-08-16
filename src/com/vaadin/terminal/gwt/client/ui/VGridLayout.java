@@ -285,8 +285,8 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
                             Cell c = column[j];
                             if (c != null && c.cc != null
                                     && c.widthCanAffectHeight()) {
-                                c.cc.setContainerSize(c.getAvailableWidth(), c
-                                        .getAvailableHeight());
+                                c.cc.setContainerSize(c.getAvailableWidth(),
+                                        c.getAvailableHeight());
                                 client.handleComponentRelativeSize(c.cc
                                         .getWidget());
                                 c.cc.updateWidgetSize();
@@ -621,8 +621,8 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
     }
 
     private void handleMargins(UIDL uidl) {
-        final VMarginInfo margins = new VMarginInfo(uidl
-                .getIntAttribute("margins"));
+        final VMarginInfo margins = new VMarginInfo(
+                uidl.getIntAttribute("margins"));
 
         String styles = CLASSNAME + "-margin";
         if (margins.hasTop()) {
@@ -657,8 +657,8 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         componentContainer.setWidget(newComponent);
         widgetToComponentContainer.put(newComponent, componentContainer);
 
-        paintableToCell.put((Paintable) newComponent, paintableToCell
-                .get(oldComponent));
+        paintableToCell.put((Paintable) newComponent,
+                paintableToCell.get(oldComponent));
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {

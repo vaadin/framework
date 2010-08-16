@@ -40,8 +40,8 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
         boolean selected = false;
         for (final Iterator i = uidl.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();
-            select.addItem(optionUidl.getStringAttribute("caption"), optionUidl
-                    .getStringAttribute("key"));
+            select.addItem(optionUidl.getStringAttribute("caption"),
+                    optionUidl.getStringAttribute("key"));
             if (optionUidl.hasAttribute("selected")) {
                 select.setItemSelected(select.getItemCount() - 1, true);
                 selected = true;

@@ -3,12 +3,12 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class Ticket2244 extends Application {
 
@@ -43,9 +43,7 @@ public class Ticket2244 extends Application {
                 new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        form
-                                .setItemDataSource(new BeanItem(
-                                        new MyBiggerBean()));
+                        form.setItemDataSource(new BeanItem(new MyBiggerBean()));
 
                     }
 

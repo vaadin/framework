@@ -1511,9 +1511,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 }
                 value.setHours(h);
                 if (timeChangeListener != null) {
-                    timeChangeListener.changed(h, value.getMinutes(), value
-                            .getSeconds(), DateTimeService
-                            .getMilliseconds(value));
+                    timeChangeListener.changed(h, value.getMinutes(),
+                            value.getSeconds(),
+                            DateTimeService.getMilliseconds(value));
                 }
                 event.preventDefault();
                 event.stopPropagation();
@@ -1521,9 +1521,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 final int m = mins.getSelectedIndex();
                 value.setMinutes(m);
                 if (timeChangeListener != null) {
-                    timeChangeListener.changed(value.getHours(), m, value
-                            .getSeconds(), DateTimeService
-                            .getMilliseconds(value));
+                    timeChangeListener.changed(value.getHours(), m,
+                            value.getSeconds(),
+                            DateTimeService.getMilliseconds(value));
                 }
                 event.preventDefault();
                 event.stopPropagation();
@@ -1531,9 +1531,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 final int s = sec.getSelectedIndex();
                 value.setSeconds(s);
                 if (timeChangeListener != null) {
-                    timeChangeListener.changed(value.getHours(), value
-                            .getMinutes(), s, DateTimeService
-                            .getMilliseconds(value));
+                    timeChangeListener.changed(value.getHours(),
+                            value.getMinutes(), s,
+                            DateTimeService.getMilliseconds(value));
                 }
                 event.preventDefault();
                 event.stopPropagation();
@@ -1541,8 +1541,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 final int ms = msec.getSelectedIndex();
                 DateTimeService.setMilliseconds(value, ms);
                 if (timeChangeListener != null) {
-                    timeChangeListener.changed(value.getHours(), value
-                            .getMinutes(), value.getSeconds(), ms);
+                    timeChangeListener.changed(value.getHours(),
+                            value.getMinutes(), value.getSeconds(), ms);
                 }
                 event.preventDefault();
                 event.stopPropagation();
@@ -1551,9 +1551,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
                         + (ampm.getSelectedIndex() * 12);
                 value.setHours(h);
                 if (timeChangeListener != null) {
-                    timeChangeListener.changed(h, value.getMinutes(), value
-                            .getSeconds(), DateTimeService
-                            .getMilliseconds(value));
+                    timeChangeListener.changed(h, value.getMinutes(),
+                            value.getSeconds(),
+                            DateTimeService.getMilliseconds(value));
                 }
                 event.preventDefault();
                 event.stopPropagation();

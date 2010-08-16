@@ -59,12 +59,12 @@ public class ComponentLocator {
      * The {@link #getElementByPath(String)} method can be used for the inverse
      * operation, i.e. locating an element based on the return value from this
      * method.
-     *<p>
+     * <p>
      * Note that getElementByPath(getPathForElement(element)) == element is not
      * always true as {@link #getPathForElement(Element)} can return a path to
      * another element if the widget determines an action on the other element
      * will give the same result as the action on the target element.
-     *</p>
+     * </p>
      * 
      * @since 5.4
      * @param targetElement
@@ -153,8 +153,8 @@ public class ComponentLocator {
      * 
      * @param targetElement
      * @param ancestorWidget
-     * @return The widget whose root element is a parent of {@code
-     *         targetElement}.
+     * @return The widget whose root element is a parent of
+     *         {@code targetElement}.
      */
     private Widget findParentWidget(Element targetElement, Widget ancestorWidget) {
         /*

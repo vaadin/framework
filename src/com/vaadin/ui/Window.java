@@ -18,9 +18,9 @@ import java.util.Set;
 
 import com.vaadin.Application;
 import com.vaadin.event.ShortcutAction;
-import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
@@ -37,8 +37,8 @@ import com.vaadin.terminal.gwt.client.ui.VWindow;
  * <p>
  * If the window is a application window or a sub window depends on how it is
  * added to the application. Adding a {@code Window} to a {@code Window} using
- * {@link Window#addWindow(Window)} makes it a sub window and adding a {@code
- * Window} to the {@code Application} using
+ * {@link Window#addWindow(Window)} makes it a sub window and adding a
+ * {@code Window} to the {@code Application} using
  * {@link Application#addWindow(Window)} makes it an application window.
  * </p>
  * <p>
@@ -378,8 +378,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * <b>Application window only</b>. Handles an URI by passing the URI to all
      * URI handlers defined using {@link #addURIHandler(URIHandler)}. All URI
      * handlers are called for each URI but no more than one handler may return
-     * a {@link DownloadStream}. If more than one stream is returned a {@code
-     * RuntimeException} is thrown.
+     * a {@link DownloadStream}. If more than one stream is returned a
+     * {@code RuntimeException} is thrown.
      * 
      * @param context
      *            The URL of the application
@@ -470,8 +470,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /**
      * <b>Application window only</b>. Handles parameters by passing the
      * parameters to all {@code ParameterHandler}s defined using
-     * {@link #addParameterHandler(ParameterHandler)}. All {@code
-     * ParameterHandler}s are called for each set of parameters.
+     * {@link #addParameterHandler(ParameterHandler)}. All
+     * {@code ParameterHandler}s are called for each set of parameters.
      * 
      * @param parameters
      *            a map containing the parameter names and values
@@ -822,10 +822,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * name of the window is used to uniquely identify it.
      * <p>
      * The name also determines the URL that can be used for direct access to a
-     * window. All windows can be accessed through {@code
-     * http://host:port/app/win} where {@code http://host:port/app} is the
-     * application URL (as returned by {@link Application#getURL()} and {@code
-     * win} is the window name.
+     * window. All windows can be accessed through
+     * {@code http://host:port/app/win} where {@code http://host:port/app} is
+     * the application URL (as returned by {@link Application#getURL()} and
+     * {@code win} is the window name.
      * </p>
      * <p>
      * Note! Portlets do not support direct window access through URLs.
@@ -908,10 +908,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * application.
      * <p>
      * The name also determines the URL that can be used for direct access to a
-     * window. All windows can be accessed through {@code
-     * http://host:port/app/win} where {@code http://host:port/app} is the
-     * application URL (as returned by {@link Application#getURL()} and {@code
-     * win} is the window name.
+     * window. All windows can be accessed through
+     * {@code http://host:port/app/win} where {@code http://host:port/app} is
+     * the application URL (as returned by {@link Application#getURL()} and
+     * {@code win} is the window name.
      * </p>
      * <p>
      * This method can only be called before the window is added to an

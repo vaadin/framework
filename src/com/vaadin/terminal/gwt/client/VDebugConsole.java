@@ -289,8 +289,8 @@ public final class VDebugConsole extends VOverlay implements Console {
 
     private void minimize() {
         setPixelSize(400, 150);
-        setPopupPosition(Window.getClientWidth() - 410, Window
-                .getClientHeight() - 160);
+        setPopupPosition(Window.getClientWidth() - 410,
+                Window.getClientHeight() - 160);
     }
 
     @Override
@@ -500,8 +500,8 @@ public final class VDebugConsole extends VOverlay implements Console {
             public void onClick(ClickEvent event) {
                 if (paintable != null) {
                     Element element2 = ((Widget) paintable).getElement();
-                    Widget.setStyleName(element2, "invalidlayout", emphasisInUi
-                            .getValue());
+                    Widget.setStyleName(element2, "invalidlayout",
+                            emphasisInUi.getValue());
                 }
             }
         });

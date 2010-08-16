@@ -17,6 +17,7 @@ import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -27,7 +28,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class TestSizeableIncomponents extends Application {
 
@@ -257,10 +257,8 @@ public class TestSizeableIncomponents extends Application {
             if (AbstractSelect.class.isAssignableFrom(c.getClass())) {
                 if (c instanceof Table) {
                     Table new_name = (Table) c;
-                    new_name
-                            .setContainerDataSource(TestForTablesInitialColumnWidthLogicRendering
-                                    .getTestTable(5, 100)
-                                    .getContainerDataSource());
+                    new_name.setContainerDataSource(TestForTablesInitialColumnWidthLogicRendering
+                            .getTestTable(5, 100).getContainerDataSource());
 
                 } else {
                     AbstractSelect new_name = (AbstractSelect) c;
@@ -273,8 +271,7 @@ public class TestSizeableIncomponents extends Application {
                 }
             } else if (c instanceof ComponentContainer) {
                 ComponentContainer new_name = (ComponentContainer) c;
-                new_name
-                        .addComponent(new Label("component 1 in test container"));
+                new_name.addComponent(new Label("component 1 in test container"));
                 new_name.addComponent(new Button("component 2"));
             } else if (c instanceof Embedded) {
                 Embedded em = (Embedded) c;

@@ -92,7 +92,8 @@ public class ClassPathExplorer {
 
     /**
      * Finds server side widgets with {@link ClientWidget} annotation on the
-     * class path (entries that can contain widgets/widgetsets - see {@link #getRawClasspathEntries()}).
+     * class path (entries that can contain widgets/widgetsets - see
+     * {@link #getRawClasspathEntries()}).
      * 
      * As a side effect, also accept criteria are searched under the same class
      * path entries and added into the acceptCriterion collection.
@@ -188,8 +189,9 @@ public class ClassPathExplorer {
                         String basePath = location.getFile().replaceAll(
                                 "/" + packagePath + "$", "");
                         try {
-                            URL url = new URL(location.getProtocol(), location
-                                    .getHost(), location.getPort(), basePath);
+                            URL url = new URL(location.getProtocol(),
+                                    location.getHost(), location.getPort(),
+                                    basePath);
                             widgetsets.put(classname, url);
                         } catch (MalformedURLException e) {
                             // should never happen as based on an existing URL,
@@ -388,8 +390,8 @@ public class ClassPathExplorer {
                         && !dirs[i].getPath().contains(File.separator + ".")) {
                     String key = dirs[i].getCanonicalPath() + "/" + name
                             + dirs[i].getName();
-                    locations.put(key, new URL("file://"
-                            + dirs[i].getCanonicalPath()));
+                    locations.put(key,
+                            new URL("file://" + dirs[i].getCanonicalPath()));
                 }
             } catch (Exception ioe) {
                 return;
@@ -473,8 +475,8 @@ public class ClassPathExplorer {
                         String entryname = entry.getName();
                         if (!entry.isDirectory()
                                 && entryname.endsWith(".class")) {
-                            String classname = entryname.substring(0, entryname
-                                    .length() - 6);
+                            String classname = entryname.substring(0,
+                                    entryname.length() - 6);
                             if (classname.startsWith("/")) {
                                 classname = classname.substring(1);
                             }

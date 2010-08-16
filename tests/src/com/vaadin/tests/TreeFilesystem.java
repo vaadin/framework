@@ -11,8 +11,8 @@ import com.vaadin.demo.util.SampleDirectory;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.Tree.ExpandEvent;
+import com.vaadin.ui.Window;
 
 /**
  * Browsable file explorer using Vaadin Tree component. Demonstrates: how to add

@@ -6,6 +6,7 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 
+import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;

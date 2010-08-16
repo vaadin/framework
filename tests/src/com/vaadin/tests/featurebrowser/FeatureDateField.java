@@ -60,10 +60,12 @@ public class FeatureDateField extends Feature {
                 new Integer(DateField.RESOLUTION_DAY));
         ap.getField("locale").setValue(Locale.getDefault());
         final Select themes = (Select) propertyPanel.getField("style");
-        themes.addItem("text").getItemProperty(
-                themes.getItemCaptionPropertyId()).setValue("text");
-        themes.addItem("calendar").getItemProperty(
-                themes.getItemCaptionPropertyId()).setValue("calendar");
+        themes.addItem("text")
+                .getItemProperty(themes.getItemCaptionPropertyId())
+                .setValue("text");
+        themes.addItem("calendar")
+                .getItemProperty(themes.getItemCaptionPropertyId())
+                .setValue("calendar");
         propertyPanel.addProperties("DateField Properties", ap);
 
         setJavadocURL("ui/DateField.html");

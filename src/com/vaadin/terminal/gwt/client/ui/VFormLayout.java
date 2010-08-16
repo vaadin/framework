@@ -89,8 +89,8 @@ public class VFormLayout extends SimplePanel implements Container {
         }
 
         public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-            final VMarginInfo margins = new VMarginInfo(uidl
-                    .getIntAttribute("margins"));
+            final VMarginInfo margins = new VMarginInfo(
+                    uidl.getIntAttribute("margins"));
 
             Element margin = getElement();
             setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
@@ -98,13 +98,13 @@ public class VFormLayout extends SimplePanel implements Container {
             setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT,
                     margins.hasRight());
             setStyleName(margin,
-                    CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM, margins
-                            .hasBottom());
+                    CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM,
+                    margins.hasBottom());
             setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT,
                     margins.hasLeft());
 
-            setStyleName(margin, CLASSNAME + "-" + "spacing", uidl
-                    .hasAttribute("spacing"));
+            setStyleName(margin, CLASSNAME + "-" + "spacing",
+                    uidl.hasAttribute("spacing"));
 
             int i = 0;
             for (final Iterator it = uidl.getChildIterator(); it.hasNext(); i++) {
@@ -336,8 +336,8 @@ public class VFormLayout extends SimplePanel implements Container {
         public void updateCaption(UIDL uidl) {
             setVisible(!uidl.getBooleanAttribute("invisible"));
 
-            setStyleName(getElement(), "v-disabled", uidl
-                    .hasAttribute("disabled"));
+            setStyleName(getElement(), "v-disabled",
+                    uidl.hasAttribute("disabled"));
 
             boolean isEmpty = true;
 

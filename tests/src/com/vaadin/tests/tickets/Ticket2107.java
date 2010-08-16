@@ -2,8 +2,8 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.data.Property;
-import com.vaadin.data.Validator;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Validator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
@@ -18,8 +18,7 @@ public class Ticket2107 extends Application {
 
         final TextField tf = new TextField(
                 "Required field that validated the input");
-        tf
-                .setDescription("Enter someting and click outside the field to activate");
+        tf.setDescription("Enter someting and click outside the field to activate");
         tf.setRequired(true);
         tf.setImmediate(true);
         tf.addListener(new Property.ValueChangeListener() {
@@ -52,9 +51,8 @@ public class Ticket2107 extends Application {
         b.setImmediate(true);
         b.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                tf
-                        .setRequiredError(b.booleanValue() ? "Field must not be empty"
-                                : null);
+                tf.setRequiredError(b.booleanValue() ? "Field must not be empty"
+                        : null);
             }
         });
     }

@@ -17,15 +17,13 @@ import java.lang.management.MemoryMXBean;
 import com.vaadin.Application;
 import com.vaadin.terminal.StreamResource;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.FailedListener;
 import com.vaadin.ui.Upload.FinishedEvent;
@@ -34,6 +32,8 @@ import com.vaadin.ui.Upload.StartedEvent;
 import com.vaadin.ui.Upload.StartedListener;
 import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Upload.SucceededListener;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
 public class TestForStyledUpload extends Application implements
         Upload.FinishedListener, FailedListener, SucceededListener,
@@ -56,9 +56,8 @@ public class TestForStyledUpload extends Application implements
     private final Label memoryStatus;
 
     public TestForStyledUpload() {
-        main
-                .addComponent(new Label(
-                        "Clicking on button b updates information about upload components status or same with garbage collector."));
+        main.addComponent(new Label(
+                "Clicking on button b updates information about upload components status or same with garbage collector."));
 
         up = new Upload(null, buffer);
         up.setButtonCaption("Select file");
@@ -153,9 +152,8 @@ public class TestForStyledUpload extends Application implements
             status.addComponent(new Label(
                     "Upload finished, but output buffer is null!!"));
         } else {
-            status
-                    .addComponent(new Label("<b>Name:</b> "
-                            + event.getFilename(), Label.CONTENT_XHTML));
+            status.addComponent(new Label(
+                    "<b>Name:</b> " + event.getFilename(), Label.CONTENT_XHTML));
             status.addComponent(new Label("<b>Mimetype:</b> "
                     + event.getMIMEType(), Label.CONTENT_XHTML));
             status.addComponent(new Label("<b>Size:</b> " + event.getLength()

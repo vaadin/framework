@@ -78,7 +78,8 @@ public class TestClassesSerializable extends TestCase {
             }
         }
 
-        // useful failure message including all non-serializable classes and interfaces
+        // useful failure message including all non-serializable classes and
+        // interfaces
         if (!nonSerializableClasses.isEmpty()) {
             String nonSerializableString = "";
             Iterator<Class> it = nonSerializableClasses.iterator();
@@ -99,7 +100,7 @@ public class TestClassesSerializable extends TestCase {
      * 
      * @return List of class path segment strings
      */
-    // 
+    //
     private final static List<String> getRawClasspathEntries() {
         // try to keep the order of the classpath
         List<String> locations = new ArrayList<String>();
@@ -152,7 +153,7 @@ public class TestClassesSerializable extends TestCase {
         for (String className : classes) {
             boolean ok = false;
             for (String basePackage : BASE_PACKAGES) {
-                if (className.startsWith(basePackage+".")) {
+                if (className.startsWith(basePackage + ".")) {
                     ok = true;
                     break;
                 }
@@ -167,7 +168,7 @@ public class TestClassesSerializable extends TestCase {
                 filteredClasses.add(className);
             }
         }
-        
+
         return filteredClasses;
     }
 
@@ -187,7 +188,8 @@ public class TestClassesSerializable extends TestCase {
         while (e.hasMoreElements()) {
             JarEntry entry = e.nextElement();
             if (entry.getName().endsWith(".class")) {
-                String nameWithoutExtension = entry.getName().replaceAll("\\.class", "");
+                String nameWithoutExtension = entry.getName().replaceAll(
+                        "\\.class", "");
                 String className = nameWithoutExtension.replace('/', '.');
                 classes.add(className);
             }
@@ -225,8 +227,8 @@ public class TestClassesSerializable extends TestCase {
         File[] files = parent.listFiles();
         for (File child : files) {
             if (child.isDirectory()) {
-                classNames.addAll(findClassesInDirectory(parentPackage
-                        + child.getName(), child));
+                classNames.addAll(findClassesInDirectory(
+                        parentPackage + child.getName(), child));
             } else if (child.getName().endsWith(".class")) {
                 classNames.add(parentPackage.replace(File.separatorChar, '.')
                         + child.getName().replaceAll("\\.class", ""));

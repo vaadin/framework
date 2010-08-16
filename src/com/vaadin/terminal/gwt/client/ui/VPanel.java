@@ -405,9 +405,7 @@ public class VPanel extends SimplePanel implements Container,
             if (containerHeight < 0) {
                 containerHeight = 0;
             }
-            DOM
-                    .setStyleAttribute(contentNode, "height", containerHeight
-                            + "px");
+            DOM.setStyleAttribute(contentNode, "height", containerHeight + "px");
         } else {
             DOM.setStyleAttribute(contentNode, "height", "");
         }

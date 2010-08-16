@@ -77,9 +77,8 @@ public class Ticket1921 extends Application implements ParameterHandler {
             break;
 
         case 6:
-            inner
-                    .setOrientation(inner.getOrientation() == OrderedLayout.ORIENTATION_HORIZONTAL ? OrderedLayout.ORIENTATION_VERTICAL
-                            : OrderedLayout.ORIENTATION_HORIZONTAL);
+            inner.setOrientation(inner.getOrientation() == OrderedLayout.ORIENTATION_HORIZONTAL ? OrderedLayout.ORIENTATION_VERTICAL
+                    : OrderedLayout.ORIENTATION_HORIZONTAL);
             getMainWindow()
                     .showNotification(
                             "inner swithed to "
@@ -92,9 +91,8 @@ public class Ticket1921 extends Application implements ParameterHandler {
             break;
 
         case 8:
-            outer
-                    .setOrientation(outer.getOrientation() == OrderedLayout.ORIENTATION_HORIZONTAL ? OrderedLayout.ORIENTATION_VERTICAL
-                            : OrderedLayout.ORIENTATION_HORIZONTAL);
+            outer.setOrientation(outer.getOrientation() == OrderedLayout.ORIENTATION_HORIZONTAL ? OrderedLayout.ORIENTATION_VERTICAL
+                    : OrderedLayout.ORIENTATION_HORIZONTAL);
             getMainWindow()
                     .showNotification(
                             "outer swithed to "

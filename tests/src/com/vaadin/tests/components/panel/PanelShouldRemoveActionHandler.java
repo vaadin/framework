@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.event.Action;
-import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.Action.Handler;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class PanelShouldRemoveActionHandler extends TestBase {
 
@@ -64,8 +64,7 @@ public class PanelShouldRemoveActionHandler extends TestBase {
 
     public void remove() {
         panel.setCaption(panel.getCaption() + " - Removed handler");
-        panel.removeActionHandler(actionHandlers
-                .remove(actionHandlers.size() - 1));
+        panel.removeActionHandler(actionHandlers.remove(actionHandlers.size() - 1));
     }
 
     private List<Handler> actionHandlers = new ArrayList<Handler>();

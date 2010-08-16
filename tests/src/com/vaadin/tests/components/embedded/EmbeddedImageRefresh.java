@@ -14,8 +14,8 @@ import javax.imageio.ImageIO;
 import com.vaadin.terminal.StreamResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Embedded;
 
 public class EmbeddedImageRefresh extends TestBase {
     @Override
@@ -54,8 +54,7 @@ public class EmbeddedImageRefresh extends TestBase {
         button.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 ((StreamResource) embedded.getSource()).setFilename(new Date()
-                        .getTime()
-                        + ".png");
+                        .getTime() + ".png");
                 embedded.requestRepaint();
             }
         });

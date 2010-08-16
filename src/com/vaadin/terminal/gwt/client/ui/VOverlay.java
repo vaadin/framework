@@ -271,12 +271,18 @@ public class VOverlay extends PopupPanel {
         // Opera fix, part 2 (ticket #2704)
         if (BrowserInfo.get().isOpera()) {
             // We'll fix the height of all the middle elements
-            DOM.getChild(shadow, 3).getStyle().setPropertyPx("height",
-                    DOM.getChild(shadow, 3).getOffsetHeight());
-            DOM.getChild(shadow, 4).getStyle().setPropertyPx("height",
-                    DOM.getChild(shadow, 4).getOffsetHeight());
-            DOM.getChild(shadow, 5).getStyle().setPropertyPx("height",
-                    DOM.getChild(shadow, 5).getOffsetHeight());
+            DOM.getChild(shadow, 3)
+                    .getStyle()
+                    .setPropertyPx("height",
+                            DOM.getChild(shadow, 3).getOffsetHeight());
+            DOM.getChild(shadow, 4)
+                    .getStyle()
+                    .setPropertyPx("height",
+                            DOM.getChild(shadow, 4).getOffsetHeight());
+            DOM.getChild(shadow, 5)
+                    .getStyle()
+                    .setPropertyPx("height",
+                            DOM.getChild(shadow, 5).getOffsetHeight());
         }
 
         // Attach to dom if not there already

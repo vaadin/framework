@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.richtextarea;
 
 import com.vaadin.event.Action;
-import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.Action.Handler;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;

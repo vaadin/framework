@@ -19,12 +19,12 @@ import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Layout.AlignmentHandler;
 
 public class Ticket1710 extends com.vaadin.Application {
 
@@ -58,9 +58,8 @@ public class Ticket1710 extends com.vaadin.Application {
                 false);
         orientationButton.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                orderedLayout
-                        .setOrientation(orientationButton.booleanValue() ? OrderedLayout.ORIENTATION_HORIZONTAL
-                                : OrderedLayout.ORIENTATION_VERTICAL);
+                orderedLayout.setOrientation(orientationButton.booleanValue() ? OrderedLayout.ORIENTATION_HORIZONTAL
+                        : OrderedLayout.ORIENTATION_VERTICAL);
             }
         });
         orientationButton.setImmediate(true);
@@ -333,9 +332,7 @@ public class Ticket1710 extends com.vaadin.Application {
             vAlign.setItemCaption(new Integer(
                     Layout.AlignmentHandler.ALIGNMENT_VERTICAL_CENTER),
                     "center");
-            vAlign
-                    .addItem(new Integer(
-                            Layout.AlignmentHandler.ALIGNMENT_BOTTOM));
+            vAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_BOTTOM));
             vAlign.setItemCaption(new Integer(
                     Layout.AlignmentHandler.ALIGNMENT_BOTTOM), "bottom");
 
@@ -347,9 +344,7 @@ public class Ticket1710 extends com.vaadin.Application {
             hAlign.setItemCaption(new Integer(
                     Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER),
                     "center");
-            hAlign
-                    .addItem(new Integer(
-                            Layout.AlignmentHandler.ALIGNMENT_RIGHT));
+            hAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_RIGHT));
             hAlign.setItemCaption(new Integer(
                     Layout.AlignmentHandler.ALIGNMENT_RIGHT), "right");
 
@@ -361,9 +356,7 @@ public class Ticket1710 extends com.vaadin.Application {
 
             };
 
-            hAlign
-                    .setValue(new Integer(
-                            Layout.AlignmentHandler.ALIGNMENT_LEFT));
+            hAlign.setValue(new Integer(Layout.AlignmentHandler.ALIGNMENT_LEFT));
             vAlign.addListener(alignmentChangeListener);
             hAlign.addListener(alignmentChangeListener);
             vAlign.setValue(new Integer(Layout.AlignmentHandler.ALIGNMENT_TOP));
@@ -380,9 +373,7 @@ public class Ticket1710 extends com.vaadin.Application {
             lAlign.setItemCaption(new Integer(
                     Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER),
                     "center");
-            lAlign
-                    .addItem(new Integer(
-                            Layout.AlignmentHandler.ALIGNMENT_RIGHT));
+            lAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_RIGHT));
             lAlign.setItemCaption(new Integer(
                     Layout.AlignmentHandler.ALIGNMENT_RIGHT), "right");
 
@@ -403,11 +394,11 @@ public class Ticket1710 extends com.vaadin.Application {
         }
 
         private void updateMarginsAndSpacing() {
-            testedLayout.setMargin(((Boolean) marginTop.getValue())
-                    .booleanValue(), ((Boolean) marginRight.getValue())
-                    .booleanValue(), ((Boolean) marginBottom.getValue())
-                    .booleanValue(), ((Boolean) marginLeft.getValue())
-                    .booleanValue());
+            testedLayout.setMargin(
+                    ((Boolean) marginTop.getValue()).booleanValue(),
+                    ((Boolean) marginRight.getValue()).booleanValue(),
+                    ((Boolean) marginBottom.getValue()).booleanValue(),
+                    ((Boolean) marginLeft.getValue()).booleanValue());
             if (testedLayout instanceof Layout.SpacingHandler) {
                 ((Layout.SpacingHandler) testedLayout)
                         .setSpacing(((Boolean) spacing.getValue())

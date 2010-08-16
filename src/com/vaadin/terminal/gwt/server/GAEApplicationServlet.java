@@ -26,11 +26,11 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.FetchOptions.Builder;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.FetchOptions.Builder;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
@@ -177,8 +177,8 @@ public class GAEApplicationServlet extends ApplicationServlet {
 
         if (requestType == RequestType.APPLICATION_RESOURCE) {
             // no locking needed, let superclass handle
-            getApplicationContext(request, MemcacheServiceFactory
-                    .getMemcacheService());
+            getApplicationContext(request,
+                    MemcacheServiceFactory.getMemcacheService());
             super.service(request, response);
             cleanSession(request);
             return;
@@ -210,9 +210,8 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 try {
                     Thread.sleep(RETRY_AFTER_MILLISECONDS);
                 } catch (InterruptedException e) {
-                    log
-                            .info("Thread.sleep() interrupted while waiting for lock. Trying again. "
-                                    + e);
+                    log.info("Thread.sleep() interrupted while waiting for lock. Trying again. "
+                            + e);
                 }
             }
 
@@ -221,8 +220,7 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 // client to retry
                 response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
                 // Note: currently interpreting Retry-After as ms, not sec
-                response
-                        .setHeader("Retry-After", "" + RETRY_AFTER_MILLISECONDS);
+                response.setHeader("Retry-After", "" + RETRY_AFTER_MILLISECONDS);
                 return;
             }
 
@@ -397,9 +395,7 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 }
             }
         } catch (Exception e) {
-            log
-                    .warning("Exception while cleaning: "
-                            + getStackTraceAsString(e));
+            log.warning("Exception while cleaning: " + getStackTraceAsString(e));
         }
     }
 

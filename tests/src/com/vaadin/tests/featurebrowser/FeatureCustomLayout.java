@@ -46,10 +46,12 @@ public class FeatureCustomLayout extends Feature {
         final Form ap = propertyPanel.createBeanPropertySet(new String[] {
                 "width", "height" });
         final Select themes = (Select) propertyPanel.getField("style");
-        themes.addItem("light").getItemProperty(
-                themes.getItemCaptionPropertyId()).setValue("light");
-        themes.addItem("strong").getItemProperty(
-                themes.getItemCaptionPropertyId()).setValue("strong");
+        themes.addItem("light")
+                .getItemProperty(themes.getItemCaptionPropertyId())
+                .setValue("light");
+        themes.addItem("strong")
+                .getItemProperty(themes.getItemCaptionPropertyId())
+                .setValue("strong");
         propertyPanel.addProperties("Panel Properties", ap);
 
         setJavadocURL("ui/CustomLayout.html");

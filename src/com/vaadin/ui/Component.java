@@ -473,9 +473,9 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      * </p>
      * 
      * @param caption
-     *            the new caption for the component. If the caption is {@code
-     *            null}, no caption is shown and it does not normally take any
-     *            space
+     *            the new caption for the component. If the caption is
+     *            {@code null}, no caption is shown and it does not normally
+     *            take any space
      */
     public void setCaption(String caption);
 
@@ -533,10 +533,10 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      * </p>
      * 
      * <p>
-     * An icon will be rendered inside an HTML element that has the {@code
-     * v-icon} CSS style class. The containing layout may enclose an icon and a
-     * caption inside elements related to the caption, such as {@code v-caption}
-     * .
+     * An icon will be rendered inside an HTML element that has the
+     * {@code v-icon} CSS style class. The containing layout may enclose an icon
+     * and a caption inside elements related to the caption, such as
+     * {@code v-caption} .
      * </p>
      * 
      * This method will trigger a
@@ -1075,7 +1075,7 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
          * 
          * username.setTabIndex(1);
          * password.setTabIndex(2);
-         * remember.setTabIndex(3); // Different than natural place 
+         * remember.setTabIndex(3); // Different than natural place
          * login.setTabIndex(4);
          * </pre>
          * 

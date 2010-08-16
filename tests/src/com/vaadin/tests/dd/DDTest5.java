@@ -12,11 +12,11 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DragAndDropWrapper;
+import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
+import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
-import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable;
 
 public class DDTest5 extends TestBase {
 
@@ -130,8 +130,8 @@ public class DDTest5 extends TestBase {
                             cssLayout.removeComponent(sourceComponent);
                             wrappedLabel = (WrappedLabel) sourceComponent;
                         }
-                        if (dropEvent.getTargetDetails().getData(
-                                "verticalLocation").equals("TOP")) {
+                        if (dropEvent.getTargetDetails()
+                                .getData("verticalLocation").equals("TOP")) {
                             // before reference if dropped on topmost part
                             i--;
                             if (i < 0) {

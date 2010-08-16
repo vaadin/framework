@@ -44,8 +44,8 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
         // server side listeners have been added or removed.
         if (hasEventListener()) {
             if (mouseUpHandlerRegistration == null) {
-                mouseUpHandlerRegistration = registerHandler(this, MouseUpEvent
-                        .getType());
+                mouseUpHandlerRegistration = registerHandler(this,
+                        MouseUpEvent.getType());
                 contextMenuHandlerRegistration = registerHandler(this,
                         ContextMenuEvent.getType());
                 doubleClickHandlerRegistration = registerHandler(this,
