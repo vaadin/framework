@@ -381,7 +381,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      *         be move downwards
      */
     private boolean moveFocusDown(int offset) {
-        if (selectMode > VScrollTable.SELECT_MODE_NONE) {
+        if (isSelectable()) {
             if (focusedRow == null && scrollBody.iterator().hasNext()) {
                 return setRowFocus((VScrollTableRow) scrollBody.iterator()
                         .next());
@@ -413,7 +413,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * 
      */
     private boolean moveFocusUp(int offset) {
-        if (selectMode > VScrollTable.SELECT_MODE_NONE) {
+        if (isSelectable()) {
             if (focusedRow == null && scrollBody.iterator().hasNext()) {
                 return setRowFocus((VScrollTableRow) scrollBody.iterator()
                         .next());
@@ -440,15 +440,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private void selectFocusedRow(boolean ctrlSelect, boolean shiftSelect) {
         if (focusedRow != null) {
             // Arrows moves the selection and clears previous selections
-            if (selectMode > SELECT_MODE_NONE && !ctrlSelect && !shiftSelect) {
+            if (isSelectable() && !ctrlSelect && !shiftSelect) {
                 deselectAll();
                 focusedRow.toggleSelection();
                 selectionRangeStart = focusedRow;
             }
 
             // Ctrl+arrows moves selection head
-            else if (selectMode > SELECT_MODE_NONE && ctrlSelect
-                    && !shiftSelect) {
+            else if (isSelectable() && ctrlSelect && !shiftSelect) {
                 selectionRangeStart = focusedRow;
                 // No selection, only selection head is moved
             }
@@ -857,8 +856,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         headerChangedDuringUpdate = false;
 
         // Ensure that the focus has not scrolled outside the viewport
-        if (focusedRow != null)
+        if (focusedRow != null) {
             ensureRowIsVisible(focusedRow);
+        }
     }
 
     protected VScrollTableBody createScrollBody() {
@@ -1070,6 +1070,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
         }
         return -1;
+    }
+
+    protected boolean isSelectable() {
+        return selectMode > Table.SELECT_MODE_NONE;
     }
 
     private boolean isCollapsedColumn(String colKey) {
@@ -3775,13 +3779,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     // select event, even though nullselectionallowed wont let
                     // the change trough. Will need to be updated if that is
                     // changed.
+
                     client.updateVariable(
                             paintableId,
                             "clickEvent",
                             details.toString(),
                             !(event.getButton() == Event.BUTTON_LEFT
-                                    && !doubleClick
-                                    && selectMode > Table.SELECT_MODE_NONE && immediate));
+                                    && !doubleClick && isSelectable() && immediate));
                 }
             }
 
@@ -3822,7 +3826,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                             handleClickEvent(event, targetTdOrTr);
                             scrollBodyPanel.setFocus(true);
                             if (event.getButton() == Event.BUTTON_LEFT
-                                    && selectMode > Table.SELECT_MODE_NONE) {
+                                    && isSelectable()) {
 
                                 // Ctrl+Shift click
                                 if ((event.getCtrlKey() || event.getMetaKey())
@@ -4991,8 +4995,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         // Select navigation
-        if (selectMode > SELECT_MODE_NONE
-                && keycode == getNavigationSelectKey()) {
+        if (isSelectable() && keycode == getNavigationSelectKey()) {
             if (selectMode == SELECT_MODE_SINGLE) {
                 boolean wasSelected = focusedRow.isSelected();
                 deselectAll();
@@ -5013,7 +5016,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             int offset = pageLength * rowHeight - rowHeight;
             scrollBodyPanel.setScrollPosition(scrollBodyPanel
                     .getScrollPosition() + offset);
-            if (selectMode > SELECT_MODE_NONE) {
+            if (isSelectable()) {
                 if (!moveFocusDown(pageLength - 2)) {
                     final int lastRendered = scrollBody.getLastRendered();
                     if (lastRendered == totalRows - 1) {
@@ -5035,7 +5038,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             int offset = pageLength * rowHeight - rowHeight;
             scrollBodyPanel.setScrollPosition(scrollBodyPanel
                     .getScrollPosition() - offset);
-            if (selectMode > SELECT_MODE_NONE) {
+            if (isSelectable()) {
                 if (!moveFocusUp(pageLength - 2)) {
                     final int firstRendered = scrollBody.getFirstRendered();
                     if (firstRendered == 0) {
@@ -5053,7 +5056,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         // Goto start navigation
         if (keycode == getNavigationStartKey()) {
-            if (selectMode > SELECT_MODE_NONE) {
+            if (isSelectable()) {
                 final int firstRendered = scrollBody.getFirstRendered();
                 boolean focusOnly = ctrl;
                 if (firstRendered == 0) {
@@ -5070,7 +5073,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         // Goto end navigation
         if (keycode == getNavigationEndKey()) {
-            if (selectMode > SELECT_MODE_NONE) {
+            if (isSelectable()) {
                 final int lastRendered = scrollBody.getLastRendered();
                 boolean focusOnly = ctrl;
                 if (lastRendered == totalRows - 1) {
