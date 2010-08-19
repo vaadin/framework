@@ -93,10 +93,11 @@ public class ItemClickEvents extends TestBase {
     }
 
     protected void logEvent(ItemClickEvent event, String targetComponent) {
-        String type = "click";
+        String type = event.getButtonName() + " " + "click";
         if (event.isDoubleClick()) {
             type = "doubleClick";
         }
+
         String modifiers = "";
         if (event.isAltKey()) {
             modifiers += "alt ";
@@ -114,8 +115,8 @@ public class ItemClickEvents extends TestBase {
             modifiers = " (" + modifiers.trim() + ")";
         }
 
-        log.log(event.getButtonName() + " " + type + " on " + targetComponent
-                + "/" + event.getItemId() + modifiers);
+        log.log(type + " on " + targetComponent + "/" + event.getItemId()
+                + modifiers);
 
     }
 
