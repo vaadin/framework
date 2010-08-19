@@ -26,7 +26,6 @@ public class WidgetImplementationSwap extends TestBase {
             final TextField tf = new TextField();
             layout.addComponent(tf);
             Button b = new Button("-> TextArea", new Button.ClickListener() {
-                @Override
                 public void buttonClick(ClickEvent event) {
                     if (tf.getRows() == 0) {
                         tf.setRows(3);
@@ -51,7 +50,6 @@ public class WidgetImplementationSwap extends TestBase {
             final TextField tf = new TextField();
             layout.addComponent(tf);
             Button b = new Button("-> TextArea", new Button.ClickListener() {
-                @Override
                 public void buttonClick(ClickEvent event) {
                     if (tf.getRows() == 0) {
                         tf.setRows(3);
@@ -77,7 +75,6 @@ public class WidgetImplementationSwap extends TestBase {
             final TextField tf = new TextField();
             layout.addComponent(tf);
             Button b = new Button("-> TextArea", new Button.ClickListener() {
-                @Override
                 public void buttonClick(ClickEvent event) {
                     if (tf.getRows() == 0) {
                         tf.setRows(3);
@@ -103,7 +100,6 @@ public class WidgetImplementationSwap extends TestBase {
             final TextField tf = new TextField();
             layout.addComponent(tf);
             Button b = new Button("-> TextArea", new Button.ClickListener() {
-                @Override
                 public void buttonClick(ClickEvent event) {
                     if (tf.getRows() == 0) {
                         tf.setRows(3);
@@ -129,7 +125,6 @@ public class WidgetImplementationSwap extends TestBase {
             final TextField tf = new TextField();
             layout.addComponent(tf);
             Button b = new Button("-> TextArea", new Button.ClickListener() {
-                @Override
                 public void buttonClick(ClickEvent event) {
                     if (tf.getRows() == 0) {
                         tf.setRows(3);
