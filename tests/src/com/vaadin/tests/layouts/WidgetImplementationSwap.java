@@ -13,7 +13,6 @@ import com.vaadin.ui.VerticalLayout;
 
 public class WidgetImplementationSwap extends TestBase {
 
-    @Override
     protected void setup() {
         setTheme("tests-tickets");
 
@@ -148,12 +147,10 @@ public class WidgetImplementationSwap extends TestBase {
 
     }
 
-    @Override
     protected String getDescription() {
         return "First click turns TextField into a TextArea (on the client); second click modifies the layout - widget should still be a TextArea.";
     }
 
-    @Override
     protected Integer getTicketNumber() {
         return 5457;
     }

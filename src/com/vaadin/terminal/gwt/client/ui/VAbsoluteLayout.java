@@ -285,7 +285,6 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
             }
         }
 
-        @Override
         public void setWidget(Widget w) {
             // this fixes #5457 (Widget implementation can change on-the-fly)
             paintable = (Paintable) w;
