@@ -21,10 +21,14 @@ public class Log extends VerticalLayout {
         setCaption("Events:");
     }
 
+    /**
+     * Clears the rows and reset the row number to zero.
+     */
     public void clear() {
         for (Label l : eventLabels) {
-            l.setValue("");
+            l.setValue("&nbsp;");
         }
+        nextLogNr = 0;
     }
 
     public void log(String event) {
