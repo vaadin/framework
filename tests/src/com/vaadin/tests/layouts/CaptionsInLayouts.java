@@ -165,10 +165,6 @@ public class CaptionsInLayouts extends TestBase {
 
     }
 
-    private void replaceComponent(Component oldC, Component newC) {
-        getLayout().replaceComponent(oldC, newC);
-    }
-
     private Layout getLayout(String caption, Class layoutClass, String width) {
         Layout l;
         if (layoutClass == VerticalLayout.class) {
