@@ -472,10 +472,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         // Reset selection changed flag
         selectionChanged = false;
 
-        // Note: changing the immediateness of this
-        // might
-        // require changes to "clickEvent" immediateness
-        // also.
+        // Note: changing the immediateness of this might require changes to
+        // "clickEvent" immediateness also.
         if (multiselectmode == MULTISELECT_MODE_DEFAULT) {
             // Convert ranges to a set of strings
             Set<String> ranges = new HashSet<String>();
@@ -3774,18 +3772,23 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     }
 
                     MouseEventDetails details = new MouseEventDetails(event);
-                    // Note: the 'immediate' logic would need to be more
-                    // involved (see #2104), but iscrolltable always sends
-                    // select event, even though nullselectionallowed wont let
-                    // the change trough. Will need to be updated if that is
-                    // changed.
 
-                    client.updateVariable(
-                            paintableId,
-                            "clickEvent",
-                            details.toString(),
-                            !(event.getButton() == Event.BUTTON_LEFT
-                                    && !doubleClick && isSelectable() && immediate));
+                    boolean imm = true;
+                    if (immediate && event.getButton() == Event.BUTTON_LEFT
+                            && !doubleClick && isSelectable() && !isSelected()) {
+                        /*
+                         * A left click when the table is selectable and in
+                         * immediate mode on a row that is not currently
+                         * selected will cause a selection event to be fired
+                         * after this click event. By making the click event
+                         * non-immediate we avoid sending two separate messages
+                         * to the server.
+                         */
+                        imm = false;
+                    }
+
+                    client.updateVariable(paintableId, "clickEvent",
+                            details.toString(), imm);
                 }
             }
 
