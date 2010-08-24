@@ -313,6 +313,16 @@ public class DateTimeService {
             String monthName = getMonth(date.getMonth());
 
             if (monthName != null) {
+                /*
+                 * Replace 4 or more M:s with the quoted month name. Also
+                 * concatenate generated string with any other string prepending
+                 * or following the MMMM pattern, i.e. 'MMMM'ta ' becomes
+                 * 'MONTHta ' and not 'MONTH''ta ', 'ab'MMMM becomes 'abMONTH',
+                 * 'x'MMMM'y' becomes 'xMONTHy'.
+                 */
+                formatStr = formatStr.replaceAll("'([M]{4,})'", monthName);
+                formatStr = formatStr.replaceAll("([M]{4,})'", "'" + monthName);
+                formatStr = formatStr.replaceAll("'([M]{4,})", monthName + "'");
                 formatStr = formatStr.replaceAll("[M]{4,}", "'" + monthName
                         + "'");
             }
@@ -324,6 +334,16 @@ public class DateTimeService {
             String monthName = getShortMonth(date.getMonth());
 
             if (monthName != null) {
+                /*
+                 * Replace 3 or more M:s with the quoted month name. Also
+                 * concatenate generated string with any other string prepending
+                 * or following the MMM pattern, i.e. 'MMM'ta ' becomes 'MONTHta
+                 * ' and not 'MONTH''ta ', 'ab'MMM becomes 'abMONTH', 'x'MMM'y'
+                 * becomes 'xMONTHy'.
+                 */
+                formatStr = formatStr.replaceAll("'([M]{3,})'", monthName);
+                formatStr = formatStr.replaceAll("([M]{3,})'", "'" + monthName);
+                formatStr = formatStr.replaceAll("'([M]{3,})", monthName + "'");
                 formatStr = formatStr.replaceAll("[M]{3,}", "'" + monthName
                         + "'");
             }
@@ -333,12 +353,15 @@ public class DateTimeService {
     }
 
     /**
-     * Replaces month names in the entered date Parses the month name from the
-     * entered dat
+     * Replaces month names in the entered date with the name in the current
+     * browser locale.
      * 
      * @param enteredDate
+     *            Date string e.g. "5 May 2010"
      * @param formatString
-     * @return
+     *            Format string e.g. "d M yyyy"
+     * @return The date string where the month names have been replaced by the
+     *         browser locale version
      */
     private String parseMonthName(String enteredDate, String formatString) {
         LocaleInfo browserLocale = LocaleInfo.getCurrentLocale();
