@@ -181,23 +181,30 @@ public class VTextualDate extends VDateField implements Paintable, Field,
              * manually convert it to the month name since DateTimeFormat.format
              * always uses the current locale and will replace the month name
              * wrong if current locale is different from the locale set for the
-             * DateField. Does not support abbreviated month names.
+             * DateField.
+             * 
+             * MMMM is converted into long month name, MMM is converted into
+             * short month name. '' are added around the name to avoid that
+             * DateTimeFormat parses the month name as a pattern.
              */
-            if (formatStr.contains("MMM")) {
+            if (formatStr.contains("MMMM")) {
+                @SuppressWarnings("deprecation")
                 String monthName = getDateTimeService().getMonth(
                         date.getMonth());
-                if (monthName != null) {
-                    // Capitalize month name
-                    monthName = Character.toUpperCase(monthName.charAt(0))
-                            + monthName.substring(1);
 
-                    /*
-                     * Replace all month occurrences with the month name. All
-                     * strings with 3 or more M's are converted to the month
-                     * name as defined in
-                     * http://www.docjar.com/docs/api/com/google
-                     * /gwt/i18n/client/DateTimeFormat.html
-                     */
+                if (monthName != null) {
+                    formatStr = formatStr.replaceAll("[M]{4,}", "'" + monthName
+                            + "'");
+                }
+            }
+
+            if (formatStr.contains("MMM")) {
+
+                @SuppressWarnings("deprecation")
+                String monthName = getDateTimeService().getShortMonth(
+                        date.getMonth());
+
+                if (monthName != null) {
                     formatStr = formatStr.replaceAll("[M]{3,}", "'" + monthName
                             + "'");
                 }
