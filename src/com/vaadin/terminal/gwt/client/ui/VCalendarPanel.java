@@ -202,8 +202,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private void focusDay(int day) {
         // Only used when calender body is present
         if (resolution > VDateField.RESOLUTION_MONTH) {
-            if (focusedDay != null)
+            if (focusedDay != null) {
                 focusedDay.removeStyleDependentName(CN_FOCUSED);
+            }
 
             if (day > 0 && focusedDate != null) {
                 focusedDate.setDate(day);
@@ -237,8 +238,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
         value.setDate(day);
 
-        if (selectedDay != null)
+        if (selectedDay != null) {
             selectedDay.removeStyleDependentName(CN_SELECTED);
+        }
 
         int rowCount = days.getRowCount();
         for (int i = 0; i < rowCount; i++) {
@@ -293,7 +295,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     public void setResolution(int resolution) {
         if (resolution != this.resolution) {
-            this.oldResolution = this.resolution;
+            oldResolution = this.resolution;
             this.resolution = resolution;
         }
     }
@@ -595,13 +597,13 @@ public class VCalendarPanel extends FocusableFlexTable implements
         }
 
         if (isTimeSelectorNeeded()
-                && (time == null || this.resolution != this.oldResolution)) {
+                && (time == null || resolution != oldResolution)) {
             time = new VTime();
             setWidget(2, 0, time);
             getFlexCellFormatter().setColSpan(2, 0, 5);
             getFlexCellFormatter().setStyleName(2, 0,
                     VDateField.CLASSNAME + "-calendarpanel-time");
-            this.oldResolution = this.resolution;
+            oldResolution = resolution;
         } else if (isTimeSelectorNeeded()) {
             time.updateTimes();
         } else if (time != null) {
@@ -1245,8 +1247,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
             selectFocused();
         }
 
-        if (!hasFocus)
+        if (!hasFocus) {
             focusDay(-1);
+        }
     }
 
     /**
@@ -1627,7 +1630,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      *            The listener to trigger
      */
     public void setValueChangeListener(ValueChangeListener listener) {
-        this.valueChangeListener = listener;
+        valueChangeListener = listener;
     }
 
     /**
@@ -1636,7 +1639,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * @param listener
      */
     public void setTimeChangeListener(TimeChangeListener listener) {
-        this.timeChangeListener = listener;
+        timeChangeListener = listener;
     }
 
     /**
