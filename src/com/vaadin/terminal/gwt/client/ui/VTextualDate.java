@@ -12,7 +12,6 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.TextBox;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -177,44 +176,8 @@ public class VTextualDate extends VDateField implements Paintable, Field,
         String dateText;
         Date currentDate = getDate();
         if (currentDate != null) {
-            String formatStr = getFormatString();
-
-            /*
-             * Check if format contains the month name. If it does we need to
-             * manually convert it to the month name since DateTimeFormat.format
-             * always uses the current locale and will replace the month name
-             * wrong if current locale is different from the locale set for the
-             * DateField.
-             * 
-             * MMMM is converted into long month name, MMM is converted into
-             * short month name. '' are added around the name to avoid that
-             * DateTimeFormat parses the month name as a pattern.
-             */
-            if (formatStr.contains("MMMM")) {
-                @SuppressWarnings("deprecation")
-                String monthName = getDateTimeService().getMonth(
-                        currentDate.getMonth());
-
-                if (monthName != null) {
-                    formatStr = formatStr.replaceAll("[M]{4,}", "'" + monthName
-                            + "'");
-                }
-            }
-
-            if (formatStr.contains("MMM")) {
-
-                @SuppressWarnings("deprecation")
-                String monthName = getDateTimeService().getShortMonth(
-                        currentDate.getMonth());
-
-                if (monthName != null) {
-                    formatStr = formatStr.replaceAll("[M]{3,}", "'" + monthName
-                            + "'");
-                }
-            }
-
-            DateTimeFormat format = DateTimeFormat.getFormat(formatStr);
-            dateText = format.format(currentDate);
+            dateText = getDateTimeService().formatDate(currentDate,
+                    getFormatString());
         } else {
             dateText = "";
         }
@@ -243,32 +206,23 @@ public class VTextualDate extends VDateField implements Paintable, Field,
     public void onChange(ChangeEvent event) {
         if (!text.getText().equals("")) {
             try {
-                DateTimeFormat format = DateTimeFormat
-                        .getFormat(getFormatString());
-                Date newDate;
+                String enteredDate = text.getText();
+
+                setDate(getDateTimeService().parseDate(enteredDate,
+                        getFormatString(), lenient));
+
                 if (lenient) {
-                    newDate = format.parse(text.getText());
-                    if (newDate != null) {
-                        // if date value was leniently parsed, normalize text
-                        // presentation
-                        text.setValue(
-                                DateTimeFormat.getFormat(getFormatString())
-                                        .format(newDate), false);
-                    }
-                } else {
-                    newDate = format.parseStrict(text.getText());
+                    // If date value was leniently parsed, normalize text
+                    // presentation.
+                    // FIXME: Add a description/example here of when this is
+                    // needed
+                    text.setValue(
+                            getDateTimeService().formatDate(getDate(),
+                                    getFormatString()), false);
                 }
 
-                long stamp = newDate.getTime();
-                if (stamp == 0) {
-                    // If date parsing fails in firefox the stamp will be 0
-                    setDate(null);
-                    addStyleName(PARSE_ERROR_CLASSNAME);
-                } else {
-                    setDate(newDate);
-                    // remove possibly added invalid value indication
-                    removeStyleName(PARSE_ERROR_CLASSNAME);
-                }
+                // remove possibly added invalid value indication
+                removeStyleName(PARSE_ERROR_CLASSNAME);
             } catch (final Exception e) {
                 ClientExceptionHandler.displayError(e.getMessage());
 

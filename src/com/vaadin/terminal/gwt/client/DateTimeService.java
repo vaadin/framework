@@ -6,6 +6,8 @@ package com.vaadin.terminal.gwt.client;
 
 import java.util.Date;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.vaadin.terminal.gwt.client.ui.VDateField;
 
 /**
@@ -270,6 +272,145 @@ public class DateTimeService {
         int weekNumber = (daysSinceFirstOfJanuary) / 7 + 1;
 
         return weekNumber;
+    }
+
+    /**
+     * Check if format contains the month name. If it does we manually convert
+     * it to the month name since DateTimeFormat.format always uses the current
+     * locale and will replace the month name wrong if current locale is
+     * different from the locale set for the DateField.
+     * 
+     * MMMM is converted into long month name, MMM is converted into short month
+     * name. '' are added around the name to avoid that DateTimeFormat parses
+     * the month name as a pattern.
+     * 
+     * @param date
+     *            The date to convert
+     * @param formatStr
+     *            The format string that might contain MMM or MMMM
+     * @param dateTimeService
+     *            Reference to the Vaadin DateTimeService
+     * @return
+     */
+    public String formatDate(Date date, String formatStr) {
+        /*
+         * Format month names separately when locale for the DateTimeService is
+         * not the same as the browser locale
+         */
+        formatStr = formatMonthNames(date, formatStr);
+
+        // Format uses the browser locale
+        DateTimeFormat format = DateTimeFormat.getFormat(formatStr);
+
+        String result = format.format(date);
+
+        return result;
+    }
+
+    private String formatMonthNames(Date date, String formatStr) {
+        if (formatStr.contains("MMMM")) {
+            @SuppressWarnings("deprecation")
+            String monthName = getMonth(date.getMonth());
+
+            if (monthName != null) {
+                formatStr = formatStr.replaceAll("[M]{4,}", "'" + monthName
+                        + "'");
+            }
+        }
+
+        if (formatStr.contains("MMM")) {
+
+            @SuppressWarnings("deprecation")
+            String monthName = getShortMonth(date.getMonth());
+
+            if (monthName != null) {
+                formatStr = formatStr.replaceAll("[M]{3,}", "'" + monthName
+                        + "'");
+            }
+        }
+
+        return formatStr;
+    }
+
+    /**
+     * Replaces month names in the entered date Parses the month name from the
+     * entered dat
+     * 
+     * @param enteredDate
+     * @param formatString
+     * @return
+     */
+    private String parseMonthName(String enteredDate, String formatString) {
+        LocaleInfo browserLocale = LocaleInfo.getCurrentLocale();
+        if (browserLocale.getLocaleName().equals(getLocale())) {
+            // No conversion needs to be done when locales match
+            return enteredDate;
+        }
+        String[] browserMonthNames = browserLocale.getDateTimeConstants()
+                .months();
+        String[] browserShortMonthNames = browserLocale.getDateTimeConstants()
+                .shortMonths();
+
+        if (formatString.contains("MMMM")) {
+            // Full month name
+            for (int i = 0; i < 12; i++) {
+                enteredDate = enteredDate.replaceAll(getMonth(i),
+                        browserMonthNames[i]);
+            }
+        }
+        if (formatString.contains("MMM")) {
+            // Short month name
+            for (int i = 0; i < 12; i++) {
+                enteredDate = enteredDate.replaceAll(getShortMonth(i),
+                        browserShortMonthNames[i]);
+            }
+        }
+
+        return enteredDate;
+    }
+
+    /**
+     * Parses the given date string using the given format string and the locale
+     * set in this DateTimeService instance.
+     * 
+     * @param dateString
+     *            Date string e.g. "1 February 2010"
+     * @param formatString
+     *            Format string e.g. "d MMMM yyyy"
+     * @param lenient
+     *            true to use lenient parsing, false to use strict parsing
+     * @return A Date object representing the dateString. Never returns null.
+     * @throws IllegalArgumentException
+     *             if the parsing fails
+     * 
+     */
+    public Date parseDate(String dateString, String formatString,
+            boolean lenient) throws IllegalArgumentException {
+        /* DateTimeFormat uses the browser's locale */
+        DateTimeFormat format = DateTimeFormat.getFormat(formatString);
+
+        /*
+         * Parse month names separately when locale for the DateTimeService is
+         * not the same as the browser locale
+         */
+        dateString = parseMonthName(dateString, formatString);
+
+        Date date;
+
+        if (lenient) {
+            date = format.parse(dateString);
+        } else {
+            date = format.parseStrict(dateString);
+        }
+
+        // Some version of Firefox sets the timestamp to 0 if parsing fails.
+        if (date != null && date.getTime() == 0) {
+            throw new IllegalArgumentException("Parsing of '" + dateString
+                    + "' failed");
+        }
+
+        return date;
+
     }
 
 }
