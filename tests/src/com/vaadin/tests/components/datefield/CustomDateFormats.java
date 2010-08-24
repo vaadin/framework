@@ -87,9 +87,9 @@ public class CustomDateFormats extends TestBase {
         addDateField(gridLayout, "dd M yyyy", locale);
         addDateField(gridLayout, "ddd M yyyy", locale);
 
-        addDateField(gridLayout, "d M y", locale);
+        addDateField(gridLayout, "d M y", locale, "d M yyyy");
         addDateField(gridLayout, "d M yy", locale);
-        addDateField(gridLayout, "d M yyy", locale);
+        addDateField(gridLayout, "d M yyy", locale, "d M yyyy");
         addDateField(gridLayout, "d M yyyy", locale);
 
         addDateField(gridLayout, getDatePattern(locale, DateFormat.LONG),
@@ -113,9 +113,7 @@ public class CustomDateFormats extends TestBase {
     }
 
     private void addDateField(GridLayout gridLayout, String pattern,
-            Locale locale) {
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, locale);
+            Locale locale, String expectedDateFormat) {
         Calendar cal = Calendar.getInstance();
         cal.set(2010, 1, 1);
 
@@ -124,17 +122,30 @@ public class CustomDateFormats extends TestBase {
         df.setLocale(locale);
         df.setWidth("300px");
         df.setDateFormat(pattern);
+        df.setImmediate(true);
 
         df.setValue(cal.getTime());
 
         Label patternLabel = new Label(pattern);
         patternLabel.setWidth(null);
-        Label expectedLabel = new Label(dateFormat.format(cal.getTime()));
+        SimpleDateFormat expDateFormat = new SimpleDateFormat(
+                expectedDateFormat, locale);
+        Label expectedLabel = new Label(expDateFormat.format(cal.getTime()));
+        if (!pattern.equals(expectedDateFormat)) {
+            expectedLabel.setValue(expectedLabel.getValue()
+                    + " (differs from JDK)");
+        }
         expectedLabel.setWidth(null);
 
         gridLayout.addComponent(patternLabel);
         gridLayout.addComponent(df);
         gridLayout.addComponent(expectedLabel);
+
+    }
+
+    private void addDateField(GridLayout gridLayout, String pattern,
+            Locale locale) {
+        addDateField(gridLayout, pattern, locale, pattern);
     }
 
     @Override
