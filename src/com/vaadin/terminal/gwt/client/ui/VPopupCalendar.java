@@ -170,7 +170,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         if (currentResolution > RESOLUTION_DAY) {
             calendar.setTimeChangeListener(new TimeChangeListener() {
                 public void changed(int hour, int min, int sec, int msec) {
-                    Date d = (Date) date.clone();
+                    Date d = getDate();
                     d.setHours(hour);
                     d.setMinutes(min);
                     d.setSeconds(sec);
@@ -322,7 +322,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
             if (getCurrentResolution() <= VDateField.RESOLUTION_MONTH) {
                 // due to UI limitations always fetch date from popup if
                 // resolution is month or year
-                date = calendar.getDate();
+                setDate(calendar.getDate());
             }
             buildDate();
             focus();

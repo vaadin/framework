@@ -56,7 +56,7 @@ public class VDateFieldCalendar extends VDateField {
         if (currentResolution > RESOLUTION_DAY) {
             caleandarPanel.setTimeChangeListener(new TimeChangeListener() {
                 public void changed(int hour, int min, int sec, int msec) {
-                    Date d = (Date) date.clone();
+                    Date d = getDate();
                     d.setHours(hour);
                     d.setMinutes(min);
                     d.setSeconds(sec);

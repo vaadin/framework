@@ -4,6 +4,8 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.Date;
+
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -173,7 +175,8 @@ public class VTextualDate extends VDateField implements Paintable, Field,
         removeStyleName(PARSE_ERROR_CLASSNAME);
         // Create the initial text for the textfield
         String dateText;
-        if (date != null) {
+        Date currentDate = getDate();
+        if (currentDate != null) {
             String formatStr = getFormatString();
 
             /*
@@ -190,7 +193,7 @@ public class VTextualDate extends VDateField implements Paintable, Field,
             if (formatStr.contains("MMMM")) {
                 @SuppressWarnings("deprecation")
                 String monthName = getDateTimeService().getMonth(
-                        date.getMonth());
+                        currentDate.getMonth());
 
                 if (monthName != null) {
                     formatStr = formatStr.replaceAll("[M]{4,}", "'" + monthName
@@ -202,7 +205,7 @@ public class VTextualDate extends VDateField implements Paintable, Field,
 
                 @SuppressWarnings("deprecation")
                 String monthName = getDateTimeService().getShortMonth(
-                        date.getMonth());
+                        currentDate.getMonth());
 
                 if (monthName != null) {
                     formatStr = formatStr.replaceAll("[M]{3,}", "'" + monthName
@@ -211,7 +214,7 @@ public class VTextualDate extends VDateField implements Paintable, Field,
             }
 
             DateTimeFormat format = DateTimeFormat.getFormat(formatStr);
-            dateText = format.format(date);
+            dateText = format.format(currentDate);
         } else {
             dateText = "";
         }
@@ -242,25 +245,27 @@ public class VTextualDate extends VDateField implements Paintable, Field,
             try {
                 DateTimeFormat format = DateTimeFormat
                         .getFormat(getFormatString());
+                Date newDate;
                 if (lenient) {
-                    date = format.parse(text.getText());
-                    if (date != null) {
+                    newDate = format.parse(text.getText());
+                    if (newDate != null) {
                         // if date value was leniently parsed, normalize text
                         // presentation
                         text.setValue(
                                 DateTimeFormat.getFormat(getFormatString())
-                                        .format(date), false);
+                                        .format(newDate), false);
                     }
                 } else {
-                    date = format.parseStrict(text.getText());
+                    newDate = format.parseStrict(text.getText());
                 }
 
-                long stamp = date.getTime();
+                long stamp = newDate.getTime();
                 if (stamp == 0) {
                     // If date parsing fails in firefox the stamp will be 0
-                    date = null;
+                    setDate(null);
                     addStyleName(PARSE_ERROR_CLASSNAME);
                 } else {
+                    setDate(newDate);
                     // remove possibly added invalid value indication
                     removeStyleName(PARSE_ERROR_CLASSNAME);
                 }
@@ -271,10 +276,10 @@ public class VTextualDate extends VDateField implements Paintable, Field,
                 // this is a hack that may eventually be removed
                 getClient().updateVariable(getId(), "lastInvalidDateString",
                         text.getText(), false);
-                date = null;
+                setDate(null);
             }
         } else {
-            date = null;
+            setDate(null);
             // remove possibly added invalid value indication
             removeStyleName(PARSE_ERROR_CLASSNAME);
         }
@@ -285,14 +290,15 @@ public class VTextualDate extends VDateField implements Paintable, Field,
         // Update variables
         // (only the smallest defining resolution needs to be
         // immediate)
+        Date currentDate = getDate();
         getClient().updateVariable(getId(), "year",
-                date != null ? date.getYear() + 1900 : -1,
+                currentDate != null ? currentDate.getYear() + 1900 : -1,
                 currentResolution == VDateField.RESOLUTION_YEAR && immediate);
         if (currentResolution >= VDateField.RESOLUTION_MONTH) {
             getClient().updateVariable(
                     getId(),
                     "month",
-                    date != null ? date.getMonth() + 1 : -1,
+                    currentDate != null ? currentDate.getMonth() + 1 : -1,
                     currentResolution == VDateField.RESOLUTION_MONTH
                             && immediate);
         }
@@ -301,7 +307,7 @@ public class VTextualDate extends VDateField implements Paintable, Field,
                     .updateVariable(
                             getId(),
                             "day",
-                            date != null ? date.getDate() : -1,
+                            currentDate != null ? currentDate.getDate() : -1,
                             currentResolution == VDateField.RESOLUTION_DAY
                                     && immediate);
         }
@@ -309,7 +315,7 @@ public class VTextualDate extends VDateField implements Paintable, Field,
             getClient().updateVariable(
                     getId(),
                     "hour",
-                    date != null ? date.getHours() : -1,
+                    currentDate != null ? currentDate.getHours() : -1,
                     currentResolution == VDateField.RESOLUTION_HOUR
                             && immediate);
         }
@@ -318,7 +324,7 @@ public class VTextualDate extends VDateField implements Paintable, Field,
                     .updateVariable(
                             getId(),
                             "min",
-                            date != null ? date.getMinutes() : -1,
+                            currentDate != null ? currentDate.getMinutes() : -1,
                             currentResolution == VDateField.RESOLUTION_MIN
                                     && immediate);
         }
@@ -327,13 +333,13 @@ public class VTextualDate extends VDateField implements Paintable, Field,
                     .updateVariable(
                             getId(),
                             "sec",
-                            date != null ? date.getSeconds() : -1,
+                            currentDate != null ? currentDate.getSeconds() : -1,
                             currentResolution == VDateField.RESOLUTION_SEC
                                     && immediate);
         }
         if (currentResolution == VDateField.RESOLUTION_MSEC) {
             getClient().updateVariable(getId(), "msec",
-                    date != null ? getMilliseconds() : -1, immediate);
+                    currentDate != null ? getMilliseconds() : -1, immediate);
         }
 
     }

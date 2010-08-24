@@ -61,7 +61,7 @@ public class VDateField extends FlowPanel implements Paintable, Field {
      * The date that is selected in the date field. Null if an invalid date is
      * specified.
      */
-    protected Date date = null;
+    private Date date = null;
 
     protected DateTimeService dts;
 
@@ -152,10 +152,10 @@ public class VDateField extends FlowPanel implements Paintable, Field {
 
         // Construct new date for this datefield (only if not null)
         if (year > -1) {
-            date = new Date((long) getTime(year, month, day, hour, min, sec,
-                    msec));
+            setCurrentDate(new Date((long) getTime(year, month, day, hour, min,
+                    sec, msec)));
         } else {
-            date = null;
+            setCurrentDate(null);
         }
     }
 
@@ -250,4 +250,29 @@ public class VDateField extends FlowPanel implements Paintable, Field {
         return showISOWeekNumbers;
     }
 
+    /**
+     * Returns a copy of the current date. Modifying the returned date will not
+     * modify the value of this VDateField. Use {@link #setDate(Date)} to change
+     * the current date.
+     * 
+     * @return A copy of the current date
+     */
+    protected Date getDate() {
+        Date current = getCurrentDate();
+        if (current == null) {
+            return null;
+        } else {
+            return (Date) getCurrentDate().clone();
+        }
+    }
+
+    /**
+     * Sets the current date for this VDateField.
+     * 
+     * @param date
+     *            The new date to use
+     */
+    protected void setDate(Date date) {
+        this.date = date;
+    }
 }
