@@ -1225,7 +1225,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     public void setDate(Date currentDate) {
 
-        // Check that we are not re-rendering a already active date if
+        // Check that we are not re-rendering an already active date
         if (currentDate == value && currentDate != null) {
             return;
         }
@@ -1233,7 +1233,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
         Date oldValue = value;
         value = currentDate;
 
-        if (focusedDate == null && value != null) {
+        if (value == null) {
+            focusedDate = null;
+        } else {
             focusedDate = (Date) value.clone();
         }
 
