@@ -91,12 +91,19 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
 
     @Override
     public void setReadOnly(boolean readOnly) {
-        super.setReadOnly(readOnly);
+        boolean wasReadOnly = isReadOnly();
+
         if (readOnly) {
-            getElement().setTabIndex(-1);
-        } else {
-            getElement().setTabIndex(getTabIndex());
+            setTabIndex(-1);
+        } else if (wasReadOnly && !readOnly && getTabIndex() == -1) {
+            /*
+             * Need to manually set tab index to 0 since server will not send
+             * the tab index if it is 0.
+             */
+            setTabIndex(0);
         }
+
+        super.setReadOnly(readOnly);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
