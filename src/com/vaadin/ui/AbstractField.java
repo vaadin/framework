@@ -149,8 +149,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     public void paintContent(PaintTarget target) throws PaintException {
 
         // The tab ordering number
-        if (tabIndex != 0) {
-            target.addAttribute("tabindex", tabIndex);
+        if (getTabIndex() != 0) {
+            target.addAttribute("tabindex", getTabIndex());
         }
 
         // If the field is modified, but not committed, set modified attribute
