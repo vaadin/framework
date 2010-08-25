@@ -278,6 +278,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private int dragmode;
 
     private int multiselectmode;
+    private int tabIndex;
 
     public VScrollTable() {
         scrollBodyPanel.setStyleName(CLASSNAME + "-body-wrapper");
@@ -643,6 +644,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         dragmode = uidl.hasAttribute("dragmode") ? uidl
                 .getIntAttribute("dragmode") : 0;
+
+        tabIndex = uidl.hasAttribute("tabindex") ? uidl
+                .getIntAttribute("tabindex") : 0;
 
         multiselectmode = uidl.hasAttribute("multiselectmode") ? uidl
                 .getIntAttribute("multiselectmode") : MULTISELECT_MODE_DEFAULT;
@@ -4360,8 +4364,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         /*
-         * setting width may affect wheter the component has scrollbars ->
-         * needs scrolling or not
+         * setting width may affect wheter the component has scrollbars -> needs
+         * scrolling or not
          */
         setProperTabIndex();
     }
@@ -5264,11 +5268,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * 
      */
     private void setProperTabIndex() {
-        if (!isFocusable()) {
+        if (tabIndex == 0 && !isFocusable()) {
             scrollBodyPanel.getElement().setTabIndex(-1);
         } else {
-        	// TODO tabindex from UIDL
-            scrollBodyPanel.getElement().setTabIndex(0);
+            scrollBodyPanel.getElement().setTabIndex(tabIndex);
         }
     }
 }
