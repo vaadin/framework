@@ -22,6 +22,9 @@ public class SetTabIndex extends TestBase {
         field2.setTabIndex(2);
         addComponent(field2);
 
+        final TextField field0 = new TextField("Field2 (tabindex 0)");
+        addComponent(field0);
+
         final CheckBox readonly = new CheckBox("Readonly");
         readonly.setImmediate(true);
         readonly.addListener(new Property.ValueChangeListener() {
@@ -31,6 +34,7 @@ public class SetTabIndex extends TestBase {
                 field1.setReadOnly(readonly);
                 field2.setReadOnly(readonly);
                 field3.setReadOnly(readonly);
+                field0.setReadOnly(readonly);
             }
         });
         addComponent(readonly);
