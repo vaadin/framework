@@ -4,7 +4,6 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
-import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -62,7 +61,6 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     private String inputPrompt = null;
     private boolean prompting = false;
     private int lastCursorPos = -1;
-    private int lastTabIndex = 0;
 
     public VTextField() {
         this(DOM.createInputText());
@@ -95,18 +93,10 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     public void setReadOnly(boolean readOnly) {
         super.setReadOnly(readOnly);
         if (readOnly) {
-            setTabIndex(-1);
-            getElement().getStyle().setCursor(Cursor.DEFAULT);
+            getElement().setTabIndex(-1);
         } else {
-            setTabIndex(lastTabIndex);
-            getElement().getStyle().setCursor(Cursor.TEXT);
+            getElement().setTabIndex(getTabIndex());
         }
-    }
-
-    @Override
-    public void setTabIndex(int index) {
-        lastTabIndex = getTabIndex();
-        super.setTabIndex(index);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
