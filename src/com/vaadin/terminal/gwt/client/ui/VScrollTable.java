@@ -844,11 +844,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
         }
 
-        if (!isFocusable()) {
-            scrollBodyPanel.getElement().setTabIndex(-1);
-        } else {
-            scrollBodyPanel.getElement().setTabIndex(0);
-        }
+        setProperTabIndex();
 
         rendering = false;
         headerChangedDuringUpdate = false;
@@ -3948,6 +3944,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 } else {
                                     ev.createDragImage(getElement(), true);
                                 }
+                                // because we are preventing the default (due to
+                                // prevent text selection) we must ensure
+                                // gaining the focus.
+                                ensureFocus();
                                 event.preventDefault();
                                 event.stopPropagation();
                             } else if (event.getCtrlKey()
@@ -3955,6 +3955,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                     || event.getMetaKey()
                                     && selectMode == SELECT_MODE_MULTI
                                     && multiselectmode == MULTISELECT_MODE_DEFAULT) {
+
+                                // because we are preventing the default (due to
+                                // prevent text selection) we must ensure
+                                // gaining the focus.
+                                ensureFocus();
                                 // Prevent default text selection in Firefox
                                 event.preventDefault();
 
@@ -3967,12 +3972,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 }
 
                                 event.stopPropagation();
-                            }
-
-                            if (!isFocusable()) {
-                                scrollBodyPanel.getElement().setTabIndex(-1);
-                            } else {
-                                scrollBodyPanel.getElement().setTabIndex(0);
                             }
 
                             break;
@@ -4262,6 +4261,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 // render properly
             }
         }
+
+        /**
+         * Ensure the component has a focus.
+         * 
+         * TODO the current implementation simply always calls focus for the
+         * component. In case the Table at some point implements focus/blur
+         * listeners, this method needs to be evolved to conditionally call
+         * focus only if not currently focused.
+         */
+        protected void ensureFocus() {
+            focus();
+        }
     }
 
     /**
@@ -4348,11 +4359,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             super.setWidth("");
         }
 
-        if (!isFocusable()) {
-            scrollBodyPanel.getElement().setTabIndex(-1);
-        } else {
-            scrollBodyPanel.getElement().setTabIndex(0);
-        }
+        /*
+         * setting width may affect wheter the component has scrollbars ->
+         * needs scrolling or not
+         */
+        setProperTabIndex();
     }
 
     private static final int LAZY_COLUMN_ADJUST_TIMEOUT = 300;
@@ -4538,11 +4549,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
         }
 
-        if (!isFocusable()) {
-            scrollBodyPanel.getElement().setTabIndex(-1);
-        } else {
-            scrollBodyPanel.getElement().setTabIndex(0);
-        }
+        /*
+         * setting height may affect wheter the component has scrollbars ->
+         * needs scrolling or not
+         */
+        setProperTabIndex();
+
     }
 
     /*
@@ -5238,5 +5250,25 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      */
     public void focus() {
         scrollBodyPanel.focus();
+    }
+
+    /**
+     * Sets the proper tabIndex for scrollBodyPanel (the focusable elemen in the
+     * component).
+     * 
+     * If the component has no explicit tabIndex a zero is given (default
+     * tabbing order based on dom hierarchy) or -1 if the component does not
+     * need to gain focus. The component needs no focus if it has no scrollabars
+     * (not scrollable) and not selectable. Note that in the future shortcut
+     * actions may need focus.
+     * 
+     */
+    private void setProperTabIndex() {
+        if (!isFocusable()) {
+            scrollBodyPanel.getElement().setTabIndex(-1);
+        } else {
+        	// TODO tabindex from UIDL
+            scrollBodyPanel.getElement().setTabIndex(0);
+        }
     }
 }
