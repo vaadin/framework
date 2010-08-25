@@ -1055,6 +1055,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      */
     public void setTabIndex(int tabIndex) {
         this.tabIndex = tabIndex;
+        requestRepaint();
     }
 
     /**
