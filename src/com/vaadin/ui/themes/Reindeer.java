@@ -12,7 +12,7 @@ import com.vaadin.ui.VerticalLayout;
 
 public class Reindeer extends BaseTheme {
 
-    public static final String THEME_NAME = "Reindeer";
+    public static final String THEME_NAME = "reindeer";
 
     /***************************************************************************
      * 

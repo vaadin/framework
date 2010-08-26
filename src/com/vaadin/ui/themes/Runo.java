@@ -5,7 +5,7 @@ package com.vaadin.ui.themes;
 
 public class Runo extends BaseTheme {
 
-    public static final String THEME_NAME = "Runo";
+    public static final String THEME_NAME = "runo";
 
     public static String themeName() {
         return THEME_NAME.toLowerCase();

@@ -24,7 +24,7 @@ package com.vaadin.ui.themes;
  */
 public class BaseTheme {
 
-    public static final String THEME_NAME = "Base";
+    public static final String THEME_NAME = "base";
 
     /**
      * Creates a button that looks like a regular hypertext link but still acts
