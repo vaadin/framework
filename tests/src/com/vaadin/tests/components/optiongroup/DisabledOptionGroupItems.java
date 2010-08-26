@@ -103,4 +103,9 @@ public class DisabledOptionGroupItems extends ComponentTestCase<OptionGroup> {
 
         return actions;
     }
+
+    @Override
+    protected String getDescription() {
+        return "Test case for disabled items in an OptionGroup";
+    }
 }
