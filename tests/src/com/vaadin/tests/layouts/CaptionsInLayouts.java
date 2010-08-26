@@ -18,7 +18,9 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -36,6 +38,7 @@ public class CaptionsInLayouts extends TestBase {
     private FormLayout formLayout;
     private List<AbstractField> components = new ArrayList<AbstractField>();
     private CssLayout cssLayout;
+    private HorizontalLayout layoutParent = new HorizontalLayout();
 
     @Override
     protected void setup() {
@@ -46,6 +49,9 @@ public class CaptionsInLayouts extends TestBase {
         addComponent(toggleError());
         addComponent(toggleIcon());
         addComponent(addCaptionText());
+        layoutParent.addComponent(new NativeButton("Button right of layout"));
+        addComponent(layoutParent);
+        addComponent(new NativeButton("Button below layout"));
         createComponents();
         layoutSelect.setValue(layoutSelect.getItemIds().iterator().next());
     }
@@ -151,9 +157,9 @@ public class CaptionsInLayouts extends TestBase {
 
     private void setLayout(Layout newLayout) {
         if (layout == null) {
-            addComponent(newLayout);
+            layoutParent.addComponent(newLayout, 0);
         } else {
-            replaceComponent(layout, newLayout);
+            layoutParent.replaceComponent(layout, newLayout);
         }
         layout = newLayout;
 
