@@ -669,6 +669,11 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         if (!rendering) {
             // ensure rel size details are updated
             paintableToCell.get(component).updateRelSizeStatus(uidl);
+            /*
+             * This was a component-only update and the possible size change
+             * must be propagated to the layout
+             */
+            client.captionSizeUpdated(component);
         }
     }
 
