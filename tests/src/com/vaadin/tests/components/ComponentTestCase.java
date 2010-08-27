@@ -22,14 +22,7 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
     }
 
     @Override
-    protected String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     protected Integer getTicketNumber() {
-        // TODO Auto-generated method stub
         return null;
     }
 
