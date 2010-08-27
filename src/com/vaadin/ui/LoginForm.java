@@ -66,7 +66,7 @@ public class LoginForm extends CustomComponent {
         }
 
         public String getMIMEType() {
-            return "text/html";
+            return "text/html; charset=utf-8";
         }
     };
 
@@ -188,7 +188,7 @@ public class LoginForm extends CustomComponent {
         // form
         window = getWindow();
         if (window.getParent() != null) {
-            window = (Window) window.getParent();
+            window = window.getParent();
         }
         super.detach();
     }
