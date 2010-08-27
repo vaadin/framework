@@ -175,7 +175,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     /**
      * Represents a select range of rows
      */
-    private class SelectionRange {
+    private static class SelectionRange {
         /**
          * The starting key of the range
          */
@@ -3279,15 +3279,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         private void addRowBeforeFirstRendered(VScrollTableRow row) {
-            VScrollTableRow first = null;
-            if (renderedRows.size() > 0) {
-                first = (VScrollTableRow) renderedRows.get(0);
-            }
-            if (first != null && first.getStyleName().indexOf("-odd") == -1) {
-                row.addStyleName(CLASSNAME + "-row-odd");
-            } else {
-                row.addStyleName(CLASSNAME + "-row");
-            }
+            row.setIndex(firstRendered - 1);
             if (row.isSelected()) {
                 row.addStyleName("v-selected");
             }
@@ -3295,19 +3287,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     tBodyElement.getFirstChild());
             adopt(row);
             renderedRows.add(0, row);
+            int i = firstRendered;
         }
 
         private void addRow(VScrollTableRow row) {
-            VScrollTableRow last = null;
-            if (renderedRows.size() > 0) {
-                last = (VScrollTableRow) renderedRows
-                        .get(renderedRows.size() - 1);
-            }
-            if (last != null && last.getStyleName().indexOf("-odd") == -1) {
-                row.addStyleName(CLASSNAME + "-row-odd");
-            } else {
-                row.addStyleName(CLASSNAME + "-row");
-            }
+            row.setIndex(firstRendered + renderedRows.size());
             if (row.isSelected()) {
                 row.addStyleName("v-selected");
             }
@@ -3562,6 +3546,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             private String[] actionKeys = null;
             private final TableRowElement rowElement;
             private boolean mDown;
+            private static final String ROW_CLASSNAME_EVEN = CLASSNAME + "-row";
+            private static final String ROW_CLASSNAME_ODD = CLASSNAME
+                    + "-row-odd";
 
             private VScrollTableRow(int rowKey) {
                 this.rowKey = rowKey;
@@ -3570,6 +3557,22 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 DOM.sinkEvents(getElement(), Event.MOUSEEVENTS
                         | Event.ONDBLCLICK | Event.ONCONTEXTMENU
                         | Event.ONKEYDOWN);
+            }
+
+            /**
+             * Sets the index of the row in the whole table. Currently used just
+             * to set even/odd classname
+             * 
+             * @param indexInWholeTable
+             */
+            private void setIndex(int indexInWholeTable) {
+                boolean isOdd = indexInWholeTable % 2 == 0;
+                if (isOdd) {
+                    addStyleName(ROW_CLASSNAME_ODD);
+                } else {
+                    addStyleName(ROW_CLASSNAME_EVEN);
+                }
+
             }
 
             private void paintComponent(Paintable p, UIDL uidl) {
