@@ -34,6 +34,7 @@ public class CaptionsInLayouts extends TestBase {
     private NativeSelect layoutSelect;
     private Layout layout;
     private VerticalLayout verticalLayout;
+    private HorizontalLayout horizontalLayout;
     private GridLayout gridLayout;
     private FormLayout formLayout;
     private List<AbstractField> components = new ArrayList<AbstractField>();
@@ -145,13 +146,18 @@ public class CaptionsInLayouts extends TestBase {
 
     private void createComponents() {
         TextField tfUndefWide = new TextField(
-                "Undefined wide text field with a very long caption, longer than the field and the layout.");
+                "Undefined wide text field with a very long caption, longer than the field and the layout. Lorem ipsum dolor sit amet.");
         TextField tf100pxWide = new TextField(
                 "100 px wide text field with a very long caption, longer than 100px.");
         tf100pxWide.setWidth("100px");
 
+        TextField tf500pxWide = new TextField(
+                "500 px wide text field with a very long caption, longer than 500px. Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+        tf500pxWide.setWidth("500px");
+
         components.add(tfUndefWide);
         components.add(tf100pxWide);
+        components.add(tf500pxWide);
 
     }
 
@@ -179,6 +185,12 @@ public class CaptionsInLayouts extends TestBase {
                 verticalLayout.setStyleName("borders");
             }
             l = verticalLayout;
+        } else if (layoutClass == HorizontalLayout.class) {
+            if (horizontalLayout == null) {
+                horizontalLayout = new HorizontalLayout();
+                horizontalLayout.setStyleName("borders");
+            }
+            l = horizontalLayout;
         } else if (layoutClass == GridLayout.class) {
             if (gridLayout == null) {
                 gridLayout = new GridLayout();
@@ -221,8 +233,9 @@ public class CaptionsInLayouts extends TestBase {
         layoutSelect.setItemCaptionPropertyId(CAPTION);
         layoutSelect.setNullSelectionAllowed(false);
 
-        for (Class cls : new Class[] { VerticalLayout.class, GridLayout.class,
-                CssLayout.class, FormLayout.class }) {
+        for (Class<?> cls : new Class[] { HorizontalLayout.class,
+                VerticalLayout.class, GridLayout.class, CssLayout.class,
+                FormLayout.class }) {
             for (String width : new String[] { "400px", "auto" }) {
                 Object id = layoutSelect.addItem();
                 Item i = layoutSelect.getItem(id);
