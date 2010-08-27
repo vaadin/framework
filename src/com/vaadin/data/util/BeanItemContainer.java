@@ -683,7 +683,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     /**
      * Send an ItemSetChange event to all listeners.
      */
-    private void fireItemSetChange() {
+    protected void fireItemSetChange() {
         if (itemSetChangeListeners != null) {
             final Container.ItemSetChangeEvent event = new Container.ItemSetChangeEvent() {
                 public Container getContainer() {
