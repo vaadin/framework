@@ -171,7 +171,7 @@ public final class VDebugConsole extends VOverlay implements Console {
             analyzeLayout
                     .setTitle("Analyzes currently rendered view and "
                             + "reports possible common problems in usage of relative sizes."
-                            + "Will cause server visit/rendering of whole screen + lose of"
+                            + "Will cause server visit/rendering of whole screen and loss of"
                             + " all non committed variables form client side.");
 
         }
@@ -436,10 +436,10 @@ public final class VDebugConsole extends VOverlay implements Console {
         }
         if (zeroHeightComponents.size() > 0 || zeroWidthComponents.size() > 0) {
             panel.add(new HTML("<h4> Client side notifications</h4>"
-                    + " <em>Following relative sized components where "
-                    + "rendered to zero size container on client side."
-                    + " Note that these are not necessary invalid "
-                    + "states. Just reported here as they might be.</em>"));
+                    + " <em>The following relative sized components were "
+                    + "rendered to a zero size container on the client side."
+                    + " Note that these are not necessarily invalid "
+                    + "states, but reported here as they might be.</em>"));
             if (zeroHeightComponents.size() > 0) {
                 panel.add(new HTML(
                         "<p><strong>Vertically zero size:</strong><p>"));
@@ -463,7 +463,7 @@ public final class VDebugConsole extends VOverlay implements Console {
             errorDetails.add(new Label("" + Util.getSimpleName(paintable)
                     + " inside " + Util.getSimpleName(layout)));
             final CheckBox emphasisInUi = new CheckBox(
-                    "Emphasis components parent in UI (actual component is not visible)");
+                    "Emphasize components parent in UI (the actual component is not visible)");
             emphasisInUi.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {
                     if (paintable != null) {
@@ -495,7 +495,7 @@ public final class VDebugConsole extends VOverlay implements Console {
             errorDetails.add(new Label("Width problem: "
                     + valueMap.getString("widthMsg")));
         }
-        final CheckBox emphasisInUi = new CheckBox("Emphasis component in UI");
+        final CheckBox emphasisInUi = new CheckBox("Emphasize component in UI");
         emphasisInUi.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 if (paintable != null) {
