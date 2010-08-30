@@ -8,6 +8,7 @@ import com.vaadin.ui.Window;
 
 public class Ticket2436 extends Application {
 
+    @Override
     public void init() {
         final Window main = new Window();
         setMainWindow(main);

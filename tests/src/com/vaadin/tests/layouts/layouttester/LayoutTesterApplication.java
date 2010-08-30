@@ -26,6 +26,7 @@ public class LayoutTesterApplication extends AbstractTestCase {
     private Window mainWindow;
     private NativeSelect layoutSelector;
 
+    @Override
     public void init() {
         mainWindow = new Window("LayoutTesterApplication");
         setMainWindow(mainWindow);
@@ -114,10 +115,12 @@ public class LayoutTesterApplication extends AbstractTestCase {
         return layoutSelector;
     }
 
+    @Override
     protected String getDescription() {
         return "Test application for VerticalLayout, HorizontalLayout, and GridLayout";
     }
 
+    @Override
     protected Integer getTicketNumber() {
         return 5334;
     }

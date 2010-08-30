@@ -2,13 +2,12 @@ package com.vaadin.tests.components.combobox;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.VerticalLayout;
 
 public class ComboBoxValueInput extends TestBase {
 
     @Override
     protected void setup() {
-        ((VerticalLayout) getLayout()).setSpacing(true);
+        (getLayout()).setSpacing(true);
 
         ComboBox cb = getComboBox("A combobox", false);
         addComponent(cb);

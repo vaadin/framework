@@ -49,8 +49,9 @@ public class BrowserLauncher {
                     // See if the default browser is Konqueror.
                     File file = new File(defaultLinkPath);
                     String canonical = file.getCanonicalPath();
-                    if (canonical.indexOf("konqueror") != -1)
+                    if (canonical.indexOf("konqueror") != -1) {
                         isDefaultKonqueror = true;
+                    }
                 }
             } catch (IOException e1) {
                 // The symlink was probably not found, so this is ok.

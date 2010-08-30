@@ -65,8 +65,7 @@ public class TextFieldRelativeWidth extends TestBase {
         }
 
         public void addNewRow() {
-            IndexedContainer idc = (IndexedContainer) this
-                    .getContainerDataSource();
+            IndexedContainer idc = (IndexedContainer) getContainerDataSource();
             int size = idc.size();
             Object itemId = idc.addItemAt(size - 1);
             Item newItem = idc.getItem(itemId);
@@ -102,7 +101,7 @@ public class TextFieldRelativeWidth extends TestBase {
         public void buttonClick(ClickEvent event) {
             Button b = event.getButton();
             if (b == addButton) {
-                this.select(getNullSelectionItemId());
+                select(getNullSelectionItemId());
                 addNewRow();
             }
         }

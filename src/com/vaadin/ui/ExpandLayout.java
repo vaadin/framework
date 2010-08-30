@@ -84,7 +84,7 @@ public class ExpandLayout extends OrderedLayout {
         super.removeComponent(c);
         if (c == expanded) {
             if (getComponentIterator().hasNext()) {
-                expand((Component) getComponentIterator().next());
+                expand(getComponentIterator().next());
             } else {
                 expand(null);
             }

@@ -111,8 +111,7 @@ public class RemoveTabs extends TestBase {
     }
 
     private void closeFirstTab() {
-        tabsheet.removeComponent((Component) tabsheet.getComponentIterator()
-                .next());
+        tabsheet.removeComponent(tabsheet.getComponentIterator().next());
     }
 
     @SuppressWarnings("unchecked")

@@ -18,6 +18,7 @@ public class VerticalLayoutExpandRatioModification extends TestBase implements
     private VerticalLayout vl2;
     private Button button;
 
+    @Override
     public void setup() {
         Window main = new Window("The Main Window");
         mainLayout = new VerticalLayout();

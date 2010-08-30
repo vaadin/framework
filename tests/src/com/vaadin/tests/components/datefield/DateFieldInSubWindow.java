@@ -106,8 +106,7 @@ public class DateFieldInSubWindow extends AbstractTestCase {
                 Button b = new Button("Close", new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        ((Window) getParent())
-                                .removeWindow(TestCaseWindow.this);
+                        (getParent()).removeWindow(TestCaseWindow.this);
                     }
                 });
                 buttons.addComponent(b);

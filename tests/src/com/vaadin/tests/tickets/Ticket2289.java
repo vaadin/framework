@@ -4,7 +4,6 @@ import com.vaadin.Application;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -81,10 +80,10 @@ public class Ticket2289 extends Application {
 
     private void closeFirstTab() {
         if (ts != null) {
-            ts.removeComponent((Component) ts.getComponentIterator().next());
+            ts.removeComponent(ts.getComponentIterator().next());
         }
         if (acc != null) {
-            acc.removeComponent((Component) acc.getComponentIterator().next());
+            acc.removeComponent(acc.getComponentIterator().next());
         }
     }
 

@@ -184,6 +184,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
             }
         }
 
+        @Override
         public void focus() {
             setFocus(true);
         }

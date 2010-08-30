@@ -91,6 +91,7 @@ public class OptionGroup extends AbstractSelect implements
 
     }
 
+    @Override
     protected void setValue(Object newValue, boolean repaintIsNotNeeded) {
         if (repaintIsNotNeeded) {
             /*

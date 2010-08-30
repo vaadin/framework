@@ -92,8 +92,7 @@ public class RemoveTabs extends TestBase {
     }
 
     private void closeFirstTab() {
-        accordion.removeComponent((Component) accordion.getComponentIterator()
-                .next());
+        accordion.removeComponent(accordion.getComponentIterator().next());
     }
 
     @SuppressWarnings("unchecked")

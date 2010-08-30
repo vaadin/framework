@@ -21,8 +21,9 @@ public class SelectingItemScrollsRight extends TestBase {
             }
         });
 
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < 50; i++) {
             table.addItem();
+        }
 
         addComponent(table);
     }

@@ -33,6 +33,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         this.application = application;
     }
 
+    @Override
     protected Layout getAlignmentTests() {
         Layout baseLayout = getBaseLayout();
         ((HorizontalLayout) baseLayout).setSpacing(true);
@@ -64,6 +65,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
+    @Override
     protected Layout getCaptionsTests() {
         Layout baseLayout = getBaseLayout();
         VerticalLayout vlo = getTestLaytout();
@@ -105,6 +107,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
+    @Override
     protected Layout getComponentAddReplaceMoveTests() {
         Layout baseLayout = getBaseLayout();
         final VerticalLayout vlo = getTestLaytout();
@@ -180,6 +183,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
+    @Override
     protected Layout getComponentSizingTests() {
         Layout baseLayout = getBaseLayout();
         final VerticalLayout vlo = getTestLaytout();
@@ -236,6 +240,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
+    @Override
     protected Layout getLayoutSizingTests() {
         Layout baseLayout = getBaseLayout();
         final VerticalLayout vlo = getTestLaytout();
@@ -314,6 +319,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
+    @Override
     protected Layout getExpandRatiosTests() {
         Layout baseLayout = getBaseLayout();
         final VerticalLayout vlo = getTestLaytout();
@@ -372,6 +378,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
+    @Override
     protected Layout getIconsTests() {
         Layout baseLayout = getBaseLayout();
         VerticalLayout vlo = getTestLaytout();
@@ -421,6 +428,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
+    @Override
     protected Layout getMarginSpacingTests() {
         Layout baseLayout = getBaseLayout();
         final VerticalLayout vlo = getTestLaytout();
@@ -495,6 +503,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
+    @Override
     protected Layout getRequiredErrorIndicatorsTests() {
         Layout baseLayout = getBaseLayout();
         VerticalLayout vlo = getTestLaytout();
