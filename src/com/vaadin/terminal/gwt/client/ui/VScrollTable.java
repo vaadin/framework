@@ -3567,7 +3567,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
              */
             private void setIndex(int indexInWholeTable) {
                 boolean isOdd = indexInWholeTable % 2 == 0;
-                if (isOdd) {
+                // Inverted logic to be backwards compatible with earlier 6.4.
+                // It is very strange because rows 1,3,5 are considered "even"
+                // and 2,4,6 "odd".
+                if (!isOdd) {
                     addStyleName(ROW_CLASSNAME_ODD);
                 } else {
                     addStyleName(ROW_CLASSNAME_EVEN);
