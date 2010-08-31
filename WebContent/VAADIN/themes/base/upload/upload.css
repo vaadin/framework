@@ -1,3 +1,12 @@
+.v-upload {
+	white-space: nowrap;
+}
+
+.v-ie6 .v-upload,
+.v-ie7 .v-upload {
+	margin:0;
+}
+
 .v-upload-immediate {
 	position: relative;
 	margin: 0;

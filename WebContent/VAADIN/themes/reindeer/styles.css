@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_4_1_dev-20100721";}
-.v-theme-version-6_4_1_dev-20100721 {display: none;}
+.v-theme-version:after {content:"6_4_3_dev-20100831";}
+.v-theme-version-6_4_3_dev-20100831 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -548,6 +548,9 @@ div.v-app-loading {
 	cursor: default;
 	background: #333;
 	color: #fff;
+}
+.v-datefield-calendarpanel-day-focused {
+	outline: 1px dotted black;
 }
 .v-datefield-time {
 	white-space: nowrap;
@@ -1991,6 +1994,15 @@ div.v-tree-node-leaf {
 	border-color: rgba(0,109,232,.6);
 }
 
+.v-upload {
+	white-space: nowrap;
+}
+
+.v-ie6 .v-upload,
+.v-ie7 .v-upload {
+	margin:0;
+}
+
 .v-upload-immediate {
 	position: relative;
 	margin: 0;
@@ -2788,6 +2800,9 @@ div.v-window-header {
 	background: transparent;
 }
 
+input.v-textfield-readonly:focus{
+	background-color: transparent;	
+}
 .v-datefield-calendarpanel {
 	border-collapse: collapse;
 	margin: 0;
