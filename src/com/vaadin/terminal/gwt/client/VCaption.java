@@ -40,6 +40,8 @@ public class VCaption extends HTML {
     protected static final String ATTRIBUTE_ERROR = "error";
     protected static final String ATTRIBUTE_HIDEERRORS = "hideErrors";
 
+    private static final String CLASSNAME_CLEAR = CLASSNAME + "-clearelem";
+
     /**
      * 
      * @param component
@@ -192,17 +194,14 @@ public class VCaption extends HTML {
             }
         } else if (errorIndicatorElement != null) {
             // Remove existing
-            DOM.removeChild(getElement(), errorIndicatorElement);
+            getElement().removeChild(errorIndicatorElement);
             errorIndicatorElement = null;
         }
 
         if (clearElement == null) {
             clearElement = DOM.createDiv();
-            DOM.setStyleAttribute(clearElement, "clear", "both");
-            DOM.setStyleAttribute(clearElement, "width", "0");
-            DOM.setStyleAttribute(clearElement, "height", "0");
-            DOM.setStyleAttribute(clearElement, "overflow", "hidden");
-            DOM.appendChild(getElement(), clearElement);
+            clearElement.setClassName(CLASSNAME_CLEAR);
+            getElement().appendChild(clearElement);
         }
 
         return (wasPlacedAfterComponent != placedAfterComponent);
