@@ -2935,6 +2935,13 @@ public class Table extends AbstractSelect implements Action.Container,
      * property.
      * </p>
      * <p>
+     * Table will not listen to value change events from properties overridden
+     * by generated columns. If the content of your generated column depends on
+     * properties that are not directly visible in the table, attach value
+     * change listener to update the content on all depended properties.
+     * Otherwise your UI might not get updated as expected.
+     * </p>
+     * <p>
      * Also note that getVisibleColumns() will return the generated columns,
      * while getContainerPropertyIds() will not.
      * </p>
