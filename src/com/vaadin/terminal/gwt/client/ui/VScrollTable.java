@@ -4300,6 +4300,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         // still ensure all selects are removed from (not necessary rendered)
         selectedRowKeys.clear();
         selectedRowRanges.clear();
+        // also notify server that it clears all previous selections (the client
+        // side does not know about the invisible ones)
+        client.updateVariable(paintableId, "clearSelections", true, false);
     }
 
     /**

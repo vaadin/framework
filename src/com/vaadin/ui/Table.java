@@ -1881,37 +1881,67 @@ public class Table extends AbstractSelect implements Action.Container,
         final String[] ka = (String[]) variables.get("selected");
         final String[] ranges = (String[]) variables.get("selectedRanges");
 
-        // Converts the key-array to id-set
-        final LinkedList s = new LinkedList();
+        Set<Object> renderedItemIds = getCurrentlyRenderedItemIds();
+
+        HashSet<Object> newValue = new HashSet<Object>(
+                (Collection<Object>) getValue());
+
+        if (variables.containsKey("clearSelections")) {
+            // the client side has instructed to swipe all previous selections
+            newValue.clear();
+        } else {
+            /*
+             * first clear all selections that are currently rendered rows (the
+             * ones that the client side counterpart is aware of)
+             */
+            newValue.removeAll(renderedItemIds);
+        }
+
+        /*
+         * Then add (possibly some of them back) rows that are currently
+         * selected on the client side (the ones that the client side is aware
+         * of).
+         */
         for (int i = 0; i < ka.length; i++) {
+            // key to id
             final Object id = itemIdMapper.get(ka[i]);
             if (!isNullSelectionAllowed()
                     && (id == null || id == getNullSelectionItemId())) {
                 // skip empty selection if nullselection is not allowed
                 requestRepaint();
             } else if (id != null && containsId(id)) {
-                s.add(id);
+                newValue.add(id);
             }
         }
 
-        if (!isNullSelectionAllowed() && s.size() < 1) {
+        if (!isNullSelectionAllowed() && newValue.size() < 1) {
             // empty selection not allowed, keep old value
             requestRepaint();
             return;
         }
 
-        // Add range items
+        /* Add range items aka shift clicked multiselection areas */
         if (ranges != null) {
             for (String range : ranges) {
                 String[] limits = range.split("-");
                 int start = Integer.valueOf(limits[0]);
                 int end = Integer.valueOf(limits[1]);
-                s.addAll(getItemIdsInRange(start, end));
+                newValue.addAll(getItemIdsInRange(start, end));
             }
         }
 
-        setValue(s, true);
+        setValue(newValue, true);
 
+    }
+
+    private Set<Object> getCurrentlyRenderedItemIds() {
+        HashSet<Object> ids = new HashSet<Object>();
+        if (pageBuffer != null) {
+            for (int i = 0; i < pageBuffer[CELL_ITEMID].length; i++) {
+                ids.add(pageBuffer[CELL_ITEMID][i]);
+            }
+        }
+        return ids;
     }
 
     /* Component basics */
