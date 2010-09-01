@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_4_3_dev-20100831";}
-.v-theme-version-6_4_3_dev-20100831 {display: none;}
+.v-theme-version:after {content:"6_4_4_dev-20100901";}
+.v-theme-version-6_4_4_dev-20100901 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -234,7 +234,6 @@
 	height: 0;
 	overflow: hidden;
 }
-
 
 /* Fix IE6 "double-float-margin-bug" */
 .v-ie6 .v-errorindicator,
@@ -821,6 +820,11 @@ div.v-app-loading {
 .v-link img {
 	vertical-align: middle;
 	border:none;
+}
+
+.v-loginform {
+	height: 140px;
+	width: 200px;
 }
 
 .v-app-loginpage .v-button,

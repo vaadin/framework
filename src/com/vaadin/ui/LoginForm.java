@@ -118,6 +118,7 @@ public class LoginForm extends CustomComponent {
         iframe.setSizeFull();
         setSizeFull();
         setCompositionRoot(iframe);
+        addStyleName("v-loginform");
     }
 
     /**
