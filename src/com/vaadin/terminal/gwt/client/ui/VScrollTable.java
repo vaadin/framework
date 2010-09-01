@@ -3852,6 +3852,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                         && multiselectmode == MULTISELECT_MODE_DEFAULT) {
                                     toggleSelection();
                                     setRowFocus(this);
+                                    /*
+                                     * next possible range select must start on
+                                     * this row
+                                     */
+                                    selectionRangeStart = this;
 
                                     // Ctrl click (Single selection)
                                 } else if ((event.getCtrlKey() || event
