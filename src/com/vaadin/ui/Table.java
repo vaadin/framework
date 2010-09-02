@@ -1849,25 +1849,14 @@ public class Table extends AbstractSelect implements Action.Container,
      *            The end key
      * @return
      */
-    private Set<Object> getItemIdsInRange(int startRowKey, int endRowKey) {
+    private Set<Object> getItemIdsInRange(Object itemId, final int length) {
         HashSet<Object> ids = new HashSet<Object>();
-
-        Object startItemId = itemIdMapper.get(String.valueOf(startRowKey));
-        ids.add(startItemId);
-
-        Object endItemId = itemIdMapper.get(String.valueOf(endRowKey));
-        ids.add(endItemId);
-
-        Object currentItemId = startItemId;
-
-        Container.Ordered ordered = (Container.Ordered) items;
-        while ((currentItemId != null) && !currentItemId.equals(endItemId)) {
-            currentItemId = ordered.nextItemId(currentItemId);
-            if (currentItemId != null) {
-                ids.add(currentItemId);
-            }
+        for (int i = 0; i < length; i++) {
+            assert itemId != null; // should not be null unless client-server
+                                   // are out of sync
+            ids.add(itemId);
+            itemId = nextItemId(itemId);
         }
-
         return ids;
     }
 
@@ -1923,10 +1912,10 @@ public class Table extends AbstractSelect implements Action.Container,
         /* Add range items aka shift clicked multiselection areas */
         if (ranges != null) {
             for (String range : ranges) {
-                String[] limits = range.split("-");
-                int start = Integer.valueOf(limits[0]);
-                int end = Integer.valueOf(limits[1]);
-                newValue.addAll(getItemIdsInRange(start, end));
+                String[] split = range.split("-");
+                Object startItemId = itemIdMapper.get(split[0]);
+                int length = Integer.valueOf(split[1]);
+                newValue.addAll(getItemIdsInRange(startItemId, length));
             }
         }
 
