@@ -10,6 +10,9 @@
 	<!-- Screen shot base directory -->
 	<fail unless="com.vaadin.testbench.screenshot.directory" message="The 'com.vaadin.testbench.screenshot.directory' property must be defined." />
 	
+	<!-- Screen shot resolution -->
+	<property name="com.vaadin.testbench.screenshot.resolution" value="1500x850"/>
+	
 	<!-- Host running Testbench Hub -->
 	<property name="com.vaadin.testbench.tester.host" value="192.168.1.48" />
 
@@ -131,6 +134,9 @@
 			<jvmarg value="-Dcom.vaadin.testbench.deployment.url=${com.vaadin.testbench.deployment.url}" />
 			<!-- Define where the reference screenshots and diff files are saved -->
 			<jvmarg value="-Dcom.vaadin.testbench.screenshot.directory=${com.vaadin.testbench.screenshot.directory}" />
+			<!-- Resolution for screenshots -->
+			<jvmarg value="-Dcom.vaadin.testbench.screenshot.resolution=${com.vaadin.testbench.screenshot.resolution}" />
+			
 			<jvmarg value="-Djava.awt.headless=true" />
 
 			<!-- true/false system arguments -->
