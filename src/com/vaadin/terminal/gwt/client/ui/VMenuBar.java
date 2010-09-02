@@ -90,7 +90,6 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
     }
 
     public VMenuBar(boolean subMenu) {
-        super();
 
         items = new ArrayList<CustomMenuItem>();
         popup = null;
@@ -286,7 +285,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
     public void onMenuClick(int clickedItemId) {
         // Cancel the focus event handling since focus was gained by
         // clicking an item.
-        if (focusDelayTimer != null) {
+        if (focusDelayTimer != null || subMenu) {
             focusDelayTimer.cancel();
         }
 
@@ -416,6 +415,15 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 if (isEnabled() && targetItem.isEnabled()) {
                     itemClick(targetItem);
                 }
+                if (subMenu) {
+                    // Prevent moving keyboard focus to child menus
+                    VMenuBar parent = parentMenu;
+                    while (parent.getParentMenu() != null) {
+                        parent = parent.getParentMenu();
+                    }
+                    parent.setFocus(true);
+                }
+
                 break;
 
             case Event.ONMOUSEOVER:
@@ -428,6 +436,13 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 itemOut(targetItem);
                 break;
             }
+        } else if (subMenu && DOM.eventGetType(e) == Event.ONCLICK && subMenu) {
+            // Prevent moving keyboard focus to child menus
+            VMenuBar parent = parentMenu;
+            while (parent.getParentMenu() != null) {
+                parent = parent.getParentMenu();
+            }
+            parent.setFocus(true);
         }
     }
 

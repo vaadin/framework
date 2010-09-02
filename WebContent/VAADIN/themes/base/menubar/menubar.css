@@ -73,3 +73,9 @@
 .v-menubar-submenu .v-icon {
 	margin-right: 3px;
 }
+
+.v-menubar-popup:focus,
+.v-menubar-popup .popupContent:focus,
+.v-menubar-popup .popupContent .v-menubar-submenu:focus{
+	outline: none;	
+}
