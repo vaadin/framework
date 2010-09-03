@@ -38,6 +38,8 @@ public class ActionManager implements Action.Container, Action.Handler,
 
     protected Component viewer;
 
+    private boolean clientHasActions = false;
+
     public ActionManager() {
 
     }
@@ -141,7 +143,11 @@ public class ActionManager implements Action.Container, Action.Handler,
             actions.addAll(ownActions);
         }
 
-        if (!actions.isEmpty()) {
+        /*
+         * Must repaint whenever there are actions OR if all actions have been
+         * removed but still exist on client side
+         */
+        if (!actions.isEmpty() || clientHasActions) {
             actionMapper = new KeyMapper();
 
             paintTarget.addVariable(viewer, "action", "");
@@ -175,6 +181,12 @@ public class ActionManager implements Action.Container, Action.Handler,
             paintTarget.endTag("actions");
         }
 
+        /*
+         * Update flag for next repaint so we know if we need to paint empty
+         * actions or not (must send actions is client had actions before and
+         * all actions were removed).
+         */
+        clientHasActions = !actions.isEmpty();
     }
 
     public void handleActions(Map variables, Container sender) {
