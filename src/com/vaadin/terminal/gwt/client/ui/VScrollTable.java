@@ -842,29 +842,26 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             selectionChanged = false;
         }
 
-        // This is called when the Home button has been pressed and the pages
-        // changes
-        if (selectFirstItemInNextRender) {
-            selectFirstRenderedRow(false);
-            selectFirstItemInNextRender = false;
-        }
-        // The same if the table is not selectable
-        if (focusFirstItemInNextRender) {
-            selectFirstRenderedRow(true);
-            focusFirstItemInNextRender = false;
+        /*
+         * This is called when the Home or page up button has been pressed in
+         * selectable mode and the next selected row was not yet rendered in the
+         * client
+         */
+        if (selectFirstItemInNextRender || focusFirstItemInNextRender) {
+            selectFirstRenderedRowInViewPort(focusFirstItemInNextRender);
+            selectFirstItemInNextRender = focusFirstItemInNextRender = false;
         }
 
-        // This is called when the End button has been pressed and the pages
-        // changes
-        if (selectLastItemInNextRender) {
-            selectLastRenderedRow(false);
-            selectLastItemInNextRender = false;
+        /*
+         * This is called when the page down or end button has been pressed in
+         * selectable mode and the next selected row was not yet rendered in the
+         * client
+         */
+        if (selectLastItemInNextRender || focusLastItemInNextRender) {
+            selectLastRenderedRowInViewPort(focusLastItemInNextRender);
+            selectLastItemInNextRender = focusLastItemInNextRender = false;
         }
-        // the same if not selectable
-        if (focusLastItemInNextRender) {
-            selectLastRenderedRow(true);
-            focusLastItemInNextRender = false;
-        }
+        multiselectPending = false;
 
         if (focusedRow != null) {
             if (!focusedRow.isAttached()) {
@@ -894,42 +891,48 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     }
 
     /**
-     * Selects the last rendered row in the table
+     * Selects the last row visible in the table
      * 
      * @param focusOnly
      *            Should the focus only be moved to the last row
      */
-    private void selectLastRenderedRow(boolean focusOnly) {
-        VScrollTableRow row = null;
-        Iterator<Widget> it = scrollBody.iterator();
-        while (it.hasNext()) {
-            row = (VScrollTableRow) it.next();
-        }
-        if (row != null) {
-            setRowFocus(row);
-            if (!focusOnly) {
-                deselectAll();
-                selectFocusedRow(false, false);
-                sendSelectedRows();
+    private void selectLastRenderedRowInViewPort(boolean focusOnly) {
+        int index = firstRowInViewPort + getFullyVisibleRowCount();
+        VScrollTableRow lastRowInViewport = scrollBody.getRowByRowIndex(index);
+        if (lastRowInViewport == null) {
+            // this should not happen in normal situations (white space at the
+            // end of viewport). Select the last rendered as a fallback.
+            lastRowInViewport = scrollBody.getRowByRowIndex(scrollBody
+                    .getLastRendered());
+            if (lastRowInViewport == null) {
+                return; // empty table
             }
         }
-
+        setRowFocus(lastRowInViewport);
+        if (!focusOnly) {
+            selectFocusedRow(false, multiselectPending);
+            sendSelectedRows();
+        }
     }
 
     /**
-     * Selects the first rendered row
+     * Selects the first row visible in the table
      * 
      * @param focusOnly
      *            Should the focus only be moved to the first row
      */
-    private void selectFirstRenderedRow(boolean focusOnly) {
-        setRowFocus((VScrollTableRow) scrollBody.iterator().next());
+    private void selectFirstRenderedRowInViewPort(boolean focusOnly) {
+        int index = firstRowInViewPort;
+        VScrollTableRow firstInViewport = scrollBody.getRowByRowIndex(index);
+        if (firstInViewport == null) {
+            // this should not happen in normal situations
+            return;
+        }
+        setRowFocus(firstInViewport);
         if (!focusOnly) {
-            deselectAll();
-            selectFocusedRow(false, false);
+            selectFocusedRow(false, multiselectPending);
             sendSelectedRows();
         }
-
     }
 
     private void setCacheRate(double d) {
@@ -1609,10 +1612,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         @Override
         public void run() {
-            if (client.hasActiveRequest()) {
+            if (client.hasActiveRequest() || navKeyDown) {
                 // if client connection is busy, don't bother loading it more
+                ApplicationConnection.getConsole().log("Postponed rowfetch");
                 schedule(250);
-
             } else {
 
                 int firstToBeRendered = scrollBody.firstRendered;
@@ -1667,10 +1670,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         public int getReqFirstRow() {
             return reqFirstRow;
-        }
-
-        public int getReqRows() {
-            return reqRows;
         }
 
         /**
@@ -3169,7 +3168,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         public VScrollTableRow getRowByRowIndex(int indexInTable) {
             int internalIndex = indexInTable - firstRendered;
-            return (VScrollTableRow) renderedRows.get(internalIndex);
+            if (internalIndex >= 0 && internalIndex < renderedRows.size()) {
+                return (VScrollTableRow) renderedRows.get(internalIndex);
+            } else {
+                return null;
+            }
         }
 
         /**
@@ -4578,6 +4581,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private int scrollLeft;
     private int scrollTop;
     private VScrollTableDropHandler dropHandler;
+    private boolean navKeyDown;
+    private boolean multiselectPending;
 
     /**
      * @return border top + border bottom of the scrollable area of table
@@ -5095,83 +5100,188 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         // Page Down navigation
         if (keycode == getNavigationPageDownKey()) {
-            int rowHeight = (int) scrollBody.getRowHeight();
-            int offset = pageLength * rowHeight - rowHeight;
-            scrollBodyPanel.setScrollPosition(scrollBodyPanel
-                    .getScrollPosition() + offset);
             if (isSelectable()) {
-                if (!moveFocusDown(pageLength - 2)) {
-                    final int lastRendered = scrollBody.getLastRendered();
-                    if (lastRendered == totalRows - 1) {
-                        selectLastRenderedRow(false);
+                /*
+                 * If selectable we plagiate MSW behaviour: first scroll to the
+                 * end of current view. If at the end, scroll down one page
+                 * length and keep the selected row in the bottom part of
+                 * visible area.
+                 */
+                if (!isFocusAtTheEndOfTable()) {
+                    VScrollTableRow lastVisibleRowInViewPort = scrollBody
+                            .getRowByRowIndex(firstRowInViewPort
+                                    + getFullyVisibleRowCount() - 1);
+                    if (lastVisibleRowInViewPort != null
+                            && lastVisibleRowInViewPort != focusedRow) {
+                        // focused row is not at the end of the table, move
+                        // focus and select the last visible row
+                        setRowFocus(lastVisibleRowInViewPort);
+                        selectFocusedRow(ctrl, shift);
+                        sendSelectedRows();
                     } else {
-                        selectLastItemInNextRender = true;
+                        int indexOfToBeFocused = focusedRow.getIndex()
+                                + getFullyVisibleRowCount();
+                        if (indexOfToBeFocused >= totalRows) {
+                            indexOfToBeFocused = totalRows - 1;
+                        }
+                        VScrollTableRow toBeFocusedRow = scrollBody
+                                .getRowByRowIndex(indexOfToBeFocused);
+
+                        if (toBeFocusedRow != null) {
+                            /*
+                             * if the next focused row is rendered
+                             */
+                            setRowFocus(toBeFocusedRow);
+                            selectFocusedRow(ctrl, shift);
+                            // TODO needs scrollintoview ?
+                            sendSelectedRows();
+                        } else {
+                            // scroll down by pixels and return, to wait for
+                            // new rows, then select the last item in the
+                            // viewport
+                            selectLastItemInNextRender = true;
+                            multiselectPending = shift;
+                            scrollByPagelenght(1);
+                        }
                     }
-                } else {
-                    selectFocusedRow(false, false);
-                    sendSelectedRows();
                 }
+            } else {
+                /* No selections, go page down by scrolling */
+                scrollByPagelenght(1);
             }
             return true;
         }
 
         // Page Up navigation
         if (keycode == getNavigationPageUpKey()) {
-            int rowHeight = (int) scrollBody.getRowHeight();
-            int offset = pageLength * rowHeight - rowHeight;
-            scrollBodyPanel.setScrollPosition(scrollBodyPanel
-                    .getScrollPosition() - offset);
             if (isSelectable()) {
-                if (!moveFocusUp(pageLength - 2)) {
-                    final int firstRendered = scrollBody.getFirstRendered();
-                    if (firstRendered == 0) {
-                        selectFirstRenderedRow(false);
+                /*
+                 * If selectable we plagiate MSW behaviour: first scroll to the
+                 * end of current view. If at the end, scroll down one page
+                 * length and keep the selected row in the bottom part of
+                 * visible area.
+                 */
+                if (!isFocusAtTheBeginningOfTable()) {
+                    VScrollTableRow firstVisibleRowInViewPort = scrollBody
+                            .getRowByRowIndex(firstRowInViewPort);
+                    if (firstVisibleRowInViewPort != null
+                            && firstVisibleRowInViewPort != focusedRow) {
+                        // focus is not at the beginning of the table, move
+                        // focus and select the first visible row
+                        setRowFocus(firstVisibleRowInViewPort);
+                        selectFocusedRow(ctrl, shift);
+                        sendSelectedRows();
                     } else {
-                        selectFirstItemInNextRender = true;
+                        int indexOfToBeFocused = focusedRow.getIndex()
+                                - getFullyVisibleRowCount();
+                        if (indexOfToBeFocused < 0) {
+                            indexOfToBeFocused = 0;
+                        }
+                        VScrollTableRow toBeFocusedRow = scrollBody
+                                .getRowByRowIndex(indexOfToBeFocused);
+
+                        if (toBeFocusedRow != null) { // if the next focused row
+                                                      // is rendered
+                            setRowFocus(toBeFocusedRow);
+                            selectFocusedRow(ctrl, shift);
+                            // TODO needs scrollintoview ?
+                            sendSelectedRows();
+                        } else {
+                            // unless waiting for the next rowset already
+                            // scroll down by pixels and return, to wait for
+                            // new rows, then select the last item in the
+                            // viewport
+                            selectFirstItemInNextRender = true;
+                            multiselectPending = shift;
+                            scrollByPagelenght(-1);
+                        }
                     }
-                } else {
-                    selectFocusedRow(false, false);
-                    sendSelectedRows();
                 }
+            } else {
+                /* No selections, go page up by scrolling */
+                scrollByPagelenght(-1);
             }
+
             return true;
         }
 
         // Goto start navigation
         if (keycode == getNavigationStartKey()) {
+            scrollBodyPanel.setScrollPosition(0);
             if (isSelectable()) {
-                final int firstRendered = scrollBody.getFirstRendered();
-                boolean focusOnly = ctrl;
-                if (firstRendered == 0) {
-                    selectFirstRenderedRow(focusOnly);
-                } else if (focusOnly) {
-                    focusFirstItemInNextRender = true;
+                if (focusedRow != null && focusedRow.getIndex() == 0) {
+                    return false;
                 } else {
-                    selectFirstItemInNextRender = true;
+                    VScrollTableRow rowByRowIndex = (VScrollTableRow) scrollBody
+                            .iterator().next();
+                    if (rowByRowIndex.getIndex() == 0) {
+                        setRowFocus(rowByRowIndex);
+                        selectFocusedRow(ctrl, shift);
+                        sendSelectedRows();
+                    } else {
+                        // first row of table will come in next row fetch
+                        if (ctrl) {
+                            focusFirstItemInNextRender = true;
+                        } else {
+                            selectFirstItemInNextRender = true;
+                            multiselectPending = shift;
+                        }
+                    }
                 }
             }
-            scrollBodyPanel.setScrollPosition(0);
             return true;
         }
 
         // Goto end navigation
         if (keycode == getNavigationEndKey()) {
+            scrollBodyPanel.setScrollPosition(scrollBody.getOffsetHeight());
             if (isSelectable()) {
                 final int lastRendered = scrollBody.getLastRendered();
-                boolean focusOnly = ctrl;
-                if (lastRendered == totalRows - 1) {
-                    selectLastRenderedRow(focusOnly);
-                } else if (focusOnly) {
-                    focusLastItemInNextRender = true;
+                if (lastRendered + 1 == totalRows) {
+                    VScrollTableRow rowByRowIndex = scrollBody
+                            .getRowByRowIndex(lastRendered);
+                    if (focusedRow != rowByRowIndex) {
+                        setRowFocus(rowByRowIndex);
+                        selectFocusedRow(ctrl, shift);
+                        sendSelectedRows();
+                    }
                 } else {
-                    selectLastItemInNextRender = true;
+                    if (ctrl) {
+                        focusLastItemInNextRender = true;
+                    } else {
+                        selectLastItemInNextRender = true;
+                        multiselectPending = shift;
+                    }
                 }
             }
-            scrollBodyPanel.setScrollPosition(scrollBody.getOffsetHeight());
             return true;
         }
 
         return false;
+    }
+
+    private boolean isFocusAtTheBeginningOfTable() {
+        return focusedRow.getIndex() == 0;
+    }
+
+    private boolean isFocusAtTheEndOfTable() {
+        return focusedRow.getIndex() + 1 >= totalRows;
+    }
+
+    private int getFullyVisibleRowCount() {
+        return (int) (scrollBodyPanel.getOffsetHeight() / scrollBody
+                .getRowHeight());
+    }
+
+    private void scrollByPagelenght(int i) {
+        int pixels = i
+                * (int) (getFullyVisibleRowCount() * scrollBody.getRowHeight());
+        int newPixels = scrollBodyPanel.getScrollPosition() + pixels;
+        if (newPixels < 0) {
+            newPixels = 0;
+        } // else if too high, NOP (all know browsers accept illegally big
+          // values here)
+        scrollBodyPanel.setScrollPosition(newPixels);
     }
 
     /*
@@ -5214,6 +5324,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             if (handleNavigation(event.getNativeEvent().getKeyCode(),
                     event.isControlKeyDown() || event.isMetaKeyDown(),
                     event.isShiftKeyDown())) {
+                navKeyDown = true;
                 event.preventDefault();
             }
 
@@ -5261,6 +5372,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     public void onBlur(BlurEvent event) {
         scrollBodyPanel.removeStyleName("focused");
         hasFocus = false;
+        navKeyDown = false;
 
         // Unfocus any row
         setRowFocus(null);
@@ -5358,6 +5470,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 scrollingVelocityTimer = null;
                 scrollingVelocity = 10;
             }
+            navKeyDown = false;
         }
     }
 
@@ -5370,6 +5483,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         return keyCode == getNavigationUpKey()
                 || keyCode == getNavigationDownKey()
                 || keyCode == getNavigationPageUpKey()
-                || keyCode == getNavigationPageDownKey();
+                || keyCode == getNavigationPageDownKey()
+                || keyCode == getNavigationEndKey()
+                || keyCode == getNavigationStartKey();
     }
 }
