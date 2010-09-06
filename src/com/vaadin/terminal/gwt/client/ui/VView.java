@@ -428,7 +428,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
     }
 
     public void onResize(int wwidth, int wheight) {
-        if (BrowserInfo.get().isIE()) {
+        if (BrowserInfo.get().isIE() || BrowserInfo.get().isFF3()) {
             /*
              * IE will give us some false resized events due bugs with
              * scrollbars. Postponing layout phase to see if size was really
