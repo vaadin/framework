@@ -6,7 +6,7 @@
 	<property name="test_browsers" value="winxp-firefox36" />
 
 	<!-- Target deploying demo.war -->
-	<property name="sshHost" value="rndtestlinux.office.itmill.com" />
+	<property name="sshHost" value="vaadin-integration-tests.intra.itmill.com" />
 	
 	<!-- Path to key file -->
 	<property name="sshkey.file" value="id_rsa" />
@@ -21,8 +21,8 @@
 	<property name="deployment.url" value="http://${sshHost}:8080" />
 
 	<!-- ssh host values -->
-	<property name="ant.hub" value="/home/rnd/deploy.xml" />
-	<property name="user" value="rnd" />
+	<property name="ant.hub" value="/home/integration/deploy.xml" />
+	<property name="user" value="integration" />
 	<property name="passphrase" value="" />
 	
 	<!-- add ant contrib -->
