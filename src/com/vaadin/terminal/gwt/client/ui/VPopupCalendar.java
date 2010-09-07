@@ -74,7 +74,12 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
 
         calendar.setSubmitListener(new SubmitListener() {
             public void onSubmit() {
+                // Update internal value and send valuechange event if immediate
                 updateValue(calendar.getDate());
+
+                // Update text field (a must when not immediate).
+                buildDate(true);
+
                 closeCalendarPanel();
             }
 
@@ -379,6 +384,13 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         }
     }
 
+    /**
+     * Update the text field contents from the date. See {@link #buildDate()}.
+     * 
+     * @param forceValid
+     *            true to force the text field to be updated, false to only
+     *            update if the parsable flag is true.
+     */
     protected void buildDate(boolean forceValid) {
         if (forceValid) {
             parsable = true;
