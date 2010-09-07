@@ -255,12 +255,12 @@
 	</target>
 	
 	<target name="integration-test-start-liferay-6">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-liferay-6.0.5" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-liferay-6.0.5" />
 		<copy file="integration-testscripts/integration-test-liferay-6.0.5.html" tofile="integration-testscripts/integration-test-liferay-6.0.5-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-liferay-6">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-liferay-6.0.5" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-liferay-6.0.5" />
 	</target>
 			
 	<target name="integration-test-start-gatein-3">
