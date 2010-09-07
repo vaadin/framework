@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="http://rndtestlinux.office.itmill.com:8080/" />
+<link rel="selenium.base" href="" />
 <title>sampler_deployment</title>
 </head>
 <body>

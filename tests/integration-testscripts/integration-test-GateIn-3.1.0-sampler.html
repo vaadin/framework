@@ -3,18 +3,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="http://rndtestlinux.office.itmill.com:8080/" />
-<title>GateIn-Test</title>
+<link rel="selenium.base" href="" />
+<title>integration-test-GateIn-3.1.0-sampler</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">GateIn-Test</td></tr>
+<tr><td rowspan="1" colspan="3">integration-test-GateIn-3.1.0-sampler</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
 	<td>/portal/public/classic/</td>
 	<td></td>
+</tr>
+<tr>
+	<td>setSpeed</td>
+	<td>100</td>
+	<td>100</td>
 </tr>
 <tr>
 	<td>mouseClickAndWait</td>
@@ -27,7 +32,7 @@
 	<td>93,13</td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>expectDialog</td>
 	<td>//div[2]/div[2]/div[1]/div[1]/div[2]</td>
 	<td>73,18</td>
 </tr>
@@ -52,6 +57,11 @@
 	<td>55,11</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>pageName</td>
+	<td></td>
+</tr>
+<tr>
 	<td>mouseClick</td>
 	<td>pageName</td>
 	<td>33,16</td>
@@ -67,9 +77,19 @@
 	<td>36,12</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIDropDownPageTemp']/div[1]/div/div/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
 	<td>mouseClick</td>
 	<td>//div[@id='UIPageCreationWizard']/div/div[3]/div/div/div/div[2]/div/table/tbody/tr/td/div[2]/div/div/div</td>
 	<td>21,13</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIPageEditor']/div[1]/div/div/div/div[2]</td>
+	<td></td>
 </tr>
 <tr>
 	<td>mouseClick</td>
@@ -110,6 +130,11 @@
 	<td>mouseClick</td>
 	<td>//div[@id='demosampler-624716997']/div/div[2]/div/div[2]/div/div/div/div[1]/div/div[2]/div/div/div/div[8]/div/div/div[7]/a/span</td>
 	<td>22,-1763</td>
+</tr>
+<tr>
+	<td>waitForVaadin</td>
+	<td></td>
+	<td></td>
 </tr>
 <tr>
 	<td>screenCapture</td>
