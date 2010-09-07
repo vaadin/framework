@@ -124,8 +124,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
          * time we catch the mouse down and up events so we can apply the text
          * selection patch in IE
          */
-        sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEUP | Event.ONKEYUP
-                | Event.ONFOCUS);
+        sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEUP | Event.ONKEYUP);
     }
 
     /*
@@ -143,10 +142,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
             if (BrowserInfo.get().isIE()) {
                 ((Element) event.getEventTarget().cast()).setPropertyJSO(
                         "onselectstart", applyDisableTextSelectionIEHack());
-            } else {
-                setFocus(true);
             }
-
         } else if (event.getTypeInt() == Event.ONMOUSEUP) {
             // Remove IE text selection hack
             if (BrowserInfo.get().isIE()) {
@@ -474,8 +470,8 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
         public TreeNode() {
             constructDom();
-            sinkEvents(Event.ONDBLCLICK | Event.MOUSEEVENTS
-                    | Event.ONCONTEXTMENU | Event.ONMOUSEDOWN);
+            sinkEvents(Event.ONCLICK | Event.ONDBLCLICK | Event.MOUSEEVENTS
+                    | Event.ONCONTEXTMENU);
         }
 
         public VerticalDropLocation getDropDetail(NativeEvent currentGwtEvent) {
@@ -565,15 +561,30 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
          */
         private boolean handleClickSelection(boolean ctrl, boolean shift) {
 
+            // always when clicking an item, focus it
+            setFocusedNode(this, false);
+
+            /*
+             * Also ensure that the Tree itself is also gains focus (TreeNodes
+             * focus is kind of faked).
+             */
+            if (BrowserInfo.get().isOpera()) {
+                /*
+                 * focusing the tree in Opera would scroll long trees up on
+                 * clicks
+                 */
+                getElement().focus();
+            } else if (!BrowserInfo.get().isIE()) {
+                focus();
+            } // else if IE: NOP, IE will give the focus to Tree anyways
+
             if (multiSelectMode == MULTISELECT_MODE_SIMPLE || !isMultiselect) {
                 toggleSelection();
-                setFocusedNode(this, false);
                 lastSelection = this;
             } else if (multiSelectMode == MULTISELECT_MODE_DEFAULT) {
                 // Handle ctrl+click
                 if (isMultiselect && ctrl && !shift) {
                     toggleSelection();
-                    setFocusedNode(this, false);
                     lastSelection = this;
 
                     // Handle shift+click
@@ -588,9 +599,10 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
                     // Handle click
                 } else {
+                    // TODO should happen only if this alone not yet selected,
+                    // now sending excess server calls
                     deselectAll();
                     toggleSelection();
-                    setFocusedNode(this, false);
                     lastSelection = this;
                 }
             }
@@ -622,53 +634,22 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                     && (type == Event.ONDBLCLICK || type == Event.ONMOUSEUP)) {
                 fireClick(event);
             }
-
-            if (type == Event.ONCONTEXTMENU) {
-                showContextMenu(event);
-            }
-
-            if (type == Event.ONMOUSEDOWN) {
-                if (!BrowserInfo.get().isIE() && !BrowserInfo.get().isOpera()) {
-                    /*
-                     * TODO: There is a problem here with webkit. This have to
-                     * be called so that the tree gets keyboard focus but as a
-                     * side effect the tree will scroll up to its upper border.
-                     * #5400
-                     */
-                    setFocus(true);
-                }
-
-                /*
-                 * Ensure that when we are clicking on an item when the tree
-                 * does not have focus that the item is selected and focused.
-                 * #5269
-                 */
+            if (type == Event.ONCLICK) {
                 if (getElement() == target || ie6compatnode == target) {
                     // state change
                     toggleState();
-                } else if (inCaption) {
+                } else if (!readonly && inCaption && selectable) {
                     // caption click = selection change && possible click event
-                    if (!readonly && selectable) {
-                        if (handleClickSelection(
-                                event.getCtrlKey() || event.getMetaKey(),
-                                event.getShiftKey())) {
 
-                            DeferredCommand.addCommand(new Command() {
-                                public void execute() {
-                                    setFocusedNode(TreeNode.this, BrowserInfo
-                                            .get().isWebkit());
-                                }
-                            });
-
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
+                    if (handleClickSelection(
+                            event.getCtrlKey() || event.getMetaKey(),
+                            event.getShiftKey())) {
+                        event.preventDefault();
                     }
-
-                    // Need to cancel bubbling so only the item and not the
-                    // ancestors get the event
-                    event.stopPropagation();
                 }
+                event.stopPropagation();
+            } else if (type == Event.ONCONTEXTMENU) {
+                showContextMenu(event);
             }
 
             if (dragMode != 0 || dropHandler != null) {
@@ -705,6 +686,9 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                     event.stopPropagation();
                 }
 
+            } else if (type == Event.ONMOUSEDOWN
+                    && event.getButton() == NativeEvent.BUTTON_LEFT) {
+                event.preventDefault(); // text selection
             }
         }
 
@@ -739,6 +723,14 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                 DOM.appendChild(getElement(), ie6compatnode);
 
                 DOM.sinkEvents(ie6compatnode, Event.ONCLICK);
+            } else if (BrowserInfo.get().isOpera()) {
+                /*
+                 * We need to focus the TreeNode itself to get keyboard
+                 * navigation to work in opera at some level. Actually focusing
+                 * individual TreeNodes would most likely be better option for
+                 * all browsers, I don't dare to to this at bugfix release. MT.
+                 */
+                getElement().setTabIndex(-1);
             }
 
             nodeCaptionDiv = DOM.createDiv();
