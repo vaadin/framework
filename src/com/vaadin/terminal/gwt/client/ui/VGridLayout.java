@@ -943,17 +943,19 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
             assert paintable != null;
             if (cc == null || cc.getWidget() != paintable) {
                 if (widgetToComponentContainer.containsKey(paintable)) {
+                    // Component moving from one place to another
                     cc = widgetToComponentContainer.get(paintable);
                     cc.setWidth("");
                     cc.setHeight("");
                 } else {
+                    // A new component
                     cc = new ChildComponentContainer((Widget) paintable,
                             CellBasedLayout.ORIENTATION_VERTICAL);
                     widgetToComponentContainer.put((Widget) paintable, cc);
-                    paintableToCell.put(paintable, this);
                     cc.setWidth("");
                     canvas.add(cc, 0, 0);
                 }
+                paintableToCell.put(paintable, this);
             }
             cc.renderChild(childUidl, client, -1);
             if (sizeChangedDuringRendering && Util.isCached(childUidl)) {
