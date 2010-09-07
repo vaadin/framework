@@ -1,28 +1,31 @@
 <?xml version="1.0"?>
 
 <project name="Test sampler deployment" basedir="." default="integration-test-all">
-    
+   
+	<!-- Target deploying demo.war -->
+	<fail unless="test.integration.server" message="test.integration.server must be set for integration tests to run"/>
+	
+	<fail unless="test.integration.user" message="test.integration.user must be set for integration tests to run"/>
+	<fail unless="test.integration.antfile" message="test.integration.antfile must be set for integration tests to run"/>
+	
 	<!-- Test with these browsers -->
 	<property name="test_browsers" value="winxp-firefox36" />
 
-	<!-- Target deploying demo.war -->
-	<property name="sshHost" value="vaadin-integration-tests.intra.itmill.com" />
-	
-	<!-- Path to key file -->
-	<property name="sshkey.file" value="id_rsa" />
+	<!-- Path to key file. Default value -->
+	<property name="test.integration.ssh.key" value="id_dsa" />
 	
 	<!-- path and name for demo.war to be deployed -->
 	<property name="demo.war" value="demo.war"/>
 	
-	<!-- Host running Testbench RC or Testbench Hub -->
+	<!-- Host running Testbench RC or Testbench Hub. Default value -->
 	<property name="com.vaadin.testbench.tester.host" value="127.0.0.1" />
 
 	<!-- Base url where the testable application is deployed -->
-	<property name="deployment.url" value="http://${sshHost}:8080" />
+	<property name="deployment.url" value="http://${test.integration.server}:8080" />
 
 	<!-- ssh host values -->
-	<property name="ant.hub" value="/home/integration/deploy.xml" />
-	<property name="user" value="integration" />
+	<property name="ant.hub" value="${test.integration.antfile}" />
+	<property name="user" value="${test.integration.user}" />
 	<property name="passphrase" value="" />
 	
 	<!-- add ant contrib -->
@@ -34,7 +37,7 @@
 	
 	<!-- Upload war to deploy to ssh host -->
 	<target name="integration-test-upload-demo">
-		<scp file="${demo.war}" todir="${user}@${sshHost}:servers/demo.war" keyfile="${sshkey.file}" passphrase="${passphrase}" />
+		<scp file="${demo.war}" todir="${user}@${test.integration.server}:servers/demo.war" keyfile="${test.integration.ssh.key}" passphrase="${passphrase}" />
 	</target>
 	
 	<!-- Run sampler deployment test -->
@@ -57,102 +60,102 @@
 	
 	<!-- Start and stop methods for servers -->
 	<target name="integration-test-start-tomcat-4">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-4.1.40" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} start-tomcat-4.1.40" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-tomcat-4.1.40-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-tomcat-4">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-tomcat-4.1.40" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} stop-tomcat-4.1.40" />
 	</target>
 	
 	<target name="integration-test-start-tomcat-5">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-5.5.28" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} start-tomcat-5.5.28" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-tomcat-5.5.28-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-tomcat-5">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-tomcat-5.5.28" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} stop-tomcat-5.5.28" />
 	</target>
 	
 	<target name="integration-test-start-tomcat-6">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-6.0.20" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} start-tomcat-6.0.20" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-tomcat-6.0.20-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-tomcat-6">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-tomcat-6.0.20" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} stop-tomcat-6.0.20" />
 	</target>
 	
 	<target name="integration-test-start-jetty-5">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-5.1.15" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} start-jetty-5.1.15" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jetty-5.1.15-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jetty-5">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jetty-5.1.15" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} stop-jetty-5.1.15" />
 	</target>
 
 	<target name="integration-test-start-jetty-6">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-6.1.22" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} start-jetty-6.1.22" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jetty-6.1.22-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jetty-6">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jetty-6.1.22" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} stop-jetty-6.1.22" />
 	</target>
 	
 	<target name="integration-test-start-jetty-7">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-7.0.0" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} start-jetty-7.0.0" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jetty-7.0.0-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jetty-7">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jetty-7.0.0" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} stop-jetty-7.0.0" />
 	</target>
 	
 	<target name="integration-test-start-jboss-3">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-3.2.8" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} start-jboss-3.2.8" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jboss-3.2.8-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jboss-3">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jboss-3.2.8" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} stop-jboss-3.2.8" />
 	</target>
 	
 	<target name="integration-test-start-jboss-4">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-4.2.3" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} start-jboss-4.2.3" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jboss-4.2.3-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jboss-4">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jboss-4.2.3" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} stop-jboss-4.2.3" />
 	</target>
 	
 	<target name="integration-test-start-jboss-5">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-5.0.1" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} start-jboss-5.0.1" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jboss-5.0.1-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jboss-5">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jboss-5.0.1" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} stop-jboss-5.0.1" />
 	</target>
 	
 	<target name="integration-test-start-glassfish2">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-glassfish-2.1.1" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} start-glassfish-2.1.1" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-glassfish-2.1.1-sampler.html" overwrite="true" />
 	</target>
 	
 	<target name="integration-test-stop-glassfish2">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-glassfish-2.1.1" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} stop-glassfish-2.1.1" />
 	</target>
 	
 	<target name="integration-test-start-glassfish3">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-glassfish-3" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} start-glassfish-3" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-glassfish-3-sampler.html" overwrite="true" />
 	</target>
 	
 	<target name="integration-test-stop-glassfish3">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-glassfish-3" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} stop-glassfish-3" />
 	</target>
 			
 	<!-- Test liferay sampler -->
@@ -228,20 +231,20 @@
 	</target>
 	
 	<target name="integration-test-start-liferay">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-liferay-5.2.3" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} start-liferay-5.2.3" />
 		<copy file="integration-testscripts/sampler_deployment_liferay.html" tofile="integration-testscripts/integration-test-liferay-5.2.3-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-liferay">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-liferay-5.2.3" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} stop-liferay-5.2.3" />
 	</target>
 	
 	<target name="integration-test-start-gatein-3">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-gatein-3.1.0" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} start-gatein-3.1.0" />
 	</target>
 
 	<target name="integration-test-stop-gatein-3">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-gatein-3.1.0" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} stop-gatein-3.1.0" />
 	</target>
 	
 	<!-- Run sampler deployment test for WebLogic server -->
@@ -252,7 +255,7 @@
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
 			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
 			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
-			<property name="com.vaadin.testbench.deployment.url" value="http://${sshHost}:7001" />
+			<property name="com.vaadin.testbench.deployment.url" value="http://${test.integration.server}:7001" />
 			<property name="server.start.succeeded" value="1" />
 			<property name="browsers" value="${test_browsers}" />
 			<property name="testfiles" value="${test-weblogic}" />
@@ -263,21 +266,21 @@
 	</target>
 	
 	<target name="integration-test-start-weblogic9">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-weblogic-9.2" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} start-weblogic-9.2" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-weblogic-9.2-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-weblogic9">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-weblogic-9.2" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} stop-weblogic-9.2" />
 	</target>
 	
 	<target name="integration-test-start-weblogic10">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-weblogic-10.3" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} start-weblogic-10.3" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-weblogic-10.3-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-weblogic10">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-weblogic-10.3" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} stop-weblogic-10.3" />
 	</target>
 	
 	<!-- Run sampler deployment test on GAE -->
@@ -299,7 +302,7 @@
 	</target>
 		
 	<target name="integration-test-deploy-to-GAE">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} deploy-to-GAE" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} deploy-to-GAE" />
 	</target>
 			
 	<!-- Server setup, test and teardown targets. -->
@@ -518,15 +521,15 @@
 	</target>
 	
 	<target name="integration-test-get-lock">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} get-lock" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} get-lock" />
 	</target>
 	
 	<target name="integration-test-release-lock">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} release-lock" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} release-lock" />
 	</target>
 		
 	<!-- Remove demo.war -->
 	<target name="integration-test-clean">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} clean" />
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${test.integration.ssh.key}" command="ant -f ${ant.hub} clean" />
 	</target>
 </project>
