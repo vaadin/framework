@@ -65,7 +65,7 @@
 <tr>
 	<td>screenCapture</td>
 	<td></td>
-	<td></td>
+	<td>tooltips</td>
 </tr>
 <tr>
 	<td>mouseClick</td>
@@ -85,7 +85,7 @@
 <tr>
 	<td>screenCapture</td>
 	<td></td>
-	<td></td>
+	<td>icons</td>
 </tr>
 
 </tbody></table>
