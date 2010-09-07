@@ -1098,18 +1098,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * Focusing to this component is not supported.
-     * 
-     * @throws UnsupportedOperationException
-     *             if invoked.
-     * @see com.vaadin.ui.AbstractField#focus()
-     */
-    @Override
-    public void focus() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
      * Tree does not support lazy options loading mode. Setting this true will
      * throw UnsupportedOperationException.
      * 
