@@ -168,7 +168,12 @@ public class VTextualDate extends VDateField implements Paintable, Field,
     }
 
     /**
+     * Updates the text field according to the current date (provided by
+     * {@link #getDate()}). Takes care of updating text, enabling and disabling
+     * the field, setting/removing readonly status and updating readonly styles.
      * 
+     * TODO: Split part of this into a method that only updates the text as this
+     * is what usually is needed except for updateFromUIDL.
      */
     protected void buildDate() {
         removeStyleName(PARSE_ERROR_CLASSNAME);
