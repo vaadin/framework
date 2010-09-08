@@ -509,7 +509,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * {@link #COLUMN_HEADER_MODE_EXPLICIT} or
      * {@link #COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID} mode to show the
      * headers. In the defaults mode any nulls in the headers array are replaced
-     * with id.toString() outputs when rendering.
+     * with id.toString().
      * </p>
      * 
      * @return the Array of column headers.
@@ -522,7 +522,7 @@ public class Table extends AbstractSelect implements Action.Container,
         int i = 0;
         for (final Iterator<Object> it = visibleColumns.iterator(); it
                 .hasNext(); i++) {
-            headers[i] = columnHeaders.get(it.next());
+            headers[i] = getColumnHeader(it.next());
         }
         return headers;
     }
