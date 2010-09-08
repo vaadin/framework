@@ -3690,6 +3690,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 if (showRowHeaders) {
                     addCell(uidl, buildCaptionHtmlSnippet(uidl), aligns[col++],
                             "", true);
+                    visibleColumnIndex++;
                 }
 
                 if (uidl.hasAttribute("al")) {
