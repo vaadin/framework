@@ -81,6 +81,8 @@ public class Menubars extends ComponentTestCase<MenuBar> {
     protected List<Component> createActions() {
         ArrayList<Component> actions = new ArrayList<Component>();
 
+        // Required and read-only makes no sense for MenuBar
+
         CheckBox errorIndicators = new CheckBox("Error indicators",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
@@ -99,25 +101,13 @@ public class Menubars extends ComponentTestCase<MenuBar> {
             }
         });
 
-        CheckBox readonly = new CheckBox("Readonly",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        Button b = event.getButton();
-                        boolean enabled = (Boolean) b.getValue();
-                        setReadOnly(enabled);
-                    }
-                });
-
         errorIndicators.setValue(Boolean.FALSE);
-        readonly.setValue(Boolean.FALSE);
         enabled.setValue(Boolean.TRUE);
 
         errorIndicators.setImmediate(true);
-        readonly.setImmediate(true);
         enabled.setImmediate(true);
 
         actions.add(errorIndicators);
-        actions.add(readonly);
         actions.add(enabled);
 
         return actions;
