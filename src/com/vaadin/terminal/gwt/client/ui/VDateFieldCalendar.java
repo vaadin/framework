@@ -13,6 +13,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.SubmitListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.TimeChangeListener;
+import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.ValueChangeListener;
 
 public class VDateFieldCalendar extends VDateField {
 
@@ -69,10 +70,33 @@ public class VDateFieldCalendar extends VDateField {
             });
         }
 
+        if (currentResolution <= RESOLUTION_MONTH) {
+            caleandarPanel.setValueChangeListener(new ValueChangeListener() {
+                public void changed(Date date) {
+                    Date date2 = new Date(caleandarPanel.getDate().getTime());
+                    /*
+                     * Update the value of calendarPanel
+                     */
+                    date2.setYear(date.getYear());
+                    date2.setMonth(date.getMonth());
+                    caleandarPanel.setDate(date2);
+                    /*
+                     * Then update the value from panel to server
+                     */
+                    updateValueFromPanel();
+                }
+            });
+        } else {
+            caleandarPanel.setValueChangeListener(null);
+        }
+
         // Update possible changes
         caleandarPanel.renderCalendar();
     }
 
+    /**
+     * TODO refactor: almost same method as in VPopupCalendar.updateValue
+     */
     private void updateValueFromPanel() {
         Date date2 = caleandarPanel.getDate();
         Date currentDate = getCurrentDate();

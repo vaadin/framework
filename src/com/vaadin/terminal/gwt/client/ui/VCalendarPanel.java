@@ -584,7 +584,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
         if (getResolution() <= VDateField.RESOLUTION_MONTH
                 && valueChangeListener != null) {
-            valueChangeListener.changed(focusedDate);
+            valueChangeListener.changed(new Date(focusedDate.getTime()));
         }
 
         Date start = new Date();
