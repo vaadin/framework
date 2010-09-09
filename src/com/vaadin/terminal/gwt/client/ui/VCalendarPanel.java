@@ -71,14 +71,11 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * Dispatches an event when the panel changes its _focused_ value.
+     * FocusChangeListener is notified when the panel changes its _focused_
+     * value. It can be set with
      */
-    public interface ValueChangeListener {
-        /**
-         * 
-         * @return true if the calendar panel will not be used anymore
-         */
-        void changed(Date date);
+    public interface FocusChangeListener {
+        void focusChanged(Date focusedDate);
     }
 
     /**
@@ -167,7 +164,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     private SubmitListener submitListener;
 
-    private ValueChangeListener valueChangeListener;
+    private FocusChangeListener focusChangeListener;
 
     private TimeChangeListener timeChangeListener;
 
@@ -583,8 +580,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
         }
 
         if (getResolution() <= VDateField.RESOLUTION_MONTH
-                && valueChangeListener != null) {
-            valueChangeListener.changed(new Date(focusedDate.getTime()));
+                && focusChangeListener != null) {
+            focusChangeListener.focusChanged(new Date(focusedDate.getTime()));
         }
 
         Date start = new Date();
@@ -1625,14 +1622,14 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * The value change listener is triggered when the focused date changes by
-     * user either clicking on a new date or by using the keyboard.
+     * The given FocusChangeListener is notified when the focused date changes
+     * by user either clicking on a new date or by using the keyboard.
      * 
      * @param listener
-     *            The listener to trigger
+     *            The FocusChangeListener to be notified
      */
-    public void setValueChangeListener(ValueChangeListener listener) {
-        valueChangeListener = listener;
+    public void setFocusChangeListener(FocusChangeListener listener) {
+        focusChangeListener = listener;
     }
 
     /**

@@ -27,7 +27,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.SubmitListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.TimeChangeListener;
-import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.ValueChangeListener;
+import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusChangeListener;
 
 /**
  * Represents a date selection component with a text field and a popup date
@@ -164,8 +164,8 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         calendarToggle.setEnabled(enabled);
 
         if (currentResolution <= RESOLUTION_MONTH) {
-            calendar.setValueChangeListener(new ValueChangeListener() {
-                public void changed(Date date) {
+            calendar.setFocusChangeListener(new FocusChangeListener() {
+                public void focusChanged(Date date) {
                     updateValue(date);
                     buildDate();
                     Date date2 = calendar.getDate();
@@ -174,7 +174,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
                 }
             });
         } else {
-            calendar.setValueChangeListener(null);
+            calendar.setFocusChangeListener(null);
         }
 
         if (currentResolution > RESOLUTION_DAY) {

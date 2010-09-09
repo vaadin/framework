@@ -13,7 +13,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.SubmitListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.TimeChangeListener;
-import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.ValueChangeListener;
+import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusChangeListener;
 
 public class VDateFieldCalendar extends VDateField {
 
@@ -71,8 +71,8 @@ public class VDateFieldCalendar extends VDateField {
         }
 
         if (currentResolution <= RESOLUTION_MONTH) {
-            caleandarPanel.setValueChangeListener(new ValueChangeListener() {
-                public void changed(Date date) {
+            caleandarPanel.setFocusChangeListener(new FocusChangeListener() {
+                public void focusChanged(Date date) {
                     Date date2 = new Date(caleandarPanel.getDate().getTime());
                     /*
                      * Update the value of calendarPanel
@@ -87,7 +87,7 @@ public class VDateFieldCalendar extends VDateField {
                 }
             });
         } else {
-            caleandarPanel.setValueChangeListener(null);
+            caleandarPanel.setFocusChangeListener(null);
         }
 
         // Update possible changes
