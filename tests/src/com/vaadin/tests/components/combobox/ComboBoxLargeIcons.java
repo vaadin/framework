@@ -31,12 +31,11 @@ public class ComboBoxLargeIcons extends TestBase {
                 "arrow-down", "arrow-left", "arrow-right", "arrow-up",
                 "document-add", "document-delete", "document-doc",
                 "document-edit", "document-image", "document-pdf",
-                "document-ppt", "document-txt", "document-web", "document-xls",
-                "document" };
+                "document-ppt", "document-txt", "document-web", "document" };
         for (String icon : icons) {
-            Item item = cb.addItem(new Object());
+            Item item = cb.addItem(icon);
             item.getItemProperty("icon").setValue(
-                    new ThemeResource("icons/64/" + icon + ".png?"
+                    new ThemeResource("../runo/icons/32/" + icon + ".png?"
                             + new Date().getTime()));
         }
 
