@@ -34,7 +34,6 @@ public class DateFieldEmptyValid extends TestBase {
     protected void setup() {
         addComponent(new Label("<br/><br/>", Label.CONTENT_XHTML));
         log = new Log(5);
-        log.setNumberLogRows(true);
         addComponent(log);
         df = new MyDateField();
         df.setRequired(true);

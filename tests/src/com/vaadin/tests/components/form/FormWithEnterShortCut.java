@@ -14,7 +14,6 @@ public class FormWithEnterShortCut extends TestBase {
 
     @Override
     protected void setup() {
-        log.setNumberLogRows(true);
 
         final Form form = new Form();
         final Field tf = new TextField("Search");

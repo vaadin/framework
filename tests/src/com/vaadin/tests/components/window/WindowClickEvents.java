@@ -62,7 +62,6 @@ public class WindowClickEvents extends TestBase {
 
         getMainWindow().addWindow(centered);
         log = new Log(5);
-        log.setNumberLogRows(true);
         addComponent(log);
         getMainWindow().addListener(new ClickListener() {
 

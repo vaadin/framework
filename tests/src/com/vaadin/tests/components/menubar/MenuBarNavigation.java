@@ -35,6 +35,7 @@ public class MenuBarNavigation extends TestBase implements Command {
         addComponent(mb);
 
         log = new Log(5);
+        log.setNumberLogRows(false);
         addComponent(log);
     }
 

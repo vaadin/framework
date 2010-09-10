@@ -13,7 +13,6 @@ public class TableSingleSelect extends TestBase {
 
     @Override
     protected void setup() {
-        log.setNumberLogRows(true);
         log.setDebugId("eventlog");
 
         Table t = new Table();

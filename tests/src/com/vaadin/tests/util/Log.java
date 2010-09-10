@@ -24,14 +24,15 @@ public class Log extends VerticalLayout {
     /**
      * Clears the rows and reset the row number to zero.
      */
-    public void clear() {
+    public Log clear() {
         for (Label l : eventLabels) {
             l.setValue("&nbsp;");
         }
         nextLogNr = 0;
+        return this;
     }
 
-    public void log(String event) {
+    public Log log(String event) {
         int nr = eventLabels.size();
         for (int i = nr - 1; i > 0; i--) {
             eventLabels.get(i).setValue(eventLabels.get(i - 1).getValue());
@@ -43,6 +44,7 @@ public class Log extends VerticalLayout {
         }
         eventLabels.get(0).setValue(msg);
         System.out.println(event);
+        return this;
     }
 
     private Label createEventLabel() {
@@ -51,8 +53,9 @@ public class Log extends VerticalLayout {
         return l;
     }
 
-    public void setNumberLogRows(boolean numberLogRows) {
+    public Log setNumberLogRows(boolean numberLogRows) {
         this.numberLogRows = numberLogRows;
+        return this;
     }
 
 }

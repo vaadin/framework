@@ -12,7 +12,7 @@ import com.vaadin.ui.TextField;
 
 public class TextFieldFocusAndBlurListeners extends TestBase implements
         FocusListener, BlurListener, ValueChangeListener {
-    private Log log = new Log(5);
+    private Log log = new Log(5).setNumberLogRows(false);
 
     @Override
     protected String getDescription() {

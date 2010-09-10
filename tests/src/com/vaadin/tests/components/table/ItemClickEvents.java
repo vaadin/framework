@@ -22,7 +22,6 @@ public class ItemClickEvents extends TestBase {
 
     @Override
     public void setup() {
-        log.setNumberLogRows(true);
         log.setDebugId("log");
 
         HorizontalLayout ol = createHorizontalLayout(table);

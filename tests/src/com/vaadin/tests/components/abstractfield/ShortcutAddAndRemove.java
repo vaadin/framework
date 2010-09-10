@@ -16,7 +16,6 @@ public class ShortcutAddAndRemove extends TestBase {
     @Override
     protected void setup() {
         log = new Log(4);
-        log.setNumberLogRows(true);
 
         final Button logButton = new Button("Log a row (enter shortcut)");
         logButton.setClickShortcut(KeyCode.ENTER);

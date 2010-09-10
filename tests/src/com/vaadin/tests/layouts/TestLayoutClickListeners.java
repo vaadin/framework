@@ -18,7 +18,7 @@ import com.vaadin.ui.Window;
 
 public class TestLayoutClickListeners extends AbstractTestCase {
 
-    private Log log = new Log(5);
+    private Log log = new Log(5).setNumberLogRows(false);
 
     @Override
     public void init() {
