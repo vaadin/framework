@@ -8,10 +8,15 @@ import com.vaadin.data.util.BeanItemContainer;
 public class BeanItemContainerGenerator {
 
     public static BeanItemContainer<TestBean> createContainer(int size) {
+        return createContainer(size, new Date().getTime());
+    }
+
+    public static BeanItemContainer<TestBean> createContainer(int size,
+            long seed) {
 
         BeanItemContainer<TestBean> container = new BeanItemContainer<TestBean>(
                 TestBean.class);
-        Random r = new Random(new Date().getTime());
+        Random r = new Random(seed);
         for (int i = 0; i < size; i++) {
             container.addBean(new TestBean(r));
         }
