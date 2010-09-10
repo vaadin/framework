@@ -1,9 +1,9 @@
 package com.vaadin.tests.components.beanitemcontainer;
 
 import java.util.Date;
-import java.util.Random;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.tests.util.PortableRandom;
 
 public class BeanItemContainerGenerator {
 
@@ -16,7 +16,7 @@ public class BeanItemContainerGenerator {
 
         BeanItemContainer<TestBean> container = new BeanItemContainer<TestBean>(
                 TestBean.class);
-        Random r = new Random(seed);
+        PortableRandom r = new PortableRandom(seed);
         for (int i = 0; i < size; i++) {
             container.addBean(new TestBean(r));
         }
@@ -45,7 +45,7 @@ public class BeanItemContainerGenerator {
             this.shoesize = shoesize;
         }
 
-        public TestBean(Random r) {
+        public TestBean(PortableRandom r) {
             age = r.nextInt(100) + 5;
             shoesize = r.nextInt(10) + 35;
             name = createRandomString(r, r.nextInt(5) + 5);
@@ -91,7 +91,7 @@ public class BeanItemContainerGenerator {
 
     }
 
-    public static String createRandomString(Random r, int len) {
+    public static String createRandomString(PortableRandom r, int len) {
         StringBuilder b = new StringBuilder();
         for (int i = 0; i < len; i++) {
             b.append((char) (r.nextInt('z' - 'a') + 'a'));
