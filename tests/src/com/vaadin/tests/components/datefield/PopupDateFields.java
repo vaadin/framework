@@ -31,8 +31,14 @@ public class PopupDateFields extends ComponentTestCase<PopupDateField> {
         for (Locale locale : LOCALES) {
             PopupDateField pd = createPopupDateField("Undefined width", "-1",
                     locale);
+            pd.setDebugId("Locale-" + locale.toString() + "-undefined-wide");
             addTestComponent(pd);
             pd = createPopupDateField("500px width", "500px", locale);
+            pd.setDebugId("Locale-" + locale.toString() + "-500px-wide");
+            addTestComponent(pd);
+            pd = createPopupDateField("Initially empty", "", locale);
+            pd.setValue(null);
+            pd.setDebugId("Locale-" + locale.toString() + "-initially-empty");
             addTestComponent(pd);
         }
 
