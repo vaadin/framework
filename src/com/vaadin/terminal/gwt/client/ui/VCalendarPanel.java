@@ -232,9 +232,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * @param day
      */
     private void selectDate(int day) {
-
-        value.setDate(day);
-
         if (selectedDay != null) {
             selectedDay.removeStyleDependentName(CN_SELECTED);
         }
@@ -262,20 +259,16 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private void selectFocused() {
         if (focusedDate != null) {
             int changedFields = 0;
-            // #5594 First set the day, to make sure that moving from the 31 on
-            // to a month with 30 days to spill over to the wrong month.
-            if (value.getDate() != focusedDate.getDate()) {
-                value.setDate(focusedDate.getDate());
-                changedFields += VDateField.RESOLUTION_DAY;
-            }
-            if (value.getMonth() != focusedDate.getMonth()) {
-                value.setMonth(focusedDate.getMonth());
-                changedFields += VDateField.RESOLUTION_MONTH;
-            }
             if (value.getYear() != focusedDate.getYear()) {
-                value.setYear(focusedDate.getYear());
                 changedFields += VDateField.RESOLUTION_YEAR;
             }
+            if (value.getMonth() != focusedDate.getMonth()) {
+                changedFields += VDateField.RESOLUTION_MONTH;
+            }
+            if (value.getDate() != focusedDate.getDate()) {
+                changedFields += VDateField.RESOLUTION_DAY;
+            }
+            value.setTime(focusedDate.getTime());
 
             selectDate(focusedDate.getDate());
         } else {
