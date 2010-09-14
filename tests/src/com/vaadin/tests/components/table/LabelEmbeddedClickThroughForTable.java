@@ -25,6 +25,7 @@ public class LabelEmbeddedClickThroughForTable extends TestBase {
     @Override
     protected void setup() {
         Table table = new Table();
+        table.setHeight("500px");
         table.setSelectable(true);
         table.addContainerProperty("Column 1", String.class, "");
         table.addContainerProperty("Column 2", Component.class, "");
@@ -46,7 +47,7 @@ public class LabelEmbeddedClickThroughForTable extends TestBase {
         item.getItemProperty("Column 3")
                 .setValue(
                         new Label(
-                                "<a href=\"http://www.vaadin.com\" target=_blank>Label A</a>",
+                                "<a style=\"color: blue\" href=\"javascript:false\">Label A</a>",
                                 Label.CONTENT_XHTML));
         item.getItemProperty("Column 4").setValue(
                 new Embedded("", new ThemeResource(
@@ -55,9 +56,8 @@ public class LabelEmbeddedClickThroughForTable extends TestBase {
         table.addListener(new ItemClickListener() {
 
             public void itemClick(ItemClickEvent event) {
-                getMainWindow().showNotification(
-                        "Clickevent on item " + event.getItemId()
-                                + ", column: " + event.getPropertyId());
+                System.out.println("Clickevent on item " + event.getItemId()
+                        + ", column: " + event.getPropertyId());
 
             }
 
