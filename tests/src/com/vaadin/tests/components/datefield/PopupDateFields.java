@@ -62,7 +62,8 @@ public class PopupDateFields extends ComponentTestCase<PopupDateField> {
         actions.add(createEnabledAction(true));
         actions.add(createRequiredAction(false));
         actions.add(createReadonlyAction(false));
-        actions.add(createResolutionSelectAction(false));
+        actions.add(createResolutionSelectAction());
+        actions.add(createInputPromptSelectAction());
 
         return actions;
     }
@@ -106,7 +107,7 @@ public class PopupDateFields extends ComponentTestCase<PopupDateField> {
     }
 
     protected Component createRequiredAction(boolean initialState) {
-        return createCheckboxAction("Readonly", initialState,
+        return createCheckboxAction("Required", initialState,
                 new Command<PopupDateField, Boolean>() {
                     public void execute(PopupDateField c, Boolean enabled) {
                         c.setRequired(enabled);
@@ -114,7 +115,7 @@ public class PopupDateFields extends ComponentTestCase<PopupDateField> {
                 });
     }
 
-    private Component createResolutionSelectAction(boolean b) {
+    private Component createResolutionSelectAction() {
         LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
         options.put("Year", DateField.RESOLUTION_YEAR);
         options.put("Month", DateField.RESOLUTION_MONTH);
@@ -123,8 +124,7 @@ public class PopupDateFields extends ComponentTestCase<PopupDateField> {
         options.put("Min", DateField.RESOLUTION_MIN);
         options.put("Sec", DateField.RESOLUTION_SEC);
         options.put("Msec", DateField.RESOLUTION_MSEC);
-        return createSelectAction("Resolution", options,
-                DateField.RESOLUTION_YEAR,
+        return createSelectAction("Resolution", options, "Year",
                 new Command<PopupDateField, Integer>() {
 
                     public void execute(PopupDateField c, Integer value) {
@@ -134,24 +134,50 @@ public class PopupDateFields extends ComponentTestCase<PopupDateField> {
                 });
     }
 
+    private Component createInputPromptSelectAction() {
+        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        options.put("<none>", null);
+        options.put("Please enter date", "Please enter date");
+        options.put("åäöÅÄÖ", "åäöÅÄÖ");
+
+        return createSelectAction("Input prompt", options, "<none>",
+                new Command<PopupDateField, String>() {
+
+                    public void execute(PopupDateField c, String value) {
+                        c.setInputPrompt(value);
+
+                    }
+                });
+    }
+
     private <T> Component createSelectAction(String caption,
-            LinkedHashMap<String, T> options, int initialValue,
+            LinkedHashMap<String, T> options, String initialValue,
             final Command<PopupDateField, T> command) {
         final String CAPTION = "caption";
+        final String VALUE = "value";
 
-        NativeSelect select = new NativeSelect(caption);
+        final NativeSelect select = new NativeSelect(caption);
         select.addContainerProperty(CAPTION, String.class, "");
+        select.addContainerProperty(VALUE, Object.class, "");
         select.setItemCaptionPropertyId(CAPTION);
         select.setNullSelectionAllowed(false);
         for (String itemCaption : options.keySet()) {
-            Item i = select.addItem(options.get(itemCaption));
+            Object itemId = new Object();
+            Item i = select.addItem(itemId);
             i.getItemProperty(CAPTION).setValue(itemCaption);
+            i.getItemProperty(VALUE).setValue(options.get(itemCaption));
+            if (itemCaption.equals(initialValue)) {
+                select.setValue(itemId);
+            }
 
         }
         select.addListener(new Property.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
-                doCommand(command, (T) event.getProperty().getValue());
+                Object itemId = event.getProperty().getValue();
+                Item item = select.getItem(itemId);
+                T value = (T) item.getItemProperty(VALUE).getValue();
+                doCommand(command, value);
 
             }
         });
