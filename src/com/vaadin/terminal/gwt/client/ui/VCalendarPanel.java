@@ -259,16 +259,27 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private void selectFocused() {
         if (focusedDate != null) {
             int changedFields = 0;
+            /*
+             * #5594 set Date (day) to 1 in order to prevent any kind of
+             * wrapping of months when later setting the month. (e.g. 31 ->
+             * month with 30 days -> wraps to the 1st of the following month,
+             * e.g. 31st of May -> 31st of April = 1st of May)
+             */
+            value.setDate(1);
             if (value.getYear() != focusedDate.getYear()) {
+                value.setYear(focusedDate.getYear());
                 changedFields += VDateField.RESOLUTION_YEAR;
             }
             if (value.getMonth() != focusedDate.getMonth()) {
+                value.setMonth(focusedDate.getMonth());
                 changedFields += VDateField.RESOLUTION_MONTH;
             }
             if (value.getDate() != focusedDate.getDate()) {
                 changedFields += VDateField.RESOLUTION_DAY;
             }
-            value.setTime(focusedDate.getTime());
+            // We always need to set the date, even if it hasn't changed, since
+            // it was forced to 1 above.
+            value.setDate(focusedDate.getDate());
 
             selectDate(focusedDate.getDate());
         } else {
