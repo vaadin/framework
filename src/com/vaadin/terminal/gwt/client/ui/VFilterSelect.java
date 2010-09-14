@@ -751,6 +751,10 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
     private int currentPage;
 
+    /**
+     * A collection of available suggestions (options) as received from the
+     * server.
+     */
     private final Collection<FilterSelectSuggestion> currentSuggestions = new ArrayList<FilterSelectSuggestion>();
 
     private boolean immediate;
@@ -765,6 +769,10 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     private String lastFilter = "";
     private int lastIndex = -1; // last selected index when using arrows
 
+    /**
+     * The current suggestion selected from the dropdown. This must be one of
+     * the values in currentSuggestions (I think..).
+     */
     private FilterSelectSuggestion currentSuggestion;
 
     private int totalMatches;
@@ -958,7 +966,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         allowNewItem = uidl.hasAttribute("allownewitem");
         lastNewItemString = null;
 
+        /*
+         * Clear the current suggestions as the server response always includes
+         * the new ones.
+         */
         currentSuggestions.clear();
+        currentSuggestion = null;
+
         final UIDL options = uidl.getChildUIDL(0);
         totalMatches = uidl.getIntAttribute("totalMatches");
 
