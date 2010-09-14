@@ -6,6 +6,7 @@ import java.util.List;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout.SpacingHandler;
@@ -34,6 +35,7 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
         actionLayout.setMargin(true);
         for (Component c : createActions()) {
             actionLayout.addComponent(c);
+            actionLayout.setComponentAlignment(c, Alignment.BOTTOM_LEFT);
         }
         addComponent(actionLayout);
         return actionLayout;
