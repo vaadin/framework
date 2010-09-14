@@ -1,0 +1,796 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>New Test</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">New Test</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.datefield.PopupDateFields?restartApplication</td>
+	<td></td>
+</tr>
+<!--Resolution: year-->
+<tr>
+	<td>select</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[4]/VNativeSelect[0]/domChild[0]</td>
+	<td>label=Year</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>enabled-year</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>9,15</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>1970</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>enabled-year-popup-us</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>9,15</td>
+</tr>
+<!--Resolution: month-->
+<tr>
+	<td>select</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[4]/VNativeSelect[0]/domChild[0]</td>
+	<td>label=Month</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>enabled-month</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>10,12</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>May 1970</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>enabled-month-popup-us</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>10,12</td>
+</tr>
+<!--Resolution: day-->
+<tr>
+	<td>select</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[4]/VNativeSelect[0]/domChild[0]</td>
+	<td>label=Day</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>enabled-day</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>10,12</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>May 1970</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/FlexTable[0]/VCalendarPanel$Day[22]</td>
+	<td>23</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>enabled-day-popup-us</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>10,12</td>
+</tr>
+<!--Resolution: hour-->
+<tr>
+	<td>select</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[4]/VNativeSelect[0]/domChild[0]</td>
+	<td>label=Hour</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>enabled-hour</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>10,12</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>May 1970</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/FlexTable[0]/VCalendarPanel$Day[22]</td>
+	<td>23</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VTime[0]/ListBox[0]</td>
+	<td>02</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VTime[0]/ListBox[1]</td>
+	<td>PM</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VTime[0]/VLabel[0]</td>
+	<td>exact::00</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>enabled-hour-popup-us</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>10,12</td>
+</tr>
+<!--Resolution: min-->
+<tr>
+	<td>select</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[4]/VNativeSelect[0]/domChild[0]</td>
+	<td>label=Min</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>enabled-min</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>10,12</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>May 1970</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/FlexTable[0]/VCalendarPanel$Day[22]</td>
+	<td>23</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VTime[0]/ListBox[0]</td>
+	<td>02</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VTime[0]/ListBox[1]</td>
+	<td>05</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VTime[0]/ListBox[2]</td>
+	<td>PM</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>min-popup-us</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>10,12</td>
+</tr>
+<!--Resolution: sec-->
+<tr>
+	<td>select</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[4]/VNativeSelect[0]/domChild[0]</td>
+	<td>label=Sec</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>enabled-sec</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>10,12</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>May 1970</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/FlexTable[0]/VCalendarPanel$Day[22]</td>
+	<td>23</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VTime[0]/ListBox[0]</td>
+	<td>02</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VTime[0]/ListBox[1]</td>
+	<td>05</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VTime[0]/ListBox[2]</td>
+	<td>12</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VTime[0]/ListBox[3]</td>
+	<td>PM</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>sec-popup-us</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>10,12</td>
+</tr>
+<!--Resolution: msec-->
+<tr>
+	<td>select</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[4]/VNativeSelect[0]/domChild[0]</td>
+	<td>label=Msec</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>enabled-msec</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>10,12</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>May 1970</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/FlexTable[0]/VCalendarPanel$Day[22]</td>
+	<td>23</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VTime[0]/ListBox[0]</td>
+	<td>02</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VTime[0]/ListBox[1]</td>
+	<td>05</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VTime[0]/ListBox[2]</td>
+	<td>12</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VTime[0]/ListBox[3]</td>
+	<td>313</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VTime[0]/ListBox[4]</td>
+	<td>PM</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>msec-popup-us</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>10,12</td>
+</tr>
+<!--Check resolution year functionality-->
+<tr>
+	<td>select</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[4]/VNativeSelect[0]/domChild[0]</td>
+	<td>label=Year</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>11,10</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>1970</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>1971</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>1974</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>37,12</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>13,11</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>44,9</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/domChild[0]/domChild[1]</td>
+	<td>173,31</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>12,10</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/domChild[0]/domChild[1]/domChild[0]</td>
+	<td>284,10</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>1974</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>38,8</td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>2010</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/domChild[0]/domChild[1]</td>
+	<td>202,40</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>16,11</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>2010</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>2009</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>2010</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>2011</td>
+</tr>
+<!--Check resolution month functionality-->
+<tr>
+	<td>select</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[4]/VNativeSelect[0]/domChild[0]</td>
+	<td>label=Month</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>5/10</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>7,8</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>May 2010</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VEventButton[2]</td>
+	<td>10,14</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>June 2010</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VEventButton[1]</td>
+	<td>9,14</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>June 2011</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>37,15</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>6/11</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>-54,8</td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>1/09</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>8,10</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>January 2009</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VEventButton[2]</td>
+	<td>13,9</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>February 2009</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/domChild[0]/domChild[1]/domChild[0]</td>
+	<td>174,3</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>2/09</td>
+</tr>
+<!--Check resolution day functionality-->
+<tr>
+	<td>select</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[4]/VNativeSelect[0]/domChild[0]</td>
+	<td>label=Day</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>5/23/70</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>11,16</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>May 1970</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/FlexTable[0]/VCalendarPanel$Day[22]</td>
+	<td>v-datefield-calendarpanel-day-selected</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VEventButton[2]</td>
+	<td>11,11</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>June 1970</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VEventButton[1]</td>
+	<td>9,9</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>June 1971</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/domChild[0]/domChild[1]/domChild[0]</td>
+	<td>193,12</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>12,9</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>May 1970</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VEventButton[2]</td>
+	<td>10,14</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VEventButton[1]</td>
+	<td>12,15</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/FlexTable[0]/VCalendarPanel$Day[29]</td>
+	<td>14,12</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>6/30/71</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>5,13</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VEventButton[3]</td>
+	<td>15,14</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/FlexTable[0]/VCalendarPanel$Day[0]</td>
+	<td>18,8</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>5/31/71</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>11,9</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VEventButton[3]</td>
+	<td>12,8</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/FlexTable[0]/VCalendarPanel$Day[29]</td>
+	<td>13,14</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>4/30/71</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>12,13</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>April 1971</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/FlexTable[0]/VCalendarPanel$Day[0]</td>
+	<td>v-datefield-calendarpanel-day-selected</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VEventButton[1]</td>
+	<td>8,12</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/FlexTable[0]/VCalendarPanel$Day[0]</td>
+	<td>17,9</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>4/1/72</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>11,11</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VEventButton[3]</td>
+	<td>10,9</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/FlexTable[0]/VCalendarPanel$Day[29]</td>
+	<td>15,4</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>3/1/72</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>8,6</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VEventButton[3]</td>
+	<td>10,8</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/FlexTable[0]/VCalendarPanel$Day[27]</td>
+	<td>17,9</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>2/29/72</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>-13,8</td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>1/15/02</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>11,14</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>January 2002</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/FlexTable[0]/VCalendarPanel$Day[13]</td>
+	<td>v-datefield-calendarpanel-day-selected</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VEventButton[2]</td>
+	<td>11,8</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>February 2002</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/VCalendarPanel$VEventButton[1]</td>
+	<td>10,10</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>February 2003</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/domChild[0]/domChild[1]/domChild[0]</td>
+	<td>185,8</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[0]</td>
+	<td>1/15/02</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VPopupCalendar[0]/domChild[1]</td>
+	<td>8,7</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>January 2002</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/FlexTable[0]/VCalendarPanel$Day[14]</td>
+	<td>v-datefield-calendarpanel-day-selected</td>
+</tr>
+</tbody></table>
+</body>
+</html>
