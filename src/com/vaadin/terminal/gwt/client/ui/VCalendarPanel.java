@@ -1242,8 +1242,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
             focusedDate = (Date) value.clone();
         }
 
-        // Re-render calendar if the month or year has changed
-        if (oldValue == null || value == null
+        // Re-render calendar if the resolution or the month or year has changed
+        if (oldResolution != resolution || oldValue == null || value == null
                 || oldValue.getYear() != value.getYear()
                 || oldValue.getMonth() != value.getMonth()) {
             renderCalendar();
