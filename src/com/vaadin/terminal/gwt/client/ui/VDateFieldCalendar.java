@@ -17,13 +17,13 @@ import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusChangeListener;
 
 public class VDateFieldCalendar extends VDateField {
 
-    private final VCalendarPanel caleandarPanel;
+    private final VCalendarPanel calendarPanel;
 
     public VDateFieldCalendar() {
         super();
-        caleandarPanel = new VCalendarPanel();
-        add(caleandarPanel);
-        caleandarPanel.setSubmitListener(new SubmitListener() {
+        calendarPanel = new VCalendarPanel();
+        add(calendarPanel);
+        calendarPanel.setSubmitListener(new SubmitListener() {
             public void onSubmit() {
                 updateValueFromPanel();
             }
@@ -33,7 +33,7 @@ public class VDateFieldCalendar extends VDateField {
 
             }
         });
-        caleandarPanel.setFocusOutListener(new FocusOutListener() {
+        calendarPanel.setFocusOutListener(new FocusOutListener() {
             public boolean onFocusOut(DomEvent event) {
                 updateValueFromPanel();
                 return false;
@@ -44,18 +44,18 @@ public class VDateFieldCalendar extends VDateField {
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         super.updateFromUIDL(uidl, client);
-        caleandarPanel.setShowISOWeekNumbers(isShowISOWeekNumbers());
-        caleandarPanel.setDateTimeService(getDateTimeService());
-        caleandarPanel.setResolution(getCurrentResolution());
+        calendarPanel.setShowISOWeekNumbers(isShowISOWeekNumbers());
+        calendarPanel.setDateTimeService(getDateTimeService());
+        calendarPanel.setResolution(getCurrentResolution());
         Date currentDate = getCurrentDate();
         if (currentDate != null) {
-            caleandarPanel.setDate(new Date(currentDate.getTime()));
+            calendarPanel.setDate(new Date(currentDate.getTime()));
         } else {
-            caleandarPanel.setDate(null);
+            calendarPanel.setDate(null);
         }
 
         if (currentResolution > RESOLUTION_DAY) {
-            caleandarPanel.setTimeChangeListener(new TimeChangeListener() {
+            calendarPanel.setTimeChangeListener(new TimeChangeListener() {
                 public void changed(int hour, int min, int sec, int msec) {
                     Date d = getDate();
                     d.setHours(hour);
@@ -64,22 +64,22 @@ public class VDateFieldCalendar extends VDateField {
                     DateTimeService.setMilliseconds(d, msec);
 
                     // Always update time changes to the server
-                    caleandarPanel.setDate(d);
+                    calendarPanel.setDate(d);
                     updateValueFromPanel();
                 }
             });
         }
 
         if (currentResolution <= RESOLUTION_MONTH) {
-            caleandarPanel.setFocusChangeListener(new FocusChangeListener() {
+            calendarPanel.setFocusChangeListener(new FocusChangeListener() {
                 public void focusChanged(Date date) {
-                    Date date2 = new Date(caleandarPanel.getDate().getTime());
+                    Date date2 = new Date(calendarPanel.getDate().getTime());
                     /*
                      * Update the value of calendarPanel
                      */
                     date2.setYear(date.getYear());
                     date2.setMonth(date.getMonth());
-                    caleandarPanel.setDate(date2);
+                    calendarPanel.setDate(date2);
                     /*
                      * Then update the value from panel to server
                      */
@@ -87,18 +87,18 @@ public class VDateFieldCalendar extends VDateField {
                 }
             });
         } else {
-            caleandarPanel.setFocusChangeListener(null);
+            calendarPanel.setFocusChangeListener(null);
         }
 
         // Update possible changes
-        caleandarPanel.renderCalendar();
+        calendarPanel.renderCalendar();
     }
 
     /**
      * TODO refactor: almost same method as in VPopupCalendar.updateValue
      */
     private void updateValueFromPanel() {
-        Date date2 = caleandarPanel.getDate();
+        Date date2 = calendarPanel.getDate();
         Date currentDate = getCurrentDate();
         if (currentDate == null || date2.getTime() != currentDate.getTime()) {
             setCurrentDate(date2);
