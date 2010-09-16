@@ -16,8 +16,13 @@ public class BrowserUserAgentParser extends TestCase {
 
     private static final String IE6_WINDOWS = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)";
     private static final String IE7_WINDOWS = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)";
+
     private static final String IE8_WINDOWS = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; InfoPath.2)";
     private static final String IE8_IN_IE7_MODE_WINDOWS = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; InfoPath.2)";
+
+    private static final String IE9_BETA_IN_IE7_MODE_WINDOWS_7 = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C)";
+    private static final String IE9_BETA_IN_IE8_MODE_WINDOWS_7 = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C)";
+    private static final String IE9_BETA_WINDOWS_7 = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
 
     // "Version/" was added in 10.00
     private static final String OPERA964_WINDOWS = "Opera/9.64(Windows NT 5.1; U; en) Presto/2.1.1";
@@ -195,6 +200,39 @@ public class BrowserUserAgentParser extends TestCase {
         // assertTrident(bd);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 7);
+        assertBrowserMinorVersion(bd, 0);
+
+        assertWindows(bd);
+    }
+
+    public void testIE9() {
+        VBrowserDetails bd = new VBrowserDetails(IE9_BETA_WINDOWS_7);
+        // assertTrident(bd);
+        assertIE(bd);
+        assertBrowserMajorVersion(bd, 9);
+        assertBrowserMinorVersion(bd, 0);
+        assertWindows(bd);
+    }
+
+    public void testIE9InIE7CompatibilityMode() {
+        VBrowserDetails bd = new VBrowserDetails(IE9_BETA_IN_IE7_MODE_WINDOWS_7);
+        // bd.setIE8InCompatibilityMode();
+
+        // assertTrident(bd);
+        assertIE(bd);
+        assertBrowserMajorVersion(bd, 7);
+        assertBrowserMinorVersion(bd, 0);
+
+        assertWindows(bd);
+    }
+
+    public void testIE9InIE8CompatibilityMode() {
+        VBrowserDetails bd = new VBrowserDetails(IE9_BETA_IN_IE8_MODE_WINDOWS_7);
+        // bd.setIE8InCompatibilityMode();
+
+        // assertTrident(bd);
+        assertIE(bd);
+        assertBrowserMajorVersion(bd, 8);
         assertBrowserMinorVersion(bd, 0);
 
         assertWindows(bd);
