@@ -770,8 +770,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     private int lastIndex = -1; // last selected index when using arrows
 
     /**
-     * The current suggestion selected from the dropdown. This must be one of
-     * the values in currentSuggestions (I think..).
+     * The current suggestion selected from the dropdown. This is one of the
+     * values in currentSuggestions except when filtering, in this case
+     * currentSuggestion might not be in currentSuggestions.
      */
     private FilterSelectSuggestion currentSuggestion;
 
@@ -966,12 +967,16 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         allowNewItem = uidl.hasAttribute("allownewitem");
         lastNewItemString = null;
 
-        /*
-         * Clear the current suggestions as the server response always includes
-         * the new ones.
-         */
         currentSuggestions.clear();
-        currentSuggestion = null;
+        if (!filtering) {
+            /*
+             * Clear the current suggestions as the server response always
+             * includes the new ones. Exception is when filtering, then we need
+             * to retain the value if the user does not select any of the
+             * options matching the filter.
+             */
+            currentSuggestion = null;
+        }
 
         final UIDL options = uidl.getChildUIDL(0);
         totalMatches = uidl.getIntAttribute("totalMatches");
