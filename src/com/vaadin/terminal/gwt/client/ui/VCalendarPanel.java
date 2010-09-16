@@ -5,7 +5,6 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Date;
-import java.util.List;
 
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -67,7 +66,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
         /**
          * @return true if the calendar panel is not used after focus moves out
          */
-        boolean onFocusOut(DomEvent event);
+        boolean onFocusOut(DomEvent<?> event);
     }
 
     /**
@@ -140,7 +139,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private int resolution = VDateField.RESOLUTION_YEAR;
 
     private int focusedRow;
-    private int focusedColumn;
 
     private Timer mouseTimer;
 
@@ -215,7 +213,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
                             if (curday.getDay() == day) {
                                 curday.addStyleDependentName(CN_FOCUSED);
                                 focusedDay = curday;
-                                focusedColumn = j;
                                 focusedRow = i;
                                 return;
                             }
@@ -258,7 +255,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     private void selectFocused() {
         if (focusedDate != null) {
-            int changedFields = 0;
             /*
              * #5594 set Date (day) to 1 in order to prevent any kind of
              * wrapping of months when later setting the month. (e.g. 31 ->
@@ -268,14 +264,11 @@ public class VCalendarPanel extends FocusableFlexTable implements
             value.setDate(1);
             if (value.getYear() != focusedDate.getYear()) {
                 value.setYear(focusedDate.getYear());
-                changedFields += VDateField.RESOLUTION_YEAR;
             }
             if (value.getMonth() != focusedDate.getMonth()) {
                 value.setMonth(focusedDate.getMonth());
-                changedFields += VDateField.RESOLUTION_MONTH;
             }
             if (value.getDate() != focusedDate.getDate()) {
-                changedFields += VDateField.RESOLUTION_DAY;
             }
             // We always need to set the date, even if it hasn't changed, since
             // it was forced to 1 above.
@@ -292,7 +285,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
         return false;
     }
 
-    private int getResolution() {
+    public int getResolution() {
         return resolution;
     }
 
@@ -534,7 +527,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     if (dayOfMonth == focusedDate.getDate()) {
                         focusedDay = day;
                         focusedRow = weekOfMonth;
-                        focusedColumn = firstWeekdayColumn + dayOfWeek;
                         if (hasFocus) {
                             day.addStyleDependentName(CN_FOCUSED);
                         }
@@ -700,10 +692,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
         }
     }
 
-    public interface CalendarEntrySource {
-        public List getEntries(Date date, int resolution);
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -733,7 +721,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * @param event
      *            The keydown/keypress event
      */
-    private void handleKeyPress(DomEvent event) {
+    private void handleKeyPress(DomEvent<?> event) {
         if (time != null
                 && time.getElement().isOrHasChild(
                         (Node) event.getNativeEvent().getEventTarget().cast())) {
@@ -1274,8 +1262,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
         private ListBox ampm;
 
-        private ListBox lastField;
-
         /**
          * Constructor
          */
@@ -1364,7 +1350,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 add(new VLabel(h < 10 ? "0" + h : "" + h));
             } else {
                 add(hours);
-                lastField = hours;
             }
 
             if (getResolution() >= VDateField.RESOLUTION_MIN) {
@@ -1374,7 +1359,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     add(new VLabel(m < 10 ? "0" + m : "" + m));
                 } else {
                     add(mins);
-                    lastField = mins;
                 }
             }
             if (getResolution() >= VDateField.RESOLUTION_SEC) {
@@ -1384,7 +1368,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     add(new VLabel(s < 10 ? "0" + s : "" + s));
                 } else {
                     add(sec);
-                    lastField = sec;
                 }
             }
             if (getResolution() == VDateField.RESOLUTION_MSEC) {
@@ -1395,7 +1378,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     add(new VLabel(m < 10 ? "0" + ms : ms));
                 } else {
                     add(msec);
-                    lastField = msec;
                 }
             }
             if (getResolution() == VDateField.RESOLUTION_HOUR) {
@@ -1411,7 +1393,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     add(new VLabel(ampm.getItemText(i)));
                 } else {
                     add(ampm);
-                    lastField = ampm;
                 }
             }
 
@@ -1598,7 +1579,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * @param event
      * @return
      */
-    protected boolean onTabOut(DomEvent event) {
+    protected boolean onTabOut(DomEvent<?> event) {
         if (focusOutListener != null) {
             return focusOutListener.onFocusOut(event);
         }
