@@ -134,8 +134,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     private FlexTable days = new FlexTable();
 
-    /* Needed to identify resolution changes */
-    private int oldResolution = 0;
     private int resolution = VDateField.RESOLUTION_YEAR;
 
     private int focusedRow;
@@ -290,10 +288,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     public void setResolution(int resolution) {
-        if (resolution != this.resolution) {
-            oldResolution = this.resolution;
-            this.resolution = resolution;
-        }
+        this.resolution = resolution;
     }
 
     private boolean isReadonly() {
@@ -591,14 +586,12 @@ public class VCalendarPanel extends FocusableFlexTable implements
             buildCalendarBody();
         }
 
-        if (isTimeSelectorNeeded()
-                && (time == null || resolution != oldResolution)) {
+        if (isTimeSelectorNeeded() && time == null) {
             time = new VTime();
             setWidget(2, 0, time);
             getFlexCellFormatter().setColSpan(2, 0, 5);
             getFlexCellFormatter().setStyleName(2, 0,
                     VDateField.CLASSNAME + "-calendarpanel-time");
-            oldResolution = resolution;
         } else if (isTimeSelectorNeeded()) {
             time.updateTimes();
         } else if (time != null) {
@@ -1230,8 +1223,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
             focusedDate = (Date) value.clone();
         }
 
-        // Re-render calendar if the resolution or the month or year has changed
-        if (oldResolution != resolution || oldValue == null || value == null
+        // Re-render calendar if month or year has changed
+        if (oldValue == null || value == null
                 || oldValue.getYear() != value.getYear()
                 || oldValue.getMonth() != value.getMonth()) {
             renderCalendar();

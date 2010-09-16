@@ -24,10 +24,10 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.DateTimeService;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusChangeListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.SubmitListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.TimeChangeListener;
-import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusChangeListener;
 
 /**
  * Represents a date selection component with a text field and a popup date
@@ -160,7 +160,13 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
                 + resolutionToString(currentResolution));
         calendar.setDateTimeService(getDateTimeService());
         calendar.setShowISOWeekNumbers(isShowISOWeekNumbers());
-        calendar.setResolution(currentResolution);
+        if (calendar.getResolution() != currentResolution) {
+            calendar.setResolution(currentResolution);
+            if (calendar.getDate() != null) {
+                // force re-render when changing resolution only
+                calendar.renderCalendar();
+            }
+        }
         calendarToggle.setEnabled(enabled);
 
         if (currentResolution <= RESOLUTION_MONTH) {
