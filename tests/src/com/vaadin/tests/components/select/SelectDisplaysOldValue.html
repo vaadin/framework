@@ -71,6 +71,69 @@
 	<td>vaadin=runcomvaadintestscomponentsselectSelectDisplaysOldValue::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[1]/VFilterSelect[0]/domChild[0]</td>
 	<td></td>
 </tr>
+<!--Master should retain its value after filtering and not selecting any option-->
+<!--Select "Master 3" and "Master 3 - Slave 1"-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsselectSelectDisplaysOldValue::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[0]/VFilterSelect[0]/domChild[1]</td>
+	<td>10,7</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsselectSelectDisplaysOldValue::Root/VFilterSelect$SuggestionPopup[0]/VFilterSelect$SuggestionMenu[0]#item2</td>
+	<td>96,8</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsselectSelectDisplaysOldValue::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[1]/VFilterSelect[0]/domChild[0]</td>
+	<td>87,10</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsselectSelectDisplaysOldValue::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[1]/VFilterSelect[0]/domChild[0]</td>
+	<td>98,16</td>
+</tr>
+<tr>
+	<td>pressSpecialKey</td>
+	<td>vaadin=runcomvaadintestscomponentsselectSelectDisplaysOldValue::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[1]/VFilterSelect[0]/domChild[0]</td>
+	<td>down</td>
+</tr>
+<tr>
+	<td>pressSpecialKey</td>
+	<td>vaadin=runcomvaadintestscomponentsselectSelectDisplaysOldValue::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[1]/VFilterSelect[0]/domChild[0]</td>
+	<td>down</td>
+</tr>
+<tr>
+	<td>pressSpecialKey</td>
+	<td>vaadin=runcomvaadintestscomponentsselectSelectDisplaysOldValue::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[1]/VFilterSelect[0]/domChild[0]</td>
+	<td>enter</td>
+</tr>
+<!--Filter master using "test" but do not select anything-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsselectSelectDisplaysOldValue::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[0]/VFilterSelect[0]/domChild[0]</td>
+	<td>-70,7</td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=runcomvaadintestscomponentsselectSelectDisplaysOldValue::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[0]/VFilterSelect[0]/domChild[0]</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsselectSelectDisplaysOldValue::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[1]/VFilterSelect[0]/domChild[0]</td>
+	<td>58,163</td>
+</tr>
+<tr>
+	<td>focus</td>
+	<td>vaadin=runcomvaadintestscomponentsselectSelectDisplaysOldValue::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[1]/VFilterSelect[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentsselectSelectDisplaysOldValue::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[0]/VFilterSelect[0]/domChild[0]</td>
+	<td>Master 3</td>
+</tr>
 </tbody></table>
 </body>
 </html>
