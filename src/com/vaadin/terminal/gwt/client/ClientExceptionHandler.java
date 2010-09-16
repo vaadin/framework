@@ -3,11 +3,14 @@
  */
 package com.vaadin.terminal.gwt.client;
 
+import com.google.gwt.core.client.GWT;
+
 public class ClientExceptionHandler {
 
     public static void displayError(Throwable e) {
         displayError(e.getClass().getName() + ": " + e.getMessage());
-        e.printStackTrace();
+
+        GWT.log(e.getMessage(), e);
     }
 
     public static void displayError(String msg) {
@@ -16,8 +19,7 @@ public class ClientExceptionHandler {
 
         if (console != null) {
             console.error(msg);
-            // } else {
-            // System.err.println(msg);
+            GWT.log(msg);
         }
     }
 
