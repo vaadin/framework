@@ -88,6 +88,8 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
             actions.add(createRequiredAction(false));
         }
 
+        createCustomActions(actions);
+
         return actions;
     }
 
