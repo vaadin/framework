@@ -161,6 +161,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         if (calendar.getResolution() != currentResolution) {
             calendar.setResolution(currentResolution);
             if (calendar.getDate() != null) {
+                calendar.setDate(getCurrentDate());
                 // force re-render when changing resolution only
                 calendar.renderCalendar();
             }

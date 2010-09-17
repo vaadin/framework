@@ -288,6 +288,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     public void setResolution(int resolution) {
         this.resolution = resolution;
+        if (time != null) {
+            time.removeFromParent();
+            time = null;
+        }
     }
 
     private boolean isReadonly() {

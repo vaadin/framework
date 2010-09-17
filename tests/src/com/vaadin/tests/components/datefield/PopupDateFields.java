@@ -19,6 +19,7 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.PopupDateField;
 
+@SuppressWarnings("serial")
 public class PopupDateFields extends ComponentTestCase<PopupDateField> {
 
     private static final Locale[] LOCALES = new Locale[] { Locale.US,
@@ -182,6 +183,7 @@ public class PopupDateFields extends ComponentTestCase<PopupDateField> {
             public void valueChange(ValueChangeEvent event) {
                 Object itemId = event.getProperty().getValue();
                 Item item = select.getItem(itemId);
+                @SuppressWarnings("unchecked")
                 T value = (T) item.getItemProperty(VALUE).getValue();
                 doCommand(command, value);
 
