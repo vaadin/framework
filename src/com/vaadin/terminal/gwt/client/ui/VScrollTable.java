@@ -620,7 +620,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.terminal
      * .gwt.client.UIDL, com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
-    @SuppressWarnings("unchecked")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
 
@@ -765,7 +764,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         UIDL rowData = null;
         UIDL ac = null;
-        for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
+        for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL c = (UIDL) it.next();
             if (c.getTag().equals("rows")) {
                 rowData = c;
@@ -1756,6 +1755,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             DOM.sinkEvents(td, Event.MOUSEEVENTS);
 
             setElement(td);
+
+            setAlign(ALIGN_LEFT);
         }
 
         public void setWidth(int w, boolean ensureDefinedWidth) {
@@ -2047,18 +2048,25 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         public void setAlign(char c) {
+            final String ALIGN_PREFIX = CLASSNAME + "-caption-container-align-";
             if (align != c) {
+                captionContainer.removeClassName(ALIGN_PREFIX + "center");
+                captionContainer.removeClassName(ALIGN_PREFIX + "right");
+                captionContainer.removeClassName(ALIGN_PREFIX + "left");
                 switch (c) {
                 case ALIGN_CENTER:
                     DOM.setStyleAttribute(captionContainer, "textAlign",
                             "center");
+                    captionContainer.addClassName(ALIGN_PREFIX + "center");
                     break;
                 case ALIGN_RIGHT:
                     DOM.setStyleAttribute(captionContainer, "textAlign",
                             "right");
+                    captionContainer.addClassName(ALIGN_PREFIX + "right");
                     break;
                 default:
                     DOM.setStyleAttribute(captionContainer, "textAlign", "");
+                    captionContainer.addClassName(ALIGN_PREFIX + "left");
                     break;
                 }
             }
@@ -3329,7 +3337,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     tBodyElement.getFirstChild());
             adopt(row);
             renderedRows.add(0, row);
-            int i = firstRendered;
         }
 
         private void addRow(VScrollTableRow row) {

@@ -76,6 +76,14 @@
 	background: transparent no-repeat right 7px;
 	background-image: url(img/desc-light.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
+.v-table-header-cell-asc .v-table-caption-container-align-right {
+    background: transparent no-repeat left 7px;
+    background-image: url(img/asc-light.png); /** sprite-ref: verticals; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-left: 0px; */
+}
+.v-table-header-cell-desc .v-table-caption-container-align-right {
+    background: transparent no-repeat left 7px;
+    background-image: url(img/desc-light.png); /** sprite-ref: verticals; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-left: 0px; */
+}
 .v-table-body,
 .white .v-table-body {
 	border-color: #c2c3c4;
@@ -213,6 +221,12 @@
 .v-table-strong .v-table-header-cell-desc .v-table-caption-container {
 	background-image: url(img/desc.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
+.v-table-strong .v-table-header-cell-asc .v-table-caption-container-align-right {
+    background-image: url(img/asc.png); /** sprite-ref: verticals; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-left: 0px; */
+}
+.v-table-strong .v-table-header-cell-desc .v-table-caption-container-align-right {
+    background-image: url(img/desc.png); /** sprite-ref: verticals; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-left: 0px; */
+}
 .v-table-strong .v-table-column-selector {
 	background-image: url(img/col-sel.png); /** sprite-ref: verticals */
 }
@@ -245,6 +259,12 @@
 }
 .black .v-table-header-cell-desc .v-table-caption-container {
 	background-image: url(img/desc.png); /** sprite-ref: black-verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
+}
+.black .v-table-header-cell-asc .v-table-caption-container-align-right {
+    background-image: url(img/asc.png); /** sprite-ref: verticals; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-left: 0px; */
+}
+.black .v-table-header-cell-desc .v-table-caption-container-align-right {
+    background-image: url(img/desc.png); /** sprite-ref: verticals; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-left: 0px; */
 }
 .black .v-table-column-selector {
 	background-image: url(img/col-sel-black.png); /** sprite-ref: black-verticals */

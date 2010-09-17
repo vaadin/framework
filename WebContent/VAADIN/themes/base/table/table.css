@@ -100,6 +100,12 @@
 .v-table-header-cell-desc .v-table-caption-container {
 	background: transparent url(../common/img/sprites.png) no-repeat right -10px;
 }
+.v-table-header-cell-asc .v-table-caption-container-align-right {
+    background: transparent url(../common/img/sprites.png) no-repeat -8px 6px;
+}
+.v-table-header-cell-desc .v-table-caption-container-align-right {
+    background: transparent url(../common/img/sprites.png) no-repeat -8px -10px;
+}
 .v-table-caption-container .v-icon,
 .v-table-header-drag .v-icon {
 	vertical-align: middle;
