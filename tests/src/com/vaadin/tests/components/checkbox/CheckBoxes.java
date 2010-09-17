@@ -1,15 +1,9 @@
 package com.vaadin.tests.components.checkbox;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.ComponentTestCase;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Component;
 
 public class CheckBoxes extends ComponentTestCase<CheckBox> {
 
@@ -19,8 +13,12 @@ public class CheckBoxes extends ComponentTestCase<CheckBox> {
             "../runo/icons/64/document.png");
 
     @Override
-    protected void setup() {
-        super.setup();
+    protected Class<CheckBox> getTestClass() {
+        return CheckBox.class;
+    }
+
+    @Override
+    protected void initializeComponents() {
 
         setTheme("tests-tickets");
         CheckBox cb;
@@ -69,64 +67,6 @@ public class CheckBoxes extends ComponentTestCase<CheckBox> {
     @Override
     protected Integer getTicketNumber() {
         return null;
-    }
-
-    @Override
-    protected List<Component> createActions() {
-        ArrayList<Component> actions = new ArrayList<Component>();
-
-        CheckBox errorIndicators = new CheckBox("Error indicators",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        Button b = event.getButton();
-                        boolean enabled = (Boolean) b.getValue();
-                        setErrorIndicators(enabled);
-
-                    }
-                });
-
-        CheckBox required = new CheckBox("Required",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        Button b = event.getButton();
-                        boolean enabled = (Boolean) b.getValue();
-                        setRequired(enabled);
-                    }
-                });
-
-        CheckBox enabled = new CheckBox("Enabled", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                Button b = event.getButton();
-                boolean enabled = (Boolean) b.getValue();
-                setEnabled(enabled);
-            }
-        });
-
-        CheckBox readonly = new CheckBox("Readonly",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        Button b = event.getButton();
-                        boolean enabled = (Boolean) b.getValue();
-                        setReadOnly(enabled);
-                    }
-                });
-
-        errorIndicators.setValue(Boolean.FALSE);
-        required.setValue(Boolean.FALSE);
-        readonly.setValue(Boolean.FALSE);
-        enabled.setValue(Boolean.TRUE);
-
-        errorIndicators.setImmediate(true);
-        required.setImmediate(true);
-        readonly.setImmediate(true);
-        enabled.setImmediate(true);
-
-        actions.add(errorIndicators);
-        actions.add(required);
-        actions.add(readonly);
-        actions.add(enabled);
-
-        return actions;
     }
 
 }

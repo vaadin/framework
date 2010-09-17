@@ -4,20 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.tests.components.ComponentTestCase;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 
 public class Menubars extends ComponentTestCase<MenuBar> {
 
-    MenuBar menubar[] = new MenuBar[20];
+    @Override
+    protected Class<MenuBar> getTestClass() {
+        return MenuBar.class;
+    }
 
     @Override
-    protected void setup() {
-        super.setup();
+    protected void initializeComponents() {
 
         MenuBar m;
         m = createMenuBar("This is an undefined wide menubar with 3 items", 3);
@@ -80,35 +79,8 @@ public class Menubars extends ComponentTestCase<MenuBar> {
     @Override
     protected List<Component> createActions() {
         ArrayList<Component> actions = new ArrayList<Component>();
-
-        // Required and read-only makes no sense for MenuBar
-
-        CheckBox errorIndicators = new CheckBox("Error indicators",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        Button b = event.getButton();
-                        boolean enabled = (Boolean) b.getValue();
-                        setErrorIndicators(enabled);
-
-                    }
-                });
-
-        CheckBox enabled = new CheckBox("Enabled", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                Button b = event.getButton();
-                boolean enabled = (Boolean) b.getValue();
-                setEnabled(enabled);
-            }
-        });
-
-        errorIndicators.setValue(Boolean.FALSE);
-        enabled.setValue(Boolean.TRUE);
-
-        errorIndicators.setImmediate(true);
-        enabled.setImmediate(true);
-
-        actions.add(errorIndicators);
-        actions.add(enabled);
+        actions.add(createErrorIndicatorAction(false));
+        actions.add(createEnabledAction(true));
 
         return actions;
     }

@@ -1,12 +1,8 @@
 package com.vaadin.tests.components.select;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.tests.components.ComponentTestCase;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.NativeSelect;
 
@@ -16,8 +12,12 @@ public class NativeSelects extends ComponentTestCase<NativeSelect> {
     NativeSelect label[] = new NativeSelect[20];
 
     @Override
-    protected void setup() {
-        super.setup();
+    protected Class<NativeSelect> getTestClass() {
+        return NativeSelect.class;
+    }
+
+    @Override
+    protected void initializeComponents() {
 
         NativeSelect s;
 
@@ -105,71 +105,14 @@ public class NativeSelects extends ComponentTestCase<NativeSelect> {
     }
 
     @Override
-    protected List<Component> createActions() {
-        ArrayList<Component> actions = new ArrayList<Component>();
+    protected void createCustomActions(List<Component> actions) {
+        actions.add(createCheckboxAction("Null selection allowed", false,
+                new Command<NativeSelect, Boolean>() {
 
-        CheckBox errorIndicators = new CheckBox("Error indicators",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        Button b = event.getButton();
-                        boolean enabled = (Boolean) b.getValue();
-                        setErrorIndicators(enabled);
-
+                    public void execute(NativeSelect c, Boolean value) {
+                        c.setNullSelectionAllowed(value);
                     }
-                });
-
-        CheckBox enabled = new CheckBox("Enabled", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                Button b = event.getButton();
-                boolean enabled = (Boolean) b.getValue();
-                setEnabled(enabled);
-            }
-        });
-
-        CheckBox readonly = new CheckBox("Readonly",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        Button b = event.getButton();
-                        boolean enabled = (Boolean) b.getValue();
-                        setReadOnly(enabled);
-                    }
-                });
-
-        CheckBox nullSelect = new CheckBox("Null selection allowed",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        boolean nullAllowed = event.getButton().booleanValue();
-                        setNullAllowed(nullAllowed);
-                    }
-                });
-
-        errorIndicators.setValue(Boolean.FALSE);
-        readonly.setValue(Boolean.FALSE);
-        enabled.setValue(Boolean.TRUE);
-        nullSelect.setValue(Boolean.FALSE);
-
-        errorIndicators.setImmediate(true);
-        readonly.setImmediate(true);
-        enabled.setImmediate(true);
-        nullSelect.setImmediate(true);
-
-        actions.add(errorIndicators);
-        actions.add(readonly);
-        actions.add(enabled);
-        actions.add(nullSelect);
-
-        return actions;
-    }
-
-    protected void setNullAllowed(boolean on) {
-        for (NativeSelect c : getTestComponents()) {
-            if (c == null) {
-                continue;
-            }
-
-            c.setNullSelectionAllowed(on);
-        }
-
+                }));
     }
 
 }

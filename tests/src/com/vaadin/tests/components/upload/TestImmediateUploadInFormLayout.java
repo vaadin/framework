@@ -25,8 +25,12 @@ public class TestImmediateUploadInFormLayout extends
     }
 
     @Override
-    protected void setup() {
-        super.setup();
+    protected Class<FormLayout> getTestClass() {
+        return FormLayout.class;
+    }
+
+    @Override
+    protected void initializeComponents() {
 
         FormLayout formLayout = new FormLayout();
         formLayout.setWidth("100%");

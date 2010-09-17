@@ -1,19 +1,17 @@
 package com.vaadin.tests.components.richtextarea;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.vaadin.tests.components.ComponentTestCase;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.RichTextArea;
 
 public class RichTextAreas extends ComponentTestCase<RichTextArea> {
 
     @Override
-    protected void setup() {
+    protected Class<RichTextArea> getTestClass() {
+        return RichTextArea.class;
+    }
+
+    @Override
+    protected void initializeComponents() {
         super.setup();
 
         RichTextArea rta;
@@ -39,75 +37,6 @@ public class RichTextAreas extends ComponentTestCase<RichTextArea> {
 
     private RichTextArea createRichTextArea(String caption) {
         return new RichTextArea(caption);
-    }
-
-    @Override
-    protected String getDescription() {
-        return "A generic test for TextFields in different configurations";
-    }
-
-    @Override
-    protected Integer getTicketNumber() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected List<Component> createActions() {
-        ArrayList<Component> actions = new ArrayList<Component>();
-
-        CheckBox errorIndicators = new CheckBox("Error indicators",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        Button b = event.getButton();
-                        boolean enabled = (Boolean) b.getValue();
-                        setErrorIndicators(enabled);
-
-                    }
-                });
-
-        CheckBox required = new CheckBox("Required",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        Button b = event.getButton();
-                        boolean enabled = (Boolean) b.getValue();
-                        setRequired(enabled);
-                    }
-                });
-
-        CheckBox enabled = new CheckBox("Enabled", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                Button b = event.getButton();
-                boolean enabled = (Boolean) b.getValue();
-                setEnabled(enabled);
-            }
-        });
-
-        CheckBox readonly = new CheckBox("Readonly",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        Button b = event.getButton();
-                        boolean enabled = (Boolean) b.getValue();
-                        setReadOnly(enabled);
-                    }
-                });
-
-        errorIndicators.setValue(Boolean.FALSE);
-        required.setValue(Boolean.FALSE);
-        readonly.setValue(Boolean.FALSE);
-        enabled.setValue(Boolean.TRUE);
-
-        errorIndicators.setImmediate(true);
-        required.setImmediate(true);
-        readonly.setImmediate(true);
-        enabled.setImmediate(true);
-
-        actions.add(errorIndicators);
-        actions.add(required);
-        actions.add(readonly);
-        actions.add(enabled);
-
-        return actions;
     }
 
 }

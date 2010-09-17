@@ -1,25 +1,20 @@
 package com.vaadin.tests.components.combobox;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.vaadin.tests.components.ComponentTestCase;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.Select;
 
 public class Comboboxes extends ComponentTestCase<ComboBox> {
 
     private static final Object CAPTION = "caption";
-    Select label[] = new Select[20];
 
     @Override
-    protected void setup() {
-        super.setup();
+    protected Class<ComboBox> getTestClass() {
+        return ComboBox.class;
+    }
 
+    @Override
+    protected void initializeComponents() {
         ComboBox s;
 
         s = createSelect(null);
@@ -117,52 +112,6 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
     @Override
     protected String getDescription() {
         return "A generic test for Labels in different configurations";
-    }
-
-    @Override
-    protected List<Component> createActions() {
-        ArrayList<Component> actions = new ArrayList<Component>();
-
-        CheckBox errorIndicators = new CheckBox("Error indicators",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        Button b = event.getButton();
-                        boolean enabled = (Boolean) b.getValue();
-                        setErrorIndicators(enabled);
-
-                    }
-                });
-
-        CheckBox enabled = new CheckBox("Enabled", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                Button b = event.getButton();
-                boolean enabled = (Boolean) b.getValue();
-                setEnabled(enabled);
-            }
-        });
-
-        CheckBox readonly = new CheckBox("Readonly",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        Button b = event.getButton();
-                        boolean enabled = (Boolean) b.getValue();
-                        setReadOnly(enabled);
-                    }
-                });
-
-        errorIndicators.setValue(Boolean.FALSE);
-        readonly.setValue(Boolean.FALSE);
-        enabled.setValue(Boolean.TRUE);
-
-        errorIndicators.setImmediate(true);
-        readonly.setImmediate(true);
-        enabled.setImmediate(true);
-
-        actions.add(errorIndicators);
-        actions.add(readonly);
-        actions.add(enabled);
-
-        return actions;
     }
 
 }

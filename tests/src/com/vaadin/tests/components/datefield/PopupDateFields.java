@@ -1,22 +1,13 @@
 package com.vaadin.tests.components.datefield;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.terminal.UserError;
 import com.vaadin.tests.components.ComponentTestCase;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.PopupDateField;
 
 @SuppressWarnings("serial")
@@ -26,8 +17,12 @@ public class PopupDateFields extends ComponentTestCase<PopupDateField> {
             Locale.TAIWAN, new Locale("fi", "FI") };
 
     @Override
-    protected void setup() {
-        super.setup();
+    protected Class<PopupDateField> getTestClass() {
+        return PopupDateField.class;
+    }
+
+    @Override
+    protected void initializeComponents() {
 
         for (Locale locale : LOCALES) {
             PopupDateField pd = createPopupDateField("Undefined width", "-1",
@@ -64,62 +59,10 @@ public class PopupDateFields extends ComponentTestCase<PopupDateField> {
 
     @Override
     protected List<Component> createActions() {
-        ArrayList<Component> actions = new ArrayList<Component>();
-        actions.add(createErrorIndicatorAction(false));
-        actions.add(createEnabledAction(true));
-        actions.add(createRequiredAction(false));
-        actions.add(createReadonlyAction(false));
+        List<Component> actions = super.createActions();
         actions.add(createResolutionSelectAction());
         actions.add(createInputPromptSelectAction());
-
         return actions;
-    }
-
-    public interface Command<T extends Component, VALUETYPE extends Object> {
-        public void execute(T c, VALUETYPE value);
-
-    }
-
-    protected Component createErrorIndicatorAction(boolean initialState) {
-        return createCheckboxAction("Error indicators", initialState,
-                new Command<PopupDateField, Boolean>() {
-                    public void execute(PopupDateField c, Boolean enabled) {
-                        if (enabled) {
-                            c.setComponentError(new UserError("It failed!"));
-                        } else {
-                            c.setComponentError(null);
-
-                        }
-                    }
-
-                });
-    }
-
-    protected Component createEnabledAction(boolean initialState) {
-        return createCheckboxAction("Enabled", initialState,
-                new Command<PopupDateField, Boolean>() {
-                    public void execute(PopupDateField c, Boolean enabled) {
-                        c.setEnabled(enabled);
-                    }
-                });
-    }
-
-    protected Component createReadonlyAction(boolean initialState) {
-        return createCheckboxAction("Readonly", initialState,
-                new Command<PopupDateField, Boolean>() {
-                    public void execute(PopupDateField c, Boolean enabled) {
-                        c.setReadOnly(enabled);
-                    }
-                });
-    }
-
-    protected Component createRequiredAction(boolean initialState) {
-        return createCheckboxAction("Required", initialState,
-                new Command<PopupDateField, Boolean>() {
-                    public void execute(PopupDateField c, Boolean enabled) {
-                        c.setRequired(enabled);
-                    }
-                });
     }
 
     private Component createResolutionSelectAction() {
@@ -157,73 +100,4 @@ public class PopupDateFields extends ComponentTestCase<PopupDateField> {
                 });
     }
 
-    private <T> Component createSelectAction(String caption,
-            LinkedHashMap<String, T> options, String initialValue,
-            final Command<PopupDateField, T> command) {
-        final String CAPTION = "caption";
-        final String VALUE = "value";
-
-        final NativeSelect select = new NativeSelect(caption);
-        select.addContainerProperty(CAPTION, String.class, "");
-        select.addContainerProperty(VALUE, Object.class, "");
-        select.setItemCaptionPropertyId(CAPTION);
-        select.setNullSelectionAllowed(false);
-        for (String itemCaption : options.keySet()) {
-            Object itemId = new Object();
-            Item i = select.addItem(itemId);
-            i.getItemProperty(CAPTION).setValue(itemCaption);
-            i.getItemProperty(VALUE).setValue(options.get(itemCaption));
-            if (itemCaption.equals(initialValue)) {
-                select.setValue(itemId);
-            }
-
-        }
-        select.addListener(new Property.ValueChangeListener() {
-
-            public void valueChange(ValueChangeEvent event) {
-                Object itemId = event.getProperty().getValue();
-                Item item = select.getItem(itemId);
-                @SuppressWarnings("unchecked")
-                T value = (T) item.getItemProperty(VALUE).getValue();
-                doCommand(command, value);
-
-            }
-        });
-
-        select.setValue(initialValue);
-
-        select.setImmediate(true);
-
-        return select;
-    }
-
-    protected Component createCheckboxAction(String caption,
-            boolean initialState, final Command<PopupDateField, Boolean> command) {
-        CheckBox errorIndicators = new CheckBox(caption,
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        boolean enabled = (Boolean) event.getButton()
-                                .getValue();
-                        doCommand(command, enabled);
-                    }
-                });
-
-        errorIndicators.setValue(initialState);
-        errorIndicators.setImmediate(true);
-
-        return errorIndicators;
-    }
-
-    protected <VALUET> void doCommand(Command<PopupDateField, VALUET> command,
-            VALUET value) {
-        for (PopupDateField c : getTestComponents()) {
-            if (c == null) {
-                continue;
-            }
-
-            command.execute(c, value);
-
-        }
-
-    }
 }

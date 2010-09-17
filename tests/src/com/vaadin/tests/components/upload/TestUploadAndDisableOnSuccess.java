@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.tests.components.ComponentTestCase;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Upload;
@@ -18,6 +15,7 @@ import com.vaadin.ui.Upload.StartedEvent;
 
 public class TestUploadAndDisableOnSuccess extends ComponentTestCase<Upload>
         implements Receiver {
+
     @Override
     protected String getDescription() {
         return "If upload is detached and attached during upload, the client side componenent never receives information that the upload has finished. Second update will not be successful.";
@@ -28,12 +26,16 @@ public class TestUploadAndDisableOnSuccess extends ComponentTestCase<Upload>
         return 4605;
     }
 
+    @Override
+    protected Class<Upload> getTestClass() {
+        return Upload.class;
+    }
+
     int counter = 0;
     private Label l;
 
     @Override
-    protected void setup() {
-        super.setup();
+    protected void initializeComponents() {
 
         final Label labe = new Label();
 
@@ -76,14 +78,13 @@ public class TestUploadAndDisableOnSuccess extends ComponentTestCase<Upload>
     @Override
     protected List<Component> createActions() {
         List<Component> actions = new ArrayList<Component>();
-        Button enabled = new Button("Toggle Enabled", new ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                for (Upload c : getTestComponents()) {
-                    c.setEnabled(!c.isEnabled());
-                }
-            }
-        });
-        actions.add(enabled);
+        actions.add(createButtonAction("Toggle Enabled",
+                new Command<Upload, Boolean>() {
+
+                    public void execute(Upload c, Boolean value) {
+                        c.setEnabled(!c.isEnabled());
+                    }
+                }));
 
         return actions;
     }
