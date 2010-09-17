@@ -12,8 +12,6 @@ public class RichTextAreas extends ComponentTestCase<RichTextArea> {
 
     @Override
     protected void initializeComponents() {
-        super.setup();
-
         RichTextArea rta;
 
         rta = createRichTextArea("TextField 100% wide, 100px high");
