@@ -93,8 +93,6 @@ public class ApplicationConnection {
 
     private final HashMap<String, String> resourcesMap = new HashMap<String, String>();
 
-    private static Console console;
-
     private final ArrayList<String> pendingVariables = new ArrayList<String>();
 
     private final ComponentDetailMap idToPaintableDetail = ComponentDetailMap
@@ -147,14 +145,22 @@ public class ApplicationConnection {
 
     public ApplicationConnection(WidgetSet widgetSet,
             ApplicationConfiguration cnf) {
+
+        VConsole.log("Starting application " + cnf.getRootPanelId());
+
+        VConsole.log("Vaadin application servlet version: "
+                + cnf.getServletVersion());
+        VConsole.log("Application version: " + cnf.getApplicationVersion());
+
+        if (!cnf.getServletVersion().equals(ApplicationConfiguration.VERSION)) {
+            VConsole.error("Warning: your widget set seems to be built with a different "
+                    + "version than the one used on server. Unexpected "
+                    + "behavior may occur.");
+        }
+
         this.widgetSet = widgetSet;
         configuration = cnf;
         windowName = configuration.getInitialWindowName();
-        if (isDebugMode()) {
-            console = new VDebugConsole(this, cnf, !isQuietDebugMode());
-        } else {
-            console = new NullConsole();
-        }
 
         ComponentLocator componentLocator = new ComponentLocator(this);
 
@@ -291,35 +297,27 @@ public class ApplicationConnection {
      * Get the active Console for writing debug messages. May return an actual
      * logging console, or the NullConsole if debugging is not turned on.
      * 
+     * @deprecated Developers should use {@link VConsole} since 6.4.5
+     * 
      * @return the active Console
      */
+    @Deprecated
     public static Console getConsole() {
-        return console;
+        return VConsole.getImplementation();
     }
 
     /**
      * Checks if client side is in debug mode. Practically this is invoked by
      * adding ?debug parameter to URI.
      * 
+     * @deprecated use ApplicationConfiguration isDebugMode instead.
+     * 
      * @return true if client side is currently been debugged
      */
-    public native static boolean isDebugMode()
-    /*-{
-        if($wnd.vaadin.debug) {
-            var parameters = $wnd.location.search;
-            var re = /debug[^\/]*$/;
-            return re.test(parameters);
-        } else {
-            return false;
-        }
-    }-*/;
-
-    private native static boolean isQuietDebugMode()
-    /*-{
-        var uri = $wnd.location;
-        var re = /debug=q[^\/]*$/;
-        return re.test(uri);
-    }-*/;
+    @Deprecated
+    public static boolean isDebugMode() {
+        return ApplicationConfiguration.isDebugMode();
+    }
 
     /**
      * Gets the application base URI. Using this other than as the download
@@ -349,7 +347,7 @@ public class ApplicationConnection {
         // Security: double cookie submission pattern
         final String rd = uidl_security_key + VAR_BURST_SEPARATOR + requestData;
 
-        console.log("Making UIDL Request with params: " + rd);
+        VConsole.log("Making UIDL Request with params: " + rd);
         String uri;
         if (configuration.usePortletURLs()) {
             uri = configuration.getPortletUidlURLBase();
@@ -410,7 +408,7 @@ public class ApplicationConnection {
 
                     public void onResponseReceived(Request request,
                             Response response) {
-                        console.log("Server visit took "
+                        VConsole.log("Server visit took "
                                 + String.valueOf((new Date()).getTime()
                                         - requestStartTime.getTime()) + "ms");
 
@@ -436,7 +434,7 @@ public class ApplicationConnection {
                             // We'll assume msec instead of the usual seconds
                             int delay = Integer.parseInt(response
                                     .getHeader("Retry-After"));
-                            console.log("503, retrying in " + delay + "msec");
+                            VConsole.log("503, retrying in " + delay + "msec");
                             (new Timer() {
                                 @Override
                                 public void run() {
@@ -481,22 +479,22 @@ public class ApplicationConnection {
                                     handleWhenCSSLoaded(response);
                                 }
                             }).schedule(50);
-                            console.log("Assuming CSS loading is not complete, "
+                            VConsole.log("Assuming CSS loading is not complete, "
                                     + "postponing render phase. "
                                     + "(.v-loading-indicator height == 0)");
                             cssWaits++;
                         } else {
                             handleReceivedJSONMessage(response);
                             if (cssWaits >= MAX_CSS_WAITS) {
-                                console.error("CSS files may have not loaded properly.");
+                                VConsole.error("CSS files may have not loaded properly.");
                             }
                         }
                     }
 
                 });
 
-            } catch (final RequestException e) {
-                ClientExceptionHandler.displayError(e);
+            } catch (RequestException e) {
+                VConsole.error(e);
                 endRequest();
             }
         } else {
@@ -518,7 +516,7 @@ public class ApplicationConnection {
      *            Optional details for debugging.
      */
     private void showCommunicationError(String details) {
-        console.error("Communication error: " + details);
+        VConsole.error("Communication error: " + details);
         showError(details, configuration.getCommunicationErrorCaption(),
                 configuration.getCommunicationErrorMessage(),
                 configuration.getCommunicationErrorUrl());
@@ -531,7 +529,7 @@ public class ApplicationConnection {
      *            Optional details for debugging.
      */
     private void showAuthenticationError(String details) {
-        console.error("Authentication error: " + details);
+        VConsole.error("Authentication error: " + details);
         showError(details, configuration.getAuthorizationErrorCaption(),
                 configuration.getAuthorizationErrorMessage(),
                 configuration.getAuthorizationErrorUrl());
@@ -666,8 +664,7 @@ public class ApplicationConnection {
                 variableBurst.remove(i - 1);
                 variableBurst.remove(i - 1);
                 i -= 2;
-                ApplicationConnection.getConsole().log(
-                        "Removed variable from removed component: " + id);
+                VConsole.log("Removed variable from removed component: " + id);
             }
         }
     }
@@ -678,7 +675,7 @@ public class ApplicationConnection {
             loadElement = DOM.createDiv();
             DOM.setStyleAttribute(loadElement, "position", "absolute");
             DOM.appendChild(view.getElement(), loadElement);
-            ApplicationConnection.getConsole().log("inserting load indicator");
+            VConsole.log("inserting load indicator");
         }
         DOM.setElementProperty(loadElement, "className", "v-loading-indicator");
         DOM.setStyleAttribute(loadElement, "display", "block");
@@ -774,13 +771,12 @@ public class ApplicationConnection {
             return;
         }
 
-        ApplicationConnection.getConsole().log(
-                "JSON parsing took " + (new Date().getTime() - start.getTime())
-                        + "ms");
+        VConsole.log("JSON parsing took "
+                + (new Date().getTime() - start.getTime()) + "ms");
         // Handle redirect
         if (json.containsKey("redirect")) {
             String url = json.getValueMap("redirect").getString("url");
-            console.log("redirecting to " + url);
+            VConsole.log("redirecting to " + url);
             redirect(url);
             return;
         }
@@ -856,15 +852,7 @@ public class ApplicationConnection {
                 for (int i = 0; i < length; i++) {
                     try {
                         final UIDL change = changes.get(i).cast();
-                        try {
-                            console.dirUIDL(change);
-                        } catch (final Exception e) {
-                            ClientExceptionHandler.displayError(e);
-                            // TODO: dir doesn't work in any browser although it
-                            // should
-                            // work (works in hosted mode)
-                            // it partially did at some part but now broken.
-                        }
+                        VConsole.dirUIDL(change, configuration);
                         final UIDL uidl = change.getChildUIDL(0);
                         // TODO optimize
                         final Paintable paintable = getPaintable(uidl.getId());
@@ -880,11 +868,10 @@ public class ApplicationConnection {
                         } else {
                             if (!uidl.getTag().equals(
                                     configuration.getEncodedWindowTag())) {
-                                ClientExceptionHandler
-                                        .displayError("Received update for "
-                                                + uidl.getTag()
-                                                + ", but there is no such paintable ("
-                                                + uidl.getId() + ") rendered.");
+                                VConsole.error("Received update for "
+                                        + uidl.getTag()
+                                        + ", but there is no such paintable ("
+                                        + uidl.getId() + ") rendered.");
                             } else {
                                 String pid = uidl.getId();
                                 if (!idToPaintableDetail.containsKey(pid)) {
@@ -902,7 +889,7 @@ public class ApplicationConnection {
                             }
                         }
                     } catch (final Throwable e) {
-                        ClientExceptionHandler.displayError(e);
+                        VConsole.error(e);
                     }
                 }
 
@@ -966,7 +953,7 @@ public class ApplicationConnection {
                         applicationRunning = false;
                     }
                     if (validatingLayouts) {
-                        getConsole().printLayoutProblems(meta,
+                        VConsole.printLayoutProblems(meta,
                                 ApplicationConnection.this,
                                 zeroHeightComponents, zeroWidthComponents);
                         zeroHeightComponents = null;
@@ -980,10 +967,10 @@ public class ApplicationConnection {
 
                 final long prosessingTime = (new Date().getTime())
                         - start.getTime();
-                console.log(" Processing time was "
+                VConsole.log(" Processing time was "
                         + String.valueOf(prosessingTime) + "ms for "
                         + jsonText.length() + " characters of JSON");
-                console.log("Referenced paintables: "
+                VConsole.log("Referenced paintables: "
                         + idToPaintableDetail.size());
 
                 endRequest();
@@ -1082,8 +1069,7 @@ public class ApplicationConnection {
      */
     public void unregisterPaintable(Paintable p) {
         if (p == null) {
-            ApplicationConnection.getConsole().error(
-                    "WARN: Trying to unregister null paintable");
+            VConsole.error("WARN: Trying to unregister null paintable");
             return;
         }
         String id = getPid(p);
@@ -1562,19 +1548,17 @@ public class ApplicationConnection {
             boolean manageCaption) {
         String pid = getPid(component.getElement());
         if (pid == null) {
-            getConsole().error(
-                    "Trying to update an unregistered component: "
-                            + Util.getSimpleName(component));
+            VConsole.error("Trying to update an unregistered component: "
+                    + Util.getSimpleName(component));
             return true;
         }
 
         ComponentDetail componentDetail = idToPaintableDetail.get(pid);
 
         if (componentDetail == null) {
-            getConsole().error(
-                    "ComponentDetail not found for "
-                            + Util.getSimpleName(component) + " with PID "
-                            + pid + ". This should not happen.");
+            VConsole.error("ComponentDetail not found for "
+                    + Util.getSimpleName(component) + " with PID " + pid
+                    + ". This should not happen.");
             return true;
         }
 
@@ -1899,29 +1883,21 @@ public class ApplicationConnection {
                 }
 
                 if (debugSizes) {
-                    getConsole()
-                            .log("Widget "
-                                    + Util.getSimpleName(widget)
-                                    + "/"
-                                    + getPid(widget.getElement())
-                                    + " relative height "
-                                    + relativeSize.getHeight()
-                                    + "% of "
-                                    + renderSpace.getHeight()
-                                    + "px (reported by "
+                    VConsole.log("Widget " + Util.getSimpleName(widget) + "/"
+                            + getPid(widget.getElement()) + " relative height "
+                            + relativeSize.getHeight() + "% of "
+                            + renderSpace.getHeight() + "px (reported by "
 
-                                    + Util.getSimpleName(parent)
-                                    + "/"
-                                    + (parent == null ? "?" : parent.hashCode())
-                                    + ") : " + height + "px");
+                            + Util.getSimpleName(parent) + "/"
+                            + (parent == null ? "?" : parent.hashCode())
+                            + ") : " + height + "px");
                 }
                 widget.setHeight(height + "px");
             } else {
                 widget.setHeight(relativeSize.getHeight() + "%");
-                ApplicationConnection.getConsole().error(
-                        Util.getLayout(widget).getClass().getName()
-                                + " did not produce allocatedSpace for "
-                                + widget.getClass().getName());
+                VConsole.error(Util.getLayout(widget).getClass().getName()
+                        + " did not produce allocatedSpace for "
+                        + widget.getClass().getName());
             }
         }
 
@@ -1956,24 +1932,20 @@ public class ApplicationConnection {
                 }
 
                 if (debugSizes) {
-                    getConsole().log(
-                            "Widget " + Util.getSimpleName(widget) + "/"
-                                    + getPid(widget.getElement())
-                                    + " relative width "
-                                    + relativeSize.getWidth() + "% of "
-                                    + renderSpace.getWidth()
-                                    + "px (reported by "
-                                    + Util.getSimpleName(parent) + "/"
-                                    + (parent == null ? "?" : getPid(parent))
-                                    + ") : " + width + "px");
+                    VConsole.log("Widget " + Util.getSimpleName(widget) + "/"
+                            + getPid(widget.getElement()) + " relative width "
+                            + relativeSize.getWidth() + "% of "
+                            + renderSpace.getWidth() + "px (reported by "
+                            + Util.getSimpleName(parent) + "/"
+                            + (parent == null ? "?" : getPid(parent)) + ") : "
+                            + width + "px");
                 }
                 widget.setWidth(width + "px");
             } else {
                 widget.setWidth(relativeSize.getWidth() + "%");
-                ApplicationConnection.getConsole().error(
-                        Util.getLayout(widget).getClass().getName()
-                                + " did not produce allocatedSpace for "
-                                + widget.getClass().getName());
+                VConsole.error(Util.getLayout(widget).getClass().getName()
+                        + " did not produce allocatedSpace for "
+                        + widget.getClass().getName());
             }
         }
 
@@ -2081,7 +2053,7 @@ public class ApplicationConnection {
         if (uidlUri.startsWith("theme://")) {
             final String themeUri = configuration.getThemeUri();
             if (themeUri == null) {
-                console.error("Theme not set: ThemeResource will not be found. ("
+                VConsole.error("Theme not set: ThemeResource will not be found. ("
                         + uidlUri + ")");
             }
             uidlUri = themeUri + uidlUri.substring(7);
@@ -2204,8 +2176,7 @@ public class ApplicationConnection {
 
         @Override
         public void run() {
-            getConsole().log(
-                    "Running re-layout of " + view.getClass().getName());
+            VConsole.log("Running re-layout of " + view.getClass().getName());
             runDescendentsLayout(view);
             isPending = false;
         }

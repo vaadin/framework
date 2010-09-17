@@ -7,6 +7,7 @@ package com.vaadin.terminal.gwt.client;
 import java.util.List;
 import java.util.Set;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -32,20 +33,6 @@ import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
 public final class VDebugConsole extends VOverlay implements Console {
 
-    /**
-     * Builds number. For example 0-custom_tag in 5.0.0-custom_tag.
-     */
-    public static final String VERSION;
-
-    /* Initialize version numbers from string replaced by build-script. */
-    static {
-        if ("@VERSION@".equals("@" + "VERSION" + "@")) {
-            VERSION = "9.9.9.INTERNAL-DEBUG-BUILD";
-        } else {
-            VERSION = "@VERSION@";
-        }
-    }
-
     Element caption = DOM.createDiv();
 
     private Panel panel;
@@ -69,127 +56,11 @@ public final class VDebugConsole extends VOverlay implements Console {
 
     private int origLeft;
 
-    private ApplicationConnection client;
-
-    private ApplicationConfiguration conf;
-
     private static final String help = "Drag=move, shift-drag=resize, doubleclick=min/max."
             + "Use debug=quiet to log only to browser console.";
 
-    public VDebugConsole(ApplicationConnection client,
-            ApplicationConfiguration cnf, boolean showWindow) {
+    public VDebugConsole() {
         super(false, false);
-
-        this.client = client;
-        conf = cnf;
-
-        panel = new FlowPanel();
-        if (showWindow) {
-            DOM.appendChild(getContainerElement(), caption);
-            setWidget(panel);
-            caption.setClassName("v-debug-console-caption");
-            setStyleName("v-debug-console");
-            DOM.setStyleAttribute(getElement(), "zIndex", 20000 + "");
-            DOM.setStyleAttribute(getElement(), "overflow", "hidden");
-
-            sinkEvents(Event.ONDBLCLICK);
-
-            sinkEvents(Event.MOUSEEVENTS);
-
-            panel.setStyleName("v-debug-console-content");
-
-            caption.setInnerHTML("Debug window");
-            caption.setTitle(help);
-
-            show();
-            minimize();
-
-            actions = new HorizontalPanel();
-            actions.add(clear);
-            actions.add(restart);
-            actions.add(forceLayout);
-            actions.add(analyzeLayout);
-
-            panel.add(actions);
-
-            panel.add(new HTML("<i>" + help + "</i>"));
-
-            clear.addClickHandler(new ClickHandler() {
-                public void onClick(ClickEvent event) {
-                    int width = panel.getOffsetWidth();
-                    int height = panel.getOffsetHeight();
-                    panel = new FlowPanel();
-                    panel.setPixelSize(width, height);
-                    panel.setStyleName("v-debug-console-content");
-                    panel.add(actions);
-                    setWidget(panel);
-                }
-            });
-
-            restart.addClickHandler(new ClickHandler() {
-                public void onClick(ClickEvent event) {
-
-                    String queryString = Window.Location.getQueryString();
-                    if (queryString != null
-                            && queryString.contains("restartApplications")) {
-                        Window.Location.reload();
-                    } else {
-                        String url = Location.getHref();
-                        String separator = "?";
-                        if (url.contains("?")) {
-                            separator = "&";
-                        }
-                        if (!url.contains("restartApplication")) {
-                            url += separator;
-                            url += "restartApplication";
-                        }
-                        if (!"".equals(Location.getHash())) {
-                            String hash = Location.getHash();
-                            url = url.replace(hash, "") + hash;
-                        }
-                        Window.Location.replace(url);
-                    }
-
-                }
-            });
-
-            forceLayout.addClickHandler(new ClickHandler() {
-                public void onClick(ClickEvent event) {
-                    VDebugConsole.this.client.forceLayout();
-                }
-            });
-
-            analyzeLayout.addClickHandler(new ClickHandler() {
-                public void onClick(ClickEvent event) {
-                    List<ApplicationConnection> runningApplications = ApplicationConfiguration
-                            .getRunningApplications();
-                    for (ApplicationConnection applicationConnection : runningApplications) {
-                        applicationConnection.analyzeLayouts();
-                    }
-                }
-            });
-            analyzeLayout
-                    .setTitle("Analyzes currently rendered view and "
-                            + "reports possible common problems in usage of relative sizes."
-                            + "Will cause server visit/rendering of whole screen and loss of"
-                            + " all non committed variables form client side.");
-
-        }
-
-        log("Vaadin application servlet version: " + cnf.getServletVersion());
-        log("Widget set is built on version: " + VERSION);
-        log("Application version: " + cnf.getApplicationVersion());
-
-        if (!cnf.getServletVersion().equals(VERSION)) {
-            error("Warning: your widget set seems to be built with a different "
-                    + "version than the one used on server. Unexpected "
-                    + "behavior may occur.");
-        }
-
-        logToDebugWindow("<div class=\"v-theme-version v-theme-version-"
-                + VERSION.replaceAll("\\.", "_")
-                + "\">Warning: widgetset version " + VERSION
-                + " does not seem to match theme version </div>", true);
     }
 
     private EventPreview dragpreview = new EventPreview() {
@@ -199,6 +70,8 @@ public final class VDebugConsole extends VOverlay implements Console {
             return false;
         }
     };
+
+    private boolean quietMode;
 
     @Override
     public void onBrowserEvent(Event event) {
@@ -310,7 +183,7 @@ public final class VDebugConsole extends VOverlay implements Console {
         }
 
         logToDebugWindow(msg, false);
-        System.out.println(msg);
+        GWT.log(msg);
         consoleLog(msg);
     }
 
@@ -347,7 +220,7 @@ public final class VDebugConsole extends VOverlay implements Console {
 
         logToDebugWindow(msg, true);
 
-        System.err.println(msg);
+        GWT.log(msg);
         consoleErr(msg);
     }
 
@@ -374,7 +247,7 @@ public final class VDebugConsole extends VOverlay implements Console {
      * @see com.vaadin.terminal.gwt.client.Console#dirUIDL(com.vaadin
      * .terminal.gwt.client.UIDL)
      */
-    public void dirUIDL(UIDL u) {
+    public void dirUIDL(UIDL u, ApplicationConfiguration conf) {
         if (panel.isAttached()) {
             panel.add(new VUIDLBrowser(u, conf));
         }
@@ -520,5 +393,124 @@ public final class VDebugConsole extends VOverlay implements Console {
 
         }
         parent.addItem(errorNode);
+    }
+
+    public void log(Throwable e) {
+        log(e.getMessage());
+        GWT.log(e.getMessage(), e);
+    }
+
+    public void error(Throwable e) {
+        error(e.getMessage());
+        GWT.log(e.getMessage(), e);
+    }
+
+    public void init() {
+        panel = new FlowPanel();
+        if (!quietMode) {
+            DOM.appendChild(getContainerElement(), caption);
+            setWidget(panel);
+            caption.setClassName("v-debug-console-caption");
+            setStyleName("v-debug-console");
+            DOM.setStyleAttribute(getElement(), "zIndex", 20000 + "");
+            DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+
+            sinkEvents(Event.ONDBLCLICK);
+
+            sinkEvents(Event.MOUSEEVENTS);
+
+            panel.setStyleName("v-debug-console-content");
+
+            caption.setInnerHTML("Debug window");
+            caption.setTitle(help);
+
+            show();
+            minimize();
+
+            actions = new HorizontalPanel();
+            actions.add(clear);
+            actions.add(restart);
+            actions.add(forceLayout);
+            actions.add(analyzeLayout);
+
+            panel.add(actions);
+
+            panel.add(new HTML("<i>" + help + "</i>"));
+
+            clear.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
+                    int width = panel.getOffsetWidth();
+                    int height = panel.getOffsetHeight();
+                    panel = new FlowPanel();
+                    panel.setPixelSize(width, height);
+                    panel.setStyleName("v-debug-console-content");
+                    panel.add(actions);
+                    setWidget(panel);
+                }
+            });
+
+            restart.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
+
+                    String queryString = Window.Location.getQueryString();
+                    if (queryString != null
+                            && queryString.contains("restartApplications")) {
+                        Window.Location.reload();
+                    } else {
+                        String url = Location.getHref();
+                        String separator = "?";
+                        if (url.contains("?")) {
+                            separator = "&";
+                        }
+                        if (!url.contains("restartApplication")) {
+                            url += separator;
+                            url += "restartApplication";
+                        }
+                        if (!"".equals(Location.getHash())) {
+                            String hash = Location.getHash();
+                            url = url.replace(hash, "") + hash;
+                        }
+                        Window.Location.replace(url);
+                    }
+
+                }
+            });
+
+            forceLayout.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
+                    // TODO for each client in appconf force layout
+                    // VDebugConsole.this.client.forceLayout();
+                }
+            });
+
+            analyzeLayout.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
+                    List<ApplicationConnection> runningApplications = ApplicationConfiguration
+                            .getRunningApplications();
+                    for (ApplicationConnection applicationConnection : runningApplications) {
+                        applicationConnection.analyzeLayouts();
+                    }
+                }
+            });
+            analyzeLayout
+                    .setTitle("Analyzes currently rendered view and "
+                            + "reports possible common problems in usage of relative sizes."
+                            + "Will cause server visit/rendering of whole screen and loss of"
+                            + " all non committed variables form client side.");
+
+        }
+        log("Widget set is built on version: "
+                + ApplicationConfiguration.VERSION);
+
+        logToDebugWindow("<div class=\"v-theme-version v-theme-version-"
+                + ApplicationConfiguration.VERSION.replaceAll("\\.", "_")
+                + "\">Warning: widgetset version "
+                + ApplicationConfiguration.VERSION
+                + " does not seem to match theme version </div>", true);
+
+    }
+
+    public void setQuietMode(boolean quietDebugMode) {
+        quietMode = quietDebugMode;
     }
 }

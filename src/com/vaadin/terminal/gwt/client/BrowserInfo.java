@@ -54,17 +54,13 @@ public class BrowserInfo {
     private VBrowserDetails browserDetails;
 
     private BrowserInfo() {
-        try {
-            browserDetails = new VBrowserDetails(getBrowserString());
-            if (browserDetails.isIE()
-                    && browserDetails.getBrowserMajorVersion() == 8
-                    && isIE8InIE7CompatibilityMode()) {
-                browserDetails.setIE8InCompatibilityMode();
-            }
-
-        } catch (Exception e) {
-            ClientExceptionHandler.displayError(e);
+        browserDetails = new VBrowserDetails(getBrowserString());
+        if (browserDetails.isIE()
+                && browserDetails.getBrowserMajorVersion() == 8
+                && isIE8InIE7CompatibilityMode()) {
+            browserDetails.setIE8InCompatibilityMode();
         }
+
     }
 
     private native boolean isIE8InIE7CompatibilityMode()

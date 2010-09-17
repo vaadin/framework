@@ -16,7 +16,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.TextBox;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.ClientExceptionHandler;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
@@ -160,7 +159,9 @@ public class VTextualDate extends VDateField implements Paintable, Field,
 
                     formatStr = frmString;
                 } catch (LocaleNotLoadedException e) {
-                    ClientExceptionHandler.displayError(e);
+                    // TODO should die instead? Can the component survive
+                    // without format string?
+                    ApplicationConnection.getConsole().error(e);
                 }
             }
         }
@@ -229,7 +230,7 @@ public class VTextualDate extends VDateField implements Paintable, Field,
                 // remove possibly added invalid value indication
                 removeStyleName(PARSE_ERROR_CLASSNAME);
             } catch (final Exception e) {
-                ClientExceptionHandler.displayError(e.getMessage());
+                ApplicationConnection.getConsole().log(e);
 
                 addStyleName(PARSE_ERROR_CLASSNAME);
                 // this is a hack that may eventually be removed

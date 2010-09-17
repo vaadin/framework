@@ -13,7 +13,7 @@ import java.util.Set;
  */
 public class NullConsole implements Console {
 
-    public void dirUIDL(UIDL u) {
+    public void dirUIDL(UIDL u, ApplicationConfiguration cnf) {
     }
 
     public void error(String msg) {
@@ -29,6 +29,12 @@ public class NullConsole implements Console {
             ApplicationConnection applicationConnection,
             Set<Paintable> zeroHeightComponents,
             Set<Paintable> zeroWidthComponents) {
+    }
+
+    public void log(Throwable e) {
+    }
+
+    public void error(Throwable e) {
     }
 
 }

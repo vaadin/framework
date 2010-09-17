@@ -11,6 +11,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.user.client.Command;
@@ -18,6 +19,20 @@ import com.google.gwt.user.client.Timer;
 import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
 
 public class ApplicationConfiguration implements EntryPoint {
+
+    /**
+     * Builds number. For example 0-custom_tag in 5.0.0-custom_tag.
+     */
+    public static final String VERSION;
+
+    /* Initialize version numbers from string replaced by build-script. */
+    static {
+        if ("@VERSION@".equals("@" + "VERSION" + "@")) {
+            VERSION = "9.9.9.INTERNAL-DEBUG-BUILD";
+        } else {
+            VERSION = "@VERSION@";
+        }
+    }
 
     private static WidgetSet widgetSet = GWT.create(WidgetSet.class);
 
@@ -361,7 +376,52 @@ public class ApplicationConfiguration implements EntryPoint {
     };
 
     public void onModuleLoad() {
+        // display some sort of error of exceptions in web mode to debug console
+        GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+            public void onUncaughtException(Throwable e) {
+                Console console = ApplicationConnection.getConsole();
+                if (console != null) {
+                    console.error(e.getMessage());
+                }
+            }
+        });
+
+        // Prepare VConsole for debugging
+        if (isDebugMode()) {
+            VDebugConsole console = GWT.create(VDebugConsole.class);
+            console.setQuietMode(isQuietDebugMode());
+            console.init();
+            VConsole.setImplementation(console);
+        } else {
+            VConsole.setImplementation((Console) GWT.create(NullConsole.class));
+        }
+
         initConfigurations();
         startNextApplication();
     }
+
+    /**
+     * Checks if client side is in debug mode. Practically this is invoked by
+     * adding ?debug parameter to URI.
+     * 
+     * @return true if client side is currently been debugged
+     */
+    public native static boolean isDebugMode()
+    /*-{
+        if($wnd.vaadin.debug) {
+            var parameters = $wnd.location.search;
+            var re = /debug[^\/]*$/;
+            return re.test(parameters);
+        } else {
+            return false;
+        }
+    }-*/;
+
+    private native static boolean isQuietDebugMode()
+    /*-{
+        var uri = $wnd.location;
+        var re = /debug=q[^\/]*$/;
+        return re.test(uri);
+    }-*/;
+
 }

@@ -9,7 +9,6 @@ import java.util.Date;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ClientExceptionHandler;
 import com.vaadin.terminal.gwt.client.DateTimeService;
 import com.vaadin.terminal.gwt.client.LocaleNotLoadedException;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -102,10 +101,11 @@ public class VDateField extends FlowPanel implements Paintable, Field {
                 currentLocale = locale;
             } catch (final LocaleNotLoadedException e) {
                 currentLocale = dts.getLocale();
-                ClientExceptionHandler.displayError(
+                ApplicationConnection.getConsole().error(
                         "Tried to use an unloaded locale \"" + locale
                                 + "\". Using default locale (" + currentLocale
-                                + ").", e);
+                                + ").");
+                ApplicationConnection.getConsole().error(e);
             }
         }
 

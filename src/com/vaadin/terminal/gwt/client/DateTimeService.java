@@ -59,75 +59,77 @@ public class DateTimeService {
         try {
             return LocaleService.getMonthNames(currentLocale)[month];
         } catch (final LocaleNotLoadedException e) {
-            ClientExceptionHandler.displayError(e);
+            ApplicationConnection.getConsole().error(e);
+            return null;
         }
-        return null;
     }
 
     public String getShortMonth(int month) {
         try {
             return LocaleService.getShortMonthNames(currentLocale)[month];
         } catch (final LocaleNotLoadedException e) {
-            ClientExceptionHandler.displayError(e);
+            ApplicationConnection.getConsole().error(e);
+            return null;
         }
-        return null;
     }
 
     public String getDay(int day) {
         try {
             return LocaleService.getDayNames(currentLocale)[day];
         } catch (final LocaleNotLoadedException e) {
-            ClientExceptionHandler.displayError(e);
+            ApplicationConnection.getConsole().error(e);
+            return null;
         }
-        return null;
     }
 
     public String getShortDay(int day) {
         try {
             return LocaleService.getShortDayNames(currentLocale)[day];
         } catch (final LocaleNotLoadedException e) {
-            ClientExceptionHandler.displayError(e);
+            ApplicationConnection.getConsole().error(e);
+            return null;
         }
-        return null;
     }
 
     public int getFirstDayOfWeek() {
         try {
             return LocaleService.getFirstDayOfWeek(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            ClientExceptionHandler.displayError(e);
+            ApplicationConnection.getConsole().error(e);
+            return 0;
         }
-        return 0;
     }
 
     public boolean isTwelveHourClock() {
         try {
             return LocaleService.isTwelveHourClock(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            ClientExceptionHandler.displayError(e);
+            ApplicationConnection.getConsole().error(e);
+            return false;
         }
-        return false;
     }
 
     public String getClockDelimeter() {
         try {
             return LocaleService.getClockDelimiter(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            ClientExceptionHandler.displayError(e);
+            ApplicationConnection.getConsole().error(e);
+            return ":";
         }
-        return ":";
     }
+
+    private static final String[] DEFAULT_AMPM_STRINGS = { "AM", "PM" };
 
     public String[] getAmPmStrings() {
         try {
             return LocaleService.getAmPmStrings(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            ClientExceptionHandler.displayError(e);
+            // TODO can this practically even happen? Should die instead?
+            ApplicationConnection.getConsole().error(
+                    "Locale not loaded, using fallback : AM/PM");
+            ApplicationConnection.getConsole().error(e);
+            return DEFAULT_AMPM_STRINGS;
         }
-        final String[] temp = new String[2];
-        temp[0] = "AM";
-        temp[1] = "PM";
-        return temp;
     }
 
     public int getStartWeekDay(Date date) {
@@ -137,8 +139,10 @@ public class DateTimeService {
         try {
             firstDay = LocaleService.getFirstDayOfWeek(currentLocale);
         } catch (final LocaleNotLoadedException e) {
+            ApplicationConnection.getConsole().error(
+                    "Locale not loaded, using fallback 0");
+            ApplicationConnection.getConsole().error(e);
             firstDay = 0;
-            ClientExceptionHandler.displayError(e);
         }
         int start = dateForFirstOfThisMonth.getDay() - firstDay;
         if (start < 0) {
