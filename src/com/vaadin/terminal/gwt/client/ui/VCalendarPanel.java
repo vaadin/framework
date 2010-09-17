@@ -36,9 +36,9 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.DateTimeService;
+import com.vaadin.terminal.gwt.client.VConsole;
 
 @SuppressWarnings("deprecation")
 public class VCalendarPanel extends FocusableFlexTable implements
@@ -274,8 +274,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
             selectDate(focusedDate.getDate());
         } else {
-            ApplicationConnection.getConsole().log(
-                    "Trying to select a the focused date which is NULL!");
+            VConsole.log("Trying to select a the focused date which is NULL!");
         }
     }
 
@@ -577,7 +576,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
             focusChangeListener.focusChanged(new Date(focusedDate.getTime()));
         }
 
-        Date start = new Date();
         final boolean needsMonth = getResolution() > VDateField.RESOLUTION_YEAR;
         boolean needsBody = getResolution() >= VDateField.RESOLUTION_DAY;
         buildCalendarHeader(true, needsMonth);
@@ -597,11 +595,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
         } else if (time != null) {
             remove(time);
         }
-
-        Date end = new Date();
-        ApplicationConnection.getConsole().error(
-                "Rendering calendar panel for(ms) "
-                        + (end.getTime() - start.getTime()));
 
     }
 
@@ -720,9 +713,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
                         (Node) event.getNativeEvent().getEventTarget().cast())) {
             int nativeKeyCode = event.getNativeEvent().getKeyCode();
             if (nativeKeyCode == getSelectKey()) {
-                ApplicationConnection.getConsole().log(
-                        "keydown on listselects"
-                                + event.getNativeEvent().getKeyCode());
                 onSubmit(); // submit happens if enter key hit down on listboxes
                 event.preventDefault();
                 event.stopPropagation();

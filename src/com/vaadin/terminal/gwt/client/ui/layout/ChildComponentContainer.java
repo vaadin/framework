@@ -21,6 +21,7 @@ import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
 
 public class ChildComponentContainer extends Panel {
@@ -715,15 +716,13 @@ public class ChildComponentContainer extends Panel {
         // + " to " + containerWidth + "," + containerHeight);
 
         if (containerWidth < 0) {
-            ApplicationConnection.getConsole().log(
-                    "containerWidth should never be negative: "
-                            + containerWidth);
+            VConsole.log("containerWidth should never be negative: "
+                    + containerWidth);
             containerWidth = 0;
         }
         if (containerHeight < 0) {
-            ApplicationConnection.getConsole().log(
-                    "containerHeight should never be negative: "
-                            + containerHeight);
+            VConsole.log("containerHeight should never be negative: "
+                    + containerHeight);
             containerHeight = 0;
         }
 

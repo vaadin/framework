@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VConsole;
 
 /**
  * 
@@ -225,7 +226,7 @@ public class VUpload extends SimplePanel implements Paintable {
                     if (t != null) {
                         t.cancel();
                     }
-                    ApplicationConnection.getConsole().log("Submit complete");
+                    VConsole.log("VUpload:Submit complete");
                     client.sendPendingVariableChanges();
                 }
 
@@ -245,9 +246,7 @@ public class VUpload extends SimplePanel implements Paintable {
 
     private void submit() {
         if (fu.getFilename().length() == 0 || submitted || !enabled) {
-            ApplicationConnection
-                    .getConsole()
-                    .log("Submit cancelled (disabled, no file or already submitted)");
+            VConsole.log("Submit cancelled (disabled, no file or already submitted)");
             return;
         }
         // flush possibly pending variable changes, so they will be handled
@@ -256,7 +255,7 @@ public class VUpload extends SimplePanel implements Paintable {
 
         element.submit();
         submitted = true;
-        ApplicationConnection.getConsole().log("Submitted form");
+        VConsole.log("Submitted form");
 
         disableUpload();
 
@@ -267,9 +266,7 @@ public class VUpload extends SimplePanel implements Paintable {
         t = new Timer() {
             @Override
             public void run() {
-                ApplicationConnection
-                        .getConsole()
-                        .log("Visiting server to see if upload started event changed UI.");
+                VConsole.log("Visiting server to see if upload started event changed UI.");
                 client.updateVariable(paintableId, "pollForStart",
                         nextUploadId, true);
             }

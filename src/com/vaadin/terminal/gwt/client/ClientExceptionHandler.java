@@ -16,13 +16,8 @@ public class ClientExceptionHandler {
 
     @Deprecated
     public static void displayError(String msg) {
-
-        Console console = ApplicationConnection.getConsole();
-
-        if (console != null) {
-            console.error(msg);
-            GWT.log(msg);
-        }
+        VConsole.error(msg);
+        GWT.log(msg);
     }
 
     @Deprecated

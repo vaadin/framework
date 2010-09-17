@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.Console;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
@@ -1130,11 +1129,14 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
             if (!DOM.isOrHasChild(getElement(), target)) {
                 // not within the modal window, but let's see if it's in the
                 // debug window
-                Console console = ApplicationConnection.getConsole();
-                if (console instanceof VDebugConsole
-                        && DOM.isOrHasChild(
-                                ((VDebugConsole) console).getElement(), target)) {
-                    return true; // allow debug-window clicks
+                Widget w = Util.findWidget(target, null);
+                while (w != null) {
+                    if (w instanceof VDebugConsole) {
+                        return true; // allow debug-window clicks
+                    } else if (w instanceof Paintable) {
+                        return false;
+                    }
+                    w = w.getParent();
                 }
                 return false;
             }

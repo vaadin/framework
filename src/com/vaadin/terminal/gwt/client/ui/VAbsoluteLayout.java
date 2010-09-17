@@ -29,6 +29,7 @@ import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
+import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VAbsoluteLayout extends ComplexPanel implements Container {
 
@@ -377,10 +378,10 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
             if (bottom != null && top != null) {
                 // define height for wrapper to simulate bottom property
                 int bottompixels = measureForIE6(bottom, true);
-                ApplicationConnection.getConsole().log("ALB" + bottompixels);
+                VConsole.log("ALB" + bottompixels);
                 int height = canvas.getOffsetHeight() - bottompixels
                         - getElement().getOffsetTop();
-                ApplicationConnection.getConsole().log("ALB" + height);
+                VConsole.log("ALB" + height);
                 if (height < 0) {
                     height = 0;
                 }
@@ -392,10 +393,10 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
             if (left != null && right != null) {
                 // define width for wrapper to simulate right property
                 int rightPixels = measureForIE6(right, false);
-                ApplicationConnection.getConsole().log("ALR" + rightPixels);
+                VConsole.log("ALR" + rightPixels);
                 int width = canvas.getOffsetWidth() - rightPixels
                         - getElement().getOffsetLeft();
-                ApplicationConnection.getConsole().log("ALR" + width);
+                VConsole.log("ALR" + width);
                 if (width < 0) {
                     width = 0;
                 }

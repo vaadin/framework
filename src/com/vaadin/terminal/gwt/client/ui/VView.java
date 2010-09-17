@@ -35,6 +35,7 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
 /**
@@ -337,8 +338,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                     } else if (toBeFocused instanceof Focusable) {
                         ((Focusable) toBeFocused).focus();
                     } else {
-                        ApplicationConnection.getConsole().log(
-                                "Could not focus component");
+                        VConsole.log("Could not focus component");
                     }
                 }
             });
@@ -442,19 +442,15 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                         if (width != getOffsetWidth()) {
                             width = getOffsetWidth();
                             changed = true;
-                            ApplicationConnection.getConsole().log(
-                                    "window w" + width);
+                            VConsole.log("window w" + width);
                         }
                         if (height != getOffsetHeight()) {
                             height = getOffsetHeight();
                             changed = true;
-                            ApplicationConnection.getConsole().log(
-                                    "window h" + height);
+                            VConsole.log("window h" + height);
                         }
                         if (changed) {
-                            ApplicationConnection
-                                    .getConsole()
-                                    .log("Running layout functions due window resize");
+                            VConsole.log("Running layout functions due window resize");
                             connection.runDescendentsLayout(VView.this);
 
                             sendClientResized();
@@ -475,8 +471,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             width = Window.getClientWidth();
             height = Window.getClientHeight();
 
-            ApplicationConnection.getConsole().log(
-                    "Running layout functions due window resize");
+            VConsole.log("Running layout functions due window resize");
 
             connection.runDescendentsLayout(this);
             Util.runWebkitOverflowAutoFix(getElement());

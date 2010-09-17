@@ -22,6 +22,7 @@ import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VErrorMessage;
 
 public class VForm extends ComplexPanel implements Container, KeyDownHandler {
@@ -214,8 +215,7 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
             return new RenderSpace(renderInformation.getContentAreaSize()
                     .getWidth(), 0);
         } else {
-            ApplicationConnection.getConsole().error(
-                    "Invalid child requested RenderSpace information");
+            VConsole.error("Invalid child requested RenderSpace information");
             return null;
         }
     }

@@ -379,10 +379,10 @@ public class ApplicationConfiguration implements EntryPoint {
         // display some sort of error of exceptions in web mode to debug console
         GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
             public void onUncaughtException(Throwable e) {
-                Console console = ApplicationConnection.getConsole();
+                Console console = VConsole.getImplementation();
                 if (console != null) {
                     console.error(e.getMessage());
-                }
+                } // else very early phase of init, alert ??
             }
         });
 

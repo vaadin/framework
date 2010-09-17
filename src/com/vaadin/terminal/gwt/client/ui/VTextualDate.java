@@ -23,6 +23,7 @@ import com.vaadin.terminal.gwt.client.LocaleNotLoadedException;
 import com.vaadin.terminal.gwt.client.LocaleService;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VTextualDate extends VDateField implements Paintable, Field,
         ChangeHandler, ContainerResizedListener, Focusable {
@@ -161,7 +162,7 @@ public class VTextualDate extends VDateField implements Paintable, Field,
                 } catch (LocaleNotLoadedException e) {
                     // TODO should die instead? Can the component survive
                     // without format string?
-                    ApplicationConnection.getConsole().error(e);
+                    VConsole.error(e);
                 }
             }
         }
@@ -230,7 +231,7 @@ public class VTextualDate extends VDateField implements Paintable, Field,
                 // remove possibly added invalid value indication
                 removeStyleName(PARSE_ERROR_CLASSNAME);
             } catch (final Exception e) {
-                ApplicationConnection.getConsole().log(e);
+                VConsole.log(e);
 
                 addStyleName(PARSE_ERROR_CLASSNAME);
                 // this is a hack that may eventually be removed

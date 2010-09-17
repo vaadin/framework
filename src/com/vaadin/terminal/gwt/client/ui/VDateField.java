@@ -13,6 +13,7 @@ import com.vaadin.terminal.gwt.client.DateTimeService;
 import com.vaadin.terminal.gwt.client.LocaleNotLoadedException;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VDateField extends FlowPanel implements Paintable, Field {
@@ -101,11 +102,9 @@ public class VDateField extends FlowPanel implements Paintable, Field {
                 currentLocale = locale;
             } catch (final LocaleNotLoadedException e) {
                 currentLocale = dts.getLocale();
-                ApplicationConnection.getConsole().error(
-                        "Tried to use an unloaded locale \"" + locale
-                                + "\". Using default locale (" + currentLocale
-                                + ").");
-                ApplicationConnection.getConsole().error(e);
+                VConsole.error("Tried to use an unloaded locale \"" + locale
+                        + "\". Using default locale (" + currentLocale + ").");
+                VConsole.error(e);
             }
         }
 

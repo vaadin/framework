@@ -158,8 +158,7 @@ public class Util {
         try {
             return Float.parseFloat(size.substring(0, size.length() - 1));
         } catch (Exception e) {
-            ApplicationConnection.getConsole().log(
-                    "Unable to parse relative size");
+            VConsole.log("Unable to parse relative size");
             return -1;
         }
     }

@@ -362,7 +362,6 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
             feedbackPopup.show();
         } else if (targ.equals(getElement())
                 && DOM.eventGetType(event) == Event.ONBLUR) {
-            ApplicationConnection.getConsole().error(targ.getClassName());
             feedbackPopup.hide();
         } else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
             feedbackPopup.show();

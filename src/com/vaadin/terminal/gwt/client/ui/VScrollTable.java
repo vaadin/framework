@@ -59,6 +59,7 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
@@ -422,8 +423,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 if (prev != null) {
                     return setRowFocus(prev);
                 } else {
-                    ApplicationConnection.getConsole().log(
-                            "no previous available");
+                    VConsole.log("no previous available");
                 }
             }
         }
@@ -1614,7 +1614,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         public void run() {
             if (client.hasActiveRequest() || navKeyDown) {
                 // if client connection is busy, don't bother loading it more
-                ApplicationConnection.getConsole().log("Postponed rowfetch");
+                VConsole.log("Postponed rowfetch");
                 schedule(250);
             } else {
 

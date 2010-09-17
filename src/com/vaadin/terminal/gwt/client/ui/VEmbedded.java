@@ -25,6 +25,7 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VEmbedded extends HTML implements Paintable {
@@ -126,8 +127,7 @@ public class VEmbedded extends HTML implements Paintable {
                 }
                 clearBrowserElement = false;
             } else {
-                ApplicationConnection.getConsole().log(
-                        "Unknown Embedded type '" + type + "'");
+                VConsole.log("Unknown Embedded type '" + type + "'");
             }
         } else if (uidl.hasAttribute("mimetype")) {
             final String mime = uidl.getStringAttribute("mimetype");
@@ -179,12 +179,10 @@ public class VEmbedded extends HTML implements Paintable {
                 getElement().appendChild(obj);
 
             } else {
-                ApplicationConnection.getConsole().log(
-                        "Unknown Embedded mimetype '" + mime + "'");
+                VConsole.log("Unknown Embedded mimetype '" + mime + "'");
             }
         } else {
-            ApplicationConnection.getConsole().log(
-                    "Unknown Embedded; no type or mimetype attribute");
+            VConsole.log("Unknown Embedded; no type or mimetype attribute");
         }
 
         if (clearBrowserElement) {

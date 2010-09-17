@@ -24,6 +24,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.DateTimeService;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusChangeListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.SubmitListener;
@@ -63,9 +64,6 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         calendar = GWT.create(VCalendarPanel.class);
         calendar.setFocusOutListener(new FocusOutListener() {
             public boolean onFocusOut(DomEvent event) {
-                ApplicationConnection.getConsole().log(
-                        "Focus out event, due to "
-                                + event.getNativeEvent().getType());
                 event.preventDefault();
                 closeCalendarPanel();
                 return true;
@@ -233,7 +231,6 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
 
         if (!open && !readonly) {
             open = true;
-            final Date start = new Date();
 
             if (getCurrentDate() != null) {
                 calendar.setDate((Date) getCurrentDate().clone());
@@ -287,12 +284,6 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
                     popup.setPopupPosition(l,
                             t + calendarToggle.getOffsetHeight() + 2);
 
-                    Date end = new Date();
-
-                    ApplicationConnection.getConsole().log(
-                            "Rendering VCalendar took "
-                                    + (end.getTime() - start.getTime() + "ms"));
-
                     /*
                      * We have to wait a while before focusing since the popup
                      * needs to be opened before we can focus
@@ -308,8 +299,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
                 }
             });
         } else {
-            ApplicationConnection.getConsole().error(
-                    "Cannot reopen popup, it is already open!");
+            VConsole.error("Cannot reopen popup, it is already open!");
         }
     }
 

@@ -274,9 +274,7 @@ public class VCaption extends HTML {
             if (owner != null) {
                 Util.notifyParentOfSizeChange(owner, true);
             } else {
-                ApplicationConnection
-                        .getConsole()
-                        .log("Warning: Icon load event was not propagated because VCaption owner is unknown.");
+                VConsole.log("Warning: Icon load event was not propagated because VCaption owner is unknown.");
             }
         }
     }

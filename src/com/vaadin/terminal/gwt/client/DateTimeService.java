@@ -59,7 +59,7 @@ public class DateTimeService {
         try {
             return LocaleService.getMonthNames(currentLocale)[month];
         } catch (final LocaleNotLoadedException e) {
-            ApplicationConnection.getConsole().error(e);
+            VConsole.error(e);
             return null;
         }
     }
@@ -68,7 +68,7 @@ public class DateTimeService {
         try {
             return LocaleService.getShortMonthNames(currentLocale)[month];
         } catch (final LocaleNotLoadedException e) {
-            ApplicationConnection.getConsole().error(e);
+            VConsole.error(e);
             return null;
         }
     }
@@ -77,7 +77,7 @@ public class DateTimeService {
         try {
             return LocaleService.getDayNames(currentLocale)[day];
         } catch (final LocaleNotLoadedException e) {
-            ApplicationConnection.getConsole().error(e);
+            VConsole.error(e);
             return null;
         }
     }
@@ -86,7 +86,7 @@ public class DateTimeService {
         try {
             return LocaleService.getShortDayNames(currentLocale)[day];
         } catch (final LocaleNotLoadedException e) {
-            ApplicationConnection.getConsole().error(e);
+            VConsole.error(e);
             return null;
         }
     }
@@ -95,7 +95,7 @@ public class DateTimeService {
         try {
             return LocaleService.getFirstDayOfWeek(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            ApplicationConnection.getConsole().error(e);
+            VConsole.error(e);
             return 0;
         }
     }
@@ -104,7 +104,7 @@ public class DateTimeService {
         try {
             return LocaleService.isTwelveHourClock(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            ApplicationConnection.getConsole().error(e);
+            VConsole.error(e);
             return false;
         }
     }
@@ -113,7 +113,7 @@ public class DateTimeService {
         try {
             return LocaleService.getClockDelimiter(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            ApplicationConnection.getConsole().error(e);
+            VConsole.error(e);
             return ":";
         }
     }
@@ -125,9 +125,8 @@ public class DateTimeService {
             return LocaleService.getAmPmStrings(currentLocale);
         } catch (final LocaleNotLoadedException e) {
             // TODO can this practically even happen? Should die instead?
-            ApplicationConnection.getConsole().error(
-                    "Locale not loaded, using fallback : AM/PM");
-            ApplicationConnection.getConsole().error(e);
+            VConsole.error("Locale not loaded, using fallback : AM/PM");
+            VConsole.error(e);
             return DEFAULT_AMPM_STRINGS;
         }
     }
@@ -139,9 +138,8 @@ public class DateTimeService {
         try {
             firstDay = LocaleService.getFirstDayOfWeek(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            ApplicationConnection.getConsole().error(
-                    "Locale not loaded, using fallback 0");
-            ApplicationConnection.getConsole().error(e);
+            VConsole.error("Locale not loaded, using fallback 0");
+            VConsole.error(e);
             firstDay = 0;
         }
         int start = dateForFirstOfThisMonth.getDay() - firstDay;

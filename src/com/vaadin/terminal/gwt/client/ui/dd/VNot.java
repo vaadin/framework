@@ -6,8 +6,8 @@
  */
 package com.vaadin.terminal.gwt.client.ui.dd;
 
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VConsole;
 
 /**
  * TODO implementation could now be simplified/optimized
@@ -23,8 +23,7 @@ final public class VNot extends VAcceptCriterion {
         if (crit1 == null) {
             crit1 = getCriteria(drag, configuration, 0);
             if (crit1 == null) {
-                ApplicationConnection.getConsole().log(
-                        "Not criteria didn't found a child criteria");
+                VConsole.log("Not criteria didn't found a child criteria");
                 return;
             }
         }

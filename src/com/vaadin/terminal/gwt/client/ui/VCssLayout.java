@@ -27,6 +27,7 @@ import com.vaadin.terminal.gwt.client.StyleConstants;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ValueMap;
 
 public class VCssLayout extends SimplePanel implements Paintable, Container {
@@ -189,9 +190,8 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
                             }
                         }
                     } catch (Exception e) {
-                        ApplicationConnection.getConsole().log(
-                                "CssLayout encounterd invalid css string: "
-                                        + css);
+                        VConsole.log("CssLayout encounterd invalid css string: "
+                                + css);
                     }
                 }
 
