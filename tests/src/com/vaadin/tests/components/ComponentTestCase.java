@@ -23,7 +23,6 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
         TestBase {
 
     private List<T> testComponents = new ArrayList<T>();
-    private Class<T> componentClass;
     private HorizontalLayout actionLayout;
 
     abstract protected Class<T> getTestClass();
@@ -39,7 +38,6 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
         addComponent(actionLayout);
 
         // Create Components
-        componentClass = getTestClass();
         initializeComponents();
 
         // Create actions and add to layout
@@ -84,7 +82,7 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
         actions.add(createReadonlyAction(false));
 
         actions.add(createErrorIndicatorAction(false));
-        if (Field.class.isAssignableFrom(componentClass)) {
+        if (Field.class.isAssignableFrom(getTestClass())) {
             actions.add(createRequiredAction(false));
         }
 
@@ -254,6 +252,6 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
 
     @Override
     protected String getDescription() {
-        return "Generic test case for " + componentClass.getSimpleName();
+        return "Generic test case for " + getTestClass().getSimpleName();
     }
 }
