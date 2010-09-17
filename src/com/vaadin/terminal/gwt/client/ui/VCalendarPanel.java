@@ -1208,7 +1208,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
             return;
         }
 
-        Date oldValue = value;
+        Date oldFocusedValue = focusedDate;
         value = currentDate;
 
         if (value == null) {
@@ -1217,10 +1217,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
             focusedDate = (Date) value.clone();
         }
 
-        // Re-render calendar if month or year has changed
-        if (oldValue == null || value == null
-                || oldValue.getYear() != value.getYear()
-                || oldValue.getMonth() != value.getMonth()) {
+        // Re-render calendar if month or year of focused date has changed
+        if (oldFocusedValue == null || value == null
+                || oldFocusedValue.getYear() != value.getYear()
+                || oldFocusedValue.getMonth() != value.getMonth()) {
             renderCalendar();
         } else {
             focusDay(currentDate.getDate());
