@@ -1,0 +1,15 @@
+.v-app input[type="text"],
+.v-app input[type="password"],
+.v-app input[type="reset"],
+.v-app textarea ,
+.v-window input[type="text"],
+.v-window input[type="password"],
+.v-window input[type="reset"],
+.v-window textarea {
+	padding: 5px 1px;
+}
+
+input.v-textfield-prompt, 
+textarea.v-textarea-prompt {
+	font-style: normal;	
+}

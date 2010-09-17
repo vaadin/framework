@@ -1,0 +1,28 @@
+.v-accordion {
+	border: 1px solid #999;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.v-accordion-item-caption {
+	color: #222;
+	text-shadow: 1px 1px #FFFFFF;
+	font-size: 12px;
+	font-weight: bold;
+	background: #c0c2c5 url(/html/themes/classic/images/application/panel_header_bg.png) repeat-x scroll 0 0;
+	border-top: 1px solid #999;
+	border-bottom: none;
+	padding: 4px 5px 5px 5px;
+}
+
+.v-accordion-item-first .v-accordion-item-caption {
+	border-top: none;
+	-webkit-border-radius: 4px 4px 0 0;
+	-moz-border-radius: 4px 4px 0 0;
+	border-radius: 4px 4px 0 0;
+}
+
+.v-accordion-item-open .v-accordion-item-caption {
+	border-bottom: 1px solid #999;
+}

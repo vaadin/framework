@@ -25,6 +25,7 @@ public class CompileDefaultTheme {
     private static final String BASE = "base";
     private static final String RUNO = "runo";
     private static final String REINDEER = "reindeer";
+    private static final String LIFERAY = "liferay";
 
     /**
      * @param args
@@ -43,6 +44,7 @@ public class CompileDefaultTheme {
         combineTheme(new String[] { BASE }, false, ver);
         combineTheme(new String[] { BASE, RUNO }, false, ver);
         combineTheme(new String[] { BASE, REINDEER }, true, ver);
+        combineTheme(new String[] { BASE, LIFERAY }, false, ver);
     }
 
     /**
@@ -163,7 +165,9 @@ public class CompileDefaultTheme {
                     urlPrefix = "../" + themeName + "/";
                 }
 
-                if (strLine.indexOf("url(../") > 0) {
+                if (strLine.indexOf("url(/") > 0) {
+                    // Do nothing for urls beginning with /
+                } else if (strLine.indexOf("url(../") > 0) {
                     strLine = strLine.replaceAll("url\\(../",
                             ("url\\(" + urlPrefix));
 

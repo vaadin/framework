@@ -1,0 +1,64 @@
+.v-menubar {
+	background: #97A1AE url(/html/themes/classic/images/dockbar/dockbar_bg.png) repeat-x 0 0;
+	border-bottom: 1px solid #636364;
+}
+
+.v-menubar-separator span {
+	display: none;
+}
+
+.v-menubar-menuitem {
+	padding: 3px 8px;
+	line-height: 16px;
+	font-weight: bold;
+	color: #2c2f34;
+	text-shadow: -1px -1px #FFF;
+}
+
+.v-menubar-menuitem-selected {
+	color: #FFF;
+	text-shadow: -1px -1px #2c2f34;
+}
+
+.v-menubar-submenu {
+	background: #CCC9C9 url(/html/themes/classic/images/application/menu_bg.png) repeat-x 0 0;
+	border: 1px solid;
+	border-color: #aeafb1 #777879 #777879 #aeafb1;
+	-webkit-border-radius: 0 0 4px 4px;
+	-moz-border-radius: 0 0 4px 4px;
+	border-radius: 0 0 4px 4px;
+	padding: 2px 0;
+}
+
+.v-menubar-submenu .v-menubar-menuitem {
+	color: #2c2f34;
+	font-weight: bold;
+	text-shadow: 1px 1px #fff;
+	padding: 1px 26px 1px 10px;
+	line-height: 16px;
+	border-bottom: 1px solid #bcbbbb;
+	border-top: 1px solid #eee;
+}
+
+.v-menubar-submenu .v-menubar-menuitem:last-child {
+	border-bottom-width: 0;
+}
+
+.v-menubar-submenu .v-menubar-menuitem-caption * { 
+	vertical-align: middle;
+}
+
+.v-menubar .v-menubar-menuitem-selected,
+.v-menubar-submenu .v-menubar-menuitem-selected {
+	color: #fff;
+	text-shadow: 1px 1px #000;
+	background-color: #5b677d;
+}
+
+.v-menubar-menuitem-disabled,
+.v-menubar-submenu .v-menubar-menuitem-disabled,
+.v-menubar span.v-menubar-menuitem-disabled:hover,
+.v-menubar span.v-menubar-menuitem-disabled:focus,
+.v-menubar span.v-menubar-menuitem-disabled:active {
+	color: #999;
+}

@@ -1,0 +1,40 @@
+.v-contextmenu {
+	background: #ccc9c9 url(/html/themes/classic/images/application/menu_bg.png) repeat-x 0 0;
+	border: 1px solid;
+	border-color: #aeafb1 #777879 #777879 #aeafb1;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.v-contextmenu table {
+	border-collapse: separate;	
+}
+
+.v-contextmenu .gwt-MenuItem {
+	padding: 3px 8px 2px 8px;
+	height: 16px;
+	color: #2c2f34;
+	text-shadow: -1px -1px #fff;
+	font-weight: bold;
+	border-bottom: 1px solid #bcbbbb;
+	border-top: 1px solid #eee;
+}
+
+.v-contextmenu tr:last-child .gwt-MenuItem {
+	border-bottom-width: 0;	
+}
+
+.v-contextmenu .gwt-MenuItem img {
+	margin-right: 4px;	
+}
+
+.v-contextmenu .gwt-MenuItem-selected {
+	background-color: #5b677d;
+	color: #FFF;
+	text-shadow: -1px -1px #2c2f34;	
+}
+
+.v-contextmenu .gwt-MenuItem-selected div {
+	background: transparent;	
+}

@@ -1,0 +1,12 @@
+.v-progressindicator-wrapper {
+	background: #dfe2e4 url(../../reindeer/progressindicator/img/base.gif) repeat-x;
+	border: 1px solid #bfbfbf;
+}
+
+.v-disabled .v-progressindicator-wrapper {
+	background-image: url(../../reindeer/progressindicator/img/disabled.gif);
+}
+
+.v-progressindicator-indicator {
+	background: #f7f9f9 url(../../reindeer/progressindicator/img/progress.png);
+}

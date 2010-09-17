@@ -1,0 +1,169 @@
+.v-datefield-popup {
+	padding: 3px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.v-datefield-calendarpanel:focus {
+	outline: none;	
+}
+
+.v-datefield-calendarpanel-body {
+	text-align: right;
+	vertical-align: top;
+}
+
+.v-datefield-popupcalendar .v-datefield-button {
+	background: transparent url(../common/buttons_sprites.png) no-repeat 0 -48px;
+	width: 24px;
+	height: 24px;
+	border: none;
+}
+
+.v-datefield-popupcalendar .v-datefield-button:hover {
+	background-position: 0px -72px;
+}
+
+.v-datefield-popupcalendar .v-datefield-button:focus {
+	background-position: 0px -96px;
+}
+
+.v-datefield-month .v-datefield-calendarpanel-month,
+.v-datefield-day .v-datefield-calendarpanel-month,
+.v-datefield-full .v-datefield-calendarpanel-month {
+	width: 124px;
+}
+
+.v-datefield-year .v-datefield-calendarpanel-month {
+	width: 35px;
+}
+
+.v-datefield-calendarpanel-month {
+	background: transparent url(datefield_sprites.png) repeat-x 0 -112px;
+	font-weight: bold;
+}
+
+span.v-datefield-calendarpanel-month {
+	display: block;
+	text-align: center;
+	background: transparent;
+	overflow: hidden;
+	padding: 1px 3px 0;
+}
+
+.v-datefield-calendarpanel-prevyear,
+.v-datefield-calendarpanel-nextyear {
+	width: 22px;	
+}
+	
+.v-datefield-calendarpanel-prevyear button,
+.v-datefield-calendarpanel-prevmonth button,
+.v-datefield-calendarpanel-nextmonth button,
+.v-datefield-calendarpanel-nextyear button {
+	width: 22px;
+	height: 28px;
+	border: none;
+	background: transparent;
+	background-repeat: no-repeat;
+	background-image: url(datefield_sprites.png);
+  	background-position: 0 0;
+	overflow: hidden;
+	padding: 0;
+	text-indent: -9999px;
+	outline: none;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
+
+.v-ie .v-datefield-calendarpanel-prevyear button,
+.v-ie .v-datefield-calendarpanel-nextyear button,
+.v-ie .v-datefield-calendarpanel-prevmonth button,
+.v-ie .v-datefield-calendarpanel-nextmonth button {
+	text-indent: 0;
+	font-size: 1px;
+}
+
+.v-datefield-calendarpanel-prevmonth button {
+	background-position: 0 -56px;
+}
+
+.v-datefield-calendarpanel-prevmonth {
+	background: transparent url(datefield_sprites.png) repeat-x 0 -112px;
+}
+
+.v-datefield-calendarpanel-nextyear button {
+	background-position: 0 -28px;
+	width: 100%;
+	min-width: 22px;
+}
+
+.v-datefield-calendarpanel-nextmonth button {
+	background-position: 0 -84px;
+}
+
+.v-datefield-calendarpanel-nextmonth {
+	background: transparent url(datefield_sprites.png) repeat-x 0 -112px;
+}
+
+.v-datefield-calendarpanel-prevyear button {
+	width: 100%;
+	min-width: 22px;
+}
+
+.v-ie6 .v-datefield-calendarpanel-prevyear button,
+.v-ie6 .v-datefield-calendarpanel-nextyear button,
+.v-ie7 .v-datefield-calendarpanel-prevyear button,
+.v-ie7 .v-datefield-calendarpanel-nextyear button {
+	width: 22px;
+}
+
+.v-datefield-calendarpanel-day {
+	display: block;
+	width: 22px;
+	margin: 0 0 3px 3px;
+	text-align: center;
+	background: #d4d4d4 url(/html/themes/classic/images/application/state_default_bg.png) repeat-x 0 0;
+	border-color: #c8c9ca #9e9e9e #9e9e9e #c8c9ca;
+	border-style: solid;
+	border-width: 1px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.v-datefield-calendarpanel-day-today {
+	font-weight: bold;
+}
+
+.v-datefield-calendarpanel-day-selected {
+	background: #b5b5b5 url(/html/themes/classic/images/application/state_active_bg.png) repeat-x 0 0;
+	color: #000;
+	border-color: #555;
+}
+
+.v-datefield-calendarpanel-day-focused {
+	outline: 1px dotted #555;
+}
+
+
+.v-datefield-calendarpanel-weekdays {
+	text-align: center;
+}
+
+.v-datefield-calendarpanel-weekdays strong {
+	font-weight: normal;
+}
+
+.v-datefield-calendarpanel-weeknumber {
+	display: block;
+	border: none;
+	padding: 2px 0 2px 0;
+	margin: 0;
+}
+
+.v-datefield-calendarpanel-body table {
+	margin: 0 auto;
+	width: 200px;	
+}

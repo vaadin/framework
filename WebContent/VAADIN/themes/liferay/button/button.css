@@ -1,0 +1,87 @@
+.v-button:focus {
+	outline: none;
+}
+
+.v-button:hover {
+	background: #b9ced9 url(/html/themes/classic/images/application/state_hover_bg.png) repeat-x 0 0;
+	border-color: #627782;
+	color: #369;
+}
+
+.v-button:active,
+.v-button.v-pressed,
+.v-button:focus {
+	background: #ebebeb url(/html/themes/classic/images/application/state_active_bg.png) repeat-x 0 0;
+	border-color: #555;
+}
+
+.v-button,
+.v-disabled.v-button  {
+	display: block;
+	font-size: 11px;
+	font-weight: bold;
+	border: 1px solid #c8c9ca;
+	border-right-color: #9e9e9e;
+	border-bottom-color: #9e9e9e;
+	background: #d4d4d4 url(/html/themes/classic/images/portlet/header_bg.png) repeat-x 0 0;
+	-webkit-background-origin: padding;
+	-moz-background-origin: padding;
+	padding: 3px 8px 4px 8px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	line-height: 16px;
+	min-height: 16px;
+	text-shadow: 1px 1px #fff;
+	color: #34404f;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* Link style button */
+.v-button-link,
+.v-disabled.v-button-link,
+.v-button-link:focus,
+.v-button-link:active,
+.v-button-link:hover,
+.v-button-link-pressed,
+button.v-nativebutton-link,
+.v-disabled.v-nativebutton-link,
+button.v-nativebutton-link:focus,
+button.v-nativebutton-link:active,
+button.v-nativebutton-link:hover,
+button.v-nativebutton-link-pressed  {
+	color: #5B677D;
+	font-weight: normal;
+	border: none;
+	border-style: none;
+	background: transparent;
+	padding: 0;
+	font-size: inherit;
+	-webkit-box-shadow: none;
+	-mox-box-shadow: none;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	text-shadow: none;
+}
+
+.v-button-link:hover {
+	color: #0066cc;
+	text-decoration: none;
+}
+
+.v-button-link:focus,
+.v-nativebutton-link:focus {
+	outline: 1px dotted #1b699f;
+	outline-offset: -1px;
+}
+
+.v-sa .v-button-link:focus {
+	outline-offset: -1px;
+}
+
+/* CheckBox */
+.v-checkbox input {
+	margin-right: 3px;	
+}
