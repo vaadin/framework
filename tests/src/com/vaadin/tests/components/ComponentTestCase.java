@@ -24,6 +24,7 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
 
     private List<T> testComponents = new ArrayList<T>();
     private Class<T> componentClass;
+    private HorizontalLayout actionLayout;
 
     abstract protected Class<T> getTestClass();
 
@@ -33,12 +34,23 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
     protected final void setup() {
         ((SpacingHandler) getLayout()).setSpacing(true);
 
+        // Create action layout so it appears before the components
+        actionLayout = createActionLayout();
+        addComponent(actionLayout);
+
         // Create Components
         componentClass = getTestClass();
         initializeComponents();
 
         // Create actions and add to layout
-        addComponent(createActionLayout());
+        populateActionLayout();
+    }
+
+    private void populateActionLayout() {
+        for (Component c : createActions()) {
+            actionLayout.addComponent(c);
+            actionLayout.setComponentAlignment(c, Alignment.BOTTOM_LEFT);
+        }
 
     }
 
@@ -79,15 +91,11 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
         return actions;
     }
 
-    private Component createActionLayout() {
+    private HorizontalLayout createActionLayout() {
         HorizontalLayout actionLayout = new HorizontalLayout();
         actionLayout.setSpacing(true);
         actionLayout.setMargin(true);
-        for (Component c : createActions()) {
-            actionLayout.addComponent(c);
-            actionLayout.setComponentAlignment(c, Alignment.BOTTOM_LEFT);
-        }
-        addComponent(actionLayout);
+
         return actionLayout;
     }
 
