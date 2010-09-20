@@ -225,6 +225,40 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	
+	<portlet>
+        <portlet-name>Vaadin Liferay Theme Portlet</portlet-name>
+        <display-name>Vaadin Liferay Theme</display-name>
+        
+        <portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet2</portlet-class>
+        <init-param>
+            <name>application</name>
+            <value>com.vaadin.demo.themes.LiferayTheme</value>
+        </init-param>
+        
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>view</portlet-mode>
+        </supports>
+        
+        <portlet-info>
+            <title>Vaadin Liferay Theme</title>
+            <short-title>Vaadin Liferay Theme</short-title>
+        </portlet-info>
+        
+        <security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+    </portlet>
 
 	<!-- A Vaadin portlet and a non-Vaadin portlet that can communicate with each other -->
 	<portlet>

@@ -32,6 +32,11 @@
         <instanceable>true</instanceable>       
         <ajaxable>false</ajaxable>
     </portlet>      
+    <portlet>
+        <portlet-name>Vaadin Liferay Theme Portlet</portlet-name>
+        <instanceable>true</instanceable>
+        <ajaxable>false</ajaxable>
+    </portlet>
     
     <role-mapper>
         <role-name>administrator</role-name>
