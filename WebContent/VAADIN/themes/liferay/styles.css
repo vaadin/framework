@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_4_5_dev-20100917";}
-.v-theme-version-6_4_5_dev-20100917 {display: none;}
+.v-theme-version:after {content:"6_4_5_dev-20100920";}
+.v-theme-version-6_4_5_dev-20100920 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -2277,7 +2277,7 @@ div.v-window-header {
 	background: #d4d4d4 url(/html/themes/classic/images/portlet/header_bg.png) repeat-x 0 0;
 	-webkit-background-origin: padding;
 	-moz-background-origin: padding;
-	padding: 3px 8px 4px 8px;
+	padding: 4px 4px 0px 4px;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
@@ -2287,6 +2287,25 @@ div.v-window-header {
 	color: #34404f;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	height: 26px;
+}
+
+.v-button-wrap {
+	display: block;
+	height: 19px;
+}
+
+.v-button-caption {
+	line-height: 16px;	
+}
+
+.v-ie6 .v-button {
+	height: 20px;
+}
+.v-ie6 .v-button .v-button-wrap {
+	height: 17px;
+	display: inline;
+	zoom: 1;
 }
 
 /* Link style button */
@@ -2301,7 +2320,12 @@ button.v-nativebutton-link,
 button.v-nativebutton-link:focus,
 button.v-nativebutton-link:active,
 button.v-nativebutton-link:hover,
-button.v-nativebutton-link-pressed  {
+button.v-nativebutton-link-pressed,
+.v-button.v-button-link .v-button-wrap,
+.v-button.v-button-link:focus .v-button-wrap,
+.v-button.v-button-link:active .v-button-wrap,
+.v-button-link.v-pressed .v-button-wrap,
+.v-disabled.v-button.v-button-link .v-button-wrap {
 	color: #5B677D;
 	font-weight: normal;
 	border: none;
@@ -2315,6 +2339,7 @@ button.v-nativebutton-link-pressed  {
 	-moz-border-radius: 0;
 	border-radius: 0;
 	text-shadow: none;
+	height: auto;
 }
 
 .v-button-link:hover {
@@ -2391,6 +2416,10 @@ div.v-app {
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
+}
+
+.v-datefield-calendarpanel-header {
+	height: 28px;	
 }
 
 .v-datefield-calendarpanel:focus {
@@ -2625,6 +2654,55 @@ span.v-datefield-calendarpanel-month {
 	color: #999;
 }
 
+.v-Notification {
+	background: #dff4ff;
+	color: #34404F;
+	font-weight: bold;
+	cursor: pointer;
+	overflow: hidden;
+	padding: 1em;
+	max-width: 85%;
+	border: 1px solid #a7cedf;
+}
+
+.v-Notification h1,
+.v-Notification p,
+.v-Notification-error h1,
+.v-Notification-error p,
+.v-Notification-warning h1,
+.v-Notification-warning p {
+	display: inline;
+	margin: 0 0.5em 0 0;
+}
+.v-Notification-warning {
+	background: #ffc;
+	border-color: #fc0;
+}
+.v-Notification-error {
+	background-color: #ffdddd;
+	border-color: #ff0000;
+}
+
+.v-Notification-tray {
+	color: #111111;
+	background-color: #e5e5e5;
+	border-color: #b5b5b5;
+}
+.v-Notification-tray h1 {
+	display: block;
+}
+.v-Notification-tray p {
+	display: block;
+}
+.v-Notification-system {
+	background-color: #ffdddd;
+	border-color: #ff0000;
+}
+.v-Notification-system h1 {
+	display: block;
+	margin: 0;
+}
+
 .v-panel-caption {
 	text-shadow: 1px 1px #fff;
 	font-size: 12px;
@@ -2706,6 +2784,10 @@ span.v-datefield-calendarpanel-month {
 .v-app select,
 .v-window select {
 	padding: 1px;	
+}
+
+select {
+	background-color: #fff;	
 }
 
 .v-filterselect-button {
@@ -3031,8 +3113,11 @@ span.v-datefield-calendarpanel-month {
 	margin-left: -10px;
 	position: absolute;
 	text-indent: -9999px;
-	z-index: 9999;
 	width: 0;
+}
+
+.v-tabsheet-tabs {
+	height: 35px;
 }
 
 .v-tabsheet-tabcontainer,
@@ -3047,20 +3132,18 @@ span.v-datefield-calendarpanel-month {
 	border-radius: 4px 0 0 4px;
 }
 
+.v-tabsheet-tabitemcell, .v-tabsheet-spacertd {
+	vertical-align: top;
+}
+
 .v-tabsheet-spacertd div {
-	height: 23px;
+	height: 28px;
 	border: 1px solid #c8c9ca;
 	border-left: none;
 	-webkit-border-radius: 0 4px 4px 0;
 	-moz-border-radius: 0 4px 4px 0;
 	border-radius: 0 4px 4px 0;
-}
-
-.v-ie6 .v-tabsheet-spacertd div,
-.v-ie7 .v-tabsheet-spacertd div,
-.v-op .v-tabsheet-spacertd div,
-.v-sa .v-tabsheet-spacertd div {
-	height: 24px;
+	padding: 0;
 }
 
 .v-tabsheet-tabitem {
@@ -3074,7 +3157,7 @@ span.v-datefield-calendarpanel-month {
 	float: right;
 	width: 33px;
 	height: 28px;
-	margin-top: -30px;
+	margin-top: -35px;
 	background-color: #eef0f2;
 	border: 1px solid #c8c9ca;
 	border-left: none;
@@ -3135,10 +3218,6 @@ span.v-datefield-calendarpanel-month {
 input.v-textfield-prompt, 
 textarea.v-textarea-prompt {
 	font-style: normal;	
-}
-
-.v-tree {
-	outline: none;
 }
 
 .v-tree-node {
@@ -3267,4 +3346,12 @@ textarea.v-textarea-prompt {
 	background: transparent url(/html/themes/classic/images/aui/icon_sprite.png) no-repeat scroll -64px -228px;
 	width: 14px;
 	height: 16px;	
+}
+
+.v-shadow-window {
+	padding-bottom: 11px;
+}
+
+.v-ie .v-shadow-window {
+	padding-bottom: 0;
 }

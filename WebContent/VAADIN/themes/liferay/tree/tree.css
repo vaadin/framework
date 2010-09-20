@@ -1,7 +1,3 @@
-.v-tree {
-	outline: none;
-}
-
 .v-tree-node {
 	background: transparent url(arrows_sprites.png) no-repeat -42px 1px;
 }

@@ -3,6 +3,10 @@
 	padding: 1px;	
 }
 
+select {
+	background-color: #fff;	
+}
+
 .v-filterselect-button {
 	width: 24px;
 	height: 24px;

@@ -66,3 +66,11 @@
 	width: 14px;
 	height: 16px;	
 }
+
+.v-shadow-window {
+	padding-bottom: 11px;
+}
+
+.v-ie .v-shadow-window {
+	padding-bottom: 0;
+}

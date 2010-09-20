@@ -5,6 +5,10 @@
 	border-radius: 4px;
 }
 
+.v-datefield-calendarpanel-header {
+	height: 28px;	
+}
+
 .v-datefield-calendarpanel:focus {
 	outline: none;	
 }

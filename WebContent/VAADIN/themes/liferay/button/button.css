@@ -26,7 +26,7 @@
 	background: #d4d4d4 url(/html/themes/classic/images/portlet/header_bg.png) repeat-x 0 0;
 	-webkit-background-origin: padding;
 	-moz-background-origin: padding;
-	padding: 3px 8px 4px 8px;
+	padding: 4px 4px 0px 4px;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
@@ -36,6 +36,25 @@
 	color: #34404f;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	height: 26px;
+}
+
+.v-button-wrap {
+	display: block;
+	height: 19px;
+}
+
+.v-button-caption {
+	line-height: 16px;	
+}
+
+.v-ie6 .v-button {
+	height: 20px;
+}
+.v-ie6 .v-button .v-button-wrap {
+	height: 17px;
+	display: inline;
+	zoom: 1;
 }
 
 /* Link style button */
@@ -50,7 +69,12 @@ button.v-nativebutton-link,
 button.v-nativebutton-link:focus,
 button.v-nativebutton-link:active,
 button.v-nativebutton-link:hover,
-button.v-nativebutton-link-pressed  {
+button.v-nativebutton-link-pressed,
+.v-button.v-button-link .v-button-wrap,
+.v-button.v-button-link:focus .v-button-wrap,
+.v-button.v-button-link:active .v-button-wrap,
+.v-button-link.v-pressed .v-button-wrap,
+.v-disabled.v-button.v-button-link .v-button-wrap {
 	color: #5B677D;
 	font-weight: normal;
 	border: none;
@@ -64,6 +88,7 @@ button.v-nativebutton-link-pressed  {
 	-moz-border-radius: 0;
 	border-radius: 0;
 	text-shadow: none;
+	height: auto;
 }
 
 .v-button-link:hover {
