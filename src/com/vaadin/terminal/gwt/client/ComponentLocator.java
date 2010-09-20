@@ -136,14 +136,15 @@ public class ComponentLocator {
              */
             String elementLocator = ((SubPartAware) w)
                     .getSubPartName(targetElement);
-            return path + SUBPART_SEPARATOR + elementLocator;
-        } else {
-            /*
-             * If everything else fails we use the DOM path to identify the
-             * target element
-             */
-            return path + getDOMPathForElement(targetElement, w.getElement());
+            if (elementLocator != null) {
+                return path + SUBPART_SEPARATOR + elementLocator;
+            }
         }
+        /*
+         * If everything else fails we use the DOM path to identify the target
+         * element
+         */
+        return path + getDOMPathForElement(targetElement, w.getElement());
     }
 
     /**
