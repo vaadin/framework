@@ -5489,6 +5489,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      */
     private boolean isNavigationKey(int keyCode) {
         return keyCode == getNavigationUpKey()
+                || keyCode == getNavigationLeftKey()
+                || keyCode == getNavigationRightKey()
                 || keyCode == getNavigationDownKey()
                 || keyCode == getNavigationPageUpKey()
                 || keyCode == getNavigationPageDownKey()
