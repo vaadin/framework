@@ -261,6 +261,46 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
     }
 
+    /**
+     * Returns the first root node of the tree or null if there are no root
+     * nodes.
+     * 
+     * @return The first root {@link TreeNode}
+     */
+    protected TreeNode getFirstRootNode() {
+        if (body.getWidgetCount() == 0) {
+            return null;
+        }
+        return (TreeNode) body.getWidget(0);
+    }
+
+    /**
+     * Returns the last root node of the tree or null if there are no root
+     * nodes.
+     * 
+     * @return The last root {@link TreeNode}
+     */
+    protected TreeNode getLastRootNode() {
+        if (body.getWidgetCount() == 0) {
+            return null;
+        }
+        return (TreeNode) body.getWidget(body.getWidgetCount() - 1);
+    }
+
+    /**
+     * Returns a list of all root nodes in the Tree in the order they appear in
+     * the tree.
+     * 
+     * @return A list of all root {@link TreeNode}s.
+     */
+    protected List<TreeNode> getRootNodes() {
+        ArrayList<TreeNode> rootNodes = new ArrayList<TreeNode>();
+        for (int i = 0; i < body.getWidgetCount(); i++) {
+            rootNodes.add((TreeNode) body.getWidget(i));
+        }
+        return rootNodes;
+    }
+
     private void updateTreeRelatedDragData(VDragEvent drag) {
 
         currentMouseOverKey = findCurrentMouseOverKey(drag.getElementOver());
@@ -1219,10 +1259,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
         if (commonParent != null) {
             children = commonParent.getChildren();
         } else {
-            children = new LinkedList<TreeNode>();
-            for (int w = 0; w < body.getWidgetCount(); w++) {
-                children.add((TreeNode) body.getWidget(w));
-            }
+            children = getRootNodes();
         }
 
         // Find the start and end branches
@@ -1344,12 +1381,10 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
     private void doSiblingSelection(TreeNode startNode, TreeNode endNode) {
         TreeNode parent = startNode.getParentNode();
 
-        List<TreeNode> children = new LinkedList<TreeNode>();
+        List<TreeNode> children;
         if (parent == null) {
             // Topmost parent
-            for (int w = 0; w < body.getWidgetCount(); w++) {
-                children.add((TreeNode) body.getWidget(w));
-            }
+            children = getRootNodes();
         } else {
             children = parent.getChildren();
         }
@@ -1492,7 +1527,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
     public void onFocus(FocusEvent event) {
         // If no node has focus, focus the first item in the tree
         if (focusedNode == null && lastSelection == null && selectable) {
-            setFocusedNode((TreeNode) body.getWidget(0), false);
+            setFocusedNode(getFirstRootNode(), false);
         } else if (focusedNode != null && selectable) {
             setFocusedNode(focusedNode, false);
         } else if (lastSelection != null && selectable) {
@@ -1675,7 +1710,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
         // Home selection
         if (keycode == getNavigationStartKey()) {
-            TreeNode node = (TreeNode) body.getWidget(0);
+            TreeNode node = getFirstRootNode();
             if (!ctrl && !shift) {
                 selectNode(node, true);
             } else if (ctrl) {
@@ -1690,8 +1725,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
         // End selection
         if (keycode == getNavigationEndKey()) {
-            TreeNode lastNode = (TreeNode) body
-                    .getWidget(body.getWidgetCount() - 1);
+            TreeNode lastNode = getLastRootNode();
             TreeNode node = getLastVisibleChildInTree(lastNode);
             if (!ctrl && !shift) {
                 selectNode(node, true);
@@ -1734,10 +1768,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
         TreeNode parent = node.getParentNode();
         List<TreeNode> children;
         if (parent == null) {
-            children = new LinkedList<TreeNode>();
-            for (int w = 0; w < body.getWidgetCount(); w++) {
-                children.add((TreeNode) body.getWidget(w));
-            }
+            children = getRootNodes();
         } else {
             children = parent.getChildren();
         }
@@ -1761,10 +1792,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
         TreeNode parent = node.getParentNode();
         List<TreeNode> children;
         if (parent == null) {
-            children = new LinkedList<TreeNode>();
-            for (int w = 0; w < body.getWidgetCount(); w++) {
-                children.add((TreeNode) body.getWidget(w));
-            }
+            children = getRootNodes();
         } else {
             children = parent.getChildren();
         }
