@@ -228,6 +228,23 @@
 		</subant>
 	</target>
 	
+	<target name="test-theme-liferay-6">
+		<fileset dir="integration-testscripts" id="html-test-files" includes="test-liferay6-theme.html" />
+		<pathconvert pathsep=" " property="test-liferay" refid="html-test-files" />
+			
+		<subant target="run-tests" failonerror="false" antfile="test.xml">
+			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
+			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
+			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
+			<property name="server.start.succeeded" value="1" />
+			<property name="browsers" value="winxp-firefox36" />
+			<property name="testfiles" value="${test-liferay}" />
+			<property name="test-output-dir" value="../build/integration-test-output" />
+		
+			<fileset dir="." includes="test.xml" />
+		</subant>
+	</target>
+	
 	<target name="integration-test-gatein-3">
 		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-GateIn-3.1.0-sampler.html" />
 		<pathconvert pathsep=" " property="test-gatein" refid="html-test-files" />
@@ -436,6 +453,7 @@
 	<target name="integration-test-liferay6">
 		<antcall target="integration-test-start-liferay-6" />
 		<antcall target="integration-test-liferay-6" />
+		<antcall target="test-theme-liferay-6" />
 		<antcall target="integration-test-stop-liferay-6" />
 	</target>
 	
