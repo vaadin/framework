@@ -54,7 +54,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
  */
 public class VTree extends SimpleFocusablePanel implements Paintable,
         VHasDropHandler, FocusHandler, BlurHandler, KeyPressHandler,
-        KeyDownHandler {
+        KeyDownHandler, SubPartAware {
 
     public static final String CLASSNAME = "v-tree";
 
@@ -1916,4 +1916,111 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
         return KeyCodes.KEY_END;
     }
 
+    private final String SUBPART_NODE_PREFIX = "n";
+    private final String EXPAND_IDENTIFIER = "expand";
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.terminal.gwt.client.ui.SubPartAware#getSubPartElement(java
+     * .lang.String)
+     */
+    public Element getSubPartElement(String subPart) {
+
+        if (subPart.startsWith(SUBPART_NODE_PREFIX + "[")) {
+            boolean expandCollapse = false;
+
+            // Node
+            String[] nodes = subPart.split("/");
+            TreeNode treeNode = null;
+            try {
+                for (String node : nodes) {
+                    if (node.startsWith(SUBPART_NODE_PREFIX)) {
+
+                        // skip SUBPART_NODE_PREFIX"["
+                        node = node.substring(SUBPART_NODE_PREFIX.length() + 1);
+                        // skip "]"
+                        node = node.substring(0, node.length() - 1);
+                        int position = Integer.parseInt(node);
+                        if (treeNode == null) {
+                            treeNode = getRootNodes().get(position);
+                        } else {
+                            treeNode = treeNode.getChildren().get(position);
+                        }
+                    } else if (node.startsWith(EXPAND_IDENTIFIER)) {
+                        expandCollapse = true;
+                    }
+                }
+
+                if (expandCollapse) {
+                    if (treeNode.ie6compatnode != null) {
+                        return treeNode.ie6compatnode;
+                    } else {
+                        return treeNode.getElement();
+                    }
+                } else {
+                    return treeNode.nodeCaptionSpan;
+                }
+            } catch (Exception e) {
+                // Invalid locator string or node could not be found
+                return null;
+            }
+        }
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.terminal.gwt.client.ui.SubPartAware#getSubPartName(com.google
+     * .gwt.user.client.Element)
+     */
+    public String getSubPartName(Element subElement) {
+        // Supported identifiers:
+        //
+        // n[index]/n[index]/n[index]{/expand}
+        //
+        // Ends with "/expand" if the target is expand/collapse indicator,
+        // otherwise ends with the node
+
+        boolean isExpandCollapse = false;
+
+        if (!getElement().isOrHasChild(subElement)) {
+            return null;
+        }
+
+        TreeNode treeNode = Util.findWidget(subElement, TreeNode.class);
+        if (treeNode == null) {
+            // Did not click on a node, let somebody else take care of the
+            // locator string
+            return null;
+        }
+
+        if (subElement == treeNode.getElement()
+                || subElement == treeNode.ie6compatnode) {
+            // Targets expand/collapse arrow
+            isExpandCollapse = true;
+        }
+
+        ArrayList<Integer> positions = new ArrayList<Integer>();
+        while (treeNode.getParentNode() != null) {
+            positions.add(0,
+                    treeNode.getParentNode().getChildren().indexOf(treeNode));
+            treeNode = treeNode.getParentNode();
+        }
+        positions.add(0, getRootNodes().indexOf(treeNode));
+
+        String locator = "";
+        for (Integer i : positions) {
+            locator += SUBPART_NODE_PREFIX + "[" + i + "]/";
+        }
+
+        locator = locator.substring(0, locator.length() - 1);
+        if (isExpandCollapse) {
+            locator += "/" + EXPAND_IDENTIFIER;
+        }
+        return locator;
+    }
 }
