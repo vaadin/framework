@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -185,9 +185,6 @@ public class GridLayout extends AbstractLayout implements
         // Checks that newItem does not overlap with existing items
         checkExistingOverlaps(area);
 
-        // first attemt to add to super
-        super.addComponent(component);
-
         // Inserts the component to right place at the list
         // Respect top-down, left-right ordering
         // component.setParent(this);
@@ -207,6 +204,15 @@ public class GridLayout extends AbstractLayout implements
         if (!done) {
             areas.addLast(area);
             components.addLast(component);
+        }
+
+        // Attempt to add to super
+        try {
+            super.addComponent(component);
+        } catch (IllegalArgumentException e) {
+            areas.remove(area);
+            components.remove(component);
+            throw e;
         }
 
         // update cursor position, if it's within this area; use first position
@@ -341,8 +347,6 @@ public class GridLayout extends AbstractLayout implements
             return;
         }
 
-        super.removeComponent(component);
-
         Area area = null;
         for (final Iterator i = areas.iterator(); area == null && i.hasNext();) {
             final Area a = (Area) i.next();
@@ -357,6 +361,8 @@ public class GridLayout extends AbstractLayout implements
         }
 
         componentToAlignment.remove(component);
+
+        super.removeComponent(component);
 
         requestRepaint();
     }

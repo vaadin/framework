@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 package com.vaadin.ui;
@@ -71,8 +71,13 @@ public class AbsoluteLayout extends AbstractLayout {
     @Override
     public void addComponent(Component c) {
         components.add(c);
-        super.addComponent(c);
-        requestRepaint();
+        try {
+            super.addComponent(c);
+            requestRepaint();
+        } catch (IllegalArgumentException e) {
+            components.remove(c);
+            throw e;
+        }
     }
 
     /*
@@ -85,6 +90,7 @@ public class AbsoluteLayout extends AbstractLayout {
     @Override
     public void removeComponent(Component c) {
         components.remove(c);
+        componentToCoordinates.remove(c);
         super.removeComponent(c);
         requestRepaint();
     }
@@ -119,7 +125,9 @@ public class AbsoluteLayout extends AbstractLayout {
      *         layout.
      */
     public ComponentPosition getPosition(Component component) {
-        if (componentToCoordinates.containsKey(component)) {
+        if (component.getParent() != this) {
+            return null;
+        } else if (componentToCoordinates.containsKey(component)) {
             return componentToCoordinates.get(component);
         } else {
             ComponentPosition coords = new ComponentPosition();

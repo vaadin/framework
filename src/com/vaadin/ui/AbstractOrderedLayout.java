@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -53,9 +53,14 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     @Override
     public void addComponent(Component c) {
-        super.addComponent(c);
         components.add(c);
-        requestRepaint();
+        try {
+            super.addComponent(c);
+            requestRepaint();
+        } catch (IllegalArgumentException e) {
+            components.remove(c);
+            throw e;
+        }
     }
 
     /**
@@ -66,9 +71,14 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      *            the component to be added.
      */
     public void addComponentAsFirst(Component c) {
-        super.addComponent(c);
         components.addFirst(c);
-        requestRepaint();
+        try {
+            super.addComponent(c);
+            requestRepaint();
+        } catch (IllegalArgumentException e) {
+            components.remove(c);
+            throw e;
+        }
     }
 
     /**
@@ -81,9 +91,14 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      *            in and after the position are shifted forwards.
      */
     public void addComponent(Component c, int index) {
-        super.addComponent(c);
         components.add(index, c);
-        requestRepaint();
+        try {
+            super.addComponent(c);
+            requestRepaint();
+        } catch (IllegalArgumentException e) {
+            components.remove(c);
+            throw e;
+        }
     }
 
     /**
@@ -94,10 +109,10 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     @Override
     public void removeComponent(Component c) {
-        super.removeComponent(c);
         components.remove(c);
         componentToAlignment.remove(c);
         componentToExpandRatio.remove(c);
+        super.removeComponent(c);
         requestRepaint();
     }
 
