@@ -381,6 +381,7 @@ public class Embedded extends AbstractComponent {
      * <ul>
      * <li>TYPE_OBJECT <i>(This is the default)</i>
      * <li>TYPE_IMAGE
+     * <li>TYPE_BROWSER
      * </ul>
      * </p>
      * 
