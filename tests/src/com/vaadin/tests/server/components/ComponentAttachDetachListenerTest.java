@@ -13,6 +13,7 @@ import com.vaadin.ui.ComponentContainer.ComponentAttachEvent;
 import com.vaadin.ui.ComponentContainer.ComponentAttachListener;
 import com.vaadin.ui.ComponentContainer.ComponentDetachEvent;
 import com.vaadin.ui.ComponentContainer.ComponentDetachListener;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.GridLayout.Area;
 import com.vaadin.ui.HorizontalLayout;
@@ -23,6 +24,7 @@ public class ComponentAttachDetachListenerTest extends TestCase {
     private AbstractOrderedLayout olayout;
     private GridLayout gridlayout;
     private AbsoluteLayout absolutelayout;
+    private CssLayout csslayout;
 
     // General variables
     private int attachCounter = 0;
@@ -135,6 +137,10 @@ public class ComponentAttachDetachListenerTest extends TestCase {
         absolutelayout = new AbsoluteLayout();
         absolutelayout.addListener(new MyAttachListener());
         absolutelayout.addListener(new MyDetachListener());
+
+        csslayout = new CssLayout();
+        csslayout.addListener(new MyAttachListener());
+        csslayout.addListener(new MyDetachListener());
     }
 
     public void testOrderedLayoutAttachListener() {
@@ -288,5 +294,50 @@ public class ComponentAttachDetachListenerTest extends TestCase {
 
         // The component position should be null
         assertNull(componentPosition);
+    }
+
+    public void testCSSLayoutAttachListener() {
+        // Reset state variables
+        resetVariables();
+
+        // Add component -> Should trigger attach listener
+        Component comp = new Label();
+        csslayout.addComponent(comp);
+
+        // Attach counter should get incremented
+        assertEquals(1, attachCounter);
+
+        // The attached component should be the label
+        assertSame(comp, attachedComponent);
+
+        // The attached target should be the layout
+        assertSame(csslayout, attachTarget);
+
+        // The attached component should be found in the container
+        assertTrue(foundInContainer);
+    }
+
+    public void testCSSLayoutDetachListener() {
+        // Add a component to detach
+        Component comp = new Label();
+        csslayout.addComponent(comp);
+
+        // Reset state variables (since they are set by the attach listener)
+        resetVariables();
+
+        // Detach the component -> triggers the detach listener
+        csslayout.removeComponent(comp);
+
+        // Detach counter should get incremented
+        assertEquals(1, detachCounter);
+
+        // The detached component should be the label
+        assertSame(comp, detachedComponent);
+
+        // The detached target should be the layout
+        assertSame(csslayout, detachedTarget);
+
+        // The detached component should not be found in the container
+        assertFalse(foundInContainer);
     }
 }

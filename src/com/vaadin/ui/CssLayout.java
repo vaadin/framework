@@ -76,9 +76,14 @@ public class CssLayout extends AbstractLayout {
      */
     @Override
     public void addComponent(Component c) {
-        super.addComponent(c);
         components.add(c);
-        requestRepaint();
+        try {
+            super.addComponent(c);
+            requestRepaint();
+        } catch (IllegalArgumentException e) {
+            components.remove(c);
+            throw e;
+        }
     }
 
     /**
@@ -89,9 +94,14 @@ public class CssLayout extends AbstractLayout {
      *            the component to be added.
      */
     public void addComponentAsFirst(Component c) {
-        super.addComponent(c);
         components.addFirst(c);
-        requestRepaint();
+        try {
+            super.addComponent(c);
+            requestRepaint();
+        } catch (IllegalArgumentException e) {
+            components.remove(c);
+            throw e;
+        }
     }
 
     /**
@@ -104,9 +114,14 @@ public class CssLayout extends AbstractLayout {
      *            in and after the position are shifted forwards.
      */
     public void addComponent(Component c, int index) {
-        super.addComponent(c);
         components.add(index, c);
-        requestRepaint();
+        try {
+            super.addComponent(c);
+            requestRepaint();
+        } catch (IllegalArgumentException e) {
+            components.remove(c);
+            throw e;
+        }
     }
 
     /**
@@ -117,8 +132,8 @@ public class CssLayout extends AbstractLayout {
      */
     @Override
     public void removeComponent(Component c) {
-        super.removeComponent(c);
         components.remove(c);
+        super.removeComponent(c);
         requestRepaint();
     }
 
