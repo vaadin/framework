@@ -2367,6 +2367,47 @@ div.v-app {
 	font-weight: bold;
 }
 
+.v-tooltip {
+	background-color: #fffcdd;
+	border: 1px solid #b8b295;
+	font-size: 11px;
+	color: #222;
+}
+.v-tooltip-text {
+	padding: 2px 4px;
+}
+.v-tooltip .v-errormessage {
+	padding: 3px 4px;
+	background: #ffecc6;
+	color: #b74100;
+	border: none;
+	border-top: 1px solid #fff3dc;
+}
+.v-tooltip .v-errormessage h2 {
+	font-size: 16px;
+	font-weight: normal;
+	color: #ab3101;
+	margin: 2px 0 8px 0;
+}
+.v-tooltip .v-errormessage h3 {
+	font-size: 13px;
+	font-weight: bold;
+	margin: 1px 0 4px 0;
+}
+
+.v-ie8 .v-menubar-popup,
+.v-ie8 .v-datefield-popup,
+.v-ie8 .v-filterselect-suggestpopup, 
+.v-ie8 .v-shadow,
+.v-ie8 .v-window,
+.v-ie8 .v-popupview-popup,
+.v-ie8 .v-tooltip,
+.v-ie8 .v-slider-feedback,
+.v-ie8 .v-Notification,
+.v-ie8 .v-contextmenu {
+	margin-top: -16px;
+}
+
 .v-contextmenu {
 	background: #ccc9c9 url(/html/themes/classic/images/application/menu_bg.png) repeat-x 0 0;
 	border: 1px solid;
