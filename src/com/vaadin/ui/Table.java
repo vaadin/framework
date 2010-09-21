@@ -3073,6 +3073,28 @@ public class Table extends AbstractSelect implements Action.Container,
             Container.PropertySetChangeEvent event) {
         super.containerPropertySetChange(event);
 
+        // sanitetize visibleColumns. note that we are not adding previously
+        // non-existing properties as columns
+        Collection<?> containerPropertyIds = getContainerDataSource()
+                .getContainerPropertyIds();
+        for (Iterator<Object> iterator = visibleColumns.iterator(); iterator
+                .hasNext();) {
+            Object id = iterator.next();
+            if (!(containerPropertyIds.contains(id) || columnGenerators
+                    .containsKey(id))) {
+                iterator.remove();
+            }
+        }
+        // same for collapsed columns
+        for (Iterator<Object> iterator = collapsedColumns.iterator(); iterator
+                .hasNext();) {
+            Object id = iterator.next();
+            if (!(containerPropertyIds.contains(id) || columnGenerators
+                    .containsKey(id))) {
+                iterator.remove();
+            }
+        }
+
         resetPageBuffer();
         refreshRenderedCells();
     }
