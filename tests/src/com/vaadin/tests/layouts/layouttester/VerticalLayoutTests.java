@@ -1,7 +1,6 @@
 package com.vaadin.tests.layouts.layouttester;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.terminal.ThemeResource;
@@ -575,8 +574,8 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
     private AbstractComponent getTestTabsheet() {
         TabSheet tabsheet = new TabSheet();
         tabsheet.setSizeUndefined();
-        tabsheet.addTab(new Label("TAB1"), "TAB1", new ClassResource(
-                GLOBE_16_PNG, application));
+        tabsheet.addTab(new Label("TAB1"), "TAB1", new ThemeResource(
+                GLOBE_16_PNG));
         tabsheet.addTab(new Label("TAB2"), "TAB2", null);
         return tabsheet;
     }
