@@ -93,7 +93,7 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         for (int i = 0; i < captions.length; i++) {
             component = new Select();
             component.setCaption(captions[i]);
-            component.setIcon(new ThemeResource("../runo/icons/16/lock.png"));
+            component.setIcon(new ThemeResource(LOCK_16_PNG));
             vlo.addComponent(component);
         }
         baseLayout.addComponent(vlo);
@@ -372,9 +372,8 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         HorizontalLayout vlo = getTestLaytout();
         AbstractComponent[] components = new AbstractComponent[2];
         Layout baseLayout = getBaseLayout();
-        Resource[] icons = new Resource[] {
-                new ThemeResource("../runo/icons/32/calendar.png"),
-                new ThemeResource("../runo/icons/16/lock.png") };
+        Resource[] icons = new Resource[] { new ThemeResource(CALENDAR_32_PNG),
+                new ThemeResource(LOCK_16_PNG) };
 
         for (int i = 0; i < components.length; i++) {
             components[i] = new TextField();
@@ -493,7 +492,7 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         components[1] = new Button("BUTTON");
         components[2] = getTestTable();
         components[3] = getTestTabsheet();
-        components[3].setIcon(new ThemeResource("../runo/icons/16/lock.png"));
+        components[3].setIcon(new ThemeResource(LOCK_16_PNG));
 
         AbstractField[] fields = new AbstractField[6];
         fields[0] = new TextField();
@@ -523,7 +522,7 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         fields[5].setRequiredError("required error");
         fields[5]
                 .setComponentError(new UserError("component error, user error"));
-        fields[5].setIcon(new ThemeResource("../runo/icons/32/calendar.png"));
+        fields[5].setIcon(new ThemeResource(CALENDAR_32_PNG));
 
         for (int i = 0; i < components.length; i++) {
             components[i].setComponentError(new UserError(
@@ -556,7 +555,7 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         TabSheet tabsheet = new TabSheet();
         tabsheet.setSizeUndefined();
         tabsheet.addTab(new Label("TAB1"), "TAB1", new ClassResource(
-                "alert.png", application));
+                GLOBE_16_PNG, application));
         tabsheet.addTab(new Label("TAB2"), "TAB2", null);
         return tabsheet;
     }

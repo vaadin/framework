@@ -39,6 +39,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         this.application = application;
     }
 
+    @Override
     protected Layout getAlignmentTests() {
         HorizontalLayout hlo = new HorizontalLayout();
         hlo.setSpacing(true);
@@ -75,6 +76,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return hlo;
     }
 
+    @Override
     protected Layout getCaptionsTests() {
         GridLayout glo = getTestGrid();
         glo.setWidth("600px");
@@ -89,7 +91,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         col1.setCaption(captions[0]);
         col2.setCaption(captions[1]);
         col3.setCaption(captions[2]);
-        col3.setIcon(new ThemeResource("../runo/icons/16/lock.png"));
+        col3.setIcon(new ThemeResource(LOCK_16_PNG));
 
         glo.replaceComponent(row1, row1 = new Label());
         glo.replaceComponent(row2, row2 = new Label());
@@ -109,6 +111,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return glo;
     }
 
+    @Override
     protected Layout getComponentAddReplaceMoveTests() {
         final GridLayout glo = getTestGrid();
         glo.setHeight("350px");
@@ -202,6 +205,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
+    @Override
     protected Layout getComponentSizingTests() {
         final GridLayout glo = getTestGrid();
         glo.setHeight("350px");
@@ -264,6 +268,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
+    @Override
     protected Layout getExpandRatiosTests() {
         final GridLayout glo = getTestGrid();
         Layout baseLayout = getBaseLayout();
@@ -326,12 +331,12 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
+    @Override
     protected Layout getIconsTests() {
         GridLayout glo = getTestGrid();
         glo.setWidth("600px");
-        Resource[] icons = new Resource[] {
-                new ThemeResource("../runo/icons/32/calendar.png"),
-                new ThemeResource("../runo/icons/16/lock.png") };
+        Resource[] icons = new Resource[] { new ThemeResource(CALENDAR_32_PNG),
+                new ThemeResource(LOCK_16_PNG) };
 
         glo.replaceComponent(col1, col1 = new TextField("TEXTFIELD"));
         glo.replaceComponent(col2, col2 = new Label("LABEL"));
@@ -354,7 +359,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
 
         glo.replaceComponent(x3, x3 = new CheckBox("CHECKBOX"));
         glo.replaceComponent(x22, x22 = new Panel("PANEL"));
-        x22.setIcon(new ThemeResource("../runo/icons/32/calendar.png"));
+        x22.setIcon(new ThemeResource(CALENDAR_32_PNG));
 
         x3.setIcon(icons[0]);
         x22.setIcon(icons[1]);
@@ -362,6 +367,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return glo;
     }
 
+    @Override
     protected Layout getLayoutSizingTests() {
         final GridLayout glo = getTestGrid();
         Layout baseLayout = getBaseLayout();
@@ -426,6 +432,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
+    @Override
     protected Layout getMarginSpacingTests() {
         final GridLayout glo = getTestGrid();
         Layout baseLayout = getBaseLayout();
@@ -486,12 +493,12 @@ public class GridLayoutTests extends AbstractLayoutTests {
         return baseLayout;
     }
 
+    @Override
     protected Layout getRequiredErrorIndicatorsTests() {
         GridLayout glo = getTestGrid();
         glo.setWidth("600px");
-        Resource[] icons = new Resource[] {
-                new ThemeResource("../runo/icons/32/calendar.png"),
-                new ThemeResource("../runo/icons/16/lock.png") };
+        Resource[] icons = new Resource[] { new ThemeResource(CALENDAR_32_PNG),
+                new ThemeResource(LOCK_16_PNG) };
 
         glo.replaceComponent(col1, col1 = new TextField("TEXTFIELD"));
         glo.replaceComponent(col2, col2 = new Label("LABEL"));
@@ -571,7 +578,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
         TabSheet tabsheet = new TabSheet();
         tabsheet.setSizeUndefined();
         tabsheet.addTab(new Label("TAB1"), "TAB1", new ClassResource(
-                "alert.png", application));
+                GLOBE_16_PNG, application));
         tabsheet.addTab(new Label("TAB2"), "TAB2", null);
         return tabsheet;
     }
