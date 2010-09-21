@@ -744,7 +744,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         final boolean success = ((Container.Hierarchical) items)
                 .setChildrenAllowed(itemId, areChildrenAllowed);
         if (success) {
-            fireValueChange(false);
+            requestRepaint();
         }
         return success;
     }
