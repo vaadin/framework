@@ -312,7 +312,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
      * .dom.client.ClickEvent)
      */
     public void onClick(ClickEvent event) {
-        if (event.getSource() == calendarToggle) {
+        if (event.getSource() == calendarToggle && isEnabled()) {
             openCalendarPanel();
         }
     }
