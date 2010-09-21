@@ -23,6 +23,11 @@
 	<td>6,8</td>
 </tr>
 <tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>disabled</td>
+</tr>
+<tr>
 	<td>mouseClick</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::PID_SLocale-en_US-undefined-wide/domChild[1]</td>
 	<td>10,15</td>
@@ -121,6 +126,32 @@
 	<td>assertElementNotPresent</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::Root/VOverlay[0]/VCalendarPanel[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
 	<td></td>
+</tr>
+<!--Ensure no popups appear when DateField is enabled but readonly-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::PID_Scheckboxaction-Enabled/domChild[0]</td>
+	<td>3,8</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::PID_Scheckboxaction-Readonly/domChild[0]</td>
+	<td>5,8</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>readonly</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFields::PID_Scheckboxaction-Enabled/domChild[0]</td>
+	<td>3,8</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>readonly-disabled</td>
 </tr>
 </tbody></table>
 </body>
