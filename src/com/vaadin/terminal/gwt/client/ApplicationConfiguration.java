@@ -376,15 +376,6 @@ public class ApplicationConfiguration implements EntryPoint {
     };
 
     public void onModuleLoad() {
-        // display some sort of error of exceptions in web mode to debug console
-        GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-            public void onUncaughtException(Throwable e) {
-                Console console = VConsole.getImplementation();
-                if (console != null) {
-                    console.error(e.getMessage());
-                } // else very early phase of init, alert ??
-            }
-        });
 
         // Prepare VConsole for debugging
         if (isDebugMode()) {
@@ -395,6 +386,21 @@ public class ApplicationConfiguration implements EntryPoint {
         } else {
             VConsole.setImplementation((Console) GWT.create(NullConsole.class));
         }
+        /*
+         * Display some sort of error of exceptions in web mode to debug
+         * console. After this, exceptions are reported to VConsole and possible
+         * GWT hosted mode.
+         */
+        GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+            public void onUncaughtException(Throwable e) {
+                /*
+                 * Note in case of null console (without ?debug) we eat
+                 * exceptions. "a1 is not an object" style errors helps nobody,
+                 * especially end user. It does not work tells just as much.
+                 */
+                VConsole.getImplementation().error(e.getMessage());
+            }
+        });
 
         initConfigurations();
         startNextApplication();
