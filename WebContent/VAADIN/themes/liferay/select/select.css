@@ -7,6 +7,10 @@ select {
 	background-color: #fff;	
 }
 
+.v-ie6 select { 
+	font-size: 1em;
+}
+
 .v-filterselect-button {
 	width: 24px;
 	height: 24px;
@@ -65,4 +69,13 @@ select {
 	color: #000;
 	background: #dfe8f6;
 	border-color: #a3bae9;
+}
+
+.v-filterselect-suggestmenu .gwt-MenuItem .v-icon {
+	float: left;
+}
+
+.v-select-twincol-buttons .v-button-wrap { 
+	padding-left: 11px;
+	padding-right: 11px;
 }
