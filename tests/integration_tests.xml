@@ -229,7 +229,7 @@
 	</target>
 	
 	<target name="test-theme-liferay-6">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="test-liferay6-theme.html" />
+		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay6-theme.html" />
 		<pathconvert pathsep=" " property="test-liferay" refid="html-test-files" />
 			
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
