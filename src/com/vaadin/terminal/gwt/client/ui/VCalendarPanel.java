@@ -1390,7 +1390,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
             // Update times
             updateTimes();
 
-            ListBox lastDropDown = (ListBox) getWidget(getWidgetCount() - 1);
+            ListBox lastDropDown = getLastDropDown();
             lastDropDown.addKeyDownHandler(new KeyDownHandler() {
                 public void onKeyDown(KeyDownEvent event) {
                     boolean shiftKey = event.getNativeEvent().getShiftKey();
@@ -1405,6 +1405,18 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 }
             });
 
+        }
+
+        private ListBox getLastDropDown() {
+            int i = getWidgetCount() - 1;
+            while (i >= 0) {
+                Widget widget = getWidget(i);
+                if (widget instanceof ListBox) {
+                    return (ListBox) widget;
+                }
+                i--;
+            }
+            return null;
         }
 
         /**
