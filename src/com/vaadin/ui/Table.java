@@ -452,6 +452,8 @@ public class Table extends AbstractSelect implements Action.Container,
                     "Can not set visible columns to null value");
         }
 
+        // TODO add error check that no duplicate identifiers exist
+
         // Checks that the new visible columns contains no nulls and properties
         // exist
         final Collection properties = getContainerPropertyIds();
