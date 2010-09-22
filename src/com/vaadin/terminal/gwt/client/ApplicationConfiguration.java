@@ -398,7 +398,7 @@ public class ApplicationConfiguration implements EntryPoint {
                  * exceptions. "a1 is not an object" style errors helps nobody,
                  * especially end user. It does not work tells just as much.
                  */
-                VConsole.getImplementation().error(e.getMessage());
+                VConsole.getImplementation().error(e);
             }
         });
 
