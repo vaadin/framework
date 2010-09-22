@@ -28,3 +28,7 @@
 	 * to properly detect row header width */
 	width: 16px;
 }
+
+.v-table-iso3166 .v-icon {
+	height:11px;
+}
