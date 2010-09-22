@@ -3071,13 +3071,17 @@ public class Table extends AbstractSelect implements Action.Container,
     @Override
     public void containerPropertySetChange(
             Container.PropertySetChangeEvent event) {
+        disableContentRefreshing();
         super.containerPropertySetChange(event);
 
         // sanitetize visibleColumns. note that we are not adding previously
         // non-existing properties as columns
         Collection<?> containerPropertyIds = getContainerDataSource()
                 .getContainerPropertyIds();
-        for (Iterator<Object> iterator = visibleColumns.iterator(); iterator
+
+        LinkedList<Object> newVisibleColumns = new LinkedList<Object>(
+                visibleColumns);
+        for (Iterator<Object> iterator = newVisibleColumns.iterator(); iterator
                 .hasNext();) {
             Object id = iterator.next();
             if (!(containerPropertyIds.contains(id) || columnGenerators
@@ -3085,6 +3089,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 iterator.remove();
             }
         }
+        setVisibleColumns(newVisibleColumns.toArray());
         // same for collapsed columns
         for (Iterator<Object> iterator = collapsedColumns.iterator(); iterator
                 .hasNext();) {
@@ -3096,7 +3101,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         resetPageBuffer();
-        refreshRenderedCells();
+        enableContentRefreshing(true);
     }
 
     /**
