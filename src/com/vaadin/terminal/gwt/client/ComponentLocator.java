@@ -91,6 +91,9 @@ public class ComponentLocator {
 
         Widget w = null;
         if (pid != null) {
+            // If we found a Paintable then we use that as reference. We should
+            // find the Paintable for all but very special cases (like
+            // overlays).
             w = (Widget) client.getPaintable(pid);
         }
         if (w == null) {
@@ -104,6 +107,15 @@ public class ComponentLocator {
                     // The target element is contained by this root widget
                     w = findParentWidget(targetElement, rootWidget);
                     break;
+                }
+            }
+            if (w != null) {
+                // We found a widget but we should still see if we find a
+                // SubPartAware implementor (we cannot find the Paintable as
+                // there is no link from VOverlay to its paintable/owner).
+                Widget subPartAwareWidget = findSubPartAwareParentWidget(w);
+                if (subPartAwareWidget != null) {
+                    w = subPartAwareWidget;
                 }
             }
         }
@@ -145,6 +157,28 @@ public class ComponentLocator {
          * element
          */
         return path + getDOMPathForElement(targetElement, w.getElement());
+    }
+
+    /**
+     * Finds the first widget in the hierarchy (moving upwards) that implements
+     * SubPartAware. Returns the SubPartAware implementor or null if none is
+     * found.
+     * 
+     * @param w
+     *            The widget to start from. This is returned if it implements
+     *            SubPartAware.
+     * @return The first widget (upwards in hierarchy) that implements
+     *         SubPartAware or null
+     */
+    private Widget findSubPartAwareParentWidget(Widget w) {
+
+        while (w != null) {
+            if (w instanceof SubPartAware) {
+                return w;
+            }
+            w = w.getParent();
+        }
+        return null;
     }
 
     /**
