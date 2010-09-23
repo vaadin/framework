@@ -22,6 +22,8 @@ import com.vaadin.ui.NativeSelect;
 public abstract class ComponentTestCase<T extends AbstractComponent> extends
         TestBase {
 
+    protected static final Object CAPTION = "caption";
+
     private List<T> testComponents = new ArrayList<T>();
     private HorizontalLayout actionLayout;
 

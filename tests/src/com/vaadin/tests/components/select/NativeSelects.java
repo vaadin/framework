@@ -8,7 +8,6 @@ import com.vaadin.ui.NativeSelect;
 
 public class NativeSelects extends ComponentTestCase<NativeSelect> {
 
-    private static final Object CAPTION = "caption";
     NativeSelect label[] = new NativeSelect[20];
 
     @Override
