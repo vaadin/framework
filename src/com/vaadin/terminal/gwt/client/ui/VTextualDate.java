@@ -13,6 +13,7 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.TextBox;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -26,7 +27,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VTextualDate extends VDateField implements Paintable, Field,
-        ChangeHandler, ContainerResizedListener, Focusable {
+        ChangeHandler, ContainerResizedListener, Focusable, SubPartAware {
 
     private static final String PARSE_ERROR_CLASSNAME = CLASSNAME
             + "-parseerror";
@@ -414,6 +415,24 @@ public class VTextualDate extends VDateField implements Paintable, Field,
         }
 
         this.text.setText(text);
+    }
+
+    private final String TEXTFIELD_ID = "field";
+
+    public Element getSubPartElement(String subPart) {
+        if (subPart.equals(TEXTFIELD_ID)) {
+            return text.getElement();
+        }
+
+        return null;
+    }
+
+    public String getSubPartName(Element subElement) {
+        if (text.getElement().isOrHasChild(subElement)) {
+            return TEXTFIELD_ID;
+        }
+
+        return null;
     }
 
 }

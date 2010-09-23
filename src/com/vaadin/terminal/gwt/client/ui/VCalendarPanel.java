@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Date;
+import java.util.Iterator;
 
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -29,6 +30,7 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -38,12 +40,13 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.DateTimeService;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 
 @SuppressWarnings("deprecation")
 public class VCalendarPanel extends FocusableFlexTable implements
         KeyDownHandler, KeyPressHandler, MouseOutHandler, MouseDownHandler,
-        MouseUpHandler, BlurHandler, FocusHandler {
+        MouseUpHandler, BlurHandler, FocusHandler, SubPartAware {
 
     public interface SubmitListener {
 
@@ -1674,6 +1677,118 @@ public class VCalendarPanel extends FocusableFlexTable implements
             // Focuses the current day if the calendar shows the days
             focusDay(focusedDay.getDay());
         }
+    }
+
+    private static final String SUBPART_NEXT_MONTH = "nextmon";
+    private static final String SUBPART_PREV_MONTH = "prevmon";
+
+    private static final String SUBPART_NEXT_YEAR = "nexty";
+    private static final String SUBPART_PREV_YEAR = "prevy";
+    private static final String SUBPART_HOUR_SELECT = "h";
+    private static final String SUBPART_MINUTE_SELECT = "m";
+    private static final String SUBPART_SECS_SELECT = "s";
+    private static final String SUBPART_MSECS_SELECT = "ms";
+    private static final String SUBPART_AMPM_SELECT = "ampm";
+    private static final String SUBPART_DAY = "day";
+    private static final String SUBPART_MONTH_YEAR_HEADER = "header";
+
+    public String getSubPartName(Element subElement) {
+        if (contains(nextMonth, subElement)) {
+            return SUBPART_NEXT_MONTH;
+        } else if (contains(prevMonth, subElement)) {
+            return SUBPART_PREV_MONTH;
+        } else if (contains(nextYear, subElement)) {
+            return SUBPART_NEXT_YEAR;
+        } else if (contains(prevYear, subElement)) {
+            return SUBPART_PREV_YEAR;
+        } else if (contains(days, subElement)) {
+            // Day, find out which dayOfMonth and use that as the identifier
+            Day day = Util.findWidget(subElement, Day.class);
+            if (day != null) {
+                return SUBPART_DAY + day.getDay();
+            }
+        } else if (time != null) {
+            if (contains(time.hours, subElement)) {
+                return SUBPART_HOUR_SELECT;
+            } else if (contains(time.mins, subElement)) {
+                return SUBPART_MINUTE_SELECT;
+            } else if (contains(time.sec, subElement)) {
+                return SUBPART_SECS_SELECT;
+            } else if (contains(time.msec, subElement)) {
+                return SUBPART_MSECS_SELECT;
+            } else if (contains(time.ampm, subElement)) {
+                return SUBPART_AMPM_SELECT;
+
+            }
+        } else if (getCellFormatter().getElement(0, 2).isOrHasChild(subElement)) {
+            return SUBPART_MONTH_YEAR_HEADER;
+        }
+
+        return null;
+    }
+
+    /**
+     * Checks if subElement is inside the widget DOM hierarchy.
+     * 
+     * @param w
+     * @param subElement
+     * @return true if {@code w} is a parent of subElement, false otherwise.
+     */
+    private boolean contains(Widget w, Element subElement) {
+        if (w == null || w.getElement() == null) {
+            return false;
+        }
+
+        return w.getElement().isOrHasChild(subElement);
+    }
+
+    public Element getSubPartElement(String subPart) {
+        if (SUBPART_NEXT_MONTH.equals(subPart)) {
+            return nextMonth.getElement();
+        }
+        if (SUBPART_PREV_MONTH.equals(subPart)) {
+            return prevMonth.getElement();
+        }
+        if (SUBPART_NEXT_YEAR.equals(subPart)) {
+            return nextYear.getElement();
+        }
+        if (SUBPART_PREV_YEAR.equals(subPart)) {
+            return prevYear.getElement();
+        }
+        if (SUBPART_HOUR_SELECT.equals(subPart)) {
+            return time.hours.getElement();
+        }
+        if (SUBPART_MINUTE_SELECT.equals(subPart)) {
+            return time.mins.getElement();
+        }
+        if (SUBPART_SECS_SELECT.equals(subPart)) {
+            return time.sec.getElement();
+        }
+        if (SUBPART_MSECS_SELECT.equals(subPart)) {
+            return time.msec.getElement();
+        }
+        if (SUBPART_AMPM_SELECT.equals(subPart)) {
+            return time.ampm.getElement();
+        }
+        if (subPart.startsWith(SUBPART_DAY)) {
+            int dayOfMonth = Integer.parseInt(subPart.substring(SUBPART_DAY
+                    .length()));
+            Iterator<Widget> iter = days.iterator();
+            while (iter.hasNext()) {
+                Widget w = iter.next();
+                if (w instanceof Day) {
+                    Day day = (Day) w;
+                    if (day.getDay() == dayOfMonth) {
+                        return day.getElement();
+                    }
+                }
+            }
+        }
+
+        if (SUBPART_MONTH_YEAR_HEADER.equals(subPart)) {
+            return (Element) getCellFormatter().getElement(0, 2).getChild(0);
+        }
+        return null;
     }
 
 }

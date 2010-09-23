@@ -14,6 +14,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -41,7 +42,7 @@ import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.TimeChangeListener;
  * 
  */
 public class VPopupCalendar extends VTextualDate implements Paintable, Field,
-        ClickHandler, CloseHandler<PopupPanel> {
+        ClickHandler, CloseHandler<PopupPanel>, SubPartAware {
 
     private final Button calendarToggle;
 
@@ -429,6 +430,26 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         if (open) {
             popup.hide(true);
         }
+    }
+
+    private final String CALENDAR_TOGGLE_ID = "popupButton";
+
+    @Override
+    public Element getSubPartElement(String subPart) {
+        if (subPart.equals(CALENDAR_TOGGLE_ID)) {
+            return calendarToggle.getElement();
+        }
+
+        return super.getSubPartElement(subPart);
+    }
+
+    @Override
+    public String getSubPartName(Element subElement) {
+        if (calendarToggle.getElement().isOrHasChild(subElement)) {
+            return CALENDAR_TOGGLE_ID;
+        }
+
+        return super.getSubPartName(subElement);
     }
 
 }
