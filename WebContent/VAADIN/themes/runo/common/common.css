@@ -101,3 +101,8 @@
 .v-contextmenu .gwt-MenuItem img {
 	margin-right: 10px;
 }
+/* Fix icon height to help browsers to load page smoother */
+.v-embedded-icon-16 img {
+	width:16px;
+	height:16px;
+}

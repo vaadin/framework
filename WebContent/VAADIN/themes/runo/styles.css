@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_4_5_dev-20100917";}
-.v-theme-version-6_4_5_dev-20100917 {display: none;}
+.v-theme-version:after {content:"6_4_5_dev-20100923";}
+.v-theme-version-6_4_5_dev-20100923 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -2565,6 +2565,11 @@ div.v-window-header {
 }
 .v-contextmenu .gwt-MenuItem img {
 	margin-right: 10px;
+}
+/* Fix icon height to help browsers to load page smoother */
+.v-embedded-icon-16 img {
+	width:16px;
+	height:16px;
 }
 
 .v-datefield input.v-textfield,
