@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_4_5_dev-20100917";}
-.v-theme-version-6_4_5_dev-20100917 {display: none;}
+.v-theme-version:after {content:"6_4_5_dev-20100923";}
+.v-theme-version-6_4_5_dev-20100923 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -3126,7 +3126,7 @@ td.v-datefield-calendarpanel-nextyear {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: left -337px;
-	cursor: default;
+	cursor: pointer;
 	-webkit-border-radius: 0;
 	-moz-border-radius: 0;
 	border-radius: 0;

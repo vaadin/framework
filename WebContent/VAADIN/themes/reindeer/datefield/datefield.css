@@ -272,7 +272,7 @@ td.v-datefield-calendarpanel-nextyear {
 	border: none;
 	padding: 0;
 	background-image: url(img/popup-btn.png); /** sprite-ref: verticals */
-	cursor: default;
+	cursor: pointer;
 	-webkit-border-radius: 0;
 	-moz-border-radius: 0;
 	border-radius: 0;
