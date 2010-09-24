@@ -47,3 +47,7 @@ div.v-app {
 .v-ie8 .v-contextmenu {
 	margin-top: -16px;
 }
+
+.v-ie6 .v-view {
+	border-top: none;
+}
