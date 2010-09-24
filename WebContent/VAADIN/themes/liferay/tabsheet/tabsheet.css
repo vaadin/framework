@@ -131,13 +131,13 @@
 }
 
 .v-tabsheet-caption-close {
-	background: transparent url(/html/themes/classic/images/aui/icon_sprite.png) no-repeat -80px -128px;
+	background: transparent url(close.png) no-repeat right top;
+	-background-image: url(close-ie6.png);
 	cursor: default;
 	float: right;
-	margin: -1px -1px 0;
+	margin: 3px -1px 0;
 	overflow: hidden;
-	padding-left: 2px;
 	text-indent: -999px;
-	width: 10px;
-	height: 16px;
+	width: 13px;
+	height: 9px;
 }
