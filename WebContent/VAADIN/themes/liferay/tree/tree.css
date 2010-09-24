@@ -1,5 +1,6 @@
 .v-tree-node {
 	background: transparent url(arrows_sprites.png) no-repeat -42px 1px;
+	-background: transparent url(arrows_sprites-ie6.png) no-repeat -42px 1px;
 }
 
 .v-tree-node span {
