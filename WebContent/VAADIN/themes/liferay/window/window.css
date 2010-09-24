@@ -71,6 +71,7 @@
 	padding-bottom: 11px;
 }
 
-.v-ie .v-shadow-window {
+.v-ie6 .v-shadow-window,
+.v-ie7 .v-shadow-window {
 	padding-bottom: 0;
 }
