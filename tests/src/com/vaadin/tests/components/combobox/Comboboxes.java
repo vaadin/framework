@@ -1,7 +1,13 @@
 package com.vaadin.tests.components.combobox;
 
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+
+import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Select;
 
 public class Comboboxes extends ComponentTestCase<ComboBox> {
@@ -111,7 +117,35 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
 
     @Override
     protected String getDescription() {
-        return "A generic test for Labels in different configurations";
+        return "A generic test for ComboBoxes in different configurations";
     }
 
+    @Override
+    protected void createCustomActions(List<Component> actions) {
+        actions.add(createIconSelect());
+    }
+
+    private Component createIconSelect() {
+
+        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        options.put("<None>", null);
+        options.put("16x16", "../runo/icons/16/user.png");
+        options.put("32x32", "../runo/icons/32/attention.png");
+        options.put("64x64", "../runo/icons/64/email-reply.png");
+
+        return createSelectAction("Icon", options, "<None>",
+                new Command<ComboBox, String>() {
+
+                    public void execute(ComboBox c, String value) {
+                        for (Object id : c.getItemIds()) {
+                            if (value == null) {
+                                c.setItemIcon(id, null);
+                            } else {
+                                c.setItemIcon(id, new ThemeResource(value + "?"
+                                        + new Date().getTime()));
+                            }
+                        }
+                    }
+                });
+    }
 }
