@@ -73,7 +73,10 @@ public class VDateFieldCalendar extends VDateField {
         if (currentResolution <= RESOLUTION_MONTH) {
             calendarPanel.setFocusChangeListener(new FocusChangeListener() {
                 public void focusChanged(Date date) {
-                    Date date2 = new Date(calendarPanel.getDate().getTime());
+                	Date date2 = new Date();
+                	if (calendarPanel.getDate() != null) {
+                		date2.setTime(calendarPanel.getDate().getTime());
+                	}
                     /*
                      * Update the value of calendarPanel
                      */
