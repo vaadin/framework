@@ -206,7 +206,7 @@ public class TextFileProperty implements Property, Property.ValueChangeNotifier 
      */
     public void addListener(Property.ValueChangeListener listener) {
         if (valueChangeListeners == null) {
-            valueChangeListeners = new LinkedList();
+            valueChangeListeners = new LinkedList<Property.ValueChangeListener>();
         }
         valueChangeListeners.add(listener);
     }

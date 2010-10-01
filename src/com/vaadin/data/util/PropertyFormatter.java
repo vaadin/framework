@@ -43,12 +43,12 @@ public abstract class PropertyFormatter implements Property,
     /**
      * Internal list of registered value change listeners.
      */
-    private LinkedList valueChangeListeners = null;
+    private LinkedList<Property.ValueChangeListener> valueChangeListeners = null;
 
     /**
      * Internal list of registered read-only status change listeners.
      */
-    private LinkedList readOnlyStatusChangeListeners = null;
+    private LinkedList<Property.ReadOnlyStatusChangeListener> readOnlyStatusChangeListeners = null;
 
     /** Datasource that stores the actual value. */
     Property dataSource;
@@ -316,7 +316,7 @@ public abstract class PropertyFormatter implements Property,
      */
     public void addListener(Property.ValueChangeListener listener) {
         if (valueChangeListeners == null) {
-            valueChangeListeners = new LinkedList();
+            valueChangeListeners = new LinkedList<Property.ValueChangeListener>();
         }
         valueChangeListeners.add(listener);
     }
@@ -329,7 +329,7 @@ public abstract class PropertyFormatter implements Property,
      */
     public void addListener(Property.ReadOnlyStatusChangeListener listener) {
         if (readOnlyStatusChangeListeners == null) {
-            readOnlyStatusChangeListeners = new LinkedList();
+            readOnlyStatusChangeListeners = new LinkedList<Property.ReadOnlyStatusChangeListener>();
         }
         readOnlyStatusChangeListeners.add(listener);
     }

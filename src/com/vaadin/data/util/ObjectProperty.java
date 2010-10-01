@@ -41,12 +41,12 @@ public class ObjectProperty<T> implements Property,
     /**
      * Internal list of registered value change listeners.
      */
-    private LinkedList valueChangeListeners = null;
+    private LinkedList<ValueChangeListener> valueChangeListeners = null;
 
     /**
      * Internal list of registered read-only status change listeners.
      */
-    private LinkedList readOnlyStatusChangeListeners = null;
+    private LinkedList<ReadOnlyStatusChangeListener> readOnlyStatusChangeListeners = null;
 
     /**
      * Creates a new instance of ObjectProperty with the given value. The type
@@ -300,7 +300,7 @@ public class ObjectProperty<T> implements Property,
      */
     public void addListener(Property.ValueChangeListener listener) {
         if (valueChangeListeners == null) {
-            valueChangeListeners = new LinkedList();
+            valueChangeListeners = new LinkedList<ValueChangeListener>();
         }
         valueChangeListeners.add(listener);
     }
@@ -313,7 +313,7 @@ public class ObjectProperty<T> implements Property,
      */
     public void addListener(Property.ReadOnlyStatusChangeListener listener) {
         if (readOnlyStatusChangeListeners == null) {
-            readOnlyStatusChangeListeners = new LinkedList();
+            readOnlyStatusChangeListeners = new LinkedList<ReadOnlyStatusChangeListener>();
         }
         readOnlyStatusChangeListeners.add(listener);
     }
