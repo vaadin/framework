@@ -16,6 +16,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import com.vaadin.data.Container;
@@ -68,24 +70,24 @@ public class IndexedContainer implements Container.Indexed,
     /**
      * Property ID to type mapping.
      */
-    private Hashtable types = new Hashtable();
+    private Hashtable<Object, Class<?>> types = new Hashtable<Object, Class<?>>();
 
     /**
      * Hash of Items, where each Item is implemented as a mapping from Property
      * ID to Property value.
      */
-    private Hashtable items = new Hashtable();
+    private Hashtable<Object, Map<Object, Object>> items = new Hashtable<Object, Map<Object, Object>>();
 
     /**
      * Set of properties that are read-only.
      */
-    private HashSet readOnlyProperties = new HashSet();
+    private HashSet<Property> readOnlyProperties = new HashSet<Property>();
 
     /**
      * List of all Property value change event listeners listening all the
      * properties.
      */
-    private LinkedList propertyValueChangeListeners = null;
+    private LinkedList<Property.ValueChangeListener> propertyValueChangeListeners = null;
 
     /**
      * Data structure containing all listeners interested in changes to single
@@ -93,17 +95,17 @@ public class IndexedContainer implements Container.Indexed,
      * hashtable that maps Item IDs to a linked list of listeners listening
      * Property identified by given Property ID and Item ID.
      */
-    private Hashtable singlePropertyValueChangeListeners = null;
+    private Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>> singlePropertyValueChangeListeners = null;
 
     /**
      * List of all Property set change event listeners.
      */
-    private LinkedList propertySetChangeListeners = null;
+    private LinkedList<Container.PropertySetChangeListener> propertySetChangeListeners = null;
 
     /**
      * List of all container Item set change event listeners.
      */
-    private LinkedList itemSetChangeListeners = null;
+    private LinkedList<Container.ItemSetChangeListener> itemSetChangeListeners = null;
 
     /**
      * The item sorter which is used for sorting the container.
@@ -125,9 +127,9 @@ public class IndexedContainer implements Container.Indexed,
     public IndexedContainer() {
     }
 
-    public IndexedContainer(Collection itemIds) {
+    public IndexedContainer(Collection<?> itemIds) {
         if (items != null) {
-            for (final Iterator i = itemIds.iterator(); i.hasNext();) {
+            for (final Iterator<?> i = itemIds.iterator(); i.hasNext();) {
                 this.addItem(i.next());
             }
         }
@@ -155,7 +157,7 @@ public class IndexedContainer implements Container.Indexed,
      * 
      * @see com.vaadin.data.Container#getItemIds()
      */
-    public Collection getItemIds() {
+    public Collection<?> getItemIds() {
         if (filteredItemIds != null) {
             return Collections.unmodifiableCollection(filteredItemIds);
         }
@@ -167,7 +169,7 @@ public class IndexedContainer implements Container.Indexed,
      * 
      * @see com.vaadin.data.Container#getContainerPropertyIds()
      */
-    public Collection getContainerPropertyIds() {
+    public Collection<?> getContainerPropertyIds() {
         return Collections.unmodifiableCollection(propertyIds);
     }
 
@@ -178,8 +180,8 @@ public class IndexedContainer implements Container.Indexed,
      *            the ID of the Property.
      * @return Type of the requested Property
      */
-    public Class getType(Object propertyId) {
-        return (Class) types.get(propertyId);
+    public Class<?> getType(Object propertyId) {
+        return types.get(propertyId);
     }
 
     /*
@@ -255,7 +257,7 @@ public class IndexedContainer implements Container.Indexed,
         // If default value is given, set it
         if (defaultValue != null) {
             // for existing rows
-            for (final Iterator i = itemIds.iterator(); i.hasNext();) {
+            for (final Iterator<?> i = itemIds.iterator(); i.hasNext();) {
                 getItem(i.next()).getItemProperty(propertyId).setValue(
                         defaultValue);
             }
@@ -322,7 +324,7 @@ public class IndexedContainer implements Container.Indexed,
 
         // Adds the Item to container (at the end of the unfiltered list)
         itemIds.add(itemId);
-        Hashtable t = new Hashtable();
+        Hashtable<Object, Object> t = new Hashtable<Object, Object>();
         items.put(itemId, t);
 
         addDefaultValues(t);
@@ -347,7 +349,7 @@ public class IndexedContainer implements Container.Indexed,
      * @param t
      *            data table of added item
      */
-    private void addDefaultValues(Hashtable t) {
+    private void addDefaultValues(Hashtable<Object, Object> t) {
         if (defaultPropertyValues != null) {
             for (Object key : defaultPropertyValues.keySet()) {
                 t.put(key, defaultPropertyValues.get(key));
@@ -398,8 +400,8 @@ public class IndexedContainer implements Container.Indexed,
         }
 
         // If remove the Property from all Items
-        for (final Iterator i = itemIds.iterator(); i.hasNext();) {
-            ((Hashtable) items.get(i.next())).remove(propertyId);
+        for (final Iterator<Object> i = itemIds.iterator(); i.hasNext();) {
+            items.get(i.next()).remove(propertyId);
         }
 
         // Sends a change event
@@ -435,7 +437,7 @@ public class IndexedContainer implements Container.Indexed,
     public Object lastItemId() {
         try {
             if (filteredItemIds != null) {
-                final Iterator i = filteredItemIds.iterator();
+                final Iterator<?> i = filteredItemIds.iterator();
                 Object last = null;
                 while (i.hasNext()) {
                     last = i.next();
@@ -458,7 +460,7 @@ public class IndexedContainer implements Container.Indexed,
             if (itemId == null || !filteredItemIds.contains(itemId)) {
                 return null;
             }
-            final Iterator i = filteredItemIds.iterator();
+            final Iterator<?> i = filteredItemIds.iterator();
             while (i.hasNext() && !itemId.equals(i.next())) {
                 ;
             }
@@ -490,7 +492,7 @@ public class IndexedContainer implements Container.Indexed,
             if (!filteredItemIds.contains(itemId)) {
                 return null;
             }
-            final Iterator i = filteredItemIds.iterator();
+            final Iterator<?> i = filteredItemIds.iterator();
             if (itemId == null) {
                 return null;
             }
@@ -534,7 +536,8 @@ public class IndexedContainer implements Container.Indexed,
         if (filteredItemIds != null) {
             try {
                 Object last = null;
-                for (final Iterator i = filteredItemIds.iterator(); i.hasNext();) {
+                for (final Iterator<?> i = filteredItemIds.iterator(); i
+                        .hasNext();) {
                     last = i.next();
                 }
                 return (itemId != null && itemId.equals(last));
@@ -599,7 +602,7 @@ public class IndexedContainer implements Container.Indexed,
                 throw new IndexOutOfBoundsException();
             }
             try {
-                final Iterator i = filteredItemIds.iterator();
+                final Iterator<?> i = filteredItemIds.iterator();
                 while (index-- > 0) {
                     i.next();
                 }
@@ -623,7 +626,7 @@ public class IndexedContainer implements Container.Indexed,
             if (itemId == null) {
                 return -1;
             }
-            final Iterator i = filteredItemIds.iterator();
+            final Iterator<?> i = filteredItemIds.iterator();
             while (i.hasNext()) {
                 Object id = i.next();
                 if (itemId.equals(id)) {
@@ -720,7 +723,7 @@ public class IndexedContainer implements Container.Indexed,
 
         // Adds the Item to container
         itemIds.add(index, newItemId);
-        Hashtable t = new Hashtable();
+        Hashtable<Object, Object> t = new Hashtable<Object, Object>();
         items.put(newItemId, t);
         addDefaultValues(t);
 
@@ -836,7 +839,7 @@ public class IndexedContainer implements Container.Indexed,
      */
     public void addListener(Container.PropertySetChangeListener listener) {
         if (propertySetChangeListeners == null) {
-            propertySetChangeListeners = new LinkedList();
+            propertySetChangeListeners = new LinkedList<Container.PropertySetChangeListener>();
         }
         propertySetChangeListeners.add(listener);
     }
@@ -861,7 +864,7 @@ public class IndexedContainer implements Container.Indexed,
      */
     public void addListener(Container.ItemSetChangeListener listener) {
         if (itemSetChangeListeners == null) {
-            itemSetChangeListeners = new LinkedList();
+            itemSetChangeListeners = new LinkedList<Container.ItemSetChangeListener>();
         }
         itemSetChangeListeners.add(listener);
     }
@@ -886,7 +889,7 @@ public class IndexedContainer implements Container.Indexed,
      */
     public void addListener(Property.ValueChangeListener listener) {
         if (propertyValueChangeListeners == null) {
-            propertyValueChangeListeners = new LinkedList();
+            propertyValueChangeListeners = new LinkedList<Property.ValueChangeListener>();
         }
         propertyValueChangeListeners.add(listener);
     }
@@ -923,10 +926,10 @@ public class IndexedContainer implements Container.Indexed,
 
         // Sends event to single property value change listeners
         if (singlePropertyValueChangeListeners != null) {
-            final Hashtable propertySetToListenerListMap = (Hashtable) singlePropertyValueChangeListeners
+            final Map<Object, List<Property.ValueChangeListener>> propertySetToListenerListMap = singlePropertyValueChangeListeners
                     .get(source.propertyId);
             if (propertySetToListenerListMap != null) {
-                final LinkedList listenerList = (LinkedList) propertySetToListenerListMap
+                final List<Property.ValueChangeListener> listenerList = propertySetToListenerListMap
                         .get(source.itemId);
                 if (listenerList != null) {
                     final Property.ValueChangeEvent event = new IndexedContainer.PropertyValueChangeEvent(
@@ -989,22 +992,22 @@ public class IndexedContainer implements Container.Indexed,
             Object itemId, Property.ValueChangeListener listener) {
         if (listener != null) {
             if (singlePropertyValueChangeListeners == null) {
-                singlePropertyValueChangeListeners = new Hashtable();
+                singlePropertyValueChangeListeners = new Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>>();
             }
-            Hashtable propertySetToListenerListMap = (Hashtable) singlePropertyValueChangeListeners
+            Map<Object, List<Property.ValueChangeListener>> propertySetToListenerListMap = singlePropertyValueChangeListeners
                     .get(propertyId);
             if (propertySetToListenerListMap == null) {
-                propertySetToListenerListMap = new Hashtable();
+                propertySetToListenerListMap = new Hashtable<Object, List<Property.ValueChangeListener>>();
                 singlePropertyValueChangeListeners.put(propertyId,
                         propertySetToListenerListMap);
             }
-            LinkedList listenerList = (LinkedList) propertySetToListenerListMap
+            List<Property.ValueChangeListener> listenerList = propertySetToListenerListMap
                     .get(itemId);
             if (listenerList == null) {
-                listenerList = new LinkedList();
+                listenerList = new LinkedList<Property.ValueChangeListener>();
                 propertySetToListenerListMap.put(itemId, listenerList);
             }
-            listenerList.addLast(listener);
+            listenerList.add(listener);
         }
     }
 
@@ -1021,10 +1024,10 @@ public class IndexedContainer implements Container.Indexed,
     private void removeSinglePropertyChangeListener(Object propertyId,
             Object itemId, Property.ValueChangeListener listener) {
         if (listener != null && singlePropertyValueChangeListeners != null) {
-            final Hashtable propertySetToListenerListMap = (Hashtable) singlePropertyValueChangeListeners
+            final Map<Object, List<Property.ValueChangeListener>> propertySetToListenerListMap = singlePropertyValueChangeListeners
                     .get(propertyId);
             if (propertySetToListenerListMap != null) {
-                final LinkedList listenerList = (LinkedList) propertySetToListenerListMap
+                final List<Property.ValueChangeListener> listenerList = propertySetToListenerListMap
                         .get(itemId);
                 if (listenerList != null) {
                     listenerList.remove(listener);
@@ -1086,7 +1089,7 @@ public class IndexedContainer implements Container.Indexed,
             return new IndexedContainerProperty(itemId, id);
         }
 
-        public Collection getItemPropertyIds() {
+        public Collection<?> getItemPropertyIds() {
             return Collections.unmodifiableCollection(propertyIds);
         }
 
@@ -1102,7 +1105,7 @@ public class IndexedContainer implements Container.Indexed,
         public String toString() {
             String retValue = "";
 
-            for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
+            for (final Iterator<?> i = propertyIds.iterator(); i.hasNext();) {
                 final Object propertyId = i.next();
                 retValue += getItemProperty(propertyId).toString();
                 if (i.hasNext()) {
@@ -1227,8 +1230,8 @@ public class IndexedContainer implements Container.Indexed,
          * 
          * @see com.vaadin.data.Property#getType()
          */
-        public Class getType() {
-            return (Class) types.get(propertyId);
+        public Class<?> getType() {
+            return types.get(propertyId);
         }
 
         /*
@@ -1237,7 +1240,7 @@ public class IndexedContainer implements Container.Indexed,
          * @see com.vaadin.data.Property#getValue()
          */
         public Object getValue() {
-            return ((Hashtable) items.get(itemId)).get(propertyId);
+            return items.get(itemId).get(propertyId);
         }
 
         /*
@@ -1271,7 +1274,7 @@ public class IndexedContainer implements Container.Indexed,
                 throws Property.ReadOnlyException, Property.ConversionException {
 
             // Gets the Property set
-            final Hashtable propertySet = (Hashtable) items.get(itemId);
+            final Map<Object, Object> propertySet = items.get(itemId);
 
             // Support null values on all types
             if (newValue == null) {
@@ -1282,7 +1285,7 @@ public class IndexedContainer implements Container.Indexed,
                 try {
 
                     // Gets the string constructor
-                    final Constructor constr = getType().getConstructor(
+                    final Constructor<?> constr = getType().getConstructor(
                             new Class[] { String.class });
 
                     // Creates new object from the string
@@ -1423,10 +1426,10 @@ public class IndexedContainer implements Container.Indexed,
      */
     public Collection<?> getSortableContainerPropertyIds() {
 
-        final LinkedList list = new LinkedList();
-        for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
+        final List<Object> list = new LinkedList<Object>();
+        for (final Iterator<?> i = propertyIds.iterator(); i.hasNext();) {
             final Object id = i.next();
-            final Class type = getType(id);
+            final Class<?> type = getType(id);
             if (type != null && Comparable.class.isAssignableFrom(type)) {
                 list.add(id);
             }
@@ -1470,36 +1473,39 @@ public class IndexedContainer implements Container.Indexed,
         final IndexedContainer nc = new IndexedContainer();
 
         // Clone the shallow properties
-        nc.itemIds = itemIds != null ? (ArrayList) itemIds.clone() : null;
-        nc.itemSetChangeListeners = itemSetChangeListeners != null ? (LinkedList) itemSetChangeListeners
-                .clone() : null;
-        nc.propertyIds = propertyIds != null ? (ArrayList) propertyIds.clone()
+        nc.itemIds = itemIds != null ? (ArrayList<Object>) itemIds.clone()
                 : null;
-        nc.propertySetChangeListeners = propertySetChangeListeners != null ? (LinkedList) propertySetChangeListeners
+        nc.itemSetChangeListeners = itemSetChangeListeners != null ? (LinkedList<Container.ItemSetChangeListener>) itemSetChangeListeners
                 .clone() : null;
-        nc.propertyValueChangeListeners = propertyValueChangeListeners != null ? (LinkedList) propertyValueChangeListeners
+        nc.propertyIds = propertyIds != null ? (ArrayList<Object>) propertyIds
                 .clone() : null;
-        nc.readOnlyProperties = readOnlyProperties != null ? (HashSet) readOnlyProperties
+        nc.propertySetChangeListeners = propertySetChangeListeners != null ? (LinkedList<Container.PropertySetChangeListener>) propertySetChangeListeners
                 .clone() : null;
-        nc.singlePropertyValueChangeListeners = singlePropertyValueChangeListeners != null ? (Hashtable) singlePropertyValueChangeListeners
+        nc.propertyValueChangeListeners = propertyValueChangeListeners != null ? (LinkedList<Property.ValueChangeListener>) propertyValueChangeListeners
+                .clone() : null;
+        nc.readOnlyProperties = readOnlyProperties != null ? (HashSet<Property>) readOnlyProperties
+                .clone() : null;
+        nc.singlePropertyValueChangeListeners = singlePropertyValueChangeListeners != null ? (Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>>) singlePropertyValueChangeListeners
                 .clone() : null;
 
-        nc.types = types != null ? (Hashtable) types.clone() : null;
+        nc.types = types != null ? (Hashtable<Object, Class<?>>) types.clone()
+                : null;
 
         nc.filters = filters == null ? null : (HashSet<Filter>) filters.clone();
 
         nc.filteredItemIds = filteredItemIds == null ? null
-                : (LinkedHashSet) filteredItemIds.clone();
+                : (LinkedHashSet<Object>) filteredItemIds.clone();
 
         // Clone property-values
         if (items == null) {
             nc.items = null;
         } else {
-            nc.items = new Hashtable();
-            for (final Iterator i = items.keySet().iterator(); i.hasNext();) {
+            nc.items = new Hashtable<Object, Map<Object, Object>>();
+            for (final Iterator<?> i = items.keySet().iterator(); i.hasNext();) {
                 final Object id = i.next();
-                final Hashtable it = (Hashtable) items.get(id);
-                nc.items.put(id, it.clone());
+                final Hashtable<Object, Object> it = (Hashtable<Object, Object>) items
+                        .get(id);
+                nc.items.put(id, (Map<Object, Object>) it.clone());
             }
         }
 
@@ -1592,13 +1598,13 @@ public class IndexedContainer implements Container.Indexed,
         }
         // Reset filtered list
         if (filteredItemIds == null) {
-            filteredItemIds = new LinkedHashSet();
+            filteredItemIds = new LinkedHashSet<Object>();
         } else {
             filteredItemIds.clear();
         }
 
         // Filter
-        for (final Iterator i = itemIds.iterator(); i.hasNext();) {
+        for (final Iterator<?> i = itemIds.iterator(); i.hasNext();) {
             final Object id = i.next();
             if (passesFilters(id)) {
                 filteredItemIds.add(id);
