@@ -16,11 +16,11 @@ import com.vaadin.ui.Window;
  */
 public class Ticket2119 extends Application {
 
-    private ObjectProperty globalValue;
+    private ObjectProperty<String> globalValue;
 
     @Override
     public void init() {
-        globalValue = new ObjectProperty(null, String.class);
+        globalValue = new ObjectProperty<String>(null, String.class);
         Window main = createWindow();
         setMainWindow(main);
     }
@@ -67,8 +67,8 @@ public class Ticket2119 extends Application {
         select.addItem("2");
         select.addItem("3");
 
-        final ObjectProperty valueProperty = new ObjectProperty("1",
-                String.class);
+        final ObjectProperty<String> valueProperty = new ObjectProperty<String>(
+                "1", String.class);
         select.setPropertyDataSource(valueProperty);
         layout.addComponent(select);
 

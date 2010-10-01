@@ -26,7 +26,8 @@ public class Ticket1397 extends Application {
         Panel panel = new Panel("PopupTest");
 
         // First test component
-        final ObjectProperty prop = new ObjectProperty("fooTextField");
+        final ObjectProperty<String> prop = new ObjectProperty<String>(
+                "fooTextField");
 
         PopupView.Content content = new PopupView.Content() {
             public String getMinimizedValueAsHTML() {
@@ -48,16 +49,15 @@ public class Ticket1397 extends Application {
         panel.addComponent(pe2);
 
         // Third test component
-        final ObjectProperty prop2 = new ObjectProperty(new StringBuffer(
-                "Text for button"));
+        final ObjectProperty<StringBuffer> prop2 = new ObjectProperty<StringBuffer>(
+                new StringBuffer("Text for button"));
 
         class myButton extends Button {
             public myButton() {
                 super("Reverse the property");
                 this.addListener(new Button.ClickListener() {
                     public void buttonClick(Button.ClickEvent event) {
-                        StringBuffer getContents = (StringBuffer) prop2
-                                .getValue();
+                        StringBuffer getContents = prop2.getValue();
                         getContents.reverse();
 
                     }
@@ -83,7 +83,8 @@ public class Ticket1397 extends Application {
         // Fourth test component
         final Panel panel3 = new Panel("Editor popup for a property");
         TextField tf2 = new TextField("TextField for editing a property");
-        final ObjectProperty op = new ObjectProperty("This is property text.");
+        final ObjectProperty<String> op = new ObjectProperty<String>(
+                "This is property text.");
         tf2.setPropertyDataSource(op);
         panel3.addComponent(tf2);
         PopupView.Content content3 = new PopupView.Content() {

@@ -6,7 +6,6 @@ import org.easymock.EasyMock;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.Property.ValueChangeNotifier;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.AbstractField;
 
@@ -37,7 +36,7 @@ public abstract class AbstractTestFieldValueChange extends TestCase {
      * Test that listeners are not called when they have been unregistered.
      */
     public void testRemoveListener() {
-        getField().setPropertyDataSource(new ObjectProperty(""));
+        getField().setPropertyDataSource(new ObjectProperty<String>(""));
         getField().setWriteThrough(true);
         getField().setReadThrough(true);
 
@@ -73,7 +72,7 @@ public abstract class AbstractTestFieldValueChange extends TestCase {
      * source behind the field.
      */
     public void testWriteThroughReadThrough() {
-        getField().setPropertyDataSource(new ObjectProperty(""));
+        getField().setPropertyDataSource(new ObjectProperty<String>(""));
         getField().setWriteThrough(true);
         getField().setReadThrough(true);
 
@@ -88,7 +87,7 @@ public abstract class AbstractTestFieldValueChange extends TestCase {
      * not the original data source value changes.
      */
     public void testNoWriteThroughNoReadThrough() {
-        getField().setPropertyDataSource(new ObjectProperty(""));
+        getField().setPropertyDataSource(new ObjectProperty<String>(""));
         getField().setWriteThrough(false);
         getField().setReadThrough(false);
 
@@ -106,7 +105,7 @@ public abstract class AbstractTestFieldValueChange extends TestCase {
      * source value through the text field or the (notifying) property.
      */
     public void testWriteThroughNoReadThrough() {
-        getField().setPropertyDataSource(new ObjectProperty(""));
+        getField().setPropertyDataSource(new ObjectProperty<String>(""));
         getField().setWriteThrough(true);
         getField().setReadThrough(false);
 
@@ -125,7 +124,7 @@ public abstract class AbstractTestFieldValueChange extends TestCase {
      * not the original data source value changes.
      */
     public void testNoWriteThroughReadThrough() {
-        getField().setPropertyDataSource(new ObjectProperty(""));
+        getField().setPropertyDataSource(new ObjectProperty<String>(""));
         getField().setWriteThrough(false);
         getField().setReadThrough(true);
 

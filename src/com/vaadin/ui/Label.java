@@ -134,7 +134,7 @@ public class Label extends AbstractComponent implements Property,
      * @param contentMode
      */
     public Label(String content, int contentMode) {
-        this(new ObjectProperty(content, String.class), contentMode);
+        this(new ObjectProperty<String>(content, String.class), contentMode);
     }
 
     /**

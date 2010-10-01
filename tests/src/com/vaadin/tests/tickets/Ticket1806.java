@@ -14,7 +14,7 @@ public class Ticket1806 extends com.vaadin.Application {
                 getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
-        final ObjectProperty prop = new ObjectProperty("");
+        final ObjectProperty<String> prop = new ObjectProperty<String>("");
         final TextField tf1 = new TextField(
                 "Buffered TextField bound to ObjectProperty");
         tf1.setWriteThrough(false);

@@ -18,7 +18,7 @@ public class Ticket2242 extends Application implements ValueChangeListener {
     private Object tableValue = null;
     private Table t;
     private String valueDataSource = "-";
-    private ObjectProperty prop;
+    private ObjectProperty<String> prop;
 
     @Override
     public void init() {
@@ -44,7 +44,7 @@ public class Ticket2242 extends Application implements ValueChangeListener {
         layout.addComponent(b);
 
         t = new Table("A table");
-        prop = new ObjectProperty(valueDataSource);
+        prop = new ObjectProperty<String>(valueDataSource);
         t.setPropertyDataSource(prop);
         t.setSelectable(true);
         t.setImmediate(true);

@@ -20,8 +20,8 @@ import com.vaadin.data.Property;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class ObjectProperty implements Property, Property.ValueChangeNotifier,
-        Property.ReadOnlyStatusChangeNotifier {
+public class ObjectProperty<T> implements Property,
+        Property.ValueChangeNotifier, Property.ReadOnlyStatusChangeNotifier {
 
     /**
      * A boolean value storing the Property's read-only status information.
@@ -31,12 +31,12 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
     /**
      * The value contained by the Property.
      */
-    private Object value;
+    private T value;
 
     /**
      * Data type of the Property's value.
      */
-    private final Class type;
+    private final Class<T> type;
 
     /**
      * Internal list of registered value change listeners.
@@ -56,12 +56,18 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      * @param value
      *            the Initial value of the Property.
      */
-    public ObjectProperty(Object value) {
-        this(value, value.getClass());
+    @SuppressWarnings("unchecked")
+    // the cast is safe, because an object of type T has class Class<T>
+    public ObjectProperty(T value) {
+        this(value, (Class<T>) value.getClass());
     }
 
     /**
      * Creates a new instance of ObjectProperty with the given value and type.
+     * 
+     * Any value of type Object is accepted because, if the type class contains
+     * a string constructor, the toString of the value is used to create the new
+     * value. See {@link #setValue(Object)}.
      * 
      * @param value
      *            the Initial value of the Property.
@@ -69,7 +75,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      *            the type of the value. The value must be assignable to given
      *            type.
      */
-    public ObjectProperty(Object value, Class type) {
+    public ObjectProperty(Object value, Class<T> type) {
 
         // Set the values
         this.type = type;
@@ -80,6 +86,9 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      * Creates a new instance of ObjectProperty with the given value, type and
      * read-only mode status.
      * 
+     * Any value of type Object is accepted, see
+     * {@link #ObjectProperty(Object, Class)}.
+     * 
      * @param value
      *            the Initial value of the property.
      * @param type
@@ -88,7 +97,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      * @param readOnly
      *            Sets the read-only mode.
      */
-    public ObjectProperty(Object value, Class type, boolean readOnly) {
+    public ObjectProperty(Object value, Class<T> type, boolean readOnly) {
         this(value, type);
         setReadOnly(readOnly);
     }
@@ -102,7 +111,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      * 
      * @return type of the Property
      */
-    public final Class getType() {
+    public final Class<T> getType() {
         return type;
     }
 
@@ -111,7 +120,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      * 
      * @return the value stored in the Property
      */
-    public Object getValue() {
+    public T getValue() {
         return value;
     }
 
@@ -182,12 +191,15 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
 
         // Tries to assign the compatible value directly
         if (newValue == null || type.isAssignableFrom(newValue.getClass())) {
-            value = newValue;
+            @SuppressWarnings("unchecked")
+            // the cast is safe after an isAssignableFrom check
+            T value = (T) newValue;
+            this.value = value;
         } else {
             try {
 
                 // Gets the string constructor
-                final Constructor constr = getType().getConstructor(
+                final Constructor<T> constr = getType().getConstructor(
                         new Class[] { String.class });
 
                 // Creates new object from the string
@@ -222,7 +234,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
          * @param source
          *            the source object of the event.
          */
-        protected ValueChangeEvent(ObjectProperty source) {
+        protected ValueChangeEvent(ObjectProperty<T> source) {
             super(source);
         }
 
@@ -254,7 +266,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
          * @param source
          *            source object of the event
          */
-        protected ReadOnlyStatusChangeEvent(ObjectProperty source) {
+        protected ReadOnlyStatusChangeEvent(ObjectProperty<T> source) {
             super(source);
         }
 
@@ -324,8 +336,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
     private void fireValueChange() {
         if (valueChangeListeners != null) {
             final Object[] l = valueChangeListeners.toArray();
-            final Property.ValueChangeEvent event = new ObjectProperty.ValueChangeEvent(
-                    this);
+            final Property.ValueChangeEvent event = new ValueChangeEvent(this);
             for (int i = 0; i < l.length; i++) {
                 ((Property.ValueChangeListener) l[i]).valueChange(event);
             }
@@ -338,7 +349,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
     private void fireReadOnlyStatusChange() {
         if (readOnlyStatusChangeListeners != null) {
             final Object[] l = readOnlyStatusChangeListeners.toArray();
-            final Property.ReadOnlyStatusChangeEvent event = new ObjectProperty.ReadOnlyStatusChangeEvent(
+            final Property.ReadOnlyStatusChangeEvent event = new ReadOnlyStatusChangeEvent(
                     this);
             for (int i = 0; i < l.length; i++) {
                 ((Property.ReadOnlyStatusChangeListener) l[i])

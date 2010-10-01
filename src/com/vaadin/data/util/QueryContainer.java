@@ -239,7 +239,8 @@ public class QueryContainer implements Container, Container.Ordered,
         }
 
         // Handle also null values from the database
-        return new ObjectProperty(value != null ? value : new String(""));
+        return new ObjectProperty<Object>(value != null ? value
+                : new String(""));
     }
 
     /**

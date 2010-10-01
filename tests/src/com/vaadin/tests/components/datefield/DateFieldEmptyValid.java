@@ -73,8 +73,8 @@ public class DateFieldEmptyValid extends TestBase {
         b.addListener(new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                ObjectProperty dfProp = new ObjectProperty(new Date(
-                        2000 - 1900, 6 - 1, 5), Date.class);
+                ObjectProperty<Date> dfProp = new ObjectProperty<Date>(
+                        new Date(2000 - 1900, 6 - 1, 5), Date.class);
                 df.setPropertyDataSource(dfProp);
             }
         });
@@ -85,7 +85,8 @@ public class DateFieldEmptyValid extends TestBase {
         b.addListener(new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                ObjectProperty dfProp = new ObjectProperty(null, Date.class);
+                ObjectProperty<Date> dfProp = new ObjectProperty<Date>(null,
+                        Date.class);
                 df.setPropertyDataSource(dfProp);
                 dfProp.setValue(new Date(2005 - 1900, 8 - 1, 27));
             }

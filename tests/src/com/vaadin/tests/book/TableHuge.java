@@ -69,7 +69,7 @@ public class TableHuge extends CustomComponent {
             if (itemId instanceof Integer) {
                 int pos = ((Integer) itemId).intValue();
                 if (pos >= 0 && pos < numberofitems) {
-                    return new ObjectProperty("This is the item " + pos
+                    return new ObjectProperty<String>("This is the item " + pos
                             + " in the huge table");
                 }
             }
@@ -88,7 +88,7 @@ public class TableHuge extends CustomComponent {
                 int pos = ((Integer) itemId).intValue();
                 if (pos >= 0 && pos < numberofitems) {
                     Item item = new PropertysetItem();
-                    item.addItemProperty("id", new ObjectProperty(
+                    item.addItemProperty("id", new ObjectProperty<String>(
                             "This is the item " + pos + " in the huge table"));
                     return item;
                 }

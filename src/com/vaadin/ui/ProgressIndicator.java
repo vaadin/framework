@@ -50,7 +50,8 @@ public class ProgressIndicator extends AbstractField implements Property,
      * Creates an a new ProgressIndicator.
      */
     public ProgressIndicator() {
-        setPropertyDataSource(new ObjectProperty(new Float(0), Float.class));
+        setPropertyDataSource(new ObjectProperty<Float>(new Float(0),
+                Float.class));
     }
 
     /**
@@ -59,7 +60,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      * @param value
      */
     public ProgressIndicator(Float value) {
-        setPropertyDataSource(new ObjectProperty(value, Float.class));
+        setPropertyDataSource(new ObjectProperty<Float>(value, Float.class));
     }
 
     /**

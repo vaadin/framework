@@ -14,9 +14,11 @@ public class FormNotGettingSmaller extends TestBase {
     @Override
     protected void setup() {
         Item item = new PropertysetItem();
-        item.addItemProperty("name", new ObjectProperty("Charles Anthony"));
-        item.addItemProperty("city", new ObjectProperty("London"));
-        item.addItemProperty("isTallPerson", new ObjectProperty(Boolean.FALSE));
+        item.addItemProperty("name", new ObjectProperty<String>(
+                "Charles Anthony"));
+        item.addItemProperty("city", new ObjectProperty<String>("London"));
+        item.addItemProperty("isTallPerson", new ObjectProperty<Boolean>(
+                Boolean.FALSE));
 
         Label spacer = new Label();
         HorizontalLayout buttons = new HorizontalLayout();

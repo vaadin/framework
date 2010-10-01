@@ -83,7 +83,8 @@ public class Ticket2151 extends Application {
             try {
                 b.setWriteThrough(true);
                 b.setReadThrough(true);
-                ObjectProperty prop = new ObjectProperty("ABC 123");
+                ObjectProperty<String> prop = new ObjectProperty<String>(
+                        "ABC 123");
                 /*
                  * This should throw an exception or somehow tell that the
                  * property was invalid (wrong type). See #2223.
