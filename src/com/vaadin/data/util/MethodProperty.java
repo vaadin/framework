@@ -46,8 +46,8 @@ import com.vaadin.util.SerializerHelper;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class MethodProperty implements Property, Property.ValueChangeNotifier,
-        Property.ReadOnlyStatusChangeNotifier {
+public class MethodProperty<T> implements Property,
+        Property.ValueChangeNotifier, Property.ReadOnlyStatusChangeNotifier {
 
     /**
      * The object that includes the property the MethodProperty is bound to.
@@ -79,7 +79,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
     /**
      * Type of the property.
      */
-    private transient Class<?> type;
+    private transient Class<? extends T> type;
 
     /**
      * List of listeners who are interested in the read-only status changes of
@@ -123,7 +123,10 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
             ClassNotFoundException {
         in.defaultReadObject();
         try {
-            type = SerializerHelper.readClass(in);
+            @SuppressWarnings("unchecked")
+            // business assumption; type parameters not checked at runtime
+            Class<T> class1 = (Class<T>) SerializerHelper.readClass(in);
+            type = class1;
             instance = in.readObject();
             setArgs = (Object[]) in.readObject();
             getArgs = (Object[]) in.readObject();
@@ -171,7 +174,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      * </p>
      * 
      * <p>
-     * Method names are constucted from the bean property by adding
+     * Method names are constructed from the bean property by adding
      * get/is/are/set prefix and capitalising the first character in the name of
      * the given bean property.
      * </p>
@@ -208,42 +211,48 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
                     getMethod = beanClass.getMethod("are" + beanPropertyName,
                             new Class[] {});
                 } catch (final java.lang.NoSuchMethodException e) {
-                    throw new MethodProperty.MethodException("Bean property "
+                    throw new MethodException(this, "Bean property "
                             + beanPropertyName + " can not be found");
                 }
             }
         }
 
         // In case the get method is found, resolve the type
-        type = getMethod.getReturnType();
+        Class<?> returnType = getMethod.getReturnType();
 
         // Finds the set method
         setMethod = null;
         try {
             setMethod = beanClass.getMethod("set" + beanPropertyName,
-                    new Class[] { type });
+                    new Class[] { returnType });
         } catch (final java.lang.NoSuchMethodException skipped) {
         }
 
         // Gets the return type from get method
-        if (type.isPrimitive()) {
-            if (type.equals(Boolean.TYPE)) {
-                type = Boolean.class;
-            } else if (type.equals(Integer.TYPE)) {
-                type = Integer.class;
-            } else if (type.equals(Float.TYPE)) {
-                type = Float.class;
-            } else if (type.equals(Double.TYPE)) {
-                type = Double.class;
-            } else if (type.equals(Byte.TYPE)) {
-                type = Byte.class;
-            } else if (type.equals(Character.TYPE)) {
-                type = Character.class;
-            } else if (type.equals(Short.TYPE)) {
-                type = Short.class;
-            } else if (type.equals(Long.TYPE)) {
-                type = Long.class;
+        if (returnType.isPrimitive()) {
+            if (returnType.equals(Boolean.TYPE)) {
+                type = (Class<T>) Boolean.class;
+            } else if (returnType.equals(Integer.TYPE)) {
+                type = (Class<T>) Integer.class;
+            } else if (returnType.equals(Float.TYPE)) {
+                type = (Class<T>) Float.class;
+            } else if (returnType.equals(Double.TYPE)) {
+                type = (Class<T>) Double.class;
+            } else if (returnType.equals(Byte.TYPE)) {
+                type = (Class<T>) Byte.class;
+            } else if (returnType.equals(Character.TYPE)) {
+                type = (Class<T>) Character.class;
+            } else if (returnType.equals(Short.TYPE)) {
+                type = (Class<T>) Short.class;
+            } else if (returnType.equals(Long.TYPE)) {
+                type = (Class<T>) Long.class;
+            } else {
+                throw new MethodException(this, "Bean property "
+                        + beanPropertyName
+                        + " getter return type must not be void");
             }
+        } else {
+            type = (Class<T>) returnType;
         }
 
         setArguments(new Object[] {}, new Object[] { null }, 0);
@@ -276,8 +285,8 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      * 
      */
     @SuppressWarnings("unchecked")
-    public MethodProperty(Class type, Object instance, String getMethodName,
-            String setMethodName) {
+    public MethodProperty(Class<? extends T> type, Object instance,
+            String getMethodName, String setMethodName) {
         this(type, instance, getMethodName, setMethodName, new Object[] {},
                 new Object[] { null }, 0);
     }
@@ -306,8 +315,8 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      *            the setter method.
      */
     @SuppressWarnings("unchecked")
-    public MethodProperty(Class type, Object instance, Method getMethod,
-            Method setMethod) {
+    public MethodProperty(Class<? extends T> type, Object instance,
+            Method getMethod, Method setMethod) {
         this(type, instance, getMethod, setMethod, new Object[] {},
                 new Object[] { null }, 0);
     }
@@ -349,9 +358,9 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      *            {@link #setValue(Object newValue)} is called.
      */
     @SuppressWarnings("unchecked")
-    public MethodProperty(Class type, Object instance, String getMethodName,
-            String setMethodName, Object[] getArgs, Object[] setArgs,
-            int setArgumentIndex) {
+    public MethodProperty(Class<? extends T> type, Object instance,
+            String getMethodName, String setMethodName, Object[] getArgs,
+            Object[] setArgs, int setArgumentIndex) {
 
         // Check the setargs and setargs index
         if (setMethodName != null && setArgs == null) {
@@ -406,7 +415,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
 
                 // all paramteters matched
                 if (found == true) {
-                    throw new MethodProperty.MethodException(
+                    throw new MethodException(this,
                             "Could not uniquely identify " + getMethodName
                                     + "-method");
                 } else {
@@ -416,8 +425,8 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
             }
         }
         if (found != true) {
-            throw new MethodProperty.MethodException("Could not find "
-                    + getMethodName + "-method");
+            throw new MethodException(this, "Could not find " + getMethodName
+                    + "-method");
         }
 
         // Finds set method
@@ -459,7 +468,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
 
                     // all parameters match
                     if (found == true) {
-                        throw new MethodProperty.MethodException(
+                        throw new MethodException(this,
                                 "Could not identify unique " + setMethodName
                                         + "-method");
                     } else {
@@ -469,7 +478,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
                 }
             }
             if (found != true) {
-                throw new MethodProperty.MethodException("Could not identify "
+                throw new MethodException(this, "Could not identify "
                         + setMethodName + "-method");
             }
         }
@@ -477,21 +486,21 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
         // Gets the return type from get method
         if (type.isPrimitive()) {
             if (type.equals(Boolean.TYPE)) {
-                this.type = Boolean.class;
+                this.type = (Class<T>) Boolean.class;
             } else if (type.equals(Integer.TYPE)) {
-                this.type = Integer.class;
+                this.type = (Class<T>) Integer.class;
             } else if (type.equals(Float.TYPE)) {
-                this.type = Float.class;
+                this.type = (Class<T>) Float.class;
             } else if (type.equals(Double.TYPE)) {
-                this.type = Double.class;
+                this.type = (Class<T>) Double.class;
             } else if (type.equals(Byte.TYPE)) {
-                this.type = Byte.class;
+                this.type = (Class<T>) Byte.class;
             } else if (type.equals(Character.TYPE)) {
-                this.type = Character.class;
+                this.type = (Class<T>) Character.class;
             } else if (type.equals(Short.TYPE)) {
-                this.type = Short.class;
+                this.type = (Class<T>) Short.class;
             } else if (type.equals(Long.TYPE)) {
-                this.type = Long.class;
+                this.type = (Class<T>) Long.class;
             }
         }
 
@@ -535,7 +544,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
             int setArgumentIndex) {
 
         if (getMethod == null) {
-            throw new MethodProperty.MethodException(
+            throw new MethodException(this,
                     "Property GET-method cannot not be null: " + type);
         }
 
@@ -615,7 +624,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
         try {
             return getMethod.invoke(instance, getArgs);
         } catch (final Throwable e) {
-            throw new MethodProperty.MethodException(e);
+            throw new MethodException(this, e);
         }
     }
 
@@ -733,9 +742,9 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
             }
         } catch (final InvocationTargetException e) {
             final Throwable targetException = e.getTargetException();
-            throw new MethodProperty.MethodException(targetException);
+            throw new MethodException(this, targetException);
         } catch (final Exception e) {
-            throw new MethodProperty.MethodException(e);
+            throw new MethodException(this, e);
         }
     }
 
@@ -767,7 +776,14 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      * @VERSION@
      * @since 3.0
      */
-    public class MethodException extends RuntimeException {
+    @SuppressWarnings("rawtypes")
+    // Exceptions cannot be parameterized, ever.
+    public static class MethodException extends RuntimeException {
+
+        /**
+         * The method property from which the exception originates from
+         */
+        private final MethodProperty methodProperty;
 
         /**
          * Cause of the method exception
@@ -778,20 +794,26 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
          * Constructs a new <code>MethodException</code> with the specified
          * detail message.
          * 
+         * @param methodProperty
+         *            the method property.
          * @param msg
          *            the detail message.
          */
-        public MethodException(String msg) {
+        public MethodException(MethodProperty methodProperty, String msg) {
             super(msg);
+            this.methodProperty = methodProperty;
         }
 
         /**
          * Constructs a new <code>MethodException</code> from another exception.
          * 
+         * @param methodProperty
+         *            the method property.
          * @param cause
          *            the cause of the exception.
          */
-        public MethodException(Throwable cause) {
+        public MethodException(MethodProperty methodProperty, Throwable cause) {
+            this.methodProperty = methodProperty;
             this.cause = cause;
         }
 
@@ -807,7 +829,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
          * Gets the method property this exception originates from.
          */
         public MethodProperty getMethodProperty() {
-            return MethodProperty.this;
+            return methodProperty;
         }
     }
 
@@ -831,7 +853,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
          * @param source
          *            source object of the event.
          */
-        protected ReadOnlyStatusChangeEvent(MethodProperty source) {
+        protected ReadOnlyStatusChangeEvent(MethodProperty<T> source) {
             super(source);
         }
 
@@ -877,7 +899,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
     private void fireReadOnlyStatusChange() {
         if (readOnlyStatusChangeListeners != null) {
             final Object[] l = readOnlyStatusChangeListeners.toArray();
-            final Property.ReadOnlyStatusChangeEvent event = new MethodProperty.ReadOnlyStatusChangeEvent(
+            final Property.ReadOnlyStatusChangeEvent event = new ReadOnlyStatusChangeEvent(
                     this);
             for (int i = 0; i < l.length; i++) {
                 ((Property.ReadOnlyStatusChangeListener) l[i])
@@ -904,7 +926,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
          * @param source
          *            source object of the event.
          */
-        protected ValueChangeEvent(MethodProperty source) {
+        protected ValueChangeEvent(MethodProperty<T> source) {
             super(source);
         }
 
@@ -940,8 +962,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
     public void fireValueChange() {
         if (valueChangeListeners != null) {
             final Object[] l = valueChangeListeners.toArray();
-            final Property.ValueChangeEvent event = new MethodProperty.ValueChangeEvent(
-                    this);
+            final Property.ValueChangeEvent event = new ValueChangeEvent(this);
             for (int i = 0; i < l.length; i++) {
                 ((Property.ValueChangeListener) l[i]).valueChange(event);
             }

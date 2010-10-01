@@ -38,7 +38,7 @@ public class Ticket1804 extends com.vaadin.Application {
 
         s = new Select("Testcase from the ticket #1804");
         s.setNullSelectionAllowed(false);
-        s.setPropertyDataSource(new MethodProperty(new TestPojo(), "id"));
+        s.setPropertyDataSource(new MethodProperty<String>(new TestPojo(), "id"));
         s.addValidator(new EmptyStringValidator(
                 "Selection required for test-field"));
         s.setRequired(true);
@@ -46,14 +46,14 @@ public class Ticket1804 extends com.vaadin.Application {
 
         s = new Select("Testcase from the ticket #1804, but without validator");
         s.setNullSelectionAllowed(false);
-        s.setPropertyDataSource(new MethodProperty(new TestPojo(), "id"));
+        s.setPropertyDataSource(new MethodProperty<String>(new TestPojo(), "id"));
         s.setRequired(true);
         listOfAllFields.add(s);
 
         s = new Select(
                 "Testcase from the ticket #1804, but with required=false");
         s.setNullSelectionAllowed(false);
-        s.setPropertyDataSource(new MethodProperty(new TestPojo(), "id"));
+        s.setPropertyDataSource(new MethodProperty<String>(new TestPojo(), "id"));
         s.addValidator(new EmptyStringValidator(
                 "Selection required for test-field"));
         listOfAllFields.add(s);
@@ -61,14 +61,14 @@ public class Ticket1804 extends com.vaadin.Application {
         s = new Select(
                 "Testcase from the ticket #1804, but without validator and with required=false");
         s.setNullSelectionAllowed(false);
-        s.setPropertyDataSource(new MethodProperty(new TestPojo(), "id"));
+        s.setPropertyDataSource(new MethodProperty<String>(new TestPojo(), "id"));
         listOfAllFields.add(s);
 
         s = new Select(
                 "Required=true, custom error message, null selection not allowed");
         s.setRequired(true);
         s.setNullSelectionAllowed(false);
-        s.setPropertyDataSource(new MethodProperty(new TestPojo(), "id"));
+        s.setPropertyDataSource(new MethodProperty<String>(new TestPojo(), "id"));
         s.setValue(null);
         s.setComponentError(new SystemError("Test error message"));
         listOfAllFields.add(s);

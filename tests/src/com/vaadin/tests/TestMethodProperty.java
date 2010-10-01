@@ -11,8 +11,8 @@ public class TestMethodProperty {
 
         MyTest myTest = new MyTest();
 
-        MethodProperty methodProperty2 = new MethodProperty(Integer.TYPE,
-                myTest, "getInt", "setInt", new Object[0],
+        MethodProperty<Integer> methodProperty2 = new MethodProperty<Integer>(
+                Integer.TYPE, myTest, "getInt", "setInt", new Object[0],
                 new Object[] { null }, 0);
 
         methodProperty2.setValue("3");

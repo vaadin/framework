@@ -27,7 +27,7 @@ public class TestSerialization extends TestCase {
     public void testForm() throws Exception {
         Form f = new Form();
         String propertyId = "My property";
-        f.addItemProperty(propertyId, new MethodProperty(new Data(),
+        f.addItemProperty(propertyId, new MethodProperty<Object>(new Data(),
                 "dummyGetterAndSetter"));
         f.replaceWithSelect(propertyId, new Object[] { "a", "b", null },
                 new String[] { "Item a", "ITem b", "Null item" });
@@ -49,18 +49,20 @@ public class TestSerialization extends TestCase {
     }
 
     public void testMethodPropertyGetter() throws Exception {
-        MethodProperty mp = new MethodProperty(new Data(), "dummyGetter");
+        MethodProperty<?> mp = new MethodProperty<Object>(new Data(),
+                "dummyGetter");
         serializeAndDeserialize(mp);
     }
 
     public void testMethodPropertyGetterAndSetter() throws Exception {
-        MethodProperty mp = new MethodProperty(new Data(),
+        MethodProperty<?> mp = new MethodProperty<Object>(new Data(),
                 "dummyGetterAndSetter");
         serializeAndDeserialize(mp);
     }
 
     public void testMethodPropertyInt() throws Exception {
-        MethodProperty mp = new MethodProperty(new Data(), "dummyInt");
+        MethodProperty<?> mp = new MethodProperty<Object>(new Data(),
+                "dummyInt");
         serializeAndDeserialize(mp);
     }
 

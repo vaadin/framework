@@ -35,11 +35,11 @@ public class Ticket2002 extends Application {
         layout.setSpacing(true);
 
         TextField f1 = new TextField("Non-immediate/Long text field",
-                new MethodProperty(this, "long1"));
+                new MethodProperty<Long>(this, "long1"));
         f1.setImmediate(false);
         f1.setNullSettingAllowed(true);
         TextField f2 = new TextField("Immediate/Long text field",
-                new MethodProperty(this, "long2"));
+                new MethodProperty<Long>(this, "long2"));
         f2.setImmediate(true);
         f2.setNullSettingAllowed(true);
 

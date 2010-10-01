@@ -461,23 +461,23 @@ public class FilesystemContainer implements Container.Hierarchical {
         }
 
         if (propertyId.equals(PROPERTY_NAME)) {
-            return new MethodProperty(getType(propertyId), new FileItem(
-                    (File) itemId), FILEITEM_NAME, null);
+            return new MethodProperty<Object>(getType(propertyId),
+                    new FileItem((File) itemId), FILEITEM_NAME, null);
         }
 
         if (propertyId.equals(PROPERTY_ICON)) {
-            return new MethodProperty(getType(propertyId), new FileItem(
-                    (File) itemId), FILEITEM_ICON, null);
+            return new MethodProperty<Object>(getType(propertyId),
+                    new FileItem((File) itemId), FILEITEM_ICON, null);
         }
 
         if (propertyId.equals(PROPERTY_SIZE)) {
-            return new MethodProperty(getType(propertyId), new FileItem(
-                    (File) itemId), FILEITEM_SIZE, null);
+            return new MethodProperty<Object>(getType(propertyId),
+                    new FileItem((File) itemId), FILEITEM_SIZE, null);
         }
 
         if (propertyId.equals(PROPERTY_LASTMODIFIED)) {
-            return new MethodProperty(getType(propertyId), new FileItem(
-                    (File) itemId), FILEITEM_LASTMODIFIED, null);
+            return new MethodProperty<Object>(getType(propertyId),
+                    new FileItem((File) itemId), FILEITEM_LASTMODIFIED, null);
         }
 
         return null;

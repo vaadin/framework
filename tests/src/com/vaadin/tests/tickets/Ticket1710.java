@@ -50,7 +50,7 @@ public class Ticket1710 extends com.vaadin.Application {
         LayoutTestingPanel oltp = new LayoutTestingPanel("OrderedLayout",
                 orderedLayout);
         hidingControls.addComponent(new Button("OrderedLayout",
-                new MethodProperty(oltp, "visible")));
+                new MethodProperty<Boolean>(oltp, "visible")));
         lo.addComponent(oltp);
         orderedLayout.setSpacing(false);
         addFields(orderedLayout);
@@ -69,7 +69,7 @@ public class Ticket1710 extends com.vaadin.Application {
         GridLayout grid = new GridLayout(1, 1);
         Panel g1tp = new LayoutTestingPanel("Gridlayout with 1 column", grid);
         hidingControls.addComponent(new Button("GridLayout (1col)",
-                new MethodProperty(g1tp, "visible")));
+                new MethodProperty<Boolean>(g1tp, "visible")));
         g1tp.setVisible(false);
         lo.addComponent(g1tp);
         grid.setSpacing(true);
@@ -77,7 +77,7 @@ public class Ticket1710 extends com.vaadin.Application {
         GridLayout grid2 = new GridLayout(2, 1);
         Panel g2tp = new LayoutTestingPanel("Gridlayout with 2 columns", grid2);
         hidingControls.addComponent(new Button("GridLayout (2cols)",
-                new MethodProperty(g2tp, "visible")));
+                new MethodProperty<Boolean>(g2tp, "visible")));
         g2tp.setVisible(false);
         lo.addComponent(g2tp);
         grid2.setSpacing(true);
@@ -88,7 +88,7 @@ public class Ticket1710 extends com.vaadin.Application {
         Panel elp = new LayoutTestingPanel(
                 "ExpandLayout width first component expanded", el);
         hidingControls.addComponent(new Button("ExpandLayout (vertical)",
-                new MethodProperty(elp, "visible")));
+                new MethodProperty<Boolean>(elp, "visible")));
         elp.setVisible(false);
         el.setHeight(700);
         addFields(el);
@@ -100,7 +100,7 @@ public class Ticket1710 extends com.vaadin.Application {
         Panel elhp = new LayoutTestingPanel(
                 "ExpandLayout width first component expanded; horizontal", elh);
         hidingControls.addComponent(new Button("ExpandLayout (horizontal)",
-                new MethodProperty(elhp, "visible")));
+                new MethodProperty<Boolean>(elhp, "visible")));
         elhp.setVisible(false);
         elhp.setScrollable(true);
         elh.setWidth(2000);
@@ -116,15 +116,15 @@ public class Ticket1710 extends com.vaadin.Application {
         OrderedLayout cl = new OrderedLayout();
         Panel clp = new LayoutTestingPanel("CustomLayout", cl);
         hidingControls.addComponent(new Button("CustomLayout",
-                new MethodProperty(clp, "visible")));
+                new MethodProperty<Boolean>(clp, "visible")));
         clp.setVisible(false);
         lo.addComponent(clp);
         cl.addComponent(new Label("<<< Add customlayout testcase here >>>"));
 
         // Form
         Panel formPanel = new Panel("Form");
-        hidingControls.addComponent(new Button("Form", new MethodProperty(
-                formPanel, "visible")));
+        hidingControls.addComponent(new Button("Form",
+                new MethodProperty<Boolean>(formPanel, "visible")));
         formPanel.setVisible(false);
         formPanel.addComponent(getFormPanelExample());
         lo.addComponent(formPanel);
@@ -269,15 +269,15 @@ public class Ticket1710 extends com.vaadin.Application {
             controls.setSpacing(true);
             controls.setMargin(false);
             controls.addComponent(new Label("width"));
-            controls.addComponent(new TextField(new MethodProperty(
+            controls.addComponent(new TextField(new MethodProperty<Float>(
                     testedLayout, "width")));
-            controls.addComponent(new Button("%", new MethodProperty(this,
-                    "widthPercents")));
+            controls.addComponent(new Button("%", new MethodProperty<Boolean>(
+                    this, "widthPercents")));
             controls.addComponent(new Label("height"));
-            controls.addComponent(new TextField(new MethodProperty(
+            controls.addComponent(new TextField(new MethodProperty<Float>(
                     testedLayout, "height")));
-            controls.addComponent(new Button("%", new MethodProperty(this,
-                    "heightPercents")));
+            controls.addComponent(new Button("%", new MethodProperty<Boolean>(
+                    this, "heightPercents")));
             controls.addComponent(marginLeft);
             controls.addComponent(marginRight);
             controls.addComponent(marginTop);

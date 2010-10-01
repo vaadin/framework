@@ -121,13 +121,16 @@ public class ItemClickEvents extends TestBase {
 
     private static HorizontalLayout createHorizontalLayout(Component c) {
         HorizontalLayout layout = new HorizontalLayout();
-        Button b = new Button("immediate", new MethodProperty(c, "immediate"));
+        Button b = new Button("immediate", new MethodProperty<Boolean>(c,
+                "immediate"));
         layout.addComponent(b);
-        b = new Button("selectable", new MethodProperty(c, "selectable"));
+        b = new Button("selectable", new MethodProperty<Boolean>(c,
+                "selectable"));
         layout.addComponent(b);
-        b = new Button("nullsel", new MethodProperty(c, "nullSelectionAllowed"));
+        b = new Button("nullsel", new MethodProperty<Boolean>(c,
+                "nullSelectionAllowed"));
         layout.addComponent(b);
-        b = new Button("multi", new MethodProperty(c, "multiSelect"));
+        b = new Button("multi", new MethodProperty<Boolean>(c, "multiSelect"));
         layout.addComponent(b);
         return layout;
     }

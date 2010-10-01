@@ -79,8 +79,8 @@ public class Ticket20 extends Application {
                 "readOnly", "readThrough", "invalidCommitted",
                 "validationVisible" };
         for (int i = 0; i < visibleProps.length; i++) {
-            Button b = new Button(visibleProps[i], new MethodProperty(tx,
-                    visibleProps[i]));
+            Button b = new Button(visibleProps[i], new MethodProperty<Boolean>(
+                    tx, visibleProps[i]));
             b.setImmediate(true);
             mainWin.addComponent(b);
         }

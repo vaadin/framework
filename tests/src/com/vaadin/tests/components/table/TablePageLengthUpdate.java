@@ -55,7 +55,7 @@ public class TablePageLengthUpdate extends TestBase {
         addComponent(updateButton);
 
         TextField tableHeight = new TextField("Table height",
-                new MethodProperty(this, "tableHeight"));
+                new MethodProperty<String>(this, "tableHeight"));
         tableHeight.setImmediate(true);
         addComponent(tableHeight);
     }

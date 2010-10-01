@@ -40,8 +40,8 @@ public class Ticket846 extends Application {
                 "readOnly", "readThrough", "invalidCommitted",
                 "validationVisible" };
         for (int i = 0; i < visibleProps.length; i++) {
-            Button b = new Button(visibleProps[i], new MethodProperty(tx,
-                    visibleProps[i]));
+            Button b = new Button(visibleProps[i], new MethodProperty<Boolean>(
+                    tx, visibleProps[i]));
             b.setImmediate(true);
             mainWin.addComponent(b);
         }
@@ -56,8 +56,8 @@ public class Ticket846 extends Application {
                                 + (tx.isValid() ? "" : "not ") + "valid");
                     };
                 }));
-        TextField caption = new TextField("Caption", new MethodProperty(tx,
-                "caption"));
+        TextField caption = new TextField("Caption",
+                new MethodProperty<String>(tx, "caption"));
         caption.setImmediate(true);
         mainWin.addComponent(caption);
     }

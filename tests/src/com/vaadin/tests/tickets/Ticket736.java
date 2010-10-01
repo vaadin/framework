@@ -66,8 +66,8 @@ public class Ticket736 extends Application {
                 "readOnly", "readThrough", "writeThrough", "invalidCommitted",
                 "validationVisible", "immediate" };
         for (int i = 0; i < visibleProps.length; i++) {
-            Button b = new Button(visibleProps[i], new MethodProperty(f,
-                    visibleProps[i]));
+            Button b = new Button(visibleProps[i], new MethodProperty<Boolean>(
+                    f, visibleProps[i]));
             b.setImmediate(true);
             formProperties.addComponent(b);
         }

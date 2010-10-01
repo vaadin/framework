@@ -52,8 +52,8 @@ public class Ticket2125 extends Application {
                 }
 
             });
-            Button b = new Button("editmode", new MethodProperty(table,
-                    "editable"));
+            Button b = new Button("editmode", new MethodProperty<Boolean>(
+                    table, "editable"));
             b.setImmediate(true);
             addComponent(b);
         }

@@ -73,8 +73,8 @@ public class BeanItem<BT> extends PropertysetItem {
             final Method setMethod = pd.getWriteMethod();
             final Class<?> type = pd.getPropertyType();
             final String name = pd.getName();
-            final Property p = new MethodProperty(type, bean, getMethod,
-                    setMethod);
+            final Property p = new MethodProperty<Object>(type, bean,
+                    getMethod, setMethod);
             addItemProperty(name, p);
 
         }
@@ -114,8 +114,8 @@ public class BeanItem<BT> extends PropertysetItem {
                 final Method getMethod = pd.getReadMethod();
                 final Method setMethod = pd.getWriteMethod();
                 final Class<?> type = pd.getPropertyType();
-                final Property p = new MethodProperty(type, bean, getMethod,
-                        setMethod);
+                final Property p = new MethodProperty<Object>(type, bean,
+                        getMethod, setMethod);
                 addItemProperty(name, p);
             }
         }

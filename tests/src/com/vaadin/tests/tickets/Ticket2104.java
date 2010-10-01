@@ -32,18 +32,20 @@ public class Ticket2104 extends Application {
         OrderedLayout ol = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         main.addComponent(ol);
-        Button b = new Button("immediate",
-                new MethodProperty(tree, "immediate"));
+        Button b = new Button("immediate", new MethodProperty<Boolean>(tree,
+                "immediate"));
         b.setImmediate(true);
         ol.addComponent(b);
-        b = new Button("selectable", new MethodProperty(tree, "selectable"));
+        b = new Button("selectable", new MethodProperty<Boolean>(tree,
+                "selectable"));
         b.setImmediate(true);
         ol.addComponent(b);
-        b = new Button("nullsel", new MethodProperty(tree,
+        b = new Button("nullsel", new MethodProperty<Boolean>(tree,
                 "nullSelectionAllowed"));
         b.setImmediate(true);
         ol.addComponent(b);
-        b = new Button("multi", new MethodProperty(tree, "multiSelect"));
+        b = new Button("multi",
+                new MethodProperty<Boolean>(tree, "multiSelect"));
         b.setImmediate(true);
         ol.addComponent(b);
         b = new Button("icon", new Button.ClickListener() {
@@ -86,17 +88,20 @@ public class Ticket2104 extends Application {
 
         ol = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
         main.addComponent(ol);
-        b = new Button("immediate", new MethodProperty(table, "immediate"));
+        b = new Button("immediate", new MethodProperty<Boolean>(table,
+                "immediate"));
         b.setImmediate(true);
         ol.addComponent(b);
-        b = new Button("selectable", new MethodProperty(table, "selectable"));
+        b = new Button("selectable", new MethodProperty<Boolean>(table,
+                "selectable"));
         b.setImmediate(true);
         ol.addComponent(b);
-        b = new Button("nullsel", new MethodProperty(table,
+        b = new Button("nullsel", new MethodProperty<Boolean>(table,
                 "nullSelectionAllowed"));
         b.setImmediate(true);
         ol.addComponent(b);
-        b = new Button("multi", new MethodProperty(table, "multiSelect"));
+        b = new Button("multi", new MethodProperty<Boolean>(table,
+                "multiSelect"));
         b.setImmediate(true);
         ol.addComponent(b);
         main.addComponent(table);
