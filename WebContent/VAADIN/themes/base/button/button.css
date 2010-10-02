@@ -130,6 +130,10 @@
 /*
  * Checkbox styles
  * -------------------------------------- */
+ 
+ .v-checkbox {
+ 	display: block;
+ }
 
 .v-checkbox,
 .v-checkbox label,
