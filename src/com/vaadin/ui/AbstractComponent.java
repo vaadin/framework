@@ -1000,7 +1000,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @param method
      *            the activation method.
      */
-    public void addListener(Class eventType, Object target, Method method) {
+    public void addListener(Class<?> eventType, Object target, Method method) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
@@ -1041,7 +1041,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @param methodName
      *            the name of the activation method.
      */
-    public void addListener(Class eventType, Object target, String methodName) {
+    public void addListener(Class<?> eventType, Object target, String methodName) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
@@ -1066,7 +1066,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      *            the target object that has registered to listen to events of
      *            type <code>eventType</code> with one or more methods.
      */
-    public void removeListener(Class eventType, Object target) {
+    public void removeListener(Class<?> eventType, Object target) {
         if (eventRouter != null) {
             eventRouter.removeListener(eventType, target);
         }
@@ -1091,7 +1091,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      *            the method owned by <code>target</code> that's registered to
      *            listen to events of type <code>eventType</code>.
      */
-    public void removeListener(Class eventType, Object target, Method method) {
+    public void removeListener(Class<?> eventType, Object target, Method method) {
         if (eventRouter != null) {
             eventRouter.removeListener(eventType, target, method);
         }
@@ -1125,7 +1125,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      *            the name of the method owned by <code>target</code> that's
      *            registered to listen to events of type <code>eventType</code>.
      */
-    public void removeListener(Class eventType, Object target, String methodName) {
+    public void removeListener(Class<?> eventType, Object target,
+            String methodName) {
         if (eventRouter != null) {
             eventRouter.removeListener(eventType, target, methodName);
         }

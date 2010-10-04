@@ -48,7 +48,7 @@ public interface MethodEventSource extends Serializable {
      *             unless <code>method</code> has exactly one match in
      *             <code>object</code>
      */
-    public void addListener(Class eventType, Object object, Method method);
+    public void addListener(Class<?> eventType, Object object, Method method);
 
     /**
      * <p>
@@ -81,7 +81,7 @@ public interface MethodEventSource extends Serializable {
      *             unless <code>method</code> has exactly one match in
      *             <code>object</code>
      */
-    public void addListener(Class eventType, Object object, String methodName);
+    public void addListener(Class<?> eventType, Object object, String methodName);
 
     /**
      * Removes all registered listeners matching the given parameters. Since
@@ -101,7 +101,7 @@ public interface MethodEventSource extends Serializable {
      *            the target object that has registered to listen to events of
      *            type <code>eventType</code> with one or more methods.
      */
-    public void removeListener(Class eventType, Object target);
+    public void removeListener(Class<?> eventType, Object target);
 
     /**
      * Removes one registered listener method. The given method owned by the
@@ -122,7 +122,7 @@ public interface MethodEventSource extends Serializable {
      *            the method owned by the target that's registered to listen to
      *            events of type eventType.
      */
-    public void removeListener(Class eventType, Object target, Method method);
+    public void removeListener(Class<?> eventType, Object target, Method method);
 
     /**
      * <p>
@@ -152,5 +152,6 @@ public interface MethodEventSource extends Serializable {
      *            the name of the method owned by <code>target</code> that's
      *            registered to listen to events of type <code>eventType</code>.
      */
-    public void removeListener(Class eventType, Object target, String methodName);
+    public void removeListener(Class<?> eventType, Object target,
+            String methodName);
 }
