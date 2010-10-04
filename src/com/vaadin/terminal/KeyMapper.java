@@ -21,9 +21,9 @@ public class KeyMapper implements Serializable {
 
     private int lastKey = 0;
 
-    private final Hashtable objectKeyMap = new Hashtable();
+    private final Hashtable<Object, String> objectKeyMap = new Hashtable<Object, String>();
 
-    private final Hashtable keyObjectMap = new Hashtable();
+    private final Hashtable<String, Object> keyObjectMap = new Hashtable<String, Object>();
 
     /**
      * Gets key for an object.
@@ -38,7 +38,7 @@ public class KeyMapper implements Serializable {
         }
 
         // If the object is already mapped, use existing key
-        String key = (String) objectKeyMap.get(o);
+        String key = objectKeyMap.get(o);
         if (key != null) {
             return key;
         }
@@ -70,7 +70,7 @@ public class KeyMapper implements Serializable {
      *            the object to be removed.
      */
     public void remove(Object removeobj) {
-        final String key = (String) objectKeyMap.get(removeobj);
+        final String key = objectKeyMap.get(removeobj);
 
         if (key != null) {
             objectKeyMap.remove(key);
