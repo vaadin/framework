@@ -237,7 +237,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         boolean result = true;
 
         // Initial stack
-        final Stack todo = new Stack();
+        final Stack<Object> todo = new Stack<Object>();
         todo.add(startItemId);
 
         // Expands recursively
@@ -290,7 +290,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         boolean result = true;
 
         // Initial stack
-        final Stack todo = new Stack();
+        final Stack<Object> todo = new Stack<Object>();
         todo.add(startItemId);
 
         // Collapse recursively
@@ -373,7 +373,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * java.util.Map)
      */
     @Override
-    public void changeVariables(Object source, Map variables) {
+    public void changeVariables(Object source, Map<String, Object> variables) {
 
         if (variables.containsKey("clickedKey")) {
             String key = (String) variables.get("clickedKey");
@@ -390,7 +390,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         if (!isSelectable() && variables.containsKey("selected")) {
             // Not-selectable is a special case, AbstractSelect does not support
             // TODO could be optimized.
-            variables = new HashMap(variables);
+            variables = new HashMap<String, Object>(variables);
             variables.remove("selected");
         }
 
@@ -462,7 +462,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         final String[] ka = (String[]) variables.get("selected");
 
         // Converts the key-array to id-set
-        final LinkedList s = new LinkedList();
+        final LinkedList<Object> s = new LinkedList<Object>();
         for (int i = 0; i < ka.length; i++) {
             final Object id = itemIdMapper.get(ka[i]);
             if (!isNullSelectionAllowed()
@@ -537,8 +537,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         final LinkedList<String> expandedKeys = new LinkedList<String>();
 
         // Iterates through hierarchical tree using a stack of iterators
-        final Stack<Iterator> iteratorStack = new Stack<Iterator>();
-        Collection ids;
+        final Stack<Iterator<?>> iteratorStack = new Stack<Iterator<?>>();
+        Collection<?> ids;
         if (partialUpdate) {
             ids = getChildren(expandedItemId);
         } else {
@@ -552,7 +552,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         while (!iteratorStack.isEmpty()) {
 
             // Gets the iterator for current tree level
-            final Iterator i = iteratorStack.peek();
+            final Iterator<?> i = iteratorStack.peek();
 
             // If the level is finished, back to previous tree level
             if (!i.hasNext()) {
@@ -694,7 +694,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * 
      * @see com.vaadin.data.Container.Hierarchical#getChildren(Object)
      */
-    public Collection getChildren(Object itemId) {
+    public Collection<?> getChildren(Object itemId) {
         return ((Container.Hierarchical) items).getChildren(itemId);
     }
 
@@ -730,7 +730,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * 
      * @see com.vaadin.data.Container.Hierarchical#rootItemIds()
      */
-    public Collection rootItemIds() {
+    public Collection<?> rootItemIds() {
         return ((Container.Hierarchical) items).rootItemIds();
     }
 
@@ -1030,20 +1030,20 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @see com.vaadin.ui.Select#getVisibleItemIds()
      */
     @Override
-    public Collection getVisibleItemIds() {
+    public Collection<?> getVisibleItemIds() {
 
-        final LinkedList visible = new LinkedList();
+        final LinkedList<Object> visible = new LinkedList<Object>();
 
         // Iterates trough hierarchical tree using a stack of iterators
-        final Stack<Iterator> iteratorStack = new Stack<Iterator>();
-        final Collection ids = rootItemIds();
+        final Stack<Iterator<?>> iteratorStack = new Stack<Iterator<?>>();
+        final Collection<?> ids = rootItemIds();
         if (ids != null) {
             iteratorStack.push(ids.iterator());
         }
         while (!iteratorStack.isEmpty()) {
 
             // Gets the iterator for current tree level
-            final Iterator i = iteratorStack.peek();
+            final Iterator<?> i = iteratorStack.peek();
 
             // If the level is finished, back to previous tree level
             if (!i.hasNext()) {
@@ -1241,7 +1241,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             VerticalDropLocation dropLocation = getDropLocation();
             if (VerticalDropLocation.TOP == dropLocation) {
                 // if on top of the caption area, add before
-                Collection children;
+                Collection<?> children;
                 Object itemIdInto = getItemIdInto();
                 if (itemIdInto != null) {
                     // seek the previous from child list

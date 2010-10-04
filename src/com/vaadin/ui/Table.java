@@ -456,7 +456,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Checks that the new visible columns contains no nulls and properties
         // exist
-        final Collection properties = getContainerPropertyIds();
+        final Collection<?> properties = getContainerPropertyIds();
         for (int i = 0; i < visibleColumns.length; i++) {
             if (visibleColumns[i] == null) {
                 throw new NullPointerException("Ids must be non-nulls");
@@ -1823,7 +1823,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // columnGenerators 'override' properties, don't add the same id twice
         Collection<Object> col = new LinkedList<Object>();
-        for (Iterator it = getContainerPropertyIds().iterator(); it.hasNext();) {
+        for (Iterator<?> it = getContainerPropertyIds().iterator(); it
+                .hasNext();) {
             Object id = it.next();
             if (columnGenerators == null || !columnGenerators.containsKey(id)) {
                 col.add(id);
@@ -2284,9 +2285,9 @@ public class Table extends AbstractSelect implements Action.Container,
         // selection support
         LinkedList<String> selectedKeys = new LinkedList<String>();
         if (isMultiSelect()) {
-            HashSet sel = new HashSet((Set) getValue());
-            Collection vids = getVisibleItemIds();
-            for (Iterator it = vids.iterator(); it.hasNext();) {
+            HashSet<?> sel = new HashSet<Object>((Set<?>) getValue());
+            Collection<?> vids = getVisibleItemIds();
+            for (Iterator<?> it = vids.iterator(); it.hasNext();) {
                 Object id = it.next();
                 if (sel.contains(id)) {
                     selectedKeys.add(itemIdMapper.key(id));
@@ -2338,7 +2339,7 @@ public class Table extends AbstractSelect implements Action.Container,
         target.addAttribute("colfooters", columnFootersVisible);
 
         // Visible column order
-        final Collection sortables = getSortableContainerPropertyIds();
+        final Collection<?> sortables = getSortableContainerPropertyIds();
         final ArrayList<String> visibleColOrder = new ArrayList<String>();
         for (final Iterator<Object> it = visibleColumns.iterator(); it
                 .hasNext();) {
@@ -2360,7 +2361,7 @@ public class Table extends AbstractSelect implements Action.Container,
             if (columnGenerators.containsKey(columnId)) {
                 iscomponent[iscomponentIndex++] = true;
             } else {
-                final Class colType = getType(columnId);
+                final Class<?> colType = getType(columnId);
                 iscomponent[iscomponentIndex++] = colType != null
                         && Component.class.isAssignableFrom(colType);
             }
@@ -3023,7 +3024,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.ui.Select#getVisibleItemIds()
      */
     @Override
-    public Collection getVisibleItemIds() {
+    public Collection<?> getVisibleItemIds() {
 
         final LinkedList<Object> visible = new LinkedList<Object>();
 
@@ -3366,12 +3367,12 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds()
      */
-    public Collection getSortableContainerPropertyIds() {
+    public Collection<?> getSortableContainerPropertyIds() {
         final Container c = getContainerDataSource();
         if (c instanceof Container.Sortable && !isSortDisabled()) {
             return ((Container.Sortable) c).getSortableContainerPropertyIds();
         } else {
-            return new LinkedList();
+            return new LinkedList<Object>();
         }
     }
 
