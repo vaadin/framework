@@ -24,7 +24,7 @@ final public class VTargetDetailIs extends VAcceptCriterion {
         if (value != null) {
             Object object = drag.getDropDetails().get(name);
             if (object instanceof Enum) {
-                return ((Enum) object).name().equals(value);
+                return ((Enum<?>) object).name().equals(value);
             } else {
                 return value.equals(object);
             }
