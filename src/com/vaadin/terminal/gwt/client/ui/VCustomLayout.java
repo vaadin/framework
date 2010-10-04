@@ -40,13 +40,13 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
     public static final String CLASSNAME = "v-customlayout";
 
     /** Location-name to containing element in DOM map */
-    private final HashMap locationToElement = new HashMap();
+    private final HashMap<String, Element> locationToElement = new HashMap<String, Element>();
 
     /** Location-name to contained widget map */
     private final HashMap<String, Widget> locationToWidget = new HashMap<String, Widget>();
 
     /** Widget to captionwrapper map */
-    private final HashMap widgetToCaptionWrapper = new HashMap();
+    private final HashMap<Paintable, VCaptionWrapper> widgetToCaptionWrapper = new HashMap<Paintable, VCaptionWrapper>();
 
     /** Name of the currently rendered style */
     String currentTemplateName;
@@ -104,7 +104,7 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
         }
 
         // If no given location is found in the layout, and exception is throws
-        Element elem = (Element) locationToElement.get(location);
+        Element elem = locationToElement.get(location);
         if (elem == null && hasTemplate()) {
             throw new IllegalArgumentException("No location " + location
                     + " found");
@@ -153,11 +153,11 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
         // TODO Check if this is needed
         client.runDescendentsLayout(this);
 
-        Set oldWidgets = new HashSet();
+        Set<Widget> oldWidgets = new HashSet<Widget>();
         oldWidgets.addAll(locationToWidget.values());
 
         // For all contained widgets
-        for (final Iterator i = uidl.getChildIterator(); i.hasNext();) {
+        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
             final UIDL uidlForChild = (UIDL) i.next();
             if (uidlForChild.getTag().equals("location")) {
                 final String location = uidlForChild.getStringAttribute("name");
@@ -172,8 +172,9 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
                 oldWidgets.remove(child);
             }
         }
-        for (Iterator iterator = oldWidgets.iterator(); iterator.hasNext();) {
-            Widget oldWidget = (Widget) iterator.next();
+        for (Iterator<Widget> iterator = oldWidgets.iterator(); iterator
+                .hasNext();) {
+            Widget oldWidget = iterator.next();
             if (oldWidget.isAttached()) {
                 // slot of this widget is emptied, remove it
                 remove(oldWidget);
@@ -384,14 +385,13 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
 
     /** Update caption for given widget */
     public void updateCaption(Paintable component, UIDL uidl) {
-        VCaptionWrapper wrapper = (VCaptionWrapper) widgetToCaptionWrapper
-                .get(component);
+        VCaptionWrapper wrapper = widgetToCaptionWrapper.get(component);
         if (VCaption.isNeeded(uidl)) {
             if (wrapper == null) {
                 final String loc = getLocation((Widget) component);
                 super.remove((Widget) component);
                 wrapper = new VCaptionWrapper(component, client);
-                super.add(wrapper, (Element) locationToElement.get(loc));
+                super.add(wrapper, locationToElement.get(loc));
                 widgetToCaptionWrapper.put(component, wrapper);
             }
             wrapper.updateCaption(uidl);
@@ -400,7 +400,7 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
                 final String loc = getLocation((Widget) component);
                 super.remove(wrapper);
                 super.add((Widget) wrapper.getPaintable(),
-                        (Element) locationToElement.get(loc));
+                        locationToElement.get(loc));
                 widgetToCaptionWrapper.remove(component);
             }
         }
@@ -408,9 +408,9 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
 
     /** Get the location of an widget */
     public String getLocation(Widget w) {
-        for (final Iterator i = locationToWidget.keySet().iterator(); i
+        for (final Iterator<String> i = locationToWidget.keySet().iterator(); i
                 .hasNext();) {
-            final String location = (String) i.next();
+            final String location = i.next();
             if (locationToWidget.get(location) == w) {
                 return location;
             }
@@ -426,8 +426,7 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
         if (location != null) {
             locationToWidget.remove(location);
         }
-        final VCaptionWrapper cw = (VCaptionWrapper) widgetToCaptionWrapper
-                .get(w);
+        final VCaptionWrapper cw = widgetToCaptionWrapper.get(w);
         if (cw != null) {
             widgetToCaptionWrapper.remove(w);
             return super.remove(cw);
