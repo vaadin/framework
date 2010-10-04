@@ -781,7 +781,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             DOM.setInnerHTML(getElement(), html);
             if (BrowserInfo.get().isIE6() && client != null) {
                 // Find possible icon element
-                final NodeList imgs = getElement().getElementsByTagName("IMG");
+                final NodeList<com.google.gwt.dom.client.Element> imgs = getElement()
+                        .getElementsByTagName("IMG");
                 if (imgs.getLength() > 0) {
                     client.addPngFix((Element) imgs.getItem(0).cast());
                 }
