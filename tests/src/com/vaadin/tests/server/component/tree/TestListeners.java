@@ -26,7 +26,7 @@ public class TestListeners extends TestCase implements ExpandListener,
     public void testExpandListener() {
         Tree tree = createTree(10, 20, false);
         tree.addListener((ExpandListener) this);
-        List<String> rootIds = new ArrayList<String>(tree.rootItemIds());
+        List<Object> rootIds = new ArrayList<Object>(tree.rootItemIds());
 
         assertEquals(10, rootIds.size());
         assertEquals(10 + 10 * 20 + 10, tree.size());
@@ -97,7 +97,7 @@ public class TestListeners extends TestCase implements ExpandListener,
         Tree tree = createTree(7, 15, true);
         tree.addListener((CollapseListener) this);
 
-        List<String> rootIds = new ArrayList<String>(tree.rootItemIds());
+        List<Object> rootIds = new ArrayList<Object>(tree.rootItemIds());
 
         assertEquals(7, rootIds.size());
         assertEquals(7 + 7 * 15 + 7, tree.size());
