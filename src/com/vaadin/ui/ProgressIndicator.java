@@ -163,7 +163,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      * @see com.vaadin.ui.AbstractField#getType()
      */
     @Override
-    public Class getType() {
+    public Class<?> getType() {
         if (dataSource == null) {
             throw new IllegalStateException("Datasource must be set");
         }
