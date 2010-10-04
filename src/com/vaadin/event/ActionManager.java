@@ -189,7 +189,7 @@ public class ActionManager implements Action.Container, Action.Handler,
         clientHasActions = !actions.isEmpty();
     }
 
-    public void handleActions(Map variables, Container sender) {
+    public void handleActions(Map<String, Object> variables, Container sender) {
         if (variables.containsKey("action") && actionMapper != null) {
             final String key = (String) variables.get("action");
             final Action action = (Action) actionMapper.get(key);
