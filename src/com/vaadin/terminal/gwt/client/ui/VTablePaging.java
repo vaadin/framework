@@ -55,7 +55,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
 
     private int totalRows;
 
-    private final HashMap visibleColumns = new HashMap();
+    private final HashMap<?, ?> visibleColumns = new HashMap<Object, Object>();
 
     private int rows;
 
@@ -63,7 +63,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
     private boolean sortAscending = true;
     private final HorizontalPanel pager;
 
-    public HashMap rowKeysToTableRows = new HashMap();
+    public HashMap<String, TableRow> rowKeysToTableRows = new HashMap<String, TableRow>();
 
     public VTablePaging() {
 
@@ -128,7 +128,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
 
         UIDL rowData = null;
         UIDL visibleColumns = null;
-        for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
+        for (final Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL c = (UIDL) it.next();
             if (c.getTag().equals("rows")) {
                 rowData = c;
@@ -147,7 +147,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
     }
 
     private void updateHeader(UIDL c) {
-        final Iterator it = c.getChildIterator();
+        final Iterator<?> it = c.getChildIterator();
         visibleColumns.clear();
         int colIndex = (rowHeaders ? 1 : 0);
         while (it.hasNext()) {
@@ -178,7 +178,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
      *            which contains row data
      */
     private void updateBody(UIDL uidl) {
-        final Iterator it = uidl.getChildIterator();
+        final Iterator<?> it = uidl.getChildIterator();
 
         int curRowIndex = 1;
         while (it.hasNext()) {
@@ -192,7 +192,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
                         rowUidl.getStringAttribute("caption")));
                 colIndex++;
             }
-            final Iterator cells = rowUidl.getChildIterator();
+            final Iterator<?> cells = rowUidl.getChildIterator();
             while (cells.hasNext()) {
                 final Object cell = cells.next();
                 if (cell instanceof String) {
@@ -375,7 +375,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
             }
         }
 
-        public void setContextMenuOptions(HashMap options) {
+        public void setContextMenuOptions(HashMap<?, ?> options) {
 
         }
 
@@ -415,8 +415,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
     public void deselectAll() {
         final Object[] keys = selectedRowKeys.toArray();
         for (int i = 0; i < keys.length; i++) {
-            final TableRow tableRow = (TableRow) rowKeysToTableRows
-                    .get(keys[i]);
+            final TableRow tableRow = rowKeysToTableRows.get(keys[i]);
             if (tableRow != null) {
                 tableRow.setSelected(false);
             }
@@ -435,7 +434,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
 
     }
 
-    public Iterator iterator() {
+    public Iterator<Widget> iterator() {
         // TODO Auto-generated method stub
         return null;
     }
