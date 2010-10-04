@@ -70,10 +70,10 @@ public class ComponentSizeValidator implements Serializable {
                     parent);
         } else if (component instanceof ComponentContainer) {
             ComponentContainer lo = (ComponentContainer) component;
-            Iterator it = lo.getComponentIterator();
+            Iterator<Component> it = lo.getComponentIterator();
             while (it.hasNext()) {
-                errors = validateComponentRelativeSizes((Component) it.next(),
-                        errors, parent);
+                errors = validateComponentRelativeSizes(it.next(), errors,
+                        parent);
             }
         } else if (component instanceof Form) {
             Form form = (Form) component;
@@ -393,9 +393,9 @@ public class ComponentSizeValidator implements Serializable {
 
     private static boolean hasNonRelativeHeightComponent(
             AbstractOrderedLayout ol) {
-        Iterator it = ol.getComponentIterator();
+        Iterator<Component> it = ol.getComponentIterator();
         while (it.hasNext()) {
-            if (!hasRelativeHeight((Component) it.next())) {
+            if (!hasRelativeHeight(it.next())) {
                 return true;
             }
         }
@@ -488,9 +488,9 @@ public class ComponentSizeValidator implements Serializable {
     }
 
     private static boolean hasNonRelativeWidthComponent(AbstractOrderedLayout ol) {
-        Iterator it = ol.getComponentIterator();
+        Iterator<Component> it = ol.getComponentIterator();
         while (it.hasNext()) {
-            if (!hasRelativeWidth((Component) it.next())) {
+            if (!hasRelativeWidth(it.next())) {
                 return true;
             }
         }
@@ -649,7 +649,7 @@ public class ComponentSizeValidator implements Serializable {
     private static void setLocation(Map<Object, FileLocation> map, Object object) {
         StackTraceElement[] traceLines = Thread.currentThread().getStackTrace();
         for (StackTraceElement traceElement : traceLines) {
-            Class cls;
+            Class<?> cls;
             try {
                 String className = traceElement.getClassName();
                 if (className.startsWith("java.")
