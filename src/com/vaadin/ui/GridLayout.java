@@ -73,7 +73,7 @@ public class GridLayout extends AbstractLayout implements
      * Contains all items that are placed on the grid. These are components with
      * grid area definition.
      */
-    private final LinkedList areas = new LinkedList();
+    private final LinkedList<Area> areas = new LinkedList<Area>();
 
     /**
      * Mapping from components to their respective areas.
@@ -188,11 +188,11 @@ public class GridLayout extends AbstractLayout implements
         // Inserts the component to right place at the list
         // Respect top-down, left-right ordering
         // component.setParent(this);
-        final Iterator i = areas.iterator();
+        final Iterator<Area> i = areas.iterator();
         int index = 0;
         boolean done = false;
         while (!done && i.hasNext()) {
-            final Area existingArea = (Area) i.next();
+            final Area existingArea = i.next();
             if ((existingArea.row1 >= row1 && existingArea.column1 > column1)
                     || existingArea.row1 > row1) {
                 areas.add(index, area);
@@ -244,8 +244,8 @@ public class GridLayout extends AbstractLayout implements
      *             if <code>area</code> overlaps with any existing area.
      */
     private void checkExistingOverlaps(Area area) throws OverlapsException {
-        for (final Iterator i = areas.iterator(); i.hasNext();) {
-            final Area existingArea = (Area) i.next();
+        for (final Iterator<Area> i = areas.iterator(); i.hasNext();) {
+            final Area existingArea = i.next();
             if (existingArea.overlaps(area)) {
                 // Component not added, overlaps with existing component
                 throw new OverlapsException(existingArea);
@@ -348,8 +348,9 @@ public class GridLayout extends AbstractLayout implements
         }
 
         Area area = null;
-        for (final Iterator i = areas.iterator(); area == null && i.hasNext();) {
-            final Area a = (Area) i.next();
+        for (final Iterator<Area> i = areas.iterator(); area == null
+                && i.hasNext();) {
+            final Area a = i.next();
             if (a.getComponent() == component) {
                 area = a;
             }
@@ -378,8 +379,8 @@ public class GridLayout extends AbstractLayout implements
     public void removeComponent(int column, int row) {
 
         // Finds the area
-        for (final Iterator i = areas.iterator(); i.hasNext();) {
-            final Area area = (Area) i.next();
+        for (final Iterator<Area> i = areas.iterator(); i.hasNext();) {
+            final Area area = i.next();
             if (area.getColumn1() == column && area.getRow1() == row) {
                 removeComponent(area.getComponent());
                 return;
@@ -422,13 +423,13 @@ public class GridLayout extends AbstractLayout implements
         }
 
         // Area iterator
-        final Iterator areaiterator = areas.iterator();
+        final Iterator<Area> areaiterator = areas.iterator();
 
         // Current item to be processed (fetch first item)
         Area area = areaiterator.hasNext() ? (Area) areaiterator.next() : null;
 
         // Collects rowspan related information here
-        final HashMap cellUsed = new HashMap();
+        final HashMap<Integer, Integer> cellUsed = new HashMap<Integer, Integer>();
 
         // Empty cell collector
         int emptyCells = 0;
@@ -527,7 +528,7 @@ public class GridLayout extends AbstractLayout implements
 
                     // Fetch next item
                     if (areaiterator.hasNext()) {
-                        area = (Area) areaiterator.next();
+                        area = areaiterator.next();
                     } else {
                         area = null;
                     }
@@ -554,8 +555,8 @@ public class GridLayout extends AbstractLayout implements
 
                         // Current column contains already an item,
                         // check if rowspan affects at current x,y position
-                        final int rowspanDepth = ((Integer) cellUsed
-                                .get(new Integer(curx))).intValue();
+                        final int rowspanDepth = cellUsed
+                                .get(new Integer(curx)).intValue();
 
                         if (rowspanDepth >= cury) {
 
@@ -950,8 +951,8 @@ public class GridLayout extends AbstractLayout implements
 
         // Checks for overlaps
         if (cols > columns) {
-            for (final Iterator i = areas.iterator(); i.hasNext();) {
-                final Area area = (Area) i.next();
+            for (final Iterator<Area> i = areas.iterator(); i.hasNext();) {
+                final Area area = i.next();
                 if (area.column2 >= columns) {
                     throw new OutOfBoundsException(area);
                 }
@@ -994,8 +995,8 @@ public class GridLayout extends AbstractLayout implements
 
         // Checks for overlaps
         if (this.rows > rows) {
-            for (final Iterator i = areas.iterator(); i.hasNext();) {
-                final Area area = (Area) i.next();
+            for (final Iterator<Area> i = areas.iterator(); i.hasNext();) {
+                final Area area = i.next();
                 if (area.row2 >= rows) {
                     throw new OutOfBoundsException(area);
                 }
@@ -1066,8 +1067,8 @@ public class GridLayout extends AbstractLayout implements
         // Gets the locations
         Area oldLocation = null;
         Area newLocation = null;
-        for (final Iterator i = areas.iterator(); i.hasNext();) {
-            final Area location = (Area) i.next();
+        for (final Iterator<Area> i = areas.iterator(); i.hasNext();) {
+            final Area location = i.next();
             final Component component = location.getComponent();
             if (component == oldComponent) {
                 oldLocation = location;
@@ -1099,7 +1100,7 @@ public class GridLayout extends AbstractLayout implements
     @Override
     public void removeAllComponents() {
         super.removeAllComponents();
-        componentToAlignment = new HashMap();
+        componentToAlignment = new HashMap<Component, Alignment>();
         cursorX = 0;
         cursorY = 0;
     }
@@ -1164,8 +1165,8 @@ public class GridLayout extends AbstractLayout implements
                     + " in a gridlayout with height " + rows);
         }
 
-        for (Iterator i = areas.iterator(); i.hasNext();) {
-            Area existingArea = (Area) i.next();
+        for (Iterator<Area> i = areas.iterator(); i.hasNext();) {
+            Area existingArea = i.next();
             // Areas ending below the row needs to be moved down or stretched
             if (existingArea.row2 >= row) {
                 existingArea.row2++;
@@ -1212,8 +1213,8 @@ public class GridLayout extends AbstractLayout implements
         }
 
         // Shrink or remove areas in the selected row
-        for (Iterator i = areas.iterator(); i.hasNext();) {
-            Area existingArea = (Area) i.next();
+        for (Iterator<Area> i = areas.iterator(); i.hasNext();) {
+            Area existingArea = i.next();
             if (existingArea.row2 >= row) {
                 existingArea.row2--;
 
@@ -1321,8 +1322,9 @@ public class GridLayout extends AbstractLayout implements
      * @return Component in given cell or null if empty
      */
     public Component getComponent(int x, int y) {
-        for (final Iterator iterator = areas.iterator(); iterator.hasNext();) {
-            final Area area = (Area) iterator.next();
+        for (final Iterator<Area> iterator = areas.iterator(); iterator
+                .hasNext();) {
+            final Area area = iterator.next();
             if (area.getColumn1() <= x && x <= area.getColumn2()
                     && area.getRow1() <= y && y <= area.getRow2()) {
                 return area.getComponent();
@@ -1341,8 +1343,9 @@ public class GridLayout extends AbstractLayout implements
      *         in the grid
      */
     public Area getComponentArea(Component component) {
-        for (final Iterator iterator = areas.iterator(); iterator.hasNext();) {
-            final Area area = (Area) iterator.next();
+        for (final Iterator<Area> iterator = areas.iterator(); iterator
+                .hasNext();) {
+            final Area area = iterator.next();
             if (area.getComponent() == component) {
                 return area;
             }
@@ -1355,7 +1358,7 @@ public class GridLayout extends AbstractLayout implements
     }
 
     @Override
-    public void changeVariables(Object source, Map variables) {
+    public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
 
         if (variables.containsKey(CLICK_EVENT)) {
