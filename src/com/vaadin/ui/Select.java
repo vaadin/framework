@@ -60,7 +60,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
 
     private String filterstring;
     private String prevfilterstring;
-    private List filteredOptions;
+    private List<Object> filteredOptions;
 
     /**
      * Flag to indicate that request repaint is called by filter request only
@@ -75,7 +75,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
         super();
     }
 
-    public Select(String caption, Collection options) {
+    public Select(String caption, Collection<?> options) {
         super(caption, options);
     }
 
@@ -141,7 +141,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
         // Constructs selected keys array
         String[] selectedKeys;
         if (isMultiSelect()) {
-            selectedKeys = new String[((Set) getValue()).size()];
+            selectedKeys = new String[((Set<?>) getValue()).size()];
         } else {
             selectedKeys = new String[(getValue() == null
                     && getNullSelectionItemId() == null ? 0 : 1)];
@@ -164,7 +164,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
             filterstring = "";
         }
 
-        List options = getFilteredOptions();
+        List<?> options = getFilteredOptions();
         boolean nullFilteredOut = filterstring != null
                 && !"".equals(filterstring)
                 && filteringMode != FILTERINGMODE_OFF;
@@ -181,7 +181,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
             target.endTag("so");
         }
 
-        final Iterator i = options.iterator();
+        final Iterator<?> i = options.iterator();
         // Paints the available selection options from data source
 
         while (i.hasNext()) {
@@ -259,7 +259,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
      *            flag to indicate if nullselect option needs to be taken into
      *            consideration
      */
-    private List sanitetizeList(List options, boolean needNullSelectOption) {
+    private List<?> sanitetizeList(List<?> options, boolean needNullSelectOption) {
 
         if (pageLength != 0 && options.size() > pageLength) {
             // Not all options are visible, find out which ones are on the
@@ -303,11 +303,11 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
         }
     }
 
-    protected List getFilteredOptions() {
+    protected List<?> getFilteredOptions() {
         if (filterstring == null || filterstring.equals("")
                 || filteringMode == FILTERINGMODE_OFF) {
             prevfilterstring = null;
-            filteredOptions = new LinkedList(getItemIds());
+            filteredOptions = new LinkedList<Object>(getItemIds());
             return filteredOptions;
         }
 
@@ -315,7 +315,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
             return filteredOptions;
         }
 
-        Collection items;
+        Collection<?> items;
         if (prevfilterstring != null
                 && filterstring.startsWith(prevfilterstring)) {
             items = filteredOptions;
@@ -324,8 +324,8 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
         }
         prevfilterstring = filterstring;
 
-        filteredOptions = new LinkedList();
-        for (final Iterator it = items.iterator(); it.hasNext();) {
+        filteredOptions = new LinkedList<Object>();
+        for (final Iterator<?> it = items.iterator(); it.hasNext();) {
             final Object itemId = it.next();
             String caption = getItemCaption(itemId);
             if (caption == null || caption.equals("")) {
@@ -358,7 +358,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
      *      java.util.Map)
      */
     @Override
-    public void changeVariables(Object source, Map variables) {
+    public void changeVariables(Object source, Map<String, Object> variables) {
         // Not calling super.changeVariables due the history of select
         // component hierarchy
 
@@ -372,7 +372,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
                 // TODO Optimize by adding repaintNotNeeded whan applicaple
 
                 // Converts the key-array to id-set
-                final LinkedList s = new LinkedList();
+                final LinkedList<Object> s = new LinkedList<Object>();
                 for (int i = 0; i < ka.length; i++) {
                     final Object id = itemIdMapper.get(ka[i]);
                     if (id != null && containsId(id)) {
@@ -382,13 +382,13 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
 
                 // Limits the deselection to the set of visible items
                 // (non-visible items can not be deselected)
-                final Collection visible = getVisibleItemIds();
+                final Collection<?> visible = getVisibleItemIds();
                 if (visible != null) {
-                    Set newsel = (Set) getValue();
+                    Set<Object> newsel = (Set<Object>) getValue();
                     if (newsel == null) {
-                        newsel = new HashSet();
+                        newsel = new HashSet<Object>();
                     } else {
-                        newsel = new HashSet(newsel);
+                        newsel = new HashSet<Object>(newsel);
                     }
                     newsel.removeAll(visible);
                     newsel.addAll(s);
@@ -400,7 +400,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
 
                     // Allows deselection only if the deselected item is visible
                     final Object current = getValue();
-                    final Collection visible = getVisibleItemIds();
+                    final Collection<?> visible = getVisibleItemIds();
                     if (visible != null && visible.contains(current)) {
                         setValue(null, true);
                     }
