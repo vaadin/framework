@@ -89,7 +89,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * comment here, we use the default documentation from implemented
      * interface.
      */
-    public Collection getChildren(Object itemId) {
+    public Collection<?> getChildren(Object itemId) {
         LinkedList<Object> c;
 
         if (filteredChildren != null) {
@@ -156,7 +156,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * comment here, we use the default documentation from implemented
      * interface.
      */
-    public Collection rootItemIds() {
+    public Collection<?> rootItemIds() {
         if (filteredRoots != null) {
             return Collections.unmodifiableCollection(filteredRoots);
         } else {

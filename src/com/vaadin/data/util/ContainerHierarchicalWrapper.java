@@ -253,14 +253,14 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * comment here, we use the default documentation from implemented
      * interface.
      */
-    public Collection getChildren(Object itemId) {
+    public Collection<?> getChildren(Object itemId) {
 
         // If the wrapped container implements the method directly, use it
         if (hierarchical) {
             return ((Container.Hierarchical) container).getChildren(itemId);
         }
 
-        final Collection c = children.get(itemId);
+        final Collection<?> c = children.get(itemId);
         if (c == null) {
             return null;
         }
@@ -321,7 +321,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * comment here, we use the default documentation from implemented
      * interface.
      */
-    public Collection rootItemIds() {
+    public Collection<?> rootItemIds() {
 
         // If the wrapped container implements the method directly, use it
         if (hierarchical) {
@@ -632,7 +632,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * comment here, we use the default documentation from implemented
      * interface.
      */
-    public Collection getItemIds() {
+    public Collection<?> getItemIds() {
         return container.getItemIds();
     }
 
@@ -650,7 +650,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * JavaDoc comment here, we use the default documentation from implemented
      * interface.
      */
-    public Collection getContainerPropertyIds() {
+    public Collection<?> getContainerPropertyIds() {
         return container.getContainerPropertyIds();
     }
 
@@ -659,7 +659,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * Don't add a JavaDoc comment here, we use the default documentation from
      * implemented interface.
      */
-    public Class getType(Object propertyId) {
+    public Class<?> getType(Object propertyId) {
         return container.getType(propertyId);
     }
 
