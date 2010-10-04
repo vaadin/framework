@@ -126,7 +126,7 @@ public class DDTest1 extends TestBase {
 
             private void populateSubTree(HierarchicalContainer idx,
                     HierarchicalContainer subtree, Object itemId) {
-                Collection children = subtree.getChildren(itemId);
+                Collection<?> children = subtree.getChildren(itemId);
                 if (children != null) {
 
                     for (Object childId : children) {
@@ -153,7 +153,8 @@ public class DDTest1 extends TestBase {
             private HierarchicalContainer getSubTree(HierarchicalContainer idx,
                     Object itemId) {
                 HierarchicalContainer hierarchicalContainer = new HierarchicalContainer();
-                Collection containerPropertyIds = idx.getContainerPropertyIds();
+                Collection<?> containerPropertyIds = idx
+                        .getContainerPropertyIds();
                 for (Object object : containerPropertyIds) {
                     hierarchicalContainer.addContainerProperty(object,
                             idx.getType(object), null);
@@ -165,7 +166,7 @@ public class DDTest1 extends TestBase {
 
             private void copyChildren(HierarchicalContainer source,
                     HierarchicalContainer target, Object itemId) {
-                Collection children = source.getChildren(itemId);
+                Collection<?> children = source.getChildren(itemId);
                 if (children != null) {
                     for (Object childId : children) {
                         Item item = source.getItem(childId);

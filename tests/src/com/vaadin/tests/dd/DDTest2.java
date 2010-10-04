@@ -82,7 +82,7 @@ public class DDTest2 extends TestBase {
             @Override
             protected Set<Object> getAllowedItemIds(DragAndDropEvent dragEvent,
                     Tree tree) {
-                return new HashSet(tree.getItemIds());
+                return new HashSet<Object>(tree.getItemIds());
             }
         };
 
@@ -217,7 +217,7 @@ public class DDTest2 extends TestBase {
             }
 
             private void copySubTree(Object itemId, Object itemIdTo) {
-                Collection children = tree1.getChildren(itemId);
+                Collection<?> children = tree1.getChildren(itemId);
                 if (children != null) {
                     for (Object childId : children) {
                         Object newItemId = tree2.addItem();

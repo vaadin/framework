@@ -122,7 +122,7 @@ public class DDTest7 extends TestBase {
                     newIndex = 0;
                 }
                 Object idAfter = containerDataSource.getIdByIndex(newIndex);
-                Collection selections = (Collection) table.getValue();
+                Collection<?> selections = (Collection<?>) table.getValue();
                 if (selections != null && selections.contains(itemId)) {
                     // dragged a selected item, if multiple rows selected, drag
                     // them too (functionality similar to apple mail)
