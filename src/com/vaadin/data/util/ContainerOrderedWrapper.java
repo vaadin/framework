@@ -43,12 +43,12 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     /**
      * Ordering information, ie. the mapping from Item ID to the next item ID
      */
-    private Hashtable next;
+    private Hashtable<Object, Object> next;
 
     /**
      * Reverse ordering information for convenience and performance reasons.
      */
-    private Hashtable prev;
+    private Hashtable<Object, Object> prev;
 
     /**
      * ID of the first Item in the container.
@@ -180,19 +180,19 @@ public class ContainerOrderedWrapper implements Container.Ordered,
 
         if (!ordered) {
 
-            final Collection ids = container.getItemIds();
+            final Collection<?> ids = container.getItemIds();
 
             // Recreates ordering if some parts of it are missing
             if (next == null || first == null || last == null || prev != null) {
                 first = null;
                 last = null;
-                next = new Hashtable();
-                prev = new Hashtable();
+                next = new Hashtable<Object, Object>();
+                prev = new Hashtable<Object, Object>();
             }
 
             // Filter out all the missing items
-            final LinkedList l = new LinkedList(next.keySet());
-            for (final Iterator i = l.iterator(); i.hasNext();) {
+            final LinkedList<?> l = new LinkedList<Object>(next.keySet());
+            for (final Iterator<?> i = l.iterator(); i.hasNext();) {
                 final Object id = i.next();
                 if (!container.containsId(id)) {
                     removeFromOrderWrapper(id);
@@ -200,7 +200,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
             }
 
             // Adds missing items
-            for (final Iterator i = ids.iterator(); i.hasNext();) {
+            for (final Iterator<?> i = ids.iterator(); i.hasNext();) {
                 final Object id = i.next();
                 if (!next.containsKey(id)) {
                     addToOrderWrapper(id);
@@ -421,7 +421,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      * comment here, we use the default documentation from implemented
      * interface.
      */
-    public Collection getItemIds() {
+    public Collection<?> getItemIds() {
         return container.getItemIds();
     }
 
@@ -439,7 +439,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      * JavaDoc comment here, we use the default documentation from implemented
      * interface.
      */
-    public Collection getContainerPropertyIds() {
+    public Collection<?> getContainerPropertyIds() {
         return container.getContainerPropertyIds();
     }
 
@@ -448,7 +448,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      * Don't add a JavaDoc comment here, we use the default documentation from
      * implemented interface.
      */
-    public Class getType(Object propertyId) {
+    public Class<?> getType(Object propertyId) {
         return container.getType(propertyId);
     }
 
