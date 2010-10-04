@@ -52,8 +52,6 @@ import com.vaadin.Application.SystemMessages;
 import com.vaadin.external.org.apache.commons.fileupload.portlet.PortletFileUpload;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.Terminal;
-import com.vaadin.terminal.gwt.client.ApplicationConfiguration;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.ui.Window;
 
 /**
@@ -93,18 +91,18 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         super.init(config);
         // Stores the application parameters into Properties object
         applicationProperties = new Properties();
-        for (final Enumeration e = config.getInitParameterNames(); e
+        for (final Enumeration<String> e = config.getInitParameterNames(); e
                 .hasMoreElements();) {
-            final String name = (String) e.nextElement();
+            final String name = e.nextElement();
             applicationProperties.setProperty(name,
                     config.getInitParameter(name));
         }
 
         // Overrides with server.xml parameters
         final PortletContext context = config.getPortletContext();
-        for (final Enumeration e = context.getInitParameterNames(); e
+        for (final Enumeration<String> e = context.getInitParameterNames(); e
                 .hasMoreElements();) {
-            final String name = (String) e.nextElement();
+            final String name = e.nextElement();
             applicationProperties.setProperty(name,
                     context.getInitParameter(name));
         }
@@ -621,10 +619,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
             // Copy download stream parameters directly
             // to HTTP headers.
-            final Iterator i = stream.getParameterNames();
+            final Iterator<String> i = stream.getParameterNames();
             if (i != null) {
                 while (i.hasNext()) {
-                    final String param = (String) i.next();
+                    final String param = i.next();
                     response.setProperty(param, stream.getParameter(param));
                 }
             }

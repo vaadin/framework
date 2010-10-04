@@ -197,18 +197,18 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
         // Stores the application parameters into Properties object
         applicationProperties = new Properties();
-        for (final Enumeration e = servletConfig.getInitParameterNames(); e
-                .hasMoreElements();) {
-            final String name = (String) e.nextElement();
+        for (final Enumeration<String> e = servletConfig
+                .getInitParameterNames(); e.hasMoreElements();) {
+            final String name = e.nextElement();
             applicationProperties.setProperty(name,
                     servletConfig.getInitParameter(name));
         }
 
         // Overrides with server.xml parameters
         final ServletContext context = servletConfig.getServletContext();
-        for (final Enumeration e = context.getInitParameterNames(); e
+        for (final Enumeration<String> e = context.getInitParameterNames(); e
                 .hasMoreElements();) {
-            final String name = (String) e.nextElement();
+            final String name = e.nextElement();
             applicationProperties.setProperty(name,
                     context.getInitParameter(name));
         }
@@ -486,7 +486,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             }
 
             // Handle parameters
-            final Map parameters = request.getParameterMap();
+            final Map<String, String[]> parameters = request.getParameterMap();
             if (window != null && parameters != null) {
                 window.handleParameters(parameters);
             }
@@ -875,10 +875,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             // Copy download stream parameters directly
             // to HTTP headers.
-            final Iterator i = stream.getParameterNames();
+            final Iterator<String> i = stream.getParameterNames();
             if (i != null) {
                 while (i.hasNext()) {
-                    final String param = (String) i.next();
+                    final String param = i.next();
                     response.setHeader(param, stream.getParameter(param));
                 }
             }

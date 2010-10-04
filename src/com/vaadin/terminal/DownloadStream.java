@@ -37,7 +37,7 @@ public class DownloadStream implements Serializable {
 
     private String fileName;
 
-    private Map params;
+    private Map<String, String> params;
 
     private long cacheTime = DEFAULT_CACHETIME;
 
@@ -125,7 +125,7 @@ public class DownloadStream implements Serializable {
      */
     public void setParameter(String name, String value) {
         if (params == null) {
-            params = new HashMap();
+            params = new HashMap<String, String>();
         }
         params.put(name, value);
     }
@@ -142,7 +142,7 @@ public class DownloadStream implements Serializable {
      */
     public String getParameter(String name) {
         if (params != null) {
-            return (String) params.get(name);
+            return params.get(name);
         }
         return null;
     }
@@ -152,7 +152,7 @@ public class DownloadStream implements Serializable {
      * 
      * @return Iterator of names or null if no parameters are set.
      */
-    public Iterator getParameterNames() {
+    public Iterator<String> getParameterNames() {
         if (params != null) {
             return params.keySet().iterator();
         }
