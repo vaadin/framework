@@ -18,6 +18,7 @@ public class KeyboardNavigationWithChangingContent extends TestBase {
         ValueHolder<String> v1 = new ValueHolder<String>("test1");
         ValueHolder<String> v2 = new ValueHolder<String>("test2");
         ValueHolder<String> v3 = new ValueHolder<String>("test3");
+        @SuppressWarnings("unchecked")
         final BeanItemContainer<ValueHolder<String>> bic = new BeanItemContainer<ValueHolder<String>>(
                 Arrays.asList(v1, v2, v3));
         final Table t = new Table(null, bic);

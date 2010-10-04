@@ -32,6 +32,8 @@ public class ExpandCollapseTree extends TestBase {
         tree.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
                 if (tree.getValue() instanceof Set) {
+                    @SuppressWarnings("unchecked")
+                    // safe cast after instanceof check
                     Set<Object> itemIds = (Set<Object>) tree.getValue();
                     if (itemIds.size() == 0) {
                         valueLbl.setValue("No selection");

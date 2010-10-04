@@ -43,7 +43,7 @@ public class TestImmediateUploadInFormLayout extends
 
     @Override
     protected List<Component> createActions() {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     public OutputStream receiveUpload(String filename, String MIMEType) {

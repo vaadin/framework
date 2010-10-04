@@ -30,7 +30,8 @@ public class ComboBoxInPopupView extends TestBase {
         cb2.setWidth("260px");
         PopupView pv2 = new PopupView("<u>2. focused (click)</u>", cb2) {
             @Override
-            public void changeVariables(Object source, Map variables) {
+            public void changeVariables(Object source,
+                    Map<String, Object> variables) {
                 super.changeVariables(source, variables);
                 cb2.focus();
             }

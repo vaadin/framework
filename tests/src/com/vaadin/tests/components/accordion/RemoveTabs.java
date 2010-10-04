@@ -97,10 +97,10 @@ public class RemoveTabs extends TestBase {
 
     @SuppressWarnings("unchecked")
     private void closeLastTab() {
-        Iterator i = accordion.getComponentIterator();
+        Iterator<Component> i = accordion.getComponentIterator();
         Component last = null;
         while (i.hasNext()) {
-            last = (Component) i.next();
+            last = i.next();
 
         }
         accordion.removeComponent(last);
