@@ -65,8 +65,8 @@ public class TestForGridLayoutChildComponentRendering extends CustomComponent {
     }
 
     public void randomReorder() {
-        final Iterator it = main.getComponentIterator();
-        final ArrayList components = new ArrayList();
+        final Iterator<Component> it = main.getComponentIterator();
+        final ArrayList<Component> components = new ArrayList<Component>();
         while (it.hasNext()) {
             components.add(it.next());
         }
@@ -79,24 +79,24 @@ public class TestForGridLayoutChildComponentRendering extends CustomComponent {
         for (int i = components.size(); i > 0; i--) {
             final int index = (int) (Math.random() * i);
             if (i == colspanIndex) {
-                main.addComponent((Component) components.get(index), 0,
-                        (size - i) / 2, 1, (size - i) / 2);
+                main.addComponent(components.get(index), 0, (size - i) / 2, 1,
+                        (size - i) / 2);
             } else {
-                main.addComponent((Component) components.get(index));
+                main.addComponent(components.get(index));
             }
             components.remove(index);
         }
     }
 
     public void removeRandomComponent() {
-        final Iterator it = main.getComponentIterator();
-        final ArrayList components = new ArrayList();
+        final Iterator<Component> it = main.getComponentIterator();
+        final ArrayList<Component> components = new ArrayList<Component>();
         while (it.hasNext()) {
             components.add(it.next());
         }
         final int size = components.size();
         final int index = (int) (Math.random() * size);
-        main.removeComponent((Component) components.get(index));
+        main.removeComponent(components.get(index));
 
     }
 

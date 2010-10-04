@@ -32,7 +32,7 @@ public class TestForMultipleStyleNames extends CustomComponent implements
 
     private final TwinColSelect s = new TwinColSelect();
 
-    private ArrayList styleNames2;
+    private ArrayList<String> styleNames2;
 
     public TestForMultipleStyleNames() {
         setCompositionRoot(main);
@@ -49,7 +49,7 @@ public class TestForMultipleStyleNames extends CustomComponent implements
                 + " on the browser. Currently changes are"
                 + " visible only by inspecting DOM."));
 
-        styleNames2 = new ArrayList();
+        styleNames2 = new ArrayList<String>();
 
         styleNames2.add("red");
         styleNames2.add("bold");
@@ -69,16 +69,16 @@ public class TestForMultipleStyleNames extends CustomComponent implements
 
         final String currentStyle = l.getStyle();
         final String[] tmp = currentStyle.split(" ");
-        final ArrayList curStyles = new ArrayList();
+        final ArrayList<String> curStyles = new ArrayList<String>();
         for (int i = 0; i < tmp.length; i++) {
             if (tmp[i] != "") {
                 curStyles.add(tmp[i]);
             }
         }
 
-        final Collection styles = (Collection) s.getValue();
+        final Collection<?> styles = (Collection<?>) s.getValue();
 
-        for (final Iterator iterator = styles.iterator(); iterator.hasNext();) {
+        for (final Iterator<?> iterator = styles.iterator(); iterator.hasNext();) {
             final String styleName = (String) iterator.next();
             if (curStyles.contains(styleName)) {
                 // already added
@@ -87,9 +87,9 @@ public class TestForMultipleStyleNames extends CustomComponent implements
                 l.addStyleName(styleName);
             }
         }
-        for (final Iterator iterator2 = curStyles.iterator(); iterator2
+        for (final Iterator<String> iterator2 = curStyles.iterator(); iterator2
                 .hasNext();) {
-            final String object = (String) iterator2.next();
+            final String object = iterator2.next();
             l.removeStyleName(object);
         }
     }

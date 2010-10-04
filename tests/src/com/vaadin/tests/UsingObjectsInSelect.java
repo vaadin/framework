@@ -21,7 +21,7 @@ public class UsingObjectsInSelect extends com.vaadin.Application implements
     private final Label selectedTask = new Label("Selected task",
             Label.CONTENT_XHTML);
 
-    public LinkedList exampleTasks = new LinkedList();
+    public LinkedList<?> exampleTasks = new LinkedList<Object>();
 
     public static Random random = new Random(1);
 

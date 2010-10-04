@@ -64,8 +64,8 @@ public class TestForChildComponentRendering extends CustomComponent {
     }
 
     public void randomReorder() {
-        final Iterator it = main.getComponentIterator();
-        final ArrayList components = new ArrayList();
+        final Iterator<Component> it = main.getComponentIterator();
+        final ArrayList<Component> components = new ArrayList<Component>();
         while (it.hasNext()) {
             components.add(it.next());
         }
@@ -75,20 +75,20 @@ public class TestForChildComponentRendering extends CustomComponent {
 
         for (int i = components.size(); i > 0; i--) {
             final int index = (int) (Math.random() * i);
-            v.addComponent((Component) components.get(index));
+            v.addComponent(components.get(index));
             components.remove(index);
         }
     }
 
     public void removeRandomComponent() {
-        final Iterator it = main.getComponentIterator();
-        final ArrayList components = new ArrayList();
+        final Iterator<Component> it = main.getComponentIterator();
+        final ArrayList<Component> components = new ArrayList<Component>();
         while (it.hasNext()) {
             components.add(it.next());
         }
         final int size = components.size();
         final int index = (int) (Math.random() * size);
-        main.removeComponent((Component) components.get(index));
+        main.removeComponent(components.get(index));
 
     }
 

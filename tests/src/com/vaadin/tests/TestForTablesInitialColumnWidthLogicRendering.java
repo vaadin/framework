@@ -65,7 +65,7 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         t = getTestTable(5, 5);
         t.setCaption("Table with  some cols and rows rows, some col widths fixed");
 
-        Iterator it = t.getContainerPropertyIds().iterator();
+        Iterator<?> it = t.getContainerPropertyIds().iterator();
         it.next();
         it.next();
         t.setColumnWidth(it.next(), 30);
@@ -115,7 +115,7 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         }
         t.addContainerProperty("button", Button.class, null);
         for (int i = 0; i < rows; i++) {
-            final Vector content = new Vector();
+            final Vector<Object> content = new Vector<Object>();
             for (int j = 0; j < cols; j++) {
                 content.add(rndString());
             }

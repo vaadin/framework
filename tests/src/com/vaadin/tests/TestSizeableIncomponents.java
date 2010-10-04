@@ -135,7 +135,7 @@ public class TestSizeableIncomponents extends Application {
                     && (f.indexOf("Window") == -1)) {
                 f = f.replaceAll(".class", "");
                 String className = "com.vaadin.ui." + f;
-                Class c;
+                Class<?> c;
                 try {
                     c = Class.forName(className);
                     Object o = c.newInstance();
@@ -213,10 +213,10 @@ public class TestSizeableIncomponents extends Application {
 
     class Testable {
 
-        private Class classToTest;
-        private ArrayList configurations = new ArrayList();
+        private Class<?> classToTest;
+        private ArrayList<Configuration> configurations = new ArrayList<Configuration>();
 
-        Testable(Class c) {
+        Testable(Class<?> c) {
             classToTest = c;
         }
 
@@ -228,8 +228,9 @@ public class TestSizeableIncomponents extends Application {
             StringBuffer sb = new StringBuffer();
             sb.append(classToTest.getName().replaceAll("com.vaadin.ui.", ""));
             sb.append("[");
-            for (Iterator i = configurations.iterator(); i.hasNext();) {
-                sb.append(((Configuration) i.next()).getDescription());
+            for (Iterator<Configuration> i = configurations.iterator(); i
+                    .hasNext();) {
+                sb.append((i.next()).getDescription());
                 if (i.hasNext()) {
                     sb.append(",");
                 }
@@ -280,8 +281,9 @@ public class TestSizeableIncomponents extends Application {
                 ((Label) c).setValue("Test label");
             }
 
-            for (Iterator i = configurations.iterator(); i.hasNext();) {
-                Configuration conf = (Configuration) i.next();
+            for (Iterator<Configuration> i = configurations.iterator(); i
+                    .hasNext();) {
+                Configuration conf = i.next();
                 conf.configure(c);
             }
             return c;

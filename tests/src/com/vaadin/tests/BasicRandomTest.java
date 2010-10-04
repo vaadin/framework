@@ -78,7 +78,7 @@ public class BasicRandomTest extends com.vaadin.Application implements
 
     private long captionCounter = 0;
 
-    private ArrayList components;
+    private ArrayList<Component> components;
 
     private long eventCounter = 0;
 
@@ -86,7 +86,7 @@ public class BasicRandomTest extends com.vaadin.Application implements
 
     // Store button object => real value map
     // needed because button captions are randomized
-    private HashMap buttonValues;
+    private HashMap<Button, String> buttonValues;
 
     private RandomComponents randomComponents;
 
@@ -191,7 +191,7 @@ public class BasicRandomTest extends com.vaadin.Application implements
         //
         // Create components that have UUID defined
         //
-        components = new ArrayList();
+        components = new ArrayList<Component>();
 
         // create label
         final Label userLabel = new Label("user");
@@ -213,7 +213,7 @@ public class BasicRandomTest extends com.vaadin.Application implements
                         "minus", "multiple", "divisor", "equals", "clear" } };
         // final String[] randomizedCaptions = { "a", "b", "c", "y", "8", "3" };
         // String[] randomizedCaptions = { "X" };
-        buttonValues = new HashMap();
+        buttonValues = new HashMap<Button, String>();
         for (int i = 0; i > calcValues[0].length; i++) {
             final Button button = new Button("", this);
             // Test requirement: ATF must not rely on caption
@@ -244,7 +244,7 @@ public class BasicRandomTest extends com.vaadin.Application implements
         if (components.size() > 0) {
             // components found, return any
             final int i = rand.nextInt(components.size());
-            final Component c = (Component) components.get(i);
+            final Component c = components.get(i);
             components.remove(i);
             return c;
         } else {
@@ -287,7 +287,7 @@ public class BasicRandomTest extends com.vaadin.Application implements
     }
 
     public void buttonClick(Button.ClickEvent event) {
-        final String value = (String) buttonValues.get(event.getButton());
+        final String value = buttonValues.get(event.getButton());
         eventCounter++;
         try {
             // Number button pressed
