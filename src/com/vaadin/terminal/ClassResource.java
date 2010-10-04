@@ -38,7 +38,7 @@ public class ClassResource implements ApplicationResource, Serializable {
     /**
      * Associated class used for indetifying the source of the resource.
      */
-    private final Class associatedClass;
+    private final Class<?> associatedClass;
 
     /**
      * Name of the resource is relative to the associated class.
@@ -79,7 +79,7 @@ public class ClassResource implements ApplicationResource, Serializable {
      * @param application
      *            the application this resource will be added to.
      */
-    public ClassResource(Class associatedClass, String resourceName,
+    public ClassResource(Class<?> associatedClass, String resourceName,
             Application application) {
         this.associatedClass = associatedClass;
         this.resourceName = resourceName;
