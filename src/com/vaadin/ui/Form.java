@@ -114,7 +114,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     /**
      * Visible item properties.
      */
-    private Collection<Object> visibleItemProperties;
+    private Collection<?> visibleItemProperties;
 
     /**
      * Form needs to repaint itself if child fields value changes due possible
@@ -622,7 +622,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     }
 
     /* Documented in interface */
-    public Collection getItemPropertyIds() {
+    public Collection<?> getItemPropertyIds() {
         return Collections.unmodifiableCollection(propertyIds);
     }
 
@@ -699,7 +699,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * 
      * @see com.vaadin.data.Item.Viewer#setItemDataSource(Item)
      */
-    public void setItemDataSource(Item newDataSource, Collection propertyIds) {
+    public void setItemDataSource(Item newDataSource, Collection<?> propertyIds) {
 
         if (layout instanceof GridLayout) {
             GridLayout gl = (GridLayout) layout;
@@ -726,7 +726,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         }
 
         // Adds all the properties to this form
-        for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
+        for (final Iterator<?> i = propertyIds.iterator(); i.hasNext();) {
             final Object id = i.next();
             final Property property = itemDatasource.getItemProperty(id);
             if (id != null && property != null) {
@@ -847,7 +847,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         }
         if (value != null && !found) {
             if (value instanceof Collection) {
-                for (final Iterator it = ((Collection) value).iterator(); it
+                for (final Iterator<?> it = ((Collection<?>) value).iterator(); it
                         .hasNext();) {
                     final Object val = it.next();
                     found = false;
@@ -1001,7 +1001,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     @Override
     public void setReadOnly(boolean readOnly) {
         super.setReadOnly(readOnly);
-        for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
+        for (final Iterator<?> i = propertyIds.iterator(); i.hasNext();) {
             (fields.get(i.next())).setReadOnly(readOnly);
         }
     }
@@ -1067,7 +1067,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * @see com.vaadin.ui.AbstractField#getType()
      */
     @Override
-    public Class getType() {
+    public Class<?> getType() {
         if (getPropertyDataSource() != null) {
             return getPropertyDataSource().getType();
         }
@@ -1131,14 +1131,14 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * @param data
      * @param properties
      */
-    protected void setFormDataSource(Object data, Collection properties) {
+    protected void setFormDataSource(Object data, Collection<?> properties) {
 
         // If data is an item use it.
         Item item = null;
         if (data instanceof Item) {
             item = (Item) data;
         } else if (data != null) {
-            item = new BeanItem(data);
+            item = new BeanItem<Object>(data);
         }
 
         // Sets the datasource to form
@@ -1156,7 +1156,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * 
      * @return the Collection of visible Item properites.
      */
-    public Collection getVisibleItemProperties() {
+    public Collection<?> getVisibleItemProperties() {
         return visibleItemProperties;
     }
 
@@ -1166,7 +1166,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * @param visibleProperties
      *            the visibleProperties to set.
      */
-    public void setVisibleItemProperties(Collection visibleProperties) {
+    public void setVisibleItemProperties(Collection<?> visibleProperties) {
         visibleItemProperties = visibleProperties;
         Object value = getValue();
         if (value == null) {
@@ -1210,7 +1210,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     @Override
     public void setTabIndex(int tabIndex) {
         super.setTabIndex(tabIndex);
-        for (final Iterator i = getItemPropertyIds().iterator(); i.hasNext();) {
+        for (final Iterator<?> i = getItemPropertyIds().iterator(); i.hasNext();) {
             (getField(i.next())).setTabIndex(tabIndex);
         }
     }
