@@ -40,7 +40,7 @@ public class BaseFieldFactory implements FieldFactory {
      * 
      * @see com.vaadin.ui.FieldFactory#createField(Class, Component)
      */
-    public Field createField(Class type, Component uiContext) {
+    public Field createField(Class<?> type, Component uiContext) {
         return DefaultFieldFactory.createFieldByPropertyType(type);
     }
 

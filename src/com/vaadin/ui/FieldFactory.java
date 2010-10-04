@@ -30,7 +30,7 @@ public interface FieldFactory extends FormFieldFactory, TableFieldFactory {
      * @return Field the field suitable for editing the specified data.
      * 
      */
-    Field createField(Class type, Component uiContext);
+    Field createField(Class<?> type, Component uiContext);
 
     /**
      * Creates a field based on the property datasource.
