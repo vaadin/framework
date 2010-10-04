@@ -277,8 +277,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             final MenuItem cur = menu.getSelectedItem();
             final int index = 1 + menu.getItems().indexOf(cur);
             if (menu.getItems().size() > index) {
-                final MenuItem newSelectedItem = (MenuItem) menu.getItems()
-                        .get(index);
+                final MenuItem newSelectedItem = menu.getItems().get(index);
                 menu.selectItem(newSelectedItem);
                 tb.setText(newSelectedItem.getText());
                 tb.setSelectionRange(lastFilter.length(), newSelectedItem
@@ -297,8 +296,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             final MenuItem cur = menu.getSelectedItem();
             final int index = -1 + menu.getItems().indexOf(cur);
             if (index > -1) {
-                final MenuItem newSelectedItem = (MenuItem) menu.getItems()
-                        .get(index);
+                final MenuItem newSelectedItem = menu.getItems().get(index);
                 menu.selectItem(newSelectedItem);
                 tb.setText(newSelectedItem.getText());
                 tb.setSelectionRange(lastFilter.length(), newSelectedItem
@@ -309,8 +307,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                     filterOptions(currentPage - 1, lastFilter);
                 }
             } else {
-                final MenuItem newSelectedItem = (MenuItem) menu.getItems()
-                        .get(menu.getItems().size() - 1);
+                final MenuItem newSelectedItem = menu.getItems().get(
+                        menu.getItems().size() - 1);
                 menu.selectItem(newSelectedItem);
                 tb.setText(newSelectedItem.getText());
                 tb.setSelectionRange(lastFilter.length(), newSelectedItem
@@ -586,8 +584,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             int p = getItems().size();
             if (p > 0) {
                 for (int i = 0; i < p; i++) {
-                    final MenuItem potentialExactMatch = (MenuItem) getItems()
-                            .get(i);
+                    final MenuItem potentialExactMatch = getItems().get(i);
                     if (potentialExactMatch.getText().equals(enteredItemValue)) {
                         selectItem(potentialExactMatch);
                         // do not send a value change event if null was and
@@ -663,7 +660,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             int index = Integer.parseInt(subPart.substring(SUBPART_PREFIX
                     .length()));
 
-            MenuItem item = (MenuItem) getItems().get(index);
+            MenuItem item = getItems().get(index);
 
             return item.getElement();
         }
@@ -682,7 +679,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
             final int itemCount = getItems().size();
             for (int i = 0; i < itemCount; i++) {
-                if (((MenuItem) getItems().get(i)).getElement() == menuItemRoot) {
+                if (getItems().get(i).getElement() == menuItemRoot) {
                     String name = SUBPART_PREFIX + i;
                     return name;
                 }
@@ -983,7 +980,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
         String captions = inputPrompt;
 
-        for (final Iterator i = options.getChildIterator(); i.hasNext();) {
+        for (final Iterator<?> i = options.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();
             final FilterSelectSuggestion suggestion = new FilterSelectSuggestion(
                     optionUidl);
@@ -1037,7 +1034,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 if (lastIndex == 0) {
                     // going up, select last item
                     int lastItem = pageLength - 1;
-                    List items = suggestionPopup.menu.getItems();
+                    List<MenuItem> items = suggestionPopup.menu.getItems();
                     /*
                      * The first page can contain less than 10 items if the null
                      * selection item is filtered away
@@ -1045,12 +1042,11 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                     if (lastItem >= items.size()) {
                         lastItem = items.size() - 1;
                     }
-                    activeMenuItem = (MenuItem) items.get(lastItem);
+                    activeMenuItem = items.get(lastItem);
                     suggestionPopup.menu.selectItem(activeMenuItem);
                 } else {
                     // going down, select first item
-                    activeMenuItem = (MenuItem) suggestionPopup.menu.getItems()
-                            .get(0);
+                    activeMenuItem = suggestionPopup.menu.getItems().get(0);
                     suggestionPopup.menu.selectItem(activeMenuItem);
                 }
 
@@ -1298,8 +1294,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
             if (currentSuggestions.size() == 1 && !allowNewItem) {
                 // If there is only one suggestion, select that
-                suggestionPopup.menu.selectItem((MenuItem) suggestionPopup.menu
-                        .getItems().get(0));
+                suggestionPopup.menu.selectItem(suggestionPopup.menu.getItems()
+                        .get(0));
             }
             suggestionPopup.menu.doSelectedItemAction();
             break;
