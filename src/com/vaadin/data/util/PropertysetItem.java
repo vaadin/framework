@@ -34,17 +34,17 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
     /**
      * Mapping from property id to property.
      */
-    private HashMap map = new HashMap();
+    private HashMap<Object, Property> map = new HashMap<Object, Property>();
 
     /**
      * List of all property ids to maintain the order.
      */
-    private LinkedList list = new LinkedList();
+    private LinkedList<Object> list = new LinkedList<Object>();
 
     /**
      * List of property set modification listeners.
      */
-    private LinkedList propertySetChangeListeners = null;
+    private LinkedList<Item.PropertySetChangeListener> propertySetChangeListeners = null;
 
     /* Item methods */
 
@@ -58,7 +58,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * @return the Property with the given ID or <code>null</code>
      */
     public Property getItemProperty(Object id) {
-        return (Property) map.get(id);
+        return map.get(id);
     }
 
     /**
@@ -67,7 +67,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * @return unmodifiable collection containing IDs of the Properties stored
      *         the Item
      */
-    public Collection getItemPropertyIds() {
+    public Collection<?> getItemPropertyIds() {
         return Collections.unmodifiableCollection(list);
     }
 
@@ -141,7 +141,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
     public String toString() {
         String retValue = "";
 
-        for (final Iterator i = getItemPropertyIds().iterator(); i.hasNext();) {
+        for (final Iterator<?> i = getItemPropertyIds().iterator(); i.hasNext();) {
             final Object propertyId = i.next();
             retValue += getItemProperty(propertyId).toString();
             if (i.hasNext()) {
@@ -188,7 +188,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      */
     public void addListener(Item.PropertySetChangeListener listener) {
         if (propertySetChangeListeners == null) {
-            propertySetChangeListeners = new LinkedList();
+            propertySetChangeListeners = new LinkedList<PropertySetChangeListener>();
         }
         propertySetChangeListeners.add(listener);
     }
@@ -246,10 +246,10 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
 
         final PropertysetItem npsi = new PropertysetItem();
 
-        npsi.list = list != null ? (LinkedList) list.clone() : null;
-        npsi.propertySetChangeListeners = propertySetChangeListeners != null ? (LinkedList) propertySetChangeListeners
+        npsi.list = list != null ? (LinkedList<Object>) list.clone() : null;
+        npsi.propertySetChangeListeners = propertySetChangeListeners != null ? (LinkedList<PropertySetChangeListener>) propertySetChangeListeners
                 .clone() : null;
-        npsi.map = (HashMap) map.clone();
+        npsi.map = (HashMap<Object, Property>) map.clone();
 
         return npsi;
     }
