@@ -299,7 +299,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @see com.vaadin.terminal.VariableOwner#changeVariables(Object, Map)
      */
     @Override
-    public void changeVariables(Object source, Map variables) {
+    public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
 
         if (variables.containsKey(CLICK_EVENT)) {

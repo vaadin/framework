@@ -1042,7 +1042,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * @see com.vaadin.ui.Panel#changeVariables(java.lang.Object, java.util.Map)
      */
     @Override
-    public void changeVariables(Object source, Map variables) {
+    public void changeVariables(Object source, Map<String, Object> variables) {
 
         boolean sizeHasChanged = false;
         // size is handled in super class, but resize events only in windows ->

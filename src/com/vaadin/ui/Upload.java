@@ -236,7 +236,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      *      java.util.Map)
      */
     @Override
-    public void changeVariables(Object source, Map variables) {
+    public void changeVariables(Object source, Map<String, Object> variables) {
         if (variables.containsKey("pollForStart")) {
             int id = (Integer) variables.get("pollForStart");
             if (!isUploading && id == nextid) {

@@ -391,7 +391,7 @@ public class SplitPanel extends AbstractLayout {
      * interface.
      */
     @Override
-    public void changeVariables(Object source, Map variables) {
+    public void changeVariables(Object source, Map<String, Object> variables) {
 
         super.changeVariables(source, variables);
 

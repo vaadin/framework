@@ -325,7 +325,7 @@ public class PopupView extends AbstractComponentContainer {
      *      java.util.Map)
      */
     @Override
-    public void changeVariables(Object source, Map variables) {
+    public void changeVariables(Object source, Map<String, Object> variables) {
         if (variables.containsKey("popupVisibility")) {
             setPopupVisible(((Boolean) variables.get("popupVisibility"))
                     .booleanValue());

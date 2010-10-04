@@ -205,8 +205,8 @@ public class CssLayout extends AbstractLayout {
         int oldLocation = -1;
         int newLocation = -1;
         int location = 0;
-        for (final Iterator i = components.iterator(); i.hasNext();) {
-            final Component component = (Component) i.next();
+        for (final Iterator<Component> i = components.iterator(); i.hasNext();) {
+            final Component component = i.next();
 
             if (component == oldComponent) {
                 oldLocation = location;
@@ -241,7 +241,7 @@ public class CssLayout extends AbstractLayout {
     }
 
     @Override
-    public void changeVariables(Object source, Map variables) {
+    public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
 
         if (variables.containsKey(CLICK_EVENT)) {

@@ -547,7 +547,7 @@ public class TabSheet extends AbstractComponentContainer {
 
     // inherits javadoc
     @Override
-    public void changeVariables(Object source, Map variables) {
+    public void changeVariables(Object source, Map<String, Object> variables) {
         if (variables.containsKey("selected")) {
             setSelectedTab((Component) keyMapper.get((String) variables
                     .get("selected")));
