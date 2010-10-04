@@ -164,12 +164,12 @@ public abstract class AbstractSelect extends AbstractField implements
     /**
      * Item icons.
      */
-    private final HashMap itemIcons = new HashMap();
+    private final HashMap<Object, Resource> itemIcons = new HashMap<Object, Resource>();
 
     /**
      * Item captions.
      */
-    private final HashMap itemCaptions = new HashMap();
+    private final HashMap<Object, String> itemCaptions = new HashMap<Object, String>();
 
     /**
      * Item caption mode.
@@ -189,12 +189,12 @@ public abstract class AbstractSelect extends AbstractField implements
     /**
      * List of property set change event listeners.
      */
-    private Set propertySetEventListeners = null;
+    private Set<Container.PropertySetChangeListener> propertySetEventListeners = null;
 
     /**
      * List of item set change event listeners.
      */
-    private Set itemSetEventListeners = null;
+    private Set<Container.ItemSetChangeListener> itemSetEventListeners = null;
 
     /**
      * Item id that represents null selection of this select.
@@ -252,12 +252,12 @@ public abstract class AbstractSelect extends AbstractField implements
      * @param options
      *            the Collection containing the options.
      */
-    public AbstractSelect(String caption, Collection options) {
+    public AbstractSelect(String caption, Collection<?> options) {
 
         // Creates the options container and add given options to it
         final Container c = new IndexedContainer();
         if (options != null) {
-            for (final Iterator i = options.iterator(); i.hasNext();) {
+            for (final Iterator<?> i = options.iterator(); i.hasNext();) {
                 c.addItem(i.next());
             }
         }
@@ -299,7 +299,7 @@ public abstract class AbstractSelect extends AbstractField implements
         // Constructs selected keys array
         String[] selectedKeys;
         if (isMultiSelect()) {
-            selectedKeys = new String[((Set) getValue()).size()];
+            selectedKeys = new String[((Set<?>) getValue()).size()];
         } else {
             selectedKeys = new String[(getValue() == null
                     && getNullSelectionItemId() == null ? 0 : 1)];
@@ -313,7 +313,7 @@ public abstract class AbstractSelect extends AbstractField implements
         target.startTag("options");
         int keyIndex = 0;
         // Support for external null selection item id
-        final Collection ids = getItemIds();
+        final Collection<?> ids = getItemIds();
         if (isNullSelectionAllowed() && getNullSelectionItemId() != null
                 && !ids.contains(getNullSelectionItemId())) {
             final Object id = getNullSelectionItemId();
@@ -326,7 +326,7 @@ public abstract class AbstractSelect extends AbstractField implements
             target.endTag("so");
         }
 
-        final Iterator i = getItemIds().iterator();
+        final Iterator<?> i = getItemIds().iterator();
         // Paints the available selection options from data source
         while (i.hasNext()) {
             // Gets the option attribute values
@@ -404,7 +404,7 @@ public abstract class AbstractSelect extends AbstractField implements
                 // TODO Optimize by adding repaintNotNeeded when applicable
 
                 // Converts the key-array to id-set
-                final LinkedList s = new LinkedList();
+                final LinkedList<Object> s = new LinkedList<Object>();
                 for (int i = 0; i < ka.length; i++) {
                     final Object id = itemIdMapper.get(ka[i]);
                     if (!isNullSelectionAllowed()
@@ -424,13 +424,13 @@ public abstract class AbstractSelect extends AbstractField implements
 
                 // Limits the deselection to the set of visible items
                 // (non-visible items can not be deselected)
-                final Collection visible = getVisibleItemIds();
+                final Collection<?> visible = getVisibleItemIds();
                 if (visible != null) {
-                    Set newsel = (Set) getValue();
+                    Set<Object> newsel = (Set<Object>) getValue();
                     if (newsel == null) {
-                        newsel = new HashSet();
+                        newsel = new HashSet<Object>();
                     } else {
-                        newsel = new HashSet(newsel);
+                        newsel = new HashSet<Object>(newsel);
                     }
                     newsel.removeAll(visible);
                     newsel.addAll(s);
@@ -447,7 +447,7 @@ public abstract class AbstractSelect extends AbstractField implements
                     // Allows deselection only if the deselected item is
                     // visible
                     final Object current = getValue();
-                    final Collection visible = getVisibleItemIds();
+                    final Collection<?> visible = getVisibleItemIds();
                     if (visible != null && visible.contains(current)) {
                         setValue(null, true);
                     }
@@ -541,7 +541,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * but can be overriden in subclasses if they paint only part of the items
      * to the terminal or null if no items is visible.
      */
-    public Collection getVisibleItemIds() {
+    public Collection<?> getVisibleItemIds() {
         if (isVisible()) {
             return getItemIds();
         }
@@ -559,7 +559,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * @return the Type of the property.
      */
     @Override
-    public Class getType() {
+    public Class<?> getType() {
         if (isMultiSelect()) {
             return Set.class;
         } else {
@@ -580,14 +580,14 @@ public abstract class AbstractSelect extends AbstractField implements
 
             // If the return value is not a set
             if (retValue == null) {
-                return new HashSet();
+                return new HashSet<Object>();
             }
             if (retValue instanceof Set) {
-                return Collections.unmodifiableSet((Set) retValue);
+                return Collections.unmodifiableSet((Set<?>) retValue);
             } else if (retValue instanceof Collection) {
-                return new HashSet((Collection) retValue);
+                return new HashSet<Object>((Collection<?>) retValue);
             } else {
-                final Set s = new HashSet();
+                final Set<Object> s = new HashSet<Object>();
                 if (items.containsId(retValue)) {
                     s.add(retValue);
                 }
@@ -644,9 +644,9 @@ public abstract class AbstractSelect extends AbstractField implements
 
         if (isMultiSelect()) {
             if (newValue == null) {
-                super.setValue(new HashSet(), repaintIsNotNeeded);
+                super.setValue(new HashSet<Object>(), repaintIsNotNeeded);
             } else if (Collection.class.isAssignableFrom(newValue.getClass())) {
-                super.setValue(new HashSet((Collection) newValue),
+                super.setValue(new HashSet<Object>((Collection<?>) newValue),
                         repaintIsNotNeeded);
             }
         } else if (newValue == null || items.containsId(newValue)) {
@@ -673,7 +673,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * 
      * @return the Collection of item ids.
      */
-    public Collection getItemIds() {
+    public Collection<?> getItemIds() {
         return items.getItemIds();
     }
 
@@ -682,7 +682,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * 
      * @return the Collection of property ids.
      */
-    public Collection getContainerPropertyIds() {
+    public Collection<?> getContainerPropertyIds() {
         return items.getContainerPropertyIds();
     }
 
@@ -693,7 +693,7 @@ public abstract class AbstractSelect extends AbstractField implements
      *            the Id identifying the property.
      * @see com.vaadin.data.Container#getType(java.lang.Object)
      */
-    public Class getType(Object propertyId) {
+    public Class<?> getType(Object propertyId) {
         return items.getType(propertyId);
     }
 
@@ -959,13 +959,13 @@ public abstract class AbstractSelect extends AbstractField implements
 
             // Convert the value type
             if (multiSelect) {
-                final Set s = new HashSet();
+                final Set<Object> s = new HashSet<Object>();
                 if (oldValue != null) {
                     s.add(oldValue);
                 }
                 setValue(s);
             } else {
-                final Set s = (Set) oldValue;
+                final Set<?> s = (Set<?>) oldValue;
                 if (s == null || s.isEmpty()) {
                     setValue(null);
                 } else {
@@ -1065,11 +1065,11 @@ public abstract class AbstractSelect extends AbstractField implements
             break;
 
         case ITEM_CAPTION_MODE_EXPLICIT:
-            caption = (String) itemCaptions.get(itemId);
+            caption = itemCaptions.get(itemId);
             break;
 
         case ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID:
-            caption = (String) itemCaptions.get(itemId);
+            caption = itemCaptions.get(itemId);
             if (caption == null) {
                 caption = itemId.toString();
             }
@@ -1115,7 +1115,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * @return the Icon for the item or null, if not specified.
      */
     public Resource getItemIcon(Object itemId) {
-        final Resource explicit = (Resource) itemIcons.get(itemId);
+        final Resource explicit = itemIcons.get(itemId);
         if (explicit != null) {
             return explicit;
         }
@@ -1328,7 +1328,7 @@ public abstract class AbstractSelect extends AbstractField implements
             return false;
         }
         if (isMultiSelect()) {
-            return ((Set) getValue()).contains(itemId);
+            return ((Set<?>) getValue()).contains(itemId);
         } else {
             final Object value = getValue();
             return itemId.equals(value == null ? getNullSelectionItemId()
@@ -1355,7 +1355,7 @@ public abstract class AbstractSelect extends AbstractField implements
             setValue(itemId);
         } else if (!isSelected(itemId) && itemId != null
                 && items.containsId(itemId)) {
-            final Set s = new HashSet((Set) getValue());
+            final Set<Object> s = new HashSet<Object>((Set<?>) getValue());
             s.add(itemId);
             setValue(s);
         }
@@ -1373,7 +1373,7 @@ public abstract class AbstractSelect extends AbstractField implements
     public void unselect(Object itemId) {
         if (isSelected(itemId)) {
             if (isMultiSelect()) {
-                final Set s = new HashSet((Set) getValue());
+                final Set<Object> s = new HashSet<Object>((Set<?>) getValue());
                 s.remove(itemId);
                 setValue(s);
             } else {
@@ -1399,7 +1399,7 @@ public abstract class AbstractSelect extends AbstractField implements
      */
     public void addListener(Container.PropertySetChangeListener listener) {
         if (propertySetEventListeners == null) {
-            propertySetEventListeners = new LinkedHashSet();
+            propertySetEventListeners = new LinkedHashSet<Container.PropertySetChangeListener>();
         }
         propertySetEventListeners.add(listener);
     }
@@ -1425,7 +1425,7 @@ public abstract class AbstractSelect extends AbstractField implements
      */
     public void addListener(Container.ItemSetChangeListener listener) {
         if (itemSetEventListeners == null) {
-            itemSetEventListeners = new LinkedHashSet();
+            itemSetEventListeners = new LinkedHashSet<Container.ItemSetChangeListener>();
         }
         itemSetEventListeners.add(listener);
     }
@@ -1535,7 +1535,7 @@ public abstract class AbstractSelect extends AbstractField implements
         } else {
             Object value = getValue();
             return super.isEmpty()
-                    || (value instanceof Collection && ((Collection) value)
+                    || (value instanceof Collection && ((Collection<?>) value)
                             .isEmpty());
         }
     }
@@ -1653,7 +1653,9 @@ public abstract class AbstractSelect extends AbstractField implements
     protected class CaptionChangeListener implements
             Item.PropertySetChangeListener, Property.ValueChangeListener {
 
-        HashSet captionChangeNotifiers = new HashSet();
+        // TODO clean this up - type is either Item.PropertySetChangeNotifier or
+        // Property.ValueChangeNotifier
+        HashSet<Object> captionChangeNotifiers = new HashSet<Object>();
 
         public void addNotifierForItem(Object itemId) {
             switch (getItemCaptionMode()) {
@@ -1667,9 +1669,9 @@ public abstract class AbstractSelect extends AbstractField implements
                             .addListener(getCaptionChangeListener());
                     captionChangeNotifiers.add(i);
                 }
-                Collection pids = i.getItemPropertyIds();
+                Collection<?> pids = i.getItemPropertyIds();
                 if (pids != null) {
-                    for (Iterator it = pids.iterator(); it.hasNext();) {
+                    for (Iterator<?> it = pids.iterator(); it.hasNext();) {
                         Property p = i.getItemProperty(it.next());
                         if (p != null
                                 && p instanceof Property.ValueChangeNotifier) {
@@ -1695,7 +1697,8 @@ public abstract class AbstractSelect extends AbstractField implements
         }
 
         public void clear() {
-            for (Iterator it = captionChangeNotifiers.iterator(); it.hasNext();) {
+            for (Iterator<Object> it = captionChangeNotifiers.iterator(); it
+                    .hasNext();) {
                 Object notifier = it.next();
                 if (notifier instanceof Item.PropertySetChangeNotifier) {
                     ((Item.PropertySetChangeNotifier) notifier)
