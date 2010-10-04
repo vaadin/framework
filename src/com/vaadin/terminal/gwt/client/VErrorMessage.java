@@ -25,7 +25,7 @@ public class VErrorMessage extends FlowPanel {
         if (uidl.getChildCount() == 0) {
             add(new HTML(" "));
         } else {
-            for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
+            for (final Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
                 final Object child = it.next();
                 if (child instanceof String) {
                     final String errorMessage = (String) child;
