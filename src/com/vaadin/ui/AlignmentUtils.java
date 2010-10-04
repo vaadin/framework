@@ -37,7 +37,7 @@ public class AlignmentUtils implements Serializable {
             | AlignmentHandler.ALIGNMENT_VERTICAL_CENTER
             | AlignmentHandler.ALIGNMENT_BOTTOM;
 
-    private static Map<String, Integer> alignmentStrings = new HashMap();
+    private static Map<String, Integer> alignmentStrings = new HashMap<String, Integer>();
 
     private static void addMapping(int alignment, String... values) {
         for (String s : values) {
