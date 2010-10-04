@@ -35,7 +35,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
     private final Panel panel;
 
-    private final Map optionsToKeys;
+    private final Map<CheckBox, String> optionsToKeys;
 
     private boolean sendFocusEvents = false;
     private boolean sendBlurEvents = false;
@@ -54,7 +54,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
     public VOptionGroup() {
         super(CLASSNAME);
         panel = (Panel) optionsContainer;
-        optionsToKeys = new HashMap();
+        optionsToKeys = new HashMap<CheckBox, String>();
     }
 
     @Override
@@ -98,7 +98,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
     @Override
     protected void buildOptions(UIDL uidl) {
         panel.clear();
-        for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
+        for (final Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL opUidl = (UIDL) it.next();
             CheckBox op;
             if (isMultiselect()) {
@@ -130,7 +130,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
         super.onClick(event);
         if (event.getSource() instanceof CheckBox) {
             final boolean selected = ((CheckBox) event.getSource()).getValue();
-            final String key = (String) optionsToKeys.get(event.getSource());
+            final String key = optionsToKeys.get(event.getSource());
             if (!isMultiselect()) {
                 selectedKeys.clear();
             }
@@ -146,7 +146,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
     @Override
     protected void setTabIndex(int tabIndex) {
-        for (Iterator iterator = panel.iterator(); iterator.hasNext();) {
+        for (Iterator<Widget> iterator = panel.iterator(); iterator.hasNext();) {
             FocusWidget widget = (FocusWidget) iterator.next();
             widget.setTabIndex(tabIndex);
         }
