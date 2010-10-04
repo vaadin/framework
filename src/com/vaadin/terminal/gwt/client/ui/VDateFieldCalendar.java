@@ -10,10 +10,10 @@ import com.google.gwt.event.dom.client.DomEvent;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.DateTimeService;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusChangeListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.SubmitListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.TimeChangeListener;
-import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusChangeListener;
 
 public class VDateFieldCalendar extends VDateField {
 
@@ -34,7 +34,7 @@ public class VDateFieldCalendar extends VDateField {
             }
         });
         calendarPanel.setFocusOutListener(new FocusOutListener() {
-            public boolean onFocusOut(DomEvent event) {
+            public boolean onFocusOut(DomEvent<?> event) {
                 updateValueFromPanel();
                 return false;
             }

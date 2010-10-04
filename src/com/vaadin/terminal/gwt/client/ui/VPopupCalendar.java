@@ -64,7 +64,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
 
         calendar = GWT.create(VCalendarPanel.class);
         calendar.setFocusOutListener(new FocusOutListener() {
-            public boolean onFocusOut(DomEvent event) {
+            public boolean onFocusOut(DomEvent<?> event) {
                 event.preventDefault();
                 closeCalendarPanel();
                 return true;
