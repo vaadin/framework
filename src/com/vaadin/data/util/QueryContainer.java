@@ -66,9 +66,9 @@ public class QueryContainer implements Container, Container.Ordered,
 
     private ResultSet result;
 
-    private Collection propertyIds;
+    private Collection<String> propertyIds;
 
-    private final HashMap propertyTypes = new HashMap();
+    private final HashMap<String, Class<?>> propertyTypes = new HashMap<String, Class<?>>();
 
     private int size = -1;
 
@@ -129,7 +129,7 @@ public class QueryContainer implements Container, Container.Ordered,
         ResultSetMetaData metadata;
         metadata = result.getMetaData();
         final int count = metadata.getColumnCount();
-        final ArrayList list = new ArrayList(count);
+        final ArrayList<String> list = new ArrayList<String>(count);
         for (int i = 1; i <= count; i++) {
             final String columnName = metadata.getColumnName(i);
             list.add(columnName);
@@ -194,7 +194,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * @return Collection of Property ID.
      */
 
-    public Collection getContainerPropertyIds() {
+    public Collection<String> getContainerPropertyIds() {
         return propertyIds;
     }
 
@@ -203,8 +203,8 @@ public class QueryContainer implements Container, Container.Ordered,
      * 
      * @return collection of Item IDs
      */
-    public Collection getItemIds() {
-        final Collection c = new ArrayList(size);
+    public Collection<?> getItemIds() {
+        final Collection<Integer> c = new ArrayList<Integer>(size);
         for (int i = 1; i <= size; i++) {
             c.add(new Integer(i));
         }
@@ -252,8 +252,8 @@ public class QueryContainer implements Container, Container.Ordered,
      * @return data type of the Properties
      */
 
-    public Class getType(Object id) {
-        return (Class) propertyTypes.get(id);
+    public Class<?> getType(Object id) {
+        return propertyTypes.get(id);
     }
 
     /**
@@ -538,7 +538,7 @@ public class QueryContainer implements Container, Container.Ordered,
          * @return unmodifiable collection containing IDs of the Properties
          *         stored the Item.
          */
-        public Collection getItemPropertyIds() {
+        public Collection<String> getItemPropertyIds() {
             return propertyIds;
         }
 
