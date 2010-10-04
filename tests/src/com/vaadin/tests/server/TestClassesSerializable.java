@@ -63,7 +63,7 @@ public class TestClassesSerializable extends TestCase {
             classes.addAll(findServerClasses(location));
         }
 
-        List<Class> nonSerializableClasses = new ArrayList<Class>();
+        ArrayList<Class<?>> nonSerializableClasses = new ArrayList<Class<?>>();
         for (String className : classes) {
             Class<?> cls = Class.forName(className);
             // skip annotations and synthetic classes
@@ -82,7 +82,7 @@ public class TestClassesSerializable extends TestCase {
         // interfaces
         if (!nonSerializableClasses.isEmpty()) {
             String nonSerializableString = "";
-            Iterator<Class> it = nonSerializableClasses.iterator();
+            Iterator<Class<?>> it = nonSerializableClasses.iterator();
             nonSerializableString = it.next().getName();
             while (it.hasNext()) {
                 nonSerializableString += ", " + it.next().getName();
@@ -146,7 +146,7 @@ public class TestClassesSerializable extends TestCase {
             classes = findClassesInJar(file);
         } else {
             System.out.println("Ignoring " + classpathEntry);
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         List<String> filteredClasses = new ArrayList<String>();
@@ -212,7 +212,7 @@ public class TestClassesSerializable extends TestCase {
             String parentPackage, File parent) {
         if (parent.isHidden()
                 || parent.getPath().contains(File.separator + ".")) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         if (parentPackage == null) {
