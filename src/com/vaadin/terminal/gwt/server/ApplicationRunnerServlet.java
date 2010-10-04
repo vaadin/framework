@@ -60,8 +60,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
 
         // Creates a new application instance
         try {
-            final Application application = (Application) getApplicationClass()
-                    .newInstance();
+            final Application application = getApplicationClass().newInstance();
             return application;
         } catch (final IllegalAccessException e) {
             throw new ServletException(e);
@@ -146,9 +145,9 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
         return uris;
     }
 
-    // @Override
     @Override
-    protected Class getApplicationClass() throws ClassNotFoundException {
+    protected Class<? extends Application> getApplicationClass()
+            throws ClassNotFoundException {
         // TODO use getClassLoader() ?
 
         Class<? extends Application> appClass = null;
