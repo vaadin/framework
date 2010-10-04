@@ -244,6 +244,39 @@
 		</subant>
 	</target>
 	
+	<target name="integration-test-liferay-6ee">
+			<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-liferay-6ee.html" />
+			<pathconvert pathsep=" " property="test-liferay" refid="html-test-files" />
+			
+			<subant target="run-tests" failonerror="false" antfile="test.xml">
+				<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
+				<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
+				<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
+				<property name="server.start.succeeded" value="1" />
+				<property name="browsers" value="winxp-firefox36" />
+				<property name="testfiles" value="${test-liferay}" />
+				<property name="test-output-dir" value="../build/integration-test-output" />
+		
+				<fileset dir="." includes="test.xml" />
+			</subant>
+		</target>
+	
+	<target name="test-theme-liferay-6ee">
+			<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay6EE-theme.html" />
+			<pathconvert pathsep=" " property="test-liferay" refid="html-test-files" />
+				
+			<subant target="run-tests" failonerror="false" antfile="test.xml">
+				<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
+				<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
+				<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
+				<property name="server.start.succeeded" value="1" />
+				<property name="testfiles" value="${test-liferay}" />
+				<property name="test-output-dir" value="../build/integration-test-output" />
+			
+				<fileset dir="." includes="test.xml" />
+			</subant>
+		</target>	
+	
 	<target name="integration-test-gatein-3">
 		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-GateIn-3.1.0-sampler.html" />
 		<pathconvert pathsep=" " property="test-gatein" refid="html-test-files" />
@@ -281,7 +314,6 @@
 	
 	<target name="integration-test-start-liferay-6ee">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-liferay-6.0-ee" />
-		<copy file="integration-testscripts/integration-test-liferay-6.0.5.html" tofile="integration-testscripts/integration-test-liferay-6.0.5-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-liferay-6ee">
@@ -467,8 +499,8 @@
 	
 	<target name="integration-test-liferay6ee">
 		<antcall target="integration-test-start-liferay-6ee" />
-		<antcall target="integration-test-liferay-6" />
-		<!--<antcall target="test-theme-liferay-6" />-->
+		<antcall target="integration-test-liferay-6ee" />
+		<antcall target="test-theme-liferay-6ee" />
 		<antcall target="integration-test-stop-liferay-6ee" />
 	</target>
 	
