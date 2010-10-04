@@ -115,7 +115,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         remove.setEnabled(enabled);
         options.clear();
         selections.clear();
-        for (final Iterator i = uidl.getChildIterator(); i.hasNext();) {
+        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();
             if (optionUidl.hasAttribute("selected")) {
                 selections.addItem(optionUidl.getStringAttribute("caption"),

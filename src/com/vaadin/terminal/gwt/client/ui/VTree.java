@@ -171,7 +171,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
     }
 
     private void updateActionMap(UIDL c) {
-        final Iterator it = c.getChildIterator();
+        final Iterator<?> it = c.getChildIterator();
         while (it.hasNext()) {
             final UIDL action = (UIDL) it.next();
             final String key = action.getStringAttribute("key");
@@ -223,7 +223,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
         isNullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
 
         body.clear();
-        for (final Iterator i = uidl.getChildIterator(); i.hasNext();) {
+        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
             final UIDL childUidl = (UIDL) i.next();
             if ("actions".equals(childUidl.getTag())) {
                 updateActionMap(childUidl);
@@ -890,7 +890,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
             DOM.setInnerText(nodeCaptionSpan, text);
         }
 
-        private void renderChildNodes(Iterator i) {
+        private void renderChildNodes(Iterator<?> i) {
             childNodeContainer.clear();
             childNodeContainer.setVisible(true);
             while (i.hasNext()) {

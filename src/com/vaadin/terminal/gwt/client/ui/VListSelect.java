@@ -46,7 +46,7 @@ public class VListSelect extends VOptionGroupBase {
             // can't unselect last item in singleselect mode
             select.addItem("", null);
         }
-        for (final Iterator i = uidl.getChildIterator(); i.hasNext();) {
+        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();
             select.addItem(optionUidl.getStringAttribute("caption"),
                     optionUidl.getStringAttribute("key"));

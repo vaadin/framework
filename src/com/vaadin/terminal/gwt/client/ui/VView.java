@@ -271,7 +271,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                 String script = childUidl.getStringAttribute("script");
                 eval(script);
             } else if (tag == "notifications") {
-                for (final Iterator it = childUidl.getChildIterator(); it
+                for (final Iterator<?> it = childUidl.getChildIterator(); it
                         .hasNext();) {
                     final UIDL notification = (UIDL) it.next();
                     String html = "";

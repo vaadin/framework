@@ -403,7 +403,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
                     shortcutHandler.updateActionMap(childUidl);
                 } else if (childUidl.getTag().equals("notifications")) {
                     // TODO needed? move ->
-                    for (final Iterator it = childUidl.getChildIterator(); it
+                    for (final Iterator<?> it = childUidl.getChildIterator(); it
                             .hasNext();) {
                         final UIDL notification = (UIDL) it.next();
                         String html = "";

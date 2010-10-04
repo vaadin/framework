@@ -38,7 +38,7 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
             select.addItem("", null);
         }
         boolean selected = false;
-        for (final Iterator i = uidl.getChildIterator(); i.hasNext();) {
+        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();
             select.addItem(optionUidl.getStringAttribute("caption"),
                     optionUidl.getStringAttribute("key"));

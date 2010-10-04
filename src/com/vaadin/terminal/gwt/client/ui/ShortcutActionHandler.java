@@ -18,11 +18,9 @@ import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
 
 /**
  * A helper class to implement keyboard shorcut handling. Keeps a list of owners
@@ -94,7 +92,7 @@ public class ShortcutActionHandler {
      */
     public void updateActionMap(UIDL c) {
         actions.clear();
-        final Iterator it = c.getChildIterator();
+        final Iterator<?> it = c.getChildIterator();
         while (it.hasNext()) {
             final UIDL action = (UIDL) it.next();
 

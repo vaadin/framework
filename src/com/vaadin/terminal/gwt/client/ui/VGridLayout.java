@@ -143,10 +143,10 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
 
         LinkedList<Cell> relativeHeighted = new LinkedList<Cell>();
 
-        for (final Iterator i = uidl.getChildIterator(); i.hasNext();) {
+        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
             final UIDL r = (UIDL) i.next();
             if ("gr".equals(r.getTag())) {
-                for (final Iterator j = r.getChildIterator(); j.hasNext();) {
+                for (final Iterator<?> j = r.getChildIterator(); j.hasNext();) {
                     final UIDL c = (UIDL) j.next();
                     if ("gc".equals(c.getTag())) {
                         Cell cell = getCell(c);
@@ -483,8 +483,9 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
     private void renderRemainingComponentsWithNoRelativeHeight(
             LinkedList<Cell> pendingCells) {
 
-        for (Iterator iterator = pendingCells.iterator(); iterator.hasNext();) {
-            Cell cell = (Cell) iterator.next();
+        for (Iterator<Cell> iterator = pendingCells.iterator(); iterator
+                .hasNext();) {
+            Cell cell = iterator.next();
             if (!cell.hasRelativeHeight()) {
                 cell.render();
                 iterator.remove();

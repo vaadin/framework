@@ -107,7 +107,7 @@ public class VFormLayout extends SimplePanel implements Container {
                     uidl.hasAttribute("spacing"));
 
             int i = 0;
-            for (final Iterator it = uidl.getChildIterator(); it.hasNext(); i++) {
+            for (final Iterator<?> it = uidl.getChildIterator(); it.hasNext(); i++) {
                 prepareCell(i, 1);
                 final UIDL childUidl = (UIDL) it.next();
                 final Paintable p = client.getPaintable(childUidl);
