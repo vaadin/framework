@@ -30,7 +30,7 @@ public class ComboBox extends Select {
         setNewItemsAllowed(false);
     }
 
-    public ComboBox(String caption, Collection options) {
+    public ComboBox(String caption, Collection<?> options) {
         super(caption, options);
         setMultiSelect(false);
         setNewItemsAllowed(false);

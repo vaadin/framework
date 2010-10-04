@@ -26,7 +26,7 @@ public class ListSelect extends AbstractSelect {
         super();
     }
 
-    public ListSelect(String caption, Collection options) {
+    public ListSelect(String caption, Collection<?> options) {
         super(caption, options);
     }
 

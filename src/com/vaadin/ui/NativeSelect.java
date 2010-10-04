@@ -28,7 +28,7 @@ public class NativeSelect extends AbstractSelect {
         super();
     }
 
-    public NativeSelect(String caption, Collection options) {
+    public NativeSelect(String caption, Collection<?> options) {
         super(caption, options);
     }
 

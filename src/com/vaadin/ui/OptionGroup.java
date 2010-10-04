@@ -33,7 +33,7 @@ public class OptionGroup extends AbstractSelect implements
         super();
     }
 
-    public OptionGroup(String caption, Collection options) {
+    public OptionGroup(String caption, Collection<?> options) {
         super(caption, options);
     }
 
@@ -101,8 +101,8 @@ public class OptionGroup extends AbstractSelect implements
              * has selected a disabled item.
              */
             if (isMultiSelect()) {
-                Set currentValueSet = (Set) getValue();
-                Set newValueSet = (Set) newValue;
+                Set<?> currentValueSet = (Set<?>) getValue();
+                Set<?> newValueSet = (Set<?>) newValue;
                 for (Object itemId : currentValueSet) {
                     if (!isItemEnabled(itemId) && !newValueSet.contains(itemId)) {
                         requestRepaint();

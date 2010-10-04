@@ -95,7 +95,7 @@ public class TwinColSelect extends AbstractSelect {
      * @param caption
      * @param options
      */
-    public TwinColSelect(String caption, Collection options) {
+    public TwinColSelect(String caption, Collection<?> options) {
         super(caption, options);
         setMultiSelect(true);
     }

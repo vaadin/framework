@@ -174,7 +174,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * Gets the field type Don't add a JavaDoc comment here, we use the default
      * documentation from the implemented interface.
      */
-    public abstract Class getType();
+    public abstract Class<?> getType();
 
     /**
      * The abstract field is read only also if the data source is in read only
@@ -1015,7 +1015,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * @param propertyType
      *            the Type of the property, that needs to be edited.
      */
-    public static AbstractField constructField(Class propertyType) {
+    public static AbstractField constructField(Class<?> propertyType) {
 
         // Null typed properties can not be edited
         if (propertyType == null) {
