@@ -61,7 +61,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class MenuBar extends Widget implements PopupListener {
 
     private final Element body;
-    private final ArrayList items = new ArrayList();
+    private final ArrayList<MenuItem> items = new ArrayList<MenuItem>();
     private MenuBar parentMenu;
     private PopupPanel popup;
     private MenuItem selectedItem;
@@ -294,7 +294,7 @@ public class MenuBar extends Widget implements PopupListener {
      * @return a list containing the <code>MenuItem</code> objects in the menu
      *         bar
      */
-    protected List getItems() {
+    protected List<MenuItem> getItems() {
         return items;
     }
 
@@ -478,7 +478,7 @@ public class MenuBar extends Widget implements PopupListener {
 
     private MenuItem findItem(Element hItem) {
         for (int i = 0; i < items.size(); ++i) {
-            final MenuItem item = (MenuItem) items.get(i);
+            final MenuItem item = items.get(i);
             if (DOM.isOrHasChild(item.getElement(), hItem)) {
                 return item;
             }
@@ -512,7 +512,7 @@ public class MenuBar extends Widget implements PopupListener {
     private void onShow() {
         // Select the first item when a menu is shown.
         if (items.size() > 0) {
-            selectItem((MenuItem) items.get(0));
+            selectItem(items.get(0));
         }
     }
 }
