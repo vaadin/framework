@@ -36,7 +36,8 @@ public class DemoLauncher {
 
     public static void main(String[] args) throws Exception {
 
-        final Map serverArgs = DevelopmentServerLauncher.parseArguments(args);
+        final Map<String, String> serverArgs = DevelopmentServerLauncher
+                .parseArguments(args);
         boolean deployed = false;
         try {
             // Default deployment: embedded.war
@@ -176,7 +177,8 @@ public class DemoLauncher {
      * @return
      * @throws IOException
      */
-    protected static boolean deployEmbeddedWarfile(Map args) throws IOException {
+    protected static boolean deployEmbeddedWarfile(Map<String, String> args)
+            throws IOException {
         final String embeddedWarfileName = "/embedded.war";
         final InputStream embeddedWarfile = DemoLauncher.class
                 .getResourceAsStream(embeddedWarfileName);
