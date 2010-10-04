@@ -42,7 +42,7 @@ public class LocaleService {
         return defaultLocale;
     }
 
-    public static Set getAvailableLocales() {
+    public static Set<String> getAvailableLocales() {
         return cache.keySet();
     }
 
