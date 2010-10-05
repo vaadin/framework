@@ -1353,6 +1353,18 @@ public class GridLayout extends AbstractLayout implements
         return null;
     }
 
+    /**
+     * Sets the component alignment using a short hand string notation.
+     * 
+     * @deprecated Replaced by
+     *             {@link #setComponentAlignment(Component, Alignment)}
+     * 
+     * @param component
+     *            A child component in this layout
+     * @param alignment
+     *            A short hand notation described in {@link AlignmentUtils}
+     */
+    @Deprecated
     public void setComponentAlignment(Component component, String alignment) {
         AlignmentUtils.setComponentAlignment(this, component, alignment);
     }

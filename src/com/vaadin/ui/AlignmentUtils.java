@@ -26,13 +26,16 @@ import com.vaadin.ui.Layout.AlignmentHandler;
  * 
  * r,right for right alignment
  * 
+ * @deprecated {@code AlignmentUtils} has been replaced by {@link Alignment}.
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial" })
+@Deprecated
 public class AlignmentUtils implements Serializable {
 
     private static int horizontalMask = AlignmentHandler.ALIGNMENT_LEFT
             | AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER
             | AlignmentHandler.ALIGNMENT_RIGHT;
+
     private static int verticalMask = AlignmentHandler.ALIGNMENT_TOP
             | AlignmentHandler.ALIGNMENT_VERTICAL_CENTER
             | AlignmentHandler.ALIGNMENT_BOTTOM;
