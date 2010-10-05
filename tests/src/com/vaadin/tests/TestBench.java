@@ -58,7 +58,8 @@ public class TestBench extends com.vaadin.Application implements
 
     Panel bodyLayout = new Panel();
 
-    HashMap itemCaptions = new HashMap();
+    // TODO this could probably be a simple Set
+    HashMap<Class<?>, String> itemCaptions = new HashMap<Class<?>, String>();
 
     @Override
     public void init() {
@@ -67,10 +68,10 @@ public class TestBench extends com.vaadin.Application implements
         for (int p = 0; p < testablePackages.length; p++) {
             testables.addItem(testablePackages[p]);
             try {
-                final List testableClasses = getTestableClassesForPackage(testablePackages[p]);
-                for (final Iterator it = testableClasses.iterator(); it
+                final List<Class<?>> testableClasses = getTestableClassesForPackage(testablePackages[p]);
+                for (final Iterator<Class<?>> it = testableClasses.iterator(); it
                         .hasNext();) {
-                    final Class t = (Class) it.next();
+                    final Class<?> t = it.next();
                     // ignore TestBench itself
                     if (t.equals(TestBench.class)) {
                         continue;
@@ -100,15 +101,16 @@ public class TestBench extends com.vaadin.Application implements
 
         menu = new Tree("Testables", testables);
 
-        for (final Iterator i = itemCaptions.keySet().iterator(); i.hasNext();) {
-            final Class testable = (Class) i.next();
+        for (final Iterator<Class<?>> i = itemCaptions.keySet().iterator(); i
+                .hasNext();) {
+            final Class<?> testable = i.next();
             // simplify captions
             final String name = testable.getName().substring(
                     testable.getName().lastIndexOf('.') + 1);
             menu.setItemCaption(testable, name);
         }
         // expand all root items
-        for (final Iterator i = menu.rootItemIds().iterator(); i.hasNext();) {
+        for (final Iterator<?> i = menu.rootItemIds().iterator(); i.hasNext();) {
             menu.expandItemsRecursively(i.next());
         }
 
@@ -128,11 +130,11 @@ public class TestBench extends com.vaadin.Application implements
                     // try to find a proper test class
 
                     // exact match
-                    Iterator iterator = menu.getItemIds().iterator();
+                    Iterator<?> iterator = menu.getItemIds().iterator();
                     while (iterator.hasNext()) {
                         Object next = iterator.next();
                         if (next instanceof Class) {
-                            Class c = (Class) next;
+                            Class<?> c = (Class<?>) next;
                             String string = c.getName();
                             if (string.equals(fragment)) {
                                 menu.setValue(c);
@@ -147,7 +149,7 @@ public class TestBench extends com.vaadin.Application implements
                     while (iterator.hasNext()) {
                         Object next = iterator.next();
                         if (next instanceof Class) {
-                            Class c = (Class) next;
+                            Class<?> c = (Class<?>) next;
                             String string = c.getSimpleName();
                             if (string.equals(fragment)) {
                                 menu.setValue(c);
@@ -161,7 +163,7 @@ public class TestBench extends com.vaadin.Application implements
                     while (iterator.hasNext()) {
                         Object next = iterator.next();
                         if (next instanceof Class) {
-                            Class c = (Class) next;
+                            Class<?> c = (Class<?>) next;
                             String string = c.getSimpleName();
                             if (string.startsWith("Ticket" + fragment)) {
                                 menu.setValue(c);
@@ -176,7 +178,7 @@ public class TestBench extends com.vaadin.Application implements
                     while (iterator.hasNext()) {
                         Object next = iterator.next();
                         if (next instanceof Class) {
-                            Class c = (Class) next;
+                            Class<?> c = (Class<?>) next;
                             String string = c.getSimpleName();
                             if (string.toLowerCase().contains(
                                     fragment.toLowerCase())) {
@@ -210,7 +212,7 @@ public class TestBench extends com.vaadin.Application implements
         setMainWindow(mainWindow);
     }
 
-    private Component createTestable(Class c) {
+    private Component createTestable(Class<?> c) {
         try {
             final Application app = (Application) c.newInstance();
             app.init();
@@ -245,7 +247,7 @@ public class TestBench extends com.vaadin.Application implements
 
         final Object o = menu.getValue();
         if (o != null && o instanceof Class) {
-            final Class c = (Class) o;
+            final Class<?> c = (Class<?>) o;
             final String title = c.getName();
             bodyLayout.setCaption(title);
             bodyLayout.addComponent(createTestable(c));
@@ -262,9 +264,9 @@ public class TestBench extends com.vaadin.Application implements
      * @return
      * @throws ClassNotFoundException
      */
-    public static List getTestableClassesForPackage(String packageName)
+    public static List<Class<?>> getTestableClassesForPackage(String packageName)
             throws Exception {
-        final ArrayList directories = new ArrayList();
+        final ArrayList<File> directories = new ArrayList<File>();
         try {
             final ClassLoader cld = Thread.currentThread()
                     .getContextClassLoader();
@@ -273,9 +275,9 @@ public class TestBench extends com.vaadin.Application implements
             }
             final String path = packageName.replace('.', '/');
             // Ask for all resources for the path
-            final Enumeration resources = cld.getResources(path);
+            final Enumeration<URL> resources = cld.getResources(path);
             while (resources.hasMoreElements()) {
-                final URL url = (URL) resources.nextElement();
+                final URL url = resources.nextElement();
                 directories.add(new File(url.getFile()));
             }
         } catch (final Exception x) {
@@ -283,10 +285,10 @@ public class TestBench extends com.vaadin.Application implements
                     + " does not appear to be a valid package.");
         }
 
-        final ArrayList classes = new ArrayList();
+        final ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
         // For every directory identified capture all the .class files
-        for (final Iterator it = directories.iterator(); it.hasNext();) {
-            final File directory = (File) it.next();
+        for (final Iterator<File> it = directories.iterator(); it.hasNext();) {
+            final File directory = it.next();
             if (directory.exists()) {
                 // Get the list of the files contained in the package
                 final String[] files = directory.list();
@@ -296,7 +298,7 @@ public class TestBench extends com.vaadin.Application implements
                         // removes the .class extension
                         final String p = packageName + '.'
                                 + files[j].substring(0, files[j].length() - 6);
-                        final Class c = Class.forName(p);
+                        final Class<?> c = Class.forName(p);
                         if (c.getSuperclass() != null) {
                             if ((c.getSuperclass()
                                     .equals(com.vaadin.Application.class))) {

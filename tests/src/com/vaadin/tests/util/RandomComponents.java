@@ -102,17 +102,16 @@ public class RandomComponents {
             ts.setCaption("TabSheet_" + caption);
             // randomly select one of the tabs
             final int selectedTab = seededRandom.nextInt(3);
-            final ArrayList tabs = new ArrayList();
+            final ArrayList<ComponentContainer> tabs = new ArrayList<ComponentContainer>();
             for (int i = 0; i < 3; i++) {
                 String tabCaption = "tab" + i;
                 if (selectedTab == i) {
                     tabCaption = "tabX";
                 }
                 tabs.add(new OrderedLayout());
-                ts.addTab((ComponentContainer) tabs.get(tabs.size() - 1),
-                        tabCaption, null);
+                ts.addTab(tabs.get(tabs.size() - 1), tabCaption, null);
             }
-            ts.setSelectedTab((ComponentContainer) tabs.get(selectedTab));
+            ts.setSelectedTab(tabs.get(selectedTab));
             result = ts;
             break;
         }

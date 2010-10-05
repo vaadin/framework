@@ -23,7 +23,7 @@ public class OrderedLayoutSwapComponents extends CustomComponent {
 
     private final OrderedLayout main;
 
-    ArrayList order = new ArrayList();
+    ArrayList<MyComponent> order = new ArrayList<MyComponent>();
 
     public OrderedLayoutSwapComponents() {
 
@@ -61,7 +61,7 @@ public class OrderedLayoutSwapComponents extends CustomComponent {
             up.addListener(new Button.ClickListener() {
                 public void buttonClick(ClickEvent event) {
                     int newIndex = order.indexOf(MyComponent.this) - 1;
-                    MyComponent old = (MyComponent) order.get(newIndex);
+                    MyComponent old = order.get(newIndex);
                     main.replaceComponent(old, MyComponent.this);
                     order.remove(MyComponent.this);
                     order.add(newIndex, MyComponent.this);
@@ -78,7 +78,7 @@ public class OrderedLayoutSwapComponents extends CustomComponent {
             down.addListener(new Button.ClickListener() {
                 public void buttonClick(ClickEvent event) {
                     int newIndex = order.indexOf(MyComponent.this) + 1;
-                    MyComponent old = (MyComponent) order.get(newIndex);
+                    MyComponent old = order.get(newIndex);
                     main.replaceComponent(old, MyComponent.this);
                     order.remove(MyComponent.this);
                     order.add(newIndex, MyComponent.this);

@@ -24,7 +24,7 @@ public class ListenerOrder extends com.vaadin.Application implements
 
     Select s1;
 
-    HashMap buttonListeners = new HashMap();
+    HashMap<String, Integer> buttonListeners = new HashMap<String, Integer>();
 
     @Override
     public void init() {
@@ -88,7 +88,7 @@ public class ListenerOrder extends com.vaadin.Application implements
         s1.addListener((ValueChangeListener) this);
 
         Item i = s1.getItem("second");
-        for (Iterator it = i.getItemPropertyIds().iterator(); it.hasNext();) {
+        for (Iterator<?> it = i.getItemPropertyIds().iterator(); it.hasNext();) {
             Object o = it.next();
             System.out.println("[" + o + "]");
         }
@@ -119,7 +119,7 @@ public class ListenerOrder extends com.vaadin.Application implements
         public MyClickListener(String name) {
             Integer count = null;
             try {
-                count = (Integer) buttonListeners.get(name);
+                count = buttonListeners.get(name);
                 count = new Integer(count.intValue() + 1);
                 buttonListeners.put(name, count);
             } catch (Exception e) {

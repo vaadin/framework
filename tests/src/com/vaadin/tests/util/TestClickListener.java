@@ -7,7 +7,7 @@ import com.vaadin.ui.Button.ClickEvent;
 
 public class TestClickListener implements Button.ClickListener {
 
-    private static final HashMap buttonListeners = new HashMap();
+    private static final HashMap<String, Integer> buttonListeners = new HashMap<String, Integer>();
 
     String name = "";
     int count = 0;
@@ -15,7 +15,7 @@ public class TestClickListener implements Button.ClickListener {
     public TestClickListener(String name) {
         Integer count = null;
         try {
-            count = (Integer) buttonListeners.get(name);
+            count = buttonListeners.get(name);
             count = new Integer(count.intValue() + 1);
             buttonListeners.put(name, count);
         } catch (Exception e) {
