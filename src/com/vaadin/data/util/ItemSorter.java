@@ -12,7 +12,7 @@ import com.vaadin.data.Container.Sortable;
 /**
  * An item comparator which is compatible with the {@link Sortable} interface.
  * The <code>ItemSorter</code> interface can be used in <code>Sortable</code>
- * implementations to provide a custom sorting method. The interface
+ * implementations to provide a custom sorting method.
  */
 public interface ItemSorter extends Comparator<Object>, Cloneable, Serializable {
 
