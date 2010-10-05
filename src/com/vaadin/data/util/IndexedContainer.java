@@ -1630,9 +1630,6 @@ public class IndexedContainer implements Container.Indexed,
         if (filters == null) {
             return true;
         }
-        if (item == null) {
-            return false;
-        }
         final Iterator<Filter> i = filters.iterator();
         while (i.hasNext()) {
             final Filter f = i.next();
