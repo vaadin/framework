@@ -16,7 +16,7 @@ import com.vaadin.ui.Window;
 
 public class Ticket1804 extends com.vaadin.Application {
 
-    LinkedList listOfAllFields = new LinkedList();
+    LinkedList<Select> listOfAllFields = new LinkedList<Select>();
 
     @Override
     public void init() {
@@ -73,8 +73,8 @@ public class Ticket1804 extends com.vaadin.Application {
         s.setComponentError(new SystemError("Test error message"));
         listOfAllFields.add(s);
 
-        for (Iterator i = listOfAllFields.iterator(); i.hasNext();) {
-            s = (Select) i.next();
+        for (Iterator<Select> i = listOfAllFields.iterator(); i.hasNext();) {
+            s = i.next();
             main.addComponent(s);
             s.addItem("foo");
             s.addItem("");
@@ -92,9 +92,9 @@ public class Ticket1804 extends com.vaadin.Application {
 
             public void buttonClick(ClickEvent event) {
                 StringBuffer msg = new StringBuffer();
-                for (java.util.Iterator i = listOfAllFields.iterator(); i
+                for (Iterator<Select> i = listOfAllFields.iterator(); i
                         .hasNext();) {
-                    AbstractField af = (AbstractField) i.next();
+                    AbstractField af = i.next();
                     msg.append("<h1>" + af.getCaption() + "</h1>\n");
                     msg.append("Value=" + af.getValue() + "<br/>\n");
                     if (af.isValid()) {

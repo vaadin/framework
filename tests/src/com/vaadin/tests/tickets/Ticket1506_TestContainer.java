@@ -16,7 +16,7 @@ import com.vaadin.data.util.PropertysetItem;
  * @version $Revision$, $Date$
  */
 public class Ticket1506_TestContainer implements Container {
-    private Map items = new HashMap();
+    private Map<String, PropertysetItem> items = new HashMap<String, PropertysetItem>();
     public static final String ITEM_1_ID = "1";
     public static final String ITEM_2_ID = "2";
     public static final String PROPERTY_1_ID = "property 1";
@@ -42,24 +42,24 @@ public class Ticket1506_TestContainer implements Container {
         if (items.isEmpty()) {
             loadItems();
         }
-        return (Item) items.get(itemId);
+        return items.get(itemId);
     }
 
-    public Collection getContainerPropertyIds() {
+    public Collection<String> getContainerPropertyIds() {
         if (items.isEmpty()) {
             loadItems();
         }
-        ArrayList a = new ArrayList();
+        ArrayList<String> a = new ArrayList<String>();
         a.add(PROPERTY_1_ID);
         a.add(PROPERTY_2_ID);
         return a;
     }
 
-    public Collection getItemIds() {
+    public Collection<String> getItemIds() {
         if (items.isEmpty()) {
             loadItems();
         }
-        ArrayList a = new ArrayList();
+        ArrayList<String> a = new ArrayList<String>();
         a.add(ITEM_1_ID);
         a.add(ITEM_2_ID);
         return a;
@@ -69,14 +69,14 @@ public class Ticket1506_TestContainer implements Container {
         if (items.isEmpty()) {
             loadItems();
         }
-        Item item = (Item) items.get(itemId);
+        Item item = items.get(itemId);
         if (item != null) {
             return item.getItemProperty(propertyId);
         }
         return null;
     }
 
-    public Class getType(Object propertyId) {
+    public Class<String> getType(Object propertyId) {
         if (items.isEmpty()) {
             loadItems();
         }

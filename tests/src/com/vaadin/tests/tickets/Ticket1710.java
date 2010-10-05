@@ -1,7 +1,6 @@
 package com.vaadin.tests.tickets;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -28,8 +27,7 @@ import com.vaadin.ui.Window;
 
 public class Ticket1710 extends com.vaadin.Application {
 
-    LinkedList listOfAllFields = new LinkedList();
-
+    @Override
     public void init() {
 
         setTheme("tests-tickets");
@@ -92,7 +90,7 @@ public class Ticket1710 extends com.vaadin.Application {
         elp.setVisible(false);
         el.setHeight(700);
         addFields(el);
-        Component firstComponent = (Component) el.getComponentIterator().next();
+        Component firstComponent = el.getComponentIterator().next();
         firstComponent.setSizeFull();
         el.expand(firstComponent);
         lo.addComponent(elp);
@@ -106,8 +104,7 @@ public class Ticket1710 extends com.vaadin.Application {
         elh.setWidth(2000);
         elh.setHeight(100);
         addFields(elh);
-        Component firstComponentElh = (Component) elh.getComponentIterator()
-                .next();
+        Component firstComponentElh = elh.getComponentIterator().next();
         firstComponentElh.setSizeFull();
         elh.expand(firstComponentElh);
         lo.addComponent(elhp);
@@ -129,7 +126,8 @@ public class Ticket1710 extends com.vaadin.Application {
         formPanel.addComponent(getFormPanelExample());
         lo.addComponent(formPanel);
 
-        for (Iterator i = hidingControls.getComponentIterator(); i.hasNext();) {
+        for (Iterator<Component> i = hidingControls.getComponentIterator(); i
+                .hasNext();) {
             ((AbstractComponent) i.next()).setImmediate(true);
         }
 
@@ -304,7 +302,8 @@ public class Ticket1710 extends com.vaadin.Application {
             testedLayout.setStyleName("tested-layout");
             setStyleName("layout-testing-panel");
 
-            for (Iterator i = controls.getComponentIterator(); i.hasNext();) {
+            for (Iterator<Component> i = controls.getComponentIterator(); i
+                    .hasNext();) {
                 ((AbstractComponent) i.next()).setImmediate(true);
             }
         }
@@ -387,9 +386,10 @@ public class Ticket1710 extends com.vaadin.Application {
         }
 
         private void updateAlignments(int h, int v) {
-            for (Iterator i = testedLayout.getComponentIterator(); i.hasNext();) {
+            for (Iterator<Component> i = testedLayout.getComponentIterator(); i
+                    .hasNext();) {
                 ((Layout.AlignmentHandler) testedLayout).setComponentAlignment(
-                        (Component) i.next(), h, v);
+                        i.next(), h, v);
             }
         }
 

@@ -13,7 +13,7 @@ import com.vaadin.ui.Window;
 
 public class Ticket1811 extends com.vaadin.Application {
 
-    LinkedList listOfAllFields = new LinkedList();
+    LinkedList<TextField> listOfAllFields = new LinkedList<TextField>();
 
     @Override
     public void init() {
@@ -44,8 +44,8 @@ public class Ticket1811 extends com.vaadin.Application {
         tf4.addValidator(strLenValidator);
         listOfAllFields.add(tf4);
 
-        for (Iterator i = listOfAllFields.iterator(); i.hasNext();) {
-            TextField tf = (TextField) i.next();
+        for (Iterator<TextField> i = listOfAllFields.iterator(); i.hasNext();) {
+            TextField tf = i.next();
             main.addComponent(tf);
             tf.setImmediate(true);
         }
@@ -56,9 +56,9 @@ public class Ticket1811 extends com.vaadin.Application {
 
             public void buttonClick(ClickEvent event) {
                 StringBuffer msg = new StringBuffer();
-                for (java.util.Iterator i = listOfAllFields.iterator(); i
-                        .hasNext();) {
-                    TextField tf = (TextField) i.next();
+                for (Iterator<TextField> i = listOfAllFields
+                        .iterator(); i.hasNext();) {
+                    TextField tf = i.next();
                     msg.append("<h1>" + tf.getCaption() + "</h1>\n");
                     if (tf.isValid()) {
                         msg.append("VALID\n<hr/>");

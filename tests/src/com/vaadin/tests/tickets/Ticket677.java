@@ -120,7 +120,7 @@ public class Ticket677 extends Application {
             }
 
         });
-        form.setItemDataSource(new BeanItem(new MyBean()));
+        form.setItemDataSource(new BeanItem<MyBean>(new MyBean()));
         root.addComponent(form);
 
         table = new Table("Enabled");

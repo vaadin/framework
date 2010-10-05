@@ -58,7 +58,7 @@ public class Ticket2204 extends Application {
         ts = new TabSheet();
         layout.addComponent(ts);
 
-        for (Class c : classes) {
+        for (Class<? extends Component> c : classes) {
             ts.addTab(createComponent(c), c.getSimpleName(), null);
         }
         rta = new RichTextArea();
@@ -95,7 +95,7 @@ public class Ticket2204 extends Application {
         c.setVisible(!c.isVisible());
     }
 
-    private Component createComponent(Class c) {
+    private Component createComponent(Class<? extends Component> c) {
         RichTextArea textArea = new RichTextArea();
         textArea.setVisible(false);
         textArea.setCaption("This is the textArea");
@@ -105,7 +105,7 @@ public class Ticket2204 extends Application {
         Component cc = null;
 
         try {
-            cc = (Component) c.newInstance();
+            cc = c.newInstance();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -124,7 +124,7 @@ public class Ticket2204 extends Application {
             Form f = (Form) cc;
             f.setFieldFactory(new FieldFactory() {
 
-                public Field createField(Class type, Component uiContext) {
+                public Field createField(Class<?> type, Component uiContext) {
                     return createField();
                 }
 
@@ -149,7 +149,7 @@ public class Ticket2204 extends Application {
                 }
 
             });
-            f.setItemDataSource(new BeanItem(new Object() {
+            f.setItemDataSource(new BeanItem<Object>(new Object() {
                 private int a;
 
                 public int getA() {

@@ -28,8 +28,8 @@ public class Ticket736 extends Application {
 
         // Create form for editing address
         final Form f = new Form();
-        f.setItemDataSource(new BeanItem(address, new String[] { "name",
-                "street", "zip", "city", "state", "country" }));
+        f.setItemDataSource(new BeanItem<Address>(address, new String[] {
+                "name", "street", "zip", "city", "state", "country" }));
         f.setCaption("Office address");
         f.setIcon(new ThemeResource("../runo/icons/16/document.png"));
         f.setDescription("Jep jpe, this is form description.");

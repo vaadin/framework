@@ -13,6 +13,7 @@ import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
@@ -184,9 +185,9 @@ public class Ticket1878 extends Application {
         Random r = new Random();
         GridLayout l1 = new GridLayout(1, 3);
         form = createForm(l1, "200px", "500px");
-        BeanItem item = new BeanItem(new FormObject());
+        BeanItem<FormObject> item = new BeanItem<FormObject>(new FormObject());
         form.setItemDataSource(item);
-        for (Iterator i = item.getItemPropertyIds().iterator(); i.hasNext();) {
+        for (Iterator<?> i = item.getItemPropertyIds().iterator(); i.hasNext();) {
             Object property = i.next();
             Field f = form.getField(property);
 
@@ -247,7 +248,7 @@ public class Ticket1878 extends Application {
         switchToFormsButton.setEnabled(true);
 
         b.setEnabled(false);
-        java.util.Iterator i = mainLayout.getComponentIterator();
+        Iterator<Component> i = mainLayout.getComponentIterator();
         i.next();
         Layout l = (Layout) i.next();
 

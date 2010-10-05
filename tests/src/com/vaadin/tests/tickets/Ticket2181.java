@@ -76,6 +76,7 @@ public class Ticket2181 extends Application implements Button.ClickListener {
     }
 
     private void set() {
+        @SuppressWarnings("unchecked")
         Set<String> values = (Set<String>) options.getValue();
         TextField[] tfs = new TextField[] { tf1, tf2 };
         for (TextField tf : tfs) {

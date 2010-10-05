@@ -14,7 +14,7 @@ import com.vaadin.ui.Window;
 
 public class Ticket1982 extends Application {
 
-    private List components = new ArrayList();
+    private List<TitleBar> components = new ArrayList<TitleBar>();
 
     @Override
     public void init() {
@@ -41,10 +41,10 @@ public class Ticket1982 extends Application {
 
     private void restoreComponents(GridLayout gl) {
         gl.removeAllComponents();
-        gl.addComponent((TitleBar) components.get(0));
-        gl.addComponent((TitleBar) components.get(1));
-        gl.addComponent((TitleBar) components.get(2));
-        gl.addComponent((TitleBar) components.get(3));
+        gl.addComponent(components.get(0));
+        gl.addComponent(components.get(1));
+        gl.addComponent(components.get(2));
+        gl.addComponent(components.get(3));
     }
 
     private class TitleBar extends ExpandLayout {

@@ -22,7 +22,7 @@ public class Ticket1966_2 extends Application {
     private static final int VCENTER = OrderedLayout.ALIGNMENT_VERTICAL_CENTER;
     private static final int BOTTOM = OrderedLayout.ALIGNMENT_BOTTOM;
 
-    private static Map names = new HashMap();
+    private static Map<Integer, String> names = new HashMap<Integer, String>();
     static {
         names.put(new Integer(LEFT), "Left");
         names.put(new Integer(CENTER), "Center");

@@ -25,7 +25,7 @@ public class Ticket2244 extends Application {
         gl.newLine();
 
         form = new Form(gl);
-        form.setItemDataSource(new BeanItem(new MyBean()));
+        form.setItemDataSource(new BeanItem<MyBean>(new MyBean()));
 
         gl.addComponent(new Label("After form"));
 
@@ -34,7 +34,7 @@ public class Ticket2244 extends Application {
         w.addComponent(new Button("new item", new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                form.setItemDataSource(new BeanItem(new MyBean()));
+                form.setItemDataSource(new BeanItem<MyBean>(new MyBean()));
 
             }
 
@@ -43,7 +43,8 @@ public class Ticket2244 extends Application {
                 new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        form.setItemDataSource(new BeanItem(new MyBiggerBean()));
+                        form.setItemDataSource(new BeanItem<MyBean>(
+                                new MyBiggerBean()));
 
                     }
 

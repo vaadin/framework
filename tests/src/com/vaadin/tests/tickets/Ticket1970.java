@@ -40,8 +40,9 @@ public class Ticket1970 extends Application {
 
                     public void buttonClick(ClickEvent event) {
                         String openWindows = "";
-                        for (Iterator i = getWindows().iterator(); i.hasNext();) {
-                            Window t = (Window) i.next();
+                        for (Iterator<Window> i = getWindows().iterator(); i
+                                .hasNext();) {
+                            Window t = i.next();
                             openWindows += (openWindows.length() > 0 ? "," : "")
                                     + t.getName();
                         }

@@ -76,7 +76,7 @@ public class Ticket3146 extends Application {
     }
 
     void clearSelection2() {
-        table.setValue(new HashSet());
+        table.setValue(new HashSet<Object>());
     }
 
     void clearSelection3() {
@@ -87,7 +87,7 @@ public class Ticket3146 extends Application {
 
     void printSelection() {
         String selection = "";
-        for (Object item : (Collection) table.getValue()) {
+        for (Object item : (Collection<?>) table.getValue()) {
             selection = selection + item + ' ';
         }
         result.setValue(selection);

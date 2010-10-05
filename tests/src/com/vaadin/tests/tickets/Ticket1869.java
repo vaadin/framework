@@ -10,8 +10,6 @@ import com.vaadin.ui.Window;
 
 public class Ticket1869 extends com.vaadin.Application {
 
-    LinkedList listOfAllFields = new LinkedList();
-
     @Override
     public void init() {
 

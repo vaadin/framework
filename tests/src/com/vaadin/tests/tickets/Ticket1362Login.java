@@ -89,23 +89,22 @@ public class Ticket1362Login extends Application {
 
         private ParameterHandler paramHandler = new ParameterHandler() {
 
-            public void handleParameters(Map parameters) {
+            public void handleParameters(Map<String, String[]> parameters) {
                 if (parameters.containsKey("username")) {
                     getWindow().addURIHandler(uriHandler);
 
-                    HashMap params = new HashMap();
+                    HashMap<String, String> params = new HashMap<String, String>();
                     // expecting single params
-                    for (Iterator it = parameters.keySet().iterator(); it
+                    for (Iterator<String> it = parameters.keySet().iterator(); it
                             .hasNext();) {
-                        String key = (String) it.next();
-                        String value = ((String[]) parameters.get(key))[0];
+                        String key = it.next();
+                        String value = (parameters.get(key))[0];
                         params.put(key, value);
                     }
                     LoginEvent event = new LoginEvent(params);
-                    for (Iterator iterator = listeners.iterator(); iterator
-                            .hasNext();) {
-                        LoginListener listener = (LoginListener) iterator
-                                .next();
+                    for (Iterator<LoginListener> iterator = listeners
+                            .iterator(); iterator.hasNext();) {
+                        LoginListener listener = iterator.next();
                         listener.onLogin(event);
                     }
                 }
@@ -125,7 +124,7 @@ public class Ticket1362Login extends Application {
             }
         };
 
-        private LinkedList listeners = new LinkedList();
+        private LinkedList<LoginListener> listeners = new LinkedList<LoginListener>();
 
         private Window window;
 
@@ -159,9 +158,9 @@ public class Ticket1362Login extends Application {
          */
         public class LoginEvent {
 
-            private Map params;
+            private Map<String, String> params;
 
-            private LoginEvent(Map params) {
+            private LoginEvent(Map<String, String> params) {
                 this.params = params;
             }
 
@@ -173,7 +172,7 @@ public class Ticket1362Login extends Application {
              */
             public String getLoginParameter(String name) {
                 if (params.containsKey(name)) {
-                    return (String) params.get(name);
+                    return params.get(name);
                 } else {
                     return null;
                 }

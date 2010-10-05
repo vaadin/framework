@@ -102,8 +102,8 @@ public class Ticket1921 extends Application implements ParameterHandler {
         }
     }
 
-    public void handleParameters(Map parameters) {
-        String[] s = (String[]) parameters.get("state");
+    public void handleParameters(Map<String, String[]> parameters) {
+        String[] s = parameters.get("state");
         if (s == null || s.length != 1) {
             return;
         }
