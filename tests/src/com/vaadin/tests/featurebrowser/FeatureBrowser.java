@@ -120,7 +120,8 @@ public class FeatureBrowser extends CustomComponent implements
         // new FeatureParameters());
 
         // Pre-open all menus
-        for (final Iterator i = features.getItemIds().iterator(); i.hasNext();) {
+        for (final Iterator<?> i = features.getItemIds().iterator(); i
+                .hasNext();) {
             features.expandItem(i.next());
         }
 
@@ -240,7 +241,7 @@ public class FeatureBrowser extends CustomComponent implements
     }
 
     @Override
-    public Iterator getComponentIterator() {
+    public Iterator<Component> getComponentIterator() {
         // TODO Auto-generated method stub
         return null;
     }

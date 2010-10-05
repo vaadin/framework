@@ -43,7 +43,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
     private final OrderedLayout formsLayout = new OrderedLayout();
 
-    private final LinkedList forms = new LinkedList();
+    private final LinkedList<Form> forms = new LinkedList<Form>();
 
     private final Button setButton = new Button("Set", this);
 
@@ -53,7 +53,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
     private final Object objectToConfigure;
 
-    private final BeanItem config;
+    private final BeanItem<Object> config;
 
     protected static final int COLUMNS = 3;
 
@@ -70,7 +70,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
         // Target object
         this.objectToConfigure = objectToConfigure;
-        config = new BeanItem(objectToConfigure);
+        config = new BeanItem<Object>(objectToConfigure);
 
         // Control buttons
         final OrderedLayout buttons = new OrderedLayout(
@@ -134,9 +134,9 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
         allProperties.removeAllItems();
 
         // Collect demoed properties
-        final HashSet listed = new HashSet();
-        for (final Iterator i = forms.iterator(); i.hasNext();) {
-            listed.addAll(((Form) i.next()).getItemPropertyIds());
+        final HashSet<Object> listed = new HashSet<Object>();
+        for (final Iterator<Form> i = forms.iterator(); i.hasNext();) {
+            listed.addAll(i.next().getItemPropertyIds());
         }
 
         // Resolve all properties
@@ -433,8 +433,8 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
         // Discard all changed on all forms
         if (event.getButton() == discardButton) {
-            for (final Iterator i = forms.iterator(); i.hasNext();) {
-                ((Form) i.next()).discard();
+            for (final Iterator<Form> i = forms.iterator(); i.hasNext();) {
+                i.next().discard();
             }
         }
 
@@ -469,8 +469,8 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
     /** Find a field from all forms */
     public Field getField(Object propertyId) {
-        for (final Iterator i = forms.iterator(); i.hasNext();) {
-            final Form f = (Form) i.next();
+        for (final Iterator<Form> i = forms.iterator(); i.hasNext();) {
+            final Form f = i.next();
             final Field af = f.getField(propertyId);
             if (af != null) {
                 return af;
@@ -484,8 +484,8 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
     }
 
     protected void commit() {
-        for (final Iterator i = forms.iterator(); i.hasNext();) {
-            ((Form) i.next()).commit();
+        for (final Iterator<Form> i = forms.iterator(); i.hasNext();) {
+            i.next().commit();
         }
     }
 

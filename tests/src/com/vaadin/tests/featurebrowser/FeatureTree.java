@@ -47,13 +47,13 @@ public class FeatureTree extends Feature implements Action.Handler {
     }
 
     public void expandAll() {
-        for (final Iterator i = t.rootItemIds().iterator(); i.hasNext();) {
+        for (final Iterator<?> i = t.rootItemIds().iterator(); i.hasNext();) {
             t.expandItemsRecursively(i.next());
         }
     }
 
     public void collapseAll() {
-        for (final Iterator i = t.rootItemIds().iterator(); i.hasNext();) {
+        for (final Iterator<?> i = t.rootItemIds().iterator(); i.hasNext();) {
             t.collapseItemsRecursively(i.next());
         }
     }

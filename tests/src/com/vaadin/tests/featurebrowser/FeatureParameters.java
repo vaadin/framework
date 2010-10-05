@@ -151,11 +151,12 @@ public class FeatureParameters extends Feature implements URIHandler,
      * 
      * @see com.vaadin.terminal.ParameterHandler#handleParameters(Map)
      */
-    public void handleParameters(Map parameters) {
+    public void handleParameters(Map<String, String[]> parameters) {
         params.removeAllItems();
-        for (final Iterator i = parameters.keySet().iterator(); i.hasNext();) {
-            final String name = (String) i.next();
-            final String[] values = (String[]) parameters.get(name);
+        for (final Iterator<String> i = parameters.keySet().iterator(); i
+                .hasNext();) {
+            final String name = i.next();
+            final String[] values = parameters.get(name);
             String v = "";
             for (int j = 0; j < values.length; j++) {
                 if (v.length() > 0) {

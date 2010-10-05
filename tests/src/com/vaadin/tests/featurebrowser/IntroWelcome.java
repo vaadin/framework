@@ -158,9 +158,10 @@ public class IntroWelcome extends Feature implements URIHandler,
      * 
      * @see com.vaadin.terminal.ParameterHandler#handleParameters(Map)
      */
-    public void handleParameters(Map parameters) {
-        for (final Iterator i = parameters.keySet().iterator(); i.hasNext();) {
-            final String name = (String) i.next();
+    public void handleParameters(Map<String, String[]> parameters) {
+        for (final Iterator<String> i = parameters.keySet().iterator(); i
+                .hasNext();) {
+            final String name = i.next();
             if (name.equals("systemStatus")) {
                 String status = "";
                 status += "timestamp=" + new Date() + " ";
