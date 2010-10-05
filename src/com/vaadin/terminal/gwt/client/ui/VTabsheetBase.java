@@ -21,11 +21,11 @@ abstract class VTabsheetBase extends ComplexPanel implements Container {
     String id;
     ApplicationConnection client;
 
-    protected final ArrayList tabKeys = new ArrayList();
+    protected final ArrayList<String> tabKeys = new ArrayList<String>();
     protected int activeTabIndex = 0;
     protected boolean disabled;
     protected boolean readonly;
-    protected Set disabledTabKeys = new HashSet();
+    protected Set<String> disabledTabKeys = new HashSet<String>();
     protected boolean cachedUpdate = false;
 
     public VTabsheetBase(String classname) {
@@ -50,8 +50,9 @@ abstract class VTabsheetBase extends ComplexPanel implements Container {
         final UIDL tabs = uidl.getChildUIDL(0);
 
         // Paintables in the TabSheet before update
-        ArrayList oldPaintables = new ArrayList();
-        for (Iterator iterator = getPaintableIterator(); iterator.hasNext();) {
+        ArrayList<Object> oldPaintables = new ArrayList<Object>();
+        for (Iterator<Object> iterator = getPaintableIterator(); iterator
+                .hasNext();) {
             oldPaintables.add(iterator.next());
         }
 
@@ -60,7 +61,7 @@ abstract class VTabsheetBase extends ComplexPanel implements Container {
         disabledTabKeys.clear();
 
         int index = 0;
-        for (final Iterator it = tabs.getChildIterator(); it.hasNext();) {
+        for (final Iterator<Object> it = tabs.getChildIterator(); it.hasNext();) {
             final UIDL tab = (UIDL) it.next();
             final String key = tab.getStringAttribute("key");
             final boolean selected = tab.getBooleanAttribute("selected");
@@ -90,7 +91,8 @@ abstract class VTabsheetBase extends ComplexPanel implements Container {
         }
 
         // Perform unregister for any paintables removed during update
-        for (Iterator iterator = oldPaintables.iterator(); iterator.hasNext();) {
+        for (Iterator<Object> iterator = oldPaintables.iterator(); iterator
+                .hasNext();) {
             Object oldPaintable = iterator.next();
             if (oldPaintable instanceof Paintable) {
                 Widget w = (Widget) oldPaintable;
@@ -106,7 +108,7 @@ abstract class VTabsheetBase extends ComplexPanel implements Container {
     /**
      * @return a list of currently shown Paintables
      */
-    abstract protected Iterator getPaintableIterator();
+    abstract protected Iterator<Object> getPaintableIterator();
 
     /**
      * Clears current tabs and contents

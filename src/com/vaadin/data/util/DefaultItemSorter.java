@@ -154,7 +154,8 @@ public class DefaultItemSorter implements ItemSorter {
         // Removes any non-sortable property ids
         final List<Object> ids = new ArrayList<Object>();
         final List<Boolean> orders = new ArrayList<Boolean>();
-        final Collection sortable = container.getSortableContainerPropertyIds();
+        final Collection<?> sortable = container
+                .getSortableContainerPropertyIds();
         for (int i = 0; i < propertyId.length; i++) {
             if (sortable.contains(propertyId[i])) {
                 ids.add(propertyId[i]);
@@ -180,6 +181,7 @@ public class DefaultItemSorter implements ItemSorter {
     public static class DefaultPropertyValueComparator implements
             Comparator<Object>, Serializable {
 
+        @SuppressWarnings("unchecked")
         public int compare(Object o1, Object o2) {
             int r = 0;
             // Normal non-null comparison
@@ -197,7 +199,7 @@ public class DefaultItemSorter implements ItemSorter {
                 } else {
                     // Assume the objects can be cast to Comparable, throw
                     // ClassCastException otherwise.
-                    r = ((Comparable) o1).compareTo(o2);
+                    r = ((Comparable<Object>) o1).compareTo(o2);
                 }
             } else if (o1 == o2) {
                 // Objects are equal if both are null
@@ -212,7 +214,6 @@ public class DefaultItemSorter implements ItemSorter {
 
             return r;
         }
-
     }
 
 }
