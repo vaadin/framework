@@ -177,7 +177,8 @@ public class CaptionsInLayouts extends TestBase {
 
     }
 
-    private Layout getLayout(String caption, Class layoutClass, String width) {
+    private Layout getLayout(String caption,
+            Class<? extends Layout> layoutClass, String width) {
         Layout l;
         if (layoutClass == VerticalLayout.class) {
             if (verticalLayout == null) {
@@ -249,14 +250,14 @@ public class CaptionsInLayouts extends TestBase {
         layoutSelect.setImmediate(true);
         layoutSelect.addListener(new ValueChangeListener() {
 
+            @SuppressWarnings("unchecked")
             public void valueChange(ValueChangeEvent event) {
                 Item i = layoutSelect.getItem(event.getProperty().getValue());
 
                 setLayout(getLayout((String) i.getItemProperty(CAPTION)
-                        .getValue(), (Class) i.getItemProperty(CLASS)
-                        .getValue(), (String) i.getItemProperty(WIDTH)
-                        .getValue()));
-
+                        .getValue(), (Class<? extends Layout>) i
+                        .getItemProperty(CLASS).getValue(), (String) i
+                        .getItemProperty(WIDTH).getValue()));
             }
         });
 

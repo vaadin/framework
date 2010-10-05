@@ -91,7 +91,7 @@ public class TestLayoutPerformance extends TestBase {
     }
 
     private Layout getCurrentLayout() {
-        Class value = (Class) ns.getValue();
+        Class<?> value = (Class<?>) ns.getValue();
         if (value == GridLayout.class) {
             return new GridLayout(10, 1);
         }
@@ -110,7 +110,7 @@ public class TestLayoutPerformance extends TestBase {
     }
 
     private Component newTestComponent() {
-        Class componentClass = (Class) ns2.getValue();
+        Class<?> componentClass = (Class<?>) ns2.getValue();
         AbstractComponent newInstance = null;
         try {
             newInstance = (AbstractComponent) componentClass.newInstance();

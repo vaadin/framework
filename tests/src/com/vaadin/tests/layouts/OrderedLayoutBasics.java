@@ -1041,7 +1041,7 @@ public class OrderedLayoutBasics extends TestBase {
 
     protected void addBefore(AbstractOrderedLayout ol, Component c, String width) {
         int index = 0;
-        Iterator iter = ol.getComponentIterator();
+        Iterator<Component> iter = ol.getComponentIterator();
         while (iter.hasNext()) {
             if (iter.next() == c) {
                 break;

@@ -14,6 +14,7 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.BaseFieldFactory;
 import com.vaadin.ui.Button;
@@ -212,7 +213,7 @@ public class TestAbsoluteLayout extends TestBase {
                                                 files[j].length() - 6);
                                 p = p.replaceAll(".*classes/", "");
                                 p = p.replaceAll("/", ".");
-                                Class c;
+                                Class<?> c;
                                 try {
                                     c = Class.forName(p);
                                     if (AbstractComponent.class
@@ -235,7 +236,8 @@ public class TestAbsoluteLayout extends TestBase {
 
                     select.addListener(new ValueChangeListener() {
                         public void valueChange(ValueChangeEvent event) {
-                            Class c = (Class) event.getProperty().getValue();
+                            Class<?> c = (Class<?>) event.getProperty()
+                                    .getValue();
 
                             try {
                                 Component newInstance = (Component) c
@@ -288,7 +290,7 @@ public class TestAbsoluteLayout extends TestBase {
 
         private void editcomponent(Component value) {
 
-            BeanItem beanItem = new BeanItem(value);
+            BeanItem<Component> beanItem = new BeanItem<Component>(value);
             String c = "Component properties for "
                     + value.getClass().getSimpleName();
             ArrayList<String> fields = new ArrayList<String>(
@@ -301,10 +303,11 @@ public class TestAbsoluteLayout extends TestBase {
 
             componentEditor.setItemDataSource(beanItem, fields);
 
-            beanItem = new BeanItem(l.getPosition(value));
+            BeanItem<ComponentPosition> positionItem = new BeanItem<ComponentPosition>(
+                    l.getPosition(value));
             componentEditor.setCaption(c);
 
-            positionEditor.setItemDataSource(beanItem);
+            positionEditor.setItemDataSource(positionItem);
 
         }
     }
