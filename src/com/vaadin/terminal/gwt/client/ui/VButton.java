@@ -34,6 +34,11 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
     public static final String CLASSNAME = "v-button";
     private static final String CLASSNAME_PRESSED = "v-pressed";
 
+    // mouse movement is checked before synthesizing click event on mouseout
+    protected static int MOVE_THRESHOLD = 3;
+    protected int mousedownX = 0;
+    protected int mousedownY = 0;
+
     protected String id;
 
     protected ApplicationConnection client;
@@ -204,6 +209,11 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
             break;
         case Event.ONMOUSEDOWN:
             if (event.getButton() == Event.BUTTON_LEFT) {
+                // save mouse position to detect movement before synthesizing
+                // event later
+                mousedownX = event.getClientX();
+                mousedownY = event.getClientY();
+
                 disallowNextClick = true;
                 clickPending = true;
                 setFocus(true);
@@ -240,7 +250,9 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
             Element to = event.getRelatedTarget();
             if (getElement().isOrHasChild(DOM.eventGetTarget(event))
                     && (to == null || !getElement().isOrHasChild(to))) {
-                if (clickPending) {
+                if (clickPending
+                        && Math.abs(mousedownX - event.getClientX()) < MOVE_THRESHOLD
+                        && Math.abs(mousedownY - event.getClientY()) < MOVE_THRESHOLD) {
                     onClick();
                     break;
                 }
