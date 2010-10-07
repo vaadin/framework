@@ -15,7 +15,9 @@ import com.vaadin.ui.Window;
 
 public class Ticket2104 extends Application {
 
-    private static final Label info = new Label("Click event should _always_ come trough. Switching features on/off should immediatly affect the tree (verify w/ debug window)", Label.CONTENT_RAW);
+    private static final Label info = new Label(
+            "Click event should _always_ come trough. Switching features on/off should immediatly affect the tree (verify w/ debug window)",
+            Label.CONTENT_RAW);
 
     Tree tree = new Tree();
     Table table = new Table();
@@ -29,16 +31,20 @@ public class Ticket2104 extends Application {
 
         HorizontalLayout ol = new HorizontalLayout();
         main.addComponent(ol);
-        Button b = new Button("immediate", new MethodProperty<Boolean>(tree, "immediate"));
+        Button b = new Button("immediate", new MethodProperty<Boolean>(tree,
+                "immediate"));
         b.setImmediate(true);
         ol.addComponent(b);
-        b = new Button("selectable", new MethodProperty<Boolean>(tree, "selectable"));
+        b = new Button("selectable", new MethodProperty<Boolean>(tree,
+                "selectable"));
         b.setImmediate(true);
         ol.addComponent(b);
-        b = new Button("nullsel", new MethodProperty<Boolean>(tree, "nullSelectionAllowed"));
+        b = new Button("nullsel", new MethodProperty<Boolean>(tree,
+                "nullSelectionAllowed"));
         b.setImmediate(true);
         ol.addComponent(b);
-        b = new Button("multi", new MethodProperty<Boolean>(tree, "multiSelect"));
+        b = new Button("multi",
+                new MethodProperty<Boolean>(tree, "multiSelect"));
         b.setImmediate(true);
         ol.addComponent(b);
         b = new Button("icon", new Button.ClickListener() {
@@ -66,27 +72,35 @@ public class Ticket2104 extends Application {
         tree.setParent("2. Child 1", "Root 2");
         tree.addItem("2. Child 2");
         tree.setParent("2. Child 2", "Root 2");
-        tree.addContainerProperty("icon", ExternalResource.class, new ExternalResource("http://www.itmill.com/res/images/itmill_logo.gif"));
+        tree.addContainerProperty("icon", ExternalResource.class,
+                new ExternalResource(
+                        "http://www.itmill.com/res/images/itmill_logo.gif"));
 
         tree.addListener(new ItemClickListener() {
             public void itemClick(ItemClickEvent event) {
-                getMainWindow().addComponent(new Label(event.toString() + " // " + event.getItemId() + "//" + event.getSource()));
+                getMainWindow().addComponent(
+                        new Label(event.toString() + " // " + event.getItemId()
+                                + "//" + event.getSource()));
 
             }
         });
 
         ol = new HorizontalLayout();
         main.addComponent(ol);
-        b = new Button("immediate", new MethodProperty<Boolean>(table, "immediate"));
+        b = new Button("immediate", new MethodProperty<Boolean>(table,
+                "immediate"));
         b.setImmediate(true);
         ol.addComponent(b);
-        b = new Button("selectable", new MethodProperty<Boolean>(table, "selectable"));
+        b = new Button("selectable", new MethodProperty<Boolean>(table,
+                "selectable"));
         b.setImmediate(true);
         ol.addComponent(b);
-        b = new Button("nullsel", new MethodProperty<Boolean>(table, "nullSelectionAllowed"));
+        b = new Button("nullsel", new MethodProperty<Boolean>(table,
+                "nullSelectionAllowed"));
         b.setImmediate(true);
         ol.addComponent(b);
-        b = new Button("multi", new MethodProperty<Boolean>(table, "multiSelect"));
+        b = new Button("multi", new MethodProperty<Boolean>(table,
+                "multiSelect"));
         b.setImmediate(true);
         ol.addComponent(b);
         main.addComponent(table);
@@ -99,7 +113,9 @@ public class Ticket2104 extends Application {
         }
         table.addListener(new ItemClickListener() {
             public void itemClick(ItemClickEvent event) {
-                getMainWindow().addComponent(new Label(event.toString() + " // " + event.getItemId() + "//" + event.getSource()));
+                getMainWindow().addComponent(
+                        new Label(event.toString() + " // " + event.getItemId()
+                                + "//" + event.getSource()));
 
             }
         });

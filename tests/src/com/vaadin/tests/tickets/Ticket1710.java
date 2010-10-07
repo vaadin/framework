@@ -43,8 +43,10 @@ public class Ticket1710 extends com.vaadin.Application {
 
         // OrderedLayout
         final VerticalLayout orderedLayout = new VerticalLayout();
-        LayoutTestingPanel oltp = new LayoutTestingPanel("OrderedLayout", orderedLayout);
-        hidingControls.addComponent(new Button("OrderedLayout", new MethodProperty<Boolean>(oltp, "visible")));
+        LayoutTestingPanel oltp = new LayoutTestingPanel("OrderedLayout",
+                orderedLayout);
+        hidingControls.addComponent(new Button("OrderedLayout",
+                new MethodProperty<Boolean>(oltp, "visible")));
         lo.addComponent(oltp);
         orderedLayout.setSpacing(false);
         addFields(orderedLayout);
@@ -52,14 +54,16 @@ public class Ticket1710 extends com.vaadin.Application {
         // GridLayout
         GridLayout grid = new GridLayout(1, 1);
         Panel g1tp = new LayoutTestingPanel("Gridlayout with 1 column", grid);
-        hidingControls.addComponent(new Button("GridLayout (1col)", new MethodProperty<Boolean>(g1tp, "visible")));
+        hidingControls.addComponent(new Button("GridLayout (1col)",
+                new MethodProperty<Boolean>(g1tp, "visible")));
         g1tp.setVisible(false);
         lo.addComponent(g1tp);
         grid.setSpacing(true);
         addFields(grid);
         GridLayout grid2 = new GridLayout(2, 1);
         Panel g2tp = new LayoutTestingPanel("Gridlayout with 2 columns", grid2);
-        hidingControls.addComponent(new Button("GridLayout (2cols)", new MethodProperty<Boolean>(g2tp, "visible")));
+        hidingControls.addComponent(new Button("GridLayout (2cols)",
+                new MethodProperty<Boolean>(g2tp, "visible")));
         g2tp.setVisible(false);
         lo.addComponent(g2tp);
         grid2.setSpacing(true);
@@ -67,8 +71,10 @@ public class Ticket1710 extends com.vaadin.Application {
 
         // ExpandLayout
         VerticalLayout el = new VerticalLayout();
-        Panel elp = new LayoutTestingPanel("ExpandLayout width first component expanded", el);
-        hidingControls.addComponent(new Button("ExpandLayout (vertical)", new MethodProperty<Boolean>(elp, "visible")));
+        Panel elp = new LayoutTestingPanel(
+                "ExpandLayout width first component expanded", el);
+        hidingControls.addComponent(new Button("ExpandLayout (vertical)",
+                new MethodProperty<Boolean>(elp, "visible")));
         elp.setVisible(false);
         el.setHeight("700px");
         addFields(el);
@@ -77,8 +83,10 @@ public class Ticket1710 extends com.vaadin.Application {
         el.setExpandRatio(firstComponent, 1);
         lo.addComponent(elp);
         HorizontalLayout elh = new HorizontalLayout();
-        Panel elhp = new LayoutTestingPanel("ExpandLayout width first component expanded; horizontal", elh);
-        hidingControls.addComponent(new Button("ExpandLayout (horizontal)", new MethodProperty<Boolean>(elhp, "visible")));
+        Panel elhp = new LayoutTestingPanel(
+                "ExpandLayout width first component expanded; horizontal", elh);
+        hidingControls.addComponent(new Button("ExpandLayout (horizontal)",
+                new MethodProperty<Boolean>(elhp, "visible")));
         elhp.setVisible(false);
         elhp.setScrollable(true);
         elh.setWidth("2000px");
@@ -92,19 +100,22 @@ public class Ticket1710 extends com.vaadin.Application {
         // CustomLayout
         VerticalLayout cl = new VerticalLayout();
         Panel clp = new LayoutTestingPanel("CustomLayout", cl);
-        hidingControls.addComponent(new Button("CustomLayout", new MethodProperty<Boolean>(clp, "visible")));
+        hidingControls.addComponent(new Button("CustomLayout",
+                new MethodProperty<Boolean>(clp, "visible")));
         clp.setVisible(false);
         lo.addComponent(clp);
         cl.addComponent(new Label("<<< Add customlayout testcase here >>>"));
 
         // Form
         Panel formPanel = new Panel("Form");
-        hidingControls.addComponent(new Button("Form", new MethodProperty<Boolean>(formPanel, "visible")));
+        hidingControls.addComponent(new Button("Form",
+                new MethodProperty<Boolean>(formPanel, "visible")));
         formPanel.setVisible(false);
         formPanel.addComponent(getFormPanelExample());
         lo.addComponent(formPanel);
 
-        for (Iterator<Component> i = hidingControls.getComponentIterator(); i.hasNext();) {
+        for (Iterator<Component> i = hidingControls.getComponentIterator(); i
+                .hasNext();) {
             ((AbstractComponent) i.next()).setImmediate(true);
         }
 
@@ -194,7 +205,8 @@ public class Ticket1710 extends com.vaadin.Application {
         t7.setIcon(new ThemeResource("../runo/icons/16/ok.png"));
         lo.addComponent(t7);
 
-        DateField d1 = new DateField("Datefield with caption and icon, next one without caption");
+        DateField d1 = new DateField(
+                "Datefield with caption and icon, next one without caption");
         d1.setComponentError(new SystemError("Error"));
         d1.setRequired(true);
         d1.setIcon(new ThemeResource("../runo/icons/16/ok.png"));
@@ -240,11 +252,15 @@ public class Ticket1710 extends com.vaadin.Application {
             controls.setSpacing(true);
             controls.setMargin(false);
             controls.addComponent(new Label("width"));
-            controls.addComponent(new TextField(new MethodProperty<Float>(testedLayout, "width")));
-            controls.addComponent(new Button("%", new MethodProperty<Boolean>(this, "widthPercents")));
+            controls.addComponent(new TextField(new MethodProperty<Float>(
+                    testedLayout, "width")));
+            controls.addComponent(new Button("%", new MethodProperty<Boolean>(
+                    this, "widthPercents")));
             controls.addComponent(new Label("height"));
-            controls.addComponent(new TextField(new MethodProperty<Float>(testedLayout, "height")));
-            controls.addComponent(new Button("%", new MethodProperty<Boolean>(this, "heightPercents")));
+            controls.addComponent(new TextField(new MethodProperty<Float>(
+                    testedLayout, "height")));
+            controls.addComponent(new Button("%", new MethodProperty<Boolean>(
+                    this, "heightPercents")));
             controls.addComponent(marginLeft);
             controls.addComponent(marginRight);
             controls.addComponent(marginTop);
@@ -271,7 +287,8 @@ public class Ticket1710 extends com.vaadin.Application {
             testedLayout.setStyleName("tested-layout");
             setStyleName("layout-testing-panel");
 
-            for (Iterator<Component> i = controls.getComponentIterator(); i.hasNext();) {
+            for (Iterator<Component> i = controls.getComponentIterator(); i
+                    .hasNext();) {
                 ((AbstractComponent) i.next()).setImmediate(true);
             }
         }
@@ -293,22 +310,33 @@ public class Ticket1710 extends com.vaadin.Application {
             vAlign.setNullSelectionAllowed(false);
 
             vAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_TOP));
-            vAlign.setItemCaption(new Integer(Layout.AlignmentHandler.ALIGNMENT_TOP), "top");
-            vAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_VERTICAL_CENTER));
-            vAlign.setItemCaption(new Integer(Layout.AlignmentHandler.ALIGNMENT_VERTICAL_CENTER), "center");
+            vAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_TOP), "top");
+            vAlign.addItem(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_VERTICAL_CENTER));
+            vAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_VERTICAL_CENTER),
+                    "center");
             vAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_BOTTOM));
-            vAlign.setItemCaption(new Integer(Layout.AlignmentHandler.ALIGNMENT_BOTTOM), "bottom");
+            vAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_BOTTOM), "bottom");
 
             hAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_LEFT));
-            hAlign.setItemCaption(new Integer(Layout.AlignmentHandler.ALIGNMENT_LEFT), "left");
-            hAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER));
-            hAlign.setItemCaption(new Integer(Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER), "center");
+            hAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_LEFT), "left");
+            hAlign.addItem(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER));
+            hAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER),
+                    "center");
             hAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_RIGHT));
-            hAlign.setItemCaption(new Integer(Layout.AlignmentHandler.ALIGNMENT_RIGHT), "right");
+            hAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_RIGHT), "right");
 
             Property.ValueChangeListener alignmentChangeListener = new Property.ValueChangeListener() {
                 public void valueChange(ValueChangeEvent event) {
-                    updateAlignments(((Integer) hAlign.getValue()).intValue(), ((Integer) vAlign.getValue()).intValue());
+                    updateAlignments(((Integer) hAlign.getValue()).intValue(),
+                            ((Integer) vAlign.getValue()).intValue());
                 }
 
             };
@@ -323,30 +351,45 @@ public class Ticket1710 extends com.vaadin.Application {
             controls.addComponent(lAlign);
             lAlign.setNullSelectionAllowed(false);
             lAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_LEFT));
-            lAlign.setItemCaption(new Integer(Layout.AlignmentHandler.ALIGNMENT_LEFT), "left");
-            lAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER));
-            lAlign.setItemCaption(new Integer(Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER), "center");
+            lAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_LEFT), "left");
+            lAlign.addItem(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER));
+            lAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER),
+                    "center");
             lAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_RIGHT));
-            lAlign.setItemCaption(new Integer(Layout.AlignmentHandler.ALIGNMENT_RIGHT), "right");
+            lAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_RIGHT), "right");
 
             lAlign.addListener(new Property.ValueChangeListener() {
                 public void valueChange(ValueChangeEvent event) {
-                    testPanelLayout.setComponentAlignment(testedLayout, ((Integer) lAlign.getValue()).intValue(), VerticalLayout.ALIGNMENT_TOP);
+                    testPanelLayout.setComponentAlignment(testedLayout,
+                            ((Integer) lAlign.getValue()).intValue(),
+                            VerticalLayout.ALIGNMENT_TOP);
                 }
             });
         }
 
         @SuppressWarnings("deprecation")
         private void updateAlignments(int h, int v) {
-            for (Iterator<Component> i = testedLayout.getComponentIterator(); i.hasNext();) {
-                ((Layout.AlignmentHandler) testedLayout).setComponentAlignment(i.next(), h, v);
+            for (Iterator<Component> i = testedLayout.getComponentIterator(); i
+                    .hasNext();) {
+                ((Layout.AlignmentHandler) testedLayout).setComponentAlignment(
+                        i.next(), h, v);
             }
         }
 
         private void updateMarginsAndSpacing() {
-            testedLayout.setMargin(((Boolean) marginTop.getValue()).booleanValue(), ((Boolean) marginRight.getValue()).booleanValue(), ((Boolean) marginBottom.getValue()).booleanValue(), ((Boolean) marginLeft.getValue()).booleanValue());
+            testedLayout.setMargin(
+                    ((Boolean) marginTop.getValue()).booleanValue(),
+                    ((Boolean) marginRight.getValue()).booleanValue(),
+                    ((Boolean) marginBottom.getValue()).booleanValue(),
+                    ((Boolean) marginLeft.getValue()).booleanValue());
             if (testedLayout instanceof Layout.SpacingHandler) {
-                ((Layout.SpacingHandler) testedLayout).setSpacing(((Boolean) spacing.getValue()).booleanValue());
+                ((Layout.SpacingHandler) testedLayout)
+                        .setSpacing(((Boolean) spacing.getValue())
+                                .booleanValue());
             }
         }
 

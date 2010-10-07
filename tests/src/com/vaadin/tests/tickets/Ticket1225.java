@@ -20,7 +20,8 @@ public class Ticket1225 extends Application {
     @Override
     public void init() {
 
-        final Window mainWin = new Window("Test app to break layout fuction in IE7");
+        final Window mainWin = new Window(
+                "Test app to break layout fuction in IE7");
         setMainWindow(mainWin);
 
         SplitPanel sp = new SplitPanel();
@@ -35,13 +36,16 @@ public class Ticket1225 extends Application {
 
         el.addComponent(new Label("Top"));
 
-        Table testTable = TestForTablesInitialColumnWidthLogicRendering.getTestTable(5, 50);
+        Table testTable = TestForTablesInitialColumnWidthLogicRendering
+                .getTestTable(5, 50);
         testTable.setSizeFull();
 
         TabSheet ts = new TabSheet();
         ts.setSizeFull();
 
-        Label red = new Label("<div style='background:red;width:100%;height:100%;'>??</div>", Label.CONTENT_XHTML);
+        Label red = new Label(
+                "<div style='background:red;width:100%;height:100%;'>??</div>",
+                Label.CONTENT_XHTML);
         // red.setCaption("cap");
         // red.setSizeFull();
 
@@ -53,7 +57,8 @@ public class Ticket1225 extends Application {
         ts.addComponent(red);
         ts.getTab(red).setCaption("REd tab");
 
-        Label l = new Label("<div style='background:blue;'>sdf</div>", Label.CONTENT_XHTML);
+        Label l = new Label("<div style='background:blue;'>sdf</div>",
+                Label.CONTENT_XHTML);
         el.addComponent(l);
         el.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
 

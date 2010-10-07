@@ -65,9 +65,11 @@ public class Ticket2151 extends Application {
         }
 
         if (ok) {
-            status.setValue(status.getValue() + " " + class1.getClass().getSimpleName() + ": OK");
+            status.setValue(status.getValue() + " "
+                    + class1.getClass().getSimpleName() + ": OK");
         } else {
-            status.setValue(status.getValue() + " " + class1.getClass().getSimpleName() + ": FAILED");
+            status.setValue(status.getValue() + " "
+                    + class1.getClass().getSimpleName() + ": FAILED");
         }
 
     }
@@ -81,7 +83,8 @@ public class Ticket2151 extends Application {
             try {
                 b.setWriteThrough(true);
                 b.setReadThrough(true);
-                ObjectProperty<String> prop = new ObjectProperty<String>("ABC 123");
+                ObjectProperty<String> prop = new ObjectProperty<String>(
+                        "ABC 123");
                 /*
                  * This should throw an exception or somehow tell that the
                  * property was invalid (wrong type). See #2223.
@@ -96,9 +99,11 @@ public class Ticket2151 extends Application {
         }
 
         if (ok) {
-            status.setValue(status.getValue() + " " + class1.getClass().getSimpleName() + "/DB: OK");
+            status.setValue(status.getValue() + " "
+                    + class1.getClass().getSimpleName() + "/DB: OK");
         } else {
-            status.setValue(status.getValue() + " " + class1.getClass().getSimpleName() + "/DB: FAILED");
+            status.setValue(status.getValue() + " "
+                    + class1.getClass().getSimpleName() + "/DB: FAILED");
         }
 
     }

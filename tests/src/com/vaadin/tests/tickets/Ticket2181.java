@@ -91,7 +91,8 @@ public class Ticket2181 extends Application implements Button.ClickListener {
                     tf.setCaption(caption);
                 } else if (value.equals("Icon")) {
                     String timestamp = String.valueOf(new Date().getTime());
-                    tf.setIcon(new ThemeResource(icons.get(random.nextInt(icons.size())) + "?" + timestamp));
+                    tf.setIcon(new ThemeResource(icons.get(random.nextInt(icons
+                            .size())) + "?" + timestamp));
                 } else if (value.equals("Required")) {
                     tf.setRequired(true);
                 } else if (value.equals("Error")) {

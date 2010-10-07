@@ -22,7 +22,8 @@ public class Ticket2180 extends Application {
         button.setWidth("100%");
         Label label1 = new Label("Lorem ipsum");
         Label label2 = new Label("Lorem");
-        Label label3 = new Label("Lorema jsdfhak sjdfh kajsdh fkajhd kfjah dkfjah ksfdjh kajsfh kj 1 2 3 4 5 6 7 8 9 10");
+        Label label3 = new Label(
+                "Lorema jsdfhak sjdfh kajsdh fkajhd kfjah dkfjah ksfdjh kajsfh kj 1 2 3 4 5 6 7 8 9 10");
 
         label3.setWidth("800px");
         tabSheet.addTab(label1, "Tab 1", null);

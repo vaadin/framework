@@ -16,7 +16,10 @@ import com.vaadin.ui.VerticalLayout;
 
 public abstract class Feature extends CustomComponent {
 
-    private static final String PROP_REMINDER_TEXT = "" + "<br /><br />Note: Use <b>Properties</b> panel located at the top" + " right corner to try out how different properties affect" + " the presentation or functionality of currently selected component.";
+    private static final String PROP_REMINDER_TEXT = ""
+            + "<br /><br />Note: Use <b>Properties</b> panel located at the top"
+            + " right corner to try out how different properties affect"
+            + " the presentation or functionality of currently selected component.";
 
     private boolean propsReminder = true;
 
@@ -46,7 +49,8 @@ public abstract class Feature extends CustomComponent {
      * @param url
      */
     public void setJavadocURL(String url) {
-        javadoc.setValue("<iframe width=\"100%\" src=\"http://www.vaadin.com/api/com/vaadin/" + url + "\"></iframe>");
+        javadoc.setValue("<iframe width=\"100%\" src=\"http://www.vaadin.com/api/com/vaadin/"
+                + url + "\"></iframe>");
     }
 
     /**
@@ -84,7 +88,8 @@ public abstract class Feature extends CustomComponent {
             final HorizontalLayout layout = new HorizontalLayout();
             mainLayout.addComponent(layout);
             if (getImage() != null) {
-                layout.addComponent(new Embedded("", new ClassResource(getImage(), getApplication())));
+                layout.addComponent(new Embedded("", new ClassResource(
+                        getImage(), getApplication())));
             }
             String label = "";
             label += getDescriptionXHTML();
@@ -92,7 +97,8 @@ public abstract class Feature extends CustomComponent {
                 label += PROP_REMINDER_TEXT;
             }
             if (title != null) {
-                layout.addComponent(new Label("<h3>" + title + "</h3>", Label.CONTENT_XHTML));
+                layout.addComponent(new Label("<h3>" + title + "</h3>",
+                        Label.CONTENT_XHTML));
             }
             description = new Label(label, Label.CONTENT_XHTML);
             mainLayout.addComponent(description);
@@ -114,7 +120,9 @@ public abstract class Feature extends CustomComponent {
         if (example != null) {
             final VerticalLayout l = new VerticalLayout();
             if (getTitle() != null) {
-                l.addComponent(new Label("<b>// " + getTitle() + " example</b>", Label.CONTENT_XHTML));
+                l.addComponent(new Label(
+                        "<b>// " + getTitle() + " example</b>",
+                        Label.CONTENT_XHTML));
             }
             l.addComponent(new Label(example, Label.CONTENT_PREFORMATTED));
             ts.addTab(l, "Code Sample", null);

@@ -150,19 +150,22 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setWidth("");
         ol.setCaption("Fixed height (50px) and dynamic width");
 
-        TextField tf = new TextField("100px high TextField, valign: bottom, should be partly outside");
+        TextField tf = new TextField(
+                "100px high TextField, valign: bottom, should be partly outside");
         tf.setHeight("100px");
         tf.setWidth("");
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
 
-        tf = new TextField("100% high, 50px wide TextField, valign: bottom, should fill full height");
+        tf = new TextField(
+                "100% high, 50px wide TextField, valign: bottom, should fill full height");
         tf.setHeight("100%");
         tf.setWidth("50px");
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
 
-        Label l = new Label("100% high, 50px wide Label, valign: bottom, does not fill full height, only needed space");
+        Label l = new Label(
+                "100% high, 50px wide Label, valign: bottom, does not fill full height, only needed space");
         tf.setHeight("100%");
         tf.setWidth("50px");
         ol.addComponent(l);
@@ -213,7 +216,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
 
-        Label l = new Label("100% high, 50px wide Label, valign: bottom, does not fill full height, only needed space");
+        Label l = new Label(
+                "100% high, 50px wide Label, valign: bottom, does not fill full height, only needed space");
         tf.setHeight("100%");
         tf.setWidth("50px");
         ol.addComponent(l);
@@ -265,7 +269,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
 
-        Label l = new Label("100% high, 50px wide Label, valign: bottom, does not fill full height, only needed space");
+        Label l = new Label(
+                "100% high, 50px wide Label, valign: bottom, does not fill full height, only needed space");
         tf.setHeight("100%");
         tf.setWidth("50px");
         ol.addComponent(l);
@@ -322,7 +327,8 @@ public class OrderedLayoutBasics extends TestBase {
             int w = i * 100;
             tf = new TextField("Field " + i);
             tf.setRows(2);
-            tf.setValue(w + "px high, " + w + "px wide TextField, valign: " + valignName[i % 3]);
+            tf.setValue(w + "px high, " + w + "px wide TextField, valign: "
+                    + valignName[i % 3]);
             tf.setWidth(w + "px");
             tf.setHeight(w + "px");
             ol.addComponent(tf);
@@ -352,7 +358,9 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
 
         // ol.setWidth("");
-        ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height (" + ol.getHeight() + "px) / layout_field_100pct_button_field");
+        ol.setCaption("Fixed width (" + ol.getWidth()
+                + "px) and fixed height (" + ol.getHeight()
+                + "px) / layout_field_100pct_button_field");
         TextField tf;
 
         tf = new TextField("300px x 300px Field");
@@ -392,7 +400,9 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
 
         // ol.setWidth("");
-        ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height (" + ol.getHeight() + "px) / layout_basic_test");
+        ol.setCaption("Fixed width (" + ol.getWidth()
+                + "px) and fixed height (" + ol.getHeight()
+                + "px) / layout_basic_test");
         TextField tf;
 
         tf = new TextField("300px x 300px Field");
@@ -432,7 +442,9 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(false);
 
         // ol.setWidth("");
-        ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height (" + ol.getHeight() + "px) / layout_symmetric_fields");
+        ol.setCaption("Fixed width (" + ol.getWidth()
+                + "px) and fixed height (" + ol.getHeight()
+                + "px) / layout_symmetric_fields");
         TextField tf;
 
         tf = new TextField("300px x 300px Field");
@@ -469,7 +481,9 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
 
         // ol.setWidth("");
-        ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height (" + ol.getHeight() + "px) / layout_leftAndRight");
+        ol.setCaption("Fixed width (" + ol.getWidth()
+                + "px) and fixed height (" + ol.getHeight()
+                + "px) / layout_leftAndRight");
         TextField tf;
 
         // tf = new TextField("100%x100% Field");
@@ -543,7 +557,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
 
         // ol.setWidth("");
-        ol.setCaption("Filled with fixed width (" + ol.getWidth() + "px) and fixed height (" + ol.getHeight() + "px)");
+        ol.setCaption("Filled with fixed width (" + ol.getWidth()
+                + "px) and fixed height (" + ol.getHeight() + "px)");
         TextField tf;
 
         tf = new TextField("60%x100% Field");
@@ -635,7 +650,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
 
         // ol.setWidth("");
-        ol.setCaption("OverFilled with fixed width (" + ol.getWidth() + "px) and fixed height (" + ol.getHeight() + "px)");
+        ol.setCaption("OverFilled with fixed width (" + ol.getWidth()
+                + "px) and fixed height (" + ol.getHeight() + "px)");
         TextField tf;
 
         for (int i = 0; i < 5; i++) {
@@ -663,7 +679,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
 
         // ol.setWidth("");
-        ol.setCaption("OverFilled with fixed width (" + ol.getWidth() + "px) and dynamic height");
+        ol.setCaption("OverFilled with fixed width (" + ol.getWidth()
+                + "px) and dynamic height");
         TextField tf;
 
         for (int i = 0; i < 10; i++) {
@@ -710,7 +727,9 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
 
         // ol.setWidth("");
-        ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height (" + ol.getHeight() + "px) / layout_add_remove_components");
+        ol.setCaption("Fixed width (" + ol.getWidth()
+                + "px) and fixed height (" + ol.getHeight()
+                + "px) / layout_add_remove_components");
 
         for (int i = 0; i < 2; i++) {
             AbstractOrderedLayout inner = createAddRemove(ol, "", "");
@@ -754,10 +773,12 @@ public class OrderedLayoutBasics extends TestBase {
         tf = new TextField("Short caption");
         ol.addComponent(tf);
 
-        tf = new TextField("A very long caption which is probably much longer than the field");
+        tf = new TextField(
+                "A very long caption which is probably much longer than the field");
         ol.addComponent(tf);
 
-        tf = new TextField("A very long caption which is probably much longer than the field and includes indicators");
+        tf = new TextField(
+                "A very long caption which is probably much longer than the field and includes indicators");
         tf.setRequired(true);
         tf.setComponentError(new UserError("abc123"));
         ol.addComponent(tf);
@@ -793,14 +814,16 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
 
-        tf = new TextField("A long caption which is probably much longer than the field");
+        tf = new TextField(
+                "A long caption which is probably much longer than the field");
         tf.setValue("Undefined width");
         tf.setRequired(true);
         tf.setComponentError(new UserError("123"));
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
 
-        tf = new TextField("A very long caption which is probably much longer than the field and includes indicators");
+        tf = new TextField(
+                "A very long caption which is probably much longer than the field and includes indicators");
         tf.setValue("Undefined width");
         tf.setIcon(new ThemeResource("icons/16/document-add.png"));
         tf.setRequired(true);
@@ -822,7 +845,8 @@ public class OrderedLayoutBasics extends TestBase {
 
     }
 
-    private Layout layout_captions_fixed_size_and_relative_size(AbstractOrderedLayout ol) {
+    private Layout layout_captions_fixed_size_and_relative_size(
+            AbstractOrderedLayout ol) {
         ol.setWidth("700px");
         ol.setHeight("250px");
 
@@ -842,7 +866,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
         ol.setExpandRatio(tf, 1);
 
-        tf = new TextField("A long caption which is probably much longer than the field");
+        tf = new TextField(
+                "A long caption which is probably much longer than the field");
         tf.setValue("100% wide field, ratio 2");
         tf.setSizeFull();
         tf.setRequired(true);
@@ -851,7 +876,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
         ol.setExpandRatio(tf, 2);
 
-        tf = new TextField("A very long caption which is probably much longer than the field and includes indicators");
+        tf = new TextField(
+                "A very long caption which is probably much longer than the field and includes indicators");
         tf.setValue("100% wide field, ratio 3");
         tf.setSizeFull();
         tf.setIcon(new ThemeResource("icons/16/document-add.png"));
@@ -875,7 +901,8 @@ public class OrderedLayoutBasics extends TestBase {
 
     }
 
-    private Layout layout_captions_fixed_size_and_fixed_size(AbstractOrderedLayout ol) {
+    private Layout layout_captions_fixed_size_and_fixed_size(
+            AbstractOrderedLayout ol) {
         ol.setWidth("700px");
         ol.setHeight("250px");
 
@@ -893,7 +920,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
 
-        tf = new TextField("A long caption which is probably much longer than the field");
+        tf = new TextField(
+                "A long caption which is probably much longer than the field");
         tf.setWidth("250px");
         tf.setValue("250px wide field");
         tf.setRequired(true);
@@ -901,7 +929,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
 
-        tf = new TextField("A very long caption which is probably much longer than the field and includes indicators");
+        tf = new TextField(
+                "A very long caption which is probably much longer than the field and includes indicators");
         tf.setValue("200px wide field");
         tf.setWidth("200px");
         tf.setIcon(new ThemeResource("icons/16/document-add.png"));
@@ -935,7 +964,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setCaption("Caption test with fixed width");
 
         Label l;
-        l = new Label("This is a long text and should remain on one line as there is nothing forcing line breaks");
+        l = new Label(
+                "This is a long text and should remain on one line as there is nothing forcing line breaks");
         ol.addComponent(l);
         // ol.setComponentAlignment(l, AlignmentHandler.ALIGNMENT_RIGHT,
         // AlignmentHandler.ALIGNMENT_BOTTOM);
@@ -949,7 +979,8 @@ public class OrderedLayoutBasics extends TestBase {
 
     }
 
-    private AbstractOrderedLayout createAddRemove(AbstractOrderedLayout ol, String width, String buttonSuffix) {
+    private AbstractOrderedLayout createAddRemove(AbstractOrderedLayout ol,
+            String width, String buttonSuffix) {
         Button b = createAddButton(ol);
         Button wb = createWideAddButton(ol);
         Button r = createRemoveButton(ol, buttonSuffix);
@@ -969,7 +1000,8 @@ public class OrderedLayoutBasics extends TestBase {
         Button b = new Button("Add before", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                addBefore((AbstractOrderedLayout) event.getButton().getData(), event.getButton().getParent(), "");
+                addBefore((AbstractOrderedLayout) event.getButton().getData(),
+                        event.getButton().getParent(), "");
             }
 
         });
@@ -982,7 +1014,8 @@ public class OrderedLayoutBasics extends TestBase {
         Button b = new Button("Add 100% before", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                addBefore((AbstractOrderedLayout) event.getButton().getData(), event.getButton().getParent(), "100%");
+                addBefore((AbstractOrderedLayout) event.getButton().getData(),
+                        event.getButton().getParent(), "100%");
             }
 
         });
@@ -995,7 +1028,8 @@ public class OrderedLayoutBasics extends TestBase {
         Button b = new Button("Remove this " + suffix, new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                remove((AbstractOrderedLayout) event.getButton().getData(), event.getButton().getParent());
+                remove((AbstractOrderedLayout) event.getButton().getData(),
+                        event.getButton().getParent());
             }
 
         });
@@ -1019,7 +1053,8 @@ public class OrderedLayoutBasics extends TestBase {
             }
             index++;
         }
-        AbstractOrderedLayout inner = createAddRemove(ol, width, String.valueOf(suffix++));
+        AbstractOrderedLayout inner = createAddRemove(ol, width,
+                String.valueOf(suffix++));
         ol.addComponent(inner, index);
         if (width.contains("%")) {
             ol.setExpandRatio(inner, 1.0f);
@@ -1036,7 +1071,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
 
         // ol.setWidth("");
-        ol.setCaption("100 % filled with fixed width (" + ol.getWidth() + "px) and fixed height (" + ol.getHeight() + "px)");
+        ol.setCaption("100 % filled with fixed width (" + ol.getWidth()
+                + "px) and fixed height (" + ol.getHeight() + "px)");
         TextField tf;
 
         tf = new TextField();
@@ -1086,7 +1122,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(false);
 
         // ol.setWidth("");
-        ol.setCaption("100 % filled with fixed width (" + ol.getWidth() + "px) and fixed height (" + ol.getHeight() + "px)");
+        ol.setCaption("100 % filled with fixed width (" + ol.getWidth()
+                + "px) and fixed height (" + ol.getHeight() + "px)");
         TextField tf;
 
         tf = new TextField();
@@ -1124,7 +1161,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
 
         // ol.setWidth("");
-        ol.setCaption("Underfilled with fixed width (" + ol.getWidth() + "px) and fixed height (" + ol.getHeight() + "px)");
+        ol.setCaption("Underfilled with fixed width (" + ol.getWidth()
+                + "px) and fixed height (" + ol.getHeight() + "px)");
         TextField tf;
 
         tf = new TextField("60%x100% Field");

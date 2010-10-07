@@ -51,7 +51,8 @@ public class ScrollbarStressTest extends Application {
         context.addItem("Accordion");
         context.setValue("Main window");
 
-        final OptionGroup testComponent = new OptionGroup("TestComponent 100%x100%");
+        final OptionGroup testComponent = new OptionGroup(
+                "TestComponent 100%x100%");
         testComponent.addItem("Label");
         testComponent.addItem("Table");
         testComponent.setValue("Label");
@@ -222,7 +223,8 @@ public class ScrollbarStressTest extends Application {
 
     private Component getTestComponent() {
         if (getTable) {
-            Table testTable = TestForTablesInitialColumnWidthLogicRendering.getTestTable(4, 50);
+            Table testTable = TestForTablesInitialColumnWidthLogicRendering
+                    .getTestTable(4, 50);
             testTable.setSizeFull();
             return testTable;
         } else {

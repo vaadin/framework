@@ -151,7 +151,8 @@ public class Ticket2998 extends Application {
         }
 
         @Override
-        public Field createField(Container container, Object itemId, Object propertyId, Component uiContext) {
+        public Field createField(Container container, Object itemId,
+                Object propertyId, Component uiContext) {
 
             /*
              * trainingType is manyToOne relation, give it a combobox
@@ -167,7 +168,8 @@ public class Ticket2998 extends Application {
                 return getSecondaryTypesList(itemId);
             }
 
-            final Field f = super.createField(container, itemId, propertyId, uiContext);
+            final Field f = super.createField(container, itemId, propertyId,
+                    uiContext);
             if (f != null) {
                 if (f instanceof TextField) {
                     TextField tf = (TextField) f;
@@ -182,13 +184,15 @@ public class Ticket2998 extends Application {
                                 float f = Float.parseFloat((String) value);
                                 return true;
                             } catch (Exception e) {
-                                f.getWindow().showNotification("Bad number value");
+                                f.getWindow().showNotification(
+                                        "Bad number value");
                                 f.setValue(0);
                                 return false;
                             }
                         }
 
-                        public void validate(Object value) throws InvalidValueException {
+                        public void validate(Object value)
+                                throws InvalidValueException {
                             // TODO Auto-generated method stub
 
                         }
@@ -308,7 +312,9 @@ public class Ticket2998 extends Application {
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MINUTE, 0);
 
-        String[] titles = new String[] { "A short easy one", "intervals", "very long", "just shaking legs after work", "long one with Paul", "test run" };
+        String[] titles = new String[] { "A short easy one", "intervals",
+                "very long", "just shaking legs after work",
+                "long one with Paul", "test run" };
 
         c.add(Calendar.DATE, -1000);
 
@@ -318,7 +324,8 @@ public class Ticket2998 extends Application {
 
         for (int i = 0; i < 1000; i++) {
             r = new Workout();
-            c.set(Calendar.HOUR_OF_DAY, 12 + (rnd.nextInt(11) - rnd.nextInt(11)));
+            c.set(Calendar.HOUR_OF_DAY,
+                    12 + (rnd.nextInt(11) - rnd.nextInt(11)));
             r.setDate(c.getTime());
             r.setTitle(titles[rnd.nextInt(titles.length)]);
             r.setKilometers(Math.round(rnd.nextFloat() * 30));

@@ -15,7 +15,9 @@ public class WindowResizeListener extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "Size changes from windows (both sub " + "and browsers level) should get back to server." + " If size changes, a separate server side event should occur.";
+        return "Size changes from windows (both sub "
+                + "and browsers level) should get back to server."
+                + " If size changes, a separate server side event should occur.";
     }
 
     @Override
@@ -33,7 +35,9 @@ public class WindowResizeListener extends TestBase {
 
         getMainWindow().addListener(new ResizeListener() {
             public void windowResized(ResizeEvent e) {
-                l.setValue("Current main window size: " + getMainWindow().getWidth() + " x " + getMainWindow().getHeight());
+                l.setValue("Current main window size: "
+                        + getMainWindow().getWidth() + " x "
+                        + getMainWindow().getHeight());
             }
         });
 
@@ -90,6 +94,9 @@ class ResizeListenerWindow extends Window {
     }
 
     public void updateLabel() {
-        sizeLabel.setValue(getWidth() + Sizeable.UNIT_SYMBOLS[getWidthUnits()] + " x " + getHeight() + Sizeable.UNIT_SYMBOLS[getHeightUnits()]);
+        sizeLabel
+                .setValue(getWidth() + Sizeable.UNIT_SYMBOLS[getWidthUnits()]
+                        + " x " + getHeight()
+                        + Sizeable.UNIT_SYMBOLS[getHeightUnits()]);
     }
 }

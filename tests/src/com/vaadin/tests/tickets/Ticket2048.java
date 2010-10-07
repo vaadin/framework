@@ -67,25 +67,31 @@ public class Ticket2048 extends Application {
         l.setHeight("400px");
         p.addComponent(l);
 
-        embedded = new Embedded(null, new ThemeResource("icons/64/folder-add.png"));
+        embedded = new Embedded(null, new ThemeResource(
+                "icons/64/folder-add.png"));
         layout.addComponent(embedded);
-        Button b = new Button("Replace image with new embedded component (flashes)", new ClickListener() {
+        Button b = new Button(
+                "Replace image with new embedded component (flashes)",
+                new ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                Embedded newEmbedded = new Embedded(null, new ThemeResource("icons/64/folder-add.png"));
-                getMainWindow().getContent().replaceComponent(embedded, newEmbedded);
-                embedded = newEmbedded;
+                    public void buttonClick(ClickEvent event) {
+                        Embedded newEmbedded = new Embedded(null,
+                                new ThemeResource("icons/64/folder-add.png"));
+                        getMainWindow().getContent().replaceComponent(embedded,
+                                newEmbedded);
+                        embedded = newEmbedded;
 
-            }
+                    }
 
-        });
+                });
         p.addComponent(b);
 
         b = new Button("Change image source (is fine)", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
                 String img = "folder-add";
-                if (((ThemeResource) embedded.getSource()).getResourceId().contains("folder-add")) {
+                if (((ThemeResource) embedded.getSource()).getResourceId()
+                        .contains("folder-add")) {
                     img = "folder-delete";
                 }
                 embedded.setSource(new ThemeResource("icons/64/" + img + ".png"));

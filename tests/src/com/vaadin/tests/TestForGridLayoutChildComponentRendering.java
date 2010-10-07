@@ -58,7 +58,8 @@ public class TestForGridLayoutChildComponentRendering extends CustomComponent {
         b = new Button("reorder view", this, "randomReorder");
         main.addComponent(b);
 
-        b = new Button("remove randomly one component", this, "removeRandomComponent");
+        b = new Button("remove randomly one component", this,
+                "removeRandomComponent");
         main.addComponent(b);
 
     }
@@ -78,7 +79,8 @@ public class TestForGridLayoutChildComponentRendering extends CustomComponent {
         for (int i = components.size(); i > 0; i--) {
             final int index = (int) (Math.random() * i);
             if (i == colspanIndex) {
-                main.addComponent(components.get(index), 0, (size - i) / 2, 1, (size - i) / 2);
+                main.addComponent(components.get(index), 0, (size - i) / 2, 1,
+                        (size - i) / 2);
             } else {
                 main.addComponent(components.get(index));
             }

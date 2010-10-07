@@ -28,7 +28,8 @@ public class FormWithRelativelySizedLayout extends TestBase {
         f.setWidth("100%");
         f.setHeight("100%");
 
-        Label l = new Label("This green label should consume all available space, pushing ok button to bottom of the view");
+        Label l = new Label(
+                "This green label should consume all available space, pushing ok button to bottom of the view");
         l.setSizeFull();
 
         CssLayout lo = new CssLayout() {

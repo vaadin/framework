@@ -16,14 +16,17 @@ public class Ticket2107 extends Application {
         final Window w = new Window("Testing for #2107");
         setMainWindow(w);
 
-        final TextField tf = new TextField("Required field that validated the input");
+        final TextField tf = new TextField(
+                "Required field that validated the input");
         tf.setDescription("Enter someting and click outside the field to activate");
         tf.setRequired(true);
         tf.setImmediate(true);
         tf.addListener(new Property.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
-                w.showNotification("TextField is " + (tf.isValid() ? "" : "in") + "valid, with error: " + tf.getErrorMessage(), Notification.TYPE_WARNING_MESSAGE);
+                w.showNotification("TextField is " + (tf.isValid() ? "" : "in")
+                        + "valid, with error: " + tf.getErrorMessage(),
+                        Notification.TYPE_WARNING_MESSAGE);
             }
         });
         tf.addValidator(new Validator() {
@@ -34,18 +37,22 @@ public class Ticket2107 extends Application {
 
             public void validate(Object value) throws InvalidValueException {
                 if (!isValid(value)) {
-                    throw new InvalidValueException("Text length must exceed 3 characters");
+                    throw new InvalidValueException(
+                            "Text length must exceed 3 characters");
                 }
             }
         });
         w.addComponent(tf);
 
-        final Button b = new Button("Field should use error message. (!) should be shown when empty.", false);
+        final Button b = new Button(
+                "Field should use error message. (!) should be shown when empty.",
+                false);
         w.addComponent(b);
         b.setImmediate(true);
         b.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                tf.setRequiredError(b.booleanValue() ? "Field must not be empty" : null);
+                tf.setRequiredError(b.booleanValue() ? "Field must not be empty"
+                        : null);
             }
         });
     }

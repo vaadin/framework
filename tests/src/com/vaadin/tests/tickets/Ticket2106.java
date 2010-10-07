@@ -25,11 +25,14 @@ public class Ticket2106 extends Application {
     @Override
     public void init() {
         setMainWindow(new Window("#2106"));
-        getMainWindow().addComponent(new Button("Do nothing", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                getMainWindow().addComponent(new Label("Last time did nothing: " + new Date()));
-            }
-        }));
+        getMainWindow().addComponent(
+                new Button("Do nothing", new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        getMainWindow().addComponent(
+                                new Label("Last time did nothing: "
+                                        + new Date()));
+                    }
+                }));
     }
 
 }

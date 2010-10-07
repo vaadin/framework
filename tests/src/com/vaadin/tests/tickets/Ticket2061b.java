@@ -20,7 +20,8 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class Ticket2061b extends Application implements SelectedTabChangeListener {
+public class Ticket2061b extends Application implements
+        SelectedTabChangeListener {
 
     private Window mainWindow;
     private Panel p;
@@ -29,7 +30,8 @@ public class Ticket2061b extends Application implements SelectedTabChangeListene
     public void init() {
         mainWindow = new Window("Ticket 2061b");
         mainWindow.setSizeFull();
-        AbstractOrderedLayout mainLayout = (AbstractOrderedLayout) mainWindow.getContent();
+        AbstractOrderedLayout mainLayout = (AbstractOrderedLayout) mainWindow
+                .getContent();
         mainLayout.setSizeFull();
         mainLayout.setMargin(false);
         setMainWindow(mainWindow);
@@ -122,7 +124,8 @@ public class Ticket2061b extends Application implements SelectedTabChangeListene
                 Item rowItem = table.addItem(j);
                 if (rowItem != null) {
                     for (int i = 0; i < columns.length; i++) {
-                        rowItem.getItemProperty(columns[i]).setValue("Value" + j);
+                        rowItem.getItemProperty(columns[i]).setValue(
+                                "Value" + j);
                     }
                 }
             }

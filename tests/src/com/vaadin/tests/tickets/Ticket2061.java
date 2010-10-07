@@ -33,7 +33,8 @@ public class Ticket2061 extends Application {
         MyTable table3 = new MyTable(24, "table3");
         table3.loadTable(1000);
 
-        MyAccordion accordion = new MyAccordion(new Component[] { table1, table2 }, "Test");
+        MyAccordion accordion = new MyAccordion(new Component[] { table1,
+                table2 }, "Test");
 
         Tabs tab = new Tabs(new Component[] { accordion, table3 });
 
@@ -71,7 +72,8 @@ public class Ticket2061 extends Application {
                 Item rowItem = table.addItem(j);
                 if (rowItem != null) {
                     for (int i = 0; i < columns.length; i++) {
-                        rowItem.getItemProperty(columns[i]).setValue("Value" + j);
+                        rowItem.getItemProperty(columns[i]).setValue(
+                                "Value" + j);
                     }
                 }
             }

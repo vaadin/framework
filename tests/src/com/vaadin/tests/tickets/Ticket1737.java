@@ -28,7 +28,8 @@ public class Ticket1737 extends Application {
     @Override
     public void init() {
 
-        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(
+                getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         VerticalLayout el = new VerticalLayout();
@@ -37,7 +38,10 @@ public class Ticket1737 extends Application {
         Panel p = new Panel("Test panel");
         p.setSizeFull();
 
-        p.addComponent(new Label("Second component is embedded with a slow resource " + "and thus should break layout if Embedded cannot" + " request re-layout after load."));
+        p.addComponent(new Label(
+                "Second component is embedded with a slow resource "
+                        + "and thus should break layout if Embedded cannot"
+                        + " request re-layout after load."));
 
         Embedded em = new Embedded("TestEmbedded", slowRes);
 

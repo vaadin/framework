@@ -36,21 +36,28 @@ public class Ticket846 extends Application {
             }
         });
 
-        final String[] visibleProps = { "required", "invalidAllowed", "readOnly", "readThrough", "invalidCommitted", "validationVisible" };
+        final String[] visibleProps = { "required", "invalidAllowed",
+                "readOnly", "readThrough", "invalidCommitted",
+                "validationVisible" };
         for (int i = 0; i < visibleProps.length; i++) {
-            Button b = new Button(visibleProps[i], new MethodProperty<Boolean>(tx, visibleProps[i]));
+            Button b = new Button(visibleProps[i], new MethodProperty<Boolean>(
+                    tx, visibleProps[i]));
             b.setImmediate(true);
             mainWin.addComponent(b);
         }
 
         // tx.setIcon(new ThemeResource("icons/16/folder.png"));
 
-        mainWin.addComponent(new Button("Validate integer", new Button.ClickListener() {
-            public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
-                mainWin.showNotification("The field is " + (tx.isValid() ? "" : "not ") + "valid");
-            };
-        }));
-        TextField caption = new TextField("Caption", new MethodProperty<String>(tx, "caption"));
+        mainWin.addComponent(new Button("Validate integer",
+                new Button.ClickListener() {
+                    public void buttonClick(
+                            com.vaadin.ui.Button.ClickEvent event) {
+                        mainWin.showNotification("The field is "
+                                + (tx.isValid() ? "" : "not ") + "valid");
+                    };
+                }));
+        TextField caption = new TextField("Caption",
+                new MethodProperty<String>(tx, "caption"));
         caption.setImmediate(true);
         mainWin.addComponent(caption);
     }

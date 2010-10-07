@@ -43,22 +43,23 @@ public class Ticket2221 extends Application {
 
             setCompositionRoot(main);
             main.setSizeFull();
-            Button b = new Button("Switch textfield/panel", new ClickListener() {
+            Button b = new Button("Switch textfield/panel",
+                    new ClickListener() {
 
-                public void buttonClick(ClickEvent event) {
-                    Component visible = tf;
+                        public void buttonClick(ClickEvent event) {
+                            Component visible = tf;
 
-                    if (tf.isVisible()) {
-                        visible = outerPanel;
-                    }
+                            if (tf.isVisible()) {
+                                visible = outerPanel;
+                            }
 
-                    outerPanel.setVisible(false);
-                    tf.setVisible(false);
+                            outerPanel.setVisible(false);
+                            tf.setVisible(false);
 
-                    visible.setVisible(true);
-                }
+                            visible.setVisible(true);
+                        }
 
-            });
+                    });
             main.addComponent(b);
 
             tf = new TextField("TextField");

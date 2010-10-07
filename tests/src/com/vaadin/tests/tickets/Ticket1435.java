@@ -134,7 +134,8 @@ public class Ticket1435 extends Application {
                         } else {
                             root.setHeight(lastHeight, lastHeightUnit);
                         }
-                        event.getButton().setCaption(visible ? "Expand" : "Collapse");
+                        event.getButton().setCaption(
+                                visible ? "Expand" : "Collapse");
                     }
                 }
             });
@@ -218,7 +219,8 @@ public class Ticket1435 extends Application {
 
         for (int i = 0; i < 10; i++) {
             String name = "Name " + i;
-            table.addItem(new Object[] { new CheckBox(), name, "02-22-2007 13:37" }, new Integer(i));
+            table.addItem(new Object[] { new CheckBox(), name,
+                    "02-22-2007 13:37" }, new Integer(i));
         }
 
         panel.setPanelComponent(table);

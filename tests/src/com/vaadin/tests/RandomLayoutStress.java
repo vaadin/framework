@@ -52,7 +52,8 @@ public class RandomLayoutStress extends com.vaadin.Application {
         setMainWindow(mainWindow);
 
         // Create horizontal ordered layout
-        final Panel panelA = new Panel("Panel containing horizontal ordered layout");
+        final Panel panelA = new Panel(
+                "Panel containing horizontal ordered layout");
         HorizontalLayout layoutA = new HorizontalLayout();
         // Add 4 random components
         fillLayout(layoutA, componentCountA);
@@ -60,7 +61,8 @@ public class RandomLayoutStress extends com.vaadin.Application {
         panelA.addComponent(layoutA);
 
         // Create vertical ordered layout
-        final Panel panelB = new Panel("Panel containing vertical ordered layout");
+        final Panel panelB = new Panel(
+                "Panel containing vertical ordered layout");
         VerticalLayout layoutB = new VerticalLayout();
         // Add 4 random components
         fillLayout(layoutB, componentCountB);
@@ -69,7 +71,8 @@ public class RandomLayoutStress extends com.vaadin.Application {
 
         // Create grid layout
         final int gridSize = (int) java.lang.Math.sqrt(componentCountC);
-        final Panel panelG = new Panel("Panel containing grid layout (" + gridSize + " x " + gridSize + ")");
+        final Panel panelG = new Panel("Panel containing grid layout ("
+                + gridSize + " x " + gridSize + ")");
         GridLayout layoutG = new GridLayout(gridSize, gridSize);
         // Add 12 random components
         fillLayout(layoutG, componentCountC);
@@ -144,7 +147,12 @@ public class RandomLayoutStress extends com.vaadin.Application {
             // Link
             result = new Panel();
             result.setCaption("Panel component " + caption);
-            ((Panel) result).addComponent(new Label("Panel is a container for other components, by default it draws a frame around it's " + "extremities and may have a caption to clarify the nature of the contained components' purpose." + " Panel contains an layout where the actual contained components are added, " + "this layout may be switched on the fly."));
+            ((Panel) result)
+                    .addComponent(new Label(
+                            "Panel is a container for other components, by default it draws a frame around it's "
+                                    + "extremities and may have a caption to clarify the nature of the contained components' purpose."
+                                    + " Panel contains an layout where the actual contained components are added, "
+                                    + "this layout may be switched on the fly."));
             ((Panel) result).setWidth(250);
             break;
         case 6:

@@ -20,7 +20,8 @@ public class Ticket2009 extends com.vaadin.Application {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(
+                getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         HorizontalLayout ol = new HorizontalLayout();
@@ -39,7 +40,11 @@ public class Ticket2009 extends com.vaadin.Application {
 
         t.addListener(new ItemClickEvent.ItemClickListener() {
             public void itemClick(ItemClickEvent event) {
-                events.addComponent(new Label(new Label("Click:" + (event.isDoubleClick() ? "double" : "single") + " button:" + event.getButton() + " propertyId:" + event.getPropertyId() + " itemID:" + event.getItemId() + " item:" + event.getItem())));
+                events.addComponent(new Label(new Label("Click:"
+                        + (event.isDoubleClick() ? "double" : "single")
+                        + " button:" + event.getButton() + " propertyId:"
+                        + event.getPropertyId() + " itemID:"
+                        + event.getItemId() + " item:" + event.getItem())));
 
             }
         });
@@ -52,11 +57,16 @@ public class Ticket2009 extends com.vaadin.Application {
         p2.setSizeFull();
 
         final VerticalLayout events2 = new VerticalLayout();
-        Table table = TestForTablesInitialColumnWidthLogicRendering.getTestTable(5, 100);
+        Table table = TestForTablesInitialColumnWidthLogicRendering
+                .getTestTable(5, 100);
         table.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
         table.addListener(new ItemClickEvent.ItemClickListener() {
             public void itemClick(ItemClickEvent event) {
-                events2.addComponent(new Label("Click:" + (event.isDoubleClick() ? "double" : "single") + " button:" + event.getButton() + " propertyId:" + event.getPropertyId() + " itemID:" + event.getItemId() + " item:" + event.getItem()));
+                events2.addComponent(new Label("Click:"
+                        + (event.isDoubleClick() ? "double" : "single")
+                        + " button:" + event.getButton() + " propertyId:"
+                        + event.getPropertyId() + " itemID:"
+                        + event.getItemId() + " item:" + event.getItem()));
                 if (event.isDoubleClick()) {
                     new PropertyEditor(event);
                 }
@@ -90,7 +100,8 @@ public class Ticket2009 extends com.vaadin.Application {
 
             setCaption("Editing " + itemid + " : " + propertyid);
 
-            editor.setPropertyDataSource(c.getContainerProperty(itemid, propertyid));
+            editor.setPropertyDataSource(c.getContainerProperty(itemid,
+                    propertyid));
             addComponent(editor);
             addComponent(done);
 

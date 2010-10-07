@@ -24,7 +24,8 @@ public class Ticket2209 extends Application {
         getMainWindow().addComponent(gl);
         setTheme("tests-tickets");
         combo = new ComboBox("Combo caption");
-        labelLong = new Label("A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?");
+        labelLong = new Label(
+                "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?");
         gl.addComponent(combo);
         gl.addComponent(labelLong);
 

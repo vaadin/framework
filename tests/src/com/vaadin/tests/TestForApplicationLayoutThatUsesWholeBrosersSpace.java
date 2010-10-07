@@ -11,7 +11,8 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends Application {
+public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
+        Application {
 
     Window main = new Window("Windowing test");
 
@@ -30,13 +31,15 @@ public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends Applicati
 
         firstLevelSplit = new SplitPanel();
 
-        final SplitPanel secondSplitPanel = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+        final SplitPanel secondSplitPanel = new SplitPanel(
+                SplitPanel.ORIENTATION_HORIZONTAL);
         secondSplitPanel.setFirstComponent(new Label("left"));
 
         final VerticalLayout topRight = new VerticalLayout();
         topRight.addComponent(new Label("topright header"));
 
-        final Table t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(4, 100);
+        final Table t = TestForTablesInitialColumnWidthLogicRendering
+                .getTestTable(4, 100);
         t.setSizeFull();
         topRight.addComponent(t);
         topRight.setExpandRatio(t, 1);

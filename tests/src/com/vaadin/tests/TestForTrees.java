@@ -25,13 +25,17 @@ import com.vaadin.ui.VerticalLayout;
  */
 public class TestForTrees extends CustomComponent implements Handler {
 
-    private static final String[] firstnames = new String[] { "John", "Mary", "Joe", "Sarah", "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
+    private static final String[] firstnames = new String[] { "John", "Mary",
+            "Joe", "Sarah", "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
 
-    private static final String[] lastnames = new String[] { "Torvalds", "Smith", "Jones", "Beck", "Sheridan", "Picard", "Hill", "Fielding", "Einstein" };
+    private static final String[] lastnames = new String[] { "Torvalds",
+            "Smith", "Jones", "Beck", "Sheridan", "Picard", "Hill", "Fielding",
+            "Einstein" };
 
     private final VerticalLayout main = new VerticalLayout();
 
-    private final Action[] actions = new Action[] { new Action("edit"), new Action("delete") };
+    private final Action[] actions = new Action[] { new Action("edit"),
+            new Action("delete") };
 
     private Panel al;
 
@@ -45,7 +49,8 @@ public class TestForTrees extends CustomComponent implements Handler {
 
     public void createNewView() {
         main.removeAllComponents();
-        main.addComponent(new Label("Some test cases for trees. Events panel logs events that happen server side."));
+        main.addComponent(new Label(
+                "Some test cases for trees. Events panel logs events that happen server side."));
 
         main.addComponent(new Button("commit"));
 
@@ -90,7 +95,9 @@ public class TestForTrees extends CustomComponent implements Handler {
         Tree t = new Tree("Tree");
         final String[] names = new String[100];
         for (int i = 0; i < names.length; i++) {
-            names[i] = firstnames[(int) (Math.random() * (firstnames.length - 1))] + " " + lastnames[(int) (Math.random() * (lastnames.length - 1))];
+            names[i] = firstnames[(int) (Math.random() * (firstnames.length - 1))]
+                    + " "
+                    + lastnames[(int) (Math.random() * (lastnames.length - 1))];
         }
 
         // Create tree
@@ -135,7 +142,8 @@ public class TestForTrees extends CustomComponent implements Handler {
         t.addListener(new Listener() {
             public void componentEvent(Event event) {
                 status.addComponent(new Label(event.getClass().getName()));
-                status.addComponent(new Label("selected: " + event.getSource().toString()));
+                status.addComponent(new Label("selected: "
+                        + event.getSource().toString()));
             }
         });
 

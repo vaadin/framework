@@ -29,16 +29,17 @@ public class Ticket2242 extends Application implements ValueChangeListener {
     }
 
     private void createUI(AbstractOrderedLayout layout) {
-        Button b = new Button("Change container datasource", new ClickListener() {
+        Button b = new Button("Change container datasource",
+                new ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                for (int i = 0; i < 5; i++) {
-                    t.setContainerDataSource(createContainer());
-                    // prop.setValue("ipsum");
-                }
-            }
+                    public void buttonClick(ClickEvent event) {
+                        for (int i = 0; i < 5; i++) {
+                            t.setContainerDataSource(createContainer());
+                            // prop.setValue("ipsum");
+                        }
+                    }
 
-        });
+                });
 
         layout.addComponent(b);
 
@@ -59,7 +60,8 @@ public class Ticket2242 extends Application implements ValueChangeListener {
         IndexedContainer ic = new IndexedContainer();
         ic.addContainerProperty("a", String.class, null);
 
-        for (String s : new String[] { "Lorem", "ipsum", "dolor", "sit", "amet", "consectetuer" }) {
+        for (String s : new String[] { "Lorem", "ipsum", "dolor", "sit",
+                "amet", "consectetuer" }) {
             Item item = ic.addItem(s);
             item.getItemProperty("a").setValue(s);
 
@@ -106,7 +108,8 @@ public class Ticket2242 extends Application implements ValueChangeListener {
     }
 
     public void valueChange(ValueChangeEvent event) {
-        System.out.println("Value change from " + tableValue + " to " + t.getValue());
+        System.out.println("Value change from " + tableValue + " to "
+                + t.getValue());
         tableValue = t.getValue();
     }
 

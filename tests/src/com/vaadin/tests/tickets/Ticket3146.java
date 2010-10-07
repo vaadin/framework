@@ -34,29 +34,33 @@ public class Ticket3146 extends Application {
         table.setWidth("200px");
         mainWindow.addComponent(table);
 
-        Button clearButton = new Button("Clear selection", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                clearSelection();
-            }
-        });
+        Button clearButton = new Button("Clear selection",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        clearSelection();
+                    }
+                });
         mainWindow.addComponent(clearButton);
-        Button clearButton2 = new Button("Clear selection 2", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                clearSelection2();
-            }
-        });
+        Button clearButton2 = new Button("Clear selection 2",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        clearSelection2();
+                    }
+                });
         mainWindow.addComponent(clearButton2);
-        Button clearButton3 = new Button("Clear selection 3", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                clearSelection3();
-            }
-        });
+        Button clearButton3 = new Button("Clear selection 3",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        clearSelection3();
+                    }
+                });
         mainWindow.addComponent(clearButton3);
-        Button printButton = new Button("Print selection", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                printSelection();
-            }
-        });
+        Button printButton = new Button("Print selection",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        printSelection();
+                    }
+                });
         mainWindow.addComponent(printButton);
 
         result = new TextField();

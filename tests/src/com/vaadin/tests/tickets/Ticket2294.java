@@ -50,6 +50,7 @@ public class Ticket2294 extends Application {
             result3 = "FAILED: " + e.getMessage();
         }
 
-        label1.setValue("Result 1: " + result1 + ", result 2: " + result2 + ", result 3: " + result3);
+        label1.setValue("Result 1: " + result1 + ", result 2: " + result2
+                + ", result 3: " + result3);
     }
 }

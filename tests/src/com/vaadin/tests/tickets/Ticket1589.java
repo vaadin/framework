@@ -29,9 +29,13 @@ public class Ticket1589 extends Application {
 
         w.addURIHandler(res);
 
-        w.addComponent(new Link("Test (without Content-Disposition, should suggest generatedFile.png when saving, browser default for actual disposition)", new ExternalResource("myresource")));
+        w.addComponent(new Link(
+                "Test (without Content-Disposition, should suggest generatedFile.png when saving, browser default for actual disposition)",
+                new ExternalResource("myresource")));
 
-        w.addComponent(new Link("Test (with Content-Disposition, should popup download dialog that suggests  filename downloadedPNG.png)", new ExternalResource("myresource_download")));
+        w.addComponent(new Link(
+                "Test (with Content-Disposition, should popup download dialog that suggests  filename downloadedPNG.png)",
+                new ExternalResource("myresource_download")));
     }
 }
 
@@ -53,7 +57,8 @@ class MyDynamicResource implements URIHandler {
         }
 
         // Create an image and draw some background on it.
-        BufferedImage image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
+        BufferedImage image = new BufferedImage(200, 200,
+                BufferedImage.TYPE_INT_RGB);
         Graphics drawable = image.getGraphics();
         drawable.setColor(Color.lightGray);
         drawable.fillRect(0, 0, 200, 200);
@@ -72,11 +77,14 @@ class MyDynamicResource implements URIHandler {
             ImageIO.write(image, "png", imagebuffer);
 
             // Return a stream from the buffer.
-            ByteArrayInputStream istream = new ByteArrayInputStream(imagebuffer.toByteArray());
-            DownloadStream downloadStream = new DownloadStream(istream, "image/png", "generatedFile.png");
+            ByteArrayInputStream istream = new ByteArrayInputStream(
+                    imagebuffer.toByteArray());
+            DownloadStream downloadStream = new DownloadStream(istream,
+                    "image/png", "generatedFile.png");
 
             if (relativeUri.startsWith("myresource_download")) {
-                downloadStream.setParameter("Content-Disposition", "attachment; filename=\"downloadedPNG.png\"");
+                downloadStream.setParameter("Content-Disposition",
+                        "attachment; filename=\"downloadedPNG.png\"");
             }
             return downloadStream;
         } catch (IOException e) {

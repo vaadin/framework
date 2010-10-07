@@ -14,7 +14,8 @@ public class Ticket2037 extends com.vaadin.Application {
         Window main = new Window();
         setMainWindow(main);
 
-        main.addComponent(new Label("Use debug dialog and trac number of registered paintables. It should not grow on subsequant b clicks."));
+        main.addComponent(new Label(
+                "Use debug dialog and trac number of registered paintables. It should not grow on subsequant b clicks."));
 
         final Layout lo = new VerticalLayout();
 

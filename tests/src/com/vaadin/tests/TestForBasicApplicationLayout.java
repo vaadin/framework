@@ -55,7 +55,8 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         tab = new TabSheet();
         tab.setSizeFull();
 
-        final Panel report = new Panel("Monthly Program Runs", new VerticalLayout());
+        final Panel report = new Panel("Monthly Program Runs",
+                new VerticalLayout());
         final VerticalLayout controls = new VerticalLayout();
         controls.setMargin(true);
         controls.addComponent(new Label("Report tab"));
@@ -72,7 +73,8 @@ public class TestForBasicApplicationLayout extends CustomComponent {
 
         sp2.setFirstComponent(report);
 
-        final Table table = TestForTablesInitialColumnWidthLogicRendering.getTestTable(5, 200);
+        final Table table = TestForTablesInitialColumnWidthLogicRendering
+                .getTestTable(5, 200);
         table.setPageLength(15);
         table.setSelectable(true);
         table.setRowHeaderMode(Table.ROW_HEADER_MODE_INDEX);

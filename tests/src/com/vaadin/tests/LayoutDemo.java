@@ -83,15 +83,27 @@ public class LayoutDemo extends com.vaadin.Application {
         //
         // Add demo layouts to main window
         //
-        mainWindow.addComponent(new Label("<h3>Horizontal ordered layout</h3>Added four components.", Label.CONTENT_XHTML));
+        mainWindow.addComponent(new Label(
+                "<h3>Horizontal ordered layout</h3>Added four components.",
+                Label.CONTENT_XHTML));
         mainWindow.addComponent(layoutA);
-        mainWindow.addComponent(new Label("<br /><h3>Vertical ordered layout</h3>Added four components.", Label.CONTENT_XHTML));
+        mainWindow.addComponent(new Label(
+                "<br /><h3>Vertical ordered layout</h3>Added four components.",
+                Label.CONTENT_XHTML));
         mainWindow.addComponent(layoutB);
-        mainWindow.addComponent(new Label("<br /><h3>Grid Layout (4 x 4)</h3>Added 16 components.", Label.CONTENT_XHTML));
+        mainWindow.addComponent(new Label(
+                "<br /><h3>Grid Layout (4 x 4)</h3>Added 16 components.",
+                Label.CONTENT_XHTML));
         mainWindow.addComponent(layoutG);
-        mainWindow.addComponent(new Label("<br /><h3>Grid Layout (4 x 4)</h3>" + "Added four panels and four embedded components " + "diagonally with absolute coordinates.", Label.CONTENT_XHTML));
+        mainWindow
+                .addComponent(new Label("<br /><h3>Grid Layout (4 x 4)</h3>"
+                        + "Added four panels and four embedded components "
+                        + "diagonally with absolute coordinates.",
+                        Label.CONTENT_XHTML));
         mainWindow.addComponent(layoutG2);
-        mainWindow.addComponent(new Label("<br /><h3>TabSheet</h3>Added above layouts as tabs.", Label.CONTENT_XHTML));
+        mainWindow.addComponent(new Label(
+                "<br /><h3>TabSheet</h3>Added above layouts as tabs.",
+                Label.CONTENT_XHTML));
         mainWindow.addComponent(tabsheet);
 
     }
@@ -107,7 +119,12 @@ public class LayoutDemo extends com.vaadin.Application {
     private Component getExampleComponent(String caption) {
         final Panel panel = new Panel();
         panel.setCaption("Panel component " + caption);
-        panel.addComponent(new Label("Panel is a container for other components, by default it draws a frame around it's " + "extremities and may have a caption to clarify the nature of the contained components' purpose." + " Panel contains an layout where the actual contained components are added, " + "this layout may be switched on the fly.", Label.CONTENT_XHTML));
+        panel.addComponent(new Label(
+                "Panel is a container for other components, by default it draws a frame around it's "
+                        + "extremities and may have a caption to clarify the nature of the contained components' purpose."
+                        + " Panel contains an layout where the actual contained components are added, "
+                        + "this layout may be switched on the fly.",
+                Label.CONTENT_XHTML));
         panel.setWidth(222);
         return panel;
     }

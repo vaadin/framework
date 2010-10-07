@@ -6,7 +6,8 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Window;
 
-public class Ticket2023 extends com.vaadin.Application implements Button.ClickListener {
+public class Ticket2023 extends com.vaadin.Application implements
+        Button.ClickListener {
 
     AbstractComponent c = new Button();
 
@@ -16,7 +17,8 @@ public class Ticket2023 extends com.vaadin.Application implements Button.ClickLi
         setMainWindow(main);
 
         String[] sizes = { "20", "100", "1", "0", "-1", "", "z" };
-        String[] units = { "%", "px", "em", "ex", "in", "cm", "mm", "pt", "pc", "", "p", "zyx" };
+        String[] units = { "%", "px", "em", "ex", "in", "cm", "mm", "pt", "pc",
+                "", "p", "zyx" };
 
         GridLayout gl = new GridLayout(units.length, sizes.length);
         main.addComponent(gl);

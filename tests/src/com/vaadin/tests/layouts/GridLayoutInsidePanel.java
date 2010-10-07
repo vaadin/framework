@@ -23,7 +23,8 @@ public class GridLayoutInsidePanel extends TestBase {
         {
             GridLayout gl = new GridLayout(1, 1);
             gl.setSizeUndefined();
-            gl.addComponent(new Label("A label which defines the size of the GL"));
+            gl.addComponent(new Label(
+                    "A label which defines the size of the GL"));
 
             Panel p = new Panel("Panel 1");
             ((Layout) p.getContent()).setMargin(false);
@@ -36,7 +37,8 @@ public class GridLayoutInsidePanel extends TestBase {
         {
             GridLayout gl = new GridLayout(1, 1);
             gl.setSizeUndefined();
-            gl.addComponent(new Label("A label which defines the size of the GL"));
+            gl.addComponent(new Label(
+                    "A label which defines the size of the GL"));
 
             Panel p = new Panel("Panel 2", gl);
             ((Layout) p.getContent()).setMargin(false);

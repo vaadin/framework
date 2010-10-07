@@ -22,7 +22,8 @@ public class Ticket2282 extends Application {
         layout1 = new FormLayout();
         layout1.setSizeUndefined();
         layout1.setStyleName("borders");
-        Label label = new Label("This should not be wider than this label + reserved error space");
+        Label label = new Label(
+                "This should not be wider than this label + reserved error space");
         label.setCaption("A caption");
         layout1.addComponent(label);
         w.addComponent(layout1);

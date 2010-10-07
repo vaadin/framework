@@ -17,7 +17,8 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class Ticket2061c extends Application implements SelectedTabChangeListener {
+public class Ticket2061c extends Application implements
+        SelectedTabChangeListener {
 
     private Window mainWindow;
     private Panel p;
@@ -87,7 +88,8 @@ public class Ticket2061c extends Application implements SelectedTabChangeListene
                 Item rowItem = table.addItem(j);
                 if (rowItem != null) {
                     for (int i = 0; i < columns.length; i++) {
-                        rowItem.getItemProperty(columns[i]).setValue("Value" + j);
+                        rowItem.getItemProperty(columns[i]).setValue(
+                                "Value" + j);
                     }
                 }
             }

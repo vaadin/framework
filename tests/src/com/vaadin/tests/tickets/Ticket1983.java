@@ -52,13 +52,27 @@ public class Ticket1983 extends Application {
             dataSource.addContainerProperty(propId, String.class, null);
             dataSource.addContainerProperty(propId2, String.class, null);
             final Object itemId = dataSource.addItem();
-            dataSource.getItem(itemId).getItemProperty(propId).setValue("Very long value that makes a scrollbar appear for sure");
-            dataSource.getItem(itemId).getItemProperty(propId2).setValue("Very long value that makes a scrollbar appear for sure");
+            dataSource
+                    .getItem(itemId)
+                    .getItemProperty(propId)
+                    .setValue(
+                            "Very long value that makes a scrollbar appear for sure");
+            dataSource
+                    .getItem(itemId)
+                    .getItemProperty(propId2)
+                    .setValue(
+                            "Very long value that makes a scrollbar appear for sure");
 
             for (int i = 0; i < 150; i++) {
                 Object id = dataSource.addItem();
-                dataSource.getItem(id).getItemProperty(propId).setValue((i == 100 ? "Very long value that makes a scrollbar appear for sure" : "Short"));
-                dataSource.getItem(id).getItemProperty(propId2).setValue("Short");
+                dataSource
+                        .getItem(id)
+                        .getItemProperty(propId)
+                        .setValue(
+                                (i == 100 ? "Very long value that makes a scrollbar appear for sure"
+                                        : "Short"));
+                dataSource.getItem(id).getItemProperty(propId2)
+                        .setValue("Short");
             }
 
             table.setSizeFull();
@@ -73,12 +87,22 @@ public class Ticket1983 extends Application {
                     // Change the column value to a short one --> Should remove
                     // the scrollbar
                     if (isLong) {
-                        dataSource.getItem(itemId).getItemProperty(propId).setValue("Short value");
-                        dataSource.getItem(itemId).getItemProperty(propId2).setValue("Short value");
+                        dataSource.getItem(itemId).getItemProperty(propId)
+                                .setValue("Short value");
+                        dataSource.getItem(itemId).getItemProperty(propId2)
+                                .setValue("Short value");
                         isLong = false;
                     } else {
-                        dataSource.getItem(itemId).getItemProperty(propId).setValue("Very long value that makes a scrollbar appear for sure");
-                        dataSource.getItem(itemId).getItemProperty(propId2).setValue("Very long value that makes a scrollbar appear for sure");
+                        dataSource
+                                .getItem(itemId)
+                                .getItemProperty(propId)
+                                .setValue(
+                                        "Very long value that makes a scrollbar appear for sure");
+                        dataSource
+                                .getItem(itemId)
+                                .getItemProperty(propId2)
+                                .setValue(
+                                        "Very long value that makes a scrollbar appear for sure");
                         isLong = true;
                     }
                     // Works the same way with or without repaint request

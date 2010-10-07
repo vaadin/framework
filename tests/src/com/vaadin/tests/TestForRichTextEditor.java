@@ -17,7 +17,8 @@ import com.vaadin.ui.VerticalLayout;
  * 
  * @author IT Mill Ltd.
  */
-public class TestForRichTextEditor extends CustomComponent implements ValueChangeListener {
+public class TestForRichTextEditor extends CustomComponent implements
+        ValueChangeListener {
 
     private final VerticalLayout main = new VerticalLayout();
 
@@ -33,7 +34,8 @@ public class TestForRichTextEditor extends CustomComponent implements ValueChang
 
     public void createNewView() {
         main.removeAllComponents();
-        main.addComponent(new Label("RTE uses google richtextArea and their examples toolbar."));
+        main.addComponent(new Label(
+                "RTE uses google richtextArea and their examples toolbar."));
 
         rte = new RichTextArea();
         rte.addListener(this);

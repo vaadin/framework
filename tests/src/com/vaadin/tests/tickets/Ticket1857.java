@@ -26,7 +26,7 @@ public class Ticket1857 extends Application implements Handler {
 
         final Table t = new Table();
         el.addComponent(t);
-        el.setExpandRatio(t,1);
+        el.setExpandRatio(t, 1);
         t.setSizeFull();
         addContentsToTable(t);
         t.setStyleName("foo");
@@ -56,12 +56,14 @@ public class Ticket1857 extends Application implements Handler {
                 if (((Boolean) cellStylesEnabler.getValue()).booleanValue()) {
                     t.setCellStyleGenerator(new Table.CellStyleGenerator() {
                         public String getStyle(Object itemId, Object propertyId) {
-                            Object cell = t.getContainerProperty(itemId, propertyId).getValue();
+                            Object cell = t.getContainerProperty(itemId,
+                                    propertyId).getValue();
                             if (!(cell instanceof Integer)) {
                                 return null;
                             }
                             int age = ((Integer) cell).intValue();
-                            return age > 65 ? "old" : (age < 18 ? "young" : null);
+                            return age > 65 ? "old" : (age < 18 ? "young"
+                                    : null);
                         }
                     });
                 } else {
@@ -79,11 +81,17 @@ public class Ticket1857 extends Application implements Handler {
         t.addContainerProperty("Last name", String.class, "");
         t.addContainerProperty("Age", Integer.class, "");
 
-        String firstNames[] = { "Quentin", "Marc", "Peter", "David", "Mary", "Jani", "Jane", "Brita" };
-        String lastNames[] = { "Heiskanen", "Bjorn", "Torwalds", "Autere", "Smith", "Lindström" };
+        String firstNames[] = { "Quentin", "Marc", "Peter", "David", "Mary",
+                "Jani", "Jane", "Brita" };
+        String lastNames[] = { "Heiskanen", "Bjorn", "Torwalds", "Autere",
+                "Smith", "Lindström" };
 
         for (int i = 0; i < 1000; i++) {
-            t.addItem(new Object[] { firstNames[((int) (Math.random() * firstNames.length))], lastNames[((int) (Math.random() * lastNames.length))], new Integer((int) (Math.random() * 100) + 10) }, new Integer(i));
+            t.addItem(new Object[] {
+                    firstNames[((int) (Math.random() * firstNames.length))],
+                    lastNames[((int) (Math.random() * lastNames.length))],
+                    new Integer((int) (Math.random() * 100) + 10) },
+                    new Integer(i));
         }
     }
 

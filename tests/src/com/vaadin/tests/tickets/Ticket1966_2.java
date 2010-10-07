@@ -157,7 +157,8 @@ public class Ticket1966_2 extends Application {
     }
 
     private Button getButton(Layout l, Alignment align) {
-        Button b = new Button(align.getHorizontalAlignment() + " - " + align.getVerticalAlignment());
+        Button b = new Button(align.getHorizontalAlignment() + " - "
+                + align.getVerticalAlignment());
         // b.setWidth("100");
         ((AlignmentHandler) l).setComponentAlignment(b, align);
 

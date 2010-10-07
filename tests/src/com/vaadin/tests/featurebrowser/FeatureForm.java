@@ -17,7 +17,8 @@ import com.vaadin.ui.Select;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class FeatureForm extends Feature implements Property.ValueChangeListener {
+public class FeatureForm extends Feature implements
+        Property.ValueChangeListener {
 
     VerticalLayout demo = null;
 
@@ -145,7 +146,24 @@ public class FeatureForm extends Feature implements Property.ValueChangeListener
 
     @Override
     protected String getDescriptionXHTML() {
-        return "Form is a flexible, yet simple container for fields. " + " It provides support for any layouts and provides buffering interface for" + " easy connection of commit- and discard buttons. All the form" + " fields can be customized by adding validators, setting captions and icons, " + " setting immediateness, etc. Also direct mechanism for replacing existing" + " fields with selections is given." + " <br /><br />Form provides customizable editor for classes implementing" + " Item-interface. Also the form itself" + " implements this interface for easier connectivity to other items." + " To use the form as editor for an item, just connect the item to" + " form.After the item has been connected to the form," + " the automatically created fields can be customized and new fields can" + " be added. If you need to connect a class that does not implement" + " Item-interface, most properties of any" + " class following bean pattern, can be accessed trough" + " BeanItem." + " <br /><br />The best example of Form usage is the this feature browser itself; " + " all the Property-panels in demos are composed of Form-components.";
+        return "Form is a flexible, yet simple container for fields. "
+                + " It provides support for any layouts and provides buffering interface for"
+                + " easy connection of commit- and discard buttons. All the form"
+                + " fields can be customized by adding validators, setting captions and icons, "
+                + " setting immediateness, etc. Also direct mechanism for replacing existing"
+                + " fields with selections is given."
+                + " <br /><br />Form provides customizable editor for classes implementing"
+                + " Item-interface. Also the form itself"
+                + " implements this interface for easier connectivity to other items."
+                + " To use the form as editor for an item, just connect the item to"
+                + " form.After the item has been connected to the form,"
+                + " the automatically created fields can be customized and new fields can"
+                + " be added. If you need to connect a class that does not implement"
+                + " Item-interface, most properties of any"
+                + " class following bean pattern, can be accessed trough"
+                + " BeanItem."
+                + " <br /><br />The best example of Form usage is the this feature browser itself; "
+                + " all the Property-panels in demos are composed of Form-components.";
     }
 
     @Override

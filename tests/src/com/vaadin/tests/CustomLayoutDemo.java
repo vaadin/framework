@@ -28,7 +28,8 @@ import com.vaadin.ui.Window;
  * @since 4.0.0
  * 
  */
-public class CustomLayoutDemo extends com.vaadin.Application implements Listener {
+public class CustomLayoutDemo extends com.vaadin.Application implements
+        Listener {
 
     private CustomLayout mainLayout = null;
 
@@ -56,7 +57,8 @@ public class CustomLayoutDemo extends com.vaadin.Application implements Listener
         // Create custom layout, themes/example/layout/mainLayout.html
         mainLayout = new CustomLayout("mainLayout");
         // wrap custom layout inside a panel
-        final Panel customLayoutPanel = new Panel("Panel containing custom layout (mainLayout.html)");
+        final Panel customLayoutPanel = new Panel(
+                "Panel containing custom layout (mainLayout.html)");
         customLayoutPanel.addComponent(mainLayout);
 
         // Login components
@@ -86,7 +88,8 @@ public class CustomLayoutDemo extends com.vaadin.Application implements Listener
         setBody("Welcome");
 
         // Add heading label and custom layout panel to main window
-        mainWindow.addComponent(new Label("<h3>Custom layout demo</h3>", Label.CONTENT_XHTML));
+        mainWindow.addComponent(new Label("<h3>Custom layout demo</h3>",
+                Label.CONTENT_XHTML));
         mainWindow.addComponent(customLayoutPanel);
     }
 
@@ -101,7 +104,8 @@ public class CustomLayoutDemo extends com.vaadin.Application implements Listener
         if (username.getValue().toString().length() < 1) {
             username.setValue("Anonymous");
         }
-        mainLayout.replaceComponent(loginButton, new Label("Welcome user <em>" + username.getValue() + "</em>", Label.CONTENT_XHTML));
+        mainLayout.replaceComponent(loginButton, new Label("Welcome user <em>"
+                + username.getValue() + "</em>", Label.CONTENT_XHTML));
     }
 
     /**

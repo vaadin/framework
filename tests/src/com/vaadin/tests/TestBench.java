@@ -39,10 +39,13 @@ import com.vaadin.ui.Window;
  * @author IT Mill Ltd.
  * 
  */
-public class TestBench extends com.vaadin.Application implements Property.ValueChangeListener {
+public class TestBench extends com.vaadin.Application implements
+        Property.ValueChangeListener {
 
     // Add here packages which are used for finding testable classes
-    String[] testablePackages = { "com.vaadin.tests", "com.vaadin.demo", "com.vaadin.demo.colorpicker", "com.vaadin.demo.features", "com.vaadin.tests.tickets" };
+    String[] testablePackages = { "com.vaadin.tests", "com.vaadin.demo",
+            "com.vaadin.demo.colorpicker", "com.vaadin.demo.features",
+            "com.vaadin.tests.tickets" };
 
     HierarchicalContainer testables = new HierarchicalContainer();
 
@@ -66,7 +69,8 @@ public class TestBench extends com.vaadin.Application implements Property.ValueC
             testables.addItem(testablePackages[p]);
             try {
                 final List<Class<?>> testableClasses = getTestableClassesForPackage(testablePackages[p]);
-                for (final Iterator<Class<?>> it = testableClasses.iterator(); it.hasNext();) {
+                for (final Iterator<Class<?>> it = testableClasses.iterator(); it
+                        .hasNext();) {
                     final Class<?> t = it.next();
                     // ignore TestBench itself
                     if (t.equals(TestBench.class)) {
@@ -97,10 +101,12 @@ public class TestBench extends com.vaadin.Application implements Property.ValueC
 
         menu = new Tree("Testables", testables);
 
-        for (final Iterator<Class<?>> i = itemCaptions.keySet().iterator(); i.hasNext();) {
+        for (final Iterator<Class<?>> i = itemCaptions.keySet().iterator(); i
+                .hasNext();) {
             final Class<?> testable = i.next();
             // simplify captions
-            final String name = testable.getName().substring(testable.getName().lastIndexOf('.') + 1);
+            final String name = testable.getName().substring(
+                    testable.getName().lastIndexOf('.') + 1);
             menu.setItemCaption(testable, name);
         }
         // expand all root items
@@ -174,7 +180,8 @@ public class TestBench extends com.vaadin.Application implements Property.ValueC
                         if (next instanceof Class) {
                             Class<?> c = (Class<?>) next;
                             String string = c.getSimpleName();
-                            if (string.toLowerCase().contains(fragment.toLowerCase())) {
+                            if (string.toLowerCase().contains(
+                                    fragment.toLowerCase())) {
                                 menu.setValue(c);
                                 mainLayout.setSplitPosition(0);
                                 return;
@@ -182,7 +189,8 @@ public class TestBench extends com.vaadin.Application implements Property.ValueC
                         }
                     }
 
-                    getMainWindow().showNotification("No potential matc for #" + fragment);
+                    getMainWindow().showNotification(
+                            "No potential matc for #" + fragment);
 
                 }
 
@@ -219,9 +227,12 @@ public class TestBench extends com.vaadin.Application implements Property.ValueC
             } catch (final Exception e1) {
                 e1.printStackTrace();
                 VerticalLayout lo = new VerticalLayout();
-                lo.addComponent(new Label("Cannot create application / custom component: " + e1.toString()));
+                lo.addComponent(new Label(
+                        "Cannot create application / custom component: "
+                                + e1.toString()));
 
-                Link l = new Link("Try opening via app runner", new ExternalResource("../run/" + c.getName()));
+                Link l = new Link("Try opening via app runner",
+                        new ExternalResource("../run/" + c.getName()));
                 lo.addComponent(l);
 
                 return lo;
@@ -253,10 +264,12 @@ public class TestBench extends com.vaadin.Application implements Property.ValueC
      * @return
      * @throws ClassNotFoundException
      */
-    public static List<Class<?>> getTestableClassesForPackage(String packageName) throws Exception {
+    public static List<Class<?>> getTestableClassesForPackage(String packageName)
+            throws Exception {
         final ArrayList<File> directories = new ArrayList<File>();
         try {
-            final ClassLoader cld = Thread.currentThread().getContextClassLoader();
+            final ClassLoader cld = Thread.currentThread()
+                    .getContextClassLoader();
             if (cld == null) {
                 throw new ClassNotFoundException("Can't get class loader.");
             }
@@ -268,7 +281,8 @@ public class TestBench extends com.vaadin.Application implements Property.ValueC
                 directories.add(new File(url.getFile()));
             }
         } catch (final Exception x) {
-            throw new Exception(packageName + " does not appear to be a valid package.");
+            throw new Exception(packageName
+                    + " does not appear to be a valid package.");
         }
 
         final ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
@@ -282,12 +296,15 @@ public class TestBench extends com.vaadin.Application implements Property.ValueC
                     // we are only interested in .class files
                     if (files[j].endsWith(".class")) {
                         // removes the .class extension
-                        final String p = packageName + '.' + files[j].substring(0, files[j].length() - 6);
+                        final String p = packageName + '.'
+                                + files[j].substring(0, files[j].length() - 6);
                         final Class<?> c = Class.forName(p);
                         if (c.getSuperclass() != null) {
-                            if ((c.getSuperclass().equals(com.vaadin.Application.class))) {
+                            if ((c.getSuperclass()
+                                    .equals(com.vaadin.Application.class))) {
                                 classes.add(c);
-                            } else if ((c.getSuperclass().equals(com.vaadin.ui.CustomComponent.class))) {
+                            } else if ((c.getSuperclass()
+                                    .equals(com.vaadin.ui.CustomComponent.class))) {
                                 classes.add(c);
                             }
                         }
@@ -302,7 +319,9 @@ public class TestBench extends com.vaadin.Application implements Property.ValueC
                     }
                 }
             } else {
-                throw new ClassNotFoundException(packageName + " (" + directory.getPath() + ") does not appear to be a valid package");
+                throw new ClassNotFoundException(packageName + " ("
+                        + directory.getPath()
+                        + ") does not appear to be a valid package");
             }
         }
 

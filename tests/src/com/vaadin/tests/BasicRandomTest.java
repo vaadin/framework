@@ -46,7 +46,8 @@ import com.vaadin.ui.Window;
  * 
  */
 @SuppressWarnings("unchecked")
-public class BasicRandomTest extends com.vaadin.Application implements Button.ClickListener {
+public class BasicRandomTest extends com.vaadin.Application implements
+        Button.ClickListener {
 
     // Seed with fixed number to ensure predeterministic AUT behaviour
     private Random rand;
@@ -62,9 +63,11 @@ public class BasicRandomTest extends com.vaadin.Application implements Button.Cl
 
     private final TextField randomSeedValue = new TextField("Seed for random");
 
-    private final Button seedShuffle = new Button("Shuffle with seed", this, "seedShuffle");
+    private final Button seedShuffle = new Button("Shuffle with seed", this,
+            "seedShuffle");
 
-    private final Button randomShuffle = new Button("Seed randomly and shuffle", this, "randomShuffle");
+    private final Button randomShuffle = new Button(
+            "Seed randomly and shuffle", this, "randomShuffle");
 
     private Label display = null;
 
@@ -111,7 +114,16 @@ public class BasicRandomTest extends com.vaadin.Application implements Button.Cl
 
         // Setup contains restart button and deterministic component shuffler
         // Test requirement: test cases must be reproducable (use seed)
-        mainLayout.addComponent(new Label("<H3>ATFTest with randomized Calculator functionality</H3>" + "Buttons with X captions contain calculator number, " + "minus, add, multiply, divisor or clear " + "button functionalities.<br />Layouts, \"noise\" " + "components and component placing is randomized " + "after each application restart.<br />" + "Test cases should exercise calculator functions " + "through X buttons and ensure that Result label " + "contains correct value.", Label.CONTENT_XHTML));
+        mainLayout.addComponent(new Label(
+                "<H3>ATFTest with randomized Calculator functionality</H3>"
+                        + "Buttons with X captions contain calculator number, "
+                        + "minus, add, multiply, divisor or clear "
+                        + "button functionalities.<br />Layouts, \"noise\" "
+                        + "components and component placing is randomized "
+                        + "after each application restart.<br />"
+                        + "Test cases should exercise calculator functions "
+                        + "through X buttons and ensure that Result label "
+                        + "contains correct value.", Label.CONTENT_XHTML));
 
         final HorizontalLayout setupLayout = new HorizontalLayout();
         final Panel statusPanel = new Panel("Status");
@@ -145,7 +157,8 @@ public class BasicRandomTest extends com.vaadin.Application implements Button.Cl
         }
         try {
             // randomize using user given value
-            rand = new Random(Long.parseLong((String) randomSeedValue.getValue()));
+            rand = new Random(Long.parseLong((String) randomSeedValue
+                    .getValue()));
         } catch (final Exception e) {
             randomize();
         }
@@ -155,7 +168,8 @@ public class BasicRandomTest extends com.vaadin.Application implements Button.Cl
         addComponents(testingLayout);
         eventCounter = 0;
 
-        statusLabel.setValue("#" + eventCounter + ": button <none>" + ", value " + Double.toString(current));
+        statusLabel.setValue("#" + eventCounter + ": button <none>"
+                + ", value " + Double.toString(current));
     }
 
     // initialize random with random seed and shuffle
@@ -192,7 +206,11 @@ public class BasicRandomTest extends com.vaadin.Application implements Button.Cl
         components.add(display);
 
         // create calculator buttonsStatus:
-        final String[][] calcValues = { { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "-", "*", "/", "=", "C" }, { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "plus", "minus", "multiple", "divisor", "equals", "clear" } };
+        final String[][] calcValues = {
+                { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "-",
+                        "*", "/", "=", "C" },
+                { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "plus",
+                        "minus", "multiple", "divisor", "equals", "clear" } };
         // final String[] randomizedCaptions = { "a", "b", "c", "y", "8", "3" };
         // String[] randomizedCaptions = { "X" };
         buttonValues = new HashMap<Button, String>();
@@ -238,7 +256,8 @@ public class BasicRandomTest extends com.vaadin.Application implements Button.Cl
     private void addComponents(Layout layout) {
         while (components.size() > 0) {
             // Get random container
-            final ComponentContainer container = randomComponents.getRandomComponentContainer("" + captionCounter++);
+            final ComponentContainer container = randomComponents
+                    .getRandomComponentContainer("" + captionCounter++);
             layout.addComponent(container);
             // Get random amount of components for above container
             final int groupsize = rand.nextInt(COMPONENT_MAX_GROUPED_NUMBER) + 1;
@@ -246,7 +265,8 @@ public class BasicRandomTest extends com.vaadin.Application implements Button.Cl
                 final Component c = getComponent();
                 if (c != null) {
                     if (container instanceof TabSheet) {
-                        final ComponentContainer tab = (ComponentContainer) ((TabSheet) container).getSelectedTab();
+                        final ComponentContainer tab = (ComponentContainer) ((TabSheet) container)
+                                .getSelectedTab();
                         tab.addComponent(c);
                     } else if (container instanceof GridLayout) {
                         final GridLayout gl = (GridLayout) container;
@@ -273,8 +293,10 @@ public class BasicRandomTest extends com.vaadin.Application implements Button.Cl
             // Number button pressed
             current = current * 10 + Double.parseDouble(value);
             display.setValue(Double.toString(current));
-            statusLabel.setValue("#" + eventCounter + ": button " + value + ", value " + Double.toString(current));
-            System.out.println("#" + eventCounter + ": button " + value + ", value " + Double.toString(current));
+            statusLabel.setValue("#" + eventCounter + ": button " + value
+                    + ", value " + Double.toString(current));
+            System.out.println("#" + eventCounter + ": button " + value
+                    + ", value " + Double.toString(current));
         } catch (final java.lang.NumberFormatException e) {
             // Operation button pressed
             if (operation.equals("+")) {
@@ -298,8 +320,10 @@ public class BasicRandomTest extends com.vaadin.Application implements Button.Cl
             operation = value;
             current = 0.0;
             display.setValue(Double.toString(stored));
-            statusLabel.setValue("#" + eventCounter + ": button " + value + ", value " + Double.toString(stored));
-            System.out.println("#" + eventCounter + ": button " + value + ", value " + Double.toString(stored));
+            statusLabel.setValue("#" + eventCounter + ": button " + value
+                    + ", value " + Double.toString(stored));
+            System.out.println("#" + eventCounter + ": button " + value
+                    + ", value " + Double.toString(stored));
         }
     }
 
@@ -319,7 +343,8 @@ public class BasicRandomTest extends com.vaadin.Application implements Button.Cl
     @Override
     public void terminalError(com.vaadin.terminal.Terminal.ErrorEvent event) {
         final Throwable e = event.getThrowable();
-        System.err.println(getUser().toString() + " terminalError: " + e.toString());
+        System.err.println(getUser().toString() + " terminalError: "
+                + e.toString());
         e.printStackTrace();
     }
 }

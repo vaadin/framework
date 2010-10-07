@@ -91,9 +91,12 @@ public class TestComponentAddAndRecursion extends CustomComponent {
             public void buttonClick(ClickEvent event) {
                 try {
                     p3.addComponent(p2);
-                    getWindow().showNotification("ERROR", "This should have failed", Window.Notification.TYPE_ERROR_MESSAGE);
+                    getWindow().showNotification("ERROR",
+                            "This should have failed",
+                            Window.Notification.TYPE_ERROR_MESSAGE);
                 } catch (Exception e) {
-                    getWindow().showNotification("OK", "threw, as expected", Window.Notification.TYPE_ERROR_MESSAGE);
+                    getWindow().showNotification("OK", "threw, as expected",
+                            Window.Notification.TYPE_ERROR_MESSAGE);
                 }
             }
 
@@ -106,9 +109,12 @@ public class TestComponentAddAndRecursion extends CustomComponent {
                 p.addComponent(p2);
                 try {
                     p3.addComponent(p);
-                    getWindow().showNotification("ERROR", "This should have failed", Window.Notification.TYPE_ERROR_MESSAGE);
+                    getWindow().showNotification("ERROR",
+                            "This should have failed",
+                            Window.Notification.TYPE_ERROR_MESSAGE);
                 } catch (Exception e) {
-                    getWindow().showNotification("OK", "threw, as expected", Window.Notification.TYPE_ERROR_MESSAGE);
+                    getWindow().showNotification("OK", "threw, as expected",
+                            Window.Notification.TYPE_ERROR_MESSAGE);
                 }
             }
 

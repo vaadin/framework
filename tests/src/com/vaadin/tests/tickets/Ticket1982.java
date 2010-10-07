@@ -66,7 +66,8 @@ public class Ticket1982 extends Application {
                     min.setVisible(true);
                     max.setVisible(false);
                     TitleBar.this.layout.removeAllComponents();
-                    TitleBar.this.layout.addComponent(TitleBar.this, 0, 0, 1, 1);
+                    TitleBar.this.layout
+                            .addComponent(TitleBar.this, 0, 0, 1, 1);
                 }
             });
             min.addListener(new ClickListener() {

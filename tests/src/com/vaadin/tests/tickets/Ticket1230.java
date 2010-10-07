@@ -116,11 +116,12 @@ public class Ticket1230 extends Application {
 
         }
 
-        w.addComponent(new Button("print select values", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                printState();
-            }
-        }));
+        w.addComponent(new Button("print select values",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        printState();
+                    }
+                }));
     }
 
     private Select createSelect() {
@@ -140,8 +141,10 @@ public class Ticket1230 extends Application {
     }
 
     void printState() {
-        System.out.println(" Select without null item " + selectWithoutNullItem.getValue());
-        System.out.println(" Select with null item " + selectWithNullItem.getValue());
+        System.out.println(" Select without null item "
+                + selectWithoutNullItem.getValue());
+        System.out.println(" Select with null item "
+                + selectWithNullItem.getValue());
 
     }
 

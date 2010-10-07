@@ -17,7 +17,10 @@ public class Ticket2339 extends Application {
         setMainWindow(mainWin);
 
         try {
-            CustomLayout cl = new CustomLayout(new ByteArrayInputStream("<div style=\"width:400px;overflow:hidden;background-color:red;\"><div style=\"border:1em solid blue; height:4em; padding:1em 1.5em;\" location=\"b\"></div></div>".getBytes()));
+            CustomLayout cl = new CustomLayout(
+                    new ByteArrayInputStream(
+                            "<div style=\"width:400px;overflow:hidden;background-color:red;\"><div style=\"border:1em solid blue; height:4em; padding:1em 1.5em;\" location=\"b\"></div></div>"
+                                    .getBytes()));
             Button button = new Button("b");
             button.setSizeFull();
 

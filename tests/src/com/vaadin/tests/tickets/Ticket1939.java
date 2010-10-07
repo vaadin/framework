@@ -24,11 +24,12 @@ public class Ticket1939 extends Application {
         l.addComponent(t);
         w.addComponent(l);
 
-        w.addComponent(new Button("show me the bug", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                l.setWidth(-1);
-            }
-        }));
+        w.addComponent(new Button("show me the bug",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        l.setWidth(-1);
+                    }
+                }));
 
     }
 

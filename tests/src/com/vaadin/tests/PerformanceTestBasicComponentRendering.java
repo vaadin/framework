@@ -43,11 +43,13 @@ public class PerformanceTestBasicComponentRendering extends CustomComponent {
 
         testContainer = new VerticalLayout();
 
-        final Table t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(5, 200);
+        final Table t = TestForTablesInitialColumnWidthLogicRendering
+                .getTestTable(5, 200);
 
         Table t2 = new Table("Test Table with 199 rows rendered initially") {
             @Override
-            public void changeVariables(Object source, Map<String, Object> variables) {
+            public void changeVariables(Object source,
+                    Map<String, Object> variables) {
                 super.changeVariables(source, variables);
                 // end timing on cache row request
                 endTest();

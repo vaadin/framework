@@ -31,7 +31,9 @@ public class Ticket34 extends Application {
         reader.addListener(new UriFragmentUtility.FragmentChangedListener() {
 
             public void fragmentChanged(FragmentChangedEvent event) {
-                getMainWindow().showNotification("Fragment now: " + event.getUriFragmentUtility().getFragment());
+                getMainWindow().showNotification(
+                        "Fragment now: "
+                                + event.getUriFragmentUtility().getFragment());
                 // try to change to view mapped by fragment string
                 setView(event.getUriFragmentUtility().getFragment());
             }
@@ -39,7 +41,8 @@ public class Ticket34 extends Application {
 
         mainLayout = new VerticalLayout();
         mainLayout.setSizeFull();
-        final Window mainWin = new Window("Test app for URI fragment management/reading", mainLayout);
+        final Window mainWin = new Window(
+                "Test app for URI fragment management/reading", mainLayout);
         setMainWindow(mainWin);
 
         // UriFragmentReader is 0px size by default, so it will not render
@@ -53,7 +56,8 @@ public class Ticket34 extends Application {
     private void setView(String string) {
         Component component = views.get(string);
         if (component == null) {
-            getMainWindow().showNotification("View called " + string + " not found!");
+            getMainWindow().showNotification(
+                    "View called " + string + " not found!");
         } else if (component != currentView) {
             if (currentView != null) {
                 mainLayout.replaceComponent(currentView, component);
@@ -71,17 +75,23 @@ public class Ticket34 extends Application {
             Panel p = new Panel(string);
             p.setSizeFull();
             ((VerticalLayout) p.getContent()).setSpacing(true);
-            p.addComponent(new Label("This is a simple test case for " + "UriFragmentReader that can be used for" + " adding linking, back/forward button " + "and history support for ajax application. "));
+            p.addComponent(new Label("This is a simple test case for "
+                    + "UriFragmentReader that can be used for"
+                    + " adding linking, back/forward button "
+                    + "and history support for ajax application. "));
             StringBuffer sb = new StringBuffer();
             sb.append("Available views : ");
             for (String key : strings) {
                 sb.append(key);
                 sb.append(" ");
             }
-            sb.append("Application will change to them from uri " + "fragment or server initiated via textfield below.");
+            sb.append("Application will change to them from uri "
+                    + "fragment or server initiated via textfield below.");
             p.addComponent(new Label(sb.toString()));
 
-            final TextField tf = new TextField("Type view name (will change to that " + "view and change the uri fragment)");
+            final TextField tf = new TextField(
+                    "Type view name (will change to that "
+                            + "view and change the uri fragment)");
             p.addComponent(tf);
             Button b = new Button("Go!");
             p.addComponent(b);

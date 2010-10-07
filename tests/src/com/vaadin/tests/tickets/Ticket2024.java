@@ -21,7 +21,8 @@ public class Ticket2024 extends Application {
         w.getContent().setHeight("2000");
         w.getContent().addComponent(layout);
 
-        layout.addComponent(new Label("This should NOT get stuck when scrolling down"));
+        layout.addComponent(new Label(
+                "This should NOT get stuck when scrolling down"));
         layout.addComponent(new TextField("This should not get stuck either..."));
 
         VerticalLayout ol = new VerticalLayout();

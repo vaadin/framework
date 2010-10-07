@@ -17,7 +17,8 @@ public class Ticket1245 extends com.vaadin.Application {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(
+                getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         main.addComponent(new TreeExample());

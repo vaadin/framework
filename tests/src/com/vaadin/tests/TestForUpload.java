@@ -36,7 +36,8 @@ import com.vaadin.ui.Upload.StartedEvent;
 import com.vaadin.ui.Upload.StartedListener;
 import com.vaadin.ui.VerticalLayout;
 
-public class TestForUpload extends CustomComponent implements Upload.ProgressListener {
+public class TestForUpload extends CustomComponent implements
+        Upload.ProgressListener {
 
     private static final long serialVersionUID = -3400119871764256575L;
 
@@ -63,15 +64,25 @@ public class TestForUpload extends CustomComponent implements Upload.ProgressLis
 
     private CheckBox beSluggish = new CheckBox("Be sluggish");
 
-    private CheckBox throwExecption = new CheckBox("Throw exception in receiver");
+    private CheckBox throwExecption = new CheckBox(
+            "Throw exception in receiver");
 
     private Button interrupt = new Button("Interrupt upload");
 
     public TestForUpload() {
         setCompositionRoot(main);
-        main.addComponent(new Label("This is a simple test for upload application. " + "Upload should work with big files and concurrent " + "requests should not be blocked. Button 'b' reads " + "current state into label below it. Memory receiver " + "streams upload contents into memory. You may track" + "consumption." + "tempfile receiver writes upload to file and " + "should have low memory consumption."));
+        main.addComponent(new Label(
+                "This is a simple test for upload application. "
+                        + "Upload should work with big files and concurrent "
+                        + "requests should not be blocked. Button 'b' reads "
+                        + "current state into label below it. Memory receiver "
+                        + "streams upload contents into memory. You may track"
+                        + "consumption."
+                        + "tempfile receiver writes upload to file and "
+                        + "should have low memory consumption."));
 
-        main.addComponent(new Label("Clicking on button b updates information about upload components status or same with garbage collector."));
+        main.addComponent(new Label(
+                "Clicking on button b updates information about upload components status or same with garbage collector."));
 
         textField = new TextField("Test field");
         textFieldValue = new Label();
@@ -96,7 +107,9 @@ public class TestForUpload extends CustomComponent implements Upload.ProgressLis
                 pi.setVisible(true);
                 pi2.setVisible(true);
                 l.setValue("Started uploading file " + event.getFilename());
-                textFieldValue.setValue(" TestFields value at the upload start is:" + textField.getValue());
+                textFieldValue
+                        .setValue(" TestFields value at the upload start is:"
+                                + textField.getValue());
             }
         });
 
@@ -108,7 +121,8 @@ public class TestForUpload extends CustomComponent implements Upload.ProgressLis
                 pi2.setVisible(false);
                 if (event instanceof Upload.FailedEvent) {
                     Exception reason = ((Upload.FailedEvent) event).getReason();
-                    l.setValue("Finished with failure ( " + reason + "  ), idle");
+                    l.setValue("Finished with failure ( " + reason
+                            + "  ), idle");
                 } else if (event instanceof Upload.SucceededEvent) {
                     l.setValue("Finished with succes, idle");
                 } else {
@@ -118,13 +132,20 @@ public class TestForUpload extends CustomComponent implements Upload.ProgressLis
                 status.removeAllComponents();
                 final InputStream stream = buffer.getStream();
                 if (stream == null) {
-                    status.addComponent(new Label("Upload finished, but output buffer is null"));
+                    status.addComponent(new Label(
+                            "Upload finished, but output buffer is null"));
                 } else {
-                    status.addComponent(new Label("<b>Name:</b> " + event.getFilename(), Label.CONTENT_XHTML));
-                    status.addComponent(new Label("<b>Mimetype:</b> " + event.getMIMEType(), Label.CONTENT_XHTML));
-                    status.addComponent(new Label("<b>Size:</b> " + event.getLength() + " bytes.", Label.CONTENT_XHTML));
+                    status.addComponent(new Label("<b>Name:</b> "
+                            + event.getFilename(), Label.CONTENT_XHTML));
+                    status.addComponent(new Label("<b>Mimetype:</b> "
+                            + event.getMIMEType(), Label.CONTENT_XHTML));
+                    status.addComponent(new Label("<b>Size:</b> "
+                            + event.getLength() + " bytes.",
+                            Label.CONTENT_XHTML));
 
-                    status.addComponent(new Link("Download " + buffer.getFileName(), new StreamResource(buffer, buffer.getFileName(), getApplication())));
+                    status.addComponent(new Link("Download "
+                            + buffer.getFileName(), new StreamResource(buffer,
+                            buffer.getFileName(), getApplication())));
 
                     status.setVisible(true);
                 }
@@ -163,11 +184,12 @@ public class TestForUpload extends CustomComponent implements Upload.ProgressLis
         uploadBufferSelector.addItem("memory");
         uploadBufferSelector.setValue("memory");
         uploadBufferSelector.addItem("tempfile");
-        uploadBufferSelector.addListener(new AbstractField.ValueChangeListener() {
-            public void valueChange(ValueChangeEvent event) {
-                setBuffer();
-            }
-        });
+        uploadBufferSelector
+                .addListener(new AbstractField.ValueChangeListener() {
+                    public void valueChange(ValueChangeEvent event) {
+                        setBuffer();
+                    }
+                });
         main.addComponent(uploadBufferSelector);
 
         main.addComponent(up);
@@ -222,7 +244,8 @@ public class TestForUpload extends CustomComponent implements Upload.ProgressLis
             sb.append("/");
             sb.append(up.getUploadSize());
             sb.append(" ");
-            sb.append(Math.round(100 * up.getBytesRead() / (double) up.getUploadSize()));
+            sb.append(Math.round(100 * up.getBytesRead()
+                    / (double) up.getUploadSize()));
             sb.append("%");
         } else {
             sb.append("Idle");
@@ -231,7 +254,8 @@ public class TestForUpload extends CustomComponent implements Upload.ProgressLis
         refreshMemUsage();
     }
 
-    public interface Buffer extends StreamResource.StreamSource, Upload.Receiver {
+    public interface Buffer extends StreamResource.StreamSource,
+            Upload.Receiver {
 
         String getFileName();
     }
@@ -300,7 +324,8 @@ public class TestForUpload extends CustomComponent implements Upload.ProgressLis
         private File file;
 
         public TmpFileBuffer() {
-            final String tempFileName = "upload_tmpfile_" + System.currentTimeMillis();
+            final String tempFileName = "upload_tmpfile_"
+                    + System.currentTimeMillis();
             try {
                 file = File.createTempFile(tempFileName, null);
             } catch (final IOException e) {
@@ -333,7 +358,8 @@ public class TestForUpload extends CustomComponent implements Upload.ProgressLis
                 return new FileOutputStream(file) {
 
                     @Override
-                    public void write(byte[] b, int off, int len) throws IOException {
+                    public void write(byte[] b, int off, int len)
+                            throws IOException {
                         beSluggish();
                         throwExecption();
                         super.write(b, off, len);

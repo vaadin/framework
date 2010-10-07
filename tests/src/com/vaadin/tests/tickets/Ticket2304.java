@@ -10,7 +10,8 @@ public class Ticket2304 extends Application {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(
+                getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         Panel p = new Panel();
@@ -18,10 +19,12 @@ public class Ticket2304 extends Application {
         main.addComponent(p);
         p.setHeight("100px");
 
-        Label l = new Label("a\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\n");
+        Label l = new Label(
+                "a\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\n");
         l.setContentMode(Label.CONTENT_PREFORMATTED);
         p.addComponent(l);
-        main.addComponent(new Label("This text should be right below the panel, w/o spacing"));
+        main.addComponent(new Label(
+                "This text should be right below the panel, w/o spacing"));
     }
 
 }

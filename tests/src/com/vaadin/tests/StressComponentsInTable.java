@@ -39,7 +39,8 @@ public class StressComponentsInTable extends CustomComponent {
 
                 public void buttonClick(ClickEvent event) {
                     Button b = event.getButton();
-                    System.out.println(b.getCaption() + " click: " + (new Date()).toGMTString());
+                    System.out.println(b.getCaption() + " click: "
+                            + (new Date()).toGMTString());
                     System.out.println(b.getApplication());
 
                 }
@@ -50,7 +51,22 @@ public class StressComponentsInTable extends CustomComponent {
         return t;
     }
 
-    static String[] testString = new String[] { "Jacob", "Michael", "Joshua", "Matthew", "Ethan", "Andrew", "Daniel", "Anthony", "Christopher", "Joseph", "William", "Alexander", "Ryan", "David", "Nicholas", "Tyler", "James", "John", "Jonathan", "Nathan", "Samuel", "Christian", "Noah", "Dylan", "Benjamin", "Logan", "Brandon", "Gabriel", "Zachary", "Jose", "Elijah", "Angel", "Kevin", "Jack", "Caleb", "Justin", "Austin", "Evan", "Robert", "Thomas", "Luke", "Mason", "Aidan", "Jackson", "Isaiah", "Jordan", "Gavin", "Connor", "Aiden", "Isaac", "Jason", "Cameron", "Hunter", "Jayden", "Juan", "Charles", "Aaron", "Lucas", "Luis", "Owen", "Landon", "Diego", "Brian", "Adam", "Adrian", "Kyle", "Eric", "Ian", "Nathaniel", "Carlos", "Alex", "Bryan", "Jesus", "Julian", "Sean", "Carter", "Hayden", "Jeremiah", "Cole", "Brayden", "Wyatt", "Chase", "Steven", "Timothy", "Dominic", "Sebastian", "Xavier", "Jaden", "Jesse", "Devin", "Seth", "Antonio", "Richard", "Miguel", "Colin", "Cody", "Alejandro", "Caden", "Blake", "Carson" };
+    static String[] testString = new String[] { "Jacob", "Michael", "Joshua",
+            "Matthew", "Ethan", "Andrew", "Daniel", "Anthony", "Christopher",
+            "Joseph", "William", "Alexander", "Ryan", "David", "Nicholas",
+            "Tyler", "James", "John", "Jonathan", "Nathan", "Samuel",
+            "Christian", "Noah", "Dylan", "Benjamin", "Logan", "Brandon",
+            "Gabriel", "Zachary", "Jose", "Elijah", "Angel", "Kevin", "Jack",
+            "Caleb", "Justin", "Austin", "Evan", "Robert", "Thomas", "Luke",
+            "Mason", "Aidan", "Jackson", "Isaiah", "Jordan", "Gavin", "Connor",
+            "Aiden", "Isaac", "Jason", "Cameron", "Hunter", "Jayden", "Juan",
+            "Charles", "Aaron", "Lucas", "Luis", "Owen", "Landon", "Diego",
+            "Brian", "Adam", "Adrian", "Kyle", "Eric", "Ian", "Nathaniel",
+            "Carlos", "Alex", "Bryan", "Jesus", "Julian", "Sean", "Carter",
+            "Hayden", "Jeremiah", "Cole", "Brayden", "Wyatt", "Chase",
+            "Steven", "Timothy", "Dominic", "Sebastian", "Xavier", "Jaden",
+            "Jesse", "Devin", "Seth", "Antonio", "Richard", "Miguel", "Colin",
+            "Cody", "Alejandro", "Caden", "Blake", "Carson" };
 
     public static String rndString() {
         return testString[(int) (Math.random() * testString.length)];

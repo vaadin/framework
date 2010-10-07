@@ -16,7 +16,10 @@ public class Ticket2232 extends Application {
         setMainWindow(new Window());
         setTheme("tests-tickets");
 
-        getMainWindow().addComponent(new Label("Defining spacing must be possible also with pure CSS"));
+        getMainWindow()
+                .addComponent(
+                        new Label(
+                                "Defining spacing must be possible also with pure CSS"));
 
         Layout gl;
         gl = new VerticalLayout();
@@ -62,7 +65,8 @@ public class Ticket2232 extends Application {
             gl.addComponent(b);
         }
         String caption = gl.getClass().getSimpleName();
-        caption += " style: " + gl.getStyleName() + ", spacingFromServer:" + ((SpacingHandler) gl).isSpacingEnabled();
+        caption += " style: " + gl.getStyleName() + ", spacingFromServer:"
+                + ((SpacingHandler) gl).isSpacingEnabled();
         gl.setCaption(caption);
         getMainWindow().addComponent(gl);
     }

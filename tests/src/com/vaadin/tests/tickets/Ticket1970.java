@@ -33,18 +33,22 @@ public class Ticket1970 extends Application {
         final Window w = new Window("Extra window: " + name);
         w.setName(name);
         addWindow(w);
-        w.addComponent(new Label("This window has been created on fly for name: " + name));
-        w.addComponent(new Button("Show open windows", new Button.ClickListener() {
+        w.addComponent(new Label(
+                "This window has been created on fly for name: " + name));
+        w.addComponent(new Button("Show open windows",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                String openWindows = "";
-                for (Iterator<Window> i = getWindows().iterator(); i.hasNext();) {
-                    Window t = i.next();
-                    openWindows += (openWindows.length() > 0 ? "," : "") + t.getName();
-                }
-                w.showNotification(openWindows);
-            }
-        }));
+                    public void buttonClick(ClickEvent event) {
+                        String openWindows = "";
+                        for (Iterator<Window> i = getWindows().iterator(); i
+                                .hasNext();) {
+                            Window t = i.next();
+                            openWindows += (openWindows.length() > 0 ? "," : "")
+                                    + t.getName();
+                        }
+                        w.showNotification(openWindows);
+                    }
+                }));
         w.addListener(new Window.CloseListener() {
             public void windowClose(CloseEvent e) {
                 removeWindow(w);
@@ -56,13 +60,19 @@ public class Ticket1970 extends Application {
 
     private Window createWindow() {
         final Window w = new Window();
-        w.addComponent(new Button("Show the name of the application", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                w.showNotification("Name of this window = " + w.getName());
-            }
-        }));
-        w.addComponent(new Label("<a href='" + getURL().toExternalForm() + "'>" + getURL().toExternalForm() + "</a>", Label.CONTENT_XHTML));
-        w.addComponent(new Label("<h2>How to reproduce</h2>Open the above link in another browser" + " window and then press the Show-button on this window.", Label.CONTENT_XHTML));
+        w.addComponent(new Button("Show the name of the application",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        w.showNotification("Name of this window = "
+                                + w.getName());
+                    }
+                }));
+        w.addComponent(new Label("<a href='" + getURL().toExternalForm() + "'>"
+                + getURL().toExternalForm() + "</a>", Label.CONTENT_XHTML));
+        w.addComponent(new Label(
+                "<h2>How to reproduce</h2>Open the above link in another browser"
+                        + " window and then press the Show-button on this window.",
+                Label.CONTENT_XHTML));
 
         return w;
     }

@@ -41,7 +41,8 @@ public class TestContainerChanges extends CustomComponent {
         VerticalLayout main = new VerticalLayout();
         setCompositionRoot(main);
 
-        main.addComponent(new Label("The same IndexedContainer is wrapped in a ordered/hierarchical wrapper and is set as data source for all components . The buttons only affect the 'original' IndexedContainer."));
+        main.addComponent(new Label(
+                "The same IndexedContainer is wrapped in a ordered/hierarchical wrapper and is set as data source for all components . The buttons only affect the 'original' IndexedContainer."));
 
         HorizontalLayout h = new HorizontalLayout();
 
@@ -70,7 +71,8 @@ public class TestContainerChanges extends CustomComponent {
         tbl2.setImmediate(true);
         tbl2.addListener(new Table.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                System.err.println("Value now " + event.getProperty().getValue());
+                System.err.println("Value now "
+                        + event.getProperty().getValue());
 
             }
         });
@@ -90,38 +92,43 @@ public class TestContainerChanges extends CustomComponent {
         });
         buttons.addComponent(b);
 
-        b = new Button("indexedcontainer.addItem()", new Button.ClickListener() {
+        b = new Button("indexedcontainer.addItem()",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                cont.addItem(new Integer(cnt++));
-            }
+                    public void buttonClick(ClickEvent event) {
+                        cont.addItem(new Integer(cnt++));
+                    }
 
-        });
+                });
         buttons.addComponent(b);
-        b = new Button("indexedcontainer.addItem(null)", new Button.ClickListener() {
+        b = new Button("indexedcontainer.addItem(null)",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                cont.addItem(null);
-            }
+                    public void buttonClick(ClickEvent event) {
+                        cont.addItem(null);
+                    }
 
-        });
+                });
         buttons.addComponent(b);
-        b = new Button("indexedcontainer.removeItem(table.lastItemId()", new Button.ClickListener() {
+        b = new Button("indexedcontainer.removeItem(table.lastItemId()",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                cont.removeItem(tbl.lastItemId());
-            }
+                    public void buttonClick(ClickEvent event) {
+                        cont.removeItem(tbl.lastItemId());
+                    }
 
-        });
+                });
         buttons.addComponent(b);
 
-        b = new Button("indexedcontainer.addContainerProperty()", new Button.ClickListener() {
+        b = new Button("indexedcontainer.addContainerProperty()",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                cont.addContainerProperty("prop" + cnt, String.class, "#" + cnt++);
-            }
+                    public void buttonClick(ClickEvent event) {
+                        cont.addContainerProperty("prop" + cnt, String.class,
+                                "#" + cnt++);
+                    }
 
-        });
+                });
         buttons.addComponent(b);
 
         b = new Button("indexedcontainer.clear()", new Button.ClickListener() {
@@ -132,29 +139,32 @@ public class TestContainerChanges extends CustomComponent {
 
         });
         buttons.addComponent(b);
-        b = new Button("table.setContainerDataSource(indexedcontainer)", new Button.ClickListener() {
+        b = new Button("table.setContainerDataSource(indexedcontainer)",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                tbl.setContainerDataSource(cont);
-            }
+                    public void buttonClick(ClickEvent event) {
+                        tbl.setContainerDataSource(cont);
+                    }
 
-        });
+                });
         buttons.addComponent(b);
-        b = new Button("table.setContainerDataSource(orderedwrapper)", new Button.ClickListener() {
+        b = new Button("table.setContainerDataSource(orderedwrapper)",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                tbl.setContainerDataSource(ordered);
-            }
+                    public void buttonClick(ClickEvent event) {
+                        tbl.setContainerDataSource(ordered);
+                    }
 
-        });
+                });
         buttons.addComponent(b);
-        b = new Button("table.setContainerDataSource(hierarchicalwrapper)", new Button.ClickListener() {
+        b = new Button("table.setContainerDataSource(hierarchicalwrapper)",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                tbl.setContainerDataSource(hierarchical);
-            }
+                    public void buttonClick(ClickEvent event) {
+                        tbl.setContainerDataSource(hierarchical);
+                    }
 
-        });
+                });
         buttons.addComponent(b);
 
         Panel p = new Panel("Tree");

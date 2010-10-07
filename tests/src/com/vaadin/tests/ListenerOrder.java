@@ -16,7 +16,9 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Window;
 
-public class ListenerOrder extends com.vaadin.Application implements Button.ClickListener, PropertySetChangeListener, ItemSetChangeListener, ValueChangeListener {
+public class ListenerOrder extends com.vaadin.Application implements
+        Button.ClickListener, PropertySetChangeListener, ItemSetChangeListener,
+        ValueChangeListener {
 
     Button b1;
 
@@ -132,7 +134,8 @@ public class ListenerOrder extends com.vaadin.Application implements Button.Clic
         }
 
         public void buttonClick(ClickEvent event) {
-            String msg = "ClickEvent from MyClickListener " + name + ", id=" + count;
+            String msg = "ClickEvent from MyClickListener " + name + ", id="
+                    + count;
             System.out.println(msg);
             getMainWindow().showNotification(msg);
         }

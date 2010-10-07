@@ -22,7 +22,8 @@ public class Ticket2125 extends Application {
         MainWindow(String caption) {
             super(caption);
 
-            addComponent(new Label("Inspect w/ Firebug: row 5 should have a MYROW -style on the row, and MYCELL on all cells"));
+            addComponent(new Label(
+                    "Inspect w/ Firebug: row 5 should have a MYROW -style on the row, and MYCELL on all cells"));
 
             Table table = new Table();
             table.setRowHeaderMode(Table.ROW_HEADER_MODE_INDEX);
@@ -33,7 +34,8 @@ public class Ticket2125 extends Application {
             table.addContainerProperty("String", String.class, "a string");
             table.addContainerProperty("Boolean", Boolean.class, Boolean.TRUE);
             table.addGeneratedColumn("Generated", new ColumnGenerator() {
-                public Component generateCell(Table source, Object itemId, Object columnId) {
+                public Component generateCell(Table source, Object itemId,
+                        Object columnId) {
                     return new Label("Item " + itemId);
                 }
             });
@@ -50,7 +52,8 @@ public class Ticket2125 extends Application {
                 }
 
             });
-            Button b = new Button("editmode", new MethodProperty<Boolean>(table, "editable"));
+            Button b = new Button("editmode", new MethodProperty<Boolean>(
+                    table, "editable"));
             b.setImmediate(true);
             addComponent(b);
         }

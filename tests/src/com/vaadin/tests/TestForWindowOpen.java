@@ -17,35 +17,42 @@ public class TestForWindowOpen extends CustomComponent {
         final VerticalLayout main = new VerticalLayout();
         setCompositionRoot(main);
 
-        main.addComponent(new Button("Open in this window", new Button.ClickListener() {
+        main.addComponent(new Button("Open in this window",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                final ExternalResource r = new ExternalResource("http://www.google.com");
-                getApplication().getMainWindow().open(r);
+                    public void buttonClick(ClickEvent event) {
+                        final ExternalResource r = new ExternalResource(
+                                "http://www.google.com");
+                        getApplication().getMainWindow().open(r);
 
-            }
+                    }
 
-        }));
+                }));
 
-        main.addComponent(new Button("Open in target \"mytarget\"", new Button.ClickListener() {
+        main.addComponent(new Button("Open in target \"mytarget\"",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                final ExternalResource r = new ExternalResource("http://www.google.com");
-                getApplication().getMainWindow().open(r, "mytarget");
+                    public void buttonClick(ClickEvent event) {
+                        final ExternalResource r = new ExternalResource(
+                                "http://www.google.com");
+                        getApplication().getMainWindow().open(r, "mytarget");
 
-            }
+                    }
 
-        }));
+                }));
 
-        main.addComponent(new Button("Open in target \"secondtarget\"", new Button.ClickListener() {
+        main.addComponent(new Button("Open in target \"secondtarget\"",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                final ExternalResource r = new ExternalResource("http://www.google.com");
-                getApplication().getMainWindow().open(r, "secondtarget");
+                    public void buttonClick(ClickEvent event) {
+                        final ExternalResource r = new ExternalResource(
+                                "http://www.google.com");
+                        getApplication().getMainWindow()
+                                .open(r, "secondtarget");
 
-            }
+                    }
 
-        }));
+                }));
 
     }
 

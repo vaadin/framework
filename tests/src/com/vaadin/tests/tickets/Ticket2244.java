@@ -39,30 +39,34 @@ public class Ticket2244 extends Application {
             }
 
         }));
-        w.addComponent(new Button("new bigger item", new Button.ClickListener() {
+        w.addComponent(new Button("new bigger item",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                form.setItemDataSource(new BeanItem<MyBean>(new MyBiggerBean()));
+                    public void buttonClick(ClickEvent event) {
+                        form.setItemDataSource(new BeanItem<MyBean>(
+                                new MyBiggerBean()));
 
-            }
+                    }
 
-        }));
-        w.addComponent(new Button("new grid layout", new Button.ClickListener() {
+                }));
+        w.addComponent(new Button("new grid layout",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                form.setLayout(new GridLayout());
+                    public void buttonClick(ClickEvent event) {
+                        form.setLayout(new GridLayout());
 
-            }
+                    }
 
-        }));
-        w.addComponent(new Button("new form layout", new Button.ClickListener() {
+                }));
+        w.addComponent(new Button("new form layout",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                form.setLayout(new FormLayout());
+                    public void buttonClick(ClickEvent event) {
+                        form.setLayout(new FormLayout());
 
-            }
+                    }
 
-        }));
+                }));
 
     }
 

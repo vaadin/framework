@@ -35,7 +35,9 @@ public class FeatureOrderedLayout extends Feature {
         // Integer(AbstractOrderedLayout.ORIENTATION_VERTICAL) }, new Object[] {
         // "Horizontal", "Vertical" });
         final Select themes = (Select) propertyPanel.getField("style");
-        themes.addItem("form").getItemProperty(themes.getItemCaptionPropertyId()).setValue("form");
+        themes.addItem("form")
+                .getItemProperty(themes.getItemCaptionPropertyId())
+                .setValue("form");
         // propertyPanel.addProperties("OrderedLayout Properties", ap);
 
         setJavadocURL("ui/OrderedLayout.html");
@@ -45,7 +47,9 @@ public class FeatureOrderedLayout extends Feature {
 
     @Override
     protected String getExampleSrc() {
-        return "OrderedLayout ol = new OrderedLayout(AbstractOrderedLayout.ORIENTATION_FLOW);\n" + "ol.addComponent(new TextField(\"Textfield caption\"));\n" + "ol.addComponent(new Label(\"Label\"));\n";
+        return "OrderedLayout ol = new OrderedLayout(AbstractOrderedLayout.ORIENTATION_FLOW);\n"
+                + "ol.addComponent(new TextField(\"Textfield caption\"));\n"
+                + "ol.addComponent(new Label(\"Label\"));\n";
 
     }
 
@@ -54,7 +58,14 @@ public class FeatureOrderedLayout extends Feature {
      */
     @Override
     protected String getDescriptionXHTML() {
-        return "This feature provides a container for laying out components either " + "vertically, horizontally or flowingly. The orientation may be changed " + "during runtime. It also defines a special style for themes to implement called \"form\"" + "that is used for input forms where the components are laid-out side-by-side " + "with their captions." + "<br /><br />" + "On the demo tab you can try out how the different properties " + "affect the presentation of the component.";
+        return "This feature provides a container for laying out components either "
+                + "vertically, horizontally or flowingly. The orientation may be changed "
+                + "during runtime. It also defines a special style for themes to implement called \"form\""
+                + "that is used for input forms where the components are laid-out side-by-side "
+                + "with their captions."
+                + "<br /><br />"
+                + "On the demo tab you can try out how the different properties "
+                + "affect the presentation of the component.";
     }
 
     @Override

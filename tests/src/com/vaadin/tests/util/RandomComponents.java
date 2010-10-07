@@ -67,18 +67,21 @@ public class RandomComponents {
 
         case 0:
             result = new HorizontalLayout();
-            ((HorizontalLayout) result).setCaption("OrderedLayout_horizontal_" + caption);
+            ((HorizontalLayout) result).setCaption("OrderedLayout_horizontal_"
+                    + caption);
             break;
         case 1:
             result = new VerticalLayout();
-            ((VerticalLayout) result).setCaption("OrderedLayout_vertical_" + caption);
+            ((VerticalLayout) result).setCaption("OrderedLayout_vertical_"
+                    + caption);
             break;
         case 2:
             GridLayout gl;
             if (seededRandom.nextInt(1) > 0) {
                 gl = new GridLayout();
             } else {
-                gl = new GridLayout(seededRandom.nextInt(3) + 1, seededRandom.nextInt(3) + 1);
+                gl = new GridLayout(seededRandom.nextInt(3) + 1,
+                        seededRandom.nextInt(3) + 1);
             }
             gl.setCaption("GridLayout_" + caption);
             gl.setDescription(gl.getCaption());
@@ -166,7 +169,12 @@ public class RandomComponents {
             // Link
             result = new Panel();
             result.setCaption("Panel component " + caption);
-            ((Panel) result).addComponent(new Label("Panel is a container for other components, by default it draws a frame around it's " + "extremities and may have a caption to clarify the nature of the contained components' purpose." + " Panel contains an layout where the actual contained components are added, " + "this layout may be switched on the fly."));
+            ((Panel) result)
+                    .addComponent(new Label(
+                            "Panel is a container for other components, by default it draws a frame around it's "
+                                    + "extremities and may have a caption to clarify the nature of the contained components' purpose."
+                                    + " Panel contains an layout where the actual contained components are added, "
+                                    + "this layout may be switched on the fly."));
             ((Panel) result).setWidth(250);
             break;
         case 6:
@@ -197,7 +205,8 @@ public class RandomComponents {
         case 11:
             result = new VerticalLayout();
             // TODO: disabled gwt bug with mixed up iframe's
-            ((VerticalLayout) result).addComponent(new EmbeddedBrowserExample());
+            ((VerticalLayout) result)
+                    .addComponent(new EmbeddedBrowserExample());
             break;
         case 12:
             result = new VerticalLayout();
@@ -241,7 +250,8 @@ public class RandomComponents {
             break;
         case 22:
             result = new VerticalLayout();
-            ((VerticalLayout) result).addComponent(new StressComponentsInTable());
+            ((VerticalLayout) result)
+                    .addComponent(new StressComponentsInTable());
             break;
         }
 
@@ -265,18 +275,23 @@ public class RandomComponents {
         return em;
     }
 
-    public class MultiListener implements Button.ClickListener, PropertySetChangeListener, ItemSetChangeListener, ValueChangeListener {
+    public class MultiListener implements Button.ClickListener,
+            PropertySetChangeListener, ItemSetChangeListener,
+            ValueChangeListener {
 
         public void buttonClick(ClickEvent event) {
-            System.out.println("ClickEvent from " + event.getButton().getCaption());
+            System.out.println("ClickEvent from "
+                    + event.getButton().getCaption());
         }
 
         public void containerPropertySetChange(PropertySetChangeEvent event) {
-            System.out.println("containerPropertySetChange from " + event.getContainer());
+            System.out.println("containerPropertySetChange from "
+                    + event.getContainer());
         }
 
         public void containerItemSetChange(ItemSetChangeEvent event) {
-            System.out.println("containerItemSetChange from " + event.getContainer());
+            System.out.println("containerItemSetChange from "
+                    + event.getContainer());
         }
 
         public void valueChange(ValueChangeEvent event) {

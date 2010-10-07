@@ -26,11 +26,20 @@ public class TestSetVisibleAndCaching extends com.vaadin.Application {
         final Window mainWindow = new Window("TestSetVisibleAndCaching");
         setMainWindow(mainWindow);
 
-        panelA.addComponent(new Label("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-        panelB.addComponent(new Label("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"));
-        panelC.addComponent(new Label("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"));
+        panelA.addComponent(new Label(
+                "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+        panelB.addComponent(new Label(
+                "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"));
+        panelC.addComponent(new Label(
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"));
 
-        mainWindow.addComponent(new Label("Inspect transfered data from server to " + "client using firebug (http request / response cycles)." + " See how widgets are re-used," + " after each panel is once shown in GUI then" + " their contents are not resend."));
+        mainWindow
+                .addComponent(new Label(
+                        "Inspect transfered data from server to "
+                                + "client using firebug (http request / response cycles)."
+                                + " See how widgets are re-used,"
+                                + " after each panel is once shown in GUI then"
+                                + " their contents are not resend."));
         mainWindow.addComponent(buttonNextPanel);
         mainWindow.addComponent(panelA);
         mainWindow.addComponent(panelB);

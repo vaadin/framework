@@ -25,9 +25,11 @@ public class Ticket2208 extends Application {
         t.setHeight("150px");
         t.addGeneratedColumn("col 3 (green)", new ColumnGenerator() {
 
-            public Component generateCell(Table source, Object itemId, Object columnId) {
+            public Component generateCell(Table source, Object itemId,
+                    Object columnId) {
                 Item item = source.getItem(itemId);
-                String col1 = (String) item.getItemProperty("col 1 (red)").getValue();
+                String col1 = (String) item.getItemProperty("col 1 (red)")
+                        .getValue();
                 String col2 = (String) item.getItemProperty("col 2").getValue();
                 return new Label(col1 + "-" + col2);
             }
@@ -49,9 +51,12 @@ public class Ticket2208 extends Application {
             }
         });
 
-        t.addItem(new Object[] { "Col 1-1", "Col 2-1", "Col 4-1" }, new Object());
-        t.addItem(new Object[] { "Col 1-2", "Col 2-2", "Col 4-2" }, new Object());
-        t.addItem(new Object[] { "Col 1-3", "Col 2-3", "Col 4-3" }, new Object());
+        t.addItem(new Object[] { "Col 1-1", "Col 2-1", "Col 4-1" },
+                new Object());
+        t.addItem(new Object[] { "Col 1-2", "Col 2-2", "Col 4-2" },
+                new Object());
+        t.addItem(new Object[] { "Col 1-3", "Col 2-3", "Col 4-3" },
+                new Object());
 
         t.setColumnReorderingAllowed(true);
         t.setColumnCollapsingAllowed(true);

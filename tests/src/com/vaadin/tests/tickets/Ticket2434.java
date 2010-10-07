@@ -14,7 +14,8 @@ public class Ticket2434 extends Application {
 
         setMainWindow(w);
 
-        Table t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(3, 50);
+        Table t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(3,
+                50);
 
         t.setPageLength(0);
 

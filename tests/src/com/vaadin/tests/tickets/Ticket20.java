@@ -53,11 +53,13 @@ public class Ticket20 extends Application {
 
             public void validate(Object value) throws InvalidValueException {
                 if (!isValid(value)) {
-                    throw new InvalidValueException(value + " is not a non-negative number");
+                    throw new InvalidValueException(value
+                            + " is not a non-negative number");
                 }
             }
         });
-        CompositeValidator v2 = new CompositeValidator(CompositeValidator.MODE_OR, null);
+        CompositeValidator v2 = new CompositeValidator(
+                CompositeValidator.MODE_OR, null);
         v2.addValidator(v);
         v2.addValidator(new Validator() {
 
@@ -73,18 +75,24 @@ public class Ticket20 extends Application {
         });
         tx.addValidator(v2);
 
-        final String[] visibleProps = { "required", "invalidAllowed", "readOnly", "readThrough", "invalidCommitted", "validationVisible" };
+        final String[] visibleProps = { "required", "invalidAllowed",
+                "readOnly", "readThrough", "invalidCommitted",
+                "validationVisible" };
         for (int i = 0; i < visibleProps.length; i++) {
-            Button b = new Button(visibleProps[i], new MethodProperty<Boolean>(tx, visibleProps[i]));
+            Button b = new Button(visibleProps[i], new MethodProperty<Boolean>(
+                    tx, visibleProps[i]));
             b.setImmediate(true);
             mainWin.addComponent(b);
         }
 
-        mainWin.addComponent(new Button("Validate integer", new Button.ClickListener() {
-            public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
-                mainWin.showNotification("The field is " + (tx.isValid() ? "" : "not ") + "valid");
-            };
-        }));
+        mainWin.addComponent(new Button("Validate integer",
+                new Button.ClickListener() {
+                    public void buttonClick(
+                            com.vaadin.ui.Button.ClickEvent event) {
+                        mainWin.showNotification("The field is "
+                                + (tx.isValid() ? "" : "not ") + "valid");
+                    };
+                }));
     }
 
 }

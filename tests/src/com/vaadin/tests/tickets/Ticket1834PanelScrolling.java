@@ -18,7 +18,8 @@ public class Ticket1834PanelScrolling extends com.vaadin.Application {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(
+                getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         HorizontalLayout currentState = new HorizontalLayout();
@@ -28,7 +29,8 @@ public class Ticket1834PanelScrolling extends com.vaadin.Application {
         currentState.addComponent(b);
         b.addListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
-                state.setValue("ScrollTop: " + p.getScrollTop() + " ScrollLeft: " + p.getScrollLeft());
+                state.setValue("ScrollTop: " + p.getScrollTop()
+                        + " ScrollLeft: " + p.getScrollLeft());
             }
         });
         main.addComponent(currentState);
@@ -38,7 +40,8 @@ public class Ticket1834PanelScrolling extends com.vaadin.Application {
             public void buttonClick(ClickEvent event) {
                 p.setScrollLeft(p.getScrollLeft() + 50);
                 p.setScrollTop(p.getScrollTop() + 50);
-                state.setValue("ScrollTop: " + p.getScrollTop() + " ScrollLeft: " + p.getScrollLeft());
+                state.setValue("ScrollTop: " + p.getScrollTop()
+                        + " ScrollLeft: " + p.getScrollLeft());
             }
         });
 
@@ -68,7 +71,10 @@ public class Ticket1834PanelScrolling extends com.vaadin.Application {
         p.setScrollable(true);
 
         for (int i = 0; i < ROWS; i++) {
-            p.addComponent(new Label("Label" + i + "................................................................................................................."));
+            p.addComponent(new Label(
+                    "Label"
+                            + i
+                            + "................................................................................................................."));
         }
 
         p.setHeight("300px");

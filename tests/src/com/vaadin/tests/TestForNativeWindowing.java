@@ -22,41 +22,76 @@ public class TestForNativeWindowing extends Application {
 
         setMainWindow(main);
 
-        main.addComponent(new Button("Add new subwindow", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                final Window w = new Window("sw " + System.currentTimeMillis());
-                main.addWindow(w);
-                w.setPositionX(100);
-                w.setPositionY(100);
-                w.setWidth(200);
-                w.setHeight(200);
-
-                w.setWidth(100);
-                w.setHeight(400);
-
-                final Button closebutton = new Button("Close " + w.getCaption(), new Button.ClickListener() {
+        main.addComponent(new Button("Add new subwindow",
+                new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
-                        main.removeWindow(w);
+                        final Window w = new Window("sw "
+                                + System.currentTimeMillis());
+                        main.addWindow(w);
+                        w.setPositionX(100);
+                        w.setPositionY(100);
+                        w.setWidth(200);
+                        w.setHeight(200);
+
+                        w.setWidth(100);
+                        w.setHeight(400);
+
+                        final Button closebutton = new Button("Close "
+                                + w.getCaption(), new Button.ClickListener() {
+                            public void buttonClick(ClickEvent event) {
+                                main.removeWindow(w);
+                            }
+
+                        });
+                        w.addComponent(closebutton);
+
+                        w.addComponent(new Label(
+                                "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>"
+                                        + "<p>Lorem ipsum dolor sit amet.</p>",
+                                Label.CONTENT_XHTML));
+
                     }
+                }));
 
-                });
-                w.addComponent(closebutton);
+        main.addComponent(new Button(
+                "Open a currently uncreated application level window",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        try {
+                            main.open(
+                                    new com.vaadin.terminal.ExternalResource(
+                                            new URL(
+                                                    getURL(),
+                                                    "mainwin-"
+                                                            + System.currentTimeMillis()
+                                                            + "/")), null);
+                        } catch (final MalformedURLException e) {
+                        }
+                    }
+                }));
 
-                w.addComponent(new Label("<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>" + "<p>Lorem ipsum dolor sit amet.</p>", Label.CONTENT_XHTML));
-
-            }
-        }));
-
-        main.addComponent(new Button("Open a currently uncreated application level window", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                try {
-                    main.open(new com.vaadin.terminal.ExternalResource(new URL(getURL(), "mainwin-" + System.currentTimeMillis() + "/")), null);
-                } catch (final MalformedURLException e) {
-                }
-            }
-        }));
-
-        main.addComponent(new Button("Commit (saves window state: size, place, scrollpos)"));
+        main.addComponent(new Button(
+                "Commit (saves window state: size, place, scrollpos)"));
     }
 
     @Override
@@ -71,12 +106,15 @@ public class TestForNativeWindowing extends Application {
             final String postfix = name.substring("mainwin-".length());
             final Window ww = new Window("Window: " + postfix);
             ww.setName(name);
-            ww.addComponent(new Label("This is a application-level window opened with name: " + name));
+            ww.addComponent(new Label(
+                    "This is a application-level window opened with name: "
+                            + name));
             ww.addComponent(new Button("Click me", new Button.ClickListener() {
                 int state = 0;
 
                 public void buttonClick(ClickEvent event) {
-                    ww.addComponent(new Label("Button clicked " + (++state) + " times"));
+                    ww.addComponent(new Label("Button clicked " + (++state)
+                            + " times"));
                 }
             }));
             addWindow(ww);

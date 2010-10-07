@@ -18,7 +18,8 @@ public class Ticket2337 extends Application {
         Button b = new Button("add", new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                gl.addComponent(new Label("asd"), 0, gl.getCursorY(), 2, gl.getCursorY());
+                gl.addComponent(new Label("asd"), 0, gl.getCursorY(), 2,
+                        gl.getCursorY());
 
             }
 

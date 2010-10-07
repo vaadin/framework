@@ -23,7 +23,8 @@ import com.vaadin.ui.VerticalLayout;
  * 
  * @author IT Mill Ltd.
  */
-public class TestForTablesInitialColumnWidthLogicRendering extends CustomComponent {
+public class TestForTablesInitialColumnWidthLogicRendering extends
+        CustomComponent {
 
     private final VerticalLayout main = new VerticalLayout();
 
@@ -35,7 +36,8 @@ public class TestForTablesInitialColumnWidthLogicRendering extends CustomCompone
 
     public void createNewView() {
         main.removeAllComponents();
-        main.addComponent(new Label("Below are same tables that all should render somewhat nice. Also when testing, you might want to try resizing window."));
+        main.addComponent(new Label(
+                "Below are same tables that all should render somewhat nice. Also when testing, you might want to try resizing window."));
 
         Table t;
 
@@ -132,7 +134,22 @@ public class TestForTablesInitialColumnWidthLogicRendering extends CustomCompone
         return t;
     }
 
-    static String[] testString = new String[] { "Jacob", "Michael", "Joshua", "Matthew", "Ethan", "Andrew", "Daniel", "Anthony", "Christopher", "Joseph", "William", "Alexander", "Ryan", "David", "Nicholas", "Tyler", "James", "John", "Jonathan", "Nathan", "Samuel", "Christian", "Noah", "Dylan", "Benjamin", "Logan", "Brandon", "Gabriel", "Zachary", "Jose", "Elijah", "Angel", "Kevin", "Jack", "Caleb", "Justin", "Austin", "Evan", "Robert", "Thomas", "Luke", "Mason", "Aidan", "Jackson", "Isaiah", "Jordan", "Gavin", "Connor", "Aiden", "Isaac", "Jason", "Cameron", "Hunter", "Jayden", "Juan", "Charles", "Aaron", "Lucas", "Luis", "Owen", "Landon", "Diego", "Brian", "Adam", "Adrian", "Kyle", "Eric", "Ian", "Nathaniel", "Carlos", "Alex", "Bryan", "Jesus", "Julian", "Sean", "Carter", "Hayden", "Jeremiah", "Cole", "Brayden", "Wyatt", "Chase", "Steven", "Timothy", "Dominic", "Sebastian", "Xavier", "Jaden", "Jesse", "Devin", "Seth", "Antonio", "Richard", "Miguel", "Colin", "Cody", "Alejandro", "Caden", "Blake", "Carson" };
+    static String[] testString = new String[] { "Jacob", "Michael", "Joshua",
+            "Matthew", "Ethan", "Andrew", "Daniel", "Anthony", "Christopher",
+            "Joseph", "William", "Alexander", "Ryan", "David", "Nicholas",
+            "Tyler", "James", "John", "Jonathan", "Nathan", "Samuel",
+            "Christian", "Noah", "Dylan", "Benjamin", "Logan", "Brandon",
+            "Gabriel", "Zachary", "Jose", "Elijah", "Angel", "Kevin", "Jack",
+            "Caleb", "Justin", "Austin", "Evan", "Robert", "Thomas", "Luke",
+            "Mason", "Aidan", "Jackson", "Isaiah", "Jordan", "Gavin", "Connor",
+            "Aiden", "Isaac", "Jason", "Cameron", "Hunter", "Jayden", "Juan",
+            "Charles", "Aaron", "Lucas", "Luis", "Owen", "Landon", "Diego",
+            "Brian", "Adam", "Adrian", "Kyle", "Eric", "Ian", "Nathaniel",
+            "Carlos", "Alex", "Bryan", "Jesus", "Julian", "Sean", "Carter",
+            "Hayden", "Jeremiah", "Cole", "Brayden", "Wyatt", "Chase",
+            "Steven", "Timothy", "Dominic", "Sebastian", "Xavier", "Jaden",
+            "Jesse", "Devin", "Seth", "Antonio", "Richard", "Miguel", "Colin",
+            "Cody", "Alejandro", "Caden", "Blake", "Carson" };
 
     public static String rndString() {
         return testString[(int) (Math.random() * testString.length)];

@@ -53,7 +53,10 @@ public class Ticket2090 extends Application {
     }
 
     private void updateLabel() {
-        label.setValue("width: " + target.getWidth() + Sizeable.UNIT_SYMBOLS[target.getWidthUnits()] + ", height: " + target.getHeight() + Sizeable.UNIT_SYMBOLS[target.getHeightUnits()]);
+        label.setValue("width: " + target.getWidth()
+                + Sizeable.UNIT_SYMBOLS[target.getWidthUnits()] + ", height: "
+                + target.getHeight()
+                + Sizeable.UNIT_SYMBOLS[target.getHeightUnits()]);
     }
 
 }

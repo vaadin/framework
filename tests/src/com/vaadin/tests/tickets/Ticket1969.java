@@ -14,7 +14,8 @@ public class Ticket1969 extends com.vaadin.Application {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(
+                getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         main.getContent().setSizeFull();
@@ -22,11 +23,13 @@ public class Ticket1969 extends com.vaadin.Application {
         TabSheet ts = new TabSheet();
         ts.setSizeFull();
 
-        final Table t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(7, 2000);
+        final Table t = TestForTablesInitialColumnWidthLogicRendering
+                .getTestTable(7, 2000);
         t.setSizeFull();
         ts.addTab(t, "Table, scrollins should not flash", null);
 
-        final Label testContent = new Label("TabSheet by default uses caption, icon, errors etc. from Components. ");
+        final Label testContent = new Label(
+                "TabSheet by default uses caption, icon, errors etc. from Components. ");
 
         testContent.setCaption("Introduction to test");
 
@@ -40,18 +43,21 @@ public class Ticket1969 extends com.vaadin.Application {
 
         Button b;
 
-        b = new Button("change introduction caption (should add * to tab name)", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                testContent.setCaption(testContent.getCaption() + "*");
-            }
-        });
+        b = new Button(
+                "change introduction caption (should add * to tab name)",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        testContent.setCaption(testContent.getCaption() + "*");
+                    }
+                });
         actions.addComponent(b);
 
-        b = new Button("change tab caption (should add * to tab name)", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                actions.setCaption(actions.getCaption() + "*");
-            }
-        });
+        b = new Button("change tab caption (should add * to tab name)",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        actions.setCaption(actions.getCaption() + "*");
+                    }
+                });
 
         actions.addComponent(b);
 

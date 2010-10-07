@@ -22,7 +22,12 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
 
     private final Label result;
 
-    private static final String DESCRIPTION = "Hypothesis: Toolkit 4 has major architechtural problem when adding " + "small incrementall updates to a container which has either a lot or " + "some very slow components in it. Toolkit 5 has 'subtree caching' and a" + " small amount of logic in containers, so CommunicationManager can assure" + " that client do not need information about unchanged components it contains." + " Completing test ought to be much faster with Toolkit 5.";
+    private static final String DESCRIPTION = "Hypothesis: Toolkit 4 has major architechtural problem when adding "
+            + "small incrementall updates to a container which has either a lot or "
+            + "some very slow components in it. Toolkit 5 has 'subtree caching' and a"
+            + " small amount of logic in containers, so CommunicationManager can assure"
+            + " that client do not need information about unchanged components it contains."
+            + " Completing test ought to be much faster with Toolkit 5.";
 
     private static final int INITIAL_COMPONENTS = 40;
 
@@ -65,7 +70,8 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
     private void populateContainer(VerticalLayout container, int n) {
         for (int i = 0; i < n; i++) {
             // array_type array_element = [i];
-            final Table t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(5, 100);
+            final Table t = TestForTablesInitialColumnWidthLogicRendering
+                    .getTestTable(5, 100);
             container.addComponent(t);
         }
     }

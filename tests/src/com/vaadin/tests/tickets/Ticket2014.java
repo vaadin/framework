@@ -30,13 +30,14 @@ public class Ticket2014 extends Application {
     private void createUI(GridLayout layout) {
         createPanel(layout);
 
-        layout.addComponent(new Button("Change class name", new ClickListener() {
+        layout.addComponent(new Button("Change class name",
+                new ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                b1.setStyleName(UUID.randomUUID().toString());
-            }
+                    public void buttonClick(ClickEvent event) {
+                        b1.setStyleName(UUID.randomUUID().toString());
+                    }
 
-        }));
+                }));
 
     }
 

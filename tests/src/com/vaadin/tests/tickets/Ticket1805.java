@@ -14,11 +14,16 @@ public class Ticket1805 extends com.vaadin.Application {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(
+                getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
         ((Layout) main.getContent()).setMargin(false);
 
-        Label description = new Label("GridLayout with 100% (no height), is wanted to " + "share all available width with columns " + "relatively to their natural width. And it " + "should still work with margins and spacings");
+        Label description = new Label(
+                "GridLayout with 100% (no height), is wanted to "
+                        + "share all available width with columns "
+                        + "relatively to their natural width. And it "
+                        + "should still work with margins and spacings");
         main.addComponent(description);
 
         final GridLayout grid = new GridLayout(4, 1);

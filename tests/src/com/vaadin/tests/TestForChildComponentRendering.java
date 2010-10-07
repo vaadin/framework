@@ -57,7 +57,8 @@ public class TestForChildComponentRendering extends CustomComponent {
         b = new Button("reorder view", this, "randomReorder");
         main.addComponent(b);
 
-        b = new Button("remove randomly one component", this, "removeRandomComponent");
+        b = new Button("remove randomly one component", this,
+                "removeRandomComponent");
         main.addComponent(b);
 
     }

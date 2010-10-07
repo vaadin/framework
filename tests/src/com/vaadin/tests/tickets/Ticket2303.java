@@ -18,7 +18,8 @@ public class Ticket2303 extends Application {
         String customlayout = "<div location=\"test\"></div>";
         CustomLayout cl = null;
         try {
-            cl = new CustomLayout(new ByteArrayInputStream(customlayout.getBytes()));
+            cl = new CustomLayout(new ByteArrayInputStream(
+                    customlayout.getBytes()));
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
