@@ -3,11 +3,8 @@
     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
-	<!--
-		THIS IS THE DEVELOPMENT web.xml Package web.xml can be found in
-		build/package, please update it too when making changes that should
-		affect the package.
-	-->
+<!-- THIS IS THE DEVELOPMENT web.xml Package web.xml can be found in build/package, 
+	please update it too when making changes that should affect the package. -->
 
 
 <web-app>
@@ -19,17 +16,19 @@
 		<param-value>false</param-value>
 		<description>Vaadin production mode</description>
 	</context-param>
-	
+
 	<context-param>
 		<param-name>resourceCacheTime</param-name>
-		<param-value>3600</param-value>	
+		<param-value>3600</param-value>
 	</context-param>
 
 	<servlet>
 		<servlet-name>VaadinApplicationRunner</servlet-name>
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationRunnerServlet</servlet-class>
-		<init-param><param-name>defaultPackages</param-name>
-		<param-value>com.vaadin.tests,com.vaadin.demo,com.vaadin.tests.tickets,com.vaadin.tests.components,com.vaadin.tests.components.layouts,com.vaadin.tests.components.panel,com.vaadin.tests.components.combobox,com.vaadin.tests.components.popupview,com.vaadin.tests.components.datefield,com.vaadin.tests.components.richtextarea,com.vaadin.tests.components.absolutelayout,com.vaadin.tests.components.embedded,com.vaadin.tests.components.splitpanel,com.vaadin.tests.components.abstractfield,com.vaadin.tests.components.form,com.vaadin.tests.components.table,com.vaadin.tests.components.accordion,com.vaadin.tests.components.label,com.vaadin.tests.components.tabsheet,com.vaadin.tests.components.beanitemcontainer,com.vaadin.tests.components.link,com.vaadin.tests.components.textfield,com.vaadin.tests.components.button,com.vaadin.tests.components.optiongroup,com.vaadin.tests.components.tree,com.vaadin.tests.components.caption,com.vaadin.tests.components.orderedlayout,com.vaadin.tests.components.window,com.vaadin.tests.dd</param-value></init-param>
+		<init-param>
+			<param-name>defaultPackages</param-name>
+			<param-value>com.vaadin.tests,com.vaadin.demo,com.vaadin.tests.tickets,com.vaadin.tests.components,com.vaadin.tests.components.layouts,com.vaadin.tests.components.panel,com.vaadin.tests.components.combobox,com.vaadin.tests.components.popupview,com.vaadin.tests.components.datefield,com.vaadin.tests.components.richtextarea,com.vaadin.tests.components.absolutelayout,com.vaadin.tests.components.embedded,com.vaadin.tests.components.splitpanel,com.vaadin.tests.components.abstractfield,com.vaadin.tests.components.form,com.vaadin.tests.components.table,com.vaadin.tests.components.accordion,com.vaadin.tests.components.label,com.vaadin.tests.components.tabsheet,com.vaadin.tests.components.beanitemcontainer,com.vaadin.tests.components.link,com.vaadin.tests.components.textfield,com.vaadin.tests.components.button,com.vaadin.tests.components.optiongroup,com.vaadin.tests.components.tree,com.vaadin.tests.components.caption,com.vaadin.tests.components.orderedlayout,com.vaadin.tests.components.window,com.vaadin.tests.dd</param-value>
+		</init-param>
 	</servlet>
 
 
@@ -119,7 +118,7 @@
 			<param-value>com.vaadin.tests.RandomLayoutStress</param-value>
 		</init-param>
 	</servlet>
-	
+
 	<servlet>
 		<servlet-name>PortletDemo</servlet-name>
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
@@ -127,7 +126,7 @@
 			<param-name>application</param-name>
 			<param-value>com.vaadin.demo.portlet.PortletDemo</param-value>
 		</init-param>
-	</servlet>	
+	</servlet>
 
 	<servlet>
 		<servlet-name>CustomLayoutDemo</servlet-name>
@@ -208,15 +207,10 @@
 			<param-name>application</param-name>
 			<param-value>com.vaadin.tests.TreeFilesystemContainer</param-value>
 		</init-param>
-		<!--
-			Set this property if demo cannot access context base directory
-			because of Application Server or Servlet Container security
-			constraints
-		-->
-		<!--
-			<init-param> <param-name>sampleDirectory</param-name>
-			<param-value>/mySampleDirectory</param-value> </init-param>
-		-->
+		<!-- Set this property if demo cannot access context base directory because 
+			of Application Server or Servlet Container security constraints -->
+		<!-- <init-param> <param-name>sampleDirectory</param-name> <param-value>/mySampleDirectory</param-value> 
+			</init-param> -->
 	</servlet>
 
 	<servlet>
@@ -226,15 +220,10 @@
 			<param-name>application</param-name>
 			<param-value>com.vaadin.tests.TreeFilesystem</param-value>
 		</init-param>
-		<!--
-			Set this property if demo cannot access context base directory
-			because of Application Server or Servlet Container security
-			constraints
-		-->
-		<!--
-			<init-param> <param-name>sampleDirectory</param-name>
-			<param-value>/mySampleDirectory</param-value> </init-param>
-		-->
+		<!-- Set this property if demo cannot access context base directory because 
+			of Application Server or Servlet Container security constraints -->
+		<!-- <init-param> <param-name>sampleDirectory</param-name> <param-value>/mySampleDirectory</param-value> 
+			</init-param> -->
 	</servlet>
 
 	<servlet>
@@ -407,12 +396,12 @@
 		<servlet-name>ChatServlet</servlet-name>
 		<url-pattern>/chat/*</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet-mapping>
 		<servlet-name>PortletDemo</servlet-name>
 		<url-pattern>/PortletDemo/*</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet-mapping>
 		<servlet-name>GAESyncTest</servlet-name>
 		<url-pattern>/gaesynctest/*</url-pattern>
@@ -422,12 +411,12 @@
 		<servlet-name>AddressBook</servlet-name>
 		<url-pattern>/AddressBook/*</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet-mapping>
 		<servlet-name>ReindeerThemeStyles</servlet-name>
 		<url-pattern>/ReindeerTheme/*</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet-mapping>
 		<servlet-name>RunoTheme</servlet-name>
 		<url-pattern>/RunoTheme/*</url-pattern>
