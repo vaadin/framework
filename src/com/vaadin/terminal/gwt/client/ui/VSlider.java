@@ -46,7 +46,6 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
     private int resolution;
     private Double value;
     private boolean vertical;
-    private final int size = -1;
     private boolean arrows;
 
     private final HTML feedback = new HTML("", false);
@@ -198,35 +197,31 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
         final String styleAttribute = vertical ? "height" : "width";
         final String domProperty = vertical ? "offsetHeight" : "offsetWidth";
 
-        if (size == -1) {
-            final Element p = DOM.getParent(getElement());
-            if (DOM.getElementPropertyInt(p, domProperty) > 50) {
-                if (vertical) {
-                    setHeight();
-                } else {
-                    DOM.setStyleAttribute(base, styleAttribute, "");
-                }
+        final Element p = DOM.getParent(getElement());
+        if (DOM.getElementPropertyInt(p, domProperty) > 50) {
+            if (vertical) {
+                setHeight();
             } else {
-                // Set minimum size and adjust after all components have
-                // (supposedly) been drawn completely.
-                DOM.setStyleAttribute(base, styleAttribute, MIN_SIZE + "px");
-                DeferredCommand.addCommand(new Command() {
-                    public void execute() {
-                        final Element p = DOM.getParent(getElement());
-                        if (DOM.getElementPropertyInt(p, domProperty) > (MIN_SIZE + 5)) {
-                            if (vertical) {
-                                setHeight();
-                            } else {
-                                DOM.setStyleAttribute(base, styleAttribute, "");
-                            }
-                            // Ensure correct position
-                            setValue(value, false);
-                        }
-                    }
-                });
+                DOM.setStyleAttribute(base, styleAttribute, "");
             }
         } else {
-            DOM.setStyleAttribute(base, styleAttribute, size + "px");
+            // Set minimum size and adjust after all components have
+            // (supposedly) been drawn completely.
+            DOM.setStyleAttribute(base, styleAttribute, MIN_SIZE + "px");
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    final Element p = DOM.getParent(getElement());
+                    if (DOM.getElementPropertyInt(p, domProperty) > (MIN_SIZE + 5)) {
+                        if (vertical) {
+                            setHeight();
+                        } else {
+                            DOM.setStyleAttribute(base, styleAttribute, "");
+                        }
+                        // Ensure correct position
+                        setValue(value, false);
+                    }
+                }
+            });
         }
 
         // TODO attach listeners for focusing and arrow keys
@@ -493,18 +488,14 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
     }
 
     private void setHeight() {
-        if (size == -1) {
-            // Calculate decoration size
-            DOM.setStyleAttribute(base, "height", "0");
-            DOM.setStyleAttribute(base, "overflow", "hidden");
-            int h = DOM.getElementPropertyInt(getElement(), "offsetHeight");
-            if (h < MIN_SIZE) {
-                h = MIN_SIZE;
-            }
-            DOM.setStyleAttribute(base, "height", h + "px");
-        } else {
-            DOM.setStyleAttribute(base, "height", size + "px");
+        // Calculate decoration size
+        DOM.setStyleAttribute(base, "height", "0");
+        DOM.setStyleAttribute(base, "overflow", "hidden");
+        int h = DOM.getElementPropertyInt(getElement(), "offsetHeight");
+        if (h < MIN_SIZE) {
+            h = MIN_SIZE;
         }
+        DOM.setStyleAttribute(base, "height", h + "px");
         DOM.setStyleAttribute(base, "overflow", "");
     }
 
