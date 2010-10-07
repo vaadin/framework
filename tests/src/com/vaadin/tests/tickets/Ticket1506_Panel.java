@@ -14,13 +14,10 @@ import com.vaadin.ui.Select;
 public class Ticket1506_Panel extends Panel {
 
     public Ticket1506_Panel() {
-        ObjectProperty<String> property1 = new ObjectProperty<String>(null,
-                String.class);
-        addComponent(initSelect(new Ticket1506_TestContainer(), "Test select",
-                property1));
+        ObjectProperty<String> property1 = new ObjectProperty<String>(null, String.class);
+        addComponent(initSelect(new Ticket1506_TestContainer(), "Test select", property1));
         addComponent(initButton(property1));
-        addComponent(initSelect(new Ticket1506_TestContainer2(),
-                "Test select 2", new ObjectProperty<String>(null, String.class)));
+        addComponent(initSelect(new Ticket1506_TestContainer2(), "Test select 2", new ObjectProperty<String>(null, String.class)));
     }
 
     private Component initButton(final ObjectProperty<?> property) {
@@ -33,8 +30,7 @@ public class Ticket1506_Panel extends Panel {
         return button;
     }
 
-    private Component initSelect(Container containerDataSource, String caption,
-            ObjectProperty<?> property) {
+    private Component initSelect(Container containerDataSource, String caption, ObjectProperty<?> property) {
         Select select = new Select(caption);
         select.setFilteringMode(Select.FILTERINGMODE_CONTAINS);
         select.setImmediate(true);

@@ -14,16 +14,17 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket1878 extends Application {
@@ -48,22 +49,20 @@ public class Ticket1878 extends Application {
         gridLayout = createGL();
         formLayout = createForms();
 
-        switchToGridButton = new Button("Switch to GridLayout",
-                new ClickListener() {
+        switchToGridButton = new Button("Switch to GridLayout", new ClickListener() {
 
-                    public void buttonClick(ClickEvent event) {
-                        changeLayout(switchToGridButton, gridLayout);
-                    }
+            public void buttonClick(ClickEvent event) {
+                changeLayout(switchToGridButton, gridLayout);
+            }
 
-                });
-        switchToOrderedButton = new Button("Switch to OrderedLayout",
-                new ClickListener() {
+        });
+        switchToOrderedButton = new Button("Switch to OrderedLayout", new ClickListener() {
 
-                    public void buttonClick(ClickEvent event) {
-                        changeLayout(switchToOrderedButton, orderedLayout);
-                    }
+            public void buttonClick(ClickEvent event) {
+                changeLayout(switchToOrderedButton, orderedLayout);
+            }
 
-                });
+        });
         switchToOrderedButton.setEnabled(false);
 
         switchToFormsButton = new Button("Switch to Form", new ClickListener() {
@@ -74,8 +73,7 @@ public class Ticket1878 extends Application {
 
         });
 
-        OrderedLayout buttonLayout = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout buttonLayout = new HorizontalLayout();
         buttonLayout.addComponent(switchToOrderedButton);
         buttonLayout.addComponent(switchToGridButton);
         buttonLayout.addComponent(switchToFormsButton);
@@ -89,25 +87,15 @@ public class Ticket1878 extends Application {
         GridLayout layout = new GridLayout(1, 5);
 
         GridLayout l1 = new GridLayout(1, 3);
-        createLayout(l1,
-                new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL),
-                "1000px", "150px", "100%", null, true);
-        createLayout(l1,
-                new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL),
-                "1000px", "150px", "50px", null, false);
+        createLayout(l1, new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL), "1000px", "150px", "100%", null, true);
+        createLayout(l1, new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL), "1000px", "150px", "50px", null, false);
         GridLayout l2 = new GridLayout(6, 1);
-        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL),
-                "200px", "500px", true);
-        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL),
-                "200px", "500px", "100%", null, true);
-        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL),
-                "150px", "500px", true);
-        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL),
-                "150px", "500px", "100%", null, true);
-        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL),
-                "100px", "500px", true);
-        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL),
-                "100px", "500px", "100%", null, true);
+        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL), "200px", "500px", true);
+        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL), "200px", "500px", "100%", null, true);
+        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL), "150px", "500px", true);
+        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL), "150px", "500px", "100%", null, true);
+        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL), "100px", "500px", true);
+        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL), "100px", "500px", "100%", null, true);
         layout.addComponent(l1);
         layout.addComponent(l2);
 
@@ -118,20 +106,15 @@ public class Ticket1878 extends Application {
         GridLayout layout = new GridLayout(1, 5);
 
         GridLayout l1 = new GridLayout(1, 3);
-        createLayout(l1, new GridLayout(8, 1), "1000px", "150px", "100%", null,
-                true);
-        createLayout(l1, new GridLayout(8, 1), "1000px", "150px", "50px", null,
-                false);
+        createLayout(l1, new GridLayout(8, 1), "1000px", "150px", "100%", null, true);
+        createLayout(l1, new GridLayout(8, 1), "1000px", "150px", "50px", null, false);
         GridLayout l2 = new GridLayout(6, 1);
         createLayout(l2, new GridLayout(1, 8), "200px", "500px", true);
-        createLayout(l2, new GridLayout(1, 8), "200px", "500px", "100%", null,
-                true);
+        createLayout(l2, new GridLayout(1, 8), "200px", "500px", "100%", null, true);
         createLayout(l2, new GridLayout(1, 8), "150px", "500px", true);
-        createLayout(l2, new GridLayout(1, 8), "150px", "500px", "100%", null,
-                true);
+        createLayout(l2, new GridLayout(1, 8), "150px", "500px", "100%", null, true);
         createLayout(l2, new GridLayout(1, 8), "100px", "500px", true);
-        createLayout(l2, new GridLayout(1, 8), "100px", "500px", "100%", null,
-                true);
+        createLayout(l2, new GridLayout(1, 8), "100px", "500px", "100%", null, true);
         layout.addComponent(l1);
         layout.addComponent(l2);
 
@@ -255,33 +238,27 @@ public class Ticket1878 extends Application {
         mainLayout.replaceComponent(l, newLayout);
     }
 
-    private static void createLayout(GridLayout parentLayout, Layout newLayout,
-            String w, String h, boolean align) {
+    private static void createLayout(GridLayout parentLayout, Layout newLayout, String w, String h, boolean align) {
         createLayout(parentLayout, newLayout, w, h, null, null, align);
     }
 
-    private static void createLayout(GridLayout parentLayout, Layout newLayout,
-            String w, String h, String componentWidth, String componentHeight,
-            boolean align) {
+    private static void createLayout(GridLayout parentLayout, Layout newLayout, String w, String h, String componentWidth, String componentHeight, boolean align) {
         int dir;
         String type;
-        if (newLayout instanceof ExpandLayout) {
-            dir = ((ExpandLayout) newLayout).getOrientation();
-            type = "EL";
+        if (newLayout instanceof VerticalLayout) {
+            dir = OrderedLayout.ORIENTATION_VERTICAL;
+            type = "OL";
         } else if (newLayout instanceof OrderedLayout) {
-            dir = ((OrderedLayout) newLayout).getOrientation();
+            dir = OrderedLayout.ORIENTATION_HORIZONTAL;
             type = "OL";
         } else {
-            dir = ((GridLayout) newLayout).getColumns() == 1 ? OrderedLayout.ORIENTATION_VERTICAL
-                    : OrderedLayout.ORIENTATION_HORIZONTAL;
+            dir = ((GridLayout) newLayout).getColumns() == 1 ? OrderedLayout.ORIENTATION_VERTICAL : OrderedLayout.ORIENTATION_HORIZONTAL;
             type = "GL";
         }
-        String dirText = (dir == OrderedLayout.ORIENTATION_HORIZONTAL ? "H"
-                : "V");
+        String dirText = (dir == OrderedLayout.ORIENTATION_HORIZONTAL ? "H" : "V");
         String alignText = align ? "-A" : "";
         String cWidth = componentWidth == null ? "" : " - " + componentWidth;
-        Panel p = new Panel(type + "/" + dirText + alignText + " " + w + "x"
-                + h + cWidth, newLayout);
+        Panel p = new Panel(type + "/" + dirText + alignText + " " + w + "x" + h + cWidth, newLayout);
 
         p.setWidth(w);
         p.setHeight(h);
@@ -289,15 +266,13 @@ public class Ticket1878 extends Application {
         newLayout.setSizeFull();
 
         String captions[] = new String[] { "TextField with caption", null };
-        Resource icons[] = new Resource[] {
-                new ThemeResource("icons/16/document-delete.png"), null };
+        Resource icons[] = new Resource[] { new ThemeResource("icons/16/document-delete.png"), null };
         boolean required[] = new boolean[] { true, false };
         TextField fields[][] = new TextField[captions.length][icons.length];
         for (int caption = 0; caption < captions.length; caption++) {
             for (int icon = 0; icon < icons.length; icon++) {
                 for (int req = 0; req < required.length; req++) {
-                    TextField tf = createTextFieldWithError(captions[caption],
-                            icons[icon], required[req]);
+                    TextField tf = createTextFieldWithError(captions[caption], icons[icon], required[req]);
 
                     fields[caption][icon] = tf;
                     if (componentWidth != null) {
@@ -313,9 +288,7 @@ public class Ticket1878 extends Application {
                     p.addComponent(tf);
 
                     if (align) {
-                        ((AlignmentHandler) newLayout).setComponentAlignment(
-                                tf, OrderedLayout.ALIGNMENT_RIGHT,
-                                OrderedLayout.ALIGNMENT_BOTTOM);
+                        ((AlignmentHandler) newLayout).setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT, OrderedLayout.ALIGNMENT_BOTTOM);
                     }
                 }
             }
@@ -380,8 +353,7 @@ public class Ticket1878 extends Application {
     //
     // }
 
-    private static TextField createTextFieldWithError(String caption,
-            Resource icon, boolean required) {
+    private static TextField createTextFieldWithError(String caption, Resource icon, boolean required) {
         TextField tf = new TextField();
         tf.setCaption(caption);
         tf.setIcon(icon);

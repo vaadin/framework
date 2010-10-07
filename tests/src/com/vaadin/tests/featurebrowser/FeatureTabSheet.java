@@ -6,8 +6,8 @@ package com.vaadin.tests.featurebrowser;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.VerticalLayout;
 
 public class FeatureTabSheet extends Feature {
 
@@ -18,7 +18,7 @@ public class FeatureTabSheet extends Feature {
     @Override
     protected Component getDemoComponent() {
 
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
 
         final TabSheet ts = new TabSheet();
         ts.addTab(

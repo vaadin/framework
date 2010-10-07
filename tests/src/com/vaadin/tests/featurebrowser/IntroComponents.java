@@ -9,9 +9,9 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
+import com.vaadin.ui.VerticalLayout;
 
 public class IntroComponents extends Feature {
 
@@ -26,7 +26,7 @@ public class IntroComponents extends Feature {
     @Override
     protected Component getDemoComponent() {
 
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
 
         final Panel panel = new Panel();
         panel.setCaption("UI component diagram");

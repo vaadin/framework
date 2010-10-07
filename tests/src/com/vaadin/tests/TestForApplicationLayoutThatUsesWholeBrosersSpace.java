@@ -5,18 +5,17 @@
 package com.vaadin.tests;
 
 import com.vaadin.Application;
-import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
-        Application {
+public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends Application {
 
     Window main = new Window("Windowing test");
 
-    ExpandLayout rootLayout;
+    VerticalLayout rootLayout;
 
     SplitPanel firstLevelSplit;
 
@@ -24,38 +23,36 @@ public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
     public void init() {
         setMainWindow(main);
 
-        rootLayout = new ExpandLayout();
+        rootLayout = new VerticalLayout();
         main.setLayout(rootLayout);
 
         rootLayout.addComponent(new Label("header"));
 
         firstLevelSplit = new SplitPanel();
 
-        final SplitPanel secondSplitPanel = new SplitPanel(
-                SplitPanel.ORIENTATION_HORIZONTAL);
+        final SplitPanel secondSplitPanel = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
         secondSplitPanel.setFirstComponent(new Label("left"));
 
-        final ExpandLayout topRight = new ExpandLayout();
+        final VerticalLayout topRight = new VerticalLayout();
         topRight.addComponent(new Label("topright header"));
 
-        final Table t = TestForTablesInitialColumnWidthLogicRendering
-                .getTestTable(4, 100);
+        final Table t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(4, 100);
         t.setSizeFull();
         topRight.addComponent(t);
-        topRight.expand(t);
+        topRight.setExpandRatio(t, 1);
 
         topRight.addComponent(new Label("topright footer"));
 
         secondSplitPanel.setSecondComponent(topRight);
 
-        final ExpandLayout el = new ExpandLayout();
+        final VerticalLayout el = new VerticalLayout();
         el.addComponent(new Label("B��"));
 
         firstLevelSplit.setFirstComponent(secondSplitPanel);
         firstLevelSplit.setSecondComponent(el);
 
         rootLayout.addComponent(firstLevelSplit);
-        rootLayout.expand(firstLevelSplit);
+        rootLayout.setExpandRatio(firstLevelSplit, 1);
 
         rootLayout.addComponent(new Label("footer"));
 

@@ -11,8 +11,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 
 public class FeatureGridLayout extends Feature {
 
@@ -23,7 +23,7 @@ public class FeatureGridLayout extends Feature {
     @Override
     protected Component getDemoComponent() {
 
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
 
         final GridLayout gl = new GridLayout(3, 3);
         final DateField cal = new DateField("Test component 1", new Date());

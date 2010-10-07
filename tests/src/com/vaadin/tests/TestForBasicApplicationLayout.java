@@ -11,13 +11,12 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 
 public class TestForBasicApplicationLayout extends CustomComponent {
 
@@ -55,9 +54,8 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         tab = new TabSheet();
         tab.setSizeFull();
 
-        final Panel report = new Panel("Monthly Program Runs",
-                new ExpandLayout());
-        final OrderedLayout controls = new OrderedLayout();
+        final Panel report = new Panel("Monthly Program Runs", new VerticalLayout());
+        final VerticalLayout controls = new VerticalLayout();
         controls.setMargin(true);
         controls.addComponent(new Label("Report tab"));
         controls.addComponent(click);
@@ -67,14 +65,13 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         cal.setResolution(DateField.RESOLUTION_DAY);
         cal.setLocale(new Locale("en", "US"));
         report.addComponent(cal);
-        ((ExpandLayout) report.getLayout()).expand(controls);
+        ((VerticalLayout) report.getContent()).setExpandRatio(controls, 1);
         report.addStyleName(Panel.STYLE_LIGHT);
         report.setHeight(100, SplitPanel.UNITS_PERCENTAGE);
 
         sp2.setFirstComponent(report);
 
-        final Table table = TestForTablesInitialColumnWidthLogicRendering
-                .getTestTable(5, 200);
+        final Table table = TestForTablesInitialColumnWidthLogicRendering.getTestTable(5, 200);
         table.setPageLength(15);
         table.setSelectable(true);
         table.setRowHeaderMode(Table.ROW_HEADER_MODE_INDEX);

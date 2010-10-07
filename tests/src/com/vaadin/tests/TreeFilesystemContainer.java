@@ -28,8 +28,7 @@ import com.vaadin.ui.Window;
  * @since 4.0.0
  * 
  */
-public class TreeFilesystemContainer extends com.vaadin.Application implements
-        Listener {
+public class TreeFilesystemContainer extends com.vaadin.Application implements Listener {
 
     // Filesystem explorer panel and it's components
     private final Panel explorerPanel = new Panel("Filesystem explorer");
@@ -86,11 +85,9 @@ public class TreeFilesystemContainer extends com.vaadin.Application implements
             // Check if event is about changing value
             if (event.getClass() == Field.ValueChangeEvent.class) {
                 // Update property panel contents
-                final FileItem fileItem = (FileItem) filesystem
-                        .getItem(filesystem.getValue());
+                final FileItem fileItem = (FileItem) filesystem.getItem(filesystem.getValue());
                 fileProperties.setIcon(fileItem.getIcon());
-                fileProperties.setCaption(fileItem.getName() + ", size "
-                        + fileItem.getSize() + " bytes.");
+                fileProperties.setCaption(fileItem.getName() + ", size " + fileItem.getSize() + " bytes.");
                 propertyPanel.setEnabled(true);
             }
             // here we could check for other type of events for filesystem

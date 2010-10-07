@@ -15,8 +15,7 @@ public class Ticket1365 extends com.vaadin.Application implements Handler {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         main.addComponent(f);
@@ -26,19 +25,14 @@ public class Ticket1365 extends com.vaadin.Application implements Handler {
 
     }
 
-    final static private Action[] actions = new Action[] {
-            new ShortcutAction("Enter", ShortcutAction.KeyCode.ENTER,
-                    new int[] {}),
-            new ShortcutAction("CTRL-S", ShortcutAction.KeyCode.S,
-                    new int[] { ShortcutAction.ModifierKey.CTRL }), };
+    final static private Action[] actions = new Action[] { new ShortcutAction("Enter", ShortcutAction.KeyCode.ENTER, new int[] {}), new ShortcutAction("CTRL-S", ShortcutAction.KeyCode.S, new int[] { ShortcutAction.ModifierKey.CTRL }), };
 
     public Action[] getActions(Object target, Object sender) {
         return actions;
     }
 
     public void handleAction(Action action, Object sender, Object target) {
-        status.setValue("Pressed " + action.getCaption()
-                + " to fire shortcut. Texfield value: " + f.getValue());
+        status.setValue("Pressed " + action.getCaption() + " to fire shortcut. Texfield value: " + f.getValue());
         f.focus();
     }
 

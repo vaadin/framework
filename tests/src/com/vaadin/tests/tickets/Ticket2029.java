@@ -8,9 +8,11 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2029 extends Application {
@@ -39,8 +41,7 @@ public class Ticket2029 extends Application {
         p.setWidth(DIM1 + "px");
         p.setHeight(DIM2 + "px");
 
-        OrderedLayout layout = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout layout = new HorizontalLayout();
         p.setLayout(layout);
         p.getLayout().setSizeFull();
 
@@ -56,8 +57,7 @@ public class Ticket2029 extends Application {
                 tf.setComponentError(new UserError("Error"));
             }
             tf.setWidth("100%");
-            layout.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                    OrderedLayout.ALIGNMENT_BOTTOM);
+            layout.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT, OrderedLayout.ALIGNMENT_BOTTOM);
             p.addComponent(tf);
 
         }
@@ -95,8 +95,7 @@ public class Ticket2029 extends Application {
                 tf.setComponentError(new UserError("Error"));
             }
             tf.setWidth("100%");
-            layout.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                    OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+            layout.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT, OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
             p.addComponent(tf);
 
         }
@@ -109,8 +108,7 @@ public class Ticket2029 extends Application {
         p.setWidth("" + DIM2 + "px");
         p.setHeight("" + DIM1 + "px");
 
-        OrderedLayout layout = new OrderedLayout(
-                OrderedLayout.ORIENTATION_VERTICAL);
+        VerticalLayout layout = new VerticalLayout();
         p.setLayout(layout);
         p.getLayout().setSizeFull();
 
@@ -129,8 +127,7 @@ public class Ticket2029 extends Application {
             tf.setRows(2);
             tf.setSizeFull();
 
-            layout.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                    OrderedLayout.ALIGNMENT_BOTTOM);
+            layout.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT, OrderedLayout.ALIGNMENT_BOTTOM);
             p.addComponent(tf);
 
         }

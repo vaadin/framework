@@ -9,9 +9,9 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.SplitPanel;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2048 extends Application {
@@ -20,7 +20,7 @@ public class Ticket2048 extends Application {
     private Panel p;
     private SplitPanel splitPanel;
     private GridLayout gridLayout;
-    private OrderedLayout orderedLayout;
+    private VerticalLayout orderedLayout;
 
     @Override
     public void init() {
@@ -33,7 +33,7 @@ public class Ticket2048 extends Application {
         // GridLayout layout = new GridLayout(10, 10);
         // w.setLayout(layout);
         // gridLayout = new GridLayout(1, 1);
-        orderedLayout = new OrderedLayout();
+        orderedLayout = new VerticalLayout();
 
         getMainWindow().setLayout(orderedLayout);
         // getMainWindow().setLayout(new GridLayout(1, 1));
@@ -67,31 +67,25 @@ public class Ticket2048 extends Application {
         l.setHeight("400px");
         p.addComponent(l);
 
-        embedded = new Embedded(null, new ThemeResource(
-                "icons/64/folder-add.png"));
+        embedded = new Embedded(null, new ThemeResource("icons/64/folder-add.png"));
         layout.addComponent(embedded);
-        Button b = new Button(
-                "Replace image with new embedded component (flashes)",
-                new ClickListener() {
+        Button b = new Button("Replace image with new embedded component (flashes)", new ClickListener() {
 
-                    public void buttonClick(ClickEvent event) {
-                        Embedded newEmbedded = new Embedded(null,
-                                new ThemeResource("icons/64/folder-add.png"));
-                        getMainWindow().getLayout().replaceComponent(embedded,
-                                newEmbedded);
-                        embedded = newEmbedded;
+            public void buttonClick(ClickEvent event) {
+                Embedded newEmbedded = new Embedded(null, new ThemeResource("icons/64/folder-add.png"));
+                getMainWindow().getLayout().replaceComponent(embedded, newEmbedded);
+                embedded = newEmbedded;
 
-                    }
+            }
 
-                });
+        });
         p.addComponent(b);
 
         b = new Button("Change image source (is fine)", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
                 String img = "folder-add";
-                if (((ThemeResource) embedded.getSource()).getResourceId()
-                        .contains("folder-add")) {
+                if (((ThemeResource) embedded.getSource()).getResourceId().contains("folder-add")) {
                     img = "folder-delete";
                 }
                 embedded.setSource(new ThemeResource("icons/64/" + img + ".png"));

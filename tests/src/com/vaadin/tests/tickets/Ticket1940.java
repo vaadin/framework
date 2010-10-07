@@ -1,8 +1,8 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket1940 extends Application {
@@ -12,7 +12,7 @@ public class Ticket1940 extends Application {
         final Window w = new Window(getClass().getName());
         setMainWindow(w);
 
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
         l.setWidth(200);
         l.setHeight(-1);
         TextField t = new TextField();

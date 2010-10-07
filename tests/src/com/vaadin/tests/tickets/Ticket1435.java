@@ -6,12 +6,13 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.ExpandLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket1435 extends Application {
@@ -42,12 +43,11 @@ public class Ticket1435 extends Application {
      */
     public class ButtonPanel extends CustomComponent {
 
-        ExpandLayout root = new ExpandLayout();
+        VerticalLayout root = new VerticalLayout();
 
         // In header are the panel's title and the control buttons.
         // Panel title is expanded by default.
-        ExpandLayout header = new ExpandLayout(
-                ExpandLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout header = new HorizontalLayout();
 
         // This is where the actual data is put.
         Panel container = new Panel();
@@ -81,8 +81,7 @@ public class Ticket1435 extends Application {
                 buttonContainer = header;
 
             } else {
-                buttonContainer = new OrderedLayout(
-                        OrderedLayout.ORIENTATION_HORIZONTAL);
+                buttonContainer = new HorizontalLayout();
                 header.addComponent(buttonContainer);
 
             }
@@ -135,8 +134,7 @@ public class Ticket1435 extends Application {
                         } else {
                             root.setHeight(lastHeight, lastHeightUnit);
                         }
-                        event.getButton().setCaption(
-                                visible ? "Expand" : "Collapse");
+                        event.getButton().setCaption(visible ? "Expand" : "Collapse");
                     }
                 }
             });
@@ -160,7 +158,7 @@ public class Ticket1435 extends Application {
             container.getLayout().setMargin(false);
             container.getLayout().setSizeFull();
             root.addComponent(container);
-            root.expand(container);
+            root.setExpandRatio(container,1);
         }
 
         public void setHeight(int height, int unit) {
@@ -220,8 +218,7 @@ public class Ticket1435 extends Application {
 
         for (int i = 0; i < 10; i++) {
             String name = "Name " + i;
-            table.addItem(new Object[] { new CheckBox(), name,
-                    "02-22-2007 13:37" }, new Integer(i));
+            table.addItem(new Object[] { new CheckBox(), name, "02-22-2007 13:37" }, new Integer(i));
         }
 
         panel.setPanelComponent(table);

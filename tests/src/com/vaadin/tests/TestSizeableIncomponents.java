@@ -62,8 +62,7 @@ public class TestSizeableIncomponents extends Application {
                 if (prev == null) {
                     getMainWindow().showNotification("No more test cases");
                 } else {
-                    getMainWindow().showNotification(
-                            "Selected test:" + prev.getTestableName());
+                    getMainWindow().showNotification("Selected test:" + prev.getTestableName());
                     select.setValue(prev);
                     select.requestRepaint();
                 }
@@ -77,8 +76,7 @@ public class TestSizeableIncomponents extends Application {
                 if (next == null) {
                     getMainWindow().showNotification("No more test cases");
                 } else {
-                    getMainWindow().showNotification(
-                            "Selected test:" + next.getTestableName());
+                    getMainWindow().showNotification("Selected test:" + next.getTestableName());
                     select.setValue(next);
                     select.requestRepaint();
                 }
@@ -131,8 +129,7 @@ public class TestSizeableIncomponents extends Application {
         String[] list2 = (new File(dir.getFile())).list();
         for (int i = 0; i < list2.length; i++) {
             String f = list2[i];
-            if (f.endsWith(".class") && (f.indexOf("CustomComponent") == -1)
-                    && (f.indexOf("Window") == -1)) {
+            if (f.endsWith(".class") && (f.indexOf("CustomComponent") == -1) && (f.indexOf("Window") == -1)) {
                 f = f.replaceAll(".class", "");
                 String className = "com.vaadin.ui." + f;
                 Class<?> c;
@@ -168,14 +165,11 @@ public class TestSizeableIncomponents extends Application {
                         cont.addItem(t);
                         t = new Testable(c) {
                             @Override
-                            public Component getComponent()
-                                    throws InstantiationException,
-                                    IllegalAccessException {
+                            public Component getComponent() throws InstantiationException, IllegalAccessException {
 
                                 Component c = super.getComponent();
 
-                                Panel p = new Panel(
-                                        "Wrapper panel (400px*400px)");
+                                Panel p = new Panel("Wrapper panel (400px*400px)");
                                 p.setContent(new VerticalLayout());
                                 p.setWidth("400px");
                                 p.setHeight("400px");
@@ -228,8 +222,7 @@ public class TestSizeableIncomponents extends Application {
             StringBuffer sb = new StringBuffer();
             sb.append(classToTest.getName().replaceAll("com.vaadin.ui.", ""));
             sb.append("[");
-            for (Iterator<Configuration> i = configurations.iterator(); i
-                    .hasNext();) {
+            for (Iterator<Configuration> i = configurations.iterator(); i.hasNext();) {
                 sb.append((i.next()).getDescription());
                 if (i.hasNext()) {
                     sb.append(",");
@@ -248,8 +241,7 @@ public class TestSizeableIncomponents extends Application {
          * @throws InstantiationException
          * @throws IllegalAccessException
          */
-        public Component getComponent() throws InstantiationException,
-                IllegalAccessException {
+        public Component getComponent() throws InstantiationException, IllegalAccessException {
             Component c = (Component) classToTest.newInstance();
 
             if (c instanceof Button) {
@@ -258,16 +250,13 @@ public class TestSizeableIncomponents extends Application {
             if (AbstractSelect.class.isAssignableFrom(c.getClass())) {
                 if (c instanceof Table) {
                     Table new_name = (Table) c;
-                    new_name.setContainerDataSource(TestForTablesInitialColumnWidthLogicRendering
-                            .getTestTable(5, 100).getContainerDataSource());
+                    new_name.setContainerDataSource(TestForTablesInitialColumnWidthLogicRendering.getTestTable(5, 100).getContainerDataSource());
 
                 } else {
                     AbstractSelect new_name = (AbstractSelect) c;
-                    Container cont = TestForTablesInitialColumnWidthLogicRendering
-                            .getTestTable(2, 8).getContainerDataSource();
+                    Container cont = TestForTablesInitialColumnWidthLogicRendering.getTestTable(2, 8).getContainerDataSource();
                     new_name.setContainerDataSource(cont);
-                    new_name.setItemCaptionPropertyId(cont
-                            .getContainerPropertyIds().iterator().next());
+                    new_name.setItemCaptionPropertyId(cont.getContainerPropertyIds().iterator().next());
 
                 }
             } else if (c instanceof ComponentContainer) {
@@ -281,8 +270,7 @@ public class TestSizeableIncomponents extends Application {
                 ((Label) c).setValue("Test label");
             }
 
-            for (Iterator<Configuration> i = configurations.iterator(); i
-                    .hasNext();) {
+            for (Iterator<Configuration> i = configurations.iterator(); i.hasNext();) {
                 Configuration conf = i.next();
                 conf.configure(c);
             }

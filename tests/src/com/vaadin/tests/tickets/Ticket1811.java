@@ -21,26 +21,21 @@ public class Ticket1811 extends com.vaadin.Application {
         final Window main = new Window("#1811");
         setMainWindow(main);
 
-        Validator strLenValidator = new StringLengthValidator(
-                "String must be at least 3 chars long and non-null", 3, -1,
-                false);
+        Validator strLenValidator = new StringLengthValidator("String must be at least 3 chars long and non-null", 3, -1, false);
 
-        TextField tf1 = new TextField(
-                "Text field with default settings (required=false)");
+        TextField tf1 = new TextField("Text field with default settings (required=false)");
         listOfAllFields.add(tf1);
 
         TextField tf2 = new TextField("Text field with required=true");
         tf2.setRequired(true);
         listOfAllFields.add(tf2);
 
-        TextField tf3 = new TextField(
-                "Text field with required=true and strlen >= 3");
+        TextField tf3 = new TextField("Text field with required=true and strlen >= 3");
         tf3.setRequired(true);
         tf3.addValidator(strLenValidator);
         listOfAllFields.add(tf3);
 
-        TextField tf4 = new TextField(
-                "Text field with required=false (default) and strlen >= 3");
+        TextField tf4 = new TextField("Text field with required=false (default) and strlen >= 3");
         tf4.addValidator(strLenValidator);
         listOfAllFields.add(tf4);
 
@@ -56,15 +51,13 @@ public class Ticket1811 extends com.vaadin.Application {
 
             public void buttonClick(ClickEvent event) {
                 StringBuffer msg = new StringBuffer();
-                for (Iterator<TextField> i = listOfAllFields
-                        .iterator(); i.hasNext();) {
+                for (Iterator<TextField> i = listOfAllFields.iterator(); i.hasNext();) {
                     TextField tf = i.next();
                     msg.append("<h1>" + tf.getCaption() + "</h1>\n");
                     if (tf.isValid()) {
                         msg.append("VALID\n<hr/>");
                     } else {
-                        msg.append("INVALID<br/><i>" + tf.getErrorMessage()
-                                + "</i><hr/>");
+                        msg.append("INVALID<br/><i>" + tf.getErrorMessage() + "</i><hr/>");
                     }
                 }
                 Window w = new Window("Status of the fields");

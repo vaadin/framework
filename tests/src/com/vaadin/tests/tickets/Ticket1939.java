@@ -3,8 +3,8 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket1939 extends Application {
@@ -14,7 +14,7 @@ public class Ticket1939 extends Application {
         Window w = new Window(getClass().getName());
         setMainWindow(w);
 
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
         l.setWidth(400);
         l.setHeight(100);
         l.addComponent(new TextField("This one works fine"));
@@ -24,12 +24,11 @@ public class Ticket1939 extends Application {
         l.addComponent(t);
         w.addComponent(l);
 
-        w.addComponent(new Button("show me the bug",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        l.setWidth(-1);
-                    }
-                }));
+        w.addComponent(new Button("show me the bug", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                l.setWidth(-1);
+            }
+        }));
 
     }
 

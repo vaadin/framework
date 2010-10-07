@@ -34,6 +34,7 @@ import com.vaadin.ui.Select;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class PropertyPanel extends Panel implements Button.ClickListener,
@@ -41,7 +42,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
     private Select addComponent;
 
-    private final OrderedLayout formsLayout = new OrderedLayout();
+    private final VerticalLayout formsLayout = new VerticalLayout();
 
     private final LinkedList<Form> forms = new LinkedList<Form>();
 

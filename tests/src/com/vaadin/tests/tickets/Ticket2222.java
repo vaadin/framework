@@ -2,8 +2,10 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2222 extends Application {
@@ -17,8 +19,7 @@ public class Ticket2222 extends Application {
     }
 
     private void createUI(OrderedLayout layout) {
-        OrderedLayout horiz = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout horiz = new HorizontalLayout();
         horiz.setSpacing(true);
         horiz.setMargin(true);
         horiz.setStyleName("ticket2222");
@@ -30,8 +31,7 @@ public class Ticket2222 extends Application {
         horiz.addComponent(new Label("Margin-bottom: 30px;"));
         horiz.addStyleName("borders");
 
-        OrderedLayout vert = new OrderedLayout(
-                OrderedLayout.ORIENTATION_VERTICAL);
+        VerticalLayout vert = new VerticalLayout();
         vert.setSizeUndefined();
         vert.setSpacing(true);
         vert.setMargin(false);

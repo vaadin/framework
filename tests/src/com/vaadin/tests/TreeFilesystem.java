@@ -23,8 +23,7 @@ import com.vaadin.ui.Window;
  * @since 4.0.0
  * 
  */
-public class TreeFilesystem extends com.vaadin.Application implements
-        Tree.ExpandListener {
+public class TreeFilesystem extends com.vaadin.Application implements Tree.ExpandListener {
 
     // Filesystem explorer panel and it's components
     private final Panel explorerPanel = new Panel("Filesystem explorer");

@@ -5,7 +5,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2060 extends Application {
@@ -25,8 +25,7 @@ public class Ticket2060 extends Application {
     }
 
     private void createUI(GridLayout layout) {
-        OrderedLayout buttonLayout = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout buttonLayout = new HorizontalLayout();
         button1 = new Button("Button which is 50px wide");
         button1.setWidth("50px");
         button2 = new Button("Button without width");

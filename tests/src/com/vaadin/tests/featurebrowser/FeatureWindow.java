@@ -8,7 +8,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 
@@ -30,9 +30,9 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
     @Override
     protected Component getDemoComponent() {
 
-        final OrderedLayout layoutRoot = new OrderedLayout();
-        final OrderedLayout layoutUpper = new OrderedLayout();
-        final OrderedLayout layoutLower = new OrderedLayout();
+        final VerticalLayout layoutRoot = new VerticalLayout();
+        final VerticalLayout layoutUpper = new VerticalLayout();
+        final VerticalLayout layoutLower = new VerticalLayout();
 
         demoWindow = new Window("Feature Test Window");
         demoWindow.addListener(this);

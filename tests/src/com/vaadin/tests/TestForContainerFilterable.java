@@ -13,14 +13,14 @@ import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 
 public class TestForContainerFilterable extends CustomComponent {
 
-    OrderedLayout lo = new OrderedLayout();
+    VerticalLayout lo = new VerticalLayout();
     IndexedContainer ic = new IndexedContainer();
     Table t = new Table();
-    private static String parts[] = { "Neo", "Sa", "rem", "the", "adi", "za",
-            "tre", "day", "Ca", "re", "cen", "ter", "mi", "nal" };
+    private static String parts[] = { "Neo", "Sa", "rem", "the", "adi", "za", "tre", "day", "Ca", "re", "cen", "ter", "mi", "nal" };
     TextField fooFilter = new TextField("foo-filter");
     TextField barFilter = new TextField("bar-filter");
     Button filterButton = new Button("Filter");
@@ -39,17 +39,14 @@ public class TestForContainerFilterable extends CustomComponent {
         }
 
         // Init filtering view
-        final Panel filterPanel = new Panel("Filter", new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL));
+        final Panel filterPanel = new Panel("Filter", new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
         filterPanel.setWidth(100, Panel.UNITS_PERCENTAGE);
         lo.addComponent(filterPanel);
         filterPanel.addComponent(fooFilter);
         filterPanel.addComponent(barFilter);
         filterPanel.addComponent(filterButton);
-        fooFilter
-                .setDescription("Filters foo column in case-sensitive contains manner.");
-        barFilter
-                .setDescription("Filters bar column in case-insensitive prefix manner.");
+        fooFilter.setDescription("Filters foo column in case-sensitive contains manner.");
+        barFilter.setDescription("Filters bar column in case-insensitive prefix manner.");
         filterPanel.addComponent(count);
 
         // Table
@@ -63,24 +60,21 @@ public class TestForContainerFilterable extends CustomComponent {
             public void buttonClick(ClickEvent event) {
                 ic.removeAllContainerFilters();
                 if (fooFilter.toString().length() > 0) {
-                    ic.addContainerFilter("foo", fooFilter.toString(), false,
-                            false);
+                    ic.addContainerFilter("foo", fooFilter.toString(), false, false);
                 }
                 if (barFilter.toString().length() > 0) {
-                    ic.addContainerFilter("bar", barFilter.toString(), true,
-                            true);
+                    ic.addContainerFilter("bar", barFilter.toString(), true, true);
                 }
                 count.setValue("Rows in table: " + ic.size());
             }
         });
 
         // Resetbutton
-        lo.addComponent(new Button("Rebind table datasource",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        t.setContainerDataSource(ic);
-                    }
-                }));
+        lo.addComponent(new Button("Rebind table datasource", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                t.setContainerDataSource(ic);
+            }
+        }));
     }
 
     private String randomWord() {

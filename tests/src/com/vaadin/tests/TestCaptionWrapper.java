@@ -40,8 +40,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
     VerticalLayout main = new VerticalLayout();
 
     final String eventListenerString = "Component.Listener feedback: ";
-    Label eventListenerFeedback = new Label(eventListenerString
-            + " <no events occured>");
+    Label eventListenerFeedback = new Label(eventListenerString + " <no events occured>");
     int count = 0;
 
     public TestCaptionWrapper() {
@@ -57,10 +56,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
     public void createNewView() {
         main.removeAllComponents();
 
-        main.addComponent(new Label(
-                "Each Layout and their contained components should "
-                        + "have icon, caption, description, user error defined. "
-                        + "Eeach layout should contain similar components."));
+        main.addComponent(new Label("Each Layout and their contained components should " + "have icon, caption, description, user error defined. " + "Eeach layout should contain similar components."));
 
         main.addComponent(eventListenerFeedback);
 
@@ -79,10 +75,8 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         final VerticalLayout tab2 = new VerticalLayout();
         test(tab2);
         populateLayout(tab2);
-        tabsheet.addTab(tab1, "TabSheet tab1", new ClassResource("m.gif",
-                getApplication()));
-        tabsheet.addTab(tab2, "TabSheet tab2", new ClassResource("m.gif",
-                getApplication()));
+        tabsheet.addTab(tab1, "TabSheet tab1", new ClassResource("m.gif", getApplication()));
+        tabsheet.addTab(tab2, "TabSheet tab2", new ClassResource("m.gif", getApplication()));
 
         final VerticalLayout expandLayout = new VerticalLayout();
         test(expandLayout);
@@ -119,16 +113,13 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         final Label label = new Label("Label " + count++);
         test(layout, label);
 
-        final Link link = new Link("Link " + count++, new ExternalResource(
-                "www.vaadin.com"));
+        final Link link = new Link("Link " + count++, new ExternalResource("www.vaadin.com"));
         test(layout, link);
 
-        final NativeSelect nativeSelect = new NativeSelect("NativeSelect "
-                + count++);
+        final NativeSelect nativeSelect = new NativeSelect("NativeSelect " + count++);
         test(layout, nativeSelect);
 
-        final OptionGroup optionGroup = new OptionGroup("OptionGroup "
-                + count++);
+        final OptionGroup optionGroup = new OptionGroup("OptionGroup " + count++);
         test(layout, optionGroup);
 
         final ProgressIndicator pi = new ProgressIndicator();
@@ -152,16 +143,14 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         final Tree tree = new Tree("Tree " + count++);
         test(layout, tree);
 
-        final TwinColSelect twinColSelect = new TwinColSelect("TwinColSelect "
-                + count++);
+        final TwinColSelect twinColSelect = new TwinColSelect("TwinColSelect " + count++);
         test(layout, twinColSelect);
 
         final Upload upload = new Upload("Upload (non-functional)", null);
         test(layout, upload);
 
         // Custom components
-        layout.addComponent(new Label("<B>Below are few custom components</B>",
-                Label.CONTENT_XHTML));
+        layout.addComponent(new Label("<B>Below are few custom components</B>", Label.CONTENT_XHTML));
         final TestForUpload tfu = new TestForUpload();
         layout.addComponent(tfu);
 
@@ -195,8 +184,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
     }
 
     public void componentEvent(Event event) {
-        final String feedback = eventListenerString + " source="
-                + event.getSource() + ", toString()=" + event.toString();
+        final String feedback = eventListenerString + " source=" + event.getSource() + ", toString()=" + event.toString();
         System.out.println("eventListenerFeedback: " + feedback);
         eventListenerFeedback.setValue(feedback);
     }

@@ -5,10 +5,10 @@ import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket1245 extends com.vaadin.Application {
@@ -17,8 +17,7 @@ public class Ticket1245 extends com.vaadin.Application {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         main.addComponent(new TreeExample());
@@ -35,7 +34,7 @@ class TreeExample extends CustomComponent {
     Tree tree;
 
     public TreeExample() {
-        final OrderedLayout main = new OrderedLayout();
+        final VerticalLayout main = new VerticalLayout();
         setCompositionRoot(main);
 
         // Panel w/ Tree

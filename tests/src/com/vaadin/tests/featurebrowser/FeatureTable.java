@@ -8,9 +8,9 @@ import com.vaadin.event.Action;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 
 public class FeatureTable extends Feature implements Action.Handler {
 
@@ -52,7 +52,7 @@ public class FeatureTable extends Feature implements Action.Handler {
 
     protected Component getDemoComponent() {
 
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
 
         // Sample table
         t = new Table("Corporate Employees");

@@ -17,10 +17,10 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 /**
@@ -34,19 +34,13 @@ import com.vaadin.ui.Window;
  * @since 3.1.1
  * @author IT Mill Ltd.
  */
-public class UpgradingSample extends Application implements
-        Property.ValueChangeListener {
+public class UpgradingSample extends Application implements Property.ValueChangeListener {
 
     /* Menu for navigating inside the application. */
     private final Tree menu = new Tree();
 
     /* Contents of the website */
-    private final String[][] pages = {
-            { "Welcome", "Welcome to our website..." },
-            { "Products", "Public product information." },
-            { "Contact", "Public contact information." },
-            { "CRM", "CRM Database requiring login." },
-            { "Intranet", "Internal information database." } };
+    private final String[][] pages = { { "Welcome", "Welcome to our website..." }, { "Products", "Public product information." }, { "Contact", "Public contact information." }, { "CRM", "CRM Database requiring login." }, { "Intranet", "Internal information database." } };
 
     /* Application layout */
     private final GridLayout layout = new GridLayout(2, 1);
@@ -60,7 +54,7 @@ public class UpgradingSample extends Application implements
         setMainWindow(main);
 
         // Add menu and loginbox to the application
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
         layout.addComponent(l, 0, 0);
         l.addComponent(menu);
         l.addComponent(new LoginBox());
@@ -107,8 +101,7 @@ public class UpgradingSample extends Application implements
     }
 
     // Simple loginbox component for the application
-    public class LoginBox extends CustomComponent implements
-            Application.UserChangeListener {
+    public class LoginBox extends CustomComponent implements Application.UserChangeListener {
 
         // The components this loginbox is composed of
         private final TextField loginName = new TextField("Name");
@@ -119,8 +112,7 @@ public class UpgradingSample extends Application implements
 
         private final Panel statusPanel = new Panel();
 
-        private final Button logoutButton = new Button("Logout",
-                UpgradingSample.this, "close");
+        private final Button logoutButton = new Button("Logout", UpgradingSample.this, "close");
 
         private final Label statusLabel = new Label();
 

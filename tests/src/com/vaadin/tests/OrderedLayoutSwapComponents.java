@@ -6,11 +6,13 @@ package com.vaadin.tests;
 
 import java.util.ArrayList;
 
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * 
@@ -21,13 +23,13 @@ import com.vaadin.ui.OrderedLayout;
  */
 public class OrderedLayoutSwapComponents extends CustomComponent {
 
-    private final OrderedLayout main;
+    private final AbstractOrderedLayout main;
 
     ArrayList<MyComponent> order = new ArrayList<MyComponent>();
 
     public OrderedLayoutSwapComponents() {
 
-        main = new OrderedLayout();
+        main = new VerticalLayout();
         // main.setSizeFull();
         setCompositionRoot(main);
         createNewView();
@@ -53,8 +55,7 @@ public class OrderedLayoutSwapComponents extends CustomComponent {
         private Button down;
 
         MyComponent(String name) {
-            OrderedLayout ol = new OrderedLayout(
-                    OrderedLayout.ORIENTATION_HORIZONTAL);
+            HorizontalLayout ol = new HorizontalLayout();
             ol.setDebugId(name.replaceAll(" ", ""));
             ol.addComponent(new Label(name));
             up = new Button("up");

@@ -7,6 +7,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket1966_3 extends Application {
@@ -22,7 +23,7 @@ public class Ticket1966_3 extends Application {
     }
 
     private void createUI(GridLayout layout) {
-        OrderedLayout ol = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
+        VerticalLayout ol = new VerticalLayout();
         Panel p = new Panel(ol);
         p.setWidth("300px");
         p.setHeight("300px");
@@ -32,16 +33,14 @@ public class Ticket1966_3 extends Application {
         tf.setWidth("100px");
 
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_TOP);
+        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT, OrderedLayout.ALIGNMENT_TOP);
 
         tf = new TextField("Short caption");
         tf.setWidth("100px");
 
         tf.setComponentError(new UserError("error message"));
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_TOP);
+        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT, OrderedLayout.ALIGNMENT_TOP);
 
         tf = new TextField("Short caption");
         tf.setComponentError(new UserError("error message"));
@@ -50,16 +49,14 @@ public class Ticket1966_3 extends Application {
 
         tf.setComponentError(new UserError("error message"));
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_TOP);
+        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT, OrderedLayout.ALIGNMENT_TOP);
 
         tf = new TextField();
         tf.setValue("No caption");
         tf.setWidth("100px");
 
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_TOP);
+        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT, OrderedLayout.ALIGNMENT_TOP);
 
         layout.addComponent(p);
     }

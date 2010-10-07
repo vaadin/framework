@@ -6,9 +6,9 @@ import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 /**
@@ -39,7 +39,7 @@ public class Ticket1983 extends Application {
             final SplitPanel leftSide = initLeftSide();
             setFirstComponent(leftSide);
 
-            final Layout rightSide = new OrderedLayout();
+            final Layout rightSide = new VerticalLayout();
             rightSide.setHeight("100%");
             setSecondComponent(rightSide);
         }
@@ -52,27 +52,13 @@ public class Ticket1983 extends Application {
             dataSource.addContainerProperty(propId, String.class, null);
             dataSource.addContainerProperty(propId2, String.class, null);
             final Object itemId = dataSource.addItem();
-            dataSource
-                    .getItem(itemId)
-                    .getItemProperty(propId)
-                    .setValue(
-                            "Very long value that makes a scrollbar appear for sure");
-            dataSource
-                    .getItem(itemId)
-                    .getItemProperty(propId2)
-                    .setValue(
-                            "Very long value that makes a scrollbar appear for sure");
+            dataSource.getItem(itemId).getItemProperty(propId).setValue("Very long value that makes a scrollbar appear for sure");
+            dataSource.getItem(itemId).getItemProperty(propId2).setValue("Very long value that makes a scrollbar appear for sure");
 
             for (int i = 0; i < 150; i++) {
                 Object id = dataSource.addItem();
-                dataSource
-                        .getItem(id)
-                        .getItemProperty(propId)
-                        .setValue(
-                                (i == 100 ? "Very long value that makes a scrollbar appear for sure"
-                                        : "Short"));
-                dataSource.getItem(id).getItemProperty(propId2)
-                        .setValue("Short");
+                dataSource.getItem(id).getItemProperty(propId).setValue((i == 100 ? "Very long value that makes a scrollbar appear for sure" : "Short"));
+                dataSource.getItem(id).getItemProperty(propId2).setValue("Short");
             }
 
             table.setSizeFull();
@@ -87,22 +73,12 @@ public class Ticket1983 extends Application {
                     // Change the column value to a short one --> Should remove
                     // the scrollbar
                     if (isLong) {
-                        dataSource.getItem(itemId).getItemProperty(propId)
-                                .setValue("Short value");
-                        dataSource.getItem(itemId).getItemProperty(propId2)
-                                .setValue("Short value");
+                        dataSource.getItem(itemId).getItemProperty(propId).setValue("Short value");
+                        dataSource.getItem(itemId).getItemProperty(propId2).setValue("Short value");
                         isLong = false;
                     } else {
-                        dataSource
-                                .getItem(itemId)
-                                .getItemProperty(propId)
-                                .setValue(
-                                        "Very long value that makes a scrollbar appear for sure");
-                        dataSource
-                                .getItem(itemId)
-                                .getItemProperty(propId2)
-                                .setValue(
-                                        "Very long value that makes a scrollbar appear for sure");
+                        dataSource.getItem(itemId).getItemProperty(propId).setValue("Very long value that makes a scrollbar appear for sure");
+                        dataSource.getItem(itemId).getItemProperty(propId2).setValue("Very long value that makes a scrollbar appear for sure");
                         isLong = true;
                     }
                     // Works the same way with or without repaint request
@@ -110,7 +86,7 @@ public class Ticket1983 extends Application {
                 }
             });
 
-            OrderedLayout ol = new OrderedLayout();
+            VerticalLayout ol = new VerticalLayout();
             ol.addComponent(button);
             leftSide.setFirstComponent(ol);
 

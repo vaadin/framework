@@ -72,8 +72,7 @@ public class Ticket2279 extends Application {
         vl.setWidth("500px");
         vl.setHeight("500px");
         vl.setStyleName("borders");
-        label = new Label("<b>Error messages follows:</b><br/>",
-                Label.CONTENT_XHTML);
+        label = new Label("<b>Error messages follows:</b><br/>", Label.CONTENT_XHTML);
         vl.addComponent(label);
         layout.addComponent(vl);
 
@@ -83,8 +82,7 @@ public class Ticket2279 extends Application {
         gl.setWidth("500px");
         gl.setHeight("500px");
         gl.setStyleName("borders");
-        label = new Label("<b>Error messages follows:</b><br/>",
-                Label.CONTENT_XHTML);
+        label = new Label("<b>Error messages follows:</b><br/>", Label.CONTENT_XHTML);
         gl.addComponent(label);
         layout.addComponent(gl);
 
@@ -100,101 +98,82 @@ public class Ticket2279 extends Application {
         for (String horiz : horizontals) {
             // Test "l","r","left","right" etc
             int expectedHoriz = expected.get(horiz);
-            checkAlignment(layout, horiz, AlignmentHandler.ALIGNMENT_TOP
-                    | expectedHoriz);
+            checkAlignment(layout, horiz, AlignmentHandler.ALIGNMENT_TOP | expectedHoriz);
 
             for (String vert : shortVerticalAlignments) {
                 int expectedVert = expected.get(vert);
 
                 // Test "lt","rt" etc
                 if (horiz.length() == 1) {
-                    checkAlignment(layout, horiz + vert, expectedHoriz
-                            | expectedVert);
-                    checkAlignment(layout, vert + horiz, expectedHoriz
-                            | expectedVert);
+                    checkAlignment(layout, horiz + vert, expectedHoriz | expectedVert);
+                    checkAlignment(layout, vert + horiz, expectedHoriz | expectedVert);
                 } else {
                     boolean ok = false;
                     try {
-                        checkAlignment(layout, horiz + vert, expectedHoriz
-                                | expectedVert);
+                        checkAlignment(layout, horiz + vert, expectedHoriz | expectedVert);
                     } catch (IllegalArgumentException e) {
                         // OK, "centert","rightb" etc are not valid
                         ok = true;
                     }
                     if (!ok) {
-                        error("IllegalArgumentException was not thrown for "
-                                + horiz + vert);
+                        error("IllegalArgumentException was not thrown for " + horiz + vert);
                     }
                     ok = false;
                     try {
-                        checkAlignment(layout, vert + horiz, expectedHoriz
-                                | expectedVert);
+                        checkAlignment(layout, vert + horiz, expectedHoriz | expectedVert);
                     } catch (IllegalArgumentException e) {
                         // OK, "centert","rightb" etc are not valid
                         ok = true;
                     }
                     if (!ok) {
-                        error("IllegalArgumentException was not thrown for "
-                                + horiz + vert);
+                        error("IllegalArgumentException was not thrown for " + horiz + vert);
                     }
 
                 }
 
                 // Test "l t","r t" etc
-                checkAlignment(layout, horiz + " " + vert, expectedHoriz
-                        | expectedVert);
-                checkAlignment(layout, vert + " " + horiz, expectedHoriz
-                        | expectedVert);
+                checkAlignment(layout, horiz + " " + vert, expectedHoriz | expectedVert);
+                checkAlignment(layout, vert + " " + horiz, expectedHoriz | expectedVert);
             }
 
             for (String vert : longVerticalAlignments) {
                 int expectedVert = expected.get(vert);
 
                 // Test "right t","right b" etc
-                checkAlignment(layout, horiz + " " + vert, expectedHoriz
-                        | expectedVert);
-                checkAlignment(layout, vert + " " + horiz, expectedHoriz
-                        | expectedVert);
+                checkAlignment(layout, horiz + " " + vert, expectedHoriz | expectedVert);
+                checkAlignment(layout, vert + " " + horiz, expectedHoriz | expectedVert);
 
                 // Three alignments should throw an exception
                 boolean ok = false;
                 try {
-                    checkAlignment(layout, horiz + " " + vert + " " + horiz,
-                            expectedHoriz | expectedVert);
+                    checkAlignment(layout, horiz + " " + vert + " " + horiz, expectedHoriz | expectedVert);
                 } catch (IllegalArgumentException e) {
                     // OK, "centert","rightb" etc are not valid
                     ok = true;
                 }
                 if (!ok) {
-                    error("IllegalArgumentException was not thrown for "
-                            + horiz + " " + vert + " " + horiz);
+                    error("IllegalArgumentException was not thrown for " + horiz + " " + vert + " " + horiz);
                 }
             }
         }
 
-        checkAlignment(layout, "left right", AlignmentHandler.ALIGNMENT_TOP
-                | AlignmentHandler.ALIGNMENT_RIGHT);
+        checkAlignment(layout, "left right", AlignmentHandler.ALIGNMENT_TOP | AlignmentHandler.ALIGNMENT_RIGHT);
     }
 
-    private void checkAlignment(AlignmentHandler layout,
-            String alignmentString, int expected) {
-        layout.setComponentAlignment(label, AlignmentInfo.Bits.ALIGNMENT_TOP,
-                AlignmentInfo.Bits.ALIGNMENT_LEFT);
+    private void checkAlignment(AlignmentHandler layout, String alignmentString, int expected) {
+        layout.setComponentAlignment(label, AlignmentInfo.Bits.ALIGNMENT_TOP, AlignmentInfo.Bits.ALIGNMENT_LEFT);
         if (layout instanceof AbstractOrderedLayout) {
-            ((AbstractOrderedLayout) layout).setComponentAlignment(label,
-                    alignmentString);
+            ((AbstractOrderedLayout) layout).setComponentAlignment(label, alignmentString);
         } else {
             ((GridLayout) layout).setComponentAlignment(label, alignmentString);
         }
 
         int actual = layout.getComponentAlignment(label).getBitMask();
         if (actual != expected) {
-            String error = "Error " + alignmentString
-                    + " did not produce expected results";
+            String error = "Error " + alignmentString + " did not produce expected results";
             error(error);
         } else {
-            String str = layout.getClass().getSimpleName() + "/"
-                    + alignmentString + ": OK";
+            String str = layout.getClass().getSimpleName() + "/" + alignmentString + ": OK";
             System.out.println(str);
         }
 

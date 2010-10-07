@@ -8,7 +8,7 @@ import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Form;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.VerticalLayout;
 
 public class FeatureEmbedded extends Feature {
 
@@ -19,7 +19,7 @@ public class FeatureEmbedded extends Feature {
     @Override
     protected Component getDemoComponent() {
 
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
 
         final ClassResource flashResource = new ClassResource(
                 "vaadin_spin.swf", getApplication());

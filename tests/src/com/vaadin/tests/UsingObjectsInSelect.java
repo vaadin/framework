@@ -14,12 +14,10 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Window;
 
-public class UsingObjectsInSelect extends com.vaadin.Application implements
-        ValueChangeListener {
+public class UsingObjectsInSelect extends com.vaadin.Application implements ValueChangeListener {
 
     private final Select select = new Select();
-    private final Label selectedTask = new Label("Selected task",
-            Label.CONTENT_XHTML);
+    private final Label selectedTask = new Label("Selected task", Label.CONTENT_XHTML);
 
     public LinkedList<?> exampleTasks = new LinkedList<Object>();
 
@@ -46,24 +44,17 @@ public class UsingObjectsInSelect extends com.vaadin.Application implements
     }
 
     public void createExampleTasks() {
-        final String[] assignedTo = new String[] { "John", "Mary", "Joe",
-                "Sarah", "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
-        final String[] type = new String[] { "Enhancement", "Bugfix",
-                "Testing", "Task" };
+        final String[] assignedTo = new String[] { "John", "Mary", "Joe", "Sarah", "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
+        final String[] type = new String[] { "Enhancement", "Bugfix", "Testing", "Task" };
         for (int j = 0; j < 100; j++) {
-            final Task task = new Task(
-                    type[(int) (random.nextDouble() * (type.length - 1))],
-                    assignedTo[(int) (random.nextDouble() * (assignedTo.length - 1))],
-                    random.nextInt(100));
+            final Task task = new Task(type[(int) (random.nextDouble() * (type.length - 1))], assignedTo[(int) (random.nextDouble() * (assignedTo.length - 1))], random.nextInt(100));
             select.addItem(task);
         }
     }
 
     public void valueChange(ValueChangeEvent event) {
         final Task task = (Task) select.getValue();
-        selectedTask.setValue("<b>Type:</b> " + task.getType()
-                + "<br /><b>Assigned to:</b> " + task.getAssignedTo()
-                + "<br /><b>Estimated hours: </b>" + task.getEstimatedHours());
+        selectedTask.setValue("<b>Type:</b> " + task.getType() + "<br /><b>Assigned to:</b> " + task.getAssignedTo() + "<br /><b>Estimated hours: </b>" + task.getEstimatedHours());
     }
 
     /**

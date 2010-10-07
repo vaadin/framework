@@ -6,12 +6,12 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2209OL2 extends Application {
 
-    private OrderedLayout gl;
+    private VerticalLayout gl;
     private ComboBox combo;
     private Label labelLong;
 
@@ -19,26 +19,13 @@ public class Ticket2209OL2 extends Application {
     public void init() {
         setMainWindow(new Window());
         getMainWindow().getLayout().setWidth("250px");
-        gl = new OrderedLayout();
+        gl = new VerticalLayout();
         gl.setSizeUndefined();
         gl.setStyleName("borders");
         getMainWindow().addComponent(gl);
         setTheme("tests-tickets");
         combo = new ComboBox("Combo caption");
-        labelLong = new Label(
-                "This should stay on one line or to wrap to multiple lines? At leas it should display all the text?. "
-                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?"
-                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?"
-                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?"
-                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?"
-                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?"
-                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?"
-                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?"
-                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?"
-                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?"
-                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?"
-                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?"
-                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?");
+        labelLong = new Label("This should stay on one line or to wrap to multiple lines? At leas it should display all the text?. " + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?" + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?" + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?" + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?" + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?" + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?" + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?" + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?" + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?" + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?" + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?" + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?");
         gl.addComponent(combo);
         gl.addComponent(labelLong);
 

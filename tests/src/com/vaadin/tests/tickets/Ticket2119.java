@@ -7,8 +7,8 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Select;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 /**
@@ -48,14 +48,8 @@ public class Ticket2119 extends Application {
     }
 
     private Layout testLayout() {
-        final Layout layout = new OrderedLayout();
-        final Label label = new Label(
-                "Instructions to reproduce:\n"
-                        + "  - Open this application in two browser windows\n"
-                        + "  - Click the Button in first Window\n"
-                        + "  - Go to the second Window\n"
-                        + "     - Click the arrow in the Select\n"
-                        + "  --> The opened list correctly shows the new value but the old one is shown in the \"input\" part");
+        final Layout layout = new VerticalLayout();
+        final Label label = new Label("Instructions to reproduce:\n" + "  - Open this application in two browser windows\n" + "  - Click the Button in first Window\n" + "  - Go to the second Window\n" + "     - Click the arrow in the Select\n" + "  --> The opened list correctly shows the new value but the old one is shown in the \"input\" part");
         label.setContentMode(Label.CONTENT_PREFORMATTED);
         layout.addComponent(label);
 
@@ -67,8 +61,7 @@ public class Ticket2119 extends Application {
         select.addItem("2");
         select.addItem("3");
 
-        final ObjectProperty<String> valueProperty = new ObjectProperty<String>(
-                "1", String.class);
+        final ObjectProperty<String> valueProperty = new ObjectProperty<String>("1", String.class);
         select.setPropertyDataSource(valueProperty);
         layout.addComponent(select);
 

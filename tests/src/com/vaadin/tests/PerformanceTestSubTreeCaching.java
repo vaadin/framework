@@ -9,30 +9,25 @@ import java.util.Date;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 
 public class PerformanceTestSubTreeCaching extends CustomComponent {
 
-    private final OrderedLayout main;
+    private final VerticalLayout main;
 
-    private final OrderedLayout testContainer;
+    private final VerticalLayout testContainer;
 
     private Date startTime;
 
     private final Label result;
 
-    private static final String DESCRIPTION = "Hypothesis: Toolkit 4 has major architechtural problem when adding "
-            + "small incrementall updates to a container which has either a lot or "
-            + "some very slow components in it. Toolkit 5 has 'subtree caching' and a"
-            + " small amount of logic in containers, so CommunicationManager can assure"
-            + " that client do not need information about unchanged components it contains."
-            + " Completing test ought to be much faster with Toolkit 5.";
+    private static final String DESCRIPTION = "Hypothesis: Toolkit 4 has major architechtural problem when adding " + "small incrementall updates to a container which has either a lot or " + "some very slow components in it. Toolkit 5 has 'subtree caching' and a" + " small amount of logic in containers, so CommunicationManager can assure" + " that client do not need information about unchanged components it contains." + " Completing test ought to be much faster with Toolkit 5.";
 
     private static final int INITIAL_COMPONENTS = 40;
 
     public PerformanceTestSubTreeCaching() {
-        main = new OrderedLayout();
+        main = new VerticalLayout();
         setCompositionRoot(main);
         addInfo();
 
@@ -46,7 +41,7 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
         result = new Label();
         main.addComponent(result);
 
-        testContainer = new OrderedLayout();
+        testContainer = new VerticalLayout();
         populateContainer(testContainer, INITIAL_COMPONENTS);
         main.addComponent(testContainer);
     }
@@ -67,11 +62,10 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
      * 
      * @param testContainer2
      */
-    private void populateContainer(OrderedLayout container, int n) {
+    private void populateContainer(VerticalLayout container, int n) {
         for (int i = 0; i < n; i++) {
             // array_type array_element = [i];
-            final Table t = TestForTablesInitialColumnWidthLogicRendering
-                    .getTestTable(5, 100);
+            final Table t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(5, 100);
             container.addComponent(t);
         }
     }

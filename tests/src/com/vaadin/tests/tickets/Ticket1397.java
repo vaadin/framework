@@ -26,8 +26,7 @@ public class Ticket1397 extends Application {
         Panel panel = new Panel("PopupTest");
 
         // First test component
-        final ObjectProperty<String> prop = new ObjectProperty<String>(
-                "fooTextField");
+        final ObjectProperty<String> prop = new ObjectProperty<String>("fooTextField");
 
         PopupView.Content content = new PopupView.Content() {
             public String getMinimizedValueAsHTML() {
@@ -49,8 +48,7 @@ public class Ticket1397 extends Application {
         panel.addComponent(pe2);
 
         // Third test component
-        final ObjectProperty<StringBuffer> prop2 = new ObjectProperty<StringBuffer>(
-                new StringBuffer("Text for button"));
+        final ObjectProperty<StringBuffer> prop2 = new ObjectProperty<StringBuffer>(new StringBuffer("Text for button"));
 
         class myButton extends Button {
             public myButton() {
@@ -83,8 +81,7 @@ public class Ticket1397 extends Application {
         // Fourth test component
         final Panel panel3 = new Panel("Editor popup for a property");
         TextField tf2 = new TextField("TextField for editing a property");
-        final ObjectProperty<String> op = new ObjectProperty<String>(
-                "This is property text.");
+        final ObjectProperty<String> op = new ObjectProperty<String>("This is property text.");
         tf2.setPropertyDataSource(op);
         panel3.addComponent(tf2);
         PopupView.Content content3 = new PopupView.Content() {
@@ -126,9 +123,7 @@ public class Ticket1397 extends Application {
 
                 TextField tf = new TextField("Editor for line " + lineNum,
 
-                "Try to edit the contents for this textfield on line "
-                        + lineNum
-                        + " and see how the overview-version changes.");
+                "Try to edit the contents for this textfield on line " + lineNum + " and see how the overview-version changes.");
 
                 public String getMinimizedValueAsHTML() {
                     return "" + tf.toString().length() + " characters of info";
@@ -139,8 +134,7 @@ public class Ticket1397 extends Application {
                 }
 
             });
-            table.addItem(new Object[] { "1 " + i, "2 " + i, "3 " + i,
-                    "4 " + i, "5 " + i, pp, pp2 }, new Integer(i));
+            table.addItem(new Object[] { "1 " + i, "2 " + i, "3 " + i, "4 " + i, "5 " + i, pp, pp2 }, new Integer(i));
         }
 
         main.addComponent(table);

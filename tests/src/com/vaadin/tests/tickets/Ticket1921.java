@@ -6,7 +6,7 @@ import com.vaadin.Application;
 import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket1921 extends Application implements ParameterHandler {
@@ -14,15 +14,15 @@ public class Ticket1921 extends Application implements ParameterHandler {
     int state = -1;
     int round = 1;
     Button button;
-    OrderedLayout outer, inner;
+    VerticalLayout outer, inner;
 
     @Override
     public void init() {
 
-        outer = new OrderedLayout();
+        outer = new VerticalLayout();
         setMainWindow(new Window("#1921", outer));
         setTheme("tests-tickets");
-        inner = new OrderedLayout();
+        inner = new VerticalLayout();
         outer.addComponent(inner);
         button = new Button("foo", this, "newState");
         inner.addComponent(button);
@@ -37,7 +37,7 @@ public class Ticket1921 extends Application implements ParameterHandler {
 
     public void newState() {
 
-        if (state >= 8) {
+        if (state >= 6) {
             state = 0;
             round++;
         } else {
@@ -77,28 +77,9 @@ public class Ticket1921 extends Application implements ParameterHandler {
             break;
 
         case 6:
-            inner.setOrientation(inner.getOrientation() == OrderedLayout.ORIENTATION_HORIZONTAL ? OrderedLayout.ORIENTATION_VERTICAL
-                    : OrderedLayout.ORIENTATION_HORIZONTAL);
-            getMainWindow()
-                    .showNotification(
-                            "inner swithed to "
-                                    + (inner.getOrientation() == OrderedLayout.ORIENTATION_HORIZONTAL ? "horizontal"
-                                            : "vertical"));
-            break;
-
-        case 7:
             outer.addComponent(new Label("Added at " + button.getCaption()));
             break;
 
-        case 8:
-            outer.setOrientation(outer.getOrientation() == OrderedLayout.ORIENTATION_HORIZONTAL ? OrderedLayout.ORIENTATION_VERTICAL
-                    : OrderedLayout.ORIENTATION_HORIZONTAL);
-            getMainWindow()
-                    .showNotification(
-                            "outer swithed to "
-                                    + (outer.getOrientation() == OrderedLayout.ORIENTATION_HORIZONTAL ? "horizontal"
-                                            : "vertical"));
-            break;
         }
     }
 
@@ -115,8 +96,7 @@ public class Ticket1921 extends Application implements ParameterHandler {
             int rr = Integer.parseInt(v[0]);
             int rs = Integer.parseInt(v[1]);
             if (rr < round || (rr == round && rs < state)) {
-                getMainWindow().showNotification(
-                        "Already past requested " + s[0]);
+                getMainWindow().showNotification("Already past requested " + s[0]);
                 return;
             }
             while (round < rr || state < rs) {

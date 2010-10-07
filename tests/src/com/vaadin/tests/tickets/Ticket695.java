@@ -26,9 +26,7 @@ public class Ticket695 extends Application {
                     ObjectOutputStream oos = new ObjectOutputStream(buffer);
                     long t = System.currentTimeMillis();
                     oos.writeObject(getContext());
-                    w.showNotification("ApplicationContext serialized ("
-                            + buffer.size() + "bytes) in "
-                            + (System.currentTimeMillis() - t) + "ms");
+                    w.showNotification("ApplicationContext serialized (" + buffer.size() + "bytes) in " + (System.currentTimeMillis() - t) + "ms");
                 } catch (IOException e) {
                     e.printStackTrace();
                     w.showNotification("ApplicationContext serialization failed - see console for stacktrace");

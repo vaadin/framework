@@ -7,14 +7,16 @@ package com.vaadin.tests;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 
 public class TestForAlignments extends CustomComponent {
 
     public TestForAlignments() {
 
-        final OrderedLayout main = new OrderedLayout();
+        final VerticalLayout main = new VerticalLayout();
 
         final Button b1 = new Button("Right");
         final Button b2 = new Button("Left");
@@ -25,36 +27,26 @@ public class TestForAlignments extends CustomComponent {
         final DateField d1 = new DateField("Center aligned");
         final DateField d2 = new DateField("Center aligned");
 
-        final OrderedLayout vert = new OrderedLayout();
+        final VerticalLayout vert = new VerticalLayout();
         vert.addComponent(b1);
         vert.addComponent(b2);
         vert.addComponent(t1);
         vert.addComponent(d1);
         // vert.getSize().setWidth(500);
-        vert.setComponentAlignment(b1, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_TOP);
-        vert.setComponentAlignment(b2, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_TOP);
-        vert.setComponentAlignment(t1, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_TOP);
-        vert.setComponentAlignment(d1,
-                OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER,
-                OrderedLayout.ALIGNMENT_TOP);
-        final OrderedLayout hori = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        vert.setComponentAlignment(b1, OrderedLayout.ALIGNMENT_RIGHT, OrderedLayout.ALIGNMENT_TOP);
+        vert.setComponentAlignment(b2, OrderedLayout.ALIGNMENT_LEFT, OrderedLayout.ALIGNMENT_TOP);
+        vert.setComponentAlignment(t1, OrderedLayout.ALIGNMENT_RIGHT, OrderedLayout.ALIGNMENT_TOP);
+        vert.setComponentAlignment(d1, OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER, OrderedLayout.ALIGNMENT_TOP);
+        final HorizontalLayout hori = new HorizontalLayout();
         hori.addComponent(b3);
         hori.addComponent(b4);
         hori.addComponent(t2);
         hori.addComponent(d2);
         // hori.getSize().setHeight(200);
-        hori.setComponentAlignment(b3, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
-        hori.setComponentAlignment(b4, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_TOP);
-        hori.setComponentAlignment(t2, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
-        hori.setComponentAlignment(d2, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+        hori.setComponentAlignment(b3, OrderedLayout.ALIGNMENT_LEFT, OrderedLayout.ALIGNMENT_BOTTOM);
+        hori.setComponentAlignment(b4, OrderedLayout.ALIGNMENT_LEFT, OrderedLayout.ALIGNMENT_TOP);
+        hori.setComponentAlignment(t2, OrderedLayout.ALIGNMENT_LEFT, OrderedLayout.ALIGNMENT_BOTTOM);
+        hori.setComponentAlignment(d2, OrderedLayout.ALIGNMENT_LEFT, OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
 
         main.addComponent(vert);
         main.addComponent(hori);

@@ -12,7 +12,7 @@ import com.vaadin.terminal.UserError;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * 
@@ -20,7 +20,7 @@ import com.vaadin.ui.OrderedLayout;
  */
 public class TestDateField extends CustomComponent {
 
-    OrderedLayout main = new OrderedLayout();
+    VerticalLayout main = new VerticalLayout();
 
     DateField df;
 
@@ -65,8 +65,7 @@ public class TestDateField extends CustomComponent {
 
     @Override
     public void attach() {
-        final ClassResource res = new ClassResource("m.gif",
-                super.getApplication());
+        final ClassResource res = new ClassResource("m.gif", super.getApplication());
         df.setIcon(res);
         super.attach();
     }

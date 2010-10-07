@@ -30,8 +30,7 @@ public class Ticket2398 extends Application {
 
         t.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
 
-        mainWin.addComponent(new Label(
-                "Both rows in table should have same data (default values)"));
+        mainWin.addComponent(new Label("Both rows in table should have same data (default values)"));
 
         mainWin.addComponent(t);
 

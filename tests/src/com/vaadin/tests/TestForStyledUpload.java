@@ -35,9 +35,7 @@ import com.vaadin.ui.Upload.SucceededListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class TestForStyledUpload extends Application implements
-        Upload.FinishedListener, FailedListener, SucceededListener,
-        StartedListener {
+public class TestForStyledUpload extends Application implements Upload.FinishedListener, FailedListener, SucceededListener, StartedListener {
 
     Layout main = new VerticalLayout();
 
@@ -56,8 +54,7 @@ public class TestForStyledUpload extends Application implements
     private final Label memoryStatus;
 
     public TestForStyledUpload() {
-        main.addComponent(new Label(
-                "Clicking on button b updates information about upload components status or same with garbage collector."));
+        main.addComponent(new Label("Clicking on button b updates information about upload components status or same with garbage collector."));
 
         up = new Upload(null, buffer);
         up.setButtonCaption("Select file");
@@ -74,8 +71,7 @@ public class TestForStyledUpload extends Application implements
 
                 refreshMemUsage();
 
-                transferred.setValue("Transferred " + readBytes + " of "
-                        + contentLenght);
+                transferred.setValue("Transferred " + readBytes + " of " + contentLenght);
             }
 
         });
@@ -135,8 +131,7 @@ public class TestForStyledUpload extends Application implements
             sb.append("/");
             sb.append(up.getUploadSize());
             sb.append(" ");
-            sb.append(Math.round(100 * up.getBytesRead()
-                    / (double) up.getUploadSize()));
+            sb.append(Math.round(100 * up.getBytesRead() / (double) up.getUploadSize()));
             sb.append("%");
         } else {
             sb.append("Idle");
@@ -149,25 +144,19 @@ public class TestForStyledUpload extends Application implements
         status.removeAllComponents();
         final InputStream stream = buffer.getStream();
         if (stream == null) {
-            status.addComponent(new Label(
-                    "Upload finished, but output buffer is null!!"));
+            status.addComponent(new Label("Upload finished, but output buffer is null!!"));
         } else {
-            status.addComponent(new Label(
-                    "<b>Name:</b> " + event.getFilename(), Label.CONTENT_XHTML));
-            status.addComponent(new Label("<b>Mimetype:</b> "
-                    + event.getMIMEType(), Label.CONTENT_XHTML));
-            status.addComponent(new Label("<b>Size:</b> " + event.getLength()
-                    + " bytes.", Label.CONTENT_XHTML));
+            status.addComponent(new Label("<b>Name:</b> " + event.getFilename(), Label.CONTENT_XHTML));
+            status.addComponent(new Label("<b>Mimetype:</b> " + event.getMIMEType(), Label.CONTENT_XHTML));
+            status.addComponent(new Label("<b>Size:</b> " + event.getLength() + " bytes.", Label.CONTENT_XHTML));
 
-            status.addComponent(new Link("Download " + buffer.getFileName(),
-                    new StreamResource(buffer, buffer.getFileName(), this)));
+            status.addComponent(new Link("Download " + buffer.getFileName(), new StreamResource(buffer, buffer.getFileName(), this)));
 
             status.setVisible(true);
         }
     }
 
-    public interface Buffer extends StreamResource.StreamSource,
-            Upload.Receiver {
+    public interface Buffer extends StreamResource.StreamSource, Upload.Receiver {
 
         String getFileName();
     }
@@ -182,8 +171,7 @@ public class TestForStyledUpload extends Application implements
         private FileInputStream stream;
 
         public TmpFileBuffer() {
-            final String tempFileName = "upload_tmpfile_"
-                    + System.currentTimeMillis();
+            final String tempFileName = "upload_tmpfile_" + System.currentTimeMillis();
             try {
                 file = File.createTempFile(tempFileName, null);
             } catch (final IOException e) {

@@ -7,8 +7,8 @@ package com.vaadin.tests.featurebrowser;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Select;
+import com.vaadin.ui.VerticalLayout;
 
 public class FeatureButton extends Feature {
 
@@ -19,7 +19,7 @@ public class FeatureButton extends Feature {
     @Override
     protected Component getDemoComponent() {
 
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
 
         final Button b = new Button("Caption");
         l.addComponent(b);

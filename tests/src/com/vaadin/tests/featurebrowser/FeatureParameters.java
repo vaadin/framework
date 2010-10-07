@@ -16,10 +16,10 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 
 public class FeatureParameters extends Feature implements URIHandler,
         ParameterHandler {
@@ -38,7 +38,7 @@ public class FeatureParameters extends Feature implements URIHandler,
     @Override
     protected Component getDemoComponent() {
 
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
 
         final Label info = new Label("To test this feature, try to "
                 + "add some get parameters to URL. For example if you have "

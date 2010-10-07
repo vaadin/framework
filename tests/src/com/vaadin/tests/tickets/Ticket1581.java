@@ -17,8 +17,7 @@ public class Ticket1581 extends com.vaadin.Application {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         main.addComponent(new Label("Test the second issue in ticket #1581"));

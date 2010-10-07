@@ -4,12 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.Application;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket1966 extends Application {
@@ -81,7 +84,7 @@ public class Ticket1966 extends Application {
         Panel p = new Panel("OrderedLayout");
         layout.addComponent(p);
 
-        OrderedLayout ol = new OrderedLayout();
+        AbstractOrderedLayout ol = new VerticalLayout();
         ol.setCaption("Horizontal");
         // ol.setWidth("100%");
 
@@ -96,7 +99,7 @@ public class Ticket1966 extends Application {
 
         /* VERTICAL */
 
-        ol = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+        ol = new HorizontalLayout();
         ol.setCaption("Vertical");
 
         addButtons(ol);
@@ -116,9 +119,7 @@ public class Ticket1966 extends Application {
     }
 
     private Button getButton(Layout l, int hAlign, int vAlign) {
-        Button b = new Button("Narrow Button - "
-                + names.get(new Integer(hAlign)) + " - "
-                + names.get(new Integer(vAlign)));
+        Button b = new Button("Narrow Button - " + names.get(new Integer(hAlign)) + " - " + names.get(new Integer(vAlign)));
         b.setWidth("100px");
         ((AlignmentHandler) l).setComponentAlignment(b, hAlign, vAlign);
 

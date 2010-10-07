@@ -4,7 +4,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2037 extends com.vaadin.Application {
@@ -14,10 +14,9 @@ public class Ticket2037 extends com.vaadin.Application {
         Window main = new Window();
         setMainWindow(main);
 
-        main.addComponent(new Label(
-                "Use debug dialog and trac number of registered paintables. It should not grow on subsequant b clicks."));
+        main.addComponent(new Label("Use debug dialog and trac number of registered paintables. It should not grow on subsequant b clicks."));
 
-        final Layout lo = new OrderedLayout();
+        final Layout lo = new VerticalLayout();
 
         Button b = new Button("b");
 

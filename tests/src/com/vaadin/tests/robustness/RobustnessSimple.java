@@ -2,7 +2,7 @@ package com.vaadin.tests.robustness;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.VerticalLayout;
 
 public class RobustnessSimple extends Robustness implements
         Button.ClickListener {
@@ -18,7 +18,7 @@ public class RobustnessSimple extends Robustness implements
         }
 
         // create new stress layout
-        stressLayout = new OrderedLayout();
+        stressLayout = new VerticalLayout();
 
         // CASE single orderedlayout with a label containing 1Mb of data
         // fill with random components

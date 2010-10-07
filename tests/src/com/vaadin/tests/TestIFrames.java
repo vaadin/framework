@@ -6,11 +6,11 @@ package com.vaadin.tests;
 
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.VerticalLayout;
 
 public class TestIFrames extends CustomComponent {
 
-    OrderedLayout main = new OrderedLayout();
+    VerticalLayout main = new VerticalLayout();
 
     public TestIFrames() {
         setCompositionRoot(main);
@@ -29,8 +29,7 @@ public class TestIFrames extends CustomComponent {
     private Label createEmbedded(String URL) {
         final int width = 600;
         final int height = 250;
-        final String iFrame = "<iframe height=\"" + height + "\" width=\""
-                + width + "\" src=\"" + URL + "\" />";
+        final String iFrame = "<iframe height=\"" + height + "\" width=\"" + width + "\" src=\"" + URL + "\" />";
         return new Label(iFrame, Label.CONTENT_XHTML);
     }
 

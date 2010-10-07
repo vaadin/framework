@@ -12,11 +12,11 @@ import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.URIHandler;
-import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 /**
@@ -26,8 +26,7 @@ import com.vaadin.ui.Window;
  * 
  * @since 3.1.1
  */
-public class Parameters extends com.vaadin.Application implements URIHandler,
-        ParameterHandler {
+public class Parameters extends com.vaadin.Application implements URIHandler, ParameterHandler {
 
     private final Label context = new Label();
 
@@ -45,22 +44,18 @@ public class Parameters extends com.vaadin.Application implements URIHandler,
         main.addURIHandler(this);
         main.addParameterHandler(this);
 
-        final ExpandLayout layout = new ExpandLayout();
-        final Label info = new Label("To test URI and Parameter Handlers, "
-                + "add get parameters to URL. For example try examples below: ");
+        final VerticalLayout layout = new VerticalLayout();
+        final Label info = new Label("To test URI and Parameter Handlers, " + "add get parameters to URL. For example try examples below: ");
         info.setCaption("Usage info");
         layout.addComponent(info);
         try {
             final URL u1 = new URL(getURL(), "test/uri?test=1&test=2");
             final URL u2 = new URL(getURL(), "foo/bar?mary=john&count=3");
-            layout.addComponent(new Link(u1.toString(),
-                    new ExternalResource(u1)));
+            layout.addComponent(new Link(u1.toString(), new ExternalResource(u1)));
             layout.addComponent(new Label("Or this: "));
-            layout.addComponent(new Link(u2.toString(),
-                    new ExternalResource(u2)));
+            layout.addComponent(new Link(u2.toString(), new ExternalResource(u2)));
         } catch (final Exception e) {
-            System.out.println("Couldn't get hostname for this machine: "
-                    + e.toString());
+            System.out.println("Couldn't get hostname for this machine: " + e.toString());
             e.printStackTrace();
         }
 
@@ -76,7 +71,7 @@ public class Parameters extends com.vaadin.Application implements URIHandler,
         params.addContainerProperty("Value", String.class, "");
         final Panel panel2 = new Panel("Parameter Handler");
         params.setSizeFull();
-        panel2.setLayout(new ExpandLayout());
+        panel2.setLayout(new VerticalLayout());
         panel2.getLayout().setMargin(true);
 
         params.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_ID);
@@ -84,7 +79,7 @@ public class Parameters extends com.vaadin.Application implements URIHandler,
         layout.addComponent(panel2);
 
         // expand parameter panel and its table
-        layout.expand(panel2);
+        layout.setExpandRatio(panel2, 1);
 
         layout.setMargin(true);
         layout.setSpacing(true);
@@ -110,8 +105,7 @@ public class Parameters extends com.vaadin.Application implements URIHandler,
      */
     public void handleParameters(Map<String, String[]> parameters) {
         params.removeAllItems();
-        for (final Iterator<String> i = parameters.keySet().iterator(); i
-                .hasNext();) {
+        for (final Iterator<String> i = parameters.keySet().iterator(); i.hasNext();) {
             final String name = i.next();
             final String[] values = parameters.get(name);
             String v = "";

@@ -13,6 +13,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
@@ -20,24 +21,20 @@ import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.TwinColSelect;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * @author IT Mill Ltd.
  */
-public class TestForPreconfiguredComponents extends CustomComponent implements
-        Handler {
+public class TestForPreconfiguredComponents extends CustomComponent implements Handler {
 
-    private static final String[] firstnames = new String[] { "John", "Mary",
-            "Joe", "Sarah", "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
+    private static final String[] firstnames = new String[] { "John", "Mary", "Joe", "Sarah", "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
 
-    private static final String[] lastnames = new String[] { "Torvalds",
-            "Smith", "Jones", "Beck", "Sheridan", "Picard", "Hill", "Fielding",
-            "Einstein" };
+    private static final String[] lastnames = new String[] { "Torvalds", "Smith", "Jones", "Beck", "Sheridan", "Picard", "Hill", "Fielding", "Einstein" };
 
-    private final OrderedLayout main = new OrderedLayout();
+    private final VerticalLayout main = new VerticalLayout();
 
-    private final Action[] actions = new Action[] { new Action("edit"),
-            new Action("delete") };
+    private final Action[] actions = new Action[] { new Action("edit"), new Action("delete") };
 
     private Panel al;
 
@@ -51,12 +48,7 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
 
     public void createNewView() {
         main.removeAllComponents();
-        main.addComponent(new Label(
-                "In Toolkit 5 we introduce new components. Previously we"
-                        + " usually used setStyle or some other methods on possibly "
-                        + "multiple steps to configure component for ones needs. These new "
-                        + "server side components are mostly just classes that in constructor "
-                        + "set base class to state that programmer wants."));
+        main.addComponent(new Label("In Toolkit 5 we introduce new components. Previously we" + " usually used setStyle or some other methods on possibly " + "multiple steps to configure component for ones needs. These new " + "server side components are mostly just classes that in constructor " + "set base class to state that programmer wants."));
 
         main.addComponent(new Button("commit"));
 
@@ -96,9 +88,7 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
 
     public static void fillSelect(AbstractSelect s, int items) {
         for (int i = 0; i < items; i++) {
-            final String name = firstnames[(int) (Math.random() * (firstnames.length - 1))]
-                    + " "
-                    + lastnames[(int) (Math.random() * (lastnames.length - 1))];
+            final String name = firstnames[(int) (Math.random() * (firstnames.length - 1))] + " " + lastnames[(int) (Math.random() * (lastnames.length - 1))];
             s.addItem(name);
         }
     }
@@ -107,9 +97,7 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
         Tree t = new Tree("Tree");
         final String[] names = new String[100];
         for (int i = 0; i < names.length; i++) {
-            names[i] = firstnames[(int) (Math.random() * (firstnames.length - 1))]
-                    + " "
-                    + lastnames[(int) (Math.random() * (lastnames.length - 1))];
+            names[i] = firstnames[(int) (Math.random() * (firstnames.length - 1))] + " " + lastnames[(int) (Math.random() * (lastnames.length - 1))];
         }
 
         // Create tree
@@ -137,8 +125,7 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
 
         ol.addComponent(t);
 
-        final OrderedLayout ol2 = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        final HorizontalLayout ol2 = new HorizontalLayout();
         final Panel status = new Panel("Events");
         final Button clear = new Button("clear event log");
         clear.addListener(new ClickListener() {
@@ -160,8 +147,7 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
         t.addListener(new Listener() {
             public void componentEvent(Event event) {
                 status.addComponent(new Label(event.getClass().getName()));
-                status.addComponent(new Label("selected: "
-                        + event.getSource().toString()));
+                status.addComponent(new Label("selected: " + event.getSource().toString()));
             }
         });
 

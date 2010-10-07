@@ -8,9 +8,9 @@ import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2061 extends Application {
@@ -33,8 +33,7 @@ public class Ticket2061 extends Application {
         MyTable table3 = new MyTable(24, "table3");
         table3.loadTable(1000);
 
-        MyAccordion accordion = new MyAccordion(new Component[] { table1,
-                table2 }, "Test");
+        MyAccordion accordion = new MyAccordion(new Component[] { table1, table2 }, "Test");
 
         Tabs tab = new Tabs(new Component[] { accordion, table3 });
 
@@ -46,7 +45,7 @@ public class Ticket2061 extends Application {
 
         private Table table = new Table();
         private String[] columns;
-        private ExpandLayout layout = new ExpandLayout();
+        private VerticalLayout layout = new VerticalLayout();
 
         public MyTable(int columnNumber, String id) {
             setDebugId(id);
@@ -72,8 +71,7 @@ public class Ticket2061 extends Application {
                 Item rowItem = table.addItem(j);
                 if (rowItem != null) {
                     for (int i = 0; i < columns.length; i++) {
-                        rowItem.getItemProperty(columns[i]).setValue(
-                                "Value" + j);
+                        rowItem.getItemProperty(columns[i]).setValue("Value" + j);
                     }
                 }
             }

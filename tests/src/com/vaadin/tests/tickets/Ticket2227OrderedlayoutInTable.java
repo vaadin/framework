@@ -6,6 +6,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2227OrderedlayoutInTable extends Application {
@@ -28,7 +29,7 @@ public class Ticket2227OrderedlayoutInTable extends Application {
         Item i = t.addItem(1);
         i.getItemProperty("pno").setValue("1");
         i.getItemProperty("testi").setValue("12.12.08");
-        OrderedLayout ol = new OrderedLayout();
+        VerticalLayout ol = new VerticalLayout();
         ol.setWidth("100%");
         ol.setHeight(null);
         ol.addComponent(new Label("monirivi testi"));

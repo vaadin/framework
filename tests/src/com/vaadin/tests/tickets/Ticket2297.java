@@ -12,26 +12,16 @@ public class Ticket2297 extends Ticket2292 {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
         URL url = getURL();
-        main.addComponent(new Label(
-                "Icon is built by servlet with a slow method, so it will show the bug (components not firing requestLayout)."));
+        main.addComponent(new Label("Icon is built by servlet with a slow method, so it will show the bug (components not firing requestLayout)."));
 
         try {
-            CustomLayout cl = new CustomLayout(
-                    new ByteArrayInputStream(
-                            ("This is an empty CustomLayout with as slow image. <img src=\""
-                                    + url.toString() + "/icon.png\" />")
-                                    .getBytes()));
+            CustomLayout cl = new CustomLayout(new ByteArrayInputStream(("This is an empty CustomLayout with as slow image. <img src=\"" + url.toString() + "/icon.png\" />").getBytes()));
             main.addComponent(cl);
 
-            cl = new CustomLayout(
-                    new ByteArrayInputStream(
-                            ("This is an empty CustomLayout with as slow image. <img src=\""
-                                    + url.toString() + "/icon.png\" />")
-                                    .getBytes()));
+            cl = new CustomLayout(new ByteArrayInputStream(("This is an empty CustomLayout with as slow image. <img src=\"" + url.toString() + "/icon.png\" />").getBytes()));
             main.addComponent(cl);
         } catch (IOException e) {
             // TODO Auto-generated catch block

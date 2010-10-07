@@ -6,7 +6,7 @@ import java.io.IOException;
 import com.vaadin.Application;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2303 extends Application {
@@ -18,8 +18,7 @@ public class Ticket2303 extends Application {
         String customlayout = "<div location=\"test\"></div>";
         CustomLayout cl = null;
         try {
-            cl = new CustomLayout(new ByteArrayInputStream(
-                    customlayout.getBytes()));
+            cl = new CustomLayout(new ByteArrayInputStream(customlayout.getBytes()));
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -29,7 +28,7 @@ public class Ticket2303 extends Application {
 
         // VerticalLayout ol = new VerticalLayout();
         // w.setLayout(ol);
-        OrderedLayout hugeLayout = new OrderedLayout();
+        VerticalLayout hugeLayout = new VerticalLayout();
         hugeLayout.setMargin(true);
         hugeLayout.setSpacing(true);
         for (int i = 0; i < 30; i++) {

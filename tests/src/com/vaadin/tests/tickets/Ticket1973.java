@@ -4,8 +4,8 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket1973 extends com.vaadin.Application {
@@ -43,7 +43,7 @@ public class Ticket1973 extends com.vaadin.Application {
     public void fill(IndexedContainer container, int size, String prefix) {
         for (int i = 0; i < size; i++) {
             Item item = container.addItem(new Integer(i));
-            OrderedLayout layout = new OrderedLayout();
+            VerticalLayout layout = new VerticalLayout();
             layout.addComponent(new Button(prefix + i));
             item.getItemProperty("layout").setValue(layout);
         }

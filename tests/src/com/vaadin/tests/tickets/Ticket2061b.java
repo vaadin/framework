@@ -8,7 +8,6 @@ import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
@@ -18,10 +17,10 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class Ticket2061b extends Application implements
-        SelectedTabChangeListener {
+public class Ticket2061b extends Application implements SelectedTabChangeListener {
 
     private Window mainWindow;
     private Panel p;
@@ -97,7 +96,7 @@ public class Ticket2061b extends Application implements
 
         private Table table = new Table();
         private String[] columns;
-        private ExpandLayout layout = new ExpandLayout();
+        private VerticalLayout layout = new VerticalLayout();
 
         public MyTable(int columnNumber, String id) {
             setDebugId(id);
@@ -123,8 +122,7 @@ public class Ticket2061b extends Application implements
                 Item rowItem = table.addItem(j);
                 if (rowItem != null) {
                     for (int i = 0; i < columns.length; i++) {
-                        rowItem.getItemProperty(columns[i]).setValue(
-                                "Value" + j);
+                        rowItem.getItemProperty(columns[i]).setValue("Value" + j);
                     }
                 }
             }

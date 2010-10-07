@@ -26,18 +26,14 @@ public class Ticket2294 extends Application {
 
         layout.addComponent(label1);
         try {
-            layout.setComponentAlignment(label1,
-                    AlignmentHandler.ALIGNMENT_LEFT,
-                    AlignmentHandler.ALIGNMENT_BOTTOM);
+            layout.setComponentAlignment(label1, AlignmentHandler.ALIGNMENT_LEFT, AlignmentHandler.ALIGNMENT_BOTTOM);
             result1 = "OK";
         } catch (Exception e) {
             result1 = "FAILED: " + e.getMessage();
         }
 
         try {
-            layout.setComponentAlignment(label2,
-                    AlignmentHandler.ALIGNMENT_LEFT,
-                    AlignmentHandler.ALIGNMENT_BOTTOM);
+            layout.setComponentAlignment(label2, AlignmentHandler.ALIGNMENT_LEFT, AlignmentHandler.ALIGNMENT_BOTTOM);
             result2 = "FAILED, no exception";
         } catch (IllegalArgumentException e) {
             result2 = "OK";
@@ -46,9 +42,7 @@ public class Ticket2294 extends Application {
         }
 
         try {
-            layout.setComponentAlignment(label3,
-                    AlignmentHandler.ALIGNMENT_LEFT,
-                    AlignmentHandler.ALIGNMENT_BOTTOM);
+            layout.setComponentAlignment(label3, AlignmentHandler.ALIGNMENT_LEFT, AlignmentHandler.ALIGNMENT_BOTTOM);
             result3 = "FAILED, no exception";
         } catch (IllegalArgumentException e) {
             result3 = "OK";
@@ -56,7 +50,6 @@ public class Ticket2294 extends Application {
             result3 = "FAILED: " + e.getMessage();
         }
 
-        label1.setValue("Result 1: " + result1 + ", result 2: " + result2
-                + ", result 3: " + result3);
+        label1.setValue("Result 1: " + result1 + ", result 2: " + result2 + ", result 3: " + result3);
     }
 }

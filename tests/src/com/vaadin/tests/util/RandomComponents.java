@@ -33,6 +33,7 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.OrderedLayout;
@@ -40,6 +41,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 
 public class RandomComponents {
 
@@ -65,12 +67,12 @@ public class RandomComponents {
         switch (randint) {
 
         case 0:
-            result = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+            result = new HorizontalLayout();
             ((OrderedLayout) result).setCaption("OrderedLayout_horizontal_"
                     + caption);
             break;
         case 1:
-            result = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
+            result = new VerticalLayout();
             ((OrderedLayout) result).setCaption("OrderedLayout_vertical_"
                     + caption);
             break;
@@ -190,64 +192,64 @@ public class RandomComponents {
             result.setCaption("Calendar component " + caption);
             break;
         case 8:
-            result = new OrderedLayout();
+            result = new VerticalLayout();
             ((OrderedLayout) result).addComponent(new ButtonExample());
             break;
         case 9:
-            result = new OrderedLayout();
+            result = new VerticalLayout();
             ((OrderedLayout) result).addComponent(new ClientCachingExample());
             break;
         case 10:
-            result = new OrderedLayout();
+            result = new VerticalLayout();
             ((OrderedLayout) result).addComponent(new ComboBoxExample());
             break;
         case 11:
-            result = new OrderedLayout();
+            result = new VerticalLayout();
             // TODO: disabled gwt bug with mixed up iframe's
             ((OrderedLayout) result).addComponent(new EmbeddedBrowserExample());
             break;
         case 12:
-            result = new OrderedLayout();
+            result = new VerticalLayout();
             ((OrderedLayout) result).addComponent(new JavaScriptAPIExample());
             break;
         case 13:
-            result = new OrderedLayout();
+            result = new VerticalLayout();
             ((OrderedLayout) result).addComponent(new LabelExample());
             break;
         case 14:
-            result = new OrderedLayout();
+            result = new VerticalLayout();
             ((OrderedLayout) result).addComponent(new LayoutExample());
             break;
         case 15:
-            result = new OrderedLayout();
+            result = new VerticalLayout();
             ((OrderedLayout) result).addComponent(new NotificationExample());
             break;
         case 16:
-            result = new OrderedLayout();
+            result = new VerticalLayout();
             ((OrderedLayout) result).addComponent(new RichTextExample());
             break;
         case 17:
-            result = new OrderedLayout();
+            result = new VerticalLayout();
             ((OrderedLayout) result).addComponent(new SelectExample());
             break;
         case 18:
-            result = new OrderedLayout();
+            result = new VerticalLayout();
             ((OrderedLayout) result).addComponent(new ValueInputExample());
             break;
         case 19:
-            result = new OrderedLayout();
+            result = new VerticalLayout();
             ((OrderedLayout) result).addComponent(new WindowingExample());
             break;
         case 20:
-            result = new OrderedLayout();
+            result = new VerticalLayout();
             ((OrderedLayout) result).addComponent(new TreeExample());
             break;
         case 21:
-            result = new OrderedLayout();
+            result = new VerticalLayout();
             ((OrderedLayout) result).addComponent(new TableExample());
             break;
         case 22:
-            result = new OrderedLayout();
+            result = new VerticalLayout();
             ((OrderedLayout) result)
                     .addComponent(new StressComponentsInTable());
             break;

@@ -13,16 +13,16 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 
 public class PerformanceTestBasicComponentRendering extends CustomComponent {
 
-    private final OrderedLayout main;
+    private final VerticalLayout main;
 
-    private final OrderedLayout testContainer;
+    private final VerticalLayout testContainer;
 
     private Date startTime;
 
@@ -34,22 +34,20 @@ public class PerformanceTestBasicComponentRendering extends CustomComponent {
 
     public PerformanceTestBasicComponentRendering() {
 
-        main = new OrderedLayout();
+        main = new VerticalLayout();
         setCompositionRoot(main);
         addInfo();
 
         result = new Label();
         main.addComponent(result);
 
-        testContainer = new OrderedLayout();
+        testContainer = new VerticalLayout();
 
-        final Table t = TestForTablesInitialColumnWidthLogicRendering
-                .getTestTable(5, 200);
+        final Table t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(5, 200);
 
         Table t2 = new Table("Test Table with 199 rows rendered initially") {
             @Override
-            public void changeVariables(Object source,
-                    Map<String, Object> variables) {
+            public void changeVariables(Object source, Map<String, Object> variables) {
                 super.changeVariables(source, variables);
                 // end timing on cache row request
                 endTest();

@@ -6,17 +6,18 @@ package com.vaadin.tests;
 
 import java.util.Date;
 
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.VerticalLayout;
 
 public class PerformanceTestLabelsAndOrderedLayouts extends CustomComponent {
-    private final OrderedLayout main;
+    private final AbstractOrderedLayout main;
 
-    private final OrderedLayout testContainer;
+    private final AbstractOrderedLayout testContainer;
 
     private Date startTime;
 
@@ -27,30 +28,27 @@ public class PerformanceTestLabelsAndOrderedLayouts extends CustomComponent {
     private static final int INITIAL_COMPONENTS = 1000;
 
     public PerformanceTestLabelsAndOrderedLayouts() {
-        main = new OrderedLayout();
+        main = new VerticalLayout();
         setCompositionRoot(main);
         addInfo();
 
         result = new Label();
         main.addComponent(result);
 
-        main.addComponent(new Button("click when rendered",
-                new ClickListener() {
+        main.addComponent(new Button("click when rendered", new ClickListener() {
 
-                    public void buttonClick(ClickEvent event) {
-                        endTest();
-                    }
-                }));
+            public void buttonClick(ClickEvent event) {
+                endTest();
+            }
+        }));
 
-        main.addComponent(new Button(
-                "Click for layout repaint (cached components)",
-                new ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        testContainer.requestRepaint();
-                    }
-                }));
+        main.addComponent(new Button("Click for layout repaint (cached components)", new ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                testContainer.requestRepaint();
+            }
+        }));
 
-        testContainer = new OrderedLayout();
+        testContainer = new VerticalLayout();
 
         for (int i = 0; i < INITIAL_COMPONENTS; i++) {
             Label l = new Label("foo" + i);

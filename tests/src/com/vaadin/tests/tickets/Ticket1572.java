@@ -17,8 +17,7 @@ public class Ticket1572 extends com.vaadin.Application {
     @Override
     public void init() {
 
-        final Window main = new Window(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         Panel p = new Panel("Test wrapper for gridlayout margin/spacing");

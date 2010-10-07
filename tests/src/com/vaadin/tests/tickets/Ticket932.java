@@ -16,8 +16,7 @@ public class Ticket932 extends Application {
         final Window mainWin = new Window("Test app for max length feature");
         setMainWindow(mainWin);
 
-        final TextField tx = new TextField(
-                "Textfield with maxlenght 10, single row");
+        final TextField tx = new TextField("Textfield with maxlenght 10, single row");
         tx.setImmediate(true);
         tx.setMaxLength(10);
 
@@ -27,16 +26,14 @@ public class Ticket932 extends Application {
         b.addListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                l.setValue("Length: " + tx.getValue().toString().length()
-                        + " Content: " + tx.getValue());
+                l.setValue("Length: " + tx.getValue().toString().length() + " Content: " + tx.getValue());
             }
         });
 
         mainWin.addComponent(tx);
         mainWin.addComponent(b);
 
-        final TextField tx2 = new TextField(
-                "Textfield with maxlenght 10, multirow ");
+        final TextField tx2 = new TextField("Textfield with maxlenght 10, multirow ");
         mainWin.addComponent(tx2);
         tx2.setImmediate(true);
         tx2.setRows(5);
@@ -46,8 +43,7 @@ public class Ticket932 extends Application {
         b2.addListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                l.setValue("Length: " + tx2.getValue().toString().length()
-                        + " Content: " + tx2.getValue());
+                l.setValue("Length: " + tx2.getValue().toString().length() + " Content: " + tx2.getValue());
             }
         });
 
@@ -64,8 +60,7 @@ public class Ticket932 extends Application {
         b = new Button("Check value");
         b.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                l.setValue("Length: " + rta.getValue().toString().length()
-                        + " Content: " + rta.getValue());
+                l.setValue("Length: " + rta.getValue().toString().length() + " Content: " + rta.getValue());
             }
         });
 

@@ -16,17 +16,14 @@ public class Ticket2431 extends Application {
 
         Window w = new Window();
         setMainWindow(w);
-        Label help = new Label(
-                "Use CTRL X to fire action, CTRL C to remove it (fails before fix)");
+        Label help = new Label("Use CTRL X to fire action, CTRL C to remove it (fails before fix)");
 
         w.addComponent(help);
 
         w.addActionHandler(new Handler() {
 
-            final ShortcutAction a1 = new ShortcutAction("action", KeyCode.X,
-                    new int[] { ModifierKey.CTRL });
-            final ShortcutAction a2 = new ShortcutAction("action", KeyCode.C,
-                    new int[] { ModifierKey.CTRL });
+            final ShortcutAction a1 = new ShortcutAction("action", KeyCode.X, new int[] { ModifierKey.CTRL });
+            final ShortcutAction a2 = new ShortcutAction("action", KeyCode.C, new int[] { ModifierKey.CTRL });
 
             Action[] actions = new Action[] { a1, a2 };
 

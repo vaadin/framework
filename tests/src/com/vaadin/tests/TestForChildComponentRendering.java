@@ -13,8 +13,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Select;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * 
@@ -25,11 +25,11 @@ import com.vaadin.ui.Select;
  */
 public class TestForChildComponentRendering extends CustomComponent {
 
-    private final OrderedLayout main;
+    private final VerticalLayout main;
 
     public TestForChildComponentRendering() {
 
-        main = new OrderedLayout();
+        main = new VerticalLayout();
         setCompositionRoot(main);
         createNewView();
     }
@@ -57,8 +57,7 @@ public class TestForChildComponentRendering extends CustomComponent {
         b = new Button("reorder view", this, "randomReorder");
         main.addComponent(b);
 
-        b = new Button("remove randomly one component", this,
-                "removeRandomComponent");
+        b = new Button("remove randomly one component", this, "removeRandomComponent");
         main.addComponent(b);
 
     }
@@ -70,7 +69,7 @@ public class TestForChildComponentRendering extends CustomComponent {
             components.add(it.next());
         }
 
-        final OrderedLayout v = main;
+        final VerticalLayout v = main;
         v.removeAllComponents();
 
         for (int i = components.size(); i > 0; i--) {

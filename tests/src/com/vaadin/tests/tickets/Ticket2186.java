@@ -1,10 +1,11 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2186 extends Application {
@@ -14,11 +15,10 @@ public class Ticket2186 extends Application {
         Window main = new Window("Quick test");
         setMainWindow(main);
 
-        OrderedLayout base = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout base = new HorizontalLayout();
         main.setLayout(base);
 
-        OrderedLayout content = new OrderedLayout();
+        VerticalLayout content = new VerticalLayout();
 
         content.addComponent(new Label("Content."));
         content.setWidth("500px");

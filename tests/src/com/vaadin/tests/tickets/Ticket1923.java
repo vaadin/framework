@@ -1,8 +1,8 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket1923 extends com.vaadin.Application {
@@ -13,8 +13,7 @@ public class Ticket1923 extends com.vaadin.Application {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         p = new Panel("TestPanel 250x300");
@@ -22,10 +21,7 @@ public class Ticket1923 extends com.vaadin.Application {
         p.setScrollable(true);
         // p.setLayout(new GridLayout(1, 100));
         for (int i = 0; i < ROWS; i++) {
-            p.addComponent(new Label(
-                    "Label"
-                            + i
-                            + " 5067w09adsfasdjfahlsdfjhalfjhaldjfhalsjdfhlajdhflajhdfljahdslfjahldsjfhaljdfhaljfdhlajsdhflajshdflkajhsdlfkjahsldfkjahsldfhalskjfdhlksjfdh857idifhaljsdfhlajsdhflajhdflajhdfljahldfjhaljdfhalsjdfhalkjdhflkajhdfljahsdlfjahlsdjfhaldjfhaljfdhlajdhflajshdfljahsdlfjhalsjdfhalskjhfdlhusfglksuhdflgjshflgjhslfghslfjghsljfglsjhfglsjhfgljshfgljshflgjhslfghsljfgsljdfglsdjhfglsjhflgkjshfldjgh"));
+            p.addComponent(new Label("Label" + i + " 5067w09adsfasdjfahlsdfjhalfjhaldjfhalsjdfhlajdhflajhdfljahdslfjahldsjfhaljdfhaljfdhlajsdhflajshdflkajhsdlfkjahsldfkjahsldfhalskjfdhlksjfdh857idifhaljsdfhlajsdhflajhdflajhdfljahldfjhaljdfhalsjdfhalkjdhflkajhdfljahsdlfjahlsdjfhaldjfhaljfdhlajdhflajshdfljahsdlfjhalsjdfhalskjhfdlhusfglksuhdflgjshflgjhslfghslfjghsljfglsjhfglsjhfgljshfgljshflgjhslfghsljfgsljdfglsdjhfglsjhflgkjshfldjgh"));
         }
         // main.getLayout().setSizeFull();
 
@@ -38,25 +34,24 @@ public class Ticket1923 extends com.vaadin.Application {
 
         main.addComponent(p);
 
-        OrderedLayout ol = new OrderedLayout();
+        VerticalLayout ol = new VerticalLayout();
         p = new Panel("a");
         p.addComponent(new Label("Longer than caption"));
         ol.addComponent(p);
 
         main.addComponent(ol);
 
-        ol = new OrderedLayout();
+        ol = new VerticalLayout();
         p = new Panel("captionasdfjahsdjfh this should be clipped god damn it");
         // p.getLayout().setSizeFull();
         p.setWidth("50px");
         p.setHeight("100px");
-        p.addComponent(new Label(
-                "aasdfaasdfja dslkfj lakfdj lakjdf lkaj dflkaj ldfkj alsdfj laksdj flkajs dflkj sdfsadfasdfasd"));
+        p.addComponent(new Label("aasdfaasdfja dslkfj lakfdj lakjdf lkaj dflkaj ldfkj alsdfj laksdj flkajs dflkj sdfsadfasdfasd"));
         ol.addComponent(p);
 
         main.addComponent(ol);
 
-        ol = new OrderedLayout();
+        ol = new VerticalLayout();
         p = new Panel("300x-1");
         // p.getLayout().setSizeFull();
         p.setWidth("300px");

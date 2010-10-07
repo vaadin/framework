@@ -8,8 +8,7 @@ public class Ticket1767 extends com.vaadin.Application {
     @Override
     public void init() {
 
-        final Window main = new Window(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         ComboBox cb = new ComboBox(" '<' item is not seen in populist?");

@@ -31,8 +31,7 @@ public class Ticket2040 extends com.vaadin.Application {
         l.setSizeFull();
         ts.addTab(l, "100% h component", null);
 
-        Label testContent = new Label(
-                "TabSheet by default uses caption, icon, errors etc. from Components. ");
+        Label testContent = new Label("TabSheet by default uses caption, icon, errors etc. from Components. ");
 
         testContent.setCaption("Introduction to test");
 
@@ -51,8 +50,7 @@ public class Ticket2040 extends com.vaadin.Application {
         l.setSizeFull();
         ts.addTab(l, "200px h component", null);
 
-        testContent = new Label(
-                "TabSheet by default uses caption, icon, errors etc. from Components. ");
+        testContent = new Label("TabSheet by default uses caption, icon, errors etc. from Components. ");
 
         testContent.setCaption("Introduction to test");
 
@@ -71,8 +69,7 @@ public class Ticket2040 extends com.vaadin.Application {
         l.setSizeFull();
         ts.addTab(l, "50% h component", null);
 
-        testContent = new Label(
-                "TabSheet by default uses caption, icon, errors etc. from Components. ");
+        testContent = new Label("TabSheet by default uses caption, icon, errors etc. from Components. ");
 
         testContent.setCaption("Introduction to test");
 

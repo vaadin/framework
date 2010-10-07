@@ -10,17 +10,16 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.RichTextArea;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * 
  * @author IT Mill Ltd.
  */
-public class TestForRichTextEditor extends CustomComponent implements
-        ValueChangeListener {
+public class TestForRichTextEditor extends CustomComponent implements ValueChangeListener {
 
-    private final OrderedLayout main = new OrderedLayout();
+    private final VerticalLayout main = new VerticalLayout();
 
     private Label l;
 
@@ -34,8 +33,7 @@ public class TestForRichTextEditor extends CustomComponent implements
 
     public void createNewView() {
         main.removeAllComponents();
-        main.addComponent(new Label(
-                "RTE uses google richtextArea and their examples toolbar."));
+        main.addComponent(new Label("RTE uses google richtextArea and their examples toolbar."));
 
         rte = new RichTextArea();
         rte.addListener(this);

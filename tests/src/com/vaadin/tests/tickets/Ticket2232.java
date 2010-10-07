@@ -6,7 +6,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.SpacingHandler;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2232 extends Application {
@@ -16,13 +16,10 @@ public class Ticket2232 extends Application {
         setMainWindow(new Window());
         setTheme("tests-tickets");
 
-        getMainWindow()
-                .addComponent(
-                        new Label(
-                                "Defining spacing must be possible also with pure CSS"));
+        getMainWindow().addComponent(new Label("Defining spacing must be possible also with pure CSS"));
 
         Layout gl;
-        gl = new OrderedLayout();
+        gl = new VerticalLayout();
         gl.setWidth("100%");
         gl.setHeight("200px");
         gl.setStyleName("t2232");
@@ -34,7 +31,7 @@ public class Ticket2232 extends Application {
         gl.setStyleName("t2232");
         fillAndAdd(gl);
 
-        gl = new OrderedLayout();
+        gl = new VerticalLayout();
         gl.setWidth("100%");
         gl.setHeight("200px");
         ((SpacingHandler) gl).setSpacing(true);
@@ -46,7 +43,7 @@ public class Ticket2232 extends Application {
         ((SpacingHandler) gl).setSpacing(true);
         fillAndAdd(gl);
 
-        gl = new OrderedLayout();
+        gl = new VerticalLayout();
         gl.setWidth("100%");
         gl.setHeight("200px");
         fillAndAdd(gl);
@@ -65,8 +62,7 @@ public class Ticket2232 extends Application {
             gl.addComponent(b);
         }
         String caption = gl.getClass().getSimpleName();
-        caption += " style: " + gl.getStyleName() + ", spacingFromServer:"
-                + ((SpacingHandler) gl).isSpacingEnabled();
+        caption += " style: " + gl.getStyleName() + ", spacingFromServer:" + ((SpacingHandler) gl).isSpacingEnabled();
         gl.setCaption(caption);
         getMainWindow().addComponent(gl);
     }

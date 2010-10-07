@@ -11,8 +11,7 @@ public class Ticket1772 extends com.vaadin.Application {
     @Override
     public void init() {
 
-        final Window main = new Window(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         Button b = new Button("Add content");
@@ -26,8 +25,7 @@ public class Ticket1772 extends com.vaadin.Application {
 
             public void buttonClick(ClickEvent event) {
 
-                gridLayout
-                        .addComponent(new TextField("Content " + (++counter)));
+                gridLayout.addComponent(new TextField("Content " + (++counter)));
 
             }
         });

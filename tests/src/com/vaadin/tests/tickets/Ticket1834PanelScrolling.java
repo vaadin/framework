@@ -3,8 +3,8 @@ package com.vaadin.tests.tickets;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Window;
 
@@ -18,20 +18,17 @@ public class Ticket1834PanelScrolling extends com.vaadin.Application {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
-        OrderedLayout currentState = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout currentState = new HorizontalLayout();
 
         currentState.addComponent(state);
         Button b = new Button("update");
         currentState.addComponent(b);
         b.addListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
-                state.setValue("ScrollTop: " + p.getScrollTop()
-                        + " ScrollLeft: " + p.getScrollLeft());
+                state.setValue("ScrollTop: " + p.getScrollTop() + " ScrollLeft: " + p.getScrollLeft());
             }
         });
         main.addComponent(currentState);
@@ -41,8 +38,7 @@ public class Ticket1834PanelScrolling extends com.vaadin.Application {
             public void buttonClick(ClickEvent event) {
                 p.setScrollLeft(p.getScrollLeft() + 50);
                 p.setScrollTop(p.getScrollTop() + 50);
-                state.setValue("ScrollTop: " + p.getScrollTop()
-                        + " ScrollLeft: " + p.getScrollLeft());
+                state.setValue("ScrollTop: " + p.getScrollTop() + " ScrollLeft: " + p.getScrollLeft());
             }
         });
 
@@ -72,10 +68,7 @@ public class Ticket1834PanelScrolling extends com.vaadin.Application {
         p.setScrollable(true);
 
         for (int i = 0; i < ROWS; i++) {
-            p.addComponent(new Label(
-                    "Label"
-                            + i
-                            + "................................................................................................................."));
+            p.addComponent(new Label("Label" + i + "................................................................................................................."));
         }
 
         p.setHeight("300px");

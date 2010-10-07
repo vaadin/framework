@@ -5,8 +5,8 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket1973_2 extends Application {
@@ -45,7 +45,7 @@ public class Ticket1973_2 extends Application {
         for (int i = 0; i < size; i++) {
             int randInt = i;
             Item item = container.addItem(new Integer(i));
-            OrderedLayout layout = new OrderedLayout();
+            VerticalLayout layout = new VerticalLayout();
             layout.setDebugId("lo" + i);
             layout.addComponent(new Button("Test " + randInt));
             item.getItemProperty("layout").setValue(layout);

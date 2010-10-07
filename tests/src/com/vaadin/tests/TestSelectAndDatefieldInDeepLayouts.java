@@ -14,6 +14,7 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * This test has a somewhat deep layout within one page. At the bottom, Select
@@ -62,7 +63,7 @@ public class TestSelectAndDatefieldInDeepLayouts extends CustomComponent {
     }
 
     AbstractLayout getOrderedLayout() {
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
         l.setCaption(getCaption("orderedlayout"));
         return l;
     }

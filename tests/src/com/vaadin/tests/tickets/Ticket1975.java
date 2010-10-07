@@ -35,20 +35,17 @@ public class Ticket1975 extends Application {
             layout.addComponent(cl1);
             WebApplicationContext wc = ((WebApplicationContext) getContext());
 
-            layout.addComponent(new Button("Disable/Enable",
-                    new ClickListener() {
+            layout.addComponent(new Button("Disable/Enable", new ClickListener() {
 
-                        public void buttonClick(ClickEvent event) {
-                            boolean e = cl1.isEnabled();
+                public void buttonClick(ClickEvent event) {
+                    boolean e = cl1.isEnabled();
 
-                            cl1.setEnabled(!e);
-                            cl2.setEnabled(!e);
-                        }
+                    cl1.setEnabled(!e);
+                    cl2.setEnabled(!e);
+                }
 
-                    }));
-            File f = new File(wc.getBaseDirectory().getAbsoluteFile()
-                    + "/VAADIN/themes/" + getTheme()
-                    + "/layouts/Ticket1975.html");
+            }));
+            File f = new File(wc.getBaseDirectory().getAbsoluteFile() + "/VAADIN/themes/" + getTheme() + "/layouts/Ticket1975.html");
 
             cl2 = new CustomLayout(new FileInputStream(f));
             layout.addComponent(cl2);

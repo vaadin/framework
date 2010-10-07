@@ -3,8 +3,8 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2024 extends Application {
@@ -21,11 +21,10 @@ public class Ticket2024 extends Application {
         w.getLayout().setHeight("2000");
         w.getLayout().addComponent(layout);
 
-        layout.addComponent(new Label(
-                "This should NOT get stuck when scrolling down"));
+        layout.addComponent(new Label("This should NOT get stuck when scrolling down"));
         layout.addComponent(new TextField("This should not get stuck either..."));
 
-        OrderedLayout ol = new OrderedLayout();
+        VerticalLayout ol = new VerticalLayout();
         ol.setHeight("1000");
         ol.setWidth("200");
         w.getLayout().addComponent(ol);

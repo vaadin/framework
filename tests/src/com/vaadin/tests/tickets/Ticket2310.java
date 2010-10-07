@@ -11,13 +11,10 @@ public class Ticket2310 extends Application {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
-        main.addComponent(new Label("Instructions: change label when panel is "
-                + "invisible -> invalid change (with disabled "
-                + "flag) is sent to client. Label is grey when panel is shown."));
+        main.addComponent(new Label("Instructions: change label when panel is " + "invisible -> invalid change (with disabled " + "flag) is sent to client. Label is grey when panel is shown."));
 
         final Panel p = new Panel();
         p.setStyleName(Panel.STYLE_LIGHT);

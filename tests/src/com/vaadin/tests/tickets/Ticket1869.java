@@ -1,11 +1,10 @@
 package com.vaadin.tests.tickets;
 
-import java.util.LinkedList;
-
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket1869 extends com.vaadin.Application {
@@ -18,16 +17,15 @@ public class Ticket1869 extends com.vaadin.Application {
         lo.setMargin(true);
         lo.setSpacing(true);
 
-        ExpandLayout el = new ExpandLayout();
-        Panel elp = new Panel(
-                "Vertical ExpandLayout /w first component expanded", el);
+        VerticalLayout el = new VerticalLayout();
+        Panel elp = new Panel("Vertical ExpandLayout /w first component expanded", el);
         el.setHeight(1000);
         for (int i = 0; i < 3; i++) {
             Button b = new Button("x");
             el.addComponent(b);
             if (i == 0) {
                 b.setSizeFull();
-                el.expand(b);
+                el.setExpandRatio(b,1);
             }
         }
         lo.addComponent(elp);
@@ -35,16 +33,15 @@ public class Ticket1869 extends com.vaadin.Application {
         elp.setHeight(300);
         elp.setScrollable(true);
 
-        ExpandLayout elh = new ExpandLayout(ExpandLayout.ORIENTATION_HORIZONTAL);
-        Panel elph = new Panel(
-                "Horizontal ExpandLayout /w first component expanded", elh);
+        HorizontalLayout elh = new HorizontalLayout();
+        Panel elph = new Panel("Horizontal ExpandLayout /w first component expanded", elh);
         elh.setWidth(1000);
         for (int i = 0; i < 3; i++) {
             Button b = new Button("x");
             elh.addComponent(b);
             if (i == 0) {
                 b.setSizeFull();
-                elh.expand(b);
+                elh.setExpandRatio(b,1);
             }
         }
         lo.addComponent(elph);

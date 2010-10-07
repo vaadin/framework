@@ -21,8 +21,7 @@ import com.vaadin.ui.Window;
  * @see com.vaadin.ui.Window
  * @see com.vaadin.ui.Label
  */
-public class ModalWindow extends com.vaadin.Application implements
-        ClickListener {
+public class ModalWindow extends com.vaadin.Application implements ClickListener {
 
     private Window test;
     private Button reopen;
@@ -57,8 +56,7 @@ public class ModalWindow extends com.vaadin.Application implements
         if (event.getButton() == reopen) {
             openSubWindow();
         }
-        getMainWindow().addComponent(
-                new Label("Button click: " + event.getButton().getCaption()));
+        getMainWindow().addComponent(new Label("Button click: " + event.getButton().getCaption()));
     }
 
     private void openSubWindow() {
@@ -66,8 +64,7 @@ public class ModalWindow extends com.vaadin.Application implements
         test = new Window("Modal window");
         test.setModal(true);
         getMainWindow().addWindow(test);
-        test.addComponent(new Label(
-                "You have to close this window before accessing others."));
+        test.addComponent(new Label("You have to close this window before accessing others."));
 
         // Textfield for modal window
         final TextField f = new TextField();

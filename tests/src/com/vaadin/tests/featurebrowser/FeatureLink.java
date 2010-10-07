@@ -8,7 +8,7 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.VerticalLayout;
 
 public class FeatureLink extends Feature {
 
@@ -19,7 +19,7 @@ public class FeatureLink extends Feature {
     @Override
     protected Component getDemoComponent() {
 
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
 
         final Link lnk = new Link("Link caption", new ExternalResource(
                 "http://www.vaadin.com"));

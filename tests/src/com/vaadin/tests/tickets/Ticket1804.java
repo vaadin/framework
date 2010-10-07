@@ -39,8 +39,7 @@ public class Ticket1804 extends com.vaadin.Application {
         s = new Select("Testcase from the ticket #1804");
         s.setNullSelectionAllowed(false);
         s.setPropertyDataSource(new MethodProperty<String>(new TestPojo(), "id"));
-        s.addValidator(new EmptyStringValidator(
-                "Selection required for test-field"));
+        s.addValidator(new EmptyStringValidator("Selection required for test-field"));
         s.setRequired(true);
         listOfAllFields.add(s);
 
@@ -50,22 +49,18 @@ public class Ticket1804 extends com.vaadin.Application {
         s.setRequired(true);
         listOfAllFields.add(s);
 
-        s = new Select(
-                "Testcase from the ticket #1804, but with required=false");
+        s = new Select("Testcase from the ticket #1804, but with required=false");
         s.setNullSelectionAllowed(false);
         s.setPropertyDataSource(new MethodProperty<String>(new TestPojo(), "id"));
-        s.addValidator(new EmptyStringValidator(
-                "Selection required for test-field"));
+        s.addValidator(new EmptyStringValidator("Selection required for test-field"));
         listOfAllFields.add(s);
 
-        s = new Select(
-                "Testcase from the ticket #1804, but without validator and with required=false");
+        s = new Select("Testcase from the ticket #1804, but without validator and with required=false");
         s.setNullSelectionAllowed(false);
         s.setPropertyDataSource(new MethodProperty<String>(new TestPojo(), "id"));
         listOfAllFields.add(s);
 
-        s = new Select(
-                "Required=true, custom error message, null selection not allowed");
+        s = new Select("Required=true, custom error message, null selection not allowed");
         s.setRequired(true);
         s.setNullSelectionAllowed(false);
         s.setPropertyDataSource(new MethodProperty<String>(new TestPojo(), "id"));
@@ -92,16 +87,14 @@ public class Ticket1804 extends com.vaadin.Application {
 
             public void buttonClick(ClickEvent event) {
                 StringBuffer msg = new StringBuffer();
-                for (Iterator<Select> i = listOfAllFields.iterator(); i
-                        .hasNext();) {
+                for (Iterator<Select> i = listOfAllFields.iterator(); i.hasNext();) {
                     AbstractField af = i.next();
                     msg.append("<h1>" + af.getCaption() + "</h1>\n");
                     msg.append("Value=" + af.getValue() + "<br/>\n");
                     if (af.isValid()) {
                         msg.append("VALID\n<hr/>");
                     } else {
-                        msg.append("INVALID<br/><i>" + af.getErrorMessage()
-                                + "</i><hr/>");
+                        msg.append("INVALID<br/><i>" + af.getErrorMessage() + "</i><hr/>");
                     }
                 }
                 Window w = new Window("Status of the fields");

@@ -5,8 +5,8 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2103 extends Application {
@@ -15,17 +15,16 @@ public class Ticket2103 extends Application {
     @Override
     public void init() {
         mainWindow = new Window(getClass().getSimpleName());
-        mainWindow.setLayout(new ExpandLayout());
+        mainWindow.setContent(new VerticalLayout());
         mainWindow.setSizeFull();
-        mainWindow.getLayout().setSizeFull();
+        mainWindow.getContent().setSizeFull();
 
         MyTable table1 = new MyTable(4, "table1");
         table1.loadTable(100);
         MyTable table2 = new MyTable(4, "table2");
         table2.loadTable(100);
 
-        MyAccordion a = new MyAccordion(new Component[] { table1, table2 },
-                "FDSF");
+        MyAccordion a = new MyAccordion(new Component[] { table1, table2 }, "FDSF");
         mainWindow.addComponent(a);
         setMainWindow(mainWindow);
         // mainWindow.addComponent(table1);
@@ -48,7 +47,7 @@ public class Ticket2103 extends Application {
 
         private Table table = this;
         private String[] columns;
-        private ExpandLayout layout = new ExpandLayout();
+        private VerticalLayout layout = new VerticalLayout();
 
         public MyTable(int columnNumber, String id) {
             setDebugId(id);
@@ -72,8 +71,7 @@ public class Ticket2103 extends Application {
                 Item rowItem = table.addItem(j);
                 if (rowItem != null) {
                     for (int i = 0; i < columns.length; i++) {
-                        rowItem.getItemProperty(columns[i]).setValue(
-                                "Value" + j);
+                        rowItem.getItemProperty(columns[i]).setValue("Value" + j);
                     }
                 }
             }

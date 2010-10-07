@@ -33,10 +33,8 @@ public class Ticket2117 extends Application {
         final Window w = new Window("Extra window: " + name);
         w.setName(name);
         addWindow(w);
-        w.addComponent(new Label(
-                "This window has been created on fly for name: " + name));
-        w.addComponent(new Label("It has also been redirected to " + w.getURL()
-                + " to support reloading"));
+        w.addComponent(new Label("This window has been created on fly for name: " + name));
+        w.addComponent(new Label("It has also been redirected to " + w.getURL() + " to support reloading"));
         w.addComponent(new Button("button", new ClickListener() {
             public void buttonClick(ClickEvent event) {
                 w.showNotification("Button clicked");
@@ -48,13 +46,7 @@ public class Ticket2117 extends Application {
 
     private Window createWindow() {
         final Window w = new Window();
-        w.addComponent(new Label(
-                "Click this link: <a target=\"_blank\" href='"
-                        + getURL().toExternalForm()
-                        + "'>"
-                        + getURL().toExternalForm()
-                        + "</a> which opens new windows to this uri. They should end up having a separate Window and URL.",
-                Label.CONTENT_XHTML));
+        w.addComponent(new Label("Click this link: <a target=\"_blank\" href='" + getURL().toExternalForm() + "'>" + getURL().toExternalForm() + "</a> which opens new windows to this uri. They should end up having a separate Window and URL.", Label.CONTENT_XHTML));
         return w;
     }
 }

@@ -4,6 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2178 extends Application {
@@ -17,11 +18,11 @@ public class Ticket2178 extends Application {
     }
 
     private void createUI(OrderedLayout layout) {
-        OrderedLayout ol;
+        VerticalLayout ol;
         Panel p;
         ComboBox cb;
 
-        ol = new OrderedLayout();
+        ol = new VerticalLayout();
         p = new Panel(ol);
         p.setCaption("Combobox without width");
         // p.setWidth("100px");
@@ -31,7 +32,7 @@ public class Ticket2178 extends Application {
         p.addComponent(cb);
         layout.addComponent(p);
 
-        ol = new OrderedLayout();
+        ol = new VerticalLayout();
         p = new Panel(ol);
         p.setCaption("Combobox without width with caption");
         // p.setWidth("100px");
@@ -41,7 +42,7 @@ public class Ticket2178 extends Application {
         p.addComponent(cb);
         layout.addComponent(p);
 
-        ol = new OrderedLayout();
+        ol = new VerticalLayout();
         p = new Panel(ol);
         p.setCaption("Combobox 100px wide");
         // p.setWidth("100px");
@@ -51,7 +52,7 @@ public class Ticket2178 extends Application {
         p.addComponent(cb);
         layout.addComponent(p);
 
-        ol = new OrderedLayout();
+        ol = new VerticalLayout();
         p = new Panel(ol);
         p.setCaption("Combobox 100px wide with caption");
         // p.setWidth("100px");
@@ -61,7 +62,7 @@ public class Ticket2178 extends Application {
         p.addComponent(cb);
         layout.addComponent(p);
 
-        ol = new OrderedLayout();
+        ol = new VerticalLayout();
         p = new Panel(ol);
         p.setCaption("Combobox 500px wide");
         // p.setWidth("500px");
@@ -71,7 +72,7 @@ public class Ticket2178 extends Application {
         p.addComponent(cb);
         layout.addComponent(p);
 
-        ol = new OrderedLayout();
+        ol = new VerticalLayout();
         p = new Panel(ol);
         p.setCaption("Combobox 500px wide with caption");
         // p.setWidth("500px");
@@ -81,7 +82,7 @@ public class Ticket2178 extends Application {
         p.addComponent(cb);
         layout.addComponent(p);
 
-        ol = new OrderedLayout();
+        ol = new VerticalLayout();
         p = new Panel(ol);
         p.setCaption("Combobox 100% wide inside 200px panel");
         p.setWidth("200px");
@@ -93,7 +94,7 @@ public class Ticket2178 extends Application {
         p.addComponent(cb);
         layout.addComponent(p);
 
-        ol = new OrderedLayout();
+        ol = new VerticalLayout();
         p = new Panel(ol);
         p.setCaption("Combobox 100% wide inside 200px panel with caption");
         p.setWidth("200px");

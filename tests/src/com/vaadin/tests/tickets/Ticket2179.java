@@ -26,8 +26,7 @@ public class Ticket2179 extends Application {
         f.addListener(new Property.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
-                main.showNotification("Test field is "
-                        + (f.isValid() ? "valid" : "invalid"));
+                main.showNotification("Test field is " + (f.isValid() ? "valid" : "invalid"));
             }
         });
 

@@ -6,6 +6,7 @@ import org.easymock.EasyMock;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.Property.ValueChangeNotifier;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.AbstractField;
 

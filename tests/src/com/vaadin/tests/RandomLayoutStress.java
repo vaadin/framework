@@ -12,14 +12,15 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 /**
@@ -51,20 +52,16 @@ public class RandomLayoutStress extends com.vaadin.Application {
         setMainWindow(mainWindow);
 
         // Create horizontal ordered layout
-        final Panel panelA = new Panel(
-                "Panel containing horizontal ordered layout");
-        OrderedLayout layoutA = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        final Panel panelA = new Panel("Panel containing horizontal ordered layout");
+        HorizontalLayout layoutA = new HorizontalLayout();
         // Add 4 random components
         fillLayout(layoutA, componentCountA);
         // Add layout to panel
         panelA.addComponent(layoutA);
 
         // Create vertical ordered layout
-        final Panel panelB = new Panel(
-                "Panel containing vertical ordered layout");
-        OrderedLayout layoutB = new OrderedLayout(
-                OrderedLayout.ORIENTATION_VERTICAL);
+        final Panel panelB = new Panel("Panel containing vertical ordered layout");
+        VerticalLayout layoutB = new VerticalLayout();
         // Add 4 random components
         fillLayout(layoutB, componentCountB);
         // Add layout to panel
@@ -72,8 +69,7 @@ public class RandomLayoutStress extends com.vaadin.Application {
 
         // Create grid layout
         final int gridSize = (int) java.lang.Math.sqrt(componentCountC);
-        final Panel panelG = new Panel("Panel containing grid layout ("
-                + gridSize + " x " + gridSize + ")");
+        final Panel panelG = new Panel("Panel containing grid layout (" + gridSize + " x " + gridSize + ")");
         GridLayout layoutG = new GridLayout(gridSize, gridSize);
         // Add 12 random components
         fillLayout(layoutG, componentCountC);
@@ -83,11 +79,11 @@ public class RandomLayoutStress extends com.vaadin.Application {
         // Create TabSheet
         final TabSheet tabsheet = new TabSheet();
         tabsheet.setCaption("Tabsheet, above layouts are added to this component");
-        layoutA = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+        layoutA = new HorizontalLayout();
         // Add 4 random components
         fillLayout(layoutA, componentCountA);
         tabsheet.addTab(layoutA, "Horizontal ordered layout", null);
-        layoutB = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
+        layoutB = new VerticalLayout();
         // Add 4 random components
         fillLayout(layoutB, componentCountB);
         tabsheet.addTab(layoutB, "Vertical ordered layout", null);
@@ -148,12 +144,7 @@ public class RandomLayoutStress extends com.vaadin.Application {
             // Link
             result = new Panel();
             result.setCaption("Panel component " + caption);
-            ((Panel) result)
-                    .addComponent(new Label(
-                            "Panel is a container for other components, by default it draws a frame around it's "
-                                    + "extremities and may have a caption to clarify the nature of the contained components' purpose."
-                                    + " Panel contains an layout where the actual contained components are added, "
-                                    + "this layout may be switched on the fly."));
+            ((Panel) result).addComponent(new Label("Panel is a container for other components, by default it draws a frame around it's " + "extremities and may have a caption to clarify the nature of the contained components' purpose." + " Panel contains an layout where the actual contained components are added, " + "this layout may be switched on the fly."));
             ((Panel) result).setWidth(250);
             break;
         case 6:

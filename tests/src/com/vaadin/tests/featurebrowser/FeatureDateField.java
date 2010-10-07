@@ -10,8 +10,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Select;
+import com.vaadin.ui.VerticalLayout;
 
 public class FeatureDateField extends Feature {
 
@@ -31,7 +31,7 @@ public class FeatureDateField extends Feature {
     @Override
     protected Component getDemoComponent() {
 
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
 
         l.addComponent(new Label("Your default locale is: "
                 + getApplication().getLocale().toString().replace('_', '-')));

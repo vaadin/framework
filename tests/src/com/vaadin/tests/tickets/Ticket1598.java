@@ -41,39 +41,33 @@ public class Ticket1598 extends Application {
         MenuItem firstSubItem1 = first.getChildren().get(1);
 
         for (int i = 0; i < 3; i++) {
-            firstSubItem1.addItem(new String("Subsubmenu item" + i), null,
-                    new Command() {
+            firstSubItem1.addItem(new String("Subsubmenu item" + i), null, new Command() {
 
-                        public void menuSelected(MenuItem selected) {
-                            main.showNotification("Action "
-                                    + selected.getText());
-                        }
-                    });
+                public void menuSelected(MenuItem selected) {
+                    main.showNotification("Action " + selected.getText());
+                }
+            });
         }
         MenuItem firstSubItem2 = first.getChildren().get(3);
 
         for (int i = 0; i < 3; i++) {
-            firstSubItem2.addItem(new String("Subsubmenu item" + i), null,
-                    new Command() {
+            firstSubItem2.addItem(new String("Subsubmenu item" + i), null, new Command() {
 
-                        public void menuSelected(MenuItem selected) {
-                            main.showNotification("Action "
-                                    + selected.getText());
-                        }
-                    });
+                public void menuSelected(MenuItem selected) {
+                    main.showNotification("Action " + selected.getText());
+                }
+            });
         }
 
         MenuItem second = menuBar.getItems().get(1);
 
         for (int i = 0; i < 5; i++) {
-            second.addItem(new String("Second submenu item" + i), null,
-                    new Command() {
+            second.addItem(new String("Second submenu item" + i), null, new Command() {
 
-                        public void menuSelected(MenuItem selected) {
-                            main.showNotification("Action "
-                                    + selected.getText());
-                        }
-                    });
+                public void menuSelected(MenuItem selected) {
+                    main.showNotification("Action " + selected.getText());
+                }
+            });
         }
 
         MenuItem third = menuBar.getItems().get(2);

@@ -13,10 +13,10 @@ import com.vaadin.terminal.StreamResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FinishedEvent;
+import com.vaadin.ui.VerticalLayout;
 
 public class FeatureUpload extends Feature implements Upload.FinishedListener {
     Buffer buffer = new Buffer();
@@ -30,7 +30,7 @@ public class FeatureUpload extends Feature implements Upload.FinishedListener {
     @Override
     protected Component getDemoComponent() {
 
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
 
         final Upload up = new Upload("Upload", buffer);
         up.setImmediate(true);

@@ -11,8 +11,7 @@ public class Ticket2101 extends Application {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);
 
-        Button b = new Button(
-                "Button with a long text which will not fit on 50 pixels");
+        Button b = new Button("Button with a long text which will not fit on 50 pixels");
         b.setWidth("50px");
 
         w.getLayout().addComponent(b);

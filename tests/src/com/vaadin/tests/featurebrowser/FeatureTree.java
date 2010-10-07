@@ -10,9 +10,9 @@ import com.vaadin.event.Action;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.VerticalLayout;
 
 public class FeatureTree extends Feature implements Action.Handler {
 
@@ -61,7 +61,7 @@ public class FeatureTree extends Feature implements Action.Handler {
     @Override
     protected Component getDemoComponent() {
 
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
 
         final String[] names = new String[100];
         for (int i = 0; i < names.length; i++) {

@@ -6,11 +6,11 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.Form;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Window;
 
@@ -28,8 +28,7 @@ public class Ticket736 extends Application {
 
         // Create form for editing address
         final Form f = new Form();
-        f.setItemDataSource(new BeanItem<Address>(address, new String[] {
-                "name", "street", "zip", "city", "state", "country" }));
+        f.setItemDataSource(new BeanItem<Address>(address, new String[] { "name", "street", "zip", "city", "state", "country" }));
         f.setCaption("Office address");
         f.setIcon(new ThemeResource("../runo/icons/16/document.png"));
         f.setDescription("Jep jpe, this is form description.");
@@ -40,19 +39,17 @@ public class Ticket736 extends Application {
         f.setReadThrough(false);
         Button commit = new Button("Commit", f, "commit");
         Button discard = new Button("Discard", f, "discard");
-        ExpandLayout ol = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout ol = new HorizontalLayout();
         ol.setHeight("3em");
         ol.addComponent(commit);
-        ol.setComponentAlignment(commit, ExpandLayout.ALIGNMENT_RIGHT,
-                ExpandLayout.ALIGNMENT_TOP);
+        ol.setComponentAlignment(commit, Alignment.TOP_RIGHT);
         ol.addComponent(discard);
         f.setFooter(ol);
 
         // Add some validators for the form
         f.getField("zip").addValidator(new IsInteger());
         f.getField("zip").setDescription("Jepjep");
-        ((AbstractComponent) f.getField("zip")).setIcon(new ThemeResource(
-                "../runo/icons/16/folder.png"));
+        ((AbstractComponent) f.getField("zip")).setIcon(new ThemeResource("../runo/icons/16/folder.png"));
         f.getField("state").addValidator(new IsValidState());
         f.getField("name").setRequired(true);
         f.getField("street").setRequired(true);
@@ -61,26 +58,22 @@ public class Ticket736 extends Application {
 
         // Debug form properties
         final Panel formProperties = new Panel("Form properties");
-        formProperties.setWidth(200);
-        final String[] visibleProps = { "required", "invalidAllowed",
-                "readOnly", "readThrough", "writeThrough", "invalidCommitted",
-                "validationVisible", "immediate" };
+        formProperties.setWidth("200px");
+        final String[] visibleProps = { "required", "invalidAllowed", "readOnly", "readThrough", "writeThrough", "invalidCommitted", "validationVisible", "immediate" };
         for (int i = 0; i < visibleProps.length; i++) {
-            Button b = new Button(visibleProps[i], new MethodProperty<Boolean>(
-                    f, visibleProps[i]));
+            Button b = new Button(visibleProps[i], new MethodProperty<Boolean>(f, visibleProps[i]));
             b.setImmediate(true);
             formProperties.addComponent(b);
         }
         mainWin.addComponent(formProperties);
 
         // Debug the internal state of the address-object
-        mainWin.addComponent(new Button("Show state of the address object",
-                new Button.ClickListener() {
+        mainWin.addComponent(new Button("Show state of the address object", new Button.ClickListener() {
 
-                    public void buttonClick(ClickEvent event) {
-                        mainWin.showNotification(address.toString());
-                    }
-                }));
+            public void buttonClick(ClickEvent event) {
+                mainWin.showNotification(address.toString());
+            }
+        }));
     }
 
     /** Address pojo. */
@@ -142,8 +135,7 @@ public class Ticket736 extends Application {
 
         @Override
         public String toString() {
-            return name + "; " + street + "; " + city + " " + zip
-                    + (state != null ? " " + state : "") + " " + country;
+            return name + "; " + street + "; " + city + " " + zip + (state != null ? " " + state : "") + " " + country;
         }
 
     }
@@ -162,8 +154,7 @@ public class Ticket736 extends Application {
 
         public void validate(Object value) throws InvalidValueException {
             if (!isValid(value)) {
-                throw new InvalidValueException("'" + value
-                        + "' is not a number");
+                throw new InvalidValueException("'" + value + "' is not a number");
             }
         }
     }
@@ -186,8 +177,7 @@ public class Ticket736 extends Application {
 
         public void validate(Object value) throws InvalidValueException {
             if (!isValid(value)) {
-                throw new InvalidValueException(
-                        "State must be either two capital letter abreviation or left empty");
+                throw new InvalidValueException("State must be either two capital letter abreviation or left empty");
             }
         }
     }

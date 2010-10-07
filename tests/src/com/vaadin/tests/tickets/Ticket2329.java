@@ -34,8 +34,7 @@ public class Ticket2329 extends Application {
     }
 
     class TestColumnGenerator implements ColumnGenerator {
-        public Component generateCell(Table source, Object rowId,
-                Object columnId) {
+        public Component generateCell(Table source, Object rowId, Object columnId) {
             return new Button("1");
         }
     }

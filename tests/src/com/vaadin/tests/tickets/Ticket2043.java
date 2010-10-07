@@ -19,9 +19,7 @@ public class Ticket2043 extends Application {
     }
 
     private void createUI(GridLayout layout) {
-        Link l = new Link("Vaadin home (new 200x200 window, no decor, icon)",
-                new ExternalResource("http://www.vaadin.com"), "_blank", 200,
-                200, Link.TARGET_BORDER_NONE);
+        Link l = new Link("Vaadin home (new 200x200 window, no decor, icon)", new ExternalResource("http://www.vaadin.com"), "_blank", 200, 200, Link.TARGET_BORDER_NONE);
 
         layout.addComponent(l);
     }

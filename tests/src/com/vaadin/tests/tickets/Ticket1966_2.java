@@ -4,13 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.Application;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket1966_2 extends Application {
@@ -109,7 +111,7 @@ public class Ticket1966_2 extends Application {
         p.getLayout().setWidth("100%");
         layout.addComponent(p);
 
-        OrderedLayout ol = new OrderedLayout();
+        AbstractOrderedLayout ol = new VerticalLayout();
         // ol.setCaption("Horizontal");
         ol.setWidth("100%");
         addButtons(ol);
@@ -117,7 +119,7 @@ public class Ticket1966_2 extends Application {
 
         /* VERTICAL */
 
-        ol = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+        ol = new HorizontalLayout();
         // ol.setCaption("Vertical");
         ol.setHeight(200);
         addButtons(ol);
@@ -134,7 +136,7 @@ public class Ticket1966_2 extends Application {
         p.getLayout().setWidth("500");
         p.getLayout().setHeight("400");
 
-        ExpandLayout el = new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL);
+        AbstractOrderedLayout el = new VerticalLayout();
         // el.setCaption("Horizontal");
         // el.setSizeUndefined();
         // el.setWidth("100%");
@@ -144,7 +146,7 @@ public class Ticket1966_2 extends Application {
         b = new Button("Wide button");
         b.setWidth("100%");
         // b.setHeight(200);
-        // el.expand(b);
+        // el.setExpandRatio(b,1);
         // el.addComponent(b);
 
         addButtons(el);
@@ -152,14 +154,14 @@ public class Ticket1966_2 extends Application {
 
         /* VERTICAL */
 
-        el = new ExpandLayout(ExpandLayout.ORIENTATION_HORIZONTAL);
+        el = new HorizontalLayout();
         // el.setHeight(400);
         // el.setWidth("100%");
         // el.setCaption("Vertical");
 
         addButtons(el);
         // b = new Button("High button");
-        // el.expand(b);
+        // el.setExpandRatio(b,1);
         // b.setHeight(100);
         // el.addComponent(b);
 
@@ -175,8 +177,7 @@ public class Ticket1966_2 extends Application {
     }
 
     private Button getButton(Layout l, int hAlign, int vAlign) {
-        Button b = new Button(names.get(new Integer(hAlign)) + " - "
-                + names.get(new Integer(vAlign)));
+        Button b = new Button(names.get(new Integer(hAlign)) + " - " + names.get(new Integer(vAlign)));
         // b.setWidth("100");
         ((AlignmentHandler) l).setComponentAlignment(b, hAlign, vAlign);
 

@@ -112,7 +112,7 @@ public class Ticket2204 extends Application {
             return null;
         }
         // if (c == OrderedLayout.class) {
-        // cc = new OrderedLayout();
+        // cc = new VerticalLayout();
         // } else
         if (c == Accordion.class) {
             // Label l = new Label("Filler");
@@ -132,8 +132,7 @@ public class Ticket2204 extends Application {
                     return createField();
                 }
 
-                public Field createField(Item item, Object propertyId,
-                        Component uiContext) {
+                public Field createField(Item item, Object propertyId, Component uiContext) {
                     return createField();
                 }
 
@@ -143,8 +142,7 @@ public class Ticket2204 extends Application {
                     return formTextArea;
                 }
 
-                public Field createField(Container container, Object itemId,
-                        Object propertyId, Component uiContext) {
+                public Field createField(Container container, Object itemId, Object propertyId, Component uiContext) {
                     return createField();
                 }
 

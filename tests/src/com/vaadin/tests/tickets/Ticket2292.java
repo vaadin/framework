@@ -22,13 +22,11 @@ public class Ticket2292 extends com.vaadin.Application {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         ExternalResource icon = new ExternalResource("./icon.png");
-        main.addComponent(new Label(
-                "Note, run with trailing slash in url to have a working icon. Icon is built by servlet with a slow method, so it will show the bug (components not firing requestLayout)"));
+        main.addComponent(new Label("Note, run with trailing slash in url to have a working icon. Icon is built by servlet with a slow method, so it will show the bug (components not firing requestLayout)"));
         Button b = new Button();
         main.addComponent(b);
         b.setIcon(icon);
@@ -56,8 +54,7 @@ public class Ticket2292 extends com.vaadin.Application {
             e1.printStackTrace();
         }
 
-        BufferedImage image = new BufferedImage(200, 200,
-                BufferedImage.TYPE_INT_RGB);
+        BufferedImage image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
         Graphics drawable = image.getGraphics();
         drawable.setColor(Color.lightGray);
         drawable.fillRect(0, 0, 200, 200);
@@ -76,8 +73,7 @@ public class Ticket2292 extends com.vaadin.Application {
             ImageIO.write(image, "png", imagebuffer);
 
             // Return a stream from the buffer.
-            ByteArrayInputStream istream = new ByteArrayInputStream(
-                    imagebuffer.toByteArray());
+            ByteArrayInputStream istream = new ByteArrayInputStream(imagebuffer.toByteArray());
             return new DownloadStream(istream, null, null);
         } catch (IOException e) {
             return null;

@@ -6,14 +6,14 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2099 extends Application {
 
     private Label l1, l2, l3;
-    private OrderedLayout ol1, ol2, ol3;
+    private VerticalLayout ol1, ol2, ol3;
     private Window popup;
 
     @Override
@@ -52,9 +52,9 @@ public class Ticket2099 extends Application {
     private Window createPopup() {
         Window w = new Window("Popup");
         TabSheet ts = new TabSheet();
-        ol1 = new OrderedLayout();
-        ol2 = new OrderedLayout();
-        ol3 = new OrderedLayout();
+        ol1 = new VerticalLayout();
+        ol2 = new VerticalLayout();
+        ol3 = new VerticalLayout();
         l1 = new Label("111");
         l2 = new Label("222");
         l3 = new Label("333");

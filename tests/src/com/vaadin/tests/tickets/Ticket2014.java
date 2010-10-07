@@ -7,13 +7,13 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Window;
 
 public class Ticket2014 extends Application {
 
-    private OrderedLayout innerLayout1;
+    private HorizontalLayout innerLayout1;
     private Button b1;
     private Panel panel;
 
@@ -23,21 +23,20 @@ public class Ticket2014 extends Application {
         setMainWindow(w);
         // setTheme("tests-ticket");
         GridLayout layout = new GridLayout(10, 10);
-        w.setLayout(layout);
+        w.setContent(layout);
         createUI(layout);
     }
 
     private void createUI(GridLayout layout) {
         createPanel(layout);
 
-        layout.addComponent(new Button("Change class name",
-                new ClickListener() {
+        layout.addComponent(new Button("Change class name", new ClickListener() {
 
-                    public void buttonClick(ClickEvent event) {
-                        b1.setStyleName(UUID.randomUUID().toString());
-                    }
+            public void buttonClick(ClickEvent event) {
+                b1.setStyleName(UUID.randomUUID().toString());
+            }
 
-                }));
+        }));
 
     }
 
@@ -45,7 +44,7 @@ public class Ticket2014 extends Application {
         panel = new Panel("panel caption");
         layout.addComponent(panel);
 
-        innerLayout1 = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+        innerLayout1 = new HorizontalLayout();
         innerLayout1.setSpacing(true);
         panel.addComponent(innerLayout1);
 

@@ -12,8 +12,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2181 extends Application implements Button.ClickListener {
@@ -41,12 +41,12 @@ public class Ticket2181 extends Application implements Button.ClickListener {
     @Override
     public void init() {
         setMainWindow(main);
-        OrderedLayout ol;
-        ol = new OrderedLayout();
+        VerticalLayout ol;
+        ol = new VerticalLayout();
         ol.addComponent(tf1);
         main.addComponent(ol);
 
-        ol = new OrderedLayout();
+        ol = new VerticalLayout();
         ol.setWidth("150px");
         tf2.setWidth("150px");
         ol.addComponent(tf2);
@@ -91,8 +91,7 @@ public class Ticket2181 extends Application implements Button.ClickListener {
                     tf.setCaption(caption);
                 } else if (value.equals("Icon")) {
                     String timestamp = String.valueOf(new Date().getTime());
-                    tf.setIcon(new ThemeResource(icons.get(random.nextInt(icons
-                            .size())) + "?" + timestamp));
+                    tf.setIcon(new ThemeResource(icons.get(random.nextInt(icons.size())) + "?" + timestamp));
                 } else if (value.equals("Required")) {
                     tf.setRequired(true);
                 } else if (value.equals("Error")) {

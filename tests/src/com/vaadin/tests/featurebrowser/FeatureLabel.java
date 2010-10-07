@@ -7,7 +7,7 @@ package com.vaadin.tests.featurebrowser;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.VerticalLayout;
 
 public class FeatureLabel extends Feature {
 
@@ -18,7 +18,7 @@ public class FeatureLabel extends Feature {
     @Override
     protected Component getDemoComponent() {
 
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
 
         final Label lab = new Label("Label text");
         l.addComponent(lab);

@@ -19,8 +19,7 @@ public class Ticket2411 extends Application {
         l.setHeight("504px");
 
         for (int i = 1; i <= 5; i++) {
-            Button b = new Button("Button " + i
-                    + " should be 100px or 101px high");
+            Button b = new Button("Button " + i + " should be 100px or 101px high");
             b.setHeight("100%");
             l.addComponent(b);
         }

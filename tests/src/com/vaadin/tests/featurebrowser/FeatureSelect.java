@@ -5,8 +5,8 @@
 package com.vaadin.tests.featurebrowser;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Select;
+import com.vaadin.ui.VerticalLayout;
 
 public class FeatureSelect extends Feature {
 
@@ -27,7 +27,7 @@ public class FeatureSelect extends Feature {
     @Override
     protected Component getDemoComponent() {
 
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
 
         final Select s = new Select("Select employee");
         for (int i = 0; i < 50; i++) {

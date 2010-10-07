@@ -43,14 +43,12 @@ public class Ticket2405 extends Application {
         // Let's attach that one straight away too
         root.addComponent(top);
 
-        label = new Label(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent porttitor porta lacus. Nulla tellus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin mollis turpis in mauris faucibus posuere. Nullam rutrum, nisi a fermentum tempus, lacus metus rutrum massa, a condimentum mauris justo a tortor. Mauris aliquet, ante quis ultricies posuere, sapien libero laoreet sem, a accumsan diam metus sed elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur vehicula metus nec turpis dignissim cursus. Suspendisse potenti. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam feugiat orci eget risus. Vestibulum at sem. ");
+        label = new Label("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent porttitor porta lacus. Nulla tellus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin mollis turpis in mauris faucibus posuere. Nullam rutrum, nisi a fermentum tempus, lacus metus rutrum massa, a condimentum mauris justo a tortor. Mauris aliquet, ante quis ultricies posuere, sapien libero laoreet sem, a accumsan diam metus sed elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur vehicula metus nec turpis dignissim cursus. Suspendisse potenti. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam feugiat orci eget risus. Vestibulum at sem. ");
         label.setWidth("100%");
         top.addComponent(label);
         split = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
         split.setHeight("100%");
-        Embedded image = new Embedded("An image", new ExternalResource(
-                "http://dev.itmill.com/chrome/site/toolkit-logo.png"));
+        Embedded image = new Embedded("An image", new ExternalResource("http://dev.itmill.com/chrome/site/toolkit-logo.png"));
         image.setWidth("100%");
         root.addComponent(split);
         ((VerticalLayout) root.getLayout()).setExpandRatio(split, 1.0f);

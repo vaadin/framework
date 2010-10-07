@@ -1,9 +1,11 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket1904 extends Application {
@@ -19,7 +21,12 @@ public class Ticket1904 extends Application {
     }
 
     private void addOL(String descr, String style, boolean horizontal) {
-        OrderedLayout ol = new OrderedLayout();
+        AbstractOrderedLayout ol;
+        if (horizontal) {
+            ol = new HorizontalLayout();
+        } else {
+            ol = new VerticalLayout();
+        }
         ol.setMargin(true);
         ol.setSpacing(true);
         if (style != null) {
@@ -32,9 +39,6 @@ public class Ticket1904 extends Application {
                 b.setWidth(500);
             }
             ol.addComponent(b);
-        }
-        if (horizontal) {
-            ol.setOrientation(OrderedLayout.ORIENTATION_HORIZONTAL);
         }
         getMainWindow().addComponent(ol);
     }

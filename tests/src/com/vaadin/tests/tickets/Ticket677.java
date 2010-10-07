@@ -13,8 +13,8 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
@@ -22,15 +22,7 @@ import com.vaadin.ui.Window;
 
 public class Ticket677 extends Application {
 
-    private static final Label info = new Label(
-            "<li> keep debug window open to see variable changes"
-                    + "<li> disable root panel w/ toggle button"
-                    + "<li> toggle one of the subpanels"
-                    + "<li> we attempt to focus the subpanels first textfield"
-                    + "<li> focusing should fail (try tabbing as well) [worked previousy]"
-                    + "<li> no variable changes should be sent from disabled fields [changed sent previously]"
-                    + "<li> try further toggling and tabbing around",
-            Label.CONTENT_RAW);
+    private static final Label info = new Label("<li> keep debug window open to see variable changes" + "<li> disable root panel w/ toggle button" + "<li> toggle one of the subpanels" + "<li> we attempt to focus the subpanels first textfield" + "<li> focusing should fail (try tabbing as well) [worked previousy]" + "<li> no variable changes should be sent from disabled fields [changed sent previously]" + "<li> try further toggling and tabbing around", Label.CONTENT_RAW);
 
     Panel root = new Panel("Enabled");
     Panel one = new Panel("Enabled");
@@ -45,28 +37,24 @@ public class Ticket677 extends Application {
 
         main.addComponent(info);
 
-        OrderedLayout l = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout l = new HorizontalLayout();
         main.addComponent(l);
 
-        l.addComponent(new Button("Toggle root panel",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        toggle(root);
-                    }
-                }));
-        l.addComponent(new Button("Toggle panel one",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        toggle(one);
-                    }
-                }));
-        l.addComponent(new Button("Toggle panel two",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        toggle(two);
-                    }
-                }));
+        l.addComponent(new Button("Toggle root panel", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                toggle(root);
+            }
+        }));
+        l.addComponent(new Button("Toggle panel one", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                toggle(one);
+            }
+        }));
+        l.addComponent(new Button("Toggle panel two", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                toggle(two);
+            }
+        }));
         l.addComponent(new Button("Toggle form", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 toggle(form);
@@ -112,8 +100,7 @@ public class Ticket677 extends Application {
         form.setFieldFactory(new BaseFieldFactory() {
 
             @Override
-            public Field createField(Item item, Object propertyId,
-                    Component uiContext) {
+            public Field createField(Item item, Object propertyId, Component uiContext) {
                 Field f = super.createField(item, propertyId, uiContext);
                 f.setEnabled(!"disabled".equals(propertyId));
                 return f;
@@ -135,10 +122,8 @@ public class Ticket677 extends Application {
         table.setFieldFactory(new BaseFieldFactory() {
 
             @Override
-            public Field createField(Container container, Object itemId,
-                    Object propertyId, Component uiContext) {
-                Field f = super.createField(container, itemId, propertyId,
-                        uiContext);
+            public Field createField(Container container, Object itemId, Object propertyId, Component uiContext) {
+                Field f = super.createField(container, itemId, propertyId, uiContext);
                 Item item = container.getItem(itemId);
                 Property p = item.getItemProperty(propertyId);
                 if ("disabled".equals(p.getValue())) {
@@ -158,8 +143,7 @@ public class Ticket677 extends Application {
         c.setEnabled(enable);
         c.setCaption((enable ? "Enabled" : "Disabled"));
         if (c instanceof ComponentContainer) {
-            TextField tf = (TextField) ((ComponentContainer) c)
-                    .getComponentIterator().next();
+            TextField tf = (TextField) ((ComponentContainer) c).getComponentIterator().next();
             tf.focus();
         }
     }

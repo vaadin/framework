@@ -7,8 +7,8 @@ import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
@@ -47,14 +47,14 @@ public class Ticket1982 extends Application {
         gl.addComponent(components.get(3));
     }
 
-    private class TitleBar extends ExpandLayout {
+    private class TitleBar extends HorizontalLayout {
 
         private Button max = new Button("Max");
         private Button min = new Button("Min");
         private GridLayout layout;
 
         public TitleBar(String title, GridLayout layout) {
-            super(ExpandLayout.ORIENTATION_HORIZONTAL);
+            super();
             this.layout = layout;
             addComponent(new Label(title));
             addComponent(max);
@@ -66,8 +66,7 @@ public class Ticket1982 extends Application {
                     min.setVisible(true);
                     max.setVisible(false);
                     TitleBar.this.layout.removeAllComponents();
-                    TitleBar.this.layout
-                            .addComponent(TitleBar.this, 0, 0, 1, 1);
+                    TitleBar.this.layout.addComponent(TitleBar.this, 0, 0, 1, 1);
                 }
             });
             min.addListener(new ClickListener() {

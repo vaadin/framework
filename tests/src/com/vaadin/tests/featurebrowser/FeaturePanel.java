@@ -7,9 +7,9 @@ package com.vaadin.tests.featurebrowser;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
+import com.vaadin.ui.VerticalLayout;
 
 public class FeaturePanel extends Feature {
 
@@ -20,7 +20,7 @@ public class FeaturePanel extends Feature {
     @Override
     protected Component getDemoComponent() {
 
-        final OrderedLayout l = new OrderedLayout();
+        final VerticalLayout l = new VerticalLayout();
 
         // Example panel
         final Panel show = new Panel("Panel caption");
