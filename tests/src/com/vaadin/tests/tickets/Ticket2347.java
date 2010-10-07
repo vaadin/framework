@@ -17,7 +17,7 @@ public class Ticket2347 extends Application {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);
         setTheme("tests-tickets");
-        createUI((VerticalLayout) w.getLayout());
+        createUI((VerticalLayout) w.getContent());
     }
 
     private void createUI(VerticalLayout layout) {

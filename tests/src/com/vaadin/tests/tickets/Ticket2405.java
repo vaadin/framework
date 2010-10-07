@@ -2,10 +2,12 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -29,8 +31,8 @@ public class Ticket2405 extends Application {
         // browser.addWindow(root);
         setMainWindow(root);
 
-        root.getLayout().setSizeFull();
-        root.getLayout().setMargin(false);
+        root.getContent().setSizeFull();
+        ((Layout) root.getContent()).setMargin(false);
 
         // Top area, containing playback and volume controls, play status, view
         // modes and search
@@ -51,14 +53,14 @@ public class Ticket2405 extends Application {
         Embedded image = new Embedded("An image", new ExternalResource("http://dev.itmill.com/chrome/site/toolkit-logo.png"));
         image.setWidth("100%");
         root.addComponent(split);
-        ((VerticalLayout) root.getLayout()).setExpandRatio(split, 1.0f);
+        ((VerticalLayout) root.getContent()).setExpandRatio(split, 1.0f);
         VerticalLayout vl = new VerticalLayout();
         split.addComponent(vl);
 
         vl.addComponent(new TextField("abc"));
         vl.addComponent(image);
         vl.setExpandRatio(image, 1.0f);
-        vl.setComponentAlignment(image, "bottom center");
+        vl.setComponentAlignment(image, Alignment.BOTTOM_CENTER);
         vl.setHeight("100%");
         // We'll need one splitpanel to separate the sidebar and track listing
         Button bottomButton = new Button("Filler");
@@ -67,7 +69,7 @@ public class Ticket2405 extends Application {
 
         // The splitpanel is by default 100% x 100%, but we'll need to adjust
         // our main window layout to accomodate the height
-        root.getLayout().setHeight("100%");
+        root.getContent().setHeight("100%");
         // ((VerticalLayout) root.getLayout()).setExpandRatio(bottomButton,
         // 1.0F);
 

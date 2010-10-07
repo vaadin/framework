@@ -19,6 +19,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.Reindeer;
 
 public class EmptyFieldErrorIndicators extends TestBase {
 
@@ -42,7 +43,7 @@ public class EmptyFieldErrorIndicators extends TestBase {
 
         Panel panel = new Panel();
         panel.setSizeFull();
-        panel.setStyleName(Panel.STYLE_LIGHT);
+        panel.setStyleName(Reindeer.PANEL_LIGHT);
         panel.addComponent(hl);
         panel.setScrollable(true);
         addComponent(panel);

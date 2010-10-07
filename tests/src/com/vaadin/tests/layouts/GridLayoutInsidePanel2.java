@@ -14,7 +14,7 @@ public class GridLayoutInsidePanel2 extends Application {
     public void init() {
         Window w = new Window("Main");
         setMainWindow(w);
-        layout = w.getLayout();
+        layout = (Layout) w.getContent();
         GridLayout gl = new GridLayout(1, 1);
         gl.setSizeUndefined();
         Label l = new Label("This should be visible");

@@ -5,6 +5,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.themes.BaseTheme;
 
 public class TableRowHeight3 extends TestBase {
 
@@ -36,7 +37,7 @@ public class TableRowHeight3 extends TestBase {
 
             Button b = new Button();
             b.setWidth("100%");
-            b.setStyleName(Button.STYLE_LINK);
+            b.setStyleName(BaseTheme.BUTTON_LINK);
             b.addStyleName("nowraplink");
             if (i < 2) {
                 b.setCaption("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ullamcorper, elit quis elementum iaculis, dui est rutrum risus, at cursus sem leo eget arcu. Proin vel eros ut tortor luctus pretium. Nulla facilisi. Donec in dui. Proin ac diam vitae massa tempus faucibus. Fusce eu risus. Nunc ac risus. Cras libero.");

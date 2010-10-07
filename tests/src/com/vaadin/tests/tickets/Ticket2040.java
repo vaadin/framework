@@ -2,6 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
@@ -14,8 +15,8 @@ public class Ticket2040 extends com.vaadin.Application {
         Window main = new Window();
         setMainWindow(main);
 
-        main.getLayout().setSizeFull();
-        main.getLayout().setMargin(true);
+        main.getContent().setSizeFull();
+        ((Layout) main.getContent()).setMargin(true);
 
         setTheme("tests-tickets");
 

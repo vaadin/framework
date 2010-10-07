@@ -19,6 +19,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.Reindeer;
 
 /**
  * @author marc
@@ -157,7 +158,7 @@ public class TestContainerChanges extends CustomComponent {
         buttons.addComponent(b);
 
         Panel p = new Panel("Tree");
-        p.setStyleName(Panel.STYLE_LIGHT);
+        p.setStyleName(Reindeer.PANEL_LIGHT);
         h.addComponent(p);
         Tree tree = new Tree("ITEM_CAPTION_MODE_PROPERTY");
         tree.setContainerDataSource(ordered);
@@ -171,7 +172,7 @@ public class TestContainerChanges extends CustomComponent {
         p.addComponent(tree);
 
         p = new Panel("ComboBox");
-        p.setStyleName(Panel.STYLE_LIGHT);
+        p.setStyleName(Reindeer.PANEL_LIGHT);
         h.addComponent(p);
         ComboBox c = new ComboBox("ITEM_CAPTION_MODE_PROPERTY");
         c.setImmediate(true);
@@ -186,7 +187,7 @@ public class TestContainerChanges extends CustomComponent {
         p.addComponent(c);
 
         p = new Panel("ListBox");
-        p.setStyleName(Panel.STYLE_LIGHT);
+        p.setStyleName(Reindeer.PANEL_LIGHT);
         h.addComponent(p);
         ListSelect l = new ListSelect("ITEM_CAPTION_MODE_PROPERTY");
         l.setContainerDataSource(cont);

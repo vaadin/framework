@@ -21,7 +21,7 @@ public class Ticket2083 extends Application {
     private void createUI(GridLayout layout) {
         Panel p = new Panel("This is a panel with a longer caption than it should have");
         p.setWidth("100px");
-        p.getLayout().addComponent(new Label("Contents"));
+        p.getContent().addComponent(new Label("Contents"));
         layout.addComponent(p);
     }
 }

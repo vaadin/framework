@@ -38,7 +38,7 @@ public class Ticket2048 extends Application {
         getMainWindow().setContent(orderedLayout);
         // getMainWindow().setContent(new GridLayout(1, 1));
         getMainWindow().setSizeFull();
-        getMainWindow().getLayout().setSizeFull();
+        getMainWindow().getContent().setSizeFull();
 
         createUI(orderedLayout);
         // createUI(gridLayout);
@@ -73,7 +73,7 @@ public class Ticket2048 extends Application {
 
             public void buttonClick(ClickEvent event) {
                 Embedded newEmbedded = new Embedded(null, new ThemeResource("icons/64/folder-add.png"));
-                getMainWindow().getLayout().replaceComponent(embedded, newEmbedded);
+                getMainWindow().getContent().replaceComponent(embedded, newEmbedded);
                 embedded = newEmbedded;
 
             }

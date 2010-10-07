@@ -17,9 +17,9 @@ public class Ticket2024 extends Application {
         GridLayout layout = new GridLayout(2, 2);
         layout.setHeight("100%");
         layout.setWidth("700");
-        w.getLayout().setSizeFull();
-        w.getLayout().setHeight("2000");
-        w.getLayout().addComponent(layout);
+        w.getContent().setSizeFull();
+        w.getContent().setHeight("2000");
+        w.getContent().addComponent(layout);
 
         layout.addComponent(new Label("This should NOT get stuck when scrolling down"));
         layout.addComponent(new TextField("This should not get stuck either..."));
@@ -27,7 +27,7 @@ public class Ticket2024 extends Application {
         VerticalLayout ol = new VerticalLayout();
         ol.setHeight("1000");
         ol.setWidth("200");
-        w.getLayout().addComponent(ol);
+        w.getContent().addComponent(ol);
         ol.addComponent(new Label("Just a label to enable the scrollbar"));
 
     }

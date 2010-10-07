@@ -221,7 +221,6 @@ public class ApplicationConnection {
     /**
      * Helper for tt initialization
      */
-    @SuppressWarnings("unused")
     private JavaScriptObject getVersionInfo() {
         return configuration.getVersionInfoJSObject();
     }

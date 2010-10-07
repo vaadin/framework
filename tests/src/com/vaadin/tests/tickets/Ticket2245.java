@@ -9,7 +9,7 @@ public class Ticket2245 extends Application {
     @Override
     public void init() {
         Window main = new Window("The Main Window");
-        main.getLayout().setSizeFull();
+        main.getContent().setSizeFull();
         setMainWindow(main);
         SplitPanel sp = new SplitPanel(SplitPanel.ORIENTATION_VERTICAL);
         main.addComponent(sp);

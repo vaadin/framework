@@ -20,7 +20,7 @@ public class Ticket2221 extends Application {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
-        createUI((AbstractOrderedLayout) w.getLayout());
+        createUI((AbstractOrderedLayout) w.getContent());
     }
 
     private void createUI(AbstractOrderedLayout layout) {
@@ -71,7 +71,7 @@ public class Ticket2221 extends Application {
             outerPanel.setHeight("1000px");
             outerPanel.setWidth("1000px");
 
-            outerPanel.getLayout().setSizeFull();
+            outerPanel.getContent().setSizeFull();
             Panel innerPanel = new Panel("Inner panel");
             innerPanel.setSizeFull();
             outerPanel.addComponent(innerPanel);

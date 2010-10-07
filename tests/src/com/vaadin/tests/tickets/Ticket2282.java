@@ -17,7 +17,7 @@ public class Ticket2282 extends Application {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);
         setTheme("tests-tickets");
-        w.getLayout().setSizeUndefined();
+        w.getContent().setSizeUndefined();
 
         layout1 = new FormLayout();
         layout1.setSizeUndefined();

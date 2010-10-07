@@ -31,9 +31,9 @@ public class Ticket2029 extends Application {
         setMainWindow(w);
         // setTheme("tests-tickets");
         Panel p = createPanel();
-        w.getLayout().addComponent(p);
+        w.getContent().addComponent(p);
         // w.getLayout().addComponent(createGLPanel());
-        w.getLayout().addComponent(createPanelV());
+        w.getContent().addComponent(createPanelV());
     }
 
     private Panel createPanel() {
@@ -43,7 +43,7 @@ public class Ticket2029 extends Application {
 
         HorizontalLayout layout = new HorizontalLayout();
         p.setContent(layout);
-        p.getLayout().setSizeFull();
+        p.getContent().setSizeFull();
 
         for (int i = 0; i < COMPONENTS; i++) {
             TextField tf = new TextField();
@@ -72,7 +72,7 @@ public class Ticket2029 extends Application {
 
         GridLayout layout = new GridLayout(COMPONENTS, 1);
         p.setContent(layout);
-        p.getLayout().setSizeFull();
+        p.getContent().setSizeFull();
 
         for (int i = 0; i < COMPONENTS; i++) {
             TextField tf = new TextField();
@@ -110,7 +110,7 @@ public class Ticket2029 extends Application {
 
         VerticalLayout layout = new VerticalLayout();
         p.setContent(layout);
-        p.getLayout().setSizeFull();
+        p.getContent().setSizeFull();
 
         for (int i = 0; i < COMPONENTS; i++) {
             TextField tf = new TextField();

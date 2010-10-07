@@ -36,7 +36,7 @@ public class TabSheetCaptions extends TestBase {
 
         panel1 = new Panel("Panel initial caption (should also be tab caption)");
         panel1.setSizeFull();
-        panel1.getLayout().setSizeFull();
+        panel1.getContent().setSizeFull();
         panel1.addComponent(new Label("This is a panel"));
         tabSheet.addTab(panel1);
 

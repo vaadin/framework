@@ -51,7 +51,7 @@ public class Ticket2204 extends Application {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
-        createUI((AbstractOrderedLayout) w.getLayout());
+        createUI((AbstractOrderedLayout) w.getContent());
     }
 
     private void createUI(AbstractOrderedLayout layout) {
@@ -174,7 +174,7 @@ public class Ticket2204 extends Application {
             textArea.setSizeFull();
         }
         if (c == Panel.class) {
-            Layout layout = ((Panel) cc).getLayout();
+            Layout layout = (Layout) ((Panel) cc).getContent();
             containerToComponent.put(cc, layout);
             layout.setVisible(false);
             textArea.setVisible(true);

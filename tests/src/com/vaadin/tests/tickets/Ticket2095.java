@@ -14,7 +14,7 @@ public class Ticket2095 extends Application {
 
         // uncomment to workaround iorderedlayout bug in current trunk
         // w.setContent(new ExpandLayout());
-        w.getLayout().setSizeFull();
+        w.getContent().setSizeFull();
 
         Embedded em = new Embedded();
         em.setType(Embedded.TYPE_BROWSER);

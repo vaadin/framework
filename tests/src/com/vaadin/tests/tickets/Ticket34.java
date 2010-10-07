@@ -70,7 +70,7 @@ public class Ticket34 extends Application {
         for (String string : strings) {
             Panel p = new Panel(string);
             p.setSizeFull();
-            ((VerticalLayout) p.getLayout()).setSpacing(true);
+            ((VerticalLayout) p.getContent()).setSpacing(true);
             p.addComponent(new Label("This is a simple test case for " + "UriFragmentReader that can be used for" + " adding linking, back/forward button " + "and history support for ajax application. "));
             StringBuffer sb = new StringBuffer();
             sb.append("Available views : ");

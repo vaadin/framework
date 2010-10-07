@@ -13,7 +13,7 @@ public class Ticket2323 extends Application {
 
         Window subWindow = new Window("");
         subWindow.setSizeUndefined();
-        subWindow.getLayout().setSizeUndefined();
+        subWindow.getContent().setSizeUndefined();
         subWindow.center();
         subWindow.addComponent(new RichTextArea());
         w.addWindow(subWindow);

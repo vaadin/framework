@@ -25,6 +25,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.Reindeer;
 
 /**
  * Table layout is very slow in Firefox 3.0.10 when the table contains
@@ -113,7 +114,7 @@ public class Ticket2998 extends Application {
             Layout main = new VerticalLayout();
             setLayout(main);
             main.setSizeUndefined();
-            main.setStyleName(Panel.STYLE_LIGHT);
+            main.setStyleName(Reindeer.PANEL_LIGHT);
 
             FormLayout form = new FormLayout();
             form.setSizeUndefined();
@@ -255,11 +256,11 @@ public class Ticket2998 extends Application {
 
         // set theme and some layout stuff
         setMainWindow(w);
-        w.getLayout().setSizeFull();
-        w.getLayout().setMargin(false);
+        w.getContent().setSizeFull();
+        ((Layout) w.getContent()).setMargin(false);
 
         Panel p = new Panel("Workout Log");
-        p.setStyleName(Panel.STYLE_LIGHT);
+        p.setStyleName(Reindeer.PANEL_LIGHT);
         w.addComponent(p);
         mainLayout = new VerticalLayout();
         p.setContent(mainLayout);

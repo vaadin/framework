@@ -5,11 +5,11 @@ import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.Reindeer;
 
 public class Ticket1245 extends com.vaadin.Application {
 
@@ -38,7 +38,7 @@ class TreeExample extends CustomComponent {
         setCompositionRoot(main);
 
         // Panel w/ Tree
-        main.setStyleName(Panel.STYLE_LIGHT);
+        main.setStyleName(Reindeer.PANEL_LIGHT);
         main.setWidth(200);
         // // Description, this is needed. Works in first slot
         main.addComponent(new Label(desc));

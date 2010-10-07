@@ -12,7 +12,7 @@ public class Ticket2231 extends Application {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);
         setTheme("tests-tickets");
-        createUI((AbstractOrderedLayout) w.getLayout());
+        createUI((AbstractOrderedLayout) w.getContent());
     }
 
     private void createUI(AbstractOrderedLayout layout) {

@@ -18,7 +18,7 @@ public class Ticket2209OL extends Application {
     @Override
     public void init() {
         setMainWindow(new Window());
-        getMainWindow().getLayout().setWidth("250px");
+        getMainWindow().getContent().setWidth("250px");
         gl = new VerticalLayout();
         gl.setStyleName("borders");
         getMainWindow().addComponent(gl);

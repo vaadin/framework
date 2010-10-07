@@ -39,7 +39,7 @@ public class Ticket1966_2 extends Application {
         // p.addComponent(gl);
 
         // w.getLayout().addComponent(p);
-        createUI(w.getLayout());
+        createUI((Layout) w.getContent());
     }
 
     private void createUI(Layout layout) {
@@ -52,7 +52,7 @@ public class Ticket1966_2 extends Application {
         Panel p = new Panel("GridLayout");
         p.setWidth(500);
         p.setHeight(500);
-        p.getLayout().setSizeFull();
+        p.getContent().setSizeFull();
         layout.addComponent(p);
 
         GridLayout gl = new GridLayout(1, 4);
@@ -88,7 +88,7 @@ public class Ticket1966_2 extends Application {
         Panel p = new Panel("OrderedLayout");
         p.setWidth(500);
         p.setHeight(500);
-        p.getLayout().setWidth("100%");
+        p.getContent().setWidth("100%");
         layout.addComponent(p);
 
         AbstractOrderedLayout ol = new VerticalLayout();
@@ -113,8 +113,8 @@ public class Ticket1966_2 extends Application {
     private void expandLayout(Layout layout) {
         Panel p = new Panel("ExpandLayout");
         layout.addComponent(p);
-        p.getLayout().setWidth("500");
-        p.getLayout().setHeight("400");
+        p.getContent().setWidth("500");
+        p.getContent().setHeight("400");
 
         AbstractOrderedLayout el = new VerticalLayout();
         // el.setCaption("Horizontal");

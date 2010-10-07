@@ -19,7 +19,7 @@ public class VerticalLayoutWithRelativeSizeComponents extends TestBase {
     @Override
     protected void setup() {
         getLayout().setSizeUndefined();
-        getMainWindow().getLayout().setHeight(null);
+        getMainWindow().getContent().setHeight(null);
 
         Label l = new Label(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc condimentum urna quis leo. In hac habitasse platea dictumst. Pellentesque tincidunt. Sed libero nisl, faucibus in, laoreet pellentesque, consectetur non, dolor. Sed tortor. Ut pretium sapien. Cras elementum enim non lacus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla velit est, aliquam a, pellentesque a, iaculis nec, sapien. Ut ultrices ligula vitae nulla. Morbi sem pede, iaculis ac, condimentum a, ornare eget, nisi. Aliquam hendrerit pulvinar massa. Vestibulum pretium purus eu augue. Sed posuere elit ut magna. Cras consequat faucibus nunc. Vestibulum quis diam.");

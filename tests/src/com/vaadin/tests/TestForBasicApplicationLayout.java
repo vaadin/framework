@@ -17,6 +17,7 @@ import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.Reindeer;
 
 public class TestForBasicApplicationLayout extends CustomComponent {
 
@@ -66,7 +67,7 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         cal.setLocale(new Locale("en", "US"));
         report.addComponent(cal);
         ((VerticalLayout) report.getContent()).setExpandRatio(controls, 1);
-        report.addStyleName(Panel.STYLE_LIGHT);
+        report.addStyleName(Reindeer.PANEL_LIGHT);
         report.setHeight(100, SplitPanel.UNITS_PERCENTAGE);
 
         sp2.setFirstComponent(report);

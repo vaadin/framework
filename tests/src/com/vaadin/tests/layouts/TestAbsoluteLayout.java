@@ -133,7 +133,7 @@ public class TestAbsoluteLayout extends TestBase {
             componentChooser.addListener(new Button.ClickListener() {
                 public void buttonClick(ClickEvent event) {
                     final Window chooser = new Window("Choose component");
-                    chooser.getLayout().setSizeUndefined();
+                    chooser.getContent().setSizeUndefined();
                     chooser.setModal(true);
 
                     NativeSelect select = new NativeSelect(
@@ -188,7 +188,7 @@ public class TestAbsoluteLayout extends TestBase {
                 public void buttonClick(ClickEvent event) {
                     final Window chooser = new Window(
                             "Choose component type to add");
-                    chooser.getLayout().setSizeUndefined();
+                    chooser.getContent().setSizeUndefined();
                     chooser.setModal(true);
 
                     NativeSelect select = new NativeSelect(

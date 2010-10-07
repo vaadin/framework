@@ -11,7 +11,7 @@ public class Ticket2341 extends com.vaadin.Application {
     public void init() {
         Window main = new Window();
         setMainWindow(main);
-        constructTables(main.getLayout());
+        constructTables((Layout) main.getContent());
     }
 
     private void constructTables(Layout layout) {

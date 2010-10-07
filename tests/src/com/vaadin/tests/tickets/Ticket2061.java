@@ -21,7 +21,7 @@ public class Ticket2061 extends Application {
     public void init() {
         mainWindow = new Window("Ticket 2061");
         mainWindow.setSizeFull();
-        mainWindow.getLayout().setSizeFull();
+        mainWindow.getContent().setSizeFull();
         setMainWindow(mainWindow);
 
         MyTable table1 = new MyTable(24, "table1");

@@ -68,7 +68,7 @@ public abstract class Robustness extends com.vaadin.Application implements
             create = null;
             label = null;
             stressLayout = null;
-            System.out.println("main.getLayout()=" + main.getLayout());
+            System.out.println("main.getLayout()=" + main.getContent());
             System.out.println(getMemoryStatistics());
         } else if (event.getButton() == close) {
             System.out.println("Before close, memory statistics:");

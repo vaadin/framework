@@ -25,7 +25,7 @@ public class Ticket2242 extends Application implements ValueChangeListener {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
-        createUI((AbstractOrderedLayout) w.getLayout());
+        createUI((AbstractOrderedLayout) w.getContent());
     }
 
     private void createUI(AbstractOrderedLayout layout) {

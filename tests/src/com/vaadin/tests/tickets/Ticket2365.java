@@ -43,10 +43,10 @@ public class Ticket2365 extends Application {
         if (panel == null) {
             panel = new Panel("Panel level " + i);
             panel.setSizeFull();
-            panel.getLayout().setSizeFull();
+            panel.getContent().setSizeFull();
         }
         Panel p = new Panel("Panel level " + i--);
-        p.getLayout().setSizeFull();
+        p.getContent().setSizeFull();
         p.setSizeFull();
         panel.addComponent(p);
         if (i > 0) {

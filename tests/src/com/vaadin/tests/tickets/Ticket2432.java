@@ -17,8 +17,8 @@ public class Ticket2432 extends Application {
 
         Window w = new Window();
         setMainWindow(w);
-        w.getLayout().setSizeFull();
-        ((SpacingHandler) w.getLayout()).setSpacing(true);
+        w.getContent().setSizeFull();
+        ((SpacingHandler) w.getContent()).setSpacing(true);
 
         Layout layout = new GridLayout(3, 3);
         populateLayout(layout);

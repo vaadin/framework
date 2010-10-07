@@ -8,6 +8,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.BaseTheme;
 
 public class Ticket2344 extends Application {
 
@@ -41,7 +42,7 @@ public class Ticket2344 extends Application {
             VerticalLayout vl = new VerticalLayout();
             // vl.setWidth(null);
             Button b = new Button("String 1 2 3");
-            b.setStyleName(Button.STYLE_LINK);
+            b.setStyleName(BaseTheme.BUTTON_LINK);
             vl.addComponent(b);
             t.addItem(new Object[] { vl, "String 2", "String 3", "String 4",
 

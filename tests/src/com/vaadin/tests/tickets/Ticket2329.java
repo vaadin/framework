@@ -16,7 +16,7 @@ public class Ticket2329 extends Application {
     public void init() {
         Window mainw = new Window();
         setMainWindow(mainw);
-        mainLo = (VerticalLayout) mainw.getLayout();
+        mainLo = (VerticalLayout) mainw.getContent();
         table = new Table();
         for (int i = 0; i < 10000; i++) {
             table.addItem(i);

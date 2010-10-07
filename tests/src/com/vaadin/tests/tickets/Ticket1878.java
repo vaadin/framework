@@ -216,7 +216,7 @@ public class Ticket1878 extends Application {
         p.setWidth(w);
         p.setHeight(h);
 
-        p.getLayout().setSizeFull();
+        p.getContent().setSizeFull();
 
         parentLayout.addComponent(p);
         p.addComponent(form);

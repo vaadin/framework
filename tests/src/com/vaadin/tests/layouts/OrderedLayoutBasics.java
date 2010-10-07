@@ -16,7 +16,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TextField;
@@ -25,7 +24,6 @@ import com.vaadin.ui.VerticalLayout;
 public class OrderedLayoutBasics extends TestBase {
 
     String valignName[] = new String[] { "top", "middle", "bottom" };
-    int valign[] = new int[] { AlignmentHandler.ALIGNMENT_TOP, AlignmentHandler.ALIGNMENT_VERTICAL_CENTER, AlignmentHandler.ALIGNMENT_BOTTOM };
 
     Set<AbstractOrderedLayout> layouts = new HashSet<AbstractOrderedLayout>();
     private AbstractOrderedLayout layoutContainer;
@@ -43,7 +41,7 @@ public class OrderedLayoutBasics extends TestBase {
 
     @Override
     public void setup() {
-        getMainWindow().getLayout().setHeight(null);
+        getMainWindow().getContent().setHeight(null);
 
         layoutContainer = new VerticalLayout();
         createUI(layoutContainer);
@@ -104,6 +102,7 @@ public class OrderedLayoutBasics extends TestBase {
 
     /* LAYOUTS */
 
+    @SuppressWarnings("unused")
     private Layout layout1() {
         HorizontalLayout ol = new HorizontalLayout();
         ol.setHeight("200px");
@@ -144,6 +143,7 @@ public class OrderedLayoutBasics extends TestBase {
 
     }
 
+    @SuppressWarnings("unused")
     private Layout layout2() {
         HorizontalLayout ol = new HorizontalLayout();
         ol.setHeight("70px");
@@ -187,6 +187,7 @@ public class OrderedLayoutBasics extends TestBase {
         return ol;
     }
 
+    @SuppressWarnings("unused")
     private Layout layout3() {
         HorizontalLayout ol = new HorizontalLayout();
         ol.setHeight("");
@@ -237,6 +238,7 @@ public class OrderedLayoutBasics extends TestBase {
         return ol;
     }
 
+    @SuppressWarnings("unused")
     private Layout layout3New() {
         HorizontalLayout ol = new HorizontalLayout();
         ol.setHeight("300px");
@@ -288,6 +290,7 @@ public class OrderedLayoutBasics extends TestBase {
         return ol;
     }
 
+    @SuppressWarnings("unused")
     private Layout layout4(AbstractOrderedLayout ol) {
         // ol.setHeight("300px");
         // ol.setWidth("500px");
@@ -323,7 +326,13 @@ public class OrderedLayoutBasics extends TestBase {
             tf.setWidth(w + "px");
             tf.setHeight(w + "px");
             ol.addComponent(tf);
-            ol.setComponentAlignment(tf, AlignmentHandler.ALIGNMENT_LEFT, valign[i % 3]);
+            if (i % 3 == 0) {
+                ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
+            } else if (i % 3 == 1) {
+                ol.setComponentAlignment(tf, Alignment.MIDDLE_LEFT);
+            } else {
+                ol.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
+            }
 
         }
 
@@ -396,7 +405,7 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
 
-        Button b;
+        // Button b;
         // b = new Button("This is a 100%x50% valign middle button");
         // b.setSizeFull();
         // b.setHeight("50%");
@@ -560,7 +569,7 @@ public class OrderedLayoutBasics extends TestBase {
         tf.setRequired(true);
         ol.addComponent(tf);
         ol.setExpandRatio(tf, 1f);
-        ol.setComponentAlignment(tf, AlignmentHandler.ALIGNMENT_LEFT, AlignmentHandler.ALIGNMENT_VERTICAL_CENTER);
+        ol.setComponentAlignment(tf, Alignment.MIDDLE_LEFT);
         // tf.setComponentError(new UserError("It's broken!"));
 
         // tf.setHeight("100%");
@@ -1069,6 +1078,7 @@ public class OrderedLayoutBasics extends TestBase {
         return ol;
     }
 
+    @SuppressWarnings("unused")
     private Layout layout_pctFilled2(AbstractOrderedLayout ol) {
         ol.setHeight("600px");
         ol.setWidth("600px");

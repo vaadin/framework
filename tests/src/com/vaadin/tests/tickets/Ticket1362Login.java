@@ -237,7 +237,7 @@ public class Ticket1362Login extends Application {
                     setUser(username);
                     currentUser.setValue(username);
                     currentUser.getWindow().showNotification("Logged in user: " + username);
-                    getMainWindow().getLayout().replaceComponent(loginBox, mainPanel);
+                    getMainWindow().getContent().replaceComponent(loginBox, mainPanel);
                     el.setExpandRatio(mainPanel, 1);
                 } else {
                     getMainWindow().showNotification("Wrong password. Hint, try '1234' ", Notification.TYPE_WARNING_MESSAGE);

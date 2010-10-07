@@ -4,6 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.Reindeer;
 
 public class Ticket2304 extends Application {
 
@@ -13,7 +14,7 @@ public class Ticket2304 extends Application {
         setMainWindow(main);
 
         Panel p = new Panel();
-        p.setStyleName(Panel.STYLE_LIGHT);
+        p.setStyleName(Reindeer.PANEL_LIGHT);
         main.addComponent(p);
         p.setHeight("100px");
 

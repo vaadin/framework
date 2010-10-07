@@ -2,8 +2,8 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.AbstractOrderedLayout;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.Window;
 
 public class Ticket2294 extends Application {
@@ -13,7 +13,7 @@ public class Ticket2294 extends Application {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
-        createUI((AbstractOrderedLayout) w.getLayout());
+        createUI((AbstractOrderedLayout) w.getContent());
     }
 
     private void createUI(AbstractOrderedLayout layout) {
@@ -26,14 +26,14 @@ public class Ticket2294 extends Application {
 
         layout.addComponent(label1);
         try {
-            layout.setComponentAlignment(label1, AlignmentHandler.ALIGNMENT_LEFT, AlignmentHandler.ALIGNMENT_BOTTOM);
+            layout.setComponentAlignment(label1, Alignment.BOTTOM_LEFT);
             result1 = "OK";
         } catch (Exception e) {
             result1 = "FAILED: " + e.getMessage();
         }
 
         try {
-            layout.setComponentAlignment(label2, AlignmentHandler.ALIGNMENT_LEFT, AlignmentHandler.ALIGNMENT_BOTTOM);
+            layout.setComponentAlignment(label2, Alignment.BOTTOM_LEFT);
             result2 = "FAILED, no exception";
         } catch (IllegalArgumentException e) {
             result2 = "OK";
@@ -42,7 +42,7 @@ public class Ticket2294 extends Application {
         }
 
         try {
-            layout.setComponentAlignment(label3, AlignmentHandler.ALIGNMENT_LEFT, AlignmentHandler.ALIGNMENT_BOTTOM);
+            layout.setComponentAlignment(label3, Alignment.BOTTOM_LEFT);
             result3 = "FAILED, no exception";
         } catch (IllegalArgumentException e) {
             result3 = "OK";

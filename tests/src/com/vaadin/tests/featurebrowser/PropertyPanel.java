@@ -28,6 +28,7 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
@@ -36,6 +37,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.Reindeer;
 
 public class PropertyPanel extends Panel implements Button.ClickListener, Property.ValueChangeListener {
 
@@ -60,7 +62,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener, Proper
     /** Contruct new property panel for configuring given object. */
     public PropertyPanel(Object objectToConfigure) {
         super();
-        getLayout().setMargin(false);
+        ((Layout) getContent()).setMargin(false);
 
         // Layout
         setCaption("Properties");
@@ -110,7 +112,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener, Proper
         // Create new panel containing the form
         final Panel p = new Panel();
         p.setCaption(propertySetCaption);
-        p.setStyleName(Panel.STYLE_LIGHT);
+        p.setStyleName(Reindeer.PANEL_LIGHT);
         p.addComponent(properties);
         formsLayout.addComponent(p);
 

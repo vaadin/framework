@@ -6,6 +6,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
@@ -15,7 +16,7 @@ public class Ticket1805 extends com.vaadin.Application {
     public void init() {
         final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
-        main.getLayout().setMargin(false);
+        ((Layout) main.getContent()).setMargin(false);
 
         Label description = new Label("GridLayout with 100% (no height), is wanted to " + "share all available width with columns " + "relatively to their natural width. And it " + "should still work with margins and spacings");
         main.addComponent(description);

@@ -52,6 +52,8 @@ import com.vaadin.Application.SystemMessages;
 import com.vaadin.external.org.apache.commons.fileupload.portlet.PortletFileUpload;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.Terminal;
+import com.vaadin.terminal.gwt.client.ApplicationConfiguration;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.ui.Window;
 
 /**

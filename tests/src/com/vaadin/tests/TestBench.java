@@ -208,7 +208,7 @@ public class TestBench extends com.vaadin.Application implements Property.ValueC
         try {
             final Application app = (Application) c.newInstance();
             app.init();
-            Layout lo = app.getMainWindow().getLayout();
+            Layout lo = (Layout) app.getMainWindow().getContent();
             lo.setParent(null);
             return lo;
         } catch (final Exception e) {

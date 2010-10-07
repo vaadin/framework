@@ -17,7 +17,7 @@ public class Ticket1969 extends com.vaadin.Application {
         final Window main = new Window(getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
-        main.getLayout().setSizeFull();
+        main.getContent().setSizeFull();
 
         TabSheet ts = new TabSheet();
         ts.setSizeFull();

@@ -24,7 +24,7 @@ public class Ticket1435 extends Application {
 
         final Window mainWin = new Window("ButtonPanel containing a table test");
         setMainWindow(mainWin);
-        ((AbstractOrderedLayout) mainWin.getLayout()).setSpacing(true);
+        ((AbstractOrderedLayout) mainWin.getContent()).setSpacing(true);
 
         ButtonPanel dataCardView1 = buildButtonPanel("My Tickets");
         ButtonPanel dataCardView2 = buildButtonPanel("My Tickets 2");
@@ -155,10 +155,10 @@ public class Ticket1435 extends Application {
         private void initContainer() {
             container.setStyleName("custompanel");
             container.setSizeFull();
-            container.getLayout().setMargin(false);
-            container.getLayout().setSizeFull();
+            ((Layout) container.getContent()).setMargin(false);
+            container.getContent().setSizeFull();
             root.addComponent(container);
-            root.setExpandRatio(container,1);
+            root.setExpandRatio(container, 1);
         }
 
         public void setHeight(int height, int unit) {
