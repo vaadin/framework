@@ -36,7 +36,6 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TabSheet;
@@ -68,21 +67,18 @@ public class RandomComponents {
 
         case 0:
             result = new HorizontalLayout();
-            ((OrderedLayout) result).setCaption("OrderedLayout_horizontal_"
-                    + caption);
+            ((HorizontalLayout) result).setCaption("OrderedLayout_horizontal_" + caption);
             break;
         case 1:
             result = new VerticalLayout();
-            ((OrderedLayout) result).setCaption("OrderedLayout_vertical_"
-                    + caption);
+            ((VerticalLayout) result).setCaption("OrderedLayout_vertical_" + caption);
             break;
         case 2:
             GridLayout gl;
             if (seededRandom.nextInt(1) > 0) {
                 gl = new GridLayout();
             } else {
-                gl = new GridLayout(seededRandom.nextInt(3) + 1,
-                        seededRandom.nextInt(3) + 1);
+                gl = new GridLayout(seededRandom.nextInt(3) + 1, seededRandom.nextInt(3) + 1);
             }
             gl.setCaption("GridLayout_" + caption);
             gl.setDescription(gl.getCaption());
@@ -110,7 +106,7 @@ public class RandomComponents {
                 if (selectedTab == i) {
                     tabCaption = "tabX";
                 }
-                tabs.add(new OrderedLayout());
+                tabs.add(new VerticalLayout());
                 ts.addTab(tabs.get(tabs.size() - 1), tabCaption, null);
             }
             ts.setSelectedTab(tabs.get(selectedTab));
@@ -170,12 +166,7 @@ public class RandomComponents {
             // Link
             result = new Panel();
             result.setCaption("Panel component " + caption);
-            ((Panel) result)
-                    .addComponent(new Label(
-                            "Panel is a container for other components, by default it draws a frame around it's "
-                                    + "extremities and may have a caption to clarify the nature of the contained components' purpose."
-                                    + " Panel contains an layout where the actual contained components are added, "
-                                    + "this layout may be switched on the fly."));
+            ((Panel) result).addComponent(new Label("Panel is a container for other components, by default it draws a frame around it's " + "extremities and may have a caption to clarify the nature of the contained components' purpose." + " Panel contains an layout where the actual contained components are added, " + "this layout may be switched on the fly."));
             ((Panel) result).setWidth(250);
             break;
         case 6:
@@ -193,65 +184,64 @@ public class RandomComponents {
             break;
         case 8:
             result = new VerticalLayout();
-            ((OrderedLayout) result).addComponent(new ButtonExample());
+            ((VerticalLayout) result).addComponent(new ButtonExample());
             break;
         case 9:
             result = new VerticalLayout();
-            ((OrderedLayout) result).addComponent(new ClientCachingExample());
+            ((VerticalLayout) result).addComponent(new ClientCachingExample());
             break;
         case 10:
             result = new VerticalLayout();
-            ((OrderedLayout) result).addComponent(new ComboBoxExample());
+            ((VerticalLayout) result).addComponent(new ComboBoxExample());
             break;
         case 11:
             result = new VerticalLayout();
             // TODO: disabled gwt bug with mixed up iframe's
-            ((OrderedLayout) result).addComponent(new EmbeddedBrowserExample());
+            ((VerticalLayout) result).addComponent(new EmbeddedBrowserExample());
             break;
         case 12:
             result = new VerticalLayout();
-            ((OrderedLayout) result).addComponent(new JavaScriptAPIExample());
+            ((VerticalLayout) result).addComponent(new JavaScriptAPIExample());
             break;
         case 13:
             result = new VerticalLayout();
-            ((OrderedLayout) result).addComponent(new LabelExample());
+            ((VerticalLayout) result).addComponent(new LabelExample());
             break;
         case 14:
             result = new VerticalLayout();
-            ((OrderedLayout) result).addComponent(new LayoutExample());
+            ((VerticalLayout) result).addComponent(new LayoutExample());
             break;
         case 15:
             result = new VerticalLayout();
-            ((OrderedLayout) result).addComponent(new NotificationExample());
+            ((VerticalLayout) result).addComponent(new NotificationExample());
             break;
         case 16:
             result = new VerticalLayout();
-            ((OrderedLayout) result).addComponent(new RichTextExample());
+            ((VerticalLayout) result).addComponent(new RichTextExample());
             break;
         case 17:
             result = new VerticalLayout();
-            ((OrderedLayout) result).addComponent(new SelectExample());
+            ((VerticalLayout) result).addComponent(new SelectExample());
             break;
         case 18:
             result = new VerticalLayout();
-            ((OrderedLayout) result).addComponent(new ValueInputExample());
+            ((VerticalLayout) result).addComponent(new ValueInputExample());
             break;
         case 19:
             result = new VerticalLayout();
-            ((OrderedLayout) result).addComponent(new WindowingExample());
+            ((VerticalLayout) result).addComponent(new WindowingExample());
             break;
         case 20:
             result = new VerticalLayout();
-            ((OrderedLayout) result).addComponent(new TreeExample());
+            ((VerticalLayout) result).addComponent(new TreeExample());
             break;
         case 21:
             result = new VerticalLayout();
-            ((OrderedLayout) result).addComponent(new TableExample());
+            ((VerticalLayout) result).addComponent(new TableExample());
             break;
         case 22:
             result = new VerticalLayout();
-            ((OrderedLayout) result)
-                    .addComponent(new StressComponentsInTable());
+            ((VerticalLayout) result).addComponent(new StressComponentsInTable());
             break;
         }
 
@@ -275,23 +265,18 @@ public class RandomComponents {
         return em;
     }
 
-    public class MultiListener implements Button.ClickListener,
-            PropertySetChangeListener, ItemSetChangeListener,
-            ValueChangeListener {
+    public class MultiListener implements Button.ClickListener, PropertySetChangeListener, ItemSetChangeListener, ValueChangeListener {
 
         public void buttonClick(ClickEvent event) {
-            System.out.println("ClickEvent from "
-                    + event.getButton().getCaption());
+            System.out.println("ClickEvent from " + event.getButton().getCaption());
         }
 
         public void containerPropertySetChange(PropertySetChangeEvent event) {
-            System.out.println("containerPropertySetChange from "
-                    + event.getContainer());
+            System.out.println("containerPropertySetChange from " + event.getContainer());
         }
 
         public void containerItemSetChange(ItemSetChangeEvent event) {
-            System.out.println("containerItemSetChange from "
-                    + event.getContainer());
+            System.out.println("containerItemSetChange from " + event.getContainer());
         }
 
         public void valueChange(ValueChangeEvent event) {

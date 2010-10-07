@@ -2,10 +2,10 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2151 extends Application {
@@ -17,10 +17,10 @@ public class Ticket2151 extends Application {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
-        createUI((OrderedLayout) w.getLayout());
+        createUI((AbstractOrderedLayout) w.getLayout());
     }
 
-    private void createUI(OrderedLayout layout) {
+    private void createUI(AbstractOrderedLayout layout) {
         Button b = new Button("This is a button");
         CheckBox cb = new CheckBox("This is a checkbox");
         cb.setImmediate(true);

@@ -10,6 +10,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -22,7 +23,6 @@ import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.SplitPanel;
@@ -40,7 +40,7 @@ public class Ticket2204 extends Application {
 
     @Override
     public void init() {
-        classes.add(OrderedLayout.class);
+        classes.add(AbstractOrderedLayout.class);
         classes.add(GridLayout.class);
         classes.add(Accordion.class);
         classes.add(TabSheet.class);
@@ -51,10 +51,10 @@ public class Ticket2204 extends Application {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
-        createUI((OrderedLayout) w.getLayout());
+        createUI((AbstractOrderedLayout) w.getLayout());
     }
 
-    private void createUI(OrderedLayout layout) {
+    private void createUI(AbstractOrderedLayout layout) {
         ts = new TabSheet();
         layout.addComponent(ts);
 

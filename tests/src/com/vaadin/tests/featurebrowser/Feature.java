@@ -9,8 +9,8 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Embedded;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 
@@ -80,8 +80,8 @@ public abstract class Feature extends CustomComponent {
         // Description tab
         final String title = getTitle();
         if (getDescriptionXHTML() != null) {
-            final OrderedLayout mainLayout = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
-            final OrderedLayout layout = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+            final VerticalLayout mainLayout = new VerticalLayout();
+            final HorizontalLayout layout = new HorizontalLayout();
             mainLayout.addComponent(layout);
             if (getImage() != null) {
                 layout.addComponent(new Embedded("", new ClassResource(getImage(), getApplication())));

@@ -8,8 +8,8 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
@@ -39,7 +39,7 @@ public class TestForContainerFilterable extends CustomComponent {
         }
 
         // Init filtering view
-        final Panel filterPanel = new Panel("Filter", new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
+        final Panel filterPanel = new Panel("Filter", new HorizontalLayout());
         filterPanel.setWidth(100, Panel.UNITS_PERCENTAGE);
         lo.addComponent(filterPanel);
         filterPanel.addComponent(fooFilter);

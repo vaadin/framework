@@ -3,8 +3,8 @@ package com.vaadin.tests.tickets;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Window;
 
@@ -22,7 +22,7 @@ public class Ticket1572 extends com.vaadin.Application {
 
         Panel p = new Panel("Test wrapper for gridlayout margin/spacing");
 
-        p.setLayout(new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
+        p.setLayout(new HorizontalLayout());
 
         gl = new GridLayout(3, 3);
         gl.setMargin(true);

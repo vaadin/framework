@@ -6,10 +6,10 @@ import com.vaadin.Application;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.terminal.UserError;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -57,7 +57,7 @@ public class Ticket2029 extends Application {
                 tf.setComponentError(new UserError("Error"));
             }
             tf.setWidth("100%");
-            layout.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT, OrderedLayout.ALIGNMENT_BOTTOM);
+            layout.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
             p.addComponent(tf);
 
         }
@@ -95,7 +95,7 @@ public class Ticket2029 extends Application {
                 tf.setComponentError(new UserError("Error"));
             }
             tf.setWidth("100%");
-            layout.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT, OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+            layout.setComponentAlignment(tf, Alignment.MIDDLE_LEFT);
             p.addComponent(tf);
 
         }
@@ -127,7 +127,7 @@ public class Ticket2029 extends Application {
             tf.setRows(2);
             tf.setSizeFull();
 
-            layout.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT, OrderedLayout.ALIGNMENT_BOTTOM);
+            layout.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
             p.addComponent(tf);
 
         }

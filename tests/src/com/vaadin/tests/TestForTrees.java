@@ -6,6 +6,7 @@ package com.vaadin.tests;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -13,7 +14,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
@@ -75,7 +75,7 @@ public class TestForTrees extends CustomComponent implements Handler {
         t.setCaption("with actions");
         t.setImmediate(true);
         t.addActionHandler(this);
-        final OrderedLayout ol = (OrderedLayout) createTestBench(t);
+        final AbstractOrderedLayout ol = (AbstractOrderedLayout) createTestBench(t);
         al = new Panel("action log");
         ol.addComponent(al);
         main.addComponent(ol);

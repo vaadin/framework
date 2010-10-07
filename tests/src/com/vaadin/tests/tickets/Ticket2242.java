@@ -6,10 +6,10 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
 
@@ -25,10 +25,10 @@ public class Ticket2242 extends Application implements ValueChangeListener {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
-        createUI((OrderedLayout) w.getLayout());
+        createUI((AbstractOrderedLayout) w.getLayout());
     }
 
-    private void createUI(OrderedLayout layout) {
+    private void createUI(AbstractOrderedLayout layout) {
         Button b = new Button("Change container datasource", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {

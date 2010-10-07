@@ -7,11 +7,10 @@ package com.vaadin.tests;
 import java.util.Collection;
 import java.util.Vector;
 
-import com.vaadin.ui.AbstractLayout;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
@@ -28,7 +27,7 @@ import com.vaadin.ui.VerticalLayout;
 public class TestSelectAndDatefieldInDeepLayouts extends CustomComponent {
 
     public TestSelectAndDatefieldInDeepLayouts() {
-        final OrderedLayout root = (OrderedLayout) getOrderedLayout();
+        final AbstractOrderedLayout root = getOrderedLayout();
         setCompositionRoot(root);
 
         root.addComponent(getSelect());
@@ -44,7 +43,7 @@ public class TestSelectAndDatefieldInDeepLayouts extends CustomComponent {
         p1.addComponent(getSelect());
         p1.addComponent(getDateField());
 
-        final OrderedLayout l1 = (OrderedLayout) getOrderedLayout();
+        final AbstractOrderedLayout l1 = getOrderedLayout();
         p1.addComponent(l1);
 
         l1.addComponent(getSelect());
@@ -62,7 +61,7 @@ public class TestSelectAndDatefieldInDeepLayouts extends CustomComponent {
 
     }
 
-    AbstractLayout getOrderedLayout() {
+    VerticalLayout getOrderedLayout() {
         final VerticalLayout l = new VerticalLayout();
         l.setCaption(getCaption("orderedlayout"));
         return l;

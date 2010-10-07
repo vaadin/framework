@@ -5,8 +5,6 @@
 package com.vaadin.tests.featurebrowser;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Form;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -30,11 +28,15 @@ public class FeatureOrderedLayout extends Feature {
 
         // Properties
         propertyPanel = new PropertyPanel(ol);
-        final Form ap = propertyPanel.createBeanPropertySet(new String[] { "orientation" });
-        ap.replaceWithSelect("orientation", new Object[] { new Integer(OrderedLayout.ORIENTATION_HORIZONTAL), new Integer(OrderedLayout.ORIENTATION_VERTICAL) }, new Object[] { "Horizontal", "Vertical" });
+        // final Form ap = propertyPanel.createBeanPropertySet(new String[] {
+        // "orientation" });
+        // ap.replaceWithSelect("orientation", new Object[] { new
+        // Integer(AbstractOrderedLayout.ORIENTATION_HORIZONTAL), new
+        // Integer(AbstractOrderedLayout.ORIENTATION_VERTICAL) }, new Object[] {
+        // "Horizontal", "Vertical" });
         final Select themes = (Select) propertyPanel.getField("style");
         themes.addItem("form").getItemProperty(themes.getItemCaptionPropertyId()).setValue("form");
-        propertyPanel.addProperties("OrderedLayout Properties", ap);
+        // propertyPanel.addProperties("OrderedLayout Properties", ap);
 
         setJavadocURL("ui/OrderedLayout.html");
 
@@ -43,7 +45,7 @@ public class FeatureOrderedLayout extends Feature {
 
     @Override
     protected String getExampleSrc() {
-        return "OrderedLayout ol = new OrderedLayout(OrderedLayout.ORIENTATION_FLOW);\n" + "ol.addComponent(new TextField(\"Textfield caption\"));\n" + "ol.addComponent(new Label(\"Label\"));\n";
+        return "OrderedLayout ol = new OrderedLayout(AbstractOrderedLayout.ORIENTATION_FLOW);\n" + "ol.addComponent(new TextField(\"Textfield caption\"));\n" + "ol.addComponent(new Label(\"Label\"));\n";
 
     }
 

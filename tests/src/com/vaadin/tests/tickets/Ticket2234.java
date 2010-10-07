@@ -2,8 +2,8 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.data.Item;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2234 extends Application {
@@ -13,10 +13,10 @@ public class Ticket2234 extends Application {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
-        createUI((OrderedLayout) w.getLayout());
+        createUI((AbstractOrderedLayout) w.getLayout());
     }
 
-    private void createUI(OrderedLayout layout) {
+    private void createUI(AbstractOrderedLayout layout) {
         ComboBox combo = new ComboBox("Combobox caption");
         combo.addContainerProperty("blah", String.class, "");
         combo.setItemCaptionPropertyId("blah");

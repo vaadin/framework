@@ -3,8 +3,8 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.UserError;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -33,14 +33,14 @@ public class Ticket1966_3 extends Application {
         tf.setWidth("100px");
 
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT, OrderedLayout.ALIGNMENT_TOP);
+        ol.setComponentAlignment(tf, Alignment.TOP_RIGHT);
 
         tf = new TextField("Short caption");
         tf.setWidth("100px");
 
         tf.setComponentError(new UserError("error message"));
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT, OrderedLayout.ALIGNMENT_TOP);
+        ol.setComponentAlignment(tf, Alignment.TOP_RIGHT);
 
         tf = new TextField("Short caption");
         tf.setComponentError(new UserError("error message"));
@@ -49,14 +49,14 @@ public class Ticket1966_3 extends Application {
 
         tf.setComponentError(new UserError("error message"));
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT, OrderedLayout.ALIGNMENT_TOP);
+        ol.setComponentAlignment(tf, Alignment.TOP_RIGHT);
 
         tf = new TextField();
         tf.setValue("No caption");
         tf.setWidth("100px");
 
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT, OrderedLayout.ALIGNMENT_TOP);
+        ol.setComponentAlignment(tf, Alignment.TOP_RIGHT);
 
         layout.addComponent(p);
     }

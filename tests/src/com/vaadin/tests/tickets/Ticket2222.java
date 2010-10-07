@@ -1,10 +1,10 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -15,10 +15,10 @@ public class Ticket2222 extends Application {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);
         setTheme("tests-tickets");
-        createUI((OrderedLayout) w.getLayout());
+        createUI((AbstractOrderedLayout) w.getLayout());
     }
 
-    private void createUI(OrderedLayout layout) {
+    private void createUI(AbstractOrderedLayout layout) {
         HorizontalLayout horiz = new HorizontalLayout();
         horiz.setSpacing(true);
         horiz.setMargin(true);

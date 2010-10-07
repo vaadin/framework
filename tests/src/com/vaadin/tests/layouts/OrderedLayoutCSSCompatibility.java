@@ -1,7 +1,7 @@
 package com.vaadin.tests.layouts;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 
 public class OrderedLayoutCSSCompatibility extends TestBase {
@@ -18,8 +18,7 @@ public class OrderedLayoutCSSCompatibility extends TestBase {
 
     @Override
     protected void setup() {
-        OrderedLayout l = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout l = new HorizontalLayout();
         l.setMargin(true);
         l.setSpacing(true);
         l.addComponent(new TextField("abc"));

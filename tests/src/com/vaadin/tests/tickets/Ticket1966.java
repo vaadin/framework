@@ -1,47 +1,27 @@
 package com.vaadin.tests.tickets;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.vaadin.Application;
 import com.vaadin.ui.AbstractOrderedLayout;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.AlignmentHandler;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket1966 extends Application {
 
-    private static final int LEFT = OrderedLayout.ALIGNMENT_LEFT;
-    private static final int CENTER = OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER;
-    private static final int RIGHT = OrderedLayout.ALIGNMENT_RIGHT;
-    private static final int TOP = OrderedLayout.ALIGNMENT_TOP;
-    private static final int VCENTER = OrderedLayout.ALIGNMENT_VERTICAL_CENTER;
-    private static final int BOTTOM = OrderedLayout.ALIGNMENT_BOTTOM;
-
-    private static Map<Integer, String> names = new HashMap<Integer, String>();
-    static {
-        names.put(new Integer(LEFT), "Left");
-        names.put(new Integer(CENTER), "Center");
-        names.put(new Integer(RIGHT), "Right");
-        names.put(new Integer(BOTTOM), "Bottom");
-        names.put(new Integer(VCENTER), "Vcenter");
-        names.put(new Integer(TOP), "Top");
-    }
-
     @Override
     public void init() {
         Window w = new Window(getClass().getName());
         setMainWindow(w);
         // setTheme("tests-tickets");
-        w.setLayout(new GridLayout(2, 2));
+        w.setContent(new GridLayout(2, 2));
         // w.getLayout().setSizeFull();
-        createUI(w.getLayout());
+        createUI((Layout) w.getContent());
     }
 
     private void createUI(Layout layout) {
@@ -104,7 +84,7 @@ public class Ticket1966 extends Application {
 
         addButtons(ol);
         b = new Button("High button");
-        b.setHeight(200);
+        b.setHeight("200px");
         ol.addComponent(b);
 
         p.addComponent(ol);
@@ -112,16 +92,16 @@ public class Ticket1966 extends Application {
     }
 
     private void addButtons(Layout ol) {
-        ol.addComponent(getButton(ol, LEFT, TOP));
-        ol.addComponent(getButton(ol, CENTER, VCENTER));
-        ol.addComponent(getButton(ol, RIGHT, BOTTOM));
+        ol.addComponent(getButton(ol, Alignment.TOP_LEFT));
+        ol.addComponent(getButton(ol, Alignment.MIDDLE_CENTER));
+        ol.addComponent(getButton(ol, Alignment.BOTTOM_RIGHT));
 
     }
 
-    private Button getButton(Layout l, int hAlign, int vAlign) {
-        Button b = new Button("Narrow Button - " + names.get(new Integer(hAlign)) + " - " + names.get(new Integer(vAlign)));
+    private Button getButton(Layout l, Alignment align) {
+        Button b = new Button("Narrow Button - " + align.getHorizontalAlignment() + " - " + align.getVerticalAlignment());
         b.setWidth("100px");
-        ((AlignmentHandler) l).setComponentAlignment(b, hAlign, vAlign);
+        ((AlignmentHandler) l).setComponentAlignment(b, align);
 
         return b;
 

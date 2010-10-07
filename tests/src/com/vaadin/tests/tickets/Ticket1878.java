@@ -10,6 +10,7 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.UserError;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -21,7 +22,6 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.AlignmentHandler;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -87,15 +87,15 @@ public class Ticket1878 extends Application {
         GridLayout layout = new GridLayout(1, 5);
 
         GridLayout l1 = new GridLayout(1, 3);
-        createLayout(l1, new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL), "1000px", "150px", "100%", null, true);
-        createLayout(l1, new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL), "1000px", "150px", "50px", null, false);
+        createLayout(l1, new HorizontalLayout(), "1000px", "150px", "100%", null, true);
+        createLayout(l1, new HorizontalLayout(), "1000px", "150px", "50px", null, false);
         GridLayout l2 = new GridLayout(6, 1);
-        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL), "200px", "500px", true);
-        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL), "200px", "500px", "100%", null, true);
-        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL), "150px", "500px", true);
-        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL), "150px", "500px", "100%", null, true);
-        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL), "100px", "500px", true);
-        createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL), "100px", "500px", "100%", null, true);
+        createLayout(l2, new VerticalLayout(), "200px", "500px", true);
+        createLayout(l2, new VerticalLayout(), "200px", "500px", "100%", null, true);
+        createLayout(l2, new VerticalLayout(), "150px", "500px", true);
+        createLayout(l2, new VerticalLayout(), "150px", "500px", "100%", null, true);
+        createLayout(l2, new VerticalLayout(), "100px", "500px", true);
+        createLayout(l2, new VerticalLayout(), "100px", "500px", "100%", null, true);
         layout.addComponent(l1);
         layout.addComponent(l2);
 
@@ -243,19 +243,19 @@ public class Ticket1878 extends Application {
     }
 
     private static void createLayout(GridLayout parentLayout, Layout newLayout, String w, String h, String componentWidth, String componentHeight, boolean align) {
-        int dir;
+        String dirText = "V";
         String type;
         if (newLayout instanceof VerticalLayout) {
-            dir = OrderedLayout.ORIENTATION_VERTICAL;
             type = "OL";
-        } else if (newLayout instanceof OrderedLayout) {
-            dir = OrderedLayout.ORIENTATION_HORIZONTAL;
+        } else if (newLayout instanceof HorizontalLayout) {
+            dirText = "H";
             type = "OL";
         } else {
-            dir = ((GridLayout) newLayout).getColumns() == 1 ? OrderedLayout.ORIENTATION_VERTICAL : OrderedLayout.ORIENTATION_HORIZONTAL;
+            if (((GridLayout) newLayout).getColumns() != 1) {
+                dirText = "H";
+            }
             type = "GL";
         }
-        String dirText = (dir == OrderedLayout.ORIENTATION_HORIZONTAL ? "H" : "V");
         String alignText = align ? "-A" : "";
         String cWidth = componentWidth == null ? "" : " - " + componentWidth;
         Panel p = new Panel(type + "/" + dirText + alignText + " " + w + "x" + h + cWidth, newLayout);
@@ -288,7 +288,7 @@ public class Ticket1878 extends Application {
                     p.addComponent(tf);
 
                     if (align) {
-                        ((AlignmentHandler) newLayout).setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT, OrderedLayout.ALIGNMENT_BOTTOM);
+                        ((AlignmentHandler) newLayout).setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
                     }
                 }
             }

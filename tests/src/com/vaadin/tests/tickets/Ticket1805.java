@@ -2,6 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -43,7 +44,7 @@ public class Ticket1805 extends com.vaadin.Application {
         grid.addComponent(new Label("VEEEEEEEEEEERY_WIDE"));
         Label label = new Label("|");
         grid.addComponent(label);
-        grid.setComponentAlignment(label, GridLayout.ALIGNMENT_RIGHT, GridLayout.ALIGNMENT_TOP);
+        grid.setComponentAlignment(label, Alignment.TOP_RIGHT);
         main.addComponent(grid);
     }
 

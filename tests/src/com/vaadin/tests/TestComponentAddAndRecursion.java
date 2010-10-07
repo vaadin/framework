@@ -8,7 +8,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -44,9 +43,9 @@ public class TestComponentAddAndRecursion extends CustomComponent {
         Button b = new Button("use gridlayout", new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                p.setLayout(new GridLayout());
-                p2.setLayout(new GridLayout());
-                p3.setLayout(new GridLayout());
+                p.setContent(new GridLayout());
+                p2.setContent(new GridLayout());
+                p3.setContent(new GridLayout());
             }
 
         });
@@ -54,9 +53,9 @@ public class TestComponentAddAndRecursion extends CustomComponent {
         b = new Button("use orderedlayout", new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                p.setLayout(new OrderedLayout());
-                p2.setLayout(new OrderedLayout());
-                p3.setLayout(new OrderedLayout());
+                p.setContent(new VerticalLayout());
+                p2.setContent(new VerticalLayout());
+                p3.setContent(new VerticalLayout());
             }
 
         });

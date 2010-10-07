@@ -4,11 +4,11 @@
 
 package com.vaadin.tests;
 
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -33,20 +33,20 @@ public class TestForAlignments extends CustomComponent {
         vert.addComponent(t1);
         vert.addComponent(d1);
         // vert.getSize().setWidth(500);
-        vert.setComponentAlignment(b1, OrderedLayout.ALIGNMENT_RIGHT, OrderedLayout.ALIGNMENT_TOP);
-        vert.setComponentAlignment(b2, OrderedLayout.ALIGNMENT_LEFT, OrderedLayout.ALIGNMENT_TOP);
-        vert.setComponentAlignment(t1, OrderedLayout.ALIGNMENT_RIGHT, OrderedLayout.ALIGNMENT_TOP);
-        vert.setComponentAlignment(d1, OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER, OrderedLayout.ALIGNMENT_TOP);
+        vert.setComponentAlignment(b1, Alignment.TOP_RIGHT);
+        vert.setComponentAlignment(b2, Alignment.TOP_LEFT);
+        vert.setComponentAlignment(t1, Alignment.TOP_RIGHT);
+        vert.setComponentAlignment(d1, Alignment.TOP_CENTER);
         final HorizontalLayout hori = new HorizontalLayout();
         hori.addComponent(b3);
         hori.addComponent(b4);
         hori.addComponent(t2);
         hori.addComponent(d2);
         // hori.getSize().setHeight(200);
-        hori.setComponentAlignment(b3, OrderedLayout.ALIGNMENT_LEFT, OrderedLayout.ALIGNMENT_BOTTOM);
-        hori.setComponentAlignment(b4, OrderedLayout.ALIGNMENT_LEFT, OrderedLayout.ALIGNMENT_TOP);
-        hori.setComponentAlignment(t2, OrderedLayout.ALIGNMENT_LEFT, OrderedLayout.ALIGNMENT_BOTTOM);
-        hori.setComponentAlignment(d2, OrderedLayout.ALIGNMENT_LEFT, OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+        hori.setComponentAlignment(b3, Alignment.BOTTOM_LEFT);
+        hori.setComponentAlignment(b4, Alignment.TOP_LEFT);
+        hori.setComponentAlignment(t2, Alignment.BOTTOM_LEFT);
+        hori.setComponentAlignment(d2, Alignment.MIDDLE_LEFT);
 
         main.addComponent(vert);
         main.addComponent(hori);
