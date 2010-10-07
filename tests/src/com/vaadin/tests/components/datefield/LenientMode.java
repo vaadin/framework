@@ -26,6 +26,7 @@ public class LenientMode extends TestBase implements ValueChangeListener {
     @Override
     protected void setup() {
 
+        @SuppressWarnings("deprecation")
         Date d = new Date(2009 - 1900, 12 - 1, 31, 23, 59, 59);
 
         DateField df = new DateField("Lenient ");

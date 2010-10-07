@@ -26,8 +26,8 @@ public class FeatureEmbedded extends Feature {
         final Embedded emb = new Embedded("Embedded Caption", flashResource);
         emb.setType(Embedded.TYPE_OBJECT);
         emb.setMimeType("application/x-shockwave-flash");
-        emb.setWidth(250);
-        emb.setHeight(100);
+        emb.setWidth("250px");
+        emb.setHeight("100px");
         l.addComponent(emb);
 
         // Properties

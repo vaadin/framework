@@ -117,13 +117,13 @@ public class FeatureForm extends Feature implements
                     final DateField d = new DateField("Time", new Date());
                     d.setDescription("This is a DateField-component with text-style");
                     d.setResolution(DateField.RESOLUTION_MIN);
-                    d.setStyle("text");
+                    d.setStyleName("text");
                     test.addField(new Object(), d);
                 }
                 if (value.equals("Calendar")) {
                     final DateField c = new DateField("Calendar", new Date());
                     c.setDescription("DateField-component with calendar-style and day-resolution");
-                    c.setStyle("calendar");
+                    c.setStyleName("calendar");
                     c.setResolution(DateField.RESOLUTION_DAY);
                     test.addField(new Object(), c);
                 }
@@ -134,7 +134,7 @@ public class FeatureForm extends Feature implements
                     s.addItem("Windows");
                     s.addItem("Solaris");
                     s.addItem("Symbian");
-                    s.setStyle("optiongroup");
+                    s.setStyleName("optiongroup");
 
                     test.addField(new Object(), s);
                 }

@@ -112,7 +112,7 @@ public class LayoutDemo extends com.vaadin.Application {
         // loads image from package com.vaadin.demo
         final ClassResource cr = new ClassResource("m-bullet-blue.gif", this);
         final Embedded em = new Embedded("Embedded " + caption, cr);
-        em.setWidth(170);
+        em.setWidth("170px");
         return em;
     }
 
@@ -125,7 +125,7 @@ public class LayoutDemo extends com.vaadin.Application {
                         + " Panel contains an layout where the actual contained components are added, "
                         + "this layout may be switched on the fly.",
                 Label.CONTENT_XHTML));
-        panel.setWidth(222);
+        panel.setWidth("222px");
         return panel;
     }
 

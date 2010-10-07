@@ -114,7 +114,6 @@ public class RemoveTabs extends TestBase {
         tabsheet.removeComponent(tabsheet.getComponentIterator().next());
     }
 
-    @SuppressWarnings("unchecked")
     private void closeLastTab() {
         Iterator<Component> i = tabsheet.getComponentIterator();
         Component last = null;
@@ -125,7 +124,6 @@ public class RemoveTabs extends TestBase {
         tabsheet.removeComponent(last);
     }
 
-    @SuppressWarnings("unchecked")
     private void reorder() {
         AbstractComponentContainer container = tabsheet;
 

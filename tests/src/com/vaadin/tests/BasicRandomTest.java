@@ -45,7 +45,6 @@ import com.vaadin.ui.Window;
  * @author IT Mill Ltd.
  * 
  */
-@SuppressWarnings("unchecked")
 public class BasicRandomTest extends com.vaadin.Application implements
         Button.ClickListener {
 
@@ -127,7 +126,7 @@ public class BasicRandomTest extends com.vaadin.Application implements
 
         final HorizontalLayout setupLayout = new HorizontalLayout();
         final Panel statusPanel = new Panel("Status");
-        statusPanel.setWidth(200);
+        statusPanel.setWidth("200px");
         setupLayout.addComponent(statusPanel);
         statusPanel.addComponent(statusLabel);
         setupLayout.addComponent(randomSeedValue);

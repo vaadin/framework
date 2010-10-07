@@ -152,8 +152,8 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
         ol2.addComponent(commit);
         status.addComponent(ol2);
 
-        status.setHeight(300);
-        status.setWidth(400);
+        status.setHeight("300px");
+        status.setWidth("400px");
 
         ol.addComponent(status);
 

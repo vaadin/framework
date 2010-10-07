@@ -105,8 +105,8 @@ public class Ticket2009 extends com.vaadin.Application {
             addComponent(editor);
             addComponent(done);
 
-            setWidth(W);
-            setHeight(H);
+            setWidth(W + "px");
+            setHeight(H + "px");
 
             setPositionX(event.getClientX() - W / 2);
             setPositionY(event.getClientY() - H / 2);

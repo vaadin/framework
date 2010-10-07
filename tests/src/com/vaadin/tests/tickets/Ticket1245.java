@@ -40,7 +40,7 @@ class TreeExample extends CustomComponent {
 
         // Panel w/ Tree
         main.setStyleName(Reindeer.PANEL_LIGHT);
-        main.setWidth(200);
+        main.setWidth("200px");
         // // Description, this is needed. Works in first slot
         main.addComponent(new Label(desc));
 

@@ -20,6 +20,7 @@ public class TestDatefieldYear extends TestBase {
 
     @Override
     protected void setup() {
+        @SuppressWarnings("deprecation")
         DateField df = new DateField("Year", new Date(2009 - 1900, 4 - 1, 1));
         df.setLocale(new Locale("en", "US"));
         df.setResolution(DateField.RESOLUTION_YEAR);

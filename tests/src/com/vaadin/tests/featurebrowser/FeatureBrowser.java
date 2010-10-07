@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import com.vaadin.data.Property;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -50,7 +49,7 @@ public class FeatureBrowser extends CustomComponent implements
         features.setItemCaptionPropertyId("name");
         features.addListener(this);
         features.setImmediate(true);
-        features.setStyle("menu");
+        features.setStyleName("menu");
 
         // Configure component layout
         mainlayout = new CustomLayout("featurebrowser-mainlayout");
@@ -67,7 +66,7 @@ public class FeatureBrowser extends CustomComponent implements
 
         // Restart button
         final Button close = new Button("restart", getApplication(), "close");
-        close.setStyle("link");
+        close.setStyleName("link");
         mainlayout.addComponent(close, "restart");
 
         // Test component
@@ -163,15 +162,15 @@ public class FeatureBrowser extends CustomComponent implements
         // FIXME: navigation statistics
         try {
             if ((event.getProperty().toString() == null)
-                    && ((AbstractComponent) event.getProperty()).getTag()
-                            .equals("tree")) {
+                    && (event.getProperty() instanceof Tree)) {
                 // ignore tree initialization
             } else {
                 FeatureUtil.debug(
                         getApplication().getUser().toString(),
                         "valueChange "
-                                + ((AbstractComponent) event.getProperty())
-                                        .getTag() + ", " + event.getProperty());
+                                + event.getProperty().getClass()
+                                        .getSimpleName() + ", "
+                                + event.getProperty());
             }
         } catch (final Exception e) {
             // ignored, should never happen
@@ -213,8 +212,9 @@ public class FeatureBrowser extends CustomComponent implements
         // FIXME: navigation statistics
         try {
             FeatureUtil.debug(getApplication().getUser().toString(),
-                    "buttonClick " + event.getButton().getTag() + ", "
-                            + event.getButton().getCaption() + ", "
+                    "buttonClick "
+                            + event.getButton().getClass().getSimpleName()
+                            + ", " + event.getButton().getCaption() + ", "
                             + event.getButton().getValue());
         } catch (final Exception e) {
             // ignored, should never happen

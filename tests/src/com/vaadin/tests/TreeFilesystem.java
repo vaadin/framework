@@ -42,7 +42,7 @@ public class TreeFilesystem extends com.vaadin.Application implements
         // configure file structure panel
         main.addComponent(explorerPanel);
         explorerPanel.addComponent(tree);
-        explorerPanel.setHeight(400);
+        explorerPanel.setHeight("400px");
 
         // "this" handles tree's expand event
         tree.addListener(this);

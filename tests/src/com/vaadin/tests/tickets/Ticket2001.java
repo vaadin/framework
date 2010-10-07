@@ -23,7 +23,11 @@ public class Ticket2001 extends Application {
         final Button b = new Button("fixed width: 30px", false);
         b.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                l.setWidth(b.booleanValue() ? 30 : -1);
+                if (b.booleanValue()) {
+                    l.setWidth("30px");
+                } else {
+                    l.setWidth(null);
+                }
             }
         });
         b.setImmediate(true);

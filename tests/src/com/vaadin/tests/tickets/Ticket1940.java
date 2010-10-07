@@ -13,8 +13,8 @@ public class Ticket1940 extends Application {
         setMainWindow(w);
 
         final VerticalLayout l = new VerticalLayout();
-        l.setWidth(200);
-        l.setHeight(-1);
+        l.setWidth("200px");
+        l.setHeight(null);
         TextField t = new TextField();
         l.addComponent(t);
         t.setRequired(true);

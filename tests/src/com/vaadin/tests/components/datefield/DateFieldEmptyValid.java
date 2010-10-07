@@ -63,6 +63,7 @@ public class DateFieldEmptyValid extends TestBase {
         b = new Button("Set date to 4.5.1990");
         b.addListener(new ClickListener() {
 
+            @SuppressWarnings("deprecation")
             public void buttonClick(ClickEvent event) {
                 df.setValue(new Date(1990 - 1900, 5 - 1, 4));
             }
@@ -72,6 +73,7 @@ public class DateFieldEmptyValid extends TestBase {
         b = new Button("Set date to 5.6.2000 using a property data source");
         b.addListener(new ClickListener() {
 
+            @SuppressWarnings("deprecation")
             public void buttonClick(ClickEvent event) {
                 ObjectProperty<Date> dfProp = new ObjectProperty<Date>(
                         new Date(2000 - 1900, 6 - 1, 5), Date.class);
@@ -84,6 +86,7 @@ public class DateFieldEmptyValid extends TestBase {
                 "Set date to 27.8.2005 by changing a property data source from null");
         b.addListener(new ClickListener() {
 
+            @SuppressWarnings("deprecation")
             public void buttonClick(ClickEvent event) {
                 ObjectProperty<Date> dfProp = new ObjectProperty<Date>(null,
                         Date.class);

@@ -20,7 +20,7 @@ public class IntroTerminal extends Feature {
         final VerticalLayout l = new VerticalLayout();
 
         final Label lab = new Label();
-        lab.setStyle("featurebrowser-none");
+        lab.setStyleName("featurebrowser-none");
         l.addComponent(lab);
 
         // Properties

@@ -10,6 +10,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
@@ -131,7 +132,7 @@ public class Ticket677 extends Application {
             p.setValue(i % 5 == 0 ? "enabled" : "disabled");
         }
 
-        table.setFieldFactory(new BaseFieldFactory() {
+        table.setTableFieldFactory(new DefaultFieldFactory() {
 
             @Override
             public Field createField(Container container, Object itemId,

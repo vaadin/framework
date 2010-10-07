@@ -67,7 +67,7 @@ public class TestForMultipleStyleNames extends CustomComponent implements
 
     public void valueChange(ValueChangeEvent event) {
 
-        final String currentStyle = l.getStyle();
+        final String currentStyle = l.getStyleName();
         final String[] tmp = currentStyle.split(" ");
         final ArrayList<String> curStyles = new ArrayList<String>();
         for (int i = 0; i < tmp.length; i++) {

@@ -1,8 +1,5 @@
 package com.vaadin.tests.components.tree;
 
-import java.io.IOException;
-import java.io.StringBufferInputStream;
-
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomLayout;
@@ -29,11 +26,7 @@ public class ItemStyleGenerator extends TestBase {
 
     @Override
     protected void setup() {
-        try {
-            styles = new CustomLayout(new StringBufferInputStream(css));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        styles = new CustomLayout(css);
         addComponent(styles);
 
         Tree tree = new Tree();

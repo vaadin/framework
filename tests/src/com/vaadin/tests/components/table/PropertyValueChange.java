@@ -7,15 +7,15 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractSelect.NewItemHandler;
-import com.vaadin.ui.BaseFieldFactory;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
-import com.vaadin.ui.FieldFactory;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
+import com.vaadin.ui.TableFieldFactory;
 
 public class PropertyValueChange extends TestBase {
 
@@ -65,7 +65,7 @@ public class PropertyValueChange extends TestBase {
         }
     };
 
-    FieldFactory ff = new MyFieldFactory();
+    TableFieldFactory ff = new MyFieldFactory();
 
     @Override
     public void setup() {
@@ -86,7 +86,7 @@ public class PropertyValueChange extends TestBase {
         t1.setPageLength(0);
         t1.setContainerDataSource(container);
         t1.addGeneratedColumn("integer x 3", multiplier);
-        t1.setFieldFactory(ff);
+        t1.setTableFieldFactory(ff);
         t1.setEditable(true);
         t1.setDebugId("editortable");
 
@@ -95,7 +95,7 @@ public class PropertyValueChange extends TestBase {
         t2.setDescription("This table is in editable mode."
                 + " Updates to common datasource should not affect redraw for this "
                 + "table. Only the components inside table should get updated.");
-        t2.setFieldFactory(ff);
+        t2.setTableFieldFactory(ff);
         t2.setEditable(true);
         t2.setEnabled(false);
         t2.setContainerDataSource(container);
@@ -119,7 +119,7 @@ public class PropertyValueChange extends TestBase {
     }
 }
 
-class MyFieldFactory extends BaseFieldFactory {
+class MyFieldFactory extends DefaultFieldFactory {
 
     IndexedContainer texts = new IndexedContainer();
 

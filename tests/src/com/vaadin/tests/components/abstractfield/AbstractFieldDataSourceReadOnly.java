@@ -17,6 +17,7 @@ public class AbstractFieldDataSourceReadOnly extends TestBase {
             return textField;
         }
 
+        @SuppressWarnings("unused")
         public void setTextField(ObjectProperty<String> textField) {
             this.textField = textField;
         }

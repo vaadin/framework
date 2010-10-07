@@ -30,7 +30,7 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         click = new Button("Set height -1", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                tab.setHeight(-1);
+                tab.setHeight(null);
             }
 
         });

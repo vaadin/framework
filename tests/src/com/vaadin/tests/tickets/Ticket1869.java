@@ -20,7 +20,7 @@ public class Ticket1869 extends com.vaadin.Application {
         VerticalLayout el = new VerticalLayout();
         Panel elp = new Panel(
                 "Vertical ExpandLayout /w first component expanded", el);
-        el.setHeight(1000);
+        el.setHeight("1000px");
         for (int i = 0; i < 3; i++) {
             Button b = new Button("x");
             el.addComponent(b);
@@ -30,14 +30,14 @@ public class Ticket1869 extends com.vaadin.Application {
             }
         }
         lo.addComponent(elp);
-        elp.setWidth(300);
-        elp.setHeight(300);
+        elp.setWidth("300px");
+        elp.setHeight("300px");
         elp.setScrollable(true);
 
         HorizontalLayout elh = new HorizontalLayout();
         Panel elph = new Panel(
                 "Horizontal ExpandLayout /w first component expanded", elh);
-        elh.setWidth(1000);
+        elh.setWidth("1000px");
         for (int i = 0; i < 3; i++) {
             Button b = new Button("x");
             elh.addComponent(b);
@@ -47,8 +47,8 @@ public class Ticket1869 extends com.vaadin.Application {
             }
         }
         lo.addComponent(elph);
-        elph.setWidth(300);
-        elph.setHeight(300);
+        elph.setWidth("300px");
+        elph.setHeight("300px");
         elph.setScrollable(true);
 
     }

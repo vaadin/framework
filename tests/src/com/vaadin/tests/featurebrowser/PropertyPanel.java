@@ -19,7 +19,6 @@ import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.UserError;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
@@ -344,11 +343,10 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
         // FIXME: navigation statistics
         try {
-            FeatureUtil.debug(
-                    getApplication().getUser().toString(),
+            FeatureUtil.debug(getApplication().getUser().toString(),
                     "valueChange "
-                            + ((AbstractComponent) event.getProperty())
-                                    .getTag() + ", " + event.getProperty());
+                            + event.getProperty().getClass().getSimpleName()
+                            + ", " + event.getProperty());
         } catch (final Exception e) {
             // ignored, should never happen
         }
@@ -421,8 +419,9 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
         // FIXME: navigation statistics
         try {
             FeatureUtil.debug(getApplication().getUser().toString(),
-                    "buttonClick " + event.getButton().getTag() + ", "
-                            + event.getButton().getCaption() + ", "
+                    "buttonClick "
+                            + event.getButton().getClass().getSimpleName()
+                            + ", " + event.getButton().getCaption() + ", "
                             + event.getButton().getValue());
         } catch (final Exception e) {
             // ignored, should never happen

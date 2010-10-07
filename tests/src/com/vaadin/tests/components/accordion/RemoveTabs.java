@@ -95,7 +95,6 @@ public class RemoveTabs extends TestBase {
         accordion.removeComponent(accordion.getComponentIterator().next());
     }
 
-    @SuppressWarnings("unchecked")
     private void closeLastTab() {
         Iterator<Component> i = accordion.getComponentIterator();
         Component last = null;
@@ -106,7 +105,6 @@ public class RemoveTabs extends TestBase {
         accordion.removeComponent(last);
     }
 
-    @SuppressWarnings("unchecked")
     private void reorder() {
         AbstractComponentContainer container = accordion;
 

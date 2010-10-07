@@ -16,12 +16,11 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.BaseFieldFactory;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
-import com.vaadin.ui.FieldFactory;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -31,7 +30,7 @@ import com.vaadin.ui.Window;
 
 public class TestAbsoluteLayout extends TestBase {
 
-    private static class MFieldFactory extends BaseFieldFactory {
+    private static class MFieldFactory extends DefaultFieldFactory {
 
         @Override
         public Field createField(Item item, Object propertyId,
@@ -61,7 +60,7 @@ public class TestAbsoluteLayout extends TestBase {
 
         private static MFieldFactory instance;
 
-        public static FieldFactory get() {
+        public static DefaultFieldFactory get() {
             if (instance == null) {
                 instance = new MFieldFactory();
             }
@@ -269,13 +268,13 @@ public class TestAbsoluteLayout extends TestBase {
             componentEditor = new Form();
             componentEditor.setWriteThrough(false);
             componentEditor.setCaption("Component properties:");
-            componentEditor.setFieldFactory(MFieldFactory.get());
+            componentEditor.setFormFieldFactory(MFieldFactory.get());
             addComponent(componentEditor);
 
             positionEditor = new Form();
             positionEditor.setCaption("Component position");
             positionEditor.setWriteThrough(false);
-            positionEditor.setFieldFactory(MFieldFactory.get());
+            positionEditor.setFormFieldFactory(MFieldFactory.get());
             addComponent(positionEditor);
 
             Button b = new Button("Commit changes", new Button.ClickListener() {

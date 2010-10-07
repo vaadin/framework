@@ -43,8 +43,9 @@ public class TabSheetCaptions extends TestBase {
         Button button = new Button("Update tab caption");
         button.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                tabSheet.setTabCaption(panel1, "This is a new tab caption "
-                        + dateFormatter.format(date));
+                tabSheet.getTab(panel1).setCaption(
+                        "This is a new tab caption "
+                                + dateFormatter.format(date));
             }
         });
 

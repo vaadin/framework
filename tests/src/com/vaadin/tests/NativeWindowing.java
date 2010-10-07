@@ -30,11 +30,11 @@ public class NativeWindowing extends Application {
                         main.addWindow(w);
                         w.setPositionX(100);
                         w.setPositionY(100);
-                        w.setWidth(200);
-                        w.setHeight(200);
+                        w.setWidth("200px");
+                        w.setHeight("200px");
 
-                        w.setWidth(100);
-                        w.setHeight(400);
+                        w.setWidth("100px");
+                        w.setHeight("400px");
 
                         final Button closebutton = new Button("Close "
                                 + w.getCaption(), new Button.ClickListener() {

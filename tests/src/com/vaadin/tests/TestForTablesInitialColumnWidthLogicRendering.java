@@ -79,7 +79,7 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
 
         t = getTestTable(3, 40);
         t.setCaption("Table with some columns and wide explicit width. (Ought to widen columns to use all space)");
-        t.setWidth(1000);
+        t.setWidth("1000px");
         main.addComponent(t);
 
         t = getTestTable(12, 4);
@@ -99,7 +99,7 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         t = getTestTable(4, 4);
         t.setCaption("Table with some rows and width = 200px");
 
-        t.setWidth(200);
+        t.setWidth("200px");
         main.addComponent(t);
 
         final Button b = new Button("refresh view", this, "createNewView");

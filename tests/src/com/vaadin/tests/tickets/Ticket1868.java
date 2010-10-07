@@ -12,8 +12,8 @@ public class Ticket1868 extends com.vaadin.Application {
 
         Panel p = new Panel(
                 "This is a really long caption for the panel, too long in fact!");
-        p.setWidth(300);
-        p.setHeight(300);
+        p.setWidth("300px");
+        p.setHeight("300px");
 
         getMainWindow().addComponent(p);
     }

@@ -36,7 +36,7 @@ public class Ticket1904 extends Application {
         for (int i = 0; i < 3; i++) {
             Button b = new Button("Row " + (i + 1));
             if (!horizontal) {
-                b.setWidth(500);
+                b.setWidth("500px");
             }
             ol.addComponent(b);
         }

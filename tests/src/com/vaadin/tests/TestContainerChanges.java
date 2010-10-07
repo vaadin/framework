@@ -51,8 +51,8 @@ public class TestContainerChanges extends CustomComponent {
         VerticalLayout v = new VerticalLayout();
         h.addComponent(v);
         tbl = new Table();
-        tbl.setHeight(200);
-        tbl.setWidth(300);
+        tbl.setHeight("200px");
+        tbl.setWidth("300px");
         v.addComponent(tbl);
         tbl.setSelectable(true);
         tbl.setMultiSelect(false);
@@ -63,8 +63,8 @@ public class TestContainerChanges extends CustomComponent {
         tbl.setContainerDataSource(hierarchical);
 
         Table tbl2 = new Table();
-        tbl2.setHeight(200);
-        tbl2.setWidth(300);
+        tbl2.setHeight("200px");
+        tbl2.setWidth("300px");
         v.addComponent(tbl2);
         tbl2.setSelectable(true);
         tbl2.setMultiSelect(false);

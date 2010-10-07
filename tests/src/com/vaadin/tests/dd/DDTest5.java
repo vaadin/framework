@@ -7,7 +7,6 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -164,11 +163,6 @@ public class DDTest5 extends TestBase {
         getLayout().addComponent(dragAndDropWrapper2);
 
     }
-
-    private final static ThemeResource FOLDER = new ThemeResource(
-            "../runo/icons/16/folder.png");
-    private final static ThemeResource DOC = new ThemeResource(
-            "../runo/icons/16/document.png");
 
     @Override
     protected String getDescription() {

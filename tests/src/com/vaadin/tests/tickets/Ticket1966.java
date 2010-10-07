@@ -53,7 +53,7 @@ public class Ticket1966 extends Application {
         addButtons(gl);
 
         b = new Button("High button");
-        b.setHeight(200);
+        b.setHeight("200px");
         gl.addComponent(b);
 
         p.addComponent(gl);

@@ -74,8 +74,8 @@ public class Ticket2021 extends Application {
 
         Panel p3 = new Panel();
         p3.setCaption("GridLayout");
-        p3.setWidth(500);
-        p3.setHeight(500);
+        p3.setWidth("500px");
+        p3.setHeight("500px");
         // p3.setContent(new GridLayout());
         p3.getContent().setSizeFull();
         ((Layout) p3.getContent()).setMargin(false);

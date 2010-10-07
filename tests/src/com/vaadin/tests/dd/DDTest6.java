@@ -26,7 +26,6 @@ import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.Not;
 import com.vaadin.event.dd.acceptcriteria.SourceIsTarget;
-import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.StreamResource;
 import com.vaadin.terminal.StreamResource.StreamSource;
@@ -65,8 +64,6 @@ public class DDTest6 extends TestBase {
     private SplitPanel sp;
 
     private BeanItemContainer<File> fs1;
-
-    private static int count;
 
     private static DDTest6 instance;
 
@@ -267,13 +264,15 @@ public class DDTest6 extends TestBase {
     }
 
     private void showSpreadsheet(File file) {
-        ApplicationResource resource = (ApplicationResource) file.getResource();
+        // ApplicationResource resource = (ApplicationResource)
+        // file.getResource();
         String string = new String(file.bas.toByteArray());
         String[] rows = string.split("\n");
         String[] cols = rows[0].split(",");
         Table table = new Table();
         for (String string2 : cols) {
-            String col = string2.replaceAll("\"", ""); // remove surrounding ""
+            // String col =
+            string2.replaceAll("\"", ""); // remove surrounding ""
             table.addContainerProperty(string2, String.class, "");
         }
         for (int i = 1; i < rows.length; i++) {

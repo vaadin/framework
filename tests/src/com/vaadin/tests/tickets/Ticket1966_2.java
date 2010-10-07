@@ -50,8 +50,8 @@ public class Ticket1966_2 extends Application {
 
     private void gridLayout(Layout layout) {
         Panel p = new Panel("GridLayout");
-        p.setWidth(500);
-        p.setHeight(500);
+        p.setWidth("500px");
+        p.setHeight("500px");
         p.getContent().setSizeFull();
         layout.addComponent(p);
 
@@ -86,8 +86,8 @@ public class Ticket1966_2 extends Application {
 
     private void orderedLayout(Layout layout) {
         Panel p = new Panel("OrderedLayout");
-        p.setWidth(500);
-        p.setHeight(500);
+        p.setWidth("500px");
+        p.setHeight("500px");
         p.getContent().setWidth("100%");
         layout.addComponent(p);
 
@@ -101,7 +101,7 @@ public class Ticket1966_2 extends Application {
 
         ol = new HorizontalLayout();
         // ol.setCaption("Vertical");
-        ol.setHeight(200);
+        ol.setHeight("200px");
         addButtons(ol);
         // Button b = new Button("High button");
         // b.setHeight(200);

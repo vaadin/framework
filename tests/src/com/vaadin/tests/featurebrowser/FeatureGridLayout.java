@@ -27,7 +27,7 @@ public class FeatureGridLayout extends Feature {
 
         final GridLayout gl = new GridLayout(3, 3);
         final DateField cal = new DateField("Test component 1", new Date());
-        cal.setStyle("calendar");
+        cal.setStyleName("calendar");
         gl.addComponent(cal, 1, 0, 2, 1);
         for (int i = 2; i < 7; i++) {
             gl.addComponent(new TextField("Test component " + i));
