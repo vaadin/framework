@@ -57,7 +57,8 @@ public class TextFieldRelativeWidth extends TestBase {
 
                 public void valueChange(
                         com.vaadin.data.Property.ValueChangeEvent event) {
-                    IndexedContainer idc = (IndexedContainer) getContainerDataSource();
+                    // IndexedContainer idc = (IndexedContainer)
+                    // getContainerDataSource();
 
                 }
 

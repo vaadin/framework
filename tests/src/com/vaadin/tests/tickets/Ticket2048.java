@@ -10,7 +10,6 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -18,8 +17,6 @@ public class Ticket2048 extends Application {
 
     private Embedded embedded;
     private Panel p;
-    private SplitPanel splitPanel;
-    private GridLayout gridLayout;
     private VerticalLayout orderedLayout;
 
     @Override

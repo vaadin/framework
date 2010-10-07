@@ -82,9 +82,9 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
 
     private static class URIS {
         String staticFilesPath;
-        String applicationURI;
-        String context;
-        String runner;
+        // String applicationURI;
+        // String context;
+        // String runner;
         String applicationClassname;
 
     }
@@ -108,38 +108,38 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
         final String[] urlParts = request.getRequestURI().toString()
                 .split("\\/");
         String context = null;
-        String runner = null;
+        // String runner = null;
         URIS uris = new URIS();
         String applicationClassname = null;
         String contextPath = request.getContextPath();
         if (urlParts[1].equals(contextPath.replaceAll("\\/", ""))) {
             // class name comes after web context and runner application
             context = urlParts[1];
-            runner = urlParts[2];
+            // runner = urlParts[2];
             if (urlParts.length == 3) {
                 throw new IllegalArgumentException("No application specified");
             }
             applicationClassname = urlParts[3];
 
             uris.staticFilesPath = "/" + context;
-            uris.applicationURI = "/" + context + "/" + runner + "/"
-                    + applicationClassname;
-            uris.context = context;
-            uris.runner = runner;
+            // uris.applicationURI = "/" + context + "/" + runner + "/"
+            // + applicationClassname;
+            // uris.context = context;
+            // uris.runner = runner;
             uris.applicationClassname = applicationClassname;
         } else {
             // no context
             context = "";
-            runner = urlParts[1];
+            // runner = urlParts[1];
             if (urlParts.length == 2) {
                 throw new IllegalArgumentException("No application specified");
             }
             applicationClassname = urlParts[2];
 
             uris.staticFilesPath = "/";
-            uris.applicationURI = "/" + runner + "/" + applicationClassname;
-            uris.context = context;
-            uris.runner = runner;
+            // uris.applicationURI = "/" + runner + "/" + applicationClassname;
+            // uris.context = context;
+            // uris.runner = runner;
             uris.applicationClassname = applicationClassname;
         }
         return uris;

@@ -24,8 +24,6 @@ public class DragAndDropService implements VariableOwner {
 
     private int lastVisitId;
 
-    private int currentEventId;
-
     private boolean lastVisitAccepted = false;
 
     private DragAndDropEvent dragEvent;
@@ -159,7 +157,6 @@ public class DragAndDropService implements VariableOwner {
     private Transferable constructTransferable(DropTarget dropHandlerOwner,
             Map<String, Object> variables) {
         int eventId = (Integer) variables.get("eventId");
-        currentEventId = eventId;
 
         final Component sourceComponent = (Component) variables
                 .get("component");

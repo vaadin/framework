@@ -24,8 +24,6 @@ public class Ticket2021 extends Application {
             + "Nulla nisi. Sed blandit, ante vitae sagittis volutpat, arcu mauris vehicula risus, vitae posuere felis lectus sit amet purus. Donec nec magna et leo eleifend scelerisque. Suspendisse condimentum pharetra ligula. Curabitur lorem. Pellentesque a augue sit amet enim fermentum placerat. Phasellus ante risus, molestie at, iaculis at, pellentesque non, tellus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus non urna eget risus tempus imperdiet. Integer est diam, sagittis sit amet, posuere sit amet, bibendum sed, lacus. Aenean adipiscing cursus ipsum. Quisque at elit. Vestibulum vitae nunc. Praesent placerat metus viverra lorem. Cras nec elit congue nisi faucibus feugiat. Nam eget mi. Vestibulum condimentum. Nunc nisl ante, cursus in, dictum ac, lobortis rutrum, mi. Nulla eu nisi. In ultricies vehicula magna."
             + "Nunc eros dui, elementum at, ullamcorper eget, varius at, velit. Ut dictum. Cras ullamcorper ante vel tortor. Quisque viverra mauris vulputate quam. Nulla dui. Suspendisse non eros at ipsum faucibus hendrerit. Morbi dignissim pharetra tortor. Etiam malesuada. Mauris lacinia elementum erat. Duis mollis placerat metus. Nunc risus felis, cursus ac, cursus vel, convallis vel, metus. Ut vehicula nibh et nulla. Vivamus id pede. Quisque egestas arcu a ligula. Maecenas vehicula. Quisque sed ligula quis tellus tempus rutrum. Curabitur vel augue sed orci egestas pharetra. Duis pharetra.";
 
-    private AbstractOrderedLayout orderedLayout;
-
     @Override
     public void init() {
         Window w = new Window(getClass().getSimpleName());

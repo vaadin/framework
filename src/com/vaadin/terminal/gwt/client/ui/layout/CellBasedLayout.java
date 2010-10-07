@@ -342,8 +342,8 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
                     throw new NullPointerException();
                 }
             }
-            ChildComponentContainer remove = widgetToComponentContainer
-                    .remove(widget);
+            // ChildComponentContainer remove =
+            widgetToComponentContainer.remove(widget);
             remove(child);
             if (!relocated) {
                 Paintable p = (Paintable) widget;

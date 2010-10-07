@@ -324,7 +324,7 @@ public class Util {
 
     public static int measureHorizontalBorder(Element element) {
         int borders;
-        int cw = element.getClientWidth();
+        // element.getClientWidth();
         if (BrowserInfo.get().isIE()) {
             String width = element.getStyle().getProperty("width");
             String height = element.getStyle().getProperty("height");

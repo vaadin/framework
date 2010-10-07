@@ -37,7 +37,6 @@ import com.vaadin.ui.themes.Reindeer;
  */
 public class Ticket2998 extends Application {
     private Table table;
-    private WorkoutEditor editor = new WorkoutEditor(this);
     private VerticalLayout mainLayout;
 
     public class Workout implements Serializable {
@@ -105,7 +104,6 @@ public class Ticket2998 extends Application {
         private TextField kilomiters = new TextField("Kilometers");
         private TextField title = new TextField("Title/note");
 
-        private Workout run;
         private Ticket2998 workoutLog;
 
         public WorkoutEditor(Ticket2998 app) {
@@ -137,17 +135,13 @@ public class Ticket2998 extends Application {
                     workoutLog.getMainWindow().addWindow(this);
                 }
                 kilomiters.focus();
-                this.run = run;
             }
         }
     }
 
     public class MyFieldFactory extends DefaultFieldFactory {
 
-        private BeanItemContainer<String> trainingTypes;
-
         public MyFieldFactory(Ticket2998 app) {
-            trainingTypes = new BeanItemContainer<String>(String.class);
         }
 
         @Override

@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.vaadin.Application;
-import com.vaadin.data.Container;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Accordion;
@@ -18,8 +16,8 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Field;
-import com.vaadin.ui.FieldFactory;
 import com.vaadin.ui.Form;
+import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -122,40 +120,25 @@ public class Ticket2204 extends Application {
 
         if (c == Form.class) {
             Form f = (Form) cc;
-            f.setFieldFactory(new FieldFactory() {
-
-                public Field createField(Class<?> type, Component uiContext) {
-                    return createField();
-                }
-
-                public Field createField(Property property, Component uiContext) {
-                    return createField();
-                }
+            f.setFormFieldFactory(new FormFieldFactory() {
 
                 public Field createField(Item item, Object propertyId,
                         Component uiContext) {
-                    return createField();
-                }
-
-                private Field createField() {
                     formTextArea = new RichTextArea();
                     formTextArea.setVisible(false);
                     return formTextArea;
-                }
-
-                public Field createField(Container container, Object itemId,
-                        Object propertyId, Component uiContext) {
-                    return createField();
                 }
 
             });
             f.setItemDataSource(new BeanItem<Object>(new Object() {
                 private int a;
 
+                @SuppressWarnings("unused")
                 public int getA() {
                     return a;
                 }
 
+                @SuppressWarnings("unused")
                 public void setA(int a) {
                     this.a = a;
                 }

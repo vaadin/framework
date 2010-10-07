@@ -65,6 +65,7 @@ public class Ticket2029 extends Application {
         return p;
     }
 
+    @SuppressWarnings("unused")
     private Panel createGLPanel() {
         Panel p = new Panel("" + DIM1 + "x" + DIM2 + " GridLayout");
         p.setWidth("" + DIM1 + "px");

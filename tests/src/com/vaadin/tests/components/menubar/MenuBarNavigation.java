@@ -10,7 +10,6 @@ public class MenuBarNavigation extends TestBase implements Command {
 
     private MenuItem edit;
     private MenuItem file;
-    private MenuItem help;
     private Log log;
     private MenuItem export;
 
@@ -30,7 +29,7 @@ public class MenuBarNavigation extends TestBase implements Command {
         edit.addItem("Copy", this);
         edit.addItem("Cut", this);
         edit.addItem("Paste", this);
-        help = mb.addItem("Help", this);
+        mb.addItem("Help", this);
 
         addComponent(mb);
 

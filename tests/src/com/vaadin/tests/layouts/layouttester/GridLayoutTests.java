@@ -30,12 +30,10 @@ import com.vaadin.ui.themes.Reindeer;
 
 public class GridLayoutTests extends AbstractLayoutTests {
 
-    private Application application;
     private AbstractComponent rc1, col1, col2, col3, row1, row2, row3, x3, x22;
 
     public GridLayoutTests(Application application) {
         super();
-        this.application = application;
     }
 
     @Override

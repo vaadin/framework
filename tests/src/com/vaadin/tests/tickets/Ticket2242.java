@@ -70,43 +70,6 @@ public class Ticket2242 extends Application implements ValueChangeListener {
         return ic;
     }
 
-    private static class TestObject {
-        public TestObject(int a, String b, Long c) {
-            super();
-            this.a = a;
-            this.b = b;
-            this.c = c;
-        }
-
-        private int a;
-        private String b;
-        private Long c;
-
-        public int getA() {
-            return a;
-        }
-
-        public void setA(int a) {
-            this.a = a;
-        }
-
-        public String getB() {
-            return b;
-        }
-
-        public void setB(String b) {
-            this.b = b;
-        }
-
-        public Long getC() {
-            return c;
-        }
-
-        public void setC(Long c) {
-            this.c = c;
-        }
-    }
-
     public void valueChange(ValueChangeEvent event) {
         System.out.println("Value change from " + tableValue + " to "
                 + t.getValue());

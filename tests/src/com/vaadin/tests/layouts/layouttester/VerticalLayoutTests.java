@@ -25,11 +25,8 @@ import com.vaadin.ui.VerticalLayout;
 
 public class VerticalLayoutTests extends AbstractLayoutTests {
 
-    private Application application;
-
     public VerticalLayoutTests(Application application) {
         super();
-        this.application = application;
     }
 
     @Override

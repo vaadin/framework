@@ -135,8 +135,8 @@ public class VTextualDate extends VDateField implements Paintable, Field,
                     String frmString = LocaleService
                             .getDateFormat(currentLocale);
                     frmString = cleanFormat(frmString);
-                    String delim = LocaleService
-                            .getClockDelimiter(currentLocale);
+                    // String delim = LocaleService
+                    // .getClockDelimiter(currentLocale);
 
                     if (currentResolution >= RESOLUTION_HOUR) {
                         if (dts.isTwelveHourClock()) {

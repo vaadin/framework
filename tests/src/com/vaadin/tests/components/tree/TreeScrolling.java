@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.tree;
 
-import com.vaadin.data.Item;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextField;
@@ -22,10 +21,12 @@ public class TreeScrolling extends AbstractTestCase {
         Tree tree = new Tree();
         for (int i = 0; i < 20; i++) {
             String parentId = "Item " + i;
-            Item parentItem = tree.addItem(parentId);
+            // Item parentItem =
+            tree.addItem(parentId);
             for (int j = 0; j < 20; j++) {
                 String subId = "Item " + i + " - " + j;
-                Item subItem = tree.addItem(subId);
+                // Item subItem =
+                tree.addItem(subId);
                 tree.setParent(subId, parentId);
             }
 

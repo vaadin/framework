@@ -9,7 +9,6 @@ import java.util.NoSuchElementException;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
@@ -51,7 +50,7 @@ public class ChildComponentContainer extends Panel {
 
     private double expandRatio;
 
-    private int containerMarginLeft = 0;
+    // private int containerMarginLeft = 0;
     private int containerMarginTop = 0;
 
     AlignmentInfo alignment = AlignmentInfo.TOP_LEFT;
@@ -80,7 +79,7 @@ public class ChildComponentContainer extends Panel {
 
         widgetDIV = Document.get().createDivElement();
         if (BrowserInfo.get().isFF2()) {
-            Style style = widgetDIV.getStyle();
+            // Style style = widgetDIV.getStyle();
             // FF2 chokes on some floats very easily. Measuring size escpecially
             // becomes terribly slow
             TableElement tableEl = Document.get().createTableElement();
@@ -174,7 +173,7 @@ public class ChildComponentContainer extends Panel {
         // setWidth("0px");
         contSize.setHeight(0);
         contSize.setWidth(0);
-        containerMarginLeft = 0;
+        // containerMarginLeft = 0;
         containerMarginTop = 0;
         containerDIV.getStyle().setProperty("paddingLeft", "0");
         containerDIV.getStyle().setProperty("paddingTop", "0");
@@ -234,7 +233,7 @@ public class ChildComponentContainer extends Panel {
     }
 
     public void setMarginLeft(int marginLeft) {
-        containerMarginLeft = marginLeft;
+        // containerMarginLeft = marginLeft;
         containerDIV.getStyle().setPropertyPx("paddingLeft", marginLeft);
     }
 

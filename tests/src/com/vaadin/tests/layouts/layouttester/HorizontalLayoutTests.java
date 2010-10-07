@@ -26,11 +26,8 @@ import com.vaadin.ui.themes.Reindeer;
 
 public class HorizontalLayoutTests extends AbstractLayoutTests {
 
-    private Application application;
-
     public HorizontalLayoutTests(Application application) {
         super();
-        this.application = application;
     }
 
     @Override

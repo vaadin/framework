@@ -45,9 +45,9 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
 
     protected final Element canvas = DOM.createDiv();
 
-    private int excessPixelsHorizontal;
-
-    private int excessPixelsVertical;
+    // private int excessPixelsHorizontal;
+    //
+    // private int excessPixelsVertical;
 
     private Object previousStyleName;
 
@@ -199,8 +199,8 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
     public void setStyleName(String style) {
         super.setStyleName(style);
         if (previousStyleName == null || !previousStyleName.equals(style)) {
-            excessPixelsHorizontal = -1;
-            excessPixelsVertical = -1;
+            // excessPixelsHorizontal = -1;
+            // excessPixelsVertical = -1;
         }
     }
 
