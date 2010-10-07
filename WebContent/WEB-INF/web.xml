@@ -278,33 +278,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>BookTestServlet</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.book.BookTestApplication</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>WindowTestServlet</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.book.WindowTestApplication</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>ChatServlet</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.book.ChatApplication</param-value>
-		</init-param>
-	</servlet>
-	
-	<servlet>
 		<servlet-name>GAESyncTest</servlet-name>
 		<servlet-class>com.vaadin.terminal.gwt.server.GAEApplicationServlet</servlet-class>
 		<init-param>
