@@ -383,19 +383,6 @@
 		<servlet-name>ColorPickerApplication</servlet-name>
 		<url-pattern>/colorpicker/*</url-pattern>
 	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>BookTestServlet</servlet-name>
-		<url-pattern>/book/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>WindowTestServlet</servlet-name>
-		<url-pattern>/windowtest/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>ChatServlet</servlet-name>
-		<url-pattern>/chat/*</url-pattern>
-	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>PortletDemo</servlet-name>
