@@ -116,8 +116,8 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
             WrapperTransferable wtr = (WrapperTransferable) ctr;
 
             String object = wtr.getText();
-            String html = wtr.getHtml();
-            String url = (String) ctr.getData("Url");
+            // String html = wtr.getHtml();
+            // String url = (String) ctr.getData("Url");
 
             final Label l = new Label();
             l.setCaption("Generated from HTML5 drag:");

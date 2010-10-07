@@ -12,7 +12,6 @@ import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
@@ -176,11 +175,6 @@ public class DDTest7 extends TestBase {
         }
 
     }
-
-    private final static ThemeResource FOLDER = new ThemeResource(
-            "../runo/icons/16/folder.png");
-    private final static ThemeResource DOC = new ThemeResource(
-            "../runo/icons/16/document.png");
 
     @Override
     protected String getDescription() {

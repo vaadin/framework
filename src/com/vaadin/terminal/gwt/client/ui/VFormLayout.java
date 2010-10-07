@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -400,7 +401,7 @@ public class VFormLayout extends SimplePanel implements Container {
             // Workaround for IE weirdness, sometimes returns bad height in some
             // circumstances when Caption is empty. See #1444
             // IE7 bugs more often. I wonder what happens when IE8 arrives...
-            if (Util.isIE()) {
+            if (BrowserInfo.get().isIE()) {
                 if (isEmpty) {
                     setHeight("0px");
                     DOM.setStyleAttribute(getElement(), "overflow", "hidden");

@@ -384,6 +384,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
                 // (non-visible items can not be deselected)
                 final Collection<?> visible = getVisibleItemIds();
                 if (visible != null) {
+                    @SuppressWarnings("unchecked")
                     Set<Object> newsel = (Set<Object>) getValue();
                     if (newsel == null) {
                         newsel = new HashSet<Object>();

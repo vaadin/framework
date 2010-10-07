@@ -49,6 +49,7 @@ public class DDTest8 extends TestBase {
          */
         DropHandler itemSorter = new DropHandler() {
 
+            @SuppressWarnings("unused")
             private void populateSubTree(HierarchicalContainer idx,
                     HierarchicalContainer subtree, Object itemId) {
                 Collection<?> children = subtree.getChildren(itemId);
@@ -75,6 +76,7 @@ public class DDTest8 extends TestBase {
 
             }
 
+            @SuppressWarnings("unused")
             private HierarchicalContainer getSubTree(HierarchicalContainer idx,
                     Object itemId) {
                 HierarchicalContainer hierarchicalContainer = new HierarchicalContainer();

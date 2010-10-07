@@ -24,6 +24,7 @@ public class VMyDragSource extends Composite implements Paintable,
 
     private boolean mouseDown;
     private MouseDownEvent mDownEvent;
+    @SuppressWarnings("unused")
     private ApplicationConnection client;
 
     public VMyDragSource() {

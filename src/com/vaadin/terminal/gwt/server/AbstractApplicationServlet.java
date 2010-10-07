@@ -839,7 +839,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * 
      * @see com.vaadin.terminal.URIHandler
      */
-    @SuppressWarnings("unchecked")
     private void handleDownload(DownloadStream stream,
             HttpServletRequest request, HttpServletResponse response)
             throws IOException {

@@ -30,7 +30,7 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "deprecation" })
 public class ComponentSizeValidator implements Serializable {
 
     private final static int LAYERS_SHOWN = 4;
@@ -173,7 +173,6 @@ public class ComponentSizeValidator implements Serializable {
             subErrors.add(error);
         }
 
-        @SuppressWarnings("deprecation")
         public void reportErrors(PrintWriter clientJSON,
                 AbstractCommunicationManager communicationManager,
                 PrintStream serverErrorStream) {
@@ -402,7 +401,6 @@ public class ComponentSizeValidator implements Serializable {
         return false;
     }
 
-    @SuppressWarnings("deprecation")
     public static boolean parentCanDefineHeight(Component component) {
         Component parent = component.getParent();
         if (parent == null) {
@@ -502,7 +500,6 @@ public class ComponentSizeValidator implements Serializable {
                 && paintable.getWidthUnits() == Sizeable.UNITS_PERCENTAGE;
     }
 
-    @SuppressWarnings("deprecation")
     public static boolean parentCanDefineWidth(Component component) {
         Component parent = component.getParent();
         if (parent == null) {

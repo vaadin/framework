@@ -127,6 +127,7 @@ public class DDTest2 extends TestBase {
         final Or fromTree1OrTable = new Or(fromTable, fromTree);
         // Or could in the case be replaced with, keeping here as an example and
         // test
+        @SuppressWarnings("unused")
         SourceIs treeOrTable = new SourceIs(table, tree1);
 
         final And and = new And(fromTree1OrTable, onNode);

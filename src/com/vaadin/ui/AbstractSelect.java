@@ -426,6 +426,7 @@ public abstract class AbstractSelect extends AbstractField implements
                 // (non-visible items can not be deselected)
                 final Collection<?> visible = getVisibleItemIds();
                 if (visible != null) {
+                    @SuppressWarnings("unchecked")
                     Set<Object> newsel = (Set<Object>) getValue();
                     if (newsel == null) {
                         newsel = new HashSet<Object>();

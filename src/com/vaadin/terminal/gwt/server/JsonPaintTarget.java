@@ -351,6 +351,7 @@ public class JsonPaintTarget implements PaintTarget {
         tag.addAttribute("\"" + name + "\":" + (value ? "true" : "false"));
     }
 
+    @SuppressWarnings("deprecation")
     public void addAttribute(String name, Resource value) throws PaintException {
 
         if (value instanceof ExternalResource) {

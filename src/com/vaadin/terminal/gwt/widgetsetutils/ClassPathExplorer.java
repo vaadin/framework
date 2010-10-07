@@ -521,6 +521,7 @@ public class ClassPathExplorer {
      *            the collection to which to add server side classes with
      *            {@link ClientWidget} annotation
      */
+    @SuppressWarnings("unchecked")
     private static void tryToAdd(final String fullclassName,
             Collection<Class<? extends Paintable>> paintables) {
         try {

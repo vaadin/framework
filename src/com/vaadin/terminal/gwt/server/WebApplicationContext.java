@@ -99,7 +99,7 @@ public class WebApplicationContext extends AbstractWebApplicationContext {
 
         if (mgr == null) {
             // Creates new manager
-            mgr = new CommunicationManager(application, servlet);
+            mgr = new CommunicationManager(application);
             applicationToAjaxAppMgrMap.put(application, mgr);
         }
         return mgr;

@@ -14,10 +14,10 @@ public class ChangeVariablesErrorEvent implements ComponentErrorEvent {
     private Throwable throwable;
     private Component component;
 
-    private Map variableChanges;
+    private Map<String, Object> variableChanges;
 
     public ChangeVariablesErrorEvent(Component component, Throwable throwable,
-            Map variableChanges) {
+            Map<String, Object> variableChanges) {
         this.component = component;
         this.throwable = throwable;
         this.variableChanges = variableChanges;
@@ -31,7 +31,7 @@ public class ChangeVariablesErrorEvent implements ComponentErrorEvent {
         return component;
     }
 
-    public Map getVariableChanges() {
+    public Map<String, Object> getVariableChanges() {
         return variableChanges;
     }
 

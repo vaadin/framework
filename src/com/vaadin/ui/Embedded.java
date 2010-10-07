@@ -447,6 +447,7 @@ public class Embedded extends AbstractComponent {
         removeListener(CLICK_EVENT, ClickEvent.class, listener);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);

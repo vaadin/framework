@@ -1039,9 +1039,6 @@ public abstract class AbstractCommunicationManager implements
                     }
                     final VariableOwner owner = getVariableOwner(variable[VAR_PID]);
                     if (owner != null && owner.isEnabled()) {
-                        // TODO this should be Map<String, Object>, but the
-                        // VariableOwner API does not guarantee the key is a
-                        // string
                         Map<String, Object> m;
                         if (nextVariable != null
                                 && variable[VAR_PID]
@@ -1230,7 +1227,7 @@ public abstract class AbstractCommunicationManager implements
      *            map from variable names to values
      */
     private void handleChangeVariablesError(Application application,
-            Component owner, Exception e, Map<? extends Object, Object> m) {
+            Component owner, Exception e, Map<String, Object> m) {
         boolean handled = false;
         ChangeVariablesErrorEvent errorEvent = new ChangeVariablesErrorEvent(
                 owner, e, m);
@@ -1690,7 +1687,7 @@ public abstract class AbstractCommunicationManager implements
                     }
                     if (componentsRoot.getParent() != null) {
                         // this is a subwindow
-                        componentsRoot = (Window) componentsRoot.getParent();
+                        componentsRoot = componentsRoot.getParent();
                     }
                     if (componentsRoot != w) {
                         resultset.remove(p);
@@ -1879,6 +1876,7 @@ public abstract class AbstractCommunicationManager implements
      *         should be suppressed, null otherwise.
      * @see com.vaadin.terminal.URIHandler
      */
+    @SuppressWarnings("deprecation")
     protected DownloadStream handleURI(Window window, Request request,
             Response response, Callback callback) {
 

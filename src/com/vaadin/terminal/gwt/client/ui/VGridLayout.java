@@ -98,6 +98,7 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         return margin.cast();
     }
 
+    @SuppressWarnings("unchecked")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
         this.client = client;

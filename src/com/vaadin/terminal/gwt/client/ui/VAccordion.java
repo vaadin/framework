@@ -564,8 +564,9 @@ public class VAccordion extends VTabsheetBase implements
     }
 
     @Override
-    protected Iterator getPaintableIterator() {
-        return paintables.iterator();
+    @SuppressWarnings("unchecked")
+    protected Iterator<Object> getPaintableIterator() {
+        return (Iterator) paintables.iterator();
     }
 
     public boolean hasChildComponent(Widget component) {

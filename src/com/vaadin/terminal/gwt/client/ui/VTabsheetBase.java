@@ -107,6 +107,10 @@ abstract class VTabsheetBase extends ComplexPanel implements Container {
 
     /**
      * @return a list of currently shown Paintables
+     * 
+     *         Apparently can be something else than Paintable as
+     *         {@link #updateFromUIDL(UIDL, ApplicationConnection)} checks if
+     *         instanceof Paintable. Therefore set to <Object>
      */
     abstract protected Iterator<Object> getPaintableIterator();
 

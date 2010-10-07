@@ -145,6 +145,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
         return uris;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Class<? extends Application> getApplicationClass()
             throws ClassNotFoundException {

@@ -298,6 +298,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * 
      * @see com.vaadin.terminal.VariableOwner#changeVariables(Object, Map)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);

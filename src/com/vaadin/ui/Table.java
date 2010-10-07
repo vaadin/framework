@@ -1875,6 +1875,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         Set<Object> renderedItemIds = getCurrentlyRenderedItemIds();
 
+        @SuppressWarnings("unchecked")
         HashSet<Object> newValue = new HashSet<Object>(
                 (Collection<Object>) getValue());
 

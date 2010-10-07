@@ -57,8 +57,6 @@ public class DDTest6 extends TestBase {
             new Folder("Images"), new File("document.doc"),
             new File("song.mp3"), new File("photo.jpg") };
 
-    private DropHandler dh;
-
     private static Tree tree1;
 
     private SplitPanel sp;

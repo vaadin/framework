@@ -217,7 +217,6 @@ public class VUpload extends SimplePanel implements Paintable {
     /**
      * Called by JSNI (hooked via {@link #onloadstrategy})
      */
-    @SuppressWarnings("unused")
     private void onSubmitComplete() {
         /* Needs to be run dereferred to avoid various browser issues. */
         DeferredCommand.addCommand(new Command() {

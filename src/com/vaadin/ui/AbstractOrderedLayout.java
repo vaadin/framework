@@ -340,6 +340,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         AlignmentUtils.setComponentAlignment(this, component, alignment);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);

@@ -172,6 +172,7 @@ public class VRichTextToolbar extends Composite {
     private class EventHandler implements ClickHandler, ChangeHandler,
             KeyUpHandler {
 
+        @SuppressWarnings("deprecation")
         public void onChange(ChangeEvent event) {
             Object sender = event.getSource();
             if (sender == backColors) {
@@ -192,6 +193,7 @@ public class VRichTextToolbar extends Composite {
             }
         }
 
+        @SuppressWarnings("deprecation")
         public void onClick(ClickEvent event) {
             Object sender = event.getSource();
             if (sender == bold) {
@@ -269,7 +271,9 @@ public class VRichTextToolbar extends Composite {
     private final EventHandler handler = new EventHandler();
 
     private final RichTextArea richText;
+    @SuppressWarnings("deprecation")
     private final RichTextArea.BasicFormatter basic;
+    @SuppressWarnings("deprecation")
     private final RichTextArea.ExtendedFormatter extended;
 
     private final FlowPanel outer = new FlowPanel();
@@ -305,6 +309,7 @@ public class VRichTextToolbar extends Composite {
      * @param richText
      *            the rich text area to be controlled
      */
+    @SuppressWarnings("deprecation")
     public VRichTextToolbar(RichTextArea richText) {
         this.richText = richText;
         basic = richText.getBasicFormatter();
@@ -434,6 +439,7 @@ public class VRichTextToolbar extends Composite {
     /**
      * Updates the status of all the stateful buttons.
      */
+    @SuppressWarnings("deprecation")
     private void updateStatus() {
         if (basic != null) {
             bold.setDown(basic.isBold());

@@ -240,6 +240,7 @@ public class CssLayout extends AbstractLayout {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);

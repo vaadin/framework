@@ -42,7 +42,7 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
 @ClientWidget(value = VLabel.class, loadStyle = LoadStyle.EAGER)
 public class Label extends AbstractComponent implements Property,
         Property.Viewer, Property.ValueChangeListener,
-        Property.ValueChangeNotifier, Comparable {
+        Property.ValueChangeNotifier, Comparable<Object> {
 
     /**
      * Content mode, where the label contains only plain text. The getValue()

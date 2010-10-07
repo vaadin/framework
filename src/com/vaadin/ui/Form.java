@@ -1052,7 +1052,11 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Get the field factory of the form.
      * 
      * @return the FieldFactory Factory used to create the fields.
+     * @deprecated Use {@link #getFormFieldFactory()} instead. Set the
+     *             FormFieldFactory using
+     *             {@link #setFormFieldFactory(FormFieldFactory)}.
      */
+    @Deprecated
     public FieldFactory getFieldFactory() {
         if (fieldFactory instanceof FieldFactory) {
             return (FieldFactory) fieldFactory;

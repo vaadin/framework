@@ -87,7 +87,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     private boolean productionMode = false;
 
-    @SuppressWarnings("unchecked")
     @Override
     public void init(PortletConfig config) throws PortletException {
         super.init(config);
@@ -586,7 +585,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         return false;
     }
 
-    @SuppressWarnings("unchecked")
     private void handleDownload(DownloadStream stream, ResourceRequest request,
             ResourceResponse response) throws IOException {
 

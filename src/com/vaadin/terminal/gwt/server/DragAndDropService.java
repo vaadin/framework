@@ -156,8 +156,6 @@ public class DragAndDropService implements VariableOwner {
     @SuppressWarnings("unchecked")
     private Transferable constructTransferable(DropTarget dropHandlerOwner,
             Map<String, Object> variables) {
-        int eventId = (Integer) variables.get("eventId");
-
         final Component sourceComponent = (Component) variables
                 .get("component");
 

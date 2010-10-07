@@ -556,6 +556,7 @@ public class AbsoluteLayout extends AbstractLayout {
      * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
      * java.util.Map)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);

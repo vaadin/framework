@@ -390,6 +390,7 @@ public class SplitPanel extends AbstractLayout {
      * comment here, we use the default documentation from implemented
      * interface.
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
 
