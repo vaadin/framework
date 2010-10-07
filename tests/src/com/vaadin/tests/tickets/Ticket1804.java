@@ -5,7 +5,6 @@ import java.util.LinkedList;
 
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.MethodProperty;
-import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
@@ -107,8 +106,7 @@ public class Ticket1804 extends com.vaadin.Application {
                 Window w = new Window("Status of the fields");
                 w.setModal(true);
                 w.setScrollable(true);
-                w.setHeight("80px");
-                w.setHeightUnits(Sizeable.UNITS_PERCENTAGE);
+                w.setHeight("80%");
                 w.addComponent(new Label(msg.toString(), Label.CONTENT_XHTML));
                 main.addWindow(w);
             }

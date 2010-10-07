@@ -2,6 +2,7 @@ package com.vaadin.tests.layouts;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
+import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbsoluteLayout;
@@ -141,9 +142,9 @@ public class TestLayoutClickListeners extends AbstractTestCase {
             }
         }
         String button = "left";
-        if (event.getButton() == event.BUTTON_RIGHT) {
+        if (event.getButton() == ClickEvent.BUTTON_RIGHT) {
             button = "right";
-        } else if (event.getButton() == event.BUTTON_MIDDLE) {
+        } else if (event.getButton() == ClickEvent.BUTTON_MIDDLE) {
             button = "middle";
 
         }

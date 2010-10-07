@@ -54,7 +54,7 @@ public class TestStaticFilesLocation extends TestCase {
             return null;
         }
 
-        public Enumeration getInitParameterNames() {
+        public Enumeration<Object> getInitParameterNames() {
             return new Enumeration<Object>() {
 
                 public boolean hasMoreElements() {

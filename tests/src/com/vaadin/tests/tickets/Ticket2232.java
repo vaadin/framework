@@ -66,7 +66,7 @@ public class Ticket2232 extends Application {
         }
         String caption = gl.getClass().getSimpleName();
         caption += " style: " + gl.getStyleName() + ", spacingFromServer:"
-                + ((SpacingHandler) gl).isSpacingEnabled();
+                + ((SpacingHandler) gl).isSpacing();
         gl.setCaption(caption);
         getMainWindow().addComponent(gl);
     }

@@ -110,7 +110,7 @@ public class Ticket2998 extends Application {
             super("Edit workout");
             workoutLog = app;
             Layout main = new VerticalLayout();
-            setLayout(main);
+            setContent(main);
             main.setSizeUndefined();
             main.setStyleName(Reindeer.PANEL_LIGHT);
 

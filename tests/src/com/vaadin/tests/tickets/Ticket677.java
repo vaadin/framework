@@ -5,7 +5,6 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.ui.BaseFieldFactory;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -109,7 +108,7 @@ public class Ticket677 extends Application {
 
         form = new Form();
         form.setCaption("Enabled");
-        form.setFieldFactory(new BaseFieldFactory() {
+        form.setFormFieldFactory(new DefaultFieldFactory() {
 
             @Override
             public Field createField(Item item, Object propertyId,

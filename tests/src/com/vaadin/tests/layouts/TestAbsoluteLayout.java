@@ -149,7 +149,7 @@ public class TestAbsoluteLayout extends TestBase {
                                 .next();
                         Item item = container.addItem(next);
 
-                        String caption = next.getTag();
+                        String caption = next.getClass().getSimpleName();
 
                         caption += "; cap: " + next.getCaption() + "; debugid"
                                 + getDebugId();
