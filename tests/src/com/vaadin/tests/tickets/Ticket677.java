@@ -66,7 +66,7 @@ public class Ticket677 extends Application {
             }
         }));
 
-        root.setLayout(new GridLayout(2, 3));
+        root.setContent(new GridLayout(2, 3));
         main.addComponent(root);
 
         TextField tf = new TextField("Enabled");

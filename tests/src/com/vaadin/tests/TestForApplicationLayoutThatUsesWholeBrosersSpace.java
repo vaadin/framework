@@ -24,7 +24,7 @@ public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends Applicati
         setMainWindow(main);
 
         rootLayout = new VerticalLayout();
-        main.setLayout(rootLayout);
+        main.setContent(rootLayout);
 
         rootLayout.addComponent(new Label("header"));
 

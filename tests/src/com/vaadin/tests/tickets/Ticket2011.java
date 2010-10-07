@@ -13,7 +13,7 @@ public class Ticket2011 extends Application {
         setMainWindow(w);
         // setTheme("tests-ticket");
         GridLayout layout = new GridLayout(10, 10);
-        w.setLayout(layout);
+        w.setContent(layout);
         createUI(layout);
     }
 

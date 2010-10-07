@@ -28,7 +28,7 @@ public class Ticket1919 extends com.vaadin.Application {
         lo.addComponent(getTestComponent());
         lo.addComponent(getTestComponent());
 
-        main.setLayout(lo);
+        main.setContent(lo);
 
     }
 

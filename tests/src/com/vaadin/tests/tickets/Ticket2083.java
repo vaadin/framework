@@ -14,7 +14,7 @@ public class Ticket2083 extends Application {
         setMainWindow(w);
         // setTheme("tests-tickets");
         GridLayout layout = new GridLayout(10, 10);
-        w.setLayout(layout);
+        w.setContent(layout);
         createUI(layout);
     }
 

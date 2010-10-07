@@ -121,7 +121,7 @@ public class TestForPreconfiguredComponents extends CustomComponent implements H
 
     public Panel createTestBench(Component t) {
         final Panel ol = new Panel();
-        ol.setLayout(new HorizontalLayout());
+        ol.setContent(new HorizontalLayout());
 
         ol.addComponent(t);
 

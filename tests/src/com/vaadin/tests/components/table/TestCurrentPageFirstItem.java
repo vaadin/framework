@@ -28,7 +28,7 @@ public class TestCurrentPageFirstItem extends Application implements
             main.setSizeFull();
             // setTheme("testtheme");
             VerticalLayout baseLayout = new VerticalLayout();
-            main.setLayout(baseLayout);
+            main.setContent(baseLayout);
 
             table = new Table();
             container.addContainerProperty("row", String.class, "");

@@ -17,7 +17,7 @@ public class FeaturesApplication extends com.vaadin.Application {
         final Window main = new Window("Vaadin Features Tour");
         setMainWindow(main);
 
-        main.setLayout(new FeatureBrowser());
+        main.setContent(new FeatureBrowser());
     }
 
     /**

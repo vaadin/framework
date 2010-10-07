@@ -32,7 +32,7 @@ public class FormRenderingFlicker extends TestBase {
         form = new Form();
 
         tablePanel = new Panel();
-        tablePanel.setLayout(tableLayout);
+        tablePanel.setContent(tableLayout);
 
         addComponent(tablePanel);
     }

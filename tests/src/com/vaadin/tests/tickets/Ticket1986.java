@@ -72,7 +72,7 @@ public class Ticket1986 extends Application {
         layout.addComponent(f2);
         layout.addComponent(f1);
 
-        w.setLayout(layout);
+        w.setContent(layout);
 
     }
 

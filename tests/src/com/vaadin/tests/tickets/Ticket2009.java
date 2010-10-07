@@ -24,7 +24,7 @@ public class Ticket2009 extends com.vaadin.Application {
         setMainWindow(main);
 
         HorizontalLayout ol = new HorizontalLayout();
-        main.setLayout(ol);
+        main.setContent(ol);
         ol.setSizeFull();
 
         Panel p = new Panel("Tree test");

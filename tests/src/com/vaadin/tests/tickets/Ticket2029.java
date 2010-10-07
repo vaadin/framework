@@ -42,7 +42,7 @@ public class Ticket2029 extends Application {
         p.setHeight(DIM2 + "px");
 
         HorizontalLayout layout = new HorizontalLayout();
-        p.setLayout(layout);
+        p.setContent(layout);
         p.getLayout().setSizeFull();
 
         for (int i = 0; i < COMPONENTS; i++) {
@@ -71,7 +71,7 @@ public class Ticket2029 extends Application {
         p.setHeight("" + DIM2 + "px");
 
         GridLayout layout = new GridLayout(COMPONENTS, 1);
-        p.setLayout(layout);
+        p.setContent(layout);
         p.getLayout().setSizeFull();
 
         for (int i = 0; i < COMPONENTS; i++) {
@@ -109,7 +109,7 @@ public class Ticket2029 extends Application {
         p.setHeight("" + DIM1 + "px");
 
         VerticalLayout layout = new VerticalLayout();
-        p.setLayout(layout);
+        p.setContent(layout);
         p.getLayout().setSizeFull();
 
         for (int i = 0; i < COMPONENTS; i++) {

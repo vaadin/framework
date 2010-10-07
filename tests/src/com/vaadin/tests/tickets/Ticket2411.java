@@ -14,7 +14,7 @@ public class Ticket2411 extends Application {
 
         // VerticalLayout l = new VerticalLayout();
         GridLayout l = new GridLayout();
-        w.setLayout(l);
+        w.setContent(l);
 
         l.setHeight("504px");
 

@@ -28,15 +28,15 @@ public class Ticket2048 extends Application {
         setMainWindow(w);
         // setTheme("tests-tickets");
         // splitPanel = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
-        // getMainWindow().setLayout(splitPanel);
+        // getMainWindow().setContent(splitPanel);
 
         // GridLayout layout = new GridLayout(10, 10);
-        // w.setLayout(layout);
+        // w.setContent(layout);
         // gridLayout = new GridLayout(1, 1);
         orderedLayout = new VerticalLayout();
 
-        getMainWindow().setLayout(orderedLayout);
-        // getMainWindow().setLayout(new GridLayout(1, 1));
+        getMainWindow().setContent(orderedLayout);
+        // getMainWindow().setContent(new GridLayout(1, 1));
         getMainWindow().setSizeFull();
         getMainWindow().getLayout().setSizeFull();
 
@@ -51,9 +51,9 @@ public class Ticket2048 extends Application {
         // public void buttonClick(ClickEvent event) {
         // Layout l = getMainWindow().getLayout();
         // if (l == orderedLayout) {
-        // getMainWindow().setLayout(gridLayout);
+        // getMainWindow().setContent(gridLayout);
         // } else {
-        // getMainWindow().setLayout(orderedLayout);
+        // getMainWindow().setContent(orderedLayout);
         // }
         //
         // }

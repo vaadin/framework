@@ -19,7 +19,7 @@ public class Ticket1923 extends com.vaadin.Application {
         p = new Panel("TestPanel 250x300");
         // p.getLayout().setWidth("100%");
         p.setScrollable(true);
-        // p.setLayout(new GridLayout(1, 100));
+        // p.setContent(new GridLayout(1, 100));
         for (int i = 0; i < ROWS; i++) {
             p.addComponent(new Label("Label" + i + " 5067w09adsfasdjfahlsdfjhalfjhaldjfhalsjdfhlajdhflajhdfljahdslfjahldsjfhaljdfhaljfdhlajsdhflajshdflkajhsdlfkjahsldfkjahsldfhalskjfdhlksjfdh857idifhaljsdfhlajsdhflajhdflajhdfljahldfjhaljdfhalsjdfhalkjdhflkajhdfljahsdlfjahlsdjfhaldjfhaljfdhlajdhflajshdfljahsdlfjhalsjdfhalskjhfdlhusfglksuhdflgjshflgjhslfghslfjghsljfglsjhfglsjhfgljshfgljshflgjhslfghsljfgsljdfglsdjhfglsjhflgkjshfldjgh"));
         }

@@ -24,10 +24,10 @@ public class Ticket2303 extends Application {
             e.printStackTrace();
         }
         cl.setWidth("100%");
-        w.setLayout(cl);
+        w.setContent(cl);
 
         // VerticalLayout ol = new VerticalLayout();
-        // w.setLayout(ol);
+        // w.setContent(ol);
         VerticalLayout hugeLayout = new VerticalLayout();
         hugeLayout.setMargin(true);
         hugeLayout.setSpacing(true);

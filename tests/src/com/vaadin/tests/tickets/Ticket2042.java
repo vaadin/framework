@@ -18,7 +18,7 @@ public class Ticket2042 extends Application {
         // setTheme("tests-tickets");
         GridLayout layout = new GridLayout(1, 2);
         layout.setHeight("2000px");
-        w.setLayout(layout);
+        w.setContent(layout);
         createUI(layout);
     }
 

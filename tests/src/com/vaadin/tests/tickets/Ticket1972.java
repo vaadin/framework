@@ -24,7 +24,7 @@ public class Ticket1972 extends Application {
         layout.space();
         layout.addComponent(new Label("3-3"));
 
-        w.setLayout(layout);
+        w.setContent(layout);
     }
 
 }

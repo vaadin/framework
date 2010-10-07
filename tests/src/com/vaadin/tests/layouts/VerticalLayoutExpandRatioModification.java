@@ -22,7 +22,7 @@ public class VerticalLayoutExpandRatioModification extends TestBase implements
     public void setup() {
         Window main = new Window("The Main Window");
         mainLayout = new VerticalLayout();
-        main.setLayout(mainLayout);
+        main.setContent(mainLayout);
         setMainWindow(main);
 
         // The upper layout

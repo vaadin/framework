@@ -43,7 +43,7 @@ public class Ticket2119 extends Application {
 
     private Window createWindow() {
         Window main = new Window("Test for ticket XXX");
-        main.setLayout(testLayout());
+        main.setContent(testLayout());
         return main;
     }
 

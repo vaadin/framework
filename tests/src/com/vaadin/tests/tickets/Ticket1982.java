@@ -23,7 +23,7 @@ public class Ticket1982 extends Application {
 
         GridLayout gl = new GridLayout(2, 2);
         gl.setSizeFull();
-        main.setLayout(gl);
+        main.setContent(gl);
         gl.setMargin(true);
 
         TitleBar t1 = new TitleBar("Title 1", gl);

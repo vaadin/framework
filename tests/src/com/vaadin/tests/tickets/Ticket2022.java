@@ -20,7 +20,7 @@ public class Ticket2022 extends Application {
         l = new CustomLayout("Ticket2022");
         // try {
         // l = new CustomLayout(new FileInputStream(f));
-        w.setLayout(l);
+        w.setContent(l);
         // } catch (FileNotFoundException e) {
         // // TODO Auto-generated catch block
         // e.printStackTrace();

@@ -17,7 +17,7 @@ public class Ticket2365 extends Application {
 
         VerticalLayout lo = new VerticalLayout();
         lo.setSizeFull();
-        mainWin.setLayout(lo);
+        mainWin.setContent(lo);
 
         final Panel p = createMultilevelPanel(5, (Panel) null);
 

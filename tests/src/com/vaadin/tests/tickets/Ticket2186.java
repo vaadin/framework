@@ -16,7 +16,7 @@ public class Ticket2186 extends Application {
         setMainWindow(main);
 
         HorizontalLayout base = new HorizontalLayout();
-        main.setLayout(base);
+        main.setContent(base);
 
         VerticalLayout content = new VerticalLayout();
 

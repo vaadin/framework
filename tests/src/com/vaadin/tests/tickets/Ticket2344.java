@@ -23,7 +23,7 @@ public class Ticket2344 extends Application {
 
         VerticalLayout hl = new VerticalLayout();
         hl.setWidth("400px");
-        main.setLayout(hl);
+        main.setContent(hl);
 
         Table t = new Table();
         t.setWidth("100%");

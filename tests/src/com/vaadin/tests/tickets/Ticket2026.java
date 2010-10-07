@@ -30,6 +30,6 @@ public class Ticket2026 extends Application {
         tf.setTabIndex(2);
         layout.addComponent(tf);
 
-        w.setLayout(layout);
+        w.setContent(layout);
     }
 }

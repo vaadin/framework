@@ -22,7 +22,7 @@ public class Ticket1230 extends Application {
         setMainWindow(w);
 
         GridLayout layout = new GridLayout(5, 5);
-        w.setLayout(layout);
+        w.setContent(layout);
 
         layout.setSpacing(true);
 

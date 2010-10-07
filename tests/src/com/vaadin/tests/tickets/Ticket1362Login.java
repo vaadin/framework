@@ -215,7 +215,7 @@ public class Ticket1362Login extends Application {
         el.addComponent(loginBox);
         el.setExpandRatio(loginBox, 1);
 
-        mainWin.setLayout(el);
+        mainWin.setContent(el);
 
         setMainWindow(mainWin);
 

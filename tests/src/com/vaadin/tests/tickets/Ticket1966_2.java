@@ -18,12 +18,12 @@ public class Ticket1966_2 extends Application {
     public void init() {
         Window w = new Window(getClass().getName());
         setMainWindow(w);
-        w.setLayout(new GridLayout(2, 2));
+        w.setContent(new GridLayout(2, 2));
 
         // Panel p = new Panel("test");
         // p.setWidth(500);
         // p.setHeight(500);
-        // p.setLayout(new GridLayout(1, 2));
+        // p.setContent(new GridLayout(1, 2));
         // p.getLayout().setSizeFull();
         //
         // p.addComponent(new Button("asjkdfhakshdf"));

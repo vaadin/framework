@@ -262,7 +262,7 @@ public class Ticket2998 extends Application {
         p.setStyleName(Panel.STYLE_LIGHT);
         w.addComponent(p);
         mainLayout = new VerticalLayout();
-        p.setLayout(mainLayout);
+        p.setContent(mainLayout);
 
         populateAndConfigureTable();
 

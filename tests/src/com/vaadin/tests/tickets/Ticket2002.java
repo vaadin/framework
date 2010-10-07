@@ -44,6 +44,6 @@ public class Ticket2002 extends Application {
         layout.addComponent(f1);
         layout.addComponent(f2);
 
-        w.setLayout(layout);
+        w.setContent(layout);
     }
 }

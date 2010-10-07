@@ -22,7 +22,7 @@ public class Ticket1572 extends com.vaadin.Application {
 
         Panel p = new Panel("Test wrapper for gridlayout margin/spacing");
 
-        p.setLayout(new HorizontalLayout());
+        p.setContent(new HorizontalLayout());
 
         gl = new GridLayout(3, 3);
         gl.setMargin(true);

@@ -17,7 +17,7 @@ public class Ticket2062 extends Application {
 
         SplitPanel p = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
         p.setSizeFull();
-        getMainWindow().setLayout(p);
+        getMainWindow().setContent(p);
 
         TextField tf1 = new TextField("Tab 1");
         tf1.setValue("Field 1");

@@ -27,7 +27,7 @@ public class Ticket2296 extends Application {
         b.setHeight("50%");
         cl.addComponent(b, "button3");
 
-        w.setLayout(cl);
+        w.setContent(cl);
     }
 
 }

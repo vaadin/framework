@@ -22,7 +22,7 @@ public class TestSplitPanel extends com.vaadin.Application {
         verticalSplit.setFirstComponent(new Label("vertical first"));
         verticalSplit.setSecondComponent(new Label("vertical second"));
 
-        mainWindow.setLayout(verticalSplit);
+        mainWindow.setContent(verticalSplit);
 
     }
 

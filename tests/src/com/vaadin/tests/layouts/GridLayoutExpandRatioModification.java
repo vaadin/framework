@@ -23,7 +23,7 @@ public class GridLayoutExpandRatioModification extends TestBase implements
     public void setup() {
         Window main = new Window("The Main Window");
         mainLayout = new GridLayout(3, 3);
-        main.setLayout(mainLayout);
+        main.setContent(mainLayout);
         setMainWindow(main);
 
         // The upper layout

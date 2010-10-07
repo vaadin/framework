@@ -13,6 +13,7 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.URIHandler;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
@@ -35,7 +36,6 @@ public class Parameters extends com.vaadin.Application implements URIHandler, Pa
     private final Table params = new Table();
 
     @Override
-    @SuppressWarnings("deprecation")
     public void init() {
         final Window main = new Window("Parameters demo");
         setMainWindow(main);
@@ -71,8 +71,8 @@ public class Parameters extends com.vaadin.Application implements URIHandler, Pa
         params.addContainerProperty("Value", String.class, "");
         final Panel panel2 = new Panel("Parameter Handler");
         params.setSizeFull();
-        panel2.setLayout(new VerticalLayout());
-        panel2.getLayout().setMargin(true);
+        panel2.setContent(new VerticalLayout());
+        ((Layout) panel2.getContent()).setMargin(true);
 
         params.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_ID);
         panel2.addComponent(params);
@@ -84,7 +84,7 @@ public class Parameters extends com.vaadin.Application implements URIHandler, Pa
         layout.setMargin(true);
         layout.setSpacing(true);
 
-        main.setLayout(layout);
+        main.setContent(layout);
     }
 
     /**

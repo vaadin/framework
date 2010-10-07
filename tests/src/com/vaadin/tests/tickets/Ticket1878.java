@@ -44,7 +44,7 @@ public class Ticket1878 extends Application {
         // setTheme("tests-tickets");
 
         mainLayout = new GridLayout(1, 2);
-        w.setLayout(mainLayout);
+        w.setContent(mainLayout);
         orderedLayout = createOL();
         gridLayout = createGL();
         formLayout = createForms();
@@ -80,7 +80,7 @@ public class Ticket1878 extends Application {
 
         mainLayout.addComponent(buttonLayout);
         mainLayout.addComponent(orderedLayout);
-        // w.setLayout(orderedLayout);
+        // w.setContent(orderedLayout);
     }
 
     private static Layout createOL() {

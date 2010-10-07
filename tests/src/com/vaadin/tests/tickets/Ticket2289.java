@@ -22,7 +22,7 @@ public class Ticket2289 extends Application {
         Window w = new Window();
         setMainWindow(w);
         VerticalLayout ol = new VerticalLayout();
-        w.setLayout(ol);
+        w.setContent(ol);
         Button b = new Button("close current tab");
         b.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {

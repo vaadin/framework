@@ -26,7 +26,7 @@ public class Ticket2406 extends Application {
 
         VerticalLayout l = new VerticalLayout();
         l.setSizeFull();
-        w.setLayout(l);
+        w.setContent(l);
 
         Button b = new Button("Button 1");
         b.setSizeFull();

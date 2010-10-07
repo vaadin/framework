@@ -90,7 +90,7 @@ public class DeepComponentTrees extends TestBase {
         }
         layout.addComponent(new Label(
                 "FF did it! Vaadin, Mozilla and you win! Dare to try again?"));
-        root.setLayout(r);
+        root.setContent(r);
     }
 
     Layout getTestLayout() {

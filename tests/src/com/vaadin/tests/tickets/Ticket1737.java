@@ -32,7 +32,7 @@ public class Ticket1737 extends Application {
         setMainWindow(main);
 
         VerticalLayout el = new VerticalLayout();
-        main.setLayout(el);
+        main.setContent(el);
 
         Panel p = new Panel("Test panel");
         p.setSizeFull();

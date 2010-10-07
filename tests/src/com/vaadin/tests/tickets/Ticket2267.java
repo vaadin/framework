@@ -35,7 +35,7 @@ public class Ticket2267 extends Application {
         gl.addComponent(new Label("3"));
         gl.addComponent(new Label("4"));
 
-        w.setLayout(gl);
+        w.setContent(gl);
 
     }
 }
