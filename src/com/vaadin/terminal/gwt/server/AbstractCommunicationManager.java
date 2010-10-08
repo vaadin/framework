@@ -43,29 +43,26 @@ import javax.servlet.ServletResponse;
 
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
-import com.vaadin.external.org.apache.commons.fileupload.FileItemIterator;
-import com.vaadin.external.org.apache.commons.fileupload.FileItemStream;
-import com.vaadin.external.org.apache.commons.fileupload.FileUpload;
-import com.vaadin.external.org.apache.commons.fileupload.FileUploadException;
-import com.vaadin.external.org.apache.commons.fileupload.ProgressListener;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.Paintable.RepaintRequestEvent;
+import com.vaadin.terminal.Receiver;
+import com.vaadin.terminal.ReceiverOwner;
+import com.vaadin.terminal.ReceiverOwner.ReceivingController;
+import com.vaadin.terminal.ReceiverOwner.ReceivingEndedEvent;
+import com.vaadin.terminal.ReceiverOwner.ReceivingFailedEvent;
+import com.vaadin.terminal.ReceiverOwner.ReceivingStartedEvent;
 import com.vaadin.terminal.Terminal.ErrorEvent;
 import com.vaadin.terminal.Terminal.ErrorListener;
 import com.vaadin.terminal.URIHandler;
-import com.vaadin.terminal.UploadStream;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DragAndDropWrapper;
-import com.vaadin.ui.Upload;
-import com.vaadin.ui.Upload.UploadException;
 import com.vaadin.ui.Window;
 
 /**
@@ -261,6 +258,12 @@ public abstract class AbstractCommunicationManager implements
 
     }
 
+    static class UploadInterruptedException extends Exception {
+        public UploadInterruptedException() {
+            super("Upload interrupted by other thread");
+        }
+    }
+
     private static String GET_PARAM_REPAINT_ALL = "repaintAll";
 
     // flag used in the request to indicate that the security token should be
@@ -295,6 +298,9 @@ public abstract class AbstractCommunicationManager implements
     private final HashMap<String, OpenWindowCache> currentlyOpenWindowsInClient = new HashMap<String, OpenWindowCache>();
 
     private static final int MAX_BUFFER_SIZE = 64 * 1024;
+
+    /* Same as in apache commons file upload library that was previously used. */
+    private static final int MAX_UPLOAD_BUFFER_SIZE = 4 * 1024;
 
     private static final String GET_PARAM_ANALYZE_LAYOUTS = "analyzeLayouts";
 
@@ -332,146 +338,319 @@ public abstract class AbstractCommunicationManager implements
         requireLocale(application.getLocale().toString());
     }
 
-    /**
-     * Create an upload handler that is appropriate to the context in which the
-     * application is being run (servlet or portlet).
-     * 
-     * @return new {@link FileUpload} instance
-     */
-    protected abstract FileUpload createFileUpload();
+    protected Application getApplication() {
+        return application;
+    }
+
+    private static final int LF = "\n".getBytes()[0];
+
+    private static final String CRLF = "\r\n";
+
+    private static String readLine(InputStream stream) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        int readByte = stream.read();
+        while (readByte != LF) {
+            char c = (char) readByte;
+            sb.append(c);
+            readByte = stream.read();
+        }
+
+        return sb.substring(0, sb.length() - 1);
+    }
 
     /**
-     * TODO New method - document me!
+     * Method used to stream content from a multipart request (either from
+     * servlet or portlet request) to given Receiver
      * 
-     * @param upload
-     * @param request
-     * @return
-     * @throws IOException
-     * @throws FileUploadException
-     */
-    protected abstract FileItemIterator getUploadItemIterator(
-            FileUpload upload, Request request) throws IOException,
-            FileUploadException;
-
-    /**
-     * TODO New method - document me!
      * 
      * @param request
      * @param response
+     * @param receiver
+     * @param owner
+     * @param boundary
      * @throws IOException
-     * @throws FileUploadException
      */
-    protected void doHandleFileUpload(Request request, Response response)
-            throws IOException, FileUploadException {
+    protected void doHandleSimpleMultipartFileUpload(Request request,
+            Response response, Receiver receiver, ReceiverOwner owner,
+            String boundary) throws IOException {
+        boundary = CRLF + "--" + boundary + "--";
 
-        // Create a new file upload handler
-        final FileUpload upload = createFileUpload();
+        // multipart parsing, supports only one file for request, but that is
+        // fine for our current terminal
 
-        final UploadProgressListener pl = new UploadProgressListener();
+        final InputStream inputStream = request.getInputStream();
 
-        upload.setProgressListener(pl);
+        int contentLength = request.getContentLength();
 
-        // Parse the request
-        FileItemIterator iter;
+        boolean atStart = false;
 
-        try {
-            iter = getUploadItemIterator(upload, request);
-            /*
-             * ATM this loop is run only once as we are uploading one file per
-             * request.
+        String rawfilename = "unknown";
+        String rawMimeType = "application/octet-stream";
+
+        /*
+         * Read the stream until the actual file starts (empty line). Read
+         * filename and content type from multipart headers.
+         */
+        while (!atStart) {
+            String readLine = readLine(inputStream);
+            contentLength -= (readLine.length() + 2);
+            if (readLine.startsWith("Content-Disposition:")
+                    && readLine.indexOf("filename=") > 0) {
+                rawfilename = readLine.replaceAll(".*filename=", "");
+                String parenthesis = rawfilename.substring(0, 1);
+                rawfilename = rawfilename.substring(1);
+                rawfilename = rawfilename.substring(0,
+                        rawfilename.indexOf(parenthesis));
+            } else if (readLine.equals("")) {
+                atStart = true;
+            } else if (readLine.startsWith("Content-Type")) {
+                rawMimeType = readLine.split(": ")[1];
+            }
+        }
+
+        contentLength -= (boundary.length() + 2); // 2 == CRLF
+
+        final char[] charArray = boundary.toCharArray();
+
+        /*
+         * Reads bytes from the underlaying stream. Compares the read bytes to
+         * the boundary string and returns -1 if met.
+         * 
+         * The maching happens so that if the read byte equals to the first char
+         * of boundary string, the stream goes to "buffering mode". In buffering
+         * mode bytes are read until the character does not match the
+         * corresponding from boundary string or the full boundary string is
+         * found.
+         */
+        InputStream simpleMultiPartReader = new InputStream() {
+            int matchedCount = 0;
+            int curBoundaryIndex = 0;
+            /**
+             * The byte found after a "promising start for boundary"
              */
-            while (iter.hasNext()) {
-                final FileItemStream item = iter.next();
-                final String name = item.getFieldName();
-                // Should report only the filename even if the browser sends the
-                // path
-                final String filename = removePath(item.getName());
-                final String mimeType = item.getContentType();
-                final InputStream stream = item.openStream();
-                if (item.isFormField()) {
-                    // ignored, upload requests contains only files
+            private int bufferedByte = -1;
+            private boolean atTheEnd = false;
+
+            @Override
+            public int read() throws IOException {
+                if (atTheEnd) {
+                    return -1;
+                } else if (bufferedByte >= 0) {
+                    return getBuffered();
                 } else {
-                    final UploadStream upstream = new UploadStream() {
-
-                        public String getContentName() {
-                            return filename;
-                        }
-
-                        public String getContentType() {
-                            return mimeType;
-                        }
-
-                        public InputStream getStream() {
-                            return stream;
-                        }
-
-                        public String getStreamName() {
-                            return "stream";
-                        }
-
-                    };
-
-                    if (name.startsWith("XHRFILE")) {
-                        String[] split = item.getFieldName().substring(7)
-                                .split("\\.");
-                        DragAndDropWrapper ddw = (DragAndDropWrapper) idPaintableMap
-                                .get(split[0]);
-
-                        try {
-                            ddw.receiveFile(upstream, split[1]);
-                        } catch (UploadException e) {
-                            synchronized (application) {
-                                handleChangeVariablesError(application, ddw, e,
-                                        new HashMap<String, Object>());
+                    int fromActualStream = inputStream.read();
+                    if (fromActualStream == -1) {
+                        // unexpected end of stream
+                        throw new IOException(
+                                "The multipart stream ended unexpectedly");
+                    }
+                    if (charArray[matchedCount] == fromActualStream) {
+                        while (true) {
+                            matchedCount++;
+                            if (matchedCount == charArray.length) {
+                                // reached the end of file
+                                atTheEnd = true;
+                                return -1;
                             }
-                        }
-
-                    } else {
-
-                        int separatorPos = name.lastIndexOf("_");
-                        final String pid = name.substring(0, separatorPos);
-                        final Upload uploadComponent = (Upload) idPaintableMap
-                                .get(pid);
-                        if (uploadComponent == null) {
-                            throw new FileUploadException(
-                                    "Upload component not found");
-                        }
-                        if (uploadComponent.isReadOnly()) {
-                            throw new FileUploadException(
-                                    "Warning: ignored file upload because upload component is set as read-only");
-                        }
-                        synchronized (application) {
-                            // put upload component into receiving state
-                            uploadComponent.startUpload();
-                        }
-
-                        // tell UploadProgressListener which component is
-                        // receiving
-                        // file
-                        pl.setUpload(uploadComponent);
-
-                        try {
-                            uploadComponent.receiveUpload(upstream);
-                        } catch (UploadException e) {
-                            // error happened while receiving file. Handle the
-                            // error in the same manner as it would have
-                            // happened in
-                            // variable change.
-                            synchronized (application) {
-                                handleChangeVariablesError(application,
-                                        uploadComponent, e,
-                                        new HashMap<String, Object>());
+                            fromActualStream = inputStream.read();
+                            if (fromActualStream != charArray[matchedCount]) {
+                                // Did not found full boundary, cache the last
+                                // byte
+                                bufferedByte = fromActualStream;
+                                return getBuffered();
                             }
                         }
                     }
-
+                    return fromActualStream;
                 }
             }
-        } catch (final FileUploadException e) {
-            throw e;
+
+            private int getBuffered() throws IOException {
+                int b;
+                if (matchedCount == 0) {
+                    b = bufferedByte;
+                    bufferedByte = -1;
+                } else {
+                    b = charArray[curBoundaryIndex++];
+                    if (curBoundaryIndex == matchedCount) {
+                        matchedCount = 0;
+                        curBoundaryIndex = 0;
+                        // next call for getBuffered will return the
+                        // bufferedByte, not from the char array.
+                    }
+                }
+                if (b == -1) {
+                    throw new IOException(
+                            "The multipart stream ended unexpectedly");
+                }
+                return b;
+            }
+        };
+
+        /*
+         * Should report only the filename even if the browser sends the path
+         */
+        final String filename = removePath(rawfilename);
+        final String mimeType = rawMimeType;
+
+        try {
+            /*
+             * safe cast as in GWT terminal all variable owners are expected to
+             * be components.
+             */
+            Component component = (Component) owner;
+            if (component.isReadOnly()) {
+                throw new UploadException(
+                        "Warning: file upload ignored because the componente was read-only");
+            }
+            streamToReceiver(simpleMultiPartReader, receiver, owner, filename,
+                    mimeType, contentLength);
+        } catch (Exception e) {
+            synchronized (application) {
+                handleChangeVariablesError(application, (Component) owner, e,
+                        new HashMap<String, Object>());
+            }
+        }
+        sendUploadResponse(request, response);
+
+    }
+
+    /**
+     * Used to stream plain file post (aka XHR2.post(File))
+     * 
+     * @param request
+     * @param response
+     * @param receiver
+     * @param owner
+     * @param contentLength
+     * @throws IOException
+     */
+    protected void doHandleXhrFilePost(Request request, Response response,
+            Receiver receiver, ReceiverOwner owner, int contentLength)
+            throws IOException {
+
+        // These are unknown in filexhr ATM, maybe add to Accept header that
+        // is accessible in portlets
+        final String filename = "unknown";
+        final String mimeType = filename;
+        final InputStream stream = request.getInputStream();
+        try {
+            /*
+             * safe cast as in GWT terminal all variable owners are expected to
+             * be components.
+             */
+            Component component = (Component) owner;
+            if (component.isReadOnly()) {
+                throw new UploadException(
+                        "Warning: file upload ignored because the componente was read-only");
+            }
+            streamToReceiver(stream, receiver, owner, filename, mimeType,
+                    contentLength);
+        } catch (Exception e) {
+            synchronized (application) {
+                handleChangeVariablesError(application, (Component) owner, e,
+                        new HashMap<String, Object>());
+            }
+        }
+        sendUploadResponse(request, response);
+    }
+
+    protected final void streamToReceiver(final InputStream in,
+            Receiver receiver, ReceiverOwner source, String filename,
+            String type, int contentLength) throws UploadException {
+        if (receiver == null) {
+            throw new IllegalStateException("Receiver for the post not found");
         }
 
-        sendUploadResponse(request, response);
+        ReceivingController controller = source
+                .getReceivingController(receiver);
+
+        final Application application = getApplication();
+
+        OutputStream out = null;
+        try {
+            boolean listenProgress;
+            synchronized (application) {
+                ReceivingStartedEvent startedEvent = new ReceivingStartedEventImpl(
+                        receiver, filename, type, contentLength);
+                controller.uploadStarted(startedEvent);
+                out = receiver.receiveUpload(filename, type);
+                listenProgress = controller.listenProgress();
+            }
+
+            // Gets the output target stream
+            if (out == null) {
+                throw new NoOutputStreamException();
+            }
+
+            if (null == in) {
+                // No file, for instance non-existent filename in html upload
+                throw new NoInputStreamException();
+            }
+
+            final byte buffer[] = new byte[MAX_UPLOAD_BUFFER_SIZE];
+            int bytesReadToBuffer = 0;
+            int totalBytes = 0;
+            ReceivingProgressedEventImpl progressEvent = new ReceivingProgressedEventImpl(
+                    receiver, filename, type, contentLength);
+
+            while ((bytesReadToBuffer = in.read(buffer)) > 0) {
+                out.write(buffer, 0, bytesReadToBuffer);
+                totalBytes += bytesReadToBuffer;
+                if (listenProgress) {
+                    // update progress if listener set and contentLength
+                    // received
+                    synchronized (application) {
+                        /*
+                         * Note, we are reusing the same progress event, not to
+                         * pollute VM with lots of objects. This might not help
+                         * though if the end user aggressively updates UI on
+                         * each onProgress.
+                         */
+                        progressEvent.setBytesReceived(totalBytes);
+                        controller.onProgress(progressEvent);
+                    }
+                }
+                if (controller.isInterrupted()) {
+                    throw new UploadInterruptedException();
+                }
+            }
+
+            // upload successful
+            out.close();
+            ReceivingEndedEvent event = new ReceivingEndedEventImpl(receiver,
+                    filename, type, totalBytes);
+            synchronized (application) {
+                controller.uploadFinished(event);
+            }
+
+        } catch (UploadInterruptedException e) {
+            // Download interrupted by application code
+            try {
+                // still try to close output stream (e.g. file handle)
+                out.close();
+            } catch (IOException e1) {
+                // NOP
+            }
+            ReceivingFailedEvent event = new ReceivingFailedEventImpl(receiver,
+                    filename, type, contentLength, e);
+            synchronized (application) {
+                controller.uploadFailed(event);
+            }
+            // Note, we are not throwing interrupted exception forward as it is
+            // not a terminal level erro like all other exception.
+        } catch (final Exception e) {
+            synchronized (application) {
+                ReceivingFailedEvent event = new ReceivingFailedEventImpl(
+                        receiver, filename, type, contentLength, e);
+                synchronized (application) {
+                    controller.uploadFailed(event);
+                }
+                // throw exception for terminal to be handled (to be passed to
+                // terminalErrorHandler)
+                throw new UploadException(e);
+            }
+        }
     }
 
     /**
@@ -722,14 +901,19 @@ public abstract class AbstractCommunicationManager implements
             } else {
                 // remove detached components from paintableIdMap so they
                 // can be GC'ed
+                /*
+                 * TODO figure out if we could move this beyond the painting
+                 * phase, "respond as fast as possible, then do the cleanup".
+                 * Beware of painting the dirty detatched components.
+                 */
                 for (Iterator<Paintable> it = paintableIdMap.keySet()
                         .iterator(); it.hasNext();) {
                     Component p = (Component) it.next();
                     if (p.getApplication() == null) {
+                        unregisterPaintable(p);
                         idPaintableMap.remove(paintableIdMap.get(p));
                         it.remove();
                         dirtyPaintables.remove(p);
-                        p.removeListener(this);
                     }
                 }
                 paintables = getDirtyVisibleComponents(window);
@@ -978,6 +1162,16 @@ public abstract class AbstractCommunicationManager implements
     }
 
     /**
+     * Called when communication manager stops listening for repaints for given
+     * component.
+     * 
+     * @param p
+     */
+    protected void unregisterPaintable(Component p) {
+        p.removeListener(this);
+    }
+
+    /**
      * TODO document
      * 
      * If this method returns false, something was submitted that we did not
@@ -1148,7 +1342,7 @@ public abstract class AbstractCommunicationManager implements
         return success;
     }
 
-    private VariableOwner getVariableOwner(String string) {
+    protected VariableOwner getVariableOwner(String string) {
         VariableOwner owner = (VariableOwner) idPaintableMap.get(string);
         if (owner == null && string.startsWith("DD")) {
             return getDragAndDropService();
@@ -1807,30 +2001,6 @@ public abstract class AbstractCommunicationManager implements
         }
     }
 
-    /*
-     * Upload progress listener notifies upload component once when Jakarta
-     * FileUpload can determine content length. Used to detect files total size,
-     * uploads progress can be tracked inside upload.
-     */
-    private class UploadProgressListener implements ProgressListener,
-            Serializable {
-
-        Upload uploadComponent;
-
-        boolean updated = false;
-
-        public void setUpload(Upload u) {
-            uploadComponent = u;
-        }
-
-        public void update(long bytesRead, long contentLength, int items) {
-            if (!updated && uploadComponent != null) {
-                uploadComponent.setUploadSize(contentLength);
-                updated = true;
-            }
-        }
-    }
-
     /**
      * Helper method to test if a component contains another
      * 
@@ -1964,4 +2134,7 @@ public abstract class AbstractCommunicationManager implements
         }
 
     }
+
+    abstract String createReceiverUrl(ReceiverOwner owner, String name,
+            Receiver value);
 }

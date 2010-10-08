@@ -49,7 +49,6 @@ import com.liferay.portal.kernel.util.PortalClassInvoker;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
-import com.vaadin.external.org.apache.commons.fileupload.portlet.PortletFileUpload;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration;
@@ -259,6 +258,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         } else if (request instanceof ResourceRequest) {
             if (isUIDLRequest((ResourceRequest) request)) {
                 return RequestType.UIDL;
+            } else if (isFileUploadRequest((ResourceRequest) request)) {
+                return RequestType.FILE_UPLOAD;
             } else if (isApplicationResourceRequest((ResourceRequest) request)) {
                 return RequestType.APPLICATION_RESOURCE;
             } else if (isDummyRequest((ResourceRequest) request)) {
@@ -267,12 +268,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 return RequestType.STATIC_FILE;
             }
         } else if (request instanceof ActionRequest) {
-            if (isFileUploadRequest((ActionRequest) request)) {
-                return RequestType.FILE_UPLOAD;
-            } else {
-                // action other than upload
-                return RequestType.ACTION;
-            }
+            return RequestType.ACTION;
         } else if (request instanceof EventRequest) {
             return RequestType.EVENT;
         }
@@ -294,8 +290,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 && request.getResourceID().equals("DUMMY");
     }
 
-    private boolean isFileUploadRequest(ActionRequest request) {
-        return PortletFileUpload.isMultipartContent(request);
+    private boolean isFileUploadRequest(ResourceRequest request) {
+        return "UPLOAD".equals(request.getResourceID());
     }
 
     /**
@@ -355,19 +351,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                 PortletCommunicationManager applicationManager = applicationContext
                         .getApplicationManager(application);
-
-                if (response instanceof RenderResponse
-                        && applicationManager.dummyURL == null) {
-                    /*
-                     * The application manager needs an URL to the dummy page.
-                     * See the PortletCommunicationManager.sendUploadResponse
-                     * method for more information.
-                     */
-                    ResourceURL dummyURL = ((RenderResponse) response)
-                            .createResourceURL();
-                    dummyURL.setResourceID("DUMMY");
-                    applicationManager.dummyURL = dummyURL.toString();
-                }
 
                 /* Update browser information from request */
                 updateBrowserProperties(applicationContext.getBrowser(),
@@ -438,7 +421,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 /* Handle the request */
                 if (requestType == RequestType.FILE_UPLOAD) {
                     applicationManager.handleFileUpload(
-                            (ActionRequest) request, (ActionResponse) response);
+                            (ResourceRequest) request,
+                            (ResourceResponse) response);
                     return;
                 } else if (requestType == RequestType.UIDL) {
                     // Handles AJAX UIDL requests
@@ -1054,7 +1038,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         Map<String, String> config = new LinkedHashMap<String, String>();
 
         /*
-         * We need this in order to get uploads to work.
+         * We need this in order to get uploads to work. TODO this is not needed
+         * for uploads anymore, check if this is needed for some other things
          */
         PortletURL appUri = response.createActionURL();
         config.put("appUri", "'" + appUri.toString() + "'");

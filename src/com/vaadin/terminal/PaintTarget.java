@@ -152,6 +152,22 @@ public interface PaintTarget extends Serializable {
     public void addAttribute(String name, Resource value) throws PaintException;
 
     /**
+     * Adds a Receiver attribute to component. Eg. in web terminals Receivers
+     * are typically URIs, where the client side can do an http post (multipart
+     * request).
+     * 
+     * @param name
+     *            the Attribute name
+     * @param value
+     *            the Attribute value
+     * 
+     * @throws PaintException
+     *             if the paint operation failed.
+     */
+    public void addVariable(ReceiverOwner owner, String name, Receiver value)
+            throws PaintException;
+
+    /**
      * Adds a long attribute to component. Atributes must be added before any
      * content is written.
      * 

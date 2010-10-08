@@ -3,10 +3,6 @@
  */
 package com.vaadin.ui;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,22 +15,33 @@ import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.UploadStream;
+import com.vaadin.terminal.Receiver;
+import com.vaadin.terminal.ReceiverOwner;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
-import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
-import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable.Html5File;
-import com.vaadin.ui.Upload.Receiver;
-import com.vaadin.ui.Upload.UploadException;
+import com.vaadin.ui.Html5File.ProxyReceiver;
 
 @SuppressWarnings("serial")
 @ClientWidget(VDragAndDropWrapper.class)
 public class DragAndDropWrapper extends CustomComponent implements DropTarget,
-        DragSource {
+        DragSource, ReceiverOwner {
 
     public class WrapperTransferable extends TransferableImpl {
+
+        /**
+         * @deprecated this class is made top level in recent version. Use
+         *             com.vaadin.ui.Html5File instead
+         */
+        @Deprecated
+        private class Html5File extends com.vaadin.ui.Html5File {
+
+            Html5File(String name, long size, String mimeType) {
+                super(name, size, mimeType);
+            }
+
+        }
 
         private Html5File[] files;
 
@@ -45,13 +52,14 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
             if (fc != null) {
                 files = new Html5File[fc];
                 for (int i = 0; i < fc; i++) {
-                    Html5File file = new Html5File();
+                    Html5File file = new Html5File(
+                            (String) rawVariables.get("fn" + i), // name
+                            (Integer) rawVariables.get("fs" + i), // size
+                            (String) rawVariables.get("ft" + i)); // mime
                     String id = (String) rawVariables.get("fi" + i);
-                    file.name = (String) rawVariables.get("fn" + i);
-                    file.size = (Integer) rawVariables.get("fs" + i);
-                    file.type = (String) rawVariables.get("ft" + i);
                     files[i] = file;
                     receivers.put(id, file);
+                    requestRepaint(); // paint Receivers
                 }
             }
         }
@@ -94,50 +102,6 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                 data = (String) getData("text/html");
             }
             return data;
-        }
-
-        /**
-         * {@link DragAndDropWrapper} can receive also files from client
-         * computer if appropriate HTML 5 features are supported on client side.
-         * This class wraps information about dragged file on server side.
-         */
-        public class Html5File implements Serializable {
-
-            public String name;
-            private int size;
-            private Receiver receiver;
-            private String type;
-
-            public String getFileName() {
-                return name;
-            }
-
-            public int getFileSize() {
-                return size;
-            }
-
-            public String getType() {
-                return type;
-            }
-
-            /**
-             * Sets the {@link Receiver} that into which the file contents will
-             * be written. Usage of Reveiver is similar to {@link Upload}
-             * component.
-             * 
-             * <p>
-             * <em>Note!</em> receiving file contents is experimental feature
-             * depending on HTML 5 API's. It is supported only by Firefox 3.6 at
-             * this time.
-             * 
-             * @param receiver
-             *            the callback that returns stream where the
-             *            implementation writes the file contents as it arrives.
-             */
-            public void setReceiver(Receiver receiver) {
-                this.receiver = receiver;
-            }
-
         }
 
     }
@@ -220,9 +184,23 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         if (getDropHandler() != null) {
             getDropHandler().getAcceptCriterion().paint(target);
         }
+        if (receivers != null && receivers.size() > 0) {
+            for (String id : receivers.keySet()) {
+                Html5File html5File = receivers.get(id);
+                if (html5File.getReceiver() != null) {
+                    target.addVariable(this, "rec-" + id,
+                            html5File.getProxyReceiver());
+                } else {
+                    // instructs the client side not to send the file
+                    target.addVariable(this, "rec-" + id, (String) null);
+                }
+            }
+        }
     }
 
     private DropHandler dropHandler;
+    private Html5File currentlyUploadedFile;
+    private boolean listenProgressOfUploadedFile;
 
     public DropHandler getDropHandler() {
         return dropHandler;
@@ -251,38 +229,96 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         return dragStartMode;
     }
 
-    /**
-     * This method should only be used by Vaadin terminal implementation. This
-     * is not end user api.
-     * 
-     * TODO should fire progress events + end/succes events like upload. Not
-     * critical until we have a wider browser support for HTML5 File API
-     * 
-     * @param upstream
-     * @param fileId
-     * @throws UploadException
+    /*
+     * Single controller is enough for atm as files are transferred in serial.
+     * If parallel transfer is needed, this logic needs to go to Html5File
      */
-    public void receiveFile(UploadStream upstream, String fileId)
-            throws UploadException {
-        Html5File file = receivers.get(fileId);
-        if (file != null && file.receiver != null) {
-            OutputStream receiveUpload = file.receiver.receiveUpload(
-                    file.getFileName(), "TODO");
+    private ReceivingController controller = new ReceivingController() {
+        /*
+         * With XHR2 file posts we can't provide as much information from the
+         * terminal as with multipart request. This helper class wraps the
+         * terminal event and provides the lacking information from the
+         * Html5File.
+         */
+        class ReceivingEventWrapper implements ReceivingFailedEvent,
+                ReceivingEndedEvent, ReceivingStartedEvent,
+                ReceivingProgressedEvent {
+            private ReceivingEvent wrappedEvent;
 
-            InputStream stream = upstream.getStream();
-            byte[] buf = new byte[AbstractApplicationServlet.MAX_BUFFER_SIZE];
-            int bytesRead;
-            try {
-                while ((bytesRead = stream.read(buf)) != -1) {
-                    receiveUpload.write(buf, 0, bytesRead);
-                }
-                receiveUpload.close();
-            } catch (IOException e) {
-                throw new UploadException(e);
+            ReceivingEventWrapper(ReceivingEvent e) {
+                wrappedEvent = e;
             }
-            // clean up the reference when file is downloaded
-            receivers.remove(fileId);
+
+            public String getMimeType() {
+                return currentlyUploadedFile.getType();
+            }
+
+            public String getFileName() {
+                return currentlyUploadedFile.getFileName();
+            }
+
+            public long getContentLength() {
+                return currentlyUploadedFile.getFileSize();
+            }
+
+            public Receiver getReceiver() {
+                return currentlyUploadedFile.getReceiver();
+            }
+
+            public Exception getException() {
+                if (wrappedEvent instanceof ReceivingFailedEvent) {
+                    return ((ReceivingFailedEvent) wrappedEvent).getException();
+                }
+                return null;
+            }
+
+            public long getBytesReceived() {
+                return wrappedEvent.getBytesReceived();
+            }
         }
 
+        public boolean listenProgress() {
+            return listenProgressOfUploadedFile;
+        }
+
+        public void onProgress(ReceivingProgressedEvent event) {
+            currentlyUploadedFile.getUploadListener().onProgress(
+                    new ReceivingEventWrapper(event));
+        }
+
+        public void uploadStarted(ReceivingStartedEvent event) {
+            currentlyUploadedFile = ((ProxyReceiver) event.getReceiver())
+                    .getFile();
+            listenProgressOfUploadedFile = currentlyUploadedFile
+                    .getUploadListener() != null;
+            if (listenProgressOfUploadedFile) {
+                currentlyUploadedFile.getUploadListener().uploadStarted(
+                        new ReceivingEventWrapper(event));
+            }
+        }
+
+        public void uploadFinished(ReceivingEndedEvent event) {
+            if (listenProgressOfUploadedFile) {
+                currentlyUploadedFile.getUploadListener().uploadFinished(
+                        new ReceivingEventWrapper(event));
+            }
+        }
+
+        public void uploadFailed(final ReceivingFailedEvent event) {
+            if (listenProgressOfUploadedFile) {
+                currentlyUploadedFile.getUploadListener().uploadFailed(
+                        new ReceivingEventWrapper(event));
+            }
+        }
+
+        public boolean isInterrupted() {
+            return currentlyUploadedFile.isInterrupted();
+        }
+
+    };
+
+    public ReceivingController getReceivingController(Receiver receiver) {
+        return controller;
     }
+
 }

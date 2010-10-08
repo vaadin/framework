@@ -34,7 +34,6 @@ import javax.servlet.http.HttpSession;
 
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
-import com.vaadin.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.Terminal;
@@ -177,6 +176,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     private final String resourcePath = null;
 
     private int resourceCacheTime = 3600;
+    static final String UPLOAD_URL_PREFIX = "APP/UPLOAD/";
 
     /**
      * Called by the servlet container to indicate to a servlet that the servlet
@@ -1362,7 +1362,18 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     private boolean isFileUploadRequest(HttpServletRequest request) {
-        return ServletFileUpload.isMultipartContent(request);
+        String pathInfo = getRequestPathInfo(request);
+
+        if (pathInfo == null) {
+            return false;
+        }
+
+        if (pathInfo.startsWith("/" + UPLOAD_URL_PREFIX)) {
+            return true;
+        }
+
+        return false;
+
     }
 
     private boolean isOnUnloadRequest(HttpServletRequest request) {

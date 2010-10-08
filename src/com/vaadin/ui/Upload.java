@@ -4,20 +4,18 @@
 
 package com.vaadin.ui;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
-import com.vaadin.Application;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.UploadStream;
+import com.vaadin.terminal.ReceiverOwner;
 import com.vaadin.terminal.gwt.client.ui.VUpload;
+import com.vaadin.terminal.gwt.server.NoInputStreamException;
+import com.vaadin.terminal.gwt.server.NoOutputStreamException;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
@@ -62,12 +60,8 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  */
 @SuppressWarnings("serial")
 @ClientWidget(value = VUpload.class, loadStyle = LoadStyle.LAZY)
-public class Upload extends AbstractComponent implements Component.Focusable {
-
-    /**
-     * Upload buffer size.
-     */
-    private static final int BUFFER_SIZE = 64 * 1024; // 64k
+public class Upload extends AbstractComponent implements Component.Focusable,
+        ReceiverOwner {
 
     /**
      * Should the field be focused on next repaint?
@@ -131,105 +125,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     }
 
     /**
-     * This method is called by terminal when upload is received.
-     * 
-     * Note, this method is called outside synchronized (Application) block, so
-     * overriding this may be dangerous.
-     * 
-     * @param upload
-     */
-    public void receiveUpload(UploadStream upload) throws UploadException {
-        if (receiver == null) {
-            throw new IllegalStateException(
-                    "Receiver not set for the Upload component");
-        }
-
-        if (!isUploading) {
-            throw new IllegalStateException("uploading not started");
-        }
-
-        // Gets file properties
-        final String filename = upload.getContentName();
-        final String type = upload.getContentType();
-
-        final Application application = getApplication();
-
-        synchronized (application) {
-            fireStarted(filename, type);
-        }
-
-        // Gets the output target stream
-        final OutputStream out = receiver.receiveUpload(filename, type);
-        if (out == null) {
-            synchronized (application) {
-                fireNoOutputStream(filename, type, 0);
-                endUpload();
-            }
-            return;
-        }
-
-        final InputStream in = upload.getStream();
-
-        if (null == in) {
-            // No file, for instance non-existent filename in html upload
-            synchronized (application) {
-                fireNoInputStream(filename, type, 0);
-                endUpload();
-            }
-            return;
-        }
-
-        final byte buffer[] = new byte[BUFFER_SIZE];
-        int bytesRead = 0;
-        totalBytes = 0;
-        try {
-            while ((bytesRead = in.read(buffer)) > 0) {
-                out.write(buffer, 0, bytesRead);
-                totalBytes += bytesRead;
-                if (contentLength > 0
-                        && (progressListeners != null || progressListener != null)) {
-                    // update progress if listener set and contentLength
-                    // received
-                    synchronized (application) {
-                        fireUpdateProgress(totalBytes, contentLength);
-                    }
-                }
-                if (interrupted) {
-                    throw new UploadInterruptedException();
-                }
-            }
-
-            // upload successful
-            out.close();
-            synchronized (application) {
-                fireUploadSuccess(filename, type, totalBytes);
-                endUpload();
-                requestRepaint();
-            }
-
-        } catch (final Exception e) {
-            synchronized (application) {
-                if (e instanceof UploadInterruptedException) {
-                    // Download interrupted
-                    try {
-                        // still try to close output stream
-                        out.close();
-                    } catch (IOException e1) {
-                        // NOP
-                    }
-                }
-                fireUploadInterrupted(filename, type, totalBytes, e);
-                endUpload();
-                interrupted = false;
-                if (!(e instanceof UploadInterruptedException)) {
-                    // throw exception for terminal to be handled
-                    throw new UploadException(e);
-                }
-            }
-        }
-    }
-
-    /**
      * Invoked when the value of a variable has changed.
      * 
      * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
@@ -278,6 +173,9 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 
         target.addAttribute("nextid", nextid);
 
+        // Post file to this receiver
+        target.addVariable(this, "action", receiver);
+
     }
 
     /**
@@ -288,20 +186,11 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * @version
      * @VERSION@
      * @since 3.0
+     * @deprecated use {@link com.vaadin.terminal.Receiver} instead. A "copy"
+     *             here is kept for backwards compatibility.
      */
-    public interface Receiver extends Serializable {
-
-        /**
-         * Invoked when a new upload arrives.
-         * 
-         * @param filename
-         *            the desired filename of the upload, usually as specified
-         *            by the client.
-         * @param MIMEType
-         *            the MIME type of the uploaded file.
-         * @return Stream to which the uploaded file should be written.
-         */
-        public OutputStream receiveUpload(String filename, String MIMEType);
+    @Deprecated
+    public interface Receiver extends com.vaadin.terminal.Receiver {
     }
 
     /* Upload events */
@@ -332,19 +221,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
         }
     }
 
-    private class UploadInterruptedException extends Exception {
-        public UploadInterruptedException() {
-            super("Upload interrupted by other thread");
-        }
-
-    }
-
-    public static class UploadException extends Exception {
-        public UploadException(Exception e) {
-            super("Upload failed", e);
-        }
-    }
-
     /**
      * Upload.Received event is sent when the upload receives a file, regardless
      * of whether the reception was successful or failed. If you wish to
@@ -356,7 +232,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * @VERSION@
      * @since 3.0
      */
-    public class FinishedEvent extends Component.Event {
+    public static class FinishedEvent extends Component.Event {
 
         /**
          * Length of the received file.
@@ -439,7 +315,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * @VERSION@
      * @since 3.0
      */
-    public class FailedEvent extends FinishedEvent {
+    public static class FailedEvent extends FinishedEvent {
 
         private Exception reason = null;
 
@@ -484,7 +360,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     /**
      * FailedEvent that indicates that an output stream could not be obtained.
      */
-    public class NoOutputStreamEvent extends FailedEvent {
+    public static class NoOutputStreamEvent extends FailedEvent {
 
         /**
          * 
@@ -502,7 +378,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     /**
      * FailedEvent that indicates that an input stream could not be obtained.
      */
-    public class NoInputStreamEvent extends FailedEvent {
+    public static class NoInputStreamEvent extends FailedEvent {
 
         /**
          * 
@@ -526,7 +402,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * @VERSION@
      * @since 3.0
      */
-    public class SucceededEvent extends FinishedEvent {
+    public static class SucceededEvent extends FinishedEvent {
 
         /**
          * 
@@ -550,10 +426,14 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * @VERSION@
      * @since 5.0
      */
-    public class StartedEvent extends Component.Event {
+    public static class StartedEvent extends Component.Event {
 
         private final String filename;
         private final String type;
+        /**
+         * Length of the received file.
+         */
+        private final long length;
 
         /**
          * 
@@ -562,10 +442,12 @@ public class Upload extends AbstractComponent implements Component.Focusable {
          * @param MIMEType
          * @param length
          */
-        public StartedEvent(Upload source, String filename, String MIMEType) {
+        public StartedEvent(Upload source, String filename, String MIMEType,
+                long contentLength) {
             super(source);
             this.filename = filename;
             type = MIMEType;
+            length = contentLength;
         }
 
         /**
@@ -593,6 +475,13 @@ public class Upload extends AbstractComponent implements Component.Focusable {
          */
         public String getMIMEType() {
             return type;
+        }
+
+        /**
+         * @return the length of the file that is being uploaded
+         */
+        public long getContentLength() {
+            return length;
         }
 
     }
@@ -786,19 +675,8 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * @param length
      */
     protected void fireStarted(String filename, String MIMEType) {
-        fireEvent(new Upload.StartedEvent(this, filename, MIMEType));
-    }
-
-    /**
-     * Emit upload finished event.
-     * 
-     * @param filename
-     * @param MIMEType
-     * @param length
-     */
-    protected void fireUploadReceived(String filename, String MIMEType,
-            long length) {
-        fireEvent(new Upload.FinishedEvent(this, filename, MIMEType, length));
+        fireEvent(new Upload.StartedEvent(this, filename, MIMEType,
+                contentLength));
     }
 
     /**
@@ -914,15 +792,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     }
 
     /**
-     * Sets the size of the file currently being uploaded.
-     * 
-     * @param contentLength
-     */
-    public void setUploadSize(long contentLength) {
-        this.contentLength = contentLength;
-    }
-
-    /**
      * Go into upload state. This is to prevent double uploading on same
      * component.
      * 
@@ -959,6 +828,8 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     private void endUpload() {
         isUploading = false;
         contentLength = -1;
+        interrupted = false;
+        requestRepaint();
     }
 
     public boolean isUploading() {
@@ -1044,6 +915,56 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      */
     public void setButtonCaption(String buttonCaption) {
         this.buttonCaption = buttonCaption;
+    }
+
+    /*
+     * Handle to terminal via Upload monitors and controls the upload during it
+     * is being streamed.
+     */
+    private final ReceivingController controller = new ReceivingController() {
+        public boolean listenProgress() {
+            return (progressListeners != null || progressListener != null);
+        }
+
+        public void onProgress(ReceivingProgressedEvent event) {
+            fireUpdateProgress(event.getBytesReceived(),
+                    event.getContentLength());
+        }
+
+        public void uploadStarted(ReceivingStartedEvent event) {
+            startUpload();
+            contentLength = event.getContentLength();
+            fireStarted(event.getFileName(), event.getMimeType());
+        }
+
+        public void uploadFinished(ReceivingEndedEvent event) {
+            fireUploadSuccess(event.getFileName(), event.getMimeType(),
+                    event.getContentLength());
+            endUpload();
+            requestRepaint();
+        }
+
+        public void uploadFailed(ReceivingFailedEvent event) {
+            Exception exception = event.getException();
+            if (exception instanceof NoInputStreamException) {
+                fireNoInputStream(event.getFileName(), event.getMimeType(), 0);
+            } else if (exception instanceof NoOutputStreamException) {
+                fireNoOutputStream(event.getFileName(), event.getMimeType(), 0);
+            } else {
+                fireUploadInterrupted(event.getFileName(), event.getMimeType(),
+                        0, exception);
+            }
+            endUpload();
+        }
+
+        public boolean isInterrupted() {
+            return interrupted;
+        }
+    };
+
+    public final ReceivingController getReceivingController(
+            com.vaadin.terminal.Receiver receiver) {
+        return controller;
     }
 
 }

@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
 import javax.portlet.ClientDataRequest;
 import javax.portlet.MimeResponse;
 import javax.portlet.PortletRequest;
@@ -17,15 +17,16 @@ import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
+import javax.portlet.ResourceURL;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 import com.vaadin.Application;
-import com.vaadin.external.org.apache.commons.fileupload.FileItemIterator;
-import com.vaadin.external.org.apache.commons.fileupload.FileUpload;
-import com.vaadin.external.org.apache.commons.fileupload.FileUploadException;
-import com.vaadin.external.org.apache.commons.fileupload.portlet.PortletFileUpload;
 import com.vaadin.terminal.DownloadStream;
+import com.vaadin.terminal.Paintable;
+import com.vaadin.terminal.Receiver;
+import com.vaadin.terminal.ReceiverOwner;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Window;
 
 /**
@@ -37,7 +38,7 @@ import com.vaadin.ui.Window;
 @SuppressWarnings("serial")
 public class PortletCommunicationManager extends AbstractCommunicationManager {
 
-    protected String dummyURL;
+    private ResourceResponse currentUidlResponse;
 
     private static class PortletRequestWrapper implements Request {
 
@@ -191,39 +192,36 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         super(application);
     }
 
-    @Override
-    protected FileUpload createFileUpload() {
-        return new PortletFileUpload();
-    }
+    public void handleFileUpload(ResourceRequest request,
+            ResourceResponse response) throws IOException {
+        String contentType = request.getContentType();
+        String name = request.getParameter("name");
+        String ownerId = request.getParameter("rec-owner");
+        ReceiverOwner variableOwner = (ReceiverOwner) getVariableOwner(ownerId);
+        Receiver receiver = ownerToNameToReceiver.get(variableOwner).remove(
+                name);
 
-    @Override
-    protected FileItemIterator getUploadItemIterator(FileUpload upload,
-            Request request) throws IOException, FileUploadException {
-        return ((PortletFileUpload) upload)
-                .getItemIterator((ActionRequest) request.getWrappedRequest());
-    }
+        // clean up, may be re added on next paint
+        ownerToNameToReceiver.get(variableOwner).remove(name);
 
-    public void handleFileUpload(ActionRequest request, ActionResponse response)
-            throws FileUploadException, IOException {
-        doHandleFileUpload(new PortletRequestWrapper(request),
-                new PortletResponseWrapper(response));
-    }
-
-    @Override
-    protected void sendUploadResponse(Request request, Response response)
-            throws IOException {
-        if (response.getWrappedResponse() instanceof ActionResponse) {
-            /*
-             * If we do not redirect to some other page, the entire portal page
-             * will be re-printed into the target of the upload request (an
-             * IFRAME), which in turn will cause very strange side effects.
-             */
-            System.out.println("Redirecting to dummyURL: " + dummyURL);
-            ((ActionResponse) response.getWrappedResponse())
-                    .sendRedirect(dummyURL == null ? "http://www.google.com"
-                            : dummyURL);
+        if (contentType.contains("boundary")) {
+            doHandleSimpleMultipartFileUpload(
+                    new PortletRequestWrapper(request),
+                    new PortletResponseWrapper(response), receiver,
+                    variableOwner, contentType.split("boundary=")[1]);
         } else {
-            super.sendUploadResponse(request, response);
+            doHandleXhrFilePost(new PortletRequestWrapper(request),
+                    new PortletResponseWrapper(response), receiver,
+                    variableOwner, request.getContentLength());
+        }
+
+    }
+
+    @Override
+    protected void unregisterPaintable(Component p) {
+        super.unregisterPaintable(p);
+        if (ownerToNameToReceiver != null) {
+            ownerToNameToReceiver.remove(p);
         }
     }
 
@@ -231,10 +229,12 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             ResourceResponse response,
             AbstractApplicationPortlet applicationPortlet, Window window)
             throws InvalidUIDLSecurityKeyException, IOException {
+        currentUidlResponse = response;
         doHandleUidlRequest(new PortletRequestWrapper(request),
                 new PortletResponseWrapper(response),
                 new AbstractApplicationPortletWrapper(applicationPortlet),
                 window);
+        currentUidlResponse = null;
     }
 
     DownloadStream handleURI(Window window, ResourceRequest request,
@@ -265,9 +265,32 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     Window getApplicationWindow(PortletRequest request,
             AbstractApplicationPortlet applicationPortlet,
             Application application, Window assumedWindow) {
+
         return doGetApplicationWindow(new PortletRequestWrapper(request),
                 new AbstractApplicationPortletWrapper(applicationPortlet),
                 application, assumedWindow);
+    }
+
+    private Map<ReceiverOwner, Map<String, Receiver>> ownerToNameToReceiver;
+
+    @Override
+    String createReceiverUrl(ReceiverOwner owner, String name, Receiver value) {
+        if (ownerToNameToReceiver == null) {
+            ownerToNameToReceiver = new HashMap<ReceiverOwner, Map<String, Receiver>>();
+        }
+        Map<String, Receiver> nameToReceiver = ownerToNameToReceiver.get(owner);
+        if (nameToReceiver == null) {
+            nameToReceiver = new HashMap<String, Receiver>();
+            ownerToNameToReceiver.put(owner, nameToReceiver);
+        }
+        nameToReceiver.put(name, value);
+        ResourceURL resurl = currentUidlResponse.createResourceURL();
+        resurl.setResourceID("UPLOAD");
+        resurl.setParameter("name", name);
+        resurl.setParameter("rec-owner", getPaintableId((Paintable) owner));
+        resurl.setProperty("name", name);
+        resurl.setProperty("rec-owner", getPaintableId((Paintable) owner));
+        return resurl.toString();
     }
 
 }

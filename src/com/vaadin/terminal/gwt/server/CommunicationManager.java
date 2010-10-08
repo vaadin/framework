@@ -7,6 +7,9 @@ package com.vaadin.terminal.gwt.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,12 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.vaadin.Application;
-import com.vaadin.external.org.apache.commons.fileupload.FileItemIterator;
-import com.vaadin.external.org.apache.commons.fileupload.FileUpload;
-import com.vaadin.external.org.apache.commons.fileupload.FileUploadException;
-import com.vaadin.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.DownloadStream;
+import com.vaadin.terminal.Paintable;
+import com.vaadin.terminal.Receiver;
+import com.vaadin.terminal.ReceiverOwner;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Window;
 
 /**
@@ -202,34 +205,56 @@ public class CommunicationManager extends AbstractCommunicationManager {
         super(application);
     }
 
-    @Override
-    protected FileUpload createFileUpload() {
-        return new ServletFileUpload();
-    }
-
-    @Override
-    protected FileItemIterator getUploadItemIterator(FileUpload upload,
-            Request request) throws IOException, FileUploadException {
-        return ((ServletFileUpload) upload)
-                .getItemIterator((HttpServletRequest) request
-                        .getWrappedRequest());
-    }
-
     /**
      * Handles file upload request submitted via Upload component.
      * 
-     * TODO document
+     * @see #createReceiverUrl(ReceiverOwner, String, Receiver)
      * 
      * @param request
      * @param response
      * @throws IOException
-     * @throws FileUploadException
+     * @throws InvalidUIDLSecurityKeyException
      */
     public void handleFileUpload(HttpServletRequest request,
             HttpServletResponse response) throws IOException,
-            FileUploadException {
-        doHandleFileUpload(new HttpServletRequestWrapper(request),
-                new HttpServletResponseWrapper(response));
+            InvalidUIDLSecurityKeyException {
+
+        /*
+         * URI pattern: APP/UPPLOAD/[PID]/[NAME]/[SECKEY] See #createReceiverUrl
+         */
+
+        String pathInfo = request.getPathInfo();
+        // strip away part until the data we are interested starts
+        int startOfData = pathInfo
+                .indexOf(AbstractApplicationServlet.UPLOAD_URL_PREFIX)
+                + AbstractApplicationServlet.UPLOAD_URL_PREFIX.length();
+        String uppUri = pathInfo.substring(startOfData);
+        String[] parts = uppUri.split("/", 3); // 0 = pid, 1= name, 2 = sec key
+
+        Receiver receiver = pidToNameToReceiver.get(parts[0]).remove(parts[1]);
+        String secKey = receiverToSeckey.remove(receiver);
+        if (secKey.equals(parts[2])) {
+
+            ReceiverOwner source = (ReceiverOwner) getVariableOwner(parts[0]);
+            String contentType = request.getContentType();
+            if (request.getContentType().contains("boundary")) {
+                // Multipart requests contain boundary string
+                doHandleSimpleMultipartFileUpload(
+                        new HttpServletRequestWrapper(request),
+                        new HttpServletResponseWrapper(response), receiver,
+                        source, contentType.split("boundary=")[1]);
+            } else {
+                // if boundary string does not exist, the posted file is from
+                // XHR2.post(File)
+                doHandleXhrFilePost(new HttpServletRequestWrapper(request),
+                        new HttpServletResponseWrapper(response), receiver,
+                        source, request.getContentLength());
+            }
+        } else {
+            throw new InvalidUIDLSecurityKeyException(
+                    "Security key in upload post did not match!");
+        }
+
     }
 
     /**
@@ -306,6 +331,67 @@ public class CommunicationManager extends AbstractCommunicationManager {
         return handleURI(window, new HttpServletRequestWrapper(request),
                 new HttpServletResponseWrapper(response),
                 new AbstractApplicationServletWrapper(applicationServlet));
+    }
+
+    @Override
+    protected void unregisterPaintable(Component p) {
+        /* Cleanup possible receivers */
+        if (pidToNameToReceiver != null && p instanceof ReceiverOwner) {
+            Map<String, Receiver> removed = pidToNameToReceiver
+                    .remove(getPaintableId(p));
+            if (removed != null) {
+                for (String key : removed.keySet()) {
+                    receiverToSeckey.remove(removed.get(key));
+                }
+            }
+        }
+        super.unregisterPaintable(p);
+
+    }
+
+    private Map<String, Map<String, Receiver>> pidToNameToReceiver;
+
+    private Map<Receiver, String> receiverToSeckey;
+
+    @Override
+    String createReceiverUrl(ReceiverOwner owner, String name, Receiver value) {
+
+        /*
+         * We will use the same APP/* URI space as ApplicationResources but
+         * prefix url with UPLOAD
+         * 
+         * eg. APP/UPPLOAD/[PID]/[NAME]/[SECKEY]
+         * 
+         * SECKEY is created on each paint to make URL's unpredictable (to
+         * prevent CSRF attacks).
+         * 
+         * NAME and PID from URI forms a key to fetch Receiver when handling
+         * post
+         */
+        String paintableId = getPaintableId((Paintable) owner);
+        String key = paintableId + "/" + name;
+
+        if (pidToNameToReceiver == null) {
+            pidToNameToReceiver = new HashMap<String, Map<String, Receiver>>();
+        }
+        Map<String, Receiver> nameToReceiver = pidToNameToReceiver
+                .get(paintableId);
+        if (nameToReceiver == null) {
+            nameToReceiver = new HashMap<String, Receiver>();
+            pidToNameToReceiver.put(paintableId, nameToReceiver);
+        }
+        nameToReceiver.put(name, value);
+
+        if (receiverToSeckey == null) {
+            receiverToSeckey = new HashMap<Receiver, String>();
+        }
+        String seckey = UUID.randomUUID().toString();
+        receiverToSeckey.put(value, seckey);
+
+        return getApplication().getURL()
+                + AbstractApplicationServlet.UPLOAD_URL_PREFIX + key + "/"
+                + seckey;
+
     }
 
 }

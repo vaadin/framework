@@ -250,6 +250,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
             return resourceURL.toString();
         } else {
             // in a background thread or otherwise outside a request
+            // TODO exception ??
             return null;
         }
     }

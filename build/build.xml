@@ -180,7 +180,6 @@
         <!-- Construct classpath used by java and javadoc compilation -->
         <path id="compile.classpath">
             <pathelement path="build/lib/servlet.jar" />
-            <pathelement path="build/external/fileupload/classes" />
         	<fileset dir="lib/core">
         	    <include name="**/*.jar"/>
         		
@@ -574,12 +573,7 @@
         </copy>
     </target>
 
-    <target name="compile-fileupload">
-        <echo>Compiling custom fileupload classes.</echo>
-        <ant dir="build/external/fileupload" antfile="build.xml" target="compile" />
-    </target>
-
-    <target name="compile-java" depends="init, check-servlet-version, compile-fileupload, webcontent">
+    <target name="compile-java" depends="init, check-servlet-version, webcontent">
         <echo>Compiling src (server-side)</echo>
     	
         <!-- Compile all sources at the same time as they depend on each other -->
@@ -797,10 +791,6 @@
                     <exclude name="${toolkit-package}/tests/**"/>
                     <exclude name="${toolkit-package}/launcher/**" />
                 </patternset>
-            </fileset>
-            <!-- fileupload, see build/external/fileupload/build.xml -->
-            <fileset dir="build/external/fileupload/classes">
-                <include name="**/*" />
             </fileset>
             <!-- add sources -->
             <fileset dir="${result-path}/src/core">

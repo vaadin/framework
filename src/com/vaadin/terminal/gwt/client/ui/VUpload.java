@@ -147,7 +147,7 @@ public class VUpload extends SimplePanel implements Paintable {
         this.client = client;
         paintableId = uidl.getId();
         nextUploadId = uidl.getIntAttribute("nextid");
-        element.setAction(client.getAppUri());
+        element.setAction(uidl.getStringVariable("action"));
         submitButton.setText(uidl.getStringAttribute("buttoncaption"));
         fu.setName(paintableId + "_file");
 
