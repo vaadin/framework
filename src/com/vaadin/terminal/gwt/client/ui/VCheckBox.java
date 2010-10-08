@@ -42,8 +42,6 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
     private Icon icon;
 
-    private boolean isBlockMode = false;
-
     private HandlerRegistration focusHandlerRegistration;
     private HandlerRegistration blurHandlerRegistration;
 
@@ -170,24 +168,12 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
     @Override
     public void setWidth(String width) {
-        setBlockMode();
         super.setWidth(width);
     }
 
     @Override
     public void setHeight(String height) {
-        setBlockMode();
         super.setHeight(height);
-    }
-
-    /**
-     * makes container element (span) to be block element to enable sizing.
-     */
-    private void setBlockMode() {
-        if (!isBlockMode) {
-            DOM.setStyleAttribute(getElement(), "display", "block");
-            isBlockMode = true;
-        }
     }
 
     public void onFocus(FocusEvent arg0) {
