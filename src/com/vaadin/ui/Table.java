@@ -1031,6 +1031,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         if (header == null) {
             columnHeaders.remove(propertyId);
+            requestRepaint();
             return;
         }
         columnHeaders.put(propertyId, header);
@@ -3996,6 +3997,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public void setColumnFooter(Object propertyId, String footer) {
         if (footer == null) {
             columnFooters.remove(propertyId);
+            requestRepaint();
             return;
         }
         columnFooters.put(propertyId, footer);
