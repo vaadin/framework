@@ -90,8 +90,8 @@ public class Html5File implements Serializable {
     }
 
     /**
-     * Gets the {@link Html5FileUploadListener} that is used to track the progress of
-     * streaming the file contents to given {@link Receiver}.
+     * Gets the {@link Html5FileUploadListener} that is used to track the
+     * progress of streaming the file contents to given {@link Receiver}.
      * 
      * @return
      */
@@ -100,8 +100,8 @@ public class Html5File implements Serializable {
     }
 
     /**
-     * Sets the {@link Html5FileUploadListener} that can be used to track the progress of
-     * streaming the file contents to given {@link Receiver}.
+     * Sets the {@link Html5FileUploadListener} that can be used to track the
+     * progress of streaming the file contents to given {@link Receiver}.
      * 
      * @param listener
      * @see #setReceiver(Receiver)
@@ -123,7 +123,7 @@ public class Html5File implements Serializable {
         this.interrupted = interrupted;
     }
 
-    public interface Html5FileUploadListener {
+    public interface Html5FileUploadListener extends Serializable {
 
         void onProgress(ReceivingProgressedEvent event);
 
