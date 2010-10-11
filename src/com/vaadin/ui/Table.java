@@ -1031,10 +1031,9 @@ public class Table extends AbstractSelect implements Action.Container,
 
         if (header == null) {
             columnHeaders.remove(propertyId);
-            requestRepaint();
-            return;
+        } else {
+            columnHeaders.put(propertyId, header);
         }
-        columnHeaders.put(propertyId, header);
 
         // Assures the visual refresh
         // FIXME: Is this really needed? Header captions should not affect
@@ -3997,10 +3996,9 @@ public class Table extends AbstractSelect implements Action.Container,
     public void setColumnFooter(Object propertyId, String footer) {
         if (footer == null) {
             columnFooters.remove(propertyId);
-            requestRepaint();
-            return;
+        } else {
+            columnFooters.put(propertyId, footer);
         }
-        columnFooters.put(propertyId, footer);
 
         requestRepaint();
     }
