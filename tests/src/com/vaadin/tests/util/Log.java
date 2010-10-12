@@ -17,7 +17,7 @@ public class Log extends VerticalLayout {
             eventLabels.add(l);
             addComponent(l);
         }
-
+        setDebugId("Log");
         setCaption("Events:");
     }
 
