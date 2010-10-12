@@ -183,7 +183,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
         target.addAttribute("nextid", nextid);
 
         // Post file to this receiver
-        target.addVariable(this, "action", receiver);
+        target.addVariable(this, "action", getReceiver());
 
     }
 
@@ -984,7 +984,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
         }
     };
 
-    public final ReceivingController getReceivingController(
+    public ReceivingController getReceivingController(
             com.vaadin.terminal.Receiver receiver) {
         return controller;
     }
