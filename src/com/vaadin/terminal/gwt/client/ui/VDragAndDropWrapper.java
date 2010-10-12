@@ -17,6 +17,7 @@ import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xhr.client.ReadyStateChangeHandler;
 import com.google.gwt.xhr.client.XMLHttpRequest;
@@ -28,6 +29,7 @@ import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
@@ -100,7 +102,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     private final static int WRAPPER = 2;
     private int dragStarMode;
     private int filecounter = 0;
-    private boolean dragLeavPostponed;
     private Map<String, String> fileIdToReveiver;
 
     @Override
@@ -158,6 +159,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             }
         }
     };
+    private Timer dragleavetimer;
 
     private void startNextUpload() {
         DeferredCommand.addCommand(new Command() {
@@ -187,22 +189,30 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     }
 
     public boolean html5DragEnter(VHtml5DragEvent event) {
+        VConsole.log("dragenter");
         if (dropHandler == null) {
             return true;
         }
         try {
-
-            if (dragLeavPostponed) {
-                // returned quickly back to wrapper
-                dragLeavPostponed = false;
-                return false;
+            Element elem = event.getEventTarget().cast();
+            if (elem == getElement()) {
+                VConsole.error("top element");
             }
-            VTransferable transferable = new VTransferable();
-            transferable.setDragSource(this);
 
-            vaadinDragEvent = VDragAndDropManager.get().startDrag(transferable,
-                    event, false);
-            VDragAndDropManager.get().setCurrentDropHandler(getDropHandler());
+            if (dragleavetimer != null) {
+                // returned quickly back to wrapper
+                dragleavetimer.cancel();
+                dragleavetimer = null;
+            }
+            if (VDragAndDropManager.get().getCurrentDropHandler() != getDropHandler()) {
+                VTransferable transferable = new VTransferable();
+                transferable.setDragSource(this);
+
+                vaadinDragEvent = VDragAndDropManager.get().startDrag(
+                        transferable, event, false);
+                VDragAndDropManager.get().setCurrentDropHandler(
+                        getDropHandler());
+            }
             event.preventDefault();
             event.stopPropagation();
             return false;
@@ -218,24 +228,28 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         }
 
         try {
+            VConsole.error("drageleave");
+            Element elem = event.getEventTarget().cast();
+            if (elem == getElement()) {
+                VConsole.error("top element");
+            }
 
-            dragLeavPostponed = true;
-            DeferredCommand.addCommand(new Command() {
-                public void execute() {
+            dragleavetimer = new Timer() {
+                @Override
+                public void run() {
                     // Yes, dragleave happens before drop. Makes no sense to me.
                     // IMO shouldn't fire leave at all if drop happens (I guess
                     // this
                     // is what IE does).
                     // In Vaadin we fire it only if drop did not happen.
-                    if (dragLeavPostponed
-                            && vaadinDragEvent != null
+                    if (vaadinDragEvent != null
                             && VDragAndDropManager.get()
                                     .getCurrentDropHandler() == getDropHandler()) {
                         VDragAndDropManager.get().interruptDrag();
                     }
-                    dragLeavPostponed = false;
                 }
-            });
+            };
+            dragleavetimer.schedule(350);
             event.preventDefault();
             event.stopPropagation();
             return false;
@@ -248,6 +262,14 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     public boolean html5DragOver(VHtml5DragEvent event) {
         if (dropHandler == null) {
             return true;
+        }
+
+        VConsole.log("dragover");
+        if (dragleavetimer != null) {
+            // returned quickly back to wrapper
+            VConsole.error("Dragleave cancelled");
+            dragleavetimer.cancel();
+            dragleavetimer = null;
         }
 
         vaadinDragEvent.setCurrentGwtEvent(event);
@@ -410,7 +432,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         @Override
         public void dragLeave(VDragEvent drag) {
             deEmphasis(true);
-            dragLeavPostponed = false;
+            dragleavetimer = null;
         }
 
         @Override
