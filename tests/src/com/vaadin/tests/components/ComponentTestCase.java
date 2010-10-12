@@ -225,16 +225,6 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
         select.addContainerProperty(VALUE, Object.class, "");
         select.setItemCaptionPropertyId(CAPTION);
         select.setNullSelectionAllowed(false);
-        for (String itemCaption : options.keySet()) {
-            Object itemId = new Object();
-            Item i = select.addItem(itemId);
-            i.getItemProperty(CAPTION).setValue(itemCaption);
-            i.getItemProperty(VALUE).setValue(options.get(itemCaption));
-            if (itemCaption.equals(initialValue)) {
-                select.setValue(itemId);
-            }
-
-        }
         select.addListener(new Property.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
@@ -247,7 +237,17 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
             }
         });
 
-        select.setValue(initialValue);
+        for (String itemCaption : options.keySet()) {
+            Object itemId = new Object();
+            Item i = select.addItem(itemId);
+            i.getItemProperty(CAPTION).setValue(itemCaption);
+            i.getItemProperty(VALUE).setValue(options.get(itemCaption));
+            if (itemCaption.equals(initialValue)) {
+                select.setValue(itemId);
+            }
+
+        }
+
         select.setDebugId("selectaction-" + caption);
 
         select.setImmediate(true);
