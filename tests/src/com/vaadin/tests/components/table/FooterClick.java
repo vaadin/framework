@@ -4,6 +4,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
@@ -18,9 +19,12 @@ public class FooterClick extends TestBase {
     private final String COLUMN2_PROPERTY_ID = "col2";
     private final String COLUMN3_PROPERTY_ID = "col3";
 
+    private Log log = new Log(5);
+
     @Override
     protected void setup() {
         final Table table = new Table();
+        table.setDebugId("table");
         table.setContainerDataSource(createContainer());
         table.setWidth("400px");
         table.setHeight("400px");
@@ -29,16 +33,18 @@ public class FooterClick extends TestBase {
         table.setColumnReorderingAllowed(true);
 
         table.setColumnFooter(COLUMN1_PROPERTY_ID, "fuu");
-        table.setColumnFooter(COLUMN2_PROPERTY_ID, "bar");
+        // table.setColumnFooter(COLUMN2_PROPERTY_ID, "bar");
         table.setColumnFooter(COLUMN3_PROPERTY_ID, "fuubar");
 
         final TextField columnField = new TextField(
                 "ProperyId of clicked column");
+        columnField.setDebugId("ClickedColumn");
 
         // Add a footer click listener
         table.addListener(new Table.FooterClickListener() {
             public void footerClick(FooterClickEvent event) {
                 columnField.setValue(event.getPropertyId());
+                log.log("Clicked on footer: " + event.getPropertyId());
             }
         });
 
@@ -66,6 +72,8 @@ public class FooterClick extends TestBase {
 
         addComponent(immediateCheckbox);
         addComponent(columnReorderingCheckbox);
+
+        addComponent(log);
 
         addComponent(table);
         addComponent(columnField);
