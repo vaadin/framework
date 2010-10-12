@@ -8,6 +8,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.UserError;
+import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -30,6 +31,8 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
     abstract protected Class<T> getTestClass();
 
     abstract protected void initializeComponents();
+
+    private Log log = null;
 
     @Override
     protected final void setup() {
@@ -255,5 +258,21 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
     @Override
     protected String getDescription() {
         return "Generic test case for " + getTestClass().getSimpleName();
+    }
+
+    protected void enableLog() {
+        if (log == null) {
+            log = new Log(5).setNumberLogRows(true);
+            getLayout().addComponent(log, 1);
+        }
+
+    }
+
+    protected void log(String msg) {
+        if (log == null) {
+            throw new IllegalStateException(
+                    "Use enableLog() before calling log()");
+        }
+        log.log(msg);
     }
 }
