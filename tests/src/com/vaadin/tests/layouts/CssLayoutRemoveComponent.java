@@ -13,7 +13,7 @@ public class CssLayoutRemoveComponent extends TestBase {
     @Override
     protected void setup() {
         final CssLayout layout = new CssLayout();
-        final TextField tf = new TextField("Caption");
+        final TextField tf = new TextField("Caption1");
         Button b = new Button("Remove field ", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
