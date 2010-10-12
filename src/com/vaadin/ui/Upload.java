@@ -76,7 +76,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     /**
      * The output of the upload is redirected to this receiver.
      */
-    private Receiver receiver;
+    private com.vaadin.terminal.Receiver receiver;
 
     private boolean isUploading;
 
@@ -99,14 +99,23 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     private int nextid;
 
-    /* TODO: Add a default constructor, receive to temp file. */
-
     /**
      * Creates a new instance of Upload.
      * 
      * The receiver must be set before performing an upload.
      */
     public Upload() {
+    }
+
+    /**
+     * @deprecated use
+     *             {@link Upload#Upload(String, com.vaadin.terminal.Receiver)}
+     *             instead
+     */
+    @Deprecated
+    public Upload(String caption, Receiver uploadReceiver) {
+        setCaption(caption);
+        receiver = uploadReceiver;
     }
 
     /**
@@ -119,7 +128,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param uploadReceiver
      *            Receiver to call to retrieve output stream when upload starts.
      */
-    public Upload(String caption, Receiver uploadReceiver) {
+    public Upload(String caption, com.vaadin.terminal.Receiver uploadReceiver) {
         setCaption(caption);
         receiver = uploadReceiver;
     }
@@ -751,8 +760,21 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * 
      * @return the Receiver.
      */
-    public Receiver getReceiver() {
+    public com.vaadin.terminal.Receiver getReceiver() {
         return receiver;
+    }
+
+    /**
+     * Sets the receiver.
+     * 
+     * @deprecated use {@link #setReceiver(com.vaadin.terminal.Receiver)}
+     *             instead
+     * @param receiver
+     *            the receiver to set.
+     */
+    @Deprecated
+    public void setReceiver(Receiver receiver) {
+        this.receiver = receiver;
     }
 
     /**
@@ -761,7 +783,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param receiver
      *            the receiver to set.
      */
-    public void setReceiver(Receiver receiver) {
+    public void setReceiver(com.vaadin.terminal.Receiver receiver) {
         this.receiver = receiver;
     }
 
