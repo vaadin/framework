@@ -302,6 +302,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                 currentlyUploadedFile.getUploadListener().uploadFinished(
                         new ReceivingEventWrapper(event));
             }
+            receivers.remove(event.getReceiver());
         }
 
         public void uploadFailed(final ReceivingFailedEvent event) {
@@ -309,6 +310,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                 currentlyUploadedFile.getUploadListener().uploadFailed(
                         new ReceivingEventWrapper(event));
             }
+            receivers.remove(event.getReceiver());
         }
 
         public boolean isInterrupted() {
