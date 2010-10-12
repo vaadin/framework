@@ -28,21 +28,34 @@
 <ul>
   <li><a href="#overview">Overview</a></li>
   <li><a href="#upgrading">General Upgrade Notes</a></li>
-  <li><a href="#upgradefrom63">Upgrading from Vaadin 6.3</a></li>
-  <li><a href="#widgetupgrade">Upgrading from Vaadin 6.0 or 6.1</a></li>
   <li><a href="#upgrading-tk5">Instructions for Upgrading from IT Mill Toolkit 5</a></li>
   <li><a href="#known-problems">Important known problems in Vaadin @version@</a></li>
+  <li><a href="#changelog">Change Log</a></li>
   <li><a href="#requirements">Requirements</a></li>
 </ul>
 
-<p>Vaadin @version@ is a maintenance release for Vaadin 6.4. It contains several important fixes.</p>
+<p>Vaadin @version@ is an update release for Vaadin 6. In addition to various fixes, it
+contains a number of significant enhancements.</p>
 
-<p>Please see the <a href="http://dev.vaadin.com/query?status=closed&resolution=fixed&order=id&milestone=Vaadin+@version@&type=!task">list of fixed issues in Vaadin @version@</a>
-for more details. Problem fixes and enhancements planned for upcoming
-releases can be found from the <a
-href="http://dev.vaadin.com/roadmap">Vaadin Roadmap</a> in Vaadin Trac.</p>
+<h3>Enhancements</h3>
 
-<p>An outline of enhancements introduced in Vaadin 6.4 is given in the <a href="http://vaadin.com/download/release/6.4/6.4.0/release-notes.html">Release Notes for Vaadin 6.4.0</a>.</p>
+<ul>
+  <li>Implemented server-side logging using java.util.logging, allowing you to specify loglevels and get
+      rid of unnecessary messages. See <a href="http://dev.vaadin.com/ticket/5715">#5715</a> for more info.
+  </li>
+</ul>
+
+<h3>Backward Incompatible API Changes</h3>
+
+<p>The following changes can break backward compatibility in applications using an earlier version of Vaadin:</p>
+
+<ul>
+  <li>TBA</li>
+</ul>
+
+<h3>Change Log, Future Releases, and Upgrading</h3>
+
+<p>See the <a href="#changelog">Change Log</a> for a full list of tickets fixed in this release.</p>
 
 <p>Problem fixes and enhancements planned for upcoming releases can be found in the <a
 href="http://dev.vaadin.com/roadmap">Vaadin Roadmap</a> in Vaadin Trac.</p>
@@ -51,6 +64,35 @@ href="http://dev.vaadin.com/roadmap">Vaadin Roadmap</a> in Vaadin Trac.</p>
 widget sets and refresh your project in Eclipse. If you are upgrading from earlier than
 6.3.0, notice that Vaadin 6.4 uses GWT 2.0 (included in the installation package). See
 <a href="#upgrading">General Upgrade Notes</a> for more details on upgrading.</p>
+
+<h2 id="widgetupgrade">Upgrading from Vaadin 6.0 or 6.1</h2>
+
+<p>The way how widget sets are defined was simplified in Vaadin 6.2.
+Existing projects, where custom widgets (a custom widget set) are used,
+must be migrated when upgrading to Vaadin 6.2 or later. Projects where
+the default widget set is used do not need migration. For most projects
+this should be a quite painless upgrade.</p>
+
+<p>
+For applications where custom widgets are used (also applicable to widget projects):
+<ul>
+<li>Remove the <i>getTag()</i> method from all components and replace it with a <tt>@ClientWidget(VClientSideWidget.class)</tt> annotation. Tag names are no longer used to map the server-side and client-side part of the component. This is done automatically using the <tt>@ClientWidget</tt> annotation.</li>
+<li>Remove the <tt>WidgetSet.java</tt> file. This file is no longer needed as the mapping between the server- and the client-side is done automatically using <tt>@ClientWidget</tt>.</li>
+</ul>
+</p>
+<p>
+If you are using widgets from another project (typically in a separate JAR file):
+<ul>
+<li>Acquire a new JAR which is compatible with Vaadin 6.3 and add it to <tt>WEB-INF/lib</tt>. The widget set compilation will automatically include the JAR in your <tt>.gwt.xml</tt> during compilation if you use the Eclipse <b>Compile Widget Set</b> button. For Ant/Maven you need to specify the location of the widget set JARs that you want to include in the application widget set.</li>
+</ul>
+</p>
+<p>
+If you package a widget set as a JAR for use in other projects:
+<ul>
+	<li>Replace <tt>getTag()</tt> with <tt>@ClientWidget</tt> and remove the <tt>-WidgetSet.java</tt> as described above.</li>
+    <li>Add a &quot;Vaadin-Widgetsets: &lt;fully qualified name of widgetset&gt;&quot; (e.g. &quot;Vaadin-Widgetsets: com.example.widgetset.mywidgetset&quot;) row to the META-INF/MANIFEST.MF of the JAR file. This enables the widget set builder to automatically detect and include the widget set in other projects.</li>
+</ul>
+</p>
 
 <h2 id="upgrading">General Upgrade Notes</h2>
 
@@ -74,66 +116,6 @@ widget sets and refresh your project in Eclipse. If you are upgrading from earli
 </ol>
 
 <p>Using the Vaadin project facet in the Eclipse IDE does the steps 1 and 2 automatically.</p>
-
-<h2 id="upgradefrom63">Upgrading from Vaadin 6.3</h2>
-
-<p>The following changes can break backward compatibility in applications
-using Vaadin 6.3 or earlier:</p>
-
-<ul>
-  <li><p>In <b>AbsoluteLayout.ComponentPosition</b> (<a href="http://dev.vaadin.com/ticket/5311">#5311</a>):</p>
-	<ul>
-		<li><p>The setters and getters of floating-point properties now use <b>Float</b>
-		instead of <tt>float</tt> to allow null values for indicating "unset"
-		values. This change can cause compile-time errors, which you may need
-		to solve with proper casts.</p></li>
-
-		<li><p>The <tt>setCSSString()</tt> now resets attributes not present
-		in the given parameter to their unset state, which may cause change
-		application behavior without causing any compile- or runtime-errors.</p></li>
-	</ul>
-  </li>
-  
-  <li>In the rare case that you have extended the <b>DefaultWidgetSet</b> class, please notice that earlier, the custom entry point was defined in the <tt>.gwt.xml</tt> file as follows:
-    
-    <pre>    &lt;entry-point class="com.example.MyExtendedWidgetSet" /&gt;</pre>
-    
-    Now you need to write as follows:
-       <pre>    &lt;replace-with class="com.example.MyExtendedWidgetSet"&gt;
-        &lt;when-type-is class="com.vaadin.terminal.gwt.client.WidgetSet" /&gt;
-    &lt;/replace-with&gt;</pre>
-  </li>
-  
-</ul>
-
-<h2 id="widgetupgrade">Upgrading from Vaadin 6.0 or 6.1</h2>
-
-<p>The way how widget sets are defined was simplified in Vaadin 6.2.
-Existing projects, where custom widgets (a custom widget set) are used,
-must be migrated when upgrading to Vaadin 6.2 or later. Projects where
-the default widget set is used do not need migration. For most projects
-this should be a quite painless upgrade.</p>
-
-<p>
-For applications where custom widgets are used (also applicable to widget projects):
-<ul>
-<li>Remove the <i>getTag()</i> method from all components and replace it with a <tt>@ClientWidget(VClientSideWidget.class)</tt> annotation. Tag names are no longer used to map the server-side and client-side part of the component. This is done automatically using the <tt>@ClientWidget</tt> annotation.</li>
-<li>Remove the <tt>WidgetSet.java</tt> file. This file is no longer needed as the mapping between the server- and the client-side is done automatically using <tt>@ClientWidget</tt>.</li>
-</ul>
-</p>
-<p>
-If you are using widgets from another project (typically in a separate JAR file):
-<ul>
-<li>Acquire a new JAR which is compatible with Vaadin 6.4 and add it to <tt>WEB-INF/lib</tt>. The widget set compilation will automatically include the JAR in your <tt>.gwt.xml</tt> during compilation if you use the Eclipse <b>Compile Widget Set</b> button. For Ant/Maven you need to specify the location of the widget set JARs that you want to include in the application widget set.</li>
-</ul>
-</p>
-<p>
-If you package a widget set as a JAR for use in other projects:
-<ul>
-	<li>Replace <tt>getTag()</tt> with <tt>@ClientWidget</tt> and remove the <tt>-WidgetSet.java</tt> as described above.</li>
-    <li>Add a &quot;Vaadin-Widgetsets: &lt;fully qualified name of widgetset&gt;&quot; (e.g. &quot;Vaadin-Widgetsets: com.example.widgetset.mywidgetset&quot;) row to the META-INF/MANIFEST.MF of the JAR file. This enables the widget set builder to automatically detect and include the widget set in other projects.</li>
-</ul>
-</p>
 
 <h2 id="upgrading-tk5">Instructions for Upgrading from IT Mill Toolkit 5</h2>
 
@@ -257,6 +239,103 @@ under the Google App Engine.</p>
 
 <p>For other known problems, see open tickets at developer site <a
 	href="http://dev.vaadin.com/">dev.vaadin.com</a>.</p>
+
+<h2 id="changelog">Change Log</h2>
+
+<p>The following closed issues have been included in this release:</p>
+	
+<ul>
+  <li><a href="http://dev.vaadin.com/ticket/1086">#1086</a>: Tree: Keyboard navigation</li>
+  <li><a href="http://dev.vaadin.com/ticket/1553">#1553</a>: Table: add footer element</li>
+  <li><a href="http://dev.vaadin.com/ticket/2228">#2228</a>: Cannot get multiple causes from InvalidValueException</li>
+  <li><a href="http://dev.vaadin.com/ticket/2366">#2366</a>: Optimize subtree rendering when becoming/losing width or height</li>
+  <li><a href="http://dev.vaadin.com/ticket/2390">#2390</a>: Keyboard navigation for Table</li>
+  <li><a href="http://dev.vaadin.com/ticket/2497">#2497</a>: Missing icons</li>
+  <li><a href="http://dev.vaadin.com/ticket/2807">#2807</a>: Table should update column size back to server</li>
+  <li><a href="http://dev.vaadin.com/ticket/2974">#2974</a>: Combobox with icon broken in reindeer theme</li>
+  <li><a href="http://dev.vaadin.com/ticket/3161">#3161</a>: Reindeer black window rounded borders look pixelated in Chrome</li>
+  <li><a href="http://dev.vaadin.com/ticket/3520">#3520</a>: Improve Table multiselect to use Ctrl and Shift for selection</li>
+  <li><a href="http://dev.vaadin.com/ticket/3720">#3720</a>: Disable Items for OptionGroup</li>
+  <li><a href="http://dev.vaadin.com/ticket/3723">#3723</a>: ComponentContainerers should have the possibility to give an index of some component.</li>
+  <li><a href="http://dev.vaadin.com/ticket/3988">#3988</a>: Provide access to portlet ResourceBundles</li>
+  <li><a href="http://dev.vaadin.com/ticket/4259">#4259</a>: Improve Tree multiselect to use Ctrl and Shift for selection</li>
+  <li><a href="http://dev.vaadin.com/ticket/4311">#4311</a>: DateField should not show stacktrace for invalid dates</li>
+  <li><a href="http://dev.vaadin.com/ticket/4315">#4315</a>: Window name generation should be deterministic</li>
+  <li><a href="http://dev.vaadin.com/ticket/4317">#4317</a>: VScrollTable should not update page length when hidden or disabled</li>
+  <li><a href="http://dev.vaadin.com/ticket/4442">#4442</a>: Fix differences script to use zip instead of tar.gz for previous version</li>
+  <li><a href="http://dev.vaadin.com/ticket/4448">#4448</a>: TextField input prompt focus timing problem with Firefox</li>
+  <li><a href="http://dev.vaadin.com/ticket/4484">#4484</a>: PropertyFormatter constructor calls format</li>
+  <li><a href="http://dev.vaadin.com/ticket/4499">#4499</a>: Chrome GWT development mode rendering broken</li>
+  <li><a href="http://dev.vaadin.com/ticket/4515">#4515</a>: Add support for Table header click listener</li>
+  <li><a href="http://dev.vaadin.com/ticket/4516">#4516</a>: Add support for Table footer click listener</li>
+  <li><a href="http://dev.vaadin.com/ticket/4567">#4567</a>: FormLayout doesn't focus the fields when clicking on their caption</li>
+  <li><a href="http://dev.vaadin.com/ticket/4581">#4581</a>: Dropdowns in a table auto-close when clicked in IE</li>
+  <li><a href="http://dev.vaadin.com/ticket/4595">#4595</a>: BeanItemContainer: no warning about use of Bean's hashCode</li>
+  <li><a href="http://dev.vaadin.com/ticket/4609">#4609</a>: Retrieving an index of a component in an AbstractOrderedLayout</li>
+  <li><a href="http://dev.vaadin.com/ticket/4619">#4619</a>: Gecko as user.agent for GWT doesn't work with Firefox 3.6</li>
+  <li><a href="http://dev.vaadin.com/ticket/4631">#4631</a>: Implement Runo theme demo application</li>
+  <li><a href="http://dev.vaadin.com/ticket/4636">#4636</a>: Checking a checkbox moves it 1 pixel down in IE6+IE7</li>
+  <li><a href="http://dev.vaadin.com/ticket/4997">#4997</a>: VFormLayout should copy component style names to the caption as well</li>
+  <li><a href="http://dev.vaadin.com/ticket/5006">#5006</a>: Table does not refresh header state when no rows exist</li>
+  <li><a href="http://dev.vaadin.com/ticket/5008">#5008</a>: Tree should ensure that the selected node is visible after navigation with the keyboard</li>
+  <li><a href="http://dev.vaadin.com/ticket/5012">#5012</a>: Self comparison of classId with itself in com.vaadin.ui.Embedded.setClassId(String)</li>
+  <li><a href="http://dev.vaadin.com/ticket/5024">#5024</a>: Table keyboard navigation blocks essential shortcuts</li>
+  <li><a href="http://dev.vaadin.com/ticket/5026">#5026</a>: WidgetSetBuilder creates duplicate references to non-Vaadin GWT modules</li>
+  <li><a href="http://dev.vaadin.com/ticket/5030">#5030</a>: ItemSetChangeEvent's in HierarchicalContainer are fired too early</li>
+  <li><a href="http://dev.vaadin.com/ticket/5033">#5033</a>: Widget not found error should reference to manual or another help page</li>
+  <li><a href="http://dev.vaadin.com/ticket/5038">#5038</a>: Window clicklistener is not working</li>
+  <li><a href="http://dev.vaadin.com/ticket/5057">#5057</a>: Keyboard support for TwinColSelect</li>
+  <li><a href="http://dev.vaadin.com/ticket/5059">#5059</a>: PopupView is not closed when focus is moved outside using tab</li>
+  <li><a href="http://dev.vaadin.com/ticket/5060">#5060</a>: Pressing ESC inside a ComboBox with input prompt shows an editable prompt</li>
+  <li><a href="http://dev.vaadin.com/ticket/5061">#5061</a>: Keyboard support for MenuBar</li>
+  <li><a href="http://dev.vaadin.com/ticket/5063">#5063</a>: RichTextArea class should have constructors</li>
+  <li><a href="http://dev.vaadin.com/ticket/5065">#5065</a>: Table should not receive focus if it is not in selectable mode and all rows are visible</li>
+  <li><a href="http://dev.vaadin.com/ticket/5068">#5068</a>: When moving focus to Tree or Table keyboard nav focus should be placed to the current selection</li>
+  <li><a href="http://dev.vaadin.com/ticket/5079">#5079</a>: AbsoluteLayout z-index parsing is picky</li>
+  <li><a href="http://dev.vaadin.com/ticket/5091">#5091</a>: RichTextArea with fixed height does not work</li>
+  <li><a href="http://dev.vaadin.com/ticket/5099">#5099</a>: Slider keyboard navigation</li>
+  <li><a href="http://dev.vaadin.com/ticket/5102">#5102</a>: Double click in TwinColSelect should move selected item</li>
+  <li><a href="http://dev.vaadin.com/ticket/5104">#5104</a>: "Table with setNullSelectionAllowed(false) can be visually ""set to null"" using the keyboard"</li>
+  <li><a href="http://dev.vaadin.com/ticket/5110">#5110</a>: Context menu should get keyboard focus when opened</li>
+  <li><a href="http://dev.vaadin.com/ticket/5112">#5112</a>: Table.focus() should not throw UnsupportedOperationException</li>
+  <li><a href="http://dev.vaadin.com/ticket/5114">#5114</a>: ClassPathExplorer should not use URL instances as map or set keys</li>
+  <li><a href="http://dev.vaadin.com/ticket/5120">#5120</a>: TableClickHandlers sample has extra scrollbar</li>
+  <li><a href="http://dev.vaadin.com/ticket/5124">#5124</a>: Unsteady first apperance of modal popup Window</li>
+  <li><a href="http://dev.vaadin.com/ticket/5144">#5144</a>: Moving the caret inside a textfield which is inside a selectable Table is impossible</li>
+  <li><a href="http://dev.vaadin.com/ticket/5148">#5148</a>: WebBrowser doesn't get correct details when application is run as a portlet</li>
+  <li><a href="http://dev.vaadin.com/ticket/5174">#5174</a>: Menu cannot be clicked using mouse</li>
+  <li><a href="http://dev.vaadin.com/ticket/5177">#5177</a>: Popup for DateField with msec resolution fails to open after entering invalid date</li>
+  <li><a href="http://dev.vaadin.com/ticket/5179">#5179</a>: TabSheet should have a removeTab(Tab t)</li>
+  <li><a href="http://dev.vaadin.com/ticket/5180">#5180</a>: Selecting a menu item that has no parent using enter does not remove focus from the item</li>
+  <li><a href="http://dev.vaadin.com/ticket/5182">#5182</a>: ComponentLocator fails to identify widgets attached to RootPanel</li>
+  <li><a href="http://dev.vaadin.com/ticket/5203">#5203</a>: DateField setResolution() should call requestRepaint</li>
+  <li><a href="http://dev.vaadin.com/ticket/5212">#5212</a>: Table.setColumnAlignment(Object, String) API and JavaDoc misleading</li>
+  <li><a href="http://dev.vaadin.com/ticket/5217">#5217</a>: Text selections/cursor position features</li>
+  <li><a href="http://dev.vaadin.com/ticket/5225">#5225</a>: ApplicationServlet#getApplicationClass does not retain its parent class's 'throws ClassNotFoundException' clause</li>
+  <li><a href="http://dev.vaadin.com/ticket/5227">#5227</a>: GridLayout column expansion is incorrect</li>
+  <li><a href="http://dev.vaadin.com/ticket/5269">#5269</a>: Scrolling Tree and the clicking on item will not select item</li>
+  <li><a href="http://dev.vaadin.com/ticket/5270">#5270</a>: CombobBox is not always opened by first click on dropdown button (Webkit)</li>
+  <li><a href="http://dev.vaadin.com/ticket/5277">#5277</a>: PopupDateField: isEmpty() returns incorrect result</li>
+  <li><a href="http://dev.vaadin.com/ticket/5278">#5278</a>: Moving an invisible component to another layout renders the component as visible</li>
+  <li><a href="http://dev.vaadin.com/ticket/5279">#5279</a>: Combobox selected item's caption disappears from scrolling</li>
+  <li><a href="http://dev.vaadin.com/ticket/5280">#5280</a>: ContainerHierarchicalWrapper is not fully serializable</li>
+  <li><a href="http://dev.vaadin.com/ticket/5281">#5281</a>: Tree keeps selected items even after a new containerDataSource has been set</li>
+  <li><a href="http://dev.vaadin.com/ticket/5282">#5282</a>: Transferable interface and classes implementing it are not serializable</li>
+  <li><a href="http://dev.vaadin.com/ticket/5285">#5285</a>: Action and event related interfaces and notifiers should be serializable</li>
+  <li><a href="http://dev.vaadin.com/ticket/5286">#5286</a>: Relevant server side classes and interfaces should implement Serializable</li>
+  <li><a href="http://dev.vaadin.com/ticket/5291">#5291</a>: PopupDateField ValueChangEvents sent for invalid date changes but not when clearing the field</li>
+  <li><a href="http://dev.vaadin.com/ticket/5292">#5292</a>: PopupDateField setValue(null) does not clear the field when there is invalid input</li>
+  <li><a href="http://dev.vaadin.com/ticket/5293">#5293</a>: WidgetsetBuilder should create widgetset directory if it does not exist</li>
+  <li><a href="http://dev.vaadin.com/ticket/5300">#5300</a>: The Upload component should have a default constructor</li>
+  <li><a href="http://dev.vaadin.com/ticket/5303">#5303</a>: Error indicator not always shown for checkboxes</li>
+  <li><a href="http://dev.vaadin.com/ticket/5306">#5306</a>: The multiselect mode for normal Selects doesn't work</li>
+  <li><a href="http://dev.vaadin.com/ticket/5311">#5311</a>: AbsoluteLayout$ComponentPosition does not indicate unset values properly</li>
+  <li><a href="http://dev.vaadin.com/ticket/5314">#5314</a>: Menubar should not use a static field for generating menu item ids</li>
+  <li><a href="http://dev.vaadin.com/ticket/5315">#5315</a>: Header and footer clicks should be immediate even if Table is not immediate</li>
+  <li><a href="http://dev.vaadin.com/ticket/5316">#5316</a>: Footer cell not resized with the rightmost column</li>
+  <li><a href="http://dev.vaadin.com/ticket/5320">#5320</a>: Error in table column header mode JavaDoc</li>
+  <li><a href="http://dev.vaadin.com/ticket/5323">#5323</a>: Disabled buttons in OptionGroup not grayed in CSS</li>
+</ul>
 
 <h2 id="requirements">Requirements</h2>
 
