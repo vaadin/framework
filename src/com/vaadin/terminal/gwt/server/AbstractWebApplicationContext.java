@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
@@ -26,6 +28,9 @@ import com.vaadin.terminal.ApplicationResource;
  */
 public abstract class AbstractWebApplicationContext implements
         ApplicationContext, HttpSessionBindingListener, Serializable {
+
+    private static final Logger logger = Logger
+            .getLogger(AbstractWebApplicationContext.class.getName());
 
     protected Collection<TransactionListener> listeners = Collections
             .synchronizedList(new LinkedList<TransactionListener>());
@@ -128,8 +133,8 @@ public abstract class AbstractWebApplicationContext implements
             // remove same application here. Possible if you got e.g. session
             // lifetime 1 min but socket write may take longer than 1 min.
             // FIXME: Handle exception
-            System.err.println("Could not remove application, leaking memory.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE,
+                    "Could not remove application, leaking memory.", e);
         }
     }
 

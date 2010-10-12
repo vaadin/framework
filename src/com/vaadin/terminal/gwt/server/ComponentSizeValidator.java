@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -32,6 +34,9 @@ import com.vaadin.ui.Window;
 
 @SuppressWarnings({ "serial", "deprecation" })
 public class ComponentSizeValidator implements Serializable {
+
+    private final static Logger logger = Logger
+            .getLogger(ComponentSizeValidator.class.getName());
 
     private final static int LAYERS_SHOWN = 4;
 
@@ -130,7 +135,8 @@ public class ComponentSizeValidator implements Serializable {
 
             return parentCanDefineHeight(component);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.FINER,
+                    "An exception occurred while validating sizes.", e);
             return true;
         }
     }
@@ -149,19 +155,20 @@ public class ComponentSizeValidator implements Serializable {
 
             return parentCanDefineWidth(component);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.FINER,
+                    "An exception occurred while validating sizes.", e);
             return true;
         }
     }
 
     public static class InvalidLayout implements Serializable {
 
-        private Component component;
+        private final Component component;
 
-        private boolean invalidHeight;
-        private boolean invalidWidth;
+        private final boolean invalidHeight;
+        private final boolean invalidWidth;
 
-        private Vector<InvalidLayout> subErrors = new Vector<InvalidLayout>();
+        private final Vector<InvalidLayout> subErrors = new Vector<InvalidLayout>();
 
         public InvalidLayout(Component component, boolean height, boolean width) {
             this.component = component;
@@ -668,7 +675,8 @@ public class ComponentSizeValidator implements Serializable {
                 return;
             } catch (Exception e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                logger.log(Level.FINER,
+                        "An exception occurred while validating sizes.", e);
             }
 
         }

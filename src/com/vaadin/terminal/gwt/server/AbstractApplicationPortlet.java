@@ -21,6 +21,8 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -65,6 +67,9 @@ import com.vaadin.ui.Window;
  */
 public abstract class AbstractApplicationPortlet extends GenericPortlet
         implements Constants {
+
+    private static final Logger logger = Logger
+            .getLogger(AbstractApplicationPortlet.class.getName());
 
     /**
      * This portlet parameter is used to add styles to the main element. E.g
@@ -118,7 +123,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
              * Print an information/warning message about running with xsrf
              * protection disabled
              */
-            System.err.println(WARNING_XSRF_PROTECTION_DISABLED);
+            logger.warning(WARNING_XSRF_PROTECTION_DISABLED);
         }
     }
 
@@ -138,7 +143,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         if (!productionMode) {
             /* Print an information/warning message about running in debug mode */
             // TODO Maybe we need a different message for portlets?
-            System.err.println(NOT_PRODUCTION_MODE_INFO);
+            logger.warning(NOT_PRODUCTION_MODE_INFO);
         }
     }
 
@@ -446,14 +451,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             } catch (final SessionExpiredException e) {
                 // TODO Figure out a better way to deal with
                 // SessionExpiredExceptions
-                System.err.println("Session has expired");
-                e.printStackTrace(System.err);
+                logger.finest("A user session has expired");
             } catch (final GeneralSecurityException e) {
                 // TODO Figure out a better way to deal with
                 // GeneralSecurityExceptions
-                System.err
-                        .println("General security exception, should never happen");
-                e.printStackTrace(System.err);
+                logger.finest("General security exception, the security key was probably incorrect.");
             } catch (final Throwable e) {
                 handleServiceException(request, response, application, e);
             } finally {
@@ -476,7 +478,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     private void handleUnknownRequest(PortletRequest request,
             PortletResponse response) {
-        System.err.println("Unknown request type");
+        logger.warning("Unknown request type");
     }
 
     /**
@@ -657,7 +659,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 os.write(buffer, 0, bytes);
             }
         } else {
-            System.err.println("Requested resource [" + resourceID
+            logger.warning("Requested resource [" + resourceID
                     + "] could not be found");
             response.setProperty(ResourceResponse.HTTP_STATUS_CODE,
                     Integer.toString(HttpServletResponse.SC_NOT_FOUND));
@@ -912,7 +914,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             appClass += getApplicationClass().getSimpleName();
         } catch (ClassNotFoundException e) {
             appClass += "unknown";
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Could not find application class", e);
         }
         String themeClass = "v-theme-"
                 + themeName.replaceAll("[^a-zA-Z0-9]", "");

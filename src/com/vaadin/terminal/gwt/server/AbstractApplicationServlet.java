@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -62,6 +64,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
     // TODO Move some (all?) of the constants to a separate interface (shared
     // with portlet)
+
+    private static final Logger logger = Logger
+            .getLogger(AbstractApplicationServlet.class.getName());
 
     /**
      * The version number of this release. For example "6.2.0". Always in the
@@ -225,7 +230,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
              * Print an information/warning message about running with xsrf
              * protection disabled
              */
-            System.err.println(WARNING_XSRF_PROTECTION_DISABLED);
+            logger.warning(WARNING_XSRF_PROTECTION_DISABLED);
         }
     }
 
@@ -244,7 +249,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
         if (!productionMode) {
             /* Print an information/warning message about running in debug mode */
-            System.err.println(NOT_PRODUCTION_MODE_INFO);
+            logger.warning(NOT_PRODUCTION_MODE_INFO);
         }
 
     }
@@ -258,7 +263,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         } catch (NumberFormatException nfe) {
             // Default is 1h
             resourceCacheTime = 3600;
-            System.err.println(WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC);
+            logger.warning(WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC);
         }
     }
 
@@ -816,7 +821,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 resultPath = url.getFile();
             } catch (final Exception e) {
                 // FIXME: Handle exception
-                e.printStackTrace();
+                logger.log(Level.WARNING, "Could not find resource path "
+                        + path, e);
             }
         }
         return resultPath;
@@ -1197,11 +1203,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             if (resourceUrl == null) {
                 // cannot serve requested file
-                System.err
-                        .println("Requested resource ["
-                                + filename
-                                + "] not found from filesystem or through class loader."
-                                + " Add widgetset and/or theme JAR to your classpath or add files to WebContent/VAADIN folder.");
+                logger.severe("Requested resource ["
+                        + filename
+                        + "] not found from filesystem or through class loader."
+                        + " Add widgetset and/or theme JAR to your classpath or add files to WebContent/VAADIN folder.");
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
@@ -1222,7 +1227,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             }
         } catch (Exception e) {
             // Failed to find out last modified timestamp. Continue without it.
-            e.printStackTrace();
+            logger.log(
+                    Level.FINEST,
+                    "Failed to find out last modified timestamp. Continuing without it.",
+                    e);
         }
 
         // Set type mime type if we can determine it based on the filename
@@ -1653,7 +1661,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         try {
             return getApplicationClass().getSimpleName();
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            logger.log(Level.FINER, "getApplicationCSSClassName failed", e);
             return "unknown";
         }
     }

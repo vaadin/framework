@@ -11,19 +11,19 @@ package com.vaadin.terminal.gwt.server;
  */
 public interface Constants {
 
-    static final String NOT_PRODUCTION_MODE_INFO = ""
+    static final String NOT_PRODUCTION_MODE_INFO = "\n"
             + "=================================================================\n"
             + "Vaadin is running in DEBUG MODE.\nAdd productionMode=true to web.xml "
             + "to disable debug features.\nTo show debug window, add ?debug to "
             + "your application URL.\n"
             + "=================================================================";
 
-    static final String WARNING_XSRF_PROTECTION_DISABLED = ""
+    static final String WARNING_XSRF_PROTECTION_DISABLED = "\n"
             + "===========================================================\n"
             + "WARNING: Cross-site request forgery protection is disabled!\n"
             + "===========================================================";
 
-    static final String WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC = ""
+    static final String WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC = "\n"
             + "===========================================================\n"
             + "WARNING: resourceCacheTime has been set to a non integer value "
             + "in web.xml. The default of 1h will be used.\n"

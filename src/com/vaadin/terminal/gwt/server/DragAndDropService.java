@@ -5,6 +5,7 @@ package com.vaadin.terminal.gwt.server;
 
 import java.io.PrintWriter;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.vaadin.event.Transferable;
 import com.vaadin.event.TransferableImpl;
@@ -21,6 +22,9 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
 import com.vaadin.ui.Component;
 
 public class DragAndDropService implements VariableOwner {
+
+    private static final Logger logger = Logger
+            .getLogger(DragAndDropService.class.getName());
 
     private int lastVisitId;
 
@@ -41,7 +45,7 @@ public class DragAndDropService implements VariableOwner {
 
         // Validate drop handler owner
         if (!(owner instanceof DropTarget)) {
-            System.err.println("DropHandler owner " + owner
+            logger.severe("DropHandler owner " + owner
                     + " must implement DropTarget");
             return;
         }
@@ -72,9 +76,8 @@ public class DragAndDropService implements VariableOwner {
         DropHandler dropHandler = (dropTarget).getDropHandler();
         if (dropHandler == null) {
             // No dropHandler returned so no drop can be performed.
-            System.err
-                    .println("DropTarget.getDropHandler() returned null for owner: "
-                            + dropTarget);
+            logger.fine("DropTarget.getDropHandler() returned null for owner: "
+                    + dropTarget);
             return;
         }
 

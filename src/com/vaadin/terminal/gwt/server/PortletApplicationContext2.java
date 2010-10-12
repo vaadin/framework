@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -47,6 +49,9 @@ import com.vaadin.ui.Window;
 @SuppressWarnings("serial")
 public class PortletApplicationContext2 extends AbstractWebApplicationContext {
 
+    private static final Logger logger = Logger
+            .getLogger(PortletApplicationContext2.class.getName());
+
     protected Map<Application, Set<PortletListener>> portletListeners = new HashMap<Application, Set<PortletListener>>();
 
     protected transient PortletSession session;
@@ -56,11 +61,11 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
 
     private PortletResponse response;
 
-    private Map<String, QName> eventActionDestinationMap = new HashMap<String, QName>();
-    private Map<String, Serializable> eventActionValueMap = new HashMap<String, Serializable>();
+    private final Map<String, QName> eventActionDestinationMap = new HashMap<String, QName>();
+    private final Map<String, Serializable> eventActionValueMap = new HashMap<String, Serializable>();
 
-    private Map<String, String> sharedParameterActionNameMap = new HashMap<String, String>();
-    private Map<String, String> sharedParameterActionValueMap = new HashMap<String, String>();
+    private final Map<String, String> sharedParameterActionNameMap = new HashMap<String, String>();
+    private final Map<String, String> sharedParameterActionValueMap = new HashMap<String, String>();
 
     public File getBaseDirectory() {
         String resultPath = session.getPortletContext().getRealPath("/");
@@ -72,7 +77,11 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
                 return new File(url.getFile());
             } catch (final Exception e) {
                 // FIXME: Handle exception
-                e.printStackTrace();
+                logger.log(
+                        Level.FINE,
+                        "Cannot access base directory, possible security issue "
+                                + "with Application Server or Servlet Container",
+                        e);
             }
         }
         return null;

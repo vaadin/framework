@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -84,6 +86,9 @@ import com.vaadin.ui.Window;
 @SuppressWarnings("serial")
 public abstract class AbstractCommunicationManager implements
         Paintable.RepaintRequestListener, Serializable {
+
+    private static final Logger logger = Logger
+            .getLogger(AbstractCommunicationManager.class.getName());
 
     /**
      * Generic interface of a (HTTP or Portlet) request to the application.
@@ -742,9 +747,8 @@ public abstract class AbstractCommunicationManager implements
                 if (window == null) {
                     // This should not happen, no windows exists but
                     // application is still open.
-                    System.err
-                            .println("Warning, could not get window for application with request ID "
-                                    + request.getRequestID());
+                    logger.severe("Warning, could not get window for application with request ID "
+                            + request.getRequestID());
                     return;
                 }
             } else {
@@ -768,7 +772,8 @@ public abstract class AbstractCommunicationManager implements
                     // FIXME: Handle exception
                     // Not critical, but something is still wrong; print
                     // stacktrace
-                    e2.printStackTrace();
+                    logger.log(Level.WARNING,
+                            "getSystemMessages() failed - continuing", e2);
                 }
                 if (ci != null) {
                     String msg = ci.getOutOfSyncMessage();
@@ -1036,14 +1041,18 @@ public abstract class AbstractCommunicationManager implements
                         "getSystemMessages", (Class[]) null);
                 ci = (Application.SystemMessages) m.invoke(null,
                         (Object[]) null);
-            } catch (NoSuchMethodException e1) {
-                e1.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                logger.log(Level.WARNING,
+                        "getSystemMessages() failed - continuing", e);
             } catch (IllegalArgumentException e) {
-                e.printStackTrace();
+                logger.log(Level.WARNING,
+                        "getSystemMessages() failed - continuing", e);
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                logger.log(Level.WARNING,
+                        "getSystemMessages() failed - continuing", e);
             } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                logger.log(Level.WARNING,
+                        "getSystemMessages() failed - continuing", e);
             }
 
             // meta instruction for client to enable auto-forward to
@@ -1091,7 +1100,8 @@ public abstract class AbstractCommunicationManager implements
                     is = callback.getThemeResourceAsStream(themeName, resource);
                 } catch (final Exception e) {
                     // FIXME: Handle exception
-                    e.printStackTrace();
+                    logger.log(Level.FINER,
+                            "Failed to get theme resource stream.", e);
                 }
                 if (is != null) {
 
@@ -1110,16 +1120,15 @@ public abstract class AbstractCommunicationManager implements
                         r.close();
                     } catch (final java.io.IOException e) {
                         // FIXME: Handle exception
-                        System.err.println("Resource transfer failed:  "
-                                + request.getRequestID() + ". ("
-                                + e.getMessage() + ")");
+                        logger.log(Level.SEVERE, "Resource transfer failed:  "
+                                + request.getRequestID() + ".", e);
                     }
                     outWriter.print("\""
                             + JsonPaintTarget.escapeJSON(layout.toString())
                             + "\"");
                 } else {
                     // FIXME: Handle exception
-                    System.err.println("CustomLayout not found: " + resource);
+                    logger.severe("CustomLayout not found: " + resource);
                 }
             }
             outWriter.print("}");
@@ -1315,7 +1324,7 @@ public abstract class AbstractCommunicationManager implements
                                     + variable[VAR_PID];
                             success = false;
                         }
-                        System.err.println(msg);
+                        logger.warning(msg);
                         continue;
                     }
                 }
@@ -1608,9 +1617,8 @@ public abstract class AbstractCommunicationManager implements
             DateFormat dateFormat = DateFormat.getDateTimeInstance(
                     DateFormat.SHORT, DateFormat.SHORT, l);
             if (!(dateFormat instanceof SimpleDateFormat)) {
-                System.err
-                        .println("Unable to get default date pattern for locale "
-                                + l.toString());
+                logger.warning("Unable to get default date pattern for locale "
+                        + l.toString());
                 dateFormat = new SimpleDateFormat();
             }
             final String df = ((SimpleDateFormat) dateFormat).toPattern();
@@ -2098,7 +2106,7 @@ public abstract class AbstractCommunicationManager implements
         }
     }
 
-    private HashMap<Class<? extends Paintable>, Integer> typeToKey = new HashMap<Class<? extends Paintable>, Integer>();
+    private final HashMap<Class<? extends Paintable>, Integer> typeToKey = new HashMap<Class<? extends Paintable>, Integer>();
     private int nextTypeKey = 0;
 
     String getTagForType(Class<? extends Paintable> class1) {
@@ -2118,7 +2126,7 @@ public abstract class AbstractCommunicationManager implements
      */
     class OpenWindowCache implements Serializable {
 
-        private Set<Object> res = new HashSet<Object>();
+        private final Set<Object> res = new HashSet<Object>();
 
         /**
          * 

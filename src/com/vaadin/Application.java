@@ -17,6 +17,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.ApplicationResource;
@@ -89,6 +91,9 @@ import com.vaadin.ui.Window;
 @SuppressWarnings("serial")
 public abstract class Application implements URIHandler,
         Terminal.ErrorListener, Serializable {
+
+    private final static Logger logger = Logger.getLogger(Application.class
+            .getName());
 
     /**
      * Id use for the next window that is opened. Access to this must be
@@ -1186,9 +1191,8 @@ public abstract class Application implements URIHandler,
         final Throwable t = event.getThrowable();
         if (t instanceof SocketException) {
             // Most likely client browser closed socket
-            System.err
-                    .println("Warning: SocketException in CommunicationManager."
-                            + " Most likely client (browser) closed socket.");
+            logger.warning("SocketException in CommunicationManager."
+                    + " Most likely client (browser) closed socket.");
             return;
         }
 
@@ -1215,7 +1219,7 @@ public abstract class Application implements URIHandler,
         }
 
         // also print the error on console
-        t.printStackTrace();
+        logger.log(Level.SEVERE, "Terminal error:", t);
     }
 
     /**

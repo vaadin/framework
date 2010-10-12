@@ -17,6 +17,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -72,6 +74,9 @@ import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
 public class Table extends AbstractSelect implements Action.Container,
         Container.Ordered, Container.Sortable, ItemClickSource, DragSource,
         DropTarget {
+
+    private static final Logger logger = Logger
+            .getLogger(Table.class.getName());
 
     /**
      * Modes that Table support as drag sourse.
@@ -2002,7 +2007,8 @@ public class Table extends AbstractSelect implements Action.Container,
                         .get("lastToBeRendered")).intValue();
             } catch (Exception e) {
                 // FIXME: Handle exception
-                e.printStackTrace();
+                logger.log(Level.FINER,
+                        "Could not parse the first and/or last rows.", e);
             }
 
             // respect suggested rows only if table is not otherwise updated
@@ -2066,7 +2072,8 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                 } catch (final Exception e) {
                     // FIXME: Handle exception
-                    e.printStackTrace();
+                    logger.log(Level.FINER,
+                            "Could not determine column collapsing state", e);
                 }
                 clientNeedsContentRefresh = true;
             }
@@ -2084,8 +2091,8 @@ public class Table extends AbstractSelect implements Action.Container,
                     setColumnOrder(idsTemp);
                 } catch (final Exception e) {
                     // FIXME: Handle exception
-                    e.printStackTrace();
-
+                    logger.log(Level.FINER,
+                            "Could not determine column reordering state", e);
                 }
                 clientNeedsContentRefresh = true;
             }
@@ -3820,7 +3827,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // The property id of the column which header was pressed
-        private Object columnPropertyId;
+        private final Object columnPropertyId;
 
         public HeaderClickEvent(Component source, Object propertyId,
                 MouseEventDetails details) {
@@ -3860,7 +3867,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // The property id of the column which header was pressed
-        private Object columnPropertyId;
+        private final Object columnPropertyId;
 
         /**
          * Constructor

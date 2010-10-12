@@ -9,11 +9,10 @@ import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -256,13 +255,14 @@ public class GAEApplicationServlet extends ApplicationServlet {
             log.severe("DeadlineExceeded for " + session.getId());
             sendDeadlineExceededNotification(request, response);
         } catch (NotSerializableException e) {
-            log.severe("NotSerializableException: " + getStackTraceAsString(e));
+            log.log(Level.SEVERE, "Not serializable!", e);
 
             // TODO this notification is usually not shown - should we redirect
             // in some other way - can we?
             sendNotSerializableNotification(request, response);
         } catch (Exception e) {
-            log.severe(e + ": " + getStackTraceAsString(e));
+            log.log(Level.SEVERE,
+                    "An exception occurred while servicing request.", e);
 
             sendCriticalErrorNotification(request, response);
         } finally {
@@ -308,13 +308,15 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 session.setAttribute(WebApplicationContext.class.getName(),
                         applicationContext);
             } catch (IOException e) {
-                log.warning("Could not de-serialize ApplicationContext for "
-                        + session.getId() + " A new one will be created. "
-                        + getStackTraceAsString(e));
+                log.log(Level.WARNING,
+                        "Could not de-serialize ApplicationContext for "
+                                + session.getId()
+                                + " A new one will be created. ", e);
             } catch (ClassNotFoundException e) {
-                log.warning("Could not de-serialize ApplicationContext for "
-                        + session.getId() + " A new one will be created. "
-                        + getStackTraceAsString(e));
+                log.log(Level.WARNING,
+                        "Could not de-serialize ApplicationContext for "
+                                + session.getId()
+                                + " A new one will be created. ", e);
             }
         }
         // will create new context if the above did not
@@ -395,15 +397,7 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 }
             }
         } catch (Exception e) {
-            log.warning("Exception while cleaning: " + getStackTraceAsString(e));
+            log.log(Level.WARNING, "Exception while cleaning.", e);
         }
     }
-
-    private String getStackTraceAsString(Throwable t) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        t.printStackTrace(pw);
-        return sw.toString();
-    }
-
 }

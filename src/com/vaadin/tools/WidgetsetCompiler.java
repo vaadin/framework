@@ -4,6 +4,8 @@
 package com.vaadin.tools;
 
 import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.terminal.gwt.widgetsetutils.WidgetSetBuilder;
 
@@ -30,6 +32,9 @@ import com.vaadin.terminal.gwt.widgetsetutils.WidgetSetBuilder;
  * relevant JARs.
  */
 public class WidgetsetCompiler {
+
+    private static final Logger logger = Logger
+            .getLogger(WidgetsetCompiler.class.getName());
 
     /**
      * @param args
@@ -67,7 +72,8 @@ public class WidgetsetCompiler {
                                 String[].class);
                         method.invoke(null, new Object[] { args });
                     } catch (Throwable thr) {
-                        thr.printStackTrace();
+                        logger.log(Level.SEVERE,
+                                "Widgetset compilation failed", thr);
                     }
                 }
             };
@@ -76,7 +82,7 @@ public class WidgetsetCompiler {
             runThread.join();
             System.out.println("Widgetset compilation finished");
         } catch (Throwable thr) {
-            thr.printStackTrace();
+            logger.log(Level.SEVERE, "Widgetset compilation failed", thr);
         }
     }
 }

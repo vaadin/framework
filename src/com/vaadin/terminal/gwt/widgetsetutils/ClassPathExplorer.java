@@ -196,7 +196,8 @@ public class ClassPathExplorer {
                         } catch (MalformedURLException e) {
                             // should never happen as based on an existing URL,
                             // only changing end of file name/path part
-                            e.printStackTrace();
+                            logger.log(Level.SEVERE,
+                                    "This should never happen!", e);
                         }
                     }
                 }
@@ -340,11 +341,9 @@ public class ClassPathExplorer {
                         }
                     }
                 } catch (MalformedURLException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    logger.log(Level.FINEST, "Failed to inspect JAR file", e);
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    logger.log(Level.FINEST, "Failed to inspect JAR file", e);
                 }
 
                 return false;
@@ -547,7 +546,7 @@ public class ClassPathExplorer {
         } catch (LinkageError e) {
             // NOP
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.FINEST, "Could not add class: " + fullclassName, e);
         }
     }
 
@@ -582,10 +581,10 @@ public class ClassPathExplorer {
                 try {
                     return new URL("file://" + directory.getCanonicalPath());
                 } catch (MalformedURLException e) {
-                    e.printStackTrace();
+                    logger.log(Level.FINEST, "Ignoring exception", e);
                     // ignore: continue to the next classpath entry
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.log(Level.FINEST, "Ignoring exception", e);
                     // ignore: continue to the next classpath entry
                 }
             }

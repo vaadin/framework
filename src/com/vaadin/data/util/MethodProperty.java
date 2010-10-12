@@ -9,6 +9,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.data.Property;
 import com.vaadin.util.SerializerHelper;
@@ -49,6 +51,8 @@ import com.vaadin.util.SerializerHelper;
 public class MethodProperty<T> implements Property,
         Property.ValueChangeNotifier, Property.ReadOnlyStatusChangeNotifier {
 
+    private static final Logger logger = Logger.getLogger(MethodProperty.class
+            .getName());
     /**
      * The object that includes the property the MethodProperty is bound to.
      */
@@ -146,11 +150,9 @@ public class MethodProperty<T> implements Property,
                 getMethod = null;
             }
         } catch (SecurityException e) {
-            System.err.println("Internal deserialization error");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Internal deserialization error", e);
         } catch (NoSuchMethodException e) {
-            System.err.println("Internal deserialization error");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Internal deserialization error", e);
         }
     };
 

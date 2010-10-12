@@ -11,6 +11,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.EventListener;
 import java.util.EventObject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p>
@@ -41,6 +43,9 @@ import java.util.EventObject;
 @SuppressWarnings("serial")
 public class ListenerMethod implements EventListener, Serializable {
 
+    private static final Logger logger = Logger.getLogger(ListenerMethod.class
+            .getName());
+
     /**
      * Type of the event that should trigger this listener. Also the subclasses
      * of this class are accepted to trigger the listener.
@@ -50,7 +55,7 @@ public class ListenerMethod implements EventListener, Serializable {
     /**
      * The object containing the trigger method.
      */
-    private Object object;
+    private final Object object;
 
     /**
      * The trigger method to call when an event passing the given criteria
@@ -79,10 +84,9 @@ public class ListenerMethod implements EventListener, Serializable {
             out.writeObject(name);
             out.writeObject(paramTypes);
         } catch (NotSerializableException e) {
-            System.err
-                    .println("Fatal error in serialization of the application: Class "
-                            + object.getClass().getName()
-                            + " must implement serialization.");
+            logger.severe("Fatal error in serialization of the application: Class "
+                    + object.getClass().getName()
+                    + " must implement serialization.");
             throw e;
         }
 
@@ -99,8 +103,7 @@ public class ListenerMethod implements EventListener, Serializable {
             // inner classes
             method = findHighestMethod(object.getClass(), name, paramTypes);
         } catch (SecurityException e) {
-            System.err.println("Internal deserialization error");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Internal deserialization error", e);
         }
     };
 

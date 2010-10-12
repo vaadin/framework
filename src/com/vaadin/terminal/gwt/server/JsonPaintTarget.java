@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.ApplicationResource;
@@ -51,6 +53,9 @@ import com.vaadin.ui.CustomLayout;
 @SuppressWarnings("serial")
 public class JsonPaintTarget implements PaintTarget {
 
+    private static final Logger logger = Logger.getLogger(JsonPaintTarget.class
+            .getName());
+
     /* Document type declarations */
 
     private final static String UIDL_ARG_NAME = "name";
@@ -67,7 +72,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     private int changes = 0;
 
-    private Set<Object> usedResources = new HashSet<Object>();
+    private final Set<Object> usedResources = new HashSet<Object>();
 
     private boolean customLayoutArgumentsOpen = false;
 
@@ -77,11 +82,11 @@ public class JsonPaintTarget implements PaintTarget {
 
     private boolean cacheEnabled = false;
 
-    private Collection<Paintable> paintedComponents = new HashSet<Paintable>();
+    private final Collection<Paintable> paintedComponents = new HashSet<Paintable>();
 
     private Collection<Paintable> identifiersCreatedDueRefPaint;
 
-    private Collection<Class<? extends Paintable>> usedPaintableTypes = new LinkedList<Class<? extends Paintable>>();
+    private final Collection<Class<? extends Paintable>> usedPaintableTypes = new LinkedList<Class<? extends Paintable>>();
 
     /**
      * Creates a new XMLPrintWriter, without automatic line flushing.
@@ -1022,11 +1027,10 @@ public class JsonPaintTarget implements PaintTarget {
                         && Paintable.class.isAssignableFrom(superclass)) {
                     class1 = (Class<? extends Paintable>) superclass;
                 } else {
-                    System.out
-                            .append("Warning: no superclass of "
-                                    + paintable.getClass().getName()
-                                    + " has a @ClientWidget"
-                                    + " annotation. Component will not be mapped correctly on client side.");
+                    logger.warning("No superclass of "
+                            + paintable.getClass().getName()
+                            + " has a @ClientWidget"
+                            + " annotation. Component will not be mapped correctly on client side.");
                     break;
                 }
             }
@@ -1077,20 +1081,23 @@ public class JsonPaintTarget implements PaintTarget {
                             // TODO could optize to quit at the end attribute
                         }
                     } catch (IOException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
+                        logger.log(
+                                Level.SEVERE,
+                                "An error occurred while finding widget mapping.",
+                                e1);
                     } finally {
                         try {
                             bufferedReader.close();
                         } catch (IOException e1) {
-                            // TODO Auto-generated catch block
-                            e1.printStackTrace();
+                            logger.log(Level.SEVERE, "Could not close reader.",
+                                    e1);
                         }
                     }
 
                 } catch (Throwable e2) {
-                    // TODO Auto-generated catch block
-                    e2.printStackTrace();
+                    logger.log(Level.SEVERE,
+                            "An error occurred while finding widget mapping.",
+                            e2);
                 }
 
                 return false;

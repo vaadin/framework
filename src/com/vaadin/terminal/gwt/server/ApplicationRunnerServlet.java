@@ -6,6 +6,8 @@ package com.vaadin.terminal.gwt.server;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -17,12 +19,15 @@ import com.vaadin.Application;
 @SuppressWarnings("serial")
 public class ApplicationRunnerServlet extends AbstractApplicationServlet {
 
+    private static final Logger logger = Logger
+            .getLogger(ApplicationRunnerServlet.class.getName());
+
     /**
      * The name of the application class currently used. Only valid within one
      * request.
      */
     private String[] defaultPackages;
-    private ThreadLocal<HttpServletRequest> request = new ThreadLocal<HttpServletRequest>();
+    private final ThreadLocal<HttpServletRequest> request = new ThreadLocal<HttpServletRequest>();
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
@@ -171,7 +176,10 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
                         // Ignore as this is expected for many packages
                     } catch (Exception e2) {
                         // TODO: handle exception
-                        e2.printStackTrace();
+                        logger.log(
+                                Level.FINER,
+                                "Failed to find application class in the default package.",
+                                e2);
                     }
                     if (appClass != null) {
                         return appClass;
