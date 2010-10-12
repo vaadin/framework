@@ -170,6 +170,11 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
                 final Paintable child = client.getPaintable(r);
                 if (oldWidgets.contains(child)) {
                     oldWidgets.remove(child);
+                    VCaption vCaption = widgetToCaption.get(child);
+                    if (vCaption != null) {
+                        add(vCaption);
+                        oldWidgets.remove(vCaption);
+                    }
                 }
 
                 add((Widget) child);
