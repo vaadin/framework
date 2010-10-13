@@ -29,7 +29,6 @@ import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
@@ -189,16 +188,10 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     }
 
     public boolean html5DragEnter(VHtml5DragEvent event) {
-        VConsole.log("dragenter");
         if (dropHandler == null) {
             return true;
         }
         try {
-            Element elem = event.getEventTarget().cast();
-            if (elem == getElement()) {
-                VConsole.error("top element");
-            }
-
             if (dragleavetimer != null) {
                 // returned quickly back to wrapper
                 dragleavetimer.cancel();
@@ -228,12 +221,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         }
 
         try {
-            VConsole.error("drageleave");
-            Element elem = event.getEventTarget().cast();
-            if (elem == getElement()) {
-                VConsole.error("top element");
-            }
-
             dragleavetimer = new Timer() {
                 @Override
                 public void run() {
@@ -264,10 +251,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             return true;
         }
 
-        VConsole.log("dragover");
         if (dragleavetimer != null) {
             // returned quickly back to wrapper
-            VConsole.error("Dragleave cancelled");
             dragleavetimer.cancel();
             dragleavetimer = null;
         }
