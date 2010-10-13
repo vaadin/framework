@@ -51,6 +51,9 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
 
         // Create menu actions and trigger default actions
         populateMenu();
+
+        // Clear initialization log messages
+        clearLog();
     }
 
     /**
@@ -97,6 +100,7 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
     }
 
     private void createDefaultActions() {
+        createBooleanAction("Immediate", CATEGORY_STATE, true, immediateCommand);
         createBooleanAction("Enabled", CATEGORY_STATE, true, enabledCommand);
         createBooleanAction("Readonly", CATEGORY_STATE, false, readonlyCommand);
         createBooleanAction("Error indicator", CATEGORY_STATE, false,

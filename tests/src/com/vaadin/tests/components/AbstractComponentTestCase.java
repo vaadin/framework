@@ -46,10 +46,6 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
         public void execute(T c, VALUETYPE value, Object data);
     }
 
-    // public interface Command<T, VALUETYPE extends Object> {
-    // public void execute(T c, VALUETYPE value, Object data);
-    // }
-
     /* COMMANDS */
 
     protected Command<T, String> widthCommand = new Command<T, String>() {
@@ -72,6 +68,14 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
         @Override
         public void execute(T c, Boolean enabled, Object data) {
             c.setEnabled(enabled);
+        }
+    };
+
+    protected Command<T, Boolean> immediateCommand = new Command<T, Boolean>() {
+
+        @Override
+        public void execute(T c, Boolean immediate, Object data) {
+            c.setImmediate(immediate);
         }
     };
 
@@ -140,6 +144,10 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
     @Override
     protected String getDescription() {
         return "Generic test case for " + getTestClass().getSimpleName();
+    }
+
+    protected void clearLog() {
+        log.clear();
     }
 
     protected void enableLog() {
