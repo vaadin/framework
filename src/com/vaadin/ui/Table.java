@@ -24,9 +24,9 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.ContainerOrderedWrapper;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.Action;
+import com.vaadin.event.Action.Handler;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickSource;
 import com.vaadin.event.MouseEvents.ClickEvent;
@@ -1108,12 +1108,12 @@ public class Table extends AbstractSelect implements Action.Container,
      *            the propertyID identifying the column.
      * @param collapsed
      *            the desired collapsedness.
-     * @throws IllegalStateException
-     *             if column collapsing is not allowed
+     * @throws IllegalAccessException
      */
-    public void setColumnCollapsed(Object propertyId, boolean collapsed) {
+    public void setColumnCollapsed(Object propertyId, boolean collapsed)
+            throws IllegalAccessException {
         if (!isColumnCollapsingAllowed()) {
-            throw new IllegalStateException("Column collapsing is not allowed!");
+            throw new IllegalAccessException("Column collapsing not allowed!");
         }
 
         if (collapsed) {
@@ -1855,7 +1855,7 @@ public class Table extends AbstractSelect implements Action.Container,
         HashSet<Object> ids = new HashSet<Object>();
         for (int i = 0; i < length; i++) {
             assert itemId != null; // should not be null unless client-server
-            // are out of sync
+                                   // are out of sync
             ids.add(itemId);
             itemId = nextItemId(itemId);
         }
