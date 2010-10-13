@@ -1113,12 +1113,13 @@ public class Table extends AbstractSelect implements Action.Container,
      *            the propertyID identifying the column.
      * @param collapsed
      *            the desired collapsedness.
-     * @throws IllegalAccessException
+     * @throws IllegalStateException
+     *             if column collapsing is not allowed
      */
     public void setColumnCollapsed(Object propertyId, boolean collapsed)
-            throws IllegalAccessException {
+            throws IllegalStateException {
         if (!isColumnCollapsingAllowed()) {
-            throw new IllegalAccessException("Column collapsing not allowed!");
+            throw new IllegalStateException("Column collapsing not allowed!");
         }
 
         if (collapsed) {

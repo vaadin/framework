@@ -35,13 +35,8 @@ public class ColumnCollapsingAndColumnExpansion extends TestBase {
             }
 
             public void handleAction(Action action, Object sender, Object target) {
-                try {
-                    table.setColumnCollapsed("Col2",
-                            !table.isColumnCollapsed("Col2"));
-                } catch (IllegalAccessException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+                table.setColumnCollapsed("Col2",
+                        !table.isColumnCollapsed("Col2"));
 
             }
         });
@@ -61,12 +56,7 @@ public class ColumnCollapsingAndColumnExpansion extends TestBase {
         Button hide = new Button("Collapse", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                try {
-                    table.setColumnCollapsed(tf.getValue(), true);
-                } catch (IllegalAccessException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+                table.setColumnCollapsed(tf.getValue(), true);
             }
 
         });
@@ -74,12 +64,7 @@ public class ColumnCollapsingAndColumnExpansion extends TestBase {
         Button show = new Button("Show", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                try {
-                    table.setColumnCollapsed(tf.getValue(), false);
-                } catch (IllegalAccessException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+                table.setColumnCollapsed(tf.getValue(), false);
             }
 
         });
