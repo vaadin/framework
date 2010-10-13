@@ -52,7 +52,8 @@ public class DisabledOptionGroupItems extends ComponentTestCase<OptionGroup> {
         return createButtonAction("Toggle selection mode",
                 new Command<OptionGroup, Boolean>() {
 
-                    public void execute(OptionGroup og, Boolean value) {
+                    public void execute(OptionGroup og, Boolean value,
+                            Object data) {
                         if (og.isMultiSelect()) {
                             og.setMultiSelect(false);
                             og.setNullSelectionItemId(NULL_SELECTION_ID);
@@ -68,7 +69,8 @@ public class DisabledOptionGroupItems extends ComponentTestCase<OptionGroup> {
         return createButtonAction("Invert disabled items",
                 new Command<OptionGroup, Boolean>() {
 
-                    public void execute(OptionGroup c, Boolean value) {
+                    public void execute(OptionGroup c, Boolean value,
+                            Object data) {
                         for (Object itemId : c.getItemIds()) {
                             c.setItemEnabled(itemId, !c.isItemEnabled(itemId));
                         }

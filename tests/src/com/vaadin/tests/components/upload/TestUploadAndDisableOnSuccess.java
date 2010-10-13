@@ -81,7 +81,7 @@ public class TestUploadAndDisableOnSuccess extends ComponentTestCase<Upload>
         actions.add(createButtonAction("Toggle Enabled",
                 new Command<Upload, Boolean>() {
 
-                    public void execute(Upload c, Boolean value) {
+                    public void execute(Upload c, Boolean value, Object data) {
                         c.setEnabled(!c.isEnabled());
                     }
                 }));

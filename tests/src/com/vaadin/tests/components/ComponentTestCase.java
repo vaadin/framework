@@ -7,8 +7,6 @@ import java.util.List;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.terminal.UserError;
-import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -17,49 +15,37 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Layout.SpacingHandler;
 import com.vaadin.ui.NativeSelect;
 
 public abstract class ComponentTestCase<T extends AbstractComponent> extends
-        TestBase {
+        AbstractComponentTestCase<T> {
 
     protected static final Object CAPTION = "caption";
 
-    private List<T> testComponents = new ArrayList<T>();
     private HorizontalLayout actionLayout;
-
-    abstract protected Class<T> getTestClass();
-
-    abstract protected void initializeComponents();
-
-    private Log log = null;
 
     @Override
     protected final void setup() {
-        ((SpacingHandler) getLayout()).setSpacing(true);
-
         // Create action layout so it appears before the components
         actionLayout = createActionLayout();
         addComponent(actionLayout);
 
-        // Create Components
-        initializeComponents();
+        super.setup();
 
         // Create actions and add to layout
         populateActionLayout();
     }
 
-    private void populateActionLayout() {
+    protected void populateActionLayout() {
         for (Component c : createActions()) {
-            actionLayout.addComponent(c);
-            actionLayout.setComponentAlignment(c, Alignment.BOTTOM_LEFT);
+            addAction(c);
         }
 
     }
 
-    @Override
-    protected Integer getTicketNumber() {
-        return null;
+    private void addAction(Component c) {
+        actionLayout.addComponent(c);
+        actionLayout.setComponentAlignment(c, Alignment.BOTTOM_LEFT);
     }
 
     /**
@@ -104,69 +90,24 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
         return actionLayout;
     }
 
-    protected void addTestComponent(T c) {
-        testComponents.add(c);
-        addComponent(c);
-    }
-
-    protected List<T> getTestComponents() {
-        return testComponents;
-    }
-
-    public interface Command<T, VALUETYPE extends Object> {
-        public void execute(T c, VALUETYPE value);
-
-    }
-
     protected Component createErrorIndicatorAction(boolean initialState) {
-        return createCheckboxAction("Error indicators", initialState,
-                new Command<T, Boolean>() {
-                    public void execute(T c, Boolean enabled) {
-                        if (enabled) {
-                            c.setComponentError(new UserError("It failed!"));
-                        } else {
-                            c.setComponentError(null);
-
-                        }
-                    }
-
-                });
+        return createBooleanAction("Error indicators", initialState,
+                errorIndicatorCommand);
     }
 
     protected Component createEnabledAction(boolean initialState) {
-        return createCheckboxAction("Enabled", initialState,
-                new Command<T, Boolean>() {
-                    public void execute(T c, Boolean enabled) {
-                        c.setEnabled(enabled);
-                    }
-                });
+        return createBooleanAction("Enabled", initialState, enabledCommand);
     }
 
     protected Component createReadonlyAction(boolean initialState) {
-        return createCheckboxAction("Readonly", initialState,
-                new Command<T, Boolean>() {
-                    public void execute(T c, Boolean enabled) {
-                        c.setReadOnly(enabled);
-                    }
-                });
+        return createBooleanAction("Readonly", initialState, readonlyCommand);
     }
 
     protected Component createRequiredAction(boolean initialState) {
-        return createCheckboxAction("Required", initialState,
-                new Command<T, Boolean>() {
-                    public void execute(T c, Boolean enabled) {
-                        if (c instanceof Field) {
-                            ((Field) c).setRequired(enabled);
-                        } else {
-                            throw new IllegalArgumentException(
-                                    c.getClass().getName()
-                                            + " is not a field and cannot be set to required");
-                        }
-                    }
-                });
+        return createBooleanAction("Required", initialState, requiredCommand);
     }
 
-    protected Component createCheckboxAction(String caption,
+    protected Component createBooleanAction(String caption,
             boolean initialState, final Command<T, Boolean> command) {
 
         CheckBox checkBox = new CheckBox(caption);
@@ -202,16 +143,6 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
         button.setImmediate(true);
 
         return button;
-    }
-
-    protected <VALUET> void doCommand(Command<T, VALUET> command, VALUET value) {
-        for (T c : getTestComponents()) {
-            if (c == null) {
-                continue;
-            }
-
-            command.execute(c, value);
-        }
     }
 
     protected <TYPE> Component createSelectAction(String caption,
@@ -255,24 +186,4 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
         return select;
     }
 
-    @Override
-    protected String getDescription() {
-        return "Generic test case for " + getTestClass().getSimpleName();
-    }
-
-    protected void enableLog() {
-        if (log == null) {
-            log = new Log(5).setNumberLogRows(true);
-            getLayout().addComponent(log, 1);
-        }
-
-    }
-
-    protected void log(String msg) {
-        if (log == null) {
-            throw new IllegalStateException(
-                    "Use enableLog() before calling log()");
-        }
-        log.log(msg);
-    }
 }

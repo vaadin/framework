@@ -105,10 +105,11 @@ public class NativeSelects extends ComponentTestCase<NativeSelect> {
 
     @Override
     protected void createCustomActions(List<Component> actions) {
-        actions.add(createCheckboxAction("Null selection allowed", false,
+        actions.add(createBooleanAction("Null selection allowed", false,
                 new Command<NativeSelect, Boolean>() {
 
-                    public void execute(NativeSelect c, Boolean value) {
+                    public void execute(NativeSelect c, Boolean value,
+                            Object data) {
                         c.setNullSelectionAllowed(value);
                     }
                 }));
