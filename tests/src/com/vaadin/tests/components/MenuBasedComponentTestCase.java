@@ -249,7 +249,6 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
             final Object data) {
 
         return new MenuBar.Command() {
-            @Override
             public void menuSelected(MenuItem selectedItem) {
                 boolean selected = !isSelected(selectedItem);
                 doCommand(getText(selectedItem), booleanCommand, selected, data);
@@ -275,7 +274,6 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
             final com.vaadin.tests.components.ComponentTestCase.Command<T, VALUETYPE> cmd,
             final VALUETYPE object, final Object data) {
         return new MenuBar.Command() {
-            @Override
             public void menuSelected(MenuItem selectedItem) {
                 doCommand(getText(selectedItem), cmd, object, data);
 
@@ -355,7 +353,6 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
 
     protected Command<AbstractSelect, Boolean> nullSelectionAllowedCommand = new Command<AbstractSelect, Boolean>() {
 
-        @Override
         public void execute(AbstractSelect c, Boolean value, Object data) {
             (c).setNullSelectionAllowed(value);
         }
@@ -363,7 +360,6 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
 
     protected Command<AbstractSelect, Object> nullSelectItemIdCommand = new Command<AbstractSelect, Object>() {
 
-        @Override
         public void execute(AbstractSelect c, Object value, Object data) {
             c.setNullSelectionItemId(value);
         }
@@ -371,7 +367,6 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
 
     protected Command<AbstractSelect, Integer> itemsInContainerCommand = new Command<AbstractSelect, Integer>() {
 
-        @Override
         public void execute(AbstractSelect t, Integer value, Object data) {
             t.setContainerDataSource(createContainer(t.getContainerDataSource()
                     .getContainerPropertyIds().size(), value));
@@ -380,7 +375,6 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
 
     protected Command<AbstractSelect, Integer> columnsInContainerCommand = new Command<AbstractSelect, Integer>() {
 
-        @Override
         public void execute(AbstractSelect t, Integer value, Object data) {
             t.setContainerDataSource(createContainer(value, t
                     .getContainerDataSource().size()));

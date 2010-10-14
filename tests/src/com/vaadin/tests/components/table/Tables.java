@@ -46,7 +46,7 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
     };
 
     protected Command<Table, Boolean> columnResizeListenerCommand = new Command<Table, Boolean>() {
-        @Override
+
         public void execute(Table c, Boolean value, Object data) {
             if (value) {
                 c.addListener((ColumnResizeListener) Tables.this);
@@ -57,7 +57,7 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
     };
 
     protected Command<Table, Boolean> headerClickListenerCommand = new Command<Table, Boolean>() {
-        @Override
+
         public void execute(Table c, Boolean value, Object data) {
             if (value) {
                 c.addListener((HeaderClickListener) Tables.this);
@@ -68,7 +68,7 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
     };
 
     protected Command<Table, Boolean> footerClickListenerCommand = new Command<Table, Boolean>() {
-        @Override
+
         public void execute(Table c, Boolean value, Object data) {
             if (value) {
                 c.addListener((FooterClickListener) Tables.this);
@@ -79,7 +79,7 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
     };
 
     protected Command<Table, Integer> rowHeaderModeCommand = new Command<Table, Integer>() {
-        @Override
+
         public void execute(Table c, Integer value, Object data) {
             if (value == Table.ROW_HEADER_MODE_PROPERTY) {
                 c.setItemCaptionPropertyId("Column 3");
@@ -89,7 +89,7 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
     };
 
     protected Command<Table, String> footerTextCommand = new Command<Table, String>() {
-        @Override
+
         public void execute(Table c, String value, Object data) {
             for (Object propertyId : c.getContainerPropertyIds()) {
                 if (value != null) {
@@ -107,7 +107,7 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
     }
 
     protected Command<Table, Alignments> columnAlignmentCommand = new Command<Table, Alignments>() {
-        @Override
+
         public void execute(Table c, Alignments value, Object data) {
             for (Object propertyId : c.getContainerPropertyIds()) {
                 // TODO
@@ -151,7 +151,6 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
     private void createColumnReorderingAllowedCheckbox(String category) {
         createBooleanAction("Column reordering allowed", category, true,
                 new Command<Table, Boolean>() {
-                    @Override
                     public void execute(Table c, Boolean value, Object data) {
                         c.setColumnReorderingAllowed(value);
                     }
@@ -161,7 +160,6 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
     private void createColumnCollapsingAllowedCheckbox(String category) {
         createBooleanAction("Column collapsing allowed", category, true,
                 new Command<Table, Boolean>() {
-                    @Override
                     public void execute(Table c, Boolean value, Object data) {
                         c.setColumnCollapsingAllowed(value);
                     }
@@ -233,7 +231,6 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
     private void createItemClickListenerCheckbox(String category) {
         Command<Table, Boolean> itemClickListenerCommand = new Command<Table, Boolean>() {
 
-            @Override
             public void execute(Table c, Boolean value, Object data) {
                 if (value) {
                     c.addListener((ItemClickListener) Tables.this);
@@ -287,7 +284,6 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
         createBooleanAction("Footer visible", category, true,
                 new Command<Table, Boolean>() {
 
-                    @Override
                     public void execute(Table c, Boolean value, Object data) {
                         c.setFooterVisible(value);
                     }
@@ -305,7 +301,6 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
         createSelectAction("Header mode", category, options,
                 "Explicit defaults id", new Command<Table, Integer>() {
 
-                    @Override
                     public void execute(Table c, Integer value, Object data) {
                         c.setColumnHeaderMode(value);
 
@@ -324,7 +319,6 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
         createSelectAction("PageLength", category, options, "10",
                 new Command<Table, Integer>() {
 
-                    @Override
                     public void execute(Table t, Integer value, Object data) {
                         t.setPageLength(value);
                     }
@@ -345,7 +339,6 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
         createSelectAction("Selection Mode", category, options,
                 "Multi - ctrl/shift", new Command<Table, SelectMode>() {
 
-                    @Override
                     public void execute(Table t, SelectMode value, Object data) {
                         switch (value) {
                         case NONE:

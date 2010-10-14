@@ -50,14 +50,12 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     protected Command<T, String> widthCommand = new Command<T, String>() {
 
-        @Override
         public void execute(T t, String value, Object data) {
             t.setWidth(value);
         }
     };
     protected Command<T, String> heightCommand = new Command<T, String>() {
 
-        @Override
         public void execute(T t, String value, Object data) {
             t.setHeight(value);
         }
@@ -65,7 +63,6 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     protected Command<T, Boolean> enabledCommand = new Command<T, Boolean>() {
 
-        @Override
         public void execute(T c, Boolean enabled, Object data) {
             c.setEnabled(enabled);
         }
@@ -73,14 +70,13 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     protected Command<T, Boolean> immediateCommand = new Command<T, Boolean>() {
 
-        @Override
         public void execute(T c, Boolean immediate, Object data) {
             c.setImmediate(immediate);
         }
     };
 
     protected Command<T, Boolean> requiredCommand = new Command<T, Boolean>() {
-        @Override
+
         public void execute(T c, Boolean enabled, Object data) {
             if (c instanceof Field) {
                 ((Field) c).setRequired(enabled);
@@ -92,7 +88,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
     };
 
     protected Command<T, Boolean> errorIndicatorCommand = new Command<T, Boolean>() {
-        @Override
+
         public void execute(T c, Boolean enabled, Object data) {
             if (enabled) {
                 c.setComponentError(new UserError("It failed!"));
@@ -104,7 +100,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
     };
 
     protected Command<T, Boolean> readonlyCommand = new Command<T, Boolean>() {
-        @Override
+
         public void execute(T c, Boolean enabled, Object data) {
             c.setReadOnly(enabled);
         }
