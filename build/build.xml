@@ -658,7 +658,7 @@
 	<target name="compile-widgetset" description="Compiles the widgetset given as the first parameter">
 		<fail unless="widgetset" message="No widgetset parameter set"/>
 		<echo>Compiling widgetset ${widgetset}. Output directory: ${widgetsets-output-dir}</echo>
-	    <java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="128m">
+	    <java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
 	    	<classpath refid="widgetset-compile-classpath"/>
 	    	
 	        <arg value="-war" />
@@ -668,7 +668,8 @@
 	        <arg value="${widgetset}" />
 
 	    	<jvmarg value="-Xss8M"/>
-	        <jvmarg value="-Djava.awt.headless=true"/>
+            <jvmarg value="-XX:MaxPermSize=256M"/> 	
+	    	<jvmarg value="-Djava.awt.headless=true"/>
 	    </java>
         <antcall target="remove-widgetset-gwt-tmp"/>
 		
