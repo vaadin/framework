@@ -418,12 +418,12 @@ public abstract class AbstractCommunicationManager implements
         final char[] charArray = boundary.toCharArray();
 
         /*
-         * Reads bytes from the underlaying stream. Compares the read bytes to
+         * Reads bytes from the underlying stream. Compares the read bytes to
          * the boundary string and returns -1 if met.
          * 
-         * The maching happens so that if the read byte equals to the first char
-         * of boundary string, the stream goes to "buffering mode". In buffering
-         * mode bytes are read until the character does not match the
+         * The matching happens so that if the read byte equals to the first
+         * char of boundary string, the stream goes to "buffering mode". In
+         * buffering mode bytes are read until the character does not match the
          * corresponding from boundary string or the full boundary string is
          * found.
          */
@@ -459,7 +459,7 @@ public abstract class AbstractCommunicationManager implements
                             }
                             fromActualStream = inputStream.read();
                             if (fromActualStream != charArray[matchedCount]) {
-                                // Did not found full boundary, cache the last
+                                // Did not find full boundary, cache the last
                                 // byte
                                 bufferedByte = fromActualStream;
                                 return getBuffered();
@@ -643,7 +643,7 @@ public abstract class AbstractCommunicationManager implements
                 controller.uploadFailed(event);
             }
             // Note, we are not throwing interrupted exception forward as it is
-            // not a terminal level erro like all other exception.
+            // not a terminal level error like all other exception.
         } catch (final Exception e) {
             synchronized (application) {
                 ReceivingFailedEvent event = new ReceivingFailedEventImpl(

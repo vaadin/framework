@@ -47,7 +47,7 @@ public class Html5File implements Serializable {
      */
     private ProxyReceiver proxyReceiver = new ProxyReceiver();
     private boolean interrupted = false;
-    private Html5FileUploadListener listener;;
+    private Html5FileUploadListener listener;
 
     public String getFileName() {
         return name;
@@ -63,13 +63,13 @@ public class Html5File implements Serializable {
 
     /**
      * Sets the {@link Receiver} that into which the file contents will be
-     * written. Usage of Reveiver is similar to {@link Upload} component.
+     * written. Usage of Receiver is similar to {@link Upload} component.
      * <p>
      * If the {@link Receiver} is not set in the {@link DropHandler} the file
      * contents will not be sent to server.
      * <p>
      * <em>Note!</em> receiving file contents is experimental feature depending
-     * on HTML 5 API's. It is supported only by modern web brosers like Firefox
+     * on HTML 5 API's. It is supported only by modern web browsers like Firefox
      * 3.6 and above and recent webkit based browsers (Safari 5, Chrome 6) at
      * this time.
      * 

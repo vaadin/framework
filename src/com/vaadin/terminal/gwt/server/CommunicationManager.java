@@ -220,7 +220,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
             InvalidUIDLSecurityKeyException {
 
         /*
-         * URI pattern: APP/UPPLOAD/[PID]/[NAME]/[SECKEY] See #createReceiverUrl
+         * URI pattern: APP/UPLOAD/[PID]/[NAME]/[SECKEY] See #createReceiverUrl
          */
 
         String pathInfo = request.getPathInfo();
@@ -360,7 +360,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
          * We will use the same APP/* URI space as ApplicationResources but
          * prefix url with UPLOAD
          * 
-         * eg. APP/UPPLOAD/[PID]/[NAME]/[SECKEY]
+         * eg. APP/UPLOAD/[PID]/[NAME]/[SECKEY]
          * 
          * SECKEY is created on each paint to make URL's unpredictable (to
          * prevent CSRF attacks).

@@ -14,7 +14,7 @@ import com.vaadin.terminal.ReceiverOwner.ReceivingController;
 public interface ReceiverOwner extends VariableOwner {
 
     /*
-     * The monitor/control is passed to separate ReceivingContorller because:
+     * The monitor/control is passed to separate ReceivingController because:
      * 
      * - possibly some component in the future may need support for streaming to
      * multiple Receivers at the same time.
@@ -115,10 +115,10 @@ public interface ReceiverOwner extends VariableOwner {
          * during the upload.
          * <p>
          * {@link #onProgress(long, long)} is called in a synchronized block
-         * during the content is being received. This is potentially bit slow,
-         * so we are calling this method only if requested. The value is
-         * requested after the {@link #uploadStarted(ReceivingStartedEvent)}
-         * event, but not after each buffer reading.
+         * when the content is being received. This is potentially bit slow, so
+         * we are calling that method only if requested. The value is requested
+         * after the {@link #uploadStarted(ReceivingStartedEvent)} event, but
+         * not after reading each buffer.
          * 
          * @return true if this ReceiverOwner wants to by notified during the
          *         upload of the progress of streaming.
@@ -150,7 +150,7 @@ public interface ReceiverOwner extends VariableOwner {
          * Note, the usage of this method is not synchronized over the
          * Application instance by the terminal like other methods. The
          * implementation should only return a boolean field and especially not
-         * to modify UI or implement a synchronization by itself.
+         * modify UI or implement a synchronization by itself.
          * 
          * @return true if the streaming should be interrupted as soon as
          *         possible.
