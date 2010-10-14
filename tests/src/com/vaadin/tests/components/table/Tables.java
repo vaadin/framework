@@ -1,16 +1,14 @@
 package com.vaadin.tests.components.table;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.tests.components.ComponentTestCase;
+import com.vaadin.tests.components.MenuBasedComponentTestCase;
 import com.vaadin.ui.AbstractSelect.MultiSelectMode;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnResizeEvent;
 import com.vaadin.ui.Table.ColumnResizeListener;
@@ -19,9 +17,105 @@ import com.vaadin.ui.Table.FooterClickListener;
 import com.vaadin.ui.Table.HeaderClickEvent;
 import com.vaadin.ui.Table.HeaderClickListener;
 
-public class Tables extends ComponentTestCase<Table> implements
+public class Tables extends MenuBasedComponentTestCase<Table> implements
         ItemClickListener, HeaderClickListener, FooterClickListener,
         ColumnResizeListener {
+
+    protected static final String CATEGORY_ROWS = "Rows";
+    private static final String CATEGORY_HEADER = "Header";
+    private static final String CATEGORY_FOOTER = "Footer";
+    private static final String CATEGORY_FEATURE_TOGGLES = "Features";
+    private static final String CATEGORY_VISIBLE_COLUMNS = "Visible columns";
+
+    /* COMMANDS */
+    private Command<Table, Boolean> visibleColumnCommand = new Command<Table, Boolean>() {
+        public void execute(Table c, Boolean visible, Object propertyId) {
+            List<Object> visibleColumns = new ArrayList<Object>(Arrays.asList(c
+                    .getVisibleColumns()));
+            if (visible) {
+                // Table should really check this... Completely fails without
+                // the check (#
+                if (!visibleColumns.contains(propertyId)) {
+                    visibleColumns.add(propertyId);
+                }
+            } else {
+                visibleColumns.remove(propertyId);
+            }
+            c.setVisibleColumns(visibleColumns.toArray());
+        }
+    };
+
+    protected Command<Table, Boolean> columnResizeListenerCommand = new Command<Table, Boolean>() {
+
+        public void execute(Table c, Boolean value, Object data) {
+            if (value) {
+                c.addListener((ColumnResizeListener) Tables.this);
+            } else {
+                c.removeListener((ColumnResizeListener) Tables.this);
+            }
+        }
+    };
+
+    protected Command<Table, Boolean> headerClickListenerCommand = new Command<Table, Boolean>() {
+
+        public void execute(Table c, Boolean value, Object data) {
+            if (value) {
+                c.addListener((HeaderClickListener) Tables.this);
+            } else {
+                c.removeListener((HeaderClickListener) Tables.this);
+            }
+        }
+    };
+
+    protected Command<Table, Boolean> footerClickListenerCommand = new Command<Table, Boolean>() {
+
+        public void execute(Table c, Boolean value, Object data) {
+            if (value) {
+                c.addListener((FooterClickListener) Tables.this);
+            } else {
+                c.removeListener((FooterClickListener) Tables.this);
+            }
+        }
+    };
+
+    protected Command<Table, Integer> rowHeaderModeCommand = new Command<Table, Integer>() {
+
+        public void execute(Table c, Integer value, Object data) {
+            if (value == Table.ROW_HEADER_MODE_PROPERTY) {
+                c.setItemCaptionPropertyId("Column 3");
+            }
+            c.setRowHeaderMode(value);
+        }
+    };
+
+    protected Command<Table, String> footerTextCommand = new Command<Table, String>() {
+
+        public void execute(Table c, String value, Object data) {
+            for (Object propertyId : c.getContainerPropertyIds()) {
+                if (value != null) {
+                    c.setColumnFooter(propertyId,
+                            value.replace("{id}", propertyId.toString()));
+                } else {
+                    c.setColumnFooter(propertyId, null);
+                }
+            }
+        }
+    };
+
+    public class Alignments {
+
+    }
+
+    protected Command<Table, Alignments> columnAlignmentCommand = new Command<Table, Alignments>() {
+
+        public void execute(Table c, Alignments value, Object data) {
+            for (Object propertyId : c.getContainerPropertyIds()) {
+                // TODO
+            }
+        }
+    };
+
+    /* COMMANDS END */
 
     @Override
     protected Class<Table> getTestClass() {
@@ -29,58 +123,57 @@ public class Tables extends ComponentTestCase<Table> implements
     }
 
     @Override
-    protected void initializeComponents() {
-        addTestComponent(createTable());
-        enableLog();
+    protected void createCustomActions() {
+        createPageLengthSelect(CATEGORY_SIZE);
+
+        createSelectionModeSelect(CATEGORY_SELECTION);
+
+        createItemClickListenerCheckbox(CATEGORY_LISTENERS);
+        createColumnResizeListenerCheckbox(CATEGORY_LISTENERS);
+        createHeaderClickListenerCheckbox(CATEGORY_LISTENERS);
+        createFooterClickListenerCheckbox(CATEGORY_LISTENERS);
+
+        createRowHeaderModeSelect(CATEGORY_CONTENT);
+
+        createHeaderVisibilitySelect(CATEGORY_HEADER);
+        createHeaderTextCheckbox(CATEGORY_HEADER);
+
+        createFooterVisibilityCheckbox(CATEGORY_FOOTER);
+        createFooterTextSelect(CATEGORY_FOOTER);
+
+        createColumnReorderingAllowedCheckbox(CATEGORY_FEATURE_TOGGLES);
+        createColumnCollapsingAllowedCheckbox(CATEGORY_FEATURE_TOGGLES);
+
+        createVisibleColumnsMultiToggle(CATEGORY_VISIBLE_COLUMNS);
 
     }
 
-    private Table createTable() {
-        Table t = new Table();
-        return t;
+    private void createColumnReorderingAllowedCheckbox(String category) {
+        createBooleanAction("Column reordering allowed", category, true,
+                new Command<Table, Boolean>() {
+                    public void execute(Table c, Boolean value, Object data) {
+                        c.setColumnReorderingAllowed(value);
+                    }
+                });
     }
 
-    private Container createContainer(int properties, int items) {
-        IndexedContainer c = new IndexedContainer();
-        for (int i = 1; i <= properties; i++) {
-            c.addContainerProperty("Column " + i, String.class, "");
+    private void createColumnCollapsingAllowedCheckbox(String category) {
+        createBooleanAction("Column collapsing allowed", category, true,
+                new Command<Table, Boolean>() {
+                    public void execute(Table c, Boolean value, Object data) {
+                        c.setColumnCollapsingAllowed(value);
+                    }
+                });
+    }
+
+    private void createVisibleColumnsMultiToggle(String category) {
+        for (Object id : getComponent().getContainerPropertyIds()) {
+            createBooleanAction(id.toString() + " - visible", category, true,
+                    visibleColumnCommand, id);
         }
-        for (int i = 1; i <= items; i++) {
-            Item item = c.addItem("Item " + i);
-            for (int j = 1; j <= properties; j++) {
-                item.getItemProperty("Column " + j).setValue(
-                        "Item " + i + "," + j);
-            }
-        }
-
-        return c;
     }
 
-    @Override
-    protected void createCustomActions(List<Component> actions) {
-        actions.add(createNullSelectCheckbox());
-        actions.add(createWidthSelect());
-        actions.add(createHeightSelect());
-        actions.add(createPageLengthSelect());
-        actions.add(createItemsInContainerSelect());
-        actions.add(createColumnsInContainerSelect());
-        actions.add(createSelectionModeSelect());
-        actions.add(createItemClickListenerCheckbox());
-        actions.add(createColumnResizeListenerCheckbox());
-
-        actions.add(createRowHeaderModeSelect());
-
-        actions.add(createHeaderVisibilitySelect());
-        actions.add(createHeaderClickListenerCheckbox());
-        actions.add(createHeaderTextCheckbox());
-
-        actions.add(createFooterVisibilityCheckbox());
-        actions.add(createFooterClickListenerCheckbox());
-        actions.add(createFooterTextCheckbox());
-
-    }
-
-    private Component createRowHeaderModeSelect() {
+    private void createRowHeaderModeSelect(String category) {
         LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
         options.put("Explicit", Table.ROW_HEADER_MODE_EXPLICIT);
         options.put("Explicit defaults id",
@@ -92,50 +185,42 @@ public class Tables extends ComponentTestCase<Table> implements
         options.put("Item", Table.ROW_HEADER_MODE_ITEM);
         options.put("'Column 3' property", Table.ROW_HEADER_MODE_PROPERTY);
 
-        return super.createSelectAction("Row header mode", options, "Hidden",
-                new Command<Table, Integer>() {
-
-                    public void execute(Table c, Integer value) {
-                        if (value == Table.ROW_HEADER_MODE_PROPERTY) {
-                            c.setItemCaptionPropertyId("Column 3");
-                        }
-                        c.setRowHeaderMode(value);
-
-                    }
-                });
+        createSelectAction("Row header mode", category, options, "Hidden",
+                rowHeaderModeCommand);
     }
 
-    private Component createFooterTextCheckbox() {
-        return super.createCheckboxAction("Texts in footer", false,
-                new Command<Table, Boolean>() {
+    private void createFooterTextSelect(String category) {
+        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        options.put("None", null);
+        options.put("Footer X", "Footer {id}");
+        options.put("X", "{id}");
 
-                    public void execute(Table c, Boolean value) {
-                        for (Object propertyId : c.getContainerPropertyIds()) {
-                            if (value) {
-                                c.setColumnFooter(propertyId, "Footer: "
-                                        + propertyId);
-                            } else {
-                                c.setColumnFooter(propertyId, null);
-
-                            }
-                        }
-
-                    }
-                });
+        createSelectAction("Texts in footer", category, options, "None",
+                footerTextCommand);
     }
 
-    private Component createHeaderTextCheckbox() {
-        return super.createCheckboxAction("Texts in header", false,
-                new Command<Table, Boolean>() {
+    private void createHeaderTextCheckbox(String category) {
+        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        options.put("None", null);
+        options.put("Col: {id}", "Col: {id}");
+        options.put("Header {id} - every second", "Header {id}");
 
-                    public void execute(Table c, Boolean value) {
+        createSelectAction("Texts in header", category, options, "None",
+                new Command<Table, String>() {
+                    public void execute(Table c, String value, Object data) {
+                        int nr = 0;
                         for (Object propertyId : c.getContainerPropertyIds()) {
-                            if (value) {
-                                c.setColumnHeader(propertyId, "Header: "
-                                        + propertyId);
+                            nr++;
+                            if (value != null && value.equals("Header {id}")
+                                    && nr % 2 == 0) {
+                                c.setColumnHeader(propertyId, null);
+                            } else if (value != null) {
+                                c.setColumnHeader(
+                                        propertyId,
+                                        value.replace("{id}",
+                                                propertyId.toString()));
                             } else {
                                 c.setColumnHeader(propertyId, null);
-
                             }
                         }
 
@@ -143,77 +228,47 @@ public class Tables extends ComponentTestCase<Table> implements
                 });
     }
 
-    private Component createItemClickListenerCheckbox() {
-        return super.createCheckboxAction("Item click listener", false,
-                new Command<Table, Boolean>() {
+    private void createItemClickListenerCheckbox(String category) {
+        Command<Table, Boolean> itemClickListenerCommand = new Command<Table, Boolean>() {
 
-                    public void execute(Table c, Boolean value) {
-                        if (value) {
-                            c.addListener((ItemClickListener) Tables.this);
-                        } else {
-                            c.removeListener((ItemClickListener) Tables.this);
-                        }
+            public void execute(Table c, Boolean value, Object data) {
+                if (value) {
+                    c.addListener((ItemClickListener) Tables.this);
+                } else {
+                    c.removeListener((ItemClickListener) Tables.this);
+                }
 
-                    }
-                });
+            }
+        };
+        createBooleanAction("Item click listener", category, false,
+                itemClickListenerCommand);
     }
 
-    private Component createHeaderClickListenerCheckbox() {
-        return super.createCheckboxAction("Header click listener", false,
-                new Command<Table, Boolean>() {
+    private void createHeaderClickListenerCheckbox(String category) {
 
-                    public void execute(Table c, Boolean value) {
-                        if (value) {
-                            c.addListener((HeaderClickListener) Tables.this);
-                        } else {
-                            c.removeListener((HeaderClickListener) Tables.this);
-                        }
-
-                    }
-                });
+        createBooleanAction("Header click listener", category, false,
+                headerClickListenerCommand);
     }
 
-    private Component createFooterClickListenerCheckbox() {
-        return super.createCheckboxAction("Footer click listener", false,
-                new Command<Table, Boolean>() {
+    private void createFooterClickListenerCheckbox(String category) {
 
-                    public void execute(Table c, Boolean value) {
-                        if (value) {
-                            c.addListener((FooterClickListener) Tables.this);
-                        } else {
-                            c.removeListener((FooterClickListener) Tables.this);
-                        }
-
-                    }
-                });
+        createBooleanAction("Footer click listener", category, false,
+                footerClickListenerCommand);
     }
 
-    private Component createColumnResizeListenerCheckbox() {
-        return super.createCheckboxAction("Column resize listener", false,
-                new Command<Table, Boolean>() {
+    private void createColumnResizeListenerCheckbox(String category) {
 
-                    public void execute(Table c, Boolean value) {
-                        if (value) {
-                            c.addListener((ColumnResizeListener) Tables.this);
-                        } else {
-                            c.removeListener((ColumnResizeListener) Tables.this);
-                        }
-
-                    }
-                });
+        createBooleanAction("Column resize listener", category, false,
+                columnResizeListenerCommand);
     }
 
     // TODO:
     // Visible columns
-    // Column headers
-    // Column footers
     // Column icons
     // Column alignments
     // Column width
     // Column expand ratio
     // Column collapse
-    // Column reordering allowed
-    // Column collapsing allowed
     // setCurrentPageFirstItemIndex()
     // setColumnHeaderMode(int)
     // setRowHeaderMode(int)
@@ -224,27 +279,18 @@ public class Tables extends ComponentTestCase<Table> implements
 
     // Cache rate
     // CurrentPageFirstItemId
-    private Component createNullSelectCheckbox() {
-        return super.createCheckboxAction("NullSelection", false,
+
+    protected void createFooterVisibilityCheckbox(String category) {
+        createBooleanAction("Footer visible", category, true,
                 new Command<Table, Boolean>() {
 
-                    public void execute(Table c, Boolean value) {
-                        c.setNullSelectionAllowed(value);
-                    }
-                });
-    }
-
-    private Component createFooterVisibilityCheckbox() {
-        return createCheckboxAction("Footer visible", true,
-                new Command<Table, Boolean>() {
-
-                    public void execute(Table c, Boolean value) {
+                    public void execute(Table c, Boolean value, Object data) {
                         c.setFooterVisible(value);
                     }
                 });
     }
 
-    private Component createHeaderVisibilitySelect() {
+    protected void createHeaderVisibilitySelect(String category) {
         LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
         options.put("Explicit", Table.COLUMN_HEADER_MODE_EXPLICIT);
         options.put("Explicit defaults id",
@@ -252,49 +298,17 @@ public class Tables extends ComponentTestCase<Table> implements
         options.put("Id", Table.COLUMN_HEADER_MODE_ID);
         options.put("Hidden", Table.COLUMN_HEADER_MODE_HIDDEN);
 
-        return createSelectAction("Header mode", options,
+        createSelectAction("Header mode", category, options,
                 "Explicit defaults id", new Command<Table, Integer>() {
 
-                    public void execute(Table c, Integer value) {
+                    public void execute(Table c, Integer value, Object data) {
                         c.setColumnHeaderMode(value);
 
                     }
                 });
     }
 
-    protected Component createWidthSelect() {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
-        options.put("Undefined", null);
-        options.put("200px", "200px");
-        options.put("500px", "500px");
-        options.put("800px", "800px");
-
-        return super.createSelectAction("Width", options, "Undefined",
-                new Command<Table, String>() {
-
-                    public void execute(Table t, String value) {
-                        t.setWidth(value);
-                    }
-                });
-    }
-
-    protected Component createHeightSelect() {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
-        options.put("Undefined", null);
-        options.put("200px", "200px");
-        options.put("500px", "500px");
-        options.put("800px", "800px");
-
-        return super.createSelectAction("Height", options, "Undefined",
-                new Command<Table, String>() {
-
-                    public void execute(Table t, String value) {
-                        t.setHeight(value);
-                    }
-                });
-    }
-
-    protected Component createPageLengthSelect() {
+    protected void createPageLengthSelect(String category) {
         LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
         options.put("0", 0);
         options.put("5", 5);
@@ -302,50 +316,11 @@ public class Tables extends ComponentTestCase<Table> implements
         options.put("20", 20);
         options.put("50", 50);
 
-        return super.createSelectAction("PageLength", options, "10",
+        createSelectAction("PageLength", category, options, "10",
                 new Command<Table, Integer>() {
 
-                    public void execute(Table t, Integer value) {
+                    public void execute(Table t, Integer value, Object data) {
                         t.setPageLength(value);
-                    }
-                });
-    }
-
-    protected Component createItemsInContainerSelect() {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
-        options.put("0", 0);
-        options.put("20", 20);
-        options.put("100", 100);
-        options.put("1000", 1000);
-        options.put("10000", 10000);
-        options.put("100000", 100000);
-
-        return super.createSelectAction("Items in container", options, "20",
-                new Command<Table, Integer>() {
-
-                    public void execute(Table t, Integer value) {
-                        t.setContainerDataSource(createContainer(t
-                                .getContainerDataSource()
-                                .getContainerPropertyIds().size(), value));
-                    }
-                });
-    }
-
-    protected Component createColumnsInContainerSelect() {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
-        options.put("0", 0);
-        options.put("5", 5);
-        options.put("10", 10);
-        options.put("50", 50);
-        options.put("100", 100);
-        options.put("1000", 1000);
-
-        return super.createSelectAction("Columns in container", options, "10",
-                new Command<Table, Integer>() {
-
-                    public void execute(Table t, Integer value) {
-                        t.setContainerDataSource(createContainer(value, t
-                                .getContainerDataSource().size()));
                     }
                 });
     }
@@ -354,17 +329,17 @@ public class Tables extends ComponentTestCase<Table> implements
         NONE, SINGLE, MULTI_SIMPLE, MULTI;
     }
 
-    protected Component createSelectionModeSelect() {
+    protected void createSelectionModeSelect(String category) {
         LinkedHashMap<String, SelectMode> options = new LinkedHashMap<String, SelectMode>();
         options.put("None", SelectMode.NONE);
         options.put("Single", SelectMode.SINGLE);
         options.put("Multi - simple", SelectMode.MULTI_SIMPLE);
         options.put("Multi - ctrl/shift", SelectMode.MULTI);
 
-        return super.createSelectAction("Selection Mode", options,
+        createSelectAction("Selection Mode", category, options,
                 "Multi - ctrl/shift", new Command<Table, SelectMode>() {
 
-                    public void execute(Table t, SelectMode value) {
+                    public void execute(Table t, SelectMode value, Object data) {
                         switch (value) {
                         case NONE:
                             t.setSelectable(false);
@@ -404,7 +379,7 @@ public class Tables extends ComponentTestCase<Table> implements
     }
 
     public void itemClick(ItemClickEvent event) {
-        log("ItemClick on " + event.getPropertyId() + " using "
-                + event.getButtonName());
+        log("ItemClick on " + event.getItemId() + "/" + event.getPropertyId()
+                + " using " + event.getButtonName());
     }
 }
