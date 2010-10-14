@@ -143,6 +143,7 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
 
         createColumnReorderingAllowedCheckbox(CATEGORY_FEATURE_TOGGLES);
         createColumnCollapsingAllowedCheckbox(CATEGORY_FEATURE_TOGGLES);
+        createSortAllowedCheckbox(CATEGORY_FEATURE_TOGGLES);
 
         createVisibleColumnsMultiToggle(CATEGORY_VISIBLE_COLUMNS);
 
@@ -162,6 +163,15 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
                 new Command<Table, Boolean>() {
                     public void execute(Table c, Boolean value, Object data) {
                         c.setColumnCollapsingAllowed(value);
+                    }
+                });
+    }
+
+    private void createSortAllowedCheckbox(String category) {
+        createBooleanAction("Sorting allowed", category, true,
+                new Command<Table, Boolean>() {
+                    public void execute(Table c, Boolean value, Object data) {
+                        c.setSortDisabled(!value);
                     }
                 });
     }
