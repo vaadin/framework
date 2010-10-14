@@ -286,7 +286,6 @@ public class MethodProperty<T> implements Property,
      *            the name of the setter method.
      * 
      */
-    @SuppressWarnings("unchecked")
     public MethodProperty(Class<? extends T> type, Object instance,
             String getMethodName, String setMethodName) {
         this(type, instance, getMethodName, setMethodName, new Object[] {},
@@ -316,7 +315,6 @@ public class MethodProperty<T> implements Property,
      * @param setMethod
      *            the setter method.
      */
-    @SuppressWarnings("unchecked")
     public MethodProperty(Class<? extends T> type, Object instance,
             Method getMethod, Method setMethod) {
         this(type, instance, getMethod, setMethod, new Object[] {},

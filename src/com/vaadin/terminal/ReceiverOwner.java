@@ -3,6 +3,7 @@ package com.vaadin.terminal;
 import java.io.Serializable;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.ReceiverOwner.ReceivingController;
 
 /**
  * Special kind of {@link VariableOwner} that can send and receive information
