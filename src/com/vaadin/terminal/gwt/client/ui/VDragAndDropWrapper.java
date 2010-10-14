@@ -101,7 +101,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     private final static int WRAPPER = 2;
     private int dragStarMode;
     private int filecounter = 0;
-    private Map<String, String> fileIdToReveiver;
+    private Map<String, String> fileIdToReceiver;
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -123,8 +123,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                 if (fileId.startsWith("rec-")) {
                     String receiverUrl = uidl.getStringVariable(fileId);
                     fileId = fileId.substring(4);
-                    if (fileIdToReveiver == null) {
-                        fileIdToReveiver = new HashMap<String, String>();
+                    if (fileIdToReceiver == null) {
+                        fileIdToReceiver = new HashMap<String, String>();
                     }
                     if ("".equals(receiverUrl)) {
                         Integer id = Integer.parseInt(fileId);
@@ -134,7 +134,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                             fileIds.remove(indexOf);
                         }
                     } else {
-                        fileIdToReveiver.put(fileId, receiverUrl);
+                        fileIdToReceiver.put(fileId, receiverUrl);
                     }
                 }
             }
@@ -170,7 +170,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                         uploading = true;
                         final Integer fileId = fileIds.remove(0);
                         VHtml5File file = files.remove(0);
-                        final String receiverUrl = fileIdToReveiver
+                        final String receiverUrl = fileIdToReceiver
                                 .remove(fileId.toString());
                         ExtendedXHR extendedXHR = (ExtendedXHR) ExtendedXHR
                                 .create();
