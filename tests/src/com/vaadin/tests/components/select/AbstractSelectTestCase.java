@@ -57,7 +57,9 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
 
     protected void createItemsInContainerSelect(String category) {
         LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
-        options.put("0", 0);
+        for (int i = 0; i <= 10; i++) {
+            options.put(String.valueOf(i), i);
+        }
         options.put("20", 20);
         options.put("100", 100);
         options.put("1000", 1000);
@@ -71,8 +73,9 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
     protected void createColumnsInContainerSelect(String category) {
         LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
         options.put("0", 0);
-        options.put("5", 5);
-        options.put("10", 10);
+        for (int i = 0; i <= 10; i++) {
+            options.put(String.valueOf(i), i);
+        }
         options.put("50", 50);
         options.put("100", 100);
         options.put("1000", 1000);
