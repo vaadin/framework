@@ -573,6 +573,7 @@ public abstract class AbstractCommunicationManager implements
         final Application application = getApplication();
 
         OutputStream out = null;
+        int totalBytes = 0;
         try {
             boolean listenProgress;
             synchronized (application) {
@@ -595,10 +596,6 @@ public abstract class AbstractCommunicationManager implements
 
             final byte buffer[] = new byte[MAX_UPLOAD_BUFFER_SIZE];
             int bytesReadToBuffer = 0;
-            int totalBytes = 0;
-            ReceivingProgressedEventImpl progressEvent = new ReceivingProgressedEventImpl(
-                    receiver, filename, type, contentLength);
-
             while ((bytesReadToBuffer = in.read(buffer)) > 0) {
                 out.write(buffer, 0, bytesReadToBuffer);
                 totalBytes += bytesReadToBuffer;
@@ -606,13 +603,9 @@ public abstract class AbstractCommunicationManager implements
                     // update progress if listener set and contentLength
                     // received
                     synchronized (application) {
-                        /*
-                         * Note, we are reusing the same progress event, not to
-                         * pollute VM with lots of objects. This might not help
-                         * though if the end user aggressively updates UI on
-                         * each onProgress.
-                         */
-                        progressEvent.setBytesReceived(totalBytes);
+                        ReceivingProgressedEventImpl progressEvent = new ReceivingProgressedEventImpl(
+                                receiver, filename, type, contentLength,
+                                totalBytes);
                         controller.onProgress(progressEvent);
                     }
                 }
@@ -638,7 +631,7 @@ public abstract class AbstractCommunicationManager implements
                 // NOP
             }
             ReceivingFailedEvent event = new ReceivingFailedEventImpl(receiver,
-                    filename, type, contentLength, e);
+                    filename, type, contentLength, totalBytes, e);
             synchronized (application) {
                 controller.uploadFailed(event);
             }
@@ -647,7 +640,7 @@ public abstract class AbstractCommunicationManager implements
         } catch (final Exception e) {
             synchronized (application) {
                 ReceivingFailedEvent event = new ReceivingFailedEventImpl(
-                        receiver, filename, type, contentLength, e);
+                        receiver, filename, type, contentLength, totalBytes, e);
                 synchronized (application) {
                     controller.uploadFailed(event);
                 }

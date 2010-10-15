@@ -4,18 +4,19 @@ import com.vaadin.terminal.Receiver;
 import com.vaadin.terminal.ReceiverOwner.ReceivingFailedEvent;
 
 @SuppressWarnings("serial")
-class ReceivingFailedEventImpl extends AbstractReceivingEvent implements
+final class ReceivingFailedEventImpl extends AbstractReceivingEvent implements
         ReceivingFailedEvent {
 
     private final Exception exception;
 
     public ReceivingFailedEventImpl(Receiver receiver, final String filename,
-            final String type, long contentLength, final Exception exception) {
-        super(receiver, filename, type, contentLength);
+            final String type, long contentLength, long bytesReceived,
+            final Exception exception) {
+        super(receiver, filename, type, contentLength, bytesReceived);
         this.exception = exception;
     }
 
-    public Exception getException() {
+    public final Exception getException() {
         return exception;
     }
 

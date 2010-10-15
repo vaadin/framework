@@ -10,40 +10,37 @@ import com.vaadin.terminal.ReceiverOwner.ReceivingEvent;
 abstract class AbstractReceivingEvent implements ReceivingEvent {
     private final String type;
     private final String filename;
-    private Receiver receiver;
-    private long contentLength;
-    private long bytesReceived;
+    private final Receiver receiver;
+    private final long contentLength;
+    private final long bytesReceived;
 
-    public String getFileName() {
+    public final String getFileName() {
         return filename;
     }
 
-    public String getMimeType() {
+    public final String getMimeType() {
         return type;
     }
 
-    public AbstractReceivingEvent(Receiver receiver, String filename,
-            String type, long length) {
+    protected AbstractReceivingEvent(Receiver receiver, String filename,
+            String type, long length, long bytesReceived) {
         this.receiver = receiver;
         this.filename = filename;
         this.type = type;
         contentLength = length;
+        this.bytesReceived = bytesReceived;
     }
 
-    public Receiver getReceiver() {
+    public final Receiver getReceiver() {
         return receiver;
     }
 
-    public long getContentLength() {
+    public final long getContentLength() {
         return contentLength;
     }
 
-    public long getBytesReceived() {
+    public final long getBytesReceived() {
         return bytesReceived;
-    }
-
-    void setBytesReceived(long bytesReceived) {
-        this.bytesReceived = bytesReceived;
     }
 
 }
