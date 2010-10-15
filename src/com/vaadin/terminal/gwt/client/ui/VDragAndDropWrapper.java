@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
@@ -340,9 +339,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         public final native void postFile(VHtml5File file)
         /*-{
 
-            // Accept header is readable in portlets resourceRequest
-            // TODO add filename and mime type too??
-            this.setRequestHeader('Accept', 'text/html,vaadin/filexhr');
             this.setRequestHeader('Content-Type', 'multipart/form-data');
             this.send(file);
         }-*/;
@@ -367,27 +363,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     private String getPid() {
         return client.getPid(this);
     }
-
-    private native void multipartSend(JavaScriptObject xhr,
-            JavaScriptObject data, String name)
-    /*-{
-     
-        var boundaryString = "------------------------------------------VAADINXHRFILEUPLOAD";
-        var boundary = "--" + boundaryString;
-        var CRLF = "\r\n";
-        xhr.setRequestHeader("Content-type", "multipart/form-data; boundary=\"" + boundaryString + "\"");
-        var requestBody = boundary
-                + CRLF
-                + "Content-Disposition: form-data; name=\""+name+"\"; filename=\"file\""
-                + CRLF
-                + "Content-Type: application/octet-stream" // hard coded, type sent separately
-                + CRLF + CRLF + data.target.result + CRLF + boundary + "--" + CRLF;
-        xhr.setRequestHeader("Content-Length", requestBody.length);
-        
-        
-        xhr.sendAsBinary(requestBody);
-         
-     }-*/;
 
     public VDropHandler getDropHandler() {
         return dropHandler;
