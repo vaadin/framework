@@ -3,21 +3,26 @@ package com.vaadin.tests.components;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
+import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 
+//TODO swap the inheritance order so AbstractComponentTestCase refers to AbstractComponent and this is the base class. Can only be done when all old tests are converted to use this.
 public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
         extends AbstractComponentTestCase<T> {
+
+    protected static final String TEXT_SHORT = "Short";
+    protected static final String TEXT_MEDIUM = "This is a semi-long text that might wrap.";
+    protected static final String TEXT_LONG = "This is a long text. "
+            + LoremIpsum.get(500);
+    protected static final String TEXT_VERY_LONG = "This is a very, very long text. "
+            + LoremIpsum.get(5000);
 
     private static final Resource SELECTED_ICON = new ThemeResource(
             "../runo/icons/16/ok.png");
@@ -35,8 +40,9 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
     protected static final String CATEGORY_STATE = "State";
     protected static final String CATEGORY_SIZE = "Size";
     protected static final String CATEGORY_SELECTION = "Selection";
-    protected static final String CATEGORY_CONTENT = "Contents";
     protected static final String CATEGORY_LISTENERS = "Listeners";
+    protected static final String CATEGORY_FEATURES = "Features";
+    protected static final String CATEGORY_DECORATIONS = "Decorations";
 
     @Override
     protected final void setup() {
@@ -50,7 +56,7 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
         super.setup();
 
         // Create menu actions and trigger default actions
-        populateMenu();
+        createActions();
 
         // Clear initialization log messages
         clearLog();
@@ -94,96 +100,67 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
         }
     }
 
-    private void populateMenu() {
-        createDefaultActions();
-        createCustomActions();
-    }
-
-    private void createDefaultActions() {
+    /**
+     * Create actions for the component. Remember to call super.createActions()
+     * when overriding.
+     */
+    protected void createActions() {
         createBooleanAction("Immediate", CATEGORY_STATE, true, immediateCommand);
         createBooleanAction("Enabled", CATEGORY_STATE, true, enabledCommand);
         createBooleanAction("Readonly", CATEGORY_STATE, false, readonlyCommand);
+        createBooleanAction("Visible", CATEGORY_STATE, true, visibleCommand);
         createBooleanAction("Error indicator", CATEGORY_STATE, false,
                 errorIndicatorCommand);
+        createErrorMessageSelect(CATEGORY_DECORATIONS);
 
-        if (component instanceof Field) {
-            createBooleanAction("Required", CATEGORY_STATE, false,
-                    requiredCommand);
-        }
+        createDescriptionSelect(CATEGORY_DECORATIONS);
+        createCaptionSelect(CATEGORY_DECORATIONS);
+        createIconSelect(CATEGORY_DECORATIONS);
+
         createWidthSelect(CATEGORY_SIZE);
         createHeightSelect(CATEGORY_SIZE);
 
-        if (component instanceof AbstractSelect) {
-            createNullSelectAllowedCheckbox(CATEGORY_SELECTION);
-            createItemsInContainerSelect(CATEGORY_CONTENT);
-            createColumnsInContainerSelect(CATEGORY_CONTENT);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    protected void createItemsInContainerSelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
-        options.put("0", 0);
-        options.put("20", 20);
-        options.put("100", 100);
-        options.put("1000", 1000);
-        options.put("10000", 10000);
-        options.put("100000", 100000);
-
-        createSelectAction("Items in container", category, options, "20",
-                (Command) itemsInContainerCommand);
-    }
-
-    @SuppressWarnings("unchecked")
-    protected void createColumnsInContainerSelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
-        options.put("0", 0);
-        options.put("5", 5);
-        options.put("10", 10);
-        options.put("50", 50);
-        options.put("100", 100);
-        options.put("1000", 1000);
-
-        createSelectAction("Columns in container", category, options, "10",
-                (Command) columnsInContainerCommand);
-    }
-
-    private Container createContainer(int properties, int items) {
-        IndexedContainer c = new IndexedContainer();
-        for (int i = 1; i <= properties; i++) {
-            c.addContainerProperty("Column " + i, String.class, "");
-        }
-        for (int i = 1; i <= items; i++) {
-            Item item = c.addItem("Item " + i);
-            for (int j = 1; j <= properties; j++) {
-                item.getItemProperty("Column " + j).setValue(
-                        "Item " + i + "," + j);
-            }
-        }
-
-        return c;
-    }
-
-    @SuppressWarnings("unchecked")
-    protected void createNullSelectAllowedCheckbox(String category) {
-        createBooleanAction("Null Selection Allowed", category, false,
-                (Command) nullSelectionAllowedCommand);
+        // TODO Style name
 
     }
 
-    @SuppressWarnings("unchecked")
-    protected void createNullSelectItemId(String category) {
-        LinkedHashMap<String, Object> options = new LinkedHashMap<String, Object>();
-        options.put("- None -", null);
-        for (Object id : ((AbstractSelect) component).getContainerDataSource()
-                .getContainerPropertyIds()) {
-            options.put(id.toString(), id);
-        }
-        createSelectAction("Null Selection Item Id", category, options,
-                "- None -", (Command) nullSelectItemIdCommand);
+    private void createErrorMessageSelect(String category) {
+        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        options.put("-", null);
+        options.put(TEXT_SHORT, TEXT_SHORT);
+        options.put("Medium", TEXT_MEDIUM);
+        options.put("Long", TEXT_LONG);
+        options.put("Very long", TEXT_VERY_LONG);
+        createSelectAction("Error message", category, options, "-",
+                errorMessageCommand);
+
     }
 
-    protected void createWidthSelect(String category) {
+    private void createDescriptionSelect(String category) {
+        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        options.put("-", null);
+        options.put(TEXT_SHORT, TEXT_SHORT);
+        options.put("Medium", TEXT_MEDIUM);
+        options.put("Long", TEXT_LONG);
+        options.put("Very long", TEXT_VERY_LONG);
+        createSelectAction("Description / tooltip", category, options, "-",
+                descriptionCommand);
+
+    }
+
+    private void createCaptionSelect(String category) {
+        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        options.put("-", null);
+        options.put("Short", TEXT_SHORT);
+        options.put("Medium", TEXT_MEDIUM);
+        options.put("Long", TEXT_LONG);
+        options.put("Very long", TEXT_VERY_LONG);
+        createSelectAction("Caption", category, options, "Short",
+                captionCommand);
+
+    }
+
+    private void createWidthSelect(String category) {
         LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
         options.put("Undefined", null);
         options.put("50%", "50%");
@@ -196,7 +173,29 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
                 widthCommand, null);
     }
 
-    protected void createHeightSelect(String category) {
+    private void createIconSelect(String category) {
+        LinkedHashMap<String, Resource> options = new LinkedHashMap<String, Resource>();
+        options.put("-", null);
+        options.put("16x16", ICON_16_USER_PNG_CACHEABLE);
+        options.put("32x32", ICON_32_ATTENTION_PNG_CACHEABLE);
+        options.put("64x64", ICON_64_EMAIL_REPLY_PNG_CACHEABLE);
+
+        createSelectAction("Icon", category, options, "-", iconCommand, null);
+    }
+
+    private void createLocaleSelect(String category) {
+        LinkedHashMap<String, Locale> options = new LinkedHashMap<String, Locale>();
+        options.put("-", null);
+        options.put("fi_FI", new Locale("fi", "FI"));
+        options.put("en_US", Locale.US);
+        options.put("zh_CN", Locale.SIMPLIFIED_CHINESE);
+        options.put("fr_FR", Locale.FRANCE);
+
+        createSelectAction("Locale", category, options, "-", localeCommand,
+                null);
+    }
+
+    private void createHeightSelect(String category) {
         LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
         options.put("Undefined", null);
         options.put("50%", "50%");
@@ -238,11 +237,6 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
         }
         return mainMenu.addItem(category, null);
     }
-
-    /**
-     * Provide custom actions for the test case by creating them in this method.
-     */
-    protected abstract void createCustomActions();
 
     private MenuBar.Command menuBooleanCommand(
             final com.vaadin.tests.components.ComponentTestCase.Command<T, Boolean> booleanCommand,
@@ -349,37 +343,4 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
         }
     }
 
-    /* COMMANDS */
-
-    protected Command<AbstractSelect, Boolean> nullSelectionAllowedCommand = new Command<AbstractSelect, Boolean>() {
-
-        public void execute(AbstractSelect c, Boolean value, Object data) {
-            (c).setNullSelectionAllowed(value);
-        }
-    };
-
-    protected Command<AbstractSelect, Object> nullSelectItemIdCommand = new Command<AbstractSelect, Object>() {
-
-        public void execute(AbstractSelect c, Object value, Object data) {
-            c.setNullSelectionItemId(value);
-        }
-    };
-
-    protected Command<AbstractSelect, Integer> itemsInContainerCommand = new Command<AbstractSelect, Integer>() {
-
-        public void execute(AbstractSelect t, Integer value, Object data) {
-            t.setContainerDataSource(createContainer(t.getContainerDataSource()
-                    .getContainerPropertyIds().size(), value));
-        }
-    };
-
-    protected Command<AbstractSelect, Integer> columnsInContainerCommand = new Command<AbstractSelect, Integer>() {
-
-        public void execute(AbstractSelect t, Integer value, Object data) {
-            t.setContainerDataSource(createContainer(value, t
-                    .getContainerDataSource().size()));
-        }
-    };
-
-    /* COMMANDS END */
 }

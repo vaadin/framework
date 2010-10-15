@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.tests.components.MenuBasedComponentTestCase;
+import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.ui.AbstractSelect.MultiSelectMode;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnResizeEvent;
@@ -17,15 +17,19 @@ import com.vaadin.ui.Table.FooterClickListener;
 import com.vaadin.ui.Table.HeaderClickEvent;
 import com.vaadin.ui.Table.HeaderClickListener;
 
-public class Tables extends MenuBasedComponentTestCase<Table> implements
+public class Tables extends AbstractSelectTestCase<Table> implements
         ItemClickListener, HeaderClickListener, FooterClickListener,
         ColumnResizeListener {
 
     protected static final String CATEGORY_ROWS = "Rows";
     private static final String CATEGORY_HEADER = "Header";
     private static final String CATEGORY_FOOTER = "Footer";
-    private static final String CATEGORY_FEATURE_TOGGLES = "Features";
     private static final String CATEGORY_VISIBLE_COLUMNS = "Visible columns";
+
+    @Override
+    protected Class<Table> getTestClass() {
+        return Table.class;
+    }
 
     /* COMMANDS */
     private Command<Table, Boolean> visibleColumnCommand = new Command<Table, Boolean>() {
@@ -118,12 +122,9 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
     /* COMMANDS END */
 
     @Override
-    protected Class<Table> getTestClass() {
-        return Table.class;
-    }
+    protected void createActions() {
+        super.createActions();
 
-    @Override
-    protected void createCustomActions() {
         createPageLengthSelect(CATEGORY_SIZE);
 
         createSelectionModeSelect(CATEGORY_SELECTION);
@@ -141,9 +142,8 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
         createFooterVisibilityCheckbox(CATEGORY_FOOTER);
         createFooterTextSelect(CATEGORY_FOOTER);
 
-        createColumnReorderingAllowedCheckbox(CATEGORY_FEATURE_TOGGLES);
-        createColumnCollapsingAllowedCheckbox(CATEGORY_FEATURE_TOGGLES);
-        createSortAllowedCheckbox(CATEGORY_FEATURE_TOGGLES);
+        createColumnReorderingAllowedCheckbox(CATEGORY_FEATURES);
+        createColumnCollapsingAllowedCheckbox(CATEGORY_FEATURES);
 
         createVisibleColumnsMultiToggle(CATEGORY_VISIBLE_COLUMNS);
 
@@ -163,15 +163,6 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
                 new Command<Table, Boolean>() {
                     public void execute(Table c, Boolean value, Object data) {
                         c.setColumnCollapsingAllowed(value);
-                    }
-                });
-    }
-
-    private void createSortAllowedCheckbox(String category) {
-        createBooleanAction("Sorting allowed", category, true,
-                new Command<Table, Boolean>() {
-                    public void execute(Table c, Boolean value, Object data) {
-                        c.setSortDisabled(!value);
                     }
                 });
     }
