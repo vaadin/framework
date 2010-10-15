@@ -152,14 +152,21 @@ public interface PaintTarget extends Serializable {
     public void addAttribute(String name, Resource value) throws PaintException;
 
     /**
-     * Adds a Receiver attribute to component. Eg. in web terminals Receivers
-     * are typically URIs, where the client side can do an http post (multipart
-     * request).
+     * Adds details about {@link Receiver} to the UIDL stream. Eg. in web
+     * terminals Receivers are typically rendered for the client side as URLs,
+     * where the client side implementation can do an http post request.
+     * <p>
+     * Note that a Reveiver can only be used once per "paint". The same Receiver
+     * can be used several times, but it must be repainted before the next
+     * stream can be received.
      * 
+     * @param owner
+     *            the ReceiverOwner that can trac to progress of streaming to
+     *            given Receiver
      * @param name
-     *            the Attribute name
+     *            an identifying name for the Receiver
      * @param value
-     *            the Attribute value
+     *            the Receiver to paint
      * 
      * @throws PaintException
      *             if the paint operation failed.

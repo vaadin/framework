@@ -4,23 +4,31 @@ import java.io.OutputStream;
 import java.io.Serializable;
 
 /**
- * 
- * Interface that must be implemented by the upload receivers to provide the
- * Upload component an output stream to write the uploaded data.
+ * Receiver is a special kind of variable which value is streamed to given
+ * {@link OutputStream}. E.g. in web terminals Receivers can be used to send
+ * large files from browsers to the server.
+ * <p>
+ * Note, writing to the {@link OutputStream} is not synchronized by the terminal
+ * (not to avoid stalls in other operations when eg. streaming to a slow network
+ * service). If UI is changed as a side effect of writing to given output
+ * stream, developer must handle synchronization manually.
+ * <p>
  * 
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
  * @since 6.5
+ * @see PaintTarget#addVariable(ReceiverOwner, String, Receiver)
+ * @see ReceiverOwner
  */
 public interface Receiver extends Serializable {
 
     /**
-     * Invoked when a new upload arrives.
+     * Invoked by the terminal when a new upload arrives.
      * 
      * @param filename
-     *            the desired filename of the upload, usually as specified by
-     *            the client.
+     *            the filename of the upload if known by the terminal, usually
+     *            as specified by the client.
      * @param MIMEType
      *            the MIME type of the uploaded file.
      * @return Stream to which the uploaded file should be written.
