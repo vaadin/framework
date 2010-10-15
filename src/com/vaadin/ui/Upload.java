@@ -87,10 +87,9 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     private String buttonCaption = "Upload";
 
     /**
-     * ProgressListener to which information about progress is sent during
+     * ProgressListeners to which information about progress is sent during
      * upload
      */
-    private ProgressListener progressListener;
     private LinkedHashSet<ProgressListener> progressListeners;
 
     private boolean interrupted = false;
@@ -749,10 +748,6 @@ public class Upload extends AbstractComponent implements Component.Focusable,
                 l.updateProgress(totalBytes, contentLength);
             }
         }
-        // deprecated:
-        if (progressListener != null) {
-            progressListener.updateProgress(totalBytes, contentLength);
-        }
     }
 
     /**
@@ -885,7 +880,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      */
     @Deprecated
     public void setProgressListener(ProgressListener progressListener) {
-        this.progressListener = progressListener;
+        addListener(progressListener);
     }
 
     /**
@@ -897,7 +892,11 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      */
     @Deprecated
     public ProgressListener getProgressListener() {
-        return progressListener;
+        if (progressListeners == null || progressListeners.isEmpty()) {
+            return null;
+        } else {
+            return progressListeners.iterator().next();
+        }
     }
 
     /**
@@ -945,7 +944,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      */
     private final ReceivingController controller = new ReceivingController() {
         public boolean listenProgress() {
-            return (progressListeners != null || progressListener != null);
+            return (progressListeners != null && !progressListeners.isEmpty());
         }
 
         public void onProgress(ReceivingProgressedEvent event) {
