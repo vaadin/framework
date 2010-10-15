@@ -36,6 +36,7 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
     // Used to determine if a menuItem should be selected and the other
     // unselected on click
     private Set<MenuItem> parentOfSelectableMenuItem = new HashSet<MenuItem>();
+    private MenuItem windowMenu;
 
     protected static final String CATEGORY_STATE = "State";
     protected static final String CATEGORY_SIZE = "Size";
@@ -48,7 +49,8 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
     protected final void setup() {
         // Create menu here so it appears before the components
         menu = new MenuBar();
-        mainMenu = menu.addItem("Settings", null);
+        mainMenu = menu.addItem("Component", null);
+        windowMenu = menu.addItem("Test", null);
         addComponent(menu);
 
         getLayout().setSizeFull();
