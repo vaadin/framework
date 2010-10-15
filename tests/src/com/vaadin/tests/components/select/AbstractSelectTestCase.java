@@ -5,11 +5,11 @@ import java.util.LinkedHashMap;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.tests.components.MenuBasedComponentTestCase;
+import com.vaadin.tests.components.abstractfield.AbstractFieldTestCase;
 import com.vaadin.ui.AbstractSelect;
 
 public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
-        MenuBasedComponentTestCase<T> {
+        AbstractFieldTestCase<T> {
 
     protected static final String CATEGORY_CONTENT = "Contents";
 
