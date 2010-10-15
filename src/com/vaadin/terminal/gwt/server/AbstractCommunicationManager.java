@@ -624,12 +624,7 @@ public abstract class AbstractCommunicationManager implements
 
         } catch (UploadInterruptedException e) {
             // Download interrupted by application code
-            try {
-                // still try to close output stream (e.g. file handle)
-                out.close();
-            } catch (IOException e1) {
-                // NOP
-            }
+            tryToCloseStream(out);
             ReceivingFailedEvent event = new ReceivingFailedEventImpl(receiver,
                     filename, type, contentLength, totalBytes, e);
             synchronized (application) {
@@ -638,6 +633,7 @@ public abstract class AbstractCommunicationManager implements
             // Note, we are not throwing interrupted exception forward as it is
             // not a terminal level error like all other exception.
         } catch (final Exception e) {
+            tryToCloseStream(out);
             synchronized (application) {
                 ReceivingFailedEvent event = new ReceivingFailedEventImpl(
                         receiver, filename, type, contentLength, totalBytes, e);
@@ -648,6 +644,17 @@ public abstract class AbstractCommunicationManager implements
                 // terminalErrorHandler)
                 throw new UploadException(e);
             }
+        }
+    }
+
+    private void tryToCloseStream(OutputStream out) {
+        try {
+            // try to close output stream (e.g. file handle)
+            if (out != null) {
+                out.close();
+            }
+        } catch (IOException e1) {
+            // NOP
         }
     }
 
