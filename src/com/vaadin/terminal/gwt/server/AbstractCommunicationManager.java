@@ -426,9 +426,22 @@ public abstract class AbstractCommunicationManager implements
          * buffering mode bytes are read until the character does not match the
          * corresponding from boundary string or the full boundary string is
          * found.
+         * 
+         * Note, if this is someday needed elsewhere, don't shoot yourself to
+         * foot and split to a top level helper class.
          */
         InputStream simpleMultiPartReader = new InputStream() {
+
+            /**
+             * Counter of how many characters have been matched to boundary
+             * string from the stream
+             */
             int matchedCount = 0;
+
+            /**
+             * Used as pointer when returning bytes after partly matched
+             * boundary string.
+             */
             int curBoundaryIndex = 0;
             /**
              * The byte found after a "promising start for boundary"
@@ -441,6 +454,7 @@ public abstract class AbstractCommunicationManager implements
                 if (atTheEnd) {
                     return -1;
                 } else if (bufferedByte >= 0) {
+                    /* "buffered mode", purge partially matched boundary */
                     return getBuffered();
                 } else {
                     int fromActualStream = inputStream.read();
@@ -450,6 +464,10 @@ public abstract class AbstractCommunicationManager implements
                                 "The multipart stream ended unexpectedly");
                     }
                     if (charArray[matchedCount] == fromActualStream) {
+                        /*
+                         * Going to "buffered mode". Read until full boundary
+                         * match or a different character.
+                         */
                         while (true) {
                             matchedCount++;
                             if (matchedCount == charArray.length) {
