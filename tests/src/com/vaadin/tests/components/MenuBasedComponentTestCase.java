@@ -124,6 +124,7 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
         createBooleanAction("Visible", CATEGORY_STATE, true, visibleCommand);
         createBooleanAction("Error indicator", CATEGORY_STATE, false,
                 errorIndicatorCommand);
+        createLocaleSelect(CATEGORY_STATE);
         createErrorMessageSelect(CATEGORY_DECORATIONS);
 
         createDescriptionSelect(CATEGORY_DECORATIONS);
