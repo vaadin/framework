@@ -94,7 +94,7 @@ public abstract class DateFieldTestCase<T extends DateField> extends
     private Command<T, Boolean> weekNumberCommand = new Command<T, Boolean>() {
 
         public void execute(T c, Boolean value, Object data) {
-            c.setShowISOWeekNumbers(true);
+            c.setShowISOWeekNumbers(value);
 
         }
     };
