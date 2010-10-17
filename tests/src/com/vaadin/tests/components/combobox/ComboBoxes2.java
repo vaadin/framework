@@ -16,7 +16,7 @@ public class ComboBoxes2 extends AbstractSelectTestCase<ComboBox> {
     @Override
     protected void createActions() {
         super.createActions();
-        createItemIconSelect(CATEGORY_CONTENT);
+        createItemIconSelect(CATEGORY_DATA_SOURCE);
     }
 
     private void createItemIconSelect(String category) {

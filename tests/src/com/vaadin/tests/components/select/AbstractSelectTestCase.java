@@ -14,7 +14,7 @@ import com.vaadin.ui.AbstractSelect;
 public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
         AbstractFieldTestCase<T> implements ItemClickListener {
 
-    protected static final String CATEGORY_CONTENT = "Contents";
+    protected static final String CATEGORY_DATA_SOURCE = "Data source";
 
     private int items = 0;
     private int properties = 0;
@@ -23,8 +23,8 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
     protected void createActions() {
         super.createActions();
         createNullSelectAllowedCheckbox(CATEGORY_SELECTION);
-        createPropertiesInContainerSelect(CATEGORY_CONTENT);
-        createItemsInContainerSelect(CATEGORY_CONTENT);
+        createPropertiesInContainerSelect(CATEGORY_DATA_SOURCE);
+        createItemsInContainerSelect(CATEGORY_DATA_SOURCE);
 
     }
 

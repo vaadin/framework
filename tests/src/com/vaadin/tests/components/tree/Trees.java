@@ -86,11 +86,11 @@ public class Trees extends AbstractSelectTestCase<Tree> implements
         super.createActions();
 
         // Causes container changes so doing this first..
-        createRootItemSelectAction(CATEGORY_CONTENT);
+        createRootItemSelectAction(CATEGORY_DATA_SOURCE);
 
         createExpandCollapseActions(CATEGORY_FEATURES);
         createSelectionModeSelect(CATEGORY_SELECTION);
-        createChildrenAllowedAction(CATEGORY_CONTENT);
+        createChildrenAllowedAction(CATEGORY_DATA_SOURCE);
 
         createListeners(CATEGORY_LISTENERS);
         createItemStyleGenerator(CATEGORY_FEATURES);

@@ -133,7 +133,7 @@ public class Tables extends AbstractSelectTestCase<Table> implements
         createHeaderClickListenerCheckbox(CATEGORY_LISTENERS);
         createFooterClickListenerCheckbox(CATEGORY_LISTENERS);
 
-        createRowHeaderModeSelect(CATEGORY_CONTENT);
+        createRowHeaderModeSelect(CATEGORY_DATA_SOURCE);
 
         createHeaderVisibilitySelect(CATEGORY_HEADER);
         createHeaderTextCheckbox(CATEGORY_HEADER);
