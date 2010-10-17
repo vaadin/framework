@@ -5,20 +5,26 @@ import java.util.LinkedHashMap;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.event.ItemClickEvent.ItemClickSource;
 import com.vaadin.tests.components.abstractfield.AbstractFieldTestCase;
 import com.vaadin.ui.AbstractSelect;
 
 public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
-        AbstractFieldTestCase<T> {
+        AbstractFieldTestCase<T> implements ItemClickListener {
 
     protected static final String CATEGORY_CONTENT = "Contents";
+
+    private int items = 0;
+    private int properties = 0;
 
     @Override
     protected void createActions() {
         super.createActions();
         createNullSelectAllowedCheckbox(CATEGORY_SELECTION);
+        createPropertiesInContainerSelect(CATEGORY_CONTENT);
         createItemsInContainerSelect(CATEGORY_CONTENT);
-        createColumnsInContainerSelect(CATEGORY_CONTENT);
 
     }
 
@@ -40,19 +46,29 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
     }
 
     protected Container createContainer(int properties, int items) {
+        return createIndexedContainer(properties, items);
+    }
+
+    private Container createIndexedContainer(int properties, int items) {
         IndexedContainer c = new IndexedContainer();
+        populateContainer(c, properties, items);
+
+        return c;
+    }
+
+    protected void populateContainer(Container c, int properties, int items) {
+        c.removeAllItems();
         for (int i = 1; i <= properties; i++) {
-            c.addContainerProperty("Column " + i, String.class, "");
+            c.addContainerProperty("Property " + i, String.class, "");
         }
         for (int i = 1; i <= items; i++) {
             Item item = c.addItem("Item " + i);
             for (int j = 1; j <= properties; j++) {
-                item.getItemProperty("Column " + j).setValue(
+                item.getItemProperty("Property " + j).setValue(
                         "Item " + i + "," + j);
             }
         }
 
-        return c;
     }
 
     protected void createItemsInContainerSelect(String category) {
@@ -70,7 +86,7 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
                 itemsInContainerCommand);
     }
 
-    protected void createColumnsInContainerSelect(String category) {
+    protected void createPropertiesInContainerSelect(String category) {
         LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
         options.put("0", 0);
         for (int i = 0; i <= 10; i++) {
@@ -80,8 +96,13 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
         options.put("100", 100);
         options.put("1000", 1000);
 
-        createSelectAction("Columns in container", category, options, "10",
-                columnsInContainerCommand);
+        createSelectAction("Properties in container", category, options, "10",
+                propertiesInContainerCommand);
+    }
+
+    protected void createItemClickListener(String category) {
+        createBooleanAction("Item click listener", category, false,
+                itemClickListenerCommand);
     }
 
     /* COMMANDS */
@@ -103,19 +124,45 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
     protected Command<T, Integer> itemsInContainerCommand = new Command<T, Integer>() {
 
         public void execute(T t, Integer value, Object data) {
-            t.setContainerDataSource(createContainer(t.getContainerDataSource()
-                    .getContainerPropertyIds().size(), value));
+            items = value;
+            updateContainer();
         }
     };
 
-    protected Command<T, Integer> columnsInContainerCommand = new Command<T, Integer>() {
+    protected Command<T, Integer> propertiesInContainerCommand = new Command<T, Integer>() {
 
         public void execute(T t, Integer value, Object data) {
-            t.setContainerDataSource(createContainer(value, t
-                    .getContainerDataSource().size()));
+            properties = value;
+            updateContainer();
         }
     };
+
+    protected Command<T, Boolean> itemClickListenerCommand = new Command<T, Boolean>() {
+
+        public void execute(T c, Boolean value, Object data) {
+            if (value) {
+                ((ItemClickSource) c).addListener(AbstractSelectTestCase.this);
+            } else {
+                ((ItemClickSource) c)
+                        .removeListener(AbstractSelectTestCase.this);
+            }
+
+        }
+    };
+
+    protected void setContainer(Container newContainer) {
+        getComponent().setContainerDataSource(newContainer);
+
+    }
+
+    protected void updateContainer() {
+        setContainer(createContainer(properties, items));
+    }
 
     /* COMMANDS END */
 
+    public void itemClick(ItemClickEvent event) {
+        log("ItemClick on itemId: " + event.getItemId() + ", propertyId: "
+                + event.getPropertyId() + " using " + event.getButtonName());
+    }
 }

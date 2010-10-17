@@ -1,9 +1,11 @@
 package com.vaadin.tests.components;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import com.vaadin.terminal.Resource;
@@ -38,6 +40,11 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
     private Set<MenuItem> parentOfSelectableMenuItem = new HashSet<MenuItem>();
     private MenuItem windowMenu;
 
+    /**
+     * Maps the category name to a menu item
+     */
+    private Map<String, MenuItem> categoryToMenuItem = new HashMap<String, MenuItem>();
+
     protected static final String CATEGORY_STATE = "State";
     protected static final String CATEGORY_SIZE = "Size";
     protected static final String CATEGORY_SELECTION = "Selection";
@@ -47,8 +54,11 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
 
     @Override
     protected final void setup() {
+        setTheme("tests-components");
+
         // Create menu here so it appears before the components
         menu = new MenuBar();
+        menu.setDebugId("menu");
         mainMenu = menu.addItem("Component", null);
         windowMenu = menu.addItem("Test", null);
         addComponent(menu);
@@ -71,6 +81,7 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
     @Override
     protected void initializeComponents() {
         component = constructComponent();
+        component.setDebugId("testComponent");
         addTestComponent(component);
     }
 
@@ -225,19 +236,52 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
         doCommand(caption, command, initialState, data);
     }
 
+    protected <DATATYPE> void createClickAction(String caption,
+            String category, final Command<T, DATATYPE> command, DATATYPE value) {
+        createClickAction(caption, category, command, value, null);
+    }
+
+    protected <DATATYPE> void createClickAction(String caption,
+            String category, final Command<T, DATATYPE> command,
+            DATATYPE value, Object data) {
+        MenuItem categoryItem = getCategoryMenuItem(category);
+        categoryItem.addItem(caption, menuClickCommand(command, value, data));
+        doCommand(caption, command, value, data);
+    }
+
     private MenuItem getCategoryMenuItem(String category) {
         if (category == null) {
             return getCategoryMenuItem("Misc");
         }
 
-        if (mainMenu.getChildren() != null) {
-            for (MenuItem i : mainMenu.getChildren()) {
-                if (i.getText().equals(category)) {
-                    return i;
-                }
-            }
+        MenuItem item = categoryToMenuItem.get(category);
+        if (item != null) {
+            return item;
         }
-        return mainMenu.addItem(category, null);
+
+        return createCategory(category, null);
+    }
+
+    /**
+     * Creates category "category" in parent category "parentCategory". Each
+     * category name must be globally unique.
+     * 
+     * @param category
+     * @param parentCategory
+     * @return
+     */
+    protected MenuItem createCategory(String category, String parentCategory) {
+        if (categoryToMenuItem.containsKey(category)) {
+            return categoryToMenuItem.get(category);
+        }
+        MenuItem item;
+        if (parentCategory == null) {
+            item = mainMenu.addItem(category, null);
+        } else {
+            item = getCategoryMenuItem(parentCategory).addItem(category, null);
+        }
+        categoryToMenuItem.put(category, item);
+        return item;
     }
 
     private MenuBar.Command menuBooleanCommand(
@@ -249,6 +293,18 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
                 boolean selected = !isSelected(selectedItem);
                 doCommand(getText(selectedItem), booleanCommand, selected, data);
                 setSelected(selectedItem, selected);
+            }
+
+        };
+    }
+
+    private <DATATYPE> MenuBar.Command menuClickCommand(
+            final com.vaadin.tests.components.ComponentTestCase.Command<T, DATATYPE> command,
+            final DATATYPE value, final Object data) {
+
+        return new MenuBar.Command() {
+            public void menuSelected(MenuItem selectedItem) {
+                doCommand(getText(selectedItem), command, value, data);
             }
 
         };
@@ -321,6 +377,56 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
         createSelectAction(caption, category, options, initialValue, command,
                 null);
 
+    }
+
+    protected <TYPE> void createMultiClickAction(
+            String caption,
+            String category,
+            LinkedHashMap<String, TYPE> options,
+            com.vaadin.tests.components.ComponentTestCase.Command<T, TYPE> command,
+            Object data) {
+
+        MenuItem categoryItem = getCategoryMenuItem(category);
+        MenuItem mainItem = categoryItem.addItem(caption, null);
+
+        for (String option : options.keySet()) {
+            MenuBar.Command cmd = menuClickCommand(command,
+                    options.get(option), data);
+            mainItem.addItem(option, cmd);
+        }
+    }
+
+    protected <TYPE> void createMultiToggleAction(
+            String caption,
+            String category,
+            LinkedHashMap<String, TYPE> options,
+            com.vaadin.tests.components.ComponentTestCase.Command<T, Boolean> command,
+            boolean defaultValue) {
+
+        LinkedHashMap<String, Boolean> defaultValues = new LinkedHashMap<String, Boolean>();
+
+        for (String option : options.keySet()) {
+            defaultValues.put(option, defaultValue);
+        }
+
+        createMultiToggleAction(caption, category, options, command,
+                defaultValues);
+    }
+
+    protected <TYPE> void createMultiToggleAction(
+            String caption,
+            String category,
+            LinkedHashMap<String, TYPE> options,
+            com.vaadin.tests.components.ComponentTestCase.Command<T, Boolean> command,
+            LinkedHashMap<String, Boolean> defaultValues) {
+
+        createCategory(caption, category);
+
+        for (String option : options.keySet()) {
+            createBooleanAction(option, caption, defaultValues.get(option),
+                    command, options.get(option));
+
+        }
     }
 
     protected <TYPE> void createSelectAction(

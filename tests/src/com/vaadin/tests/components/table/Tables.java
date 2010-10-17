@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.ui.AbstractSelect.MultiSelectMode;
@@ -129,7 +128,7 @@ public class Tables extends AbstractSelectTestCase<Table> implements
 
         createSelectionModeSelect(CATEGORY_SELECTION);
 
-        createItemClickListenerCheckbox(CATEGORY_LISTENERS);
+        createItemClickListener(CATEGORY_LISTENERS);
         createColumnResizeListenerCheckbox(CATEGORY_LISTENERS);
         createHeaderClickListenerCheckbox(CATEGORY_LISTENERS);
         createFooterClickListenerCheckbox(CATEGORY_LISTENERS);
@@ -168,10 +167,13 @@ public class Tables extends AbstractSelectTestCase<Table> implements
     }
 
     private void createVisibleColumnsMultiToggle(String category) {
+        LinkedHashMap<String, Object> options = new LinkedHashMap<String, Object>();
         for (Object id : getComponent().getContainerPropertyIds()) {
-            createBooleanAction(id.toString() + " - visible", category, true,
-                    visibleColumnCommand, id);
+            options.put(id.toString(), id);
         }
+
+        createMultiToggleAction("Visible columns", category, options,
+                visibleColumnCommand, true);
     }
 
     private void createRowHeaderModeSelect(String category) {
@@ -227,22 +229,6 @@ public class Tables extends AbstractSelectTestCase<Table> implements
 
                     }
                 });
-    }
-
-    private void createItemClickListenerCheckbox(String category) {
-        Command<Table, Boolean> itemClickListenerCommand = new Command<Table, Boolean>() {
-
-            public void execute(Table c, Boolean value, Object data) {
-                if (value) {
-                    c.addListener((ItemClickListener) Tables.this);
-                } else {
-                    c.removeListener((ItemClickListener) Tables.this);
-                }
-
-            }
-        };
-        createBooleanAction("Item click listener", category, false,
-                itemClickListenerCommand);
     }
 
     private void createHeaderClickListenerCheckbox(String category) {
@@ -379,8 +365,4 @@ public class Tables extends AbstractSelectTestCase<Table> implements
                 + event.getButtonName());
     }
 
-    public void itemClick(ItemClickEvent event) {
-        log("ItemClick on " + event.getItemId() + "/" + event.getPropertyId()
-                + " using " + event.getButtonName());
-    }
 }
