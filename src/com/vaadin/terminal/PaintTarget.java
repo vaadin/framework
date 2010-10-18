@@ -156,13 +156,13 @@ public interface PaintTarget extends Serializable {
      * terminals Receivers are typically rendered for the client side as URLs,
      * where the client side implementation can do an http post request.
      * <p>
-     * Note that a Reveiver can only be used once per "paint". The same Receiver
+     * Note that a Receiver can only be used once per "paint". The same Receiver
      * can be used several times, but it must be repainted before the next
      * stream can be received.
      * 
      * @param owner
-     *            the ReceiverOwner that can trac to progress of streaming to
-     *            given Receiver
+     *            the ReceiverOwner that can track the progress of streaming to
+     *            the given Receiver
      * @param name
      *            an identifying name for the Receiver
      * @param value

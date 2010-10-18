@@ -4,14 +4,14 @@ import java.io.OutputStream;
 import java.io.Serializable;
 
 /**
- * Receiver is a special kind of variable which value is streamed to given
+ * Receiver is a special kind of variable whose value is streamed to a given
  * {@link OutputStream}. E.g. in web terminals Receivers can be used to send
  * large files from browsers to the server.
  * <p>
  * Note, writing to the {@link OutputStream} is not synchronized by the terminal
- * (not to avoid stalls in other operations when eg. streaming to a slow network
- * service). If UI is changed as a side effect of writing to given output
- * stream, developer must handle synchronization manually.
+ * (to avoid stalls in other operations when eg. streaming to a slow network
+ * service). If UI is changed as a side effect of writing to the output stream,
+ * developer must handle synchronization manually.
  * <p>
  * 
  * @author IT Mill Ltd.
