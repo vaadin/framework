@@ -53,6 +53,12 @@ contains a number of significant enhancements.</p>
   <li>Table.setColumnCollapsed throws IllegalStateException instead of IllegalAccessException is collapsing is not allowed.</li>
 </ul>
 
+<ul>
+  <li>AbstractStringValidator and now converts non-String values using toString() prior to validation (#5785).
+  This also affects most built-in validators such as IntegerValidator.</li>
+</ul>
+
+
 <h3>Change Log, Future Releases, and Upgrading</h3>
 
 <p>See the <a href="#changelog">Change Log</a> for a full list of tickets fixed in this release.</p>
