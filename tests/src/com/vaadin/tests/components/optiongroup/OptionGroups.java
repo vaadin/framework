@@ -1,0 +1,37 @@
+package com.vaadin.tests.components.optiongroup;
+
+import com.vaadin.tests.components.select.AbstractSelectTestCase;
+import com.vaadin.ui.OptionGroup;
+
+public class OptionGroups extends AbstractSelectTestCase<OptionGroup> {
+
+    @Override
+    protected Class<OptionGroup> getTestClass() {
+        return OptionGroup.class;
+    }
+
+    @Override
+    protected void createActions() {
+        super.createActions();
+        createFocusListener(CATEGORY_LISTENERS);
+        createBlurListener(CATEGORY_LISTENERS);
+
+        createDisabledItemsMultiToggle("Disabled items");
+    }
+
+    private void createDisabledItemsMultiToggle(String category) {
+        for (Object id : getComponent().getItemIds()) {
+            createBooleanAction(id.toString() + " - enabled", category, true,
+                    enabledItemCommand, id);
+        }
+    }
+
+    private Command<OptionGroup, Boolean> enabledItemCommand = new Command<OptionGroup, Boolean>() {
+
+        public void execute(OptionGroup c, Boolean value, Object data) {
+            c.setItemEnabled(data, value);
+
+        }
+    };
+
+}

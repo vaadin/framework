@@ -1,8 +1,12 @@
 package com.vaadin.tests.components;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.UserError;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractComponent;
@@ -12,9 +16,26 @@ import com.vaadin.ui.Layout.SpacingHandler;
 public abstract class AbstractComponentTestCase<T extends AbstractComponent>
         extends TestBase {
 
+    protected static final ThemeResource ICON_16_USER_PNG_CACHEABLE = cacheableThemeResource("../runo/icons/16/user.png");
+    protected static final ThemeResource ICON_16_USER_PNG_UNCACHEABLE = uncacheableThemeResource("../runo/icons/16/user.png");
+    protected static final ThemeResource ICON_32_ATTENTION_PNG_CACHEABLE = cacheableThemeResource("../runo/icons/32/attention.png");
+    protected static final ThemeResource ICON_32_ATTENTION_PNG_UNCACHEABLE = uncacheableThemeResource("../runo/icons/32/attention.png");
+    protected static final ThemeResource ICON_64_EMAIL_REPLY_PNG_CACHEABLE = cacheableThemeResource("../runo/icons/64/email-reply.png");
+    protected static final ThemeResource ICON_64_EMAIL_REPLY_PNG_UNCACHEABLE = uncacheableThemeResource("../runo/icons/64/email-reply.png");
+
     private List<T> testComponents = new ArrayList<T>();
 
     abstract protected Class<T> getTestClass();
+
+    protected static ThemeResource uncacheableThemeResource(
+            String resourceLocation) {
+        return new ThemeResource(resourceLocation + "?" + new Date().getTime());
+    }
+
+    protected static ThemeResource cacheableThemeResource(
+            String resourceLocation) {
+        return new ThemeResource(resourceLocation);
+    }
 
     abstract protected void initializeComponents();
 
@@ -75,6 +96,32 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
         }
     };
 
+    protected Command<T, Boolean> errorIndicatorCommand = new Command<T, Boolean>() {
+
+        public void execute(T c, Boolean enabled, Object data) {
+            if (enabled) {
+                c.setComponentError(new UserError(errorMessage));
+            } else {
+                c.setComponentError(null);
+
+            }
+        }
+    };
+    private String errorMessage = null;
+
+    protected Command<T, String> errorMessageCommand = new Command<T, String>() {
+
+        public void execute(T c, String value, Object data) {
+            errorMessage = value;
+            if (c.getComponentError() != null) {
+                errorIndicatorCommand.execute(c, true, null);
+            }
+
+        }
+
+    };
+
+    // TODO Move to AbstractFieldTestCase
     protected Command<T, Boolean> requiredCommand = new Command<T, Boolean>() {
 
         public void execute(T c, Boolean enabled, Object data) {
@@ -86,16 +133,17 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
             }
         }
     };
+    protected Command<T, String> requiredErrorMessageCommand = new Command<T, String>() {
 
-    protected Command<T, Boolean> errorIndicatorCommand = new Command<T, Boolean>() {
+        public void execute(T c, String value, Object data) {
+            ((Field) c).setRequiredError(value);
+        }
 
-        public void execute(T c, Boolean enabled, Object data) {
-            if (enabled) {
-                c.setComponentError(new UserError("It failed!"));
-            } else {
-                c.setComponentError(null);
+    };
 
-            }
+    protected Command<T, String> descriptionCommand = new Command<T, String>() {
+        public void execute(T c, String value, Object data) {
+            c.setDescription(value);
         }
     };
 
@@ -104,6 +152,36 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
         public void execute(T c, Boolean enabled, Object data) {
             c.setReadOnly(enabled);
         }
+    };
+
+    protected Command<T, Boolean> visibleCommand = new Command<T, Boolean>() {
+
+        public void execute(T c, Boolean enabled, Object data) {
+            c.setVisible(enabled);
+        }
+    };
+
+    protected Command<T, Resource> iconCommand = new Command<T, Resource>() {
+
+        public void execute(T c, Resource value, Object data) {
+            c.setIcon(value);
+        }
+
+    };
+    protected Command<T, String> captionCommand = new Command<T, String>() {
+
+        public void execute(T c, String value, Object data) {
+            c.setCaption(value);
+        }
+
+    };
+
+    protected Command<T, Locale> localeCommand = new Command<T, Locale>() {
+
+        public void execute(T c, Locale value, Object data) {
+            c.setLocale(value);
+        }
+
     };
 
     protected <VALUET> void doCommand(Command<T, VALUET> command, VALUET value) {

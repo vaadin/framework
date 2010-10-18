@@ -5,9 +5,8 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.tests.components.MenuBasedComponentTestCase;
+import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.ui.AbstractSelect.MultiSelectMode;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnResizeEvent;
@@ -17,15 +16,19 @@ import com.vaadin.ui.Table.FooterClickListener;
 import com.vaadin.ui.Table.HeaderClickEvent;
 import com.vaadin.ui.Table.HeaderClickListener;
 
-public class Tables extends MenuBasedComponentTestCase<Table> implements
+public class Tables extends AbstractSelectTestCase<Table> implements
         ItemClickListener, HeaderClickListener, FooterClickListener,
         ColumnResizeListener {
 
     protected static final String CATEGORY_ROWS = "Rows";
     private static final String CATEGORY_HEADER = "Header";
     private static final String CATEGORY_FOOTER = "Footer";
-    private static final String CATEGORY_FEATURE_TOGGLES = "Features";
     private static final String CATEGORY_VISIBLE_COLUMNS = "Visible columns";
+
+    @Override
+    protected Class<Table> getTestClass() {
+        return Table.class;
+    }
 
     /* COMMANDS */
     private Command<Table, Boolean> visibleColumnCommand = new Command<Table, Boolean>() {
@@ -118,22 +121,19 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
     /* COMMANDS END */
 
     @Override
-    protected Class<Table> getTestClass() {
-        return Table.class;
-    }
+    protected void createActions() {
+        super.createActions();
 
-    @Override
-    protected void createCustomActions() {
         createPageLengthSelect(CATEGORY_SIZE);
 
         createSelectionModeSelect(CATEGORY_SELECTION);
 
-        createItemClickListenerCheckbox(CATEGORY_LISTENERS);
+        createItemClickListener(CATEGORY_LISTENERS);
         createColumnResizeListenerCheckbox(CATEGORY_LISTENERS);
         createHeaderClickListenerCheckbox(CATEGORY_LISTENERS);
         createFooterClickListenerCheckbox(CATEGORY_LISTENERS);
 
-        createRowHeaderModeSelect(CATEGORY_CONTENT);
+        createRowHeaderModeSelect(CATEGORY_DATA_SOURCE);
 
         createHeaderVisibilitySelect(CATEGORY_HEADER);
         createHeaderTextCheckbox(CATEGORY_HEADER);
@@ -141,8 +141,8 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
         createFooterVisibilityCheckbox(CATEGORY_FOOTER);
         createFooterTextSelect(CATEGORY_FOOTER);
 
-        createColumnReorderingAllowedCheckbox(CATEGORY_FEATURE_TOGGLES);
-        createColumnCollapsingAllowedCheckbox(CATEGORY_FEATURE_TOGGLES);
+        createColumnReorderingAllowedCheckbox(CATEGORY_FEATURES);
+        createColumnCollapsingAllowedCheckbox(CATEGORY_FEATURES);
 
         createVisibleColumnsMultiToggle(CATEGORY_VISIBLE_COLUMNS);
 
@@ -167,10 +167,13 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
     }
 
     private void createVisibleColumnsMultiToggle(String category) {
+        LinkedHashMap<String, Object> options = new LinkedHashMap<String, Object>();
         for (Object id : getComponent().getContainerPropertyIds()) {
-            createBooleanAction(id.toString() + " - visible", category, true,
-                    visibleColumnCommand, id);
+            options.put(id.toString(), id);
         }
+
+        createMultiToggleAction("Visible columns", category, options,
+                visibleColumnCommand, true);
     }
 
     private void createRowHeaderModeSelect(String category) {
@@ -226,22 +229,6 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
 
                     }
                 });
-    }
-
-    private void createItemClickListenerCheckbox(String category) {
-        Command<Table, Boolean> itemClickListenerCommand = new Command<Table, Boolean>() {
-
-            public void execute(Table c, Boolean value, Object data) {
-                if (value) {
-                    c.addListener((ItemClickListener) Tables.this);
-                } else {
-                    c.removeListener((ItemClickListener) Tables.this);
-                }
-
-            }
-        };
-        createBooleanAction("Item click listener", category, false,
-                itemClickListenerCommand);
     }
 
     private void createHeaderClickListenerCheckbox(String category) {
@@ -378,8 +365,4 @@ public class Tables extends MenuBasedComponentTestCase<Table> implements
                 + event.getButtonName());
     }
 
-    public void itemClick(ItemClickEvent event) {
-        log("ItemClick on " + event.getItemId() + "/" + event.getPropertyId()
-                + " using " + event.getButtonName());
-    }
 }
