@@ -42,21 +42,20 @@ public abstract class AbstractStringValidator extends AbstractValidator {
      * Tests if the given value is a valid string.
      * <p>
      * Null values are always accepted. Values that are not {@link String}s are
-     * converted using {@link #toString()}. Then {@link #isValidString(String)}
-     * is used to validate the value.
+     * always rejected. Uses {@link #isValidString(String)} to validate the
+     * value.
      * </p>
      * 
      * @param value
      *            the value to check
-     * @return true if the value (or its toString()) is a valid string, false
-     *         otherwise
+     * @return true if the value is a valid string, false otherwise
      */
     public boolean isValid(Object value) {
         if (value == null) {
             return true;
         }
         if (!(value instanceof String)) {
-            value = String.valueOf(value);
+            return false;
         }
         return isValidString((String) value);
     }
