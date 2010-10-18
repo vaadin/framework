@@ -1,0 +1,18 @@
+@import url(../reindeer/styles.css);
+
+.v-tree-node-caption-red {
+	color: red;
+}
+
+.v-tree-node-caption-green {
+	color: green;
+}
+
+.v-tree-node-caption-blue {
+	color: blue;
+}
+
+.v-tree-node-caption-bold {
+	font-weight: bold;
+}
+
