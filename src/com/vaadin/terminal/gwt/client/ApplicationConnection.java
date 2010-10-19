@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
@@ -172,7 +173,7 @@ public class ApplicationConnection {
 
         initializeClientHooks();
 
-        view = new VView();
+        view = GWT.create(VView.class);
         view.init(cnf.getRootPanelId());
         showLoadingIndicator();
 
