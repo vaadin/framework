@@ -112,7 +112,12 @@ public class SplitPanel extends AbstractLayout {
     /**
      * Creates a new split panel. The orientation of the panels is
      * <code>ORIENTATION_VERTICAL</code>.
+     * 
+     * @deprecated this class will become abstract in a becoming version. Use
+     *             {@link HorizontalSplitPanel} and {@link VerticalSplitPanel}
+     *             instead.
      */
+    @Deprecated
     public SplitPanel() {
         orientation = ORIENTATION_VERTICAL;
         setSizeFull();
@@ -124,7 +129,12 @@ public class SplitPanel extends AbstractLayout {
      * 
      * @param orientation
      *            the Orientation of the layout.
+     * 
+     * @deprecated this class will become abstract in a becoming version. Use
+     *             {@link HorizontalSplitPanel} and {@link VerticalSplitPanel}
+     *             instead.
      */
+    @Deprecated
     public SplitPanel(int orientation) {
         this();
         setOrientation(orientation);
@@ -264,7 +274,12 @@ public class SplitPanel extends AbstractLayout {
      * Gets the orientation of the container.
      * 
      * @return the Value of property orientation.
+     * 
+     * @deprecated this class will become abstract in a becoming version. Use
+     *             {@link HorizontalSplitPanel} and {@link VerticalSplitPanel}
+     *             instead.
      */
+    @Deprecated
     public int getOrientation() {
         return orientation;
     }
@@ -274,7 +289,12 @@ public class SplitPanel extends AbstractLayout {
      * 
      * @param orientation
      *            the New value of property orientation.
+     * 
+     * @deprecated this class will become abstract in a becoming version. Use
+     *             {@link HorizontalSplitPanel} and {@link VerticalSplitPanel}
+     *             instead.
      */
+    @Deprecated
     public void setOrientation(int orientation) {
 
         // Checks the validity of the argument

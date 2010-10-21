@@ -110,7 +110,7 @@ public class TextField extends AbstractField implements
      *            the caption <code>String</code> for the editor.
      */
     public TextField(String caption) {
-        setValue("");
+        this();
         setCaption(caption);
     }
 
@@ -331,7 +331,12 @@ public class TextField extends AbstractField implements
      * adapter.
      * 
      * @return number of explicitly set rows.
+     * @deprecated use {@link TextArea} component and the same method there.
+     *             This method will be removed from TextField that is to be used
+     *             for one line text input only in the next versions.
+     * 
      */
+    @Deprecated
     public int getRows() {
         return rows;
     }
@@ -341,7 +346,12 @@ public class TextField extends AbstractField implements
      * 
      * @param rows
      *            the number of rows for this editor.
+     * 
+     * @deprecated use {@link TextArea} component and the same method there.
+     *             This method will be removed from TextField that is to be used
+     *             for one line text input only in the next versions.
      */
+    @Deprecated
     public void setRows(int rows) {
         if (rows < 0) {
             rows = 0;
@@ -407,7 +417,11 @@ public class TextField extends AbstractField implements
      * 
      * @return <code>true</code> if the component is in the word-wrap mode,
      *         <code>false</code> if not.
+     * @deprecated use {@link TextArea} component and the same method there.
+     *             This method will be removed from TextField that is to be used
+     *             for one line text input only in the next versions.
      */
+    @Deprecated
     public boolean isWordwrap() {
         return wordwrap;
     }
@@ -418,7 +432,12 @@ public class TextField extends AbstractField implements
      * @param wordwrap
      *            the boolean value specifying if the editor should be in
      *            word-wrap mode after the call or not.
+     * 
+     * @deprecated use {@link TextArea} component and the same method there.
+     *             This method will be removed from TextField that is to be used
+     *             for one line text input only in the next versions.
      */
+    @Deprecated
     public void setWordwrap(boolean wordwrap) {
         if (this.wordwrap != wordwrap) {
             this.wordwrap = wordwrap;
