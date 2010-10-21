@@ -61,17 +61,19 @@ public class WidgetSet {
         if (classType == null || classType == VUnknownComponent.class) {
             String serverSideName = conf
                     .getUnknownServerClassNameByEncodedTagName(uidl.getTag());
-            return new VUnknownComponent(serverSideName);
+            VUnknownComponent c = GWT.create(VUnknownComponent.class);
+            c.setServerSideClassName(serverSideName);
+            return c;
         } else if (VSplitPanelVertical.class == classType) {
-            return new VSplitPanelVertical();
+            return GWT.create(VSplitPanelVertical.class);
         } else if (VTextArea.class == classType) {
-            return new VTextArea();
+            return GWT.create(VTextArea.class);
         } else if (VDateFieldCalendar.class == classType) {
-            return new VDateFieldCalendar();
+            return GWT.create(VDateFieldCalendar.class);
         } else if (VPasswordField.class == classType) {
-            return new VPasswordField();
+            return GWT.create(VPasswordField.class);
         } else if (VWindow.class == classType) {
-            return new VWindow();
+            return GWT.create(VWindow.class);
         } else {
             /*
              * let the auto generated code instantiate this type

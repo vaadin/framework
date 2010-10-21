@@ -17,15 +17,18 @@ public class VUnknownComponent extends Composite implements Paintable {
     com.google.gwt.user.client.ui.Label caption = new com.google.gwt.user.client.ui.Label();;
     Tree uidlTree;
     private VerticalPanel panel;
-    private String serverClassName;
+    private String serverClassName = "unkwnown";
 
-    public VUnknownComponent(String serverClassName) {
-        this.serverClassName = serverClassName;
+    public VUnknownComponent() {
         panel = new VerticalPanel();
         panel.add(caption);
         initWidget(panel);
         setStyleName("vaadin-unknown");
         caption.setStyleName("vaadin-unknown-caption");
+    }
+
+    public void setServerSideClassName(String serverClassName) {
+        this.serverClassName = serverClassName;
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
