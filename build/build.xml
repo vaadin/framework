@@ -816,7 +816,7 @@
             </fileset>
         </jar>
     	
-    	<!-- Generate the Package-Exports attribute in the JAR -->
+    	<!-- Generate the Export-Package attribute in the manifest of the JAR -->
     	<java classname="com.vaadin.buildhelpers.GeneratePackageExports" failonerror="true" fork="yes">
     		<arg value="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}"/>
             <classpath>
