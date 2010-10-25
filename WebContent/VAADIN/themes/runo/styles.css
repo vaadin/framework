@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_4_5_dev-20100923";}
-.v-theme-version-6_4_5_dev-20100923 {display: none;}
+.v-theme-version:after {content:"9_9_9_INTERNAL-DEBUG-BUILD";}
+.v-theme-version-9_9_9_INTERNAL-DEBUG-BUILD {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -167,6 +167,10 @@
 /*
  * Checkbox styles
  * -------------------------------------- */
+ 
+ .v-checkbox {
+ 	display: block;
+ }
 
 .v-checkbox,
 .v-checkbox label,
