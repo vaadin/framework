@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import com.vaadin.data.Property;
 
 /**
- * Formatting proxy for a property.
+ * Formatting proxy for a {@link Property}.
  * 
  * <p>
  * This class can be used to implement formatting for any type of Property
@@ -18,7 +18,7 @@ import com.vaadin.data.Property;
  * 
  * <p>
  * For example <code>
- * textfield.setPropertyDataSource(new PropertyFormatter(property) {
+ * <pre>textfield.setPropertyDataSource(new PropertyFormatter(property) {
             public String format(Object value) {
                 return ((Double) value).toString() + "000000000";
             }
@@ -27,8 +27,8 @@ import com.vaadin.data.Property;
                 return Double.parseDouble(formattedValue);
             }
 
-        });</code> adds formatter for Double-typed property that extends standard
- * "1.0" notation with more zeroes.
+        });</pre></code> adds formatter for Double-typed property that extends
+ * standard "1.0" notation with more zeroes.
  * </p>
  * 
  * @author IT Mill Ltd.
