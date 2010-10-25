@@ -821,7 +821,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 resultPath = url.getFile();
             } catch (final Exception e) {
                 // FIXME: Handle exception
-                logger.log(Level.WARNING, "Could not find resource path "
+                logger.log(Level.INFO, "Could not find resource path "
                         + path, e);
             }
         }
@@ -1203,7 +1203,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             if (resourceUrl == null) {
                 // cannot serve requested file
-                logger.severe("Requested resource ["
+                logger.info("Requested resource ["
                         + filename
                         + "] not found from filesystem or through class loader."
                         + " Add widgetset and/or theme JAR to your classpath or add files to WebContent/VAADIN folder.");
@@ -1661,7 +1661,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         try {
             return getApplicationClass().getSimpleName();
         } catch (ClassNotFoundException e) {
-            logger.log(Level.FINER, "getApplicationCSSClassName failed", e);
+            logger.log(Level.WARNING, "getApplicationCSSClassName failed", e);
             return "unknown";
         }
     }

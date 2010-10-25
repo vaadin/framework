@@ -177,7 +177,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
                     } catch (Exception e2) {
                         // TODO: handle exception
                         logger.log(
-                                Level.FINER,
+                                Level.FINE,
                                 "Failed to find application class in the default package.",
                                 e2);
                     }

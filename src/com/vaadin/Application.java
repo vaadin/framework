@@ -1191,7 +1191,7 @@ public abstract class Application implements URIHandler,
         final Throwable t = event.getThrowable();
         if (t instanceof SocketException) {
             // Most likely client browser closed socket
-            logger.warning("SocketException in CommunicationManager."
+            logger.info("SocketException in CommunicationManager."
                     + " Most likely client (browser) closed socket.");
             return;
         }
@@ -1219,7 +1219,7 @@ public abstract class Application implements URIHandler,
         }
 
         // also print the error on console
-        logger.log(Level.SEVERE, "Terminal error:", t);
+        logger.log(Level.INFO, "Terminal error:", t);
     }
 
     /**

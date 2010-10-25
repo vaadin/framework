@@ -94,7 +94,7 @@ import com.vaadin.service.ApplicationContext;
  */
 public class GAEApplicationServlet extends ApplicationServlet {
 
-    private static final Logger log = Logger
+    private static final Logger logger = Logger
             .getLogger(GAEApplicationServlet.class.getName());
 
     // memcache mutex is MUTEX_BASE + sessio id
@@ -209,7 +209,7 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 try {
                     Thread.sleep(RETRY_AFTER_MILLISECONDS);
                 } catch (InterruptedException e) {
-                    log.info("Thread.sleep() interrupted while waiting for lock. Trying again. "
+                    logger.finer("Thread.sleep() interrupted while waiting for lock. Trying again. "
                             + e);
                 }
             }
@@ -252,16 +252,16 @@ public class GAEApplicationServlet extends ApplicationServlet {
             ds.put(entity);
 
         } catch (DeadlineExceededException e) {
-            log.severe("DeadlineExceeded for " + session.getId());
+            logger.warning("DeadlineExceeded for " + session.getId());
             sendDeadlineExceededNotification(request, response);
         } catch (NotSerializableException e) {
-            log.log(Level.SEVERE, "Not serializable!", e);
+            logger.log(Level.SEVERE, "Not serializable!", e);
 
             // TODO this notification is usually not shown - should we redirect
             // in some other way - can we?
             sendNotSerializableNotification(request, response);
         } catch (Exception e) {
-            log.log(Level.SEVERE,
+            logger.log(Level.WARNING,
                     "An exception occurred while servicing request.", e);
 
             sendCriticalErrorNotification(request, response);
@@ -308,12 +308,12 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 session.setAttribute(WebApplicationContext.class.getName(),
                         applicationContext);
             } catch (IOException e) {
-                log.log(Level.WARNING,
+                logger.log(Level.WARNING,
                         "Could not de-serialize ApplicationContext for "
                                 + session.getId()
                                 + " A new one will be created. ", e);
             } catch (ClassNotFoundException e) {
-                log.log(Level.WARNING,
+                logger.log(Level.WARNING,
                         "Could not de-serialize ApplicationContext for "
                                 + session.getId()
                                 + " A new one will be created. ", e);
@@ -368,7 +368,7 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 List<Entity> entities = pq.asList(Builder
                         .withLimit(CLEANUP_LIMIT));
                 if (entities != null) {
-                    log.info("Vaadin cleanup deleting " + entities.size()
+                    logger.info("Vaadin cleanup deleting " + entities.size()
                             + " expired Vaadin sessions.");
                     List<Key> keys = new ArrayList<Key>();
                     for (Entity e : entities) {
@@ -387,7 +387,7 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 List<Entity> entities = pq.asList(Builder
                         .withLimit(CLEANUP_LIMIT));
                 if (entities != null) {
-                    log.info("Vaadin cleanup deleting " + entities.size()
+                    logger.info("Vaadin cleanup deleting " + entities.size()
                             + " expired appengine sessions.");
                     List<Key> keys = new ArrayList<Key>();
                     for (Entity e : entities) {
@@ -397,7 +397,7 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 }
             }
         } catch (Exception e) {
-            log.log(Level.WARNING, "Exception while cleaning.", e);
+            logger.log(Level.WARNING, "Exception while cleaning.", e);
         }
     }
 }

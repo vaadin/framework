@@ -78,7 +78,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
             } catch (final Exception e) {
                 // FIXME: Handle exception
                 logger.log(
-                        Level.FINE,
+                        Level.INFO,
                         "Cannot access base directory, possible security issue "
                                 + "with Application Server or Servlet Container",
                         e);

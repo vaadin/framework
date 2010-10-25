@@ -455,7 +455,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             } catch (final GeneralSecurityException e) {
                 // TODO Figure out a better way to deal with
                 // GeneralSecurityExceptions
-                logger.finest("General security exception, the security key was probably incorrect.");
+                logger.fine("General security exception, the security key was probably incorrect.");
             } catch (final Throwable e) {
                 handleServiceException(request, response, application, e);
             } finally {
@@ -659,7 +659,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 os.write(buffer, 0, bytes);
             }
         } else {
-            logger.warning("Requested resource [" + resourceID
+            logger.info("Requested resource [" + resourceID
                     + "] could not be found");
             response.setProperty(ResourceResponse.HTTP_STATUS_CODE,
                     Integer.toString(HttpServletResponse.SC_NOT_FOUND));

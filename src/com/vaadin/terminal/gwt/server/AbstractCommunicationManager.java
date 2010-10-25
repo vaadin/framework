@@ -765,7 +765,7 @@ public abstract class AbstractCommunicationManager implements
                 if (window == null) {
                     // This should not happen, no windows exists but
                     // application is still open.
-                    logger.severe("Warning, could not get window for application with request ID "
+                    logger.warning("Could not get window for application with request ID "
                             + request.getRequestID());
                     return;
                 }
@@ -1138,7 +1138,7 @@ public abstract class AbstractCommunicationManager implements
                         r.close();
                     } catch (final java.io.IOException e) {
                         // FIXME: Handle exception
-                        logger.log(Level.SEVERE, "Resource transfer failed:  "
+                        logger.log(Level.INFO, "Resource transfer failed:  "
                                 + request.getRequestID() + ".", e);
                     }
                     outWriter.print("\""

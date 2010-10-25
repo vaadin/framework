@@ -54,8 +54,8 @@ import com.vaadin.ui.ClientWidget;
  */
 public class ClassPathExplorer {
 
-    private static Logger logger = Logger
-            .getLogger("com.vaadin.terminal.gwt.widgetsetutils");
+    private static Logger logger = Logger.getLogger(ClassPathExplorer.class
+            .getName());
 
     /**
      * File filter that only accepts directories.
@@ -197,7 +197,8 @@ public class ClassPathExplorer {
                             // should never happen as based on an existing URL,
                             // only changing end of file name/path part
                             logger.log(Level.SEVERE,
-                                    "This should never happen!", e);
+                                    "Error locating the widgetset " + classname,
+                                    e);
                         }
                     }
                 }
