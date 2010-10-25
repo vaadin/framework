@@ -1219,7 +1219,7 @@ public abstract class Application implements URIHandler,
         }
 
         // also print the error on console
-        logger.log(Level.INFO, "Terminal error:", t);
+        logger.log(Level.SEVERE, "Terminal error:", t);
     }
 
     /**
