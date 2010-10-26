@@ -399,6 +399,16 @@ public class GridLayout extends AbstractLayout implements
     }
 
     /**
+     * Gets the number of contained components. Consistent with the iterator
+     * returned by {@link #getComponentIterator()}.
+     * 
+     * @return the number of contained components
+     */
+    public int getComponentCount() {
+        return components.size();
+    }
+
+    /**
      * Paints the contents of this component.
      * 
      * @param target

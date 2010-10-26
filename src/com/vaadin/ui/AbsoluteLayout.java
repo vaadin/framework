@@ -51,6 +51,16 @@ public class AbsoluteLayout extends AbstractLayout {
     }
 
     /**
+     * Gets the number of contained components. Consistent with the iterator
+     * returned by {@link #getComponentIterator()}.
+     * 
+     * @return the number of contained components
+     */
+    public int getComponentCount() {
+        return components.size();
+    }
+
+    /**
      * Replaces one component with another one. The new component inherits the
      * old components position.
      */

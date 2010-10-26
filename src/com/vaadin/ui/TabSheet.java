@@ -124,6 +124,16 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
+     * Gets the number of contained components (tabs). Consistent with the
+     * iterator returned by {@link #getComponentIterator()}.
+     * 
+     * @return the number of contained components
+     */
+    public int getComponentCount() {
+        return components.size();
+    }
+
+    /**
      * Removes a component and its corresponding tab.
      * 
      * If the tab was selected, the first eligible (visible and enabled)

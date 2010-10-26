@@ -175,6 +175,16 @@ public class CustomComponent extends AbstractComponentContainer {
     }
 
     /**
+     * Gets the number of contained components. Consistent with the iterator
+     * returned by {@link #getComponentIterator()}.
+     * 
+     * @return the number of contained components (zero or one)
+     */
+    public int getComponentCount() {
+        return (root != null ? 1 : 0);
+    }
+
+    /**
      * This method is not supported by CustomComponent.
      * 
      * @see com.vaadin.ui.ComponentContainer#replaceComponent(com.vaadin.ui.Component,

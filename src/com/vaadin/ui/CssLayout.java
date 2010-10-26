@@ -148,6 +148,16 @@ public class CssLayout extends AbstractLayout {
     }
 
     /**
+     * Gets the number of contained components. Consistent with the iterator
+     * returned by {@link #getComponentIterator()}.
+     * 
+     * @return the number of contained components
+     */
+    public int getComponentCount() {
+        return components.size();
+    }
+
+    /**
      * Paints the content of this component.
      * 
      * @param target

@@ -282,8 +282,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     }
 
     /**
-     * Gets the component container iterator for going trough all the components
-     * in the container.
+     * Gets the component container iterator for going through all the
+     * components in the container.
      * 
      * @return the Iterator of the components inside the container.
      * @see com.vaadin.ui.ComponentContainer#getComponentIterator()

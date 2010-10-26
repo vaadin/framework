@@ -74,8 +74,7 @@ public class SplitPanel extends AbstractLayout {
         int i = 0;
 
         public boolean hasNext() {
-            if (i < (firstComponent == null ? 0 : 1)
-                    + (secondComponent == null ? 0 : 1)) {
+            if (i < getComponentCount()) {
                 return true;
             }
             return false;
@@ -228,6 +227,23 @@ public class SplitPanel extends AbstractLayout {
      */
     public Iterator<Component> getComponentIterator() {
         return new ComponentIterator();
+    }
+
+    /**
+     * Gets the number of contained components. Consistent with the iterator
+     * returned by {@link #getComponentIterator()}.
+     * 
+     * @return the number of contained components (zero, one or two)
+     */
+    public int getComponentCount() {
+        int count = 0;
+        if (firstComponent != null) {
+            count++;
+        }
+        if (secondComponent != null) {
+            count++;
+        }
+        return count;
     }
 
     /**

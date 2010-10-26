@@ -227,6 +227,16 @@ public class PopupView extends AbstractComponentContainer {
     }
 
     /**
+     * Gets the number of contained components. Consistent with the iterator
+     * returned by {@link #getComponentIterator()}.
+     * 
+     * @return the number of contained components (zero or one)
+     */
+    public int getComponentCount() {
+        return (visibleComponent != null ? 1 : 0);
+    }
+
+    /**
      * Not supported in this implementation.
      * 
      * @see com.vaadin.ui.AbstractComponentContainer#removeAllComponents()

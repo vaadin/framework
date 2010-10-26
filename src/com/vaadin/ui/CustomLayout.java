@@ -185,6 +185,16 @@ public class CustomLayout extends AbstractLayout {
     }
 
     /**
+     * Gets the number of contained components. Consistent with the iterator
+     * returned by {@link #getComponentIterator()}.
+     * 
+     * @return the number of contained components
+     */
+    public int getComponentCount() {
+        return slots.values().size();
+    }
+
+    /**
      * Gets the child-component by its location.
      * 
      * @param location
