@@ -115,6 +115,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private static final int MULTISELECT_MODE_DEFAULT = 0;
 
     /**
+     * The simple multiselect mode is what the table used to have before
+     * ctrl/shift selections were added. That is that when this is set clicking
+     * on an item selects/deselects the item and no ctrl/shift selections are
+     * available.
+     */
+    private static final int MULTISELECT_MODE_SIMPLE = 1;
+
+    /**
      * multiple of pagelength which component will cache when requesting more
      * rows
      */
@@ -3963,7 +3971,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                             deselectAll();
                                         }
                                         toggleSelection();
-                                    } else if (selectMode == SELECT_MODE_SINGLE
+                                    } else if ((selectMode == SELECT_MODE_SINGLE || multiselectmode == MULTISELECT_MODE_SIMPLE)
                                             && nullSelectionAllowed) {
                                         toggleSelection();
                                     }/*
@@ -5011,12 +5019,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         var top = elem.offsetTop;
         var height = elem.offsetHeight;
     
-        if (elem.parentNode != elem.offsetParent) {         
+        if (elem.parentNode != elem.offsetParent) {
           top -= elem.parentNode.offsetTop;
         }
     
         var cur = elem.parentNode;
-        while (cur && (cur.nodeType == 1)) {         
+        while (cur && (cur.nodeType == 1)) {
           if (top < cur.scrollTop) {
             cur.scrollTop = top;
           }
@@ -5025,7 +5033,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
           }
     
           var offsetTop = cur.offsetTop;
-          if (cur.parentNode != cur.offsetParent) {        
+          if (cur.parentNode != cur.offsetParent) {
             offsetTop -= cur.parentNode.offsetTop;
           }
            
