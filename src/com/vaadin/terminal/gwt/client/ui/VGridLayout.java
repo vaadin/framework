@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -413,8 +413,10 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         int canvasHeight;
         if ("".equals(height)) {
             canvasHeight = y - spacingPixelsVertical;
-        } else {
+        } else if (getOffsetHeight() > marginTopAndBottom) {
             canvasHeight = getOffsetHeight() - marginTopAndBottom;
+        } else {
+            canvasHeight = 0;
         }
         canvas.setHeight(canvasHeight + "px");
     }
