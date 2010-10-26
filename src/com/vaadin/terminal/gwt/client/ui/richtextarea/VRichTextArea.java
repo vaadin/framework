@@ -18,8 +18,10 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.Widget;
@@ -41,7 +43,7 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHan
  */
 public class VRichTextArea extends Composite implements Paintable, Field,
         ChangeHandler, BlurHandler, KeyPressHandler, KeyDownHandler,
-        BeforeShortcutActionListener {
+        BeforeShortcutActionListener, Focusable {
 
     /**
      * The input node CSS classname.
@@ -159,6 +161,33 @@ public class VRichTextArea extends Composite implements Paintable, Field,
             maxLength = -1;
             keyPressHandler.removeHandler();
         }
+
+        if (uidl.hasAttribute("selectAll")) {
+            selectAll();
+        }
+
+    }
+
+    private void selectAll() {
+        /*
+         * There is a timing issue if trying to select all immediately on first
+         * render. Simple deferred command is not enough. Using Timer with
+         * moderated timeout. If this appears to fail on many (most likely slow)
+         * environments, consider increasing the timeout.
+         * 
+         * FF seems to require the most time to stabilize its RTA. On Vaadin
+         * tiergarden test machines, 200ms was not enough always (about 50%
+         * success rate) - 300 ms was 100% successful. This however was not
+         * enough on a sluggish old non-virtualized XP test machine. A bullet
+         * proof solution would be nice, GWT 2.1 might however solve these. At
+         * least setFocus has a workaround for this kind of issue.
+         */
+        new Timer() {
+            @Override
+            public void run() {
+                rta.getFormatter().selectAll();
+            }
+        }.schedule(320);
     }
 
     private void setReadOnly(boolean b) {
@@ -195,6 +224,7 @@ public class VRichTextArea extends Composite implements Paintable, Field,
 
     public void onBlur(BlurEvent event) {
         synchronizeContentToServer();
+        // TODO notify possible server side blur/focus listeners
     }
 
     /**
@@ -336,6 +366,32 @@ public class VRichTextArea extends Composite implements Paintable, Field,
 
     public void onBeforeShortcutAction(Event e) {
         synchronizeContentToServer();
+    }
+
+    public int getTabIndex() {
+        return rta.getTabIndex();
+    }
+
+    public void setAccessKey(char key) {
+        rta.setAccessKey(key);
+    }
+
+    public void setFocus(boolean focused) {
+        /*
+         * Similar issue as with selectAll. Focusing must happen before possible
+         * selectall, so keep the timeout here lower.
+         */
+        new Timer() {
+
+            @Override
+            public void run() {
+                rta.setFocus(true);
+            }
+        }.schedule(300);
+    }
+
+    public void setTabIndex(int index) {
+        rta.setTabIndex(index);
     }
 
 }

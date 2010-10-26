@@ -41,7 +41,7 @@ public class TextArea extends TextField {
     @Override
     public void setRows(int rows) {
         // TODO implement here once AbstractTextField (or something similar is
-        // created).
+        // created) and incompatible API can be introduced.
         super.setRows(rows);
     }
 
@@ -55,7 +55,7 @@ public class TextArea extends TextField {
     @Override
     public int getRows() {
         // TODO implement here once AbstractTextField (or something similar is
-        // created).
+        // created) and incompatible API can be introduced.
         return super.getRows();
     }
 

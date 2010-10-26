@@ -19,7 +19,9 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  */
 @SuppressWarnings("serial")
 @ClientWidget(value = VRichTextArea.class, loadStyle = LoadStyle.LAZY)
-public class RichTextArea extends TextField {
+public class RichTextArea extends AbstractTextField {
+
+    private boolean selectAll;
 
     /**
      * Constructs an empty <code>RichTextArea</code> with no caption.
@@ -36,7 +38,7 @@ public class RichTextArea extends TextField {
      *            the caption for the editor.
      */
     public RichTextArea(String caption) {
-        super(caption);
+        setCaption(caption);
     }
 
     /**
@@ -47,7 +49,7 @@ public class RichTextArea extends TextField {
      *            the data source for the editor value
      */
     public RichTextArea(Property dataSource) {
-        super(dataSource);
+        setPropertyDataSource(dataSource);
     }
 
     /**
@@ -60,7 +62,8 @@ public class RichTextArea extends TextField {
      *            the data source for the editor value
      */
     public RichTextArea(String caption, Property dataSource) {
-        super(caption, dataSource);
+        this(dataSource);
+        setCaption(caption);
     }
 
     /**
@@ -73,22 +76,17 @@ public class RichTextArea extends TextField {
      *            the initial text content of the editor.
      */
     public RichTextArea(String caption, String value) {
-        super(caption, value);
+        this(caption);
+        setValue(value);
     }
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        target.addAttribute("richtext", true);
+        if (selectAll) {
+            target.addAttribute("selectAll", true);
+            selectAll = false;
+        }
         super.paintContent(target);
-    }
-
-    /**
-     * RichTextArea does not support input prompt.
-     */
-    @Override
-    public void setInputPrompt(String inputPrompt) {
-        throw new UnsupportedOperationException(
-                "RichTextArea does not support inputPrompt");
     }
 
     @Override
@@ -100,6 +98,26 @@ public class RichTextArea extends TextField {
         } else {
             removeStyleName("v-richtextarea-readonly");
         }
+    }
+
+    /**
+     * Selects all text in the rich text area. As a side effect, focuses the
+     * rich text area.
+     * 
+     * @since 6.5
+     */
+    public void selectAll() {
+        /*
+         * Set selection range functionality is currently being
+         * planned/developed for GWT RTA. Only selecting all is currently
+         * supported. Consider moving selectAll and other selection related
+         * functions to AbstractTextField at that point to share the
+         * implementation. Some third party components extending
+         * AbstractTextField might however not want to support them.
+         */
+        selectAll = true;
+        focus();
+        requestRepaint();
     }
 
 }
