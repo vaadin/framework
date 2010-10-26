@@ -40,6 +40,10 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
  */
 public class LoginForm extends CustomComponent {
 
+    private String usernameCaption = "Username";
+    private String passwordCaption = "Password";
+    private String loginButtonCaption = "Login";
+
     private Embedded iframe = new Embedded();
 
     private ApplicationResource loginPage = new ApplicationResource() {
@@ -129,7 +133,6 @@ public class LoginForm extends CustomComponent {
      * @return byte array containing login page html
      */
     protected byte[] getLoginHTML() {
-
         String appUri = getApplication().getURL().toString()
                 + getWindow().getName() + "/";
 
@@ -164,11 +167,16 @@ public class LoginForm extends CustomComponent {
                 + "<iframe name='logintarget' style='width:0;height:0;"
                 + "border:0;margin:0;padding:0;'></iframe>"
                 + "<form id='loginf' target='logintarget' onkeypress=\"submitOnEnter(event)\" method=\"post\">"
-                + "<div>Username</div><div >"
+                + "<div>"
+                + usernameCaption
+                + "</div><div >"
                 + "<input class='v-textfield' style='display:block;' type='text' name='username'></div>"
-                + "<div>Password</div>"
+                + "<div>"
+                + passwordCaption
+                + "</div>"
                 + "<div><input class='v-textfield' style='display:block;' type='password' name='password'></div>"
-                + "<div><div onclick=\"document.forms[0].submit();\" tabindex=\"0\" class=\"v-button\" role=\"button\" ><span class=\"v-button-wrap\"><span class=\"v-button-caption\">Login</span></span></div></div></form></div>" + "</body></html>")
+                + "<div><div onclick=\"document.forms[0].submit();\" tabindex=\"0\" class=\"v-button\" role=\"button\" ><span class=\"v-button-wrap\"><span class=\"v-button-caption\">"
+                + loginButtonCaption + "</span></span></div></div></form></div>" + "</body></html>")
                 .getBytes();
     }
 
@@ -290,6 +298,63 @@ public class LoginForm extends CustomComponent {
                 iframe.setHeight("100%");
             }
         }
+    }
+
+    /**
+     * Returns the caption for the user name field.
+     * 
+     * @return String
+     */
+    public String getUsernameCaption() {
+        return usernameCaption;
+    }
+
+    /**
+     * Sets the caption to show for the user name field. The caption cannot be
+     * changed after the form has been shown to the user.
+     * 
+     * @param usernameCaption
+     */
+    public void setUsernameCaption(String usernameCaption) {
+        this.usernameCaption = usernameCaption;
+    }
+
+    /**
+     * Returns the caption for the password field.
+     * 
+     * @return String
+     */
+    public String getPasswordCaption() {
+        return passwordCaption;
+    }
+
+    /**
+     * Sets the caption to show for the password field. The caption cannot be
+     * changed after the form has been shown to the user.
+     * 
+     * @param passwordCaption
+     */
+    public void setPasswordCaption(String passwordCaption) {
+        this.passwordCaption = passwordCaption;
+    }
+
+    /**
+     * Returns the caption for the login button.
+     * 
+     * @return String
+     */
+    public String getLoginButtonCaption() {
+        return loginButtonCaption;
+    }
+
+    /**
+     * Sets the caption (button text) to show for the login button. The caption
+     * cannot be changed after the form has been shown to the user.
+     * 
+     * @param loginButtonCaption
+     */
+    public void setLoginButtonCaption(String loginButtonCaption) {
+        this.loginButtonCaption = loginButtonCaption;
     }
 
 }

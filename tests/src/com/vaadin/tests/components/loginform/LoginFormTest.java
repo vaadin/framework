@@ -14,7 +14,7 @@ import com.vaadin.ui.VerticalLayout;
 public class LoginFormTest extends TestBase {
 
     private HorizontalLayout loginFormLayout;
-    private LoginForm loginForm;
+    protected LoginForm loginForm;
 
     @Override
     protected void setup() {
