@@ -32,12 +32,6 @@ public class EmbeddedInSubWindow extends TestBase {
         zoom.setModal(true);
         zoom.setResizable(false);
 
-        zoom.addListener(new Window.CloseListener() {
-            public void windowClose(Window.CloseEvent closeEvent) {
-                getMainWindow().removeWindow(closeEvent.getWindow());
-            }
-        });
-
         getMainWindow().addWindow(zoom);
 
     }
