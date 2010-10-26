@@ -387,6 +387,7 @@ public class VRichTextToolbar extends Composite {
         lb.addItem(strings.green(), "green");
         lb.addItem(strings.yellow(), "yellow");
         lb.addItem(strings.blue(), "blue");
+        lb.setTabIndex(-1);
         return lb;
     }
 
@@ -403,6 +404,7 @@ public class VRichTextToolbar extends Composite {
         lb.addItem("Georgia", "Georgia");
         lb.addItem("Trebuchet", "Trebuchet");
         lb.addItem("Verdana", "Verdana");
+        lb.setTabIndex(-1);
         return lb;
     }
 
@@ -419,6 +421,7 @@ public class VRichTextToolbar extends Composite {
         lb.addItem(strings.large());
         lb.addItem(strings.xlarge());
         lb.addItem(strings.xxlarge());
+        lb.setTabIndex(-1);
         return lb;
     }
 
@@ -426,6 +429,7 @@ public class VRichTextToolbar extends Composite {
         final PushButton pb = new PushButton(new Image(img));
         pb.addClickHandler(handler);
         pb.setTitle(tip);
+        pb.setTabIndex(-1);
         return pb;
     }
 
@@ -433,6 +437,7 @@ public class VRichTextToolbar extends Composite {
         final ToggleButton tb = new ToggleButton(new Image(img));
         tb.addClickHandler(handler);
         tb.setTitle(tip);
+        tb.setTabIndex(-1);
         return tb;
     }
 
