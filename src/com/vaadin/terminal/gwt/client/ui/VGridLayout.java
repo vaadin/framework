@@ -411,27 +411,24 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
             canvas.setWidth("");
         }
 
-        if (!isUndefinedHeight() && getOffsetHeight() < marginTopAndBottom) {
-            // Prevent a negative height value
-            canvas.setHeight("0px");
-            return;
-        }
-
         int canvasHeight;
         if (isUndefinedHeight()) {
             canvasHeight = y - spacingPixelsVertical;
         } else {
             canvasHeight = getOffsetHeight() - marginTopAndBottom;
+            if (canvasHeight < 0) {
+                canvasHeight = 0;
+            }
         }
         canvas.setHeight(canvasHeight + "px");
     }
 
-    public boolean isUndefinedHeight() {
-        return "".equals(height) || "-1px".equals(height);
+    private boolean isUndefinedHeight() {
+        return "".equals(height);
     }
 
-    public boolean isUndefinedWidth() {
-        return "".equals(width) || "-1px".equals(width);
+    private boolean isUndefinedWidth() {
+        return "".equals(width);
     }
 
     private void renderRemainingComponents(LinkedList<Cell> pendingCells) {
