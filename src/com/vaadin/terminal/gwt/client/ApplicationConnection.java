@@ -30,6 +30,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
@@ -1619,12 +1620,16 @@ public class ApplicationConnection {
         }
 
         boolean enabled = !uidl.getBooleanAttribute("disabled");
+        if (uidl.hasAttribute("tabindex") && component instanceof Focusable) {
+            ((Focusable) component).setTabIndex(uidl
+                    .getIntAttribute("tabindex"));
+        }
+        /*
+         * Disabled state may affect (override) tabindex so the order must be
+         * first setting tabindex, then enabled state.
+         */
         if (component instanceof FocusWidget) {
             FocusWidget fw = (FocusWidget) component;
-            if (uidl.hasAttribute("tabindex")) {
-                fw.setTabIndex(uidl.getIntAttribute("tabindex"));
-            }
-            // Disabled state may affect tabindex
             fw.setEnabled(enabled);
         }
 
