@@ -5310,7 +5310,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * .gwt.event.dom.client.KeyPressEvent)
      */
     public void onKeyPress(KeyPressEvent event) {
-        if (hasFocus) {
+        if (!enabled) {
+            // Cancel default keyboard events on a disabled Table (prevents
+            // scrolling)
+            event.preventDefault();
+        } else if (hasFocus) {
             if (handleNavigation(event.getNativeEvent().getKeyCode(),
                     event.isControlKeyDown() || event.isMetaKeyDown(),
                     event.isShiftKeyDown())) {
@@ -5327,10 +5331,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 };
                 scrollingVelocityTimer.scheduleRepeating(100);
             }
-        } else if (!enabled) {
-            // Cancel default keyboard events on a disabled Table (prevents
-            // scrolling)
-            event.preventDefault();
         }
     }
 
@@ -5342,7 +5342,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * .event.dom.client.KeyDownEvent)
      */
     public void onKeyDown(KeyDownEvent event) {
-        if (hasFocus) {
+        if (!enabled) {
+            // Cancel default keyboard events on a disabled Table (prevents
+            // scrolling)
+            event.preventDefault();
+        } else if (hasFocus) {
             if (handleNavigation(event.getNativeEvent().getKeyCode(),
                     event.isControlKeyDown() || event.isMetaKeyDown(),
                     event.isShiftKeyDown())) {
@@ -5360,10 +5364,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 };
                 scrollingVelocityTimer.scheduleRepeating(100);
             }
-        } else if (!enabled) {
-            // Cancel default keyboard events on a disabled Table (prevents
-            // scrolling)
-            event.preventDefault();
         }
     }
 
@@ -5396,11 +5396,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * .dom.client.BlurEvent)
      */
     public void onBlur(BlurEvent event) {
-        if (isFocusable()) {
-            scrollBodyPanel.removeStyleName("focused");
-            hasFocus = false;
-            navKeyDown = false;
+        scrollBodyPanel.removeStyleName("focused");
+        hasFocus = false;
+        navKeyDown = false;
 
+        if (isFocusable()) {
             // Unfocus any row
             setRowFocus(null);
         }
