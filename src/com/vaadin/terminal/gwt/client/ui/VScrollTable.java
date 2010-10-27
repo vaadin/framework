@@ -5481,7 +5481,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     public void onKeyUp(KeyUpEvent event) {
         int keyCode = event.getNativeKeyCode();
-        if (isFocusable() && isNavigationKey(keyCode)) {
+
+        if (!isFocusable()) {
+            if (scrollingVelocityTimer != null) {
+                // Remove velocityTimer if it exists and the Table is disabled
+                scrollingVelocityTimer.cancel();
+                scrollingVelocityTimer = null;
+                scrollingVelocity = 10;
+            }
+        } else if (isNavigationKey(keyCode)) {
             if (keyCode == getNavigationDownKey()
                     || keyCode == getNavigationUpKey()) {
                 /*
