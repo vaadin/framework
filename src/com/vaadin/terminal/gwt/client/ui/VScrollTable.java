@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -5327,6 +5327,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 };
                 scrollingVelocityTimer.scheduleRepeating(100);
             }
+        } else if (!enabled) {
+            // Cancel default keyboard events on a disabled Table (prevents
+            // scrolling)
+            event.preventDefault();
         }
     }
 
@@ -5356,6 +5360,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 };
                 scrollingVelocityTimer.scheduleRepeating(100);
             }
+        } else if (!enabled) {
+            // Cancel default keyboard events on a disabled Table (prevents
+            // scrolling)
+            event.preventDefault();
         }
     }
 
@@ -5388,12 +5396,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * .dom.client.BlurEvent)
      */
     public void onBlur(BlurEvent event) {
-        scrollBodyPanel.removeStyleName("focused");
-        hasFocus = false;
-        navKeyDown = false;
+        if (isFocusable()) {
+            scrollBodyPanel.removeStyleName("focused");
+            hasFocus = false;
+            navKeyDown = false;
 
-        // Unfocus any row
-        setRowFocus(null);
+            // Unfocus any row
+            setRowFocus(null);
+        }
     }
 
     /**
@@ -5428,7 +5438,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * @return True if the table can be focused, else false
      */
     public boolean isFocusable() {
-        if (scrollBody != null) {
+        if (scrollBody != null && enabled) {
             boolean hasVerticalScrollbars = scrollBody.getOffsetHeight() > scrollBodyPanel
                     .getOffsetHeight();
             boolean hasHorizontalScrollbars = scrollBody.getOffsetWidth() > scrollBodyPanel
@@ -5445,7 +5455,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * @see com.vaadin.terminal.gwt.client.Focusable#focus()
      */
     public void focus() {
-        scrollBodyPanel.focus();
+        if (isFocusable()) {
+            scrollBodyPanel.focus();
+        }
     }
 
     /**
@@ -5469,7 +5481,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     public void onKeyUp(KeyUpEvent event) {
         int keyCode = event.getNativeKeyCode();
-        if (isNavigationKey(keyCode)) {
+        if (isFocusable() && isNavigationKey(keyCode)) {
             if (keyCode == getNavigationDownKey()
                     || keyCode == getNavigationUpKey()) {
                 /*
