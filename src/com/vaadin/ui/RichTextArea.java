@@ -38,6 +38,7 @@ public class RichTextArea extends AbstractTextField {
      *            the caption for the editor.
      */
     public RichTextArea(String caption) {
+        this();
         setCaption(caption);
     }
 
@@ -76,8 +77,8 @@ public class RichTextArea extends AbstractTextField {
      *            the initial text content of the editor.
      */
     public RichTextArea(String caption, String value) {
-        this(caption);
         setValue(value);
+        setCaption(caption);
     }
 
     @Override
