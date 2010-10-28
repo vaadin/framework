@@ -17,7 +17,7 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * {@link RichTextArea} may produce unexpected results as formatting is counted
  * into length of field.
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "unchecked" })
 @ClientWidget(value = VRichTextArea.class, loadStyle = LoadStyle.LAZY)
 public class RichTextArea extends AbstractTextField {
 
@@ -27,7 +27,7 @@ public class RichTextArea extends AbstractTextField {
      * Constructs an empty <code>RichTextArea</code> with no caption.
      */
     public RichTextArea() {
-        super();
+        setValue("");
     }
 
     /**
