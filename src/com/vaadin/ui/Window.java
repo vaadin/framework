@@ -1102,11 +1102,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * </p>
      * 
      * <p>
-     * If one wants change the default behavior, register a window close
-     * listenter and do something else. For example, you could re-open the
-     * browser-level window with mainWindow.open(), re-add the removed
-     * sub-window back to its parent or remove browser-level window
-     * automatically from the application.
+     * To explicitly close a sub-window, use {@link #removeWindow(Window)}. To
+     * react to a window being closed (after it is closed), register a
+     * {@link CloseListener}.
      * </p>
      */
     protected void close() {
@@ -1116,7 +1114,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         } else {
             // subwindow is removed from parent
             parent.removeWindow(this);
-            fireClose();
         }
     }
 
@@ -1250,8 +1247,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * user closes the window.
      * 
      * <p>
-     * Note that removing windows using {@link #removeWindow(Window)} will not
-     * fire the CloseListener.
+     * Since Vaadin 6.5, removing windows using {@link #removeWindow(Window)}
+     * does fire the CloseListener.
      * </p>
      */
     public interface CloseListener extends Serializable {
@@ -1277,8 +1274,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * mean it will be destroyed.
      * 
      * <p>
-     * Note that removing windows using {@link #removeWindow(Window)} will not
-     * fire the CloseListener.
+     * Since Vaadin 6.5, removing windows using {@link #removeWindow(Window)}
+     * does fire the CloseListener.
      * </p>
      * 
      * @param listener
@@ -1431,12 +1428,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /**
      * Remove the given subwindow from this window.
      * 
+     * Since Vaadin 6.5, {@link CloseListener}s are called also when explicitly
+     * removing a window by calling this method.
+     * 
      * @param window
      *            Window to be removed.
      */
     public void removeWindow(Window window) {
         subwindows.remove(window);
         window.setParent(null);
+        window.fireClose();
         requestRepaint();
 
     }
