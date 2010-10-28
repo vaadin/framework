@@ -941,6 +941,17 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     }
 
     /**
+     * Checks if the given {@link Event} type is listened for this component.
+     * 
+     * @param eventType
+     *            the event type to be checked
+     * @return true if a listener is registered for the given event type
+     */
+    protected boolean hasListeners(Class<?> eventType) {
+        return eventRouter != null && eventRouter.hasListeners(eventType);
+    }
+
+    /**
      * Removes all registered listeners matching the given parameters. Since
      * this method receives the event type and the listener object as
      * parameters, it will unregister all <code>object</code>'s methods that are
