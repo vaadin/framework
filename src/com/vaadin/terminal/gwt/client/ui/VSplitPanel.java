@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -106,6 +106,8 @@ public class VSplitPanel extends ComplexPanel implements Container,
     private int origMouseY;
 
     private boolean locked = false;
+
+    private boolean positionReversed = false;
 
     private String[] componentStyleNames;
 
@@ -215,6 +217,10 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
         setLocked(uidl.getBooleanAttribute("locked"));
 
+        if (uidl.hasAttribute("reversed")) {
+            setPositionReversed(uidl.getBooleanAttribute("reversed"));
+        }
+
         setStylenames();
 
         position = uidl.getStringAttribute("position");
@@ -266,6 +272,10 @@ public class VSplitPanel extends ComplexPanel implements Container,
         }
     }
 
+    private void setPositionReversed(boolean reversed) {
+        positionReversed = reversed;
+    }
+
     private void setSplitPosition(String pos) {
         if (pos == null) {
             return;
@@ -280,9 +290,17 @@ public class VSplitPanel extends ComplexPanel implements Container,
         }
 
         if (orientation == ORIENTATION_HORIZONTAL) {
-            DOM.setStyleAttribute(splitter, "left", pos);
+            if (positionReversed) {
+                DOM.setStyleAttribute(splitter, "right", pos);
+            } else {
+                DOM.setStyleAttribute(splitter, "left", pos);
+            }
         } else {
-            DOM.setStyleAttribute(splitter, "top", pos);
+            if (positionReversed) {
+                DOM.setStyleAttribute(splitter, "bottom", pos);
+            } else {
+                DOM.setStyleAttribute(splitter, "top", pos);
+            }
         }
 
         iLayout();
@@ -310,8 +328,8 @@ public class VSplitPanel extends ComplexPanel implements Container,
             pixelPosition = DOM.getElementPropertyInt(splitter, "offsetLeft");
 
             // reposition splitter in case it is out of box
-            if (pixelPosition > 0
-                    && pixelPosition + getSplitterSize() > wholeSize) {
+            if ((pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize)
+                    || (positionReversed && pixelPosition < 0)) {
                 pixelPosition = wholeSize - getSplitterSize();
                 if (pixelPosition < 0) {
                     pixelPosition = 0;
@@ -342,8 +360,8 @@ public class VSplitPanel extends ComplexPanel implements Container,
             pixelPosition = DOM.getElementPropertyInt(splitter, "offsetTop");
 
             // reposition splitter in case it is out of box
-            if (pixelPosition > 0
-                    && pixelPosition + getSplitterSize() > wholeSize) {
+            if ((pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize)
+                    || (positionReversed && pixelPosition < 0)) {
                 pixelPosition = wholeSize - getSplitterSize();
                 if (pixelPosition < 0) {
                     pixelPosition = 0;
@@ -479,9 +497,23 @@ public class VSplitPanel extends ComplexPanel implements Container,
             if (newX + getSplitterSize() >= getOffsetWidth()) {
                 pos = getOffsetWidth();
             }
-            position = pos / getOffsetWidth() * 100 + "%";
+            // Reversed position
+            if (positionReversed) {
+                pos = getOffsetWidth() - pos;
+            }
+            position = (pos / getOffsetWidth() * 100) + "%";
         } else {
-            position = newX + "px";
+            // Reversed position
+            if (positionReversed) {
+                position = (getOffsetWidth() - newX - getSplitterSize()) + "px";
+            } else {
+                position = newX + "px";
+            }
+        }
+
+        // Reversed position
+        if (positionReversed) {
+            newX = getOffsetWidth() - newX - getSplitterSize();
         }
 
         setSplitPosition(newX + "px");
@@ -507,9 +539,24 @@ public class VSplitPanel extends ComplexPanel implements Container,
             if (newY + getSplitterSize() >= getOffsetHeight()) {
                 pos = getOffsetHeight();
             }
+            // Reversed position
+            if(positionReversed){
+                pos = getOffsetHeight() - pos - getSplitterSize();
+            }
             position = pos / getOffsetHeight() * 100 + "%";
         } else {
-            position = newY + "px";
+            // Reversed position
+            if (positionReversed) {
+                position = (getOffsetHeight() - newY - getSplitterSize())
+                        + "px";
+            } else {
+                position = newY + "px";
+            }
+        }
+
+        // Reversed position
+        if (positionReversed) {
+            newY = getOffsetHeight() - newY - getSplitterSize();
         }
 
         setSplitPosition(newY + "px");

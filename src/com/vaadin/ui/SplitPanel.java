@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -59,6 +59,8 @@ public class SplitPanel extends AbstractLayout {
     private int pos = 50;
 
     private int posUnit = UNITS_PERCENTAGE;
+
+    private boolean posReversed = false;
 
     private boolean locked = false;
 
@@ -269,6 +271,10 @@ public class SplitPanel extends AbstractLayout {
         if (isLocked()) {
             target.addAttribute("locked", true);
         }
+        
+        if (posReversed) {
+            target.addAttribute("reversed", true);
+        }
 
         if (firstComponent != null) {
             firstComponent.paint(target);
@@ -341,7 +347,21 @@ public class SplitPanel extends AbstractLayout {
      *            used (default is percentage)
      */
     public void setSplitPosition(int pos) {
-        setSplitPosition(pos, posUnit, true);
+        setSplitPosition(pos, posUnit, true, false);
+    }
+
+    /**
+     * Moves the position of the splitter.
+     * 
+     * @param pos
+     *            the new size of the region in the unit that was last used
+     *            (default is percentage)
+     * @param reverse
+     *            if set to true the split splitter position is measured by the
+     *            second region else it is measured by the first region
+     */
+    public void setSplitPosition(int pos, boolean reverse) {
+        setSplitPosition(pos, posUnit, true, reverse);
     }
 
     /**
@@ -353,7 +373,23 @@ public class SplitPanel extends AbstractLayout {
      *            the unit (from {@link Sizeable}) in which the size is given.
      */
     public void setSplitPosition(int pos, int unit) {
-        setSplitPosition(pos, unit, true);
+        setSplitPosition(pos, unit, true, false);
+    }
+
+    /**
+     * Moves the position of the splitter with given position and unit.
+     * 
+     * @param pos
+     *            size of the first region
+     * @param unit
+     *            the unit (from {@link Sizeable}) in which the size is given.
+     * @param reverse
+     *            if set to true the split splitter position is measured by the
+     *            second region else it is measured by the first region
+     * 
+     */
+    public void setSplitPosition(int pos, int unit, boolean reverse) {
+        setSplitPosition(pos, unit, true, reverse);
     }
 
     /**
@@ -387,13 +423,15 @@ public class SplitPanel extends AbstractLayout {
      *            position info has come from the client side, thus it already
      *            knows the position.
      */
-    private void setSplitPosition(int pos, int unit, boolean repaintNeeded) {
+    private void setSplitPosition(int pos, int unit, boolean repaintNeeded,
+            boolean reverse) {
         if (unit != UNITS_PERCENTAGE && unit != UNITS_PIXELS) {
             throw new IllegalArgumentException(
                     "Only percentage and pixel units are allowed");
         }
         this.pos = pos;
         posUnit = unit;
+        posReversed = reverse;
         if (repaintNeeded) {
             requestRepaint();
         }
