@@ -470,7 +470,7 @@ public class SplitPanel extends AbstractLayout {
 
         if (variables.containsKey("position") && !isLocked()) {
             Integer newPos = (Integer) variables.get("position");
-            setSplitPosition(newPos, posUnit, false);
+            setSplitPosition(newPos, posUnit, posReversed);
         }
 
         if (variables.containsKey(SPLITTER_CLICK_EVENT)) {

@@ -217,9 +217,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
         setLocked(uidl.getBooleanAttribute("locked"));
 
-        if (uidl.hasAttribute("reversed")) {
-            setPositionReversed(uidl.getBooleanAttribute("reversed"));
-        }
+        setPositionReversed(uidl.getBooleanAttribute("reversed"));
 
         setStylenames();
 
@@ -273,7 +271,11 @@ public class VSplitPanel extends ComplexPanel implements Container,
     }
 
     private void setPositionReversed(boolean reversed) {
-        positionReversed = reversed;
+        if (positionReversed != reversed) {
+            DOM.setStyleAttribute(splitter, "right", "");
+            DOM.setStyleAttribute(splitter, "left", "");
+            positionReversed = reversed;
+        }
     }
 
     private void setSplitPosition(String pos) {
