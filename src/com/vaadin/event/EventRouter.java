@@ -153,6 +153,14 @@ public class EventRouter implements MethodEventSource {
         }
     }
 
+    /**
+     * Checks if the given Event type is listened by a listener registered to
+     * this router.
+     * 
+     * @param eventType
+     *            the event type to be checked
+     * @return true if a listener is registered for the given event type
+     */
     public boolean hasListeners(Class<?> eventType) {
         if (listenerList != null) {
             for (ListenerMethod lm : listenerList) {
