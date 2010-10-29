@@ -272,9 +272,7 @@ public class SplitPanel extends AbstractLayout {
             target.addAttribute("locked", true);
         }
         
-        if (posReversed) {
-            target.addAttribute("reversed", true);
-        }
+        target.addAttribute("reversed", posReversed);
 
         if (firstComponent != null) {
             firstComponent.paint(target);
