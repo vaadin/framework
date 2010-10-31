@@ -821,8 +821,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 resultPath = url.getFile();
             } catch (final Exception e) {
                 // FIXME: Handle exception
-                logger.log(Level.INFO, "Could not find resource path "
-                        + path, e);
+                logger.log(Level.INFO, "Could not find resource path " + path,
+                        e);
             }
         }
         return resultPath;
@@ -2027,7 +2027,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @throws InstantiationException
      * @throws SessionExpiredException
      */
-    private Application getExistingApplication(HttpServletRequest request,
+    protected Application getExistingApplication(HttpServletRequest request,
             boolean allowSessionCreation) throws MalformedURLException,
             SessionExpiredException {
 
@@ -2272,5 +2272,20 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             return throwable;
         }
 
+    }
+
+    /**
+     * Override this method if you need to use a specialized communicaiton
+     * mananger implementation.
+     * 
+     * TODO figure out the right place for CM instantiation, must be
+     * overridieable
+     * 
+     * @param application
+     * @return
+     */
+    public CommunicationManager createCommunicationManager(
+            Application application) {
+        return new CommunicationManager(application);
     }
 }

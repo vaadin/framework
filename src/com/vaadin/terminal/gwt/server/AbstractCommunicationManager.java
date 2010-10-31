@@ -101,7 +101,7 @@ public abstract class AbstractCommunicationManager implements
      * 
      * @author peholmst
      */
-    protected interface Request {
+    public interface Request {
 
         /**
          * Gets a {@link Session} wrapper implementation representing the
@@ -191,7 +191,7 @@ public abstract class AbstractCommunicationManager implements
      * 
      * @author peholmst
      */
-    protected interface Response {
+    public interface Response {
 
         /**
          * Gets the output stream to which the response can be written.
@@ -250,7 +250,7 @@ public abstract class AbstractCommunicationManager implements
      * 
      * @author peholmst
      */
-    protected interface Callback {
+    public interface Callback {
 
         public void criticalNotification(Request request, Response response,
                 String cap, String msg, String details, String outOfSyncURL)
@@ -330,6 +330,10 @@ public abstract class AbstractCommunicationManager implements
     private int timeoutInterval = -1;
 
     private DragAndDropService dragAndDropService;
+
+    private String requestThemeName;
+
+    private int maxInactiveInterval;
 
     private static int nextUnusedWindowSuffix = 1;
 
@@ -737,6 +741,8 @@ public abstract class AbstractCommunicationManager implements
             Callback callback, Window window) throws IOException,
             InvalidUIDLSecurityKeyException {
 
+        requestThemeName = request.getParameter("theme");
+        maxInactiveInterval = request.getSession().getMaxInactiveInterval();
         // repaint requested or session has timed out and new one is created
         boolean repaintAll;
         final OutputStream out;
@@ -818,6 +824,7 @@ public abstract class AbstractCommunicationManager implements
         }
 
         outWriter.close();
+        requestThemeName = null;
     }
 
     /**
@@ -839,21 +846,7 @@ public abstract class AbstractCommunicationManager implements
             IOException {
 
         if (repaintAll) {
-            // If repaint is requested, clean all ids in this root window
-            for (final Iterator<String> it = idPaintableMap.keySet().iterator(); it
-                    .hasNext();) {
-                final Component c = (Component) idPaintableMap.get(it.next());
-                if (isChildOf(window, c)) {
-                    it.remove();
-                    paintableIdMap.remove(c);
-                }
-            }
-            // clean WindowCache
-            OpenWindowCache openWindowCache = currentlyOpenWindowsInClient
-                    .get(window.getName());
-            if (openWindowCache != null) {
-                openWindowCache.clear();
-            }
+            makeAllPaintablesDirty(window);
         }
 
         // Removes application if it has stopped during variable changes
@@ -885,16 +878,11 @@ public abstract class AbstractCommunicationManager implements
             outWriter.print("\",");
         }
 
-        outWriter.print("\"changes\":[");
-
-        ArrayList<Paintable> paintables = null;
-
         // If the browser-window has been closed - we do not need to paint it at
         // all
-        if (!window.getName().equals(closingWindowName)) {
-
-            List<InvalidLayout> invalidComponentRelativeSizes = null;
-
+        if (window.getName().equals(closingWindowName)) {
+            outWriter.print("\"changes\":[]");
+        } else {
             // re-get window - may have been changed
             Window newWindow = doGetApplicationWindow(request, callback,
                     application, window);
@@ -903,289 +891,326 @@ public abstract class AbstractCommunicationManager implements
                 repaintAll = true;
             }
 
-            JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
-                    !repaintAll);
-            OpenWindowCache windowCache = currentlyOpenWindowsInClient
-                    .get(window.getName());
-            if (windowCache == null) {
-                windowCache = new OpenWindowCache();
-                currentlyOpenWindowsInClient.put(window.getName(), windowCache);
-            }
+            writeUidlResponce(callback, repaintAll, outWriter, window,
+                    analyzeLayouts);
 
-            // Paints components
-            if (repaintAll) {
-                paintables = new ArrayList<Paintable>();
-                paintables.add(window);
-
-                // Reset sent locales
-                locales = null;
-                requireLocale(application.getLocale().toString());
-
-            } else {
-                // remove detached components from paintableIdMap so they
-                // can be GC'ed
-                /*
-                 * TODO figure out if we could move this beyond the painting
-                 * phase, "respond as fast as possible, then do the cleanup".
-                 * Beware of painting the dirty detatched components.
-                 */
-                for (Iterator<Paintable> it = paintableIdMap.keySet()
-                        .iterator(); it.hasNext();) {
-                    Component p = (Component) it.next();
-                    if (p.getApplication() == null) {
-                        unregisterPaintable(p);
-                        idPaintableMap.remove(paintableIdMap.get(p));
-                        it.remove();
-                        dirtyPaintables.remove(p);
-                    }
-                }
-                paintables = getDirtyVisibleComponents(window);
-            }
-            if (paintables != null) {
-
-                // We need to avoid painting children before parent.
-                // This is ensured by ordering list by depth in component
-                // tree
-                Collections.sort(paintables, new Comparator<Paintable>() {
-                    public int compare(Paintable o1, Paintable o2) {
-                        Component c1 = (Component) o1;
-                        Component c2 = (Component) o2;
-                        int d1 = 0;
-                        while (c1.getParent() != null) {
-                            d1++;
-                            c1 = c1.getParent();
-                        }
-                        int d2 = 0;
-                        while (c2.getParent() != null) {
-                            d2++;
-                            c2 = c2.getParent();
-                        }
-                        if (d1 < d2) {
-                            return -1;
-                        }
-                        if (d1 > d2) {
-                            return 1;
-                        }
-                        return 0;
-                    }
-                });
-
-                for (final Iterator<Paintable> i = paintables.iterator(); i
-                        .hasNext();) {
-                    final Paintable p = i.next();
-
-                    // TODO CLEAN
-                    if (p instanceof Window) {
-                        final Window w = (Window) p;
-                        if (w.getTerminal() == null) {
-                            w.setTerminal(application.getMainWindow()
-                                    .getTerminal());
-                        }
-                    }
-                    /*
-                     * This does not seem to happen in tk5, but remember this
-                     * case: else if (p instanceof Component) { if (((Component)
-                     * p).getParent() == null || ((Component)
-                     * p).getApplication() == null) { // Component requested
-                     * repaint, but is no // longer attached: skip
-                     * paintablePainted(p); continue; } }
-                     */
-
-                    // TODO we may still get changes that have been
-                    // rendered already (changes with only cached flag)
-                    if (paintTarget.needsToBePainted(p)) {
-                        paintTarget.startTag("change");
-                        paintTarget.addAttribute("format", "uidl");
-                        final String pid = getPaintableId(p);
-                        paintTarget.addAttribute("pid", pid);
-
-                        p.paint(paintTarget);
-
-                        paintTarget.endTag("change");
-                    }
-                    paintablePainted(p);
-
-                    if (analyzeLayouts) {
-                        Window w = (Window) p;
-                        invalidComponentRelativeSizes = ComponentSizeValidator
-                                .validateComponentRelativeSizes(w.getContent(),
-                                        null, null);
-
-                        // Also check any existing subwindows
-                        if (w.getChildWindows() != null) {
-                            for (Window subWindow : w.getChildWindows()) {
-                                invalidComponentRelativeSizes = ComponentSizeValidator
-                                        .validateComponentRelativeSizes(
-                                                subWindow.getContent(),
-                                                invalidComponentRelativeSizes,
-                                                null);
-                            }
-                        }
-                    }
-                }
-            }
-
-            paintTarget.close();
-            outWriter.print("]"); // close changes
-
-            outWriter.print(", \"meta\" : {");
-            boolean metaOpen = false;
-
-            if (repaintAll) {
-                metaOpen = true;
-                outWriter.write("\"repaintAll\":true");
-                if (analyzeLayouts) {
-                    outWriter.write(", \"invalidLayouts\":");
-                    outWriter.write("[");
-                    if (invalidComponentRelativeSizes != null) {
-                        boolean first = true;
-                        for (InvalidLayout invalidLayout : invalidComponentRelativeSizes) {
-                            if (!first) {
-                                outWriter.write(",");
-                            } else {
-                                first = false;
-                            }
-                            invalidLayout.reportErrors(outWriter, this,
-                                    System.err);
-                        }
-                    }
-                    outWriter.write("]");
-                }
-            }
-
-            SystemMessages ci = null;
-            try {
-                Method m = application.getClass().getMethod(
-                        "getSystemMessages", (Class[]) null);
-                ci = (Application.SystemMessages) m.invoke(null,
-                        (Object[]) null);
-            } catch (NoSuchMethodException e) {
-                logger.log(Level.WARNING,
-                        "getSystemMessages() failed - continuing", e);
-            } catch (IllegalArgumentException e) {
-                logger.log(Level.WARNING,
-                        "getSystemMessages() failed - continuing", e);
-            } catch (IllegalAccessException e) {
-                logger.log(Level.WARNING,
-                        "getSystemMessages() failed - continuing", e);
-            } catch (InvocationTargetException e) {
-                logger.log(Level.WARNING,
-                        "getSystemMessages() failed - continuing", e);
-            }
-
-            // meta instruction for client to enable auto-forward to
-            // sessionExpiredURL after timer expires.
-            if (ci != null && ci.getSessionExpiredMessage() == null
-                    && ci.getSessionExpiredCaption() == null
-                    && ci.isSessionExpiredNotificationEnabled()) {
-                int newTimeoutInterval = request.getSession()
-                        .getMaxInactiveInterval();
-                if (repaintAll || (timeoutInterval != newTimeoutInterval)) {
-                    String escapedURL = ci.getSessionExpiredURL() == null ? ""
-                            : ci.getSessionExpiredURL().replace("/", "\\/");
-                    if (metaOpen) {
-                        outWriter.write(",");
-                    }
-                    outWriter.write("\"timedRedirect\":{\"interval\":"
-                            + (newTimeoutInterval + 15) + ",\"url\":\""
-                            + escapedURL + "\"}");
-                    metaOpen = true;
-                }
-                timeoutInterval = newTimeoutInterval;
-            }
-
-            outWriter.print("}, \"resources\" : {");
-
-            // Precache custom layouts
-            String themeName = window.getTheme();
-            String requestThemeName = request.getParameter("theme");
-
-            if (requestThemeName != null) {
-                themeName = requestThemeName;
-            }
-            if (themeName == null) {
-                themeName = AbstractApplicationServlet.getDefaultTheme();
-            }
-
-            // TODO We should only precache the layouts that are not
-            // cached already (plagiate from usedPaintableTypes)
-            int resourceIndex = 0;
-            for (final Iterator<Object> i = paintTarget.getUsedResources()
-                    .iterator(); i.hasNext();) {
-                final String resource = (String) i.next();
-                InputStream is = null;
-                try {
-                    is = callback.getThemeResourceAsStream(themeName, resource);
-                } catch (final Exception e) {
-                    // FIXME: Handle exception
-                    logger.log(Level.FINER,
-                            "Failed to get theme resource stream.", e);
-                }
-                if (is != null) {
-
-                    outWriter.print((resourceIndex++ > 0 ? ", " : "") + "\""
-                            + resource + "\" : ");
-                    final StringBuffer layout = new StringBuffer();
-
-                    try {
-                        final InputStreamReader r = new InputStreamReader(is,
-                                "UTF-8");
-                        final char[] buffer = new char[20000];
-                        int charsRead = 0;
-                        while ((charsRead = r.read(buffer)) > 0) {
-                            layout.append(buffer, 0, charsRead);
-                        }
-                        r.close();
-                    } catch (final java.io.IOException e) {
-                        // FIXME: Handle exception
-                        logger.log(Level.INFO, "Resource transfer failed:  "
-                                + request.getRequestID() + ".", e);
-                    }
-                    outWriter.print("\""
-                            + JsonPaintTarget.escapeJSON(layout.toString())
-                            + "\"");
-                } else {
-                    // FIXME: Handle exception
-                    logger.severe("CustomLayout not found: " + resource);
-                }
-            }
-            outWriter.print("}");
-
-            Collection<Class<? extends Paintable>> usedPaintableTypes = paintTarget
-                    .getUsedPaintableTypes();
-            boolean typeMappingsOpen = false;
-            for (Class<? extends Paintable> class1 : usedPaintableTypes) {
-                if (windowCache.cache(class1)) {
-                    // client does not know the mapping key for this type, send
-                    // mapping to client
-                    if (!typeMappingsOpen) {
-                        typeMappingsOpen = true;
-                        outWriter.print(", \"typeMappings\" : { ");
-                    } else {
-                        outWriter.print(" , ");
-                    }
-                    String canonicalName = class1.getCanonicalName();
-                    outWriter.print("\"");
-                    outWriter.print(canonicalName);
-                    outWriter.print("\" : ");
-                    outWriter.print(getTagForType(class1));
-                }
-            }
-            if (typeMappingsOpen) {
-                outWriter.print(" }");
-            }
-
-            // add any pending locale definitions requested by the client
-            printLocaleDeclarations(outWriter);
-
-            if (dragAndDropService != null) {
-                dragAndDropService.printJSONResponse(outWriter);
-            }
-
-            outWriter.print("}]");
         }
+        outWriter.print("}]");
+
         outWriter.close();
 
+    }
+
+    public void writeUidlResponce(Callback callback, boolean repaintAll,
+            final PrintWriter outWriter, Window window, boolean analyzeLayouts)
+            throws PaintException {
+        outWriter.print("\"changes\":[");
+
+        ArrayList<Paintable> paintables = null;
+
+        List<InvalidLayout> invalidComponentRelativeSizes = null;
+
+        JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
+                !repaintAll);
+        OpenWindowCache windowCache = currentlyOpenWindowsInClient.get(window
+                .getName());
+        if (windowCache == null) {
+            windowCache = new OpenWindowCache();
+            currentlyOpenWindowsInClient.put(window.getName(), windowCache);
+        }
+
+        // Paints components
+        if (repaintAll) {
+            paintables = new ArrayList<Paintable>();
+            paintables.add(window);
+
+            // Reset sent locales
+            locales = null;
+            requireLocale(application.getLocale().toString());
+
+        } else {
+            // remove detached components from paintableIdMap so they
+            // can be GC'ed
+            /*
+             * TODO figure out if we could move this beyond the painting phase,
+             * "respond as fast as possible, then do the cleanup". Beware of
+             * painting the dirty detatched components.
+             */
+            for (Iterator<Paintable> it = paintableIdMap.keySet().iterator(); it
+                    .hasNext();) {
+                Component p = (Component) it.next();
+                if (p.getApplication() == null) {
+                    unregisterPaintable(p);
+                    idPaintableMap.remove(paintableIdMap.get(p));
+                    it.remove();
+                    dirtyPaintables.remove(p);
+                }
+            }
+            paintables = getDirtyVisibleComponents(window);
+        }
+        if (paintables != null) {
+
+            // We need to avoid painting children before parent.
+            // This is ensured by ordering list by depth in component
+            // tree
+            Collections.sort(paintables, new Comparator<Paintable>() {
+                public int compare(Paintable o1, Paintable o2) {
+                    Component c1 = (Component) o1;
+                    Component c2 = (Component) o2;
+                    int d1 = 0;
+                    while (c1.getParent() != null) {
+                        d1++;
+                        c1 = c1.getParent();
+                    }
+                    int d2 = 0;
+                    while (c2.getParent() != null) {
+                        d2++;
+                        c2 = c2.getParent();
+                    }
+                    if (d1 < d2) {
+                        return -1;
+                    }
+                    if (d1 > d2) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            });
+
+            for (final Iterator<Paintable> i = paintables.iterator(); i
+                    .hasNext();) {
+                final Paintable p = i.next();
+
+                // TODO CLEAN
+                if (p instanceof Window) {
+                    final Window w = (Window) p;
+                    if (w.getTerminal() == null) {
+                        w.setTerminal(application.getMainWindow().getTerminal());
+                    }
+                }
+                /*
+                 * This does not seem to happen in tk5, but remember this case:
+                 * else if (p instanceof Component) { if (((Component)
+                 * p).getParent() == null || ((Component) p).getApplication() ==
+                 * null) { // Component requested repaint, but is no // longer
+                 * attached: skip paintablePainted(p); continue; } }
+                 */
+
+                // TODO we may still get changes that have been
+                // rendered already (changes with only cached flag)
+                if (paintTarget.needsToBePainted(p)) {
+                    paintTarget.startTag("change");
+                    paintTarget.addAttribute("format", "uidl");
+                    final String pid = getPaintableId(p);
+                    paintTarget.addAttribute("pid", pid);
+
+                    p.paint(paintTarget);
+
+                    paintTarget.endTag("change");
+                }
+                paintablePainted(p);
+
+                if (analyzeLayouts) {
+                    Window w = (Window) p;
+                    invalidComponentRelativeSizes = ComponentSizeValidator
+                            .validateComponentRelativeSizes(w.getContent(),
+                                    null, null);
+
+                    // Also check any existing subwindows
+                    if (w.getChildWindows() != null) {
+                        for (Window subWindow : w.getChildWindows()) {
+                            invalidComponentRelativeSizes = ComponentSizeValidator
+                                    .validateComponentRelativeSizes(
+                                            subWindow.getContent(),
+                                            invalidComponentRelativeSizes, null);
+                        }
+                    }
+                }
+            }
+        }
+
+        paintTarget.close();
+        outWriter.print("]"); // close changes
+
+        outWriter.print(", \"meta\" : {");
+        boolean metaOpen = false;
+
+        if (repaintAll) {
+            metaOpen = true;
+            outWriter.write("\"repaintAll\":true");
+            if (analyzeLayouts) {
+                outWriter.write(", \"invalidLayouts\":");
+                outWriter.write("[");
+                if (invalidComponentRelativeSizes != null) {
+                    boolean first = true;
+                    for (InvalidLayout invalidLayout : invalidComponentRelativeSizes) {
+                        if (!first) {
+                            outWriter.write(",");
+                        } else {
+                            first = false;
+                        }
+                        invalidLayout.reportErrors(outWriter, this, System.err);
+                    }
+                }
+                outWriter.write("]");
+            }
+        }
+
+        SystemMessages ci = null;
+        try {
+            Method m = application.getClass().getMethod("getSystemMessages",
+                    (Class[]) null);
+            ci = (Application.SystemMessages) m.invoke(null, (Object[]) null);
+        } catch (NoSuchMethodException e) {
+            logger.log(Level.WARNING,
+                    "getSystemMessages() failed - continuing", e);
+        } catch (IllegalArgumentException e) {
+            logger.log(Level.WARNING,
+                    "getSystemMessages() failed - continuing", e);
+        } catch (IllegalAccessException e) {
+            logger.log(Level.WARNING,
+                    "getSystemMessages() failed - continuing", e);
+        } catch (InvocationTargetException e) {
+            logger.log(Level.WARNING,
+                    "getSystemMessages() failed - continuing", e);
+        }
+
+        // meta instruction for client to enable auto-forward to
+        // sessionExpiredURL after timer expires.
+        if (ci != null && ci.getSessionExpiredMessage() == null
+                && ci.getSessionExpiredCaption() == null
+                && ci.isSessionExpiredNotificationEnabled()) {
+            int newTimeoutInterval = getTimeoutInterval();
+            if (repaintAll || (timeoutInterval != newTimeoutInterval)) {
+                String escapedURL = ci.getSessionExpiredURL() == null ? "" : ci
+                        .getSessionExpiredURL().replace("/", "\\/");
+                if (metaOpen) {
+                    outWriter.write(",");
+                }
+                outWriter.write("\"timedRedirect\":{\"interval\":"
+                        + (newTimeoutInterval + 15) + ",\"url\":\""
+                        + escapedURL + "\"}");
+                metaOpen = true;
+            }
+            timeoutInterval = newTimeoutInterval;
+        }
+
+        outWriter.print("}, \"resources\" : {");
+
+        // Precache custom layouts
+
+        // TODO We should only precache the layouts that are not
+        // cached already (plagiate from usedPaintableTypes)
+        int resourceIndex = 0;
+        for (final Iterator<Object> i = paintTarget.getUsedResources()
+                .iterator(); i.hasNext();) {
+            final String resource = (String) i.next();
+            InputStream is = null;
+            try {
+                is = callback.getThemeResourceAsStream(getTheme(window),
+                        resource);
+            } catch (final Exception e) {
+                // FIXME: Handle exception
+                logger.log(Level.FINER, "Failed to get theme resource stream.",
+                        e);
+            }
+            if (is != null) {
+
+                outWriter.print((resourceIndex++ > 0 ? ", " : "") + "\""
+                        + resource + "\" : ");
+                final StringBuffer layout = new StringBuffer();
+
+                try {
+                    final InputStreamReader r = new InputStreamReader(is,
+                            "UTF-8");
+                    final char[] buffer = new char[20000];
+                    int charsRead = 0;
+                    while ((charsRead = r.read(buffer)) > 0) {
+                        layout.append(buffer, 0, charsRead);
+                    }
+                    r.close();
+                } catch (final java.io.IOException e) {
+                    // FIXME: Handle exception
+                    logger.log(Level.INFO, "Resource transfer failed", e);
+                }
+                outWriter.print("\""
+                        + JsonPaintTarget.escapeJSON(layout.toString()) + "\"");
+            } else {
+                // FIXME: Handle exception
+                logger.severe("CustomLayout not found: " + resource);
+            }
+        }
+        outWriter.print("}");
+
+        Collection<Class<? extends Paintable>> usedPaintableTypes = paintTarget
+                .getUsedPaintableTypes();
+        boolean typeMappingsOpen = false;
+        for (Class<? extends Paintable> class1 : usedPaintableTypes) {
+            if (windowCache.cache(class1)) {
+                // client does not know the mapping key for this type, send
+                // mapping to client
+                if (!typeMappingsOpen) {
+                    typeMappingsOpen = true;
+                    outWriter.print(", \"typeMappings\" : { ");
+                } else {
+                    outWriter.print(" , ");
+                }
+                String canonicalName = class1.getCanonicalName();
+                outWriter.print("\"");
+                outWriter.print(canonicalName);
+                outWriter.print("\" : ");
+                outWriter.print(getTagForType(class1));
+            }
+        }
+        if (typeMappingsOpen) {
+            outWriter.print(" }");
+        }
+
+        // add any pending locale definitions requested by the client
+        printLocaleDeclarations(outWriter);
+
+        if (dragAndDropService != null) {
+            dragAndDropService.printJSONResponse(outWriter);
+        }
+    }
+
+    private int getTimeoutInterval() {
+        return maxInactiveInterval;
+    }
+
+    private String getTheme(Window window) {
+        String themeName = window.getTheme();
+        String requestThemeName = getRequestTheme();
+
+        if (requestThemeName != null) {
+            themeName = requestThemeName;
+        }
+        if (themeName == null) {
+            themeName = AbstractApplicationServlet.getDefaultTheme();
+        }
+        return themeName;
+    }
+
+    private String getRequestTheme() {
+        return requestThemeName;
+    }
+
+    public void makeAllPaintablesDirty(Window window) {
+        // If repaint is requested, clean all ids in this root window
+        for (final Iterator<String> it = idPaintableMap.keySet().iterator(); it
+                .hasNext();) {
+            final Component c = (Component) idPaintableMap.get(it.next());
+            if (isChildOf(window, c)) {
+                it.remove();
+                paintableIdMap.remove(c);
+            }
+        }
+        // clean WindowCache
+        OpenWindowCache openWindowCache = currentlyOpenWindowsInClient
+                .get(window.getName());
+        if (openWindowCache != null) {
+            openWindowCache.clear();
+        }
     }
 
     /**
@@ -1244,108 +1269,9 @@ public abstract class AbstractCommunicationManager implements
             }
 
             for (int bi = 1; bi < bursts.length; bi++) {
-
-                // extract variables to two dim string array
-                final String[] tmp = bursts[bi].split(VAR_RECORD_SEPARATOR);
-                final String[][] variableRecords = new String[tmp.length][4];
-                for (int i = 0; i < tmp.length; i++) {
-                    variableRecords[i] = tmp[i].split(VAR_FIELD_SEPARATOR);
-                }
-
-                for (int i = 0; i < variableRecords.length; i++) {
-                    String[] variable = variableRecords[i];
-                    String[] nextVariable = null;
-                    if (i + 1 < variableRecords.length) {
-                        nextVariable = variableRecords[i + 1];
-                    }
-                    final VariableOwner owner = getVariableOwner(variable[VAR_PID]);
-                    if (owner != null && owner.isEnabled()) {
-                        Map<String, Object> m;
-                        if (nextVariable != null
-                                && variable[VAR_PID]
-                                        .equals(nextVariable[VAR_PID])) {
-                            // we have more than one value changes in row for
-                            // one variable owner, collect em in HashMap
-                            m = new HashMap<String, Object>();
-                            m.put(variable[VAR_NAME],
-                                    convertVariableValue(
-                                            variable[VAR_TYPE].charAt(0),
-                                            variable[VAR_VALUE]));
-                        } else {
-                            // use optimized single value map
-                            m = Collections.singletonMap(
-                                    variable[VAR_NAME],
-                                    convertVariableValue(
-                                            variable[VAR_TYPE].charAt(0),
-                                            variable[VAR_VALUE]));
-                        }
-
-                        // collect following variable changes for this owner
-                        while (nextVariable != null
-                                && variable[VAR_PID]
-                                        .equals(nextVariable[VAR_PID])) {
-                            i++;
-                            variable = nextVariable;
-                            if (i + 1 < variableRecords.length) {
-                                nextVariable = variableRecords[i + 1];
-                            } else {
-                                nextVariable = null;
-                            }
-                            m.put(variable[VAR_NAME],
-                                    convertVariableValue(
-                                            variable[VAR_TYPE].charAt(0),
-                                            variable[VAR_VALUE]));
-                        }
-                        try {
-                            owner.changeVariables(request, m);
-
-                            // Special-case of closing browser-level windows:
-                            // track browser-windows currently open in client
-                            if (owner instanceof Window
-                                    && ((Window) owner).getParent() == null) {
-                                final Boolean close = (Boolean) m.get("close");
-                                if (close != null && close.booleanValue()) {
-                                    closingWindowName = ((Window) owner)
-                                            .getName();
-                                }
-                            }
-                        } catch (Exception e) {
-                            if (owner instanceof Component) {
-                                handleChangeVariablesError(application2,
-                                        (Component) owner, e, m);
-                            } else {
-                                // TODO DragDropService error handling
-                                throw new RuntimeException(e);
-                            }
-                        }
-                    } else {
-
-                        // Handle special case where window-close is called
-                        // after the window has been removed from the
-                        // application or the application has closed
-                        if ("close".equals(variable[VAR_NAME])
-                                && "true".equals(variable[VAR_VALUE])) {
-                            // Silently ignore this
-                            continue;
-                        }
-
-                        // Ignore variable change
-                        String msg = "Warning: Ignoring variable change for ";
-                        if (owner != null) {
-                            msg += "disabled component " + owner.getClass();
-                            String caption = ((Component) owner).getCaption();
-                            if (caption != null) {
-                                msg += ", caption=" + caption;
-                            }
-                        } else {
-                            msg += "non-existent component, VAR_PID="
-                                    + variable[VAR_PID];
-                            success = false;
-                        }
-                        logger.warning(msg);
-                        continue;
-                    }
-                }
+                final String burst = bursts[bi];
+                success = handleVariableBurst(request, application2, success,
+                        burst);
 
                 // In case that there were multiple bursts, we know that this is
                 // a special synchronous case for closing window. Thus we are
@@ -1364,6 +1290,105 @@ public abstract class AbstractCommunicationManager implements
 
                 }
 
+            }
+        }
+        return success;
+    }
+
+    public boolean handleVariableBurst(Object source, Application app,
+            boolean success, final String burst) {
+        // extract variables to two dim string array
+        final String[] tmp = burst.split(VAR_RECORD_SEPARATOR);
+        final String[][] variableRecords = new String[tmp.length][4];
+        for (int i = 0; i < tmp.length; i++) {
+            variableRecords[i] = tmp[i].split(VAR_FIELD_SEPARATOR);
+        }
+
+        for (int i = 0; i < variableRecords.length; i++) {
+            String[] variable = variableRecords[i];
+            String[] nextVariable = null;
+            if (i + 1 < variableRecords.length) {
+                nextVariable = variableRecords[i + 1];
+            }
+            final VariableOwner owner = getVariableOwner(variable[VAR_PID]);
+            if (owner != null && owner.isEnabled()) {
+                Map<String, Object> m;
+                if (nextVariable != null
+                        && variable[VAR_PID].equals(nextVariable[VAR_PID])) {
+                    // we have more than one value changes in row for
+                    // one variable owner, collect em in HashMap
+                    m = new HashMap<String, Object>();
+                    m.put(variable[VAR_NAME],
+                            convertVariableValue(variable[VAR_TYPE].charAt(0),
+                                    variable[VAR_VALUE]));
+                } else {
+                    // use optimized single value map
+                    m = Collections.singletonMap(
+                            variable[VAR_NAME],
+                            convertVariableValue(variable[VAR_TYPE].charAt(0),
+                                    variable[VAR_VALUE]));
+                }
+
+                // collect following variable changes for this owner
+                while (nextVariable != null
+                        && variable[VAR_PID].equals(nextVariable[VAR_PID])) {
+                    i++;
+                    variable = nextVariable;
+                    if (i + 1 < variableRecords.length) {
+                        nextVariable = variableRecords[i + 1];
+                    } else {
+                        nextVariable = null;
+                    }
+                    m.put(variable[VAR_NAME],
+                            convertVariableValue(variable[VAR_TYPE].charAt(0),
+                                    variable[VAR_VALUE]));
+                }
+                try {
+                    owner.changeVariables(source, m);
+
+                    // Special-case of closing browser-level windows:
+                    // track browser-windows currently open in client
+                    if (owner instanceof Window
+                            && ((Window) owner).getParent() == null) {
+                        final Boolean close = (Boolean) m.get("close");
+                        if (close != null && close.booleanValue()) {
+                            closingWindowName = ((Window) owner).getName();
+                        }
+                    }
+                } catch (Exception e) {
+                    if (owner instanceof Component) {
+                        handleChangeVariablesError(app, (Component) owner, e, m);
+                    } else {
+                        // TODO DragDropService error handling
+                        throw new RuntimeException(e);
+                    }
+                }
+            } else {
+
+                // Handle special case where window-close is called
+                // after the window has been removed from the
+                // application or the application has closed
+                if ("close".equals(variable[VAR_NAME])
+                        && "true".equals(variable[VAR_VALUE])) {
+                    // Silently ignore this
+                    continue;
+                }
+
+                // Ignore variable change
+                String msg = "Warning: Ignoring variable change for ";
+                if (owner != null) {
+                    msg += "disabled component " + owner.getClass();
+                    String caption = ((Component) owner).getCaption();
+                    if (caption != null) {
+                        msg += ", caption=" + caption;
+                    }
+                } else {
+                    msg += "non-existent component, VAR_PID="
+                            + variable[VAR_PID];
+                    success = false;
+                }
+                logger.warning(msg);
+                continue;
             }
         }
         return success;

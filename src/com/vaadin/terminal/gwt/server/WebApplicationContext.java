@@ -31,7 +31,7 @@ public class WebApplicationContext extends AbstractWebApplicationContext {
      * Creates a new Web Application Context.
      * 
      */
-    WebApplicationContext() {
+    protected WebApplicationContext() {
 
     }
 
@@ -92,14 +92,14 @@ public class WebApplicationContext extends AbstractWebApplicationContext {
      * @param application
      * @return CommunicationManager
      */
-    protected CommunicationManager getApplicationManager(
-            Application application, AbstractApplicationServlet servlet) {
+    public CommunicationManager getApplicationManager(Application application,
+            AbstractApplicationServlet servlet) {
         CommunicationManager mgr = (CommunicationManager) applicationToAjaxAppMgrMap
                 .get(application);
 
         if (mgr == null) {
             // Creates new manager
-            mgr = new CommunicationManager(application);
+            mgr = servlet.createCommunicationManager(application);
             applicationToAjaxAppMgrMap.put(application, mgr);
         }
         return mgr;
