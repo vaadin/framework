@@ -100,7 +100,7 @@ public class ApplicationConnection {
     private final ComponentDetailMap idToPaintableDetail = ComponentDetailMap
             .create();
 
-    private final WidgetSet widgetSet;
+    private WidgetSet widgetSet;
 
     private VContextMenu contextMenu = null;
 
@@ -111,12 +111,12 @@ public class ApplicationConnection {
 
     private final VView view;
 
-    private boolean applicationRunning = false;
+    protected boolean applicationRunning = false;
 
     private int activeRequests = 0;
 
     /** Parameters for this application connection loaded from the web-page */
-    private final ApplicationConfiguration configuration;
+    private ApplicationConfiguration configuration;
 
     /** List of pending variable change bursts that must be submitted in order */
     private final ArrayList<ArrayList<String>> pendingVariableBursts = new ArrayList<ArrayList<String>>();
@@ -145,9 +145,11 @@ public class ApplicationConnection {
      */
     private int deferredCommandTrackers = 0;
 
-    public ApplicationConnection(WidgetSet widgetSet,
-            ApplicationConfiguration cnf) {
+    public ApplicationConnection() {
+        view = GWT.create(VView.class);
+    }
 
+    public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
         VConsole.log("Starting application " + cnf.getRootPanelId());
 
         VConsole.log("Vaadin application servlet version: "
@@ -174,10 +176,8 @@ public class ApplicationConnection {
 
         initializeClientHooks();
 
-        view = GWT.create(VView.class);
         view.init(cnf.getRootPanelId());
         showLoadingIndicator();
-
     }
 
     /**
@@ -188,7 +188,7 @@ public class ApplicationConnection {
      * to avoid session-id problems.
      */
     void start() {
-        makeUidlRequest("", true, false, false);
+        repaintAll();
     }
 
     private native void initializeTestbenchHooks(
@@ -340,14 +340,54 @@ public class ApplicationConnection {
         return (activeRequests > 0);
     }
 
-    private void makeUidlRequest(final String requestData,
-            final boolean repaintAll, final boolean forceSync,
-            final boolean analyzeLayouts) {
-        startRequest();
+    private String getRepaintAllParameters() {
+        // collect some client side data that will be sent to server on
+        // initial uidl request
+        int clientHeight = Window.getClientHeight();
+        int clientWidth = Window.getClientWidth();
+        com.google.gwt.dom.client.Element pe = view.getElement()
+                .getParentElement();
+        int offsetHeight = pe.getOffsetHeight();
+        int offsetWidth = pe.getOffsetWidth();
+        int screenWidth = BrowserInfo.get().getScreenWidth();
+        int screenHeight = BrowserInfo.get().getScreenHeight();
 
+        String token = History.getToken();
+
+        String uri;
+        // TODO figure out how client and view size could be used better on
+        // server. screen size can be accessed via Browser object, but other
+        // values currently only via transaction listener.
+        if (configuration.usePortletURLs()) {
+            uri = "&";
+        } else {
+            uri = "?";
+        }
+        uri += "repaintAll=1&" + "sh=" + screenHeight + "&sw=" + screenWidth
+                + "&cw=" + clientWidth + "&ch=" + clientHeight + "&vw="
+                + offsetWidth + "&vh=" + offsetHeight + "&fr=" + token;
+        return uri;
+    }
+
+    protected void repaintAll() {
+        String repainAllParameters = getRepaintAllParameters();
+        makeUidlRequest("", repainAllParameters, false);
+    }
+
+    /**
+     * Requests an analyze of layouts, to find inconsistencies. Exclusively used
+     * for debugging during development.
+     */
+    public void analyzeLayouts() {
+        String params = getRepaintAllParameters() + "&analyzeLayouts=1";
+        makeUidlRequest("", params, false);
+    }
+
+    protected void makeUidlRequest(final String requestData,
+            final String extraParams, final boolean forceSync) {
+        startRequest();
         // Security: double cookie submission pattern
         final String rd = uidl_security_key + VAR_BURST_SEPARATOR + requestData;
-
         VConsole.log("Making UIDL Request with params: " + rd);
         String uri;
         if (configuration.usePortletURLs()) {
@@ -355,39 +395,14 @@ public class ApplicationConnection {
         } else {
             uri = getAppUri() + "UIDL" + configuration.getPathInfo();
         }
-        if (repaintAll) {
-            // collect some client side data that will be sent to server on
-            // initial uidl request
-            int clientHeight = Window.getClientHeight();
-            int clientWidth = Window.getClientWidth();
-            com.google.gwt.dom.client.Element pe = view.getElement()
-                    .getParentElement();
-            int offsetHeight = pe.getOffsetHeight();
-            int offsetWidth = pe.getOffsetWidth();
-            int screenWidth = BrowserInfo.get().getScreenWidth();
-            int screenHeight = BrowserInfo.get().getScreenHeight();
-
-            String token = History.getToken();
-
-            // TODO figure out how client and view size could be used better on
-            // server. screen size can be accessed via Browser object, but other
-            // values currently only via transaction listener.
-            if (configuration.usePortletURLs()) {
+        uri += extraParams;
+        if (windowName != null && windowName.length() > 0) {
+            if (uri.contains("?")) {
                 uri += "&";
             } else {
                 uri += "?";
             }
-            uri += "repaintAll=1&" + "sh=" + screenHeight + "&sw="
-                    + screenWidth + "&cw=" + clientWidth + "&ch="
-                    + clientHeight + "&vw=" + offsetWidth + "&vh="
-                    + offsetHeight + "&fr=" + token;
-            if (analyzeLayouts) {
-                uri += "&analyzeLayouts=1";
-            }
-        }
-        if (windowName != null && windowName.length() > 0) {
-            uri += (repaintAll || configuration.usePortletURLs() ? "&" : "?")
-                    + "windowName=" + windowName;
+            uri += "windowName=" + windowName;
         }
 
         if (!forceSync) {
@@ -440,8 +455,8 @@ public class ApplicationConnection {
                                 @Override
                                 public void run() {
                                     activeRequests--;
-                                    makeUidlRequest(requestData, repaintAll,
-                                            forceSync, analyzeLayouts);
+                                    makeUidlRequest(requestData, extraParams,
+                                            forceSync);
                                 }
                             }).schedule(delay);
                             return;
@@ -457,38 +472,29 @@ public class ApplicationConnection {
                             return;
                         }
 
+                        final Date start = new Date();
+                        // for(;;);[realjson]
+                        final String jsonText = response.getText().substring(9,
+                                response.getText().length() - 1);
+                        final ValueMap json;
+                        try {
+                            json = parseJSONResponse(jsonText);
+                        } catch (final Exception e) {
+                            endRequest();
+                            showCommunicationError(e.getMessage()
+                                    + " - Original JSON-text:" + jsonText);
+                            return;
+                        }
+
+                        VConsole.log("JSON parsing took "
+                                + (new Date().getTime() - start.getTime())
+                                + "ms");
                         if (applicationRunning) {
-                            handleReceivedJSONMessage(response);
+                            handleReceivedJSONMessage(start, jsonText, json);
                         } else {
                             applicationRunning = true;
-                            handleWhenCSSLoaded(response);
+                            handleWhenCSSLoaded(jsonText, json);
                             ApplicationConfiguration.startNextApplication();
-                        }
-                    }
-
-                    int cssWaits = 0;
-                    static final int MAX_CSS_WAITS = 20;
-
-                    private void handleWhenCSSLoaded(final Response response) {
-                        int heightOfLoadElement = DOM.getElementPropertyInt(
-                                loadElement, "offsetHeight");
-                        if (heightOfLoadElement == 0
-                                && cssWaits < MAX_CSS_WAITS) {
-                            (new Timer() {
-                                @Override
-                                public void run() {
-                                    handleWhenCSSLoaded(response);
-                                }
-                            }).schedule(50);
-                            VConsole.log("Assuming CSS loading is not complete, "
-                                    + "postponing render phase. "
-                                    + "(.v-loading-indicator height == 0)");
-                            cssWaits++;
-                        } else {
-                            handleReceivedJSONMessage(response);
-                            if (cssWaits >= MAX_CSS_WAITS) {
-                                VConsole.error("CSS files may have not loaded properly.");
-                            }
                         }
                     }
 
@@ -507,6 +513,32 @@ public class ApplicationConnection {
              * stay open. End request properly here too. See #3289
              */
             endRequest();
+        }
+    }
+
+    int cssWaits = 0;
+    static final int MAX_CSS_WAITS = 20;
+
+    protected void handleWhenCSSLoaded(final String jsonText,
+            final ValueMap json) {
+        int heightOfLoadElement = DOM.getElementPropertyInt(loadElement,
+                "offsetHeight");
+        if (heightOfLoadElement == 0 && cssWaits < MAX_CSS_WAITS) {
+            (new Timer() {
+                @Override
+                public void run() {
+                    handleWhenCSSLoaded(jsonText, json);
+                }
+            }).schedule(50);
+            VConsole.log("Assuming CSS loading is not complete, "
+                    + "postponing render phase. "
+                    + "(.v-loading-indicator height == 0)");
+            cssWaits++;
+        } else {
+            handleReceivedJSONMessage(new Date(), jsonText, json);
+            if (cssWaits >= MAX_CSS_WAITS) {
+                VConsole.error("CSS files may have not loaded properly.");
+            }
         }
     }
 
@@ -573,7 +605,7 @@ public class ApplicationConnection {
         }
     }
 
-    private void startRequest() {
+    protected void startRequest() {
         activeRequests++;
         requestStartTime = new Date();
         // show initial throbber
@@ -597,7 +629,7 @@ public class ApplicationConnection {
         loadTimer.schedule(300);
     }
 
-    private void endRequest() {
+    protected void endRequest() {
         if (applicationRunning) {
             checkForPendingVariableBursts();
             runPostRequestHooks(configuration.getRootPanelId());
@@ -757,23 +789,13 @@ public class ApplicationConnection {
         }
     }-*/;
 
-    private void handleReceivedJSONMessage(Response response) {
-        final Date start = new Date();
-        // for(;;);[realjson]
-        final String jsonText = response.getText().substring(9,
-                response.getText().length() - 1);
-        final ValueMap json;
-        try {
-            json = parseJSONResponse(jsonText);
-        } catch (final Exception e) {
-            endRequest();
-            showCommunicationError(e.getMessage() + " - Original JSON-text:"
-                    + jsonText);
-            return;
-        }
+    private void handleReceivedJSONMessage(Date start, String jsonText,
+            ValueMap json) {
+        handleUIDLMessage(start, jsonText, json);
+    }
 
-        VConsole.log("JSON parsing took "
-                + (new Date().getTime() - start.getTime()) + "ms");
+    protected void handleUIDLMessage(final Date start, final String jsonText,
+            final ValueMap json) {
         // Handle redirect
         if (json.containsKey("redirect")) {
             String url = json.getValueMap("redirect").getString("url");
@@ -1198,7 +1220,11 @@ public class ApplicationConnection {
                 req.append(VAR_BURST_SEPARATOR);
             }
         }
-        makeUidlRequest(req.toString(), false, forceSync, false);
+        makeUidlRequest(req.toString());
+    }
+
+    private void makeUidlRequest(String string) {
+        makeUidlRequest(string, "", false);
     }
 
     /**
@@ -2218,14 +2244,6 @@ public class ApplicationConnection {
      */
     public void captionSizeUpdated(Paintable component) {
         componentCaptionSizeChanges.add(component);
-    }
-
-    /**
-     * Requests an analyze of layouts, to find inconsistensies. Exclusively used
-     * for debugging during develpoment.
-     */
-    public void analyzeLayouts() {
-        makeUidlRequest("", true, false, true);
     }
 
     /**

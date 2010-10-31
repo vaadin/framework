@@ -196,8 +196,8 @@ public class ApplicationConfiguration implements EntryPoint {
         for (Iterator<String> it = appIds.iterator(); it.hasNext();) {
             String appId = it.next();
             ApplicationConfiguration appConf = getConfigFromDOM(appId);
-            ApplicationConnection a = new ApplicationConnection(widgetSet,
-                    appConf);
+            ApplicationConnection a = GWT.create(ApplicationConnection.class);
+            a.init(widgetSet, appConf);
             unstartedApplications.add(a);
         }
 
