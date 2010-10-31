@@ -186,8 +186,9 @@ public class ApplicationConnection {
      * called once this application has started (first response received) or
      * failed to start. This ensures that the applications are started in order,
      * to avoid session-id problems.
+     * @return 
      */
-    void start() {
+    public void start() {
         repaintAll();
     }
 
