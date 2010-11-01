@@ -886,7 +886,7 @@
 
     <!-- Checkout doc repository. -->
     <target name="manual-checkout" depends="manual-init" unless="docdir">
-        <property name="manual.repository" value="http://dev.vaadin.com/svn/doc/trunk"/>
+        <!-- The required manual.repository property is defined in VERSION.properties -->
 
         <echo>Checking out manual from repository ${manual.repository}</echo>
 
