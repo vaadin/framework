@@ -922,6 +922,8 @@
         </copy>
     </target>
 
+	<!-- Package documentation in a documentation Zip package.   -->
+	<!-- * Built Eclipse plugin is not included in this package. -->
     <target name="manual-package" depends="manual-init, manual-copy">
         <zip destfile="${result-path}/${product-file}-docs-${version.full}.zip">
             <zipfileset prefix="docs" dir="${result-path}/${base-name}/WebContent/docs">
@@ -941,7 +943,14 @@
         </zip>
     </target>
 
-    <target name="manual" depends="init, manual-init, manual-checkout, manual-build, manual-copy, manual-package">
+	<!-- Publishes Eclipse plugin version of the manual as TeamCity artifacts.  -->
+	<!-- These are actually published during manual build, but with wrong path. -->
+	<target name="manual-publish-eclipse">
+        <echo>##teamcity[publishArtifacts '${docdir}/build/result/eclipse/plugins/*.jar']</echo>
+        <echo>##teamcity[publishArtifacts '${docdir}/build/result/eclipse/features/*.jar']</echo>
+	</target>
+
+    <target name="manual" depends="init, manual-init, manual-checkout, manual-build, manual-copy, manual-package, manual-publish-eclipse">
     </target>
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
