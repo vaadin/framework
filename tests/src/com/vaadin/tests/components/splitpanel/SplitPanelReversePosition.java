@@ -3,7 +3,6 @@ package com.vaadin.tests.components.splitpanel;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.SplitPanel.SplitterClickEvent;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalSplitPanel;
@@ -18,7 +17,7 @@ public class SplitPanelReversePosition extends TestBase {
         hsplit.setSizeFull();
         hsplit.setImmediate(true);
         hsplit.setSplitPosition(100, Sizeable.UNITS_PIXELS, true);
-        hsplit.addListener(new SplitPanel.SplitterClickListener() {
+        hsplit.addListener(new HorizontalSplitPanel.SplitterClickListener() {
             public void splitterClick(SplitterClickEvent event) {
                 System.out.println(hsplit.getSplitPosition());
 
@@ -33,7 +32,7 @@ public class SplitPanelReversePosition extends TestBase {
         vsplit.setSizeFull();
         vsplit.setImmediate(true);
         vsplit.setSplitPosition(10, Sizeable.UNITS_PERCENTAGE, true);
-        vsplit.addListener(new SplitPanel.SplitterClickListener() {
+        vsplit.addListener(new VerticalSplitPanel.SplitterClickListener() {
             public void splitterClick(SplitterClickEvent event) {
                 System.out.println(vsplit.getSplitPosition());
 
