@@ -946,8 +946,8 @@
 	<!-- Publishes Eclipse plugin version of the manual as TeamCity artifacts.  -->
 	<!-- These are actually published during manual build, but with wrong path. -->
 	<target name="manual-publish-eclipse">
-        <echo>##teamcity[publishArtifacts '${docdir}/build/result/eclipse/plugins/*.jar']</echo>
-        <echo>##teamcity[publishArtifacts '${docdir}/build/result/eclipse/features/*.jar']</echo>
+        <echo>##teamcity[publishArtifacts '${docdir}/build/result/package/eclipse/plugins/*.jar']</echo>
+        <echo>##teamcity[publishArtifacts '${docdir}/build/result/package/eclipse/features/*.jar']</echo>
 	</target>
 
     <target name="manual" depends="init, manual-init, manual-checkout, manual-build, manual-copy, manual-package, manual-publish-eclipse">
