@@ -726,7 +726,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      * A class to hold information on menu items
      * 
      */
-    private class CustomMenuItem extends Widget implements HasHTML, Paintable {
+    private class CustomMenuItem extends Widget implements HasHTML {
 
         private ApplicationConnection client;
 
