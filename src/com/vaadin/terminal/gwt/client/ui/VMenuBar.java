@@ -27,13 +27,15 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         CloseHandler<PopupPanel>, ContainerResizedListener, KeyPressHandler,
@@ -72,7 +74,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
     public VMenuBar() {
         // Create an empty horizontal menubar
-        this(false);
+        this(false, null);
 
         // Navigation is only handled by the root bar
         addFocusHandler(this);
@@ -89,7 +91,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         }
     }
 
-    public VMenuBar(boolean subMenu) {
+    public VMenuBar(boolean subMenu, VMenuBar parentMenu) {
 
         items = new ArrayList<CustomMenuItem>();
         popup = null;
@@ -101,11 +103,14 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             setStyleName(CLASSNAME);
         } else {
             setStyleName(CLASSNAME + "-submenu");
+            this.parentMenu = parentMenu;
         }
         this.subMenu = subMenu;
 
         sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT
                 | Event.ONLOAD);
+
+        sinkEvents(VTooltip.TOOLTIP_EVENTS);
     }
 
     @Override
@@ -181,7 +186,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             itemHTML.append(moreItemText);
 
             moreItem = new CustomMenuItem(itemHTML.toString(), emptyCommand);
-            collapsedRootItems = new VMenuBar(true);
+            collapsedRootItems = new VMenuBar(true,
+                    (VMenuBar) client.getPaintable(uidlId));
             moreItem.setSubMenu(collapsedRootItems);
             moreItem.addStyleName(CLASSNAME + "-more-menuitem");
         }
@@ -244,18 +250,13 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             }
 
             currentItem = currentMenu.addItem(itemHTML.toString(), cmd);
-            currentItem.setSeparator(item.hasAttribute("separator"));
-            currentItem.setEnabled(!item.hasAttribute("disabled"));
-            if (item.hasAttribute("style")) {
-                String itemStyle = item.getStringAttribute("style");
-                currentItem.addStyleDependentName(itemStyle);
-            }
+            currentItem.updateFromUIDL(item, client);
 
             if (item.getChildCount() > 0) {
                 menuStack.push(currentMenu);
                 iteratorStack.push(itr);
                 itr = item.getChildIterator();
-                currentMenu = new VMenuBar(true);
+                currentMenu = new VMenuBar(true, currentMenu);
                 if (uidl.hasAttribute("style")) {
                     for (String style : uidl.getStringAttribute("style").split(
                             " ")) {
@@ -406,6 +407,15 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             if (DOM.isOrHasChild(item.getElement(), targetElement)) {
                 targetItem = item;
             }
+        }
+
+        // Handle tooltips
+        if (targetItem == null && client != null) {
+            // Handle root menubar tooltips
+            client.handleTooltipEvent(e, this);
+        } else {
+            // Handle item tooltips
+            targetItem.onBrowserEvent(e);
         }
 
         if (targetItem != null) {
@@ -716,7 +726,9 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      * A class to hold information on menu items
      * 
      */
-    private class CustomMenuItem extends UIObject implements HasHTML {
+    private class CustomMenuItem extends Widget implements HasHTML, Paintable {
+
+        private ApplicationConnection client;
 
         protected String html = null;
         protected Command command = null;
@@ -734,6 +746,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             setSelected(false);
             setStyleName(CLASSNAME + "-menuitem");
 
+            sinkEvents(VTooltip.TOOLTIP_EVENTS);
         }
 
         public void setSelected(boolean selected) {
@@ -823,6 +836,45 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         public boolean isSeparator() {
             return isSeparator;
         }
+
+        public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+            this.client = client;
+            setSeparator(uidl.hasAttribute("separator"));
+            setEnabled(!uidl.hasAttribute("disabled"));
+
+            if (uidl.hasAttribute("style")) {
+                String itemStyle = uidl.getStringAttribute("style");
+                addStyleDependentName(itemStyle);
+            }
+
+            if (uidl.hasAttribute("description")) {
+                String description = uidl.getStringAttribute("description");
+                TooltipInfo info = new TooltipInfo(description);
+
+                VMenuBar root = findRootMenu();
+                client.registerTooltip(root, this, info);
+            }
+        }
+
+        @Override
+        public void onBrowserEvent(Event event) {
+            super.onBrowserEvent(event);
+            if (client != null) {
+                client.handleTooltipEvent(event, findRootMenu(), this);
+            }
+        }
+
+        private VMenuBar findRootMenu() {
+            VMenuBar menubar = getParentMenu();
+           
+            // Traverse up until root menu is found
+            while (menubar.getParentMenu() != null) {
+                menubar = menubar.getParentMenu();
+            }
+
+            return menubar;
+        }
+
     }
 
     /**

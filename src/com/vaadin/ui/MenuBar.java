@@ -115,6 +115,11 @@ public class MenuBar extends AbstractComponent {
                 target.addAttribute("disabled", true);
             }
 
+            String description = item.getDescription();
+            if (description != null && description.length() > 0) {
+                target.addAttribute("description", description);
+            }
+
             if (item.hasChildren()) {
                 for (MenuItem child : item.getChildren()) {
                     paintItem(target, child);
@@ -390,6 +395,7 @@ public class MenuBar extends AbstractComponent {
         private boolean visible = true;
         private boolean isSeparator = false;
         private String styleName;
+        private String description;
 
         /**
          * Constructs a new menu item that can optionally have an icon and a
@@ -697,6 +703,80 @@ public class MenuBar extends AbstractComponent {
 
         public String getStyleName() {
             return styleName;
+        }
+
+        /**
+         * Sets the items's description. See {@link #getDescription()} for more
+         * information on what the description is. This method will trigger a
+         * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
+         * RepaintRequestEvent}.
+         * 
+         * @param description
+         *            the new description string for the component.
+         */
+        public void setDescription(String description) {
+            this.description = description;
+            requestRepaint();
+        }
+
+        /**
+         * <p>
+         * Gets the items's description. The description can be used to briefly
+         * describe the state of the item to the user. The description string
+         * may contain certain XML tags:
+         * </p>
+         * 
+         * <p>
+         * <table border=1>
+         * <tr>
+         * <td width=120><b>Tag</b></td>
+         * <td width=120><b>Description</b></td>
+         * <td width=120><b>Example</b></td>
+         * </tr>
+         * <tr>
+         * <td>&lt;b></td>
+         * <td>bold</td>
+         * <td><b>bold text</b></td>
+         * </tr>
+         * <tr>
+         * <td>&lt;i></td>
+         * <td>italic</td>
+         * <td><i>italic text</i></td>
+         * </tr>
+         * <tr>
+         * <td>&lt;u></td>
+         * <td>underlined</td>
+         * <td><u>underlined text</u></td>
+         * </tr>
+         * <tr>
+         * <td>&lt;br></td>
+         * <td>linebreak</td>
+         * <td>N/A</td>
+         * </tr>
+         * <tr>
+         * <td>&lt;ul><br>
+         * &lt;li>item1<br>
+         * &lt;li>item1<br>
+         * &lt;/ul></td>
+         * <td>item list</td>
+         * <td>
+         * <ul>
+         * <li>item1
+         * <li>item2
+         * </ul>
+         * </td>
+         * </tr>
+         * </table>
+         * </p>
+         * 
+         * <p>
+         * These tags may be nested.
+         * </p>
+         * 
+         * @return item's description <code>String</code>
+         */
+        public String getDescription() {
+            return description;
         }
 
     }// class MenuItem
