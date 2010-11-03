@@ -152,26 +152,26 @@ public interface PaintTarget extends Serializable {
     public void addAttribute(String name, Resource value) throws PaintException;
 
     /**
-     * Adds details about {@link Receiver} to the UIDL stream. Eg. in web
+     * Adds details about {@link StreamVariable} to the UIDL stream. Eg. in web
      * terminals Receivers are typically rendered for the client side as URLs,
      * where the client side implementation can do an http post request.
      * <p>
-     * Note that a Receiver can only be used once per "paint". The same Receiver
+     * Note that a StreamVariable can only be used once per "paint". The same StreamVariable
      * can be used several times, but it must be repainted before the next
      * stream can be received.
      * 
      * @param owner
      *            the ReceiverOwner that can track the progress of streaming to
-     *            the given Receiver
+     *            the given StreamVariable
      * @param name
-     *            an identifying name for the Receiver
+     *            an identifying name for the StreamVariable
      * @param value
-     *            the Receiver to paint
+     *            the StreamVariable to paint
      * 
      * @throws PaintException
      *             if the paint operation failed.
      */
-    public void addVariable(ReceiverOwner owner, String name, Receiver value)
+    public void addVariable(VariableOwner owner, String name, StreamVariable value)
             throws PaintException;
 
     /**

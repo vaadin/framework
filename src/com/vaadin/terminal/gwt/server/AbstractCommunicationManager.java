@@ -51,12 +51,10 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.Paintable.RepaintRequestEvent;
-import com.vaadin.terminal.Receiver;
-import com.vaadin.terminal.ReceiverOwner;
-import com.vaadin.terminal.ReceiverOwner.ReceivingController;
-import com.vaadin.terminal.ReceiverOwner.ReceivingEndedEvent;
-import com.vaadin.terminal.ReceiverOwner.ReceivingFailedEvent;
-import com.vaadin.terminal.ReceiverOwner.ReceivingStartedEvent;
+import com.vaadin.terminal.StreamVariable;
+import com.vaadin.terminal.StreamVariable.StreamingEndedEvent;
+import com.vaadin.terminal.StreamVariable.StreamingFailedEvent;
+import com.vaadin.terminal.StreamVariable.StreamingStartedEvent;
 import com.vaadin.terminal.Terminal.ErrorEvent;
 import com.vaadin.terminal.Terminal.ErrorListener;
 import com.vaadin.terminal.URIHandler;
@@ -369,18 +367,18 @@ public abstract class AbstractCommunicationManager implements
 
     /**
      * Method used to stream content from a multipart request (either from
-     * servlet or portlet request) to given Receiver
+     * servlet or portlet request) to given StreamVariable
      * 
      * 
      * @param request
      * @param response
-     * @param receiver
+     * @param streamVariable
      * @param owner
      * @param boundary
      * @throws IOException
      */
     protected void doHandleSimpleMultipartFileUpload(Request request,
-            Response response, Receiver receiver, ReceiverOwner owner,
+            Response response, StreamVariable streamVariable, VariableOwner owner,
             String boundary) throws IOException {
         boundary = CRLF + "--" + boundary + "--";
 
@@ -530,7 +528,7 @@ public abstract class AbstractCommunicationManager implements
                 throw new UploadException(
                         "Warning: file upload ignored because the componente was read-only");
             }
-            streamToReceiver(simpleMultiPartReader, receiver, owner, filename,
+            streamToReceiver(simpleMultiPartReader, streamVariable, filename,
                     mimeType, contentLength);
         } catch (Exception e) {
             synchronized (application) {
@@ -547,13 +545,13 @@ public abstract class AbstractCommunicationManager implements
      * 
      * @param request
      * @param response
-     * @param receiver
+     * @param streamVariable
      * @param owner
      * @param contentLength
      * @throws IOException
      */
     protected void doHandleXhrFilePost(Request request, Response response,
-            Receiver receiver, ReceiverOwner owner, int contentLength)
+            StreamVariable streamVariable, VariableOwner owner, int contentLength)
             throws IOException {
 
         // These are unknown in filexhr ATM, maybe add to Accept header that
@@ -569,9 +567,9 @@ public abstract class AbstractCommunicationManager implements
             Component component = (Component) owner;
             if (component.isReadOnly()) {
                 throw new UploadException(
-                        "Warning: file upload ignored because the componente was read-only");
+                        "Warning: file upload ignored because the component was read-only");
             }
-            streamToReceiver(stream, receiver, owner, filename, mimeType,
+            streamToReceiver(stream, streamVariable, filename, mimeType,
                     contentLength);
         } catch (Exception e) {
             synchronized (application) {
@@ -583,14 +581,11 @@ public abstract class AbstractCommunicationManager implements
     }
 
     protected final void streamToReceiver(final InputStream in,
-            Receiver receiver, ReceiverOwner source, String filename,
+            StreamVariable streamVariable, String filename,
             String type, int contentLength) throws UploadException {
-        if (receiver == null) {
-            throw new IllegalStateException("Receiver for the post not found");
+        if (streamVariable == null) {
+            throw new IllegalStateException("StreamVariable for the post not found");
         }
-
-        ReceivingController controller = source
-                .getReceivingController(receiver);
 
         final Application application = getApplication();
 
@@ -599,11 +594,11 @@ public abstract class AbstractCommunicationManager implements
         try {
             boolean listenProgress;
             synchronized (application) {
-                ReceivingStartedEvent startedEvent = new ReceivingStartedEventImpl(
-                        receiver, filename, type, contentLength);
-                controller.uploadStarted(startedEvent);
-                out = receiver.receiveUpload(filename, type);
-                listenProgress = controller.listenProgress();
+                StreamingStartedEvent startedEvent = new StreamingStartedEventImpl(
+                        streamVariable, filename, type, contentLength);
+                streamVariable.streamingStarted(startedEvent);
+                out = streamVariable.getOutputStream();
+                listenProgress = streamVariable.listenProgress();
             }
 
             // Gets the output target stream
@@ -625,42 +620,42 @@ public abstract class AbstractCommunicationManager implements
                     // update progress if listener set and contentLength
                     // received
                     synchronized (application) {
-                        ReceivingProgressedEventImpl progressEvent = new ReceivingProgressedEventImpl(
-                                receiver, filename, type, contentLength,
+                        StreamingProgressedEventImpl progressEvent = new StreamingProgressedEventImpl(
+                                streamVariable, filename, type, contentLength,
                                 totalBytes);
-                        controller.onProgress(progressEvent);
+                        streamVariable.onProgress(progressEvent);
                     }
                 }
-                if (controller.isInterrupted()) {
+                if (streamVariable.isInterrupted()) {
                     throw new UploadInterruptedException();
                 }
             }
 
             // upload successful
             out.close();
-            ReceivingEndedEvent event = new ReceivingEndedEventImpl(receiver,
+            StreamingEndedEvent event = new StremingEndedEventImpl(streamVariable,
                     filename, type, totalBytes);
             synchronized (application) {
-                controller.uploadFinished(event);
+                streamVariable.streamingFinished(event);
             }
 
         } catch (UploadInterruptedException e) {
             // Download interrupted by application code
             tryToCloseStream(out);
-            ReceivingFailedEvent event = new ReceivingFailedEventImpl(receiver,
+            StreamingFailedEvent event = new StreamingFailedEventImpl(streamVariable,
                     filename, type, contentLength, totalBytes, e);
             synchronized (application) {
-                controller.uploadFailed(event);
+                streamVariable.streamingFailed(event);
             }
             // Note, we are not throwing interrupted exception forward as it is
             // not a terminal level error like all other exception.
         } catch (final Exception e) {
             tryToCloseStream(out);
             synchronized (application) {
-                ReceivingFailedEvent event = new ReceivingFailedEventImpl(
-                        receiver, filename, type, contentLength, totalBytes, e);
+                StreamingFailedEvent event = new StreamingFailedEventImpl(
+                        streamVariable, filename, type, contentLength, totalBytes, e);
                 synchronized (application) {
-                    controller.uploadFailed(event);
+                    streamVariable.streamingFailed(event);
                 }
                 // throw exception for terminal to be handled (to be passed to
                 // terminalErrorHandler)
@@ -2186,6 +2181,6 @@ public abstract class AbstractCommunicationManager implements
 
     }
 
-    abstract String createReceiverUrl(ReceiverOwner owner, String name,
-            Receiver value);
+    abstract String createReceiverUrl(VariableOwner owner, String name,
+            StreamVariable value);
 }

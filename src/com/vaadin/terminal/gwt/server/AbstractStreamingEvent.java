@@ -1,16 +1,16 @@
 package com.vaadin.terminal.gwt.server;
 
-import com.vaadin.terminal.Receiver;
-import com.vaadin.terminal.ReceiverOwner.ReceivingEvent;
+import com.vaadin.terminal.StreamVariable;
+import com.vaadin.terminal.StreamVariable.StreamingEvent;
 
 /**
- * Abstract base class for ReceivingEvent implementations.
+ * Abstract base class for StreamingEvent implementations.
  */
 @SuppressWarnings("serial")
-abstract class AbstractReceivingEvent implements ReceivingEvent {
+abstract class AbstractStreamingEvent implements StreamingEvent {
     private final String type;
     private final String filename;
-    private final Receiver receiver;
+    private final StreamVariable streamVariable;
     private final long contentLength;
     private final long bytesReceived;
 
@@ -22,17 +22,17 @@ abstract class AbstractReceivingEvent implements ReceivingEvent {
         return type;
     }
 
-    protected AbstractReceivingEvent(Receiver receiver, String filename,
+    protected AbstractStreamingEvent(StreamVariable streamVariable, String filename,
             String type, long length, long bytesReceived) {
-        this.receiver = receiver;
+        this.streamVariable = streamVariable;
         this.filename = filename;
         this.type = type;
         contentLength = length;
         this.bytesReceived = bytesReceived;
     }
 
-    public final Receiver getReceiver() {
-        return receiver;
+    public final StreamVariable getReceiver() {
+        return streamVariable;
     }
 
     public final long getContentLength() {

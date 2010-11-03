@@ -9,18 +9,17 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.terminal.Receiver;
-import com.vaadin.terminal.ReceiverOwner.ReceivingEndedEvent;
-import com.vaadin.terminal.ReceiverOwner.ReceivingFailedEvent;
-import com.vaadin.terminal.ReceiverOwner.ReceivingProgressedEvent;
-import com.vaadin.terminal.ReceiverOwner.ReceivingStartedEvent;
+import com.vaadin.terminal.StreamVariable;
+import com.vaadin.terminal.StreamVariable.StreamingEndedEvent;
+import com.vaadin.terminal.StreamVariable.StreamingFailedEvent;
+import com.vaadin.terminal.StreamVariable.StreamingProgressedEvent;
+import com.vaadin.terminal.StreamVariable.StreamingStartedEvent;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable;
 import com.vaadin.ui.Html5File;
-import com.vaadin.ui.Html5File.Html5FileUploadListener;
 import com.vaadin.ui.Label;
 
 public class DragAndDropFiles extends TestBase {
@@ -63,47 +62,48 @@ public class DragAndDropFiles extends TestBase {
                             continue;
                         }
 
-                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        StreamVariable streamVariable = new StreamVariable() {
 
-                        Receiver receiver = new Receiver() {
-                            public OutputStream receiveUpload(String filename,
-                                    String MIMEType) {
-                                System.err.println("receiveUpload " + filename);
-
+                            public OutputStream getOutputStream() {
                                 return new NullOutputStream();
                             }
-                        };
-                        file.setReceiver(receiver);
-                        Html5FileUploadListener listener = new Html5FileUploadListener() {
 
-                            public void uploadStarted(
-                                    ReceivingStartedEvent event) {
+                            public boolean listenProgress() {
+                                return true;
+                            }
+
+                            public void onProgress(
+                                    StreamingProgressedEvent event) {
+                                System.err.println("Progress"
+                                        + event.getBytesReceived());
+                            }
+
+                            public void streamingStarted(
+                                    StreamingStartedEvent event) {
                                 getMainWindow().showNotification(
                                         "Started uploading "
                                                 + event.getFileName());
-
                             }
 
-                            public void uploadFinished(ReceivingEndedEvent event) {
+                            public void streamingFinished(
+                                    StreamingEndedEvent event) {
                                 getMainWindow().showNotification(
                                         "Finished uploading "
                                                 + event.getFileName());
                             }
 
-                            public void uploadFailed(ReceivingFailedEvent event) {
+                            public void streamingFailed(
+                                    StreamingFailedEvent event) {
                                 getMainWindow().showNotification(
                                         "Failed uploading "
                                                 + event.getFileName());
-
                             }
 
-                            public void onProgress(
-                                    ReceivingProgressedEvent event) {
-                                System.err.println("Progress"
-                                        + event.getBytesReceived());
+                            public boolean isInterrupted() {
+                                return false;
                             }
                         };
-                        file.setUploadListener(listener);
+                        file.setReceiver(streamVariable);
                     }
                 }
 

@@ -20,8 +20,8 @@ import com.vaadin.Application;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.Receiver;
-import com.vaadin.terminal.ReceiverOwner;
+import com.vaadin.terminal.StreamVariable;
+import com.vaadin.terminal.VariableOwner;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Window;
 
@@ -208,7 +208,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
     /**
      * Handles file upload request submitted via Upload component.
      * 
-     * @see #createReceiverUrl(ReceiverOwner, String, Receiver)
+     * @see #createReceiverUrl(ReceiverOwner, String, StreamVariable)
      * 
      * @param request
      * @param response
@@ -231,23 +231,23 @@ public class CommunicationManager extends AbstractCommunicationManager {
         String uppUri = pathInfo.substring(startOfData);
         String[] parts = uppUri.split("/", 3); // 0 = pid, 1= name, 2 = sec key
 
-        Receiver receiver = pidToNameToReceiver.get(parts[0]).remove(parts[1]);
-        String secKey = receiverToSeckey.remove(receiver);
+        StreamVariable streamVariable = pidToNameToReceiver.get(parts[0]).remove(parts[1]);
+        String secKey = receiverToSeckey.remove(streamVariable);
         if (secKey.equals(parts[2])) {
 
-            ReceiverOwner source = (ReceiverOwner) getVariableOwner(parts[0]);
+            VariableOwner source = (VariableOwner) getVariableOwner(parts[0]);
             String contentType = request.getContentType();
             if (request.getContentType().contains("boundary")) {
                 // Multipart requests contain boundary string
                 doHandleSimpleMultipartFileUpload(
                         new HttpServletRequestWrapper(request),
-                        new HttpServletResponseWrapper(response), receiver,
+                        new HttpServletResponseWrapper(response), streamVariable,
                         source, contentType.split("boundary=")[1]);
             } else {
                 // if boundary string does not exist, the posted file is from
                 // XHR2.post(File)
                 doHandleXhrFilePost(new HttpServletRequestWrapper(request),
-                        new HttpServletResponseWrapper(response), receiver,
+                        new HttpServletResponseWrapper(response), streamVariable,
                         source, request.getContentLength());
             }
         } else {
@@ -336,8 +336,8 @@ public class CommunicationManager extends AbstractCommunicationManager {
     @Override
     protected void unregisterPaintable(Component p) {
         /* Cleanup possible receivers */
-        if (pidToNameToReceiver != null && p instanceof ReceiverOwner) {
-            Map<String, Receiver> removed = pidToNameToReceiver
+        if (pidToNameToReceiver != null) {
+            Map<String, StreamVariable> removed = pidToNameToReceiver
                     .remove(getPaintableId(p));
             if (removed != null) {
                 for (String key : removed.keySet()) {
@@ -349,12 +349,16 @@ public class CommunicationManager extends AbstractCommunicationManager {
 
     }
 
-    private Map<String, Map<String, Receiver>> pidToNameToReceiver;
+    private Map<String, Map<String, StreamVariable>> pidToNameToReceiver;
 
-    private Map<Receiver, String> receiverToSeckey;
+    private Map<StreamVariable, String> receiverToSeckey;
 
     @Override
-    String createReceiverUrl(ReceiverOwner owner, String name, Receiver value) {
+    String createReceiverUrl(VariableOwner owner, String name, StreamVariable value) {
+        
+        /*
+         * TODO figure out how this can be simplified now that ReceiverOwner is removed.
+         */
 
         /*
          * We will use the same APP/* URI space as ApplicationResources but
@@ -365,25 +369,25 @@ public class CommunicationManager extends AbstractCommunicationManager {
          * SECKEY is created on each paint to make URL's unpredictable (to
          * prevent CSRF attacks).
          * 
-         * NAME and PID from URI forms a key to fetch Receiver when handling
+         * NAME and PID from URI forms a key to fetch StreamVariable when handling
          * post
          */
         String paintableId = getPaintableId((Paintable) owner);
         String key = paintableId + "/" + name;
 
         if (pidToNameToReceiver == null) {
-            pidToNameToReceiver = new HashMap<String, Map<String, Receiver>>();
+            pidToNameToReceiver = new HashMap<String, Map<String, StreamVariable>>();
         }
-        Map<String, Receiver> nameToReceiver = pidToNameToReceiver
+        Map<String, StreamVariable> nameToReceiver = pidToNameToReceiver
                 .get(paintableId);
         if (nameToReceiver == null) {
-            nameToReceiver = new HashMap<String, Receiver>();
+            nameToReceiver = new HashMap<String, StreamVariable>();
             pidToNameToReceiver.put(paintableId, nameToReceiver);
         }
         nameToReceiver.put(name, value);
 
         if (receiverToSeckey == null) {
-            receiverToSeckey = new HashMap<Receiver, String>();
+            receiverToSeckey = new HashMap<StreamVariable, String>();
         }
         String seckey = UUID.randomUUID().toString();
         receiverToSeckey.put(value, seckey);

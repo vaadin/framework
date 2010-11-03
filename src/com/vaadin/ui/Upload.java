@@ -4,6 +4,7 @@
 
 package com.vaadin.ui;
 
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Iterator;
@@ -12,7 +13,7 @@ import java.util.Map;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.ReceiverOwner;
+import com.vaadin.terminal.StreamVariable.StreamingStartedEvent;
 import com.vaadin.terminal.gwt.client.ui.VUpload;
 import com.vaadin.terminal.gwt.server.NoInputStreamException;
 import com.vaadin.terminal.gwt.server.NoOutputStreamException;
@@ -60,8 +61,7 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  */
 @SuppressWarnings("serial")
 @ClientWidget(value = VUpload.class, loadStyle = LoadStyle.LAZY)
-public class Upload extends AbstractComponent implements Component.Focusable,
-        ReceiverOwner {
+public class Upload extends AbstractComponent implements Component.Focusable {
 
     /**
      * Should the field be focused on next repaint?
@@ -76,7 +76,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     /**
      * The output of the upload is redirected to this receiver.
      */
-    private com.vaadin.terminal.Receiver receiver;
+    private Receiver receiver;
 
     private boolean isUploading;
 
@@ -106,28 +106,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     public Upload() {
     }
 
-    /**
-     * @deprecated use
-     *             {@link Upload#Upload(String, com.vaadin.terminal.Receiver)}
-     *             instead
-     */
-    @Deprecated
     public Upload(String caption, Receiver uploadReceiver) {
-        setCaption(caption);
-        receiver = uploadReceiver;
-    }
-
-    /**
-     * Creates a new instance of Upload that redirects the uploaded data to
-     * stream given by the Receiver.
-     * 
-     * @param caption
-     *            Normal component caption. You can set the caption of the
-     *            upload submit button with setButtonCaption().
-     * @param uploadReceiver
-     *            Receiver to call to retrieve output stream when upload starts.
-     */
-    public Upload(String caption, com.vaadin.terminal.Receiver uploadReceiver) {
         setCaption(caption);
         receiver = uploadReceiver;
     }
@@ -181,8 +160,8 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         target.addAttribute("nextid", nextid);
 
-        // Post file to this receiver
-        target.addVariable(this, "action", getReceiver());
+        // Post file to this strean variable
+        target.addVariable(this, "action", getStreamVariable());
 
     }
 
@@ -194,11 +173,9 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @version
      * @VERSION@
      * @since 3.0
-     * @deprecated use {@link com.vaadin.terminal.Receiver} instead. A "copy"
-     *             here is kept for backwards compatibility.
      */
-    @Deprecated
-    public interface Receiver extends com.vaadin.terminal.Receiver {
+    public interface Receiver extends Serializable {
+        public OutputStream receiveUpload(String filename, String mimetype);
     }
 
     /* Upload events */
@@ -753,32 +730,19 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     /**
      * Returns the current receiver.
      * 
-     * @return the Receiver.
+     * @return the StreamVariable.
      */
-    public com.vaadin.terminal.Receiver getReceiver() {
+    public Receiver getReceiver() {
         return receiver;
     }
 
     /**
      * Sets the receiver.
      * 
-     * @deprecated use {@link #setReceiver(com.vaadin.terminal.Receiver)}
-     *             instead
      * @param receiver
      *            the receiver to set.
      */
-    @Deprecated
     public void setReceiver(Receiver receiver) {
-        this.receiver = receiver;
-    }
-
-    /**
-     * Sets the receiver.
-     * 
-     * @param receiver
-     *            the receiver to set.
-     */
-    public void setReceiver(com.vaadin.terminal.Receiver receiver) {
         this.receiver = receiver;
     }
 
@@ -942,50 +906,66 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * Handle to terminal via Upload monitors and controls the upload during it
      * is being streamed.
      */
-    private final ReceivingController controller = new ReceivingController() {
-        public boolean listenProgress() {
-            return (progressListeners != null && !progressListeners.isEmpty());
-        }
+    private com.vaadin.terminal.StreamVariable streamVariable;
 
-        public void onProgress(ReceivingProgressedEvent event) {
-            fireUpdateProgress(event.getBytesReceived(),
-                    event.getContentLength());
-        }
+    protected com.vaadin.terminal.StreamVariable getStreamVariable() {
+        if (streamVariable == null) {
+            streamVariable = new com.vaadin.terminal.StreamVariable() {
+                private StreamingStartedEvent lastStartedEvent;
 
-        public void uploadStarted(ReceivingStartedEvent event) {
-            startUpload();
-            contentLength = event.getContentLength();
-            fireStarted(event.getFileName(), event.getMimeType());
-        }
+                public boolean listenProgress() {
+                    return (progressListeners != null && !progressListeners
+                            .isEmpty());
+                }
 
-        public void uploadFinished(ReceivingEndedEvent event) {
-            fireUploadSuccess(event.getFileName(), event.getMimeType(),
-                    event.getContentLength());
-            endUpload();
-            requestRepaint();
-        }
+                public void onProgress(StreamingProgressedEvent event) {
+                    fireUpdateProgress(event.getBytesReceived(),
+                            event.getContentLength());
+                }
 
-        public void uploadFailed(ReceivingFailedEvent event) {
-            Exception exception = event.getException();
-            if (exception instanceof NoInputStreamException) {
-                fireNoInputStream(event.getFileName(), event.getMimeType(), 0);
-            } else if (exception instanceof NoOutputStreamException) {
-                fireNoOutputStream(event.getFileName(), event.getMimeType(), 0);
-            } else {
-                fireUploadInterrupted(event.getFileName(), event.getMimeType(),
-                        0, exception);
-            }
-            endUpload();
-        }
+                public boolean isInterrupted() {
+                    return interrupted;
+                }
 
-        public boolean isInterrupted() {
-            return interrupted;
-        }
-    };
+                public OutputStream getOutputStream() {
+                    OutputStream receiveUpload = receiver.receiveUpload(
+                            lastStartedEvent.getFileName(),
+                            lastStartedEvent.getMimeType());
+                    lastStartedEvent = null;
+                    return receiveUpload;
+                }
 
-    public ReceivingController getReceivingController(
-            com.vaadin.terminal.Receiver receiver) {
-        return controller;
+                public void streamingStarted(StreamingStartedEvent event) {
+                    startUpload();
+                    contentLength = event.getContentLength();
+                    fireStarted(event.getFileName(), event.getMimeType());
+                    lastStartedEvent = event;
+                }
+
+                public void streamingFinished(StreamingEndedEvent event) {
+                    fireUploadSuccess(event.getFileName(), event.getMimeType(),
+                            event.getContentLength());
+                    endUpload();
+                    requestRepaint();
+                }
+
+                public void streamingFailed(StreamingFailedEvent event) {
+                    Exception exception = event.getException();
+                    if (exception instanceof NoInputStreamException) {
+                        fireNoInputStream(event.getFileName(),
+                                event.getMimeType(), 0);
+                    } else if (exception instanceof NoOutputStreamException) {
+                        fireNoOutputStream(event.getFileName(),
+                                event.getMimeType(), 0);
+                    } else {
+                        fireUploadInterrupted(event.getFileName(),
+                                event.getMimeType(), 0, exception);
+                    }
+                    endUpload();
+                }
+            };
+        }
+        return streamVariable;
     }
 
 }

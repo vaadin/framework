@@ -3,8 +3,11 @@
  */
 package com.vaadin.ui;
 
+import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.vaadin.event.Transferable;
 import com.vaadin.event.TransferableImpl;
@@ -15,18 +18,16 @@ import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Receiver;
-import com.vaadin.terminal.ReceiverOwner;
+import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
-import com.vaadin.ui.Html5File.ProxyReceiver;
 
 @SuppressWarnings("serial")
 @ClientWidget(VDragAndDropWrapper.class)
 public class DragAndDropWrapper extends CustomComponent implements DropTarget,
-        DragSource, ReceiverOwner {
+        DragSource {
 
     public class WrapperTransferable extends TransferableImpl {
 
@@ -185,22 +186,26 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
             getDropHandler().getAcceptCriterion().paint(target);
         }
         if (receivers != null && receivers.size() > 0) {
-            for (String id : receivers.keySet()) {
+            for (Iterator<Entry<String, Html5File>> it = receivers.entrySet()
+                    .iterator(); it.hasNext();) {
+                String id = it.next().getKey();
                 Html5File html5File = receivers.get(id);
                 if (html5File.getReceiver() != null) {
-                    target.addVariable(this, "rec-" + id,
-                            html5File.getProxyReceiver());
+                    target.addVariable(this, "rec-" + id, new ProxyReceiver(
+                            html5File));
+                    // these are cleaned from receivers once the upload has
+                    // started
                 } else {
                     // instructs the client side not to send the file
                     target.addVariable(this, "rec-" + id, (String) null);
+                    // forget the file from subsequent paints
+                    it.remove();
                 }
             }
         }
     }
 
     private DropHandler dropHandler;
-    private Html5File currentlyUploadedFile;
-    private boolean listenProgressOfUploadedFile;
 
     public DropHandler getDropHandler() {
         return dropHandler;
@@ -229,45 +234,94 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         return dragStartMode;
     }
 
-    /*
-     * Single controller is enough for atm as files are transferred in serial.
-     * If parallel transfer is needed, this logic needs to go to Html5File
-     */
-    private ReceivingController controller = new ReceivingController() {
+    final class ProxyReceiver implements StreamVariable {
+
+        private Html5File file;
+
+        public ProxyReceiver(Html5File file) {
+            this.file = file;
+        }
+
+        private boolean listenProgressOfUploadedFile;
+
+        public OutputStream getOutputStream() {
+            if (file.getReceiver() == null) {
+                return null;
+            }
+            return file.getReceiver().getOutputStream();
+        }
+
+        public boolean listenProgress() {
+            return file.getReceiver().listenProgress();
+        }
+
+        public void onProgress(StreamingProgressedEvent event) {
+            file.getReceiver().onProgress(new ReceivingEventWrapper(event));
+        }
+
+        public void streamingStarted(StreamingStartedEvent event) {
+            listenProgressOfUploadedFile = file.getReceiver() != null;
+            if (listenProgressOfUploadedFile) {
+                file.getReceiver().streamingStarted(
+                        new ReceivingEventWrapper(event));
+            }
+            // no need tell to the client about this receiver on next paint
+            receivers.remove(file);
+        }
+
+        public void streamingFinished(StreamingEndedEvent event) {
+            if (listenProgressOfUploadedFile) {
+                file.getReceiver().streamingFinished(
+                        new ReceivingEventWrapper(event));
+            }
+        }
+
+        public void streamingFailed(final StreamingFailedEvent event) {
+            if (listenProgressOfUploadedFile) {
+                file.getReceiver().streamingFailed(
+                        new ReceivingEventWrapper(event));
+            }
+        }
+
+        public boolean isInterrupted() {
+            return file.getReceiver().isInterrupted();
+        }
+
         /*
          * With XHR2 file posts we can't provide as much information from the
          * terminal as with multipart request. This helper class wraps the
          * terminal event and provides the lacking information from the
          * Html5File.
          */
-        class ReceivingEventWrapper implements ReceivingFailedEvent,
-                ReceivingEndedEvent, ReceivingStartedEvent,
-                ReceivingProgressedEvent {
-            private ReceivingEvent wrappedEvent;
+        class ReceivingEventWrapper implements StreamingFailedEvent,
+                StreamingEndedEvent, StreamingStartedEvent,
+                StreamingProgressedEvent {
 
-            ReceivingEventWrapper(ReceivingEvent e) {
+            private StreamingEvent wrappedEvent;
+
+            ReceivingEventWrapper(StreamingEvent e) {
                 wrappedEvent = e;
             }
 
             public String getMimeType() {
-                return currentlyUploadedFile.getType();
+                return file.getType();
             }
 
             public String getFileName() {
-                return currentlyUploadedFile.getFileName();
+                return file.getFileName();
             }
 
             public long getContentLength() {
-                return currentlyUploadedFile.getFileSize();
+                return file.getFileSize();
             }
 
-            public Receiver getReceiver() {
-                return currentlyUploadedFile.getReceiver();
+            public StreamVariable getReceiver() {
+                return ProxyReceiver.this;
             }
 
             public Exception getException() {
-                if (wrappedEvent instanceof ReceivingFailedEvent) {
-                    return ((ReceivingFailedEvent) wrappedEvent).getException();
+                if (wrappedEvent instanceof StreamingFailedEvent) {
+                    return ((StreamingFailedEvent) wrappedEvent).getException();
                 }
                 return null;
             }
@@ -277,50 +331,6 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
             }
         }
 
-        public boolean listenProgress() {
-            return listenProgressOfUploadedFile;
-        }
-
-        public void onProgress(ReceivingProgressedEvent event) {
-            currentlyUploadedFile.getUploadListener().onProgress(
-                    new ReceivingEventWrapper(event));
-        }
-
-        public void uploadStarted(ReceivingStartedEvent event) {
-            currentlyUploadedFile = ((ProxyReceiver) event.getReceiver())
-                    .getFile();
-            listenProgressOfUploadedFile = currentlyUploadedFile
-                    .getUploadListener() != null;
-            if (listenProgressOfUploadedFile) {
-                currentlyUploadedFile.getUploadListener().uploadStarted(
-                        new ReceivingEventWrapper(event));
-            }
-        }
-
-        public void uploadFinished(ReceivingEndedEvent event) {
-            if (listenProgressOfUploadedFile) {
-                currentlyUploadedFile.getUploadListener().uploadFinished(
-                        new ReceivingEventWrapper(event));
-            }
-            receivers.remove(event.getReceiver());
-        }
-
-        public void uploadFailed(final ReceivingFailedEvent event) {
-            if (listenProgressOfUploadedFile) {
-                currentlyUploadedFile.getUploadListener().uploadFailed(
-                        new ReceivingEventWrapper(event));
-            }
-            receivers.remove(event.getReceiver());
-        }
-
-        public boolean isInterrupted() {
-            return currentlyUploadedFile.isInterrupted();
-        }
-
-    };
-
-    public ReceivingController getReceivingController(Receiver receiver) {
-        return controller;
     }
 
 }

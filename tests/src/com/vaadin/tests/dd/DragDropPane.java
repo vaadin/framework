@@ -1,7 +1,6 @@
 package com.vaadin.tests.dd;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 
 import com.vaadin.event.DataBoundTransferable;
@@ -10,6 +9,7 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
@@ -17,7 +17,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Html5File;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Upload.Receiver;
 
 /**
  * replacement for a proto class to keep tests working
@@ -134,19 +133,41 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
             if (files != null) {
                 for (Html5File html5File : files) {
                     l.setCaption(html5File.getFileName());
-                    html5File.setReceiver(new Receiver() {
-                        public OutputStream receiveUpload(String filename,
-                                String MIMEType) {
+                    html5File.setReceiver(new StreamVariable() {
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream() {
-                                @Override
-                                public void close() throws IOException {
-                                    super.close();
-                                    l.setValue((new String(toByteArray())
-                                            .substring(0, 80) + "..."));
-                                }
-                            };
+                        public OutputStream getOutputStream() {
                             return byteArrayOutputStream;
+                        }
+
+                        public boolean listenProgress() {
+                            // TODO Auto-generated method stub
+                            return false;
+                        }
+
+                        public void onProgress(StreamingProgressedEvent event) {
+                            // TODO Auto-generated method stub
+
+                        }
+
+                        public void streamingStarted(StreamingStartedEvent event) {
+                            // TODO Auto-generated method stub
+
+                        }
+
+                        public void streamingFinished(StreamingEndedEvent event) {
+                            l.setValue((new String(byteArrayOutputStream
+                                    .toByteArray()).substring(0, 80) + "..."));
+                        }
+
+                        public void streamingFailed(StreamingFailedEvent event) {
+                            // TODO Auto-generated method stub
+
+                        }
+
+                        public boolean isInterrupted() {
+                            // TODO Auto-generated method stub
+                            return false;
                         }
                     });
                 }

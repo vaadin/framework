@@ -26,6 +26,7 @@ import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.Not;
 import com.vaadin.event.dd.acceptcriteria.SourceIsTarget;
+import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.StreamResource;
 import com.vaadin.terminal.StreamResource.StreamSource;
@@ -46,7 +47,6 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.TreeDragMode;
 import com.vaadin.ui.Tree.TreeTargetDetails;
-import com.vaadin.ui.Upload.Receiver;
 import com.vaadin.ui.Window;
 
 public class DDTest6 extends TestBase {
@@ -399,21 +399,50 @@ public class DDTest6 extends TestBase {
                     for (Html5File html5File : files2) {
                         String fileName = html5File.getFileName();
                         // int bytes = html5File.getFileSize();
-                        final ByteArrayOutputStream bas = new ByteArrayOutputStream() {
-                            @Override
-                            public void close() throws IOException {
-                                super.close();
-                            }
-                        };
+                        final ByteArrayOutputStream bas = new ByteArrayOutputStream();
 
-                        Receiver receiver = new Receiver() {
-                            public OutputStream receiveUpload(String filename,
-                                    String MIMEType) {
+                        StreamVariable streamVariable = new StreamVariable() {
+
+                            public OutputStream getOutputStream() {
                                 return bas;
                             }
+
+                            public boolean listenProgress() {
+                                // TODO Auto-generated method stub
+                                return false;
+                            }
+
+                            public void onProgress(
+                                    StreamingProgressedEvent event) {
+                                // TODO Auto-generated method stub
+                                
+                            }
+
+                            public void streamingStarted(
+                                    StreamingStartedEvent event) {
+                                // TODO Auto-generated method stub
+                                
+                            }
+
+                            public void streamingFinished(
+                                    StreamingEndedEvent event) {
+                                // TODO Auto-generated method stub
+                                
+                            }
+
+                            public void streamingFailed(
+                                    StreamingFailedEvent event) {
+                                // TODO Auto-generated method stub
+                                
+                            }
+
+                            public boolean isInterrupted() {
+                                // TODO Auto-generated method stub
+                                return false;
+                            }
                         };
 
-                        html5File.setReceiver(receiver);
+                        html5File.setReceiver(streamVariable);
 
                         File file = new File(fileName, bas);
                         file.setType(html5File.getType());

@@ -29,8 +29,7 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.Receiver;
-import com.vaadin.terminal.ReceiverOwner;
+import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.VariableOwner;
@@ -1112,7 +1111,7 @@ public class JsonPaintTarget implements PaintTarget {
         return usedPaintableTypes;
     }
 
-    public void addVariable(ReceiverOwner owner, String name, Receiver value)
+    public void addVariable(VariableOwner owner, String name, StreamVariable value)
             throws PaintException {
         String url = manager.createReceiverUrl(owner, name, value);
         addVariable(owner, name, url);

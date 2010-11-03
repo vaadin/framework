@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import com.vaadin.Application;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.Receiver;
-import com.vaadin.terminal.ReceiverOwner;
+import com.vaadin.terminal.StreamVariable;
+import com.vaadin.terminal.VariableOwner;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Window;
 
@@ -197,8 +197,8 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         String contentType = request.getContentType();
         String name = request.getParameter("name");
         String ownerId = request.getParameter("rec-owner");
-        ReceiverOwner variableOwner = (ReceiverOwner) getVariableOwner(ownerId);
-        Receiver receiver = ownerToNameToReceiver.get(variableOwner).remove(
+        VariableOwner variableOwner = (VariableOwner) getVariableOwner(ownerId);
+        StreamVariable streamVariable = ownerToNameToReceiver.get(variableOwner).remove(
                 name);
 
         // clean up, may be re added on next paint
@@ -207,11 +207,11 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         if (contentType.contains("boundary")) {
             doHandleSimpleMultipartFileUpload(
                     new PortletRequestWrapper(request),
-                    new PortletResponseWrapper(response), receiver,
+                    new PortletResponseWrapper(response), streamVariable,
                     variableOwner, contentType.split("boundary=")[1]);
         } else {
             doHandleXhrFilePost(new PortletRequestWrapper(request),
-                    new PortletResponseWrapper(response), receiver,
+                    new PortletResponseWrapper(response), streamVariable,
                     variableOwner, request.getContentLength());
         }
 
@@ -271,16 +271,16 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                 application, assumedWindow);
     }
 
-    private Map<ReceiverOwner, Map<String, Receiver>> ownerToNameToReceiver;
+    private Map<VariableOwner, Map<String, StreamVariable>> ownerToNameToReceiver;
 
     @Override
-    String createReceiverUrl(ReceiverOwner owner, String name, Receiver value) {
+    String createReceiverUrl(VariableOwner owner, String name, StreamVariable value) {
         if (ownerToNameToReceiver == null) {
-            ownerToNameToReceiver = new HashMap<ReceiverOwner, Map<String, Receiver>>();
+            ownerToNameToReceiver = new HashMap<VariableOwner, Map<String, StreamVariable>>();
         }
-        Map<String, Receiver> nameToReceiver = ownerToNameToReceiver.get(owner);
+        Map<String, StreamVariable> nameToReceiver = ownerToNameToReceiver.get(owner);
         if (nameToReceiver == null) {
-            nameToReceiver = new HashMap<String, Receiver>();
+            nameToReceiver = new HashMap<String, StreamVariable>();
             ownerToNameToReceiver.put(owner, nameToReceiver);
         }
         nameToReceiver.put(name, value);
