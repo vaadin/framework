@@ -3,30 +3,64 @@ package com.vaadin.ui;
 import com.vaadin.data.Property;
 import com.vaadin.terminal.gwt.client.ui.VTextArea;
 
+/**
+ * A text field that supports multiline editing.
+ */
 @ClientWidget(VTextArea.class)
 public class TextArea extends TextField {
 
     private static final int DEFAULT_ROWS = 5;
 
+    /**
+     * Constructs an empty TextArea.
+     */
     public TextArea() {
         setRows(DEFAULT_ROWS);
     }
 
+    /**
+     * Constructs an empty TextArea with given caption.
+     * 
+     * @param caption
+     *            the caption for the field.
+     */
     public TextArea(String caption) {
         super(caption);
         setRows(DEFAULT_ROWS);
     }
 
+    /**
+     * Constructs a TextArea with given property data source.
+     * 
+     * @param dataSource
+     *            the data source for the field
+     */
     public TextArea(Property dataSource) {
         super(dataSource);
         setRows(DEFAULT_ROWS);
     }
 
+    /**
+     * Constructs a TextArea with given caption and property data source.
+     * 
+     * @param caption
+     *            the caption for the field
+     * @param dataSource
+     *            the dato source for the field
+     */
     public TextArea(String caption, Property dataSource) {
         super(caption, dataSource);
         setRows(DEFAULT_ROWS);
     }
 
+    /**
+     * Constructs a TextArea with given caption and value.
+     * 
+     * @param caption
+     *            the caption for the field
+     * @param value
+     *            the value for the field
+     */
     public TextArea(String caption, String value) {
         super(caption, value);
         setRows(DEFAULT_ROWS);
