@@ -5,10 +5,12 @@
 package com.vaadin.tests;
 
 import com.vaadin.Application;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 
 public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
@@ -29,10 +31,9 @@ public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
 
         rootLayout.addComponent(new Label("header"));
 
-        firstLevelSplit = new SplitPanel();
+        firstLevelSplit = new VerticalSplitPanel();
 
-        final SplitPanel secondSplitPanel = new SplitPanel(
-                SplitPanel.ORIENTATION_HORIZONTAL);
+        final SplitPanel secondSplitPanel = new HorizontalSplitPanel();
         secondSplitPanel.setFirstComponent(new Label("left"));
 
         final VerticalLayout topRight = new VerticalLayout();

@@ -11,6 +11,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.SplitPanel;
@@ -43,10 +44,10 @@ public class TestForBasicApplicationLayout extends CustomComponent {
 
         });
 
-        final SplitPanel sp = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+        final SplitPanel sp = new HorizontalSplitPanel();
         sp.setSplitPosition(290, SplitPanel.UNITS_PIXELS);
 
-        final SplitPanel sp2 = new SplitPanel(SplitPanel.ORIENTATION_VERTICAL);
+        final SplitPanel sp2 = new HorizontalSplitPanel();
         sp2.setSplitPosition(255, SplitPanel.UNITS_PIXELS);
 
         final Panel p = new Panel("Accordion Panel");

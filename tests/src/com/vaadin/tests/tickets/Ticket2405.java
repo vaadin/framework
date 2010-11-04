@@ -6,6 +6,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.SplitPanel;
@@ -49,7 +50,7 @@ public class Ticket2405 extends Application {
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent porttitor porta lacus. Nulla tellus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin mollis turpis in mauris faucibus posuere. Nullam rutrum, nisi a fermentum tempus, lacus metus rutrum massa, a condimentum mauris justo a tortor. Mauris aliquet, ante quis ultricies posuere, sapien libero laoreet sem, a accumsan diam metus sed elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur vehicula metus nec turpis dignissim cursus. Suspendisse potenti. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam feugiat orci eget risus. Vestibulum at sem. ");
         label.setWidth("100%");
         top.addComponent(label);
-        split = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+        split = new HorizontalSplitPanel();
         split.setHeight("100%");
         Embedded image = new Embedded("An image", new ExternalResource(
                 "http://dev.itmill.com/chrome/site/toolkit-logo.png"));

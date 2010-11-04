@@ -1,6 +1,7 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
@@ -15,7 +16,7 @@ public class Ticket2062 extends Application {
         setMainWindow(new Window("Ticket2062"));
         getMainWindow().setSizeFull();
 
-        SplitPanel p = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+        SplitPanel p = new HorizontalSplitPanel();
         p.setSizeFull();
         getMainWindow().setContent(p);
 

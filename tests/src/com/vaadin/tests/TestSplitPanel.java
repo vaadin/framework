@@ -6,13 +6,14 @@ package com.vaadin.tests;
 
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
+import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 
 public class TestSplitPanel extends com.vaadin.Application {
 
     // SplitPanel verticalSplit = new
     // SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
-    SplitPanel verticalSplit = new SplitPanel(SplitPanel.ORIENTATION_VERTICAL);
+    SplitPanel verticalSplit = new VerticalSplitPanel();
 
     @Override
     public void init() {

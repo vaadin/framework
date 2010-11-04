@@ -3,6 +3,7 @@ package com.vaadin.tests.components.table;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Table;
@@ -12,7 +13,7 @@ public class SafariRenderingBugWhiteSpace extends TestBase {
     @Override
     protected void setup() {
 
-        final SplitPanel split = new SplitPanel(SplitPanel.ORIENTATION_VERTICAL);
+        final SplitPanel split = new HorizontalSplitPanel();
 
         final Table table = new Table();
         table.addContainerProperty("name", String.class, "");

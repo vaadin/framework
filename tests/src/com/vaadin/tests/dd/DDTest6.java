@@ -40,6 +40,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Embedded;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Html5File;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
@@ -71,7 +72,7 @@ public class DDTest6 extends TestBase {
         // get()
         // not converted to thread local
 
-        sp = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+        sp = new HorizontalSplitPanel();
         sp.setSplitPosition(20);
         CssLayout l = new CssLayout();
         sp.setFirstComponent(l);

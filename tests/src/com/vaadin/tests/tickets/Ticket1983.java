@@ -5,6 +5,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Table;
@@ -23,14 +24,13 @@ public class Ticket1983 extends Application {
         setMainWindow(main);
     }
 
-    private static class TestLayout extends SplitPanel {
+    private static class TestLayout extends HorizontalSplitPanel {
         boolean isLong = true;
         final Table table = new MyTable();
         final String propId = "col";
         final String propId2 = "col2";
 
         public TestLayout() {
-            super(ORIENTATION_HORIZONTAL);
 
             setSplitPosition(200, Sizeable.UNITS_PIXELS);
             setMargin(false);
@@ -45,7 +45,7 @@ public class Ticket1983 extends Application {
         }
 
         private SplitPanel initLeftSide() {
-            final SplitPanel leftSide = new SplitPanel(ORIENTATION_VERTICAL);
+            final SplitPanel leftSide = new HorizontalSplitPanel();
             leftSide.setHeight("100%");
 
             final IndexedContainer dataSource = new IndexedContainer();

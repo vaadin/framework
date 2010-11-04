@@ -18,6 +18,7 @@ import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
@@ -52,7 +53,7 @@ public class TestBench extends com.vaadin.Application implements
     Window mainWindow = new Window("TestBench window");
 
     // Main layout consists of tree menu and body layout
-    SplitPanel mainLayout = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+    SplitPanel mainLayout = new HorizontalSplitPanel();
 
     Tree menu;
 

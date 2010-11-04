@@ -8,6 +8,7 @@ import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 
 /**
@@ -24,7 +25,7 @@ public class Ticket1225 extends Application {
                 "Test app to break layout fuction in IE7");
         setMainWindow(mainWin);
 
-        SplitPanel sp = new SplitPanel();
+        SplitPanel sp = new VerticalSplitPanel();
 
         sp.setFirstComponent(new Label("First"));
 

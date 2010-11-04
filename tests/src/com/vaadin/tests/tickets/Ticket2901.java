@@ -4,6 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 
 /**
@@ -19,7 +20,7 @@ public class Ticket2901 extends Application {
         final Window mainWin = new Window("Test app to break layout in IE6");
         setMainWindow(mainWin);
 
-        SplitPanel sp = new SplitPanel();
+        SplitPanel sp = new VerticalSplitPanel();
 
         VerticalLayout l = new VerticalLayout();
         for (int i = 0; i < 100; i++) {

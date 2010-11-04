@@ -3,10 +3,12 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 
 public class Ticket2319 extends Application {
@@ -39,7 +41,7 @@ public class Ticket2319 extends Application {
         hl.addComponent(panel2);
         mainw.addComponent(hl);
 
-        SplitPanel sp = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+        SplitPanel sp = new HorizontalSplitPanel();
 
         VerticalLayout first = new VerticalLayout();
         first.addComponent(new Label("first"));
@@ -49,7 +51,7 @@ public class Ticket2319 extends Application {
         sp.setFirstComponent(first);
         sp.setSecondComponent(second);
 
-        SplitPanel sp2 = new SplitPanel();
+        SplitPanel sp2 = new VerticalSplitPanel();
         Label label = new Label("first");
         label.setSizeFull();
         sp2.setFirstComponent(label);

@@ -2,6 +2,7 @@ package com.vaadin.tests.components.accordion;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Accordion;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
@@ -20,7 +21,7 @@ public class AccordionInactiveTabSize extends TestBase {
 
     @Override
     protected void setup() {
-        SplitPanel sp = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+        SplitPanel sp = new HorizontalSplitPanel();
         sp.setSizeFull();
 
         Accordion acc = new Accordion();

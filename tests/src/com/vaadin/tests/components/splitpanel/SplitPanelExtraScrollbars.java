@@ -6,6 +6,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Window;
@@ -19,7 +20,7 @@ public class SplitPanelExtraScrollbars extends AbstractTestCase implements
 
     @Override
     public void init() {
-        sp = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+        sp = new HorizontalSplitPanel();
         sp.setSizeFull();
         sp.setSplitPosition(0, Sizeable.UNITS_PIXELS);
 
