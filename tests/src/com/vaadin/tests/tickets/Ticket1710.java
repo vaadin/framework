@@ -9,6 +9,7 @@ import com.vaadin.terminal.SystemError;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.DateField;
@@ -45,7 +46,7 @@ public class Ticket1710 extends com.vaadin.Application {
         final VerticalLayout orderedLayout = new VerticalLayout();
         LayoutTestingPanel oltp = new LayoutTestingPanel("OrderedLayout",
                 orderedLayout);
-        hidingControls.addComponent(new Button("OrderedLayout",
+        hidingControls.addComponent(new CheckBox("OrderedLayout",
                 new MethodProperty<Boolean>(oltp, "visible")));
         lo.addComponent(oltp);
         orderedLayout.setSpacing(false);
@@ -54,7 +55,7 @@ public class Ticket1710 extends com.vaadin.Application {
         // GridLayout
         GridLayout grid = new GridLayout(1, 1);
         Panel g1tp = new LayoutTestingPanel("Gridlayout with 1 column", grid);
-        hidingControls.addComponent(new Button("GridLayout (1col)",
+        hidingControls.addComponent(new CheckBox("GridLayout (1col)",
                 new MethodProperty<Boolean>(g1tp, "visible")));
         g1tp.setVisible(false);
         lo.addComponent(g1tp);
@@ -127,7 +128,7 @@ public class Ticket1710 extends com.vaadin.Application {
         Button fb1 = new Button("Test button");
         fb1.setComponentError(new SystemError("Test error"));
         f.addField("fb1", fb1);
-        Button fb2 = new Button("Test button", true);
+        CheckBox fb2 = new CheckBox("Test button", true);
         fb2.setComponentError(new SystemError("Test error"));
         f.addField("fb2", fb2);
         TextField ft1 = new TextField("With caption");
@@ -149,9 +150,8 @@ public class Ticket1710 extends com.vaadin.Application {
         button.setComponentError(new SystemError("Test error"));
         lo.addComponent(button);
 
-        Button b2 = new Button("Test button");
+        CheckBox b2 = new CheckBox("Test button");
         b2.setComponentError(new SystemError("Test error"));
-        b2.setSwitchMode(true);
         lo.addComponent(b2);
 
         TextField t1 = new TextField("With caption");
@@ -223,11 +223,11 @@ public class Ticket1710 extends com.vaadin.Application {
         Layout testedLayout;
 
         HorizontalLayout controls = new HorizontalLayout();
-        Button marginLeft = new Button("m-left", false);
-        Button marginRight = new Button("m-right", false);
-        Button marginTop = new Button("m-top", false);
-        Button marginBottom = new Button("m-bottom", false);
-        Button spacing = new Button("spacing", false);
+        CheckBox marginLeft = new CheckBox("m-left", false);
+        CheckBox marginRight = new CheckBox("m-right", false);
+        CheckBox marginTop = new CheckBox("m-top", false);
+        CheckBox marginBottom = new CheckBox("m-bottom", false);
+        CheckBox spacing = new CheckBox("spacing", false);
         VerticalLayout testPanelLayout = new VerticalLayout();
 
         LayoutTestingPanel(String caption, Layout layout) {
@@ -254,13 +254,13 @@ public class Ticket1710 extends com.vaadin.Application {
             controls.addComponent(new Label("width"));
             controls.addComponent(new TextField(new MethodProperty<Float>(
                     testedLayout, "width")));
-            controls.addComponent(new Button("%", new MethodProperty<Boolean>(
-                    this, "widthPercents")));
+            controls.addComponent(new CheckBox("%",
+                    new MethodProperty<Boolean>(this, "widthPercents")));
             controls.addComponent(new Label("height"));
             controls.addComponent(new TextField(new MethodProperty<Float>(
                     testedLayout, "height")));
-            controls.addComponent(new Button("%", new MethodProperty<Boolean>(
-                    this, "heightPercents")));
+            controls.addComponent(new CheckBox("%",
+                    new MethodProperty<Boolean>(this, "heightPercents")));
             controls.addComponent(marginLeft);
             controls.addComponent(marginRight);
             controls.addComponent(marginTop);

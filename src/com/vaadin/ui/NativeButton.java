@@ -32,7 +32,9 @@ public class NativeButton extends Button {
      * @param state
      *            the Initial state of the switch-button.
      * @param initialState
+     * @deprecated use the {@link CheckBox} component instead
      */
+    @Deprecated
     public NativeButton(String caption, boolean initialState) {
         super(caption, initialState);
     }
@@ -43,7 +45,9 @@ public class NativeButton extends Button {
      * @param state
      *            the Initial state of the switch-button.
      * @param dataSource
+     * @deprecated use the {@link CheckBox} component instead
      */
+    @Deprecated
     public NativeButton(String caption, Property dataSource) {
         super(caption, dataSource);
     }

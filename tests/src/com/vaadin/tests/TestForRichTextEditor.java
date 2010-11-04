@@ -8,6 +8,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.RichTextArea;
@@ -47,8 +48,7 @@ public class TestForRichTextEditor extends CustomComponent implements
         l = new Label("", Label.CONTENT_XHTML);
         main.addComponent(l);
 
-        Button b = new Button("enabled");
-        b.setSwitchMode(true);
+        CheckBox b = new CheckBox("enabled");
         b.setImmediate(true);
         b.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {

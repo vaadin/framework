@@ -4,6 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
@@ -40,8 +41,8 @@ public class Ticket846 extends Application {
                 "readOnly", "readThrough", "invalidCommitted",
                 "validationVisible" };
         for (int i = 0; i < visibleProps.length; i++) {
-            Button b = new Button(visibleProps[i], new MethodProperty<Boolean>(
-                    tx, visibleProps[i]));
+            CheckBox b = new CheckBox(visibleProps[i],
+                    new MethodProperty<Boolean>(tx, visibleProps[i]));
             b.setImmediate(true);
             mainWin.addComponent(b);
         }

@@ -2,7 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.data.util.MethodProperty;
-import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
@@ -52,7 +52,7 @@ public class Ticket2125 extends Application {
                 }
 
             });
-            Button b = new Button("editmode", new MethodProperty<Boolean>(
+            CheckBox b = new CheckBox("editmode", new MethodProperty<Boolean>(
                     table, "editable"));
             b.setImmediate(true);
             addComponent(b);

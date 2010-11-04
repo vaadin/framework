@@ -5,7 +5,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
-import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
@@ -35,7 +35,8 @@ public class Ticket1857 extends Application implements Handler {
         el.addComponent(footer);
         footer.setSpacing(true);
 
-        final Button actionHandlerEnabler = new Button("Action handlers", false);
+        final CheckBox actionHandlerEnabler = new CheckBox("Action handlers",
+                false);
         footer.addComponent(actionHandlerEnabler);
         actionHandlerEnabler.setImmediate(true);
         actionHandlerEnabler.addListener(new Property.ValueChangeListener() {
@@ -48,7 +49,7 @@ public class Ticket1857 extends Application implements Handler {
             }
         });
 
-        final Button cellStylesEnabler = new Button("Cell styles", false);
+        final CheckBox cellStylesEnabler = new CheckBox("Cell styles", false);
         footer.addComponent(cellStylesEnabler);
         cellStylesEnabler.setImmediate(true);
         cellStylesEnabler.addListener(new Property.ValueChangeListener() {

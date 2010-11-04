@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
@@ -29,7 +29,7 @@ public class Ticket2038 extends Application {
         });
         w.addComponent(tf);
 
-        final Button b = new Button(
+        final CheckBox b = new CheckBox(
                 "Field should use error message. (!) should be shown when invalid.",
                 false);
         w.addComponent(b);

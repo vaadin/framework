@@ -49,7 +49,6 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      */
     public Button() {
         setValue(Boolean.FALSE);
-        setSwitchMode(false);
     }
 
     /**
@@ -105,7 +104,9 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      * @param state
      *            the Initial state of the switch-button.
      * @param initialState
+     * @deprecated use {@link CheckBox} instead of Button in "switchmode"
      */
+    @Deprecated
     public Button(String caption, boolean initialState) {
         setCaption(caption);
         setValue(Boolean.valueOf(initialState));
@@ -118,7 +119,9 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      * @param state
      *            the Initial state of the switch-button.
      * @param dataSource
+     * @deprecated use {@link CheckBox} instead of Button in "switchmode"
      */
+    @Deprecated
     public Button(String caption, Property dataSource) {
         setCaption(caption);
         setSwitchMode(true);

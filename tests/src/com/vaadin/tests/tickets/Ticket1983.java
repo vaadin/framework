@@ -5,6 +5,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.SplitPanel;
@@ -114,7 +115,7 @@ public class Ticket1983 extends Application {
             ol.addComponent(button);
             leftSide.setFirstComponent(ol);
 
-            button = new Button("Two col");
+            button = new CheckBox("Two col");
             button.addListener(new Button.ClickListener() {
                 public void buttonClick(ClickEvent event) {
                     Button b = event.getButton();
@@ -127,7 +128,6 @@ public class Ticket1983 extends Application {
                 }
 
             });
-            button.setSwitchMode(true);
             ol.addComponent(button);
 
             return leftSide;
