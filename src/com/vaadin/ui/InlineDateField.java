@@ -7,6 +7,7 @@ package com.vaadin.ui;
 import java.util.Date;
 
 import com.vaadin.data.Property;
+import com.vaadin.terminal.gwt.client.ui.VDateFieldCalendar;
 
 /**
  * <p>
@@ -21,32 +22,27 @@ import com.vaadin.data.Property;
  * @VERSION@
  * @since 5.0
  */
-@SuppressWarnings("serial")
+@ClientWidget(VDateFieldCalendar.class)
 public class InlineDateField extends DateField {
 
     public InlineDateField() {
         super();
-        type = TYPE_INLINE;
     }
 
     public InlineDateField(Property dataSource) throws IllegalArgumentException {
         super(dataSource);
-        type = TYPE_INLINE;
     }
 
     public InlineDateField(String caption, Date value) {
         super(caption, value);
-        type = TYPE_INLINE;
     }
 
     public InlineDateField(String caption, Property dataSource) {
         super(caption, dataSource);
-        type = TYPE_INLINE;
     }
 
     public InlineDateField(String caption) {
         super(caption);
-        type = TYPE_INLINE;
     }
 
 }

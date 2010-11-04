@@ -211,6 +211,8 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      * 
      * @param switchMode
      *            The switchMode to set.
+     * @deprecated the {@link CheckBox} component should be used instead of
+     *             Button in switch mode
      */
     public void setSwitchMode(boolean switchMode) {
         this.switchMode = switchMode;

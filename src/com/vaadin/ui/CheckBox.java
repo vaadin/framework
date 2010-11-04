@@ -91,6 +91,7 @@ public class CheckBox extends Button {
         super(caption, false);
     }
 
+    @Deprecated
     @Override
     public void setSwitchMode(boolean switchMode)
             throws UnsupportedOperationException {

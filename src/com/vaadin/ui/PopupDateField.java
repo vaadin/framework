@@ -23,34 +23,28 @@ import com.vaadin.terminal.PaintTarget;
  * @VERSION@
  * @since 5.0
  */
-@SuppressWarnings("serial")
 public class PopupDateField extends DateField {
 
     private String inputPrompt = null;
 
     public PopupDateField() {
         super();
-        type = TYPE_POPUP;
     }
 
     public PopupDateField(Property dataSource) throws IllegalArgumentException {
         super(dataSource);
-        type = TYPE_POPUP;
     }
 
     public PopupDateField(String caption, Date value) {
         super(caption, value);
-        type = TYPE_POPUP;
     }
 
     public PopupDateField(String caption, Property dataSource) {
         super(caption, dataSource);
-        type = TYPE_POPUP;
     }
 
     public PopupDateField(String caption) {
         super(caption);
-        type = TYPE_POPUP;
     }
 
     @Override

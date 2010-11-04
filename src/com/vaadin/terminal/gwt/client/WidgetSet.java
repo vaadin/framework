@@ -8,18 +8,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.VButton;
 import com.vaadin.terminal.gwt.client.ui.VCheckBox;
-import com.vaadin.terminal.gwt.client.ui.VDateFieldCalendar;
 import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
 import com.vaadin.terminal.gwt.client.ui.VListSelect;
-import com.vaadin.terminal.gwt.client.ui.VNativeSelect;
-import com.vaadin.terminal.gwt.client.ui.VOptionGroup;
 import com.vaadin.terminal.gwt.client.ui.VPasswordField;
-import com.vaadin.terminal.gwt.client.ui.VPopupCalendar;
 import com.vaadin.terminal.gwt.client.ui.VSplitPanelHorizontal;
 import com.vaadin.terminal.gwt.client.ui.VSplitPanelVertical;
 import com.vaadin.terminal.gwt.client.ui.VTextArea;
 import com.vaadin.terminal.gwt.client.ui.VTextField;
-import com.vaadin.terminal.gwt.client.ui.VTwinColSelect;
 import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VWindow;
@@ -64,14 +59,6 @@ public class WidgetSet {
             VUnknownComponent c = GWT.create(VUnknownComponent.class);
             c.setServerSideClassName(serverSideName);
             return c;
-        } else if (VSplitPanelVertical.class == classType) {
-            return GWT.create(VSplitPanelVertical.class);
-        } else if (VTextArea.class == classType) {
-            return GWT.create(VTextArea.class);
-        } else if (VDateFieldCalendar.class == classType) {
-            return GWT.create(VDateFieldCalendar.class);
-        } else if (VPasswordField.class == classType) {
-            return GWT.create(VPasswordField.class);
         } else if (VWindow.class == classType) {
             return GWT.create(VWindow.class);
         } else {
@@ -98,21 +85,8 @@ public class WidgetSet {
             return VWindow.class;
         } else if (widgetClass == VFilterSelect.class) {
             if (uidl.hasAttribute("type")) {
-                // TODO check if all type checks are really needed
                 final String type = uidl.getStringAttribute("type").intern();
-                if ("twincol".equals(type)) {
-                    return VTwinColSelect.class;
-                } else if ("optiongroup".equals(type)) {
-                    return VOptionGroup.class;
-                } else if ("native".equals(type)) {
-                    return VNativeSelect.class;
-                } else if ("list".equals(type)) {
-                    return VListSelect.class;
-                } else if ("legacy-multi".equals(type)) {
-                    return VListSelect.class;
-                } else if (uidl.hasAttribute("selectmode")
-                        && uidl.getStringAttribute("selectmode")
-                                .equals("multi")) {
+                if ("legacy-multi" == type) {
                     return VListSelect.class;
                 }
             }
@@ -121,11 +95,6 @@ public class WidgetSet {
                 return VTextArea.class;
             } else if (uidl.hasAttribute("secret")) {
                 return VPasswordField.class;
-            }
-        } else if (widgetClass == VPopupCalendar.class) {
-            if (uidl.hasAttribute("type")
-                    && uidl.getStringAttribute("type").equals("inline")) {
-                return VDateFieldCalendar.class;
             }
         } else if (widgetClass == VSplitPanelHorizontal.class
                 && uidl.hasAttribute("vertical")) {
@@ -177,15 +146,10 @@ public class WidgetSet {
         if (fullyqualifiedName.equals("com.vaadin.ui.Button")) {
             loadImplementation(VCheckBox.class);
         } else if (fullyqualifiedName.equals("com.vaadin.ui.Select")) {
-            loadImplementation(VTwinColSelect.class);
-            loadImplementation(VOptionGroup.class);
-            loadImplementation(VNativeSelect.class);
             loadImplementation(VListSelect.class);
         } else if (fullyqualifiedName.equals("com.vaadin.ui.TextField")) {
             loadImplementation(VTextArea.class);
             loadImplementation(VPasswordField.class);
-        } else if (fullyqualifiedName.equals("com.vaadin.ui.DateField")) {
-            loadImplementation(VDateFieldCalendar.class);
         } else if (fullyqualifiedName.equals("com.vaadin.ui.SplitPanel")) {
             loadImplementation(VSplitPanelVertical.class);
         }

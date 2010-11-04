@@ -85,21 +85,6 @@ public class DateField extends AbstractField implements
     public static final int RESOLUTION_YEAR = 6;
 
     /**
-     * Popup date selector (calendar).
-     */
-    protected static final String TYPE_POPUP = "popup";
-
-    /**
-     * Inline date selector (calendar).
-     */
-    protected static final String TYPE_INLINE = "inline";
-
-    /**
-     * Specified widget type.
-     */
-    protected String type = TYPE_POPUP;
-
-    /**
      * Specified smallest modifiable unit.
      */
     private int resolution = RESOLUTION_MSEC;
@@ -227,7 +212,6 @@ public class DateField extends AbstractField implements
             target.addAttribute("strict", true);
         }
 
-        target.addAttribute("type", type);
         target.addAttribute(VDateField.WEEK_NUMBERS, isShowISOWeekNumbers());
         target.addAttribute("parsable", parsingSucceeded);
 

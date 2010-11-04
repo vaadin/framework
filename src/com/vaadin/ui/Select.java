@@ -518,4 +518,25 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
 
     }
 
+    /**
+     * @deprecated use {@link ListSelect}, {@link OptionGroup} or
+     *             {@link TwinColSelect} instead
+     * @see com.vaadin.ui.AbstractSelect#setMultiSelect(boolean)
+     */
+    @Override
+    public void setMultiSelect(boolean multiSelect) {
+        super.setMultiSelect(multiSelect);
+    }
+
+    /**
+     * @deprecated use {@link ListSelect}, {@link OptionGroup} or
+     *             {@link TwinColSelect} instead
+     * 
+     * @see com.vaadin.ui.AbstractSelect#isMultiSelect()
+     */
+    @Override
+    public boolean isMultiSelect() {
+        return super.isMultiSelect();
+    }
+
 }

@@ -15,6 +15,9 @@ import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.SubmitListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.TimeChangeListener;
 
+/**
+ * A client side implementation for InlineDateField
+ */
 public class VDateFieldCalendar extends VDateField {
 
     private final VCalendarPanel calendarPanel;
