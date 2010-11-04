@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -1014,29 +1013,14 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * 
      * @param propertyType
      *            the Type of the property, that needs to be edited.
+     * @deprecated use e.g.
+     *             {@link DefaultFieldFactory#createFieldByPropertyType(Class)}
+     *             instead
      */
+    @Deprecated
     public static AbstractField constructField(Class<?> propertyType) {
-
-        // Null typed properties can not be edited
-        if (propertyType == null) {
-            return null;
-        }
-
-        // Date field
-        if (Date.class.isAssignableFrom(propertyType)) {
-            return new DateField();
-        }
-
-        // Boolean field
-        if (Boolean.class.isAssignableFrom(propertyType)) {
-            final Button button = new Button("");
-            button.setSwitchMode(true);
-            button.setImmediate(false);
-            return button;
-        }
-
-        // Text field is used by default
-        return new TextField();
+        return (AbstractField) DefaultFieldFactory
+                .createFieldByPropertyType(propertyType);
     }
 
     /*
