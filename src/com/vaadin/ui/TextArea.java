@@ -40,8 +40,7 @@ public class TextArea extends TextField {
      */
     @Override
     public void setRows(int rows) {
-        // TODO implement here once AbstractTextField (or something similar is
-        // created) and incompatible API can be introduced.
+        // TODO implement here once the API from TextField is removed
         super.setRows(rows);
     }
 
@@ -54,8 +53,7 @@ public class TextArea extends TextField {
      */
     @Override
     public int getRows() {
-        // TODO implement here once AbstractTextField (or something similar is
-        // created) and incompatible API can be introduced.
+        // TODO implement here once the API from TextField is removed
         return super.getRows();
     }
 
@@ -68,8 +66,7 @@ public class TextArea extends TextField {
      */
     @Override
     public void setWordwrap(boolean wordwrap) {
-        // TODO implement here once AbstractTextField (or something similar is
-        // created).
+        // TODO implement here once the API from TextField is removed
         super.setWordwrap(wordwrap);
     }
 
@@ -81,18 +78,8 @@ public class TextArea extends TextField {
      */
     @Override
     public boolean isWordwrap() {
+        // TODO implement here once the API from TextField is removed
         return super.isWordwrap();
     }
-
-    // TODO deprecate in TextField and add javadocs without deprecation here??
-    // @Override
-    // public void setHeight(float height, int unit) {
-    // super.setHeight(height, unit);
-    // }
-    //
-    // @Override
-    // public void setHeight(String height) {
-    // super.setHeight(height);
-    // }
 
 }
