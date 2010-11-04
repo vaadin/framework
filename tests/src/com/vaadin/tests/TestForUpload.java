@@ -179,7 +179,7 @@ public class TestForUpload extends CustomComponent implements
             }
         });
 
-        uploadBufferSelector = new Select("Receiver type");
+        uploadBufferSelector = new Select("StreamVariable type");
         uploadBufferSelector.setImmediate(true);
         uploadBufferSelector.addItem("memory");
         uploadBufferSelector.setValue("memory");
