@@ -649,12 +649,11 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 
     /**
      * Called when a form field is detached from a Form. Typically when a new
-     * Item is assigned to Form via {@link #setItemDataSource(Item)} *
+     * Item is assigned to Form via {@link #setItemDataSource(Item)}.
      * <p>
      * Override this method to control how the fields are removed from the
      * layout.
      * </p>
-     * 
      * 
      * @param field
      *            the field to be detached from the forms layout.
