@@ -525,6 +525,8 @@ public class ClassPathExplorer {
             Collection<Class<? extends Paintable>> paintables) {
         PrintStream out = System.out;
         PrintStream err = System.err;
+        Throwable errorToShow = null;
+
         try {
             System.setErr(devnull);
             System.setOut(devnull);
@@ -537,16 +539,36 @@ public class ClassPathExplorer {
             } else if (c.getAnnotation(ClientCriterion.class) != null) {
                 acceptCriterion.add((Class<? extends AcceptCriterion>) c);
             }
-
+        } catch (UnsupportedClassVersionError e) {
+            // Inform the user about this as the class might contain a Paintable
+            // Typically happens when using an add-on that is compiled using a
+            // newer Java version.
+            errorToShow = e;
         } catch (ClassNotFoundException e) {
-            // e.printStackTrace();
+            // Don't show to avoid flooding the user with irrelevant messages
+            if (logger.isLoggable(Level.FINE)) {
+                errorToShow = e;
+            }
         } catch (LinkageError e) {
-            // NOP
+            // Don't show to avoid flooding the user with irrelevant messages
+            if (logger.isLoggable(Level.FINE)) {
+                errorToShow = e;
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            // Don't show to avoid flooding the user with irrelevant messages
+            if (logger.isLoggable(Level.FINE)) {
+                errorToShow = e;
+            }
         } finally {
             System.setErr(err);
             System.setOut(out);
+        }
+
+        // Must be done here after stderr and stdout have been reset.
+        if (errorToShow != null) {
+            logger.warning("Failed to load class " + fullclassName + ". "
+                    + errorToShow.getClass().getName() + ": "
+                    + errorToShow.getMessage());
         }
     }
 
