@@ -526,7 +526,7 @@ public class ClassPathExplorer {
         PrintStream out = System.out;
         PrintStream err = System.err;
         Throwable errorToShow = null;
-
+        Level logLevel = null;
         try {
             System.setErr(devnull);
             System.setOut(devnull);
@@ -543,32 +543,31 @@ public class ClassPathExplorer {
             // Inform the user about this as the class might contain a Paintable
             // Typically happens when using an add-on that is compiled using a
             // newer Java version.
+            logLevel = Level.INFO;
             errorToShow = e;
         } catch (ClassNotFoundException e) {
             // Don't show to avoid flooding the user with irrelevant messages
-            if (logger.isLoggable(Level.FINE)) {
-                errorToShow = e;
-            }
+            logLevel = Level.FINE;
+            errorToShow = e;
         } catch (LinkageError e) {
             // Don't show to avoid flooding the user with irrelevant messages
-            if (logger.isLoggable(Level.FINE)) {
-                errorToShow = e;
-            }
+            logLevel = Level.FINE;
+            errorToShow = e;
         } catch (Exception e) {
             // Don't show to avoid flooding the user with irrelevant messages
-            if (logger.isLoggable(Level.FINE)) {
-                errorToShow = e;
-            }
+            logLevel = Level.FINE;
+            errorToShow = e;
         } finally {
             System.setErr(err);
             System.setOut(out);
         }
 
         // Must be done here after stderr and stdout have been reset.
-        if (errorToShow != null) {
-            logger.warning("Failed to load class " + fullclassName + ". "
-                    + errorToShow.getClass().getName() + ": "
-                    + errorToShow.getMessage());
+        if (errorToShow != null && logLevel != null) {
+            logger.log(logLevel,
+                    "Failed to load class " + fullclassName + ". "
+                            + errorToShow.getClass().getName() + ": "
+                            + errorToShow.getMessage());
         }
     }
 
