@@ -57,6 +57,8 @@ public class ClassPathExplorer {
     private static Logger logger = Logger.getLogger(ClassPathExplorer.class
             .getName());
 
+    private static final String VAADIN_ADDON_VERSION_ATTRIBUTE = "Vaadin-Package-Version";
+
     /**
      * File filter that only accepts directories.
      */
@@ -101,12 +103,18 @@ public class ClassPathExplorer {
      * @return a collection of {@link Paintable} classes
      */
     public static Collection<Class<? extends Paintable>> getPaintablesHavingWidgetAnnotation() {
-
+        logger.info("Searching for paintables..");
+        long start = System.currentTimeMillis();
         Collection<Class<? extends Paintable>> paintables = new HashSet<Class<? extends Paintable>>();
         Set<String> keySet = classpathLocations.keySet();
         for (String url : keySet) {
+            logger.fine("Searching for paintables in "
+                    + classpathLocations.get(url));
             searchForPaintables(classpathLocations.get(url), url, paintables);
         }
+        long end = System.currentTimeMillis();
+
+        logger.info("Search took " + (end - start) + "ms");
         return paintables;
 
     }
@@ -132,11 +140,14 @@ public class ClassPathExplorer {
      * @return map from widgetset classname to widgetset location URL
      */
     public static Map<String, URL> getAvailableWidgetSets() {
+        long start = System.currentTimeMillis();
         Map<String, URL> widgetsets = new HashMap<String, URL>();
         Set<String> keySet = classpathLocations.keySet();
         for (String location : keySet) {
             searchForWidgetSets(location, widgetsets);
         }
+        long end = System.currentTimeMillis();
+
         StringBuilder sb = new StringBuilder();
         sb.append("Widgetsets found from classpath:\n");
         for (String ws : widgetsets.keySet()) {
@@ -147,6 +158,7 @@ public class ClassPathExplorer {
             sb.append("\n");
         }
         logger.info(sb.toString());
+        logger.info("Search took " + (end - start) + "ms");
         return widgetsets;
     }
 
@@ -289,11 +301,16 @@ public class ClassPathExplorer {
      */
     private final static Map<String, URL> getClasspathLocations(
             List<String> rawClasspathEntries) {
+        long start = System.currentTimeMillis();
         // try to keep the order of the classpath
         Map<String, URL> locations = new LinkedHashMap<String, URL>();
         for (String classpathEntry : rawClasspathEntries) {
             File file = new File(classpathEntry);
             include(null, file, locations);
+        }
+        long end = System.currentTimeMillis();
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("getClassPathLocations took " + (end - start) + "ms");
         }
         return locations;
     }
@@ -470,6 +487,11 @@ public class ClassPathExplorer {
 
                     JarFile jarFile = conn.getJarFile();
 
+                    // Only scan for paintables in Vaadin add-ons
+                    if (!isVaadinAddon(jarFile)) {
+                        return;
+                    }
+
                     Enumeration<JarEntry> e = jarFile.entries();
                     while (e.hasMoreElements()) {
                         JarEntry entry = e.nextElement();
@@ -613,6 +635,26 @@ public class ClassPathExplorer {
             }
         }
         return null;
+    }
+
+    /**
+     * Checks if the given jarFile is a Vaadin add-on.
+     * 
+     * @param jarFile
+     * @return true if the file is an add-on, false otherwise
+     * @throws IOException
+     */
+    private static boolean isVaadinAddon(JarFile jarFile) throws IOException {
+        Manifest manifest = jarFile.getManifest();
+        if (manifest == null) {
+            return false;
+        }
+        Attributes mainAttributes = manifest.getMainAttributes();
+        if (mainAttributes == null) {
+            return false;
+        }
+
+        return (mainAttributes.getValue(VAADIN_ADDON_VERSION_ATTRIBUTE) != null);
     }
 
     /**
