@@ -88,7 +88,10 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
      * 
      * @link {@link Container} interface may support emitting
      *       {@link ItemClickEvent}s.
+     * 
+     * @deprecated Use {@link ItemClickNotifier} instead.
      */
+    @Deprecated
     public interface ItemClickSource extends Serializable {
         /**
          * Register listener to handle ItemClickEvents.
@@ -106,6 +109,42 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
          * Removes ItemClickListener.
          * 
          * @param listener
+         */
+        public void removeListener(ItemClickListener listener);
+    }
+
+    /**
+     * The interface for adding and removing <code>ItemClickEvent</code>
+     * listeners. By implementing this interface a class explicitly announces
+     * that it will generate an <code>ItemClickEvent</code> when one of its
+     * items is clicked.
+     * <p>
+     * Note: The general Java convention is not to explicitly declare that a
+     * class generates events, but to directly define the
+     * <code>addListener</code> and <code>removeListener</code> methods. That
+     * way the caller of these methods has no real way of finding out if the
+     * class really will send the events, or if it just defines the methods to
+     * be able to implement an interface.
+     * </p>
+     * 
+     * @since 6.5
+     * @see ItemClickListener
+     * @see ItemClickEvent
+     */
+    public interface ItemClickNotifier extends Serializable {
+        /**
+         * Register a listener to handle {@link ItemClickEvent}s.
+         * 
+         * @param listener
+         *            ItemClickListener to be registered
+         */
+        public void addListener(ItemClickListener listener);
+
+        /**
+         * Removes an ItemClickListener.
+         * 
+         * @param listener
+         *            ItemClickListener to be removed
          */
         public void removeListener(ItemClickListener listener);
     }

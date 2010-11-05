@@ -26,6 +26,7 @@ import com.vaadin.event.Action;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.event.ItemClickEvent.ItemClickNotifier;
 import com.vaadin.event.ItemClickEvent.ItemClickSource;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -57,10 +58,11 @@ import com.vaadin.tools.ReflectTools;
  * @VERSION@
  * @since 3.0
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "deprecation" })
 @ClientWidget(VTree.class)
 public class Tree extends AbstractSelect implements Container.Hierarchical,
-        Action.Container, ItemClickSource, DragSource, DropTarget {
+        Action.Container, ItemClickSource, ItemClickNotifier, DragSource,
+        DropTarget {
 
     /* Private members */
 

@@ -7,7 +7,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.event.ItemClickEvent.ItemClickSource;
+import com.vaadin.event.ItemClickEvent.ItemClickNotifier;
 import com.vaadin.tests.components.abstractfield.AbstractFieldTestCase;
 import com.vaadin.ui.AbstractSelect;
 
@@ -141,9 +141,10 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
 
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                ((ItemClickSource) c).addListener(AbstractSelectTestCase.this);
+                ((ItemClickNotifier) c)
+                        .addListener(AbstractSelectTestCase.this);
             } else {
-                ((ItemClickSource) c)
+                ((ItemClickNotifier) c)
                         .removeListener(AbstractSelectTestCase.this);
             }
 

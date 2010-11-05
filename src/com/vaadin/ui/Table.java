@@ -30,6 +30,7 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.event.ItemClickEvent.ItemClickNotifier;
 import com.vaadin.event.ItemClickEvent.ItemClickSource;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -69,11 +70,11 @@ import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
  * @VERSION@
  * @since 3.0
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "deprecation" })
 @ClientWidget(VScrollTable.class)
 public class Table extends AbstractSelect implements Action.Container,
-        Container.Ordered, Container.Sortable, ItemClickSource, DragSource,
-        DropTarget {
+        Container.Ordered, Container.Sortable, ItemClickSource,
+        ItemClickNotifier, DragSource, DropTarget {
 
     private static final Logger logger = Logger
             .getLogger(Table.class.getName());
