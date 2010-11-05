@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -113,6 +113,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * a range of items.
      */
     private static final int MULTISELECT_MODE_DEFAULT = 0;
+
+    /**
+     * The simple multiselect mode is what the table used to have before
+     * ctrl/shift selections were added. That is that when this is set clicking
+     * on an item selects/deselects the item and no ctrl/shift selections are
+     * available.
+     */
+    private static final int MULTISELECT_MODE_SIMPLE = 1;
 
     /**
      * multiple of pagelength which component will cache when requesting more
@@ -3963,7 +3971,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                             deselectAll();
                                         }
                                         toggleSelection();
-                                    } else if (selectMode == SELECT_MODE_SINGLE
+                                    } else if ((selectMode == SELECT_MODE_SINGLE || multiselectmode == MULTISELECT_MODE_SIMPLE)
                                             && nullSelectionAllowed) {
                                         toggleSelection();
                                     }/*
@@ -5011,12 +5019,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         var top = elem.offsetTop;
         var height = elem.offsetHeight;
     
-        if (elem.parentNode != elem.offsetParent) {         
+        if (elem.parentNode != elem.offsetParent) {
           top -= elem.parentNode.offsetTop;
         }
     
         var cur = elem.parentNode;
-        while (cur && (cur.nodeType == 1)) {         
+        while (cur && (cur.nodeType == 1)) {
           if (top < cur.scrollTop) {
             cur.scrollTop = top;
           }
@@ -5025,7 +5033,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
           }
     
           var offsetTop = cur.offsetTop;
-          if (cur.parentNode != cur.offsetParent) {        
+          if (cur.parentNode != cur.offsetParent) {
             offsetTop -= cur.parentNode.offsetTop;
           }
            
@@ -5302,7 +5310,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * .gwt.event.dom.client.KeyPressEvent)
      */
     public void onKeyPress(KeyPressEvent event) {
-        if (hasFocus) {
+        if (!enabled) {
+            // Cancel default keyboard events on a disabled Table (prevents
+            // scrolling)
+            event.preventDefault();
+        } else if (hasFocus) {
             if (handleNavigation(event.getNativeEvent().getKeyCode(),
                     event.isControlKeyDown() || event.isMetaKeyDown(),
                     event.isShiftKeyDown())) {
@@ -5330,7 +5342,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * .event.dom.client.KeyDownEvent)
      */
     public void onKeyDown(KeyDownEvent event) {
-        if (hasFocus) {
+        if (!enabled) {
+            // Cancel default keyboard events on a disabled Table (prevents
+            // scrolling)
+            event.preventDefault();
+        } else if (hasFocus) {
             if (handleNavigation(event.getNativeEvent().getKeyCode(),
                     event.isControlKeyDown() || event.isMetaKeyDown(),
                     event.isShiftKeyDown())) {
@@ -5384,8 +5400,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         hasFocus = false;
         navKeyDown = false;
 
-        // Unfocus any row
-        setRowFocus(null);
+        if (isFocusable()) {
+            // Unfocus any row
+            setRowFocus(null);
+        }
     }
 
     /**
@@ -5420,7 +5438,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * @return True if the table can be focused, else false
      */
     public boolean isFocusable() {
-        if (scrollBody != null) {
+        if (scrollBody != null && enabled) {
             boolean hasVerticalScrollbars = scrollBody.getOffsetHeight() > scrollBodyPanel
                     .getOffsetHeight();
             boolean hasHorizontalScrollbars = scrollBody.getOffsetWidth() > scrollBodyPanel
@@ -5437,7 +5455,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * @see com.vaadin.terminal.gwt.client.Focusable#focus()
      */
     public void focus() {
-        scrollBodyPanel.focus();
+        if (isFocusable()) {
+            scrollBodyPanel.focus();
+        }
     }
 
     /**
@@ -5461,7 +5481,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     public void onKeyUp(KeyUpEvent event) {
         int keyCode = event.getNativeKeyCode();
-        if (isNavigationKey(keyCode)) {
+
+        if (!isFocusable()) {
+            if (scrollingVelocityTimer != null) {
+                // Remove velocityTimer if it exists and the Table is disabled
+                scrollingVelocityTimer.cancel();
+                scrollingVelocityTimer = null;
+                scrollingVelocity = 10;
+            }
+        } else if (isNavigationKey(keyCode)) {
             if (keyCode == getNavigationDownKey()
                     || keyCode == getNavigationUpKey()) {
                 /*
