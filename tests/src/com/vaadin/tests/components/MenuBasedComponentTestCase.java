@@ -10,6 +10,7 @@ import java.util.Set;
 
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
+import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.MenuBar;
@@ -29,21 +30,27 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
     private static final Resource SELECTED_ICON = new ThemeResource(
             "../runo/icons/16/ok.png");
 
+    // Menu related
+
     private MenuItem mainMenu;
 
     private MenuBar menu;
+
+    private MenuItem settingsMenu;
 
     private T component;
 
     // Used to determine if a menuItem should be selected and the other
     // unselected on click
     private Set<MenuItem> parentOfSelectableMenuItem = new HashSet<MenuItem>();
-    private MenuItem windowMenu;
 
     /**
      * Maps the category name to a menu item
      */
     private Map<String, MenuItem> categoryToMenuItem = new HashMap<String, MenuItem>();
+
+    // Logging
+    private Log log;
 
     protected static final String CATEGORY_STATE = "State";
     protected static final String CATEGORY_SIZE = "Size";
@@ -57,21 +64,50 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
         setTheme("tests-components");
 
         // Create menu here so it appears before the components
-        menu = new MenuBar();
-        menu.setDebugId("menu");
-        mainMenu = menu.addItem("Component", null);
-        windowMenu = menu.addItem("Test", null);
-        addComponent(menu);
+        addComponent(createMainMenu());
 
         getLayout().setSizeFull();
-        enableLog();
+        createLog();
         super.setup();
 
         // Create menu actions and trigger default actions
         createActions();
 
         // Clear initialization log messages
-        clearLog();
+        log.clear();
+    }
+
+    private MenuBar createMainMenu() {
+        menu = new MenuBar();
+        menu.setDebugId("menu");
+        mainMenu = menu.addItem("Component", null);
+        settingsMenu = menu.addItem("Settings", null);
+        createSettingsMenu();
+
+        return menu;
+    }
+
+    private void createSettingsMenu() {
+        MenuItem showEventLog = settingsMenu.addItem("Show event log",
+                new MenuBar.Command() {
+
+                    public void menuSelected(MenuItem selectedItem) {
+                        boolean selected = !isSelected(selectedItem);
+                        setLogVisible(selected);
+                        setSelected(selectedItem, selected);
+                    }
+
+                });
+        setSelected(showEventLog, true);
+    }
+
+    protected void setLogVisible(boolean visible) {
+        log.setVisible(visible);
+    }
+
+    private void createLog() {
+        log = new Log(5).setNumberLogRows(true);
+        getLayout().addComponent(log, 1);
     }
 
     /**
@@ -452,4 +488,21 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
         }
     }
 
+    protected void log(String msg) {
+        log.log(msg);
+    }
+
+    protected boolean hasLog() {
+        return log != null;
+    }
+
+    @Override
+    protected <VALUET> void doCommand(String commandName,
+            AbstractComponentTestCase.Command<T, VALUET> command, VALUET value,
+            Object data) {
+        if (hasLog()) {
+            log("Command: " + commandName + "(" + value + ")");
+        }
+        super.doCommand(commandName, command, value, data);
+    }
 }

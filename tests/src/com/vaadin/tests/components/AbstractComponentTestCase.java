@@ -8,7 +8,6 @@ import java.util.Locale;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.UserError;
-import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Layout.SpacingHandler;
@@ -38,8 +37,6 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
     }
 
     abstract protected void initializeComponents();
-
-    private Log log = null;
 
     @Override
     protected void setup() {
@@ -197,22 +194,12 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     protected <VALUET> void doCommand(String commandName,
             Command<T, VALUET> command, VALUET value) {
-        doCommand(command, value, null);
-        if (hasLog()) {
-            log(commandName + ": " + value);
-        }
+        doCommand(commandName, command, value, null);
     }
 
     protected <VALUET> void doCommand(String commandName,
             Command<T, VALUET> command, VALUET value, Object data) {
         doCommand(command, value, data);
-        if (hasLog()) {
-            log(commandName + ": " + value);
-        }
-    }
-
-    protected boolean hasLog() {
-        return log != null;
     }
 
     @Override
@@ -220,23 +207,4 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
         return "Generic test case for " + getTestClass().getSimpleName();
     }
 
-    protected void clearLog() {
-        log.clear();
-    }
-
-    protected void enableLog() {
-        if (log == null) {
-            log = new Log(5).setNumberLogRows(true);
-            getLayout().addComponent(log, 1);
-        }
-
-    }
-
-    protected void log(String msg) {
-        if (log == null) {
-            throw new IllegalStateException(
-                    "Use enableLog() before calling log()");
-        }
-        log.log(msg);
-    }
 }
