@@ -89,28 +89,11 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
      * @link {@link Container} interface may support emitting
      *       {@link ItemClickEvent}s.
      * 
-     * @deprecated Use {@link ItemClickNotifier} instead.
+     * @deprecated Use {@link ItemClickNotifier} instead. ItemClickSource was
+     *             deprecated in version 6.5.
      */
     @Deprecated
-    public interface ItemClickSource extends Serializable {
-        /**
-         * Register listener to handle ItemClickEvents.
-         * 
-         * Note! Click listeners are rather terminal dependent features.
-         * 
-         * This feature is EXPERIMENTAL
-         * 
-         * @param listener
-         *            ItemClickListener to be registered
-         */
-        public void addListener(ItemClickListener listener);
-
-        /**
-         * Removes ItemClickListener.
-         * 
-         * @param listener
-         */
-        public void removeListener(ItemClickListener listener);
+    public interface ItemClickSource extends ItemClickNotifier {
     }
 
     /**
