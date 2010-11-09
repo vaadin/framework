@@ -272,8 +272,14 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     private void setPositionReversed(boolean reversed) {
         if (positionReversed != reversed) {
-            DOM.setStyleAttribute(splitter, "right", "");
-            DOM.setStyleAttribute(splitter, "left", "");
+            if (orientation == ORIENTATION_HORIZONTAL) {
+                DOM.setStyleAttribute(splitter, "right", "");
+                DOM.setStyleAttribute(splitter, "left", "");
+            } else if (orientation == ORIENTATION_VERTICAL) {
+                DOM.setStyleAttribute(splitter, "top", "");
+                DOM.setStyleAttribute(splitter, "bottom", "");
+            }
+
             positionReversed = reversed;
         }
     }
