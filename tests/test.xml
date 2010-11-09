@@ -5,8 +5,12 @@
 	<!-- Configuration                                                      -->
 	<!-- ================================================================== -->
 	<!-- Browsers to use for testing -->
-	<property name="browsers" value="winxp-ie6,winxp-ie7,winxp-ie8,winxp-firefox36,winxp-firefox4beta,winxp-safari4,winxp-safari5,winxp-googlechrome7,winxp-opera1060" />
+	<property name="browsers-windows" value="winxp-ie6,winxp-ie7,winxp-ie8,winxp-firefox36,winxp-firefox4beta,winxp-safari4,winxp-safari5,winxp-googlechrome7,winxp-opera1060" />
+	<property name="browsers-linux" value="linux-firefox3,linux-opera10,linux-googlechrome7" />
+	<property name="browsers-mac" value="osx-firefox3,osx-opera10,osx-googlechrome7,osx-safari4,osx-safari5" />
 
+	<property name="browsers" value="${browsers-windows}" />
+	
 	<!-- Screen shot base directory -->
 	<fail unless="com.vaadin.testbench.screenshot.directory" message="The 'com.vaadin.testbench.screenshot.directory' property must be defined." />
 
