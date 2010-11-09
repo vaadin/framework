@@ -907,9 +907,13 @@
 
     <!-- Build manual. -->
     <target name="manual-build" depends="manual-init, xep-license-copy">
-      <ant dir="${docdir}" antfile="build/build.xml" inheritAll="false">
-          <property name="version" value="${version.full}"/>
-      </ant>
+    	<!-- The HTML and Eclipse Manual must be built with separate runs --> 
+        <ant dir="${docdir}" antfile="build/build.xml" inheritAll="false">
+            <property name="version" value="${version.full}"/>
+        </ant>
+        <ant dir="${docdir}" antfile="build/build.xml" target="manual-eclipse" inheritAll="false">
+            <property name="version" value="${version.full}"/>
+        </ant>
     </target>
 
     <!-- Copy the manual from sub Ant results to our output directory. -->
