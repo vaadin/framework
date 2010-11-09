@@ -15,6 +15,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -34,6 +35,7 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutAct
 public class VTextField extends TextBoxBase implements Paintable, Field,
         ChangeHandler, FocusHandler, BlurHandler, BeforeShortcutActionListener {
 
+    public static final String VAR_CUR_TEXT = "curText";
     /**
      * The input node CSS classname.
      */
@@ -56,7 +58,11 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
 
     private static final String CLASSNAME_PROMPT = "prompt";
     private static final String ATTR_INPUTPROMPT = "prompt";
-    private static final String VAR_CURSOR = "c";
+    public static final String ATTR_TEXTCHANGE_TIMEOUT = "iet";
+    public static final String VAR_CURSOR = "c";
+    public static final String ATTR_TEXTCHANGE_EVENTMODE = "iem";
+    private static final String TEXTCHANGE_MODE_EAGER = "EAGER";
+    private static final String TEXTCHANGE_MODE_TIMEOUT = "TIMEOUT";
 
     private String inputPrompt = null;
     private boolean prompting = false;
@@ -81,12 +87,83 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         sinkEvents(VTooltip.TOOLTIP_EVENTS);
     }
 
+    /*
+     * TODO When GWT adds ONCUT, add it there and remove workaround. See
+     * http://code.google.com/p/google-web-toolkit/issues/detail?id=4030
+     * 
+     * Also note that the cut/paste are not totally crossbrowsers compatible.
+     * E.g. in Opera mac works via context menu, but on via File->Paste/Cut.
+     * Opera might need the polling method for 100% working textchanceevents.
+     * Eager polling for a change is bit dum and heavy operation, so I guess we
+     * should first try to survive without.
+     */
+    private static final int TEXTCHANGE_EVENTS = Event.ONPASTE
+            | Event.KEYEVENTS | Event.ONMOUSEUP;
+
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (client != null) {
             client.handleTooltipEvent(event, this);
         }
+
+        if (listenTextChangeEvents
+                && (event.getTypeInt() & TEXTCHANGE_EVENTS) == event
+                        .getTypeInt()) {
+            deferTextChangeEvent();
+        }
+
+    }
+
+    /*
+     * TODO optimize this so that only changes are sent + make the value change
+     * event just a flag that moves the current text to value
+     */
+    private String lastTextChangeString = null;
+
+    private String getLastCommunicatedString() {
+        return lastTextChangeString;
+    }
+
+    private boolean communicateTextValueToServer() {
+        String text = getText();
+        if (!text.equals(getLastCommunicatedString())) {
+            lastTextChangeString = text;
+            client.updateVariable(id, VAR_CUR_TEXT, text, true);
+            return true;
+        }
+        return false;
+    }
+
+    private Timer textChangeEventTrigger = new Timer() {
+
+        @Override
+        public void run() {
+            updateCursorPosition();
+            boolean textChanged = communicateTextValueToServer();
+            if (textChanged) {
+                client.sendPendingVariableChanges();
+            }
+            scheduled = false;
+        }
+    };
+    private boolean scheduled = false;
+    private boolean listenTextChangeEvents;
+    private String textChangeEventMode;
+    private int textChangeEventTimeout;
+
+    private void deferTextChangeEvent() {
+        if (textChangeEventMode.equals(TEXTCHANGE_MODE_TIMEOUT) && scheduled) {
+            return;
+        } else {
+            textChangeEventTrigger.cancel();
+        }
+        textChangeEventTrigger.schedule(getInputEventTimeout());
+        scheduled = true;
+    }
+
+    private int getInputEventTimeout() {
+        return textChangeEventTimeout;
     }
 
     @Override
@@ -127,6 +204,20 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
 
         immediate = uidl.getBooleanAttribute("immediate");
 
+        listenTextChangeEvents = client.hasEventListeners(this, "ie");
+        if (listenTextChangeEvents) {
+            textChangeEventMode = uidl
+                    .getStringAttribute(ATTR_TEXTCHANGE_EVENTMODE);
+            if (textChangeEventMode.equals(TEXTCHANGE_MODE_EAGER)) {
+                textChangeEventTimeout = 1;
+            } else {
+                textChangeEventTimeout = uidl
+                        .getIntAttribute(ATTR_TEXTCHANGE_TIMEOUT);
+            }
+            sinkEvents(TEXTCHANGE_EVENTS);
+            attachCutEventListener(getElement());
+        }
+
         if (uidl.hasAttribute("cols")) {
             setColumns(new Integer(uidl.getStringAttribute("cols")).intValue());
         }
@@ -154,7 +245,13 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
                         fieldValue = text;
                         removeStyleDependentName(CLASSNAME_PROMPT);
                     }
-                    setText(fieldValue);
+                    /*
+                     * Avoid resetting the old value. Prevents cursor flickering
+                     * which then again happens due to this Gecko hack.
+                     */
+                    if (!getText().equals(fieldValue)) {
+                        setText(fieldValue);
+                    }
                 }
             });
         } else {
@@ -169,7 +266,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             setText(fieldValue);
         }
 
-        valueBeforeEdit = uidl.getStringVariable("text");
+        lastTextChangeString = valueBeforeEdit = uidl.getStringVariable("text");
 
         if (uidl.hasAttribute("selpos")) {
             final int pos = uidl.getIntAttribute("selpos");
@@ -182,6 +279,39 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
                     setSelectionRange(pos, length);
                 }
             });
+        }
+    }
+
+    protected void onCut() {
+        if (listenTextChangeEvents) {
+            deferTextChangeEvent();
+        }
+    }
+
+    protected native void attachCutEventListener(Element el)
+    /*-{
+        var me = this;
+        el.oncut = function() {
+            me.@com.vaadin.terminal.gwt.client.ui.VTextField::onCut()();
+        };
+    }-*/;
+
+    protected native void detachCutEventListener(Element el)
+    /*-{
+        el.oncut = null;
+    }-*/;
+
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        detachCutEventListener(getElement());
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        if (listenTextChangeEvents) {
+            detachCutEventListener(getElement());
         }
     }
 
@@ -245,6 +375,11 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             updateCursorPosition();
 
             if (sendBlurEvent || sendValueChange) {
+                /*
+                 * Avoid sending text change event as we will simulate it on the
+                 * server side before value change events.
+                 */
+                textChangeEventTrigger.cancel();
                 client.sendPendingVariableChanges();
             }
         }

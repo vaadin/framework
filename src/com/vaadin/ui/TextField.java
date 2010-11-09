@@ -4,8 +4,12 @@
 
 package com.vaadin.ui;
 
+import java.util.Map;
+
 import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents;
+import com.vaadin.event.FieldEvents.TextChangeEvent;
+import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VTextField;
@@ -34,7 +38,10 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
 @SuppressWarnings("serial")
 @ClientWidget(value = VTextField.class, loadStyle = LoadStyle.EAGER)
 public class TextField extends AbstractTextField implements
-        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
+        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier,
+        FieldEvents.TextChangeNotifier {
+
+    private static final String VAR_TEXT_CONTENT_DIFF = "tcd";
 
     /**
      * Tells if input is used to enter sensitive information that is not echoed
@@ -62,6 +69,29 @@ public class TextField extends AbstractTextField implements
 
     private int selectionPosition = -1;
     private int selectionLength;
+
+    private int lastKnownCursorPosition;
+
+    private String lastKnownTextContent;
+
+    /**
+     * Flag indicating that a text change event is pending to be triggered.
+     * Cleared by {@link #setInternalValue(Object)} and when the event is fired.
+     */
+    private boolean textChangeEventPending;
+
+    /**
+     * Flag used to determine wheter we are currently handling a state change
+     * triggered by a user. Used to properly fire text change event before value
+     * change event triggered by the client side.
+     */
+    private boolean changingVariables;
+
+    private TextChangeEventMode textChangeEventMode = TextChangeEventMode.LAZY;
+
+    private final int DEFAULT_TEXTCHANGE_TIMEOUT = 400;
+
+    private int textChangeEventTimeout = DEFAULT_TEXTCHANGE_TIMEOUT;
 
     /**
      * Constructs an empty <code>TextField</code> with no caption.
@@ -130,7 +160,7 @@ public class TextField extends AbstractTextField implements
      * @return <code>true</code> if the field is used to enter secret
      *         information, <code>false</code> otherwise.
      * 
-     * @deprecated use {@link PasswordField} instead
+     * @deprecated in 6.5 use {@link PasswordField} instead
      */
     @Deprecated
     public boolean isSecret() {
@@ -144,7 +174,7 @@ public class TextField extends AbstractTextField implements
      * @param secret
      *            the value specifying if the field is used to enter secret
      *            information.
-     * @deprecated use {@link PasswordField} instead
+     * @deprecated in 6.5 use {@link PasswordField} instead
      */
     @Deprecated
     public void setSecret(boolean secret) {
@@ -182,8 +212,15 @@ public class TextField extends AbstractTextField implements
             target.addAttribute("sellen", selectionLength);
             selectionPosition = -1;
         }
+        if (hasListeners(TextChangeEvent.class)) {
+            target.addAttribute(VTextField.ATTR_TEXTCHANGE_EVENTMODE,
+                    getTextChangeEventMode().toString());
+            target.addAttribute(VTextField.ATTR_TEXTCHANGE_TIMEOUT,
+                    getTextChangeTimeout());
+        }
 
         super.paintContent(target);
+
     }
 
     /**
@@ -208,9 +245,9 @@ public class TextField extends AbstractTextField implements
      * @param rows
      *            the number of rows for this editor.
      * 
-     * @deprecated use {@link TextArea} component and the same method there.
-     *             This method will be removed from TextField that is to be used
-     *             for one line text input only in the next versions.
+     * @deprecated in 6.5 use {@link TextArea} component and the same method
+     *             there. This method will be removed from TextField that is to
+     *             be used for one line text input only in the next versions.
      */
     @Deprecated
     public void setRows(int rows) {
@@ -228,9 +265,9 @@ public class TextField extends AbstractTextField implements
      * 
      * @return <code>true</code> if the component is in the word-wrap mode,
      *         <code>false</code> if not.
-     * @deprecated use {@link TextArea} component and the same method there.
-     *             This method will be removed from TextField that is to be used
-     *             for one line text input only in the next versions.
+     * @deprecated in 6.5 use {@link TextArea} component and the same method
+     *             there. This method will be removed from TextField that is to
+     *             be used for one line text input only in the next versions.
      */
     @Deprecated
     public boolean isWordwrap() {
@@ -244,9 +281,9 @@ public class TextField extends AbstractTextField implements
      *            the boolean value specifying if the editor should be in
      *            word-wrap mode after the call or not.
      * 
-     * @deprecated use {@link TextArea} component and the same method there.
-     *             This method will be removed from TextField that is to be used
-     *             for one line text input only in the next versions.
+     * @deprecated in 6.5 use {@link TextArea} component and the same method
+     *             there. This method will be removed from TextField that is to
+     *             be used for one line text input only in the next versions.
      */
     @Deprecated
     public void setWordwrap(boolean wordwrap) {
@@ -344,6 +381,227 @@ public class TextField extends AbstractTextField implements
      * */
     public void setCursorPosition(int pos) {
         setSelectionRange(pos, 0);
+        lastKnownCursorPosition = pos;
+    }
+
+    /**
+     * Returns the last known cursor position of the field.
+     * 
+     * <p>
+     * Note that due to the client server nature or the GWT terminal, Vaadin
+     * cannot provide the exact value of the cursor position in most situations.
+     * The value is updated only when the client side terminal communicates to
+     * TextField, like on {@link ValueChangeEvent}s and {@link TextChangeEvent}
+     * s. This may change later if a deep push integration is built to Vaadin.
+     * 
+     * @return the cursor position
+     */
+    public int getCursorPosition() {
+        return lastKnownCursorPosition;
+    }
+
+    /**
+     * Gets the current (or the last known) text content in the field.
+     * <p>
+     * Note the text returned by this method is not necessary the same what is
+     * returned by the {@link #getValue()} method. The value is updated when the
+     * terminal fires a value change event via e.g. blurring the field or by
+     * pressing enter. The value returned by this method is updated also on
+     * {@link TextChangeEvent}s. Due to this high dependency to the terminal
+     * implementation this method is (at least at this point) not published.
+     * 
+     * @return the text which is currently displayed in the field.
+     */
+    private String getCurrentTextContent() {
+        if (lastKnownTextContent != null) {
+            return lastKnownTextContent;
+        } else {
+            Object text = getValue();
+            if (text == null) {
+                return getNullRepresentation();
+            }
+            return text.toString();
+        }
+    }
+
+    @Override
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        if (variables.containsKey(VTextField.VAR_CURSOR)) {
+            Integer object = (Integer) variables.get(VTextField.VAR_CURSOR);
+            lastKnownCursorPosition = object.intValue();
+            textChangeEventPending = true;
+        }
+        if (variables.containsKey(VTextField.VAR_CUR_TEXT)) {
+            /*
+             * NOTE, we might want to develop this further so that on a value
+             * change event the whole text content don't need to be sent from
+             * the client to server. Just "commit" the value from currentText to
+             * the value.
+             */
+            handleInputEventTextChange(variables);
+        }
+
+        changingVariables = true;
+        try {
+            super.changeVariables(source, variables);
+        } finally {
+            changingVariables = false;
+        }
+        firePendingTextChangeEvent();
+    }
+
+    private void firePendingTextChangeEvent() {
+        if (textChangeEventPending) {
+            fireEvent(new TextChangeEventImpl(this));
+            textChangeEventPending = false;
+        }
+    }
+
+    @Override
+    protected void setInternalValue(Object newValue) {
+        if (changingVariables
+                && !newValue.toString().equals(lastKnownTextContent)) {
+            /*
+             * Fire text change event before value change event if change is
+             * coming from the client side.
+             */
+            lastKnownTextContent = newValue.toString();
+            textChangeEventPending = true;
+            firePendingTextChangeEvent();
+        }
+
+        super.setInternalValue(newValue);
+    }
+
+    private void handleInputEventTextChange(Map<String, Object> variables) {
+        /*
+         * TODO we could vastly optimize the communication of values by using
+         * some sort of diffs instead of always sending the whole text content.
+         * Also on value change events we could use the mechanism.
+         */
+        String object = (String) variables.get(VTextField.VAR_CUR_TEXT);
+        lastKnownTextContent = object;
+        textChangeEventPending = true;
+    }
+
+    /* ** Text Change Events ** */
+
+    /**
+     * Sets the mode how the TextField triggers {@link TextChangeEvent}s.
+     * 
+     * @param inputEventMode
+     *            the new mode
+     * 
+     * @see TextChangeEventMode
+     */
+    public void setTextChangeEventMode(TextChangeEventMode inputEventMode) {
+        textChangeEventMode = inputEventMode;
+    }
+
+    /**
+     * @return the mode used to trigger {@link TextChangeEvent}s.
+     */
+    public TextChangeEventMode getTextChangeEventMode() {
+        return textChangeEventMode;
+    }
+
+    /**
+     * Different modes how the TextField can trigger {@link TextChangeEvent}s.
+     */
+    public enum TextChangeEventMode {
+
+        /**
+         * An event is triggered on each text content change, most commonly key
+         * press events.
+         */
+        EAGER,
+        /**
+         * Each text change event in the UI causes the event to be communicated
+         * to the application after a timeout. The length of the timeout can be
+         * controlled with {@link TextField#setInputEventTimeout(int)}. Only the
+         * last input event is reported to the server side if several text
+         * change events happen during the timeout.
+         * <p>
+         * In case of a {@link ValueChangeEvent} the schedule is not kept
+         * strictly. Before a {@link ValueChangeEvent} a {@link TextChangeEvent}
+         * is triggered if the text content has changed since the previous
+         * TextChangeEvent regardless of the schedule.
+         */
+        TIMEOUT,
+        /**
+         * An event is triggered when there is a pause of text modifications.
+         * The length of the pause can be modified with
+         * {@link TextField#setInputEventTimeout(int)}. Like with the
+         * {@link #TIMEOUT} mode, an event is forced before
+         * {@link ValueChangeEvent}s, even if the user did not keep a pause
+         * while entering the text.
+         * <p>
+         * This is the default mode.
+         */
+        LAZY
+    }
+
+    public void addListener(TextChangeListener listener) {
+        addListener(TextChangeListener.EVENT_ID, TextChangeEvent.class,
+                listener, TextChangeListener.EVENT_METHOD);
+    }
+
+    public void removeListener(TextChangeListener listener) {
+        removeListener(TextChangeListener.EVENT_ID, TextChangeEvent.class,
+                listener);
+    }
+
+    /**
+     * The text change timeout modifies how often text change events are
+     * communicated to the application when {@link #getTextChangeEventMode()} is
+     * {@link TextChangeEventMode#LAZY} or {@link TextChangeEventMode#TIMEOUT}.
+     * 
+     * 
+     * @see #getTextChangeEventMode()
+     * 
+     * @param timeout
+     *            the timeout in milliseconds
+     */
+    public void setTextChangeTimeout(int timeout) {
+        textChangeEventTimeout = timeout;
+    }
+
+    /**
+     * Gets the timeout used to fire {@link TextChangeEvent}s when the
+     * {@link #getTextChangeEventMode()} is {@link TextChangeEventMode#LAZY} or
+     * {@link TextChangeEventMode#TIMEOUT}.
+     * 
+     * @return the timeout value in milliseconds
+     */
+    public int getTextChangeTimeout() {
+        return textChangeEventTimeout;
+    }
+
+    public class TextChangeEventImpl extends TextChangeEvent {
+        private String curText;
+        private int cursorPosition;
+
+        private TextChangeEventImpl(final TextField tf) {
+            super(tf);
+            curText = tf.getCurrentTextContent();
+            cursorPosition = tf.getCursorPosition();
+        }
+
+        @Override
+        public TextField getComponent() {
+            return (TextField) super.getComponent();
+        }
+
+        @Override
+        public String getCurrentTextContent() {
+            return curText;
+        }
+
+        @Override
+        public int getCursorPosition() {
+            return cursorPosition;
+        }
+
     }
 
 }
