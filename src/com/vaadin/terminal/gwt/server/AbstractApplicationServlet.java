@@ -1908,8 +1908,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             String title, String themeUri) throws IOException {
         page.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
 
-        // Force IE9 into IE8 mode. Remove when IE 9 mode works (#5546)
-        page.write("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=8\"/>\n");
+        // Force IE9 into IE8 mode. Remove when IE 9 mode works (#5546), chrome
+        // frame if available #5261
+        page.write("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=8,chrome=1\"/>\n");
 
         page.write("<style type=\"text/css\">"
                 + "html, body {height:100%;margin:0;}</style>");
