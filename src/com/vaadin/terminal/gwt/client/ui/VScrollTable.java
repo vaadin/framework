@@ -1594,9 +1594,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                 // tell scroll position to user if currently "visible" rows are
                 // not rendered
-                if ((firstRowInViewPort + pageLength > scrollBody
-                        .getLastRendered())
-                        || (firstRowInViewPort < scrollBody.getFirstRendered())) {
+                if (totalRows > pageLength
+                        && ((firstRowInViewPort + pageLength > scrollBody
+                                .getLastRendered()) || (firstRowInViewPort < scrollBody
+                                .getFirstRendered()))) {
                     announceScrollPosition();
                 } else {
                     hideScrollPositionAnnotation();
