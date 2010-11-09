@@ -1972,7 +1972,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         rowRequestHandler.setReqFirstRow(0);
                         rowRequestHandler.setReqRows((int) (2 * pageLength
                                 * cache_rate + pageLength));
-                        rowRequestHandler.deferRowFetch();
+                        rowRequestHandler.deferRowFetch(); // some validation +
+                                                           // defer 250ms
+                        rowRequestHandler.cancel(); // instead of waiting
+                        rowRequestHandler.run(); // run immediately
                     }
                     fireHeaderClickedEvent(event);
                     break;
