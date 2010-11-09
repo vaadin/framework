@@ -1862,10 +1862,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         onResizeEvent(event);
                     }
                 } else {
-                    handleCaptionEvent(event);
-                    if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
+                    /*
+                     * Ensure focus before handling caption event. Otherwise
+                     * variables changed from caption event may be before
+                     * variables from other components that fire variables when
+                     * they lose focus.
+                     */
+                    if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
                         scrollBodyPanel.setFocus(true);
                     }
+                    handleCaptionEvent(event);
                     event.stopPropagation();
                     event.preventDefault();
                 }
