@@ -6,13 +6,13 @@
 	<!-- ================================================================== -->
 	<!-- Browsers to use for testing -->
 	<property name="browsers" value="winxp-ie6,winxp-ie7,winxp-ie8,winxp-firefox36,winxp-firefox4beta,winxp-safari4,winxp-safari5,winxp-googlechrome7,winxp-opera1060" />
-	
+
 	<!-- Screen shot base directory -->
 	<fail unless="com.vaadin.testbench.screenshot.directory" message="The 'com.vaadin.testbench.screenshot.directory' property must be defined." />
-	
+
 	<!-- Screen shot resolution -->
-	<property name="com.vaadin.testbench.screenshot.resolution" value="1500x850"/>
-	
+	<property name="com.vaadin.testbench.screenshot.resolution" value="1500x850" />
+
 	<!-- Host running Testbench Hub -->
 	<property name="com.vaadin.testbench.tester.host" value="192.168.1.48" />
 
@@ -23,7 +23,7 @@
 	<property name="class-dir" value="${test-output-dir}/classes" />
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
 		<classpath>
-			<pathelement location="../build/lib/ant-contrib-1.0b3.jar"/>
+			<pathelement location="../build/lib/ant-contrib-1.0b3.jar" />
 		</classpath>
 	</taskdef>
 
@@ -56,7 +56,7 @@
 	<!-- This target complies the generated java junit tests. -->
 	<target name="compile-tests" depends="create-tests">
 		<mkdir dir="${class-dir}" />
-		<javac srcdir="${test-output-dir}" destdir="${class-dir}" debug="on" fork="yes" failonerror="false" encoding="UTF8" >
+		<javac srcdir="${test-output-dir}" destdir="${class-dir}" debug="on" fork="yes" failonerror="false" encoding="UTF8">
 			<classpath>
 				<path refid="classpath" />
 			</classpath>
@@ -136,7 +136,7 @@
 			<jvmarg value="-Dcom.vaadin.testbench.screenshot.directory=${com.vaadin.testbench.screenshot.directory}" />
 			<!-- Resolution for screenshots -->
 			<jvmarg value="-Dcom.vaadin.testbench.screenshot.resolution=${com.vaadin.testbench.screenshot.resolution}" />
-			
+
 			<jvmarg value="-Djava.awt.headless=true" />
 
 			<!-- true/false system arguments -->
@@ -148,7 +148,7 @@
 				<filelist dir="${test-output-dir}" files="${target}" />
 			</batchtest>
 		</junit>
-		
+
 	</target>
 
 	<!-- Remove temporary source and compiled java files -->
@@ -176,9 +176,7 @@
 	<!-- ================================================================== -->
 
 	<!-- The default target. -->
-	<target name="run-and-clean-up"
-            depends="check-parameters,remove-error-screens,run-tests,remove-temp-testclasses"
-            if="server.start.succeeded">
+	<target name="run-and-clean-up" depends="check-parameters,remove-error-screens,run-tests,remove-temp-testclasses" if="server.start.succeeded">
 	</target>
 
 	<!-- Also starts the server. -->
