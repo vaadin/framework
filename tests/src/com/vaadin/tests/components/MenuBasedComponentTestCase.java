@@ -488,6 +488,41 @@ public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
         }
     }
 
+    protected LinkedHashMap<String, Integer> createIntegerOptions(int max) {
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        for (int i = 0; i <= 9 && i <= max; i++) {
+            options.put(String.valueOf(i), i);
+        }
+        for (int i = 10; i <= max; i *= 10) {
+            options.put(String.valueOf(i), i);
+            if (2 * i <= max) {
+                options.put(String.valueOf(2 * i), 2 * i);
+            }
+            if (5 * i <= max) {
+                options.put(String.valueOf(5 * i), 5 * i);
+            }
+        }
+
+        return options;
+    }
+
+    protected LinkedHashMap<String, Resource> createIconOptions(
+            boolean cacheable) {
+        LinkedHashMap<String, Resource> options = new LinkedHashMap<String, Resource>();
+        options.put("-", null);
+        if (cacheable) {
+            options.put("16x16", ICON_16_USER_PNG_CACHEABLE);
+            options.put("32x32", ICON_32_ATTENTION_PNG_CACHEABLE);
+            options.put("64x64", ICON_64_EMAIL_REPLY_PNG_CACHEABLE);
+        } else {
+            options.put("16x16", ICON_16_USER_PNG_UNCACHEABLE);
+            options.put("32x32", ICON_32_ATTENTION_PNG_UNCACHEABLE);
+            options.put("64x64", ICON_64_EMAIL_REPLY_PNG_UNCACHEABLE);
+
+        }
+        return options;
+    }
+
     protected void log(String msg) {
         log.log(msg);
     }
