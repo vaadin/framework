@@ -41,6 +41,9 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         CloseHandler<PopupPanel>, ContainerResizedListener, KeyPressHandler,
         KeyDownHandler, FocusHandler, SubPartAware {
 
+    // The hierarchy of VMenuBar is a bit weird as VMenuBar is the Paintable,
+    // used for the root menu but also used for the sub menus.
+
     /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "v-menubar";
 
@@ -51,6 +54,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
     protected final VMenuBar hostReference = this;
     protected String submenuIcon = null;
     protected CustomMenuItem moreItem = null;
+
+    // Only used by the root menu bar
     protected VMenuBar collapsedRootItems;
 
     // Construct an empty command to be used when the item has no command
@@ -272,7 +277,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             }
         }// while
 
-        iLayout();
+        iLayout(false);
 
     }// updateFromUIDL
 
@@ -396,7 +401,16 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
         // Handle onload events (icon loaded, size changes)
         if (DOM.eventGetType(e) == Event.ONLOAD) {
-            requestLayout();
+            VMenuBar parent = getParentMenu();
+            if (parent != null) {
+                // The onload event for an image in a popup should be sent to
+                // the parent, which owns the popup
+                parent.iconLoaded();
+            } else {
+                // Onload events for images in the root menu are handled by the
+                // root menu itself
+                iconLoaded();
+            }
             return;
         }
 
@@ -460,13 +474,13 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         return enabled;
     }
 
-    private void requestLayout() {
+    private void iconLoaded() {
         if (layoutTimer == null) {
             layoutTimer = new Timer() {
                 @Override
                 public void run() {
                     layoutTimer = null;
-                    iLayout();
+                    iLayout(true);
                 }
             };
         }
@@ -747,6 +761,14 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             setStyleName(CLASSNAME + "-menuitem");
 
             sinkEvents(VTooltip.TOOLTIP_EVENTS);
+
+            // Sink the onload event for an icon (if it exists). The onload
+            // events are handled by the parent VMenuBar.
+            NodeList<com.google.gwt.dom.client.Element> imgElements = getElement()
+                    .getElementsByTagName("img");
+            for (int i = 0; i < imgElements.getLength(); i++) {
+                DOM.sinkEvents((Element) imgElements.getItem(i), Event.ONLOAD);
+            }
         }
 
         public void setSelected(boolean selected) {
@@ -883,6 +905,10 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
     private int paddingWidth = -1;
 
     public void iLayout() {
+        iLayout(false);
+    }
+
+    public void iLayout(boolean iconLoadEvent) {
         // Only collapse if there is more than one item in the root menu and the
         // menu has an explicit size
         if ((getItems().size() > 1 || (collapsedRootItems != null && collapsedRootItems
@@ -964,6 +990,17 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             if (collapsedRootItems.getItems().size() > 0) {
                 addItem(moreItem);
             }
+        }
+
+        // If a popup is open we might need to adjust the shadow as well if an
+        // icon shown in that popup was loaded
+        if (popup != null) {
+            // Forces a recalculation of the shadow size
+            popup.show();
+        }
+        if (iconLoadEvent) {
+            // Size have changed if the width is undefined
+            Util.notifyParentOfSizeChange(this, false);
         }
     }
 
