@@ -209,7 +209,7 @@ public interface FieldEvents {
          * @return the text content of the field after the
          *         {@link TextChangeEvent}
          */
-        public abstract String getCurrentTextContent();
+        public abstract String getText();
 
         /**
          * @return the cursor position during after the {@link TextChangeEvent}

@@ -23,7 +23,7 @@ public class TextChangeEvents extends TestBase {
                 l.log("Text change event for  "
                         + event.getComponent().getCaption()
                         + ", text content currently:'"
-                        + event.getCurrentTextContent() + "' Cursor at index:"
+                        + event.getText() + "' Cursor at index:"
                         + event.getCursorPosition());
             }
         };
@@ -93,20 +93,20 @@ public class TextChangeEvents extends TestBase {
         }
 
         public void textChange(TextChangeEvent event) {
-            boolean atTheEndOfText = event.getCurrentTextContent().length() == getCursorPosition();
-            String match = findMatch(event.getCurrentTextContent());
+            boolean atTheEndOfText = event.getText().length() == getCursorPosition();
+            String match = findMatch(event.getText());
             if (match != null) {
                 setStyleName("match");
-                String curText = event.getCurrentTextContent();
+                String curText = event.getText();
                 int matchlenght = curText.length();
                 // autocomplete if garret is at the end of the text
                 if (atTheEndOfText) {
                     suggest(match, matchlenght);
                 } else {
-                    keepCurrentText(event.getCurrentTextContent());
+                    keepCurrentText(event.getText());
                 }
             } else {
-                keepCurrentText(event.getCurrentTextContent());
+                keepCurrentText(event.getText());
                 setStyleName("nomatch");
             }
         }

@@ -593,7 +593,7 @@ public class TextField extends AbstractTextField implements
         }
 
         @Override
-        public String getCurrentTextContent() {
+        public String getText() {
             return curText;
         }
 
