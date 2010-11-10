@@ -1,5 +1,6 @@
 .split-panel-positioning-example .measured-from-left{
-	background-color: #4899b9;
+	background-image: url("images/measured-from-left.png");
+	background-repeat: repeat-y;
 	text-align: center;
 	vertical-align: middle;
 	-moz-opacity:.50; 
@@ -7,7 +8,9 @@
 	opacity:.50; 
 }
 .split-panel-positioning-example .measured-from-right{
-	background-color: #4899b9 ;
+	background-image: url("images/measured-from-right.png");
+	background-position: right;
+	background-repeat: repeat-y;
 	text-align: center;
 	vertical-align: middle;
 	-moz-opacity:.50; 
@@ -15,7 +18,8 @@
 	opacity:.50; 
 }
 .split-panel-positioning-example .measured-from-top{
-	background-color: #48b952 ;
+	background-image: url("images/measured-from-top.png");
+	background-repeat: repeat-x;
 	text-align: center;
 	vertical-align: middle;
 	-moz-opacity:.50; 
@@ -23,7 +27,9 @@
 	opacity:.50; 
 }
 .split-panel-positioning-example .measured-from-bottom{
-	background-color: #48b952 ;
+	background-image: url("images/measured-from-bottom.png");
+	background-position: bottom;
+	background-repeat: repeat-x;
 	text-align: center;
 	vertical-align: middle;
 	-moz-opacity:.50; 
