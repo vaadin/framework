@@ -429,7 +429,6 @@ public class TextField extends AbstractTextField implements
         if (variables.containsKey(VTextField.VAR_CURSOR)) {
             Integer object = (Integer) variables.get(VTextField.VAR_CURSOR);
             lastKnownCursorPosition = object.intValue();
-            textChangeEventPending = true;
         }
         if (variables.containsKey(VTextField.VAR_CUR_TEXT)) {
             /*
@@ -438,6 +437,7 @@ public class TextField extends AbstractTextField implements
              * the client to server. Just "commit" the value from currentText to
              * the value.
              */
+            textChangeEventPending = true;
             handleInputEventTextChange(variables);
         }
 
