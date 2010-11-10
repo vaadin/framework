@@ -1,0 +1,36 @@
+.split-panel-positioning-example .measured-from-left{
+	background-color: #4899b9;
+	text-align: center;
+	vertical-align: middle;
+	-moz-opacity:.50; 
+	filter:alpha(opacity=50); 
+	opacity:.50; 
+}
+.split-panel-positioning-example .measured-from-right{
+	background-color: #4899b9 ;
+	text-align: center;
+	vertical-align: middle;
+	-moz-opacity:.50; 
+	filter:alpha(opacity=50); 
+	opacity:.50; 
+}
+.split-panel-positioning-example .measured-from-top{
+	background-color: #48b952 ;
+	text-align: center;
+	vertical-align: middle;
+	-moz-opacity:.50; 
+	filter:alpha(opacity=50); 
+	opacity:.50; 
+}
+.split-panel-positioning-example .measured-from-bottom{
+	background-color: #48b952 ;
+	text-align: center;
+	vertical-align: middle;
+	-moz-opacity:.50; 
+	filter:alpha(opacity=50); 
+	opacity:.50; 
+}
+
+.split-panel-positioning-example .v-select-optiongroup .v-select-option{
+	display:inline;	
+}
