@@ -31,19 +31,6 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     public class WrapperTransferable extends TransferableImpl {
 
-        /**
-         * @deprecated this class is made top level in recent version. Use
-         *             com.vaadin.ui.Html5File instead
-         */
-        @Deprecated
-        private class Html5File extends com.vaadin.ui.Html5File {
-
-            Html5File(String name, long size, String mimeType) {
-                super(name, size, mimeType);
-            }
-
-        }
-
         private Html5File[] files;
 
         public WrapperTransferable(Component sourceComponent,
