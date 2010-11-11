@@ -54,7 +54,6 @@ import com.vaadin.terminal.Paintable.RepaintRequestEvent;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.StreamVariable.StreamingEndEvent;
 import com.vaadin.terminal.StreamVariable.StreamingErrorEvent;
-import com.vaadin.terminal.StreamVariable.StreamingStartEvent;
 import com.vaadin.terminal.Terminal.ErrorEvent;
 import com.vaadin.terminal.Terminal.ErrorListener;
 import com.vaadin.terminal.URIHandler;
@@ -379,7 +378,8 @@ public abstract class AbstractCommunicationManager implements
      */
     protected void doHandleSimpleMultipartFileUpload(Request request,
             Response response, StreamVariable streamVariable,
-            VariableOwner owner, String boundary) throws IOException {
+            String variableName, VariableOwner owner, String boundary)
+            throws IOException {
         boundary = CRLF + "--" + boundary + "--";
 
         // multipart parsing, supports only one file for request, but that is
@@ -528,8 +528,11 @@ public abstract class AbstractCommunicationManager implements
                 throw new UploadException(
                         "Warning: file upload ignored because the componente was read-only");
             }
-            streamToReceiver(simpleMultiPartReader, streamVariable, filename,
-                    mimeType, contentLength);
+            boolean forgetVariable = streamToReceiver(simpleMultiPartReader,
+                    streamVariable, filename, mimeType, contentLength);
+            if (forgetVariable) {
+                cleanStreamVariable(owner, variableName);
+            }
         } catch (Exception e) {
             synchronized (application) {
                 handleChangeVariablesError(application, (Component) owner, e,
@@ -551,8 +554,8 @@ public abstract class AbstractCommunicationManager implements
      * @throws IOException
      */
     protected void doHandleXhrFilePost(Request request, Response response,
-            StreamVariable streamVariable, VariableOwner owner,
-            int contentLength) throws IOException {
+            StreamVariable streamVariable, String variableName,
+            VariableOwner owner, int contentLength) throws IOException {
 
         // These are unknown in filexhr ATM, maybe add to Accept header that
         // is accessible in portlets
@@ -569,8 +572,11 @@ public abstract class AbstractCommunicationManager implements
                 throw new UploadException(
                         "Warning: file upload ignored because the component was read-only");
             }
-            streamToReceiver(stream, streamVariable, filename, mimeType,
-                    contentLength);
+            boolean forgetVariable = streamToReceiver(stream, streamVariable,
+                    filename, mimeType, contentLength);
+            if (forgetVariable) {
+                cleanStreamVariable(owner, variableName);
+            }
         } catch (Exception e) {
             synchronized (application) {
                 handleChangeVariablesError(application, (Component) owner, e,
@@ -580,7 +586,17 @@ public abstract class AbstractCommunicationManager implements
         sendUploadResponse(request, response);
     }
 
-    protected final void streamToReceiver(final InputStream in,
+    /**
+     * @param in
+     * @param streamVariable
+     * @param filename
+     * @param type
+     * @param contentLength
+     * @return true if the streamvariable has informed that the terminal can
+     *         forget this variable
+     * @throws UploadException
+     */
+    protected final boolean streamToReceiver(final InputStream in,
             StreamVariable streamVariable, String filename, String type,
             int contentLength) throws UploadException {
         if (streamVariable == null) {
@@ -592,11 +608,11 @@ public abstract class AbstractCommunicationManager implements
 
         OutputStream out = null;
         int totalBytes = 0;
+        StreamingStartEventImpl startedEvent = new StreamingStartEventImpl(
+                filename, type, contentLength);
         try {
             boolean listenProgress;
             synchronized (application) {
-                StreamingStartEvent startedEvent = new StreamingStartEventImpl(
-                        filename, type, contentLength);
                 streamVariable.streamingStarted(startedEvent);
                 out = streamVariable.getOutputStream();
                 listenProgress = streamVariable.listenProgress();
@@ -662,6 +678,7 @@ public abstract class AbstractCommunicationManager implements
                 throw new UploadException(e);
             }
         }
+        return startedEvent.isDisposed();
     }
 
     private void tryToCloseStream(OutputStream out) {
@@ -2181,6 +2198,9 @@ public abstract class AbstractCommunicationManager implements
 
     }
 
-    abstract String createStreamVariableTargetUrl(VariableOwner owner, String name,
-            StreamVariable value);
+    abstract String getStreamVariableTargetUrl(VariableOwner owner,
+            String name, StreamVariable value);
+
+    abstract protected void cleanStreamVariable(VariableOwner owner, String name);
+
 }

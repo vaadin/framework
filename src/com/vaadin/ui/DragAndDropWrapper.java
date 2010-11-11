@@ -256,6 +256,9 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
             }
             // no need tell to the client about this receiver on next paint
             receivers.remove(file);
+            // let the terminal GC the streamvariable and not to accept other
+            // file uploads to this variable
+            event.disposeStreamVariable();
         }
 
         public void streamingFinished(StreamingEndEvent event) {
@@ -316,6 +319,14 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
             public long getBytesReceived() {
                 return wrappedEvent.getBytesReceived();
+            }
+
+            /**
+             * Calling this method has no effect. DD files are receive only once
+             * anyway.
+             */
+            public void disposeStreamVariable() {
+
             }
         }
 

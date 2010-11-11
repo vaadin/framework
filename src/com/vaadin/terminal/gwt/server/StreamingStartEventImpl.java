@@ -6,9 +6,19 @@ import com.vaadin.terminal.StreamVariable.StreamingStartEvent;
 final class StreamingStartEventImpl extends AbstractStreamingEvent implements
         StreamingStartEvent {
 
+    private boolean disposed;
+
     public StreamingStartEventImpl(final String filename, final String type,
             long contentLength) {
         super(filename, type, contentLength, 0);
+    }
+
+    public void disposeStreamVariable() {
+        disposed = true;
+    }
+
+    boolean isDisposed() {
+        return disposed;
     }
 
 }

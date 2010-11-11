@@ -197,21 +197,18 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         String contentType = request.getContentType();
         String name = request.getParameter("name");
         String ownerId = request.getParameter("rec-owner");
-        VariableOwner variableOwner = (VariableOwner) getVariableOwner(ownerId);
-        StreamVariable streamVariable = ownerToNameToStreamVariable.get(variableOwner).remove(
-                name);
-
-        // clean up, may be re added on next paint
-        ownerToNameToStreamVariable.get(variableOwner).remove(name);
+        VariableOwner variableOwner = getVariableOwner(ownerId);
+        StreamVariable streamVariable = ownerToNameToStreamVariable.get(
+                variableOwner).get(name);
 
         if (contentType.contains("boundary")) {
             doHandleSimpleMultipartFileUpload(
                     new PortletRequestWrapper(request),
-                    new PortletResponseWrapper(response), streamVariable,
+                    new PortletResponseWrapper(response), streamVariable, name,
                     variableOwner, contentType.split("boundary=")[1]);
         } else {
             doHandleXhrFilePost(new PortletRequestWrapper(request),
-                    new PortletResponseWrapper(response), streamVariable,
+                    new PortletResponseWrapper(response), streamVariable, name,
                     variableOwner, request.getContentLength());
         }
 
@@ -274,11 +271,13 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     private Map<VariableOwner, Map<String, StreamVariable>> ownerToNameToStreamVariable;
 
     @Override
-    String createStreamVariableTargetUrl(VariableOwner owner, String name, StreamVariable value) {
+    String getStreamVariableTargetUrl(VariableOwner owner, String name,
+            StreamVariable value) {
         if (ownerToNameToStreamVariable == null) {
             ownerToNameToStreamVariable = new HashMap<VariableOwner, Map<String, StreamVariable>>();
         }
-        Map<String, StreamVariable> nameToReceiver = ownerToNameToStreamVariable.get(owner);
+        Map<String, StreamVariable> nameToReceiver = ownerToNameToStreamVariable
+                .get(owner);
         if (nameToReceiver == null) {
             nameToReceiver = new HashMap<String, StreamVariable>();
             ownerToNameToStreamVariable.put(owner, nameToReceiver);
@@ -291,6 +290,16 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         resurl.setProperty("name", name);
         resurl.setProperty("rec-owner", getPaintableId((Paintable) owner));
         return resurl.toString();
+    }
+
+    @Override
+    protected void cleanStreamVariable(VariableOwner owner, String name) {
+        Map<String, StreamVariable> map = ownerToNameToStreamVariable
+                .get(owner);
+        map.remove(name);
+        if (map.isEmpty()) {
+            ownerToNameToStreamVariable.remove(owner);
+        }
     }
 
 }

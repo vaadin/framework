@@ -208,8 +208,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
     /**
      * Handles file upload request submitted via Upload component.
      * 
-     * @see #createStreamVariableTargetUrl(ReceiverOwner, String,
-     *      StreamVariable)
+     * @see #getStreamVariableTargetUrl(ReceiverOwner, String, StreamVariable)
      * 
      * @param request
      * @param response
@@ -231,27 +230,30 @@ public class CommunicationManager extends AbstractCommunicationManager {
                 + AbstractApplicationServlet.UPLOAD_URL_PREFIX.length();
         String uppUri = pathInfo.substring(startOfData);
         String[] parts = uppUri.split("/", 3); // 0 = pid, 1= name, 2 = sec key
+        String variableName = parts[1];
+        String paintableId = parts[0];
 
-        StreamVariable streamVariable = pidToNameToStreamVariable.get(parts[0])
-                .remove(parts[1]);
-        String secKey = streamVariableToSeckey.remove(streamVariable);
+        StreamVariable streamVariable = pidToNameToStreamVariable.get(
+                paintableId).get(variableName);
+        String secKey = streamVariableToSeckey.get(streamVariable);
         if (secKey.equals(parts[2])) {
 
-            VariableOwner source = getVariableOwner(parts[0]);
+            VariableOwner source = getVariableOwner(paintableId);
             String contentType = request.getContentType();
             if (request.getContentType().contains("boundary")) {
                 // Multipart requests contain boundary string
                 doHandleSimpleMultipartFileUpload(
                         new HttpServletRequestWrapper(request),
                         new HttpServletResponseWrapper(response),
-                        streamVariable, source,
+                        streamVariable, variableName, source,
                         contentType.split("boundary=")[1]);
             } else {
                 // if boundary string does not exist, the posted file is from
                 // XHR2.post(File)
                 doHandleXhrFilePost(new HttpServletRequestWrapper(request),
                         new HttpServletResponseWrapper(response),
-                        streamVariable, source, request.getContentLength());
+                        streamVariable, variableName, source,
+                        request.getContentLength());
             }
         } else {
             throw new InvalidUIDLSecurityKeyException(
@@ -357,9 +359,8 @@ public class CommunicationManager extends AbstractCommunicationManager {
     private Map<StreamVariable, String> streamVariableToSeckey;
 
     @Override
-    String createStreamVariableTargetUrl(VariableOwner owner, String name,
+    String getStreamVariableTargetUrl(VariableOwner owner, String name,
             StreamVariable value) {
-
         /*
          * We will use the same APP/* URI space as ApplicationResources but
          * prefix url with UPLOAD
@@ -389,13 +390,26 @@ public class CommunicationManager extends AbstractCommunicationManager {
         if (streamVariableToSeckey == null) {
             streamVariableToSeckey = new HashMap<StreamVariable, String>();
         }
-        String seckey = UUID.randomUUID().toString();
-        streamVariableToSeckey.put(value, seckey);
+        String seckey = streamVariableToSeckey.get(value);
+        if (seckey == null) {
+            seckey = UUID.randomUUID().toString();
+            streamVariableToSeckey.put(value, seckey);
+        }
 
         return getApplication().getURL()
                 + AbstractApplicationServlet.UPLOAD_URL_PREFIX + key + "/"
                 + seckey;
 
+    }
+
+    @Override
+    protected void cleanStreamVariable(VariableOwner owner, String name) {
+        Map<String, StreamVariable> nameToStreamVar = pidToNameToStreamVariable
+                .get(getPaintableId((Paintable) owner));
+        nameToStreamVar.remove("name");
+        if (nameToStreamVar.isEmpty()) {
+            pidToNameToStreamVariable.remove(getPaintableId((Paintable) owner));
+        }
     }
 
 }

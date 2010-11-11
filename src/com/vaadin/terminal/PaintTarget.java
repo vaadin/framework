@@ -7,6 +7,8 @@ package com.vaadin.terminal;
 import java.io.Serializable;
 import java.util.Map;
 
+import com.vaadin.terminal.StreamVariable.StreamingStartEvent;
+
 /**
  * This interface defines the methods for painting XML to the UIDL stream.
  * 
@@ -156,9 +158,17 @@ public interface PaintTarget extends Serializable {
      * terminals Receivers are typically rendered for the client side as URLs,
      * where the client side implementation can do an http post request.
      * <p>
-     * Note that a StreamVariable can only be used once per "paint". The same StreamVariable
-     * can be used several times, but it must be repainted before the next
-     * stream can be received.
+     * Note that in current terminal implementation StreamVariables are cleaned
+     * from the terminal only when:
+     * <ul>
+     * <li>a StreamVariable with same name replaces an old one
+     * <li>the variable owner is no more attached
+     * <li>the developer signals this by calling
+     * {@link StreamingStartEvent#disposeStreamVariable()}
+     * </ul>
+     * Most commonly a component developer can just ignore this issue, but with
+     * strict memory requirements and lots of StreamVariables implementations
+     * that reserve a lot of memory this may be a critical issue.
      * 
      * @param owner
      *            the ReceiverOwner that can track the progress of streaming to
@@ -171,8 +181,8 @@ public interface PaintTarget extends Serializable {
      * @throws PaintException
      *             if the paint operation failed.
      */
-    public void addVariable(VariableOwner owner, String name, StreamVariable value)
-            throws PaintException;
+    public void addVariable(VariableOwner owner, String name,
+            StreamVariable value) throws PaintException;
 
     /**
      * Adds a long attribute to component. Atributes must be added before any
