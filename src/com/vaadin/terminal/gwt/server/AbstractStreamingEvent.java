@@ -1,6 +1,5 @@
 package com.vaadin.terminal.gwt.server;
 
-import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.StreamVariable.StreamingEvent;
 
 /**
@@ -10,7 +9,6 @@ import com.vaadin.terminal.StreamVariable.StreamingEvent;
 abstract class AbstractStreamingEvent implements StreamingEvent {
     private final String type;
     private final String filename;
-    private final StreamVariable streamVariable;
     private final long contentLength;
     private final long bytesReceived;
 
@@ -22,17 +20,12 @@ abstract class AbstractStreamingEvent implements StreamingEvent {
         return type;
     }
 
-    protected AbstractStreamingEvent(StreamVariable streamVariable, String filename,
-            String type, long length, long bytesReceived) {
-        this.streamVariable = streamVariable;
+    protected AbstractStreamingEvent(String filename, String type, long length,
+            long bytesReceived) {
         this.filename = filename;
         this.type = type;
         contentLength = length;
         this.bytesReceived = bytesReceived;
-    }
-
-    public final StreamVariable getReceiver() {
-        return streamVariable;
     }
 
     public final long getContentLength() {

@@ -13,7 +13,7 @@ import java.util.Map;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.StreamVariable.StreamingStartedEvent;
+import com.vaadin.terminal.StreamVariable.StreamingStartEvent;
 import com.vaadin.terminal.gwt.client.ui.VUpload;
 import com.vaadin.terminal.gwt.server.NoInputStreamException;
 import com.vaadin.terminal.gwt.server.NoOutputStreamException;
@@ -911,14 +911,14 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     protected com.vaadin.terminal.StreamVariable getStreamVariable() {
         if (streamVariable == null) {
             streamVariable = new com.vaadin.terminal.StreamVariable() {
-                private StreamingStartedEvent lastStartedEvent;
+                private StreamingStartEvent lastStartedEvent;
 
                 public boolean listenProgress() {
                     return (progressListeners != null && !progressListeners
                             .isEmpty());
                 }
 
-                public void onProgress(StreamingProgressedEvent event) {
+                public void onProgress(StreamingProgressEvent event) {
                     fireUpdateProgress(event.getBytesReceived(),
                             event.getContentLength());
                 }
@@ -935,21 +935,21 @@ public class Upload extends AbstractComponent implements Component.Focusable {
                     return receiveUpload;
                 }
 
-                public void streamingStarted(StreamingStartedEvent event) {
+                public void streamingStarted(StreamingStartEvent event) {
                     startUpload();
                     contentLength = event.getContentLength();
                     fireStarted(event.getFileName(), event.getMimeType());
                     lastStartedEvent = event;
                 }
 
-                public void streamingFinished(StreamingEndedEvent event) {
+                public void streamingFinished(StreamingEndEvent event) {
                     fireUploadSuccess(event.getFileName(), event.getMimeType(),
                             event.getContentLength());
                     endUpload();
                     requestRepaint();
                 }
 
-                public void streamingFailed(StreamingFailedEvent event) {
+                public void streamingFailed(StreamingErrorEvent event) {
                     Exception exception = event.getException();
                     if (exception instanceof NoInputStreamException) {
                         fireNoInputStream(event.getFileName(),

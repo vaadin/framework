@@ -1113,7 +1113,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     public void addVariable(VariableOwner owner, String name, StreamVariable value)
             throws PaintException {
-        String url = manager.createReceiverUrl(owner, name, value);
+        String url = manager.createStreamVariableTargetUrl(owner, name, value);
         addVariable(owner, name, url);
     }
 

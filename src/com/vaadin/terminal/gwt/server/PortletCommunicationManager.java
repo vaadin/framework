@@ -198,11 +198,11 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         String name = request.getParameter("name");
         String ownerId = request.getParameter("rec-owner");
         VariableOwner variableOwner = (VariableOwner) getVariableOwner(ownerId);
-        StreamVariable streamVariable = ownerToNameToReceiver.get(variableOwner).remove(
+        StreamVariable streamVariable = ownerToNameToStreamVariable.get(variableOwner).remove(
                 name);
 
         // clean up, may be re added on next paint
-        ownerToNameToReceiver.get(variableOwner).remove(name);
+        ownerToNameToStreamVariable.get(variableOwner).remove(name);
 
         if (contentType.contains("boundary")) {
             doHandleSimpleMultipartFileUpload(
@@ -220,8 +220,8 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     @Override
     protected void unregisterPaintable(Component p) {
         super.unregisterPaintable(p);
-        if (ownerToNameToReceiver != null) {
-            ownerToNameToReceiver.remove(p);
+        if (ownerToNameToStreamVariable != null) {
+            ownerToNameToStreamVariable.remove(p);
         }
     }
 
@@ -271,17 +271,17 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                 application, assumedWindow);
     }
 
-    private Map<VariableOwner, Map<String, StreamVariable>> ownerToNameToReceiver;
+    private Map<VariableOwner, Map<String, StreamVariable>> ownerToNameToStreamVariable;
 
     @Override
-    String createReceiverUrl(VariableOwner owner, String name, StreamVariable value) {
-        if (ownerToNameToReceiver == null) {
-            ownerToNameToReceiver = new HashMap<VariableOwner, Map<String, StreamVariable>>();
+    String createStreamVariableTargetUrl(VariableOwner owner, String name, StreamVariable value) {
+        if (ownerToNameToStreamVariable == null) {
+            ownerToNameToStreamVariable = new HashMap<VariableOwner, Map<String, StreamVariable>>();
         }
-        Map<String, StreamVariable> nameToReceiver = ownerToNameToReceiver.get(owner);
+        Map<String, StreamVariable> nameToReceiver = ownerToNameToStreamVariable.get(owner);
         if (nameToReceiver == null) {
             nameToReceiver = new HashMap<String, StreamVariable>();
-            ownerToNameToReceiver.put(owner, nameToReceiver);
+            ownerToNameToStreamVariable.put(owner, nameToReceiver);
         }
         nameToReceiver.put(name, value);
         ResourceURL resurl = currentUidlResponse.createResourceURL();

@@ -10,10 +10,10 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.StreamVariable;
-import com.vaadin.terminal.StreamVariable.StreamingEndedEvent;
-import com.vaadin.terminal.StreamVariable.StreamingFailedEvent;
-import com.vaadin.terminal.StreamVariable.StreamingProgressedEvent;
-import com.vaadin.terminal.StreamVariable.StreamingStartedEvent;
+import com.vaadin.terminal.StreamVariable.StreamingEndEvent;
+import com.vaadin.terminal.StreamVariable.StreamingErrorEvent;
+import com.vaadin.terminal.StreamVariable.StreamingProgressEvent;
+import com.vaadin.terminal.StreamVariable.StreamingStartEvent;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -73,27 +73,27 @@ public class DragAndDropFiles extends TestBase {
                             }
 
                             public void onProgress(
-                                    StreamingProgressedEvent event) {
+                                    StreamingProgressEvent event) {
                                 System.err.println("Progress"
                                         + event.getBytesReceived());
                             }
 
                             public void streamingStarted(
-                                    StreamingStartedEvent event) {
+                                    StreamingStartEvent event) {
                                 getMainWindow().showNotification(
                                         "Started uploading "
                                                 + event.getFileName());
                             }
 
                             public void streamingFinished(
-                                    StreamingEndedEvent event) {
+                                    StreamingEndEvent event) {
                                 getMainWindow().showNotification(
                                         "Finished uploading "
                                                 + event.getFileName());
                             }
 
                             public void streamingFailed(
-                                    StreamingFailedEvent event) {
+                                    StreamingErrorEvent event) {
                                 getMainWindow().showNotification(
                                         "Failed uploading "
                                                 + event.getFileName());
@@ -103,7 +103,7 @@ public class DragAndDropFiles extends TestBase {
                                 return false;
                             }
                         };
-                        file.setReceiver(streamVariable);
+                        file.setStreamVariable(streamVariable);
                     }
                 }
 

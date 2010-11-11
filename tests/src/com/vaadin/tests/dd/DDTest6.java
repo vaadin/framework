@@ -2,7 +2,6 @@ package com.vaadin.tests.dd;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
@@ -26,10 +25,10 @@ import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.Not;
 import com.vaadin.event.dd.acceptcriteria.SourceIsTarget;
-import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.StreamResource;
 import com.vaadin.terminal.StreamResource.StreamSource;
+import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.tests.components.TestBase;
@@ -222,7 +221,6 @@ public class DDTest6 extends TestBase {
                         byte[] byteArray = bas.toByteArray();
                         return new ByteArrayInputStream(byteArray);
                     }
-                    // TODO Auto-generated method stub
                     return null;
                 }
             };
@@ -283,7 +281,6 @@ public class DDTest6 extends TestBase {
         table.setEditable(true);
         w.addComponent(table);
         getMainWindow().addWindow(w);
-        // TODO saving would be nice demo
 
     }
 
@@ -409,41 +406,30 @@ public class DDTest6 extends TestBase {
                             }
 
                             public boolean listenProgress() {
-                                // TODO Auto-generated method stub
                                 return false;
                             }
 
-                            public void onProgress(
-                                    StreamingProgressedEvent event) {
-                                // TODO Auto-generated method stub
-                                
+                            public void onProgress(StreamingProgressEvent event) {
                             }
 
                             public void streamingStarted(
-                                    StreamingStartedEvent event) {
-                                // TODO Auto-generated method stub
-                                
+                                    StreamingStartEvent event) {
                             }
 
                             public void streamingFinished(
-                                    StreamingEndedEvent event) {
-                                // TODO Auto-generated method stub
-                                
+                                    StreamingEndEvent event) {
                             }
 
                             public void streamingFailed(
-                                    StreamingFailedEvent event) {
-                                // TODO Auto-generated method stub
-                                
+                                    StreamingErrorEvent event) {
                             }
 
                             public boolean isInterrupted() {
-                                // TODO Auto-generated method stub
                                 return false;
                             }
                         };
 
-                        html5File.setReceiver(streamVariable);
+                        html5File.setStreamVariable(streamVariable);
 
                         File file = new File(fileName, bas);
                         file.setType(html5File.getType());

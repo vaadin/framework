@@ -90,7 +90,6 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
                     root.getPosition(component).setLeftValue(
                             Float.valueOf(clientX - left));
                 } catch (Exception e) {
-                    // TODO: handle exception
                 }
             } else {
                 // drag started and ended inside the this Pane
@@ -133,7 +132,7 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
             if (files != null) {
                 for (Html5File html5File : files) {
                     l.setCaption(html5File.getFileName());
-                    html5File.setReceiver(new StreamVariable() {
+                    html5File.setStreamVariable(new StreamVariable() {
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
                         public OutputStream getOutputStream() {
@@ -141,32 +140,24 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
                         }
 
                         public boolean listenProgress() {
-                            // TODO Auto-generated method stub
                             return false;
                         }
 
-                        public void onProgress(StreamingProgressedEvent event) {
-                            // TODO Auto-generated method stub
-
+                        public void onProgress(StreamingProgressEvent event) {
                         }
 
-                        public void streamingStarted(StreamingStartedEvent event) {
-                            // TODO Auto-generated method stub
-
+                        public void streamingStarted(StreamingStartEvent event) {
                         }
 
-                        public void streamingFinished(StreamingEndedEvent event) {
+                        public void streamingFinished(StreamingEndEvent event) {
                             l.setValue((new String(byteArrayOutputStream
                                     .toByteArray()).substring(0, 80) + "..."));
                         }
 
-                        public void streamingFailed(StreamingFailedEvent event) {
-                            // TODO Auto-generated method stub
-
+                        public void streamingFailed(StreamingErrorEvent event) {
                         }
 
                         public boolean isInterrupted() {
-                            // TODO Auto-generated method stub
                             return false;
                         }
                     });

@@ -208,7 +208,8 @@ public class CommunicationManager extends AbstractCommunicationManager {
     /**
      * Handles file upload request submitted via Upload component.
      * 
-     * @see #createReceiverUrl(ReceiverOwner, String, StreamVariable)
+     * @see #createStreamVariableTargetUrl(ReceiverOwner, String,
+     *      StreamVariable)
      * 
      * @param request
      * @param response
@@ -231,24 +232,26 @@ public class CommunicationManager extends AbstractCommunicationManager {
         String uppUri = pathInfo.substring(startOfData);
         String[] parts = uppUri.split("/", 3); // 0 = pid, 1= name, 2 = sec key
 
-        StreamVariable streamVariable = pidToNameToReceiver.get(parts[0]).remove(parts[1]);
-        String secKey = receiverToSeckey.remove(streamVariable);
+        StreamVariable streamVariable = pidToNameToStreamVariable.get(parts[0])
+                .remove(parts[1]);
+        String secKey = streamVariableToSeckey.remove(streamVariable);
         if (secKey.equals(parts[2])) {
 
-            VariableOwner source = (VariableOwner) getVariableOwner(parts[0]);
+            VariableOwner source = getVariableOwner(parts[0]);
             String contentType = request.getContentType();
             if (request.getContentType().contains("boundary")) {
                 // Multipart requests contain boundary string
                 doHandleSimpleMultipartFileUpload(
                         new HttpServletRequestWrapper(request),
-                        new HttpServletResponseWrapper(response), streamVariable,
-                        source, contentType.split("boundary=")[1]);
+                        new HttpServletResponseWrapper(response),
+                        streamVariable, source,
+                        contentType.split("boundary=")[1]);
             } else {
                 // if boundary string does not exist, the posted file is from
                 // XHR2.post(File)
                 doHandleXhrFilePost(new HttpServletRequestWrapper(request),
-                        new HttpServletResponseWrapper(response), streamVariable,
-                        source, request.getContentLength());
+                        new HttpServletResponseWrapper(response),
+                        streamVariable, source, request.getContentLength());
             }
         } else {
             throw new InvalidUIDLSecurityKeyException(
@@ -336,12 +339,12 @@ public class CommunicationManager extends AbstractCommunicationManager {
     @Override
     protected void unregisterPaintable(Component p) {
         /* Cleanup possible receivers */
-        if (pidToNameToReceiver != null) {
-            Map<String, StreamVariable> removed = pidToNameToReceiver
+        if (pidToNameToStreamVariable != null) {
+            Map<String, StreamVariable> removed = pidToNameToStreamVariable
                     .remove(getPaintableId(p));
             if (removed != null) {
                 for (String key : removed.keySet()) {
-                    receiverToSeckey.remove(removed.get(key));
+                    streamVariableToSeckey.remove(removed.get(key));
                 }
             }
         }
@@ -349,16 +352,13 @@ public class CommunicationManager extends AbstractCommunicationManager {
 
     }
 
-    private Map<String, Map<String, StreamVariable>> pidToNameToReceiver;
+    private Map<String, Map<String, StreamVariable>> pidToNameToStreamVariable;
 
-    private Map<StreamVariable, String> receiverToSeckey;
+    private Map<StreamVariable, String> streamVariableToSeckey;
 
     @Override
-    String createReceiverUrl(VariableOwner owner, String name, StreamVariable value) {
-        
-        /*
-         * TODO figure out how this can be simplified now that ReceiverOwner is removed.
-         */
+    String createStreamVariableTargetUrl(VariableOwner owner, String name,
+            StreamVariable value) {
 
         /*
          * We will use the same APP/* URI space as ApplicationResources but
@@ -369,28 +369,28 @@ public class CommunicationManager extends AbstractCommunicationManager {
          * SECKEY is created on each paint to make URL's unpredictable (to
          * prevent CSRF attacks).
          * 
-         * NAME and PID from URI forms a key to fetch StreamVariable when handling
-         * post
+         * NAME and PID from URI forms a key to fetch StreamVariable when
+         * handling post
          */
         String paintableId = getPaintableId((Paintable) owner);
         String key = paintableId + "/" + name;
 
-        if (pidToNameToReceiver == null) {
-            pidToNameToReceiver = new HashMap<String, Map<String, StreamVariable>>();
+        if (pidToNameToStreamVariable == null) {
+            pidToNameToStreamVariable = new HashMap<String, Map<String, StreamVariable>>();
         }
-        Map<String, StreamVariable> nameToReceiver = pidToNameToReceiver
+        Map<String, StreamVariable> nameToStreamVariable = pidToNameToStreamVariable
                 .get(paintableId);
-        if (nameToReceiver == null) {
-            nameToReceiver = new HashMap<String, StreamVariable>();
-            pidToNameToReceiver.put(paintableId, nameToReceiver);
+        if (nameToStreamVariable == null) {
+            nameToStreamVariable = new HashMap<String, StreamVariable>();
+            pidToNameToStreamVariable.put(paintableId, nameToStreamVariable);
         }
-        nameToReceiver.put(name, value);
+        nameToStreamVariable.put(name, value);
 
-        if (receiverToSeckey == null) {
-            receiverToSeckey = new HashMap<StreamVariable, String>();
+        if (streamVariableToSeckey == null) {
+            streamVariableToSeckey = new HashMap<StreamVariable, String>();
         }
         String seckey = UUID.randomUUID().toString();
-        receiverToSeckey.put(value, seckey);
+        streamVariableToSeckey.put(value, seckey);
 
         return getApplication().getURL()
                 + AbstractApplicationServlet.UPLOAD_URL_PREFIX + key + "/"

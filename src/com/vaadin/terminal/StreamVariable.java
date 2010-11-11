@@ -4,9 +4,9 @@ import java.io.OutputStream;
 import java.io.Serializable;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.StreamVariable.StreamingEndedEvent;
-import com.vaadin.terminal.StreamVariable.StreamingFailedEvent;
-import com.vaadin.terminal.StreamVariable.StreamingStartedEvent;
+import com.vaadin.terminal.StreamVariable.StreamingEndEvent;
+import com.vaadin.terminal.StreamVariable.StreamingErrorEvent;
+import com.vaadin.terminal.StreamVariable.StreamingStartEvent;
 
 /**
  * StreamVariable is a special kind of variable whose value is streamed to an
@@ -30,7 +30,7 @@ public interface StreamVariable extends Serializable {
 
     /**
      * Invoked by the terminal when a new upload arrives, after
-     * {@link #streamingStarted(StreamingStartedEvent)} method has been called.
+     * {@link #streamingStarted(StreamingStartEvent)} method has been called.
      * The terminal implementation will write the streamed variable to the
      * returned output stream.
      * 
@@ -45,12 +45,12 @@ public interface StreamVariable extends Serializable {
      * {@link #onProgress(long, long)} is called in a synchronized block when
      * the content is being received. This is potentially bit slow, so we are
      * calling that method only if requested. The value is requested after the
-     * {@link #uploadStarted(StreamingStartedEvent)} event, but not after
+     * {@link #uploadStarted(StreamingStartEvent)} event, but not after
      * reading each buffer.
      * 
      * @return true if this {@link StreamVariable} wants to by notified during
      *         the upload of the progress of streaming.
-     * @see #onProgress(StreamingProgressedEvent)
+     * @see #onProgress(StreamingProgressEvent)
      */
     boolean listenProgress();
 
@@ -58,13 +58,13 @@ public interface StreamVariable extends Serializable {
      * This method is called by the terminal if {@link #listenProgress()}
      * returns true when the streaming starts.
      */
-    void onProgress(StreamingProgressedEvent event);
+    void onProgress(StreamingProgressEvent event);
 
-    void streamingStarted(StreamingStartedEvent event);
+    void streamingStarted(StreamingStartEvent event);
 
-    void streamingFinished(StreamingEndedEvent event);
+    void streamingFinished(StreamingEndEvent event);
 
-    void streamingFailed(StreamingFailedEvent event);
+    void streamingFailed(StreamingErrorEvent event);
 
     /*
      * Not synchronized to avoid stalls (caused by UIDL requests) while
@@ -108,35 +108,35 @@ public interface StreamVariable extends Serializable {
     }
 
     /**
-     * Event passed to {@link #uploadStarted(StreamingStartedEvent)} method
+     * Event passed to {@link #uploadStarted(StreamingStartEvent)} method
      * before the streaming of the content to {@link StreamVariable} starts.
      */
-    public interface StreamingStartedEvent extends StreamingEvent {
+    public interface StreamingStartEvent extends StreamingEvent {
     }
 
     /**
-     * Event passed to {@link #onProgress(StreamingProgressedEvent)} method
+     * Event passed to {@link #onProgress(StreamingProgressEvent)} method
      * during the streaming progresses.
      */
-    public interface StreamingProgressedEvent extends StreamingEvent {
+    public interface StreamingProgressEvent extends StreamingEvent {
     }
 
     /**
-     * Event passed to {@link #uploadFinished(StreamingEndedEvent)} method the
+     * Event passed to {@link #uploadFinished(StreamingEndEvent)} method the
      * contents have been streamed to StreamVariable successfully.
      */
-    public interface StreamingEndedEvent extends StreamingEvent {
+    public interface StreamingEndEvent extends StreamingEvent {
     }
 
     /**
-     * Event passed to {@link #uploadFailed(StreamingFailedEvent)} method when
+     * Event passed to {@link #uploadFailed(StreamingErrorEvent)} method when
      * the streaming ended before the end of the input. The streaming may fail
      * due an interruption by {@link } or due an other unknown exception in
      * communication. In the latter case the exception is also passed to
      * {@link Application#terminalError(com.vaadin.terminal.Terminal.ErrorEvent)}
      * .
      */
-    public interface StreamingFailedEvent extends StreamingEvent {
+    public interface StreamingErrorEvent extends StreamingEvent {
 
         /**
          * @return the exception that caused the receiving not to finish cleanly

@@ -51,11 +51,11 @@ public class Html5File implements Serializable {
      *            the callback that returns stream where the implementation
      *            writes the file contents as it arrives.
      */
-    public void setReceiver(StreamVariable streamVariable) {
+    public void setStreamVariable(StreamVariable streamVariable) {
         this.streamVariable = streamVariable;
     }
 
-    public StreamVariable getReceiver() {
+    public StreamVariable getStreamVariable() {
         return streamVariable;
     }
 

@@ -188,9 +188,10 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         if (receivers != null && receivers.size() > 0) {
             for (Iterator<Entry<String, Html5File>> it = receivers.entrySet()
                     .iterator(); it.hasNext();) {
-                String id = it.next().getKey();
-                Html5File html5File = receivers.get(id);
-                if (html5File.getReceiver() != null) {
+                Entry<String, com.vaadin.ui.Html5File> entry = it.next();
+                String id = entry.getKey();
+                Html5File html5File = entry.getValue();
+                if (html5File.getStreamVariable() != null) {
                     target.addVariable(this, "rec-" + id, new ProxyReceiver(
                             html5File));
                     // these are cleaned from receivers once the upload has
@@ -245,46 +246,47 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         private boolean listenProgressOfUploadedFile;
 
         public OutputStream getOutputStream() {
-            if (file.getReceiver() == null) {
+            if (file.getStreamVariable() == null) {
                 return null;
             }
-            return file.getReceiver().getOutputStream();
+            return file.getStreamVariable().getOutputStream();
         }
 
         public boolean listenProgress() {
-            return file.getReceiver().listenProgress();
+            return file.getStreamVariable().listenProgress();
         }
 
-        public void onProgress(StreamingProgressedEvent event) {
-            file.getReceiver().onProgress(new ReceivingEventWrapper(event));
+        public void onProgress(StreamingProgressEvent event) {
+            file.getStreamVariable().onProgress(
+                    new ReceivingEventWrapper(event));
         }
 
-        public void streamingStarted(StreamingStartedEvent event) {
-            listenProgressOfUploadedFile = file.getReceiver() != null;
+        public void streamingStarted(StreamingStartEvent event) {
+            listenProgressOfUploadedFile = file.getStreamVariable() != null;
             if (listenProgressOfUploadedFile) {
-                file.getReceiver().streamingStarted(
+                file.getStreamVariable().streamingStarted(
                         new ReceivingEventWrapper(event));
             }
             // no need tell to the client about this receiver on next paint
             receivers.remove(file);
         }
 
-        public void streamingFinished(StreamingEndedEvent event) {
+        public void streamingFinished(StreamingEndEvent event) {
             if (listenProgressOfUploadedFile) {
-                file.getReceiver().streamingFinished(
+                file.getStreamVariable().streamingFinished(
                         new ReceivingEventWrapper(event));
             }
         }
 
-        public void streamingFailed(final StreamingFailedEvent event) {
+        public void streamingFailed(final StreamingErrorEvent event) {
             if (listenProgressOfUploadedFile) {
-                file.getReceiver().streamingFailed(
+                file.getStreamVariable().streamingFailed(
                         new ReceivingEventWrapper(event));
             }
         }
 
         public boolean isInterrupted() {
-            return file.getReceiver().isInterrupted();
+            return file.getStreamVariable().isInterrupted();
         }
 
         /*
@@ -293,9 +295,8 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
          * terminal event and provides the lacking information from the
          * Html5File.
          */
-        class ReceivingEventWrapper implements StreamingFailedEvent,
-                StreamingEndedEvent, StreamingStartedEvent,
-                StreamingProgressedEvent {
+        class ReceivingEventWrapper implements StreamingErrorEvent,
+                StreamingEndEvent, StreamingStartEvent, StreamingProgressEvent {
 
             private StreamingEvent wrappedEvent;
 
@@ -320,8 +321,8 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
             }
 
             public Exception getException() {
-                if (wrappedEvent instanceof StreamingFailedEvent) {
-                    return ((StreamingFailedEvent) wrappedEvent).getException();
+                if (wrappedEvent instanceof StreamingErrorEvent) {
+                    return ((StreamingErrorEvent) wrappedEvent).getException();
                 }
                 return null;
             }
