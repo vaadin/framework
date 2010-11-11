@@ -4,6 +4,9 @@ import java.io.OutputStream;
 import java.io.Serializable;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.StreamVariable.StreamingEndedEvent;
+import com.vaadin.terminal.StreamVariable.StreamingFailedEvent;
+import com.vaadin.terminal.StreamVariable.StreamingStartedEvent;
 
 /**
  * StreamVariable is a special kind of variable whose value is streamed to an
@@ -45,9 +48,9 @@ public interface StreamVariable extends Serializable {
      * {@link #uploadStarted(StreamingStartedEvent)} event, but not after
      * reading each buffer.
      * 
-     * @return true if this ReceiverOwner wants to by notified during the upload
-     *         of the progress of streaming.
-     * @see ReceiverOwner#onProgress(int, int)
+     * @return true if this {@link StreamVariable} wants to by notified during
+     *         the upload of the progress of streaming.
+     * @see #onProgress(StreamingProgressedEvent)
      */
     boolean listenProgress();
 
@@ -69,8 +72,8 @@ public interface StreamVariable extends Serializable {
      * without the restriction.
      */
     /**
-     * ReceiverOwner can set this flag to true if it wants the Terminal to stop
-     * receiving current upload.
+     * If this method returns true while the content is being streamed the
+     * Terminal to stop receiving current upload.
      * <p>
      * Note, the usage of this method is not synchronized over the Application
      * instance by the terminal like other methods. The implementation should
