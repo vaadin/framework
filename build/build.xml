@@ -785,6 +785,7 @@
              compress="true" manifest="build/package/META-INF/MANIFEST.MF">
             <metainf dir="${output-dir}/META-INF"/>
             <manifest>
+                <attribute name="Vaadin-Package-Version" value="1" />
                 <attribute name="Vaadin-Widgetsets" value="com.vaadin.terminal.gwt.DefaultWidgetSet" />
                 <attribute name="Implementation-Vendor" value="Vaadin Ltd" />
                 <attribute name="Implementation-URL" value="http://vaadin.com" />
