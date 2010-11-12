@@ -114,19 +114,24 @@ public class Util {
      * Called when the size of one or more widgets have changed during
      * rendering. Finds parent container and notifies them of the size change.
      * 
-     * @param widgets
+     * @param paintables
      */
-    public static void componentSizeUpdated(Set<Paintable> widgets) {
-        if (widgets.isEmpty()) {
+    public static void componentSizeUpdated(Set<Paintable> paintables) {
+        if (paintables.isEmpty()) {
             return;
         }
 
         Map<Container, Set<Paintable>> childWidgets = new HashMap<Container, Set<Paintable>>();
 
-        for (Paintable widget : widgets) {
+        for (Paintable paintable : paintables) {
+            Widget widget = (Widget) paintable;
+            if (!widget.isAttached()) {
+                continue;
+            }
+
             // ApplicationConnection.getConsole().log(
             // "Widget " + Util.getSimpleName(widget) + " size updated");
-            Widget parent = ((Widget) widget).getParent();
+            Widget parent = widget.getParent();
             while (parent != null && !(parent instanceof Container)) {
                 parent = parent.getParent();
             }
@@ -136,7 +141,7 @@ public class Util {
                     set = new HashSet<Paintable>();
                     childWidgets.put((Container) parent, set);
                 }
-                set.add(widget);
+                set.add(paintable);
             }
         }
 
