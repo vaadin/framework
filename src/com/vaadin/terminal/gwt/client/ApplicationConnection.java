@@ -186,7 +186,8 @@ public class ApplicationConnection {
      * called once this application has started (first response received) or
      * failed to start. This ensures that the applications are started in order,
      * to avoid session-id problems.
-     * @return 
+     * 
+     * @return
      */
     public void start() {
         repaintAll();
@@ -1221,7 +1222,7 @@ public class ApplicationConnection {
                 req.append(VAR_BURST_SEPARATOR);
             }
         }
-        makeUidlRequest(req.toString());
+        makeUidlRequest(req.toString(), "", forceSync);
     }
 
     private void makeUidlRequest(String string) {
