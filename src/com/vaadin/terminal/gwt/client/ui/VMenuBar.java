@@ -77,6 +77,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
     private boolean enabled = true;
 
+    private String width = "notinited";
+
     public VMenuBar() {
         // Create an empty horizontal menubar
         this(false, null);
@@ -130,6 +132,11 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
     @Override
     public void setWidth(String width) {
+        if (Util.equals(this.width, width)) {
+            return;
+        }
+
+        this.width = width;
         Util.setWidthExcludingPaddingAndBorder(this, width, 0);
         if (!subMenu) {
             // Only needed for root level menu
@@ -888,7 +895,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
         private VMenuBar findRootMenu() {
             VMenuBar menubar = getParentMenu();
-           
+
             // Traverse up until root menu is found
             while (menubar.getParentMenu() != null) {
                 menubar = menubar.getParentMenu();
