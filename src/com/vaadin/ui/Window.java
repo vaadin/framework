@@ -1433,9 +1433,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * 
      * @param window
      *            Window to be removed.
+     * @throws IllegalArgumentException
+     *             If the window to be removed is not a subwindow of this
+     *             window.
      */
-    public void removeWindow(Window window) {
-        subwindows.remove(window);
+    public void removeWindow(Window window) throws IllegalArgumentException {
+        if (!subwindows.remove(window)) {
+            // Window window is not a subwindow of this window.
+            throw new IllegalArgumentException(
+                    "The given window is not a sub window");
+        }
         window.setParent(null);
         window.fireClose();
         requestRepaint();
