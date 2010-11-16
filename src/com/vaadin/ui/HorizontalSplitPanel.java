@@ -22,6 +22,7 @@ import com.vaadin.terminal.gwt.client.ui.VSplitPanelHorizontal;
  */
 @ClientWidget(VSplitPanelHorizontal.class)
 public class HorizontalSplitPanel extends SplitPanel {
+    @SuppressWarnings("deprecation")
     public HorizontalSplitPanel() {
         super(ORIENTATION_HORIZONTAL);
     }
