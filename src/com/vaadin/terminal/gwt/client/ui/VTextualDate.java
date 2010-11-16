@@ -211,6 +211,7 @@ public class VTextualDate extends VDateField implements Paintable, Field,
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void onChange(ChangeEvent event) {
         if (!text.getText().equals("")) {
             try {

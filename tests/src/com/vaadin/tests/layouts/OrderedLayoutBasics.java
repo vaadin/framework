@@ -18,6 +18,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -1073,43 +1074,43 @@ public class OrderedLayoutBasics extends TestBase {
         // ol.setWidth("");
         ol.setCaption("100 % filled with fixed width (" + ol.getWidth()
                 + "px) and fixed height (" + ol.getHeight() + "px)");
-        TextField tf;
+        TextArea ta;
 
-        tf = new TextField();
-        tf.setCaption("This one has a caption");
-        tf.setValue("60% expand TextField");
-        tf.setWidth("100%");
-        tf.setHeight("100%");
-        // tf.setRequired(true);
-        // tf.setComponentError(new UserError("It's broken!"));
+        ta = new TextArea();
+        ta.setCaption("This one has a caption");
+        ta.setValue("60% expand TextField");
+        ta.setWidth("100%");
+        ta.setHeight("100%");
+        // ta.setRequired(true);
+        // ta.setComponentError(new UserError("It's broken!"));
 
-        // tf.setHeight("100%");
-        // tf.setWidth("100px");
-        tf.setRows(2);
-        ol.addComponent(tf);
-        ol.setExpandRatio(tf, 60);
+        // ta.setHeight("100%");
+        // ta.setWidth("100px");
+        ta.setRows(2);
+        ol.addComponent(ta);
+        ol.setExpandRatio(ta, 60);
 
-        tf = new TextField();
-        tf.setValue("100px 100px TextField");
-        tf.setWidth("100px");
-        tf.setHeight("100px");
-        tf.setRows(2);
-        ol.addComponent(tf);
-        ol.setComponentAlignment(tf, Alignment.MIDDLE_CENTER);
+        ta = new TextArea();
+        ta.setValue("100px 100px TextField");
+        ta.setWidth("100px");
+        ta.setHeight("100px");
+        ta.setRows(2);
+        ol.addComponent(ta);
+        ol.setComponentAlignment(ta, Alignment.MIDDLE_CENTER);
 
         //
 
-        tf = new TextField("40%x40% Field");
-        // tf.setCaption(null);
-        tf.setValue("40% expand (40% height) TextField");
-        tf.setWidth("100%");
-        tf.setHeight("40%");
-        ol.addComponent(tf);
-        ol.setExpandRatio(tf, 40);
-        // tf.setRequired(true);
-        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
+        ta = new TextArea("40%x40% Field");
+        // ta.setCaption(null);
+        ta.setValue("40% expand (40% height) TextField");
+        ta.setWidth("100%");
+        ta.setHeight("40%");
+        ol.addComponent(ta);
+        ol.setExpandRatio(ta, 40);
+        // ta.setRequired(true);
+        ol.setComponentAlignment(ta, Alignment.BOTTOM_RIGHT);
 
-        tf.setRows(2);
+        ta.setRows(2);
 
         return ol;
     }
@@ -1124,32 +1125,32 @@ public class OrderedLayoutBasics extends TestBase {
         // ol.setWidth("");
         ol.setCaption("100 % filled with fixed width (" + ol.getWidth()
                 + "px) and fixed height (" + ol.getHeight() + "px)");
-        TextField tf;
+        TextArea ta;
 
-        tf = new TextField();
-        // tf.setCaption("This one has a caption");
-        tf.setValue("80% x 20% TextField");
-        tf.setWidth("80%");
-        tf.setHeight("20%");
-        // tf.setRequired(true);
-        // tf.setComponentError(new UserError("It's broken!"));
+        ta = new TextArea();
+        // ta.setCaption("This one has a caption");
+        ta.setValue("80% x 20% TextField");
+        ta.setWidth("80%");
+        ta.setHeight("20%");
+        // ta.setRequired(true);
+        // ta.setComponentError(new UserError("It's broken!"));
 
-        // tf.setHeight("100%");
-        // tf.setWidth("100px");
-        tf.setRows(2);
-        ol.addComponent(tf);
+        // ta.setHeight("100%");
+        // ta.setWidth("100px");
+        ta.setRows(2);
+        ol.addComponent(ta);
         //
 
-        tf = new TextField("20%x60% Field");
-        tf.setCaption(null);
-        tf.setValue("20% x 60% TextField");
-        tf.setWidth("20%");
-        tf.setHeight("60%");
-        // tf.setRequired(true);
-        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
+        ta = new TextArea("20%x60% Field");
+        ta.setCaption(null);
+        ta.setValue("20% x 60% TextField");
+        ta.setWidth("20%");
+        ta.setHeight("60%");
+        // ta.setRequired(true);
+        ol.setComponentAlignment(ta, Alignment.BOTTOM_RIGHT);
 
-        tf.setRows(2);
-        ol.addComponent(tf);
+        ta.setRows(2);
+        ol.addComponent(ta);
 
         return ol;
     }
@@ -1163,38 +1164,38 @@ public class OrderedLayoutBasics extends TestBase {
         // ol.setWidth("");
         ol.setCaption("Underfilled with fixed width (" + ol.getWidth()
                 + "px) and fixed height (" + ol.getHeight() + "px)");
-        TextField tf;
+        TextArea ta;
 
-        tf = new TextField("60%x100% Field");
-        tf.setCaption("Short capt");
-        tf.setValue("60% x 100% TextField");
-        tf.setWidth("60%");
-        tf.setHeight("100%");
-        tf.setRequired(true);
-        tf.setRows(2);
+        ta = new TextArea("60%x100% Field");
+        ta.setCaption("Short capt");
+        ta.setValue("60% x 100% TextField");
+        ta.setWidth("60%");
+        ta.setHeight("100%");
+        ta.setRequired(true);
+        ta.setRows(2);
 
-        ol.addComponent(tf);
-        ol.setComponentAlignment(tf, Alignment.MIDDLE_CENTER);
+        ol.addComponent(ta);
+        ol.setComponentAlignment(ta, Alignment.MIDDLE_CENTER);
 
-        tf = new TextField("200px x 200px Field");
-        // tf.setIcon(new ThemeResource("icons/16/document-add.png"));
-        tf.setValue("200x200 field");
-        tf.setRows(2);
-        // tf.setSizeFull();
-        tf.setHeight("200px");
-        tf.setWidth("200px");
-        ol.addComponent(tf);
-        ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
+        ta = new TextArea("200px x 200px Field");
+        // ta.setIcon(new ThemeResource("icons/16/document-add.png"));
+        ta.setValue("200x200 field");
+        ta.setRows(2);
+        // ta.setSizeFull();
+        ta.setHeight("200px");
+        ta.setWidth("200px");
+        ol.addComponent(ta);
+        ol.setComponentAlignment(ta, Alignment.TOP_LEFT);
 
-        tf = new TextField("200px x 200px Field");
-        // tf.setIcon(new ThemeResource("icons/16/document-add.png"));
-        tf.setValue("200x200 field");
-        tf.setRows(2);
-        // tf.setSizeFull();
-        tf.setHeight("200px");
-        tf.setWidth("200px");
-        ol.addComponent(tf);
-        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
+        ta = new TextArea("200px x 200px Field");
+        // ta.setIcon(new ThemeResource("icons/16/document-add.png"));
+        ta.setValue("200x200 field");
+        ta.setRows(2);
+        // ta.setSizeFull();
+        ta.setHeight("200px");
+        ta.setWidth("200px");
+        ol.addComponent(ta);
+        ol.setComponentAlignment(ta, Alignment.BOTTOM_RIGHT);
         return ol;
     }
 

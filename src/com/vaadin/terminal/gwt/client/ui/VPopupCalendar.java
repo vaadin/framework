@@ -99,6 +99,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
 
     }
 
+    @SuppressWarnings("deprecation")
     private void updateValue(Date newDate) {
         Date currentDate = getCurrentDate();
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
@@ -148,6 +149,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
      * com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
     @Override
+    @SuppressWarnings("deprecation")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         boolean lastReadOnlyState = readonly;
         parsable = uidl.getBooleanAttribute("parsable");

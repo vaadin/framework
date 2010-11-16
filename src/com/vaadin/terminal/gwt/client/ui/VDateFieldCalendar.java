@@ -45,6 +45,7 @@ public class VDateFieldCalendar extends VDateField {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         super.updateFromUIDL(uidl, client);
         calendarPanel.setShowISOWeekNumbers(isShowISOWeekNumbers());
@@ -103,6 +104,7 @@ public class VDateFieldCalendar extends VDateField {
     /**
      * TODO refactor: almost same method as in VPopupCalendar.updateValue
      */
+    @SuppressWarnings("deprecation")
     private void updateValueFromPanel() {
         Date date2 = calendarPanel.getDate();
         Date currentDate = getCurrentDate();

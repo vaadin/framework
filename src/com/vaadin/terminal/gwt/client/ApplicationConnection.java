@@ -140,8 +140,8 @@ public class ApplicationConnection {
     private Set<Paintable> zeroHeightComponents = null;
 
     /**
-     * Keeps track of if there are (potentially) {@link DeferredCommand}s that
-     * are being executed. 0 == no DeferredCommands currently in progress, > 0
+     * Keeps track of if there are (potentially) deferred commands that are
+     * being executed. 0 == no deferred commands currently in progress, > 0
      * otherwise.
      */
     private int deferredCommandTrackers = 0;
@@ -762,7 +762,6 @@ public class ApplicationConnection {
      * 
      * @return
      */
-    @SuppressWarnings("unused")
     private boolean isExecutingDeferredCommands() {
         return (deferredCommandTrackers > 0);
     }

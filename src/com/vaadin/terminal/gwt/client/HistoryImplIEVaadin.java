@@ -70,7 +70,6 @@ public class HistoryImplIEVaadin extends HistoryImpl {
      *            untrusted string that may contain html
      * @return sanitized string
      */
-    @SuppressWarnings("unused")
     private static String escapeHtml(String maybeHtml) {
         final Element div = DOM.createDiv();
         DOM.setInnerText(div, maybeHtml);
@@ -82,7 +81,6 @@ public class HistoryImplIEVaadin extends HistoryImpl {
      * the fragment contains a '?'. To avoid this bug, we use location.href
      * instead.
      */
-    @SuppressWarnings("unused")
     private static native String getLocationHash()
     /*-{
        var href = $wnd.location.href;

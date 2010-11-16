@@ -16,6 +16,7 @@ public class CalendarEntry {
     private String description;
     private boolean notime;
 
+    @SuppressWarnings("deprecation")
     public CalendarEntry(String styleName, Date start, Date end, String title,
             String description, boolean notime) {
         this.styleName = styleName;
@@ -90,6 +91,7 @@ public class CalendarEntry {
         this.notime = notime;
     }
 
+    @SuppressWarnings("deprecation")
     public String getStringForDate(Date d) {
         // TODO format from DateTimeService
         String s = "";

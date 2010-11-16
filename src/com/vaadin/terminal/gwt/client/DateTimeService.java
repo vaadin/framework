@@ -311,7 +311,6 @@ public class DateTimeService {
 
     private String formatMonthNames(Date date, String formatStr) {
         if (formatStr.contains("MMMM")) {
-            @SuppressWarnings("deprecation")
             String monthName = getMonth(date.getMonth());
 
             if (monthName != null) {
@@ -332,7 +331,6 @@ public class DateTimeService {
 
         if (formatStr.contains("MMM")) {
 
-            @SuppressWarnings("deprecation")
             String monthName = getShortMonth(date.getMonth());
 
             if (monthName != null) {
