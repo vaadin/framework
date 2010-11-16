@@ -1,6 +1,5 @@
 package com.vaadin.tests.dd;
 
-import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 import org.apache.commons.io.output.NullOutputStream;
@@ -10,10 +9,6 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.StreamVariable;
-import com.vaadin.terminal.StreamVariable.StreamingEndEvent;
-import com.vaadin.terminal.StreamVariable.StreamingErrorEvent;
-import com.vaadin.terminal.StreamVariable.StreamingProgressEvent;
-import com.vaadin.terminal.StreamVariable.StreamingStartEvent;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
