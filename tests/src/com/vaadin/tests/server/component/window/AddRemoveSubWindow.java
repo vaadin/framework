@@ -1,6 +1,7 @@
 package com.vaadin.tests.server.component.window;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -67,20 +68,16 @@ public class AddRemoveSubWindow {
         assertEquals(subWindow.getParent(), mainWindow);
 
         // Remove from the wrong window, should result in an exception
-        try {
-            subWindow.removeWindow(subWindow);
-            // Should not get here
-            assertTrue("Remove window did not throw the expected exception",
-                    false);
-        } catch (IllegalArgumentException e) {
-
-        }
+        boolean removed = subWindow.removeWindow(subWindow);
+        assertFalse("Window was removed even though it should not have been",
+                removed);
 
         // Parent should still be set
         assertEquals(subWindow.getParent(), mainWindow);
 
         // Remove from the main window and assert it has been removed
-        mainWindow.removeWindow(subWindow);
+        removed = mainWindow.removeWindow(subWindow);
+        assertTrue("Window was not removed correctly", removed);
         assertNull(subWindow.getParent());
     }
 }

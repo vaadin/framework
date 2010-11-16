@@ -1431,22 +1431,23 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Since Vaadin 6.5, {@link CloseListener}s are called also when explicitly
      * removing a window by calling this method.
      * 
+     * Since Vaadin 6.5, returns a boolean indicating if the window was removed
+     * or not.
+     * 
      * @param window
      *            Window to be removed.
-     * @throws IllegalArgumentException
-     *             If the window to be removed is not a subwindow of this
-     *             window.
+     * @return true if the subwindow was removed, false otherwise
      */
-    public void removeWindow(Window window) throws IllegalArgumentException {
+    public boolean removeWindow(Window window) throws IllegalArgumentException {
         if (!subwindows.remove(window)) {
             // Window window is not a subwindow of this window.
-            throw new IllegalArgumentException(
-                    "The given window is not a sub window");
+            return false;
         }
         window.setParent(null);
         window.fireClose();
         requestRepaint();
 
+        return true;
     }
 
     /**
