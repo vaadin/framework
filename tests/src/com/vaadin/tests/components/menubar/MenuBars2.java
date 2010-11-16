@@ -233,7 +233,7 @@ public class MenuBars2 extends MenuBasedComponentTestCase<MenuBar> {
                 subMenuItem.setVisible(false);
             }
 
-            if (i % subMenuDensity == 0) {
+            if (i % subMenuDensity == 0 && level < subLevels) {
                 subMenuItem.setCommand(null);
                 createSubItems(subMenuItem, level + 1);
             }
