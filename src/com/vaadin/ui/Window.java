@@ -1438,7 +1438,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      *            Window to be removed.
      * @return true if the subwindow was removed, false otherwise
      */
-    public boolean removeWindow(Window window) throws IllegalArgumentException {
+    public boolean removeWindow(Window window) {
         if (!subwindows.remove(window)) {
             // Window window is not a subwindow of this window.
             return false;
