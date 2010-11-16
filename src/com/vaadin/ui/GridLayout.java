@@ -18,7 +18,6 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout;
-import com.vaadin.ui.GridLayout.OverlapsException;
 
 /**
  * <p>

@@ -13,7 +13,6 @@ import java.util.Map;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.StreamVariable.StreamingStartEvent;
 import com.vaadin.terminal.gwt.client.ui.VUpload;
 import com.vaadin.terminal.gwt.server.NoInputStreamException;
 import com.vaadin.terminal.gwt.server.NoOutputStreamException;

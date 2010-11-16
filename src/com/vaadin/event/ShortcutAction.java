@@ -8,8 +8,6 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.vaadin.event.Action.Handler;
-import com.vaadin.event.Action.Notifier;
 import com.vaadin.terminal.Resource;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Panel;
