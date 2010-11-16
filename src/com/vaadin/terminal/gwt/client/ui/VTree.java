@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -25,7 +26,6 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
@@ -1498,7 +1498,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
             if (!rendering) {
                 node.scrollIntoView();
             } else {
-                DeferredCommand.addCommand(new Command() {
+                Scheduler.get().scheduleDeferred(new Command() {
                     public void execute() {
                         focusedNode.scrollIntoView();
                     }

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TableCellElement;
@@ -16,7 +17,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -338,7 +338,7 @@ public class VTabsheet extends VTabsheetBase {
             addStyleDependentName("loading");
             // run updating variables in deferred command to bypass some FF
             // optimization issues
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     previousVisibleWidget = tp.getWidget(tp.getVisibleWidget());
                     DOM.setStyleAttribute(
@@ -890,7 +890,7 @@ public class VTabsheet extends VTabsheetBase {
              */
             final Style style = scroller.getStyle();
             style.setProperty("whiteSpace", "normal");
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     style.setProperty("whiteSpace", "");
                 }

@@ -16,6 +16,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -638,7 +639,7 @@ public class ApplicationConnection {
         }
         activeRequests--;
         // deferring to avoid flickering
-        DeferredCommand.addCommand(new Command() {
+        Scheduler.get().scheduleDeferred(new Command() {
             public void execute() {
                 if (activeRequests == 0) {
                     hideLoadingIndicator();
@@ -656,7 +657,7 @@ public class ApplicationConnection {
      */
     private void addDeferredCommandTracker() {
         deferredCommandTrackers++;
-        DeferredCommand.addCommand(new Command() {
+        Scheduler.get().scheduleDeferred(new Command() {
 
             public void execute() {
                 deferredCommandTrackers--;

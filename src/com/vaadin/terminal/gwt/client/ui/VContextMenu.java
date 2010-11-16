@@ -4,6 +4,7 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
@@ -21,7 +22,6 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -104,7 +104,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
                  * the focus is certainly moved to the menu in all browser after
                  * the positioning has been done.
                  */
-                DeferredCommand.addCommand(new Command() {
+                Scheduler.get().scheduleDeferred(new Command() {
                     public void execute() {
                         // Focus the menu.
                         menu.setFocus(true);

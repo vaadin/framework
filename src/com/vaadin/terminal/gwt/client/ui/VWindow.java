@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
@@ -639,7 +639,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
     /** Disable overflow auto with FF3 to fix #1837. */
     private void fixFF3OverflowBug() {
         if (BrowserInfo.get().isFF3()) {
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     DOM.setStyleAttribute(getElement(), "overflow", "");
                 }
@@ -658,7 +658,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
     private void setFF2CaretFixEnabled(boolean enable) {
         if (BrowserInfo.get().isFF2()) {
             if (enable) {
-                DeferredCommand.addCommand(new Command() {
+                Scheduler.get().scheduleDeferred(new Command() {
                     public void execute() {
                         DOM.setStyleAttribute(getElement(), "overflow", "auto");
                     }
@@ -687,7 +687,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
                 showModalityCurtain();
                 bringToFront();
             } else {
-                DeferredCommand.addCommand(new Command() {
+                Scheduler.get().scheduleDeferred(new Command() {
                     public void execute() {
                         // vaadinModality window must on top of others
                         bringToFront();

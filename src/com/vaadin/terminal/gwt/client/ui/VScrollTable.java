@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.NodeList;
@@ -40,7 +41,6 @@ import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -816,7 +816,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 // webkits may still bug with their disturbing scrollbar bug,
                 // See #3457
                 // run overflow fix for scrollable area
-                DeferredCommand.addCommand(new Command() {
+                Scheduler.get().scheduleDeferred(new Command() {
                     public void execute() {
                         Util.runWebkitOverflowAutoFix(scrollBodyPanel
                                 .getElement());
@@ -1492,7 +1492,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (firstvisible > 0) {
             // Deferred due some Firefox oddities. IE & Safari could survive
             // without
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     scrollBodyPanel
                             .setScrollPosition((int) (firstvisible * scrollBody
@@ -1527,7 +1527,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * (child components widths are correct)
          */
         scrollBody.reLayoutComponents();
-        DeferredCommand.addCommand(new Command() {
+        Scheduler.get().scheduleDeferred(new Command() {
             public void execute() {
                 Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
             }
@@ -1805,7 +1805,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     int tdWidth = width + scrollBody.getCellExtraWidth();
                     setWidth(tdWidth + "px");
                 } else {
-                    DeferredCommand.addCommand(new Command() {
+                    Scheduler.get().scheduleDeferred(new Command() {
                         public void execute() {
                             int tdWidth = width
                                     + scrollBody.getCellExtraWidth();
@@ -2708,7 +2708,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                             - borderWidths;
                     setWidth(tdWidth + "px");
                 } else {
-                    DeferredCommand.addCommand(new Command() {
+                    Scheduler.get().scheduleDeferred(new Command() {
                         public void execute() {
                             int borderWidths = 1;
                             int tdWidth = width
@@ -4564,7 +4564,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
             }
             scrollBody.reLayoutComponents();
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
                 }
@@ -4681,7 +4681,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             super.setVisible(visible);
             if (initializedAndAttached) {
                 if (visible) {
-                    DeferredCommand.addCommand(new Command() {
+                    Scheduler.get().scheduleDeferred(new Command() {
                         public void execute() {
                             scrollBodyPanel
                                     .setScrollPosition((int) (firstRowInViewPort * scrollBody
@@ -4734,7 +4734,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // for webkit, although it really is not. Expecting to have the
             // correct
             // value available soon.
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     onScroll(null);
                 }

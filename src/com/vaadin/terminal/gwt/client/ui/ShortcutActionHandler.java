@@ -7,9 +7,9 @@ package com.vaadin.terminal.gwt.client.ui;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -155,14 +155,14 @@ public class ShortcutActionHandler {
                     .onBeforeShortcutAction(event);
         } else {
             shakeTarget(et);
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     shakeTarget(et);
                 }
             });
         }
 
-        DeferredCommand.addCommand(new Command() {
+        Scheduler.get().scheduleDeferred(new Command() {
             public void execute() {
                 if (finalTarget != null) {
                     client.updateVariable(paintableId, "actiontarget",
@@ -193,7 +193,7 @@ public class ShortcutActionHandler {
             // will mess up with focus and blur event if the focus is not
             // deferred. Will cause a small flickering, so not doing it for all
             // browsers.
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     focus(e);
                 }

@@ -6,8 +6,8 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Set;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -54,7 +54,7 @@ public class VCustomComponent extends SimplePanel implements Container {
 
         boolean updateDynamicSize = updateDynamicSize();
         if (updateDynamicSize) {
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     // FIXME deferred relative size update needed to fix some
                     // scrollbar issues in sampler. This must be the wrong way

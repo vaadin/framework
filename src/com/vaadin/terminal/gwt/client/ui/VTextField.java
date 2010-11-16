@@ -4,6 +4,7 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -12,7 +13,6 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -235,7 +235,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
              * stabilized. In tests, about ten times better performance is
              * achieved with this optimization. See for eg. #2898
              */
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     String fieldValue;
                     if (prompting) {
@@ -274,7 +274,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             /*
              * Gecko defers setting the text so we need to defer the selection.
              */
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     setSelectionRange(pos, length);
                 }

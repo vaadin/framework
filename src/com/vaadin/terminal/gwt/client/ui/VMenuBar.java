@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
@@ -20,7 +21,6 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -509,7 +509,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
             hideParents(true);
             menuVisible = false;
-            DeferredCommand.addCommand(item.getCommand());
+            Scheduler.get().scheduleDeferred(item.getCommand());
 
         } else {
             if (item.getSubMenu() != null
@@ -614,7 +614,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         // Part of a fix to correct #3850
         if (BrowserInfo.get().isIE7()) {
             popup.getElement().getStyle().setProperty("zoom", "");
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     if (popup == null) {
                         // The child menu can be hidden before this command is

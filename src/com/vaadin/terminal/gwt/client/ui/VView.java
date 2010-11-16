@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.DomEvent.Type;
@@ -19,7 +20,6 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -190,7 +190,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                 // source will be opened to this browser window, but we may have
                 // to finish rendering this window in case this is a download
                 // (and window stays open).
-                DeferredCommand.addCommand(new Command() {
+                Scheduler.get().scheduleDeferred(new Command() {
                     public void execute() {
                         goTo(url);
                     }
@@ -322,7 +322,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
         if (uidl.hasAttribute("focused")) {
             // set focused component when render phase is finished
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     final Paintable toBeFocused = uidl.getPaintableAttribute(
                             "focused", connection);
@@ -383,7 +383,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      */
     void scrollIntoView(final UIDL uidl) {
         if (uidl.hasAttribute("scrollTo")) {
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     final Paintable paintable = uidl.getPaintableAttribute(
                             "scrollTo", connection);

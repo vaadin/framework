@@ -4,10 +4,10 @@
 // 
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -158,7 +158,7 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
 
         if (!vertical) {
             // Draw handle with a delay to allow base to gain maximum width
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     buildHandle();
                     setValue(value, false);
@@ -208,7 +208,7 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
             // Set minimum size and adjust after all components have
             // (supposedly) been drawn completely.
             DOM.setStyleAttribute(base, styleAttribute, MIN_SIZE + "px");
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     final Element p = DOM.getParent(getElement());
                     if (DOM.getElementPropertyInt(p, domProperty) > (MIN_SIZE + 5)) {

@@ -4,6 +4,7 @@
 
 package com.vaadin.terminal.gwt.client.ui.richtextarea;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -15,7 +16,6 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -286,7 +286,7 @@ public class VRichTextArea extends Composite implements Paintable, Field,
              * The formatter height will be initially calculated wrong so we
              * delay the height setting so the DOM has had time to stabilize.
              */
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     int editorHeight = getOffsetHeight()
                             - getExtraVerticalPixels()
@@ -328,7 +328,7 @@ public class VRichTextArea extends Composite implements Paintable, Field,
 
     public void onKeyPress(KeyPressEvent event) {
         if (maxLength >= 0) {
-            DeferredCommand.addCommand(new Command() {
+            Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     if (rta.getHTML().length() > maxLength) {
                         rta.setHTML(rta.getHTML().substring(0, maxLength));
