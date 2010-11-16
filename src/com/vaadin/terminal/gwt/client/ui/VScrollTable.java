@@ -687,12 +687,19 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             tFoot.clear();
         }
 
+        int oldPageLength = pageLength;
         if (uidl.hasAttribute("pagelength")) {
             pageLength = uidl.getIntAttribute("pagelength");
         } else {
             // pagelenght is "0" meaning scrolling is turned off
             pageLength = totalRows;
         }
+
+        if (oldPageLength != pageLength && initializedAndAttached) {
+            // page length changed, need to update size
+            sizeInit();
+        }
+
         firstvisible = uidl.hasVariable("firstvisible") ? uidl
                 .getIntVariable("firstvisible") : 0;
         if (firstvisible != lastRequestedFirstvisible && scrollBody != null) {
@@ -4447,14 +4454,20 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
             setContentWidth(innerPixels);
 
-            if (!rendering) {
-                // readjust undefined width columns
-                lazyAdjustColumnWidths.cancel();
-                lazyAdjustColumnWidths.schedule(LAZY_COLUMN_ADJUST_TIMEOUT);
-            }
+            // readjust undefined width columns
+            lazyAdjustColumnWidths.cancel();
+            lazyAdjustColumnWidths.schedule(LAZY_COLUMN_ADJUST_TIMEOUT);
 
         } else {
+            // Undefined width
             super.setWidth("");
+
+            // Readjust size of table
+            sizeInit();
+
+            // readjust undefined width columns
+            lazyAdjustColumnWidths.cancel();
+            lazyAdjustColumnWidths.schedule(LAZY_COLUMN_ADJUST_TIMEOUT);
         }
 
         /*
