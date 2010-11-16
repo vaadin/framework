@@ -3,6 +3,7 @@ package com.vaadin.tests.tickets;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
@@ -26,7 +27,7 @@ public class Ticket2040 extends com.vaadin.Application {
         ts.setSizeFull();
         ts.setWidth("300px");
 
-        TextField l = new TextField("DSFS");
+        TextArea l = new TextArea("DSFS");
         l.setRows(2);
         l.setStyleName("red");
         l.setSizeFull();
@@ -46,7 +47,7 @@ public class Ticket2040 extends com.vaadin.Application {
         ts.setHeight("200px");
         ts.setWidth("300px");
 
-        l = new TextField("DSFS");
+        l = new TextArea("DSFS");
         l.setRows(2);
         l.setStyleName("red");
         l.setSizeFull();
@@ -66,7 +67,7 @@ public class Ticket2040 extends com.vaadin.Application {
         ts.setHeight("50%");
         ts.setWidth("300px");
 
-        l = new TextField("DSFS");
+        l = new TextArea("DSFS");
         l.setRows(2);
         l.setStyleName("red");
         l.setSizeFull();

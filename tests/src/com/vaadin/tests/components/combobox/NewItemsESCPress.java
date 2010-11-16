@@ -3,14 +3,14 @@ package com.vaadin.tests.components.combobox;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractSelect.NewItemHandler;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.TextArea;
 
 @SuppressWarnings("serial")
 public class NewItemsESCPress extends TestBase {
 
     @Override
     protected void setup() {
-        final TextField addedItems = new TextField("Last added items:");
+        final TextArea addedItems = new TextArea("Last added items:");
         addedItems.setRows(10);
         addComponent(addedItems);
 

@@ -2,6 +2,7 @@ package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
 public class VerticalScrollbarPosition extends TestBase {
@@ -21,7 +22,7 @@ public class VerticalScrollbarPosition extends TestBase {
         TabSheet tabsheet = new TabSheet();
         tabsheet.setWidth(null);
         tabsheet.setHeight("200px");
-        TextField tf = new TextField();
+        TextArea tf = new TextArea();
         tf.setRows(2);
         tf.setHeight("300px");
         tf.setWidth("200px");

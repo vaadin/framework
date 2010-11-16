@@ -2,7 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.AbstractOrderedLayout;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.Window;
 
 public class Ticket2235 extends Application {
@@ -18,7 +18,7 @@ public class Ticket2235 extends Application {
     private void createUI(AbstractOrderedLayout layout) {
         layout.setSizeFull();
 
-        TextField tf = new TextField();
+        TextArea tf = new TextArea();
         tf.setCaption("A text field");
         tf.setSizeFull();
         tf.setRows(2);

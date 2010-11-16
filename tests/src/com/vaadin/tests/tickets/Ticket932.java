@@ -5,6 +5,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.RichTextArea;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
@@ -35,7 +36,7 @@ public class Ticket932 extends Application {
         mainWin.addComponent(tx);
         mainWin.addComponent(b);
 
-        final TextField tx2 = new TextField(
+        final TextArea tx2 = new TextArea(
                 "Textfield with maxlenght 10, multirow ");
         mainWin.addComponent(tx2);
         tx2.setImmediate(true);

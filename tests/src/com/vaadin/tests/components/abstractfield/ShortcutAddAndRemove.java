@@ -6,12 +6,12 @@ import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.TextArea;
 
 public class ShortcutAddAndRemove extends TestBase {
 
     private Log log;
-    private TextField textArea;
+    private TextArea textArea;
 
     @Override
     protected void setup() {
@@ -41,7 +41,7 @@ public class ShortcutAddAndRemove extends TestBase {
         });
         addComponent(log);
         addComponent(logButton);
-        textArea = new TextField("Enter key does not break lines ...");
+        textArea = new TextArea("Enter key does not break lines ...");
         textArea.setRows(5);
         textArea.setColumns(20);
         addComponent(textArea);

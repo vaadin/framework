@@ -25,7 +25,7 @@ import com.vaadin.ui.Form;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.Window;
 
 public class TestAbsoluteLayout extends TestBase {
@@ -36,7 +36,7 @@ public class TestAbsoluteLayout extends TestBase {
         public Field createField(Item item, Object propertyId,
                 Component uiContext) {
             if (propertyId.equals("CSSString")) {
-                TextField f = new TextField();
+                TextArea f = new TextArea();
                 f.setRows(5);
                 f.setHeight("8em");
                 f.setCaption("CSS string");

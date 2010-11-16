@@ -304,9 +304,9 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
         ol.setWidth("");
         ol.setCaption("Dynamic width and dynamic height");
-        TextField tf;
+        TextArea tf;
 
-        tf = new TextField("100% high TextField");
+        tf = new TextArea("100% high TextField");
         tf.setCaption(null);
         tf.setRequired(true);
         tf.setValue("100% high Field");
@@ -315,7 +315,7 @@ public class OrderedLayoutBasics extends TestBase {
         tf.setRows(2);
         ol.addComponent(tf);
 
-        tf = new TextField("100% high TextField");
+        tf = new TextArea("100% high TextField");
         tf.setCaption("100% high TextField");
         tf.setRequired(true);
         tf.setValue("100% high Field");
@@ -326,7 +326,7 @@ public class OrderedLayoutBasics extends TestBase {
 
         for (int i = 1; i < 4; i++) {
             int w = i * 100;
-            tf = new TextField("Field " + i);
+            tf = new TextArea("Field " + i);
             tf.setRows(2);
             tf.setValue(w + "px high, " + w + "px wide TextField, valign: "
                     + valignName[i % 3]);
@@ -343,7 +343,7 @@ public class OrderedLayoutBasics extends TestBase {
 
         }
 
-        tf = new TextField("100% high TextField");
+        tf = new TextArea("100% high TextField");
         tf.setValue("100% high 100px wide");
         tf.setRows(2);
         tf.setHeight("100%");
@@ -362,9 +362,9 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setCaption("Fixed width (" + ol.getWidth()
                 + "px) and fixed height (" + ol.getHeight()
                 + "px) / layout_field_100pct_button_field");
-        TextField tf;
+        TextArea tf;
 
-        tf = new TextField("300px x 300px Field");
+        tf = new TextArea("300px x 300px Field");
         // tf.setIcon(new ThemeResource("icons/16/document-add.png"));
         tf.setValue("300x300 field");
         tf.setRows(2);
@@ -382,7 +382,7 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setExpandRatio(b, 1.0f);
         ol.setComponentAlignment(b, Alignment.MIDDLE_RIGHT);
 
-        tf = new TextField("300px x 300px Field");
+        tf = new TextArea("300px x 300px Field");
         // tf.setIcon(new ThemeResource("icons/16/document-add.png"));
         tf.setValue("300x300 field");
         tf.setRows(2);
@@ -404,9 +404,9 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setCaption("Fixed width (" + ol.getWidth()
                 + "px) and fixed height (" + ol.getHeight()
                 + "px) / layout_basic_test");
-        TextField tf;
+        TextArea tf;
 
-        tf = new TextField("300px x 300px Field");
+        tf = new TextArea("300px x 300px Field");
         // tf.setIcon(new ThemeResource("icons/16/document-add.png"));
         tf.setValue("300x300 field");
         tf.setRows(2);
@@ -424,7 +424,7 @@ public class OrderedLayoutBasics extends TestBase {
         // ol.setComponentAlignment(b, AlignmentHandler.ALIGNMENT_RIGHT,
         // AlignmentHandler.ALIGNMENT_VERTICAL_CENTER);
 
-        tf = new TextField("300px x 300px Field");
+        tf = new TextArea("300px x 300px Field");
         // tf.setIcon(new ThemeResource("icons/16/document-add.png"));
         tf.setValue("300x300 field");
         tf.setRows(2);
@@ -446,9 +446,9 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setCaption("Fixed width (" + ol.getWidth()
                 + "px) and fixed height (" + ol.getHeight()
                 + "px) / layout_symmetric_fields");
-        TextField tf;
+        TextArea tf;
 
-        tf = new TextField("300px x 300px Field");
+        tf = new TextArea("300px x 300px Field");
         tf.setValue("300x300 field");
         tf.setRows(2);
         tf.setHeight("300px");
@@ -456,7 +456,7 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
 
-        tf = new TextField("300px x 300px Field");
+        tf = new TextArea("300px x 300px Field");
         tf.setValue("300x300 field");
         tf.setRows(2);
         tf.setHeight("300px");
@@ -464,7 +464,7 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.MIDDLE_CENTER);
 
-        tf = new TextField("300px x 300px Field");
+        tf = new TextArea("300px x 300px Field");
         tf.setValue("300x300 field");
         tf.setRows(2);
         tf.setHeight("300px");
@@ -485,7 +485,7 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setCaption("Fixed width (" + ol.getWidth()
                 + "px) and fixed height (" + ol.getHeight()
                 + "px) / layout_leftAndRight");
-        TextField tf;
+        TextArea tf;
 
         // tf = new TextField("100%x100% Field");
         // tf.setCaption(null);
@@ -529,7 +529,7 @@ public class OrderedLayoutBasics extends TestBase {
         // AlignmentHandler.ALIGNMENT_TOP);
         // ol.addComponent(tf);
 
-        tf = new TextField("300px x 300px Field");
+        tf = new TextArea("300px x 300px Field");
         // tf.setIcon(new ThemeResource("icons/16/document-add.png"));
         tf.setValue("300x300 field");
         tf.setRows(2);
@@ -539,7 +539,7 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
 
-        tf = new TextField("300px x 300px Field");
+        tf = new TextArea("300px x 300px Field");
         // tf.setIcon(new ThemeResource("icons/16/document-add.png"));
         tf.setValue("300x300 field");
         tf.setRows(2);
@@ -560,9 +560,9 @@ public class OrderedLayoutBasics extends TestBase {
         // ol.setWidth("");
         ol.setCaption("Filled with fixed width (" + ol.getWidth()
                 + "px) and fixed height (" + ol.getHeight() + "px)");
-        TextField tf;
+        TextArea tf;
 
-        tf = new TextField("60%x100% Field");
+        tf = new TextArea("60%x100% Field");
         tf.setCaption("This one has a caption");
         tf.setValue("60% x 100% TextField");
         tf.setWidth("100%");
@@ -577,7 +577,7 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setExpandRatio(tf, 1f);
         //
 
-        tf = new TextField("60%x60% Field");
+        tf = new TextArea("60%x60% Field");
         tf.setCaption(null);
         tf.setValue("60% x 60% TextField");
         tf.setWidth("100%");
@@ -622,7 +622,7 @@ public class OrderedLayoutBasics extends TestBase {
         // AlignmentHandler.ALIGNMENT_TOP);
         // ol.addComponent(tf);
 
-        tf = new TextField("200px x 200px Field");
+        tf = new TextArea("200px x 200px Field");
         // tf.setIcon(new ThemeResource("icons/16/document-add.png"));
         tf.setValue("200x200 field");
         tf.setRows(2);
@@ -632,7 +632,7 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
 
-        tf = new TextField("200px x 200px Field");
+        tf = new TextArea("200px x 200px Field");
         // tf.setIcon(new ThemeResource("icons/16/document-add.png"));
         tf.setValue("200x200 field");
         tf.setRows(2);
@@ -653,10 +653,10 @@ public class OrderedLayoutBasics extends TestBase {
         // ol.setWidth("");
         ol.setCaption("OverFilled with fixed width (" + ol.getWidth()
                 + "px) and fixed height (" + ol.getHeight() + "px)");
-        TextField tf;
+        TextArea tf;
 
         for (int i = 0; i < 5; i++) {
-            tf = new TextField("200x200px Field");
+            tf = new TextArea("200x200px Field");
             tf.setCaption("This one has a caption");
             tf.setValue("200x200 TextField");
             tf.setWidth("200px");
@@ -682,10 +682,10 @@ public class OrderedLayoutBasics extends TestBase {
         // ol.setWidth("");
         ol.setCaption("OverFilled with fixed width (" + ol.getWidth()
                 + "px) and dynamic height");
-        TextField tf;
+        TextArea tf;
 
         for (int i = 0; i < 10; i++) {
-            tf = new TextField("200x200px Field");
+            tf = new TextArea("200x200px Field");
             tf.setCaption("This one has a caption");
             tf.setWidth("200px");
             tf.setHeight(((i + 1) * 50) + "px");

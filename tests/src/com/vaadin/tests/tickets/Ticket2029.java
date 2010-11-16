@@ -11,6 +11,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -114,7 +115,7 @@ public class Ticket2029 extends Application {
         p.getContent().setSizeFull();
 
         for (int i = 0; i < COMPONENTS; i++) {
-            TextField tf = new TextField();
+            TextArea tf = new TextArea();
             if (r.nextBoolean()) {
                 tf.setCaption("Caption");
             }

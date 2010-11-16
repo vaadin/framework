@@ -10,13 +10,13 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2021 extends Application {
 
-    private TextField tf1, tf2, tf3;
+    private TextArea tf1, tf2, tf3;
 
     private String contents = "This TextField SHOULD FILL the panel and NOT CAUSE any scrollbars to appear in the Panel. Scrollbars SHOULD appear in the TextField AND the whole scrollbars (includinc arrow down) SHOULD be visible.\n\n"
             + ""
@@ -39,7 +39,7 @@ public class Ticket2021 extends Application {
 
         w.getContent().addComponent(p);
 
-        tf1 = new TextField();
+        tf1 = new TextArea();
         tf1.setRows(5);
         tf1.setSizeFull();
         tf1.setValue(contents);
@@ -60,7 +60,7 @@ public class Ticket2021 extends Application {
 
         w.getContent().addComponent(p2);
 
-        tf2 = new TextField();
+        tf2 = new TextArea();
         tf2.setRows(5);
         tf2.setSizeFull();
         tf2.setValue(contents);
@@ -86,7 +86,7 @@ public class Ticket2021 extends Application {
         p3.getContent().addComponent(gl);
         w.getContent().addComponent(p3);
 
-        tf3 = new TextField();
+        tf3 = new TextArea();
         tf3.setRows(5);
         tf3.setSizeFull();
         tf3.setValue(contents);
