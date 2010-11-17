@@ -874,15 +874,6 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
 
     <target name="manual-init" depends="init">
-        <!-- Can run XEP only if license is available. -->
-        <available file="build/lib/XEP/license.xml" property="xep.license.available" />
-
-        <!-- Path to installed XEP license. -->
-        <property name="xep.license.path.installed" value="/opt/RenderX/XEP/license.xml"/>
-        <echo>XEP license expected to be installed as ${xep.license.path.installed}</echo>
-
-        <!-- Can copy XEP license only if it is available. -->
-        <available file="${xep.license.path.installed}" property="xep.license.installed"/>
     </target>
 
     <!-- Checkout doc repository. -->
@@ -906,13 +897,8 @@
         <echo>Manual checked out from repository successfully</echo>
     </target>
 
-    <!-- If the XEP is installed, copy it to proper place. -->
-    <target name="xep-license-copy" if="xep.license.installed">
-        <copy file="${xep.license.path.installed}" todir="${docdir}/build/lib/XEP"/>
-    </target>
-
     <!-- Build manual. -->
-    <target name="manual-build" depends="manual-init, xep-license-copy">
+    <target name="manual-build" depends="manual-init">
     	<!-- The HTML and Eclipse Manual must be built with separate runs --> 
         <ant dir="${docdir}" antfile="build/build.xml" inheritAll="false">
             <property name="version" value="${version.full}"/>
