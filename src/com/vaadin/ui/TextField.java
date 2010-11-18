@@ -198,9 +198,9 @@ public class TextField extends AbstractTextField implements
         if (rows != 0) {
             target.addAttribute("rows", String.valueOf(rows));
             target.addAttribute("multiline", true);
-            if (!isWordwrap()) {
-                target.addAttribute("wordwrap", false);
-            }
+
+            // For backward compatibility; to be moved to TextArea
+            target.addAttribute("wordwrap", isWordwrap());
         }
 
         if (getInputPrompt() != null) {
@@ -484,7 +484,7 @@ public class TextField extends AbstractTextField implements
         textChangeEventPending = true;
     }
 
-    /* ** Text Change Events ** */
+    /*   ** Text Change Events ** */
 
     /**
      * Sets the mode how the TextField triggers {@link TextChangeEvent}s.

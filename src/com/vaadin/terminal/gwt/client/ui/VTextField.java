@@ -67,6 +67,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     private String inputPrompt = null;
     private boolean prompting = false;
     private int lastCursorPos = -1;
+    private boolean wordwrap = true;
 
     public VTextField() {
         this(DOM.createInputText());
@@ -108,8 +109,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         }
 
         if (listenTextChangeEvents
-                && (event.getTypeInt() & TEXTCHANGE_EVENTS) == event
-                        .getTypeInt()) {
+                && (event.getTypeInt() & TEXTCHANGE_EVENTS) == event.getTypeInt()) {
             deferTextChangeEvent();
         }
 
@@ -199,20 +199,18 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
 
         inputPrompt = uidl.getStringAttribute(ATTR_INPUTPROMPT);
 
-        setMaxLength(uidl.hasAttribute("maxLength") ? uidl
-                .getIntAttribute("maxLength") : -1);
+        setMaxLength(uidl.hasAttribute("maxLength") ? uidl.getIntAttribute("maxLength")
+                : -1);
 
         immediate = uidl.getBooleanAttribute("immediate");
 
         listenTextChangeEvents = client.hasEventListeners(this, "ie");
         if (listenTextChangeEvents) {
-            textChangeEventMode = uidl
-                    .getStringAttribute(ATTR_TEXTCHANGE_EVENTMODE);
+            textChangeEventMode = uidl.getStringAttribute(ATTR_TEXTCHANGE_EVENTMODE);
             if (textChangeEventMode.equals(TEXTCHANGE_MODE_EAGER)) {
                 textChangeEventTimeout = 1;
             } else {
-                textChangeEventTimeout = uidl
-                        .getIntAttribute(ATTR_TEXTCHANGE_TIMEOUT);
+                textChangeEventTimeout = uidl.getIntAttribute(ATTR_TEXTCHANGE_TIMEOUT);
             }
             sinkEvents(TEXTCHANGE_EVENTS);
             attachCutEventListener(getElement());
@@ -222,8 +220,8 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             setColumns(new Integer(uidl.getStringAttribute("cols")).intValue());
         }
 
-        final String text = uidl.hasVariable("text") ? uidl
-                .getStringVariable("text") : null;
+        final String text = uidl.hasVariable("text") ? uidl.getStringVariable("text")
+                : null;
         setPrompting(inputPrompt != null && focusedTextField != this
                 && (text == null || text.equals("")));
 
@@ -279,6 +277,11 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
                     setSelectionRange(pos, length);
                 }
             });
+        }
+
+        // For backward compatibility; to be moved to TextArea
+        if (uidl.hasAttribute("wordwrap")) {
+            setWordwrap(uidl.getBooleanAttribute("wordwrap"));
         }
     }
 
@@ -538,4 +541,18 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         valueChange(false);
     }
 
+    // For backward compatibility; to be moved to TextArea
+    public void setWordwrap(boolean enabled) {
+        if (enabled == wordwrap)
+            return; // No change
+
+        if (enabled) {
+            DOM.removeElementAttribute(getElement(), "wrap");
+            DOM.setStyleAttribute(getElement(), "overflow", null);
+        } else {
+            DOM.setElementAttribute(getElement(), "wrap", "off");
+            DOM.setStyleAttribute(getElement(), "overflow", "auto");
+        }
+        wordwrap = enabled;
+    }
 }
