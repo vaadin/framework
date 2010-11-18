@@ -357,19 +357,13 @@ public class ApplicationConnection {
 
         String token = History.getToken();
 
-        String uri;
         // TODO figure out how client and view size could be used better on
         // server. screen size can be accessed via Browser object, but other
         // values currently only via transaction listener.
-        if (configuration.usePortletURLs()) {
-            uri = "&";
-        } else {
-            uri = "?";
-        }
-        uri += "repaintAll=1&" + "sh=" + screenHeight + "&sw=" + screenWidth
-                + "&cw=" + clientWidth + "&ch=" + clientHeight + "&vw="
-                + offsetWidth + "&vh=" + offsetHeight + "&fr=" + token;
-        return uri;
+        String parameters = "repaintAll=1&" + "sh=" + screenHeight + "&sw="
+                + screenWidth + "&cw=" + clientWidth + "&ch=" + clientHeight
+                + "&vw=" + offsetWidth + "&vh=" + offsetHeight + "&fr=" + token;
+        return parameters;
     }
 
     protected void repaintAll() {
@@ -386,6 +380,19 @@ public class ApplicationConnection {
         makeUidlRequest("", params, false);
     }
 
+    /**
+     * Makes an UIDL request to the server.
+     * 
+     * @param requestData
+     *            Data that is passed to the server.
+     * @param extraParams
+     *            Parameters that are added as GET parameters to the url.
+     *            Contains key=value pairs joined by & characters or is empty if
+     *            no parameters should be added. Should not start with any
+     *            special character.
+     * @param forceSync
+     *            true if the request should be synchronous, false otherwise
+     */
     protected void makeUidlRequest(final String requestData,
             final String extraParams, final boolean forceSync) {
         startRequest();
@@ -398,14 +405,12 @@ public class ApplicationConnection {
         } else {
             uri = getAppUri() + "UIDL" + configuration.getPathInfo();
         }
-        uri += extraParams;
+
+        if (extraParams != null && extraParams.length() > 0) {
+            uri = addGetParameters(uri, extraParams);
+        }
         if (windowName != null && windowName.length() > 0) {
-            if (uri.contains("?")) {
-                uri += "&";
-            } else {
-                uri += "?";
-            }
-            uri += "windowName=" + windowName;
+            uri = addGetParameters(uri, "windowName=" + windowName);
         }
 
         if (!forceSync) {
@@ -2310,6 +2315,47 @@ public class ApplicationConnection {
     public boolean hasEventListeners(Paintable paintable, String eventIdentifier) {
         return idToPaintableDetail.get(getPid(paintable)).hasEventListeners(
                 eventIdentifier);
+    }
+
+    /**
+     * Adds the get parameters to the uri and returns the new uri that contains
+     * the parameters.
+     * 
+     * @param uri
+     *            The uri to which the parameters should be added.
+     * @param extraParams
+     *            One or more parameters in the format "a=b" or "c=d&e=f". An
+     *            empty string is allowed but will not modify the url.
+     * @return The modified URI with the get parameters in extraParams added.
+     */
+    public static String addGetParameters(String uri, String extraParams) {
+        if (extraParams == null || extraParams.length() == 0) {
+            return uri;
+        }
+        // RFC 3986: The query component is indicated by the first question
+        // mark ("?") character and terminated by a number sign ("#") character
+        // or by the end of the URI.
+        String fragment = null;
+        int hashPosition = uri.indexOf('#');
+        if (hashPosition != -1) {
+            // Fragment including "#"
+            fragment = uri.substring(hashPosition);
+            // The full uri before the fragment
+            uri = uri.substring(0, hashPosition);
+        }
+
+        if (uri.contains("?")) {
+            uri += "&";
+        } else {
+            uri += "?";
+        }
+        uri += extraParams;
+
+        if (fragment != null) {
+            uri += fragment;
+        }
+
+        return uri;
     }
 
 }
