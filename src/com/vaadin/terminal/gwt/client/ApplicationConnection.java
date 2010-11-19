@@ -24,7 +24,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
@@ -655,9 +654,9 @@ public class ApplicationConnection {
     }
 
     /**
-     * Adds a {@link DeferredCommand} tracker. Increments the tracker count when
-     * called and decrements in a DeferredCommand that is executed after all
-     * other DeferredCommands have executed.
+     * Adds a deferred command tracker. Increments the tracker count when called
+     * and decrements in a deferred command that is executed after all other
+     * deferred commands have executed.
      * 
      */
     private void addDeferredCommandTracker() {
@@ -757,15 +756,16 @@ public class ApplicationConnection {
     }
 
     /**
-     * Checks if {@link DeferredCommand}s are (potentially) still being executed
-     * as a result of an update from the server. Returns true if a
-     * DeferredCommand might still be executing, false otherwise. This will fail
-     * if a DeferredCommand adds another DeferredCommand.
+     * Checks if deferred commands are (potentially) still being executed as a
+     * result of an update from the server. Returns true if a deferred command
+     * might still be executing, false otherwise. This will not work correctly
+     * if a deferred command is added in another deferred command.
      * <p>
-     * Called by the native "client.isActive" function.
+     * Used by the native "client.isActive" function.
      * </p>
      * 
-     * @return
+     * @return true if deferred commands are (potentially) being executed, false
+     *         otherwise
      */
     private boolean isExecutingDeferredCommands() {
         return (deferredCommandTrackers > 0);
