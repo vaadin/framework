@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.button;
 
-import com.vaadin.tests.components.abstractfield.AbstractFieldTestCase;
+import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
-public class Buttons2 extends AbstractFieldTestCase<Button> implements
+public class Buttons2 extends AbstractFieldTest<Button> implements
         ClickListener {
 
     private Command<Button, Boolean> switchModeCommand = new Command<Button, Boolean>() {
@@ -35,9 +35,6 @@ public class Buttons2 extends AbstractFieldTestCase<Button> implements
     @Override
     protected void createActions() {
         super.createActions();
-
-        createFocusListener(CATEGORY_LISTENERS);
-        createBlurListener(CATEGORY_LISTENERS);
 
         createBooleanAction("Switch mode", CATEGORY_FEATURES, false,
                 switchModeCommand);

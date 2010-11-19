@@ -13,8 +13,6 @@ public class OptionGroups extends AbstractSelectTestCase<OptionGroup> {
     @Override
     protected void createActions() {
         super.createActions();
-        createFocusListener(CATEGORY_LISTENERS);
-        createBlurListener(CATEGORY_LISTENERS);
 
         createDisabledItemsMultiToggle("Disabled items");
     }

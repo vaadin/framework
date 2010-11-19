@@ -16,8 +16,7 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 
-//TODO swap the inheritance order so AbstractComponentTestCase refers to AbstractComponent and this is the base class. Can only be done when all old tests are converted to use this.
-public abstract class MenuBasedComponentTestCase<T extends AbstractComponent>
+public abstract class AbstractComponentTest<T extends AbstractComponent>
         extends AbstractComponentTestCase<T> {
 
     protected static final String TEXT_SHORT = "Short";

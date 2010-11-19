@@ -11,11 +11,11 @@ import com.vaadin.event.FieldEvents.BlurNotifier;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
-import com.vaadin.tests.components.MenuBasedComponentTestCase;
+import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.AbstractField;
 
-public abstract class AbstractFieldTestCase<T extends AbstractField> extends
-        MenuBasedComponentTestCase<T> implements ValueChangeListener,
+public abstract class AbstractFieldTest<T extends AbstractField> extends
+        AbstractComponentTest<T> implements ValueChangeListener,
         ReadOnlyStatusChangeListener, FocusListener, BlurListener {
 
     @Override
@@ -38,6 +38,14 @@ public abstract class AbstractFieldTestCase<T extends AbstractField> extends
         createSelectAction("Required error message", category, options, "-",
                 requiredErrorMessageCommand);
 
+        if (FocusNotifier.class.isAssignableFrom(getTestClass())) {
+            createFocusListener(CATEGORY_LISTENERS);
+        }
+
+        if (BlurNotifier.class.isAssignableFrom(getTestClass())) {
+            createBlurListener(CATEGORY_LISTENERS);
+        }
+
     }
 
     private void createValueChangeListener(String category) {
@@ -52,13 +60,13 @@ public abstract class AbstractFieldTestCase<T extends AbstractField> extends
                 false, readonlyStatusChangeListenerCommand);
     }
 
-    protected void createFocusListener(String category) {
+    private void createFocusListener(String category) {
         createBooleanAction("Focus listener", category, false,
                 focusListenerCommand);
 
     }
 
-    protected void createBlurListener(String category) {
+    private void createBlurListener(String category) {
         createBooleanAction("Blur listener", category, false,
                 blurListenerCommand);
 
@@ -68,9 +76,9 @@ public abstract class AbstractFieldTestCase<T extends AbstractField> extends
 
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener((ValueChangeListener) AbstractFieldTestCase.this);
+                c.addListener((ValueChangeListener) AbstractFieldTest.this);
             } else {
-                c.removeListener((ValueChangeListener) AbstractFieldTestCase.this);
+                c.removeListener((ValueChangeListener) AbstractFieldTest.this);
             }
         }
     };
@@ -78,9 +86,9 @@ public abstract class AbstractFieldTestCase<T extends AbstractField> extends
 
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener((ReadOnlyStatusChangeListener) AbstractFieldTestCase.this);
+                c.addListener((ReadOnlyStatusChangeListener) AbstractFieldTest.this);
             } else {
-                c.removeListener((ReadOnlyStatusChangeListener) AbstractFieldTestCase.this);
+                c.removeListener((ReadOnlyStatusChangeListener) AbstractFieldTest.this);
             }
         }
     };
@@ -88,9 +96,9 @@ public abstract class AbstractFieldTestCase<T extends AbstractField> extends
 
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                ((FocusNotifier) c).addListener(AbstractFieldTestCase.this);
+                ((FocusNotifier) c).addListener(AbstractFieldTest.this);
             } else {
-                ((FocusNotifier) c).removeListener(AbstractFieldTestCase.this);
+                ((FocusNotifier) c).removeListener(AbstractFieldTest.this);
             }
         }
     };
@@ -98,16 +106,23 @@ public abstract class AbstractFieldTestCase<T extends AbstractField> extends
 
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                ((BlurNotifier) c).addListener(AbstractFieldTestCase.this);
+                ((BlurNotifier) c).addListener(AbstractFieldTest.this);
             } else {
-                ((BlurNotifier) c).removeListener(AbstractFieldTestCase.this);
+                ((BlurNotifier) c).removeListener(AbstractFieldTest.this);
             }
         }
     };
 
     public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
-        log(event.getClass().getSimpleName() + ", new value: "
-                + event.getProperty().getValue());
+        Object o = event.getProperty().getValue();
+
+        // Distinguish between null and 'null'
+        String value = "null";
+        if (o != null) {
+            value = "'" + o.toString() + "'";
+        }
+
+        log(event.getClass().getSimpleName() + ", new value: " + value);
     };
 
     public void readOnlyStatusChange(ReadOnlyStatusChangeEvent event) {

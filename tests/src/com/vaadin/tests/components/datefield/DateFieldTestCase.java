@@ -5,11 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
-import com.vaadin.tests.components.abstractfield.AbstractFieldTestCase;
+import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.ui.DateField;
 
 public abstract class DateFieldTestCase<T extends DateField> extends
-        AbstractFieldTestCase<T> {
+        AbstractFieldTest<T> {
 
     @Override
     protected void createActions() {
@@ -19,8 +19,6 @@ public abstract class DateFieldTestCase<T extends DateField> extends
         createBooleanAction("Show week numbers", CATEGORY_FEATURES, false,
                 weekNumberCommand);
         createDateFormatSelectAction(CATEGORY_FEATURES);
-        createFocusListener(CATEGORY_LISTENERS);
-        createBlurListener(CATEGORY_LISTENERS);
     };
 
     private void createDateFormatSelectAction(String category) {

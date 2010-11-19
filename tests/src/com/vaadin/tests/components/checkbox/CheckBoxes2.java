@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.checkbox;
 
-import com.vaadin.tests.components.abstractfield.AbstractFieldTestCase;
+import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 
-public class CheckBoxes2 extends AbstractFieldTestCase<CheckBox> implements
+public class CheckBoxes2 extends AbstractFieldTest<CheckBox> implements
         ClickListener {
 
     // cannot extend Buttons2 because of Switch mode problems
@@ -38,8 +38,6 @@ public class CheckBoxes2 extends AbstractFieldTestCase<CheckBox> implements
     protected void createActions() {
         super.createActions();
 
-        createFocusListener(CATEGORY_LISTENERS);
-        createBlurListener(CATEGORY_LISTENERS);
         createBooleanAction("Switch mode", CATEGORY_FEATURES, true,
                 switchModeCommand);
         addClickListener(CATEGORY_LISTENERS);
