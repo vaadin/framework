@@ -1,4 +1,4 @@
-package com.vaadin.tests.tickets;
+package com.vaadin.tests.components.textfield;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -9,7 +9,7 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class Ticket6003 extends TestBase {
+public class Wordwrap extends TestBase {
 
     @Override
     public void setup() {
