@@ -67,6 +67,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     private String inputPrompt = null;
     private boolean prompting = false;
     private int lastCursorPos = -1;
+    private boolean wordwrap = true;
 
     public VTextField() {
         this(DOM.createInputText());
@@ -279,6 +280,11 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
                     setSelectionRange(pos, length);
                 }
             });
+        }
+
+        // For backward compatibility; to be moved to TextArea
+        if (uidl.hasAttribute("wordwrap")) {
+            setWordwrap(uidl.getBooleanAttribute("wordwrap"));
         }
     }
 
@@ -538,4 +544,18 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         valueChange(false);
     }
 
+    // For backward compatibility; to be moved to TextArea
+    public void setWordwrap(boolean enabled) {
+        if (enabled == wordwrap)
+            return; // No change
+
+        if (enabled) {
+            DOM.removeElementAttribute(getElement(), "wrap");
+            DOM.setStyleAttribute(getElement(), "overflow", null);
+        } else {
+            DOM.setElementAttribute(getElement(), "wrap", "off");
+            DOM.setStyleAttribute(getElement(), "overflow", "auto");
+        }
+        wordwrap = enabled;
+    }
 }
