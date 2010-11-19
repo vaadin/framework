@@ -282,9 +282,14 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             });
         }
 
-        // For backward compatibility; to be moved to TextArea
-        if (uidl.hasAttribute("wordwrap")) {
-            setWordwrap(uidl.getBooleanAttribute("wordwrap"));
+        // Here for backward compatibility; to be moved to TextArea.
+        // Optimization: server does not send attribute for the default 'true'
+        // state.
+        if (uidl.hasAttribute("wordwrap")
+                && uidl.getBooleanAttribute("wordwrap") == false) {
+            setWordwrap(false);
+        } else {
+            setWordwrap(true);
         }
     }
 
@@ -544,7 +549,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         valueChange(false);
     }
 
-    // For backward compatibility; to be moved to TextArea
+    // Here for backward compatibility; to be moved to TextArea
     public void setWordwrap(boolean enabled) {
         if (enabled == wordwrap)
             return; // No change

@@ -199,8 +199,10 @@ public class TextField extends AbstractTextField implements
             target.addAttribute("rows", String.valueOf(rows));
             target.addAttribute("multiline", true);
 
-            // For backward compatibility; to be moved to TextArea
-            target.addAttribute("wordwrap", isWordwrap());
+            // Optimization: the default true is assumed if not painted
+            if (!isWordwrap()) {
+                target.addAttribute("wordwrap", false);
+            }
         }
 
         if (getInputPrompt() != null) {
