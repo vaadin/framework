@@ -26,6 +26,21 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
 
         createValueChangeListener(CATEGORY_LISTENERS);
         createReadOnlyStatusChangeListener(CATEGORY_LISTENERS);
+
+        // * invalidcommitted
+        // * commit()
+        // * discard()
+        // * writethrough
+        // * readthrough
+        // * addvalidator
+        // * isvalid
+        // * invalidallowed
+        // * error indicator
+        //
+        // * tabindex
+        // * validation visible
+        // * ShortcutListener
+
     }
 
     private void createRequiredErrorSelect(String category) {
