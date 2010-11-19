@@ -39,7 +39,6 @@ public class Ticket6003 extends TestBase {
         CheckBox onoff = new CheckBox("Wrap state for the right field");
         onoff.setValue(false);
         onoff.addListener(new Property.ValueChangeListener() {
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 area2.setWordwrap((Boolean) event.getProperty().getValue());
             }

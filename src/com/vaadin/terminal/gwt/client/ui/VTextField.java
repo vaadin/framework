@@ -551,8 +551,9 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
 
     // Here for backward compatibility; to be moved to TextArea
     public void setWordwrap(boolean enabled) {
-        if (enabled == wordwrap)
+        if (enabled == wordwrap) {
             return; // No change
+        }
 
         if (enabled) {
             DOM.removeElementAttribute(getElement(), "wrap");
