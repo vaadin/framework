@@ -56,6 +56,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
     protected static final String CATEGORY_SELECTION = "Selection";
     protected static final String CATEGORY_LISTENERS = "Listeners";
     protected static final String CATEGORY_FEATURES = "Features";
+    protected static final String CATEGORY_ACTIONS = "Actions";
     protected static final String CATEGORY_DECORATIONS = "Decorations";
 
     @Override
@@ -98,6 +99,13 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
 
                 });
         setSelected(showEventLog, true);
+
+        settingsMenu.addItem("Clear log", new MenuBar.Command() {
+
+            public void menuSelected(MenuItem selectedItem) {
+                log.clear();
+            }
+        });
     }
 
     protected void setLogVisible(boolean visible) {
@@ -282,7 +290,6 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
             DATATYPE value, Object data) {
         MenuItem categoryItem = getCategoryMenuItem(category);
         categoryItem.addItem(caption, menuClickCommand(command, value, data));
-        doCommand(caption, command, value, data);
     }
 
     private MenuItem getCategoryMenuItem(String category) {
