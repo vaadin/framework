@@ -1,6 +1,8 @@
 package com.vaadin.tests.components.abstractfield;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import com.vaadin.data.Property.ReadOnlyStatusChangeEvent;
 import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
@@ -127,6 +129,12 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
             }
         }
     };
+    private Command<T, Object> setValueCommand = new Command<T, Object>() {
+
+        public void execute(T c, Object value, Object data) {
+            c.setValue(value);
+        }
+    };
 
     public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
         Object o = event.getProperty().getValue();
@@ -151,4 +159,20 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
     public void blur(BlurEvent event) {
         log(event.getClass().getSimpleName());
     }
+
+    protected void createSetTextValueAction(String category) {
+        String subCategory = "Set text value";
+        createCategory(subCategory, category);
+        List<String> values = new ArrayList<String>();
+        values.add("Test");
+        values.add("A little longer value");
+        values.add("A very long value with very much text. All in all it is 74 characters long");
+
+        createClickAction("(empty string)", subCategory, setValueCommand, "");
+        createClickAction("(null)", subCategory, setValueCommand, null);
+        for (String value : values) {
+            createClickAction(value, subCategory, setValueCommand, value);
+        }
+    }
+
 }
