@@ -45,7 +45,7 @@
 	background: transparent url(img/submenu-icon.png) no-repeat right 70%;
 	width: 26px;
 	height: 16px;
-	text-indent: -999px;
+	text-indent: -9999px;
 }
 .v-menubar-submenu .v-menubar-menuitem-selected .v-menubar-submenu-indicator {
 	background-image: url(img/submenu-icon-hover.png);
