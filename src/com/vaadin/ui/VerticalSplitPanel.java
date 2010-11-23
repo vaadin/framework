@@ -1,6 +1,7 @@
 package com.vaadin.ui;
 
 import com.vaadin.terminal.gwt.client.ui.VSplitPanelVertical;
+import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
  * A vertical split panel contains two components and lays them vertically. The
@@ -19,10 +20,12 @@ import com.vaadin.terminal.gwt.client.ui.VSplitPanelVertical;
  * </pre>
  * 
  */
-@ClientWidget(VSplitPanelVertical.class)
-public class VerticalSplitPanel extends SplitPanel {
-    @SuppressWarnings("deprecation")
+@ClientWidget(value = VSplitPanelVertical.class, loadStyle = LoadStyle.EAGER)
+public class VerticalSplitPanel extends AbstractSplitPanel {
+
     public VerticalSplitPanel() {
-        super(ORIENTATION_VERTICAL);
+        super();
+        setSizeFull();
     }
+
 }
