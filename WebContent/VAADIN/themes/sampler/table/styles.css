@@ -29,6 +29,7 @@
 	width: 16px;
 }
 
-.v-table-iso3166 .v-icon {
+/* explicitly set row icon height to avoid height calculation problems */
+.v-table-iso3166 .v-table-cell-content .v-icon {
 	height:11px;
 }
