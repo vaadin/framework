@@ -138,13 +138,6 @@ public class ApplicationConnection {
 
     private Set<Paintable> zeroHeightComponents = null;
 
-    /**
-     * Keeps track of if there are (potentially) deferred commands that are
-     * being executed. 0 == no deferred commands currently in progress, > 0
-     * otherwise.
-     */
-    private int deferredCommandTrackers = 0;
-
     public ApplicationConnection() {
         view = GWT.create(VView.class);
     }
@@ -650,24 +643,6 @@ public class ApplicationConnection {
                 }
             }
         });
-        addDeferredCommandTracker();
-    }
-
-    /**
-     * Adds a deferred command tracker. Increments the tracker count when called
-     * and decrements in a deferred command that is executed after all other
-     * deferred commands have executed.
-     * 
-     */
-    private void addDeferredCommandTracker() {
-        deferredCommandTrackers++;
-        Scheduler.get().scheduleDeferred(new Command() {
-
-            public void execute() {
-                deferredCommandTrackers--;
-            }
-
-        });
     }
 
     /**
@@ -768,7 +743,12 @@ public class ApplicationConnection {
      *         otherwise
      */
     private boolean isExecutingDeferredCommands() {
-        return (deferredCommandTrackers > 0);
+        Scheduler s = Scheduler.get();
+        if (s instanceof VSchedulerImpl) {
+            return ((VSchedulerImpl) s).hasWorkQueued();
+        } else {
+            return false;
+        }
     }
 
     /**
