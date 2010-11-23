@@ -400,11 +400,14 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
     }
 
     protected String getText(MenuItem item) {
-        if (!isCategory(item.getParent())) {
-            return item.getParent().getText();
-        } else {
-            return item.getText();
+        String path = "";
+        MenuItem parent = item.getParent();
+        while (!isCategory(parent)) {
+            path = parent.getText() + "/" + path;
+            parent = parent.getParent();
         }
+
+        return path + "/" + item.getText();
     }
 
     private boolean isCategory(MenuItem item) {
@@ -545,5 +548,18 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
             log("Command: " + commandName + "(" + value + ")");
         }
         super.doCommand(commandName, command, value, data);
+    }
+
+    @Override
+    public void terminalError(com.vaadin.terminal.Terminal.ErrorEvent event) {
+        String logMsg = "Exception occured, "
+                + event.getThrowable().getClass().getName();
+
+        String exceptionMsg = event.getThrowable().getMessage();
+        if (exceptionMsg != null && exceptionMsg.length() > 0) {
+            logMsg += exceptionMsg;
+        }
+        log.log(logMsg);
+
     }
 }
