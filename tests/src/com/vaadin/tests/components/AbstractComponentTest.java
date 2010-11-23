@@ -174,8 +174,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
         createCaptionSelect(CATEGORY_DECORATIONS);
         createIconSelect(CATEGORY_DECORATIONS);
 
-        createWidthSelect(CATEGORY_SIZE);
-        createHeightSelect(CATEGORY_SIZE);
+        createWidthAndHeightActions(CATEGORY_SIZE);
 
         // TODO Style name
 
@@ -217,7 +216,13 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
 
     }
 
-    private void createWidthSelect(String category) {
+    private void createWidthAndHeightActions(String category) {
+        String widthCategory = "Width";
+        String heightCategory = "Height";
+
+        createCategory(widthCategory, category);
+        createCategory(heightCategory, category);
+
         LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
         options.put("Undefined", null);
         options.put("50%", "50%");
@@ -226,8 +231,18 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
             options.put(w + "px", w + "px");
         }
 
-        createSelectAction("Width", category, options, "Undefined",
-                widthCommand, null);
+        for (String name : options.keySet()) {
+            createClickAction(name, widthCategory, widthCommand,
+                    options.get(name));
+            createClickAction(name, heightCategory, heightCommand,
+                    options.get(name));
+        }
+
+        // Default to undefined size
+        for (T c : getTestComponents()) {
+            c.setWidth(null);
+            c.setHeight(null);
+        }
     }
 
     private void createIconSelect(String category) {
@@ -250,19 +265,6 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
 
         createSelectAction("Locale", category, options, "-", localeCommand,
                 null);
-    }
-
-    private void createHeightSelect(String category) {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
-        options.put("Undefined", null);
-        options.put("50%", "50%");
-        options.put("100%", "100%");
-        for (int w = 200; w < 1000; w += 100) {
-            options.put(w + "px", w + "px");
-        }
-
-        createSelectAction("Height", category, options, "Undefined",
-                heightCommand, null);
     }
 
     protected void createBooleanAction(String caption, String category,
