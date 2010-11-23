@@ -1,51 +1,50 @@
-package com.vaadin.tests.components.textfield;
+package com.vaadin.tests.components.textarea;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 public class Wordwrap extends TestBase {
 
     @Override
     public void setup() {
-        Window main = new Window("The Main Window");
-        setMainWindow(main);
-
-        final VerticalLayout mainLayout = new VerticalLayout();
-        main.setContent(mainLayout);
-
         HorizontalLayout layout = new HorizontalLayout();
 
         TextArea area1 = new TextArea("Wrapping");
         area1.setWordwrap(true); // The default
-        area1.setValue("A quick brown fox jumps over the lazy dog");
+        area1.setValue(LoremIpsum.get(50) + "\n" + "Another row");
 
         final TextArea area2 = new TextArea("Nonwrapping");
         area2.setWordwrap(false);
-        area2.setValue("Victor jagt zwölf Boxkämpfer quer "
-                + "über den Sylter Deich");
+        area2.setValue(LoremIpsum.get(50) + "\n" + "Another row");
 
         layout.addComponent(area1);
         layout.addComponent(area2);
         layout.setSpacing(true);
 
-        mainLayout.addComponent(layout);
+        addComponent(layout);
 
         CheckBox onoff = new CheckBox("Wrap state for the right field");
         onoff.setValue(false);
         onoff.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                area2.setWordwrap((Boolean) event.getProperty().getValue());
+                boolean wrap = (Boolean) event.getProperty().getValue();
+                area2.setWordwrap(wrap);
+                if (wrap) {
+                    area2.setCaption("Wrapping");
+                } else {
+                    area2.setCaption("Nonwrapping");
+                }
+
             }
         });
         onoff.setImmediate(true);
 
-        mainLayout.addComponent(onoff);
+        addComponent(onoff);
     }
 
     @Override
