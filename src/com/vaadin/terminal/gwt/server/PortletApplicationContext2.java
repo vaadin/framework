@@ -59,7 +59,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
 
     protected HashMap<String, Application> portletWindowIdToApplicationMap = new HashMap<String, Application>();
 
-    private PortletResponse response;
+    private transient PortletResponse response;
 
     private final Map<String, QName> eventActionDestinationMap = new HashMap<String, QName>();
     private final Map<String, Serializable> eventActionValueMap = new HashMap<String, Serializable>();
