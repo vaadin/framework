@@ -285,7 +285,14 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
             }
         }
         if (other.propertySetChangeListeners != propertySetChangeListeners) {
-            if (other.propertySetChangeListeners == null) {
+            boolean thisEmpty = (propertySetChangeListeners == null || propertySetChangeListeners
+                    .isEmpty());
+            boolean otherEmpty = (other.propertySetChangeListeners == null || other.propertySetChangeListeners
+                    .isEmpty());
+            if (thisEmpty && otherEmpty) {
+                return true;
+            }
+            if (otherEmpty) {
                 return false;
             }
             if (!other.propertySetChangeListeners
@@ -307,7 +314,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
 
         return (list == null ? 0 : list.hashCode())
                 ^ (map == null ? 0 : map.hashCode())
-                ^ (propertySetChangeListeners == null ? 0
-                        : propertySetChangeListeners.hashCode());
+                ^ ((propertySetChangeListeners == null || propertySetChangeListeners
+                        .isEmpty()) ? 0 : propertySetChangeListeners.hashCode());
     }
 }
