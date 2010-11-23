@@ -1194,7 +1194,7 @@
     </target>
     
 	<!-- Assumes java classes have been compiled but depends does not work out well as this is run from a <parallel> task-->
-    <target name="testbench-tests" unless="tests.testbench.skip">
+    <target name="testbench-tests" depends="generate-sampler-tests" unless="tests.testbench.skip">
         <fail unless="product-file" message="The 'product-file' property must be defined."/>
         <fail unless="version" message="The 'version' property must be defined."/>
 
