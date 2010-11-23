@@ -5,13 +5,13 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.HierarchicalContainer;
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
@@ -37,9 +37,9 @@ public class Ticket2061b extends Application implements
         mainLayout.setMargin(false);
         setMainWindow(mainWindow);
 
-        SplitPanel sp = new VerticalSplitPanel();
+        VerticalSplitPanel sp = new VerticalSplitPanel();
         sp.setSizeFull();
-        sp.setSplitPosition(20, SplitPanel.UNITS_PIXELS);
+        sp.setSplitPosition(20, Sizeable.UNITS_PIXELS);
 
         p = new Panel("This is a panel");
         p.setSizeFull();

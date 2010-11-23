@@ -4,7 +4,6 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Table;
 
 @SuppressWarnings("serial")
@@ -14,7 +13,7 @@ public class DisabledTableShouldNotSendPageLengthUpdates extends TestBase {
 
     @Override
     protected void setup() {
-        SplitPanel split = new HorizontalSplitPanel();
+        HorizontalSplitPanel split = new HorizontalSplitPanel();
         table.addContainerProperty("name", Integer.class, 0);
         Button button = new Button("Add items", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {

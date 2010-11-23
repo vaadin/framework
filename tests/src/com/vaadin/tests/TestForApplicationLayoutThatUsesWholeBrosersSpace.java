@@ -7,7 +7,6 @@ package com.vaadin.tests;
 import com.vaadin.Application;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
@@ -20,7 +19,7 @@ public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
 
     VerticalLayout rootLayout;
 
-    SplitPanel firstLevelSplit;
+    VerticalSplitPanel firstLevelSplit;
 
     @Override
     public void init() {
@@ -33,7 +32,7 @@ public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
 
         firstLevelSplit = new VerticalSplitPanel();
 
-        final SplitPanel secondSplitPanel = new HorizontalSplitPanel();
+        final HorizontalSplitPanel secondSplitPanel = new HorizontalSplitPanel();
         secondSplitPanel.setFirstComponent(new Label("left"));
 
         final VerticalLayout topRight = new VerticalLayout();

@@ -6,6 +6,7 @@ package com.vaadin.tests;
 
 import java.util.Locale;
 
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -14,7 +15,6 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
@@ -44,11 +44,11 @@ public class TestForBasicApplicationLayout extends CustomComponent {
 
         });
 
-        final SplitPanel sp = new HorizontalSplitPanel();
-        sp.setSplitPosition(290, SplitPanel.UNITS_PIXELS);
+        final HorizontalSplitPanel sp = new HorizontalSplitPanel();
+        sp.setSplitPosition(290, Sizeable.UNITS_PIXELS);
 
-        final SplitPanel sp2 = new HorizontalSplitPanel();
-        sp2.setSplitPosition(255, SplitPanel.UNITS_PIXELS);
+        final HorizontalSplitPanel sp2 = new HorizontalSplitPanel();
+        sp2.setSplitPosition(255, Sizeable.UNITS_PIXELS);
 
         final Panel p = new Panel("Accordion Panel");
         p.setSizeFull();
@@ -70,7 +70,7 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         report.addComponent(cal);
         ((VerticalLayout) report.getContent()).setExpandRatio(controls, 1);
         report.addStyleName(Reindeer.PANEL_LIGHT);
-        report.setHeight(100, SplitPanel.UNITS_PERCENTAGE);
+        report.setHeight(100, Sizeable.UNITS_PERCENTAGE);
 
         sp2.setFirstComponent(report);
 

@@ -3,7 +3,6 @@ package com.vaadin.tests.components.splitpanel;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -19,7 +18,7 @@ public class SplitPanelInModalWindow extends TestBase {
         modalWindow.setModal(true); // This line causes the problem
         getMainWindow().addWindow(modalWindow);
 
-        SplitPanel splitPanel = new HorizontalSplitPanel();
+        HorizontalSplitPanel splitPanel = new HorizontalSplitPanel();
         splitPanel.setSplitPosition(20);
         vl.addComponent(splitPanel);
     }

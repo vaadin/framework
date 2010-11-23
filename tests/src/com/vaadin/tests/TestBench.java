@@ -23,7 +23,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.UriFragmentUtility;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
@@ -53,7 +52,7 @@ public class TestBench extends com.vaadin.Application implements
     Window mainWindow = new Window("TestBench window");
 
     // Main layout consists of tree menu and body layout
-    SplitPanel mainLayout = new HorizontalSplitPanel();
+    HorizontalSplitPanel mainLayout = new HorizontalSplitPanel();
 
     Tree menu;
 

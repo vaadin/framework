@@ -42,7 +42,6 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Html5File;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.TreeDragMode;
@@ -59,7 +58,7 @@ public class DDTest6 extends TestBase {
 
     private static Tree tree1;
 
-    private SplitPanel sp;
+    private HorizontalSplitPanel sp;
 
     private BeanItemContainer<File> fs1;
 

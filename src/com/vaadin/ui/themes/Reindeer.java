@@ -7,8 +7,9 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.SplitPanel;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.VerticalSplitPanel;
 
 public class Reindeer extends BaseTheme {
 
@@ -163,7 +164,8 @@ public class Reindeer extends BaseTheme {
     /**
      * Changes the background of a layout to white. Applies to
      * {@link VerticalLayout}, {@link HorizontalLayout}, {@link GridLayout},
-     * {@link FormLayout}, {@link CssLayout} and {@link SplitPanel}.
+     * {@link FormLayout}, {@link CssLayout}, {@link VerticalSplitPanel} and
+     * {@link HorizontalSplitPanel}.
      * <p>
      * <em>Does not revert any contained components back to normal if some 
      * parent layout has style {@link #LAYOUT_BLACK} applied.</em>
@@ -173,7 +175,8 @@ public class Reindeer extends BaseTheme {
     /**
      * Changes the background of a layout to a shade of blue. Applies to
      * {@link VerticalLayout}, {@link HorizontalLayout}, {@link GridLayout},
-     * {@link FormLayout}, {@link CssLayout} and {@link SplitPanel}.
+     * {@link FormLayout}, {@link CssLayout}, {@link VerticalSplitPanel} and
+     * {@link HorizontalSplitPanel}.
      * <p>
      * <em>Does not revert any contained components back to normal if some 
      * parent layout has style {@link #LAYOUT_BLACK} applied.</em>

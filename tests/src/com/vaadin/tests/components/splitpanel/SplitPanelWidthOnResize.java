@@ -5,7 +5,6 @@ import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -18,7 +17,7 @@ public class SplitPanelWidthOnResize extends AbstractTestCase {
         layout.setSizeFull();
         Window w = new Window("", layout);
         setMainWindow(w);
-        SplitPanel splitPanel = new HorizontalSplitPanel();
+        HorizontalSplitPanel splitPanel = new HorizontalSplitPanel();
         Button button = new NativeButton("A huge button");
         button.setSizeFull();
         TextField textField = new TextField("A small textfield");

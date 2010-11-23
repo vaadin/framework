@@ -8,7 +8,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -37,7 +36,7 @@ public class Ticket1983 extends Application {
             setMargin(false);
             setLocked(true);
 
-            final SplitPanel leftSide = initLeftSide();
+            final HorizontalSplitPanel leftSide = initLeftSide();
             setFirstComponent(leftSide);
 
             final Layout rightSide = new VerticalLayout();
@@ -45,8 +44,8 @@ public class Ticket1983 extends Application {
             setSecondComponent(rightSide);
         }
 
-        private SplitPanel initLeftSide() {
-            final SplitPanel leftSide = new HorizontalSplitPanel();
+        private HorizontalSplitPanel initLeftSide() {
+            final HorizontalSplitPanel leftSide = new HorizontalSplitPanel();
             leftSide.setHeight("100%");
 
             final IndexedContainer dataSource = new IndexedContainer();

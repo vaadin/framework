@@ -27,6 +27,7 @@ import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Window;
 
+@SuppressWarnings("deprecation")
 public class Ticket2204 extends Application {
 
     private final List<RichTextArea> textAreas = new ArrayList<RichTextArea>();

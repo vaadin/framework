@@ -9,7 +9,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -17,7 +16,7 @@ import com.vaadin.ui.Window;
 public class Ticket2405 extends Application {
 
     private Label label;
-    private SplitPanel split;
+    private HorizontalSplitPanel split;
 
     @Override
     public void init() {

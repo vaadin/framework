@@ -2,11 +2,12 @@ package com.vaadin.tests.components.splitpanel;
 
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.AbstractSplitPanel.SplitterClickEvent;
+import com.vaadin.ui.AbstractSplitPanel.SplitterClickListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.SplitPanel.SplitterClickEvent;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalSplitPanel;
 
@@ -38,7 +39,7 @@ public class SplitPanelReversePosition extends TestBase {
         vsplit.setSizeFull();
         vsplit.setImmediate(true);
         vsplit.setSplitPosition(10, Sizeable.UNITS_PERCENTAGE, vsplitReversed);
-        vsplit.addListener(new VerticalSplitPanel.SplitterClickListener() {
+        vsplit.addListener(new SplitterClickListener() {
             public void splitterClick(SplitterClickEvent event) {
                 getMainWindow().showNotification("Vertical Splitter Clicked");
             }
@@ -78,7 +79,7 @@ public class SplitPanelReversePosition extends TestBase {
                 }));
 
         addComponent(buttons);
-        
+
     }
 
     @Override

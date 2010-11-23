@@ -10,7 +10,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
@@ -22,7 +21,7 @@ public class ScrollbarStressTest extends Application {
     final Window main = new Window("Scrollbar Stress Test");
 
     final Panel panel = new Panel("Panel");
-    final SplitPanel splitPanel = new VerticalSplitPanel();
+    final VerticalSplitPanel splitPanel = new VerticalSplitPanel();
     final Accordion accordion = new Accordion();
     final TabSheet tabsheet = new TabSheet();
     final Window subwindow = new Window("Subwindow");

@@ -5,7 +5,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window.Notification;
 
@@ -23,7 +22,7 @@ public class SplitPanelSplitterWidth extends TestBase {
 
     @Override
     protected void setup() {
-        final SplitPanel split = new HorizontalSplitPanel();
+        final HorizontalSplitPanel split = new HorizontalSplitPanel();
         split.setWidth("200px");
         split.setHeight("200px");
         split.setLocked(true);
@@ -34,7 +33,7 @@ public class SplitPanelSplitterWidth extends TestBase {
         p.setSizeFull();
         split.addComponent(p);
 
-        final SplitPanel split2 = new VerticalSplitPanel();
+        final VerticalSplitPanel split2 = new VerticalSplitPanel();
         split2.setWidth("200px");
         split2.setHeight("200px");
         split2.setLocked(true);

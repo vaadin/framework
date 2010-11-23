@@ -3,14 +3,13 @@ package com.vaadin.tests.components.splitpanel;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.RichTextArea;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.VerticalSplitPanel;
 
 public class SplitPanelWithRichTextArea extends TestBase {
 
     @Override
     protected void setup() {
-        SplitPanel sp = new VerticalSplitPanel();
+        VerticalSplitPanel sp = new VerticalSplitPanel();
         sp.setSizeFull();
         RichTextArea rta = new RichTextArea();
         rta.setSizeFull();
