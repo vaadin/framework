@@ -786,18 +786,22 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      */
     public void removeContainerFilters(Object propertyId) {
         if (!filters.isEmpty()) {
+            boolean filteringChanged = false;
             for (Iterator<Filter> iterator = filters.iterator(); iterator
                     .hasNext();) {
                 Filter f = iterator.next();
                 if (f.propertyId.equals(propertyId)) {
                     iterator.remove();
+                    filteringChanged = true;
                 }
             }
-            // stop listening to change events for the property
-            for (BeanItem<BT> item : beanToItem.values()) {
-                removeValueChangeListener(item, propertyId);
+            if (filteringChanged) {
+                // stop listening to change events for the property
+                for (BeanItem<BT> item : beanToItem.values()) {
+                    removeValueChangeListener(item, propertyId);
+                }
+                filterAll();
             }
-            filterAll();
         }
     }
 
