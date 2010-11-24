@@ -64,6 +64,30 @@ contains a number of significant enhancements.</p>
   This also affects most built-in validators such as IntegerValidator.</li>
 </ul>
 
+<h3>Theme changes</h3>
+
+<p>The following changes have to be made to themes created for earlier versions of Vaadin in order for them to work correctly with Vaadin @version@:</p>
+
+<ul>
+	<li>Due to the fixes for tickets <a href="http://dev.vaadin.com/ticket/5066">#5066</a> and <a href="http://dev.vaadin.com/ticket/2681">#2681</a>,
+		the Table component has a slightly changed DOM structure in it's header.'</li>
+	<ul>
+		<li>The sort indicator (arrow icon) has been moved from being the background of the "caption container" DIV, to it's very own DIV. This DIV
+			can be styled by the <pre>.v-table-sort-indicator</pre> selector. Sort indicator images can thus no longer be placed in the
+			<pre>.v-table-caption-container</pre> DIV.</li>
+	</ul>
+</ul>
+
+<p>New themeing possibilities:</p>
+<ul>
+	<li>Table</li>
+	<ul>
+		<li>All cells in a sorted column now get the <pre>.v-table-cell-content-sorted</pre> CSS class, allowing styling of the sorted items.</li>
+		<li>The alignment of the column captions can now be changed in CSS by styling the <pre>.v-table-caption-container-align-[left|center|right]</pre>
+			CSS classes. This makes it possible to align all captions left, for instance.</li>
+	</ul>
+</ul>
+
 
 <h3>Change Log, Future Releases, and Upgrading</h3>
 
