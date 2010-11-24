@@ -390,6 +390,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private MultiSelectMode multiSelectMode = MultiSelectMode.DEFAULT;
 
+    private boolean recalculateAllColumnWidths = false;
+
     /* Table constructors */
 
     /**
@@ -2052,6 +2054,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 }
             }
             if (doSort) {
+                recalculateAllColumnWidths = true;
                 this.sort();
                 resetPageBuffer();
             }
@@ -2284,6 +2287,10 @@ public class Table extends AbstractSelect implements Action.Container,
                 // table scroll/cache requests (i.e when reqRowsToPaint<0)
                 target.addAttribute("recalcWidths", true);
             }
+        }
+        if (recalculateAllColumnWidths) {
+            target.addAttribute("recalcWidths", true);
+            recalculateAllColumnWidths = false;
         }
 
         if (!isNullSelectionAllowed() && getNullSelectionItemId() != null

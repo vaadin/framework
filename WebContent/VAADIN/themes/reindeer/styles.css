@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"9_9_9_INTERNAL-DEBUG-BUILD";}
-.v-theme-version-9_9_9_INTERNAL-DEBUG-BUILD {display: none;}
+.v-theme-version:after {content:"6_5_0_dev-20101124";}
+.v-theme-version-6_5_0_dev-20101124 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1523,22 +1523,32 @@ div.v-progressindicator-indeterminate-disabled {
 	overflow: hidden;
 }
 .v-table-caption-container {
-	float: right;
 	overflow: hidden;
 	white-space: nowrap;
-	padding-right: 6px;
+	margin-left: 6px;
 }
-.v-table-header-cell-asc .v-table-caption-container {
+.v-table-sort-indicator {
+	width: 0px;
+	height: 1.2em;
+	float: right;
+}
+.v-table-header-cell-asc .v-table-sort-indicator,
+.v-table-header-cell-desc .v-table-sort-indicator {
+	width: 16px;
+	height: 1.2em;
+	float: right;
+}		
+.v-table-header-cell-asc .v-table-sort-indicator {
 	background: transparent url(../base/common/img/sprites.png) no-repeat right 6px;
 }
-.v-table-header-cell-desc .v-table-caption-container {
+.v-table-header-cell-desc .v-table-sort-indicator {
 	background: transparent url(../base/common/img/sprites.png) no-repeat right -10px;
 }
-.v-table-header-cell-asc .v-table-caption-container-align-right {
-    background: transparent url(../base/common/img/sprites.png) no-repeat -8px 6px;
+.v-table-caption-container-align-center {
+	text-align: center;
 }
-.v-table-header-cell-desc .v-table-caption-container-align-right {
-    background: transparent url(../base/common/img/sprites.png) no-repeat -8px -10px;
+.v-table-caption-container-align-right {
+	text-align: right;
 }
 .v-table-caption-container .v-icon,
 .v-table-header-drag .v-icon {
@@ -1577,6 +1587,12 @@ div.v-progressindicator-indeterminate-disabled {
 	/* Do not specify any margins, paddings or borders here */
 	white-space: nowrap;
 	overflow: hidden;
+}
+.v-table-cell-wrapper-align-center {
+	text-align: center;
+}
+.v-table-cell-wrapper-align-right {
+	text-align: right;
 }
 .v-table-column-selector {
 	float: right;
@@ -3603,7 +3619,7 @@ td.v-datefield-calendarpanel-nextyear {
 	background: transparent url(menubar/img/submenu-icon.png) no-repeat right 70%;
 	width: 26px;
 	height: 16px;
-	text-indent: -999px;
+	text-indent: -9999px;
 }
 .v-menubar-submenu .v-menubar-menuitem-selected .v-menubar-submenu-indicator {
 	background-image: url(menubar/img/submenu-icon-hover.png);
@@ -4298,29 +4314,26 @@ td.v-datefield-calendarpanel-nextyear {
 	background: transparent;
 	border-right: 1px solid #c2c3c4;
 }
-.v-table-header-cell-asc .v-table-caption-container {
+
+.v-table-sort-indicator {
+	background: transparent;
+	width: 0px;
+	height: 20px;
+}
+
+.v-table-header-cell-asc .v-table-sort-indicator {
 	background: transparent no-repeat right 7px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: right -942px;
+	width: 16px;
 }
-.v-table-header-cell-desc .v-table-caption-container {
+.v-table-header-cell-desc .v-table-sort-indicator {
 	background: transparent no-repeat right 7px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: right -962px;
-}
-.v-table-header-cell-asc .v-table-caption-container-align-right {
-    background: transparent no-repeat left 7px;
-  background-image: url(common/img/vertical-sprites.png);
-  -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -982px;
-}
-.v-table-header-cell-desc .v-table-caption-container-align-right {
-    background: transparent no-repeat left 7px;
-  background-image: url(common/img/vertical-sprites.png);
-  -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1002px;
+	width: 16px;
 }
 .v-table-body,
 .white .v-table-body {
@@ -4362,12 +4375,12 @@ td.v-datefield-calendarpanel-nextyear {
 	background: transparent no-repeat;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1022px;
+  background-position: left -982px;
 }
 .v-table-column-selector:active {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1042px;
+  background-position: left -1002px;
 }
 .v-table-focus-slot-left {
 	border-left-color: #222;
@@ -4382,7 +4395,7 @@ td.v-datefield-calendarpanel-nextyear {
 	background: transparent repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1062px;
+  background-position: left -1022px;
 	padding: 4px;
 	text-transform: uppercase;
 	font-size: 10px;
@@ -4407,7 +4420,7 @@ td.v-datefield-calendarpanel-nextyear {
 	background: transparent repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1082px;
+  background-position: left -1042px;
 	border: 1px solid #939494;
 	border: none;
 	border-radius-bottomleft: 4px;
@@ -4436,7 +4449,7 @@ td.v-datefield-calendarpanel-nextyear {
 	background: transparent no-repeat 0 4px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1104px;
+  background-position: left -1064px;
 	padding-left: 12px;
 	padding-right: 4px;
 }
@@ -4447,7 +4460,7 @@ td.v-datefield-calendarpanel-nextyear {
 .v-contextmenu .gwt-MenuItem-selected .v-on {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1118px;
+  background-position: left -1078px;
 }
 
 
@@ -4457,7 +4470,7 @@ td.v-datefield-calendarpanel-nextyear {
 	border-top-color: #2b3033;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1133px;
+  background-position: left -1093px;
 	color: #e7e9ea;
 	text-shadow: #000 0 -1px 0;
 }
@@ -4467,40 +4480,30 @@ td.v-datefield-calendarpanel-nextyear {
 .v-table-strong .v-table-resizer {
 	border-right-color: #1c1f21;
 }
-.v-table-strong .v-table-header-cell-asc .v-table-caption-container {
+.v-table-strong .v-table-header-cell-asc .v-table-sort-indicator {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: right -1153px;
+  background-position: right -1113px;
 }
-.v-table-strong .v-table-header-cell-desc .v-table-caption-container {
+.v-table-strong .v-table-header-cell-desc .v-table-sort-indicator {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: right -1172px;
-}
-.v-table-strong .v-table-header-cell-asc .v-table-caption-container-align-right {
-  background-image: url(common/img/vertical-sprites.png);
-  -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1191px;
-}
-.v-table-strong .v-table-header-cell-desc .v-table-caption-container-align-right {
-  background-image: url(common/img/vertical-sprites.png);
-  -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1210px;
+  background-position: right -1132px;
 }
 .v-table-strong .v-table-column-selector {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1229px;
+  background-position: left -1151px;
 }
 .v-table-strong .v-table-column-selector:active {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1249px;
+  background-position: left -1171px;
 }
 .v-table-strong .v-table-header-drag {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1269px;
+  background-position: left -1191px;
 	color: #e7e9ea;
 	text-shadow: #000 0 -1px 0;
 }
@@ -4522,25 +4525,15 @@ td.v-datefield-calendarpanel-nextyear {
 .black .v-table-resizer {
 	border-right-color: #252729;
 }
-.black .v-table-header-cell-asc .v-table-caption-container {
+.black .v-table-header-cell-asc .v-table-sort-indicator {
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
   background-position: right -642px;
 }
-.black .v-table-header-cell-desc .v-table-caption-container {
+.black .v-table-header-cell-desc .v-table-sort-indicator {
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
   background-position: right -661px;
-}
-.black .v-table-header-cell-asc .v-table-caption-container-align-right {
-  background-image: url(common/img/vertical-sprites.png);
-  -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1289px;
-}
-.black .v-table-header-cell-desc .v-table-caption-container-align-right {
-  background-image: url(common/img/vertical-sprites.png);
-  -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1308px;
 }
 .black .v-table-column-selector {
   background-image: url(common/img/black-vertical-sprites.png);
@@ -4603,14 +4596,14 @@ td.v-datefield-calendarpanel-nextyear {
 	background: no-repeat;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1327px;
+  background-position: left -1211px;
 	padding-left: 3px;
 }
 .v-tabsheet-tabitemcell-first {
 	padding-left: 10px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1359px;
+  background-position: left -1243px;
 }
 .v-tabsheet-tabitem,
 .v-tabsheet-spacertd div {
@@ -4619,7 +4612,7 @@ td.v-datefield-calendarpanel-nextyear {
 	background: transparent repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1391px;
+  background-position: left -1275px;
 	padding: 0;
 	color: #222;
 	text-shadow: #fff 0 1px 0;
@@ -4630,7 +4623,7 @@ td.v-datefield-calendarpanel-nextyear {
 	background: no-repeat right top;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: right -1423px;
+  background-position: right -1307px;
 	padding: 9px 8px 0 6px;
 }
 .v-tabsheet-tabitem .v-caption-closable {
@@ -4650,7 +4643,7 @@ td.v-datefield-calendarpanel-nextyear {
 	background: transparent;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1455px;
+  background-position: left -1339px;
 	cursor: default;
 	text-indent: -999px;
 	overflow: hidden;
@@ -4667,48 +4660,48 @@ td.v-datefield-calendarpanel-nextyear {
 .v-tabsheet-caption-close:hover {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1473px;
+  background-position: left -1357px;
 }
 .v-tabsheet-caption-close:active {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1491px;
+  background-position: left -1375px;
 }
 .v-tabsheet-tabitem-selected .v-tabsheet-caption-close {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1509px;
+  background-position: left -1393px;
 }
 .v-tabsheet-tabitem-selected .v-tabsheet-caption-close:hover {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1527px;
+  background-position: left -1411px;
 }
 .v-tabsheet-tabitem-selected .v-tabsheet-caption-close:active {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1545px;
+  background-position: left -1429px;
 }
 .v-tabsheet-tabitemcell-selected {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1563px;
+  background-position: left -1447px;
 }
 .v-tabsheet-tabitemcell-selected-first {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1595px;
+  background-position: left -1479px;
 }
 .v-tabsheet-tabitem-selected {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1627px;
+  background-position: left -1511px;
 	color: #232930;
 }
 .v-tabsheet-tabitem-selected .v-caption {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: right -1659px;
+  background-position: right -1543px;
 }
 .v-tabsheet-spacertd div {
 	margin-right: 4px;
@@ -4717,7 +4710,7 @@ td.v-datefield-calendarpanel-nextyear {
 	background: transparent no-repeat right top;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: right -1691px;
+  background-position: right -1575px;
 }
 .blue .v-tabsheet-content {
 	border-color: #a8bcc5;
@@ -4815,7 +4808,7 @@ td.v-datefield-calendarpanel-nextyear {
 	background: transparent;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1723px;
+  background-position: left -1607px;
 	width: 18px;
 	height: 17px;
 	overflow: hidden;
@@ -4827,23 +4820,23 @@ td.v-datefield-calendarpanel-nextyear {
 .v-tabsheet-scrollerNext {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1740px;
+  background-position: left -1624px;
 }
 .v-tabsheet-scrollerPrev:active {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1757px;
+  background-position: left -1641px;
 }
 .v-tabsheet-scrollerNext:active {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1774px;
+  background-position: left -1658px;
 }
 .v-tabsheet-scrollerPrev-disabled,
 .v-tabsheet-scrollerPrev-disabled:active {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1791px;
+  background-position: left -1675px;
 	opacity: 1;
 	filter: none;
 }
@@ -4851,7 +4844,7 @@ td.v-datefield-calendarpanel-nextyear {
 .v-tabsheet-scrollerNext-disabled:active {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1808px;
+  background-position: left -1692px;
 	opacity: 1;
 	filter: none;
 }
@@ -5037,20 +5030,20 @@ td.v-datefield-calendarpanel-nextyear {
 .v-tabsheet-tabs-bar .v-tabsheet-tabitemcell {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1826px;
+  background-position: left -1710px;
 }
 .v-tabsheet-tabs-bar .v-tabsheet-tabitemcell-first {
 	padding-left: 6px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1846px;
+  background-position: left -1730px;
 }
 .v-tabsheet-tabs-bar .v-tabsheet-tabitem,
 .v-tabsheet-tabs-bar .v-tabsheet-spacertd div {
 	height: 20px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1866px;
+  background-position: left -1750px;
 	font-size: 11px;
 	margin: 0;
 }
@@ -5058,7 +5051,7 @@ td.v-datefield-calendarpanel-nextyear {
 	height: 18px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: right -1886px;
+  background-position: right -1770px;
 	padding: 2px 12px 0 10px;
 }
 .v-tabsheet-tabs-bar .v-tabsheet-tabitem .v-caption-closable,
@@ -5110,23 +5103,23 @@ td.v-datefield-calendarpanel-nextyear {
 .v-tabsheet-tabs-bar .v-tabsheet-tabitemcell-selected {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1906px;
+  background-position: left -1790px;
 }
 .v-tabsheet-tabs-bar .v-tabsheet-tabitemcell-selected-first {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1926px;
+  background-position: left -1810px;
 }
 .v-tabsheet-tabs-bar .v-tabsheet-tabitem-selected {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1946px;
+  background-position: left -1830px;
 	color: #232930;
 }
 .v-tabsheet-tabs-bar .v-tabsheet-tabitem-selected .v-caption {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: right -1966px;
+  background-position: right -1850px;
 }
 .v-tabsheet-tabcontainer-bar .v-tabsheet-scroller {
 	margin-top: -20px;
@@ -5134,7 +5127,7 @@ td.v-datefield-calendarpanel-nextyear {
 	border-right: none;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1986px;
+  background-position: left -1870px;
 }
 .v-tabsheet-tabcontainer-bar .v-tabsheet-scroller button {
 	margin-top: 1px;
@@ -5188,7 +5181,7 @@ td.v-datefield-calendarpanel-nextyear {
 	background-repeat: repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -2006px;
+  background-position: left -1890px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
@@ -5318,7 +5311,7 @@ textarea.v-textarea-readonly,
 	background: #4d749f repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -2029px;
+  background-position: left -1913px;
 	color: #fff;
 	padding: 1px 2px;
 	-webkit-border-radius: 2px;
@@ -5393,7 +5386,7 @@ textarea.v-textarea-readonly,
 	background: transparent repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -2049px;
+  background-position: left -1933px;
 }
 .v-window-header {
 	font-weight: bold;
@@ -5420,13 +5413,13 @@ textarea.v-textarea-readonly,
 	background: transparent;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -2086px;
+  background-position: left -1970px;
 }
 .v-window-footer {
 	background-repeat: repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -2101px;
+  background-position: left -1985px;
 	height: 15px;
 }
 .v-window-closebox {
@@ -5437,17 +5430,17 @@ textarea.v-textarea-readonly,
 	background: transparent;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -2116px;
+  background-position: left -2000px;
 }
 .v-window-closebox:hover {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -2132px;
+  background-position: left -2016px;
 }
 .v-window-closebox:active {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -2148px;
+  background-position: left -2032px;
 }
 .v-window-contents {
 	background: #fff;
@@ -5480,7 +5473,7 @@ textarea.v-textarea-readonly,
 	height: 12px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -2164px;
+  background-position: left -2048px;
 }
 .v-window-light .v-window-footer {
 	background: transparent;
@@ -5493,17 +5486,17 @@ textarea.v-textarea-readonly,
 	height: 15px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -2176px;
+  background-position: left -2060px;
 }
 .v-window-light .v-window-closebox:hover {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -2191px;
+  background-position: left -2075px;
 }
 .v-window-light .v-window-closebox:active {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -2206px;
+  background-position: left -2090px;
 }
 .v-window-light .v-window-contents {
 	background: transparent;
@@ -5513,7 +5506,7 @@ textarea.v-textarea-readonly,
 	background: #f7f7f8 repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -2221px;
+  background-position: left -2105px;
 }
 .v-ie6 .v-window-light .v-window-wrap2 {
 	background-image: none;

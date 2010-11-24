@@ -195,7 +195,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      */
     private class SelectionRange {
         private VScrollTableRow startRow;
-        private int length;
+        private final int length;
 
         /**
          * Constuctor.
@@ -1136,8 +1136,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     }
 
     private void setColWidth(int colIndex, int w, boolean isDefinedWidth) {
-        // Set header column width
         final HeaderCell hcell = tHead.getHeaderCell(colIndex);
+
+        // Make sure that the column grows to accommodate the sort indicator if
+        // necessary.
+        if (w < hcell.getMinWidth()) {
+            w = hcell.getMinWidth();
+        }
+
+        // Set header column width
         hcell.setWidth(w, isDefinedWidth);
 
         // Set body column width
@@ -1370,7 +1377,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         // fix "natural" width if width not set
         if (width == null || "".equals(width)) {
             int w = total;
-            w += scrollBody.getCellExtraWidth() * visibleColOrder.length;
+            w += tHead.getTotalExtraWidth();
             if (willHaveScrollbarz) {
                 w += Util.getNativeScrollbarSize();
             }
@@ -1382,7 +1389,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // Hey IE, are you really sure about this?
             availW = scrollBody.getAvailableWidth();
         }
-        availW -= scrollBody.getCellExtraWidth() * visibleColOrder.length;
+        availW -= tHead.getTotalExtraWidth();
 
         if (willHaveScrollbarz) {
             availW -= Util.getNativeScrollbarSize();
@@ -1709,6 +1716,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         Element captionContainer = DOM.createDiv();
 
+        Element sortIndicator = DOM.createDiv();
+
         Element colResizeWidget = DOM.createDiv();
 
         Element floatingCopyOfHeaderCell;
@@ -1739,6 +1748,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         private float expandRatio = 0;
 
+        private boolean sorted;
+
         public void setSortable(boolean b) {
             sortable = b;
         }
@@ -1757,6 +1768,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             setText(headerText);
 
             DOM.appendChild(td, colResizeWidget);
+
+            DOM.setElementProperty(sortIndicator, "className", CLASSNAME
+                    + "-sort-indicator");
+            DOM.appendChild(td, sortIndicator);
 
             DOM.setElementProperty(captionContainer, "className", CLASSNAME
                     + "-caption-container");
@@ -1781,9 +1796,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 // on column resize expand ratio becomes zero
                 expandRatio = 0;
             }
-            if (width == w) {
-                return;
-            }
             if (width == -1) {
                 // go to default mode, clip content if necessary
                 DOM.setStyleAttribute(captionContainer, "overflow", "");
@@ -1793,8 +1805,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 DOM.setStyleAttribute(captionContainer, "width", "");
                 setWidth("");
             } else {
-
-                captionContainer.getStyle().setPropertyPx("width", w);
+                /*
+                 * If this column is sorted, we need to make room for the sort
+                 * indicator by subtracting the styled margin and resizer width
+                 * from the width of the caption container.
+                 */
+                int captionContainerWidth = w - sortIndicator.getOffsetWidth()
+                        - colResizeWidget.getOffsetWidth();
+                captionContainer.getStyle().setPropertyPx("width",
+                        captionContainerWidth);
 
                 /*
                  * if we already have tBody, set the header width properly, if
@@ -1802,13 +1821,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                  * unless TD width is not explicitly set.
                  */
                 if (scrollBody != null) {
-                    int tdWidth = width + scrollBody.getCellExtraWidth();
+                    int tdWidth = width + getCellExtraWidth();
                     setWidth(tdWidth + "px");
                 } else {
                     Scheduler.get().scheduleDeferred(new Command() {
                         public void execute() {
-                            int tdWidth = width
-                                    + scrollBody.getCellExtraWidth();
+                            int tdWidth = width + getCellExtraWidth();
                             setWidth(tdWidth + "px");
                         }
                     });
@@ -1844,6 +1862,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         private void setSorted(boolean sorted) {
+            this.sorted = sorted;
             if (sorted) {
                 if (sortAscending) {
                     this.setStyleName(CLASSNAME + "-header-cell-asc");
@@ -1970,7 +1989,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                             client.updateVariable(paintableId, "sortascending",
                                     !sortAscending, false);
                         } else {
-                            // set table scrolled by this column
+                            // set table sorted by this column
                             client.updateVariable(paintableId, "sortcolumn",
                                     cid, false);
                         }
@@ -2053,8 +2072,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     }
 
                     int newWidth = originalWidth + deltaX;
-                    if (newWidth < scrollBody.getCellExtraWidth()) {
-                        newWidth = scrollBody.getCellExtraWidth();
+                    if (newWidth < getMinWidth()) {
+                        newWidth = getMinWidth();
                     }
                     setColWidth(colIndex, newWidth, true);
                 }
@@ -2062,6 +2081,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             default:
                 break;
             }
+        }
+
+        public int getMinWidth() {
+            int cellExtraWidth = getCellExtraWidth();
+            // cellExtraWidth might be -1 (undefined) if we don't yet have a
+            // scroll body.
+            return (cellExtraWidth < 0 ? 0 : cellExtraWidth)
+                    + sortIndicator.getOffsetWidth();
         }
 
         public String getCaption() {
@@ -2080,17 +2107,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 captionContainer.removeClassName(ALIGN_PREFIX + "left");
                 switch (c) {
                 case ALIGN_CENTER:
-                    DOM.setStyleAttribute(captionContainer, "textAlign",
-                            "center");
                     captionContainer.addClassName(ALIGN_PREFIX + "center");
                     break;
                 case ALIGN_RIGHT:
-                    DOM.setStyleAttribute(captionContainer, "textAlign",
-                            "right");
                     captionContainer.addClassName(ALIGN_PREFIX + "right");
                     break;
                 default:
-                    DOM.setStyleAttribute(captionContainer, "textAlign", "");
                     captionContainer.addClassName(ALIGN_PREFIX + "left");
                     break;
                 }
@@ -2122,7 +2144,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     // cols)
 
                     final int hw = ((Element) getElement().getLastChild())
-                            .getOffsetWidth() + scrollBody.getCellExtraWidth();
+                            .getOffsetWidth() + getCellExtraWidth();
                     if (columnIndex < 0) {
                         columnIndex = 0;
                         for (Iterator<Widget> it = tHead.iterator(); it
@@ -2147,6 +2169,58 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             return expandRatio;
         }
 
+        public boolean isSorted() {
+            return sorted;
+        }
+
+        private int cellExtraWidth = -1;
+
+        /**
+         * Method to return the space used for cell paddings + border.
+         */
+        public int getCellExtraWidth() {
+            if (cellExtraWidth < 0 && scrollBody != null) {
+                detectExtraWidth();
+            }
+            return cellExtraWidth;
+        }
+
+        public void clearCellExtraWidth() {
+            cellExtraWidth = -1;
+        }
+
+        private void detectExtraWidth() {
+            NodeList<TableRowElement> rows = scrollBody.tBodyElement.getRows();
+            if (rows.getLength() == 0) {
+                /* need to temporary add empty row and detect */
+                VScrollTableRow scrollTableRow = scrollBody.new VScrollTableRow();
+                scrollBody.tBodyElement
+                        .appendChild(scrollTableRow.getElement());
+                detectExtraWidth();
+                scrollBody.tBodyElement
+                        .removeChild(scrollTableRow.getElement());
+            } else {
+                colIndex = getColIndexByKey(cid);
+                boolean noCells = false;
+                TableRowElement item = rows.getItem(0);
+                TableCellElement colTD = item.getCells().getItem(colIndex);
+                if (colTD == null) {
+                    // content is currently empty, we need to add a fake cell
+                    // for measuring
+                    noCells = true;
+                    VScrollTableRow next = (VScrollTableRow) iterator().next();
+                    next.addCell(null, "", align, "", true, isSorted());
+                    colTD = item.getCells().getItem(colIndex);
+                }
+                com.google.gwt.dom.client.Element wrapper = colTD
+                        .getFirstChildElement();
+                cellExtraWidth = colTD.getOffsetWidth()
+                        - wrapper.getOffsetWidth();
+                if (noCells) {
+                    colTD.getParentElement().removeChild(colTD);
+                }
+            }
+        }
     }
 
     /**
@@ -2263,8 +2337,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     c.setAlign(col.getStringAttribute("align").charAt(0));
                 }
                 if (col.hasAttribute("width")) {
-                    final String width = col.getStringAttribute("width");
-                    c.setWidth(Integer.parseInt(width), true);
+                    final String widthStr = col.getStringAttribute("width");
+                    // Make sure to accomodate for the sort indicator if
+                    // necessary.
+                    int width = Integer.parseInt(widthStr);
+                    if (width < c.getMinWidth()) {
+                        width = c.getMinWidth();
+                    }
+                    c.setWidth(width, true);
                 } else if (recalcWidths) {
                     c.setUndefinedWidth();
                 }
@@ -2572,18 +2652,25 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             return aligns;
         }
 
+        public int getTotalExtraWidth() {
+            int totalExtraWidth = 0;
+            for (Widget w : visibleCells) {
+                totalExtraWidth += ((HeaderCell) w).getCellExtraWidth();
+            }
+            return totalExtraWidth;
+        }
     }
 
     /**
      * A cell in the footer
      */
     public class FooterCell extends Widget {
-        private Element td = DOM.createTD();
-        private Element captionContainer = DOM.createDiv();
+        private final Element td = DOM.createTD();
+        private final Element captionContainer = DOM.createDiv();
         private char align = ALIGN_LEFT;
         private int width = -1;
         private float expandRatio = 0;
-        private String cid;
+        private final String cid;
         boolean definedWidth = false;
         private int naturalWidth = -1;
 
@@ -2704,7 +2791,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                      * Reduce with one since footer does not have any spacers,
                      * instead a 1 pixel border.
                      */
-                    int tdWidth = width + scrollBody.getCellExtraWidth()
+                    int tdWidth = width
+                            + tHead.getHeaderCell(cid).getCellExtraWidth()
                             - borderWidths;
                     setWidth(tdWidth + "px");
                 } else {
@@ -2712,8 +2800,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         public void execute() {
                             int borderWidths = 1;
                             int tdWidth = width
-                                    + scrollBody.getCellExtraWidth()
-                                    - borderWidths;
+                                    + tHead.getHeaderCell(cid)
+                                            .getCellExtraWidth() - borderWidths;
                             setWidth(tdWidth + "px");
                         }
                     });
@@ -2850,7 +2938,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     // cols)
 
                     final int hw = ((Element) getElement().getLastChild())
-                            .getOffsetWidth() + scrollBody.getCellExtraWidth();
+                            .getOffsetWidth()
+                            + tHead.getHeaderCell(cid).getCellExtraWidth();
                     if (columnIndex < 0) {
                         columnIndex = 0;
                         for (Iterator<Widget> it = tHead.iterator(); it
@@ -3525,48 +3614,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
         }
 
-        private int cellExtraWidth = -1;
-
-        /**
-         * Method to return the space used for cell paddings + border.
-         */
-        private int getCellExtraWidth() {
-            if (cellExtraWidth < 0) {
-                detectExtrawidth();
-            }
-            return cellExtraWidth;
-        }
-
-        private void detectExtrawidth() {
-            NodeList<TableRowElement> rows = tBodyElement.getRows();
-            if (rows.getLength() == 0) {
-                /* need to temporary add empty row and detect */
-                VScrollTableRow scrollTableRow = new VScrollTableRow();
-                tBodyElement.appendChild(scrollTableRow.getElement());
-                detectExtrawidth();
-                tBodyElement.removeChild(scrollTableRow.getElement());
-            } else {
-                boolean noCells = false;
-                TableRowElement item = rows.getItem(0);
-                TableCellElement firstTD = item.getCells().getItem(0);
-                if (firstTD == null) {
-                    // content is currently empty, we need to add a fake cell
-                    // for measuring
-                    noCells = true;
-                    VScrollTableRow next = (VScrollTableRow) iterator().next();
-                    next.addCell(null, "", ALIGN_LEFT, "", true);
-                    firstTD = item.getCells().getItem(0);
-                }
-                com.google.gwt.dom.client.Element wrapper = firstTD
-                        .getFirstChildElement();
-                cellExtraWidth = firstTD.getOffsetWidth()
-                        - wrapper.getOffsetWidth();
-                if (noCells) {
-                    firstTD.getParentElement().removeChild(firstTD);
-                }
-            }
-        }
-
         private void reLayoutComponents() {
             for (Widget w : this) {
                 VScrollTableRow r = (VScrollTableRow) w;
@@ -3722,8 +3769,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                 // row header
                 if (showRowHeaders) {
+                    boolean sorted = tHead.getHeaderCell(col).isSorted();
                     addCell(uidl, buildCaptionHtmlSnippet(uidl), aligns[col++],
-                            "", true);
+                            "", true, sorted);
                     visibleColumnIndex++;
                 }
 
@@ -3743,15 +3791,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         style = uidl.getStringAttribute("style-" + columnId);
                     }
 
+                    boolean sorted = tHead.getHeaderCell(col).isSorted();
                     if (cell instanceof String) {
                         addCell(uidl, cell.toString(), aligns[col++], style,
-                                false);
+                                false, sorted);
                     } else {
                         final Paintable cellContent = client
                                 .getPaintable((UIDL) cell);
 
                         addCell(uidl, (Widget) cellContent, aligns[col++],
-                                style);
+                                style, sorted);
                         paintComponent(cellContent, (UIDL) cell);
                     }
                 }
@@ -3766,17 +3815,20 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             public VScrollTableRow() {
                 this(0);
                 addStyleName(CLASSNAME + "-row");
-                addCell(null, "_", 'b', "", true);
+                addCell(null, "_", 'b', "", true, false);
             }
 
             public void addCell(UIDL rowUidl, String text, char align,
-                    String style, boolean textIsHTML) {
+                    String style, boolean textIsHTML, boolean sorted) {
                 // String only content is optimized by not using Label widget
                 final Element td = DOM.createTD();
                 final Element container = DOM.createDiv();
                 String className = CLASSNAME + "-cell-content";
                 if (style != null && !style.equals("")) {
                     className += " " + CLASSNAME + "-cell-content-" + style;
+                }
+                if (sorted) {
+                    className += " " + CLASSNAME + "-cell-content-sorted";
                 }
                 td.setClassName(className);
                 container.setClassName(CLASSNAME + "-cell-wrapper");
@@ -3800,12 +3852,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 getElement().appendChild(td);
             }
 
-            public void addCell(UIDL rowUidl, Widget w, char align, String style) {
+            public void addCell(UIDL rowUidl, Widget w, char align,
+                    String style, boolean sorted) {
                 final Element td = DOM.createTD();
                 final Element container = DOM.createDiv();
                 String className = CLASSNAME + "-cell-content";
                 if (style != null && !style.equals("")) {
                     className += " " + CLASSNAME + "-cell-content-" + style;
+                }
+                if (sorted) {
+                    className += " " + CLASSNAME + "-cell-content-sorted";
                 }
                 td.setClassName(className);
                 container.setClassName(CLASSNAME + "-cell-wrapper");
@@ -4301,7 +4357,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         // but a best guess (expecting similar content in all
                         // columns ->
                         // if one component is relative width so are others)
-                        w = headerCell.getOffsetWidth() - getCellExtraWidth();
+                        w = headerCell.getOffsetWidth()
+                                - headerCell.getCellExtraWidth();
                     }
                 }
                 return new RenderSpace(w, 0) {
@@ -4508,8 +4565,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             int availW = scrollBody.getAvailableWidth();
             // Hey IE, are you really sure about this?
             availW = scrollBody.getAvailableWidth();
-            int visibleCellCount = tHead.getVisibleCellCount();
-            availW -= scrollBody.getCellExtraWidth() * visibleCellCount;
+            availW -= tHead.getTotalExtraWidth();
             if (willHaveScrollbars()) {
                 availW -= Util.getNativeScrollbarSize();
             }
@@ -4553,8 +4609,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 // fix body height (may vary if lazy loading is offhorizontal
                 // scrollbar appears/disappears)
                 int bodyHeight = scrollBody.getRequiredHeight();
-                boolean needsSpaceForHorizontalSrollbar = (availW < usedMinimumWidth);
-                if (needsSpaceForHorizontalSrollbar) {
+                boolean needsSpaceForHorizontalScrollbar = (availW < usedMinimumWidth);
+                if (needsSpaceForHorizontalScrollbar) {
                     bodyHeight += Util.getNativeScrollbarSize();
                 }
                 int heightBefore = getOffsetHeight();

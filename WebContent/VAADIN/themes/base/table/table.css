@@ -89,22 +89,32 @@
 	overflow: hidden;
 }
 .v-table-caption-container {
-	float: right;
 	overflow: hidden;
 	white-space: nowrap;
-	padding-right: 6px;
+	margin-left: 6px;
 }
-.v-table-header-cell-asc .v-table-caption-container {
+.v-table-sort-indicator {
+	width: 0px;
+	height: 1.2em;
+	float: right;
+}
+.v-table-header-cell-asc .v-table-sort-indicator,
+.v-table-header-cell-desc .v-table-sort-indicator {
+	width: 16px;
+	height: 1.2em;
+	float: right;
+}		
+.v-table-header-cell-asc .v-table-sort-indicator {
 	background: transparent url(../common/img/sprites.png) no-repeat right 6px;
 }
-.v-table-header-cell-desc .v-table-caption-container {
+.v-table-header-cell-desc .v-table-sort-indicator {
 	background: transparent url(../common/img/sprites.png) no-repeat right -10px;
 }
-.v-table-header-cell-asc .v-table-caption-container-align-right {
-    background: transparent url(../common/img/sprites.png) no-repeat -8px 6px;
+.v-table-caption-container-align-center {
+	text-align: center;
 }
-.v-table-header-cell-desc .v-table-caption-container-align-right {
-    background: transparent url(../common/img/sprites.png) no-repeat -8px -10px;
+.v-table-caption-container-align-right {
+	text-align: right;
 }
 .v-table-caption-container .v-icon,
 .v-table-header-drag .v-icon {
@@ -143,6 +153,12 @@
 	/* Do not specify any margins, paddings or borders here */
 	white-space: nowrap;
 	overflow: hidden;
+}
+.v-table-cell-wrapper-align-center {
+	text-align: center;
+}
+.v-table-cell-wrapper-align-right {
+	text-align: right;
 }
 .v-table-column-selector {
 	float: right;

@@ -47,7 +47,7 @@
 	color: #336699;
 	font-weight: bold;
 	font-size: 11px;
-	padding-right: 4px;
+	padding-left: 4px;
 	padding-top: 6px;
 }
 
@@ -60,13 +60,14 @@
 	margin-top: -2px;
 }
 
-
-.v-table-header-cell-asc .v-table-caption-container {
+.v-table-header-cell-asc .v-table-sort-indicator {
 	background: transparent url(/html/themes/control_panel/images/arrows/05_up.png) no-repeat right 8px;
+	height: 26px;
 }
 
-.v-table-header-cell-desc .v-table-caption-container {
+.v-table-header-cell-desc .v-table-sort-indicator {
 	background: transparent url(/html/themes/control_panel/images/arrows/05_down.png) no-repeat right 10px;
+	height: 26px;
 }
 
 .v-table-resizer {

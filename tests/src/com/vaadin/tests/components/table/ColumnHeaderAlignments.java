@@ -1,8 +1,12 @@
 package com.vaadin.tests.components.table;
 
+import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Table;
@@ -10,12 +14,20 @@ import com.vaadin.ui.Table;
 @SuppressWarnings("serial")
 public class ColumnHeaderAlignments extends TestBase {
 
+    private static final String BAZ = "Baz (right)";
+    private static final String BAR = "Bar (center)";
+    private static final String FOO = "Foo (left)";
+    private Table fooTable;
+    private Table barTable;
+    private Table bazTable;
+
     @Override
     protected void setup() {
         Select theme = new Select();
         theme.addItem("reindeer");
         theme.addItem("runo");
         theme.addItem("base");
+        theme.addItem("liferay");
         theme.setValue("reindeer");
         theme.setNullSelectionAllowed(false);
         theme.setImmediate(true);
@@ -25,25 +37,48 @@ public class ColumnHeaderAlignments extends TestBase {
             }
         });
         addComponent(theme);
+        CheckBox footers = new CheckBox("Show footers", new ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                fooTable.setFooterVisible((Boolean) event.getButton()
+                        .getValue());
+                barTable.setFooterVisible((Boolean) event.getButton()
+                        .getValue());
+                bazTable.setFooterVisible((Boolean) event.getButton()
+                        .getValue());
+            }
+        });
+        footers.setImmediate(true);
+        addComponent(footers);
         HorizontalLayout tables = new HorizontalLayout();
-        tables.addComponent(createTable(null));
-        tables.addComponent(createTable("strong"));
-        tables.addComponent(createTable("black"));
+        fooTable = createTable(null);
+        tables.addComponent(fooTable);
+        barTable = createTable("strong");
+        tables.addComponent(barTable);
+        bazTable = createTable("black");
+        tables.addComponent(bazTable);
         addComponent(tables);
     }
 
     private Table createTable(String style) {
         Table table = new Table();
-        table.addContainerProperty("Foo (left)", String.class, "");
-        table.addContainerProperty("Bar (center)", String.class, "");
-        table.addContainerProperty("Baz (right)", String.class, "");
+        table.addContainerProperty(FOO, String.class, "");
+        table.addContainerProperty(BAR, String.class, "");
+        table.addContainerProperty(BAZ, String.class, "");
 
-        table.setColumnAlignment("Foo (left)", Table.ALIGN_LEFT);
-        table.setColumnAlignment("Bar (center)", Table.ALIGN_CENTER);
-        table.setColumnAlignment("Baz (right)", Table.ALIGN_RIGHT);
+        table.setColumnAlignment(FOO, Table.ALIGN_LEFT);
+        table.setColumnAlignment(BAR, Table.ALIGN_CENTER);
+        table.setColumnAlignment(BAZ, Table.ALIGN_RIGHT);
         if (style != null) {
             table.setStyleName(style);
         }
+
+        for (int i = 0; i < 100; i++) {
+            Item item = table.addItem(i);
+            item.getItemProperty(FOO).setValue("foo");
+            item.getItemProperty(BAR).setValue("bar");
+            item.getItemProperty(BAZ).setValue("baz");
+        }
+
         return table;
     }
 
