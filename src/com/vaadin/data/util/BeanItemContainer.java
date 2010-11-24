@@ -467,7 +467,11 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * java.lang.Object)
      */
     public Property getContainerProperty(Object itemId, Object propertyId) {
-        return getItem(itemId).getItemProperty(propertyId);
+        BeanItem<BT> item = getItem(itemId);
+        if (item == null) {
+            return null;
+        }
+        return item.getItemProperty(propertyId);
     }
 
     /*
