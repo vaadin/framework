@@ -1,9 +1,19 @@
 package com.vaadin.tests.server.container;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import junit.framework.Assert;
+
+import org.easymock.EasyMock;
+
 import com.vaadin.data.Container;
+import com.vaadin.data.Container.ItemSetChangeEvent;
+import com.vaadin.data.Container.ItemSetChangeListener;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 
@@ -65,10 +75,20 @@ public class BeanItemContainerTest extends AbstractContainerTest {
         }
     }
 
-    private Map<String, ClassName> nameToBean = new HashMap<String, ClassName>();
+    private Map<String, ClassName> nameToBean = new LinkedHashMap<String, ClassName>();
 
     private BeanItemContainer<ClassName> getContainer() {
         return new BeanItemContainer<ClassName>(ClassName.class);
+    }
+
+    @Override
+    public void setUp() {
+        nameToBean.clear();
+
+        for (int i = 0; i < sampleData.length; i++) {
+            ClassName className = new ClassName(sampleData[i], i);
+            nameToBean.put(sampleData[i], className);
+        }
     }
 
     @Override
@@ -77,12 +97,10 @@ public class BeanItemContainerTest extends AbstractContainerTest {
         BeanItemContainer<ClassName> beanItemContainer = (BeanItemContainer<ClassName>) container;
 
         beanItemContainer.removeAllItems();
-        nameToBean.clear();
 
-        for (int i = 0; i < sampleData.length; i++) {
-            ClassName className = new ClassName(sampleData[i], i);
-            nameToBean.put(sampleData[i], className);
-            beanItemContainer.addBean(className);
+        Iterator<ClassName> it = nameToBean.values().iterator();
+        while (it.hasNext()) {
+            beanItemContainer.addBean(it.next());
         }
     }
 
@@ -196,4 +214,169 @@ public class BeanItemContainerTest extends AbstractContainerTest {
 
     }
 
+    public void testContainerIndexed() {
+        testContainerIndexed(getContainer(), nameToBean.get(sampleData[2]), 2,
+                false, new ClassName("org.vaadin.test.Test", 8888), true);
+    }
+
+    // note that the constructor tested here is problematic, and should also
+    // take the bean class as a parameter
+    public void testCollectionConstructor() {
+        List<ClassName> classNames = new ArrayList<ClassName>();
+        classNames.add(new ClassName("a.b.c.Def", 1));
+        classNames.add(new ClassName("a.b.c.Fed", 2));
+        classNames.add(new ClassName("b.c.d.Def", 3));
+
+        BeanItemContainer<ClassName> container = new BeanItemContainer<ClassName>(
+                classNames);
+
+        Assert.assertEquals(3, container.size());
+        Assert.assertEquals(classNames.get(0), container.firstItemId());
+        Assert.assertEquals(classNames.get(1), container.getIdByIndex(1));
+        Assert.assertEquals(classNames.get(2), container.lastItemId());
+    }
+
+    // this only applies to the collection constructor with no type parameter
+    public void testEmptyCollectionConstructor() {
+        try {
+            BeanItemContainer<ClassName> container = new BeanItemContainer<ClassName>(
+                    (Collection<ClassName>) null);
+            Assert.fail("Initializing BeanItemContainer from a null collection should not work!");
+        } catch (IllegalArgumentException e) {
+            // success
+        }
+        try {
+            BeanItemContainer<ClassName> container = new BeanItemContainer<ClassName>(
+                    new ArrayList<ClassName>());
+            Assert.fail("Initializing BeanItemContainer from an empty collection should not work!");
+        } catch (IllegalArgumentException e) {
+            // success
+        }
+    }
+
+    protected abstract class ItemSetChangeListenerTester {
+        public void listenerTest() {
+            listenerTest(true);
+        }
+
+        public void listenerTest(boolean expectChangeEvent) {
+            BeanItemContainer<ClassName> container = prepareContainer();
+
+            ItemSetChangeListener listener = EasyMock
+                    .createStrictMock(ItemSetChangeListener.class);
+
+            // Expectations and start test
+            if (expectChangeEvent) {
+                listener.containerItemSetChange(EasyMock
+                        .isA(ItemSetChangeEvent.class));
+            }
+            EasyMock.replay(listener);
+
+            // Add listener and add a property -> should end up in listener
+            // once
+            container.addListener(listener);
+            performModification(container);
+
+            // Ensure listener was called once
+            EasyMock.verify(listener);
+
+            // Remove the listener
+            container.removeListener(listener);
+            performModification(container);
+
+            // Ensure listener has not been called again
+            EasyMock.verify(listener);
+        }
+
+        protected BeanItemContainer<ClassName> prepareContainer() {
+            BeanItemContainer<ClassName> container = getContainer();
+            initializeContainer(container);
+            return container;
+        }
+
+        protected abstract void performModification(
+                BeanItemContainer<ClassName> container);
+    }
+
+    public void testItemSetChangeListeners() {
+        new ItemSetChangeListenerTester() {
+            @Override
+            protected void performModification(
+                    BeanItemContainer<ClassName> container) {
+                container.addBean(new ClassName("com.example.Test", 1111));
+            }
+        }.listenerTest();
+
+        new ItemSetChangeListenerTester() {
+            @Override
+            protected void performModification(
+                    BeanItemContainer<ClassName> container) {
+                container.removeItem(nameToBean.get(sampleData[0]));
+            }
+        }.listenerTest();
+
+        new ItemSetChangeListenerTester() {
+            @Override
+            protected void performModification(
+                    BeanItemContainer<ClassName> container) {
+                container.removeItem(new ClassName("com.example.Test", 1111));
+            }
+        }.listenerTest(false);
+
+        new ItemSetChangeListenerTester() {
+            @Override
+            protected void performModification(
+                    BeanItemContainer<ClassName> container) {
+                // this test does not check that there would be no second
+                // notification because the collection is already empty
+                container.removeAllItems();
+            }
+        }.listenerTest();
+
+        new ItemSetChangeListenerTester() {
+            private int propertyIndex = 0;
+
+            @Override
+            protected void performModification(
+                    BeanItemContainer<ClassName> container) {
+                Collection<String> containerPropertyIds = container
+                        .getContainerPropertyIds();
+                container.addContainerFilter(new ArrayList<String>(
+                        containerPropertyIds).get(propertyIndex++), "a", true,
+                        false);
+            }
+        }.listenerTest();
+
+        new ItemSetChangeListenerTester() {
+            @Override
+            protected void performModification(
+                    BeanItemContainer<ClassName> container) {
+                container.removeContainerFilters(SIMPLE_NAME);
+            }
+
+            @Override
+            protected BeanItemContainer<ClassName> prepareContainer() {
+                BeanItemContainer<ClassName> container = super
+                        .prepareContainer();
+                container.addContainerFilter(SIMPLE_NAME, "a", true, false);
+                return container;
+            };
+        }.listenerTest();
+
+        new ItemSetChangeListenerTester() {
+            @Override
+            protected void performModification(
+                    BeanItemContainer<ClassName> container) {
+                container.removeAllContainerFilters();
+            }
+
+            @Override
+            protected BeanItemContainer<ClassName> prepareContainer() {
+                BeanItemContainer<ClassName> container = super
+                        .prepareContainer();
+                container.addContainerFilter(SIMPLE_NAME, "a", true, false);
+                return container;
+            };
+        }.listenerTest();
+    }
 }

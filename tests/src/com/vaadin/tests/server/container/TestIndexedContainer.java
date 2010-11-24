@@ -24,4 +24,9 @@ public class TestIndexedContainer extends AbstractContainerTest {
         testContainerOrdered(new IndexedContainer());
     }
 
+    public void testContainerIndexed() {
+        testContainerIndexed(new IndexedContainer(), sampleData[2], 2, true,
+                "newItemId", true);
+    }
+
 }

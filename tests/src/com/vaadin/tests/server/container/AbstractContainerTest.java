@@ -3,6 +3,7 @@ package com.vaadin.tests.server.container;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import com.vaadin.data.Container;
@@ -170,6 +171,83 @@ public abstract class AbstractContainerTest extends TestCase {
         assertEquals(newFirstId, container.nextItemId(fifthId));
         assertNull(container.prevItemId(fifthId));
 
+    }
+
+    protected void testContainerIndexed(Container.Indexed container,
+            Object itemId, int itemPosition, boolean testAddEmptyItemAt,
+            Object newItemId, boolean testAddItemAtWithId) {
+        initializeContainer(container);
+
+        // indexOfId
+        Assert.assertEquals(itemPosition, container.indexOfId(itemId));
+
+        // getIdByIndex
+        Assert.assertEquals(itemId, container.getIdByIndex(itemPosition));
+
+        // addItemAt
+        if (testAddEmptyItemAt) {
+            Object addedId = container.addItemAt(itemPosition);
+            Assert.assertEquals(itemPosition, container.indexOfId(addedId));
+            Assert.assertEquals(itemPosition + 1, container.indexOfId(itemId));
+            Assert.assertEquals(addedId, container.getIdByIndex(itemPosition));
+            Assert.assertEquals(itemId,
+                    container.getIdByIndex(itemPosition + 1));
+
+            Object newFirstId = container.addItemAt(0);
+            Assert.assertEquals(0, container.indexOfId(newFirstId));
+            Assert.assertEquals(itemPosition + 2, container.indexOfId(itemId));
+            Assert.assertEquals(newFirstId, container.firstItemId());
+            Assert.assertEquals(newFirstId, container.getIdByIndex(0));
+            Assert.assertEquals(itemId,
+                    container.getIdByIndex(itemPosition + 2));
+
+            Object newLastId = container.addItemAt(container.size());
+            Assert.assertEquals(container.size() - 1,
+                    container.indexOfId(newLastId));
+            Assert.assertEquals(itemPosition + 2, container.indexOfId(itemId));
+            Assert.assertEquals(newLastId, container.lastItemId());
+            Assert.assertEquals(newLastId,
+                    container.getIdByIndex(container.size() - 1));
+            Assert.assertEquals(itemId,
+                    container.getIdByIndex(itemPosition + 2));
+
+            container.removeItem(addedId);
+            container.removeItem(newFirstId);
+            container.removeItem(newLastId);
+        }
+
+        // addItemAt
+        if (testAddItemAtWithId) {
+            container.addItemAt(itemPosition, newItemId);
+            Assert.assertEquals(itemPosition, container.indexOfId(newItemId));
+            Assert.assertEquals(itemPosition + 1, container.indexOfId(itemId));
+            Assert.assertEquals(newItemId, container.getIdByIndex(itemPosition));
+            Assert.assertEquals(itemId,
+                    container.getIdByIndex(itemPosition + 1));
+            container.removeItem(newItemId);
+            Assert.assertFalse(container.containsId(newItemId));
+
+            container.addItemAt(0, newItemId);
+            Assert.assertEquals(0, container.indexOfId(newItemId));
+            Assert.assertEquals(itemPosition + 1, container.indexOfId(itemId));
+            Assert.assertEquals(newItemId, container.firstItemId());
+            Assert.assertEquals(newItemId, container.getIdByIndex(0));
+            Assert.assertEquals(itemId,
+                    container.getIdByIndex(itemPosition + 1));
+            container.removeItem(newItemId);
+            Assert.assertFalse(container.containsId(newItemId));
+
+            container.addItemAt(container.size(), newItemId);
+            Assert.assertEquals(container.size() - 1,
+                    container.indexOfId(newItemId));
+            Assert.assertEquals(itemPosition, container.indexOfId(itemId));
+            Assert.assertEquals(newItemId, container.lastItemId());
+            Assert.assertEquals(newItemId,
+                    container.getIdByIndex(container.size() - 1));
+            Assert.assertEquals(itemId, container.getIdByIndex(itemPosition));
+            container.removeItem(newItemId);
+            Assert.assertFalse(container.containsId(newItemId));
+        }
     }
 
     protected void testContainerFiltering(Container.Filterable container) {
@@ -528,5 +606,4 @@ public abstract class AbstractContainerTest extends TestCase {
             "com.vaadin.ui.VerticalLayout", "com.vaadin.ui.Window",
             "com.vaadin.util.SerializerHelper", "org.vaadin.test.LastClass" };
 
-    // TODO testContainerIndexing(Container.Indexed) & use in subclasses
 }

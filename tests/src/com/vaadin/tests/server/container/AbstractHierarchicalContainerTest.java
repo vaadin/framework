@@ -7,7 +7,8 @@ import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.Item;
 
-public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
+public abstract class AbstractHierarchicalContainerTest extends
+        AbstractContainerTest {
 
     /**
      * @param container
