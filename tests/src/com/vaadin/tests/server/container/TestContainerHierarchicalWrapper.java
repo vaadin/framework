@@ -34,7 +34,8 @@ public class TestContainerHierarchicalWrapper extends
         int expectedSize = sampleData.length + packages - 1;
 
         validateContainer(container, "com", "com.vaadin.util.SerializerHelper",
-                "com.vaadin.terminal.ApplicationResource", "blah", expectedSize);
+                "com.vaadin.terminal.ApplicationResource", "blah", true,
+                expectedSize);
 
         // rootItemIds
         Collection<?> rootIds = container.rootItemIds();

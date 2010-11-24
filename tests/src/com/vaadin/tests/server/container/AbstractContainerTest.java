@@ -12,9 +12,14 @@ import com.vaadin.data.Item;
 
 public abstract class AbstractContainerTest extends TestCase {
 
+    // #6043: for items that have been filtered out, Container interface does
+    // not specify what to return from getItem() and getContainerProperty(), so
+    // need checkGetItemNull parameter for the test to be usable for most
+    // current containers
     protected void validateContainer(Container container,
             Object expectedFirstItemId, Object expectedLastItemId,
-            Object itemIdInSet, Object itemIdNotInSet, int expectedSize) {
+            Object itemIdInSet, Object itemIdNotInSet,
+            boolean checkGetItemNull, int expectedSize) {
         Container.Indexed indexed = null;
         if (container instanceof Container.Indexed) {
             indexed = (Container.Indexed) container;
@@ -38,12 +43,17 @@ public abstract class AbstractContainerTest extends TestCase {
         assertTrue(container.containsId(itemIdInSet));
 
         // getItem
-        assertNull(container.getItem(itemIdNotInSet));
+        if (checkGetItemNull) {
+            assertNull(container.getItem(itemIdNotInSet));
+        }
         assertNotNull(container.getItem(itemIdInSet));
 
         // getContainerProperty
         for (Object propId : container.getContainerPropertyIds()) {
-            assertNull(container.getContainerProperty(itemIdNotInSet, propId));
+            if (checkGetItemNull) {
+                assertNull(container.getContainerProperty(itemIdNotInSet,
+                        propId));
+            }
             assertNotNull(container.getContainerProperty(itemIdInSet, propId));
         }
 
@@ -81,17 +91,17 @@ public abstract class AbstractContainerTest extends TestCase {
 
     }
 
-    protected static final Object FULLY_QUALIFIED_NAME = "PROP1";
-    protected static final Object SIMPLE_NAME = "simplename";
-    protected static final Object REVERSE_FULLY_QUALIFIED_NAME = "PROP2";
-    protected static final Object ID_NUMBER = "PROP3";
+    protected static final Object FULLY_QUALIFIED_NAME = "fullyQualifiedName";
+    protected static final Object SIMPLE_NAME = "simpleName";
+    protected static final Object REVERSE_FULLY_QUALIFIED_NAME = "reverseFullyQualifiedName";
+    protected static final Object ID_NUMBER = "idNumber";
 
     protected void testBasicContainerOperations(Container container) {
         initializeContainer(container);
 
         // Basic container
         validateContainer(container, sampleData[0],
-                sampleData[sampleData.length - 1], sampleData[10], "abc",
+                sampleData[sampleData.length - 1], sampleData[10], "abc", true,
                 sampleData.length);
     }
 
@@ -171,7 +181,7 @@ public abstract class AbstractContainerTest extends TestCase {
         validateContainer(container, "com.vaadin.data.BufferedValidatable",
                 "com.vaadin.ui.TabSheet",
                 "com.vaadin.terminal.gwt.client.Focusable",
-                "com.vaadin.data.Buffered", 20);
+                "com.vaadin.data.Buffered", isFilteredOutItemNull(), 20);
 
         // Filter by "contains da" (reversed as ad here)
         container.removeAllContainerFilters();
@@ -181,7 +191,18 @@ public abstract class AbstractContainerTest extends TestCase {
         validateContainer(container, "com.vaadin.data.Buffered",
                 "com.vaadin.terminal.gwt.server.ComponentSizeValidator",
                 "com.vaadin.data.util.IndexedContainer",
-                "com.vaadin.terminal.gwt.client.ui.VUriFragmentUtility", 37);
+                "com.vaadin.terminal.gwt.client.ui.VUriFragmentUtility",
+                isFilteredOutItemNull(), 37);
+    }
+
+    /**
+     * Override in subclasses to return false if the container getItem() method
+     * returns a non-null value for an item that has been filtered out.
+     * 
+     * @return
+     */
+    protected boolean isFilteredOutItemNull() {
+        return true;
     }
 
     protected void testContainerSortingAndFiltering(Container.Sortable sortable) {
@@ -202,7 +223,7 @@ public abstract class AbstractContainerTest extends TestCase {
         validateContainer(sortable, "com.vaadin.data.BufferedValidatable",
                 "com.vaadin.ui.TableFieldFactory",
                 "com.vaadin.ui.TableFieldFactory",
-                "com.vaadin.data.util.BeanItem", 20);
+                "com.vaadin.data.util.BeanItem", isFilteredOutItemNull(), 20);
     }
 
     protected void testContainerSorting(Container.Filterable container) {
@@ -221,7 +242,7 @@ public abstract class AbstractContainerTest extends TestCase {
 
         validateContainer(container, "com.vaadin.Application",
                 "org.vaadin.test.LastClass",
-                "com.vaadin.terminal.ApplicationResource", "blah",
+                "com.vaadin.terminal.ApplicationResource", "blah", true,
                 sampleData.length);
 
         sortable.sort(new Object[] { REVERSE_FULLY_QUALIFIED_NAME },
@@ -230,7 +251,8 @@ public abstract class AbstractContainerTest extends TestCase {
         validateContainer(container,
                 "com.vaadin.terminal.gwt.server.ApplicationPortlet2",
                 "com.vaadin.data.util.ObjectProperty",
-                "com.vaadin.ui.BaseFieldFactory", "blah", sampleData.length);
+                "com.vaadin.ui.BaseFieldFactory", "blah", true,
+                sampleData.length);
 
     }
 
@@ -260,7 +282,7 @@ public abstract class AbstractContainerTest extends TestCase {
         }
     }
 
-    protected String getSimpleName(String name) {
+    protected static String getSimpleName(String name) {
         if (name.contains(".")) {
             return name.substring(name.lastIndexOf('.') + 1);
         } else {
@@ -506,4 +528,5 @@ public abstract class AbstractContainerTest extends TestCase {
             "com.vaadin.ui.VerticalLayout", "com.vaadin.ui.Window",
             "com.vaadin.util.SerializerHelper", "org.vaadin.test.LastClass" };
 
+    // TODO testContainerIndexing(Container.Indexed) & use in subclasses
 }

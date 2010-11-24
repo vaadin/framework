@@ -20,6 +20,10 @@ public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
      *            An item id that is in the container
      * @param itemIdNotInSet
      *            An item id that is not in the container
+     * @param checkGetItemNull
+     *            true if getItem() should return null for itemIdNotInSet, false
+     *            to skip the check (container.containsId() is checked in any
+     *            case)
      * @param expectedSize
      *            Expected number of items in the container. Not related to
      *            hierarchy.
@@ -34,11 +38,12 @@ public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
      */
     protected void validateHierarchicalContainer(Hierarchical container,
             Object expectedFirstItemId, Object expectedLastItemId,
-            Object itemIdInSet, Object itemIdNotInSet, int expectedSize,
-            int expectedRootSize, boolean rootsHaveChildren) {
+            Object itemIdInSet, Object itemIdNotInSet,
+            boolean checkGetItemNull, int expectedSize, int expectedRootSize,
+            boolean rootsHaveChildren) {
 
         validateContainer(container, expectedFirstItemId, expectedLastItemId,
-                itemIdInSet, itemIdNotInSet, expectedSize);
+                itemIdInSet, itemIdNotInSet, checkGetItemNull, expectedSize);
 
         // rootItemIds
         Collection<?> rootIds = container.rootItemIds();
@@ -143,7 +148,7 @@ public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
         int expectedSize = sampleData.length + packages;
         validateHierarchicalContainer(container, "com",
                 "org.vaadin.test.LastClass",
-                "com.vaadin.terminal.ApplicationResource", "blah",
+                "com.vaadin.terminal.ApplicationResource", "blah", true,
                 expectedSize, 2, true);
 
     }
@@ -166,7 +171,7 @@ public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
         int expectedSize = sampleData.length + packages;
         validateHierarchicalContainer(container, "com",
                 "org.vaadin.test.LastClass",
-                "com.vaadin.terminal.ApplicationResource", "blah",
+                "com.vaadin.terminal.ApplicationResource", "blah", true,
                 expectedSize, 2, true);
 
         sortable.sort(new Object[] { REVERSE_FULLY_QUALIFIED_NAME },
@@ -175,7 +180,7 @@ public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
         validateHierarchicalContainer(container,
                 "com.vaadin.terminal.gwt.server.ApplicationPortlet2",
                 "com.vaadin.data.util.ObjectProperty",
-                "com.vaadin.terminal.ApplicationResource", "blah",
+                "com.vaadin.terminal.ApplicationResource", "blah", true,
                 expectedSize, 2, true);
 
     }

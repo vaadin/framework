@@ -46,7 +46,7 @@ public class TestHierarchicalContainer extends
 
         validateHierarchicalContainer(container, "com",
                 "com.vaadin.ui.TabSheet",
-                "com.vaadin.terminal.gwt.client.Focusable", "blah",
+                "com.vaadin.terminal.gwt.client.Focusable", "blah", true,
                 expectedSize, expectedRoots, true);
 
         // only include .gwt.client classes
@@ -63,7 +63,7 @@ public class TestHierarchicalContainer extends
         validateHierarchicalContainer(container, "com",
                 "com.vaadin.terminal.gwt.client.WidgetSet",
                 "com.vaadin.terminal.gwt.client.ui.VSplitPanelVertical",
-                "blah", expectedSize, expectedRoots, true);
+                "blah", true, expectedSize, expectedRoots, true);
 
         // Additionally remove all without 'm' in the simple name.
         container.addContainerFilter(SIMPLE_NAME, "m", false, false);
@@ -76,7 +76,7 @@ public class TestHierarchicalContainer extends
                 "com",
                 "com.vaadin.terminal.gwt.client.ui.VUriFragmentUtility",
                 "com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer",
-                "blah", expectedSize, expectedRoots, true);
+                "blah", true, expectedSize, expectedRoots, true);
 
     }
 
@@ -118,7 +118,7 @@ public class TestHierarchicalContainer extends
                 "com.vaadin.data.BufferedValidatable",
                 "com.vaadin.ui.TabSheet",
                 "com.vaadin.terminal.gwt.client.ui.VTabsheetBase", "blah",
-                expectedSize, expectedRoots, false);
+                true, expectedSize, expectedRoots, false);
 
         // only include .gwt.client classes
         container.removeAllContainerFilters();
@@ -136,7 +136,7 @@ public class TestHierarchicalContainer extends
         validateHierarchicalContainer(container,
                 "com.vaadin.terminal.gwt.client.ApplicationConfiguration",
                 "com.vaadin.terminal.gwt.client.WidgetSet",
-                "com.vaadin.terminal.gwt.client.ui.VOptionGroup", "blah",
+                "com.vaadin.terminal.gwt.client.ui.VOptionGroup", "blah", true,
                 expectedSize, expectedRoots, false);
 
         // Additionally remove all without 'P' in the simple name.
@@ -149,7 +149,7 @@ public class TestHierarchicalContainer extends
                 "com.vaadin.terminal.gwt.client.Paintable",
                 "com.vaadin.terminal.gwt.client.ui.VTabsheetPanel",
                 "com.vaadin.terminal.gwt.client.ui.VPopupCalendar", "blah",
-                expectedSize, expectedRoots, false);
+                true, expectedSize, expectedRoots, false);
 
     }
 }

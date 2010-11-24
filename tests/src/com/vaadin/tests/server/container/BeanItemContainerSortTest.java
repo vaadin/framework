@@ -1,14 +1,18 @@
 package com.vaadin.tests.server.container;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.DefaultItemSorter;
 
 public class BeanItemContainerSortTest {
     public class Person {
@@ -33,6 +37,18 @@ public class BeanItemContainerSortTest {
         }
     }
 
+    public class Parent extends Person {
+        private Set<Person> children = new HashSet<Person>();
+
+        public void setChildren(Set<Person> children) {
+            this.children = children;
+        }
+
+        public Set<Person> getChildren() {
+            return children;
+        }
+    }
+
     String[] names = new String[] { "Antti", "Ville", "Sirkka", "Jaakko",
             "Pekka", "John" };
     int[] ages = new int[] { 10, 20, 50, 12, 64, 67 };
@@ -50,6 +66,18 @@ public class BeanItemContainerSortTest {
         }
         return bc;
 
+    }
+
+    public BeanItemContainer<Parent> getParentContainer() {
+        BeanItemContainer<Parent> bc = new BeanItemContainer<Parent>(
+                Parent.class);
+        for (int i = 0; i < names.length; i++) {
+            Parent p = new Parent();
+            p.setName(names[i]);
+            p.setAge(ages[i]);
+            bc.addBean(p);
+        }
+        return bc;
     }
 
     @Test
@@ -91,6 +119,52 @@ public class BeanItemContainerSortTest {
             Assert.assertTrue(container.containsId(idByIndex));
             Assert.assertEquals(string, idByIndex.getName());
         }
-
     }
+
+    @Test
+    public void customSorting() {
+        BeanItemContainer<Person> container = getContainer();
+
+        // custom sorter using the reverse order
+        container.setItemSorter(new DefaultItemSorter() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                return -super.compare(o1, o2);
+            }
+        });
+
+        container.sort(new Object[] { "age" }, new boolean[] { true });
+
+        int i = container.size() - 1;
+        for (String string : sortedByAge) {
+            Person idByIndex = container.getIdByIndex(i--);
+            Assert.assertTrue(container.containsId(idByIndex));
+            Assert.assertEquals(string, idByIndex.getName());
+        }
+    }
+
+    @Test
+    public void testGetSortableProperties() {
+        BeanItemContainer<Person> container = getContainer();
+
+        Collection<Object> sortablePropertyIds = container
+                .getSortableContainerPropertyIds();
+        Assert.assertEquals(2, sortablePropertyIds.size());
+        Assert.assertTrue(sortablePropertyIds.contains("name"));
+        Assert.assertTrue(sortablePropertyIds.contains("age"));
+    }
+
+    @Test
+    public void testGetNonSortableProperties() {
+        BeanItemContainer<Parent> container = getParentContainer();
+
+        Assert.assertEquals(3, container.getContainerPropertyIds().size());
+
+        Collection<Object> sortablePropertyIds = container
+                .getSortableContainerPropertyIds();
+        Assert.assertEquals(2, sortablePropertyIds.size());
+        Assert.assertTrue(sortablePropertyIds.contains("name"));
+        Assert.assertTrue(sortablePropertyIds.contains("age"));
+    }
+
 }
