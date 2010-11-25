@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -562,6 +563,10 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         } else {
             getElement().setAttribute("wrap", "off");
             getElement().getStyle().setOverflow(Overflow.AUTO);
+        }
+        if (BrowserInfo.get().isSafari4()) {
+            // Force redraw as Safari 4 does not properly update the screen
+            Util.forceWebkitRedraw(getElement());
         }
         wordwrap = enabled;
     }

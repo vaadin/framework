@@ -173,6 +173,10 @@ public class BrowserInfo {
         return browserDetails.isSafari();
     }
 
+    public boolean isSafari4() {
+        return isSafari() && browserDetails.getBrowserMajorVersion() == 4;
+    }
+
     public boolean isIE6() {
         return isIE() && browserDetails.getBrowserMajorVersion() == 6;
     }

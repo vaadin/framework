@@ -13,6 +13,7 @@ import java.util.Set;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -886,6 +887,22 @@ public class Util {
             }
         }
         return null;
+    }
+
+    /**
+     * Force webkit to redraw an element
+     * 
+     * @param element
+     *            The element that should be redrawn
+     */
+    public static void forceWebkitRedraw(Element element) {
+        Style style = element.getStyle();
+        String s = style.getProperty("webkitTransform");
+        if (s == null || s.length() == 0) {
+            style.setProperty("webkitTransform", "scale(1)");
+        } else {
+            style.setProperty("webkitTransform", "");
+        }
     }
 
 }
