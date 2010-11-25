@@ -338,7 +338,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             if (getElement().getTagName().toLowerCase().equals("textarea")) {
                 // NOP no maxlength property for textarea
             } else {
-                getElement().setAttribute("maxlength", "");
+                getElement().removeAttribute("maxLength");
             }
             maxLength = -1;
         }
