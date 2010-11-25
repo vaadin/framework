@@ -12,7 +12,11 @@ public abstract class AbstractSplitPanelTest<T extends AbstractSplitPanel>
     private Command<T, Boolean> splitterClickListenerCommand = new Command<T, Boolean>() {
 
         public void execute(T c, Boolean value, Object data) {
-            c.addListener((SplitterClickListener) AbstractSplitPanelTest.this);
+            if (value) {
+                c.addListener((SplitterClickListener) AbstractSplitPanelTest.this);
+            } else {
+                c.removeListener((SplitterClickListener) AbstractSplitPanelTest.this);
+            }
 
         }
     };
