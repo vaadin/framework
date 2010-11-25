@@ -207,7 +207,12 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
             paintableToCell.remove(w);
             widgetToComponentContainer.remove(w);
             childComponentContainer.removeFromParent();
-            client.unregisterPaintable((Paintable) w);
+            if (childComponentContainer.getWidget() == w) {
+                // Only unregister if the paintable has not been moved to
+                // another layout and detached from this (hence cc.getWidget()
+                // == null, or w.getParent() != this)
+                client.unregisterPaintable((Paintable) w);
+            }
         }
         nonRenderedWidgets = null;
 
