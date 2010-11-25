@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -556,11 +557,11 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         }
 
         if (enabled) {
-            DOM.removeElementAttribute(getElement(), "wrap");
-            DOM.setStyleAttribute(getElement(), "overflow", null);
+            getElement().removeAttribute("wrap");
+            getElement().getStyle().clearOverflow();
         } else {
-            DOM.setElementAttribute(getElement(), "wrap", "off");
-            DOM.setStyleAttribute(getElement(), "overflow", "auto");
+            getElement().setAttribute("wrap", "off");
+            getElement().getStyle().setOverflow(Overflow.AUTO);
         }
         wordwrap = enabled;
     }
