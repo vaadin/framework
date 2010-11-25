@@ -379,4 +379,133 @@ public class BeanItemContainerTest extends AbstractContainerTest {
             };
         }.listenerTest();
     }
+
+    protected static class Person {
+        private String name;
+
+        public Person(String name) {
+            setName(name);
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    public void testAddRemoveWhileFiltering() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+
+        Person john = new Person("John");
+        Person jane = new Person("Jane");
+        Person matthew = new Person("Matthew");
+
+        Person jack = new Person("Jack");
+        Person michael = new Person("Michael");
+        Person william = new Person("William");
+        Person julia = new Person("Julia");
+        Person george = new Person("George");
+        Person mark = new Person("Mark");
+
+        container.addBean(john);
+        container.addBean(jane);
+        container.addBean(matthew);
+
+        assertEquals(3, container.size());
+        // john, jane, matthew
+
+        container.addContainerFilter("name", "j", true, true);
+
+        assertEquals(2, container.size());
+        // john, jane, (matthew)
+
+        // add a bean that passes the filter
+        container.addBean(jack);
+        assertEquals(3, container.size());
+        assertEquals(jack, container.lastItemId());
+        // john, jane, (matthew), jack
+
+        // add beans that do not pass the filter
+        container.addBean(michael);
+        // john, jane, (matthew), jack, (michael)
+        container.addItemAfter(null, william);
+        // (william), john, jane, (matthew), jack, (michael)
+
+        // add after an item that is shown
+        container.addItemAfter(john, george);
+        // (william), john, (george), jane, (matthew), jack, (michael)
+        assertEquals(3, container.size());
+        assertEquals(john, container.firstItemId());
+
+        // add after an item that is not shown does nothing
+        container.addItemAfter(william, julia);
+        // (william), john, (george), jane, (matthew), jack, (michael)
+        assertEquals(3, container.size());
+        assertEquals(john, container.firstItemId());
+
+        container.addItemAt(1, julia);
+        // (william), john, julia, (george), jane, (matthew), jack, (michael)
+
+        container.addItemAt(2, mark);
+        // (william), john, julia, (mark), (george), jane, (matthew), jack,
+        // (michael)
+
+        container.removeItem(matthew);
+        // (william), john, julia, (mark), (george), jane, jack, (michael)
+
+        assertEquals(4, container.size());
+        assertEquals(jack, container.lastItemId());
+
+        container.removeContainerFilters("name");
+
+        assertEquals(8, container.size());
+        assertEquals(william, container.firstItemId());
+        assertEquals(john, container.nextItemId(william));
+        assertEquals(julia, container.nextItemId(john));
+        assertEquals(mark, container.nextItemId(julia));
+        assertEquals(george, container.nextItemId(mark));
+        assertEquals(jane, container.nextItemId(george));
+        assertEquals(jack, container.nextItemId(jane));
+        assertEquals(michael, container.lastItemId());
+    }
+
+    public void testRefilterOnPropertyModification() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+
+        Person john = new Person("John");
+        Person jane = new Person("Jane");
+        Person matthew = new Person("Matthew");
+
+        container.addBean(john);
+        container.addBean(jane);
+        container.addBean(matthew);
+
+        assertEquals(3, container.size());
+        // john, jane, matthew
+
+        container.addContainerFilter("name", "j", true, true);
+
+        assertEquals(2, container.size());
+        // john, jane, (matthew)
+
+        // #6053 currently, modification of an item that is not visible does not
+        // trigger refiltering - should it?
+        // matthew.setName("Julia");
+        // assertEquals(3, container.size());
+        // john, jane, julia
+
+        john.setName("Mark");
+        assertEquals(2, container.size());
+        // (mark), jane, julia
+
+        container.removeAllContainerFilters();
+
+        assertEquals(3, container.size());
+    }
+
 }
