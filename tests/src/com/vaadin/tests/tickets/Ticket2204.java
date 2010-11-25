@@ -9,6 +9,7 @@ import com.vaadin.Application;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.AbstractOrderedLayout;
+import com.vaadin.ui.AbstractSplitPanel;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -19,15 +20,17 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.RichTextArea;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 
-@SuppressWarnings("deprecation")
 public class Ticket2204 extends Application {
 
     private final List<RichTextArea> textAreas = new ArrayList<RichTextArea>();
@@ -39,12 +42,14 @@ public class Ticket2204 extends Application {
 
     @Override
     public void init() {
-        classes.add(AbstractOrderedLayout.class);
+        classes.add(VerticalLayout.class);
+        classes.add(HorizontalLayout.class);
         classes.add(GridLayout.class);
         classes.add(Accordion.class);
         classes.add(TabSheet.class);
         classes.add(Panel.class);
-        classes.add(SplitPanel.class);
+        classes.add(VerticalSplitPanel.class);
+        classes.add(HorizontalSplitPanel.class);
         classes.add(Form.class);
 
         Window w = new Window(getClass().getSimpleName());
@@ -152,8 +157,8 @@ public class Ticket2204 extends Application {
             ((ComponentContainer) cc).addComponent(textArea);
         }
 
-        if (c == SplitPanel.class) {
-            SplitPanel sp = (SplitPanel) cc;
+        if (AbstractSplitPanel.class.isAssignableFrom(c)) {
+            AbstractSplitPanel sp = (AbstractSplitPanel) cc;
             sp.setWidth("300px");
             sp.setHeight("300px");
             sp.addComponent(new Label("Label"));
