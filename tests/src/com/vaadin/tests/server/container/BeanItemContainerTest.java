@@ -1,6 +1,7 @@
 package com.vaadin.tests.server.container;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -508,4 +509,32 @@ public class BeanItemContainerTest extends AbstractContainerTest {
         assertEquals(3, container.size());
     }
 
+    public void testAddAll() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+
+        Person john = new Person("John");
+        Person jane = new Person("Jane");
+        Person matthew = new Person("Matthew");
+
+        container.addBean(john);
+        container.addBean(jane);
+        container.addBean(matthew);
+
+        assertEquals(3, container.size());
+        // john, jane, matthew
+
+        Person jack = new Person("Jack");
+        Person michael = new Person("Michael");
+
+        // addAll
+        container.addAll(Arrays.asList(jack, michael));
+        // john, jane, matthew, jack, michael
+
+        assertEquals(5, container.size());
+        assertEquals(jane, container.nextItemId(john));
+        assertEquals(matthew, container.nextItemId(jane));
+        assertEquals(jack, container.nextItemId(matthew));
+        assertEquals(michael, container.nextItemId(jack));
+    }
 }

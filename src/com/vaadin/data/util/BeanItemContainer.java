@@ -142,7 +142,7 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      * @param collection
      *            The collection of beans to add. Must not be null.
      */
-    private void addAll(Collection<? extends BT> collection) {
+    public void addAll(Collection<? extends BT> collection) {
         int idx = size();
         for (BT bean : collection) {
             if (internalAddAt(idx, bean, bean) != null) {
