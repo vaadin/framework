@@ -53,7 +53,7 @@ contains a number of significant enhancements.</p>
 <p>The following changes can break backward compatibility in applications using an earlier version of Vaadin:</p>
 
 <ul>
-  <li>Table.setColumnCollapsed throws IllegalStateException instead of IllegalAccessException is collapsing is not allowed.</li>
+  <li>Table.setColumnCollapsed throws IllegalStateException instead of IllegalAccessException if collapsing is not allowed.</li>
   <li>Window.removeWindow(Window) now triggers window close listeners also when called explicitly.
       See <a href="http://dev.vaadin.com/ticket/3865">#3865</a> for more info.
   </li>
@@ -64,13 +64,23 @@ contains a number of significant enhancements.</p>
   This also affects most built-in validators such as IntegerValidator.</li>
 </ul>
 
+<h3>Backwards compatible API Changes</h3>
+
+<p>The following backwards compatible class/method changes have been:</p>
+
+<ul>
+  <li>SplitPanel has been deprecated in favor of VerticalSplitPanel and HorizontalSplitPanel.</li>
+  <li>PasswordField has been split from TextField to a separate component. As a result TextField.setSecret has been deprecated.</li>
+  <li>TextArea has been split from TextField to a separate component. As a result TextField.setRows has been deprecated.</li>
+</ul>
+
 <h3>Theme changes</h3>
 
 <p>The following changes have to be made to themes created for earlier versions of Vaadin in order for them to work correctly with Vaadin @version@:</p>
 
 <ul>
 	<li>Due to the fixes for tickets <a href="http://dev.vaadin.com/ticket/5066">#5066</a> and <a href="http://dev.vaadin.com/ticket/2681">#2681</a>,
-		the Table component has a slightly changed DOM structure in it's header.'</li>
+		the Table component has a slightly changed DOM structure in it's header.</li>
 	<ul>
 		<li>The sort indicator (arrow icon) has been moved from being the background of the "caption container" DIV, to it's very own DIV. This DIV
 			can be styled by the <pre>.v-table-sort-indicator</pre> selector. Sort indicator images can thus no longer be placed in the
