@@ -310,16 +310,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         return (Window) super.getParent();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.AbstractComponent#setParent(com.vaadin.ui.Component)
-     */
-    @Override
-    public void setParent(Component parent) {
-        super.setParent(parent);
-    }
-
     /* ********************************************************************* */
 
     /**
