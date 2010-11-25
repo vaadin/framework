@@ -461,17 +461,27 @@ public class TextField extends AbstractTextField implements
 
     @Override
     protected void setInternalValue(Object newValue) {
-        if (changingVariables
-                && !newValue.toString().equals(lastKnownTextContent)) {
+        if (changingVariables) {
             /*
              * Fire text change event before value change event if change is
              * coming from the client side.
              */
-            lastKnownTextContent = newValue.toString();
-            textChangeEventPending = true;
-            firePendingTextChangeEvent();
-        }
+            if (newValue == null && lastKnownTextContent != null
+                    && !lastKnownTextContent.equals(getNullRepresentation())) {
+                // Value was changed from something to null representation
+                lastKnownTextContent = getNullRepresentation();
+                textChangeEventPending = true;
+            } else if (newValue != null
+                    && !newValue.toString().equals(lastKnownTextContent)) {
+                // Value was changed to something else than null representation
+                lastKnownTextContent = newValue.toString();
+                textChangeEventPending = true;
+            }
 
+            if (textChangeEventPending) {
+                firePendingTextChangeEvent();
+            }
+        }
         super.setInternalValue(newValue);
     }
 
