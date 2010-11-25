@@ -10,22 +10,25 @@ import com.vaadin.tests.components.abstractfield.AbstractTextFieldTest;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TextField.TextChangeEventMode;
 
-public class TextFieldsGeneric extends AbstractTextFieldTest<TextField>
+public class TextFieldTest extends AbstractTextFieldTest<TextField>
         implements TextChangeListener {
 
     private Command<TextField, Boolean> secretCommand = new Command<TextField, Boolean>() {
+        @SuppressWarnings("deprecation")
         public void execute(TextField c, Boolean value, Object data) {
             c.setSecret(value);
         }
     };
 
     private Command<TextField, Boolean> wordwrapCommand = new Command<TextField, Boolean>() {
+        @SuppressWarnings("deprecation")
         public void execute(TextField c, Boolean value, Object data) {
             c.setWordwrap(value);
         }
     };
 
     private Command<TextField, Integer> rowsCommand = new Command<TextField, Integer>() {
+        @SuppressWarnings("deprecation")
         public void execute(TextField c, Integer value, Object data) {
             c.setRows(value);
         }
@@ -46,9 +49,9 @@ public class TextFieldsGeneric extends AbstractTextFieldTest<TextField>
     private Command<TextField, Boolean> textChangeListenerCommand = new Command<TextField, Boolean>() {
         public void execute(TextField c, Boolean value, Object data) {
             if (value) {
-                c.addListener((TextChangeListener) TextFieldsGeneric.this);
+                c.addListener((TextChangeListener) TextFieldTest.this);
             } else {
-                c.removeListener((TextChangeListener) TextFieldsGeneric.this);
+                c.removeListener((TextChangeListener) TextFieldTest.this);
             }
         }
     };
