@@ -2203,14 +2203,19 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 colIndex = getColIndexByKey(cid);
                 boolean noCells = false;
                 TableRowElement item = rows.getItem(0);
-                TableCellElement colTD = item.getCells().getItem(colIndex);
+
+                // FIXME: Changed this from colIndex to 0 to workaround #6064
+                TableCellElement colTD = item.getCells().getItem(0);
                 if (colTD == null) {
                     // content is currently empty, we need to add a fake cell
                     // for measuring
                     noCells = true;
                     VScrollTableRow next = (VScrollTableRow) iterator().next();
                     next.addCell(null, "", align, "", true, isSorted());
-                    colTD = item.getCells().getItem(colIndex);
+
+                    // FIXME: Changed this from colIndex to 0 to workaround
+                    // #6064
+                    colTD = item.getCells().getItem(0);
                 }
                 com.google.gwt.dom.client.Element wrapper = colTD
                         .getFirstChildElement();
