@@ -50,6 +50,7 @@ public class SplitPanel extends AbstractSplitPanel {
     public SplitPanel() {
         super();
         orientation = ORIENTATION_VERTICAL;
+        setSizeFull();
     }
 
     /**
