@@ -5,7 +5,6 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -567,6 +566,10 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         if (BrowserInfo.get().isSafari4()) {
             // Force redraw as Safari 4 does not properly update the screen
             Util.forceWebkitRedraw(getElement());
+        } else if (BrowserInfo.get().isOpera()) {
+            // Opera fails to dynamically update the wrap attribute so we detach
+            // and reattach the whole TextArea.
+            Util.detachAttach(getElement());
         }
         wordwrap = enabled;
     }

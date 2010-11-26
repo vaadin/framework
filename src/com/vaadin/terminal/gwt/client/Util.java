@@ -13,6 +13,7 @@ import java.util.Set;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -903,6 +904,35 @@ public class Util {
         } else {
             style.setProperty("webkitTransform", "");
         }
+    }
+
+    /**
+     * Detaches and re-attaches the element from its parent. The element is
+     * reattached at the same position in the DOM as it was before.
+     * 
+     * Does nothing if the element is not attached to the DOM.
+     * 
+     * @param element
+     *            The element to detach and re-attach
+     */
+    public static void detachAttach(Element element) {
+        if (element == null) {
+            return;
+        }
+
+        Node nextSibling = element.getNextSibling();
+        Node parent = element.getParentNode();
+        if (parent == null) {
+            return;
+        }
+
+        parent.removeChild(element);
+        if (nextSibling == null) {
+            parent.appendChild(element);
+        } else {
+            parent.insertBefore(element, nextSibling);
+        }
+
     }
 
 }
