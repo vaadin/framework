@@ -472,7 +472,7 @@ public class TextField extends AbstractTextField implements
                 lastKnownTextContent = getNullRepresentation();
                 textChangeEventPending = true;
             } else if (newValue != null
-                    && !newValue.toString().equals(lastKnownTextContent)) {
+                    && !lastKnownTextContent.equals(newValue.toString())) {
                 // Value was changed to something else than null representation
                 lastKnownTextContent = newValue.toString();
                 textChangeEventPending = true;
