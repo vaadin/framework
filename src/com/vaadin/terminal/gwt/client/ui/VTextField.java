@@ -215,6 +215,11 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             } else {
                 textChangeEventTimeout = uidl
                         .getIntAttribute(ATTR_TEXTCHANGE_TIMEOUT);
+                if (textChangeEventTimeout < 1) {
+                    // Sanitize and allow lazy/timeout with timeout set to 0 to
+                    // work as eager
+                    textChangeEventTimeout = 1;
+                }
             }
             sinkEvents(TEXTCHANGE_EVENTS);
             attachCutEventListener(getElement());
