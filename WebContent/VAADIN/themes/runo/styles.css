@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_5_0_dev-20101124";}
-.v-theme-version-6_5_0_dev-20101124 {display: none;}
+.v-theme-version:after {content:"6_5_0_dev-20101129";}
+.v-theme-version-6_5_0_dev-20101129 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1526,6 +1526,9 @@ div.v-progressindicator-indeterminate-disabled {
 	overflow: hidden;
 	white-space: nowrap;
 	margin-left: 6px;
+}
+.v-table-caption-container-align-right {
+	float: right;
 }
 .v-table-sort-indicator {
 	width: 0px;

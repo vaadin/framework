@@ -93,6 +93,9 @@
 	white-space: nowrap;
 	margin-left: 6px;
 }
+.v-table-caption-container-align-right {
+	float: right;
+}
 .v-table-sort-indicator {
 	width: 0px;
 	height: 1.2em;
