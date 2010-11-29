@@ -807,8 +807,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * 
      * @return Returns the new BeanItem or null if the operation fails.
      */
-    protected BeanItem<BT> addItemAt(int index, IDTYPE newItemId, BT bean)
-            throws UnsupportedOperationException {
+    protected BeanItem<BT> addItemAt(int index, IDTYPE newItemId, BT bean) {
         if (index < 0 || index > size()) {
             return null;
         } else if (index == 0) {

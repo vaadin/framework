@@ -44,7 +44,8 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      * @throws IllegalArgumentException
      *             If {@code type} is null
      */
-    public BeanItemContainer(Class<? extends BT> type) {
+    public BeanItemContainer(Class<? extends BT> type)
+            throws IllegalArgumentException {
         super(type);
     }
 
@@ -91,7 +92,7 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
             throws IllegalArgumentException {
         if (collection == null || collection.isEmpty()) {
             throw new IllegalArgumentException(
-                    "The collection passed to BeanItemContainer must not be null or empty");
+                    "The collection passed to BeanItemContainer constructor must not be null or empty. Use the other BeanItemContainer constructor.");
         }
         return (Class<? extends BT>) collection.iterator().next().getClass();
     }
@@ -166,8 +167,7 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      * 
      * @see com.vaadin.data.Container.Ordered#addItemAfter(Object, Object)
      */
-    public BeanItem<BT> addItemAfter(Object previousItemId, Object newItemId)
-            throws UnsupportedOperationException {
+    public BeanItem<BT> addItemAfter(Object previousItemId, Object newItemId) {
         return super.addItemAfter((BT) previousItemId, (BT) newItemId,
                 (BT) newItemId);
     }
@@ -183,8 +183,7 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      *            The bean to add to the container.
      * @return Returns the new BeanItem or null if the operation fails.
      */
-    public BeanItem<BT> addItemAt(int index, Object newItemId)
-            throws UnsupportedOperationException {
+    public BeanItem<BT> addItemAt(int index, Object newItemId) {
         return super.addItemAt(index, (BT) newItemId, (BT) newItemId);
     }
 
@@ -195,18 +194,8 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      * 
      * @see com.vaadin.data.Container#addItem(Object)
      */
-    public BeanItem<BT> addItem(Object itemId)
-            throws UnsupportedOperationException {
-        BeanItem<BT> beanItem = null;
-
-        if (size() > 0) {
-            // add immediately after last visible item
-            int lastIndex = internalIndexOf(lastItemId());
-            beanItem = internalAddAt(lastIndex + 1, (BT) itemId, (BT) itemId);
-        } else {
-            // add at the beginning of an empty container
-            beanItem = internalAddAt(0, (BT) itemId, (BT) itemId);
-        }
+    public BeanItem<BT> addItem(Object itemId) {
+        BeanItem<BT> beanItem = addItem((BT) itemId, (BT) itemId);
 
         if (beanItem != null) {
             filterAll();
