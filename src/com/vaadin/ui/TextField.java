@@ -41,8 +41,6 @@ public class TextField extends AbstractTextField implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier,
         FieldEvents.TextChangeNotifier {
 
-    private static final String VAR_TEXT_CONTENT_DIFF = "tcd";
-
     /**
      * Tells if input is used to enter sensitive information that is not echoed
      * to display. Typically passwords.
