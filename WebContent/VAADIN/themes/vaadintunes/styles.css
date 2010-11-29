@@ -240,12 +240,18 @@
 	background: transparent url(images/table-header-bg.png) repeat-x;
 }
 
+.tTunes .v-table-sort-indicator {
+	width: 0px;
+	height: 16px;
+}
+
 .tTunes .v-table-caption-container {
 	font-size: 11px;
 	color: #000;
 	font-weight: bold;
 	text-shadow: #fff 0 1px 0;
 	padding-top: 1px;
+	margin-left: 3px;
 }
 
 .tTunes .v-table-body {
