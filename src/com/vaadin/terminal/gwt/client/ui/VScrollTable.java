@@ -1810,10 +1810,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                  * indicator by subtracting the styled margin and resizer width
                  * from the width of the caption container.
                  */
-                int captionContainerWidth = w - sortIndicator.getOffsetWidth()
-                        - colResizeWidget.getOffsetWidth();
-                captionContainer.getStyle().setPropertyPx("width",
-                        captionContainerWidth);
+                if (BrowserInfo.get().isIE6()
+                        || td.getClassName().contains("-asc")
+                        || td.getClassName().contains("-desc")) {
+                    int captionContainerWidth = w
+                            - sortIndicator.getOffsetWidth()
+                            - colResizeWidget.getOffsetWidth();
+                    captionContainer.getStyle().setPropertyPx("width",
+                            captionContainerWidth);
+                } else {
+                    captionContainer.getStyle().setPropertyPx("width", w);
+                }
 
                 /*
                  * if we already have tBody, set the header width properly, if
@@ -2143,8 +2150,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     // value (greater of header and data
                     // cols)
 
-                    final int hw = ((Element) getElement().getLastChild())
-                            .getOffsetWidth() + getCellExtraWidth();
+                    int hw = captionContainer.getOffsetWidth()
+                            + getCellExtraWidth();
+                    if (BrowserInfo.get().isGecko()
+                            || BrowserInfo.get().isIE7()) {
+                        hw += sortIndicator.getOffsetWidth();
+                    }
                     if (columnIndex < 0) {
                         columnIndex = 0;
                         for (Iterator<Widget> it = tHead.iterator(); it
