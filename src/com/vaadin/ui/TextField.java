@@ -508,6 +508,7 @@ public class TextField extends AbstractTextField implements
      */
     public void setTextChangeEventMode(TextChangeEventMode inputEventMode) {
         textChangeEventMode = inputEventMode;
+        requestRepaint();
     }
 
     /**
@@ -576,6 +577,7 @@ public class TextField extends AbstractTextField implements
      */
     public void setTextChangeTimeout(int timeout) {
         textChangeEventTimeout = timeout;
+        requestRepaint();
     }
 
     /**
