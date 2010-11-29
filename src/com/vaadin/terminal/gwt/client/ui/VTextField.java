@@ -397,6 +397,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
                  * server side before value change events.
                  */
                 textChangeEventTrigger.cancel();
+                scheduled = false;
                 client.sendPendingVariableChanges();
             }
         }
