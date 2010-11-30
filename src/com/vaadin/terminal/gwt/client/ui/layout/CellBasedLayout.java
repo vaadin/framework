@@ -126,9 +126,6 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
-
-        handleDynamicDimensions(uidl);
-
     }
 
     @Override
@@ -140,27 +137,6 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
             measureMarginsAndSpacing();
             lastStyleName = styleName;
             marginsNeedsRecalculation = false;
-        }
-
-    }
-
-    private void handleDynamicDimensions(UIDL uidl) {
-        String w = uidl.hasAttribute("width") ? uidl
-                .getStringAttribute("width") : "";
-
-        String h = uidl.hasAttribute("height") ? uidl
-                .getStringAttribute("height") : "";
-
-        if (w.equals("")) {
-            dynamicWidth = true;
-        } else {
-            dynamicWidth = false;
-        }
-
-        if (h.equals("")) {
-            dynamicHeight = true;
-        } else {
-            dynamicHeight = false;
         }
 
     }
