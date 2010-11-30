@@ -160,11 +160,11 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         } else {
             textChangeEventTrigger.cancel();
         }
-        textChangeEventTrigger.schedule(getInputEventTimeout());
+        textChangeEventTrigger.schedule(getTextChangeEventTimeout());
         scheduled = true;
     }
 
-    private int getInputEventTimeout() {
+    private int getTextChangeEventTimeout() {
         return textChangeEventTimeout;
     }
 
