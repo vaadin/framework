@@ -1,8 +1,12 @@
 package com.vaadin.tests.server.container;
 
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -105,6 +109,29 @@ public class BeanItemTest extends TestCase {
         }
     }
 
+    protected static interface MySuperInterface {
+        public int getSuper1();
+
+        public void setSuper1(int i);
+
+        public int getOverride();
+    }
+
+    protected static interface MySuperInterface2 {
+        public int getSuper2();
+    }
+
+    protected static interface MySubInterface extends MySuperInterface,
+            MySuperInterface2 {
+        public int getSub();
+
+        public void setSub(int i);
+
+        public int getOverride();
+
+        public void setOverride(int i);
+    }
+
     public void testGetProperties() {
         BeanItem<MySuperClass> item = new BeanItem<MySuperClass>(
                 new MySuperClass());
@@ -139,6 +166,41 @@ public class BeanItemTest extends TestCase {
 
         // check that name2 accessed via MyClass2, not MyClass
         Assert.assertFalse(item.getItemProperty("name2").isReadOnly());
+    }
+
+    public void testGetInterfaceProperties() throws SecurityException,
+            NoSuchMethodException, IllegalArgumentException,
+            IllegalAccessException, InvocationTargetException {
+        Method method = BeanItem.class.getDeclaredMethod(
+                "getPropertyDescriptors", Class.class);
+        method.setAccessible(true);
+        LinkedHashMap<String, PropertyDescriptor> propertyDescriptors = (LinkedHashMap<String, PropertyDescriptor>) method
+                .invoke(null, MySuperInterface.class);
+
+        Assert.assertEquals(2, propertyDescriptors.size());
+        Assert.assertTrue(propertyDescriptors.containsKey("super1"));
+        Assert.assertTrue(propertyDescriptors.containsKey("override"));
+
+        Assert.assertNull(propertyDescriptors.get("override").getWriteMethod());
+    }
+
+    public void testGetSuperInterfaceProperties() throws SecurityException,
+            NoSuchMethodException, IllegalArgumentException,
+            IllegalAccessException, InvocationTargetException {
+        Method method = BeanItem.class.getDeclaredMethod(
+                "getPropertyDescriptors", Class.class);
+        method.setAccessible(true);
+        LinkedHashMap<String, PropertyDescriptor> propertyDescriptors = (LinkedHashMap<String, PropertyDescriptor>) method
+                .invoke(null, MySubInterface.class);
+
+        Assert.assertEquals(4, propertyDescriptors.size());
+        Assert.assertTrue(propertyDescriptors.containsKey("sub"));
+        Assert.assertTrue(propertyDescriptors.containsKey("super1"));
+        Assert.assertTrue(propertyDescriptors.containsKey("super2"));
+        Assert.assertTrue(propertyDescriptors.containsKey("override"));
+
+        Assert.assertNotNull(propertyDescriptors.get("override")
+                .getWriteMethod());
     }
 
     public void testPropertyExplicitOrder() {

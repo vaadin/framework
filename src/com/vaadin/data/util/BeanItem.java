@@ -5,12 +5,15 @@
 package com.vaadin.data.util;
 
 import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import com.vaadin.data.Property;
 
@@ -165,21 +168,59 @@ public class BeanItem<BT> extends PropertysetItem {
 
         // Try to introspect, if it fails, we just have an empty Item
         try {
-            final BeanInfo info = Introspector.getBeanInfo(beanClass);
-            final PropertyDescriptor[] pds = info.getPropertyDescriptors();
+            List<PropertyDescriptor> propertyDescriptors = getBeanPropertyDescriptor(beanClass);
 
             // Add all the bean properties as MethodProperties to this Item
-            for (int i = 0; i < pds.length; i++) {
-                final Method getMethod = pds[i].getReadMethod();
+            // later entries on the list overwrite earlier ones
+            for (PropertyDescriptor pd : propertyDescriptors) {
+                final Method getMethod = pd.getReadMethod();
                 if ((getMethod != null)
                         && getMethod.getDeclaringClass() != Object.class) {
-                    pdMap.put(pds[i].getName(), pds[i]);
+                    pdMap.put(pd.getName(), pd);
                 }
             }
         } catch (final java.beans.IntrospectionException ignored) {
         }
 
         return pdMap;
+    }
+
+    /**
+     * Returns the property descriptors of a class or an interface.
+     * 
+     * For an interface, superinterfaces are also iterated as Introspector does
+     * not take them into account (Oracle Java bug 4275879), but in that case,
+     * both the setter and the getter for a property must be in the same
+     * interface and should not be overridden in subinterfaces for the discovery
+     * to work correctly.
+     * 
+     * For interfaces, the iteration is depth first and the properties of
+     * superinterfaces are returned before those of their subinterfaces.
+     * 
+     * @param beanClass
+     * @return
+     * @throws IntrospectionException
+     */
+    private static List<PropertyDescriptor> getBeanPropertyDescriptor(
+            final Class<?> beanClass) throws IntrospectionException {
+        // Oracle bug 4275879: Introspector does not consider superinterfaces of
+        // an interface
+        if (beanClass.isInterface()) {
+            List<PropertyDescriptor> propertyDescriptors = new ArrayList<PropertyDescriptor>();
+
+            for (Class<?> cls : beanClass.getInterfaces()) {
+                propertyDescriptors.addAll(getBeanPropertyDescriptor(cls));
+            }
+
+            BeanInfo info = Introspector.getBeanInfo(beanClass);
+            propertyDescriptors.addAll(Arrays.asList(info
+                    .getPropertyDescriptors()));
+
+            return propertyDescriptors;
+        } else {
+            BeanInfo info = Introspector.getBeanInfo(beanClass);
+            return Arrays.asList(info.getPropertyDescriptors());
+        }
     }
 
     /**
