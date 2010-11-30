@@ -205,15 +205,19 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
     }
 
     private void createCaptionSelect(String category) {
+        createSelectAction("Caption", category, createCaptionOptions(),
+                "Short", captionCommand);
+
+    }
+
+    protected LinkedHashMap<String, String> createCaptionOptions() {
         LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
         options.put("-", null);
         options.put("Short", TEXT_SHORT);
         options.put("Medium", TEXT_MEDIUM);
         options.put("Long", TEXT_LONG);
         options.put("Very long", TEXT_VERY_LONG);
-        createSelectAction("Caption", category, options, "Short",
-                captionCommand);
-
+        return options;
     }
 
     private void createWidthAndHeightActions(String category) {
@@ -562,6 +566,10 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
             logMsg += exceptionMsg;
         }
         log.log(logMsg);
+        final Throwable t = event.getThrowable();
+        if (t != null) {
+            t.printStackTrace();
+        }
 
     }
 }
