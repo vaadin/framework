@@ -57,7 +57,12 @@ public class VUIDLBrowser extends Tree implements MouseOutHandler {
 
         addSelectionHandler(new SelectionHandler<TreeItem>() {
             public void onSelection(SelectionEvent<TreeItem> event) {
-                UIDLItem selectedItem = (UIDLItem) event.getSelectedItem();
+                TreeItem item = event.getSelectedItem();
+                if (!(item instanceof UIDLItem)) {
+                    // e.g. "variables" and its sub items are not UIDLItems
+                    return;
+                }
+                UIDLItem selectedItem = (UIDLItem) item;
                 List<ApplicationConnection> runningApplications = ApplicationConfiguration
                         .getRunningApplications();
 
