@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -647,15 +648,19 @@ public class VOrderedLayout extends CellBasedLayout {
     }
 
     private void setOuterLayoutWidth(int activeLayoutWidth) {
-        super.setWidth((activeLayoutWidth + activeMargins.getHorizontal())
-                + "px");
-
+        // Don't call setWidth to avoid triggering all kinds of recalculations
+        // Also don't call super.setWidth to avoid messing with the
+        // dynamicWidth property
+        int newPixelWidth = (activeLayoutWidth + activeMargins.getHorizontal());
+        getElement().getStyle().setWidth(newPixelWidth, Unit.PX);
     }
 
     private void setOuterLayoutHeight(int activeLayoutHeight) {
-        super.setHeight((activeLayoutHeight + activeMargins.getVertical())
-                + "px");
-
+        // Don't call setHeight to avoid triggering all kinds of recalculations
+        // Also don't call super.setHeight to avoid messing with the
+        // dynamicHeight property
+        int newPixelHeight = (activeLayoutHeight + activeMargins.getVertical());
+        getElement().getStyle().setHeight(newPixelHeight, Unit.PX);
     }
 
     /**
