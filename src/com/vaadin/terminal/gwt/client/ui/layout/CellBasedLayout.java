@@ -165,6 +165,36 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
 
     }
 
+    @Override
+    public void setWidth(String width) {
+        super.setWidth(width);
+
+        /*
+         * Ensure the the dynamic width stays up to date even if size is altered
+         * only on client side.
+         */
+        if (width == null || width.equals("")) {
+            dynamicWidth = true;
+        } else {
+            dynamicWidth = false;
+        }
+    }
+
+    @Override
+    public void setHeight(String height) {
+        super.setHeight(height);
+
+        /*
+         * Ensure the the dynamic height stays up to date even if size is
+         * altered only on client side.
+         */
+        if (height == null || height.equals("")) {
+            dynamicHeight = true;
+        } else {
+            dynamicHeight = false;
+        }
+    }
+
     protected void addOrMoveChild(ChildComponentContainer childComponent,
             int position) {
         if (childComponent.getParent() == this) {
