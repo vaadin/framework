@@ -1,5 +1,7 @@
 package com.vaadin.tests.components.checkbox;
 
+import java.util.Date;
+
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.ComponentTestCase;
@@ -11,6 +13,8 @@ public class CheckBoxes extends ComponentTestCase<CheckBox> {
             "../runo/icons/16/ok.png");
     private ThemeResource LARGE_ICON = new ThemeResource(
             "../runo/icons/64/document.png");
+    private ThemeResource LARGE_ICON_NOCACHE = new ThemeResource(
+            "../runo/icons/64/document.png?" + new Date().getTime());
 
     @Override
     protected Class<CheckBox> getTestClass() {
@@ -42,7 +46,7 @@ public class CheckBoxes extends ComponentTestCase<CheckBox> {
                 LARGE_ICON);
         addTestComponent(cb);
         cb = createCheckBox("CheckBox with large text and large icon",
-                LARGE_ICON);
+                LARGE_ICON_NOCACHE);
         cb.setStyleName("large");
         addTestComponent(cb);
 
