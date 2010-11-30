@@ -22,6 +22,7 @@ import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.Container.ItemSetChangeNotifier;
 import com.vaadin.data.Container.Sortable;
+import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -252,8 +253,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
     public boolean removeAllItems() {
         allItemIds.clear();
         filteredItemIds.clear();
-        // detach listeners from all BeanItems
-        for (BeanItem<BT> item : itemIdToItem.values()) {
+        // detach listeners from all Items
+        for (Item item : itemIdToItem.values()) {
             removeAllValueChangeListeners(item);
         }
         itemIdToItem.clear();
@@ -297,7 +298,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * java.lang.Object)
      */
     public Property getContainerProperty(Object itemId, Object propertyId) {
-        BeanItem<BT> item = getItem(itemId);
+        Item item = getItem(itemId);
         if (item == null) {
             return null;
         }
@@ -335,6 +336,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * items, and send a notification if the set of visible items changed in any
      * way.
      */
+    @SuppressWarnings("unchecked")
     protected void filterAll() {
         // avoid notification if the filtering had no effect
         List<IDTYPE> originalItems = filteredItemIds;
@@ -384,13 +386,14 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * com.vaadin.data.Container.Filterable#addContainerFilter(java.lang.Object,
      * java.lang.String, boolean, boolean)
      */
+    @SuppressWarnings("unchecked")
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
         if (filters.isEmpty()) {
             filteredItemIds = (ListSet<IDTYPE>) allItemIds.clone();
         }
         // listen to change events to be able to update filtering
-        for (BeanItem<BT> item : itemIdToItem.values()) {
+        for (Item item : itemIdToItem.values()) {
             addValueChangeListener(item, propertyId);
         }
         Filter f = new Filter(propertyId, filterString, ignoreCase,
@@ -409,7 +412,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
         if (!filters.isEmpty()) {
             filters = new HashSet<Filter>();
             // stop listening to change events for any property
-            for (BeanItem<BT> item : itemIdToItem.values()) {
+            for (Item item : itemIdToItem.values()) {
                 removeAllValueChangeListeners(item);
             }
             filterAll();
@@ -436,7 +439,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
             }
             if (filteringChanged) {
                 // stop listening to change events for the property
-                for (BeanItem<BT> item : itemIdToItem.values()) {
+                for (Item item : itemIdToItem.values()) {
                     removeValueChangeListener(item, propertyId);
                 }
                 filterAll();
@@ -448,13 +451,13 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * Make this container listen to the given property provided it notifies
      * when its value changes.
      * 
-     * @param beanItem
-     *            The BeanItem that contains the property
+     * @param item
+     *            The {@link Item} that contains the property
      * @param propertyId
      *            The id of the property
      */
-    private void addValueChangeListener(BeanItem<BT> beanItem, Object propertyId) {
-        Property property = beanItem.getItemProperty(propertyId);
+    private void addValueChangeListener(Item item, Object propertyId) {
+        Property property = item.getItemProperty(propertyId);
         if (property instanceof ValueChangeNotifier) {
             // avoid multiple notifications for the same property if
             // multiple filters are in use
@@ -468,11 +471,11 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * Remove this container as a listener for the given property.
      * 
      * @param item
-     *            The BeanItem that contains the property
+     *            The {@link Item} that contains the property
      * @param propertyId
      *            The id of the property
      */
-    private void removeValueChangeListener(BeanItem<BT> item, Object propertyId) {
+    private void removeValueChangeListener(Item item, Object propertyId) {
         Property property = item.getItemProperty(propertyId);
         if (property instanceof ValueChangeNotifier) {
             ((ValueChangeNotifier) property).removeListener(this);
@@ -481,12 +484,12 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
 
     /**
      * Remove this contains as a listener for all the properties in the given
-     * BeanItem.
+     * {@link Item}.
      * 
      * @param item
-     *            The BeanItem that contains the properties
+     *            The {@link Item} that contains the properties
      */
-    private void removeAllValueChangeListeners(BeanItem<BT> item) {
+    private void removeAllValueChangeListeners(Item item) {
         for (Object propertyId : item.getItemPropertyIds()) {
             removeValueChangeListener(item, propertyId);
         }
