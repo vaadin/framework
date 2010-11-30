@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 
 import com.vaadin.data.Property;
 
-@SuppressWarnings("serial")
 @ClientWidget(com.vaadin.terminal.gwt.client.ui.VCheckBox.class)
 public class CheckBox extends Button {
     /**
@@ -26,6 +25,7 @@ public class CheckBox extends Button {
      * @param initialState
      *            the initial state of the switch button
      */
+    @SuppressWarnings("deprecation")
     public CheckBox(String caption, boolean initialState) {
         super(caption, initialState);
     }
@@ -72,6 +72,7 @@ public class CheckBox extends Button {
      *            the Initial state of the switch-button.
      * @param dataSource
      */
+    @SuppressWarnings("deprecation")
     public CheckBox(String caption, Property dataSource) {
         super(caption, dataSource);
         setSwitchMode(true);
@@ -87,6 +88,7 @@ public class CheckBox extends Button {
      *            the Button caption.
      */
 
+    @SuppressWarnings("deprecation")
     public CheckBox(String caption) {
         super(caption, false);
     }
