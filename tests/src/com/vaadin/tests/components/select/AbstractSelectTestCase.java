@@ -23,6 +23,8 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
     protected void createActions() {
         super.createActions();
         createNullSelectAllowedCheckbox(CATEGORY_SELECTION);
+        createMultiSelectCheckbox(CATEGORY_SELECTION);
+
         createPropertiesInContainerSelect(CATEGORY_DATA_SOURCE);
         createItemsInContainerSelect(CATEGORY_DATA_SOURCE);
 
@@ -31,6 +33,11 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
     protected void createNullSelectAllowedCheckbox(String category) {
         createBooleanAction("Null Selection Allowed", category, false,
                 nullSelectionAllowedCommand);
+
+    }
+
+    protected void createMultiSelectCheckbox(String category) {
+        createBooleanAction("Multi select", category, false, multiselectCommand);
 
     }
 
@@ -111,6 +118,13 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
 
         public void execute(T c, Boolean value, Object data) {
             (c).setNullSelectionAllowed(value);
+        }
+    };
+
+    protected Command<T, Boolean> multiselectCommand = new Command<T, Boolean>() {
+
+        public void execute(T c, Boolean value, Object data) {
+            c.setMultiSelect(value);
         }
     };
 
