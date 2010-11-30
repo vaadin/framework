@@ -12,6 +12,7 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -396,12 +397,26 @@ public final class VDebugConsole extends VOverlay implements Console {
     }
 
     public void log(Throwable e) {
-        log(e.getMessage());
+        if (e instanceof UmbrellaException) {
+            UmbrellaException ue = (UmbrellaException) e;
+            for (Throwable t : ue.getCauses()) {
+                log(t);
+            }
+            return;
+        }
+        log(Util.getSimpleName(e) + ": " + e.getMessage());
         GWT.log(e.getMessage(), e);
     }
 
     public void error(Throwable e) {
-        error(e.getMessage());
+        if (e instanceof UmbrellaException) {
+            UmbrellaException ue = (UmbrellaException) e;
+            for (Throwable t : ue.getCauses()) {
+                error(t);
+            }
+            return;
+        }
+        error(Util.getSimpleName(e) + ": " + e.getMessage());
         GWT.log(e.getMessage(), e);
     }
 
