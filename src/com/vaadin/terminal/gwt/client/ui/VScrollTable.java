@@ -895,6 +895,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         setProperTabIndex();
 
+        // Force recalculation of the captionContainer element inside the header
+        // cell to accomodate for the size of the sort arrow.
+        HeaderCell sortedHeader = tHead.getHeaderCell(sortColumn);
+        if (sortedHeader != null) {
+            sortedHeader.setWidth(sortedHeader.getWidth(),
+                    sortedHeader.isDefinedWidth());
+        }
+
         rendering = false;
         headerChangedDuringUpdate = false;
 
