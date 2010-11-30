@@ -44,7 +44,7 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      * @throws IllegalArgumentException
      *             If {@code type} is null
      */
-    public BeanItemContainer(Class<? extends BT> type)
+    public BeanItemContainer(Class<? super BT> type)
             throws IllegalArgumentException {
         super(type);
     }
@@ -69,10 +69,13 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      * 
      * @deprecated use {@link #BeanItemContainer(Class, Collection)} instead
      */
+    @SuppressWarnings("unchecked")
     @Deprecated
     public BeanItemContainer(Collection<? extends BT> collection)
             throws IllegalArgumentException {
-        super(getBeanClassForCollection(collection));
+        // must assume the class is BT
+        // the class information is erased by the compiler
+        super((Class<BT>) getBeanClassForCollection(collection));
 
         addAll(collection);
     }
@@ -86,6 +89,7 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      * @return
      * @throws IllegalArgumentException
      */
+    @SuppressWarnings("unchecked")
     @Deprecated
     private static <BT> Class<? extends BT> getBeanClassForCollection(
             Collection<? extends BT> collection)
@@ -107,7 +111,7 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      * @throws IllegalArgumentException
      *             If {@code type} is null
      */
-    public BeanItemContainer(Class<? extends BT> type,
+    public BeanItemContainer(Class<? super BT> type,
             Collection<? extends BT> collection)
             throws IllegalArgumentException {
         super(type);
@@ -167,6 +171,7 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      * 
      * @see com.vaadin.data.Container.Ordered#addItemAfter(Object, Object)
      */
+    @SuppressWarnings("unchecked")
     public BeanItem<BT> addItemAfter(Object previousItemId, Object newItemId) {
         return super.addItemAfter((BT) previousItemId, (BT) newItemId,
                 (BT) newItemId);
@@ -183,6 +188,7 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      *            The bean to add to the container.
      * @return Returns the new BeanItem or null if the operation fails.
      */
+    @SuppressWarnings("unchecked")
     public BeanItem<BT> addItemAt(int index, Object newItemId) {
         return super.addItemAt(index, (BT) newItemId, (BT) newItemId);
     }
@@ -194,6 +200,7 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      * 
      * @see com.vaadin.data.Container#addItem(Object)
      */
+    @SuppressWarnings("unchecked")
     public BeanItem<BT> addItem(Object itemId) {
         BeanItem<BT> beanItem = addItem((BT) itemId, (BT) itemId);
 

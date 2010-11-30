@@ -34,7 +34,7 @@ import com.vaadin.data.Item;
 public class BeanContainer<IDTYPE, BT> extends
         AbstractBeanContainer<IDTYPE, BT> {
 
-    public BeanContainer(Class<? extends BT> type) {
+    public BeanContainer(Class<? super BT> type) {
         super(type);
     }
 

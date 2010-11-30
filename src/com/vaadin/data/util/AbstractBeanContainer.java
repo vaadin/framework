@@ -92,7 +92,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
     /**
      * The type of the beans in the container.
      */
-    private final Class<? extends BT> type;
+    private final Class<? super BT> type;
 
     /**
      * A description of the properties found in beans of type {@link #type}.
@@ -114,7 +114,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * @throws IllegalArgumentException
      *             If {@code type} is null
      */
-    public AbstractBeanContainer(Class<? extends BT> type) {
+    protected AbstractBeanContainer(Class<? super BT> type) {
         if (type == null) {
             throw new IllegalArgumentException(
                     "The bean type passed to AbstractBeanContainer must not be null");
@@ -161,7 +161,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * 
      * @return
      */
-    public Class<? extends BT> getBeanType() {
+    public Class<? super BT> getBeanType() {
         return type;
     }
 
