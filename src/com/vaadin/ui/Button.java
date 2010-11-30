@@ -204,7 +204,10 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      * 
      * @return <code>true</code> if it is in Switch Mode, otherwise
      *         <code>false</code>.
+     * @deprecated the {@link CheckBox} component should be used instead of
+     *             Button in switch mode
      */
+    @Deprecated
     public boolean isSwitchMode() {
         return switchMode;
     }
@@ -217,6 +220,7 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      * @deprecated the {@link CheckBox} component should be used instead of
      *             Button in switch mode
      */
+    @Deprecated
     public void setSwitchMode(boolean switchMode) {
         this.switchMode = switchMode;
         if (!switchMode) {
