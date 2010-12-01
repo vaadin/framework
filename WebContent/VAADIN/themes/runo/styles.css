@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_5_0_dev-20101129";}
-.v-theme-version-6_5_0_dev-20101129 {display: none;}
+.v-theme-version:after {content:"6_5_0_dev-20101201";}
+.v-theme-version-6_5_0_dev-20101201 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1525,7 +1525,7 @@ div.v-progressindicator-indeterminate-disabled {
 .v-table-caption-container {
 	overflow: hidden;
 	white-space: nowrap;
-	margin-left: 6px;
+	padding-left: 6px;
 }
 .v-table-caption-container-align-right {
 	float: right;
@@ -3702,7 +3702,7 @@ div.v-csslayout-box-shadow {
 .v-table-caption-container {
 	color: #393a3c;
 	font-size: 15px;
-	padding: 9px 2px 9px 0;
+	padding: 9px 2px 9px 4px;
 	text-shadow: #ffffff 0 1px 0;
 	margin-left: 0px;
 }

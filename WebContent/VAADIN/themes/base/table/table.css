@@ -91,7 +91,7 @@
 .v-table-caption-container {
 	overflow: hidden;
 	white-space: nowrap;
-	margin-left: 6px;
+	padding-left: 6px;
 }
 .v-table-caption-container-align-right {
 	float: right;
