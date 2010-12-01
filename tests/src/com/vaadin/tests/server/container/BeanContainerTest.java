@@ -377,4 +377,26 @@ public class BeanContainerTest extends AbstractBeanContainerTest {
         assertEquals(0, container.size());
     }
 
+    public void testAddBeanWithPropertyResolver() {
+        BeanContainer<String, Person> container = new BeanContainer<String, Person>(
+                Person.class);
+        container.setBeanIdProperty("name");
+
+        assertNotNull(container.addBean(new Person("John")));
+        assertNotNull(container.addBeanAfter(null, new Person("Jane")));
+        assertNotNull(container.addBeanAt(0, new Person("Jack")));
+
+        container.addAll(Arrays.asList(new Person[] { new Person("Jill"),
+                new Person("Joe") }));
+
+        assertTrue(container.containsId("John"));
+        assertTrue(container.containsId("Jane"));
+        assertTrue(container.containsId("Jack"));
+        assertTrue(container.containsId("Jill"));
+        assertTrue(container.containsId("Joe"));
+        assertEquals(3, container.indexOfId("Jill"));
+        assertEquals(4, container.indexOfId("Joe"));
+        assertEquals(5, container.size());
+    }
+
 }

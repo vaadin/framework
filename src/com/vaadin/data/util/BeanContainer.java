@@ -117,9 +117,19 @@ public class BeanContainer<IDTYPE, BT> extends
 
     // automatic item id resolution
 
+    /**
+     * Sets the bean id resolver to use a property of the beans as the
+     * identifier.
+     * 
+     * @param propertyId
+     *            the identifier of the property to use to find item identifiers
+     */
+    public void setBeanIdProperty(Object propertyId) {
+        setIdResolver(createBeanPropertyResolver(propertyId));
+    }
+
     @Override
-    public void setIdResolver(
-            com.vaadin.data.util.AbstractBeanContainer.BeanIdResolver<IDTYPE, BT> beanIdResolver) {
+    public void setIdResolver(BeanIdResolver<IDTYPE, BT> beanIdResolver) {
         super.setIdResolver(beanIdResolver);
     }
 

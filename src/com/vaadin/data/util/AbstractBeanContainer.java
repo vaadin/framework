@@ -6,6 +6,8 @@ package com.vaadin.data.util;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -82,6 +84,62 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
          * @return
          */
         public IDTYPE getIdForBean(BT bean);
+    }
+
+    /**
+     * A item identifier resolver that returns the value of a bean property.
+     * 
+     * The bean must have a getter for the property, and the getter must return
+     * an object of type IDTYPE.
+     */
+    protected class PropertyBasedBeanIdResolver implements
+            BeanIdResolver<IDTYPE, BT> {
+
+        private final Object propertyId;
+        private transient Method getMethod;
+
+        public PropertyBasedBeanIdResolver(Object propertyId) {
+            if (propertyId == null) {
+                throw new IllegalArgumentException(
+                        "Property identifier must not be null");
+            }
+            this.propertyId = propertyId;
+            if (getGetter() == null) {
+                throw new IllegalArgumentException(
+                        "Missing accessor for property " + propertyId);
+            }
+        }
+
+        private Method getGetter() {
+            if (getMethod == null) {
+                try {
+                    String propertyName = propertyId.toString();
+                    if (Character.isLowerCase(propertyName.charAt(0))) {
+                        final char[] buf = propertyName.toCharArray();
+                        buf[0] = Character.toUpperCase(buf[0]);
+                        propertyName = new String(buf);
+                    }
+
+                    getMethod = getBeanType().getMethod("get" + propertyName,
+                            new Class[] {});
+                } catch (NoSuchMethodException ignored) {
+                    throw new IllegalArgumentException();
+                }
+            }
+            return getMethod;
+        }
+
+        @SuppressWarnings("unchecked")
+        public IDTYPE getIdForBean(BT bean) throws IllegalArgumentException {
+            try {
+                return (IDTYPE) getGetter().invoke(bean);
+            } catch (IllegalAccessException e) {
+                throw new IllegalArgumentException(e);
+            } catch (InvocationTargetException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+
     }
 
     /**
@@ -1018,6 +1076,18 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      */
     public BeanIdResolver<IDTYPE, BT> getIdResolver() {
         return beanIdResolver;
+    }
+
+    /**
+     * Create an item identifier resolver using a named bean property.
+     * 
+     * @param propertyId
+     *            property identifier, which must map to a getter in BT
+     * @return created resolver
+     */
+    protected BeanIdResolver<IDTYPE, BT> createBeanPropertyResolver(
+            Object propertyId) {
+        return new PropertyBasedBeanIdResolver(propertyId);
     }
 
 }
