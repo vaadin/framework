@@ -23,58 +23,9 @@ import com.vaadin.data.util.BeanItemContainer;
  * 
  * Most sorting related tests are in {@link BeanItemContainerSortTest}.
  */
-public class BeanItemContainerTest extends AbstractContainerTest {
+public class BeanItemContainerTest extends AbstractBeanContainerTest {
 
     // basics from the common container test
-
-    public class ClassName {
-        // field names match constants in parent test class
-        private String fullyQualifiedName;
-        private String simpleName;
-        private String reverseFullyQualifiedName;
-        private Integer idNumber;
-
-        public ClassName(String fullyQualifiedName, Integer idNumber) {
-            this.fullyQualifiedName = fullyQualifiedName;
-            simpleName = AbstractContainerTest
-                    .getSimpleName(fullyQualifiedName);
-            reverseFullyQualifiedName = reverse(fullyQualifiedName);
-            this.idNumber = idNumber;
-        }
-
-        public String getFullyQualifiedName() {
-            return fullyQualifiedName;
-        }
-
-        public void setFullyQualifiedName(String fullyQualifiedName) {
-            this.fullyQualifiedName = fullyQualifiedName;
-        }
-
-        public String getSimpleName() {
-            return simpleName;
-        }
-
-        public void setSimpleName(String simpleName) {
-            this.simpleName = simpleName;
-        }
-
-        public String getReverseFullyQualifiedName() {
-            return reverseFullyQualifiedName;
-        }
-
-        public void setReverseFullyQualifiedName(
-                String reverseFullyQualifiedName) {
-            this.reverseFullyQualifiedName = reverseFullyQualifiedName;
-        }
-
-        public Integer getIdNumber() {
-            return idNumber;
-        }
-
-        public void setIdNumber(Integer idNumber) {
-            this.idNumber = idNumber;
-        }
-    }
 
     private Map<String, ClassName> nameToBean = new LinkedHashMap<String, ClassName>();
 
@@ -220,14 +171,16 @@ public class BeanItemContainerTest extends AbstractContainerTest {
                 false, new ClassName("org.vaadin.test.Test", 8888), true);
     }
 
-    // note that the constructor tested here is problematic, and should also
-    // take the bean class as a parameter
-    public void testCollectionConstructor() {
+    @SuppressWarnings("deprecation")
+    public void testCollectionConstructors() {
         List<ClassName> classNames = new ArrayList<ClassName>();
         classNames.add(new ClassName("a.b.c.Def", 1));
         classNames.add(new ClassName("a.b.c.Fed", 2));
         classNames.add(new ClassName("b.c.d.Def", 3));
 
+        // note that this constructor is problematic, users should use the
+        // version that
+        // takes the bean class as a parameter
         BeanItemContainer<ClassName> container = new BeanItemContainer<ClassName>(
                 classNames);
 
@@ -235,20 +188,27 @@ public class BeanItemContainerTest extends AbstractContainerTest {
         Assert.assertEquals(classNames.get(0), container.firstItemId());
         Assert.assertEquals(classNames.get(1), container.getIdByIndex(1));
         Assert.assertEquals(classNames.get(2), container.lastItemId());
+
+        BeanItemContainer<ClassName> container2 = new BeanItemContainer<ClassName>(
+                ClassName.class, classNames);
+
+        Assert.assertEquals(3, container2.size());
+        Assert.assertEquals(classNames.get(0), container2.firstItemId());
+        Assert.assertEquals(classNames.get(1), container2.getIdByIndex(1));
+        Assert.assertEquals(classNames.get(2), container2.lastItemId());
     }
 
     // this only applies to the collection constructor with no type parameter
+    @SuppressWarnings("deprecation")
     public void testEmptyCollectionConstructor() {
         try {
-            BeanItemContainer<ClassName> container = new BeanItemContainer<ClassName>(
-                    (Collection<ClassName>) null);
+            new BeanItemContainer<ClassName>((Collection<ClassName>) null);
             Assert.fail("Initializing BeanItemContainer from a null collection should not work!");
         } catch (IllegalArgumentException e) {
             // success
         }
         try {
-            BeanItemContainer<ClassName> container = new BeanItemContainer<ClassName>(
-                    new ArrayList<ClassName>());
+            new BeanItemContainer<ClassName>(new ArrayList<ClassName>());
             Assert.fail("Initializing BeanItemContainer from an empty collection should not work!");
         } catch (IllegalArgumentException e) {
             // success
@@ -379,22 +339,6 @@ public class BeanItemContainerTest extends AbstractContainerTest {
                 return container;
             };
         }.listenerTest();
-    }
-
-    protected static class Person {
-        private String name;
-
-        public Person(String name) {
-            setName(name);
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
     }
 
     public void testAddRemoveWhileFiltering() {
@@ -537,4 +481,78 @@ public class BeanItemContainerTest extends AbstractContainerTest {
         assertEquals(jack, container.nextItemId(matthew));
         assertEquals(michael, container.nextItemId(jack));
     }
+
+    public void testUnsupportedMethods() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+        container.addBean(new Person("John"));
+
+        try {
+            container.addItem();
+            Assert.fail();
+        } catch (UnsupportedOperationException e) {
+            // should get exception
+        }
+
+        try {
+            container.addItemAfter(new Person("Jane"));
+            Assert.fail();
+        } catch (UnsupportedOperationException e) {
+            // should get exception
+        }
+
+        try {
+            container.addItemAt(0);
+            Assert.fail();
+        } catch (UnsupportedOperationException e) {
+            // should get exception
+        }
+
+        try {
+            container.addContainerProperty("lastName", String.class, "");
+            Assert.fail();
+        } catch (UnsupportedOperationException e) {
+            // should get exception
+        }
+
+        try {
+            container.removeContainerProperty("name");
+            Assert.fail();
+        } catch (UnsupportedOperationException e) {
+            // should get exception
+        }
+
+        assertEquals(1, container.size());
+    }
+
+    public void testAddNullBean() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+        Person john = new Person("John");
+        container.addBean(john);
+
+        assertNull(container.addItem(null));
+        assertNull(container.addItemAfter(null, null));
+        assertNull(container.addItemAfter(john, null));
+        assertNull(container.addItemAt(0, null));
+
+        assertEquals(1, container.size());
+    }
+
+    public void testBeanIdResolver() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+        Person john = new Person("John");
+
+        assertSame(john, container.getIdResolver().getIdForBean(john));
+    }
+
+    public void testNullBeanClass() {
+        try {
+            new BeanItemContainer<Object>((Class<Object>) null);
+        } catch (IllegalArgumentException e) {
+            // should get exception
+        }
+    }
+
 }

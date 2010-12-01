@@ -62,6 +62,38 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
         Filterable, Sortable, ValueChangeListener, ItemSetChangeNotifier {
 
     /**
+     * Resolver that maps beans to their (item) identifiers, removing the need
+     * to explicitly specify item identifiers when there is no need to customize
+     * this.
+     * 
+     * Note that beans can also be added with an explicit id even if a resolver
+     * has been set.
+     * 
+     * @param <IDTYPE>
+     * @param <BT>
+     * 
+     * @since 6.5
+     */
+    public static interface BeanIdResolver<IDTYPE, BT> {
+        /**
+         * Return the item identifier for a bean.
+         * 
+         * @param bean
+         * @return
+         */
+        public IDTYPE getIdForBean(BT bean);
+    }
+
+    /**
+     * The resolver that finds the item ID for a bean, or null not to use
+     * automatic resolving.
+     * 
+     * Methods that add a bean without specifying an ID must not be called if no
+     * resolver has been set.
+     */
+    private BeanIdResolver<IDTYPE, BT> beanIdResolver = null;
+
+    /**
      * The item sorter which is used for sorting the container.
      */
     private ItemSorter itemSorter = new DefaultItemSorter();
@@ -688,7 +720,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * ensure the filtered list is updated.
      * </p>
      * 
-     * For internal use by subclasses only.
+     * For internal use by subclasses only. This API is experimental and subject
+     * to change.
      * 
      * @param position
      *            The position at which the bean should be inserted in the
@@ -729,7 +762,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
     /**
      * Returns the index of an item within the unfiltered collection of items.
      * 
-     * For internal use in subclasses only.
+     * For internal use by subclasses only. This API is experimental and subject
+     * to change.
      * 
      * @param itemId
      * @return
@@ -745,6 +779,9 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * filters.
      * </p>
      * 
+     * For internal use by subclasses only. This API is experimental and subject
+     * to change.
+     * 
      * @param index
      *            Internal index to add the new item.
      * @param newItemId
@@ -753,7 +790,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      *            bean to be added
      * @return Returns new item or null if the operation fails.
      */
-    protected BeanItem<BT> addItemAtInternalIndex(int index, IDTYPE newItemId,
+    private BeanItem<BT> addItemAtInternalIndex(int index, IDTYPE newItemId,
             BT bean) {
         BeanItem<BT> beanItem = internalAddAt(index, newItemId, bean);
         if (beanItem != null) {
@@ -820,6 +857,167 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
             // if index==size(), adds immediately after last visible item
             return addItemAfter(getIdByIndex(index - 1), newItemId, bean);
         }
+    }
+
+    /**
+     * Adds a bean to the container using the bean item id resolver to find its
+     * identifier.
+     * 
+     * A bean id resolver must be set before calling this method.
+     * 
+     * @see #addItem(Object, Object)
+     * 
+     * @param bean
+     *            the bean to add
+     * @return BeanItem<BT> item added or null
+     * @throws IllegalStateException
+     *             if no bean identifier resolver has been set
+     * @throws IllegalArgumentException
+     *             if the resolved identifier for the bean is null
+     */
+    protected BeanItem<BT> addBean(BT bean) throws IllegalStateException,
+            IllegalArgumentException {
+        if (beanIdResolver == null) {
+            throw new IllegalStateException(
+                    "Bean item identifier resolver is required.");
+        }
+        if (bean == null) {
+            return null;
+        }
+        IDTYPE itemId = beanIdResolver.getIdForBean(bean);
+        if (itemId == null) {
+            throw new IllegalArgumentException(
+                    "Resolved identifier for a bean must not be null");
+        }
+        return addItem(itemId, bean);
+    }
+
+    /**
+     * Adds a bean to the container after a specified item identifier, using the
+     * bean item id resolver to find its identifier.
+     * 
+     * A bean id resolver must be set before calling this method.
+     * 
+     * @see #addItemAfter(Object, Object, Object)
+     * 
+     * @param previousItemId
+     *            the identifier of the bean after which this bean should be
+     *            added, null to add to the beginning
+     * @param bean
+     *            the bean to add
+     * @return BeanItem<BT> item added or null
+     * @throws IllegalStateException
+     *             if no bean identifier resolver has been set
+     * @throws IllegalArgumentException
+     *             if the resolved identifier for the bean is null
+     */
+    protected BeanItem<BT> addBeanAfter(IDTYPE previousItemId, BT bean)
+            throws IllegalStateException, IllegalArgumentException {
+        if (beanIdResolver == null) {
+            throw new IllegalStateException(
+                    "Bean item identifier resolver is required.");
+        }
+        if (bean == null) {
+            return null;
+        }
+        IDTYPE itemId = beanIdResolver.getIdForBean(bean);
+        if (itemId == null) {
+            throw new IllegalArgumentException(
+                    "Resolved identifier for a bean must not be null");
+        }
+        return addItemAfter(previousItemId, itemId, bean);
+    }
+
+    /**
+     * Adds a bean at a specified (filtered view) position in the container
+     * using the bean item id resolver to find its identifier.
+     * 
+     * A bean id resolver must be set before calling this method.
+     * 
+     * @see #addItemAfter(Object, Object, Object)
+     * 
+     * @param index
+     *            the index (in the filtered view) at which to add the item
+     * @param bean
+     *            the bean to add
+     * @return BeanItem<BT> item added or null
+     * @throws IllegalStateException
+     *             if no bean identifier resolver has been set
+     * @throws IllegalArgumentException
+     *             if the resolved identifier for the bean is null
+     */
+    protected BeanItem<BT> addBeanAt(int index, BT bean)
+            throws IllegalStateException, IllegalArgumentException {
+        if (beanIdResolver == null) {
+            throw new IllegalStateException(
+                    "Bean item identifier resolver is required.");
+        }
+        if (bean == null) {
+            return null;
+        }
+        IDTYPE itemId = beanIdResolver.getIdForBean(bean);
+        if (itemId == null) {
+            throw new IllegalArgumentException(
+                    "Resolved identifier for a bean must not be null");
+        }
+        return addItemAt(index, itemId, bean);
+    }
+
+    /**
+     * Adds all the beans from a {@link Collection} in one operation using the
+     * bean item identifier resolver. More efficient than adding them one by
+     * one.
+     * 
+     * A bean id resolver must be set before calling this method.
+     * 
+     * @param collection
+     *            The collection of beans to add. Must not be null.
+     * @throws IllegalStateException
+     *             if no bean identifier resolver has been set
+     */
+    protected void addAll(Collection<? extends BT> collection)
+            throws IllegalStateException {
+        if (beanIdResolver == null) {
+            throw new IllegalStateException(
+                    "Bean item identifier resolver is required.");
+        }
+
+        int idx = internalIndexOf(lastItemId()) + 1;
+        for (BT bean : collection) {
+            IDTYPE itemId = beanIdResolver.getIdForBean(bean);
+            if (internalAddAt(idx, itemId, bean) != null) {
+                idx++;
+            }
+        }
+
+        // Filter the contents when all items have been added
+        filterAll();
+    }
+
+    /**
+     * Sets the resolver that finds the item id for a bean, or null not to use
+     * automatic resolving.
+     * 
+     * Methods that add a bean without specifying an id must not be called if no
+     * resolver has been set.
+     * 
+     * Note that methods taking an explicit id can be used whether a resolver
+     * has been defined or not.
+     * 
+     * @param beanIdResolver
+     *            to use or null to disable automatic id resolution
+     */
+    protected void setIdResolver(BeanIdResolver<IDTYPE, BT> beanIdResolver) {
+        this.beanIdResolver = beanIdResolver;
+    }
+
+    /**
+     * Returns the resolver that finds the item ID for a bean.
+     * 
+     * @return resolver used or null if automatic item id resolving is disabled
+     */
+    public BeanIdResolver<IDTYPE, BT> getIdResolver() {
+        return beanIdResolver;
     }
 
 }

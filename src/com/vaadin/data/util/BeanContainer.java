@@ -1,5 +1,7 @@
 package com.vaadin.data.util;
 
+import java.util.Collection;
+
 import com.vaadin.data.Item;
 
 /**
@@ -19,6 +21,15 @@ import com.vaadin.data.Item;
  * <p>
  * It is not possible to add additional properties to the container and nested
  * bean properties are not supported.
+ * </p>
+ * 
+ * <p>
+ * If a bean id resolver is set, the {@link #addBean(Object)},
+ * {@link #addBeanAfter(Object, Object)}, {@link #addBeanAt(int, Object)} and
+ * {@link #addAll(java.util.Collection)} methods can be used to add items to the
+ * container. If one of these methods is called, the resolver is used to
+ * generate an identifier for the item (must not return null). Explicit item
+ * identifiers can be used also when a resolver has been set.
  * </p>
  * 
  * @param <IDTYPE>
@@ -59,7 +70,11 @@ public class BeanContainer<IDTYPE, BT> extends
      */
     @Override
     public BeanItem<BT> addItem(IDTYPE itemId, BT bean) {
-        return super.addItem(itemId, bean);
+        if (itemId != null && bean != null) {
+            return super.addItem(itemId, bean);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -70,7 +85,11 @@ public class BeanContainer<IDTYPE, BT> extends
     @Override
     public BeanItem<BT> addItemAfter(IDTYPE previousItemId, IDTYPE newItemId,
             BT bean) {
-        return super.addItemAfter(previousItemId, newItemId, bean);
+        if (newItemId != null && bean != null) {
+            return super.addItemAfter(previousItemId, newItemId, bean);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -89,7 +108,43 @@ public class BeanContainer<IDTYPE, BT> extends
      */
     @Override
     public BeanItem<BT> addItemAt(int index, IDTYPE newItemId, BT bean) {
-        return super.addItemAt(index, newItemId, bean);
+        if (newItemId != null && bean != null) {
+            return super.addItemAt(index, newItemId, bean);
+        } else {
+            return null;
+        }
+    }
+
+    // automatic item id resolution
+
+    @Override
+    public void setIdResolver(
+            com.vaadin.data.util.AbstractBeanContainer.BeanIdResolver<IDTYPE, BT> beanIdResolver) {
+        super.setIdResolver(beanIdResolver);
+    }
+
+    @Override
+    public BeanItem<BT> addBean(BT bean) throws IllegalStateException,
+            IllegalArgumentException {
+        return super.addBean(bean);
+    }
+
+    @Override
+    public BeanItem<BT> addBeanAfter(IDTYPE previousItemId, BT bean)
+            throws IllegalStateException, IllegalArgumentException {
+        return super.addBeanAfter(previousItemId, bean);
+    }
+
+    @Override
+    public BeanItem<BT> addBeanAt(int index, BT bean)
+            throws IllegalStateException, IllegalArgumentException {
+        return super.addBeanAt(index, bean);
+    }
+
+    @Override
+    public void addAll(Collection<? extends BT> collection)
+            throws IllegalStateException {
+        super.addAll(collection);
     }
 
 }
