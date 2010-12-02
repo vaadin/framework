@@ -176,7 +176,19 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
 
         createWidthAndHeightActions(CATEGORY_SIZE);
 
-        // TODO Style name
+        createStyleNameSelect(CATEGORY_DECORATIONS);
+
+    }
+
+    private void createStyleNameSelect(String category) {
+        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        options.put("-", null);
+        options.put("Light blue background (background-lightblue)",
+                "background-lightblue");
+        options.put("1px red border (border-red-1px)", "border-red-1px");
+        options.put("2px blue border (border-blue-2px)", "border-blue-2px");
+        createSelectAction("Style name", category, options, "-",
+                styleNameCommand);
 
     }
 
@@ -228,7 +240,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
         createCategory(heightCategory, category);
 
         LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
-        options.put("Undefined", null);
+        options.put("auto", null);
         options.put("50%", "50%");
         options.put("100%", "100%");
         for (int w = 200; w < 1000; w += 100) {
