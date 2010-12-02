@@ -16,3 +16,14 @@
 	font-weight: bold;
 }
 
+.background-lightblue {
+	background: lightblue;
+}
+
+.border-red-1px {
+	border: 1px solid red;
+}
+
+.border-blue-2px {
+	border: 2px solid blue;
+}
