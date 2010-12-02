@@ -17,6 +17,7 @@ public class CheckBoxes2 extends AbstractFieldTest<CheckBox> implements
 
     private Command<CheckBox, Boolean> switchModeCommand = new Command<CheckBox, Boolean>() {
 
+        @SuppressWarnings("deprecation")
         public void execute(CheckBox c, Boolean value, Object data) {
             c.setSwitchMode(value);
         }

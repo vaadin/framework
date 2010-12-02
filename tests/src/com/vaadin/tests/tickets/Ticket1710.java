@@ -46,8 +46,10 @@ public class Ticket1710 extends com.vaadin.Application {
         final VerticalLayout orderedLayout = new VerticalLayout();
         LayoutTestingPanel oltp = new LayoutTestingPanel("OrderedLayout",
                 orderedLayout);
-        hidingControls.addComponent(new CheckBox("OrderedLayout",
-                new MethodProperty<Boolean>(oltp, "visible")));
+        CheckBox cb = new CheckBox("OrderedLayout",
+                new MethodProperty<Boolean>(oltp, "visible"));
+        cb.setImmediate(true);
+        hidingControls.addComponent(cb);
         lo.addComponent(oltp);
         orderedLayout.setSpacing(false);
         addFields(orderedLayout);
@@ -55,16 +57,20 @@ public class Ticket1710 extends com.vaadin.Application {
         // GridLayout
         GridLayout grid = new GridLayout(1, 1);
         Panel g1tp = new LayoutTestingPanel("Gridlayout with 1 column", grid);
-        hidingControls.addComponent(new CheckBox("GridLayout (1col)",
-                new MethodProperty<Boolean>(g1tp, "visible")));
+        cb = new CheckBox("GridLayout (1col)", new MethodProperty<Boolean>(
+                g1tp, "visible"));
+        cb.setImmediate(true);
+        hidingControls.addComponent(cb);
         g1tp.setVisible(false);
         lo.addComponent(g1tp);
         grid.setSpacing(true);
         addFields(grid);
         GridLayout grid2 = new GridLayout(2, 1);
         Panel g2tp = new LayoutTestingPanel("Gridlayout with 2 columns", grid2);
-        hidingControls.addComponent(new Button("GridLayout (2cols)",
-                new MethodProperty<Boolean>(g2tp, "visible")));
+        cb = new CheckBox("GridLayout (2cols)", new MethodProperty<Boolean>(
+                g2tp, "visible"));
+        cb.setImmediate(true);
+        hidingControls.addComponent(cb);
         g2tp.setVisible(false);
         lo.addComponent(g2tp);
         grid2.setSpacing(true);
@@ -74,8 +80,10 @@ public class Ticket1710 extends com.vaadin.Application {
         VerticalLayout el = new VerticalLayout();
         Panel elp = new LayoutTestingPanel(
                 "ExpandLayout width first component expanded", el);
-        hidingControls.addComponent(new Button("ExpandLayout (vertical)",
-                new MethodProperty<Boolean>(elp, "visible")));
+        cb = new CheckBox("ExpandLayout (vertical)",
+                new MethodProperty<Boolean>(elp, "visible"));
+        cb.setImmediate(true);
+        hidingControls.addComponent(cb);
         elp.setVisible(false);
         el.setHeight("700px");
         addFields(el);
@@ -86,8 +94,10 @@ public class Ticket1710 extends com.vaadin.Application {
         HorizontalLayout elh = new HorizontalLayout();
         Panel elhp = new LayoutTestingPanel(
                 "ExpandLayout width first component expanded; horizontal", elh);
-        hidingControls.addComponent(new Button("ExpandLayout (horizontal)",
-                new MethodProperty<Boolean>(elhp, "visible")));
+        cb = new CheckBox("ExpandLayout (horizontal)",
+                new MethodProperty<Boolean>(elhp, "visible"));
+        cb.setImmediate(true);
+        hidingControls.addComponent(cb);
         elhp.setVisible(false);
         elhp.setScrollable(true);
         elh.setWidth("2000px");
@@ -101,16 +111,20 @@ public class Ticket1710 extends com.vaadin.Application {
         // CustomLayout
         VerticalLayout cl = new VerticalLayout();
         Panel clp = new LayoutTestingPanel("CustomLayout", cl);
-        hidingControls.addComponent(new Button("CustomLayout",
-                new MethodProperty<Boolean>(clp, "visible")));
+        cb = new CheckBox("CustomLayout", new MethodProperty<Boolean>(clp,
+                "visible"));
+        cb.setImmediate(true);
+        hidingControls.addComponent(cb);
         clp.setVisible(false);
         lo.addComponent(clp);
         cl.addComponent(new Label("<<< Add customlayout testcase here >>>"));
 
         // Form
         Panel formPanel = new Panel("Form");
-        hidingControls.addComponent(new Button("Form",
-                new MethodProperty<Boolean>(formPanel, "visible")));
+        cb = new CheckBox("Form", new MethodProperty<Boolean>(formPanel,
+                "visible"));
+        cb.setImmediate(true);
+        hidingControls.addComponent(cb);
         formPanel.setVisible(false);
         formPanel.addComponent(getFormPanelExample());
         lo.addComponent(formPanel);

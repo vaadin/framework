@@ -7,6 +7,7 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
@@ -31,23 +32,23 @@ public class Ticket2104 extends Application {
 
         HorizontalLayout ol = new HorizontalLayout();
         main.addComponent(ol);
-        Button b = new Button("immediate", new MethodProperty<Boolean>(tree,
-                "immediate"));
-        b.setImmediate(true);
-        ol.addComponent(b);
-        b = new Button("selectable", new MethodProperty<Boolean>(tree,
+        CheckBox cb = new CheckBox("immediate", new MethodProperty<Boolean>(
+                tree, "immediate"));
+        cb.setImmediate(true);
+        ol.addComponent(cb);
+        cb = new CheckBox("selectable", new MethodProperty<Boolean>(tree,
                 "selectable"));
-        b.setImmediate(true);
-        ol.addComponent(b);
-        b = new Button("nullsel", new MethodProperty<Boolean>(tree,
+        cb.setImmediate(true);
+        ol.addComponent(cb);
+        cb = new CheckBox("nullsel", new MethodProperty<Boolean>(tree,
                 "nullSelectionAllowed"));
-        b.setImmediate(true);
-        ol.addComponent(b);
-        b = new Button("multi",
-                new MethodProperty<Boolean>(tree, "multiSelect"));
-        b.setImmediate(true);
-        ol.addComponent(b);
-        b = new Button("icon", new Button.ClickListener() {
+        cb.setImmediate(true);
+        ol.addComponent(cb);
+        cb = new CheckBox("multi", new MethodProperty<Boolean>(tree,
+                "multiSelect"));
+        cb.setImmediate(true);
+        ol.addComponent(cb);
+        cb = new CheckBox("icon", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 if (tree.getItemIconPropertyId() == null) {
                     tree.setItemIconPropertyId("icon");
@@ -57,7 +58,8 @@ public class Ticket2104 extends Application {
 
             }
         });
-        ol.addComponent(b);
+        cb.setImmediate(true);
+        ol.addComponent(cb);
 
         main.addComponent(tree);
         tree.setImmediate(true);
@@ -87,22 +89,22 @@ public class Ticket2104 extends Application {
 
         ol = new HorizontalLayout();
         main.addComponent(ol);
-        b = new Button("immediate", new MethodProperty<Boolean>(table,
+        cb = new CheckBox("immediate", new MethodProperty<Boolean>(table,
                 "immediate"));
-        b.setImmediate(true);
-        ol.addComponent(b);
-        b = new Button("selectable", new MethodProperty<Boolean>(table,
+        cb.setImmediate(true);
+        ol.addComponent(cb);
+        cb = new CheckBox("selectable", new MethodProperty<Boolean>(table,
                 "selectable"));
-        b.setImmediate(true);
-        ol.addComponent(b);
-        b = new Button("nullsel", new MethodProperty<Boolean>(table,
+        cb.setImmediate(true);
+        ol.addComponent(cb);
+        cb = new CheckBox("nullsel", new MethodProperty<Boolean>(table,
                 "nullSelectionAllowed"));
-        b.setImmediate(true);
-        ol.addComponent(b);
-        b = new Button("multi", new MethodProperty<Boolean>(table,
+        cb.setImmediate(true);
+        ol.addComponent(cb);
+        cb = new CheckBox("multi", new MethodProperty<Boolean>(table,
                 "multiSelect"));
-        b.setImmediate(true);
-        ol.addComponent(b);
+        cb.setImmediate(true);
+        ol.addComponent(cb);
         main.addComponent(table);
         table.setWidth("150px");
         table.setImmediate(true);

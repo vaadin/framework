@@ -9,6 +9,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
@@ -121,16 +122,20 @@ public class ItemClickEvents extends TestBase {
 
     private static HorizontalLayout createHorizontalLayout(Component c) {
         HorizontalLayout layout = new HorizontalLayout();
-        Button b = new Button("immediate", new MethodProperty<Boolean>(c,
+        CheckBox b = new CheckBox("immediate", new MethodProperty<Boolean>(c,
                 "immediate"));
+        b.setImmediate(true);
         layout.addComponent(b);
-        b = new Button("selectable", new MethodProperty<Boolean>(c,
+        b = new CheckBox("selectable", new MethodProperty<Boolean>(c,
                 "selectable"));
+        b.setImmediate(true);
         layout.addComponent(b);
-        b = new Button("nullsel", new MethodProperty<Boolean>(c,
+        b = new CheckBox("nullsel", new MethodProperty<Boolean>(c,
                 "nullSelectionAllowed"));
+        b.setImmediate(true);
         layout.addComponent(b);
-        b = new Button("multi", new MethodProperty<Boolean>(c, "multiSelect"));
+        b = new CheckBox("multi", new MethodProperty<Boolean>(c, "multiSelect"));
+        b.setImmediate(true);
         layout.addComponent(b);
         return layout;
     }

@@ -10,6 +10,7 @@ public class Buttons2 extends AbstractFieldTest<Button> implements
 
     private Command<Button, Boolean> switchModeCommand = new Command<Button, Boolean>() {
 
+        @SuppressWarnings("deprecation")
         public void execute(Button c, Boolean value, Object data) {
             c.setSwitchMode(value);
         }
