@@ -34,7 +34,7 @@ import com.vaadin.data.Item;
  * 
  * @param <IDTYPE>
  *            The type of the item identifier
- * @param <BT>
+ * @param <BEANTYPE>
  *            The type of the Bean
  * 
  * @see AbstractBeanContainer
@@ -42,10 +42,10 @@ import com.vaadin.data.Item;
  * 
  * @since 6.5
  */
-public class BeanContainer<IDTYPE, BT> extends
-        AbstractBeanContainer<IDTYPE, BT> {
+public class BeanContainer<IDTYPE, BEANTYPE> extends
+        AbstractBeanContainer<IDTYPE, BEANTYPE> {
 
-    public BeanContainer(Class<? super BT> type) {
+    public BeanContainer(Class<? super BEANTYPE> type) {
         super(type);
     }
 
@@ -69,7 +69,7 @@ public class BeanContainer<IDTYPE, BT> extends
      * @see com.vaadin.data.Container#addItem(Object)
      */
     @Override
-    public BeanItem<BT> addItem(IDTYPE itemId, BT bean) {
+    public BeanItem<BEANTYPE> addItem(IDTYPE itemId, BEANTYPE bean) {
         if (itemId != null && bean != null) {
             return super.addItem(itemId, bean);
         } else {
@@ -78,13 +78,13 @@ public class BeanContainer<IDTYPE, BT> extends
     }
 
     /**
-     * Adds the bean after the given bean.
+     * Adds the bean after the given item id.
      * 
      * @see com.vaadin.data.Container.Ordered#addItemAfter(Object, Object)
      */
     @Override
-    public BeanItem<BT> addItemAfter(IDTYPE previousItemId, IDTYPE newItemId,
-            BT bean) {
+    public BeanItem<BEANTYPE> addItemAfter(IDTYPE previousItemId,
+            IDTYPE newItemId, BEANTYPE bean) {
         if (newItemId != null && bean != null) {
             return super.addItemAfter(previousItemId, newItemId, bean);
         } else {
@@ -107,7 +107,8 @@ public class BeanContainer<IDTYPE, BT> extends
      * @return Returns the new BeanItem or null if the operation fails.
      */
     @Override
-    public BeanItem<BT> addItemAt(int index, IDTYPE newItemId, BT bean) {
+    public BeanItem<BEANTYPE> addItemAt(int index, IDTYPE newItemId,
+            BEANTYPE bean) {
         if (newItemId != null && bean != null) {
             return super.addItemAt(index, newItemId, bean);
         } else {
@@ -124,35 +125,42 @@ public class BeanContainer<IDTYPE, BT> extends
      * @param propertyId
      *            the identifier of the property to use to find item identifiers
      */
+    // overridden to make public
     public void setBeanIdProperty(Object propertyId) {
-        setIdResolver(createBeanPropertyResolver(propertyId));
+        setBeanIdResolver(createBeanPropertyResolver(propertyId));
     }
 
     @Override
-    public void setIdResolver(BeanIdResolver<IDTYPE, BT> beanIdResolver) {
-        super.setIdResolver(beanIdResolver);
+    // overridden to make public
+    public void setBeanIdResolver(
+            BeanIdResolver<IDTYPE, BEANTYPE> beanIdResolver) {
+        super.setBeanIdResolver(beanIdResolver);
     }
 
     @Override
-    public BeanItem<BT> addBean(BT bean) throws IllegalStateException,
-            IllegalArgumentException {
+    // overridden to make public
+    public BeanItem<BEANTYPE> addBean(BEANTYPE bean)
+            throws IllegalStateException, IllegalArgumentException {
         return super.addBean(bean);
     }
 
     @Override
-    public BeanItem<BT> addBeanAfter(IDTYPE previousItemId, BT bean)
+    // overridden to make public
+    public BeanItem<BEANTYPE> addBeanAfter(IDTYPE previousItemId, BEANTYPE bean)
             throws IllegalStateException, IllegalArgumentException {
         return super.addBeanAfter(previousItemId, bean);
     }
 
     @Override
-    public BeanItem<BT> addBeanAt(int index, BT bean)
+    // overridden to make public
+    public BeanItem<BEANTYPE> addBeanAt(int index, BEANTYPE bean)
             throws IllegalStateException, IllegalArgumentException {
         return super.addBeanAt(index, bean);
     }
 
     @Override
-    public void addAll(Collection<? extends BT> collection)
+    // overridden to make public
+    public void addAll(Collection<? extends BEANTYPE> collection)
             throws IllegalStateException {
         super.addAll(collection);
     }

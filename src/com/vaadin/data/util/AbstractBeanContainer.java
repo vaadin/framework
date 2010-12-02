@@ -55,13 +55,14 @@ import com.vaadin.data.Property.ValueChangeNotifier;
  * 
  * @param <IDTYPE>
  *            The type of the item identifier
- * @param <BT>
+ * @param <BEANTYPE>
  *            The type of the Bean
  * 
  * @since 6.5
  */
-public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
-        Filterable, Sortable, ValueChangeListener, ItemSetChangeNotifier {
+public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> implements
+        Indexed, Filterable, Sortable, ValueChangeListener,
+        ItemSetChangeNotifier {
 
     /**
      * Resolver that maps beans to their (item) identifiers, removing the need
@@ -72,18 +73,19 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * has been set.
      * 
      * @param <IDTYPE>
-     * @param <BT>
+     * @param <BEANTYPE>
      * 
      * @since 6.5
      */
-    public static interface BeanIdResolver<IDTYPE, BT> extends Serializable {
+    public static interface BeanIdResolver<IDTYPE, BEANTYPE> extends
+            Serializable {
         /**
          * Return the item identifier for a bean.
          * 
          * @param bean
          * @return
          */
-        public IDTYPE getIdForBean(BT bean);
+        public IDTYPE getIdForBean(BEANTYPE bean);
     }
 
     /**
@@ -93,7 +95,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * an object of type IDTYPE.
      */
     protected class PropertyBasedBeanIdResolver implements
-            BeanIdResolver<IDTYPE, BT> {
+            BeanIdResolver<IDTYPE, BEANTYPE> {
 
         private final Object propertyId;
         private transient Method getMethod;
@@ -104,33 +106,22 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
                         "Property identifier must not be null");
             }
             this.propertyId = propertyId;
-            if (getGetter() == null) {
-                throw new IllegalArgumentException(
-                        "Missing accessor for property " + propertyId);
-            }
         }
 
-        private Method getGetter() {
+        private Method getGetter() throws IllegalStateException {
             if (getMethod == null) {
-                try {
-                    String propertyName = propertyId.toString();
-                    if (Character.isLowerCase(propertyName.charAt(0))) {
-                        final char[] buf = propertyName.toCharArray();
-                        buf[0] = Character.toUpperCase(buf[0]);
-                        propertyName = new String(buf);
-                    }
-
-                    getMethod = getBeanType().getMethod("get" + propertyName,
-                            new Class[] {});
-                } catch (NoSuchMethodException ignored) {
-                    throw new IllegalArgumentException();
+                if (!model.containsKey(propertyId)) {
+                    throw new IllegalStateException("Property " + propertyId
+                            + " not found");
                 }
+                getMethod = model.get(propertyId).getReadMethod();
             }
             return getMethod;
         }
 
         @SuppressWarnings("unchecked")
-        public IDTYPE getIdForBean(BT bean) throws IllegalArgumentException {
+        public IDTYPE getIdForBean(BEANTYPE bean)
+                throws IllegalArgumentException {
             try {
                 return (IDTYPE) getGetter().invoke(bean);
             } catch (IllegalAccessException e) {
@@ -149,7 +140,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * Methods that add a bean without specifying an ID must not be called if no
      * resolver has been set.
      */
-    private BeanIdResolver<IDTYPE, BT> beanIdResolver = null;
+    private BeanIdResolver<IDTYPE, BEANTYPE> beanIdResolver = null;
 
     /**
      * The item sorter which is used for sorting the container.
@@ -178,12 +169,12 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * Maps all item ids in the container (including filtered) to their
      * corresponding BeanItem.
      */
-    private final Map<IDTYPE, BeanItem<BT>> itemIdToItem = new HashMap<IDTYPE, BeanItem<BT>>();
+    private final Map<IDTYPE, BeanItem<BEANTYPE>> itemIdToItem = new HashMap<IDTYPE, BeanItem<BEANTYPE>>();
 
     /**
      * The type of the beans in the container.
      */
-    private final Class<? super BT> type;
+    private final Class<? super BEANTYPE> type;
 
     /**
      * A description of the properties found in beans of type {@link #type}.
@@ -205,7 +196,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * @throws IllegalArgumentException
      *             If {@code type} is null
      */
-    protected AbstractBeanContainer(Class<? super BT> type) {
+    protected AbstractBeanContainer(Class<? super BEANTYPE> type) {
         if (type == null) {
             throw new IllegalArgumentException(
                     "The bean type passed to AbstractBeanContainer must not be null");
@@ -240,8 +231,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * @param bean
      * @return
      */
-    protected BeanItem<BT> createBeanItem(BT bean) {
-        return new BeanItem<BT>(bean, model);
+    protected BeanItem<BEANTYPE> createBeanItem(BEANTYPE bean) {
+        return new BeanItem<BEANTYPE>(bean, model);
     }
 
     /**
@@ -252,7 +243,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * 
      * @return
      */
-    public Class<? super BT> getBeanType() {
+    public Class<? super BEANTYPE> getBeanType() {
         return type;
     }
 
@@ -367,7 +358,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * 
      * @see com.vaadin.data.Container#getItem(java.lang.Object)
      */
-    public BeanItem<BT> getItem(Object itemId) {
+    public BeanItem<BEANTYPE> getItem(Object itemId) {
         return itemIdToItem.get(itemId);
     }
 
@@ -437,7 +428,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
         }
         // check if exactly the same items are there after filtering to avoid
         // unnecessary notifications
-        // this may be slow in some cases as it uses BT.equals()
+        // this may be slow in some cases as it uses BEANTYPE.equals()
         if (!originalItems.equals(filteredItemIds)) {
             fireItemSetChange();
         }
@@ -789,9 +780,14 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * @param bean
      *            The bean to insert
      * 
-     * @return true if the bean was added successfully, false otherwise
+     * @return BeanItem<BEANTYPE> if the bean was added successfully, null
+     *         otherwise
      */
-    protected BeanItem<BT> internalAddAt(int position, IDTYPE itemId, BT bean) {
+    protected BeanItem<BEANTYPE> internalAddAt(int position, IDTYPE itemId,
+            BEANTYPE bean) {
+        if (bean == null) {
+            return null;
+        }
         // Make sure that the item has not been added previously
         if (allItemIds.contains(bean)) {
             return null;
@@ -804,7 +800,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
         // "filteredList" will be updated in filterAll() which should be invoked
         // by the caller after calling this method.
         allItemIds.add(position, itemId);
-        BeanItem<BT> beanItem = createBeanItem(bean);
+        BeanItem<BEANTYPE> beanItem = createBeanItem(bean);
         itemIdToItem.put(itemId, beanItem);
 
         // add listeners to be able to update filtering on property
@@ -837,9 +833,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * filters.
      * </p>
      * 
-     * For internal use by subclasses only. This API is experimental and subject
-     * to change.
-     * 
      * @param index
      *            Internal index to add the new item.
      * @param newItemId
@@ -848,9 +841,9 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      *            bean to be added
      * @return Returns new item or null if the operation fails.
      */
-    private BeanItem<BT> addItemAtInternalIndex(int index, IDTYPE newItemId,
-            BT bean) {
-        BeanItem<BT> beanItem = internalAddAt(index, newItemId, bean);
+    private BeanItem<BEANTYPE> addItemAtInternalIndex(int index,
+            IDTYPE newItemId, BEANTYPE bean) {
+        BeanItem<BEANTYPE> beanItem = internalAddAt(index, newItemId, bean);
         if (beanItem != null) {
             filterAll();
         }
@@ -863,7 +856,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * 
      * @see com.vaadin.data.Container#addItem(Object)
      */
-    protected BeanItem<BT> addItem(IDTYPE itemId, BT bean) {
+    protected BeanItem<BEANTYPE> addItem(IDTYPE itemId, BEANTYPE bean) {
         if (size() > 0) {
             // add immediately after last visible item
             int lastIndex = internalIndexOf(lastItemId());
@@ -878,8 +871,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * 
      * @see com.vaadin.data.Container.Ordered#addItemAfter(Object, Object)
      */
-    protected BeanItem<BT> addItemAfter(IDTYPE previousItemId,
-            IDTYPE newItemId, BT bean) {
+    protected BeanItem<BEANTYPE> addItemAfter(IDTYPE previousItemId,
+            IDTYPE newItemId, BEANTYPE bean) {
         // only add if the previous item is visible
         if (previousItemId == null) {
             return addItemAtInternalIndex(0, newItemId, bean);
@@ -905,7 +898,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * 
      * @return Returns the new BeanItem or null if the operation fails.
      */
-    protected BeanItem<BT> addItemAt(int index, IDTYPE newItemId, BT bean) {
+    protected BeanItem<BEANTYPE> addItemAt(int index, IDTYPE newItemId,
+            BEANTYPE bean) {
         if (index < 0 || index > size()) {
             return null;
         } else if (index == 0) {
@@ -927,14 +921,14 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * 
      * @param bean
      *            the bean to add
-     * @return BeanItem<BT> item added or null
+     * @return BeanItem<BEANTYPE> item added or null
      * @throws IllegalStateException
      *             if no bean identifier resolver has been set
      * @throws IllegalArgumentException
-     *             if the resolved identifier for the bean is null
+     *             if an identifier cannot be resolved for the bean
      */
-    protected BeanItem<BT> addBean(BT bean) throws IllegalStateException,
-            IllegalArgumentException {
+    protected BeanItem<BEANTYPE> addBean(BEANTYPE bean)
+            throws IllegalStateException, IllegalArgumentException {
         if (beanIdResolver == null) {
             throw new IllegalStateException(
                     "Bean item identifier resolver is required.");
@@ -963,14 +957,15 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      *            added, null to add to the beginning
      * @param bean
      *            the bean to add
-     * @return BeanItem<BT> item added or null
+     * @return BeanItem<BEANTYPE> item added or null
      * @throws IllegalStateException
      *             if no bean identifier resolver has been set
      * @throws IllegalArgumentException
-     *             if the resolved identifier for the bean is null
+     *             if an identifier cannot be resolved for the bean
      */
-    protected BeanItem<BT> addBeanAfter(IDTYPE previousItemId, BT bean)
-            throws IllegalStateException, IllegalArgumentException {
+    protected BeanItem<BEANTYPE> addBeanAfter(IDTYPE previousItemId,
+            BEANTYPE bean) throws IllegalStateException,
+            IllegalArgumentException {
         if (beanIdResolver == null) {
             throw new IllegalStateException(
                     "Bean item identifier resolver is required.");
@@ -998,13 +993,13 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      *            the index (in the filtered view) at which to add the item
      * @param bean
      *            the bean to add
-     * @return BeanItem<BT> item added or null
+     * @return BeanItem<BEANTYPE> item added or null
      * @throws IllegalStateException
      *             if no bean identifier resolver has been set
      * @throws IllegalArgumentException
-     *             if the resolved identifier for the bean is null
+     *             if an identifier cannot be resolved for the bean
      */
-    protected BeanItem<BT> addBeanAt(int index, BT bean)
+    protected BeanItem<BEANTYPE> addBeanAt(int index, BEANTYPE bean)
             throws IllegalStateException, IllegalArgumentException {
         if (beanIdResolver == null) {
             throw new IllegalStateException(
@@ -1033,7 +1028,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * @throws IllegalStateException
      *             if no bean identifier resolver has been set
      */
-    protected void addAll(Collection<? extends BT> collection)
+    protected void addAll(Collection<? extends BEANTYPE> collection)
             throws IllegalStateException {
         if (beanIdResolver == null) {
             throw new IllegalStateException(
@@ -1041,7 +1036,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
         }
 
         int idx = internalIndexOf(lastItemId()) + 1;
-        for (BT bean : collection) {
+        for (BEANTYPE bean : collection) {
             IDTYPE itemId = beanIdResolver.getIdForBean(bean);
             if (internalAddAt(idx, itemId, bean) != null) {
                 idx++;
@@ -1065,7 +1060,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * @param beanIdResolver
      *            to use or null to disable automatic id resolution
      */
-    protected void setIdResolver(BeanIdResolver<IDTYPE, BT> beanIdResolver) {
+    protected void setBeanIdResolver(
+            BeanIdResolver<IDTYPE, BEANTYPE> beanIdResolver) {
         this.beanIdResolver = beanIdResolver;
     }
 
@@ -1074,7 +1070,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * 
      * @return resolver used or null if automatic item id resolving is disabled
      */
-    public BeanIdResolver<IDTYPE, BT> getIdResolver() {
+    public BeanIdResolver<IDTYPE, BEANTYPE> getBeanIdResolver() {
         return beanIdResolver;
     }
 
@@ -1082,10 +1078,10 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * Create an item identifier resolver using a named bean property.
      * 
      * @param propertyId
-     *            property identifier, which must map to a getter in BT
+     *            property identifier, which must map to a getter in BEANTYPE
      * @return created resolver
      */
-    protected BeanIdResolver<IDTYPE, BT> createBeanPropertyResolver(
+    protected BeanIdResolver<IDTYPE, BEANTYPE> createBeanPropertyResolver(
             Object propertyId) {
         return new PropertyBasedBeanIdResolver(propertyId);
     }

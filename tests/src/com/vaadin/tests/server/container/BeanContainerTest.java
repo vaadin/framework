@@ -319,7 +319,7 @@ public class BeanContainerTest extends AbstractBeanContainerTest {
         BeanContainer<String, Person> container = new BeanContainer<String, Person>(
                 Person.class);
         // resolver that returns null as item id
-        container.setIdResolver(new NullResolver());
+        container.setBeanIdResolver(new NullResolver());
 
         try {
             container.addBean(new Person("John"));
@@ -346,7 +346,7 @@ public class BeanContainerTest extends AbstractBeanContainerTest {
     public void testAddBeanWithResolver() {
         BeanContainer<String, Person> container = new BeanContainer<String, Person>(
                 Person.class);
-        container.setIdResolver(new PersonNameResolver());
+        container.setBeanIdResolver(new PersonNameResolver());
 
         assertNotNull(container.addBean(new Person("John")));
         assertNotNull(container.addBeanAfter(null, new Person("Jane")));
@@ -368,7 +368,7 @@ public class BeanContainerTest extends AbstractBeanContainerTest {
     public void testAddNullBeansWithResolver() {
         BeanContainer<String, Person> container = new BeanContainer<String, Person>(
                 Person.class);
-        container.setIdResolver(new PersonNameResolver());
+        container.setBeanIdResolver(new PersonNameResolver());
 
         assertNull(container.addBean(null));
         assertNull(container.addBeanAfter(null, null));

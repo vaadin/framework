@@ -544,7 +544,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTest {
                 Person.class);
         Person john = new Person("John");
 
-        assertSame(john, container.getIdResolver().getIdForBean(john));
+        assertSame(john, container.getBeanIdResolver().getIdForBean(john));
     }
 
     public void testNullBeanClass() {

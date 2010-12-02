@@ -28,13 +28,14 @@ import java.util.Collection;
  * bean properties are not supported.
  * </p>
  * 
- * @param <BT>
+ * @param <BEANTYPE>
  *            The type of the Bean
  * 
  * @since 5.4
  */
 @SuppressWarnings("serial")
-public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
+public class BeanItemContainer<BEANTYPE> extends
+        AbstractBeanContainer<BEANTYPE, BEANTYPE> {
 
     /**
      * Bean identity resolver that returns the bean itself as its item
@@ -65,10 +66,10 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      * @throws IllegalArgumentException
      *             If {@code type} is null
      */
-    public BeanItemContainer(Class<? super BT> type)
+    public BeanItemContainer(Class<? super BEANTYPE> type)
             throws IllegalArgumentException {
         super(type);
-        super.setIdResolver(new IdentityBeanIdResolver<BT>());
+        super.setBeanIdResolver(new IdentityBeanIdResolver<BEANTYPE>());
     }
 
     /**
@@ -93,14 +94,12 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      */
     @SuppressWarnings("unchecked")
     @Deprecated
-    public BeanItemContainer(Collection<? extends BT> collection)
+    public BeanItemContainer(Collection<? extends BEANTYPE> collection)
             throws IllegalArgumentException {
         // must assume the class is BT
         // the class information is erased by the compiler
-        super((Class<BT>) getBeanClassForCollection(collection));
-        super.setIdResolver(new IdentityBeanIdResolver<BT>());
-
-        addAll(collection);
+        this((Class<BEANTYPE>) getBeanClassForCollection(collection),
+                collection);
     }
 
     /**
@@ -134,11 +133,11 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      * @throws IllegalArgumentException
      *             If {@code type} is null
      */
-    public BeanItemContainer(Class<? super BT> type,
-            Collection<? extends BT> collection)
+    public BeanItemContainer(Class<? super BEANTYPE> type,
+            Collection<? extends BEANTYPE> collection)
             throws IllegalArgumentException {
         super(type);
-        super.setIdResolver(new IdentityBeanIdResolver<BT>());
+        super.setBeanIdResolver(new IdentityBeanIdResolver<BEANTYPE>());
 
         if (collection != null) {
             addAll(collection);
@@ -172,7 +171,7 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      *            The collection of beans to add. Must not be null.
      */
     @Override
-    public void addAll(Collection<? extends BT> collection) {
+    public void addAll(Collection<? extends BEANTYPE> collection) {
         super.addAll(collection);
     }
 
@@ -189,9 +188,10 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      * @see com.vaadin.data.Container.Ordered#addItemAfter(Object, Object)
      */
     @SuppressWarnings("unchecked")
-    public BeanItem<BT> addItemAfter(Object previousItemId, Object newItemId)
-            throws IllegalArgumentException {
-        return super.addBeanAfter((BT) previousItemId, (BT) newItemId);
+    public BeanItem<BEANTYPE> addItemAfter(Object previousItemId,
+            Object newItemId) throws IllegalArgumentException {
+        return super.addBeanAfter((BEANTYPE) previousItemId,
+                (BEANTYPE) newItemId);
     }
 
     /**
@@ -206,9 +206,9 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      * @return Returns the new BeanItem or null if the operation fails.
      */
     @SuppressWarnings("unchecked")
-    public BeanItem<BT> addItemAt(int index, Object newItemId)
+    public BeanItem<BEANTYPE> addItemAt(int index, Object newItemId)
             throws IllegalArgumentException {
-        return super.addBeanAt(index, (BT) newItemId);
+        return super.addBeanAt(index, (BEANTYPE) newItemId);
     }
 
     /**
@@ -219,8 +219,8 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      * @see com.vaadin.data.Container#addItem(Object)
      */
     @SuppressWarnings("unchecked")
-    public BeanItem<BT> addItem(Object itemId) {
-        return super.addBean((BT) itemId);
+    public BeanItem<BEANTYPE> addItem(Object itemId) {
+        return super.addBean((BEANTYPE) itemId);
     }
 
     /**
@@ -231,7 +231,7 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      * @see com.vaadin.data.Container#addItem(Object)
      */
     @Override
-    public BeanItem<BT> addBean(BT bean) {
+    public BeanItem<BEANTYPE> addBean(BEANTYPE bean) {
         return addItem(bean);
     }
 
@@ -239,10 +239,11 @@ public class BeanItemContainer<BT> extends AbstractBeanContainer<BT, BT> {
      * Unsupported in BeanItemContainer.
      */
     @Override
-    protected void setIdResolver(
-            AbstractBeanContainer.BeanIdResolver<BT, BT> beanIdResolver)
+    protected void setBeanIdResolver(
+            AbstractBeanContainer.BeanIdResolver<BEANTYPE, BEANTYPE> beanIdResolver)
             throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(
+                "BeanItemContainer always uses an IdentityBeanIdResolver");
     }
 
 }
