@@ -13,6 +13,7 @@ import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.UmbrellaException;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -32,7 +33,23 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
+/**
+ * A helper console for client side development. The debug console can also be
+ * used to resolve layout issues and to inspect the communication between
+ * browser and the server.
+ * 
+ * <p>
+ * This implementation is used vaadin is in debug mode (see manual) and
+ * developer appends "?debug" query parameter to url. Debug information can also
+ * be shown on browsers internal console only, by appending "?debug=quiet" query
+ * parameter.
+ * <p>
+ * This implementation can be overridden with GWT deferred binding.
+ * 
+ */
 public final class VDebugConsole extends VOverlay implements Console {
+
+    private static final String POS_COOKIE_NAME = "VDebugConsolePos";
 
     Element caption = DOM.createDiv();
 
@@ -42,6 +59,7 @@ public final class VDebugConsole extends VOverlay implements Console {
     private Button restart = new Button("Restart app");
     private Button forceLayout = new Button("Force layout");
     private Button analyzeLayout = new Button("Analyze layouts");
+    private Button savePosition = new Button("Save pos");
     private HorizontalPanel actions;
     private boolean collapsed = false;
 
@@ -147,10 +165,12 @@ public final class VDebugConsole extends VOverlay implements Console {
             if (DOM.eventGetTarget(event) == caption) {
                 if (collapsed) {
                     panel.setVisible(true);
-                    setPixelSize(220, 300);
+                    setToDefaultSizeAndPos();
                 } else {
                     panel.setVisible(false);
                     setPixelSize(120, 20);
+                    setPopupPosition(Window.getClientWidth() - 125,
+                            Window.getClientHeight() - 25);
                 }
                 collapsed = !collapsed;
             }
@@ -161,14 +181,33 @@ public final class VDebugConsole extends VOverlay implements Console {
 
     }
 
-    private void minimize() {
-        setPixelSize(400, 150);
-        setPopupPosition(Window.getClientWidth() - 410,
-                Window.getClientHeight() - 160);
+    private void setToDefaultSizeAndPos() {
+        String cookie = Cookies.getCookie(POS_COOKIE_NAME);
+        int width, height, top, left;
+        if (cookie != null) {
+            String[] split = cookie.split(",");
+            left = Integer.parseInt(split[0]);
+            top = Integer.parseInt(split[1]);
+            width = Integer.parseInt(split[2]);
+            height = Integer.parseInt(split[3]);
+        } else {
+            width = 400;
+            height = 150;
+            top = Window.getClientHeight() - 160;
+            left = Window.getClientWidth() - 410;
+        }
+        setPixelSize(width, height);
+        setPopupPosition(left, top);
     }
 
     @Override
     public void setPixelSize(int width, int height) {
+        if (height < 20) {
+            height = 20;
+        }
+        if (width < 2) {
+            width = 2;
+        }
         panel.setHeight((height - 20) + "px");
         panel.setWidth((width - 2) + "px");
     }
@@ -440,13 +479,16 @@ public final class VDebugConsole extends VOverlay implements Console {
             caption.setTitle(help);
 
             show();
-            minimize();
+            setToDefaultSizeAndPos();
 
             actions = new HorizontalPanel();
             actions.add(clear);
             actions.add(restart);
             actions.add(forceLayout);
             actions.add(analyzeLayout);
+            actions.add(savePosition);
+            savePosition
+                    .setTitle("Saves the position and size of debug console to a cookie");
 
             panel.add(actions);
 
@@ -512,6 +554,14 @@ public final class VDebugConsole extends VOverlay implements Console {
                             + "reports possible common problems in usage of relative sizes."
                             + "Will cause server visit/rendering of whole screen and loss of"
                             + " all non committed variables form client side.");
+
+            savePosition.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
+                    String pos = getAbsoluteLeft() + "," + getAbsoluteTop()
+                            + "," + getOffsetWidth() + "," + getOffsetHeight();
+                    Cookies.setCookie(POS_COOKIE_NAME, pos);
+                }
+            });
 
         }
         log("Widget set is built on version: "
