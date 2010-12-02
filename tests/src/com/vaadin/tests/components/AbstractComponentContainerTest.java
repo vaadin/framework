@@ -274,6 +274,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
                 new ComponentSize("100%", null),
                 new ComponentSize(null, "200px"),
                 new ComponentSize(null, "100%"),
+                new ComponentSize("300px", "300px"),
                 new ComponentSize("100%", "100%"),
 
         };
