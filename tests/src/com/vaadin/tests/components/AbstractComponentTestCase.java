@@ -202,6 +202,12 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
         doCommand(command, value, data);
     }
 
+    protected Command<T, String> styleNameCommand = new Command<T, String>() {
+        public void execute(T c, String value, Object data) {
+            c.setStyleName(value);
+        }
+    };
+
     @Override
     protected String getDescription() {
         return "Generic test case for " + getTestClass().getSimpleName();
