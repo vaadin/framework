@@ -25,7 +25,7 @@ public class ItemClickEvents extends TestBase {
     public void setup() {
         log.setDebugId("log");
 
-        HorizontalLayout ol = createHorizontalLayout(table);
+        HorizontalLayout ol = createHorizontalLayout(tree);
         Button b = new Button("icon", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 if (tree.getItemIconPropertyId() == null) {
