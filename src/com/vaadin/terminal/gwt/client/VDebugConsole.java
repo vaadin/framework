@@ -60,6 +60,7 @@ public final class VDebugConsole extends VOverlay implements Console {
     private Button forceLayout = new Button("Force layout");
     private Button analyzeLayout = new Button("Analyze layouts");
     private Button savePosition = new Button("Save pos");
+    private CheckBox autoScroll = new CheckBox("Autoscroll");
     private HorizontalPanel actions;
     private boolean collapsed = false;
 
@@ -184,12 +185,14 @@ public final class VDebugConsole extends VOverlay implements Console {
     private void setToDefaultSizeAndPos() {
         String cookie = Cookies.getCookie(POS_COOKIE_NAME);
         int width, height, top, left;
+        boolean autoScrollValue = false;
         if (cookie != null) {
             String[] split = cookie.split(",");
             left = Integer.parseInt(split[0]);
             top = Integer.parseInt(split[1]);
             width = Integer.parseInt(split[2]);
             height = Integer.parseInt(split[3]);
+            autoScrollValue = Boolean.valueOf(split[4]);
         } else {
             width = 400;
             height = 150;
@@ -198,6 +201,7 @@ public final class VDebugConsole extends VOverlay implements Console {
         }
         setPixelSize(width, height);
         setPopupPosition(left, top);
+        autoScroll.setValue(autoScrollValue);
     }
 
     @Override
@@ -234,10 +238,15 @@ public final class VDebugConsole extends VOverlay implements Console {
      *            The message to log. Must not be null.
      */
     private void logToDebugWindow(String msg, boolean error) {
+        Widget row;
         if (error) {
-            panel.add(createErrorHtml(msg));
+            row = createErrorHtml(msg);
         } else {
-            panel.add(new HTML(msg));
+            row = new HTML(msg);
+        }
+        panel.add(row);
+        if (autoScroll.getValue()) {
+            row.getElement().scrollIntoView();
         }
     }
 
@@ -489,6 +498,9 @@ public final class VDebugConsole extends VOverlay implements Console {
             actions.add(savePosition);
             savePosition
                     .setTitle("Saves the position and size of debug console to a cookie");
+            actions.add(autoScroll);
+            autoScroll
+                    .setTitle("Automatically scroll so that new messages are visible");
 
             panel.add(actions);
 
@@ -558,7 +570,8 @@ public final class VDebugConsole extends VOverlay implements Console {
             savePosition.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {
                     String pos = getAbsoluteLeft() + "," + getAbsoluteTop()
-                            + "," + getOffsetWidth() + "," + getOffsetHeight();
+                            + "," + getOffsetWidth() + "," + getOffsetHeight()
+                            + "," + autoScroll.getValue();
                     Cookies.setCookie(POS_COOKIE_NAME, pos);
                 }
             });
