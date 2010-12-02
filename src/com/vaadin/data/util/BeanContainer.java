@@ -15,21 +15,35 @@ import com.vaadin.data.Item;
  * 
  * <p>
  * In BeanContainer (unlike {@link BeanItemContainer}), the item IDs do not have
- * to be the beans themselves.
+ * to be the beans themselves. The container can be used either with explicit
+ * item IDs or the item IDs can be generated when adding beans.
+ * </p>
+ * 
+ * <p>
+ * To use explicit item IDs, use the methods {@link #addItem(Object, Object)},
+ * {@link #addItemAfter(Object, Object, Object)} and
+ * {@link #addItemAt(int, Object, Object)}.
+ * </p>
+ * 
+ * <p>
+ * If a bean id resolver is set using
+ * {@link #setBeanIdResolver(com.vaadin.data.util.AbstractBeanContainer.BeanIdResolver)}
+ * or {@link #setBeanIdProperty(Object)}, the methods {@link #addBean(Object)},
+ * {@link #addBeanAfter(Object, Object)}, {@link #addBeanAt(int, Object)} and
+ * {@link #addAll(java.util.Collection)} can be used to add items to the
+ * container. If one of these methods is called, the resolver is used to
+ * generate an identifier for the item (must not return null).
+ * </p>
+ * 
+ * <p>
+ * Note that explicit item identifiers can also be used when a resolver has been
+ * set by calling the addItem*() methods - the resolver is only used when adding
+ * beans using the addBean*() methods.
  * </p>
  * 
  * <p>
  * It is not possible to add additional properties to the container and nested
  * bean properties are not supported.
- * </p>
- * 
- * <p>
- * If a bean id resolver is set, the {@link #addBean(Object)},
- * {@link #addBeanAfter(Object, Object)}, {@link #addBeanAt(int, Object)} and
- * {@link #addAll(java.util.Collection)} methods can be used to add items to the
- * container. If one of these methods is called, the resolver is used to
- * generate an identifier for the item (must not return null). Explicit item
- * identifiers can be used also when a resolver has been set.
  * </p>
  * 
  * @param <IDTYPE>
