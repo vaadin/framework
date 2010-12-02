@@ -105,11 +105,8 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     private Command<T, Integer> removeComponentByIndexCommand = new Command<T, Integer>() {
 
         public void execute(T c, Integer value, Object data) {
-            Iterator<Component> iter = c.getComponentIterator();
-            for (int i = 0; i < value; i++) {
-                iter.next();
-            }
-            c.removeComponent(iter.next());
+            Component child = getComponentAtIndex(c, value);
+            c.removeComponent(child);
 
         }
     };
@@ -132,6 +129,24 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
             } else {
                 c.removeListener((ComponentDetachListener) AbstractComponentContainerTest.this);
             }
+        }
+    };
+
+    private Command<T, Integer> setComponentHeight = new Command<T, Integer>() {
+
+        public void execute(T c, Integer value, Object data) {
+            Component child = getComponentAtIndex(c, value);
+            child.setHeight((String) data);
+
+        }
+    };
+
+    private Command<T, Integer> setComponentWidth = new Command<T, Integer>() {
+
+        public void execute(T c, Integer value, Object data) {
+            Component child = getComponentAtIndex(c, value);
+            child.setWidth((String) data);
+
         }
     };
 
@@ -172,8 +187,18 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
 
         createAddComponentActions(CATEGORY_COMPONENT_CONTAINER_FEATURES);
         createRemoveComponentActions(CATEGORY_COMPONENT_CONTAINER_FEATURES);
+        createChangeComponentSizeActions(CATEGORY_COMPONENT_CONTAINER_FEATURES);
         createComponentAttachListener(CATEGORY_LISTENERS);
         createComponentDetachListener(CATEGORY_LISTENERS);
+    }
+
+    protected Component getComponentAtIndex(T container, int value) {
+        Iterator<Component> iter = container.getComponentIterator();
+        for (int i = 0; i < value; i++) {
+            iter.next();
+        }
+
+        return iter.next();
     }
 
     protected Table createTable() {
@@ -218,7 +243,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         createCategory(byIndexCategory, subCategory);
         createClickAction("Remove all components", subCategory,
                 removeAllComponentsCommand, null);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             createClickAction("Remove component " + i, byIndexCategory,
                     removeComponentByIndexCommand, Integer.valueOf(i));
         }
@@ -260,6 +285,34 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
                 createClickAction(size.toString(), componentCategory,
                         addCommands.get(componentCategory), size);
             }
+        }
+
+    }
+
+    private void createChangeComponentSizeActions(String category) {
+        String widthCategory = "Change component width";
+        createCategory(widthCategory, category);
+        String heightCategory = "Change component height";
+        createCategory(heightCategory, category);
+
+        String[] options = new String[] { "100px", "200px", "50%", "100%" };
+        for (int i = 0; i < 20; i++) {
+            String componentWidthCategory = "Component " + i + " width";
+            String componentHeightCategory = "Component " + i + " height";
+            createCategory(componentWidthCategory, widthCategory);
+            createCategory(componentHeightCategory, heightCategory);
+
+            createClickAction("auto", componentHeightCategory,
+                    setComponentHeight, Integer.valueOf(i), null);
+            createClickAction("auto", componentWidthCategory,
+                    setComponentWidth, Integer.valueOf(i), null);
+            for (String option : options) {
+                createClickAction(option, componentHeightCategory,
+                        setComponentHeight, Integer.valueOf(i), option);
+                createClickAction(option, componentWidthCategory,
+                        setComponentWidth, Integer.valueOf(i), option);
+            }
+
         }
 
     }
