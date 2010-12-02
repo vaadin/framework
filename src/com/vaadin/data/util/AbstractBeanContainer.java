@@ -76,7 +76,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BT> implements Indexed,
      * 
      * @since 6.5
      */
-    public static interface BeanIdResolver<IDTYPE, BT> {
+    public static interface BeanIdResolver<IDTYPE, BT> extends Serializable {
         /**
          * Return the item identifier for a bean.
          * 
