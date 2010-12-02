@@ -38,7 +38,7 @@ import com.vaadin.data.Item;
  * <p>
  * Note that explicit item identifiers can also be used when a resolver has been
  * set by calling the addItem*() methods - the resolver is only used when adding
- * beans using the addBean*() methods.
+ * beans using the addBean*() or {@link #addAll(Collection)} methods.
  * </p>
  * 
  * <p>
@@ -139,7 +139,6 @@ public class BeanContainer<IDTYPE, BEANTYPE> extends
      * @param propertyId
      *            the identifier of the property to use to find item identifiers
      */
-    // overridden to make public
     public void setBeanIdProperty(Object propertyId) {
         setBeanIdResolver(createBeanPropertyResolver(propertyId));
     }
