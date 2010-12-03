@@ -120,11 +120,12 @@ public interface Container extends Serializable {
     public boolean containsId(Object itemId);
 
     /**
-     * Creates a new Item with the given ID into the Container. The new
+     * Creates a new Item with the given ID into the Container.
+     * 
      * <p>
-     * Item is returned, and it is ready to have its Properties modified.
-     * Returns <code>null</code> if the operation fails or the Container already
-     * contains a Item with the given ID.
+     * The new Item is returned, and it is ready to have its Properties
+     * modified. Returns <code>null</code> if the operation fails or the
+     * Container already contains a Item with the given ID.
      * </p>
      * 
      * <p>
