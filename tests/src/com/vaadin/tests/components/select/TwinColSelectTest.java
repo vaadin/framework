@@ -2,7 +2,6 @@ package com.vaadin.tests.components.select;
 
 import java.util.LinkedHashMap;
 
-import com.vaadin.terminal.Resource;
 import com.vaadin.ui.TwinColSelect;
 
 public class TwinColSelectTest extends AbstractSelectTestCase<TwinColSelect> {
@@ -22,29 +21,17 @@ public class TwinColSelectTest extends AbstractSelectTestCase<TwinColSelect> {
     private Command<TwinColSelect, String> leftColumnCaptionCommand = new Command<TwinColSelect, String>() {
 
         public void execute(TwinColSelect c, String value, Object data) {
-//            c.setLeftColumnCaption(value);
+            c.setLeftColumnCaption(value);
         }
     };
 
-    private Command<TwinColSelect, Resource> leftColumnIconCommand = new Command<TwinColSelect, Resource>() {
-
-        public void execute(TwinColSelect c, Resource value, Object data) {
-//            c.setLeftColumnIcon(value);
-        }
-    };
     private Command<TwinColSelect, String> rightColumnCaptionCommand = new Command<TwinColSelect, String>() {
 
         public void execute(TwinColSelect c, String value, Object data) {
-//            c.setRightColumnCaption(value);
+            c.setRightColumnCaption(value);
         }
     };
 
-    private Command<TwinColSelect, Resource> rightColumnIconCommand = new Command<TwinColSelect, Resource>() {
-
-        public void execute(TwinColSelect c, Resource value, Object data) {
-//            c.setRightColumnIcon(value);
-        }
-    };
 
     @Override
     protected Class<TwinColSelect> getTestClass() {
@@ -70,14 +57,9 @@ public class TwinColSelectTest extends AbstractSelectTestCase<TwinColSelect> {
     }
 
     private void createCaptionActions(String category) {
-//        createSelectAction("Left column caption", category,
-//                createCaptionOptions(), "-", leftColumnCaptionCommand);
-//        createSelectAction("Right column caption", category,
-//                createCaptionOptions(), "-", rightColumnCaptionCommand);
-//        createSelectAction("Left column icon", category,
-//                createIconOptions(false), "-", leftColumnIconCommand);
-//        createSelectAction("Right column icon", category,
-//                createIconOptions(false), "-", rightColumnIconCommand);
-
+        createSelectAction("Left column caption", category,
+                createCaptionOptions(), "-", leftColumnCaptionCommand);
+        createSelectAction("Right column caption", category,
+                createCaptionOptions(), "-", rightColumnCaptionCommand);
     }
 }
