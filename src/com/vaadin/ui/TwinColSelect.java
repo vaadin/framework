@@ -22,6 +22,9 @@ public class TwinColSelect extends AbstractSelect {
     private int columns = 0;
     private int rows = 0;
 
+    private String leftColumnCaption;
+    private String rightColumnCaption;
+
     /**
      * 
      */
@@ -51,6 +54,10 @@ public class TwinColSelect extends AbstractSelect {
      * Sets the number of columns in the editor. If the number of columns is set
      * 0, the actual number of displayed columns is determined implicitly by the
      * adapter.
+     * <p>
+     * The number of columns overrides the value set by setWidth. Only if
+     * columns are set to 0 (default) the width set using
+     * {@link #setWidth(float, int)} or {@link #setWidth(String)} is used.
      * 
      * @param columns
      *            the number of columns to set.
@@ -74,9 +81,15 @@ public class TwinColSelect extends AbstractSelect {
     }
 
     /**
-     * Sets the number of rows in the editor. If the number of rows is set 0,
+     * Sets the number of rows in the editor. If the number of rows is set to 0,
      * the actual number of displayed rows is determined implicitly by the
      * adapter.
+     * <p>
+     * If a height if set (using {@link #setHeight(String)} or
+     * {@link #setHeight(float, int)}) it overrides the number of rows. Leave
+     * the height undefined to use this method. This is the opposite of how
+     * {@link #setColumns(int)} work.
+     * 
      * 
      * @param rows
      *            the number of rows to set.
@@ -111,7 +124,58 @@ public class TwinColSelect extends AbstractSelect {
         if (rows != 0) {
             target.addAttribute("rows", rows);
         }
+
+        // Right and left column captions and/or icons (if set)
+        String lc = getLeftColumnCaption();
+        String rc = getRightColumnCaption();
+        if (lc != null) {
+            target.addAttribute(VTwinColSelect.ATTRIBUTE_LEFT_CAPTION, lc);
+        }
+        if (rc != null) {
+            target.addAttribute(VTwinColSelect.ATTRIBUTE_RIGHT_CAPTION, rc);
+        }
+
         super.paintContent(target);
+    }
+
+    /**
+     * Sets the text shown above the right column.
+     * 
+     * @param caption
+     *            The text to show
+     */
+    public void setRightColumnCaption(String rightColumnCaption) {
+        this.rightColumnCaption = rightColumnCaption;
+        requestRepaint();
+    }
+
+    /**
+     * Returns the text shown above the right column.
+     * 
+     * @return The text shown or null if not set.
+     */
+    public String getRightColumnCaption() {
+        return rightColumnCaption;
+    }
+
+    /**
+     * Sets the text shown above the left column.
+     * 
+     * @param caption
+     *            The text to show
+     */
+    public void setLeftColumnCaption(String leftColumnCaption) {
+        this.leftColumnCaption = leftColumnCaption;
+        requestRepaint();
+    }
+
+    /**
+     * Returns the text shown above the left column.
+     * 
+     * @return The text shown or null if not set.
+     */
+    public String getLeftColumnCaption() {
+        return leftColumnCaption;
     }
 
 }

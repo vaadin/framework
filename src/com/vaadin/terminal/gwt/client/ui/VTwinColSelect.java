@@ -7,6 +7,7 @@ package com.vaadin.terminal.gwt.client.ui;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
@@ -22,12 +23,16 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 
 public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         MouseDownHandler, DoubleClickHandler {
 
     private static final String CLASSNAME = "v-select-twincol";
+    public static final String ATTRIBUTE_LEFT_CAPTION = "lc";
+    public static final String ATTRIBUTE_RIGHT_CAPTION = "rc";
 
     private static final int VISIBLE_COUNT = 10;
 
@@ -36,6 +41,12 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     private final DoubleClickListBox options;
 
     private final DoubleClickListBox selections;
+
+    private FlowPanel captionWrapper;
+
+    private HTML optionsCaption = null;
+
+    private HTML selectionsCaption = null;
 
     private final VButton add;
 
@@ -61,6 +72,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
             super();
         }
 
+        @Override
         public HandlerRegistration addDoubleClickHandler(
                 DoubleClickHandler handler) {
             return addDomHandler(handler, DoubleClickEvent.getType());
@@ -69,16 +81,21 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     public VTwinColSelect() {
         super(CLASSNAME);
+
+        captionWrapper = new FlowPanel();
+
         options = new DoubleClickListBox();
         options.addClickHandler(this);
         options.addDoubleClickHandler(this);
+        options.setVisibleItemCount(VISIBLE_COUNT);
+        options.setStyleName(CLASSNAME + "-options");
+
         selections = new DoubleClickListBox();
         selections.addClickHandler(this);
         selections.addDoubleClickHandler(this);
-        options.setVisibleItemCount(VISIBLE_COUNT);
         selections.setVisibleItemCount(VISIBLE_COUNT);
-        options.setStyleName(CLASSNAME + "-options");
         selections.setStyleName(CLASSNAME + "-selections");
+
         buttons = new FlowPanel();
         buttons.setStyleName(CLASSNAME + "-buttons");
         add = new VButton();
@@ -87,7 +104,15 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         remove = new VButton();
         remove.setText("<<");
         remove.addClickHandler(this);
+
         panel = ((Panel) optionsContainer);
+
+        panel.add(captionWrapper);
+        captionWrapper.getElement().getStyle().setOverflow(Overflow.HIDDEN);
+        // Hide until there actually is a caption to prevent IE from rendering
+        // extra empty space
+        captionWrapper.setVisible(false);
+
         panel.add(options);
         buttons.add(add);
         final HTML br = new HTML("<span/>");
@@ -102,6 +127,95 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
         selections.addMouseDownHandler(this);
         selections.addKeyDownHandler(this);
+    }
+
+    public HTML getOptionsCaption() {
+        if (optionsCaption == null) {
+            optionsCaption = new HTML();
+            optionsCaption.setStyleName(CLASSNAME + "-options-caption");
+            optionsCaption.getElement().getStyle()
+                    .setFloat(com.google.gwt.dom.client.Style.Float.LEFT);
+            captionWrapper.add(optionsCaption);
+        }
+
+        return optionsCaption;
+    }
+
+    public HTML getSelectionsCaption() {
+        if (selectionsCaption == null) {
+            selectionsCaption = new HTML();
+            selectionsCaption.setStyleName(CLASSNAME + "-selections-caption");
+            selectionsCaption.getElement().getStyle()
+                    .setFloat(com.google.gwt.dom.client.Style.Float.RIGHT);
+            captionWrapper.add(selectionsCaption);
+        }
+
+        return selectionsCaption;
+    }
+
+    @Override
+    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        // Captions are updated before super call to ensure the widths are set
+        // correctly
+        updateCaptions(uidl);
+
+        super.updateFromUIDL(uidl, client);
+        // If the server request that a cached instance should be used, do
+        // nothing
+        // if (uidl.isCachedComponent()) {
+        if (uidl.getBooleanAttribute("cached")) {
+            // Cached update, nothing to do)
+            return;
+        }
+
+    }
+
+    private void updateCaptions(UIDL uidl) {
+        String leftCaption = (uidl.hasAttribute(ATTRIBUTE_LEFT_CAPTION) ? uidl
+                .getStringAttribute(ATTRIBUTE_LEFT_CAPTION) : null);
+        String rightCaption = (uidl.hasAttribute(ATTRIBUTE_RIGHT_CAPTION) ? uidl
+                .getStringAttribute(ATTRIBUTE_RIGHT_CAPTION) : null);
+
+        boolean hasCaptions = (leftCaption != null || rightCaption != null);
+
+        if (leftCaption == null) {
+            removeOptionsCaption();
+        } else {
+            getOptionsCaption().setText(leftCaption);
+
+        }
+
+        if (rightCaption == null) {
+            removeSelectionsCaption();
+        } else {
+            getSelectionsCaption().setText(rightCaption);
+        }
+
+        captionWrapper.setVisible(hasCaptions);
+    }
+
+    private void removeOptionsCaption() {
+        if (optionsCaption == null) {
+            return;
+        }
+
+        if (optionsCaption.getParent() != null) {
+            captionWrapper.remove(optionsCaption);
+        }
+
+        optionsCaption = null;
+    }
+
+    private void removeSelectionsCaption() {
+        if (selectionsCaption == null) {
+            return;
+        }
+
+        if (selectionsCaption.getParent() != null) {
+            captionWrapper.remove(selectionsCaption);
+        }
+
+        selectionsCaption = null;
     }
 
     @Override
@@ -134,10 +248,23 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         }
 
         if (cols >= 0) {
-            options.setWidth(cols + "em");
-            selections.setWidth(cols + "em");
+            String colWidth = cols + "em";
+            String containerWidth = (2 * cols + 4) + "em";
+            // Caption wrapper width == optionsSelect + buttons +
+            // selectionsSelect
+            String captionWrapperWidth = (2 * cols + 4 - 0.5) + "em";
+
+            options.setWidth(colWidth);
+            if (optionsCaption != null) {
+                optionsCaption.setWidth(colWidth);
+            }
+            selections.setWidth(colWidth);
+            if (selectionsCaption != null) {
+                selectionsCaption.setWidth(colWidth);
+            }
             buttons.setWidth("3.5em");
-            optionsContainer.setWidth((2 * cols + 4) + "em");
+            optionsContainer.setWidth(containerWidth);
+            captionWrapper.setWidth(captionWrapperWidth);
         }
         if (getRows() > 0) {
             options.setVisibleItemCount(getRows());
@@ -279,29 +406,58 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
             options.setHeight("");
             selections.setHeight("");
         } else {
-            setFullHeightInternals();
+            setInternalHeights();
         }
     }
 
-    private void setFullHeightInternals() {
-        options.setHeight("100%");
-        selections.setHeight("100%");
+    private void setInternalHeights() {
+        int captionHeight = 0;
+        int totalHeight = getOffsetHeight();
+
+        if (optionsCaption != null) {
+            captionHeight = Util.getRequiredHeight(optionsCaption);
+        } else if (selectionsCaption != null) {
+            captionHeight = Util.getRequiredHeight(selectionsCaption);
+        }
+        String selectHeight = (totalHeight - captionHeight) + "px";
+
+        selections.setHeight(selectHeight);
+        options.setHeight(selectHeight);
+
     }
 
     @Override
     public void setWidth(String width) {
         super.setWidth(width);
         if (!"".equals(width) && width != null) {
-            setRelativeInternalWidths();
+            setInternalWidths();
+            widthSet = true;
+        } else {
+            widthSet = false;
         }
     }
 
-    private void setRelativeInternalWidths() {
+    private void setInternalWidths() {
         DOM.setStyleAttribute(getElement(), "position", "relative");
-        buttons.setWidth("15%");
-        options.setWidth("42%");
-        selections.setWidth("42%");
-        widthSet = true;
+        // TODO: Should really take borders/padding/margin into account.
+        // Compensating for now with a guess.
+        int buttonsExtraWidthGuess = 4;
+        int buttonWidth = Util.getRequiredWidth(buttons)
+                + buttonsExtraWidthGuess;
+        int totalWidth = getOffsetWidth();
+
+        int spaceForSelect = (totalWidth - buttonWidth) / 2;
+
+        options.setWidth(spaceForSelect + "px");
+        if (optionsCaption != null) {
+            optionsCaption.setWidth(spaceForSelect + "px");
+        }
+
+        selections.setWidth(spaceForSelect + "px");
+        if (selectionsCaption != null) {
+            selectionsCaption.setWidth(spaceForSelect + "px");
+        }
+        captionWrapper.setWidth("100%");
     }
 
     @Override
