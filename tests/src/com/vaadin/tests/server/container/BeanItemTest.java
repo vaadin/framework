@@ -22,13 +22,14 @@ import com.vaadin.data.util.BeanItem;
  */
 public class BeanItemTest extends TestCase {
 
+    @SuppressWarnings("unused")
     protected static class MySuperClass {
         private int superPrivate = 1;
         private int superPrivate2 = 2;
         protected double superProtected = 3.0;
         private double superProtected2 = 4.0;
-        public String superPublic = "5";
-        private String superPublic2 = "6";
+        public boolean superPublic = true;
+        private boolean superPublic2 = true;
 
         public int getSuperPrivate() {
             return superPrivate;
@@ -46,11 +47,11 @@ public class BeanItemTest extends TestCase {
             this.superProtected = superProtected;
         }
 
-        public String getSuperPublic() {
+        public boolean isSuperPublic() {
             return superPublic;
         }
 
-        public void setSuperPublic(String superPublic) {
+        public void setSuperPublic(boolean superPublic) {
             this.superPublic = superPublic;
         }
 
@@ -276,7 +277,7 @@ public class BeanItemTest extends TestCase {
                 "superPrivate").getType()));
         Assert.assertTrue(Double.class.equals(item.getItemProperty(
                 "superProtected").getType()));
-        Assert.assertTrue(String.class.equals(item.getItemProperty(
+        Assert.assertTrue(Boolean.class.equals(item.getItemProperty(
                 "superPublic").getType()));
         Assert.assertTrue(String.class.equals(item.getItemProperty("name")
                 .getType()));
