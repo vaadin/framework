@@ -315,3 +315,11 @@
 	border-right: 10px solid red;
 	border-left: 10px solid blue;
 }
+
+
+/*****************************************************************************/
+/* The reference screenshots all have a white background					 */
+/*****************************************************************************/
+.v-view { 
+	background: #fff;
+}
