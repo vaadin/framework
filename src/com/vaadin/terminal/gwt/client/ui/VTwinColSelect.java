@@ -19,6 +19,7 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
@@ -28,7 +29,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 
 public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
-        MouseDownHandler, DoubleClickHandler {
+        MouseDownHandler, DoubleClickHandler, SubPartAware {
 
     private static final String CLASSNAME = "v-select-twincol";
     public static final String ATTRIBUTE_LEFT_CAPTION = "lc";
@@ -585,5 +586,52 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
             selections.setFocus(false);
         }
 
+    }
+
+    private static final String SUBPART_OPTION_SELECT = "leftSelect";
+    private static final String SUBPART_SELECTION_SELECT = "rightSelect";
+    private static final String SUBPART_LEFT_CAPTION = "leftCaption";
+    private static final String SUBPART_RIGHT_CAPTION = "rightCaption";
+    private static final String SUBPART_ADD_BUTTON = "add";
+    private static final String SUBPART_REMOVE_BUTTON = "remove";
+
+    public Element getSubPartElement(String subPart) {
+        if (SUBPART_OPTION_SELECT.equals(subPart)) {
+            return options.getElement();
+        } else if (SUBPART_SELECTION_SELECT.equals(subPart)) {
+            return selections.getElement();
+        } else if (optionsCaption != null
+                && SUBPART_LEFT_CAPTION.equals(subPart)) {
+            return optionsCaption.getElement();
+        } else if (selectionsCaption != null
+                && SUBPART_RIGHT_CAPTION.equals(subPart)) {
+            return selectionsCaption.getElement();
+        } else if (SUBPART_ADD_BUTTON.equals(subPart)) {
+            return add.getElement();
+        } else if (SUBPART_REMOVE_BUTTON.equals(subPart)) {
+            return remove.getElement();
+        }
+
+        return null;
+    }
+
+    public String getSubPartName(Element subElement) {
+        if (optionsCaption != null
+                && optionsCaption.getElement().isOrHasChild(subElement)) {
+            return SUBPART_LEFT_CAPTION;
+        } else if (selectionsCaption != null
+                && selectionsCaption.getElement().isOrHasChild(subElement)) {
+            return SUBPART_RIGHT_CAPTION;
+        } else if (options.getElement().isOrHasChild(subElement)) {
+            return SUBPART_OPTION_SELECT;
+        } else if (selections.getElement().isOrHasChild(subElement)) {
+            return SUBPART_SELECTION_SELECT;
+        } else if (add.getElement().isOrHasChild(subElement)) {
+            return SUBPART_ADD_BUTTON;
+        } else if (remove.getElement().isOrHasChild(subElement)) {
+            return SUBPART_REMOVE_BUTTON;
+        }
+
+        return null;
     }
 }
