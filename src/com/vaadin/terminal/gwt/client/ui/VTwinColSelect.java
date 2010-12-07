@@ -450,14 +450,18 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     private void setInternalWidths() {
         DOM.setStyleAttribute(getElement(), "position", "relative");
-        // TODO: Should really take borders/padding/margin into account.
-        // Compensating for now with a guess.
-        int buttonsExtraWidth = Util.measureHorizontalPaddingAndBorder(
+        int bordersAndPaddings = Util.measureHorizontalPaddingAndBorder(
                 buttons.getElement(), 0);
-        int buttonWidth = Util.getRequiredWidth(buttons) + buttonsExtraWidth;
+
+        if (BrowserInfo.get().isIE6()) {
+            // IE6 sets a border on selects by default..
+            bordersAndPaddings += 4;
+        }
+
+        int buttonWidth = Util.getRequiredWidth(buttons);
         int totalWidth = getOffsetWidth();
 
-        int spaceForSelect = (totalWidth - buttonWidth) / 2;
+        int spaceForSelect = (totalWidth - buttonWidth - bordersAndPaddings) / 2;
 
         options.setWidth(spaceForSelect + "px");
         if (optionsCaption != null) {
