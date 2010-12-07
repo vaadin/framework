@@ -454,7 +454,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         // Compensating for now with a guess.
         int buttonsExtraWidth = Util.measureHorizontalPaddingAndBorder(
                 buttons.getElement(), 0);
-        int buttonWidth = Util.getRequiredWidth(buttons) + +buttonsExtraWidth;
+        int buttonWidth = Util.getRequiredWidth(buttons) + buttonsExtraWidth;
         int totalWidth = getOffsetWidth();
 
         int spaceForSelect = (totalWidth - buttonWidth) / 2;
