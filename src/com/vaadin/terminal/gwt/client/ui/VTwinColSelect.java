@@ -134,7 +134,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     public HTML getOptionsCaption() {
         if (optionsCaption == null) {
             optionsCaption = new HTML();
-            optionsCaption.setStyleName(CLASSNAME + "-options-caption");
+            optionsCaption.setStyleName(CLASSNAME + "-caption-left");
             optionsCaption.getElement().getStyle()
                     .setFloat(com.google.gwt.dom.client.Style.Float.LEFT);
             captionWrapper.add(optionsCaption);
@@ -146,7 +146,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     public HTML getSelectionsCaption() {
         if (selectionsCaption == null) {
             selectionsCaption = new HTML();
-            selectionsCaption.setStyleName(CLASSNAME + "-selections-caption");
+            selectionsCaption.setStyleName(CLASSNAME + "-caption-right");
             selectionsCaption.getElement().getStyle()
                     .setFloat(com.google.gwt.dom.client.Style.Float.RIGHT);
             captionWrapper.add(selectionsCaption);

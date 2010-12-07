@@ -1107,7 +1107,7 @@ div.v-progressindicator-indeterminate-disabled {
 .v-select-twincol-options {
 	float: left;
 }
-.v-select-twincol-options-caption {
+.v-select-twincol-caption-left {
 	float: left;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -1115,7 +1115,7 @@ div.v-progressindicator-indeterminate-disabled {
 .v-select-twincol-selections {
 	font-weight: bold;
 }
-.v-select-twincol-selections-caption {
+.v-select-twincol-caption-right {
 	float: right;
 	overflow: hidden;
 	text-overflow: ellipsis;

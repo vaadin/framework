@@ -323,3 +323,12 @@
 .v-view { 
 	background: #fff;
 }
+
+.styled-twincol-captions .v-select-twincol-caption-left {
+	color: red; 
+}
+.styled-twincol-captions .v-select-twincol-caption-right {
+	font-size: 30px;
+	color: blue;
+}
+
