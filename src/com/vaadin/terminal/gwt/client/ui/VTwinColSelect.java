@@ -452,9 +452,9 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         DOM.setStyleAttribute(getElement(), "position", "relative");
         // TODO: Should really take borders/padding/margin into account.
         // Compensating for now with a guess.
-        int buttonsExtraWidthGuess = 4;
-        int buttonWidth = Util.getRequiredWidth(buttons)
-                + buttonsExtraWidthGuess;
+        int buttonsExtraWidth = Util.measureHorizontalPaddingAndBorder(
+                buttons.getElement(), 0);
+        int buttonWidth = Util.getRequiredWidth(buttons) + +buttonsExtraWidth;
         int totalWidth = getOffsetWidth();
 
         int spaceForSelect = (totalWidth - buttonWidth) / 2;
