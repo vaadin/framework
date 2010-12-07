@@ -5,9 +5,9 @@ import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.TestUtils;
+import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.TextField.TextChangeEventMode;
 
 public class TextChangeEvents extends TestBase {
     Log l = new Log(10);
@@ -22,9 +22,8 @@ public class TextChangeEvents extends TestBase {
             public void textChange(TextChangeEvent event) {
                 l.log("Text change event for  "
                         + event.getComponent().getCaption()
-                        + ", text content currently:'"
-                        + event.getText() + "' Cursor at index:"
-                        + event.getCursorPosition());
+                        + ", text content currently:'" + event.getText()
+                        + "' Cursor at index:" + event.getCursorPosition());
             }
         };
 
@@ -47,7 +46,7 @@ public class TextChangeEvents extends TestBase {
         ta.addListener(inputEventListener);
         getLayout().addComponent(ta);
 
-        VaadinDeveloeprNameField vd = new VaadinDeveloeprNameField();
+        VaadinDeveloperNameField vd = new VaadinDeveloperNameField();
         vd.addListener(inputEventListener);
         getLayout().addComponent(vd);
 
@@ -73,13 +72,13 @@ public class TextChangeEvents extends TestBase {
      * 2010-10
      * 
      */
-    private class VaadinDeveloeprNameField extends TextField implements
+    private class VaadinDeveloperNameField extends TextField implements
             TextChangeListener {
         private String[] names = new String[] { "Matti Tahvonen",
                 "Marc Englund", "Joonas Lehtinen", "Jouni Koivuviita",
                 "Marko Grönroos", "Artur Signell" };
 
-        public VaadinDeveloeprNameField() {
+        public VaadinDeveloperNameField() {
             setCaption("Start typing 'old' Vaadin developers.");
             addListener((TextChangeListener) this);
             setStyleName("nomatch");

@@ -4,12 +4,7 @@
 
 package com.vaadin.ui;
 
-import java.util.Map;
-
 import com.vaadin.data.Property;
-import com.vaadin.event.FieldEvents;
-import com.vaadin.event.FieldEvents.TextChangeEvent;
-import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VTextField;
@@ -37,59 +32,27 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  */
 @SuppressWarnings("serial")
 @ClientWidget(value = VTextField.class, loadStyle = LoadStyle.EAGER)
-public class TextField extends AbstractTextField implements
-        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier,
-        FieldEvents.TextChangeNotifier {
+public class TextField extends AbstractTextField {
 
     /**
      * Tells if input is used to enter sensitive information that is not echoed
      * to display. Typically passwords.
      */
+    @Deprecated
     private boolean secret = false;
 
     /**
      * Number of visible rows in a multiline TextField. Value 0 implies a
      * single-line text-editor.
      */
+    @Deprecated
     private int rows = 0;
 
     /**
      * Tells if word-wrapping should be used in multiline mode.
      */
+    @Deprecated
     private boolean wordwrap = true;
-
-    /**
-     * Number of visible columns in the TextField.
-     */
-    private int columns = 0;
-
-    private String inputPrompt = null;
-
-    private int selectionPosition = -1;
-    private int selectionLength;
-
-    private int lastKnownCursorPosition;
-
-    private String lastKnownTextContent;
-
-    /**
-     * Flag indicating that a text change event is pending to be triggered.
-     * Cleared by {@link #setInternalValue(Object)} and when the event is fired.
-     */
-    private boolean textChangeEventPending;
-
-    /**
-     * Flag used to determine wheter we are currently handling a state change
-     * triggered by a user. Used to properly fire text change event before value
-     * change event triggered by the client side.
-     */
-    private boolean changingVariables;
-
-    private TextChangeEventMode textChangeEventMode = TextChangeEventMode.LAZY;
-
-    private final int DEFAULT_TEXTCHANGE_TIMEOUT = 400;
-
-    private int textChangeEventTimeout = DEFAULT_TEXTCHANGE_TIMEOUT;
 
     /**
      * Constructs an empty <code>TextField</code> with no caption.
@@ -152,13 +115,13 @@ public class TextField extends AbstractTextField implements
     }
 
     /**
-     * Gets the secret property on and off. If a field is used to enter
-     * secretinformation the information is not echoed to display.
+     * Gets the secret property. If a field is used to enter secret information
+     * the information is not echoed to display.
      * 
      * @return <code>true</code> if the field is used to enter secret
      *         information, <code>false</code> otherwise.
      * 
-     * @deprecated in 6.5 use {@link PasswordField} instead
+     * @deprecated Starting from 6.5 use {@link PasswordField} instead
      */
     @Deprecated
     public boolean isSecret() {
@@ -166,13 +129,13 @@ public class TextField extends AbstractTextField implements
     }
 
     /**
-     * Sets the secret property on and off. If a field is used to enter
-     * secretinformation the information is not echoed to display.
+     * Sets the secret property on and off. If a field is used to enter secret
+     * information the information is not echoed to display.
      * 
      * @param secret
      *            the value specifying if the field is used to enter secret
      *            information.
-     * @deprecated in 6.5 use {@link PasswordField} instead
+     * @deprecated Starting from 6.5 use {@link PasswordField} instead
      */
     @Deprecated
     public void setSecret(boolean secret) {
@@ -187,11 +150,7 @@ public class TextField extends AbstractTextField implements
         if (isSecret()) {
             target.addAttribute("secret", true);
         }
-        // Adds the number of column and rows
-        final int columns = getColumns();
-        if (columns != 0) {
-            target.addAttribute("cols", String.valueOf(columns));
-        }
+
         final int rows = getRows();
         if (rows != 0) {
             target.addAttribute("rows", String.valueOf(rows));
@@ -201,22 +160,6 @@ public class TextField extends AbstractTextField implements
             if (!isWordwrap()) {
                 target.addAttribute("wordwrap", false);
             }
-        }
-
-        if (getInputPrompt() != null) {
-            target.addAttribute("prompt", getInputPrompt());
-        }
-
-        if (selectionPosition != -1) {
-            target.addAttribute("selpos", selectionPosition);
-            target.addAttribute("sellen", selectionLength);
-            selectionPosition = -1;
-        }
-        if (hasListeners(TextChangeEvent.class)) {
-            target.addAttribute(VTextField.ATTR_TEXTCHANGE_EVENTMODE,
-                    getTextChangeEventMode().toString());
-            target.addAttribute(VTextField.ATTR_TEXTCHANGE_TIMEOUT,
-                    getTextChangeTimeout());
         }
 
         super.paintContent(target);
@@ -294,326 +237,58 @@ public class TextField extends AbstractTextField implements
     }
 
     /**
-     * Gets the number of columns in the editor. If the number of columns is set
-     * 0, the actual number of displayed columns is determined implicitly by the
-     * adapter.
-     * 
-     * @return the number of columns in the editor.
-     */
-    public int getColumns() {
-        return columns;
-    }
-
-    /**
-     * Sets the number of columns in the editor. If the number of columns is set
-     * 0, the actual number of displayed columns is determined implicitly by the
-     * adapter.
-     * 
-     * @param columns
-     *            the number of columns to set.
-     */
-    public void setColumns(int columns) {
-        if (columns < 0) {
-            columns = 0;
-        }
-        this.columns = columns;
-        requestRepaint();
-    }
-
-    /**
-     * Gets the current input prompt.
-     * 
-     * @see #setInputPrompt(String)
-     * @return the current input prompt, or null if not enabled
-     */
-    public String getInputPrompt() {
-        return inputPrompt;
-    }
-
-    /**
-     * Sets the input prompt - a textual prompt that is displayed when the field
-     * would otherwise be empty, to prompt the user for input.
-     * 
-     * @param inputPrompt
-     */
-    public void setInputPrompt(String inputPrompt) {
-        this.inputPrompt = inputPrompt;
-        requestRepaint();
-    }
-
-    /**
-     * Selects all text in the field.
-     * 
-     * @since 6.4
-     */
-    public void selectAll() {
-        String text = getValue() == null ? "" : getValue().toString();
-        setSelectionRange(0, text.length());
-    }
-
-    /**
-     * Sets the range of text to be selected.
-     * 
-     * As a side effect the field will become focused.
-     * 
-     * @since 6.4
-     * 
-     * @param pos
-     *            the position of the first character to be selected
-     * @param length
-     *            the number of characters to be selected
-     */
-    public void setSelectionRange(int pos, int length) {
-        selectionPosition = pos;
-        selectionLength = length;
-        focus();
-        requestRepaint();
-    }
-
-    /**
-     * Sets the cursor position in the field. As a side effect the field will
-     * become focused.
-     * 
-     * @since 6.4
-     * 
-     * @param pos
-     *            the position for the cursor
-     * */
-    public void setCursorPosition(int pos) {
-        setSelectionRange(pos, 0);
-        lastKnownCursorPosition = pos;
-    }
-
-    /**
-     * Returns the last known cursor position of the field.
+     * Sets the height of the {@link TextField} instance.
      * 
      * <p>
-     * Note that due to the client server nature or the GWT terminal, Vaadin
-     * cannot provide the exact value of the cursor position in most situations.
-     * The value is updated only when the client side terminal communicates to
-     * TextField, like on {@link ValueChangeEvent}s and {@link TextChangeEvent}
-     * s. This may change later if a deep push integration is built to Vaadin.
-     * 
-     * @return the cursor position
-     */
-    public int getCursorPosition() {
-        return lastKnownCursorPosition;
-    }
-
-    /**
-     * Gets the current (or the last known) text content in the field.
+     * Setting height for {@link TextField} also has a side-effect that puts
+     * {@link TextField} into multiline mode (aka "textarea"). Multiline mode
+     * can also be achieved by calling {@link #setRows(int)}. The height value
+     * overrides the number of rows set by {@link #setRows(int)}.
      * <p>
-     * Note the text returned by this method is not necessary the same what is
-     * returned by the {@link #getValue()} method. The value is updated when the
-     * terminal fires a value change event via e.g. blurring the field or by
-     * pressing enter. The value returned by this method is updated also on
-     * {@link TextChangeEvent}s. Due to this high dependency to the terminal
-     * implementation this method is (at least at this point) not published.
+     * If you want to set height of single line {@link TextField}, call
+     * {@link #setRows(int)} with value 0 after setting the height. Setting rows
+     * to 0 resets the side-effect.
+     * <p>
+     * Starting from 6.5 you should use {@link TextArea} instead of
+     * {@link TextField} for multiline text input.
      * 
-     * @return the text which is currently displayed in the field.
+     * 
+     * @see com.vaadin.ui.AbstractComponent#setHeight(float, int)
      */
-    private String getCurrentTextContent() {
-        if (lastKnownTextContent != null) {
-            return lastKnownTextContent;
-        } else {
-            Object text = getValue();
-            if (text == null) {
-                return getNullRepresentation();
-            }
-            return text.toString();
-        }
-    }
-
     @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        if (variables.containsKey(VTextField.VAR_CURSOR)) {
-            Integer object = (Integer) variables.get(VTextField.VAR_CURSOR);
-            lastKnownCursorPosition = object.intValue();
-        }
-        if (variables.containsKey(VTextField.VAR_CUR_TEXT)) {
+    public void setHeight(float height, int unit) {
+        super.setHeight(height, unit);
+        if (height > 1 && getClass() == TextField.class) {
             /*
-             * NOTE, we might want to develop this further so that on a value
-             * change event the whole text content don't need to be sent from
-             * the client to server. Just "commit" the value from currentText to
-             * the value.
+             * In html based terminals we most commonly want to make component
+             * to be textarea if height is defined. Setting row field above 0
+             * will render component as textarea.
              */
-            textChangeEventPending = true;
-            handleInputEventTextChange(variables);
-        }
 
-        changingVariables = true;
-        try {
-            super.changeVariables(source, variables);
-        } finally {
-            changingVariables = false;
-        }
-        firePendingTextChangeEvent();
-    }
-
-    private void firePendingTextChangeEvent() {
-        if (textChangeEventPending) {
-            fireEvent(new TextChangeEventImpl(this));
-            textChangeEventPending = false;
+            setRows(2);
         }
     }
 
+    /**
+     * Sets the height of the {@link TextField} instance.
+     * 
+     * <p>
+     * Setting height for {@link TextField} also has a side-effect that puts
+     * {@link TextField} into multiline mode (aka "textarea"). Multiline mode
+     * can also be achieved by calling {@link #setRows(int)}. The height value
+     * overrides the number of rows set by {@link #setRows(int)}.
+     * <p>
+     * If you want to set height of single line {@link TextField}, call
+     * {@link #setRows(int)} with value 0 after setting the height. Setting rows
+     * to 0 resets the side-effect.
+     * 
+     * @see com.vaadin.ui.AbstractComponent#setHeight(java.lang.String)
+     */
     @Override
-    protected void setInternalValue(Object newValue) {
-        if (changingVariables) {
-            /*
-             * Fire text change event before value change event if change is
-             * coming from the client side.
-             */
-            if (newValue == null && lastKnownTextContent != null
-                    && !lastKnownTextContent.equals(getNullRepresentation())) {
-                // Value was changed from something to null representation
-                lastKnownTextContent = getNullRepresentation();
-                textChangeEventPending = true;
-            } else if (newValue != null
-                    && !newValue.toString().equals(lastKnownTextContent)) {
-                // Value was changed to something else than null representation
-                lastKnownTextContent = newValue.toString();
-                textChangeEventPending = true;
-            }
-
-            if (textChangeEventPending) {
-                firePendingTextChangeEvent();
-            }
-        }
-        super.setInternalValue(newValue);
-    }
-
-    private void handleInputEventTextChange(Map<String, Object> variables) {
-        /*
-         * TODO we could vastly optimize the communication of values by using
-         * some sort of diffs instead of always sending the whole text content.
-         * Also on value change events we could use the mechanism.
-         */
-        String object = (String) variables.get(VTextField.VAR_CUR_TEXT);
-        lastKnownTextContent = object;
-        textChangeEventPending = true;
-    }
-
-    /* ** Text Change Events ** */
-
-    /**
-     * Sets the mode how the TextField triggers {@link TextChangeEvent}s.
-     * 
-     * @param inputEventMode
-     *            the new mode
-     * 
-     * @see TextChangeEventMode
-     */
-    public void setTextChangeEventMode(TextChangeEventMode inputEventMode) {
-        textChangeEventMode = inputEventMode;
-        requestRepaint();
-    }
-
-    /**
-     * @return the mode used to trigger {@link TextChangeEvent}s.
-     */
-    public TextChangeEventMode getTextChangeEventMode() {
-        return textChangeEventMode;
-    }
-
-    /**
-     * Different modes how the TextField can trigger {@link TextChangeEvent}s.
-     */
-    public enum TextChangeEventMode {
-
-        /**
-         * An event is triggered on each text content change, most commonly key
-         * press events.
-         */
-        EAGER,
-        /**
-         * Each text change event in the UI causes the event to be communicated
-         * to the application after a timeout. The length of the timeout can be
-         * controlled with {@link TextField#setInputEventTimeout(int)}. Only the
-         * last input event is reported to the server side if several text
-         * change events happen during the timeout.
-         * <p>
-         * In case of a {@link ValueChangeEvent} the schedule is not kept
-         * strictly. Before a {@link ValueChangeEvent} a {@link TextChangeEvent}
-         * is triggered if the text content has changed since the previous
-         * TextChangeEvent regardless of the schedule.
-         */
-        TIMEOUT,
-        /**
-         * An event is triggered when there is a pause of text modifications.
-         * The length of the pause can be modified with
-         * {@link TextField#setInputEventTimeout(int)}. Like with the
-         * {@link #TIMEOUT} mode, an event is forced before
-         * {@link ValueChangeEvent}s, even if the user did not keep a pause
-         * while entering the text.
-         * <p>
-         * This is the default mode.
-         */
-        LAZY
-    }
-
-    public void addListener(TextChangeListener listener) {
-        addListener(TextChangeListener.EVENT_ID, TextChangeEvent.class,
-                listener, TextChangeListener.EVENT_METHOD);
-    }
-
-    public void removeListener(TextChangeListener listener) {
-        removeListener(TextChangeListener.EVENT_ID, TextChangeEvent.class,
-                listener);
-    }
-
-    /**
-     * The text change timeout modifies how often text change events are
-     * communicated to the application when {@link #getTextChangeEventMode()} is
-     * {@link TextChangeEventMode#LAZY} or {@link TextChangeEventMode#TIMEOUT}.
-     * 
-     * 
-     * @see #getTextChangeEventMode()
-     * 
-     * @param timeout
-     *            the timeout in milliseconds
-     */
-    public void setTextChangeTimeout(int timeout) {
-        textChangeEventTimeout = timeout;
-        requestRepaint();
-    }
-
-    /**
-     * Gets the timeout used to fire {@link TextChangeEvent}s when the
-     * {@link #getTextChangeEventMode()} is {@link TextChangeEventMode#LAZY} or
-     * {@link TextChangeEventMode#TIMEOUT}.
-     * 
-     * @return the timeout value in milliseconds
-     */
-    public int getTextChangeTimeout() {
-        return textChangeEventTimeout;
-    }
-
-    public class TextChangeEventImpl extends TextChangeEvent {
-        private String curText;
-        private int cursorPosition;
-
-        private TextChangeEventImpl(final TextField tf) {
-            super(tf);
-            curText = tf.getCurrentTextContent();
-            cursorPosition = tf.getCursorPosition();
-        }
-
-        @Override
-        public TextField getComponent() {
-            return (TextField) super.getComponent();
-        }
-
-        @Override
-        public String getText() {
-            return curText;
-        }
-
-        @Override
-        public int getCursorPosition() {
-            return cursorPosition;
-        }
-
+    public void setHeight(String height) {
+        // will call setHeight(float, int) the actually does the magic. Method
+        // is overridden just to document side-effects.
+        super.setHeight(height);
     }
 
 }

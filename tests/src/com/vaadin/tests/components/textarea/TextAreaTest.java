@@ -7,8 +7,8 @@ import java.util.List;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.tests.components.abstractfield.AbstractTextFieldTest;
+import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField.TextChangeEventMode;
 
 public class TextAreaTest extends AbstractTextFieldTest<TextArea> implements
         TextChangeListener {

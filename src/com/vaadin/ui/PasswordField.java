@@ -1,3 +1,6 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.ui;
 
 import com.vaadin.data.Property;
@@ -5,27 +8,26 @@ import com.vaadin.terminal.gwt.client.ui.VPasswordField;
 
 /**
  * A field that is used to enter secret text information like passwords. The
- * clear text is not displayed in the screen.
+ * entered text is not displayed on the screen.
  */
 @ClientWidget(VPasswordField.class)
-@SuppressWarnings("serial")
-public class PasswordField extends TextField {
+public class PasswordField extends AbstractTextField {
 
     /**
      * Constructs an empty PasswordField.
      */
     public PasswordField() {
-        super();
+        setValue("");
     }
 
     /**
      * Constructs a PasswordField with given property data source.
      * 
      * @param dataSource
-     *            the property dato source for the field
+     *            the property data source for the field
      */
     public PasswordField(Property dataSource) {
-        super(dataSource);
+        setPropertyDataSource(dataSource);
     }
 
     /**
@@ -37,7 +39,8 @@ public class PasswordField extends TextField {
      *            the property data source for the field
      */
     public PasswordField(String caption, Property dataSource) {
-        super(caption, dataSource);
+        this(dataSource);
+        setCaption(caption);
     }
 
     /**
@@ -49,7 +52,8 @@ public class PasswordField extends TextField {
      *            the value for the field
      */
     public PasswordField(String caption, String value) {
-        super(caption, value);
+        setValue(value);
+        setCaption(caption);
     }
 
     /**
@@ -59,7 +63,7 @@ public class PasswordField extends TextField {
      *            the caption for the field
      */
     public PasswordField(String caption) {
-        super(caption);
+        this();
+        setCaption(caption);
     }
-
 }

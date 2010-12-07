@@ -1,21 +1,34 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.ui;
 
 import com.vaadin.data.Property;
 import com.vaadin.terminal.gwt.client.ui.VTextArea;
 
 /**
- * A text field that supports multiline editing.
+ * A text field that supports multi line editing.
  */
 @ClientWidget(VTextArea.class)
-public class TextArea extends TextField {
+public class TextArea extends AbstractTextField {
 
     private static final int DEFAULT_ROWS = 5;
+
+    /**
+     * Number of visible rows in the text area.
+     */
+    private int rows = DEFAULT_ROWS;
+
+    /**
+     * Tells if word-wrapping should be used in the text area.
+     */
+    private boolean wordwrap = true;
 
     /**
      * Constructs an empty TextArea.
      */
     public TextArea() {
-        setRows(DEFAULT_ROWS);
     }
 
     /**
@@ -25,8 +38,8 @@ public class TextArea extends TextField {
      *            the caption for the field.
      */
     public TextArea(String caption) {
-        super(caption);
-        setRows(DEFAULT_ROWS);
+        this();
+        setCaption(caption);
     }
 
     /**
@@ -36,8 +49,8 @@ public class TextArea extends TextField {
      *            the data source for the field
      */
     public TextArea(Property dataSource) {
-        super(dataSource);
-        setRows(DEFAULT_ROWS);
+        this();
+        setPropertyDataSource(dataSource);
     }
 
     /**
@@ -46,11 +59,11 @@ public class TextArea extends TextField {
      * @param caption
      *            the caption for the field
      * @param dataSource
-     *            the dato source for the field
+     *            the data source for the field
      */
     public TextArea(String caption, Property dataSource) {
-        super(caption, dataSource);
-        setRows(DEFAULT_ROWS);
+        this(dataSource);
+        setCaption(caption);
     }
 
     /**
@@ -62,58 +75,60 @@ public class TextArea extends TextField {
      *            the value for the field
      */
     public TextArea(String caption, String value) {
-        super(caption, value);
-        setRows(DEFAULT_ROWS);
+        this(caption);
+        setValue(value);
+
     }
 
     /**
-     * Sets the number of rows in the editor.
+     * Sets the number of rows in the text area.
      * 
      * @param rows
-     *            the number of rows for this editor.
+     *            the number of rows for this text area.
      */
-    @Override
     public void setRows(int rows) {
-        // TODO implement here once the API from TextField is removed
-        super.setRows(rows);
+        if (rows < 0) {
+            rows = 0;
+        }
+        if (this.rows != rows) {
+            this.rows = rows;
+            requestRepaint();
+        }
     }
 
     /**
-     * Gets the number of rows in the editor. If the number of rows is set to 0,
-     * the actual number of displayed rows is determined implicitly by the
+     * Gets the number of rows in the text area. If the number of rows is set to
+     * 0, the actual number of displayed rows is determined implicitly by the
      * adapter.
      * 
      * @return number of explicitly set rows.
      */
-    @Override
     public int getRows() {
-        // TODO implement here once the API from TextField is removed
-        return super.getRows();
+        return rows;
     }
 
     /**
-     * Sets the editor's word-wrap mode on or off.
+     * Sets the text area's word-wrap mode on or off.
      * 
      * @param wordwrap
-     *            the boolean value specifying if the editor should be in
-     *            word-wrap mode after the call or not.
+     *            the boolean value specifying if the text area should be in
+     *            word-wrap mode.
      */
-    @Override
     public void setWordwrap(boolean wordwrap) {
-        // TODO implement here once the API from TextField is removed
-        super.setWordwrap(wordwrap);
+        if (this.wordwrap != wordwrap) {
+            this.wordwrap = wordwrap;
+            requestRepaint();
+        }
     }
 
     /**
-     * Tests if the editor is in word-wrap mode.
+     * Tests if the text area is in word-wrap mode.
      * 
-     * @return <code>true</code> if the component is in the word-wrap mode,
+     * @return <code>true</code> if the component is in word-wrap mode,
      *         <code>false</code> if not.
      */
-    @Override
     public boolean isWordwrap() {
-        // TODO implement here once the API from TextField is removed
-        return super.isWordwrap();
+        return wordwrap;
     }
 
 }

@@ -7,11 +7,11 @@ import java.util.List;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.tests.components.abstractfield.AbstractTextFieldTest;
+import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.TextField.TextChangeEventMode;
 
-public class TextFieldTest extends AbstractTextFieldTest<TextField>
-        implements TextChangeListener {
+public class TextFieldTest extends AbstractTextFieldTest<TextField> implements
+        TextChangeListener {
 
     private Command<TextField, Boolean> secretCommand = new Command<TextField, Boolean>() {
         @SuppressWarnings("deprecation")
