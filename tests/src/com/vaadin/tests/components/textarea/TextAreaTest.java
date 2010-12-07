@@ -96,7 +96,6 @@ public class TextAreaTest extends AbstractTextFieldTest<TextArea> implements
         createTextChangeEventModeAction(CATEGORY_FEATURES);
         createTextChangeEventTimeoutAction(CATEGORY_FEATURES);
 
-        createSetTextValueAction(CATEGORY_ACTIONS);
         createCursorPositionAction(CATEGORY_ACTIONS);
         createSelectionRangeAction(CATEGORY_ACTIONS);
     }
