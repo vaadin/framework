@@ -8,7 +8,7 @@ import java.util.Locale;
 import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.ui.DateField;
 
-public abstract class DateFieldTestCase<T extends DateField> extends
+public abstract class DateFieldTest<T extends DateField> extends
         AbstractFieldTest<T> {
 
     @Override

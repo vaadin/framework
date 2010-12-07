@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 
 import com.vaadin.ui.PopupDateField;
 
-public class PopupDateFields2 extends DateFieldTestCase<PopupDateField> {
+public class PopupDateFieldTest extends DateFieldTest<PopupDateField> {
 
     @Override
     protected Class<PopupDateField> getTestClass() {
