@@ -24,9 +24,9 @@
 .v-table-caption-container {
 	color: #393a3c;
 	font-size: 15px;
-	padding: 9px 2px 9px 4px;
+	padding: 9px 2px 9px 0;
 	text-shadow: #ffffff 0 1px 0;
-	margin-left: 0px;
+	margin-left: 4px;
 }
 .v-table-sort-indicator {
 	width: 0;
