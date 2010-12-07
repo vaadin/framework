@@ -9,7 +9,7 @@ import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 
-public class MenuBars2 extends AbstractComponentTest<MenuBar> {
+public class MenuBarTest extends AbstractComponentTest<MenuBar> {
 
     private static final String CATEGORY_MENU_ITEMS = "Menu items";
     private static final String CATEGORY_MENU_ITEM_STATES = "Menu item states";
