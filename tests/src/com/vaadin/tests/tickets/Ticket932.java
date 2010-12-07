@@ -4,7 +4,6 @@ import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
@@ -56,22 +55,6 @@ public class Ticket932 extends Application {
         mainWin.addComponent(b);
 
         mainWin.addComponent(l);
-
-        final RichTextArea rta = new RichTextArea();
-        rta.setCaption("RTA with max lenght 10");
-
-        rta.setMaxLength(10);
-
-        b = new Button("Check value");
-        b.addListener(new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                l.setValue("Length: " + rta.getValue().toString().length()
-                        + " Content: " + rta.getValue());
-            }
-        });
-
-        mainWin.addComponent(rta);
-        mainWin.addComponent(b);
 
     }
 
