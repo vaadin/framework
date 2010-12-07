@@ -31,30 +31,32 @@ public abstract class AbstractTextFieldTest<T extends AbstractTextField>
     protected void createActions() {
         super.createActions();
 
-        createNullSettingAllowedAction();
-        createNullRepresentationAction();
-        createMaxLengthAction();
+        createSetTextValueAction(CATEGORY_ACTIONS);
+
+        createNullSettingAllowedAction(CATEGORY_FEATURES);
+        createNullRepresentationAction(CATEGORY_FEATURES);
+        createMaxLengthAction(CATEGORY_FEATURES);
     }
 
-    private void createNullSettingAllowedAction() {
-        createBooleanAction("Null selection allowed", CATEGORY_FEATURES, true,
+    private void createNullSettingAllowedAction(String category) {
+        createBooleanAction("Null selection allowed", category, true,
                 nullSelectionAllowedCommand);
     }
 
-    private void createNullRepresentationAction() {
+    private void createNullRepresentationAction(String category) {
         LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
         options.put("-", null);
         options.put("null", "null");
         options.put("This is empty", "This is empty");
         options.put("- Nothing -", "- Nothing -");
-        createSelectAction("Null representation", CATEGORY_FEATURES, options,
-                "null", nullRepresentationCommand);
+        createSelectAction("Null representation", category, options, "null",
+                nullRepresentationCommand);
     }
 
-    private void createMaxLengthAction() {
+    private void createMaxLengthAction(String category) {
         LinkedHashMap<String, Integer> options = createIntegerOptions(100);
         options.put("-", -1);
-        createSelectAction("Max length", CATEGORY_FEATURES, options, "-",
+        createSelectAction("Max length", category, options, "-",
                 maxlengthCommand);
 
     }
