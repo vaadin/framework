@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 
@@ -413,7 +414,16 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     private void setInternalHeights() {
         int captionHeight = 0;
-        int totalHeight = getOffsetHeight();
+        int totalHeight;
+        if (BrowserInfo.get().isIE6()) {
+            String o = getElement().getStyle().getOverflow();
+
+            getElement().getStyle().setOverflow(Overflow.HIDDEN);
+            totalHeight = getOffsetHeight();
+            getElement().getStyle().setProperty("overflow", o);
+        } else {
+            totalHeight = getOffsetHeight();
+        }
 
         if (optionsCaption != null) {
             captionHeight = Util.getRequiredHeight(optionsCaption);
