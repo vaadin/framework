@@ -1107,8 +1107,18 @@ div.v-progressindicator-indeterminate-disabled {
 .v-select-twincol-options {
 	float: left;
 }
+.v-select-twincol-options-caption {
+	float: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 .v-select-twincol-selections {
 	font-weight: bold;
+}
+.v-select-twincol-selections-caption {
+	float: right;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .v-select-twincol-buttons {
 	float: left;
