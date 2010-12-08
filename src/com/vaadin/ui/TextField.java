@@ -153,7 +153,7 @@ public class TextField extends AbstractTextField {
 
         final int rows = getRows();
         if (rows != 0) {
-            target.addAttribute("rows", String.valueOf(rows));
+            target.addAttribute("rows", rows);
             target.addAttribute("multiline", true);
 
             // Optimization: the default true is assumed if not painted

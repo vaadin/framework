@@ -34,7 +34,9 @@ public class VTextArea extends VTextField {
         // Call parent renderer explicitly
         super.updateFromUIDL(uidl, client);
 
-        setRows(uidl.getIntAttribute("rows"));
+        if (uidl.hasAttribute("rows")) {
+            setRows(uidl.getIntAttribute("rows"));
+        }
 
         if (getMaxLength() >= 0) {
             sinkEvents(Event.ONKEYPRESS);
