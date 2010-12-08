@@ -5,6 +5,8 @@
 package com.vaadin.ui;
 
 import com.vaadin.data.Property;
+import com.vaadin.terminal.PaintException;
+import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VTextArea;
 
 /**
@@ -132,4 +134,16 @@ public class TextArea extends AbstractTextField {
         return wordwrap;
     }
 
+    @Override
+    public void paintContent(PaintTarget target) throws PaintException {
+        super.paintContent(target);
+
+        target.addAttribute("rows", getRows());
+
+        // Optimization: the default true is assumed if not painted
+        if (!isWordwrap()) {
+            target.addAttribute("wordwrap", false);
+        }
+
+    }
 }
