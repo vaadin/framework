@@ -156,8 +156,8 @@ public class TextField extends AbstractTextField {
             target.addAttribute("rows", rows);
             target.addAttribute("multiline", true);
 
-            // Optimization: the default true is assumed if not painted
             if (!isWordwrap()) {
+                // Wordwrap is only painted if turned off to minimize communications
                 target.addAttribute("wordwrap", false);
             }
         }

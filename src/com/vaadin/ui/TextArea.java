@@ -140,8 +140,8 @@ public class TextArea extends AbstractTextField {
 
         target.addAttribute("rows", getRows());
 
-        // Optimization: the default true is assumed if not painted
         if (!isWordwrap()) {
+            // Wordwrap is only painted if turned off to minimize communications
             target.addAttribute("wordwrap", false);
         }
 
