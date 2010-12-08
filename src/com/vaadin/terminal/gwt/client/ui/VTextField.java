@@ -129,6 +129,10 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
 
     private boolean communicateTextValueToServer() {
         String text = getText();
+        if (prompting) {
+            // Input prompt visible, text is actually ""
+            text = "";
+        }
         if (!text.equals(getLastCommunicatedString())) {
             lastTextChangeString = text;
             client.updateVariable(id, VAR_CUR_TEXT, text, true);
