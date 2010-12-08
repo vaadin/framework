@@ -205,6 +205,8 @@
             <pathelement path="${lib-gwt-dev}" />
         </path>
 
+        <available file="${checkout-path}/manual/book.xml" property="manual.source.available"/>
+    	
     </target>
 
     <target name="internal-package-zip">
@@ -873,7 +875,8 @@
     <!-- Manual: Build from external repository.                            -->
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
 
-    <target name="manual-init" depends="init">
+    <target name="manual-init" depends="init" if="manual.source.available">
+        <property name="docdir" value="${checkout-path}/docs"/>
     </target>
 
     <!-- Checkout doc repository. -->
@@ -898,7 +901,7 @@
     </target>
 
     <!-- Build manual. -->
-    <target name="manual-build" depends="manual-init">
+    <target name="manual-build" depends="manual-init" if="manual.source.available">
     	<!-- The HTML and Eclipse Manual must be built with separate runs --> 
         <ant dir="${docdir}" antfile="build/build.xml" inheritAll="false">
             <property name="version" value="${version.full}"/>
@@ -909,7 +912,7 @@
     </target>
 
     <!-- Copy the manual from sub Ant results to our output directory. -->
-    <target name="manual-copy" depends="manual-init">
+    <target name="manual-copy" depends="manual-init" if="manual.source.available">
         <copy todir="${output-dir}/WebContent/docs">
             <fileset dir="${docdir}/build/result/package/WebContent/docs">
                 <exclude name="**/.svn" />
@@ -920,7 +923,7 @@
 
 	<!-- Package documentation in a documentation Zip package.   -->
 	<!-- * Built Eclipse plugin is not included in this package. -->
-    <target name="manual-package" depends="manual-init, manual-copy">
+    <target name="manual-package" depends="manual-init, manual-copy" if="manual.source.available">
         <zip destfile="${result-path}/${product-file}-docs-${version.full}.zip">
             <zipfileset prefix="docs" dir="${result-path}/${base-name}/WebContent/docs">
                 <patternset>
@@ -941,13 +944,18 @@
 
 	<!-- Publishes Eclipse plugin version of the manual as TeamCity artifacts.  -->
 	<!-- These are actually published during manual build, but with wrong path. -->
-	<target name="manual-publish-eclipse">
+	<target name="manual-publish-eclipse" if="manual.source.available">
         <echo>##teamcity[publishArtifacts '${docdir}/build/result/package/eclipse/plugins/*.jar']</echo>
         <echo>##teamcity[publishArtifacts '${docdir}/build/result/package/eclipse/features/*.jar']</echo>
 	</target>
 
-    <target name="manual" depends="init, manual-init, manual-checkout, manual-build, manual-copy, manual-package, manual-publish-eclipse">
+	<target name="manual-source-not-available" unless="manual.source.available">
+		<echo>Skipping Book of Vaadin build as it is not available in ${checkout-path}/docs</echo>
+	</target>
+
+	<target name="manual" depends="init, manual-source-not-available, manual-init, manual-build, manual-copy, manual-package, manual-publish-eclipse">
     </target>
+	
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
     <!-- Documentation: Add Javadoc to doc                                  -->
