@@ -11,7 +11,7 @@
 .v-window .v-filterselect-input,
 .v-popupview-popup .v-filterselect-input {
 	background: transparent repeat-x;
-	background-image: url(img/center.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	background-image: url(img/center.png); /** sprite-ref: verticals; sprite-alignment: repeat; sprite-margin-bottom: 1px */
 	border: none;
 	height: 16px;
 }
@@ -40,7 +40,7 @@
 	overflow: hidden;
 	width: 25px;
 	height: 24px;
-	background-image: url(img/right.png); /** sprite-ref: verticals */
+	background-image: url(img/right.png); /** sprite-ref: verticals ; sprite-margin-bottom: 1px */
 	cursor: default;
 }
 .v-filterselect-button:hover {

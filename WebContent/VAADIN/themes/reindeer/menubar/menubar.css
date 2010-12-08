@@ -39,7 +39,7 @@
 	text-shadow: 0 1px 0 #3b5a7a;
 }
 .v-menubar .v-menubar-menuitem-selected {
-	background-image: url(img/menu-sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	background-image: url(img/menu-sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat; sprite-margin-bottom: 1px  */
 }
 .v-menubar-submenu .v-menubar-submenu-indicator {
 	background: transparent url(img/submenu-icon.png) no-repeat right 70%;
