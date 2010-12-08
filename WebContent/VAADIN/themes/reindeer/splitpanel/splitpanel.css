@@ -6,6 +6,7 @@
 }
 .v-splitpanel-hsplitter div {
 	width: 7px;
+	height: 100%; /* for Opera */
 	background: transparent;
 	background-repeat: no-repeat;
 	background-position: 50%;
