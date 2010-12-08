@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_5_0_dev-20101207";}
-.v-theme-version-6_5_0_dev-20101207 {display: none;}
+.v-theme-version:after {content:"6_5_0_dev-20101208";}
+.v-theme-version-6_5_0_dev-20101208 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1149,6 +1149,7 @@ div.v-progressindicator-indeterminate-disabled {
 .v-window .v-filterselect-input,
 .v-popupview-popup .v-filterselect-input {
 	float: left;
+	-webkit-border-radius: 0px;
 }
 .v-filterselect-prompt .v-filterselect-input {
 	color: #999;
