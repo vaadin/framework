@@ -121,7 +121,8 @@ public class TextField extends AbstractTextField {
      * @return <code>true</code> if the field is used to enter secret
      *         information, <code>false</code> otherwise.
      * 
-     * @deprecated Starting from 6.5 use {@link PasswordField} instead
+     * @deprecated Starting from 6.5 use {@link PasswordField} instead for
+     *             secret text input.
      */
     @Deprecated
     public boolean isSecret() {
@@ -135,7 +136,8 @@ public class TextField extends AbstractTextField {
      * @param secret
      *            the value specifying if the field is used to enter secret
      *            information.
-     * @deprecated Starting from 6.5 use {@link PasswordField} instead
+     * @deprecated Starting from 6.5 use {@link PasswordField} instead for
+     *             secret text input.
      */
     @Deprecated
     public void setSecret(boolean secret) {
@@ -157,7 +159,8 @@ public class TextField extends AbstractTextField {
             target.addAttribute("multiline", true);
 
             if (!isWordwrap()) {
-                // Wordwrap is only painted if turned off to minimize communications
+                // Wordwrap is only painted if turned off to minimize
+                // communications
                 target.addAttribute("wordwrap", false);
             }
         }
@@ -172,9 +175,8 @@ public class TextField extends AbstractTextField {
      * adapter.
      * 
      * @return number of explicitly set rows.
-     * @deprecated use {@link TextArea} component and the same method there.
-     *             This method will be removed from TextField that is to be used
-     *             for one line text input only in the next versions.
+     * @deprecated Starting from 6.5 use {@link TextArea} for a multi-line text
+     *             input.
      * 
      */
     @Deprecated
@@ -188,9 +190,8 @@ public class TextField extends AbstractTextField {
      * @param rows
      *            the number of rows for this editor.
      * 
-     * @deprecated in 6.5 use {@link TextArea} component and the same method
-     *             there. This method will be removed from TextField that is to
-     *             be used for one line text input only in the next versions.
+     * @deprecated Starting from 6.5 use {@link TextArea} for a multi-line text
+     *             input.
      */
     @Deprecated
     public void setRows(int rows) {
@@ -208,9 +209,8 @@ public class TextField extends AbstractTextField {
      * 
      * @return <code>true</code> if the component is in the word-wrap mode,
      *         <code>false</code> if not.
-     * @deprecated in 6.5 use {@link TextArea} component and the same method
-     *             there. This method will be removed from TextField that is to
-     *             be used for one line text input only in the next versions.
+     * @deprecated Starting from 6.5 use {@link TextArea} for a multi-line text
+     *             input.
      */
     @Deprecated
     public boolean isWordwrap() {
@@ -224,9 +224,8 @@ public class TextField extends AbstractTextField {
      *            the boolean value specifying if the editor should be in
      *            word-wrap mode after the call or not.
      * 
-     * @deprecated in 6.5 use {@link TextArea} component and the same method
-     *             there. This method will be removed from TextField that is to
-     *             be used for one line text input only in the next versions.
+     * @deprecated Starting from 6.5 use {@link TextArea} for a multi-line text
+     *             input.
      */
     @Deprecated
     public void setWordwrap(boolean wordwrap) {
