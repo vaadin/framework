@@ -100,9 +100,7 @@ public class TextArea extends AbstractTextField {
     }
 
     /**
-     * Gets the number of rows in the text area. If the number of rows is set to
-     * 0, the actual number of displayed rows is determined implicitly by the
-     * adapter.
+     * Gets the number of rows in the text area.
      * 
      * @return number of explicitly set rows.
      */
