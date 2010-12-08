@@ -27,13 +27,13 @@ public class TextAreaTest extends AbstractTextFieldTest<TextArea> {
     @Override
     protected void createActions() {
         super.createActions();
-        createWordwrapAction(CATEGORY_STATE);
-        createRowsAction(CATEGORY_STATE);
+        createWordwrapAction(CATEGORY_FEATURES);
+        createRowsAction(CATEGORY_FEATURES);
     }
 
     private void createRowsAction(String category) {
         LinkedHashMap<String, Integer> options = createIntegerOptions(20);
-        createSelectAction("Rows", category, options, "0", rowsCommand);
+        createSelectAction("Rows", category, options, "3", rowsCommand);
     }
 
     private void createWordwrapAction(String category) {
