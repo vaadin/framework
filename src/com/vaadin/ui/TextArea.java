@@ -29,6 +29,7 @@ public class TextArea extends AbstractTextField {
      * Constructs an empty TextArea.
      */
     public TextArea() {
+        setValue("");
     }
 
     /**
