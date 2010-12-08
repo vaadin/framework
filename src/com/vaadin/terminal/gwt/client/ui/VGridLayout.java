@@ -98,6 +98,42 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         return margin.cast();
     }
 
+    /**
+     * Returns the column widths measured in pixels
+     * 
+     * @return
+     */
+    protected int[] getColumnWidths() {
+        return columnWidths;
+    }
+
+    /**
+     * Returns the row heights measured in pixels
+     * 
+     * @return
+     */
+    protected int[] getRowHeights() {
+        return rowHeights;
+    }
+
+    /**
+     * Returns the spacing between the cells horizontally in pixels
+     * 
+     * @return
+     */
+    protected int getHorizontalSpacing() {
+        return spacingPixelsHorizontal;
+    }
+
+    /**
+     * Returns the spacing between the cells vertically in pixels
+     * 
+     * @return
+     */
+    protected int getVerticalSpacing() {
+        return spacingPixelsVertical;
+    }
+
     @SuppressWarnings("unchecked")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
