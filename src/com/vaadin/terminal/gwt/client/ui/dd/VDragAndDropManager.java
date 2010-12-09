@@ -364,8 +364,10 @@ public class VDragAndDropManager {
                                     break;
                                 }
                             case Event.ONMOUSEMOVE:
-                                deferredStartRegistration.removeHandler();
-                                deferredStartRegistration = null;
+                                if (deferredStartRegistration != null) {
+                                    deferredStartRegistration.removeHandler();
+                                    deferredStartRegistration = null;
+                                }
                                 currentDrag.setCurrentGwtEvent(event
                                         .getNativeEvent());
                                 startDrag.execute();
@@ -373,9 +375,10 @@ public class VDragAndDropManager {
                             default:
                                 // on any other events, clean up the
                                 // deferred drag start
-
-                                deferredStartRegistration.removeHandler();
-                                deferredStartRegistration = null;
+                                if (deferredStartRegistration != null) {
+                                    deferredStartRegistration.removeHandler();
+                                    deferredStartRegistration = null;
+                                }
                                 currentDrag = null;
                                 clearDragElement();
                                 break;
