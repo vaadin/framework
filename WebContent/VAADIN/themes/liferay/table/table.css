@@ -47,8 +47,13 @@
 	color: #336699;
 	font-weight: bold;
 	font-size: 11px;
-	padding-left: 4px;
+	padding-left: 0px;
 	padding-top: 6px;
+}
+
+.v-table-caption-container-align-right {
+	margin-left: 0;
+	margin-right: 6px;
 }
 
 .v-table-caption-container .v-icon {
