@@ -205,8 +205,8 @@
             <pathelement path="${lib-gwt-dev}" />
         </path>
 
-        <available file="${checkout-path}/manual/book.xml" property="manual.source.available"/>
-    	
+        <property name="docdir" value="${checkout-path}/docs"/>
+        <available file="${docdir}/manual/book.xml" property="manual.source.available"/>
     </target>
 
     <target name="internal-package-zip">
@@ -876,28 +876,6 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
 
     <target name="manual-init" depends="init" if="manual.source.available">
-        <property name="docdir" value="${checkout-path}/docs"/>
-    </target>
-
-    <!-- Checkout doc repository. -->
-    <target name="manual-checkout" depends="manual-init" unless="docdir">
-        <!-- The required manual.repository property is defined in VERSION.properties -->
-
-        <echo>Checking out manual from repository ${manual.repository}</echo>
-
-        <mkdir dir="${checkout-path}"/>
-
-        <exec executable="svn" dir="${checkout-path}">
-            <arg value="checkout"/>
-            <arg value="-q"/>
-            <arg value="${manual.repository}"/>
-            <arg value="docs"/>
-        </exec>
-
-        <!-- Documentation source directory. -->
-        <property name="docdir" value="${checkout-path}/docs"/>
-
-        <echo>Manual checked out from repository successfully</echo>
     </target>
 
     <!-- Build manual. -->
