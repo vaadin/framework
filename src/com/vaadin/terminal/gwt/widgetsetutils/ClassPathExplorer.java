@@ -581,6 +581,12 @@ public class ClassPathExplorer {
             // Don't show to avoid flooding the user with irrelevant messages
             logLevel = Level.FINE;
             errorToShow = e;
+        } catch (Error t) {
+            // At least sometimes GWT throws Error instead of
+            // NoClassDefFoundError.
+            // Don't show to avoid flooding the user with irrelevant messages
+            logLevel = Level.FINE;
+            errorToShow = t;
         } finally {
             System.setErr(err);
             System.setOut(out);
