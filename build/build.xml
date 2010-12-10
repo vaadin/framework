@@ -68,14 +68,7 @@
         <delete dir="${result-path}" includes="**/*" followsymlinks="false" defaultexcludes="false" includeemptydirs="true" failonerror="false"/>
     </target>
 
-    <!-- Clean checkout directory. -->
-    <target name="clean-checkout" depends="">
-        <property file="build/build.properties" />
-
-        <delete dir="${checkout-path}" includes="**/*" followsymlinks="false" defaultexcludes="false" includeemptydirs="true" failonerror="false"/>
-    </target>
-
-    <target name="clean-all" depends="clean-result, clean-checkout">
+    <target name="clean-all" depends="clean-result">
     </target>
 
     <!-- ================================================================== -->
