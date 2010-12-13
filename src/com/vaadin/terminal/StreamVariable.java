@@ -52,19 +52,19 @@ public interface StreamVariable extends Serializable {
      *         the upload of the progress of streaming.
      * @see #onProgress(StreamingProgressEvent)
      */
-    boolean listenProgress();
+    public boolean listenProgress();
 
     /**
      * This method is called by the terminal if {@link #listenProgress()}
      * returns true when the streaming starts.
      */
-    void onProgress(StreamingProgressEvent event);
+    public void onProgress(StreamingProgressEvent event);
 
-    void streamingStarted(StreamingStartEvent event);
+    public void streamingStarted(StreamingStartEvent event);
 
-    void streamingFinished(StreamingEndEvent event);
+    public void streamingFinished(StreamingEndEvent event);
 
-    void streamingFailed(StreamingErrorEvent event);
+    public void streamingFailed(StreamingErrorEvent event);
 
     /*
      * Not synchronized to avoid stalls (caused by UIDL requests) while
@@ -82,29 +82,29 @@ public interface StreamVariable extends Serializable {
      * 
      * @return true if the streaming should be interrupted as soon as possible.
      */
-    boolean isInterrupted();
+    public boolean isInterrupted();
 
-    interface StreamingEvent extends Serializable {
+    public interface StreamingEvent extends Serializable {
 
         /**
          * @return the file name of the streamed file if known
          */
-        String getFileName();
+        public String getFileName();
 
         /**
          * @return the mime type of the streamed file if known
          */
-        String getMimeType();
+        public String getMimeType();
 
         /**
          * @return the length of the stream (in bytes) if known, else -1
          */
-        long getContentLength();
+        public long getContentLength();
 
         /**
          * @return then number of bytes streamed to StreamVariable
          */
-        long getBytesReceived();
+        public long getBytesReceived();
     }
 
     /**
@@ -147,7 +147,7 @@ public interface StreamVariable extends Serializable {
         /**
          * @return the exception that caused the receiving not to finish cleanly
          */
-        Exception getException();
+        public Exception getException();
 
     }
 
