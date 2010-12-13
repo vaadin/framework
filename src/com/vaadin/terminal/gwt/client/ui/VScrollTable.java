@@ -900,15 +900,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         // cell to accomodate for the size of the sort arrow.
         HeaderCell sortedHeader = tHead.getHeaderCell(sortColumn);
         if (sortedHeader != null) {
-            sortedHeader.setWidth(sortedHeader.getWidth(),
-                    sortedHeader.isDefinedWidth());
+            sortedHeader.resizeCaptionContainer();
         }
         // Also recalculate the width of the captionContainer element in the
         // previously sorted header, since this now has more room.
         HeaderCell oldSortedHeader = tHead.getHeaderCell(oldSortColumn);
         if (oldSortedHeader != null) {
-            oldSortedHeader.setWidth(oldSortedHeader.getWidth(),
-                    oldSortedHeader.isDefinedWidth());
+            oldSortedHeader.resizeCaptionContainer();
         }
 
         rendering = false;
@@ -1770,6 +1768,33 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             sortable = b;
         }
 
+        /**
+         * Makes room for the sorting indicator in case the column that the
+         * header cell belongs to is sorted. This is done by resizing the width
+         * of the caption container element by the correct amount
+         */
+        public void resizeCaptionContainer() {
+            if (BrowserInfo.get().isIE6() || td.getClassName().contains("-asc")
+                    || td.getClassName().contains("-desc")) {
+                /*
+                 * Room for the sort indicator is made by subtracting the styled
+                 * margin and width of the resizer from the width of the caption
+                 * container.
+                 */
+                int captionContainerWidth = width
+                        - sortIndicator.getOffsetWidth()
+                        - colResizeWidget.getOffsetWidth();
+                captionContainer.getStyle().setPropertyPx("width",
+                        captionContainerWidth);
+            } else {
+                /*
+                 * Set the caption container element as wide as possible when
+                 * the sorting indicator is not visible.
+                 */
+                captionContainer.getStyle().setPropertyPx("width", width);
+            }
+        }
+
         public void setNaturalMinimumColumnWidth(int w) {
             naturalWidth = w;
         }
@@ -1821,22 +1846,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 DOM.setStyleAttribute(captionContainer, "width", "");
                 setWidth("");
             } else {
-                /*
-                 * If this column is sorted, we need to make room for the sort
-                 * indicator by subtracting the styled margin and resizer width
-                 * from the width of the caption container.
-                 */
-                if (BrowserInfo.get().isIE6()
-                        || td.getClassName().contains("-asc")
-                        || td.getClassName().contains("-desc")) {
-                    int captionContainerWidth = w
-                            - sortIndicator.getOffsetWidth()
-                            - colResizeWidget.getOffsetWidth();
-                    captionContainer.getStyle().setPropertyPx("width",
-                            captionContainerWidth);
-                } else {
-                    captionContainer.getStyle().setPropertyPx("width", w);
-                }
+                resizeCaptionContainer();
 
                 /*
                  * if we already have tBody, set the header width properly, if
