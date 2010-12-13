@@ -5398,7 +5398,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // scrolling)
             event.preventDefault();
         } else if (hasFocus) {
-            if (handleNavigation(event.getNativeEvent().getKeyCode(),
+            int keyCode = event.getNativeEvent().getKeyCode();
+            if (keyCode == 0) {
+                keyCode = event.getNativeEvent().getCharCode();
+            }
+
+            if (handleNavigation(keyCode,
                     event.isControlKeyDown() || event.isMetaKeyDown(),
                     event.isShiftKeyDown())) {
                 event.preventDefault();

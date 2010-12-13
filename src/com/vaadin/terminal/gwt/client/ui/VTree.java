@@ -1556,7 +1556,11 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
      * .gwt.event.dom.client.KeyPressEvent)
      */
     public void onKeyPress(KeyPressEvent event) {
-        if (handleKeyNavigation(event.getNativeEvent().getKeyCode(),
+        int keyCode = event.getNativeEvent().getKeyCode();
+        if (keyCode == 0) {
+            keyCode = event.getNativeEvent().getCharCode();
+        }
+        if (handleKeyNavigation(keyCode,
                 event.isControlKeyDown() || event.isMetaKeyDown(),
                 event.isShiftKeyDown())) {
             event.preventDefault();
