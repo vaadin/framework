@@ -38,9 +38,9 @@ public class TextFieldTest extends AbstractTextFieldTest<TextField> implements
     @Override
     protected void createActions() {
         super.createActions();
-        createSecretAction(CATEGORY_STATE);
-        createWordwrapAction(CATEGORY_STATE);
-        createRowsAction(CATEGORY_STATE);
+        createSecretAction(CATEGORY_FEATURES);
+        createWordwrapAction(CATEGORY_FEATURES);
+        createRowsAction(CATEGORY_FEATURES);
     }
 
     private void createRowsAction(String category) {

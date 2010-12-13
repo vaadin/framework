@@ -533,6 +533,24 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
         return options;
     }
 
+    protected LinkedHashMap<String, Double> createDoubleOptions(double max) {
+        LinkedHashMap<String, Double> options = new LinkedHashMap<String, Double>();
+        for (double d = 0; d <= max && d < 10; d += 0.5) {
+            options.put(String.valueOf(d), d);
+        }
+        for (double d = 10; d <= max; d *= 10) {
+            options.put(String.valueOf(d), d);
+            if (2.5 * d <= max) {
+                options.put(String.valueOf(2 * d), 2 * d);
+            }
+            if (5 * d <= max) {
+                options.put(String.valueOf(5 * d), 5 * d);
+            }
+        }
+
+        return options;
+    }
+
     protected LinkedHashMap<String, Resource> createIconOptions(
             boolean cacheable) {
         LinkedHashMap<String, Resource> options = new LinkedHashMap<String, Resource>();

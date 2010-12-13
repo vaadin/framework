@@ -10,6 +10,7 @@ import com.vaadin.ui.ComponentContainer.ComponentAttachEvent;
 import com.vaadin.ui.ComponentContainer.ComponentAttachListener;
 import com.vaadin.ui.ComponentContainer.ComponentDetachEvent;
 import com.vaadin.ui.ComponentContainer.ComponentDetachListener;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.PopupDateField;
@@ -18,6 +19,7 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalSplitPanel;
 
 public abstract class AbstractComponentContainerTest<T extends AbstractComponentContainer>
         extends AbstractComponentTest<T> implements ComponentAttachListener,
@@ -78,6 +80,22 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
             PopupDateField tf = new PopupDateField();
             c.addComponent(tf);
             size.apply(tf);
+        }
+    };
+
+    private Command<T, ComponentSize> addVerticalSplitPanelCommand = new Command<T, ComponentSize>() {
+        public void execute(T c, ComponentSize size, Object data) {
+            VerticalSplitPanel vsp = new VerticalSplitPanel();
+            c.addComponent(vsp);
+            size.apply(vsp);
+        }
+    };
+
+    private Command<T, ComponentSize> addHorizontalSplitPanelCommand = new Command<T, ComponentSize>() {
+        public void execute(T c, ComponentSize size, Object data) {
+            HorizontalSplitPanel vsp = new HorizontalSplitPanel();
+            c.addComponent(vsp);
+            size.apply(vsp);
         }
     };
 
@@ -264,6 +282,8 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         addCommands.put("Table", addTableCommand);
         addCommands.put("InlineDateField", addInlineDateFieldCommand);
         addCommands.put("PopupDateField", addPopupDateFieldCommand);
+        addCommands.put("VerticalSplitPanel", addVerticalSplitPanelCommand);
+        addCommands.put("HorizontalSplitPanel", addHorizontalSplitPanelCommand);
         // addCommands.put("AbsoluteLayout", addAbsoluteLayoutCommand);
         // addCommands.put("HorizontalLayout", addHorizontalLayoutCommand);
         // addCommands.put("VerticalLayout", addVerticalLayoutCommand);

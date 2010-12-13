@@ -25,17 +25,30 @@ public abstract class AbstractSplitPanelTest<T extends AbstractSplitPanel>
             value.apply(c);
         }
     };
+    private Command<T, Boolean> splitterLockCommand = new Command<T, Boolean>() {
+
+        public void execute(T c, Boolean value, Object data) {
+            c.setLocked(value);
+        }
+    };
 
     @Override
     protected void createActions() {
         super.createActions();
         createSetSplitPositionAction(CATEGORY_FEATURES);
         createSplitterClickListenerAction(CATEGORY_LISTENERS);
+        createSplitterLockAction(CATEGORY_FEATURES);
 
         // Default to 100% x 100% as SplitPanel does not work as undefined
         for (T c : getTestComponents()) {
             c.setSizeFull();
         }
+    }
+
+    private void createSplitterLockAction(String categoryFeatures) {
+        createBooleanAction("Splitter locked", categoryFeatures, false,
+                splitterLockCommand);
+
     }
 
     public static class SplitPosition {

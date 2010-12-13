@@ -5,32 +5,32 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
-public class Buttons2 extends AbstractFieldTest<Button> implements
+public class Buttons2<T extends Button> extends AbstractFieldTest<T> implements
         ClickListener {
 
-    private Command<Button, Boolean> switchModeCommand = new Command<Button, Boolean>() {
+    private Command<T, Boolean> switchModeCommand = new Command<T, Boolean>() {
 
         @SuppressWarnings("deprecation")
-        public void execute(Button c, Boolean value, Object data) {
+        public void execute(T c, Boolean value, Object data) {
             c.setSwitchMode(value);
         }
     };
 
-    private Command<Button, Boolean> clickListenerCommand = new Command<Button, Boolean>() {
+    private Command<T, Boolean> clickListenerCommand = new Command<T, Boolean>() {
 
-        public void execute(Button c, Boolean value, Object data) {
+        public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener((ClickListener) Buttons2.this);
+                c.addListener((Button.ClickListener) Buttons2.this);
             } else {
-                c.removeListener((ClickListener) Buttons2.this);
+                c.removeListener((Button.ClickListener) Buttons2.this);
             }
 
         }
     };
 
     @Override
-    protected Class<Button> getTestClass() {
-        return Button.class;
+    protected Class<T> getTestClass() {
+        return (Class<T>) Button.class;
     }
 
     @Override
