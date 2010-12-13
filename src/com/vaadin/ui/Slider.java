@@ -70,8 +70,8 @@ public class Slider extends AbstractField {
     private double max = 100;
 
     /**
-     * Resolution, how many digits are considered relevant after desimal point.
-     * Must be a non-negative value
+     * Resolution, how many digits are considered relevant after the decimal
+     * point. Must be a non-negative value
      */
     private int resolution = 0;
 
