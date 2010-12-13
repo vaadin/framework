@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_5_0_dev-20101209";}
-.v-theme-version-6_5_0_dev-20101209 {display: none;}
+.v-theme-version:after {content:"6_5_0_dev-20101213";}
+.v-theme-version-6_5_0_dev-20101213 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -3881,6 +3881,11 @@ tr.v-table-row-odd:hover {
 /* Small style */
 .v-table-small .v-table-header-wrap,
 .v-table-small .v-table-header {
+	height: 22px;
+}
+.v-table-small .v-table-sort-indicator,
+.v-table-small .v-table-header-cell-asc .v-table-sort-indicator,
+.v-table-small .v-table-header-cell-desc .v-table-sort-indicator {
 	height: 22px;
 }
 .v-table-small .v-table-caption-container {

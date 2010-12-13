@@ -190,6 +190,11 @@ tr.v-table-row-odd:hover {
 .v-table-small .v-table-header {
 	height: 22px;
 }
+.v-table-small .v-table-sort-indicator,
+.v-table-small .v-table-header-cell-asc .v-table-sort-indicator,
+.v-table-small .v-table-header-cell-desc .v-table-sort-indicator {
+	height: 22px;
+}
 .v-table-small .v-table-caption-container {
 	font-size: 13px;
 	padding-top: 3px;
