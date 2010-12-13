@@ -715,6 +715,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         nullSelectionAllowed = uidl.hasAttribute("nsa") ? uidl
                 .getBooleanAttribute("nsa") : true;
 
+        String oldSortColumn = sortColumn;
         if (uidl.hasVariable("sortascending")) {
             sortAscending = uidl.getBooleanVariable("sortascending");
             sortColumn = uidl.getStringVariable("sortcolumn");
@@ -901,6 +902,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (sortedHeader != null) {
             sortedHeader.setWidth(sortedHeader.getWidth(),
                     sortedHeader.isDefinedWidth());
+        }
+        // Also recalculate the width of the captionContainer element in the
+        // previously sorted header, since this now has more room.
+        HeaderCell oldSortedHeader = tHead.getHeaderCell(oldSortColumn);
+        if (oldSortedHeader != null) {
+            oldSortedHeader.setWidth(oldSortedHeader.getWidth(),
+                    oldSortedHeader.isDefinedWidth());
         }
 
         rendering = false;
