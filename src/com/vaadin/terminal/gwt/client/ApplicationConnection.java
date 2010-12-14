@@ -1092,9 +1092,13 @@ public class ApplicationConnection {
             return;
         }
         String id = getPid(p);
-        unregistryBag.add(id);
-        if (p instanceof HasWidgets) {
-            unregisterChildPaintables((HasWidgets) p);
+        if (id == null) {
+            VConsole.log("Trying to unregister Paintable not created by Application Connection.");
+        } else {
+            unregistryBag.add(id);
+            if (p instanceof HasWidgets) {
+                unregisterChildPaintables((HasWidgets) p);
+            }
         }
     }
 
@@ -1215,6 +1219,9 @@ public class ApplicationConnection {
         final StringBuffer req = new StringBuffer();
 
         while (!pendingVariables.isEmpty()) {
+            if (ApplicationConfiguration.isDebugMode()) {
+                logVariableBurst(pendingVariables);
+            }
             for (int i = 0; i < pendingVariables.size(); i++) {
                 if (i > 0) {
                     if (i % 2 == 0) {
@@ -1235,6 +1242,43 @@ public class ApplicationConnection {
             }
         }
         makeUidlRequest(req.toString(), "", forceSync);
+    }
+
+    private void logVariableBurst(ArrayList<String> pendingVariables2) {
+        try {
+            VConsole.log("Variable burst to be sent to server:");
+            String curId = null;
+            ArrayList<String[]> vars = new ArrayList<String[]>();
+            for (int i = 0; i < pendingVariables.size(); i++) {
+                String value = pendingVariables2.get(i++);
+                String[] split = pendingVariables2.get(i).split(
+                        VAR_FIELD_SEPARATOR);
+                String id = split[0];
+
+                if (curId == null) {
+                    curId = id;
+                } else if (!curId.equals(id)) {
+                    printPaintablesVariables(vars, curId);
+                    vars.clear();
+                    curId = id;
+                }
+                split[0] = value;
+                vars.add(split);
+            }
+            if (!vars.isEmpty()) {
+                printPaintablesVariables(vars, curId);
+            }
+        } catch (Exception e) {
+            VConsole.error(e);
+        }
+    }
+
+    private void printPaintablesVariables(ArrayList<String[]> vars, String id) {
+        Paintable paintable = getPaintable(id);
+        VConsole.log("\t" + id + " (" + paintable.getClass() + ") :");
+        for (String[] var : vars) {
+            VConsole.log("\t\t" + var[1] + " (" + var[2] + ")" + " : " + var[0]);
+        }
     }
 
     private void makeUidlRequest(String string) {
