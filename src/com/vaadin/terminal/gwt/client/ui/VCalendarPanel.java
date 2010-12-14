@@ -7,7 +7,6 @@ package com.vaadin.terminal.gwt.client.ui;
 import java.util.Date;
 import java.util.Iterator;
 
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -29,7 +28,6 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
@@ -325,57 +323,53 @@ public class VCalendarPanel extends FocusableFlexTable implements
     /**
      * Builds the top buttons and current month and year header.
      * 
-     * @param forceRedraw
-     *            Forces the builder to recreate the instances of the buttons.
      * @param needsMonth
      *            Should the month buttons be visible?
      */
-    private void buildCalendarHeader(boolean forceRedraw, boolean needsMonth) {
-        if (forceRedraw) {
-            if (prevMonth == null) {
+    private void buildCalendarHeader(boolean needsMonth) {
 
-                getFlexCellFormatter().setStyleName(0, 0,
-                        VDateField.CLASSNAME + "-calendarpanel-prevyear");
-                getFlexCellFormatter().setStyleName(0, 4,
-                        VDateField.CLASSNAME + "-calendarpanel-nextyear");
-                getFlexCellFormatter().setStyleName(0, 3,
-                        VDateField.CLASSNAME + "-calendarpanel-nextmonth");
-                getFlexCellFormatter().setStyleName(0, 1,
-                        VDateField.CLASSNAME + "-calendarpanel-prevmonth");
+        getRowFormatter().addStyleName(0,
+                VDateField.CLASSNAME + "-calendarpanel-header");
 
-                getRowFormatter().addStyleName(0,
-                        VDateField.CLASSNAME + "-calendarpanel-header");
+        if (prevMonth == null && needsMonth) {
+            prevMonth = new VEventButton();
+            prevMonth.setHTML("&lsaquo;");
+            prevMonth.setStyleName("v-button-prevmonth");
+            prevMonth.setTabIndex(-1);
+            nextMonth = new VEventButton();
+            nextMonth.setHTML("&rsaquo;");
+            nextMonth.setStyleName("v-button-nextmonth");
+            nextMonth.setTabIndex(-1);
+            getFlexCellFormatter().setStyleName(0, 3,
+                    VDateField.CLASSNAME + "-calendarpanel-nextmonth");
+            getFlexCellFormatter().setStyleName(0, 1,
+                    VDateField.CLASSNAME + "-calendarpanel-prevmonth");
 
-                prevYear = new VEventButton();
-                prevYear.setHTML("&laquo;");
-                prevYear.setStyleName("v-button-prevyear");
-                prevYear.setTabIndex(-1);
-                nextYear = new VEventButton();
-                nextYear.setHTML("&raquo;");
-                nextYear.setStyleName("v-button-nextyear");
-                nextYear.setTabIndex(-1);
-                setWidget(0, 0, prevYear);
-                setWidget(0, 4, nextYear);
+            setWidget(0, 3, nextMonth);
+            setWidget(0, 1, prevMonth);
+        } else if (prevMonth != null && !needsMonth) {
+            // Remove month traverse buttons
+            remove(prevMonth);
+            remove(nextMonth);
+            prevMonth = null;
+            nextMonth = null;
+        }
 
-                if (needsMonth) {
-                    prevMonth = new VEventButton();
-                    prevMonth.setHTML("&lsaquo;");
-                    prevMonth.setStyleName("v-button-prevmonth");
-                    prevMonth.setTabIndex(-1);
-                    nextMonth = new VEventButton();
-                    nextMonth.setHTML("&rsaquo;");
-                    nextMonth.setStyleName("v-button-nextmonth");
-                    nextMonth.setTabIndex(-1);
-                    setWidget(0, 3, nextMonth);
-                    setWidget(0, 1, prevMonth);
-                }
-            } else if (!needsMonth) {
-                // Remove month traverse buttons
-                remove(prevMonth);
-                remove(nextMonth);
-                prevMonth = null;
-                nextMonth = null;
-            }
+        if (prevYear == null) {
+            prevYear = new VEventButton();
+            prevYear.setHTML("&laquo;");
+            prevYear.setStyleName("v-button-prevyear");
+            prevYear.setTabIndex(-1);
+            nextYear = new VEventButton();
+            nextYear.setHTML("&raquo;");
+            nextYear.setStyleName("v-button-nextyear");
+            nextYear.setTabIndex(-1);
+            setWidget(0, 0, prevYear);
+            setWidget(0, 4, nextYear);
+            getFlexCellFormatter().setStyleName(0, 0,
+                    VDateField.CLASSNAME + "-calendarpanel-prevyear");
+            getFlexCellFormatter().setStyleName(0, 4,
+                    VDateField.CLASSNAME + "-calendarpanel-nextyear");
         }
 
         final String monthName = needsMonth ? getDateTimeService().getMonth(
@@ -585,7 +579,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
         final boolean needsMonth = getResolution() > VDateField.RESOLUTION_YEAR;
         boolean needsBody = getResolution() >= VDateField.RESOLUTION_DAY;
-        buildCalendarHeader(true, needsMonth);
+        buildCalendarHeader(needsMonth);
         clearCalendarBody(!needsBody);
         if (needsBody) {
             buildCalendarBody();
@@ -1647,16 +1641,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * .dom.client.BlurEvent)
      */
     public void onBlur(final BlurEvent event) {
-        if (isAttached()) {
-            Scheduler.get().scheduleDeferred(new Command() {
-                public void execute() {
-                    if (!hasFocus) {
-                        onTabOut(event);
-                    }
-                }
-            });
-        }
-
         if (event.getSource() instanceof VCalendarPanel) {
             hasFocus = false;
             focusDay(-1);
@@ -1793,4 +1777,11 @@ public class VCalendarPanel extends FocusableFlexTable implements
         return null;
     }
 
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        if (mouseTimer != null) {
+            mouseTimer.cancel();
+        }
+    }
 }
