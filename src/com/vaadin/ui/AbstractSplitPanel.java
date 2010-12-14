@@ -122,6 +122,7 @@ public class AbstractSplitPanel extends AbstractLayout {
         }
         firstComponent = c;
         super.addComponent(c);
+        requestRepaint();
     }
 
     public void setSecondComponent(Component c) {
@@ -136,6 +137,7 @@ public class AbstractSplitPanel extends AbstractLayout {
         }
         secondComponent = c;
         super.addComponent(c);
+        requestRepaint();
     }
 
     /**
