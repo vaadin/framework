@@ -165,7 +165,7 @@ public class AbstractSplitPanel extends AbstractLayout {
         super.removeComponent(c);
         if (c == firstComponent) {
             firstComponent = null;
-        } else {
+        } else if (c == secondComponent) {
             secondComponent = null;
         }
         requestRepaint();
