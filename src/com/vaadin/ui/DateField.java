@@ -705,6 +705,9 @@ public class DateField extends AbstractField implements
             dateString = value.toString();
         }
 
+        setComponentError(null);
+        parsingSucceeded = true;
+
         super.valueChange(event);
     }
 
