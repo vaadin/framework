@@ -138,6 +138,8 @@ public class ApplicationConnection {
 
     private Set<Paintable> zeroHeightComponents = null;
 
+    private Set<String> unregistryBag = new HashSet<String>();
+
     public ApplicationConnection() {
         view = GWT.create(VView.class);
     }
@@ -973,6 +975,8 @@ public class ApplicationConnection {
                     }
                 }
 
+                purgeUnregistryBag();
+
                 // TODO build profiling for widget impl loading time
 
                 final long prosessingTime = (new Date().getTime())
@@ -1072,21 +1076,44 @@ public class ApplicationConnection {
 
     /**
      * Unregisters the given paintable; always use after removing a paintable.
-     * Does not actually remove the paintable from the DOM.
+     * This method does not remove the paintable from the DOM, but marks the
+     * paintable so that ApplicationConnection may clean up its references to
+     * it. Removing the widget from DOM is component containers responsibility.
      * 
      * @param p
      *            the paintable to remove
      */
     public void unregisterPaintable(Paintable p) {
+
+        // add to unregistry que
+
         if (p == null) {
             VConsole.error("WARN: Trying to unregister null paintable");
             return;
         }
         String id = getPid(p);
-        idToPaintableDetail.remove(id);
+        unregistryBag.add(id);
         if (p instanceof HasWidgets) {
             unregisterChildPaintables((HasWidgets) p);
         }
+    }
+
+    private void purgeUnregistryBag() {
+        for (String id : unregistryBag) {
+            // check if can be cleaned
+            Widget component = (Widget) idToPaintableDetail.get(id)
+                    .getComponent();
+            if (!component.isAttached()) {
+                // clean reference from ac to paintable
+                idToPaintableDetail.remove(id);
+            }
+            /*
+             * else NOP : same component has been reattached to another parent
+             * or replaced by another component implementation.
+             */
+        }
+
+        unregistryBag.clear();
     }
 
     /**
