@@ -1657,6 +1657,13 @@ public class Table extends AbstractSelect implements Action.Container,
                 Component c = i.next();
                 if (!visibleComponents.contains(c)) {
                     c.setParent(null);
+                    /*
+                     * Also remove property data sources to unregister listeners
+                     * keeping the fields in memory.
+                     */
+                    if (c instanceof Field) {
+                        ((Field) c).setPropertyDataSource(null);
+                    }
                 }
             }
         }
