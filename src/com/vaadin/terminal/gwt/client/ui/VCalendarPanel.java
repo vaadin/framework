@@ -1675,7 +1675,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
             hasFocus = true;
 
             // Focuses the current day if the calendar shows the days
-            focusDay(focusedDay.getDay());
+            if (focusedDay != null) {
+                focusDay(focusedDay.getDay());
+            }
         }
     }
 
