@@ -135,6 +135,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     public static final char ALIGN_CENTER = 'c';
     public static final char ALIGN_LEFT = 'b';
     public static final char ALIGN_RIGHT = 'e';
+    private static final int CHARCODE_SPACE = 32;
     private int firstRowInViewPort = 0;
     private int pageLength = 15;
     private int lastRequestedFirstvisible = 0; // to detect "serverside scroll"
@@ -574,7 +575,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * @return
      */
     protected int getNavigationSelectKey() {
-        return 32;
+        return CHARCODE_SPACE;
     }
 
     /**
@@ -5411,14 +5412,24 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * .gwt.event.dom.client.KeyPressEvent)
      */
     public void onKeyPress(KeyPressEvent event) {
+        // This is used for Firefox only
+        if (!BrowserInfo.get().isGecko()) {
+            return;
+        }
+
         if (!enabled) {
             // Cancel default keyboard events on a disabled Table (prevents
             // scrolling)
             event.preventDefault();
         } else if (hasFocus) {
-            int keyCode = event.getNativeEvent().getKeyCode();
-            if (keyCode == 0) {
-                keyCode = event.getNativeEvent().getCharCode();
+            // Key code in Firefox/onKeyPress is present only for special keys,
+            // otherwise 0 is returned
+            NativeEvent nativeEvent = event.getNativeEvent();
+            int keyCode = nativeEvent.getKeyCode();
+            if (keyCode == 0 && nativeEvent.getCharCode() == ' ') {
+                // Provide a keyCode for space to be compatible with FireFox
+                // keypress event
+                keyCode = CHARCODE_SPACE;
             }
 
             if (handleNavigation(keyCode,

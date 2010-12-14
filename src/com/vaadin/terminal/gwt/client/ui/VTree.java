@@ -63,6 +63,8 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
     public static final int MULTISELECT_MODE_DEFAULT = 0;
     public static final int MULTISELECT_MODE_SIMPLE = 1;
 
+    private static final int CHARCODE_SPACE = 32;
+
     private final FlowPanel body = new FlowPanel();
 
     private Set<String> selectedIds = new HashSet<String>();
@@ -1556,9 +1558,12 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
      * .gwt.event.dom.client.KeyPressEvent)
      */
     public void onKeyPress(KeyPressEvent event) {
-        int keyCode = event.getNativeEvent().getKeyCode();
-        if (keyCode == 0) {
-            keyCode = event.getNativeEvent().getCharCode();
+        NativeEvent nativeEvent = event.getNativeEvent();
+        int keyCode = nativeEvent.getKeyCode();
+        if (keyCode == 0 && nativeEvent.getCharCode() == ' ') {
+            // Provide a keyCode for space to be compatible with FireFox
+            // keypress event
+            keyCode = CHARCODE_SPACE;
         }
         if (handleKeyNavigation(keyCode,
                 event.isControlKeyDown() || event.isMetaKeyDown(),
@@ -1873,7 +1878,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
      * @return
      */
     protected int getNavigationSelectKey() {
-        return 32;
+        return CHARCODE_SPACE;
     }
 
     /**
