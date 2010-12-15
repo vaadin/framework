@@ -1656,8 +1656,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     .hasNext();) {
                 Component c = i.next();
                 if (!visibleComponents.contains(c)) {
-                    c.setParent(null);
-                    unregisterFieldListeners(c);
+                    unregisterComponent(c);
                 }
             }
         }
@@ -1674,31 +1673,28 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Remove listeners between the field and property data source in order to
-     * allow the field (and property) to be garbage collected.
+     * This method cleans up a Component that has been generated when Table is
+     * in editable mode. The component needs to be detached from its parent and
+     * if it is a field, it needs to be detached from its property data source
+     * in order to allow garbage collection to take care of removing the unused
+     * component from memory.
      * 
-     * HACK WARNING: This is a temporary fix that was made in order to break as
-     * little as possible before the release of 6.5.0. A real solution according
-     * to #6155 should be made for the next major release.
+     * Override this method and getPropertyValue(Object, Object, Property) with
+     * custom logic if you need to deal with buffered fields.
      * 
-     * @param component
-     *            a component from which we should remove the listener
-     *            references.
+     * @see #getPropertyValue(Object, Object, Property)
+     * 
+     * @param oldVisibleComponents
+     *            a set of components that should be unregistered.
      */
-    private void unregisterFieldListeners(Component component) {
+    protected void unregisterComponent(Component component) {
+        component.setParent(null);
+        /*
+         * Also remove property data sources to unregister listeners keeping the
+         * fields in memory.
+         */
         if (component instanceof Field) {
-            Field field = (Field) component;
-            Property prop = field.getPropertyDataSource();
-            if (Property.ValueChangeNotifier.class.isAssignableFrom(prop
-                    .getClass())) {
-                ((Property.ValueChangeNotifier) prop).removeListener(field);
-            }
-            if (Property.ReadOnlyStatusChangeNotifier.class
-                    .isAssignableFrom(prop.getClass())
-                    && field instanceof ReadOnlyStatusChangeListener) {
-                ((Property.ReadOnlyStatusChangeNotifier) prop)
-                        .removeListener((ReadOnlyStatusChangeListener) field);
-            }
+            ((Field) component).setPropertyDataSource(null);
         }
     }
 
