@@ -54,6 +54,7 @@
 .v-table-caption-container-align-right {
 	margin-left: 0;
 	margin-right: 6px;
+	padding-left: 0;
 }
 
 .v-table-caption-container .v-icon {

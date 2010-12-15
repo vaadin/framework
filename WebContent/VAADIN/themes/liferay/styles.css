@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_5_0_dev-20101213";}
-.v-theme-version-6_5_0_dev-20101213 {display: none;}
+.v-theme-version:after {content:"6_5_0_dev-20101215";}
+.v-theme-version-6_5_0_dev-20101215 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -3122,6 +3122,7 @@ select {
 .v-table-caption-container-align-right {
 	margin-left: 0;
 	margin-right: 6px;
+	padding-left: 0;
 }
 
 .v-table-caption-container .v-icon {
