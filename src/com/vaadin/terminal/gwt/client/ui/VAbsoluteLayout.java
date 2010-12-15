@@ -297,14 +297,7 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
             if (caption != null) {
                 caption.removeFromParent();
             }
-
-            // Only unregister if the paintable has not been moved to another
-            // layout and detached from this (hence parent != this or
-            // getWidget() != paintable)
-            if (getWidget() == paintable) {
-                client.unregisterPaintable(paintable);
-            }
-
+            client.unregisterPaintable(paintable);
             removeFromParent();
         }
 
