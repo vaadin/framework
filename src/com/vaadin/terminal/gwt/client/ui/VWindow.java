@@ -730,7 +730,12 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
         }
         DOM.setStyleAttribute(modalityCurtain, "zIndex",
                 "" + (windowOrder.indexOf(this) + Z_INDEX));
-        DOM.appendChild(RootPanel.getBodyElement(), modalityCurtain);
+        if (isShowing()) {
+            RootPanel.getBodyElement().insertBefore(modalityCurtain,
+                    getElement());
+        } else {
+            DOM.appendChild(RootPanel.getBodyElement(), modalityCurtain);
+        }
     }
 
     private void hideModalityCurtain() {
