@@ -559,6 +559,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
             target.addAttribute("fixedposition", true);
         }
 
+        if (bringToFront) {
+            target.addAttribute("bringToFront", true);
+            bringToFront = false;
+        }
+
         if (centerRequested) {
             target.addAttribute("center", true);
             centerRequested = false;
@@ -1438,6 +1443,37 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         requestRepaint();
 
         return true;
+    }
+
+    private boolean bringToFront = false;
+
+    /**
+     * If there are currently several sub windows visible, calling this method
+     * makes this window topmost.
+     * <p>
+     * This method can only be called if this window is a sub window and
+     * connected a top level window. Else an illegal state exception is thrown.
+     * Also if there are modal windows and this window is not modal, and illegal
+     * state exception is thrown.
+     * <p>
+     * <strong> Note, this API works on sub windows only. Browsers can't reorder
+     * OS windows.</strong>
+     */
+    public void bringToFront() {
+        Window parent = getParent();
+        if (parent == null) {
+            throw new IllegalStateException(
+                    "Window must be attached to parent before calling bringToFront method.");
+        }
+        for (Window w : parent.getChildWindows()) {
+            if (w.isModal() && !isModal()) {
+                throw new IllegalStateException(
+                        "There are modal windows currently visible, non-modal window cannot be brought to front.");
+            }
+            w.bringToFront = false;
+        }
+        bringToFront = true;
+        requestRepaint();
     }
 
     /**

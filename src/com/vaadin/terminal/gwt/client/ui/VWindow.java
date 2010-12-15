@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -493,6 +494,20 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
 
         client.getView().scrollIntoView(uidl);
 
+        if (uidl.hasAttribute("bringToFront")) {
+            /*
+             * Modal windows bring them self the front with scheduleFinally(),
+             * deferred is used here so possible (additional) bringToFront
+             * brings the right modal window to top. If this window is not
+             * modal, scheduleFinally would be ok too.
+             */
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                public void execute() {
+                    bringToFront();
+                }
+            });
+        }
+
     }
 
     @Override
@@ -687,7 +702,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
                 showModalityCurtain();
                 bringToFront();
             } else {
-                Scheduler.get().scheduleDeferred(new Command() {
+                Scheduler.get().scheduleFinally(new Command() {
                     public void execute() {
                         // vaadinModality window must on top of others
                         bringToFront();
