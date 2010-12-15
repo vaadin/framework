@@ -13,6 +13,7 @@ import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.UmbrellaException;
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -35,8 +36,8 @@ import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
 /**
  * A helper console for client side development. The debug console can also be
- * used to resolve layout issues and to inspect the communication between
- * browser and the server.
+ * used to resolve layout issues, inspect the communication between browser and
+ * the server, start GWT dev mode and restart application.
  * 
  * <p>
  * This implementation is used vaadin is in debug mode (see manual) and
@@ -60,7 +61,8 @@ public final class VDebugConsole extends VOverlay implements Console {
     private Button forceLayout = new Button("Force layout");
     private Button analyzeLayout = new Button("Analyze layouts");
     private Button savePosition = new Button("Save pos");
-    private CheckBox autoScroll = new CheckBox("Autoscroll");
+    private CheckBox hostedMode = new CheckBox("GWT dev mode ");
+    private CheckBox autoScroll = new CheckBox("Autoscroll ");
     private HorizontalPanel actions;
     private boolean collapsed = false;
 
@@ -499,6 +501,34 @@ public final class VDebugConsole extends VOverlay implements Console {
             savePosition
                     .setTitle("Saves the position and size of debug console to a cookie");
             actions.add(autoScroll);
+            actions.add(hostedMode);
+            if (Location.getParameter("gwt.codesvr") != null) {
+                hostedMode.setValue(true);
+            }
+            hostedMode.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
+                    if (hostedMode.getValue()) {
+                        addHMParameter();
+                    } else {
+                        removeHMParameter();
+                    }
+                }
+
+                private void addHMParameter() {
+                    UrlBuilder createUrlBuilder = Location.createUrlBuilder();
+                    createUrlBuilder.setParameter("gwt.codesvr",
+                            "localhost:9997");
+                    Location.assign(createUrlBuilder.buildString());
+                }
+
+                private void removeHMParameter() {
+                    UrlBuilder createUrlBuilder = Location.createUrlBuilder();
+                    createUrlBuilder.removeParameter("gwt.codesvr");
+                    Location.assign(createUrlBuilder.buildString());
+
+                }
+            });
+
             autoScroll
                     .setTitle("Automatically scroll so that new messages are visible");
 
