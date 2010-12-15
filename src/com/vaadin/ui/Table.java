@@ -1657,13 +1657,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 Component c = i.next();
                 if (!visibleComponents.contains(c)) {
                     c.setParent(null);
-                    /*
-                     * Also remove property data sources to unregister listeners
-                     * keeping the fields in memory.
-                     */
-                    if (c instanceof Field) {
-                        ((Field) c).setPropertyDataSource(null);
-                    }
+                    unregisterFieldListeners(c);
                 }
             }
         }
@@ -1675,6 +1669,35 @@ public class Table extends AbstractSelect implements Action.Container,
                 if (!listenedProperties.contains(o)) {
                     o.removeListener(this);
                 }
+            }
+        }
+    }
+
+    /**
+     * Remove listeners between the field and property data source in order to
+     * allow the field (and property) to be garbage collected.
+     * 
+     * HACK WARNING: This is a temporary fix that was made in order to break as
+     * little as possible before the release of 6.5.0. A real solution according
+     * to #6155 should be made for the next major release.
+     * 
+     * @param component
+     *            a component from which we should remove the listener
+     *            references.
+     */
+    private void unregisterFieldListeners(Component component) {
+        if (component instanceof Field) {
+            Field field = (Field) component;
+            Property prop = field.getPropertyDataSource();
+            if (Property.ValueChangeNotifier.class.isAssignableFrom(prop
+                    .getClass())) {
+                ((Property.ValueChangeNotifier) prop).removeListener(field);
+            }
+            if (Property.ReadOnlyStatusChangeNotifier.class
+                    .isAssignableFrom(prop.getClass())
+                    && field instanceof ReadOnlyStatusChangeListener) {
+                ((Property.ReadOnlyStatusChangeNotifier) prop)
+                        .removeListener((ReadOnlyStatusChangeListener) field);
             }
         }
     }

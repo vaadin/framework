@@ -4,17 +4,25 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.HashMap;
 
+import com.vaadin.data.Container;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.DefaultFieldFactory;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 
 public class EditableTableLeak extends TestBase {
     private final Table table = new Table("ISO-3166 Country Codes and flags");
+    private final CheckBox useFieldFactory = new CheckBox(
+            "Use a caching TableFieldFactory");
     private final Label sizeLabel = new Label("", Label.CONTENT_XHTML);
 
     private long size = 0;
@@ -48,8 +56,43 @@ public class EditableTableLeak extends TestBase {
         }
     }
 
+    private static class CachingFieldFactory extends DefaultFieldFactory {
+        private final HashMap<Object, HashMap<Object, Field>> cache = new HashMap<Object, HashMap<Object, Field>>();
+
+        @Override
+        public Field createField(Container container, Object itemId,
+                Object propertyId, Component uiContext) {
+            if (cache.containsKey(itemId)) {
+                if (cache.get(itemId) != null
+                        && cache.get(itemId).containsKey(propertyId)) {
+                    return cache.get(itemId).get(propertyId);
+                }
+            }
+            Field f = super.createField(container, itemId, propertyId,
+                    uiContext);
+            if (!cache.containsKey(itemId)) {
+                cache.put(itemId, new HashMap<Object, Field>());
+            }
+            cache.get(itemId).put(propertyId, f);
+            return f;
+        }
+
+    }
+
     @Override
     protected void setup() {
+        addComponent(useFieldFactory);
+        useFieldFactory.setImmediate(true);
+        useFieldFactory.addListener(new Button.ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                if ((Boolean) useFieldFactory.getValue()) {
+                    table.setTableFieldFactory(new CachingFieldFactory());
+                } else {
+                    table.setTableFieldFactory(DefaultFieldFactory.get());
+                }
+            }
+        });
         addComponent(table);
         table.setEditable(true);
         table.setWidth("100%");
