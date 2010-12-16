@@ -823,10 +823,12 @@ public class ApplicationConnection {
                     LocaleService.addLocales(valueMapArray);
                 }
 
+                boolean repaintAll = false;
                 ValueMap meta = null;
                 if (json.containsKey("meta")) {
                     meta = json.getValueMap("meta");
                     if (meta.containsKey("repaintAll")) {
+                        repaintAll = true;
                         view.clear();
                         idToPaintableDetail.clear();
                         if (meta.containsKey("invalidLayouts")) {
@@ -975,7 +977,15 @@ public class ApplicationConnection {
                     }
                 }
 
-                purgeUnregistryBag();
+                if (!repaintAll) {
+                    /*
+                     * idToPaintableDetail is already cleanded at the start of
+                     * the changeset handling, bypass cleanup.
+                     */
+                    unregistryBag.clear();
+                } else {
+                    purgeUnregistryBag();
+                }
 
                 // TODO build profiling for widget impl loading time
 
