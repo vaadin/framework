@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_5_0_dev-20101215";}
-.v-theme-version-6_5_0_dev-20101215 {display: none;}
+.v-theme-version:after {content:"6_5_0_dev-20101216";}
+.v-theme-version-6_5_0_dev-20101216 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -446,6 +446,7 @@ div.v-app-loading {
 .v-debug-console-content {
 	font-size: x-small;
 	overflow: auto;
+	white-space: pre;
 }
 .v-debug-console-content input {
 	font-size: xx-small;

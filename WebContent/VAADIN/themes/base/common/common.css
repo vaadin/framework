@@ -197,6 +197,7 @@ div.v-app-loading {
 .v-debug-console-content {
 	font-size: x-small;
 	overflow: auto;
+	white-space: pre;
 }
 .v-debug-console-content input {
 	font-size: xx-small;
