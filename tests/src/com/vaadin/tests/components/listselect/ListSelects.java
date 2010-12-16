@@ -7,6 +7,18 @@ import com.vaadin.ui.ListSelect;
 
 public class ListSelects extends AbstractSelectTestCase<ListSelect> {
 
+    private Command<ListSelect, Integer> rowsCommand = new Command<ListSelect, Integer>() {
+        public void execute(ListSelect c, Integer value, Object data) {
+            c.setRows(value);
+        }
+    };
+
+    private Command<ListSelect, Integer> colsCommand = new Command<ListSelect, Integer>() {
+        public void execute(ListSelect c, Integer value, Object data) {
+            c.setColumns(value);
+        }
+    };
+
     @Override
     protected Class<ListSelect> getTestClass() {
         return ListSelect.class;
@@ -15,51 +27,18 @@ public class ListSelects extends AbstractSelectTestCase<ListSelect> {
     @Override
     protected void createActions() {
         super.createActions();
-        createColumnSelectAction();
-        createRowSelectAction();
-    }
-
-    private void createColumnSelectAction() {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
-        options.put("-", 0);
-        for (int i = 1; i <= 10; i++) {
-            options.put(String.valueOf(i), i);
-        }
-        options.put("50", 50);
-        options.put("100", 100);
-        options.put("1000", 1000);
-
-        super.createSelectAction("Columns", CATEGORY_DATA_SOURCE, options, "-",
-                columnsAction);
-
-    }
-
-    private void createRowSelectAction() {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
-        options.put("-", 0);
-        for (int i = 1; i <= 10; i++) {
-            options.put(String.valueOf(i), i);
-        }
-        options.put("50", 50);
-        options.put("100", 100);
-        options.put("1000", 1000);
-
-        super.createSelectAction("Rows", CATEGORY_DATA_SOURCE, options, "-",
-                rowsAction);
-
-    }
-
-    private Command<ListSelect, Integer> columnsAction = new Command<ListSelect, Integer>() {
-
-        public void execute(ListSelect c, Integer value, Object data) {
-            c.setColumns(value);
-        }
+        createRowsAction(CATEGORY_FEATURES);
+        createColsAction(CATEGORY_FEATURES);
     };
-    private Command<ListSelect, Integer> rowsAction = new Command<ListSelect, Integer>() {
 
-        public void execute(ListSelect c, Integer value, Object data) {
-            c.setRows(value);
-        }
-    };
+    private void createRowsAction(String category) {
+        LinkedHashMap<String, Integer> options = createIntegerOptions(20);
+        createSelectAction("Rows", category, options, "0", rowsCommand);
+    }
+
+    private void createColsAction(String category) {
+        LinkedHashMap<String, Integer> options = createIntegerOptions(20);
+        createSelectAction("Columns", category, options, "0", colsCommand);
+    }
 
 }
