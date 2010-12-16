@@ -1114,7 +1114,7 @@ public class ApplicationConnection {
                 VConsole.error("ApplicationConnetion tried to unregister component (id="
                         + id
                         + ") that is never registered (or already unregistered)");
-                return;
+                continue;
             }
             // check if can be cleaned
             Widget component = (Widget) componentDetail.getComponent();
