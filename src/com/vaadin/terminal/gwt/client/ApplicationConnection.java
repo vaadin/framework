@@ -1104,9 +1104,20 @@ public class ApplicationConnection {
 
     private void purgeUnregistryBag() {
         for (String id : unregistryBag) {
+            ComponentDetail componentDetail = idToPaintableDetail.get(id);
+            if (componentDetail == null) {
+                /*
+                 * this should never happen, but it does :-( See e.g.
+                 * com.vaadin.tests.components.accordion.RemoveTabs (with test
+                 * script)
+                 */
+                VConsole.error("ApplicationConnetion tried to unregister component (id="
+                        + id
+                        + ") that is never registered (or already unregistered)");
+                return;
+            }
             // check if can be cleaned
-            Widget component = (Widget) idToPaintableDetail.get(id)
-                    .getComponent();
+            Widget component = (Widget) componentDetail.getComponent();
             if (!component.isAttached()) {
                 // clean reference from ac to paintable
                 idToPaintableDetail.remove(id);
