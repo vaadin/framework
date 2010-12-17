@@ -2,6 +2,7 @@ package com.vaadin.tests.components.datefield;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
@@ -27,6 +28,7 @@ public class ValueThroughProperty extends TestBase {
                 Label.CONTENT_XML));
 
         final PopupDateField df = new PopupDateField(dateProperty);
+        df.setLocale(new Locale("en", "US"));
         df.setImmediate(true);
         df.setResolution(DateField.RESOLUTION_DAY);
         addComponent(df);
