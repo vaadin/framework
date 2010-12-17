@@ -2172,13 +2172,4 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
 
-    /**
-     * Works only for sub windows.
-     * 
-     * TODO to be or not to be? If so, should be the same as bringToFront? Or to
-     * bringToFront() as a side effect?
-     */
-    // public void focus() {
-    //
-    // }
 }
