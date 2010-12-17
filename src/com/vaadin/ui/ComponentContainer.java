@@ -31,7 +31,7 @@ public interface ComponentContainer extends Component {
      * Removes the component from this container.
      * 
      * @param c
-     *            the component to be added.
+     *            the component to be removed.
      */
     public void removeComponent(Component c);
 
