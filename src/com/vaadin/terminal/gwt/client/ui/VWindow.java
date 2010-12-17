@@ -10,7 +10,15 @@ import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.ScrollEvent;
+import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
@@ -21,28 +29,27 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.ScrollListener;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
+import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VDebugConsole;
+import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
 /**
  * "Sub window" component.
  * 
- * TODO update position / scroll position / size to client
- * 
  * @author IT Mill Ltd
  */
-public class VWindow extends VOverlay implements Container, ScrollListener,
-        ShortcutActionHandlerOwner {
+public class VWindow extends VOverlay implements Container,
+        ShortcutActionHandlerOwner, ScrollHandler, KeyDownHandler,
+        FocusHandler, BlurHandler, BeforeShortcutActionListener {
 
     /**
      * Minimum allowed height of a window. This refers to the content area, not
@@ -87,7 +94,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
 
     private Element resizeBox;
 
-    private final ScrollPanel contentPanel = new ScrollPanel();
+    private final FocusableScrollPanel contentPanel = new FocusableScrollPanel();
 
     private boolean dragging;
 
@@ -176,10 +183,10 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
         constructDOM();
         setPopupPosition(order * STACKING_OFFSET_PIXELS, order
                 * STACKING_OFFSET_PIXELS);
-        contentPanel.addScrollListener(this);
-
-        // make it focusable, but last in focus chain
-        DOM.setElementProperty(contentPanel.getElement(), "tabIndex", "0");
+        contentPanel.addScrollHandler(this);
+        contentPanel.addKeyDownHandler(this);
+        contentPanel.addFocusHandler(this);
+        contentPanel.addBlurHandler(this);
     }
 
     private void bringToFront() {
@@ -240,8 +247,6 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
 
         wrapper2 = DOM.createDiv();
         DOM.setElementProperty(wrapper2, "className", CLASSNAME + "-wrap2");
-
-        DOM.sinkEvents(wrapper, Event.ONKEYDOWN);
 
         DOM.appendChild(wrapper2, closeBox);
         DOM.appendChild(wrapper2, header);
@@ -496,6 +501,12 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
 
         if (uidl.hasAttribute("bringToFront")) {
             /*
+             * Focus as a side-efect. Will be overridden by
+             * ApplicationConnection if another component was focused by the
+             * server side.
+             */
+            contentPanel.focus();
+            /*
              * Modal windows bring them self the front with scheduleFinally(),
              * deferred is used here so possible (additional) bringToFront
              * brings the right modal window to top. If this window is not
@@ -583,13 +594,6 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
             measure();
         }
         return contentAreaToRootDifference;
-    }
-
-    private int getContentAreaBorderPadding() {
-        if (contentAreaBorderPadding < 0) {
-            measure();
-        }
-        return contentAreaBorderPadding;
     }
 
     private void measure() {
@@ -832,11 +836,6 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
         if (event != null) {
             final int type = event.getTypeInt();
 
-            if (type == Event.ONKEYDOWN && shortcutHandler != null) {
-                shortcutHandler.handleKeyboardEvent(event);
-                return;
-            }
-
             final Element target = DOM.eventGetTarget(event);
 
             // Handle window caption tooltips
@@ -863,14 +862,18 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
                 }
             }
 
+            /*
+             * If clicking on other than the content, move focus to the window.
+             * After that this windows e.g. gets all keyboard shortcuts.
+             */
             if (type == Event.ONMOUSEDOWN
                     && !DOM.isOrHasChild(contentPanel.getElement(), target)) {
-                Util.focus(contentPanel.getElement());
+                contentPanel.focus();
             }
         }
 
         if (!bubble) {
-            event.cancelBubble(true);
+            event.stopPropagation();
         } else {
             // Super.onBrowserEvent takes care of Handlers added by the
             // ClickEventHandler
@@ -1082,6 +1085,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
 
     private int extraH = 0;
 
+    private boolean hasFocus;
+
     private int getExtraHeight() {
         extraH = header.getOffsetHeight() + footer.getOffsetHeight();
         return extraH;
@@ -1164,11 +1169,6 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
         return true;
     }
 
-    public void onScroll(Widget widget, int scrollLeft, int scrollTop) {
-        client.updateVariable(id, "scrollTop", scrollTop, false);
-        client.updateVariable(id, "scrollLeft", scrollLeft, false);
-    }
-
     @Override
     public void addStyleDependentName(String styleSuffix) {
         // VWindow's getStyleElement() does not return the same element as
@@ -1225,6 +1225,39 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
 
     public ShortcutActionHandler getShortcutActionHandler() {
         return shortcutHandler;
+    }
+
+    public void onScroll(ScrollEvent event) {
+        client.updateVariable(id, "scrollTop",
+                contentPanel.getScrollPosition(), false);
+        client.updateVariable(id, "scrollLeft",
+                contentPanel.getHorizontalScrollPosition(), false);
+
+    }
+
+    public void onKeyDown(KeyDownEvent event) {
+        if (shortcutHandler != null) {
+            shortcutHandler
+                    .handleKeyboardEvent(Event.as(event.getNativeEvent()));
+            return;
+        }
+    }
+
+    public void onBlur(BlurEvent event) {
+        if (client.hasEventListeners(this, EventId.BLUR)) {
+            client.updateVariable(id, EventId.BLUR, "", true);
+        }
+    }
+
+    public void onFocus(FocusEvent event) {
+        if (client.hasEventListeners(this, EventId.FOCUS)) {
+            client.updateVariable(id, EventId.FOCUS, "", true);
+        }
+    }
+
+    public void onBeforeShortcutAction(Event e) {
+        // NOP, nothing to update just avoid workaround ( causes excess
+        // blur/focus )
     }
 
 }

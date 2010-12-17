@@ -17,6 +17,12 @@ import java.util.Map;
 import java.util.Set;
 
 import com.vaadin.Application;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.BlurNotifier;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
@@ -78,7 +84,8 @@ import com.vaadin.terminal.gwt.client.ui.VWindow;
  */
 @SuppressWarnings("serial")
 @ClientWidget(VWindow.class)
-public class Window extends Panel implements URIHandler, ParameterHandler {
+public class Window extends Panel implements URIHandler, ParameterHandler,
+        FocusNotifier, BlurNotifier {
 
     /**
      * <b>Application window only</b>. A border style used for opening resources
@@ -1082,6 +1089,12 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         // fire event if size has really changed
         if (sizeHasChanged) {
             fireResize();
+        }
+
+        if (variables.containsKey(FocusEvent.EVENT_ID)) {
+            fireEvent(new FocusEvent(this));
+        } else if (variables.containsKey(BlurEvent.EVENT_ID)) {
+            fireEvent(new BlurEvent(this));
         }
 
     }
@@ -2126,4 +2139,46 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
             window.close();
         }
     }
+
+    /**
+     * Note, that focus/blur listeners in Window class are only supported by sub
+     * windows. Also note that Window is not considered focused if its contained
+     * component currently has focus.
+     * 
+     * @see com.vaadin.event.FieldEvents.FocusNotifier#addListener(com.vaadin.event.FieldEvents.FocusListener)
+     */
+    public void addListener(FocusListener listener) {
+        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
+                FocusListener.focusMethod);
+    }
+
+    public void removeListener(FocusListener listener) {
+        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+    }
+
+    /**
+     * Note, that focus/blur listeners in Window class are only supported by sub
+     * windows. Also note that Window is not considered focused if its contained
+     * component currently has focus.
+     * 
+     * @see com.vaadin.event.FieldEvents.BlurNotifier#addListener(com.vaadin.event.FieldEvents.BlurListener)
+     */
+    public void addListener(BlurListener listener) {
+        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
+                BlurListener.blurMethod);
+    }
+
+    public void removeListener(BlurListener listener) {
+        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+    }
+
+    /**
+     * Works only for sub windows.
+     * 
+     * TODO to be or not to be? If so, should be the same as bringToFront? Or to
+     * bringToFront() as a side effect?
+     */
+    // public void focus() {
+    //
+    // }
 }
