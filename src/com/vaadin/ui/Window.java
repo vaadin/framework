@@ -566,9 +566,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
             target.addAttribute("fixedposition", true);
         }
 
-        if (bringToFront) {
-            target.addAttribute("bringToFront", true);
-            bringToFront = false;
+        if (bringToFront != null) {
+            target.addAttribute("bringToFront", bringToFront.intValue());
+            bringToFront = null;
         }
 
         if (centerRequested) {
@@ -1458,7 +1458,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
         return true;
     }
 
-    private boolean bringToFront = false;
+    private Integer bringToFront = null;
+
+    /*
+     * This sequesnce is used to keep the right order of windows if multiple
+     * windows are brought to front in a single changeset. Incremented and saved
+     * by childwindows. If sequence is not used, the order is quite random
+     * (depends on the order getting to dirty list. e.g. which window got
+     * variable changes).
+     */
+    private int bringToFrontSequence = 0;
 
     /**
      * If there are currently several sub windows visible, calling this method
@@ -1483,9 +1492,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
                 throw new IllegalStateException(
                         "There are modal windows currently visible, non-modal window cannot be brought to front.");
             }
-            w.bringToFront = false;
         }
-        bringToFront = true;
+        bringToFront = getParent().bringToFrontSequence++;
         requestRepaint();
     }
 

@@ -5,11 +5,12 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.DomEvent.Type;
@@ -64,6 +65,8 @@ public class VWindow extends VOverlay implements Container,
     private static final int MIN_CONTENT_AREA_WIDTH = 150;
 
     private static ArrayList<VWindow> windowOrder = new ArrayList<VWindow>();
+
+    private static boolean orderingDefered;
 
     public static final String CLASSNAME = "v-window";
 
@@ -172,6 +175,8 @@ public class VWindow extends VOverlay implements Container,
 
     private boolean visibilityChangesDisabled;
 
+    private int bringToFrontSequence = -1;
+
     public VWindow() {
         super(false, false, true); // no autohide, not modal, shadow
         // Different style of shadow for windows
@@ -189,7 +194,7 @@ public class VWindow extends VOverlay implements Container,
         contentPanel.addBlurHandler(this);
     }
 
-    private void bringToFront() {
+    public void bringToFront() {
         int curIndex = windowOrder.indexOf(this);
         if (curIndex + 1 < windowOrder.size()) {
             windowOrder.remove(this);
@@ -201,7 +206,7 @@ public class VWindow extends VOverlay implements Container,
     }
 
     /**
-     * Returns true if window is the topmost window
+     * Returns true if this window is the topmost VWindow
      * 
      * @return
      */
@@ -209,7 +214,7 @@ public class VWindow extends VOverlay implements Container,
         return windowOrder.get(windowOrder.size() - 1).equals(this);
     }
 
-    public void setWindowOrder(int order) {
+    private void setWindowOrder(int order) {
         setZIndex(order + Z_INDEX);
     }
 
@@ -506,19 +511,56 @@ public class VWindow extends VOverlay implements Container,
              * server side.
              */
             contentPanel.focus();
-            /*
-             * Modal windows bring them self the front with scheduleFinally(),
-             * deferred is used here so possible (additional) bringToFront
-             * brings the right modal window to top. If this window is not
-             * modal, scheduleFinally would be ok too.
-             */
-            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            bringToFrontSequence = uidl.getIntAttribute("bringToFront");
+            deferOrdering();
+        }
+    }
+
+    /**
+     * Calling this method will defer ordering algorithm, to order windows based
+     * on servers bringToFront and modality instructions. Non changed windows
+     * will be left intact.
+     */
+    private static void deferOrdering() {
+        if (!orderingDefered) {
+            orderingDefered = true;
+            Scheduler.get().scheduleFinally(new Command() {
                 public void execute() {
-                    bringToFront();
+                    doServerSideOrdering();
                 }
             });
         }
+    }
 
+    private static void doServerSideOrdering() {
+        orderingDefered = false;
+        VWindow[] array = windowOrder.toArray(new VWindow[windowOrder.size()]);
+        Arrays.sort(array, new Comparator<VWindow>() {
+            public int compare(VWindow o1, VWindow o2) {
+                /*
+                 * Order by modality, then by bringtofront sequence.
+                 */
+
+                if (o1.vaadinModality && !o2.vaadinModality) {
+                    return 1;
+                } else if (!o1.vaadinModality && o2.vaadinModality) {
+                    return -1;
+                } else if (o1.bringToFrontSequence > o2.bringToFrontSequence) {
+                    return 1;
+                } else if (o1.bringToFrontSequence < o2.bringToFrontSequence) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+        for (int i = 0; i < array.length; i++) {
+            VWindow w = array[i];
+            if (w.bringToFrontSequence != -1 || w.vaadinModality) {
+                w.bringToFront();
+                w.bringToFrontSequence = -1;
+            }
+        }
     }
 
     @Override
@@ -704,15 +746,8 @@ public class VWindow extends VOverlay implements Container,
                     + "-modalitycurtain");
             if (isAttached()) {
                 showModalityCurtain();
-                bringToFront();
-            } else {
-                Scheduler.get().scheduleFinally(new Command() {
-                    public void execute() {
-                        // vaadinModality window must on top of others
-                        bringToFront();
-                    }
-                });
             }
+            deferOrdering();
         } else {
             if (modalityCurtain != null) {
                 if (isAttached()) {
