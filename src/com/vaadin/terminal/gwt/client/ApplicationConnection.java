@@ -1296,9 +1296,12 @@ public class ApplicationConnection {
 
     private void printPaintablesVariables(ArrayList<String[]> vars, String id) {
         Paintable paintable = getPaintable(id);
-        VConsole.log("\t" + id + " (" + paintable.getClass() + ") :");
-        for (String[] var : vars) {
-            VConsole.log("\t\t" + var[1] + " (" + var[2] + ")" + " : " + var[0]);
+        if (paintable != null) {
+            VConsole.log("\t" + id + " (" + paintable.getClass() + ") :");
+            for (String[] var : vars) {
+                VConsole.log("\t\t" + var[1] + " (" + var[2] + ")" + " : "
+                        + var[0]);
+            }
         }
     }
 
