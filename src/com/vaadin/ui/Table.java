@@ -1940,12 +1940,6 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
 
-        if (!isNullSelectionAllowed() && newValue.size() < 1) {
-            // empty selection not allowed, keep old value
-            requestRepaint();
-            return;
-        }
-
         /* Add range items aka shift clicked multiselection areas */
         if (ranges != null) {
             for (String range : ranges) {
@@ -1954,6 +1948,12 @@ public class Table extends AbstractSelect implements Action.Container,
                 int length = Integer.valueOf(split[1]);
                 newValue.addAll(getItemIdsInRange(startItemId, length));
             }
+        }
+
+        if (!isNullSelectionAllowed() && newValue.size() < 1) {
+            // empty selection not allowed, keep old value
+            requestRepaint();
+            return;
         }
 
         setValue(newValue, true);
