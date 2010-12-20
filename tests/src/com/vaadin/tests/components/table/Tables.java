@@ -112,9 +112,9 @@ public class Tables extends AbstractSelectTestCase<Table> implements
     protected Command<Table, Alignments> columnAlignmentCommand = new Command<Table, Alignments>() {
 
         public void execute(Table c, Alignments value, Object data) {
-            for (Object propertyId : c.getContainerPropertyIds()) {
-                // TODO
-            }
+            // TODO
+            // for (Object propertyId : c.getContainerPropertyIds()) {
+            // }
         }
     };
 

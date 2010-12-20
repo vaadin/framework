@@ -14,6 +14,7 @@ public class Notifications extends TestBase implements ClickListener {
     private TextField tf;
     private NativeSelect type;
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void setup() {
         tf = new TextField("Text", "Hello world");

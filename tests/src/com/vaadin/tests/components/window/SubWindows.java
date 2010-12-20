@@ -41,6 +41,7 @@ public class SubWindows extends TestBase {
         return b;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void setup() {
         autoWideWindow = new Window("Dialog - width by contents",

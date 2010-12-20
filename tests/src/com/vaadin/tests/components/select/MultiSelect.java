@@ -5,6 +5,7 @@ import com.vaadin.ui.Select;
 
 public class MultiSelect extends TestBase {
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void setup() {
         Select selectComponent = new Select();

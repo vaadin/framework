@@ -8,6 +8,7 @@ import com.vaadin.ui.VerticalLayout;
 
 public class SizedTextFields extends TestBase {
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void setup() {
 

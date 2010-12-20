@@ -11,6 +11,7 @@ import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Window;
@@ -37,7 +38,7 @@ public class CustomLayoutDemo extends com.vaadin.Application implements
 
     private final TextField username = new TextField("Username");
 
-    private final TextField loginPwd = new TextField("Password");
+    private final PasswordField loginPwd = new PasswordField("Password");
 
     private final Button loginButton = new Button("Login", this, "loginClicked");
 
@@ -62,7 +63,6 @@ public class CustomLayoutDemo extends com.vaadin.Application implements
         customLayoutPanel.addComponent(mainLayout);
 
         // Login components
-        loginPwd.setSecret(true);
         mainLayout.addComponent(username, "loginUser");
         mainLayout.addComponent(loginPwd, "loginPassword");
         mainLayout.addComponent(loginButton, "loginButton");

@@ -124,6 +124,7 @@ public class Ticket1230 extends Application {
                 }));
     }
 
+    @SuppressWarnings("deprecation")
     private Select createSelect() {
         Select select = new Select();
         select.setMultiSelect(false);

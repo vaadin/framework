@@ -29,6 +29,7 @@ public class SelectionAndCursorPosition extends TestBase {
         CheckBox ml = new CheckBox("Multiline");
         ml.setImmediate(true);
         ml.addListener(new Property.ValueChangeListener() {
+            @SuppressWarnings("deprecation")
             public void valueChange(ValueChangeEvent event) {
                 if (tf.getHeight() < 0) {
                     tf.setHeight("50px");
