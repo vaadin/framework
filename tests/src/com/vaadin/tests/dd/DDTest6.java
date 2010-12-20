@@ -318,6 +318,7 @@ public class DDTest6 extends TestBase {
             super.attach();
         }
 
+        @SuppressWarnings("static-access")
         void reload() {
             Collection<?> children = folder == null ? DDTest6.get().tree1
                     .rootItemIds() : DDTest6.get().tree1.getChildren(folder);
@@ -354,6 +355,7 @@ public class DDTest6 extends TestBase {
 
         }
 
+        @SuppressWarnings("static-access")
         public void drop(DragAndDropEvent dropEvent) {
 
             if (dropEvent.getTransferable().getSourceComponent() instanceof FileIcon) {
@@ -471,6 +473,7 @@ public class DDTest6 extends TestBase {
             l.addComponent(new Label(name));
 
             l.addListener(new LayoutClickListener() {
+                @SuppressWarnings("static-access")
                 public void layoutClick(LayoutClickEvent event) {
                     if (event.isDoubleClick()) {
                         if (file instanceof Folder) {
