@@ -7,6 +7,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
@@ -41,7 +42,6 @@ public class SubWindows extends TestBase {
         return b;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void setup() {
         autoWideWindow = new Window("Dialog - width by contents",
@@ -78,12 +78,12 @@ public class SubWindows extends TestBase {
             dialog.getContent().setHeight(null);
             dialog.getContent().setWidth("100%");
 
-            TextField tf = new TextField();
-            tf.setValue("The textfield should fill the window (except margins)."
+            TextArea ta = new TextArea();
+            ta.setValue("The textfield should fill the window (except margins)."
                     + "\n - Try to resize the window\n");
-            tf.setRows(5);
-            tf.setWidth("100%");
-            dialog.addComponent(tf);
+            ta.setRows(5);
+            ta.setWidth("100%");
+            dialog.addComponent(ta);
 
             dialog.setPositionX(20);
             dialog.setPositionY(100);
@@ -95,13 +95,13 @@ public class SubWindows extends TestBase {
             dialog.getContent().setHeight("100%");
             dialog.getContent().setWidth("100%");
 
-            TextField tf = new TextField();
-            tf.setValue("The textfield should fill the window (except margins)."
+            TextArea ta = new TextArea();
+            ta.setValue("The textfield should fill the window (except margins)."
                     + "\n - Try to resize the window\n");
-            tf.setWidth("100%");
-            tf.setHeight("100%");
-            tf.setRows(5);
-            dialog.addComponent(tf);
+            ta.setWidth("100%");
+            ta.setHeight("100%");
+            ta.setRows(5);
+            dialog.addComponent(ta);
 
             dialog.setPositionX(20);
             dialog.setPositionY(300);
