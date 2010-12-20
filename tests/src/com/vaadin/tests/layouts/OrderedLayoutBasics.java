@@ -103,7 +103,7 @@ public class OrderedLayoutBasics extends TestBase {
 
     /* LAYOUTS */
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({ "unused", "deprecation" })
     private Layout layout1() {
         HorizontalLayout ol = new HorizontalLayout();
         ol.setHeight("200px");
@@ -144,7 +144,7 @@ public class OrderedLayoutBasics extends TestBase {
 
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({ "unused", "deprecation" })
     private Layout layout2() {
         HorizontalLayout ol = new HorizontalLayout();
         ol.setHeight("70px");
@@ -191,7 +191,7 @@ public class OrderedLayoutBasics extends TestBase {
         return ol;
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({ "unused", "deprecation" })
     private Layout layout3() {
         HorizontalLayout ol = new HorizontalLayout();
         ol.setHeight("");
@@ -243,7 +243,7 @@ public class OrderedLayoutBasics extends TestBase {
         return ol;
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({ "unused", "deprecation" })
     private Layout layout3New() {
         HorizontalLayout ol = new HorizontalLayout();
         ol.setHeight("300px");
