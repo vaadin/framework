@@ -1950,7 +1950,7 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
 
-        if (!isNullSelectionAllowed() && newValue.size() < 1) {
+        if (!isNullSelectionAllowed() && newValue.isEmpty()) {
             // empty selection not allowed, keep old value
             requestRepaint();
             return;
