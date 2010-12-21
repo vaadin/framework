@@ -5,12 +5,6 @@
 <script type="text/javascript">
 	var vaadin = {
 		vaadinConfigurations: {
-			'fb' :{
-				appUri:'/FeatureBrowser', 
-				pathInfo: '/', 
-				themeUri: '/VAADIN/themes/example', 
-				versionInfo : {vaadinVersion:"6.0.0-INTERNAL-NONVERSIONED-DEBUG-BUILD",applicationVersion:"NONVERSIONED"}
-			},
 			'calc' :{
 				appUri:'/Calc', 
 				pathInfo: '/', 
@@ -38,5 +32,8 @@
 	<div id="fb" style="height:400px;border:2px solid red;margin:0"></div>
 	<div id="calc" style="border:2px solid green;margin:0"></div>
 	<div id="hello" style="border:2px solid blue;margin:0"></div>
+	
+	
+	<iframe src="/FeatureBrowser?debug" style="width:300px; height:200px;"></iframe>
 	</body>
 </html>

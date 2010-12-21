@@ -332,6 +332,8 @@ public abstract class AbstractCommunicationManager implements
 
     private int maxInactiveInterval;
 
+    private boolean paintPhase;
+
     private static int nextUnusedWindowSuffix = 1;
 
     /**
@@ -857,6 +859,8 @@ public abstract class AbstractCommunicationManager implements
             Window window, boolean analyzeLayouts) throws PaintException,
             IOException {
 
+        paintPhase = true;
+
         if (repaintAll) {
             makeAllPaintablesDirty(window);
         }
@@ -910,6 +914,8 @@ public abstract class AbstractCommunicationManager implements
         outWriter.print("}]");
 
         outWriter.close();
+
+        paintPhase = false;
 
     }
 
@@ -1970,6 +1976,10 @@ public abstract class AbstractCommunicationManager implements
      * @see com.vaadin.terminal.Paintable.RepaintRequestListener#repaintRequested(com.vaadin.terminal.Paintable.RepaintRequestEvent)
      */
     public void repaintRequested(RepaintRequestEvent event) {
+        if (paintPhase) {
+            throw new IllegalStateException(
+                    "Paintables shouldn't become dirty in paint phase!!");
+        }
         final Paintable p = event.getPaintable();
         if (!dirtyPaintables.contains(p)) {
             dirtyPaintables.add(p);
