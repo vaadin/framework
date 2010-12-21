@@ -29,6 +29,9 @@ import com.vaadin.terminal.gwt.client.Util;
 
 public class VSplitPanel extends ComplexPanel implements Container,
         ContainerResizedListener {
+
+    private boolean enabled = false;
+
     public static final String CLASSNAME = "v-splitpanel";
 
     public static final String SPLITTER_CLICK_EVENT_IDENTIFIER = "sp_click";
@@ -207,6 +210,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
             rendering = false;
             return;
         }
+        setEnabled(!uidl.getBooleanAttribute("disabled"));
 
         clickEventHandler.handleEventHandlerRegistration(client);
         if (uidl.hasAttribute("style")) {
@@ -459,7 +463,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
     }
 
     public void onMouseDown(Event event) {
-        if (locked) {
+        if (locked || !isEnabled()) {
             return;
         }
         final Element trg = DOM.eventGetTarget(event);
@@ -548,7 +552,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
                 pos = getOffsetHeight();
             }
             // Reversed position
-            if(positionReversed){
+            if (positionReversed) {
                 pos = getOffsetHeight() - pos - getSplitterSize();
             }
             position = pos / getOffsetHeight() * 100 + "%";
@@ -762,5 +766,13 @@ public class VSplitPanel extends ComplexPanel implements Container,
         DOM.setElementProperty(splitter, "className", splitterStyle);
         DOM.setElementProperty(firstContainer, "className", firstStyle);
         DOM.setElementProperty(secondContainer, "className", secondStyle);
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 }

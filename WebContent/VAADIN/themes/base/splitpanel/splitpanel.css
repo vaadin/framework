@@ -16,6 +16,9 @@
 	cursor: e-resize;
 	cursor: col-resize;
 }
+.v-disabled .v-splitpanel-hsplitter div {
+	cursor: default;
+}
 .v-splitpanel-vsplitter {
 	height: 6px;
 	font-size: 1px; /* for IE6 */
@@ -26,6 +29,9 @@
 	background: #ddd;
 	cursor: s-resize;
 	cursor: row-resize;
+}
+.v-disabled .v-splitpanel-vsplitter div {
+	cursor: default;
 }
 /* IE specific styles */
 .v-ie6 .v-splitpanel-hsplitter div {
