@@ -43,11 +43,13 @@
 		<exclude name="tests/integration-testscripts/**" />
 	</fileset>
 
+	<!-- fileset containing tests to retry -->
+	<fileset dir=".." id="html-retry-files-ie6">
+		<include name="tests/**/ComboBoxLargeIcons.html" />
+	</fileset>
+
 	<!-- This target converts HTML tests files to java junit tests. One test file for each browser is created. -->
 	<target name="create-tests" depends="remove-temp-testclasses" if="server.start.succeeded">
-		<fileset id="tests">
-			<include />
-		</fileset>
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 
 		<java classname="com.vaadin.testbench.util.TestConverter" classpathref="classpath">
@@ -57,21 +59,17 @@
 		</java>
 	</target>
 
-	<target name="create-retry-tests">
+
+	<target name="create-retry-tests" if="create.retry.tests">
 		<antcall target="convert-retry-test">
 			<param name="browser" value="winxp-ie6" />
-			<param name="testfile-name" value="tests/**/ComboBoxLargeIcons.html" />
-			<param name="retries" value="3" />
+			<param name="testfile-name" value="html-retry-files-ie6" />
 		</antcall>
 	</target>
-	
+
 	<!-- Target converts test files so that the whole test can be re run 'retries' times -->
-	<target name="convert-retry-test">
-		<fail unless="retries" message="The 'retries' property must be defined." />
-		<fileset dir=".." id="test-files">
-			<include name="${testfile-name}" />
-		</fileset>
-		<pathconvert pathsep=" " property="testfile" refid="test-files" />
+	<target name="convert-retry-test" if="retries">
+		<pathconvert pathsep=" " property="testfile" refid="${testfile-name}" />
 
 		<java classname="com.vaadin.testbench.util.TestConverter" classpathref="classpath">
 			<sysproperty key="com.vaadin.testbench.test.retries" value="${retries}" />
