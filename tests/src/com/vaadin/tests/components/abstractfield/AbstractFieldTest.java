@@ -1,6 +1,8 @@
 package com.vaadin.tests.components.abstractfield;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -136,8 +138,22 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
         }
     };
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
         Object o = event.getProperty().getValue();
+        if (o instanceof Collection) {
+            // Sort collections to avoid problems with values printed in
+            // different order
+            try {
+                ArrayList<Comparable> c = new ArrayList<Comparable>(
+                        (Collection) o);
+                Collections.sort(c);
+                o = c;
+            } catch (Exception e) {
+                // continue with unsorted if sorting fails for some reason
+                log("Exception while sorting value: " + e.getMessage());
+            }
+        }
 
         // Distinguish between null and 'null'
         String value = "null";
