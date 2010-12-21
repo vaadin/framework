@@ -69,7 +69,11 @@
 	background: transparent;
 	padding: 0;
 	color: inherit;
-	}
+	-khtml-user-select: text;
+	-moz-user-select: text;
+	-ie-user-select: text;
+	user-select: text;
+}
 
 /* Inset Safari focus outline a bit */
 .v-sa .v-button-link:focus{
