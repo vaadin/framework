@@ -6,12 +6,12 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 
 import com.vaadin.terminal.ErrorMessage;
@@ -62,7 +62,7 @@ public class TabSheet extends AbstractComponentContainer {
      * there is a {@link Tab} object in tabs for each tab with meta-data about
      * the tab.
      */
-    private final LinkedList<Component> components = new LinkedList<Component>();
+    private final ArrayList<Component> components = new ArrayList<Component>();
 
     /**
      * Map containing information related to the tabs (caption, icon etc).
@@ -251,17 +251,12 @@ public class TabSheet extends AbstractComponentContainer {
             return null;
         } else if (tabs.containsKey(c)) {
             Tab tab = tabs.get(c);
+            setTabIndex(tab, index);
             tab.setCaption(caption);
             tab.setIcon(icon);
             return tab;
         } else {
-            if (index >= components.size()) {
-                components.addLast(c);
-            } else if (index < 0) {
-                components.addFirst(c);
-            } else {
-                components.add(index, c);
-            }
+            components.add(index, c);
 
             Tab tab = new TabSheetTabImpl(caption, icon);
 
