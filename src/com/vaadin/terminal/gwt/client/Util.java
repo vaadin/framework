@@ -256,25 +256,36 @@ public class Util {
     public native static void addPngFix(Element el, String blankImageUrl)
     /*-{
         el.attachEvent("onload", function() {
-            var src = el.src;
-            if (src.indexOf(".png") < 1) return;
-            var w = el.width || 16; 
-            var h = el.height || 16;
-            if(h==30 || w==28) {
-                setTimeout(function(){
-                    el.style.height = el.height + "px";
-                    el.style.width = el.width + "px";
-                    el.src = blankImageUrl;
-                },10);
-            } else {
-                el.src = blankImageUrl;
-                el.style.height = h + "px";
-                el.style.width = w + "px";
-            }
-            el.style.padding = "0";
-            el.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+src+"', sizingMethod='crop')";  
+            doPngFix(el,blankImageUrl);
         },false);
     }-*/;
+
+    public native static void doPngFix(Element el, String blankImageUrl)
+    /*-{
+        var src = el.src;
+        if (src.indexOf(".png") < 1) return;
+        var w = el.width || 16; 
+        var h = el.height || 16;
+        if(h==30 || w==28) {
+            setTimeout(function(){
+                el.style.height = el.height + "px";
+                el.style.width = el.width + "px";
+                el.src = blankImageUrl;
+            },10);
+        } else {
+            el.src = blankImageUrl;
+            el.style.height = h + "px";
+            el.style.width = w + "px";
+        }
+        el.style.padding = "0";
+        el.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+src+"', sizingMethod='crop')";  
+       }-*/;
+
+    public static void doIE6PngFix(Element el, ApplicationConnection ac) {
+        String blankImageUrl = ac.getThemeUri()
+                + "/../runo/common/img/blank.gif";
+        doPngFix(el, blankImageUrl);
+    }
 
     /**
      * Clones given element as in JavaScript.

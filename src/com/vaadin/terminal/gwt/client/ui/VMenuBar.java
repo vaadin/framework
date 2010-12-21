@@ -401,6 +401,10 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
         // Handle onload events (icon loaded, size changes)
         if (DOM.eventGetType(e) == Event.ONLOAD) {
+            if (BrowserInfo.get().isIE6()) {
+                Util.doIE6PngFix((Element) Element.as(e.getEventTarget()),
+                        client);
+            }
             VMenuBar parent = getParentMenu();
             if (parent != null) {
                 // The onload event for an image in a popup should be sent to
@@ -814,14 +818,6 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         public void setHTML(String html) {
             this.html = html;
             DOM.setInnerHTML(getElement(), html);
-            if (BrowserInfo.get().isIE6() && client != null) {
-                // Find possible icon element
-                final NodeList<com.google.gwt.dom.client.Element> imgs = getElement()
-                        .getElementsByTagName("IMG");
-                if (imgs.getLength() > 0) {
-                    client.addPngFix((Element) imgs.getItem(0).cast());
-                }
-            }
         }
 
         public String getText() {
