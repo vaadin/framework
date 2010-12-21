@@ -256,7 +256,7 @@ public class Util {
     public native static void addPngFix(Element el, String blankImageUrl)
     /*-{
         el.attachEvent("onload", function() {
-            doPngFix(el,blankImageUrl);
+            @com.vaadin.terminal.gwt.client.Util::doPngFix(Lcom/google/gwt/user/client/Element;Ljava/lang/String;)(el,blankImageUrl);
         },false);
     }-*/;
 
