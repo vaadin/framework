@@ -221,6 +221,32 @@ public class TabSheet extends AbstractComponentContainer {
      * @return the created {@link Tab}
      */
     public Tab addTab(Component c, String caption, Resource icon) {
+        return addTab(c, caption, icon, components.size());
+    }
+
+    /**
+     * Adds a new tab into TabSheet.
+     * 
+     * The first tab added to a tab sheet is automatically selected and a tab
+     * selection event is fired.
+     * 
+     * If the component is already present in the tab sheet, changes its caption
+     * and icon and returns the corresponding (old) tab, preserving other tab
+     * metadata.
+     * 
+     * @param c
+     *            the component to be added onto tab - should not be null.
+     * @param caption
+     *            the caption to be set for the component and used rendered in
+     *            tab bar
+     * @param icon
+     *            the icon to be set for the component and used rendered in tab
+     *            bar
+     * @param index
+     *            the index at where the the tab should be added.
+     * @return the created {@link Tab}
+     */
+    public Tab addTab(Component c, String caption, Resource icon, int index) {
         if (c == null) {
             return null;
         } else if (tabs.containsKey(c)) {
@@ -229,7 +255,14 @@ public class TabSheet extends AbstractComponentContainer {
             tab.setIcon(icon);
             return tab;
         } else {
-            components.addLast(c);
+            if (index >= components.size()) {
+                components.addLast(c);
+            } else if (index < 0) {
+                components.addFirst(c);
+            } else {
+                components.add(index, c);
+            }
+
             Tab tab = new TabSheetTabImpl(caption, icon);
 
             tabs.put(c, tab);
@@ -254,12 +287,28 @@ public class TabSheet extends AbstractComponentContainer {
      * @return the created {@link Tab}
      */
     public Tab addTab(Component c) {
+        return addTab(c, components.size());
+    }
+
+    /**
+     * Adds a new tab into TabSheet. Component caption and icon are copied to
+     * the tab metadata at creation time.
+     * 
+     * If the tab sheet already contains the component, its tab is returned.
+     * 
+     * @param c
+     *            the component to be added onto tab - should not be null.
+     * @param index
+     *            The index where the tab should be added
+     * @return the created {@link Tab}
+     */
+    public Tab addTab(Component c, int index) {
         if (c == null) {
             return null;
         } else if (tabs.containsKey(c)) {
             return tabs.get(c);
         } else {
-            return addTab(c, c.getCaption(), c.getIcon());
+            return addTab(c, c.getCaption(), c.getIcon(), index);
         }
     }
 
@@ -479,6 +528,22 @@ public class TabSheet extends AbstractComponentContainer {
      */
     public Tab getTab(Component c) {
         return tabs.get(c);
+    }
+
+    /**
+     * Returns the {@link Tab} (metadata) for a component. The {@link Tab}
+     * object can be used for setting caption,icon, etc for the tab.
+     * 
+     * @param index
+     *            the index of the tab
+     * @return
+     */
+    public Tab getTab(int index) {
+        Component c = components.get(index);
+        if (c != null) {
+            return tabs.get(c);
+        }
+        return null;
     }
 
     /**
@@ -913,6 +978,10 @@ public class TabSheet extends AbstractComponentContainer {
          */
         public ErrorMessage getComponentError();
 
+        /**
+         * Get the component related to the Tab
+         */
+        public Component getComponent();
     }
 
     /**
@@ -1011,6 +1080,15 @@ public class TabSheet extends AbstractComponentContainer {
             this.componentError = componentError;
             requestRepaint();
         }
+
+        public Component getComponent() {
+            for (Map.Entry<Component, Tab> entry : tabs.entrySet()) {
+                if (entry.getValue() == this) {
+                    return entry.getKey();
+                }
+            }
+            return null;
+        }
     }
 
     /**
@@ -1051,4 +1129,31 @@ public class TabSheet extends AbstractComponentContainer {
     public void setCloseHandler(CloseHandler handler) {
         closeHandler = handler;
     }
+
+    /**
+     * Sets the poistion of the tab.
+     * 
+     * @param tab
+     *            The tab
+     * @param index
+     *            The new index of the tab
+     */
+    public void setTabIndex(Tab tab, int index) {
+        int oldIndex = getTabIndex(tab);
+        components.remove(oldIndex);
+        components.add(index, tab.getComponent());
+        requestRepaint();
+    }
+
+    /**
+     * Gets the position of the tab
+     * 
+     * @param tab
+     *            The tab
+     * @return
+     */
+    public int getTabIndex(Tab tab) {
+        return components.indexOf(tab.getComponent());
+    }
+
 }
