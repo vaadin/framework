@@ -1,9 +1,12 @@
 package com.vaadin.tests.components.button;
 
+import java.util.LinkedHashMap;
+
 import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.themes.Reindeer;
 
 public class Buttons2<T extends Button> extends AbstractFieldTest<T> implements
         ClickListener {
@@ -40,6 +43,14 @@ public class Buttons2<T extends Button> extends AbstractFieldTest<T> implements
         createBooleanAction("Switch mode", CATEGORY_FEATURES, false,
                 switchModeCommand);
         addClickListener(CATEGORY_LISTENERS);
+    }
+
+    @Override
+    protected void createComponentStyleNames(
+            LinkedHashMap<String, String> options) {
+        options.put("Reindeer default", Reindeer.BUTTON_DEFAULT);
+        options.put("Reindeer small", Reindeer.BUTTON_SMALL);
+        options.put("Reindeer link", Reindeer.BUTTON_LINK);
     }
 
     private void addClickListener(String category) {
