@@ -232,7 +232,7 @@ public class TabSheet extends AbstractComponentContainer {
      * 
      * If the component is already present in the tab sheet, changes its caption
      * and icon and returns the corresponding (old) tab, preserving other tab
-     * metadata.
+     * metadata like the position.
      * 
      * @param c
      *            the component to be added onto tab - should not be null.
@@ -242,21 +242,20 @@ public class TabSheet extends AbstractComponentContainer {
      * @param icon
      *            the icon to be set for the component and used rendered in tab
      *            bar
-     * @param index
+     * @param position
      *            the index at where the the tab should be added.
      * @return the created {@link Tab}
      */
-    public Tab addTab(Component c, String caption, Resource icon, int index) {
+    public Tab addTab(Component c, String caption, Resource icon, int position) {
         if (c == null) {
             return null;
         } else if (tabs.containsKey(c)) {
             Tab tab = tabs.get(c);
-            setTabIndex(tab, index);
             tab.setCaption(caption);
             tab.setIcon(icon);
             return tab;
         } else {
-            components.add(index, c);
+            components.add(position, c);
 
             Tab tab = new TabSheetTabImpl(caption, icon);
 
@@ -293,17 +292,17 @@ public class TabSheet extends AbstractComponentContainer {
      * 
      * @param c
      *            the component to be added onto tab - should not be null.
-     * @param index
+     * @param position
      *            The index where the tab should be added
      * @return the created {@link Tab}
      */
-    public Tab addTab(Component c, int index) {
+    public Tab addTab(Component c, int position) {
         if (c == null) {
             return null;
         } else if (tabs.containsKey(c)) {
             return tabs.get(c);
         } else {
-            return addTab(c, c.getCaption(), c.getIcon(), index);
+            return addTab(c, c.getCaption(), c.getIcon(), position);
         }
     }
 
@@ -529,12 +528,12 @@ public class TabSheet extends AbstractComponentContainer {
      * Returns the {@link Tab} (metadata) for a component. The {@link Tab}
      * object can be used for setting caption,icon, etc for the tab.
      * 
-     * @param index
-     *            the index of the tab
+     * @param position
+     *            the position of the tab
      * @return
      */
-    public Tab getTab(int index) {
-        Component c = components.get(index);
+    public Tab getTab(int position) {
+        Component c = components.get(position);
         if (c != null) {
             return tabs.get(c);
         }
@@ -1130,13 +1129,13 @@ public class TabSheet extends AbstractComponentContainer {
      * 
      * @param tab
      *            The tab
-     * @param index
-     *            The new index of the tab
+     * @param position
+     *            The new position of the tab
      */
-    public void setTabIndex(Tab tab, int index) {
-        int oldIndex = getTabIndex(tab);
-        components.remove(oldIndex);
-        components.add(index, tab.getComponent());
+    public void setTabPosition(Tab tab, int position) {
+        int oldPosition = getTabPosition(tab);
+        components.remove(oldPosition);
+        components.add(position, tab.getComponent());
         requestRepaint();
     }
 
@@ -1147,7 +1146,7 @@ public class TabSheet extends AbstractComponentContainer {
      *            The tab
      * @return
      */
-    public int getTabIndex(Tab tab) {
+    public int getTabPosition(Tab tab) {
         return components.indexOf(tab.getComponent());
     }
 

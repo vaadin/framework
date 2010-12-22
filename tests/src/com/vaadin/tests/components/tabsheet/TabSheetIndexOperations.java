@@ -44,7 +44,8 @@ public class TabSheetIndexOperations extends TestBase {
         Button move = new Button("Move selected tab to index 2",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
-                        tabs.setTabIndex(tabs.getTab(tabs.getSelectedTab()), 2);
+                        tabs.setTabPosition(tabs.getTab(tabs.getSelectedTab()),
+                                2);
                     }
                 });
         addComponent(move);
@@ -53,7 +54,7 @@ public class TabSheetIndexOperations extends TestBase {
             public void buttonClick(ClickEvent event) {
                         getMainWindow().showNotification(
                                 "Index: "
-                                        + tabs.getTabIndex(tabs.getTab(tabs
+                                        + tabs.getTabPosition(tabs.getTab(tabs
                                                 .getSelectedTab())));
                 
             }
