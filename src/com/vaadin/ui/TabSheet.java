@@ -178,12 +178,7 @@ public class TabSheet extends AbstractComponentContainer {
      *            the Tab to remove
      */
     public void removeTab(Tab tab) {
-        for (Component c : tabs.keySet()) {
-            if (tabs.get(c).equals(tab)) {
-                removeComponent(c);
-                break;
-            }
-        }
+        removeComponent(tab.getComponent());
     }
 
     /**
@@ -243,7 +238,7 @@ public class TabSheet extends AbstractComponentContainer {
      *            the icon to be set for the component and used rendered in tab
      *            bar
      * @param position
-     *            the index at where the the tab should be added.
+     *            the position at where the the tab should be added.
      * @return the created {@link Tab}
      */
     public Tab addTab(Component c, String caption, Resource icon, int position) {
@@ -293,7 +288,7 @@ public class TabSheet extends AbstractComponentContainer {
      * @param c
      *            the component to be added onto tab - should not be null.
      * @param position
-     *            The index where the tab should be added
+     *            The position where the tab should be added
      * @return the created {@link Tab}
      */
     public Tab addTab(Component c, int position) {
@@ -1125,7 +1120,7 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
-     * Sets the poistion of the tab.
+     * Sets the position of the tab.
      * 
      * @param tab
      *            The tab
