@@ -597,6 +597,7 @@ public class DateField extends AbstractField implements
      */
     public void setDateFormat(String dateFormat) {
         this.dateFormat = dateFormat;
+        requestRepaint();
     }
 
     /**
