@@ -402,8 +402,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         // Handle onload events (icon loaded, size changes)
         if (DOM.eventGetType(e) == Event.ONLOAD) {
             if (BrowserInfo.get().isIE6()) {
-                Util.doIE6PngFix((Element) Element.as(e.getEventTarget()),
-                        client);
+                Util.doIE6PngFix((Element) Element.as(e.getEventTarget()));
             }
             VMenuBar parent = getParentMenu();
             if (parent != null) {
@@ -766,7 +765,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
             sinkEvents(VTooltip.TOOLTIP_EVENTS);
 
-            // Sink the onload event for an icon (if it exists). The onload
+            // Sink the onload event for any icons. The onload
             // events are handled by the parent VMenuBar.
             NodeList<com.google.gwt.dom.client.Element> imgElements = getElement()
                     .getElementsByTagName("img");
@@ -980,6 +979,16 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                         collapsedRootItems.addItem(expand, 0);
                     } else {
                         widthAvailable = diff;
+                    }
+
+                    if (BrowserInfo.get().isIE6()) {
+                        /*
+                         * Handle transparency for IE6 here as we cannot
+                         * implement it in CustomMenuItem.onAttach because
+                         * onAttach is never called for CustomMenuItem due to an
+                         * invalid component hierarchy (#6203)...
+                         */
+                        reloadImages();
                     }
                 }
             }
@@ -1375,4 +1384,31 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         }
         return null;
     }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        if (BrowserInfo.get().isIE6()) {
+            reloadImages();
+        }
+    }
+
+    /**
+     * Force a new onload event for all images. Used only for IE6 to deal with
+     * PNG transparency.
+     */
+    private void reloadImages() {
+
+        NodeList<com.google.gwt.dom.client.Element> imgElements = getElement()
+                .getElementsByTagName("img");
+        for (int i = 0; i < imgElements.getLength(); i++) {
+            Element e = (Element) imgElements.getItem(i);
+
+            // IE6 fires onload events for the icons before the listener
+            // is attached (or never). Updating the src force another
+            // onload event
+            e.setAttribute("src", e.getAttribute("src"));
+        }
+    }
+
 }

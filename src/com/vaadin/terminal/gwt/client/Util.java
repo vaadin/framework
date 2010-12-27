@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
@@ -250,17 +251,15 @@ public class Util {
      * 
      * @param el
      *            IMG element
-     * @param blankImageUrl
-     *            URL to transparent one-pixel gif
      */
-    public native static void addPngFix(Element el, String blankImageUrl)
+    public native static void addPngFix(Element el)
     /*-{
         el.attachEvent("onload", function() {
-            @com.vaadin.terminal.gwt.client.Util::doPngFix(Lcom/google/gwt/user/client/Element;Ljava/lang/String;)(el,blankImageUrl);
+            @com.vaadin.terminal.gwt.client.Util::doIE6PngFix(Lcom/google/gwt/user/client/Element;)(el);
         },false);
     }-*/;
 
-    public native static void doPngFix(Element el, String blankImageUrl)
+    private native static void doPngFix(Element el, String blankImageUrl)
     /*-{
         var src = el.src;
         if (src.indexOf(".png") < 1) return;
@@ -281,10 +280,12 @@ public class Util {
         el.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+src+"', sizingMethod='crop')";  
        }-*/;
 
-    public static void doIE6PngFix(Element el, ApplicationConnection ac) {
-        String blankImageUrl = ac.getThemeUri()
-                + "/../runo/common/img/blank.gif";
-        doPngFix(el, blankImageUrl);
+    public static void doIE6PngFix(Element el) {
+        String blankImageUrl = GWT.getModuleBaseURL() + "ie6pngfix/blank.gif";
+        String src = el.getAttribute("src");
+        if (src != null && !src.equals(blankImageUrl)) {
+            doPngFix(el, blankImageUrl);
+        }
     }
 
     /**
