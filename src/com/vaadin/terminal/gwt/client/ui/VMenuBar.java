@@ -959,13 +959,18 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 // overflow:hidden
                 getElement().getStyle().setProperty("overflow", overflow);
             }
-            int diff = availableWidth - getConsumedWidth();
 
+            // Used width includes the "more" item if present
+            int usedWidth = getConsumedWidth();
+            int diff = availableWidth - usedWidth;
             removeItem(moreItem);
 
             if (diff < 0) {
                 // Too many items: collapse last items from root menu
-                final int widthNeeded = moreItemWidth - diff;
+                int widthNeeded = usedWidth - availableWidth;
+                if (!morePresent) {
+                    widthNeeded += moreItemWidth;
+                }
                 int widthReduced = 0;
 
                 while (widthReduced < widthNeeded && getItems().size() > 0) {
