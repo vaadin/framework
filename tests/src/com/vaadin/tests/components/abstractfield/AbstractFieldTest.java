@@ -3,6 +3,7 @@ package com.vaadin.tests.components.abstractfield;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -159,6 +160,9 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
         String value = "null";
         if (o != null) {
             value = "'" + o.toString() + "'";
+            if (o instanceof Date) {
+                value += "(" + ((Date) o).getTime() + ")";
+            }
         }
 
         log(event.getClass().getSimpleName() + ", new value: " + value);
