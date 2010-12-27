@@ -285,7 +285,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
         options.put("zh_CN", Locale.SIMPLIFIED_CHINESE);
         options.put("fr_FR", Locale.FRANCE);
 
-        createSelectAction("Locale", category, options, "-", localeCommand,
+        createSelectAction("Locale", category, options, "en_US", localeCommand,
                 null);
     }
 
