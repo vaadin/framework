@@ -95,6 +95,8 @@ public class CustomDateFormats extends TestBase {
         addDateField(gridLayout, "d M yyy", locale, "d M yyyy");
         addDateField(gridLayout, "d M yyyy", locale);
 
+        addDateField(gridLayout, getDatePattern(locale, DateFormat.FULL),
+                locale);
         addDateField(gridLayout, getDatePattern(locale, DateFormat.LONG),
                 locale);
         addDateField(gridLayout, getDatePattern(locale, DateFormat.MEDIUM),
