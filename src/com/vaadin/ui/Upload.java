@@ -174,7 +174,19 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * @since 3.0
      */
     public interface Receiver extends Serializable {
-        public OutputStream receiveUpload(String filename, String mimetype);
+
+        /**
+         * Invoked when a new upload arrives.
+         * 
+         * @param filename
+         *            the desired filename of the upload, usually as specified
+         *            by the client.
+         * @param mimeType
+         *            the MIME type of the uploaded file.
+         * @return Stream to which the uploaded file should be written.
+         */
+        public OutputStream receiveUpload(String filename, String mimeType);
+
     }
 
     /* Upload events */
