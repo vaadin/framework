@@ -10,6 +10,7 @@ import java.util.Stack;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -136,7 +137,24 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         }
 
         this.width = width;
-        Util.setWidthExcludingPaddingAndBorder(this, width, 0);
+        if (BrowserInfo.get().isIE6() && width.endsWith("px")) {
+            // IE6 sometimes measures wrong using
+            // Util.setWidthExcludingPaddingAndBorder so this is extracted to a
+            // special case that uses another method. Really should fix the
+            // Util.setWidthExcludingPaddingAndBorder method but that will
+            // probably break additional cases
+            int requestedPixelWidth = Integer.parseInt(width.substring(0,
+                    width.length() - 2));
+            int paddingBorder = Util.measureHorizontalPaddingAndBorder(
+                    getElement(), 0);
+            int w = requestedPixelWidth - paddingBorder;
+            if (w < 0) {
+                w = 0;
+            }
+            getElement().getStyle().setWidth(w, Unit.PX);
+        } else {
+            Util.setWidthExcludingPaddingAndBorder(this, width, 0);
+        }
         if (!subMenu) {
             // Only needed for root level menu
             hideChildren();
@@ -988,7 +1006,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                          * onAttach is never called for CustomMenuItem due to an
                          * invalid component hierarchy (#6203)...
                          */
-                        reloadImages();
+                        reloadImages(expand.getElement());
                     }
                 }
             }
@@ -1389,7 +1407,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
     protected void onLoad() {
         super.onLoad();
         if (BrowserInfo.get().isIE6()) {
-            reloadImages();
+            reloadImages(getElement());
         }
     }
 
@@ -1397,9 +1415,9 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      * Force a new onload event for all images. Used only for IE6 to deal with
      * PNG transparency.
      */
-    private void reloadImages() {
+    private void reloadImages(Element root) {
 
-        NodeList<com.google.gwt.dom.client.Element> imgElements = getElement()
+        NodeList<com.google.gwt.dom.client.Element> imgElements = root
                 .getElementsByTagName("img");
         for (int i = 0; i < imgElements.getLength(); i++) {
             Element e = (Element) imgElements.getItem(i);
@@ -1407,7 +1425,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             // IE6 fires onload events for the icons before the listener
             // is attached (or never). Updating the src force another
             // onload event
-            e.setAttribute("src", e.getAttribute("src"));
+            String src = e.getAttribute("src");
+            e.setAttribute("src", src);
         }
     }
 
