@@ -127,7 +127,7 @@ public class VDateFieldCalendar extends VDateField {
                             if (getCurrentResolution() > RESOLUTION_MIN) {
                                 getClient().updateVariable(getId(), "sec",
                                         date2.getSeconds(), false);
-                                if (getCurrentResolution() > RESOLUTION_MSEC) {
+                                if (getCurrentResolution() > RESOLUTION_SEC) {
                                     getClient().updateVariable(
                                             getId(),
                                             "msec",
