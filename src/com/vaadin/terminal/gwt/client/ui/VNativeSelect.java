@@ -18,7 +18,7 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
 
     protected TooltipListBox select;
 
-    private int temporaryNullValueIndex = -1;
+    private boolean firstValueIsTemporaryNullItem = false;
 
     public VNativeSelect() {
         super(new TooltipListBox(false), CLASSNAME);
@@ -35,7 +35,7 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
         select.setClient(client);
         select.setEnabled(!isDisabled() && !isReadonly());
         select.clear();
-        temporaryNullValueIndex = -1;
+        firstValueIsTemporaryNullItem = false;
 
         if (isNullSelectionAllowed() && !isNullSelectionItemAvailable()) {
             // can't unselect last item in singleselect mode
@@ -56,7 +56,7 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
             // remove when something is selected
             select.insertItem("", null, 0);
             select.setItemSelected(0, true);
-            temporaryNullValueIndex = 0;
+            firstValueIsTemporaryNullItem = true;
         }
         if (BrowserInfo.get().isIE6()) {
             // lazy size change - IE6 uses naive dropdown that does not have a
@@ -86,10 +86,10 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
             client.updateVariable(id, "selected", new String[] { ""
                     + getSelectedItem() }, isImmediate());
         }
-        if (temporaryNullValueIndex != -1) {
+        if (firstValueIsTemporaryNullItem) {
             // remove temporary empty item
-            select.removeItem(temporaryNullValueIndex);
-            temporaryNullValueIndex = -1;
+            select.removeItem(0);
+            firstValueIsTemporaryNullItem = false;
         }
     }
 
