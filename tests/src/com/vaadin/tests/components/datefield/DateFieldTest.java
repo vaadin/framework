@@ -2,6 +2,8 @@ package com.vaadin.tests.components.datefield;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
@@ -11,6 +13,13 @@ import com.vaadin.ui.DateField;
 public abstract class DateFieldTest<T extends DateField> extends
         AbstractFieldTest<T> {
 
+    private Command<T, Date> setValue = new Command<T, Date>() {
+
+        public void execute(T c, Date value, Object data) {
+            c.setValue(value);
+        }
+    };
+
     @Override
     protected void createActions() {
         super.createActions();
@@ -19,7 +28,25 @@ public abstract class DateFieldTest<T extends DateField> extends
         createBooleanAction("Show week numbers", CATEGORY_FEATURES, false,
                 weekNumberCommand);
         createDateFormatSelectAction(CATEGORY_FEATURES);
+        createSetValueAction(CATEGORY_FEATURES);
+
     };
+
+    private void createSetValueAction(String category) {
+        LinkedHashMap<String, Date> options = new LinkedHashMap<String, Date>();
+        options.put("(null)", null);
+        options.put("(current time)", new Date());
+        Calendar c = Calendar.getInstance(new Locale("fi", "FI"));
+        c.clear();
+        c.set(2010, 12 - 1, 12, 12, 0, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        options.put("2010-12-12 12:00:00.000", c.getTime());
+        c.clear();
+        c.set(2000, 1 - 1, 2, 3, 4, 5);
+        c.set(Calendar.MILLISECOND, 6);
+        options.put("2000-01-02 03:04:05.006", c.getTime());
+        createMultiClickAction("Set value", category, options, setValue, null);
+    }
 
     private void createDateFormatSelectAction(String category) {
         LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
