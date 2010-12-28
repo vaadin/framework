@@ -15,6 +15,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -943,6 +944,15 @@ public class Util {
             parent.appendChild(element);
         } else {
             parent.insertBefore(element, nextSibling);
+        }
+
+    }
+
+    public static void sinkOnloadForImages(Element element) {
+        NodeList<com.google.gwt.dom.client.Element> imgElements = element
+                .getElementsByTagName("img");
+        for (int i = 0; i < imgElements.getLength(); i++) {
+            DOM.sinkEvents((Element) imgElements.getItem(i), Event.ONLOAD);
         }
 
     }

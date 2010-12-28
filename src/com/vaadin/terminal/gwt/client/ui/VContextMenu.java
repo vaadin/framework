@@ -20,6 +20,8 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Element;
@@ -28,7 +30,9 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Focusable;
+import com.vaadin.terminal.gwt.client.Util;
 
 public class VContextMenu extends VOverlay implements SubPartAware {
 
@@ -77,6 +81,9 @@ public class VContextMenu extends VOverlay implements SubPartAware {
             final Action a = actions[i];
             menu.addItem(new MenuItem(a.getHTML(), true, a));
         }
+
+        // Attach onload listeners to all images
+        Util.sinkOnloadForImages(menu.getElement());
 
         setPopupPositionAndShow(new PositionCallback() {
             public void setPosition(int offsetWidth, int offsetHeight) {
@@ -128,9 +135,11 @@ public class VContextMenu extends VOverlay implements SubPartAware {
      * onPopupClosed method so that PopupPanel gets closed.
      */
     class CMenuBar extends MenuBar implements HasFocusHandlers,
-            HasBlurHandlers, HasKeyDownHandlers, HasKeyPressHandlers, Focusable {
+            HasBlurHandlers, HasKeyDownHandlers, HasKeyPressHandlers,
+            Focusable, LoadHandler {
         public CMenuBar() {
             super(true);
+            addDomHandler(this, LoadEvent.getType());
         }
 
         @Override
@@ -188,6 +197,19 @@ public class VContextMenu extends VOverlay implements SubPartAware {
         public void focus() {
             setFocus(true);
         }
+
+        public void onLoad(LoadEvent event) {
+            // Handle icon onload events to ensure shadow is resized correctly
+            if (BrowserInfo.get().isIE6()) {
+                // Ensure PNG transparency works in IE6
+                Util.doIE6PngFix((Element) Element.as(event.getNativeEvent()
+                        .getEventTarget()));
+            }
+            if (isVisible()) {
+                show();
+            }
+        }
+
     }
 
     public Element getSubPartElement(String subPart) {

@@ -785,11 +785,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
             // Sink the onload event for any icons. The onload
             // events are handled by the parent VMenuBar.
-            NodeList<com.google.gwt.dom.client.Element> imgElements = getElement()
-                    .getElementsByTagName("img");
-            for (int i = 0; i < imgElements.getLength(); i++) {
-                DOM.sinkEvents((Element) imgElements.getItem(i), Event.ONLOAD);
-            }
+            Util.sinkOnloadForImages(getElement());
         }
 
         public void setSelected(boolean selected) {
