@@ -49,6 +49,8 @@ contains a number of significant enhancements.</p>
   <li>Localization of LoginForm. (<a href="http://dev.vaadin.com/ticket/5226">#5226</a>)</li>
   <li>Tooltip support for MenuBar items. (<a href="http://dev.vaadin.com/ticket/5919">#5919</a>)</li>
   <li>All component containers support getComponentCount().</li>
+  <li>Sub windows now support focus and blur events. (<a href="http://dev.vaadin.com/ticket/5039">#5039</a>)</li>
+  <li>Sub windows now support server side re-ordering. (<a href="http://dev.vaadin.com/ticket/5037">#5037</a>)</li>
 </ul>
 
 <h3>Backward Incompatible API Changes</h3>
@@ -61,9 +63,9 @@ contains a number of significant enhancements.</p>
       See <a href="http://dev.vaadin.com/ticket/3865">#3865</a> for more info.
   </li>
   <li>RichTextArea no longer extends TextField as it cannot implement (and never has) a large part of the TextField API.</li>
-</ul>
-
-<ul>
+  <li>The client side window implementation has changed because of <a href="http://dev.vaadin.com/ticket/5039">#5039</a> and therefore TestBench scripts may not be 100% compatible. 
+  		Replaces locators like "VWindow[0]/ScrollPanel[0]..." with "VWindow[0]/FocusableScrollPanel[0]...". An example regular 
+  		expression for replacement: Search "VWindow\[(\d)\]/ScrollPanel\[0\]" and replace with "VWindow[$1]/FocusableScrollPanel[0]".</li>
   <li>AbstractStringValidator and now converts non-String values using toString() prior to validation (#5785).
   This also affects most built-in validators such as IntegerValidator.</li>
 </ul>
