@@ -1,13 +1,17 @@
 package com.vaadin.tests.components.select;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.event.Action;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickNotifier;
+import com.vaadin.terminal.Resource;
 import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.ui.AbstractSelect;
 
@@ -18,6 +22,32 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
 
     private int items = 0;
     private int properties = 0;
+
+    protected static class ContextMenu {
+
+        private List<Action> items = new ArrayList<Action>();
+
+        public ContextMenu(String caption, Resource icon) {
+            addItem(caption, icon);
+        }
+
+        public ContextMenu() {
+        }
+
+        public void addItem(String caption, Resource icon) {
+            items.add(new Action(caption, icon));
+        }
+
+        public Action[] getActions() {
+            Action[] actions = new Action[items.size()];
+            for (int i = 0; i < items.size(); i++) {
+                actions[i] = items.get(i);
+            }
+
+            return actions;
+        }
+
+    }
 
     @Override
     protected void createActions() {
