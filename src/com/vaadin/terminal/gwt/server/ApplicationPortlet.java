@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -206,7 +208,8 @@ public class ApplicationPortlet implements Portlet, Serializable {
             } catch (PortletException e) {
                 PrintWriter out = response.getWriter();
                 out.print("<h1>Servlet include failed!</h1>");
-                out.print("<div>" + e + "</div>");
+                Logger.getLogger(AbstractApplicationPortlet.class.getName())
+                        .log(Level.WARNING, "Servlet include failed", e);
                 ctx.setPortletApplication(this, null);
                 return;
             }
