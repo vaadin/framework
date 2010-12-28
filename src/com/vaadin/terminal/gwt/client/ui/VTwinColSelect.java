@@ -603,7 +603,11 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     }
 
     private static final String SUBPART_OPTION_SELECT = "leftSelect";
+    private static final String SUBPART_OPTION_SELECT_ITEM = SUBPART_OPTION_SELECT
+            + "-item";
     private static final String SUBPART_SELECTION_SELECT = "rightSelect";
+    private static final String SUBPART_SELECTION_SELECT_ITEM = SUBPART_SELECTION_SELECT
+            + "-item";
     private static final String SUBPART_LEFT_CAPTION = "leftCaption";
     private static final String SUBPART_RIGHT_CAPTION = "rightCaption";
     private static final String SUBPART_ADD_BUTTON = "add";
@@ -612,8 +616,17 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     public Element getSubPartElement(String subPart) {
         if (SUBPART_OPTION_SELECT.equals(subPart)) {
             return options.getElement();
+        } else if (subPart.startsWith(SUBPART_OPTION_SELECT_ITEM)) {
+            String idx = subPart.substring(SUBPART_OPTION_SELECT_ITEM.length());
+            return (Element) options.getElement().getChild(
+                    Integer.parseInt(idx));
         } else if (SUBPART_SELECTION_SELECT.equals(subPart)) {
             return selections.getElement();
+        } else if (subPart.startsWith(SUBPART_SELECTION_SELECT_ITEM)) {
+            String idx = subPart.substring(SUBPART_SELECTION_SELECT_ITEM
+                    .length());
+            return (Element) selections.getElement().getChild(
+                    Integer.parseInt(idx));
         } else if (optionsCaption != null
                 && SUBPART_LEFT_CAPTION.equals(subPart)) {
             return optionsCaption.getElement();
@@ -637,9 +650,19 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
                 && selectionsCaption.getElement().isOrHasChild(subElement)) {
             return SUBPART_RIGHT_CAPTION;
         } else if (options.getElement().isOrHasChild(subElement)) {
-            return SUBPART_OPTION_SELECT;
+            if (options.getElement() == subElement) {
+                return SUBPART_OPTION_SELECT;
+            } else {
+                int idx = Util.getChildElementIndex(subElement);
+                return SUBPART_OPTION_SELECT_ITEM + idx;
+            }
         } else if (selections.getElement().isOrHasChild(subElement)) {
-            return SUBPART_SELECTION_SELECT;
+            if (selections.getElement() == subElement) {
+                return SUBPART_SELECTION_SELECT;
+            } else {
+                int idx = Util.getChildElementIndex(subElement);
+                return SUBPART_SELECTION_SELECT_ITEM + idx;
+            }
         } else if (add.getElement().isOrHasChild(subElement)) {
             return SUBPART_ADD_BUTTON;
         } else if (remove.getElement().isOrHasChild(subElement)) {

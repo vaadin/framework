@@ -957,4 +957,20 @@ public class Util {
 
     }
 
+    /**
+     * Returns the index of the childElement within its parent.
+     * 
+     * @param subElement
+     * @return
+     */
+    public static int getChildElementIndex(Element childElement) {
+        int idx = 0;
+        Node n = childElement;
+        while ((n = n.getPreviousSibling()) != null) {
+            idx++;
+        }
+
+        return idx;
+    }
+
 }
