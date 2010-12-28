@@ -73,8 +73,8 @@ public class KeyMapper implements Serializable {
         final String key = objectKeyMap.get(removeobj);
 
         if (key != null) {
-            objectKeyMap.remove(key);
-            keyObjectMap.remove(removeobj);
+            objectKeyMap.remove(removeobj);
+            keyObjectMap.remove(key);
         }
     }
 
