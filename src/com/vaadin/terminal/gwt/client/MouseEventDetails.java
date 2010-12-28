@@ -3,6 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client;
 
+import java.io.Serializable;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Event;
@@ -10,7 +12,7 @@ import com.google.gwt.user.client.Event;
 /**
  * Helper class to store and transfer mouse event details.
  */
-public class MouseEventDetails {
+public class MouseEventDetails implements Serializable {
     public static final int BUTTON_LEFT = Event.BUTTON_LEFT;
     public static final int BUTTON_MIDDLE = Event.BUTTON_MIDDLE;
     public static final int BUTTON_RIGHT = Event.BUTTON_RIGHT;
