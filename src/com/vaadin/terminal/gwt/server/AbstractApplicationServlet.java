@@ -989,6 +989,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 themeName = getDefaultTheme();
             }
         }
+
+        // XSS preventation, theme names shouldn't contain special chars anyway
+        themeName = JsonPaintTarget.escapeJSON(themeName);
+
         return themeName;
     }
 
@@ -1796,9 +1800,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         String pathInfo = getRequestPathInfo(request);
         if (pathInfo == null) {
             pathInfo = "/";
+        } else {
+            pathInfo = JsonPaintTarget.escapeJSON(pathInfo);
         }
 
-        page.write("pathInfo: '" + pathInfo + "', ");
+        page.write("pathInfo: \"" + pathInfo + "\", ");
         if (window != application.getMainWindow()) {
             page.write("windowName: '" + window.getName() + "', ");
         }
