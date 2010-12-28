@@ -4,6 +4,7 @@
 
 package com.vaadin.terminal.gwt.client;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -971,6 +972,48 @@ public class Util {
         }
 
         return idx;
+    }
+
+    private static void printPaintablesVariables(ArrayList<String[]> vars,
+            String id, ApplicationConnection c) {
+        Paintable paintable = c.getPaintable(id);
+        if (paintable != null) {
+            VConsole.log("\t" + id + " (" + paintable.getClass() + ") :");
+            for (String[] var : vars) {
+                VConsole.log("\t\t" + var[1] + " (" + var[2] + ")" + " : "
+                        + var[0]);
+            }
+        }
+    }
+
+    static void logVariableBurst(ApplicationConnection c,
+            ArrayList<String> loggedBurst) {
+        try {
+            VConsole.log("Variable burst to be sent to server:");
+            String curId = null;
+            ArrayList<String[]> vars = new ArrayList<String[]>();
+            for (int i = 0; i < loggedBurst.size(); i++) {
+                String value = loggedBurst.get(i++);
+                String[] split = loggedBurst.get(i).split(
+                        ApplicationConnection.VAR_FIELD_SEPARATOR);
+                String id = split[0];
+
+                if (curId == null) {
+                    curId = id;
+                } else if (!curId.equals(id)) {
+                    printPaintablesVariables(vars, curId, c);
+                    vars.clear();
+                    curId = id;
+                }
+                split[0] = value;
+                vars.add(split);
+            }
+            if (!vars.isEmpty()) {
+                printPaintablesVariables(vars, curId, c);
+            }
+        } catch (Exception e) {
+            VConsole.error(e);
+        }
     }
 
 }
