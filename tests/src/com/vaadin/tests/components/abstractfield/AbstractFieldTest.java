@@ -1,11 +1,13 @@
 package com.vaadin.tests.components.abstractfield;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 
 import com.vaadin.data.Property.ReadOnlyStatusChangeEvent;
 import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
@@ -159,9 +161,15 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
         // Distinguish between null and 'null'
         String value = "null";
         if (o != null) {
-            value = "'" + o.toString() + "'";
             if (o instanceof Date) {
-                value += "(" + ((Date) o).getTime() + ")";
+                Date d = (Date) o;
+                // Dec 31, 2068 23:09:26.531
+                String pattern = "MMM d, yyyy HH:mm:ss.SSS";
+                SimpleDateFormat format = new SimpleDateFormat(pattern,
+                        new Locale("en", "US"));
+                value = format.format(d);
+            } else {
+                value = "'" + o.toString() + "'";
             }
         }
 
