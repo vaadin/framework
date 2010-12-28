@@ -183,6 +183,8 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                 // TODO need some uri handling ??
                 actionMap.put(key + "_i", client.translateVaadinUri(action
                         .getStringAttribute("icon")));
+            } else {
+                actionMap.remove(key + "_i");
             }
         }
 

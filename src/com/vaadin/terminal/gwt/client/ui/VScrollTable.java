@@ -995,6 +995,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 // TODO need some uri handling ??
                 actionMap.put(key + "_i", client.translateVaadinUri(action
                         .getStringAttribute("icon")));
+            } else {
+                actionMap.remove(key + "_i");
             }
         }
 
