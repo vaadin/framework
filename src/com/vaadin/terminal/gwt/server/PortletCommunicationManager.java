@@ -38,7 +38,7 @@ import com.vaadin.ui.Window;
 @SuppressWarnings("serial")
 public class PortletCommunicationManager extends AbstractCommunicationManager {
 
-    private ResourceResponse currentUidlResponse;
+    private transient ResourceResponse currentUidlResponse;
 
     private static class PortletRequestWrapper implements Request {
 
