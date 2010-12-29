@@ -189,6 +189,11 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
             calendar.setTimeChangeListener(new TimeChangeListener() {
                 public void changed(int hour, int min, int sec, int msec) {
                     Date d = getDate();
+                    if (d == null) {
+                        // date currently null, use the value from calendarPanel
+                        // (~ client time at the init of the widget)
+                        d = (Date) calendar.getDate().clone();
+                    }
                     d.setHours(hour);
                     d.setMinutes(min);
                     d.setSeconds(sec);
