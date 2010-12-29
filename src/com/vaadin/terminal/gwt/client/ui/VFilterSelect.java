@@ -973,6 +973,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
              * options matching the filter.
              */
             currentSuggestion = null;
+            /*
+             * Also ensure no old items in menu. Unless cleared the old values
+             * may cause odd effects on blur events. Suggestions in menu might
+             * not necessary exist in select at all anymore.
+             */
+            suggestionPopup.menu.clearItems();
+
         }
 
         final UIDL options = uidl.getChildUIDL(0);
