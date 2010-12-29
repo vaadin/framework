@@ -590,13 +590,19 @@ public class VTabsheet extends VTabsheetBase {
         String overflow = style.getProperty("overflow");
         style.setProperty("overflow", "hidden");
         style.setPropertyPx("width", tabsWidth);
-        Style wrapperstyle = tp.getWidget(tp.getVisibleWidget()).getElement()
-                .getParentElement().getStyle();
-        wrapperstyle.setPropertyPx("width", tabsWidth);
+
+        boolean hasTabs = tp.getWidgetCount() > 0;
+
+        Style wrapperstyle = null;
+        if (hasTabs) {
+            wrapperstyle = tp.getWidget(tp.getVisibleWidget()).getElement()
+                    .getParentElement().getStyle();
+            wrapperstyle.setPropertyPx("width", tabsWidth);
+        }
         // Get content width from actual widget
 
         int contentWidth = 0;
-        if (tp.getWidgetCount() > 0) {
+        if (hasTabs) {
             contentWidth = tp.getWidget(tp.getVisibleWidget()).getOffsetWidth();
         }
         style.setProperty("overflow", overflow);
@@ -610,7 +616,9 @@ public class VTabsheet extends VTabsheetBase {
 
         tabs.getStyle().setPropertyPx("width", outerWidth);
         style.setPropertyPx("width", tabsWidth);
-        wrapperstyle.setPropertyPx("width", tabsWidth);
+        if (hasTabs) {
+            wrapperstyle.setPropertyPx("width", tabsWidth);
+        }
 
         contentNode.getStyle().setPropertyPx("width", tabsWidth);
         super.setWidth(outerWidth + "px");
