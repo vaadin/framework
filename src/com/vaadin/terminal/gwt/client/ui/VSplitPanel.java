@@ -266,6 +266,19 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     }
 
+    @Override
+    public boolean remove(Widget w) {
+        boolean removed = super.remove(w);
+        if (removed) {
+            if (firstChild == w) {
+                firstChild = null;
+            } else {
+                secondChild = null;
+            }
+        }
+        return removed;
+    }
+
     private void setLocked(boolean newValue) {
         if (locked != newValue) {
             locked = newValue;
