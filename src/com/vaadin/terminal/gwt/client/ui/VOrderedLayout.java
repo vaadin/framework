@@ -124,6 +124,14 @@ public class VOrderedLayout extends CellBasedLayout {
             if (childComponentContainer == null) {
                 // This is a new component
                 childComponentContainer = createChildContainer(widget);
+            } else {
+                /*
+                 * The widget may be null if the same paintable has been
+                 * rendered in a different component container while this has
+                 * been invisible. Ensure the childComponentContainer has the
+                 * widget attached. See e.g. #5372
+                 */
+                childComponentContainer.setWidget(widget);
             }
 
             addOrMoveChild(childComponentContainer, pos++);

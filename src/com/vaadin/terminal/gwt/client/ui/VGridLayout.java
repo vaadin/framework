@@ -997,6 +997,12 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
                     cc = widgetToComponentContainer.get(paintable);
                     cc.setWidth("");
                     cc.setHeight("");
+                    /*
+                     * Widget might not be set if moving from another component
+                     * and this layout has been hidden when moving out, see
+                     * #5372
+                     */
+                    cc.setWidget((Widget) paintable);
                 } else {
                     // A new component
                     cc = new ChildComponentContainer((Widget) paintable,
