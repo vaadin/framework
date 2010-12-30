@@ -280,6 +280,15 @@ public class Embedded extends AbstractComponent {
         if (mimeType != this.mimeType
                 || (mimeType != null && !mimeType.equals(this.mimeType))) {
             this.mimeType = mimeType;
+            if ("application/x-shockwave-flash".equals(mimeType)) {
+                /*
+                 * Automatically add wmode transparent as we use lots of
+                 * floating layers in Vaadin. If developers need better flash
+                 * performance, they can override this value programmatically
+                 * back to "window" (the defautl).
+                 */
+                setParameter("wmode", "transparent");
+            }
             requestRepaint();
         }
     }
