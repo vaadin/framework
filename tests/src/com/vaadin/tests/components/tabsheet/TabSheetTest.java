@@ -98,10 +98,6 @@ public class TabSheetTest extends AbstractComponentContainerTest<TabSheet>
         // TODO
         // Insert tab at x
 
-        for (TabSheet ts : getTestComponents()) {
-            // Workaround for #6191
-            ts.setWidth("100px");
-        }
     }
 
     private void createHideTabsToggle(String category) {
