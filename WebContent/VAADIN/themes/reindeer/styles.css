@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_5_0_dev-20101221";}
-.v-theme-version-6_5_0_dev-20101221 {display: none;}
+.v-theme-version:after {content:"6_5_0_dev-20101230";}
+.v-theme-version-6_5_0_dev-20101230 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -5413,7 +5413,7 @@ textarea.v-textarea-readonly,
 .v-window-outerheader {
 	padding: 12px 32px 0 14px;
 	height: 25px;
-	background: transparent repeat-x;
+	background: black repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: left -1936px;
@@ -5446,6 +5446,7 @@ textarea.v-textarea-readonly,
   background-position: left -1973px;
 }
 .v-window-footer {
+	background-color:white;
 	background-repeat: repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);

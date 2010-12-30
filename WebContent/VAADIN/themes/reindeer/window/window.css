@@ -32,7 +32,7 @@
 .v-window-outerheader {
 	padding: 12px 32px 0 14px;
 	height: 25px;
-	background: transparent repeat-x;
+	background: black repeat-x;
 	background-image: url(img/header-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 }
 .v-window-header {
@@ -61,6 +61,7 @@
 	background-image: url(img/resize.png); /** sprite-ref: verticals */
 }
 .v-window-footer {
+	background-color:white;
 	background-repeat: repeat-x;
 	background-image: url(img/footer-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	height: 15px;
