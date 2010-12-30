@@ -1,52 +1,106 @@
 package com.vaadin.tests.layouts;
 
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.tests.VaadinClasses;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.LoginForm;
+import com.vaadin.ui.PopupView;
+import com.vaadin.ui.Window;
 
 public class MovingComponentsWhileOldParentInvisible extends TestBase {
 
+    private ComponentContainer cc = new AbsoluteLayout(); // initial dummy
+                                                          // contents
+    private Label lab;
+
     @Override
     protected void setup() {
-        final VerticalLayout vl = new VerticalLayout();
-        final Label lab = new Label("Label in VL");
-        vl.addComponent(lab);
+        lab = new Label("Label inside the component container");
+        lab.setWidth(null);
 
-        final GridLayout gl = new GridLayout(1, 1);
-        final Label lab2 = new Label("Label in GL");
-        gl.addComponent(lab2);
+        ComboBox componentContainerSelect = new ComboBox("Container") {
+            {
+                pageLength = 0;
+            }
+        };
+        componentContainerSelect.setDebugId("componentContainerSelect");
+        componentContainerSelect.setWidth("300px");
+        componentContainerSelect.setImmediate(true);
+        componentContainerSelect.setNullSelectionAllowed(false);
+        // componentContainer.addContainerProperty(CAPTION, String.class, "");
+        // componentContainer.addContainerProperty(CLASS, Class.class, "");
 
-        final CssLayout cl = new CssLayout();
-        cl.setWidth("100%");
-        final Label lab3 = new Label("Label in CL");
-        cl.addComponent(lab3);
+        for (Class<? extends ComponentContainer> cls : VaadinClasses
+                .getComponentContainers()) {
+            if (cls == LoginForm.class || cls == CustomLayout.class
+                    || CustomComponent.class.isAssignableFrom(cls)
+                    || cls == PopupView.class || cls == Window.class) {
+                // Does not support addComponent
+                continue;
+            }
+            componentContainerSelect.addItem(cls);
+        }
+        componentContainerSelect.addListener(new ValueChangeListener() {
 
-        Button but1 = new Button("But 1", new Button.ClickListener() {
+            @SuppressWarnings("unchecked")
+            public void valueChange(ValueChangeEvent event) {
+                ComponentContainer oldCC = cc;
+                cc = createComponentContainer((Class<? extends ComponentContainer>) event
+                        .getProperty().getValue());
+                cc.addComponent(lab);
 
-            public void buttonClick(ClickEvent event) {
-                vl.setVisible(!vl.isVisible());
-                gl.setVisible(!gl.isVisible());
-                cl.setVisible(!cl.isVisible());
-                if (!vl.isVisible()) {
-                    getLayout().addComponent(lab);
-                    getLayout().addComponent(lab2);
-                    getLayout().addComponent(lab3);
-                } else {
-                    vl.addComponent(lab);
-                    gl.addComponent(lab2);
-                    cl.addComponent(lab3);
-                }
+                replaceComponent(oldCC, cc);
             }
         });
 
-        getLayout().addComponent(vl);
-        getLayout().addComponent(gl);
-        getLayout().addComponent(cl);
-        getLayout().addComponent(but1);
+        componentContainerSelect.setValue(componentContainerSelect.getItemIds()
+                .iterator().next());
+        Button but1 = new Button("Move in and out of component container",
+                new Button.ClickListener() {
+
+                    public void buttonClick(ClickEvent event) {
+                        cc.setVisible(!cc.isVisible());
+                        if (!cc.isVisible()) {
+                            getLayout().addComponent(lab);
+                            lab.setValue(((String) lab.getValue()).replace(
+                                    "inside", "outside"));
+                        } else {
+                            cc.addComponent(lab);
+                            lab.setValue(((String) lab.getValue()).replace(
+                                    "outside", "inside"));
+                        }
+                    }
+                });
+
+        addComponent(componentContainerSelect);
+        addComponent(cc);
+        addComponent(but1);
+    }
+
+    protected ComponentContainer createComponentContainer(
+            Class<? extends ComponentContainer> value) {
+        try {
+            ComponentContainer cc = value.newInstance();
+            cc.setWidth("300px");
+            cc.setHeight("300px");
+            return cc;
+        } catch (InstantiationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
