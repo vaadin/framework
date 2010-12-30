@@ -29,7 +29,7 @@ import com.vaadin.tools.ReflectTools;
  * @VERSION@
  * @since 6.5
  */
-public class AbstractSplitPanel extends AbstractLayout {
+public abstract class AbstractSplitPanel extends AbstractLayout {
 
     private Component firstComponent;
 
