@@ -11,32 +11,32 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TabSheet.Tab;
 
-public class TabSheetTest extends AbstractComponentContainerTest<TabSheet>
-        implements SelectedTabChangeListener {
+public class TabSheetTest<T extends TabSheet> extends
+        AbstractComponentContainerTest<T> implements SelectedTabChangeListener {
 
-    private Command<TabSheet, Integer> setTabCaption = new Command<TabSheet, Integer>() {
+    private Command<T, Integer> setTabCaption = new Command<T, Integer>() {
 
-        public void execute(TabSheet c, Integer value, Object data) {
+        public void execute(T c, Integer value, Object data) {
             c.getTab(value).setCaption((String) data);
 
         }
     };
-    private Command<TabSheet, Integer> setTabIcon = new Command<TabSheet, Integer>() {
+    private Command<T, Integer> setTabIcon = new Command<T, Integer>() {
 
-        public void execute(TabSheet c, Integer value, Object data) {
+        public void execute(T c, Integer value, Object data) {
             c.getTab(value).setIcon((Resource) data);
 
         }
     };
-    private Command<TabSheet, Integer> setTabClosable = new Command<TabSheet, Integer>() {
+    private Command<T, Integer> setTabClosable = new Command<T, Integer>() {
 
-        public void execute(TabSheet c, Integer value, Object data) {
+        public void execute(T c, Integer value, Object data) {
             c.getTab(value).setClosable((Boolean) data);
         }
     };
-    private Command<TabSheet, Boolean> setCloseHandlerListener = new Command<TabSheet, Boolean>() {
+    private Command<T, Boolean> setCloseHandlerListener = new Command<T, Boolean>() {
 
-        public void execute(TabSheet c, Boolean value, Object data) {
+        public void execute(T c, Boolean value, Object data) {
             if (value) {
                 c.setCloseHandler(new CloseHandler() {
                     public void onTabClose(TabSheet tabsheet, Component c) {
@@ -55,9 +55,9 @@ public class TabSheetTest extends AbstractComponentContainerTest<TabSheet>
 
         }
     };
-    private Command<TabSheet, Boolean> setSelectedTabListener = new Command<TabSheet, Boolean>() {
+    private Command<T, Boolean> setSelectedTabListener = new Command<T, Boolean>() {
 
-        public void execute(TabSheet c, Boolean value, Object data) {
+        public void execute(T c, Boolean value, Object data) {
             if (value) {
                 c.addListener((SelectedTabChangeListener) TabSheetTest.this);
             } else {
@@ -67,22 +67,22 @@ public class TabSheetTest extends AbstractComponentContainerTest<TabSheet>
         }
     };
 
-    private Command<TabSheet, Integer> selectTab = new Command<TabSheet, Integer>() {
-        public void execute(TabSheet c, Integer index, Object data) {
+    private Command<T, Integer> selectTab = new Command<T, Integer>() {
+        public void execute(T c, Integer index, Object data) {
             c.setSelectedTab(c.getTab(index).getComponent());
         }
     };
-    private Command<TabSheet, Boolean> hideTabs = new Command<TabSheet, Boolean>() {
+    private Command<T, Boolean> hideTabs = new Command<T, Boolean>() {
 
-        public void execute(TabSheet c, Boolean value, Object data) {
+        public void execute(T c, Boolean value, Object data) {
             c.hideTabs(value);
 
         }
     };
 
     @Override
-    protected Class<TabSheet> getTestClass() {
-        return TabSheet.class;
+    protected Class<T> getTestClass() {
+        return (Class<T>) TabSheet.class;
     }
 
     @Override
