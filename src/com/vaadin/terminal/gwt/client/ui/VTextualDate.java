@@ -392,7 +392,12 @@ public class VTextualDate extends VDateField implements Paintable, Field,
 
     public void iLayout() {
         if (needLayout) {
-            text.setWidth((getOffsetWidth() - getFieldExtraWidth()) + "px");
+            int textFieldWidth = getOffsetWidth() - getFieldExtraWidth();
+            if (textFieldWidth < 0) {
+                // Field can never be smaller than 0 (causes exception in IE)
+                textFieldWidth = 0;
+            }
+            text.setWidth(textFieldWidth + "px");
         }
     }
 
