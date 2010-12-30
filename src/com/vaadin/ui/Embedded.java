@@ -287,7 +287,9 @@ public class Embedded extends AbstractComponent {
                  * performance, they can override this value programmatically
                  * back to "window" (the defautl).
                  */
-                setParameter("wmode", "transparent");
+                if (getParameter("wmode") == null) {
+                    setParameter("wmode", "transparent");
+                }
             }
             requestRepaint();
         }
