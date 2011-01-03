@@ -11,6 +11,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.DomEvent.Type;
@@ -98,9 +99,46 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         }
     };
 
+    private VLazyExecutor delayedResizeExecutor = new VLazyExecutor(200,
+            new ScheduledCommand() {
+                public void execute() {
+                    windowSizeMaybeChanged(getOffsetWidth(), getOffsetHeight());
+                }
+
+            });
+
     public VView() {
         super();
         setStyleName(CLASSNAME);
+    }
+
+    /**
+     * Called when the window might have been resized.
+     * 
+     * @param newWidth
+     *            The new width of the window
+     * @param newHeight
+     *            The new height of the window
+     */
+    protected void windowSizeMaybeChanged(int newWidth, int newHeight) {
+        boolean changed = false;
+        if (width != newWidth) {
+            width = newWidth;
+            changed = true;
+            VConsole.log("New window width: " + width);
+        }
+        if (height != newHeight) {
+            height = newHeight;
+            changed = true;
+            VConsole.log("New window height: " + height);
+        }
+        if (changed) {
+            VConsole.log("Running layout functions due to window resize");
+            connection.runDescendentsLayout(VView.this);
+            Util.runWebkitOverflowAutoFix(getElement());
+
+            sendClientResized();
+        }
     }
 
     public String getTheme() {
@@ -351,7 +389,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             Window.addResizeHandler(this);
         }
 
-        onResize(Window.getClientWidth(), Window.getClientHeight());
+        onResize();
 
         // finally set scroll position from UIDL
         if (uidl.hasVariable("scrollTop")) {
@@ -423,62 +461,32 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.logical.shared.ResizeHandler#onResize(com.google
+     * .gwt.event.logical.shared.ResizeEvent)
+     */
     public void onResize(ResizeEvent event) {
-        onResize(event.getWidth(), event.getHeight());
+        onResize();
     }
 
-    public void onResize(int wwidth, int wheight) {
+    /**
+     * Called when a resize event is received.
+     */
+    private void onResize() {
         if (BrowserInfo.get().isIE() || BrowserInfo.get().isFF3()) {
             /*
-             * IE will give us some false resized events due bugs with
+             * IE will give us some false resize events due bugs with
              * scrollbars. Postponing layout phase to see if size was really
              * changed.
              */
-            if (resizeTimer == null) {
-                resizeTimer = new Timer() {
-                    @Override
-                    public void run() {
-                        boolean changed = false;
-                        if (width != getOffsetWidth()) {
-                            width = getOffsetWidth();
-                            changed = true;
-                            VConsole.log("window w" + width);
-                        }
-                        if (height != getOffsetHeight()) {
-                            height = getOffsetHeight();
-                            changed = true;
-                            VConsole.log("window h" + height);
-                        }
-                        if (changed) {
-                            VConsole.log("Running layout functions due window resize");
-                            connection.runDescendentsLayout(VView.this);
-
-                            sendClientResized();
-                        }
-                    }
-                };
-            } else {
-                resizeTimer.cancel();
-            }
-            resizeTimer.schedule(200);
+            delayedResizeExecutor.trigger();
         } else {
-            if (wwidth == width && wheight == height) {
-                // No point in doing resize operations if window size has not
-                // changed
-                return;
-            }
-
-            width = Window.getClientWidth();
-            height = Window.getClientHeight();
-
-            VConsole.log("Running layout functions due window resize");
-
-            connection.runDescendentsLayout(this);
-            Util.runWebkitOverflowAutoFix(getElement());
-
-            sendClientResized();
+            windowSizeMaybeChanged(Window.getClientWidth(),
+                    Window.getClientHeight());
         }
-
     }
 
     /**

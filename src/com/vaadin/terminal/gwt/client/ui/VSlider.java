@@ -5,12 +5,12 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -72,6 +72,15 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
 
     /* Temporary dragging/animation variables */
     private boolean dragging = false;
+
+    private VLazyExecutor delayedValueUpdater = new VLazyExecutor(
+            100, new ScheduledCommand() {
+
+                public void execute() {
+                    updateValueToServer();
+                    acceleration = 1;
+                }
+            });
 
     public VSlider() {
         super();
@@ -337,17 +346,7 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
 
                 feedbackPopup.show();
 
-                if (scrollTimer != null) {
-                    scrollTimer.cancel();
-                }
-                scrollTimer = new Timer() {
-                    @Override
-                    public void run() {
-                        updateValueToServer();
-                        acceleration = 1;
-                    }
-                };
-                scrollTimer.schedule(100);
+                delayedValueUpdater.trigger();
 
                 DOM.eventPreventDefault(event);
                 DOM.eventCancelBubble(event, true);
@@ -363,8 +362,6 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
         }
     }
 
-    private Timer scrollTimer;
-
     private void processMouseWheelEvent(final Event event) {
         final int dir = DOM.eventGetMouseWheelVelocityY(event);
 
@@ -374,16 +371,7 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
             decreaseValue(false);
         }
 
-        if (scrollTimer != null) {
-            scrollTimer.cancel();
-        }
-        scrollTimer = new Timer() {
-            @Override
-            public void run() {
-                updateValueToServer();
-            }
-        };
-        scrollTimer.schedule(100);
+        delayedValueUpdater.trigger();
 
         DOM.eventPreventDefault(event);
         DOM.eventCancelBubble(event, true);

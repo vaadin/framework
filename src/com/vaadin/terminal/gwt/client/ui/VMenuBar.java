@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Stack;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -24,7 +25,6 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -73,11 +73,17 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
     protected VMenuBar parentMenu;
     protected CustomMenuItem selected;
 
-    private Timer layoutTimer;
-
     private boolean enabled = true;
 
     private String width = "notinited";
+
+    private VLazyExecutor iconLoadedExecutioner = new VLazyExecutor(
+            100, new ScheduledCommand() {
+
+                public void execute() {
+                    iLayout(true);
+                }
+            });
 
     public VMenuBar() {
         // Create an empty horizontal menubar
@@ -496,16 +502,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
     }
 
     private void iconLoaded() {
-        if (layoutTimer == null) {
-            layoutTimer = new Timer() {
-                @Override
-                public void run() {
-                    layoutTimer = null;
-                    iLayout(true);
-                }
-            };
-        }
-        layoutTimer.schedule(100);
+        iconLoadedExecutioner.trigger();
     }
 
     /**
