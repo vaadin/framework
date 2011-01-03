@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.jar.JarEntry;
 
 import com.vaadin.Application;
+import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 
@@ -34,7 +35,7 @@ public class VaadinClasses {
         }
     }
 
-    private static List<Class<? extends Component>> getComponents() {
+    public static List<Class<? extends Component>> getComponents() {
         try {
             return findClasses(Component.class, "com.vaadin.ui");
         } catch (IOException e) {
@@ -50,6 +51,18 @@ public class VaadinClasses {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<Class<? extends AbstractComponentTest<?>>> getBasicComponentTests() {
+        try {
+            return (List) findClasses(AbstractComponentTest.class,
+                    "com.vaadin.tests.components");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     private static <T> List<Class<? extends T>> findClasses(Class<T> baseClass,

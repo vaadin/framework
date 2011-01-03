@@ -1,5 +1,10 @@
 @import url(../reindeer/styles.css);
 
+.missing {
+	color: red;
+	font-weight: bold;
+}
+
 .v-tree-node-caption-red {
 	color: red;
 }
