@@ -10,8 +10,12 @@ import java.util.Locale;
 import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.ui.DateField;
 
-public abstract class DateFieldTest<T extends DateField> extends
-        AbstractFieldTest<T> {
+public class DateFieldTest<T extends DateField> extends AbstractFieldTest<T> {
+
+    @Override
+    protected Class<T> getTestClass() {
+        return (Class<T>) DateField.class;
+    }
 
     private Command<T, Date> setValue = new Command<T, Date>() {
 
