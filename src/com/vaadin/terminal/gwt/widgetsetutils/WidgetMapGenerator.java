@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeSet;
@@ -175,11 +176,23 @@ public class WidgetMapGenerator extends Generator {
                 "Widget set will contain implementations for following components: ");
 
         TreeSet<String> classNames = new TreeSet<String>();
+        HashMap<String, String> loadStyle = new HashMap<String, String>();
         for (Class<? extends Paintable> class1 : paintablesHavingWidgetAnnotation) {
-            classNames.add(class1.getCanonicalName());
+            String className = class1.getCanonicalName();
+            classNames.add(className);
+            if (getLoadStyle(class1) == LoadStyle.DEFERRED) {
+                loadStyle.put(className, "DEFERRED");
+            } else if (getLoadStyle(class1) == LoadStyle.LAZY) {
+                loadStyle.put(className, "LAZY");
+            }
+
         }
-        for (String string : classNames) {
-            logger.log(Type.INFO, "\t" + string);
+        for (String className : classNames) {
+            String msg = className;
+            if (loadStyle.containsKey(className)) {
+                msg += " (load style: " + loadStyle.get(className) + ")";
+            }
+            logger.log(Type.INFO, "\t" + msg);
         }
     }
 
