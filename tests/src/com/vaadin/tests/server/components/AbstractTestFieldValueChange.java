@@ -33,6 +33,10 @@ public abstract class AbstractTestFieldValueChange extends TestCase {
 
     }
 
+    protected ValueChangeListener getListener() {
+        return listener;
+    }
+
     /**
      * Test that listeners are not called when they have been unregistered.
      */
