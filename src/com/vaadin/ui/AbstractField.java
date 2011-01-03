@@ -422,11 +422,6 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
         Object newValue = String.class == getType() ? dataSource.toString()
                 : dataSource.getValue();
-        if ((newValue == null && value != null)
-                || (newValue != null && !newValue.equals(value))) {
-            setInternalValue(newValue);
-            fireValueChange(false);
-        }
 
         return newValue;
     }
@@ -985,7 +980,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      */
     public void valueChange(Property.ValueChangeEvent event) {
         if (!suppressValueChangePropagation
-                && (isReadThrough() || !isModified())) {
+                && (isReadThrough() && !isModified())) {
+            setInternalValue(event.getProperty().getValue());
             fireValueChange(false);
         }
     }
@@ -993,7 +989,6 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
-
     }
 
     /**
