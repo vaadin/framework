@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
@@ -44,6 +45,13 @@ public class VContextMenu extends VOverlay implements SubPartAware {
 
     private int top;
 
+    private VLazyExecutor delayedImageLoadExecutioner = new VLazyExecutor(
+            100, new ScheduledCommand() {
+                public void execute() {
+                    imagesLoaded();
+                }
+            });
+
     /**
      * This method should be used only by Client object as only one per client
      * should exists. Request an instance via client.getContextMenu();
@@ -55,6 +63,12 @@ public class VContextMenu extends VOverlay implements SubPartAware {
         super(true, false, true);
         setWidget(menu);
         setStyleName("v-contextmenu");
+    }
+
+    protected void imagesLoaded() {
+        if (isVisible()) {
+            show();
+        }
     }
 
     /**
@@ -205,9 +219,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
                 Util.doIE6PngFix((Element) Element.as(event.getNativeEvent()
                         .getEventTarget()));
             }
-            if (isVisible()) {
-                show();
-            }
+            delayedImageLoadExecutioner.trigger();
         }
 
     }
