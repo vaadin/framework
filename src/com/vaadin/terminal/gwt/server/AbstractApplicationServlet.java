@@ -16,9 +16,11 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -990,11 +992,37 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             }
         }
 
-        // XSS preventation, theme names shouldn't contain special chars anyway
-        themeName = JsonPaintTarget.escapeJSON(themeName);
+        // XSS preventation, theme names shouldn't contain special chars anyway.
+        // The servlet denies them via url parameter.
+        themeName = stripSpecialChars(themeName);
 
         return themeName;
     }
+
+    /**
+     * A helper method to strip away (replace with spaces) characters that might
+     * somehow be used for XSS attacs. Leaves at least alphanumeric characters
+     * intact. Also removes eg. ( and ), so values should be safe in javascript
+     * too.
+     * 
+     * @param themeName
+     * @return
+     */
+    protected static String stripSpecialChars(String themeName) {
+        StringBuilder sb = new StringBuilder();
+        char[] charArray = themeName.toCharArray();
+        for (int i = 0; i < charArray.length; i++) {
+            char c = charArray[i];
+            if (!CHAR_BLACKLIST.contains(c)) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    private static final Collection<Character> CHAR_BLACKLIST = new HashSet<Character>(
+            Arrays.asList(new Character[] { '&', '"', '\'', '<', '>', '(', ')',
+                    ';' }));
 
     /**
      * Returns the default theme. Must never return null.
@@ -1813,7 +1841,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         page.write(", versionInfo : {vaadinVersion:\"");
         page.write(VERSION);
         page.write("\",applicationVersion:\"");
-        page.write(application.getVersion());
+        page.write(JsonPaintTarget.escapeJSON(application.getVersion()));
         page.write("\"}");
         if (systemMessages != null) {
             // Write the CommunicationError -message to client
@@ -1927,7 +1955,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         page.write("<link rel=\"icon\" type=\"image/vnd.microsoft.icon\" href=\""
                 + themeUri + "/favicon.ico\" />");
 
-        page.write("<title>" + title + "</title>");
+        page.write("<title>" + safeEscapeForHtml(title) + "</title>");
     }
 
     /**
@@ -2294,5 +2322,37 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     public CommunicationManager createCommunicationManager(
             Application application) {
         return new CommunicationManager(application);
+    }
+
+    /**
+     * Escapes characters to html entities. An exception is made for some
+     * "safe characters" to keep the text somewhat readable.
+     * 
+     * @param unsafe
+     * @return a safe string to be added inside an html tag
+     */
+    protected static final String safeEscapeForHtml(String unsafe) {
+        StringBuilder safe = new StringBuilder();
+        char[] charArray = unsafe.toCharArray();
+        for (int i = 0; i < charArray.length; i++) {
+            char c = charArray[i];
+            if (isSafe(c)) {
+                safe.append(c);
+            } else {
+                safe.append("&#");
+                safe.append((int) c);
+                safe.append(";");
+            }
+        }
+
+        return safe.toString();
+    }
+
+    private static boolean isSafe(char c) {
+        return //
+        c > 47 && c < 58 || // alphanum
+                c > 64 && c < 91 || // A-Z
+                c > 96 && c < 123 // a-z
+        ;
     }
 }
