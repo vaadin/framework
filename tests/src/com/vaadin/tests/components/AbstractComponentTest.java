@@ -29,6 +29,16 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
     private static final Resource SELECTED_ICON = new ThemeResource(
             "../runo/icons/16/ok.png");
 
+    private static final LinkedHashMap<String, String> sizeOptions = new LinkedHashMap<String, String>();
+    static {
+        sizeOptions.put("auto", null);
+        sizeOptions.put("50%", "50%");
+        sizeOptions.put("100%", "100%");
+        for (int w = 200; w < 1000; w += 100) {
+            sizeOptions.put(w + "px", w + "px");
+        }
+    }
+
     // Menu related
 
     private MenuItem mainMenu;
@@ -106,6 +116,26 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
                 log.clear();
             }
         });
+        MenuItem layoutSize = settingsMenu.addItem("Parent layout size", null);
+        MenuItem layoutWidth = layoutSize.addItem("Width", null);
+        MenuItem layoutHeight = layoutSize.addItem("Height", null);
+        for (final String name : sizeOptions.keySet()) {
+            layoutWidth.addItem(name, new MenuBar.Command() {
+                public void menuSelected(MenuItem selectedItem) {
+                    getTestComponents().get(0).getParent()
+                            .setWidth(sizeOptions.get(name));
+                    log("Parent layout width set to " + name);
+                }
+            });
+            layoutHeight.addItem(name, new MenuBar.Command() {
+                public void menuSelected(MenuItem selectedItem) {
+                    getTestComponents().get(0).getParent()
+                            .setHeight(sizeOptions.get(name));
+                    log("Parent layout height set to " + name);
+                }
+            });
+        }
+
     }
 
     protected void setLogVisible(boolean visible) {
@@ -245,19 +275,11 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
         createCategory(widthCategory, category);
         createCategory(heightCategory, category);
 
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
-        options.put("auto", null);
-        options.put("50%", "50%");
-        options.put("100%", "100%");
-        for (int w = 200; w < 1000; w += 100) {
-            options.put(w + "px", w + "px");
-        }
-
-        for (String name : options.keySet()) {
+        for (String name : sizeOptions.keySet()) {
             createClickAction(name, widthCategory, widthCommand,
-                    options.get(name));
+                    sizeOptions.get(name));
             createClickAction(name, heightCategory, heightCommand,
-                    options.get(name));
+                    sizeOptions.get(name));
         }
 
         // Default to undefined size
