@@ -867,7 +867,7 @@ public class VTabsheet extends VTabsheetBase {
         }
 
         // Make sure scrollerIndex is valid
-        if (scrollerIndex > tb.getTabCount()) {
+        if (scrollerIndex < 0 || scrollerIndex > tb.getTabCount()) {
             scrollerIndex = getNextVisibleTab(-1);
         } else if (tb.getTabCount() > 0 && tb.getTab(scrollerIndex).isHidden()) {
             scrollerIndex = getNextVisibleTab(scrollerIndex);
