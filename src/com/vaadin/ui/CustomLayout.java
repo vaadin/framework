@@ -159,8 +159,7 @@ public class CustomLayout extends AbstractLayout {
             return;
         }
         slots.values().remove(c);
-        c.setParent(null);
-        fireComponentDetachEvent(c);
+        super.removeComponent(c);
         requestRepaint();
     }
 

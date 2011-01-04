@@ -18,6 +18,10 @@ import com.vaadin.Application;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.DragAndDropWrapper;
+import com.vaadin.ui.LoginForm;
+import com.vaadin.ui.PopupView;
 
 public class VaadinClasses {
 
@@ -51,6 +55,17 @@ public class VaadinClasses {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static List<Class<? extends ComponentContainer>> getComponentContainersSupportingAddRemoveComponent() {
+        List<Class<? extends ComponentContainer>> classes = getComponentContainers();
+        classes.remove(PopupView.class);
+        classes.remove(CustomComponent.class);
+        classes.remove(DragAndDropWrapper.class);
+        classes.remove(CustomComponent.class);
+        classes.remove(LoginForm.class);
+
+        return classes;
     }
 
     @SuppressWarnings("unchecked")
