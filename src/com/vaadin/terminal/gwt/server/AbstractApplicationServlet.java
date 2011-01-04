@@ -1000,10 +1000,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     /**
-     * A helper method to strip away (replace with spaces) characters that might
-     * somehow be used for XSS attacs. Leaves at least alphanumeric characters
-     * intact. Also removes eg. ( and ), so values should be safe in javascript
-     * too.
+     * A helper method to strip away characters that might somehow be used for
+     * XSS attacs. Leaves at least alphanumeric characters intact. Also removes
+     * eg. ( and ), so values should be safe in javascript too.
      * 
      * @param themeName
      * @return
