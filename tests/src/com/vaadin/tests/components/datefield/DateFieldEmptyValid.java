@@ -36,22 +36,21 @@ public class DateFieldEmptyValid extends TestBase {
         log = new Log(5);
         addComponent(log);
         df = new MyDateField();
+        df.setDebugId("DateField");
         df.setRequired(true);
         df.setLocale(new Locale("fi", "FI"));
         df.setValue(new Date(100000000000L));
         df.setImmediate(true);
         df.setResolution(DateField.RESOLUTION_DAY);
         df.addListener(new ValueChangeListener() {
-
             public void valueChange(ValueChangeEvent event) {
                 checkEmpty();
-
             }
-
         });
         addComponent(df);
         checkEmpty();
         Button b = new Button("Clear date");
+        b.setDebugId("clear");
         b.addListener(new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
@@ -61,6 +60,7 @@ public class DateFieldEmptyValid extends TestBase {
         addComponent(b);
 
         b = new Button("Set date to 4.5.1990");
+        b.setDebugId("set4.5.1990");
         b.addListener(new ClickListener() {
 
             @SuppressWarnings("deprecation")
@@ -80,10 +80,12 @@ public class DateFieldEmptyValid extends TestBase {
                 df.setPropertyDataSource(dfProp);
             }
         });
+        b.setDebugId("set-by-ds");
         addComponent(b);
 
         b = new Button(
                 "Set date to 27.8.2005 by changing a property data source from null");
+        b.setDebugId("set-via-ds");
         b.addListener(new ClickListener() {
 
             @SuppressWarnings("deprecation")
@@ -97,8 +99,8 @@ public class DateFieldEmptyValid extends TestBase {
         addComponent(b);
 
         b = new Button("Check value");
+        b.setDebugId("check-value");
         b.addListener(new ClickListener() {
-
             public void buttonClick(ClickEvent event) {
                 checkEmpty();
             }
