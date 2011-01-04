@@ -7,12 +7,12 @@ package com.vaadin.ui;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
 import com.vaadin.data.Property;
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -26,13 +26,15 @@ import com.vaadin.terminal.gwt.client.ui.VPopupCalendar;
 
 /**
  * <p>
- * A date editor component that can be bound to any bindable Property. that is
+ * A date editor component that can be bound to any {@link Property} that is
  * compatible with <code>java.util.Date</code>.
  * </p>
  * <p>
  * Since <code>DateField</code> extends <code>AbstractField</code> it implements
- * the {@link com.vaadin.data.Buffered}interface. A <code>DateField</code> is in
- * write-through mode by default, so
+ * the {@link com.vaadin.data.Buffered}interface.
+ * </p>
+ * <p>
+ * A <code>DateField</code> is in write-through mode by default, so
  * {@link com.vaadin.ui.AbstractField#setWriteThrough(boolean)}must be called to
  * enable buffering.
  * </p>
@@ -273,7 +275,6 @@ public class DateField extends AbstractField implements
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
-        setComponentError(null);
 
         if (!isReadOnly()
                 && (variables.containsKey("year")
@@ -290,11 +291,8 @@ public class DateField extends AbstractField implements
             Date newDate = null;
 
             // this enables analyzing invalid input on the server
-            Object o = variables.get("dateString");
-            dateString = null;
-            if (o != null) {
-                dateString = o.toString();
-            }
+            final String newDateString = (String) variables.get("dateString");
+            dateString = newDateString;
 
             // Gets the new date in parts
             // Null values are converted to negative values.
@@ -356,7 +354,6 @@ public class DateField extends AbstractField implements
             if (newDate == null && dateString != null && !"".equals(dateString)) {
                 try {
                     Date parsedDate = handleUnparsableDateString(dateString);
-                    parsingSucceeded = true;
                     setValue(parsedDate, true);
 
                     /*
@@ -367,9 +364,25 @@ public class DateField extends AbstractField implements
                      */
                     requestRepaint();
                 } catch (ConversionException e) {
+
+                    /*
+                     * Datefield now contains some text that could't be parsed
+                     * into date.
+                     */
+                    if (oldDate != null) {
+                        /*
+                         * Set the logic value to null.
+                         */
+                        setValue(null);
+                        /*
+                         * Reset the dateString (overridden to null by setValue)
+                         */
+                        dateString = newDateString;
+                    }
+
                     /*
                      * Sets the component error to the Conversion Exceptions
-                     * message. This can be overriden in
+                     * message. This can be overridden in
                      * handleUnparsableDateString.
                      */
                     setComponentError(new UserError(e.getLocalizedMessage()));
@@ -380,13 +393,27 @@ public class DateField extends AbstractField implements
                      * not want to cause the client side value to change.
                      */
                     parsingSucceeded = false;
-                    setInternalValue(null);
+
+                    /*
+                     * Because of our custom implementation of isValid(), that
+                     * also checks the parsingSucceeded flag, we must also
+                     * notify the form (if this is used in one) that the
+                     * validity of this field has changed.
+                     * 
+                     * Normally fields validity doesn't change without value
+                     * change and form depends on this implemntation detail.
+                     */
+                    notifyFormOfValidityChange();
+
                 }
             } else if (newDate != oldDate
                     && (newDate == null || !newDate.equals(oldDate))) {
-                parsingSucceeded = true;
                 setValue(newDate, true); // Don't require a repaint, client
                 // updates itself
+            } else if (!parsingSucceeded) { // oldDate == newDate == null
+                // Empty value set, previously contained unparsable date string,
+                // clear related internal fields
+                setValue(null);
             }
         }
 
@@ -426,32 +453,8 @@ public class DateField extends AbstractField implements
      * the default documentation from implemented interface.
      */
     @Override
-    public Class getType() {
+    public Class<?> getType() {
         return Date.class;
-    }
-
-    /*
-     * Returns the value of the property in human readable textual format. Don't
-     * add a JavaDoc comment here, we use the default documentation from
-     * implemented interface.
-     */
-    @Override
-    public String toString() {
-        final Date value = (Date) getValue();
-        if (value != null) {
-            return value.toString();
-        }
-        return null;
-    }
-
-    /*
-     * Sets the value of the property. Don't add a JavaDoc comment here, we use
-     * the default documentation from implemented interface.
-     */
-    @Override
-    public void setValue(Object newValue) throws Property.ReadOnlyException,
-            Property.ConversionException {
-        setValue(newValue, false);
     }
 
     /*
@@ -460,49 +463,85 @@ public class DateField extends AbstractField implements
      * @see com.vaadin.ui.AbstractField#setValue(java.lang.Object, boolean)
      */
     @Override
-    public void setValue(Object newValue, boolean repaintIsNotNeeded)
+    protected void setValue(Object newValue, boolean repaintIsNotNeeded)
             throws Property.ReadOnlyException, Property.ConversionException {
 
-        dateString = null;
+        /*
+         * First handle special case when the client side component have a date
+         * string but value is null (e.g. unparsable date string typed in by the
+         * user). No value changes should happen, but we need to do some
+         * internal housekeeping.
+         */
+        if (newValue == null && !parsingSucceeded) {
+            /*
+             * Side-effects of setInternalValue clears possible previous strings
+             * and flags about invalid input.
+             */
+            setInternalValue(null);
 
-        // Allows setting dates directly
+            /*
+             * Due to DateField's special implementation of isValid(),
+             * datefields validity may change although the logical value does
+             * not change. This is an issue for Form which expects that validity
+             * of Fields cannot change unless actual value changes.
+             * 
+             * So we check if this field is inside a form and the form has
+             * registered this as a field. In this case we repaint the form.
+             * Without this hacky solution the form might not be able to clean
+             * validation errors etc. We could avoid this by firing an extra
+             * value change event, but feels like at least as bad solution as
+             * this.
+             */
+            notifyFormOfValidityChange();
+            requestRepaint();
+            return;
+        }
+
         if (newValue == null || newValue instanceof Date) {
-            try {
-                dateString = newValue == null ? null : newValue.toString();
-                if (dateString == null && super.getValue() == null) {
-                    /*
-                     * AbstractField cannot handle invalid changes in client
-                     * side so we have to repaint the component manually. No
-                     * value change event is also fired.
-                     */
-                    requestRepaint();
-
-                } else {
-                    super.setValue(newValue, repaintIsNotNeeded);
-                }
-
-                setComponentError(null);
-
-                parsingSucceeded = true;
-            } catch (InvalidValueException ive) {
-                // Thrown if validator fails
-                parsingSucceeded = false;
-                throw ive;
-            }
+            super.setValue(newValue, repaintIsNotNeeded);
         } else {
-
-            // Try to parse as string
+            // Try to parse the given string value to Date
             try {
                 final SimpleDateFormat parser = new SimpleDateFormat();
                 final Date val = parser.parse(newValue.toString());
                 super.setValue(val, repaintIsNotNeeded);
-                parsingSucceeded = true;
-                dateString = newValue.toString();
             } catch (final ParseException e) {
                 parsingSucceeded = false;
                 throw new Property.ConversionException(
                         "Date format not recognized");
             }
+        }
+    }
+
+    /**
+     * Detects if this field is used in a Form (logically) and if so, notifies
+     * it (by repainting it) that the validity of this field might have changed.
+     */
+    private void notifyFormOfValidityChange() {
+        Component parenOfDateField = getParent();
+        boolean formFound = false;
+        while (parenOfDateField != null || formFound) {
+            if (parenOfDateField instanceof Form) {
+                Form f = (Form) parenOfDateField;
+                Collection<?> visibleItemProperties = f.getItemPropertyIds();
+                for (Object fieldId : visibleItemProperties) {
+                    Field field = f.getField(fieldId);
+                    if (field == this) {
+                        /*
+                         * this datefield is logically in a form. Do the same
+                         * thing as form does in its value change listener that
+                         * it registers to all fields.
+                         */
+                        f.requestRepaint();
+                        formFound = true;
+                        break;
+                    }
+                }
+            }
+            if (formFound) {
+                break;
+            }
+            parenOfDateField = parenOfDateField.getParent();
         }
     }
 
@@ -527,7 +566,16 @@ public class DateField extends AbstractField implements
         // Also set the internal dateString
         if (newValue != null) {
             dateString = newValue.toString();
+        } else {
+            dateString = null;
         }
+
+        if (!parsingSucceeded) {
+            // clear component error and parsing flag
+            setComponentError(null);
+            parsingSucceeded = true;
+        }
+
         super.setInternalValue(newValue);
     }
 
@@ -601,7 +649,7 @@ public class DateField extends AbstractField implements
     }
 
     /**
-     * Reterns a format string used to format date value on client side or null
+     * Returns a format string used to format date value on client side or null
      * if default formatting from {@link Component#getLocale()} is used.
      * 
      * @return the dateFormat
@@ -678,51 +726,16 @@ public class DateField extends AbstractField implements
         requestRepaint();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.AbstractField#isEmpty()
-     */
-    @Override
-    protected boolean isEmpty() {
-        /*
-         * Logically isEmpty() should return false also in the case that the
-         * entered value is invalid.
-         */
-        boolean empty = (dateString == null || dateString.equals(""));
-        return empty;
-    }
-
-    @Override
-    public void valueChange(Property.ValueChangeEvent event) {
-        /*
-         * We also need to update the dateString if the value of the property
-         * data source changes. This has to be done before super fires the value
-         * change event in case someone checks isEmpty in a value change
-         * listener.
-         */
-        Object value = getValue();
-        if (value != null) {
-            dateString = value.toString();
-        }
-
-        setComponentError(null);
-        parsingSucceeded = true;
-
-        super.valueChange(event);
-    }
-
-    /*
-     * (non-Javadoc)
+    /**
+     * Tests the current value against registered validators if the field is not
+     * empty. Note that DateField is considered empty (value == null) and
+     * invalid if it contains text typed in by the user that couldn't be parsed
+     * into a Date value.
      * 
      * @see com.vaadin.ui.AbstractField#isValid()
      */
     @Override
     public boolean isValid() {
-        /*
-         * For the DateField to be valid it has to be parsable also
-         */
-        boolean parsable = isEmpty() || (!isEmpty() && getValue() != null);
-        return parsable && super.isValid();
+        return parsingSucceeded && super.isValid();
     }
 }
