@@ -583,7 +583,9 @@ public class Util {
      */
     public static void runWebkitOverflowAutoFix(final Element elem) {
         // Add max version if fix lands sometime to Webkit
-        if (BrowserInfo.get().getWebkitVersion() > 0) {
+        // Starting from Opera 11.00, also a problem in Opera
+        if (BrowserInfo.get().getWebkitVersion() > 0
+                || (BrowserInfo.get().isOpera11())) {
             final String originalOverflow = elem.getStyle().getProperty(
                     "overflow");
             if ("hidden".equals(originalOverflow)) {

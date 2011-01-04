@@ -253,6 +253,16 @@ public class BrowserInfo {
         return browserDetails.isOpera();
     }
 
+    public boolean isOpera10() {
+        return browserDetails.isOpera()
+                && browserDetails.getBrowserMajorVersion() == 10;
+    }
+
+    public boolean isOpera11() {
+        return browserDetails.isOpera()
+                && browserDetails.getBrowserMajorVersion() == 11;
+    }
+
     public native static String getBrowserString()
     /*-{
         return $wnd.navigator.userAgent;
