@@ -249,6 +249,14 @@ public class BrowserInfo {
         return browserDetails.getBrowserMajorVersion();
     }
 
+    public float getOperaVersion() {
+        if (!browserDetails.isOpera()) {
+            return -1;
+        }
+
+        return browserDetails.getBrowserMajorVersion();
+    }
+
     public boolean isOpera() {
         return browserDetails.isOpera();
     }
