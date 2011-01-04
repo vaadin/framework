@@ -1769,9 +1769,6 @@ public abstract class AbstractCommunicationManager implements
 
             // Get the path from URL
             String path = callback.getRequestPathInfo(request);
-            if (path != null && path.startsWith("/UIDL")) {
-                path = path.substring("/UIDL".length());
-            }
 
             // If the path is specified, create name from it
             if (path != null && path.length() > 0 && !path.equals("/")) {

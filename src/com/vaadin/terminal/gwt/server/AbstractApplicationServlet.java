@@ -1825,14 +1825,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         page.write("vaadin.vaadinConfigurations[\"" + appId + "\"] = {");
         page.write("appUri:'" + appUrl + "', ");
 
-        String pathInfo = getRequestPathInfo(request);
-        if (pathInfo == null) {
-            pathInfo = "/";
-        } else {
-            pathInfo = JsonPaintTarget.escapeJSON(pathInfo);
-        }
-
-        page.write("pathInfo: \"" + pathInfo + "\", ");
         if (window != application.getMainWindow()) {
             page.write("windowName: '" + window.getName() + "', ");
         }
