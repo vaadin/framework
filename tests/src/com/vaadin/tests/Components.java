@@ -233,7 +233,9 @@ public class Components extends Application {
 
         Class<? extends AbstractComponentTest<?>> superClass = (Class<? extends AbstractComponentTest<?>>) cls
                 .getSuperclass();
-        if (cls != AbstractComponentTest.class) {
+
+        // This cast is needed only to make compilation through Ant work ..
+        if (((Class<?>) cls) != AbstractComponentTest.class) {
             addTreeItem(superClass);
         }
         if (naviTree.containsId(cls)) {
