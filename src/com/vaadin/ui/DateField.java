@@ -13,16 +13,15 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.UserError;
 import com.vaadin.terminal.gwt.client.ui.VDateField;
 import com.vaadin.terminal.gwt.client.ui.VPopupCalendar;
 
@@ -113,7 +112,8 @@ public class DateField extends AbstractField implements
     private String dateString = null;
 
     /**
-     * Was the last entered string parsable?
+     * Was the last entered string parsable? If this flag is false, datefields
+     * internal validator does not pass.
      */
     private boolean parsingSucceeded = true;
 
@@ -121,6 +121,10 @@ public class DateField extends AbstractField implements
      * Determines if week numbers are shown in the date selector.
      */
     private boolean showISOWeekNumbers = false;
+
+    private String currentParseErrorMessage;
+
+    private String defaultParsingErrorMessage = "Date format not recognized";
 
     /* Constructors */
 
@@ -383,11 +387,11 @@ public class DateField extends AbstractField implements
                     }
 
                     /*
-                     * Sets the component error to the Conversion Exceptions
-                     * message. This can be overridden in
-                     * handleUnparsableDateString.
+                     * Saves the localized message of parse error. This can be
+                     * overridden in handleUnparsableDateString. The message
+                     * will later be used to show a validation error.
                      */
-                    setComponentError(new UserError(e.getLocalizedMessage()));
+                    currentParseErrorMessage = e.getLocalizedMessage();
 
                     /*
                      * The value of the DateField should be null if an invalid
@@ -403,7 +407,7 @@ public class DateField extends AbstractField implements
                      * validity of this field has changed.
                      * 
                      * Normally fields validity doesn't change without value
-                     * change and form depends on this implemntation detail.
+                     * change and form depends on this implementation detail.
                      */
                     notifyFormOfValidityChange();
 
@@ -445,7 +449,8 @@ public class DateField extends AbstractField implements
      */
     protected Date handleUnparsableDateString(String dateString)
             throws Property.ConversionException {
-        throw new Property.ConversionException(getParsinErrorMessage());
+        currentParseErrorMessage = null;
+        throw new Property.ConversionException(getParseErrorMessage());
     }
 
     /* Property features */
@@ -509,7 +514,7 @@ public class DateField extends AbstractField implements
                 super.setValue(val, repaintIsNotNeeded);
             } catch (final ParseException e) {
                 parsingSucceeded = false;
-                throw new Property.ConversionException(getParsinErrorMessage());
+                throw new Property.ConversionException(getParseErrorMessage());
             }
         }
     }
@@ -575,6 +580,7 @@ public class DateField extends AbstractField implements
             // clear component error and parsing flag
             setComponentError(null);
             parsingSucceeded = true;
+            currentParseErrorMessage = null;
         }
 
         super.setInternalValue(newValue);
@@ -743,30 +749,53 @@ public class DateField extends AbstractField implements
     @Override
     public void validate() throws InvalidValueException {
         /*
-         * To work properly in form we must also throw exception if there is
-         * currently a parsing error in the datefield.
+         * To work properly in form we must throw exception if there is
+         * currently a parsing error in the datefield. Parsing error is kind of
+         * an internal validator.
          */
         if (!parsingSucceeded) {
-            String message;
-            ErrorMessage componentError2 = getComponentError();
-            if (componentError2 != null) {
-                /*
-                 * Use possibly customized error if one exists
-                 */
-                message = componentError2.toString();
-            } else {
-                message = getParsinErrorMessage();
-            }
-            throw new InvalidValueException(message);
+            throw new UnparsableDateString(currentParseErrorMessage);
         }
         super.validate();
     }
 
     /**
+     * Return the error message that is shown if the user inputted value can't
+     * be parsed into a Date object. If
+     * {@link #handleUnparsableDateString(String)} is overridden and it throws a
+     * custom exception, the message returned by
+     * {@link Exception#getLocalizedMessage()} will be used instead of the value
+     * returned by this method.
+     * 
+     * @see #setParseErrorMessage(String)
+     * 
      * @return the error message that the DateField uses when it can't parse the
      *         textual input from user to a Date object
      */
-    protected String getParsinErrorMessage() {
-        return "Date format not recognized";
+    public String getParseErrorMessage() {
+        return defaultParsingErrorMessage;
+    }
+
+    /**
+     * Sets the default error message used if the DateField cannot parse the
+     * text input by user to a Date field. Note that if the
+     * {@link #handleUnparsableDateString(String)} method is overridden, the
+     * localized message from its exception is used.
+     * 
+     * @see #getParseErrorMessage()
+     * @see #handleUnparsableDateString(String)
+     * @param parsingErrorMessage
+     */
+    public void setParseErrorMessage(String parsingErrorMessage) {
+        defaultParsingErrorMessage = parsingErrorMessage;
+    }
+
+    public static class UnparsableDateString extends
+            Validator.InvalidValueException {
+
+        public UnparsableDateString(String message) {
+            super(message);
+        }
+
     }
 }
