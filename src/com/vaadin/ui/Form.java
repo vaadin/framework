@@ -119,6 +119,9 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     /**
      * Form needs to repaint itself if child fields value changes due possible
      * change in form validity.
+     * 
+     * TODO introduce ValidityChangeEvent (#6239) and start using it instead.
+     * See e.g. DateField#notifyFormOfValidityChange().
      */
     private final ValueChangeListener fieldValueChangeListener = new ValueChangeListener() {
         public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
