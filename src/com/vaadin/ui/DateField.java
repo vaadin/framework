@@ -13,11 +13,13 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.UserError;
@@ -443,7 +445,7 @@ public class DateField extends AbstractField implements
      */
     protected Date handleUnparsableDateString(String dateString)
             throws Property.ConversionException {
-        throw new Property.ConversionException("Date format not recognized");
+        throw new Property.ConversionException(getParsinErrorMessage());
     }
 
     /* Property features */
@@ -507,8 +509,7 @@ public class DateField extends AbstractField implements
                 super.setValue(val, repaintIsNotNeeded);
             } catch (final ParseException e) {
                 parsingSucceeded = false;
-                throw new Property.ConversionException(
-                        "Date format not recognized");
+                throw new Property.ConversionException(getParsinErrorMessage());
             }
         }
     }
@@ -737,5 +738,35 @@ public class DateField extends AbstractField implements
     @Override
     public boolean isValid() {
         return parsingSucceeded && super.isValid();
+    }
+
+    @Override
+    public void validate() throws InvalidValueException {
+        /*
+         * To work properly in form we must also throw exception if there is
+         * currently a parsing error in the datefield.
+         */
+        if (!parsingSucceeded) {
+            String message;
+            ErrorMessage componentError2 = getComponentError();
+            if (componentError2 != null) {
+                /*
+                 * Use possibly customized error if one exists
+                 */
+                message = componentError2.toString();
+            } else {
+                message = getParsinErrorMessage();
+            }
+            throw new InvalidValueException(message);
+        }
+        super.validate();
+    }
+
+    /**
+     * @return the error message that the DateField uses when it can't parse the
+     *         textual input from user to a Date object
+     */
+    protected String getParsinErrorMessage() {
+        return "Date format not recognized";
     }
 }
