@@ -533,8 +533,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     /**
      * <p>
      * Sets the specified Property as the data source for the field. All
-     * uncommitted changes to the field are discarded and the value is refreshed
-     * from the new data source.
+     * uncommitted changes are replaced with a value from the new data source.
      * </p>
      * 
      * <p>
@@ -546,6 +545,15 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * the commit can be done normally.
      * </p>
      * 
+     * <p>
+     * Note: before 6.5 we actually called discard() method in the beginning of
+     * the method. This was removed to simplify implementation, avoid excess
+     * calls to backing property and to avoid odd value change events that were
+     * previously fired (developer expects 0-1 value change events if this
+     * method is called). Some complex field implementations might now need to
+     * override this method to do housekeeping similar to discard().
+     * </p>
+     * 
      * @param newDataSource
      *            the new data source Property.
      */
@@ -553,12 +561,6 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
         // Saves the old value
         final Object oldValue = value;
-
-        // Discards all changes to old datasource
-        try {
-            discard();
-        } catch (final Buffered.SourceException ignored) {
-        }
 
         // Stops listening the old data source changes
         if (dataSource != null
