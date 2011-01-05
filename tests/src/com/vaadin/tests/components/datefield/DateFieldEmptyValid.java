@@ -33,7 +33,7 @@ public class DateFieldEmptyValid extends TestBase {
     @Override
     protected void setup() {
         addComponent(new Label("<br/><br/>", Label.CONTENT_XHTML));
-        log = new Log(5);
+        log = new Log(8);
         addComponent(log);
         df = new MyDateField();
         df.setDebugId("DateField");
@@ -44,6 +44,7 @@ public class DateFieldEmptyValid extends TestBase {
         df.setResolution(DateField.RESOLUTION_DAY);
         df.addListener(new ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
+                log.log("Value changeEvent");
                 checkEmpty();
             }
         });
@@ -54,6 +55,7 @@ public class DateFieldEmptyValid extends TestBase {
         b.addListener(new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
+                log.log("Clearing date aka setValue(null)");
                 df.setValue(null);
             }
         });
@@ -65,6 +67,7 @@ public class DateFieldEmptyValid extends TestBase {
 
             @SuppressWarnings("deprecation")
             public void buttonClick(ClickEvent event) {
+                log.log("Setting new value to datefield (4.5.1990)");
                 df.setValue(new Date(1990 - 1900, 5 - 1, 4));
             }
         });
@@ -75,6 +78,7 @@ public class DateFieldEmptyValid extends TestBase {
 
             @SuppressWarnings("deprecation")
             public void buttonClick(ClickEvent event) {
+                log.log("Setting new object property (5.6.2000) to datefield");
                 ObjectProperty<Date> dfProp = new ObjectProperty<Date>(
                         new Date(2000 - 1900, 6 - 1, 5), Date.class);
                 df.setPropertyDataSource(dfProp);
@@ -84,12 +88,13 @@ public class DateFieldEmptyValid extends TestBase {
         addComponent(b);
 
         b = new Button(
-                "Set date to 27.8.2005 by changing a property data source from null");
+                "Set date to 27.8.2005 by changing a new property data source from null, ds attached before value setting.");
         b.setDebugId("set-via-ds");
         b.addListener(new ClickListener() {
 
             @SuppressWarnings("deprecation")
             public void buttonClick(ClickEvent event) {
+                log.log("Setting object property (with value null) to datefield and set value of property to 27.8.2005");
                 ObjectProperty<Date> dfProp = new ObjectProperty<Date>(null,
                         Date.class);
                 df.setPropertyDataSource(dfProp);
@@ -102,6 +107,7 @@ public class DateFieldEmptyValid extends TestBase {
         b.setDebugId("check-value");
         b.addListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
+                log.log("Checking state");
                 checkEmpty();
             }
         });

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="" />
+<link rel="selenium.base" href="http://localhost:8888/" />
 <title>DateFieldEmptyValid</title>
 </head>
 <body>
@@ -14,11 +14,6 @@
 <tr>
 	<td>open</td>
 	<td>/run/com.vaadin.tests.components.datefield.DateFieldEmptyValid?restartApplication</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForVaadin</td>
-	<td></td>
 	<td></td>
 </tr>
 <tr>
@@ -74,12 +69,12 @@
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_0</td>
-	<td>4. isEmpty: false, isValid: true</td>
+	<td>5. isEmpty: false, isValid: true</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_1</td>
-	<td>3. DateField value is now Thu Mar 15 11:46:40 GMT+02:00 1973</td>
+	<td>4. DateField value is now Thu Mar 15 11:46:40 GMT+02:00 1973</td>
 </tr>
 <tr>
 	<td>assertValue</td>
@@ -114,12 +109,12 @@
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_0</td>
-	<td>8. isEmpty: true, isValid: false</td>
+	<td>11. isEmpty: true, isValid: false</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_1</td>
-	<td>7. DateField value is now null</td>
+	<td>10. DateField value is now null</td>
 </tr>
 <tr>
 	<td>mouseClick</td>
@@ -144,12 +139,12 @@
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_0</td>
-	<td>10. isEmpty: true, isValid: false</td>
+	<td>14. isEmpty: true, isValid: false</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_1</td>
-	<td>9. DateField value is now null</td>
+	<td>13. DateField value is now null</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -166,15 +161,16 @@
 	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_Scheck-value/domChild[0]/domChild[0]</td>
 	<td></td>
 </tr>
+<!--Note, no value change should happen, value was and is null, validity would have changed if the test had the required flag off-->
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_1</td>
-	<td>11. DateField value is now null</td>
+	<td>17. DateField value is now null</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_0</td>
-	<td>12. isEmpty: true, isValid: false</td>
+	<td>18. isEmpty: true, isValid: false</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -184,12 +180,12 @@
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_0</td>
-	<td>14. isEmpty: false, isValid: true</td>
+	<td>22. isEmpty: false, isValid: true</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_1</td>
-	<td>13. DateField value is now 1990-05-04</td>
+	<td>21. DateField value is now 1990-05-04</td>
 </tr>
 <tr>
 	<td>assertValue</td>
@@ -204,57 +200,52 @@
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_0</td>
-	<td>16. isEmpty: false, isValid: true</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_1</td>
-	<td>15. DateField value is now 2000-06-05</td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[3]/VButton[0]/domChild[0]/domChild[0]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_0</td>
-	<td>18. isEmpty: true, isValid: false</td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[5]/VButton[0]/domChild[0]/domChild[0]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>mouseClick</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_0</td>
-	<td>105,12</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_0</td>
-	<td>22. isEmpty: false, isValid: true</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_1</td>
-	<td>21. DateField value is now 2000-06-05</td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[6]/VButton[0]/domChild[0]/domChild[0]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_1</td>
-	<td>25. DateField value is now 2005-08-27</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_0</td>
 	<td>26. isEmpty: false, isValid: true</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_1</td>
+	<td>25. DateField value is now 2000-06-05</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_Sclear/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_0</td>
+	<td>30. isEmpty: true, isValid: false</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_Sset-by-ds/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_0</td>
+	<td>34. isEmpty: false, isValid: true</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_1</td>
+	<td>33. DateField value is now 2000-06-05</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_Sset-via-ds/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_1</td>
+	<td>40. DateField value is now 2005-08-27</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldDateFieldEmptyValid::PID_SLog_row_0</td>
+	<td>41. isEmpty: false, isValid: true</td>
 </tr>
 
 </tbody></table>
