@@ -39,7 +39,7 @@ def readProperties(filename):
 def helpAndExit():
     print "Usage: build/bin/tagrelease <command> [parameters...]"
     print "Commands:"
-    print "\ttag <version> <changeset>"
+    print "\ttag <version> <changeset> <manual-repository>"
     sys.exit(1)
 
 ###############################################################################
@@ -74,7 +74,7 @@ def tag(product, srcUrl, trgUrl, version, changeset, dryrun = 1):
 ###############################################################################
 # Tag command
 ###############################################################################
-def tagCommand(version, changeset):
+def tagCommand(version, changeset, bookRepo):
     # Check parameters
     m = re.match(r'^[0-9]+\.[0-9]+\.[0-9]+(\.\w+)?$', version)
     if not m:
@@ -92,8 +92,6 @@ def tagCommand(version, changeset):
     tagUrl = repoRoot+"/releases/"+version
 
     # Book tag parameters
-    versionProperties = readProperties("build/VERSION.properties")
-    bookRepo = versionProperties["manual.repository"]
     if not re.search(r'branches/[0-9\.]+$', bookRepo):
         print "Bad documentation branch '%s' for release." % (bookRepo)
         sys.exit(1)
@@ -131,8 +129,8 @@ def verifyCommand(version, changeset):
 if len(sys.argv) < 2:
     helpAndExit()
 
-if sys.argv[1] == "tag" and len(sys.argv) == 4:
-    tagCommand(sys.argv[2], sys.argv[3])
+if sys.argv[1] == "tag" and len(sys.argv) == 5:
+    tagCommand(sys.argv[2], sys.argv[3], sys.argv[4])
 elif sys.argv[1] == "verify" and len(sys.argv) == 4:
     verifyCommand(sys.argv[2], sys.argv[3])
 else:
