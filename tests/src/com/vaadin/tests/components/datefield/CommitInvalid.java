@@ -2,6 +2,7 @@ package com.vaadin.tests.components.datefield;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.ObjectProperty;
@@ -51,6 +52,7 @@ public class CommitInvalid extends TestBase {
         dateProperty = new ObjectProperty<Date>(new Date(2009 - 1900, 4 - 1, 1));
 
         dateField = new DateField("Year", dateProperty);
+        dateField.setLocale(new Locale("fi", "FI"));
         dateField.setResolution(DateField.RESOLUTION_DAY);
         dateField.setDebugId("_DF");
         form.addField("date", dateField);
