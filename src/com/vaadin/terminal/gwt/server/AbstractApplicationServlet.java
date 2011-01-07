@@ -1793,6 +1793,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             widgetsetBasePath = getStaticFilesLocation(request);
         }
 
+        widgetset = stripSpecialChars(widgetset);
+
         final String widgetsetFilePath = widgetsetBasePath + "/"
                 + WIDGETSET_DIRECTORY_PATH + widgetset + "/" + widgetset
                 + ".nocache.js?" + new Date().getTime();
@@ -1825,10 +1827,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         page.write("appUri:'" + appUrl + "', ");
 
         if (window != application.getMainWindow()) {
-            page.write("windowName: '" + window.getName() + "', ");
+            page.write("windowName: \""
+                    + JsonPaintTarget.escapeJSON(window.getName()) + "\", ");
         }
         page.write("themeUri:");
-        page.write(themeUri != null ? "'" + themeUri + "'" : "null");
+        page.write(themeUri != null ? "\"" + themeUri + "\"" : "null");
         page.write(", versionInfo : {vaadinVersion:\"");
         page.write(VERSION);
         page.write("\",applicationVersion:\"");
@@ -1838,15 +1841,15 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             // Write the CommunicationError -message to client
             String caption = systemMessages.getCommunicationErrorCaption();
             if (caption != null) {
-                caption = "\"" + caption + "\"";
+                caption = "\"" + JsonPaintTarget.escapeJSON(caption) + "\"";
             }
             String message = systemMessages.getCommunicationErrorMessage();
             if (message != null) {
-                message = "\"" + message + "\"";
+                message = "\"" + JsonPaintTarget.escapeJSON(message) + "\"";
             }
             String url = systemMessages.getCommunicationErrorURL();
             if (url != null) {
-                url = "\"" + url + "\"";
+                url = "\"" + JsonPaintTarget.escapeJSON(url) + "\"";
             }
 
             page.write(",\"comErrMsg\": {" + "\"caption\":" + caption + ","
@@ -1856,15 +1859,15 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             // Write the AuthenticationError -message to client
             caption = systemMessages.getAuthenticationErrorCaption();
             if (caption != null) {
-                caption = "\"" + caption + "\"";
+                caption = "\"" + JsonPaintTarget.escapeJSON(caption) + "\"";
             }
             message = systemMessages.getAuthenticationErrorMessage();
             if (message != null) {
-                message = "\"" + message + "\"";
+                message = "\"" + JsonPaintTarget.escapeJSON(message) + "\"";
             }
             url = systemMessages.getAuthenticationErrorURL();
             if (url != null) {
-                url = "\"" + url + "\"";
+                url = "\"" + JsonPaintTarget.escapeJSON(url) + "\"";
             }
 
             page.write(",\"authErrMsg\": {" + "\"caption\":" + caption + ","
