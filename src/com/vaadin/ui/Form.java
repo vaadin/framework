@@ -300,7 +300,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * use the default one from the interface.
      */
     @Override
-    public void commit() throws Buffered.SourceException {
+    public void commit() throws Buffered.SourceException, InvalidValueException {
 
         LinkedList<SourceException> problems = null;
 
