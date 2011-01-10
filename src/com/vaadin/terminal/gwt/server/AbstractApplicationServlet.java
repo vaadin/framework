@@ -16,9 +16,11 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -984,8 +986,37 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 themeName = getDefaultTheme();
             }
         }
+
+        // XSS preventation, theme names shouldn't contain special chars anyway.
+        // The servlet denies them via url parameter.
+        themeName = stripSpecialChars(themeName);
+
         return themeName;
     }
+
+    /**
+     * A helper method to strip away characters that might somehow be used for
+     * XSS attacs. Leaves at least alphanumeric characters intact. Also removes
+     * eg. ( and ), so values should be safe in javascript too.
+     * 
+     * @param themeName
+     * @return
+     */
+    protected static String stripSpecialChars(String themeName) {
+        StringBuilder sb = new StringBuilder();
+        char[] charArray = themeName.toCharArray();
+        for (int i = 0; i < charArray.length; i++) {
+            char c = charArray[i];
+            if (!CHAR_BLACKLIST.contains(c)) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    private static final Collection<Character> CHAR_BLACKLIST = new HashSet<Character>(
+            Arrays.asList(new Character[] { '&', '"', '\'', '<', '>', '(', ')',
+                    ';' }));
 
     /**
      * Returns the default theme. Must never return null.
@@ -1744,6 +1775,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             widgetsetBasePath = getStaticFilesLocation(request);
         }
 
+        widgetset = stripSpecialChars(widgetset);
+
         final String widgetsetFilePath = widgetsetBasePath + "/"
                 + WIDGETSET_DIRECTORY_PATH + widgetset + "/" + widgetset
                 + ".nocache.js?" + new Date().getTime();
@@ -1775,35 +1808,30 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         page.write("vaadin.vaadinConfigurations[\"" + appId + "\"] = {");
         page.write("appUri:'" + appUrl + "', ");
 
-        String pathInfo = getRequestPathInfo(request);
-        if (pathInfo == null) {
-            pathInfo = "/";
-        }
-
-        page.write("pathInfo: '" + pathInfo + "', ");
         if (window != application.getMainWindow()) {
-            page.write("windowName: '" + window.getName() + "', ");
+            page.write("windowName: \""
+                    + JsonPaintTarget.escapeJSON(window.getName()) + "\", ");
         }
         page.write("themeUri:");
-        page.write(themeUri != null ? "'" + themeUri + "'" : "null");
+        page.write(themeUri != null ? "\"" + themeUri + "\"" : "null");
         page.write(", versionInfo : {vaadinVersion:\"");
         page.write(VERSION);
         page.write("\",applicationVersion:\"");
-        page.write(application.getVersion());
+        page.write(JsonPaintTarget.escapeJSON(application.getVersion()));
         page.write("\"}");
         if (systemMessages != null) {
             // Write the CommunicationError -message to client
             String caption = systemMessages.getCommunicationErrorCaption();
             if (caption != null) {
-                caption = "\"" + caption + "\"";
+                caption = "\"" + JsonPaintTarget.escapeJSON(caption) + "\"";
             }
             String message = systemMessages.getCommunicationErrorMessage();
             if (message != null) {
-                message = "\"" + message + "\"";
+                message = "\"" + JsonPaintTarget.escapeJSON(message) + "\"";
             }
             String url = systemMessages.getCommunicationErrorURL();
             if (url != null) {
-                url = "\"" + url + "\"";
+                url = "\"" + JsonPaintTarget.escapeJSON(url) + "\"";
             }
 
             page.write(",\"comErrMsg\": {" + "\"caption\":" + caption + ","
@@ -1813,15 +1841,15 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             // Write the AuthenticationError -message to client
             caption = systemMessages.getAuthenticationErrorCaption();
             if (caption != null) {
-                caption = "\"" + caption + "\"";
+                caption = "\"" + JsonPaintTarget.escapeJSON(caption) + "\"";
             }
             message = systemMessages.getAuthenticationErrorMessage();
             if (message != null) {
-                message = "\"" + message + "\"";
+                message = "\"" + JsonPaintTarget.escapeJSON(message) + "\"";
             }
             url = systemMessages.getAuthenticationErrorURL();
             if (url != null) {
-                url = "\"" + url + "\"";
+                url = "\"" + JsonPaintTarget.escapeJSON(url) + "\"";
             }
 
             page.write(",\"authErrMsg\": {" + "\"caption\":" + caption + ","
@@ -1902,7 +1930,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         page.write("<link rel=\"icon\" type=\"image/vnd.microsoft.icon\" href=\""
                 + themeUri + "/favicon.ico\" />");
 
-        page.write("<title>" + title + "</title>");
+        page.write("<title>" + safeEscapeForHtml(title) + "</title>");
     }
 
     /**
@@ -2254,5 +2282,37 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             return throwable;
         }
 
+    }
+
+    /**
+     * Escapes characters to html entities. An exception is made for some
+     * "safe characters" to keep the text somewhat readable.
+     * 
+     * @param unsafe
+     * @return a safe string to be added inside an html tag
+     */
+    protected static final String safeEscapeForHtml(String unsafe) {
+        StringBuilder safe = new StringBuilder();
+        char[] charArray = unsafe.toCharArray();
+        for (int i = 0; i < charArray.length; i++) {
+            char c = charArray[i];
+            if (isSafe(c)) {
+                safe.append(c);
+            } else {
+                safe.append("&#");
+                safe.append((int) c);
+                safe.append(";");
+            }
+        }
+
+        return safe.toString();
+    }
+
+    private static boolean isSafe(char c) {
+        return //
+        c > 47 && c < 58 || // alphanum
+                c > 64 && c < 91 || // A-Z
+                c > 96 && c < 123 // a-z
+        ;
     }
 }

@@ -352,7 +352,7 @@ public class ApplicationConnection {
         if (configuration.usePortletURLs()) {
             uri = configuration.getPortletUidlURLBase();
         } else {
-            uri = getAppUri() + "UIDL" + configuration.getPathInfo();
+            uri = getAppUri() + "UIDL";
         }
         if (repaintAll) {
             // collect some client side data that will be sent to server on

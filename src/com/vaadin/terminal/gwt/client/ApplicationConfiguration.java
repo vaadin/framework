@@ -38,7 +38,6 @@ public class ApplicationConfiguration implements EntryPoint {
 
     private String id;
     private String themeUri;
-    private String pathInfo;
     private String appUri;
     private JavaScriptObject versionInfo;
     private String windowName;
@@ -86,10 +85,6 @@ public class ApplicationConfiguration implements EntryPoint {
      */
     public String getApplicationUri() {
         return appUri;
-    }
-
-    public String getPathInfo() {
-        return pathInfo;
     }
 
     public String getThemeUri() {
@@ -147,7 +142,6 @@ public class ApplicationConfiguration implements EntryPoint {
                 uri = uri + "/";
             }
             this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::appUri = uri;
-            this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::pathInfo = jsobj.pathInfo;
             this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::themeUri = jsobj.themeUri;
             if(jsobj.windowName) {
                 this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::windowName = jsobj.windowName;
