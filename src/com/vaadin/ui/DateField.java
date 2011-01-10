@@ -115,7 +115,7 @@ public class DateField extends AbstractField implements
      * Was the last entered string parsable? If this flag is false, datefields
      * internal validator does not pass.
      */
-    private boolean uiHasInvalidDateString = true;
+    private boolean uiHasValidDateString = true;
 
     /**
      * Determines if week numbers are shown in the date selector.
@@ -221,7 +221,7 @@ public class DateField extends AbstractField implements
         }
 
         target.addAttribute(VDateField.WEEK_NUMBERS, isShowISOWeekNumbers());
-        target.addAttribute("parsable", uiHasInvalidDateString);
+        target.addAttribute("parsable", uiHasValidDateString);
         /*
          * TODO communicate back the invalid date string? E.g. returning back to
          * app or refresh.
@@ -402,7 +402,7 @@ public class DateField extends AbstractField implements
                      * value has been given. Not using setValue() since we do
                      * not want to cause the client side value to change.
                      */
-                    uiHasInvalidDateString = false;
+                    uiHasValidDateString = false;
 
                     /*
                      * Because of our custom implementation of isValid(), that
@@ -420,8 +420,8 @@ public class DateField extends AbstractField implements
                     && (newDate == null || !newDate.equals(oldDate))) {
                 setValue(newDate, true); // Don't require a repaint, client
                 // updates itself
-            } else if (!uiHasInvalidDateString) { // oldDate ==
-                                                  // newDate == null
+            } else if (!uiHasValidDateString) { // oldDate ==
+                                                // newDate == null
                 // Empty value set, previously contained unparsable date string,
                 // clear related internal fields
                 setValue(null);
@@ -484,7 +484,7 @@ public class DateField extends AbstractField implements
          * user). No value changes should happen, but we need to do some
          * internal housekeeping.
          */
-        if (newValue == null && !uiHasInvalidDateString) {
+        if (newValue == null && !uiHasValidDateString) {
             /*
              * Side-effects of setInternalValue clears possible previous strings
              * and flags about invalid input.
@@ -518,7 +518,7 @@ public class DateField extends AbstractField implements
                 final Date val = parser.parse(newValue.toString());
                 super.setValue(val, repaintIsNotNeeded);
             } catch (final ParseException e) {
-                uiHasInvalidDateString = false;
+                uiHasValidDateString = false;
                 throw new Property.ConversionException(getParseErrorMessage());
             }
         }
@@ -581,10 +581,10 @@ public class DateField extends AbstractField implements
             dateString = null;
         }
 
-        if (!uiHasInvalidDateString) {
+        if (!uiHasValidDateString) {
             // clear component error and parsing flag
             setComponentError(null);
-            uiHasInvalidDateString = true;
+            uiHasValidDateString = true;
             currentParseErrorMessage = null;
         }
 
@@ -748,7 +748,7 @@ public class DateField extends AbstractField implements
      */
     @Override
     public boolean isValid() {
-        return uiHasInvalidDateString && super.isValid();
+        return uiHasValidDateString && super.isValid();
     }
 
     @Override
@@ -758,7 +758,7 @@ public class DateField extends AbstractField implements
          * currently a parsing error in the datefield. Parsing error is kind of
          * an internal validator.
          */
-        if (!uiHasInvalidDateString) {
+        if (!uiHasValidDateString) {
             throw new UnparsableDateString(currentParseErrorMessage);
         }
         super.validate();
