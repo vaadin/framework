@@ -137,9 +137,25 @@
 	</target>
 
 	<target name="run-tests" depends="compile-tests" if="server.start.succeeded">
-		<for threadCount="20" parallel="true" keepgoing="true" param="target">
+		<!-- Long tests are prioritized to even out load at the end of the test run -->
+		<!-- If you are interested in certain tests they can temporarily be added here -->
+		<fileset dir="${test-output-dir}" id="priority-tests-fileset">
+			<include name="**/wysiwyg*.java" />
+			<include name="**/reindeer*.java" />
+			<include name="**/runo*.java" />
+			<include name="**/demop*.java" />
+		</fileset>
+
+		<fileset dir="${test-output-dir}" id="other-tests-fileset">
+			<include name="**/**.java" />
+		</fileset>
+
+
+		<for threadCount="20" parallel="true" keepgoing="true" param="target" list="${tests-to-run}" delimiter=" ">
+			<!-- A path element APPARENTLY removes duplicates and therefore this works. Could not find this documented anywhere... -->
 			<path>
-				<fileset dir="${test-output-dir}" includes="**/**.java" />
+				<fileset refid="priority-tests-fileset" />
+				<fileset refid="other-tests-fileset" />
 			</path>
 			<sequential>
 				<antcall target="execute-tests">
