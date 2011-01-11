@@ -977,7 +977,7 @@ public class ApplicationConnection {
                     }
                 }
 
-                if (!repaintAll) {
+                if (repaintAll) {
                     /*
                      * idToPaintableDetail is already cleanded at the start of
                      * the changeset handling, bypass cleanup.
@@ -1103,7 +1103,18 @@ public class ApplicationConnection {
         }
         String id = getPid(p);
         if (id == null) {
-            VConsole.log("Trying to unregister Paintable not created by Application Connection.");
+            /*
+             * Uncomment the following to debug unregistring components. No
+             * paintables with null id should end here. At least one exception
+             * is our VScrollTableRow, that is hacked to fake it self as a
+             * Paintable to build support for sizing easier.
+             */
+            // if (!(p instanceof VScrollTableRow)) {
+            // VConsole.log("Trying to unregister Paintable not created by Application Connection.");
+            // }
+            if (p instanceof HasWidgets) {
+                unregisterChildPaintables((HasWidgets) p);
+            }
         } else {
             unregistryBag.add(id);
             if (p instanceof HasWidgets) {
