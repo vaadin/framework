@@ -414,7 +414,7 @@ public class DateField extends AbstractField implements
                      * change and form depends on this implementation detail.
                      */
                     notifyFormOfValidityChange();
-
+                    requestRepaint();
                 }
             } else if (newDate != oldDate
                     && (newDate == null || !newDate.equals(oldDate))) {
