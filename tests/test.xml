@@ -45,7 +45,7 @@
 
 	<!-- fileset containing tests to retry -->
 	<fileset dir=".." id="html-retry-files-ie6">
-		<!--<include name="tests/**/ComboBoxLargeIcons.html" />-->
+		<include name="tests/**/SubWindows**.html" />
 	</fileset>
 
 	<!-- This target converts HTML tests files to java junit tests. One test file for each browser is created. -->
@@ -151,7 +151,7 @@
 		</fileset>
 
 
-		<for threadCount="20" parallel="true" keepgoing="true" param="target" list="${tests-to-run}" delimiter=" ">
+		<for threadCount="20" parallel="true" keepgoing="true" param="target">
 			<!-- A path element APPARENTLY removes duplicates and therefore this works. Could not find this documented anywhere... -->
 			<path>
 				<fileset refid="priority-tests-fileset" />
