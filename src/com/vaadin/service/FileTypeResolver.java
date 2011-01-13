@@ -193,7 +193,7 @@ public class FileTypeResolver implements Serializable {
             + "x-world/x-vrml                                  vrm vrml wrl";
 
     /**
-     * File extension to MIME type mapping.
+     * File extension to MIME type mapping. All extensions are in lower case.
      */
     static private Hashtable<String, String> extToMIMEMap = new Hashtable<String, String>();
 
@@ -255,7 +255,7 @@ public class FileTypeResolver implements Serializable {
             }
 
             // Return type from extension map, if found
-            final String type = extToMIMEMap.get(ext);
+            final String type = extToMIMEMap.get(ext.toLowerCase());
             if (type != null) {
                 return type;
             }
@@ -343,7 +343,7 @@ public class FileTypeResolver implements Serializable {
      *            the new mime-type for <code>extension</code>.
      */
     public static void addExtension(String extension, String MIMEType) {
-        extToMIMEMap.put(extension, MIMEType);
+        extToMIMEMap.put(extension.toLowerCase(), MIMEType);
     }
 
     /**

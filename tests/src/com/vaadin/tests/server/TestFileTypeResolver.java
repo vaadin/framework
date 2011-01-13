@@ -55,4 +55,25 @@ public class TestFileTypeResolver extends TestCase {
                 FileTypeResolver.getMIMEType("?param1"));
 
     }
+
+    public void testExtensionCase() {
+        assertEquals("image/jpeg", FileTypeResolver.getMIMEType("abc.jpg"));
+        assertEquals("image/jpeg", FileTypeResolver.getMIMEType("abc.jPg"));
+        assertEquals("image/jpeg", FileTypeResolver.getMIMEType("abc.JPG"));
+        assertEquals("image/jpeg", FileTypeResolver.getMIMEType("abc.JPEG"));
+        assertEquals("image/jpeg", FileTypeResolver.getMIMEType("abc.Jpeg"));
+        assertEquals("image/jpeg", FileTypeResolver.getMIMEType("abc.JPE"));
+    }
+
+    public void testCustomMimeType() {
+        assertEquals(FileTypeResolver.DEFAULT_MIME_TYPE,
+                FileTypeResolver.getMIMEType("vaadin.foo"));
+
+        FileTypeResolver.addExtension("foo", "Vaadin Foo/Bar");
+        FileTypeResolver.addExtension("FOO2", "Vaadin Foo/Bar2");
+        assertEquals("Vaadin Foo/Bar",
+                FileTypeResolver.getMIMEType("vaadin.foo"));
+        assertEquals("Vaadin Foo/Bar2",
+                FileTypeResolver.getMIMEType("vaadin.Foo2"));
+    }
 }
