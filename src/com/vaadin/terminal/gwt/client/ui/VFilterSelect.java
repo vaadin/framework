@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -486,7 +487,24 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     /**
      * The menu where the suggestions are rendered
      */
-    public class SuggestionMenu extends MenuBar implements SubPartAware {
+    public class SuggestionMenu extends MenuBar implements SubPartAware,
+            LoadHandler {
+
+        private VLazyExecutor delayedImageLoadExecutioner = new VLazyExecutor(
+                100, new ScheduledCommand() {
+
+                    public void execute() {
+                        if (suggestionPopup.isVisible()) {
+                            setWidth("");
+                            DOM.setStyleAttribute(
+                                    DOM.getFirstChild(getElement()), "width",
+                                    "");
+                            suggestionPopup
+                                    .setPopupPositionAndShow(suggestionPopup);
+                        }
+
+                    }
+                });
 
         /**
          * Default constructor
@@ -494,6 +512,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         SuggestionMenu() {
             super(true);
             setStyleName(CLASSNAME + "-suggestmenu");
+            addDomHandler(this, LoadEvent.getType());
         }
 
         /**
@@ -522,17 +541,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 final FilterSelectSuggestion s = it.next();
                 final MenuItem mi = new MenuItem(s.getDisplayString(), true, s);
 
-                com.google.gwt.dom.client.Element child = mi.getElement()
-                        .getFirstChildElement();
-                while (child != null) {
-                    if (child.getNodeName().toLowerCase().equals("img")) {
-                        DOM.sinkEvents(
-                                (Element) child.cast(),
-                                (DOM.getEventsSunk((Element) child.cast()) | Event.ONLOAD));
-                        client.addPngFix((Element) child.cast());
-                    }
-                    child = child.getNextSiblingElement();
-                }
+                Util.sinkOnloadForImages(mi.getElement());
 
                 this.addItem(mi);
                 if (s == currentSuggestion) {
@@ -634,26 +643,6 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             suggestionPopup.hide();
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see
-         * com.vaadin.terminal.gwt.client.ui.MenuBar#onBrowserEvent(com.google
-         * .gwt.user.client.Event)
-         */
-        @Override
-        public void onBrowserEvent(Event event) {
-            if (event.getTypeInt() == Event.ONLOAD) {
-                if (suggestionPopup.isVisible()) {
-                    setWidth("");
-                    DOM.setStyleAttribute(DOM.getFirstChild(getElement()),
-                            "width", "");
-                    suggestionPopup.setPopupPositionAndShow(suggestionPopup);
-                }
-            }
-            super.onBrowserEvent(event);
-        }
-
         private static final String SUBPART_PREFIX = "item";
 
         public Element getSubPartElement(String subPart) {
@@ -685,6 +674,19 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 }
             }
             return null;
+        }
+
+        public void onLoad(LoadEvent event) {
+            if (BrowserInfo.get().isIE6()) {
+                // Ensure PNG transparency works in IE6
+                Util.doIE6PngFix((Element) Element.as(event.getNativeEvent()
+                        .getEventTarget()));
+            }
+
+            // Handle icon onload events to ensure shadow is resized
+            // correctly
+            delayedImageLoadExecutioner.trigger();
+
         }
     }
 
