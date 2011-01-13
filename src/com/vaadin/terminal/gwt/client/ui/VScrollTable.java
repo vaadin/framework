@@ -2409,6 +2409,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 // we're moving the cell
                 DOM.removeChild(tr, cell.getElement());
                 orphan(cell);
+                visibleCells.remove(cell);
             }
             if (index < visibleCells.size()) {
                 // insert to right slot
