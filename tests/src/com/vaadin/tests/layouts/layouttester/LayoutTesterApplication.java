@@ -9,7 +9,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.VerticalLayout;
@@ -54,7 +53,8 @@ public class LayoutTesterApplication extends AbstractTestCase {
             mainWindow.addComponent(vlo);
             vlo.addComponent(nextButton);
             vlo.addComponent(getLayoutTypeSelect());
-            vlo.addComponent(new Label(layoutGetters[layoutIndex].getName()));
+            vlo.addComponent(new UndefWideLabel(layoutGetters[layoutIndex]
+                    .getName()));
 
             Layout lo = null;
             if (layoutSelector.getValue() == VerticalLayout.class) {

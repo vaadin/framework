@@ -550,9 +550,9 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
     private AbstractComponent getTestTabsheet() {
         TabSheet tabsheet = new TabSheet();
         tabsheet.setSizeUndefined();
-        tabsheet.addTab(new Label("TAB1"), "TAB1", new ThemeResource(
+        tabsheet.addTab(new UndefWideLabel("TAB1"), "TAB1", new ThemeResource(
                 GLOBE_16_PNG));
-        tabsheet.addTab(new Label("TAB2"), "TAB2", null);
+        tabsheet.addTab(new UndefWideLabel("TAB2"), "TAB2", null);
         return tabsheet;
     }
 
