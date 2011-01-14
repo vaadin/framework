@@ -705,6 +705,13 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         if (requestType == RequestType.UIDL && isRepaintAll(request)) {
             return true;
         } else if (requestType == RequestType.RENDER) {
+            // In most cases the first request is a render request that renders
+            // the HTML fragment. This should create an application instance.
+            return true;
+        } else if (requestType == RequestType.EVENT) {
+            // A portlet can also be sent an event even though it has not been
+            // rendered, e.g. portlet on one page sends an event to a portlet on
+            // another page and then moves the user to that page.
             return true;
         }
         return false;
