@@ -498,10 +498,20 @@ public abstract class AbstractCommunicationManager implements
                 } else {
                     b = charArray[curBoundaryIndex++];
                     if (curBoundaryIndex == matchedCount) {
-                        matchedCount = 0;
                         curBoundaryIndex = 0;
-                        // next call for getBuffered will return the
-                        // bufferedByte, not from the char array.
+                        if (bufferedByte != charArray[0]) {
+                            // next call for getBuffered will return the
+                            // bufferedByte, not from the char array.
+                            matchedCount = 0;
+                        } else {
+                            /*
+                             * Special case where buffered byte again matches
+                             * the boundaryString. Step over one byte matching
+                             * the boundary.
+                             */
+                            matchedCount = 1;
+                            bufferedByte = -1;
+                        }
                     }
                 }
                 if (b == -1) {
