@@ -91,7 +91,7 @@ public class ApplicationConnection {
     public static final String ATTRIBUTE_ERROR = "error";
 
     // will hold the UIDL security key (for XSS protection) once received
-    private String uidl_security_key = "init";
+    private String uidlSecurityKey = "init";
 
     private final HashMap<String, String> resourcesMap = new HashMap<String, String>();
 
@@ -391,7 +391,7 @@ public class ApplicationConnection {
             final String extraParams, final boolean forceSync) {
         startRequest();
         // Security: double cookie submission pattern
-        final String rd = uidl_security_key + VAR_BURST_SEPARATOR + requestData;
+        final String rd = uidlSecurityKey + VAR_BURST_SEPARATOR + requestData;
         VConsole.log("Making UIDL Request with params: " + rd);
         String uri;
         if (configuration.usePortletURLs()) {
@@ -795,7 +795,7 @@ public class ApplicationConnection {
 
         // Get security key
         if (json.containsKey(UIDL_SECURITY_TOKEN_ID)) {
-            uidl_security_key = json.getString(UIDL_SECURITY_TOKEN_ID);
+            uidlSecurityKey = json.getString(UIDL_SECURITY_TOKEN_ID);
         }
 
         if (json.containsKey("resources")) {
@@ -2286,6 +2286,14 @@ public class ApplicationConnection {
      */
     public void setWindowName(String newName) {
         windowName = newName;
+    }
+
+    protected String getWindowName() {
+        return windowName;
+    }
+
+    protected String getUidlSecurityKey() {
+        return uidlSecurityKey;
     }
 
     /**
