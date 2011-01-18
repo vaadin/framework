@@ -805,7 +805,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         Application newApplication = getNewApplication(request);
         final PortletApplicationContext2 context = PortletApplicationContext2
                 .getApplicationContext(request.getPortletSession());
-        context.addApplication(newApplication, request.getWindowID());
+        context.addApplication(newApplication, getDecoratedWindowID(request));
         return newApplication;
     }
 
@@ -822,8 +822,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         PortletApplicationContext2 context = PortletApplicationContext2
                 .getApplicationContext(session);
-        Application application = context.getApplicationForWindowId(request
-                .getWindowID());
+        Application application = context
+                .getApplicationForWindowId(getDecoratedWindowID(request));
         if (application == null) {
             return null;
         }
@@ -936,9 +936,13 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
 
         writeAjaxPageHtmlMainDiv(request, response, page,
-                request.getWindowID(), classNames, divStyle);
+                getDecoratedWindowID(request), classNames, divStyle);
 
         page.close();
+    }
+
+    private String getDecoratedWindowID(PortletRequest request) {
+        return "v-" + request.getWindowID();
     }
 
     /**
@@ -1132,8 +1136,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             RenderResponse response, final BufferedWriter writer,
             Map<String, String> config) throws IOException, PortletException {
 
-        writer.write("vaadin.vaadinConfigurations[\"" + request.getWindowID()
-                + "\"] = {");
+        writer.write("vaadin.vaadinConfigurations[\""
+                + getDecoratedWindowID(request) + "\"] = {");
 
         Iterator<String> keyIt = config.keySet().iterator();
         while (keyIt.hasNext()) {
