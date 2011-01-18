@@ -1691,23 +1691,38 @@ public abstract class AbstractCommunicationManager implements
             // Get the path from URL
             String path = callback.getRequestPathInfo(request);
 
-            // If the path is specified, create name from it
-            if (path != null && path.length() > 0 && !path.equals("/")) {
-                String windowUrlName = null;
-                if (path.charAt(0) == '/') {
-                    path = path.substring(1);
-                }
-                final int index = path.indexOf('/');
-                if (index < 0) {
-                    windowUrlName = path;
-                    path = "";
-                } else {
-                    windowUrlName = path.substring(0, index);
-                    path = path.substring(index + 1);
-                }
+            /*
+             * If the path is specified, create name from it.
+             * 
+             * An exception is if UIDL request have come this far. This happens
+             * if main window is refreshed. In that case we always return main
+             * window (infamous hacky support for refreshes if only main window
+             * is used). However we are not returning with main window here (we
+             * will later if things work right), because the code is so cryptic
+             * that nobody really knows what it does.
+             */
+            boolean pathMayContainWindowName = path != null
+                    && path.length() > 0 && !path.equals("/");
+            if (pathMayContainWindowName) {
+                boolean uidlRequest = path.startsWith("/UIDL");
+                if (!uidlRequest) {
+                    String windowUrlName = null;
+                    if (path.charAt(0) == '/') {
+                        path = path.substring(1);
+                    }
+                    final int index = path.indexOf('/');
+                    if (index < 0) {
+                        windowUrlName = path;
+                        path = "";
+                    } else {
+                        windowUrlName = path.substring(0, index);
+                        path = path.substring(index + 1);
+                    }
 
-                window = application.getWindow(windowUrlName);
+                    window = application.getWindow(windowUrlName);
+                }
             }
+
         }
 
         // By default, use mainwindow
