@@ -417,8 +417,6 @@ public abstract class AbstractCommunicationManager implements
 
         contentLength -= (boundary.length() + 2); // 2 == CRLF
 
-        final char[] charArray = boundary.toCharArray();
-
         /*
          * Reads bytes from the underlying stream. Compares the read bytes to
          * the boundary string and returns -1 if met.
@@ -432,95 +430,8 @@ public abstract class AbstractCommunicationManager implements
          * Note, if this is someday needed elsewhere, don't shoot yourself to
          * foot and split to a top level helper class.
          */
-        InputStream simpleMultiPartReader = new InputStream() {
-
-            /**
-             * Counter of how many characters have been matched to boundary
-             * string from the stream
-             */
-            int matchedCount = 0;
-
-            /**
-             * Used as pointer when returning bytes after partly matched
-             * boundary string.
-             */
-            int curBoundaryIndex = 0;
-            /**
-             * The byte found after a "promising start for boundary"
-             */
-            private int bufferedByte = -1;
-            private boolean atTheEnd = false;
-
-            @Override
-            public int read() throws IOException {
-                if (atTheEnd) {
-                    return -1;
-                } else if (bufferedByte >= 0) {
-                    /* "buffered mode", purge partially matched boundary */
-                    return getBuffered();
-                } else {
-                    int fromActualStream = inputStream.read();
-                    if (fromActualStream == -1) {
-                        // unexpected end of stream
-                        throw new IOException(
-                                "The multipart stream ended unexpectedly");
-                    }
-                    if (charArray[matchedCount] == fromActualStream) {
-                        /*
-                         * Going to "buffered mode". Read until full boundary
-                         * match or a different character.
-                         */
-                        while (true) {
-                            matchedCount++;
-                            if (matchedCount == charArray.length) {
-                                // reached the end of file
-                                atTheEnd = true;
-                                return -1;
-                            }
-                            fromActualStream = inputStream.read();
-                            if (fromActualStream != charArray[matchedCount]) {
-                                // Did not find full boundary, cache the last
-                                // byte
-                                bufferedByte = fromActualStream;
-                                return getBuffered();
-                            }
-                        }
-                    }
-                    return fromActualStream;
-                }
-            }
-
-            private int getBuffered() throws IOException {
-                int b;
-                if (matchedCount == 0) {
-                    b = bufferedByte;
-                    bufferedByte = -1;
-                } else {
-                    b = charArray[curBoundaryIndex++];
-                    if (curBoundaryIndex == matchedCount) {
-                        curBoundaryIndex = 0;
-                        if (bufferedByte != charArray[0]) {
-                            // next call for getBuffered will return the
-                            // bufferedByte, not from the char array.
-                            matchedCount = 0;
-                        } else {
-                            /*
-                             * Special case where buffered byte again matches
-                             * the boundaryString. Step over one byte matching
-                             * the boundary.
-                             */
-                            matchedCount = 1;
-                            bufferedByte = -1;
-                        }
-                    }
-                }
-                if (b == -1) {
-                    throw new IOException(
-                            "The multipart stream ended unexpectedly");
-                }
-                return b;
-            }
-        };
+        InputStream simpleMultiPartReader = new SimpleMultiPartInputStream(
+                inputStream, boundary);
 
         /*
          * Should report only the filename even if the browser sends the path
@@ -2210,4 +2121,123 @@ public abstract class AbstractCommunicationManager implements
 
     abstract protected void cleanStreamVariable(VariableOwner owner, String name);
 
+    private static class SimpleMultiPartInputStream extends InputStream {
+
+        /**
+         * Counter of how many characters have been matched to boundary string
+         * from the stream
+         */
+        int matchedCount = 0;
+
+        /**
+         * Used as pointer when returning bytes after partly matched boundary
+         * string.
+         */
+        int curBoundaryIndex = 0;
+        /**
+         * The byte found after a "promising start for boundary"
+         */
+        private int bufferedByte = -1;
+        private boolean atTheEnd = false;
+
+        private final char[] boundary;
+
+        private final InputStream realInputStream;
+
+        public SimpleMultiPartInputStream(InputStream realInputStream,
+                String boundaryString) {
+            boundary = boundaryString.toCharArray();
+            this.realInputStream = realInputStream;
+        }
+
+        @Override
+        public int read() throws IOException {
+            if (atTheEnd) {
+                // End boundary reached, nothing more to read
+                return -1;
+            } else if (bufferedByte >= 0) {
+                /* Purge partially matched boundary if there was such */
+                return getBuffered();
+            } else {
+                int fromActualStream = realInputStream.read();
+                if (fromActualStream == -1) {
+                    // unexpected end of stream
+                    throw new IOException(
+                            "The multipart stream ended unexpectedly");
+                }
+                if (boundary[matchedCount] == fromActualStream) {
+                    /*
+                     * Going to "buffered mode". Read until full boundary match
+                     * or a different character.
+                     */
+                    while (true) {
+                        matchedCount++;
+                        if (matchedCount == boundary.length) {
+                            /*
+                             * The whole boundary matched so we have reached the
+                             * end of file
+                             */
+                            atTheEnd = true;
+                            return -1;
+                        }
+                        fromActualStream = realInputStream.read();
+                        if (fromActualStream != boundary[matchedCount]) {
+                            /*
+                             * Did not find full boundary, cache the mismatching
+                             * byte and start returning the partially matched
+                             * boundary.
+                             */
+                            bufferedByte = fromActualStream;
+                            return getBuffered();
+                        }
+                    }
+                }
+                return fromActualStream;
+            }
+        }
+
+        /**
+         * Returns the partly matched boundary string and the byte following
+         * that.
+         * 
+         * @return
+         * @throws IOException
+         */
+        private int getBuffered() throws IOException {
+            int b;
+            if (matchedCount == 0) {
+                // The boundary has been returned, return the buffered byte.
+                b = bufferedByte;
+                bufferedByte = -1;
+            } else {
+                b = boundary[curBoundaryIndex++];
+                if (curBoundaryIndex == matchedCount) {
+                    // The full boundary has been returned, remaining is the
+                    // char that did not match the boundary.
+
+                    curBoundaryIndex = 0;
+                    if (bufferedByte != boundary[0]) {
+                        /*
+                         * next call for getBuffered will return the
+                         * bufferedByte that came after the partial boundary
+                         * match
+                         */
+                        matchedCount = 0;
+                    } else {
+                        /*
+                         * Special case where buffered byte again matches the
+                         * boundaryString. This could be the start of the real
+                         * end boundary.
+                         */
+                        matchedCount = 1;
+                        bufferedByte = -1;
+                    }
+                }
+            }
+            if (b == -1) {
+                throw new IOException("The multipart stream ended unexpectedly");
+            }
+            return b;
+        }
+    }
 }
