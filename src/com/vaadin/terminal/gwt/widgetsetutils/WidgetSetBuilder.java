@@ -100,7 +100,7 @@ public class WidgetSetBuilder {
         if (isEditable(content)) {
             String originalContent = content;
 
-            Collection<String> oldInheritedWidgetsets = getCurrentGwtModules(content);
+            Collection<String> oldInheritedWidgetsets = getCurrentInheritedWidgetsets(content);
 
             // add widgetsets that do not exist
             Iterator<String> i = availableWidgetSets.keySet().iterator();
@@ -153,19 +153,24 @@ public class WidgetSetBuilder {
                 + "\" />" + "\n</module>");
     }
 
-    private static Collection<String> getCurrentGwtModules(String content) {
+    private static Collection<String> getCurrentInheritedWidgetsets(
+            String content) {
         HashSet<String> hashSet = new HashSet<String>();
         Pattern inheritsPattern = Pattern.compile(" name=\"([^\"]*)\"");
 
         Matcher matcher = inheritsPattern.matcher(content);
 
         while (matcher.find()) {
-            String possibleWidgetSet = matcher.group(1);
-            if (possibleWidgetSet.toLowerCase().contains("widgetset")) {
-                hashSet.add(possibleWidgetSet);
+            String gwtModule = matcher.group(1);
+            if (isWidgetset(gwtModule)) {
+                hashSet.add(gwtModule);
             }
         }
         return hashSet;
+    }
+
+    static boolean isWidgetset(String gwtModuleName) {
+        return gwtModuleName.toLowerCase().contains("widgetset");
     }
 
     private static String readFile(File widgetsetFile) throws IOException {

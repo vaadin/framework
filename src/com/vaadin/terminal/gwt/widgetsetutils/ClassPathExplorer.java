@@ -189,30 +189,36 @@ public class ClassPathExplorer {
             String[] files = directory.list();
             for (int i = 0; i < files.length; i++) {
                 // we are only interested in .gwt.xml files
-                if (files[i].endsWith(".gwt.xml")) {
-                    // remove the extension
-                    String classname = files[i].substring(0,
-                            files[i].length() - 8);
-                    String packageName = locationString
-                            .substring(locationString.lastIndexOf("/") + 1);
-                    classname = packageName + "." + classname;
-                    if (!widgetsets.containsKey(classname)) {
-                        String packagePath = packageName.replaceAll("\\.", "/");
-                        String basePath = location.getFile().replaceAll(
-                                "/" + packagePath + "$", "");
-                        try {
-                            URL url = new URL(location.getProtocol(),
-                                    location.getHost(), location.getPort(),
-                                    basePath);
-                            widgetsets.put(classname, url);
-                        } catch (MalformedURLException e) {
-                            // should never happen as based on an existing URL,
-                            // only changing end of file name/path part
-                            logger.log(
-                                    Level.SEVERE,
-                                    "Error locating the widgetset " + classname,
-                                    e);
-                        }
+                if (!files[i].endsWith(".gwt.xml")) {
+                    continue;
+                }
+
+                // remove the .gwt.xml extension
+                String classname = files[i].substring(0, files[i].length() - 8);
+                String packageName = locationString.substring(locationString
+                        .lastIndexOf("/") + 1);
+                classname = packageName + "." + classname;
+
+                if (!WidgetSetBuilder.isWidgetset(classname)) {
+                    // Only return widgetsets and not GWT modules to avoid
+                    // comparing modules and widgetsets
+                    continue;
+                }
+
+                if (!widgetsets.containsKey(classname)) {
+                    String packagePath = packageName.replaceAll("\\.", "/");
+                    String basePath = location.getFile().replaceAll(
+                            "/" + packagePath + "$", "");
+                    try {
+                        URL url = new URL(location.getProtocol(),
+                                location.getHost(), location.getPort(),
+                                basePath);
+                        widgetsets.put(classname, url);
+                    } catch (MalformedURLException e) {
+                        // should never happen as based on an existing URL,
+                        // only changing end of file name/path part
+                        logger.log(Level.SEVERE,
+                                "Error locating the widgetset " + classname, e);
                     }
                 }
             }
