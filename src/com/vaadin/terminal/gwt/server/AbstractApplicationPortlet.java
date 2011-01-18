@@ -805,7 +805,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         Application newApplication = getNewApplication(request);
         final PortletApplicationContext2 context = PortletApplicationContext2
                 .getApplicationContext(request.getPortletSession());
-        context.addApplication(newApplication, getDecoratedWindowID(request));
+        context.addApplication(newApplication, request.getWindowID());
         return newApplication;
     }
 
@@ -822,8 +822,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         PortletApplicationContext2 context = PortletApplicationContext2
                 .getApplicationContext(session);
-        Application application = context
-                .getApplicationForWindowId(getDecoratedWindowID(request));
+        Application application = context.getApplicationForWindowId(request
+                .getWindowID());
         if (application == null) {
             return null;
         }
@@ -936,12 +936,21 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
 
         writeAjaxPageHtmlMainDiv(request, response, page,
-                getDecoratedWindowID(request), classNames, divStyle);
+                getApplicationDomId(request), classNames, divStyle);
 
         page.close();
     }
 
-    private String getDecoratedWindowID(PortletRequest request) {
+    /**
+     * Creates and returns a unique ID for the DIV where the application is to
+     * be rendered. We need to generate a unique ID because some portals already
+     * create a DIV with the portlet's Window ID as the DOM ID.
+     * 
+     * @param request
+     *            PortletRequest
+     * @return the id to use in the DOM
+     */
+    private String getApplicationDomId(PortletRequest request) {
         return "v-" + request.getWindowID();
     }
 
@@ -1137,7 +1146,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             Map<String, String> config) throws IOException, PortletException {
 
         writer.write("vaadin.vaadinConfigurations[\""
-                + getDecoratedWindowID(request) + "\"] = {");
+                + getApplicationDomId(request) + "\"] = {");
 
         Iterator<String> keyIt = config.keySet().iterator();
         while (keyIt.hasNext()) {
