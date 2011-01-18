@@ -11,18 +11,27 @@ public class SelectIconPlacement extends TestBase {
 
     @Override
     protected void setup() {
-        mySelect = new Select("Foo");
-        String bar = "FooBarBaz";
-        mySelect.addItem(bar);
-        mySelect.setItemIcon(bar, new ThemeResource("common/icons/error.png"));
-        mySelect.select(bar);
-        addComponent(mySelect);
+        for (String width : new String[] { null, "200px" }) {
+            String icon = "error.png";
+            if (width == null) {
+                icon = "bullet.png";
+            }
+            mySelect = new Select("Width: " + (width == null ? "auto" : width));
+            String bar = "Only item";
+            mySelect.addItem(bar);
+            mySelect.setItemIcon(bar, new ThemeResource("common/icons/" + icon
+                    + "?w=" + width));
+            mySelect.select(bar);
+            mySelect.setWidth(width);
+            addComponent(mySelect);
+        }
+
     }
 
     @Override
     protected String getDescription() {
         return "A select with item icons pushes the caption of that item to the right to make room for the icon. It works fine in all browsers except IE8.<br/>"
-                + "Upon component render the icon and caption is on top of each others, and it corrects itself when you open the dropdown. ";
+                + "Upon component render the icon and caption is on top of each others, and it corrects itself when you open the dropdown. <br/><br/>";
     }
 
     @Override
