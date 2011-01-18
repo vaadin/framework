@@ -550,7 +550,7 @@ public class ApplicationConnection {
      * @param details
      *            Optional details for debugging.
      */
-    private void showCommunicationError(String details) {
+    protected void showCommunicationError(String details) {
         VConsole.error("Communication error: " + details);
         showError(details, configuration.getCommunicationErrorCaption(),
                 configuration.getCommunicationErrorMessage(),
@@ -563,7 +563,7 @@ public class ApplicationConnection {
      * @param details
      *            Optional details for debugging.
      */
-    private void showAuthenticationError(String details) {
+    protected void showAuthenticationError(String details) {
         VConsole.error("Authentication error: " + details);
         showError(details, configuration.getAuthorizationErrorCaption(),
                 configuration.getAuthorizationErrorMessage(),
