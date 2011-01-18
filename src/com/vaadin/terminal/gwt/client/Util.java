@@ -13,6 +13,7 @@ import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
@@ -1016,6 +1017,33 @@ public class Util {
         } catch (Exception e) {
             VConsole.error(e);
         }
+    }
+
+    /**
+     * Temporarily sets the {@code styleProperty} to {@code tempValue} and then
+     * resets it to its current value. Used mainly to work around rendering
+     * issues in IE (and possibly in other browsers)
+     * 
+     * @param element
+     *            The target element
+     * @param styleProperty
+     *            The name of the property to set
+     * @param tempValue
+     *            The temporary value
+     */
+    public static void setStyleTemporarily(Element element,
+            final String styleProperty, String tempValue) {
+        final Style style = element.getStyle();
+        final String currentValue = style.getProperty(styleProperty);
+
+        style.setProperty(styleProperty, tempValue);
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+            public void execute() {
+                style.setProperty(styleProperty, currentValue);
+            }
+        });
+
     }
 
 }
