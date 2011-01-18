@@ -1169,10 +1169,9 @@ public abstract class AbstractCommunicationManager implements
             Callback callback, Application application2, Window window)
             throws IOException, InvalidUIDLSecurityKeyException {
         boolean success = true;
-        int contentLength = request.getContentLength();
 
-        if (contentLength > 0) {
-            String changes = readRequest(request);
+        String changes = getRequestPayload(request);
+        if (changes != null) {
 
             // Manage bursts one by one
             final String[] bursts = changes.split(VAR_BURST_SEPARATOR);
@@ -1350,9 +1349,12 @@ public abstract class AbstractCommunicationManager implements
      * @return
      * @throws IOException
      */
-    private static String readRequest(Request request) throws IOException {
+    protected String getRequestPayload(Request request) throws IOException {
 
         int requestLength = request.getContentLength();
+        if (requestLength == 0) {
+            return null;
+        }
 
         byte[] buffer = new byte[requestLength];
         InputStream inputStream = request.getInputStream();
