@@ -13,7 +13,6 @@ import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
@@ -1037,12 +1036,8 @@ public class Util {
         final String currentValue = style.getProperty(styleProperty);
 
         style.setProperty(styleProperty, tempValue);
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-            public void execute() {
-                style.setProperty(styleProperty, currentValue);
-            }
-        });
+        element.getOffsetWidth();
+        style.setProperty(styleProperty, currentValue);
 
     }
 

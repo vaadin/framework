@@ -818,10 +818,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 updateRootWidth();
                 updateSelectedIconPosition();
                 /*
-                 * Force IE to recalculate the position of the text (#3991)
+                 * Workaround for an IE bug where the text is positioned below
+                 * the icon (#3991)
                  */
                 if (BrowserInfo.get().isIE()) {
-                    Util.setStyleTemporarily(tb.getElement(), "paddingLeft", "0");
+                    Util.setStyleTemporarily(tb.getElement(), "paddingLeft",
+                            "0");
                 }
             }
         });
