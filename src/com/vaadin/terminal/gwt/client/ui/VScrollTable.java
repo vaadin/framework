@@ -5593,10 +5593,25 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * 
      */
     private void setProperTabIndex() {
+        int storedScrollTop = 0;
+        int storedScrollLeft = 0;
+
+        if (BrowserInfo.get().getOperaVersion() >= 11) {
+            // Workaround for Opera scroll bug when changing tabIndex (#6222)
+            storedScrollTop = scrollBodyPanel.getScrollPosition();
+            storedScrollLeft = scrollBodyPanel.getHorizontalScrollPosition();
+        }
+
         if (tabIndex == 0 && !isFocusable()) {
             scrollBodyPanel.getElement().setTabIndex(-1);
         } else {
             scrollBodyPanel.getElement().setTabIndex(tabIndex);
+        }
+
+        if (BrowserInfo.get().getOperaVersion() >= 11) {
+            // Workaround for Opera scroll bug when changing tabIndex (#6222)
+            scrollBodyPanel.setScrollPosition(storedScrollTop);
+            scrollBodyPanel.setHorizontalScrollPosition(storedScrollLeft);
         }
     }
 
