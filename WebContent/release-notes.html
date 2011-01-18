@@ -71,7 +71,7 @@ contains a number of significant enhancements.</p>
   This also affects most built-in validators such as <b>IntegerValidator</b>.</li>
 </ul>
 
-<h3>Backwards compatible API Changes</h3>
+<h3>Other Changes</h3>
 
 <p>The following backwards compatible class/method changes have been made:</p>
 
@@ -81,6 +81,7 @@ contains a number of significant enhancements.</p>
   <li><b>PasswordField</b> has been split from <b>TextField</b> to a separate component. As a result, the <tt>setSecret()</tt> method in <b>TextField</b> has been deprecated.</li>
   <li>The <tt>setSwitchMode()</tt> method in <b>Button</b> has been deprecated in favor of the separate <b>CheckBox</b> component. Remember to set <b>CheckBox</b> in immediate mode.</li>
   <li><b>ItemClickSource</b> has been renamed to <b>ItemClickNotifier</b> for consistency with other classes.</li>
+  <li>The WidgetSet updater no longer takes other GWT modules than WidgetSets into account when updating the WidgetSet.</li>
 </ul>
 
 <h3>Theme changes</h3>
