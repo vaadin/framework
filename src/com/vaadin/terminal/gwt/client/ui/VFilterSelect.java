@@ -494,7 +494,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 100, new ScheduledCommand() {
 
                     public void execute() {
-                        if (suggestionPopup.isVisible()) {
+                        if (suggestionPopup.isVisible()
+                                && suggestionPopup.isAttached()) {
                             setWidth("");
                             DOM.setStyleAttribute(
                                     DOM.getFirstChild(getElement()), "width",
