@@ -791,7 +791,7 @@ public abstract class AbstractCommunicationManager implements
         // Sets the response type
         response.setContentType("application/json; charset=UTF-8");
         // some dirt to prevent cross site scripting
-        outWriter.print("for(;;);[{");
+        openJsonMessage(outWriter);
 
         // security key
         Object writeSecurityTokenFlag = request
@@ -828,7 +828,7 @@ public abstract class AbstractCommunicationManager implements
                     analyzeLayouts);
 
         }
-        outWriter.print("}]");
+        closeJsonMessage(outWriter);
 
         outWriter.close();
 
@@ -1787,12 +1787,26 @@ public abstract class AbstractCommunicationManager implements
         response.setContentType("application/json; charset=UTF-8");
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
-        outWriter.print("for(;;);[{");
+        openJsonMessage(outWriter);
         outWriter.print("\"redirect\":{");
-        outWriter.write("\"url\":\"" + logoutUrl + "\"}}]");
+        outWriter.write("\"url\":\"" + logoutUrl + "\"}");
+        closeJsonMessage(outWriter);
         outWriter.flush();
         outWriter.close();
         out.flush();
+    }
+
+    protected void closeJsonMessage(PrintWriter outWriter) {
+        outWriter.print("}]");
+    }
+
+    /**
+     * Writes the opening of JSON message to be sent to client.
+     * 
+     * @param outWriter
+     */
+    protected void openJsonMessage(PrintWriter outWriter) {
+        outWriter.print("for(;;);[{");
     }
 
     /**
