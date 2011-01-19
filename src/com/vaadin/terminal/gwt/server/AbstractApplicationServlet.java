@@ -432,8 +432,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
              * Get or create a WebApplicationContext and an ApplicationManager
              * for the session
              */
-            WebApplicationContext webApplicationContext = WebApplicationContext
-                    .getApplicationContext(request.getSession());
+            WebApplicationContext webApplicationContext = getApplicationContext(request
+                    .getSession());
             CommunicationManager applicationManager = webApplicationContext
                     .getApplicationManager(application, this);
 
@@ -934,8 +934,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             throws ServletException, MalformedURLException {
         Application newApplication = getNewApplication(request);
 
-        final WebApplicationContext context = WebApplicationContext
-                .getApplicationContext(request.getSession());
+        final WebApplicationContext context = getApplicationContext(request
+                .getSession());
         context.addApplication(newApplication);
 
         return newApplication;
@@ -2008,7 +2008,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      *             if the application is denied access to the persistent data
      *             store represented by the given URL.
      */
-    URL getApplicationUrl(HttpServletRequest request)
+    protected URL getApplicationUrl(HttpServletRequest request)
             throws MalformedURLException {
         final URL reqURL = new URL(
                 (request.isSecure() ? "https://" : "http://")
@@ -2066,8 +2066,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             throw new SessionExpiredException();
         }
 
-        WebApplicationContext context = WebApplicationContext
-                .getApplicationContext(session);
+        WebApplicationContext context = getApplicationContext(session);
 
         // Gets application list for the session.
         final Collection<Application> applications = context.getApplications();
@@ -2088,8 +2087,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 }
                 // Application has stopped, so remove it before creating a new
                 // application
-                WebApplicationContext.getApplicationContext(session)
-                        .removeApplication(sessionApplication);
+                getApplicationContext(session).removeApplication(
+                        sessionApplication);
                 break;
             }
         }
@@ -2121,8 +2120,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
         final HttpSession session = request.getSession();
         if (session != null) {
-            WebApplicationContext.getApplicationContext(session)
-                    .removeApplication(application);
+            getApplicationContext(session).removeApplication(application);
         }
 
         response.sendRedirect(response.encodeRedirectURL(logoutUrl));
@@ -2214,10 +2212,28 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
         application.close();
         if (session != null) {
-            WebApplicationContext context = WebApplicationContext
-                    .getApplicationContext(session);
+            WebApplicationContext context = getApplicationContext(session);
             context.removeApplication(application);
         }
+    }
+
+    /**
+     * 
+     * Gets the application context from an HttpSession. If no context is
+     * currently stored in a session a new context is created and stored in the
+     * session.
+     * 
+     * @param session
+     *            the HTTP session.
+     * @return the application context for HttpSession.
+     */
+    protected WebApplicationContext getApplicationContext(HttpSession session) {
+        /*
+         * TODO the ApplicationContext.getApplicationContext() should be removed
+         * and logic moved here. Now overriding context type is possible, but
+         * the whole creation logic should be here. MT 1101
+         */
+        return WebApplicationContext.getApplicationContext(session);
     }
 
     /**
@@ -2307,12 +2323,18 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * Override this method if you need to use a specialized communicaiton
      * mananger implementation.
      * 
-     * TODO figure out the right place for CM instantiation, must be
-     * overridieable
+     * @deprecated Instead of overriding this method, override
+     *             {@link WebApplicationContext} implementation via
+     *             {@link AbstractApplicationServlet#getApplicationContext(HttpSession)}
+     *             method and in that customized implementation return your
+     *             CommunicationManager in
+     *             {@link WebApplicationContext#getApplicationManager(Application, AbstractApplicationServlet)}
+     *             method.
      * 
      * @param application
      * @return
      */
+    @Deprecated
     public CommunicationManager createCommunicationManager(
             Application application) {
         return new CommunicationManager(application);

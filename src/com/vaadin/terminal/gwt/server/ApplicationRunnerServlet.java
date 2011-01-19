@@ -48,7 +48,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
     }
 
     @Override
-    URL getApplicationUrl(HttpServletRequest request)
+    protected URL getApplicationUrl(HttpServletRequest request)
             throws MalformedURLException {
         URL url = super.getApplicationUrl(request);
 

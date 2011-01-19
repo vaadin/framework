@@ -320,7 +320,7 @@ public class GAEApplicationServlet extends ApplicationServlet {
             }
         }
         // will create new context if the above did not
-        return WebApplicationContext.getApplicationContext(session);
+        return getApplicationContext(session);
 
     }
 
