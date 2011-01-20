@@ -326,8 +326,10 @@ public class VFormLayout extends SimplePanel implements Container {
             owner = component;
 
             String style = CLASSNAME;
-            for (int i = 0; i < styles.length; i++) {
-                style += " " + CLASSNAME + "-" + styles[i];
+            if (styles != null) {
+                for (int i = 0; i < styles.length; i++) {
+                    style += " " + CLASSNAME + "-" + styles[i];
+                }
             }
             setStyleName(style);
 
