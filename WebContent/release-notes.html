@@ -54,7 +54,7 @@ contains a number of significant enhancements.</p>
   <li>Sub windows now support server side re-ordering. (<a href="http://dev.vaadin.com/ticket/5037">#5037</a>)</li>
 </ul>
 
-<h3>Backward Incompatible API Changes</h3>
+<h3>Backward Incompatible Changes</h3>
 
 <p>The following changes can break backward compatibility in applications using an earlier version of Vaadin:</p>
 
@@ -69,6 +69,7 @@ contains a number of significant enhancements.</p>
   		expression for replacement: Search "<tt>VWindow\[(\d)\]/ScrollPanel\[0\]</tt>" and replace with "<tt>VWindow[$1]/FocusableScrollPanel[0]</tt>".</li>
   <li><tt>AbstractStringValidator</tt> and now converts non-String values using <tt>toString()</tt> prior to validation (<a href="http://dev.vaadin.com/ticket/5785">#5785</a>).
   This also affects most built-in validators such as <b>IntegerValidator</b>.</li>
+  <li>TestBench scripts recorded in portals with earlier versions of Vaadin will need to be updated to work with @version@ a "v-" has been prefixed to the ID of the DIV element where the Vaadin application is placed (<a href="http://dev.vaadin.com/ticket/5912">#5912</a>). The test scripts can be fixed by prepending the "v-" to the id (e.g. <tt>vaadin=VaadinLiferayThemePortlet_WAR_demo_LAYOUT_10418</tt> should be changed to <tt>vaadin=v-VaadinLiferayThemePortlet_WAR_demo_LAYOUT_10418</tt>) or alternatively re-recording the test.</li>
 </ul>
 
 <h3>Other Changes</h3>
