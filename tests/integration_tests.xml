@@ -61,7 +61,7 @@
 	<!-- Start and stop methods for servers -->
 	<target name="integration-test-start-tomcat-4">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-4.1.40" />
-		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-tomcat-4.1.40-sampler.html" overwrite="true" />
+		<copy file="integration-testscripts/common/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-tomcat-4.1.40-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-tomcat-4">
@@ -70,7 +70,7 @@
 	
 	<target name="integration-test-start-tomcat-5">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-5.5.28" />
-		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-tomcat-5.5.28-sampler.html" overwrite="true" />
+		<copy file="integration-testscripts/common/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-tomcat-5.5.28-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-tomcat-5">
@@ -79,7 +79,7 @@
 	
 	<target name="integration-test-start-tomcat-6">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-6.0.20" />
-		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-tomcat-6.0.20-sampler.html" overwrite="true" />
+		<copy file="integration-testscripts/common/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-tomcat-6.0.20-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-tomcat-6">
@@ -88,7 +88,7 @@
 	
 	<target name="integration-test-start-jetty-5">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-5.1.15" />
-		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jetty-5.1.15-sampler.html" overwrite="true" />
+		<copy file="integration-testscripts/common/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jetty-5.1.15-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jetty-5">
@@ -97,7 +97,7 @@
 
 	<target name="integration-test-start-jetty-6">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-6.1.22" />
-		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jetty-6.1.22-sampler.html" overwrite="true" />
+		<copy file="integration-testscripts/common/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jetty-6.1.22-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jetty-6">
@@ -106,7 +106,7 @@
 	
 	<target name="integration-test-start-jetty-7">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-7.0.0" />
-		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jetty-7.0.0-sampler.html" overwrite="true" />
+		<copy file="integration-testscripts/common/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jetty-7.0.0-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jetty-7">
@@ -115,7 +115,7 @@
 	
 	<target name="integration-test-start-jboss-3">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-3.2.8" />
-		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jboss-3.2.8-sampler.html" overwrite="true" />
+		<copy file="integration-testscripts/common/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jboss-3.2.8-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jboss-3">
@@ -124,7 +124,7 @@
 	
 	<target name="integration-test-start-jboss-4">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-4.2.3" />
-		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jboss-4.2.3-sampler.html" overwrite="true" />
+		<copy file="integration-testscripts/common/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jboss-4.2.3-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jboss-4">
@@ -133,7 +133,7 @@
 	
 	<target name="integration-test-start-jboss-5">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-5.0.1" />
-		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jboss-5.0.1-sampler.html" overwrite="true" />
+		<copy file="integration-testscripts/common/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jboss-5.0.1-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jboss-5">
@@ -142,7 +142,7 @@
 	
 	<target name="integration-test-start-glassfish2">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-glassfish-2.1.1" />
-		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-glassfish-2.1.1-sampler.html" overwrite="true" />
+		<copy file="integration-testscripts/common/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-glassfish-2.1.1-sampler.html" overwrite="true" />
 	</target>
 	
 	<target name="integration-test-stop-glassfish2">
@@ -151,7 +151,7 @@
 	
 	<target name="integration-test-start-glassfish3">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-glassfish-3" />
-		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-glassfish-3-sampler.html" overwrite="true" />
+		<copy file="integration-testscripts/common/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-glassfish-3-sampler.html" overwrite="true" />
 	</target>
 	
 	<target name="integration-test-stop-glassfish3">
@@ -159,8 +159,8 @@
 	</target>
 			
 	<!-- Test liferay sampler -->
-	<target name="integration-test-test-liferay">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-liferay-5.2.3-sampler.html" />
+	<target name="integration-test-test-liferay-5">
+		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-5/integration-test-liferay-5.2.3-sampler.html" />
 		<pathconvert pathsep=" " property="test-liferay" refid="html-test-files" />
 		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
@@ -177,8 +177,8 @@
 	</target>
 	
 	<!-- "deploy" sampler to liferay -->
-	<target name="integration-test-init-liferay">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="Add_Sampler_to_Liferay.html" />
+	<target name="integration-test-init-liferay-5">
+		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-5/Add_Sampler_to_Liferay.html" />
 		<pathconvert pathsep=" " property="init-liferay" refid="html-test-files" />
 		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
@@ -194,8 +194,8 @@
 		</subant>
 	</target>
 	
-	<target name="integration-test-liferay-portlet2">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-liferay-5.2.3-portlet2.html" />
+	<target name="integration-test-liferay-5-portlet2">
+		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-5/integration-test-liferay-5.2.3-portlet2.html" />
 		<pathconvert pathsep=" " property="init-liferay" refid="html-test-files" />
 		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
@@ -212,7 +212,7 @@
 	</target>
 		
 	<target name="integration-test-liferay-6">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-liferay-6.0.5.html" />
+		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6/integration-test-liferay-6.0.5.html" />
 		<pathconvert pathsep=" " property="test-liferay" refid="html-test-files" />
 		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
@@ -229,7 +229,7 @@
 	</target>
 	
 	<target name="test-theme-liferay-6">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay6-theme.html" />
+		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6/Liferay6-theme.html" />
 		<pathconvert pathsep=" " property="test-liferay" refid="html-test-files" />
 			
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
@@ -245,7 +245,7 @@
 	</target>
 	
 	<target name="integration-test-liferay-6ee">
-			<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-liferay-6ee.html" />
+			<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6EE/integration-test-liferay-6ee.html" />
 			<pathconvert pathsep=" " property="test-liferay" refid="html-test-files" />
 			
 			<subant target="run-tests" failonerror="false" antfile="test.xml">
@@ -262,7 +262,7 @@
 		</target>
 	
 	<target name="test-theme-liferay-6ee">
-			<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay6EE-theme.html" />
+			<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6EE/Liferay6EE-theme.html" />
 			<pathconvert pathsep=" " property="test-liferay" refid="html-test-files" />
 				
 			<subant target="run-tests" failonerror="false" antfile="test.xml">
@@ -278,7 +278,7 @@
 		</target>	
 	
 	<target name="integration-test-gatein-3">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-GateIn-3.1.0-sampler.html" />
+		<fileset dir="integration-testscripts" id="html-test-files" includes="GateIn-3/integration-test-GateIn-3.1.0-sampler.html" />
 		<pathconvert pathsep=" " property="test-gatein" refid="html-test-files" />
 		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
@@ -294,18 +294,16 @@
 		</subant>
 	</target>
 	
-	<target name="integration-test-start-liferay">
+	<target name="integration-test-start-liferay-5">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-liferay-5.2.3" />
-		<copy file="integration-testscripts/sampler_deployment_liferay.html" tofile="integration-testscripts/integration-test-liferay-5.2.3-sampler.html" overwrite="true" />
 	</target>
 
-	<target name="integration-test-stop-liferay">
+	<target name="integration-test-stop-liferay-5">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-liferay-5.2.3" />
 	</target>
 	
 	<target name="integration-test-start-liferay-6">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-liferay-6.0.5" />
-		<copy file="integration-testscripts/integration-test-liferay-6.0.5.html" tofile="integration-testscripts/integration-test-liferay-6.0.5-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-liferay-6">
@@ -348,7 +346,7 @@
 	
 	<target name="integration-test-start-weblogic9">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-weblogic-9.2" />
-		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-weblogic-9.2-sampler.html" overwrite="true" />
+		<copy file="integration-testscripts/common/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-weblogic-9.2-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-weblogic9">
@@ -357,7 +355,7 @@
 	
 	<target name="integration-test-start-weblogic10">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-weblogic-10.3" />
-		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-weblogic-10.3-sampler.html" overwrite="true" />
+		<copy file="integration-testscripts/common/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-weblogic-10.3-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-weblogic10">
@@ -366,7 +364,7 @@
 	
 	<!-- Run sampler deployment test on GAE -->
 	<target name="integration-test-test-GAE">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-GAE-sampler.html" />
+		<fileset dir="integration-testscripts" id="html-test-files" includes="GoogleAppEngine/integration-test-GAE-sampler.html" />
 		<pathconvert pathsep=" " property="test-GAE" refid="html-test-files" />
 		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
@@ -476,18 +474,18 @@
 	</target>
 	
 	<target name="integration-test-liferay">
-		<antcall target="integration-test-start-liferay" />
+		<antcall target="integration-test-start-liferay-5" />
 		<trycatch property="tried">
 			<try>
-				<antcall target="integration-test-init-liferay" />
-				<antcall target="integration-test-test-liferay" />
+				<antcall target="integration-test-init-liferay-5" />
+				<antcall target="integration-test-test-liferay-5" />
 			</try>
 			<catch>
 				<echo message="Liferay sampler test failed. ${tried}" />
 			</catch>
 		</trycatch>
-		<antcall target="integration-test-liferay-portlet2" />
-		<antcall target="integration-test-stop-liferay" />
+		<antcall target="integration-test-liferay-5-portlet2" />
+		<antcall target="integration-test-stop-liferay-5" />
 	</target>
 
 	<target name="integration-test-liferay6">
