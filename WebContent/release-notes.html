@@ -52,6 +52,8 @@ contains a number of significant enhancements.</p>
   <li>All component containers support <tt>getComponentCount()</tt>.</li>
   <li>Sub windows now support focus and blur events. (<a href="http://dev.vaadin.com/ticket/5039">#5039</a>)</li>
   <li>Sub windows now support server side re-ordering. (<a href="http://dev.vaadin.com/ticket/5037">#5037</a>)</li>
+  <li>Fixed a possible cross site scripting (XSS) attack. (<a href="http://dev.vaadin.com/ticket/6200">#6200</a>))</li>
+  <li>BeanItemContainer has been refactored and a more flexible BeanContainer has been added.</li>
 </ul>
 
 <h3>Backward Incompatible Changes</h3>
@@ -114,7 +116,7 @@ contains a number of significant enhancements.</p>
 
 <h3>Change Log, Future Releases, and Upgrading</h3>
 
-<p>See this <a href="http://dev.vaadin.com/query?status=closed&group=resolution&milestone=Vaadin+6.5.0.pre1">list of closed tickets</a> for a
+<p>See this <a href="http://dev.vaadin.com/query?status=closed&group=resolution&order=priority&col=id&col=summary&col=owner&col=type&col=priority&col=component&col=version&milestone=Vaadin+6.5.0.pre1&milestone=Vaadin+6.5.0.pre2&milestone=Vaadin+6.5.0">list of closed tickets</a> for a
 full list of tickets fixed in this release.</p>
 
 <p>Problem fixes and enhancements planned for upcoming releases can be found in the <a
