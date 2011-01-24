@@ -22,7 +22,10 @@ def readMap(fin, separator):
     return values
 
 def getSvnInfo():
-    pin = os.popen("svn info", "r")
+    if os.path.exists(".svn"):
+        pin = os.popen("svn info", "r")
+    elif os.path.exists(".git"):
+        pin = os.popen("git svn info", "r")
     values = readMap(pin, r'^([^:]+):\s*(.+)$')
     pin.close()
     return values
