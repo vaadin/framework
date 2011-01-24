@@ -606,16 +606,16 @@
 	</target>
 	
 	<target name="run-integration-test">
-		<echo>##teamcity[testStarted name='${target-server}']</echo>
+		<echo message="##teamcity[testStarted name='${target-server}' flowId='${target-server}']" />
 		<trycatch property="tried">
 			<try>
 				<antcall target="integration-test-${target-server}" />
 			</try>
 			<catch>
-				<echo>##teamcity[testFailed name='${target-server}' message='Integration test for ${target-server} failed.' details='${tried}'</echo>
+				<echo message="##teamcity[testFailed name='${target-server}' flowId='${target-server}' message='Integration test for ${target-server} failed.' details='${tried}']" />
 			</catch>
 		</trycatch>
-		<echo>##teamcity[testFinished name='${target-server}']</echo>
+		<echo message="##teamcity[testFinished name='${target-server}' flowId='${target-server}']" />
 	</target>
 	
 	<target name="integration-test-get-lock">
