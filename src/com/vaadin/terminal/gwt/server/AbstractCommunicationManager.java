@@ -1221,7 +1221,13 @@ public abstract class AbstractCommunicationManager implements
 
             }
         }
-        return success;
+        /*
+         * Note that we ignore inconsistencies while handling unload request.
+         * The client can't remove invalid variable changes from the burst, and
+         * we don't have the required logic implemented on the server side. E.g.
+         * a component is removed in a previous burst.
+         */
+        return success || closingWindowName != null;
     }
 
     public boolean handleVariableBurst(Object source, Application app,
