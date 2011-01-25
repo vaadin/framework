@@ -505,6 +505,10 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
     public void onWindowClosing(Window.ClosingEvent event) {
         // Change focus on this window in order to ensure that all state is
         // collected from textfields
+        // TODO this is a naive hack, that only works with text fields and may
+        // cause some odd issues. Should be replaced with a decent solution, see
+        // also related BeforeShortcutActionListener interface. Same interface
+        // might be usable here.
         VTextField.flushChangesFromFocusedTextField();
 
         // Send the closing state to server
