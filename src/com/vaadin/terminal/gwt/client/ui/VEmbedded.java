@@ -132,8 +132,9 @@ public class VEmbedded extends HTML implements Paintable {
         } else if (uidl.hasAttribute("mimetype")) {
             final String mime = uidl.getStringAttribute("mimetype");
             if (mime.equals("application/x-shockwave-flash")) {
-                String html = "<object width=\"" + width + "\" height=\""
-                        + height + "\">";
+                String html = "<object "
+                        + "type=\"application/x-shockwave-flash\" "
+                        + "width=\"" + width + "\" height=\"" + height + "\">";
 
                 Map<String, String> parameters = getParameters(uidl);
                 if (parameters.get("movie") == null) {
