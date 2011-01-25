@@ -149,7 +149,8 @@ public class VEmbedded extends HTML implements Paintable {
                 }
 
                 html += "<embed src=\"" + getSrc(uidl, client) + "\" width=\""
-                        + width + "\" height=\"" + height + "\" ";
+                        + width + "\" height=\"" + height + "\" "
+                        + "type=\"application/x-shockwave-flash\" ";
 
                 // Add the parameters to the Embed
                 for (String name : parameters.keySet()) {
