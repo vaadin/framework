@@ -103,7 +103,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
     private void updateValue(Date newDate) {
         Date currentDate = getCurrentDate();
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
-            setCurrentDate(newDate);
+            setCurrentDate((Date) newDate.clone());
             getClient().updateVariable(getId(), "year",
                     newDate.getYear() + 1900, false);
             if (getCurrentResolution() > VDateField.RESOLUTION_YEAR) {
@@ -164,7 +164,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         if (calendar.getResolution() != currentResolution) {
             calendar.setResolution(currentResolution);
             if (calendar.getDate() != null) {
-                calendar.setDate(getCurrentDate());
+                calendar.setDate((Date) getCurrentDate().clone());
                 // force re-render when changing resolution only
                 calendar.renderCalendar();
             }
