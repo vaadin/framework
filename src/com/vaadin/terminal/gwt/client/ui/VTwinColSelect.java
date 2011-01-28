@@ -159,7 +159,9 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Captions are updated before super call to ensure the widths are set
         // correctly
-        updateCaptions(uidl);
+        if (!uidl.getBooleanAttribute("cached")) {
+            updateCaptions(uidl);
+        }
 
         super.updateFromUIDL(uidl, client);
         // If the server request that a cached instance should be used, do
