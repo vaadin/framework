@@ -13,6 +13,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.ObjectElement;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -37,10 +38,12 @@ public class VEmbedded extends HTML implements Paintable {
     private String width;
     private Element browserElement;
 
+    private String type;
+
     private ApplicationConnection client;
 
-    private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
-            CLICK_EVENT_IDENTIFIER) {
+    private final ClickEventHandler clickEventHandler = new ClickEventHandler(
+            this, CLICK_EVENT_IDENTIFIER) {
 
         @Override
         protected <H extends EventHandler> HandlerRegistration registerHandler(
@@ -65,7 +68,7 @@ public class VEmbedded extends HTML implements Paintable {
         clickEventHandler.handleEventHandlerRegistration(client);
 
         if (uidl.hasAttribute("type")) {
-            final String type = uidl.getStringAttribute("type");
+            type = uidl.getStringAttribute("type");
             if (type.equals("image")) {
                 Element el = null;
                 boolean created = false;
@@ -272,6 +275,10 @@ public class VEmbedded extends HTML implements Paintable {
 
     }
 
+    private boolean isDynamicWidth() {
+        return width == null || width.equals("");
+    }
+
     private boolean isDynamicHeight() {
         return height == null || height.equals("");
     }
@@ -299,10 +306,31 @@ public class VEmbedded extends HTML implements Paintable {
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (DOM.eventGetType(event) == Event.ONLOAD) {
+            if ("image".equals(type)) {
+                updateElementDynamicSizeFromImage();
+            }
             Util.notifyParentOfSizeChange(this, true);
         }
 
         client.handleTooltipEvent(event, this);
+    }
+
+    /**
+     * Updates the size of the embedded component's element if size is
+     * undefined. Without this embeddeds containing images will remain the wrong
+     * size in certain cases (e.g. #6304).
+     */
+    private void updateElementDynamicSizeFromImage() {
+        if (isDynamicWidth()) {
+            getElement().getStyle().setWidth(
+                    getElement().getFirstChildElement().getOffsetWidth(),
+                    Unit.PX);
+        }
+        if (isDynamicHeight()) {
+            getElement().getStyle().setHeight(
+                    getElement().getFirstChildElement().getOffsetHeight(),
+                    Unit.PX);
+        }
     }
 
 }
