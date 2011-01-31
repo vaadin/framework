@@ -95,6 +95,24 @@ public class ComponentLocator {
             // find the Paintable for all but very special cases (like
             // overlays).
             w = (Widget) client.getPaintable(pid);
+
+            /*
+             * Still if the Paintable contains a widget that implements
+             * SubPartAware, we want to use that as a reference
+             */
+            Widget targetParent = findParentWidget(targetElement, w);
+            while (targetParent != w && targetParent != null) {
+                if (targetParent instanceof SubPartAware) {
+                    /*
+                     * The targetParent widget is a child of the Paintable and
+                     * the first parent (of the targetElement) that implements
+                     * SubPartAware
+                     */
+                    w = targetParent;
+                    break;
+                }
+                targetParent = targetParent.getParent();
+            }
         }
         if (w == null) {
             // Check if the element is part of a widget that is attached
