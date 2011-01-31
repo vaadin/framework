@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.server;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +17,7 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
@@ -352,16 +354,17 @@ public abstract class AbstractCommunicationManager implements
 
     private static final String CRLF = "\r\n";
 
+    private static final Charset UTF8 = Charset.forName("UTF8");
+
     private static String readLine(InputStream stream) throws IOException {
-        StringBuilder sb = new StringBuilder();
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
         int readByte = stream.read();
         while (readByte != LF) {
-            char c = (char) readByte;
-            sb.append(c);
+            bout.write(readByte);
             readByte = stream.read();
         }
-
-        return sb.substring(0, sb.length() - 1);
+        byte[] bytes = bout.toByteArray();
+        return new String(bytes, 0, bytes.length - 1, UTF8);
     }
 
     /**
