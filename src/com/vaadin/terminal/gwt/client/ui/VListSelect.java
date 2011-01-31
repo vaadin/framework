@@ -44,7 +44,7 @@ public class VListSelect extends VOptionGroupBase {
         if (!isMultiselect() && isNullSelectionAllowed()
                 && !isNullSelectionItemAvailable()) {
             // can't unselect last item in singleselect mode
-            select.addItem("", null);
+            select.addItem("", (String) null);
         }
         for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();

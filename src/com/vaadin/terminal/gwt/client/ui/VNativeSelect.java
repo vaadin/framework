@@ -39,7 +39,7 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
 
         if (isNullSelectionAllowed() && !isNullSelectionItemAvailable()) {
             // can't unselect last item in singleselect mode
-            select.addItem("", null);
+            select.addItem("", (String) null);
         }
         boolean selected = false;
         for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
@@ -54,7 +54,7 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
         if (!selected && !isNullSelectionAllowed()) {
             // null-select not allowed, but value not selected yet; add null and
             // remove when something is selected
-            select.insertItem("", null, 0);
+            select.insertItem("", (String) null, 0);
             select.setItemSelected(0, true);
             firstValueIsTemporaryNullItem = true;
         }
