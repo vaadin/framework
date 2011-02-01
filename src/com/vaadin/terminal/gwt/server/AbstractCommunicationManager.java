@@ -17,7 +17,6 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
@@ -354,7 +353,7 @@ public abstract class AbstractCommunicationManager implements
 
     private static final String CRLF = "\r\n";
 
-    private static final Charset UTF8 = Charset.forName("UTF8");
+    private static final String UTF8 = "UTF8";
 
     private static String readLine(InputStream stream) throws IOException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
