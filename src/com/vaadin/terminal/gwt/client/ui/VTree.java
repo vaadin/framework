@@ -14,6 +14,7 @@ import java.util.Set;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -603,7 +604,8 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
          *            Was the shift-key pressed
          * @return Returns true if event was handled, else false
          */
-        private boolean handleClickSelection(boolean ctrl, boolean shift) {
+        private boolean handleClickSelection(final boolean ctrl,
+                final boolean shift) {
 
             // always when clicking an item, focus it
             setFocusedNode(this, false);
@@ -622,33 +624,50 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                 focus();
             } // else if IE: NOP, IE will give the focus to Tree anyways
 
-            if (multiSelectMode == MULTISELECT_MODE_SIMPLE || !isMultiselect) {
-                toggleSelection();
-                lastSelection = this;
-            } else if (multiSelectMode == MULTISELECT_MODE_DEFAULT) {
-                // Handle ctrl+click
-                if (isMultiselect && ctrl && !shift) {
-                    toggleSelection();
-                    lastSelection = this;
+            ScheduledCommand command = new ScheduledCommand() {
+                public void execute() {
 
-                    // Handle shift+click
-                } else if (isMultiselect && !ctrl && shift) {
-                    deselectAll();
-                    selectNodeRange(lastSelection.key, key);
-                    sendSelectionToServer();
+                    if (multiSelectMode == MULTISELECT_MODE_SIMPLE
+                            || !isMultiselect) {
+                        toggleSelection();
+                        lastSelection = TreeNode.this;
+                    } else if (multiSelectMode == MULTISELECT_MODE_DEFAULT) {
+                        // Handle ctrl+click
+                        if (isMultiselect && ctrl && !shift) {
+                            toggleSelection();
+                            lastSelection = TreeNode.this;
 
-                    // Handle ctrl+shift click
-                } else if (isMultiselect && ctrl && shift) {
-                    selectNodeRange(lastSelection.key, key);
+                            // Handle shift+click
+                        } else if (isMultiselect && !ctrl && shift) {
+                            deselectAll();
+                            selectNodeRange(lastSelection.key, key);
+                            sendSelectionToServer();
 
-                    // Handle click
-                } else {
-                    // TODO should happen only if this alone not yet selected,
-                    // now sending excess server calls
-                    deselectAll();
-                    toggleSelection();
-                    lastSelection = this;
+                            // Handle ctrl+shift click
+                        } else if (isMultiselect && ctrl && shift) {
+                            selectNodeRange(lastSelection.key, key);
+
+                            // Handle click
+                        } else {
+                            // TODO should happen only if this alone not yet
+                            // selected,
+                            // now sending excess server calls
+                            deselectAll();
+                            toggleSelection();
+                            lastSelection = TreeNode.this;
+                        }
+                    }
                 }
+            };
+
+            if (BrowserInfo.get().isWebkit() && !treeHasFocus) {
+                /*
+                 * Safari may need to wait for focus. See FocusImplSafari.
+                 */
+                // VConsole.log("Deferring click handling to let webkit gain focus...");
+                Scheduler.get().scheduleDeferred(command);
+            } else {
+                command.execute();
             }
 
             return true;
@@ -736,16 +755,36 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
             }
         }
 
-        private void fireClick(Event evt) {
-            // non-immediate iff an immediate select event is going to happen
-            boolean imm = !immediate
-                    || !selectable
-                    || (!isNullSelectionAllowed && isSelected() && selectedIds
-                            .size() == 1);
-            MouseEventDetails details = new MouseEventDetails(evt);
-            client.updateVariable(paintableId, "clickedKey", key, false);
-            client.updateVariable(paintableId, "clickEvent",
-                    details.toString(), imm);
+        private void fireClick(final Event evt) {
+            /*
+             * Ensure we have focus in tree before sending variables. Otherwise
+             * previously modified field may contain dirty variables.
+             */
+            if (!treeHasFocus) {
+                focus();
+            }
+            final MouseEventDetails details = new MouseEventDetails(evt);
+            ScheduledCommand command = new ScheduledCommand() {
+                public void execute() {
+                    // non-immediate iff an immediate select event is going to
+                    // happen
+                    boolean imm = !immediate
+                            || !selectable
+                            || (!isNullSelectionAllowed && isSelected() && selectedIds
+                                    .size() == 1);
+                    client.updateVariable(paintableId, "clickedKey", key, false);
+                    client.updateVariable(paintableId, "clickEvent",
+                            details.toString(), imm);
+                }
+            };
+            if (treeHasFocus) {
+                command.execute();
+            } else {
+                /*
+                 * Webkits need a deferring due to FocusImplSafari uses timeout
+                 */
+                Scheduler.get().scheduleDeferred(command);
+            }
         }
 
         private void toggleSelection() {
@@ -1529,6 +1568,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
      * .dom.client.FocusEvent)
      */
     public void onFocus(FocusEvent event) {
+        treeHasFocus = true;
         // If no node has focus, focus the first item in the tree
         if (focusedNode == null && lastSelection == null && selectable) {
             setFocusedNode(getFirstRootNode(), false);
@@ -1547,6 +1587,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
      * .dom.client.BlurEvent)
      */
     public void onBlur(BlurEvent event) {
+        treeHasFocus = false;
         if (focusedNode != null) {
             focusedNode.setFocused(false);
         }
@@ -1931,6 +1972,13 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
     private final String EXPAND_IDENTIFIER = "expand";
 
     /*
+     * In webkit, focus may have been requested for this component but not yet
+     * gained. Use this to trac if tree has gained the focus on webkit. See
+     * FocusImplSafari and #6373
+     */
+    private boolean treeHasFocus;
+
+    /*
      * (non-Javadoc)
      * 
      * @see
@@ -2034,4 +2082,5 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
         }
         return locator;
     }
+
 }
