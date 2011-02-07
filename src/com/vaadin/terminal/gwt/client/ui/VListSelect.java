@@ -51,7 +51,9 @@ public class VListSelect extends VOptionGroupBase {
             select.addItem(optionUidl.getStringAttribute("caption"),
                     optionUidl.getStringAttribute("key"));
             if (optionUidl.hasAttribute("selected")) {
-                select.setItemSelected(select.getItemCount() - 1, true);
+                int itemIndex = select.getItemCount() - 1;
+                select.setItemSelected(itemIndex, true);
+                lastSelectedIndex = itemIndex;
             }
         }
         if (getRows() > 0) {
