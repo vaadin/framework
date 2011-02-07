@@ -81,16 +81,20 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     }
 
     /**
-     * Shows context menu at given location.
+     * Shows context menu at given location IF it contain at least one item.
      * 
      * @param left
      * @param top
      */
     public void showAt(int left, int top) {
+        final Action[] actions = actionOwner.getActions();
+        if (actions == null || actions.length == 0) {
+            // Only show if there really are actions
+            return;
+        }
         this.left = left;
         this.top = top;
         menu.clearItems();
-        final Action[] actions = actionOwner.getActions();
         for (int i = 0; i < actions.length; i++) {
             final Action a = actions[i];
             menu.addItem(new MenuItem(a.getHTML(), true, a));
