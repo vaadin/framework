@@ -1357,7 +1357,14 @@ public abstract class AbstractCommunicationManager implements
     protected String getRequestPayload(Request request) throws IOException {
 
         int requestLength = request.getContentLength();
-        if (requestLength == 0) {
+        if (requestLength <= 0) {
+            /*
+             * TODO Browsers as we know them, know how long XHR they are sending
+             * and expose this in headers. However we have seen some -1 values
+             * in logs. Wild guess is that it is some kind of bot that tries to
+             * play well with ajax pages. Decide if we need to support those
+             * requests. See #6401
+             */
             return null;
         }
 
