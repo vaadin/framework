@@ -254,6 +254,11 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     private void selectFocused() {
         if (focusedDate != null) {
+            if (value == null) {
+                // No previously selected value (set to null on server side).
+                // Create a new date using current date and time
+                value = new Date();
+            }
             /*
              * #5594 set Date (day) to 1 in order to prevent any kind of
              * wrapping of months when later setting the month. (e.g. 31 ->

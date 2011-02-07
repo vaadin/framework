@@ -114,7 +114,7 @@ public class VDateFieldCalendar extends VDateField {
         Date date2 = calendarPanel.getDate();
         Date currentDate = getCurrentDate();
         if (currentDate == null || date2.getTime() != currentDate.getTime()) {
-            setCurrentDate(date2);
+            setCurrentDate((Date) date2.clone());
             getClient().updateVariable(getId(), "year", date2.getYear() + 1900,
                     false);
             if (getCurrentResolution() > VDateField.RESOLUTION_YEAR) {

@@ -182,6 +182,12 @@ public class Tables extends AbstractSelectTestCase<Table> implements
         options.put("With and without icon", cm);
         options.put("Only one large icon", new ContextMenu("Icon",
                 ICON_64_EMAIL_REPLY_PNG_UNCACHEABLE));
+        options.put("Empty", new ContextMenu() {
+            @Override
+            public Action[] getActions() {
+                return null;
+            }
+        });
 
         createSelectAction("Context menu", category, options, "None",
                 contextMenuCommand, true);

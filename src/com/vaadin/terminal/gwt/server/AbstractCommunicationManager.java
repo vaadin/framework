@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.server;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -352,16 +353,17 @@ public abstract class AbstractCommunicationManager implements
 
     private static final String CRLF = "\r\n";
 
+    private static final String UTF8 = "UTF8";
+
     private static String readLine(InputStream stream) throws IOException {
-        StringBuilder sb = new StringBuilder();
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
         int readByte = stream.read();
         while (readByte != LF) {
-            char c = (char) readByte;
-            sb.append(c);
+            bout.write(readByte);
             readByte = stream.read();
         }
-
-        return sb.substring(0, sb.length() - 1);
+        byte[] bytes = bout.toByteArray();
+        return new String(bytes, 0, bytes.length - 1, UTF8);
     }
 
     /**
@@ -1355,7 +1357,14 @@ public abstract class AbstractCommunicationManager implements
     protected String getRequestPayload(Request request) throws IOException {
 
         int requestLength = request.getContentLength();
-        if (requestLength == 0) {
+        if (requestLength <= 0) {
+            /*
+             * TODO Browsers as we know them, know how long XHR they are sending
+             * and expose this in headers. However we have seen some -1 values
+             * in logs. Wild guess is that it is some kind of bot that tries to
+             * play well with ajax pages. Decide if we need to support those
+             * requests. See #6401
+             */
             return null;
         }
 
@@ -2164,7 +2173,7 @@ public abstract class AbstractCommunicationManager implements
          * Counter of how many characters have been matched to boundary string
          * from the stream
          */
-        int matchedCount = 0;
+        int matchedCount = -1;
 
         /**
          * Used as pointer when returning bytes after partly matched boundary
@@ -2195,6 +2204,12 @@ public abstract class AbstractCommunicationManager implements
             } else if (bufferedByte >= 0) {
                 /* Purge partially matched boundary if there was such */
                 return getBuffered();
+            } else if (matchedCount != -1) {
+                /*
+                 * Special case where last "failed" matching ended with first
+                 * character from boundary string
+                 */
+                return matchForBoundary();
             } else {
                 int fromActualStream = realInputStream.read();
                 if (fromActualStream == -1) {
@@ -2202,34 +2217,50 @@ public abstract class AbstractCommunicationManager implements
                     throw new IOException(
                             "The multipart stream ended unexpectedly");
                 }
-                if (boundary[matchedCount] == fromActualStream) {
+                if (boundary[0] == fromActualStream) {
                     /*
-                     * Going to "buffered mode". Read until full boundary match
-                     * or a different character.
+                     * If matches the first character in boundary string, start
+                     * checking if the boundary is fetched.
                      */
-                    while (true) {
-                        matchedCount++;
-                        if (matchedCount == boundary.length) {
-                            /*
-                             * The whole boundary matched so we have reached the
-                             * end of file
-                             */
-                            atTheEnd = true;
-                            return -1;
-                        }
-                        fromActualStream = realInputStream.read();
-                        if (fromActualStream != boundary[matchedCount]) {
-                            /*
-                             * Did not find full boundary, cache the mismatching
-                             * byte and start returning the partially matched
-                             * boundary.
-                             */
-                            bufferedByte = fromActualStream;
-                            return getBuffered();
-                        }
-                    }
+                    return matchForBoundary();
                 }
                 return fromActualStream;
+            }
+        }
+
+        /**
+         * Reads the input to expect a boundary string. Expects that the first
+         * character has already been matched.
+         * 
+         * @return -1 if the boundary was matched, else returns the first byte
+         *         from boundary
+         * @throws IOException
+         */
+        private int matchForBoundary() throws IOException {
+            matchedCount = 0;
+            /*
+             * Going to "buffered mode". Read until full boundary match or a
+             * different character.
+             */
+            while (true) {
+                matchedCount++;
+                if (matchedCount == boundary.length) {
+                    /*
+                     * The whole boundary matched so we have reached the end of
+                     * file
+                     */
+                    atTheEnd = true;
+                    return -1;
+                }
+                int fromActualStream = realInputStream.read();
+                if (fromActualStream != boundary[matchedCount]) {
+                    /*
+                     * Did not find full boundary, cache the mismatching byte
+                     * and start returning the partially matched boundary.
+                     */
+                    bufferedByte = fromActualStream;
+                    return getBuffered();
+                }
             }
         }
 
@@ -2246,6 +2277,7 @@ public abstract class AbstractCommunicationManager implements
                 // The boundary has been returned, return the buffered byte.
                 b = bufferedByte;
                 bufferedByte = -1;
+                matchedCount = -1;
             } else {
                 b = boundary[curBoundaryIndex++];
                 if (curBoundaryIndex == matchedCount) {
@@ -2266,7 +2298,7 @@ public abstract class AbstractCommunicationManager implements
                          * boundaryString. This could be the start of the real
                          * end boundary.
                          */
-                        matchedCount = 1;
+                        matchedCount = 0;
                         bufferedByte = -1;
                     }
                 }

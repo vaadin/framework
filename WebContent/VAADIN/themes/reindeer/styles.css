@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_5_0_dev-20101230";}
-.v-theme-version-6_5_0_dev-20101230 {display: none;}
+.v-theme-version:after {content:"6_5_1_dev-20110207";}
+.v-theme-version-6_5_1_dev-20110207 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -735,6 +735,12 @@ div.v-app-loading {
 .no-vertical-drag-hints .v-ddwrapper-over-top:before,
 .no-vertical-drag-hints .v-ddwrapper-over-bottom:after {
 	display: none;
+}
+
+
+.v-table .v-embedded-image {
+    /* make embeddeds be centered in centered table cells. */
+	display: inline-block;
 }
 
 .v-formlayout-cell .v-errorindicator {

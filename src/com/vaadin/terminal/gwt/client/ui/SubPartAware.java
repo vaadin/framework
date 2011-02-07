@@ -4,12 +4,12 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ComponentLocator;
-import com.vaadin.terminal.gwt.client.Paintable;
 
 /**
- * Interface implemented by {@link Paintable}s which can provide identifiers for
- * at least one element inside the component. Used by {@link ComponentLocator}.
+ * Interface implemented by {@link Widget}s which can provide identifiers for at
+ * least one element inside the component. Used by {@link ComponentLocator}.
  * 
  */
 public interface SubPartAware {
