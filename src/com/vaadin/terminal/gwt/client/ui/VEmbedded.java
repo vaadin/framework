@@ -13,6 +13,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.ObjectElement;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
@@ -307,6 +308,9 @@ public class VEmbedded extends HTML implements Paintable {
         super.onBrowserEvent(event);
         if (DOM.eventGetType(event) == Event.ONLOAD) {
             if ("image".equals(type)) {
+                // display: inline-block in order for embeddeds to be centered
+                // in centered table columns.
+                getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
                 updateElementDynamicSizeFromImage();
             }
             Util.notifyParentOfSizeChange(this, true);
