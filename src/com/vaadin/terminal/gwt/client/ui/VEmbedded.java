@@ -13,7 +13,6 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.ObjectElement;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
@@ -71,6 +70,7 @@ public class VEmbedded extends HTML implements Paintable {
         if (uidl.hasAttribute("type")) {
             type = uidl.getStringAttribute("type");
             if (type.equals("image")) {
+                addStyleName(CLASSNAME + "-image");
                 Element el = null;
                 boolean created = false;
                 NodeList<Node> nodes = getElement().getChildNodes();
@@ -119,6 +119,7 @@ public class VEmbedded extends HTML implements Paintable {
                 sinkEvents(VTooltip.TOOLTIP_EVENTS);
 
             } else if (type.equals("browser")) {
+                addStyleName(CLASSNAME + "-browser");
                 if (browserElement == null) {
                     setHTML("<iframe width=\"100%\" height=\"100%\" frameborder=\"0\" allowTransparency=\"true\" src=\""
                             + getSrc(uidl, client)
@@ -136,6 +137,7 @@ public class VEmbedded extends HTML implements Paintable {
         } else if (uidl.hasAttribute("mimetype")) {
             final String mime = uidl.getStringAttribute("mimetype");
             if (mime.equals("application/x-shockwave-flash")) {
+                addStyleName(CLASSNAME + "-flash");
                 String html = "<object "
                         + "type=\"application/x-shockwave-flash\" "
                         + "width=\"" + width + "\" height=\"" + height + "\">";
@@ -165,6 +167,7 @@ public class VEmbedded extends HTML implements Paintable {
                 html += "></embed></object>";
                 setHTML(html);
             } else if (mime.equals("image/svg+xml")) {
+                addStyleName(CLASSNAME + "-svg");
                 String data;
                 Map<String, String> parameters = getParameters(uidl);
                 if (parameters.get("data") == null) {
@@ -308,9 +311,6 @@ public class VEmbedded extends HTML implements Paintable {
         super.onBrowserEvent(event);
         if (DOM.eventGetType(event) == Event.ONLOAD) {
             if ("image".equals(type)) {
-                // display: inline-block in order for embeddeds to be centered
-                // in centered table columns.
-                getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
                 updateElementDynamicSizeFromImage();
             }
             Util.notifyParentOfSizeChange(this, true);
