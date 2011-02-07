@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
+import com.vaadin.data.Property;
 import com.vaadin.data.Property.ReadOnlyStatusChangeEvent;
 import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -20,6 +21,8 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.MenuItem;
 
 public abstract class AbstractFieldTest<T extends AbstractField> extends
         AbstractComponentTest<T> implements ValueChangeListener,
@@ -48,6 +51,25 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
         // * validation visible
         // * ShortcutListener
 
+    }
+
+    @Override
+    protected void populateSettingsMenu(MenuItem settingsMenu) {
+        super.populateSettingsMenu(settingsMenu);
+
+        if (AbstractField.class.isAssignableFrom(getTestClass())) {
+            MenuItem abstractField = settingsMenu
+                    .addItem("AbstractField", null);
+            abstractField.addItem("Show value", new MenuBar.Command() {
+
+                public void menuSelected(MenuItem selectedItem) {
+                    for (T a : getTestComponents()) {
+                        log(a.getClass().getSimpleName() + " value: "
+                                + getValue(a));
+                    }
+                }
+            });
+        }
     }
 
     private void createRequiredErrorSelect(String category) {
@@ -141,9 +163,14 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
         }
     };
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
-        Object o = event.getProperty().getValue();
+        log(event.getClass().getSimpleName() + ", new value: "
+                + getValue(event.getProperty()));
+    };
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private String getValue(Property property) {
+        Object o = property.getValue();
         if (o instanceof Collection) {
             // Sort collections to avoid problems with values printed in
             // different order
@@ -173,8 +200,9 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
             }
         }
 
-        log(event.getClass().getSimpleName() + ", new value: " + value);
-    };
+        return value;
+
+    }
 
     public void readOnlyStatusChange(ReadOnlyStatusChangeEvent event) {
         log(event.getClass().getSimpleName());

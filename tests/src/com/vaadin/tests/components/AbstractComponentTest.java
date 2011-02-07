@@ -92,12 +92,22 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
         menu.setDebugId("menu");
         mainMenu = menu.addItem("Component", null);
         settingsMenu = menu.addItem("Settings", null);
-        createSettingsMenu();
+        populateSettingsMenu(settingsMenu);
 
         return menu;
     }
 
-    private void createSettingsMenu() {
+    /**
+     * Override to add items to the "settings" menu.
+     * 
+     * NOTE, Call super class first to preserve current order. If you override
+     * this in a class and another class overrides it you might break tests
+     * because the wrong items will be selected.
+     * 
+     * @param settingsMenu
+     */
+    protected void populateSettingsMenu(MenuItem settingsMenu) {
+
         MenuItem showEventLog = settingsMenu.addItem("Show event log",
                 new MenuBar.Command() {
 
