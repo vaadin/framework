@@ -329,6 +329,7 @@
 }
 .styled-twincol-captions .v-select-twincol-caption-right {
 	font-size: 30px;
+	line-height: normal;
 	color: blue;
 }
 
