@@ -1564,14 +1564,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * If one needs to override parts of the host page, it is suggested that one
      * overrides on of several submethods which are called by this method:
      * <ul>
-     * <li> {@link #setAjaxPageHeaders(HttpServletResponse)}
-     * <li> {@link #writeAjaxPageHtmlHeadStart(BufferedWriter)}
-     * <li> {@link #writeAjaxPageHtmlHeader(BufferedWriter, String, String)}
-     * <li> {@link #writeAjaxPageHtmlBodyStart(BufferedWriter)}
+     * <li> {@link #setAjaxPageHeaders(HttpServletResponse)
+     * <li> {@link #writeAjaxPageHtmlHeadStart(BufferedWriter, HttpServletRequest)
+     * <li> {@link #writeAjaxPageHtmlHeader(BufferedWriter, String, String, HttpServletRequest)
+     * <li> {@link #writeAjaxPageHtmlBodyStart(BufferedWriter, HttpServletRequest)
      * <li>
-     * {@link #writeAjaxPageHtmlVaadinScripts(Window, String, Application, BufferedWriter, String, String, String, String, String, String)}
+     * {@link #writeAjaxPageHtmlVaadinScripts(Window, String, Application, BufferedWriter, String, String, String, HttpServletRequest)
      * <li>
-     * {@link #writeAjaxPageHtmlMainDiv(BufferedWriter, String, String, String)}
+     * {@link #writeAjaxPageHtmlMainDiv(BufferedWriter, String, String, String, HttpServletRequest)
      * <li> {@link #writeAjaxPageHtmlBodyEnd(BufferedWriter)}
      * </ul>
      * 
@@ -1669,7 +1669,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     + "\"";
         }
 
-        writeAjaxPageHtmlMainDiv(page, appId, classNames, divStyle);
+        writeAjaxPageHtmlMainDiv(page, appId, classNames, divStyle, request);
 
         if (!fragment) {
             page.write("</body>\n</html>\n");
@@ -1737,10 +1737,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @param appId
      * @param classNames
      * @param divStyle
+     * @param request 
      * @throws IOException
      */
     protected void writeAjaxPageHtmlMainDiv(final BufferedWriter page,
-            String appId, String classNames, String divStyle)
+            String appId, String classNames, String divStyle, HttpServletRequest request)
             throws IOException {
         page.write("<div id=\"" + appId + "\" class=\"" + classNames + "\" "
                 + (divStyle != null ? divStyle : "") + "></div>\n");
