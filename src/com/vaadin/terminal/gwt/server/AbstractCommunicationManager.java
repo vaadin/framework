@@ -1515,6 +1515,9 @@ public abstract class AbstractCommunicationManager implements
 
             // Get the path from URL
             String path = callback.getRequestPathInfo(request);
+            if (path != null && path.startsWith("/UIDL")) {
+                path = path.substring("/UIDL".length());
+            }
 
             // If the path is specified, create name from it
             if (path != null && path.length() > 0 && !path.equals("/")) {
@@ -1687,7 +1690,7 @@ public abstract class AbstractCommunicationManager implements
                     }
                     if (componentsRoot.getParent() != null) {
                         // this is a subwindow
-                        componentsRoot = (Window) componentsRoot.getParent();
+                        componentsRoot = componentsRoot.getParent();
                     }
                     if (componentsRoot != w) {
                         resultset.remove(p);
@@ -1927,7 +1930,7 @@ public abstract class AbstractCommunicationManager implements
         }
     }
 
-    private HashMap<Class<? extends Paintable>, Integer> typeToKey = new HashMap<Class<? extends Paintable>, Integer>();
+    private final HashMap<Class<? extends Paintable>, Integer> typeToKey = new HashMap<Class<? extends Paintable>, Integer>();
     private int nextTypeKey = 0;
 
     String getTagForType(Class<? extends Paintable> class1) {
@@ -1947,7 +1950,7 @@ public abstract class AbstractCommunicationManager implements
      */
     class OpenWindowCache implements Serializable {
 
-        private Set<Object> res = new HashSet<Object>();
+        private final Set<Object> res = new HashSet<Object>();
 
         /**
          * 
