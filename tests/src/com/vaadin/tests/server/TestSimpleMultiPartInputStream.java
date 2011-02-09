@@ -33,7 +33,7 @@ public class TestSimpleMultiPartInputStream extends TestCase {
         } catch (IOException e) {
             throw new IOException(e.getMessage() + "; expected "
                     + new String(expected) + " but got "
-                    + resultStream.toString(), e);
+                    + resultStream.toString());
         }
         if (!Arrays.equals(expected, resultStream.toByteArray())) {
             throw new Exception("Mismatch: expected " + new String(expected)
@@ -70,6 +70,10 @@ public class TestSimpleMultiPartInputStream extends TestCase {
         checkBoundaryDetection("aaxyz123", "aa", "");
         checkBoundaryDetection("axyzaa123", "aa", "axyz");
         checkBoundaryDetection("xyz123aa", "aa", "xyz123");
+    }
+
+    public void testRepeatingNewlineBoundary() throws Exception {
+        checkBoundaryDetection("1234567890\n\n1234567890", "\n\n", "");
     }
 
     public void testRepeatingStringBoundary() throws Exception {
