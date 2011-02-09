@@ -52,7 +52,9 @@
 	<target name="create-tests" depends="remove-temp-testclasses" if="server.start.succeeded">
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 
-		<java classname="com.vaadin.testbench.util.TestConverter" classpathref="classpath">
+		<java classname="com.vaadin.testbench.util.TestConverter" classpathref="classpath" fork="true">
+			<jvmarg value="-Duser.language=en"/>
+			<jvmarg value="-Duser.country=US"/>
 			<arg value="${test-output-dir}" />
 			<arg value="${browsers}" />
 			<arg line="${testfiles}" />
