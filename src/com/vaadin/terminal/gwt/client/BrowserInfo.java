@@ -169,6 +169,10 @@ public class BrowserInfo {
         return browserDetails.isIE();
     }
 
+    public boolean isFirefox() {
+        return browserDetails.isFirefox();
+    }
+
     public boolean isSafari() {
         return browserDetails.isSafari();
     }
@@ -211,6 +215,11 @@ public class BrowserInfo {
         // FIXME: Should use browserVersion
         return browserDetails.isFirefox()
                 && browserDetails.getBrowserEngineVersion() == 1.9;
+    }
+
+    public boolean isFF4() {
+        return browserDetails.isFirefox()
+                && browserDetails.getBrowserMajorVersion() == 4;
     }
 
     /**
