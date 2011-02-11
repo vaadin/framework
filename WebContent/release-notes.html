@@ -32,91 +32,30 @@
   <li><a href="#requirements">Requirements</a></li>
 </ul>
 
-<p>Vaadin @version@ is an update release for Vaadin 6. In addition to various fixes, it
-contains a number of significant enhancements.</p>
+<p>Vaadin @version@ is a maintenance release for Vaadin 6.5. It contains several important fixes.</p>
 
-<h3>Enhancements</h3>
+<h3>Critical fixes</h3>
 
-<ul>
-  <li>Implemented server-side logging using <tt>java.util.logging</tt>, allowing you to specify log levels and get
-      rid of unnecessary messages. See <a href="http://dev.vaadin.com/ticket/5715">#5715</a> for more info.
-  </li>
-  <li>GWT has been updated to version 2.1.1</li>
-  <li>Widget set builder has been optimized to only look for paintables in Vaadin add-on jars (containing an add-on manifest).
-      If you are packaging your own widgets into a JAR file, ensure they also contain the
-      <a href="http://dev.vaadin.com/wiki/VaadinAddon">Vaadin add-on manifest</a>.</li>
-  <li><b>TwinColSelect</b> supports separate captions for the right and left selects (<a href="http://dev.vaadin.com/ticket/2942">#2942</a>)</li>
-  <li><b>TextField</b> supports sending of <b>TextChangeEvent</b>s as the user types. (<a href="http://dev.vaadin.com/ticket/2387">#2387</a>)</li>
-  <li>Localization of <b>LoginForm</b>. (<a href="http://dev.vaadin.com/ticket/5226">#5226</a>)</li>
-  <li>Tooltip support for <b>MenuBar</b> items. (<a href="http://dev.vaadin.com/ticket/5919">#5919</a>)</li>
-  <li>All component containers support <tt>getComponentCount()</tt>.</li>
-  <li>Sub windows now support focus and blur events. (<a href="http://dev.vaadin.com/ticket/5039">#5039</a>)</li>
-  <li>Sub windows now support server side re-ordering. (<a href="http://dev.vaadin.com/ticket/5037">#5037</a>)</li>
-  <li>Fixed a possible cross site scripting (XSS) attack. (<a href="http://dev.vaadin.com/ticket/6200">#6200</a>))</li>
-  <li>BeanItemContainer has been refactored and a more flexible BeanContainer has been added.</li>
-</ul>
+<p>
+  Vaadin 6.5.0 contained a critical bug where the upload component would cause uploads to be corrupted.
+  This has been fixed in @version@ and thus everyone is recommended to update to @version@. (<a href="http://dev.vaadin.com/ticket/6361">#6361</a>)
+</p>
 
 <h3>Backward Incompatible Changes</h3>
 
 <p>The following changes can break backward compatibility in applications using an earlier version of Vaadin:</p>
 
 <ul>
-  <li>The <tt>setColumnCollapsed()</tt> method in <b>Table</b> throws <b>IllegalStateException</b> instead of <b>IllegalAccessException</b> if collapsing is not allowed.</li>
-  <li>The <tt>removeWindow(Window)</tt> method in <b>Window</b> now triggers window close listeners also when called explicitly.
-      See <a href="http://dev.vaadin.com/ticket/3865">#3865</a> for more info.
-  </li>
-  <li><b>RichTextArea</b> no longer extends <b>TextField</b> as it cannot implement (and never has) a large part of the <b>TextField</b> API.</li>
-  <li>The client side window implementation has changed because of <a href="http://dev.vaadin.com/ticket/5039">#5039</a> and therefore TestBench scripts may not be 100% compatible. 
-  		Replaces locators like "<tt>VWindow[0]/ScrollPanel[0]...</tt>" with "<tt>VWindow[0]/FocusableScrollPanel[0]...</tt>". An example regular 
-  		expression for replacement: Search "<tt>VWindow\[(\d)\]/ScrollPanel\[0\]</tt>" and replace with "<tt>VWindow[$1]/FocusableScrollPanel[0]</tt>".</li>
-  <li><tt>AbstractStringValidator</tt> and now converts non-String values using <tt>toString()</tt> prior to validation (<a href="http://dev.vaadin.com/ticket/5785">#5785</a>).
-  This also affects most built-in validators such as <b>IntegerValidator</b>.</li>
-  <li>TestBench scripts recorded in portals with earlier versions of Vaadin will need to be updated to work with @version@ a "v-" has been prefixed to the ID of the DIV element where the Vaadin application is placed (<a href="http://dev.vaadin.com/ticket/5912">#5912</a>). The test scripts can be fixed by prepending the "v-" to the id (e.g. <tt>vaadin=VaadinLiferayThemePortlet_WAR_demo_LAYOUT_10418</tt> should be changed to <tt>vaadin=v-VaadinLiferayThemePortlet_WAR_demo_LAYOUT_10418</tt>) or alternatively re-recording the test.</li>
+  <li>
+    Due to the fix for IE8 compatibility mode (<a href="http://dev.vaadin.com/ticket/6336">#6336</a>) a request parameter has been added to 
+    the <tt>writeAjaxPageHtmlBodyStart</tt>, <tt>writeAjaxPageHtmlHeader</tt>, <tt>writeAjaxPageHtmlHeadStart</tt> and
+    <tt>writeAjaxPageHtmlMainDiv</tt> methods of <b>AbstractApplicationServlet</b>.
+   </li>
 </ul>
-
-<h3>Other Changes</h3>
-
-<p>The following backwards compatible class/method changes have been made:</p>
-
-<ul>
-  <li><b>SplitPanel</b> has been deprecated in favor of <b>VerticalSplitPanel</b> and <b>HorizontalSplitPanel</b>.</li>
-  <li><b>TextArea</b> has been split from <b>TextField</b> to a separate component. As a result, the <tt>setRows()</tt> method in TextField has been deprecated.</li>
-  <li><b>PasswordField</b> has been split from <b>TextField</b> to a separate component. As a result, the <tt>setSecret()</tt> method in <b>TextField</b> has been deprecated.</li>
-  <li>The <tt>setSwitchMode()</tt> method in <b>Button</b> has been deprecated in favor of the separate <b>CheckBox</b> component. Remember to set <b>CheckBox</b> in immediate mode.</li>
-  <li><b>ItemClickSource</b> has been renamed to <b>ItemClickNotifier</b> for consistency with other classes.</li>
-  <li>The WidgetSet updater no longer takes other GWT modules than WidgetSets into account when updating the WidgetSet.</li>
-</ul>
-
-<h3>Theme changes</h3>
-
-<p>The following changes have to be made to themes created for earlier versions of Vaadin in order for them to work correctly with Vaadin @version@:</p>
-
-<ul>
-	<li>Due to the fixes for tickets <a href="http://dev.vaadin.com/ticket/5066">#5066</a> and <a href="http://dev.vaadin.com/ticket/2681">#2681</a>,
-		the <b>Table</b> component has a slightly changed DOM structure in it's header.</li>
-	<ul>
-		<li>The sort indicator (arrow icon) has been moved from being the background of the "caption container" DIV, to it's very own DIV. This DIV
-			can be styled by the <tt>.v-table-sort-indicator</tt> selector. Sort indicator images can thus no longer be placed in the
-			<tt>.v-table-caption-container</tt> DIV.</li>
-	</ul>
-	<li><b>TwinColSelect</b> DOM structure has changed slightly to support captions for the left and right column.</li>
-	<li><b>TwinColSelect</b> now supports <tt>.v-select-twincol-caption-left</tt> and <tt>.v-select-twincol-caption-right</tt> for the left and right captions.</li>
-</ul>
-
-<p>New themeing possibilities:</p>
-<ul>
-	<li><b>Table</b></li>
-	<ul>
-		<li>All cells in a sorted column now get the <tt>.v-table-cell-content-sorted</tt> CSS class, allowing styling of the sorted items.</li>
-		<li>The alignment of the column captions can now be changed in CSS by styling the <tt>.v-table-caption-container-align-[left|center|right]</tt>
-			CSS classes. This makes it possible to align all captions left, for instance.</li>
-	</ul>
-</ul>
-
 
 <h3>Change Log, Future Releases, and Upgrading</h3>
 
-<p>See this <a href="http://dev.vaadin.com/query?status=closed&group=resolution&order=priority&col=id&col=summary&col=owner&col=type&col=priority&col=component&col=version&milestone=Vaadin+6.5.0.pre1&milestone=Vaadin+6.5.0.pre2&milestone=Vaadin+6.5.0">list of closed tickets</a> for a
+<p>See this <a href="http://dev.vaadin.com/query?status=closed&group=resolution&order=priority&col=id&col=summary&col=owner&col=type&col=priority&col=component&col=version&milestone=Vaadin+@version@">list of closed tickets</a> for a
 full list of tickets fixed in this release.</p>
 
 <p>Problem fixes and enhancements planned for upcoming releases can be found in the <a
