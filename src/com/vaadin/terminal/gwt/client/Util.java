@@ -1041,4 +1041,36 @@ public class Util {
 
     }
 
+    /**
+     * A helper method to return the client position from an event. Returns
+     * position from either first changed touch (if touch event) or from the
+     * event itself.
+     * 
+     * @param event
+     * @return
+     */
+    public static int getTouchOrMouseClientX(Event event) {
+        if ((event.getTypeInt() & Event.TOUCHEVENTS) > 0) {
+            return event.getChangedTouches().get(0).getClientX();
+        } else {
+            return event.getClientX();
+        }
+    }
+
+    /**
+     * A helper method to return the client position from an event. Returns
+     * position from either first changed touch (if touch event) or from the
+     * event itself.
+     * 
+     * @param event
+     * @return
+     */
+    public static int getTouchOrMouseClientY(Event event) {
+        if ((event.getTypeInt() & Event.TOUCHEVENTS) > 0) {
+            return event.getChangedTouches().get(0).getClientY();
+        } else {
+            return event.getClientY();
+        }
+    }
+
 }
