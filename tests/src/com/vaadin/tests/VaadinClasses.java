@@ -68,7 +68,7 @@ public class VaadinClasses {
         return classes;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static List<Class<? extends AbstractComponentTest<?>>> getBasicComponentTests() {
         try {
             return (List) findClasses(AbstractComponentTest.class,
