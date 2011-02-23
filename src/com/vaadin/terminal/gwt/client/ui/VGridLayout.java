@@ -1111,17 +1111,17 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
     }
 
     /**
-     * Returns the child component which contains "element". The child component
-     * is also returned if "element" is part of its caption.
+     * Returns the deepest nested child component which contains "element". The
+     * child component is also returned if "element" is part of its caption.
      * 
      * @param element
-     *            An element that is a sub element of the root element in this
-     *            layout
+     *            An element that is a nested sub element of the root element in
+     *            this layout
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
      */
     private Paintable getComponent(Element element) {
-        return Util.getChildPaintableForElement(client, this, element);
+        return Util.getPaintableForElement(client, this, element);
     }
 
 }

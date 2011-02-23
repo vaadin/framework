@@ -253,8 +253,8 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
         }
 
         private Paintable getComponent(Element element) {
-            return Util.getChildPaintableForElement(client, VCssLayout.this,
-                    element);
+            return Util
+                    .getPaintableForElement(client, VCssLayout.this, element);
         }
 
     }

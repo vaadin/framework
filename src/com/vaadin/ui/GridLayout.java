@@ -1392,9 +1392,14 @@ public class GridLayout extends AbstractLayout implements
     private void fireClick(Map<String, Object> parameters) {
         MouseEventDetails mouseDetails = MouseEventDetails
                 .deSerialize((String) parameters.get("mouseDetails"));
-        Component childComponent = (Component) parameters.get("component");
+        Component clickedComponent = (Component) parameters.get("component");
+        Component childComponent = clickedComponent;
+        while (childComponent != null && !components.contains(childComponent)) {
+            childComponent = childComponent.getParent();
+        }
 
-        fireEvent(new LayoutClickEvent(this, mouseDetails, childComponent));
+        fireEvent(new LayoutClickEvent(this, mouseDetails, clickedComponent,
+                childComponent));
     }
 
     /**
