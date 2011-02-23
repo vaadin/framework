@@ -367,5 +367,7 @@ public class ShortcutAction extends Action {
         public static final int CTRL = 17;
 
         public static final int ALT = 18;
+
+        public static final int META = 91;
     }
 }
