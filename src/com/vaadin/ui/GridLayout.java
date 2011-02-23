@@ -16,7 +16,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout;
 
 /**
@@ -44,7 +44,7 @@ import com.vaadin.terminal.gwt.client.ui.VGridLayout;
 public class GridLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler {
 
-    private static final String CLICK_EVENT = VGridLayout.CLICK_EVENT_IDENTIFIER;
+    private static final String CLICK_EVENT = EventId.LAYOUT_CLICK;
 
     /**
      * Initial grid columns.
@@ -1376,30 +1376,6 @@ public class GridLayout extends AbstractLayout implements
     @Deprecated
     public void setComponentAlignment(Component component, String alignment) {
         AlignmentUtils.setComponentAlignment(this, component, alignment);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
-
-        if (variables.containsKey(CLICK_EVENT)) {
-            fireClick((Map<String, Object>) variables.get(CLICK_EVENT));
-        }
-
-    }
-
-    private void fireClick(Map<String, Object> parameters) {
-        MouseEventDetails mouseDetails = MouseEventDetails
-                .deSerialize((String) parameters.get("mouseDetails"));
-        Component clickedComponent = (Component) parameters.get("component");
-        Component childComponent = clickedComponent;
-        while (childComponent != null && !components.contains(childComponent)) {
-            childComponent = childComponent.getParent();
-        }
-
-        fireEvent(new LayoutClickEvent(this, mouseDetails, clickedComponent,
-                childComponent));
     }
 
     /**

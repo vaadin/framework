@@ -15,7 +15,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout;
 
 /**
@@ -27,7 +27,7 @@ import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout;
 @ClientWidget(VAbsoluteLayout.class)
 public class AbsoluteLayout extends AbstractLayout {
 
-    private static final String CLICK_EVENT = VAbsoluteLayout.CLICK_EVENT_IDENTIFIER;
+    private static final String CLICK_EVENT = EventId.LAYOUT_CLICK;
 
     // The components in the layout
     private Collection<Component> components = new LinkedHashSet<Component>();
@@ -558,41 +558,6 @@ public class AbsoluteLayout extends AbstractLayout {
             component.paint(target);
             target.endTag("cc");
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
-     * java.util.Map)
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
-        if (variables.containsKey(CLICK_EVENT)) {
-            fireClick((Map<String, Object>) variables.get(CLICK_EVENT));
-        }
-
-    }
-
-    /**
-     * Fires a click event when the layout is clicked
-     * 
-     * @param parameters
-     *            The parameters recieved from the client side implementation
-     */
-    private void fireClick(Map<String, Object> parameters) {
-        MouseEventDetails mouseDetails = MouseEventDetails
-                .deSerialize((String) parameters.get("mouseDetails"));
-        Component clickedComponent = (Component) parameters.get("component");
-        Component childComponent = clickedComponent;
-        while (childComponent != null && !components.contains(childComponent)) {
-            childComponent = childComponent.getParent();
-        }
-
-        fireEvent(new LayoutClickEvent(this, mouseDetails, clickedComponent,
-                childComponent));
     }
 
     /**

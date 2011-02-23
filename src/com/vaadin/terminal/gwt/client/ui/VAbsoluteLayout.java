@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
+import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -38,8 +39,6 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
 
     /** Class name, prefix in styling */
     public static final String CLASSNAME = "v-absolutelayout";
-
-    public static final String CLICK_EVENT_IDENTIFIER = "click";
 
     private DivElement marginElement;
 
@@ -58,7 +57,7 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
     private boolean rendering;
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
-            this, CLICK_EVENT_IDENTIFIER) {
+            this, EventId.LAYOUT_CLICK) {
 
         @Override
         protected Paintable getChildComponent(Element element) {

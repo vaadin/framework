@@ -14,14 +14,13 @@ import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.VOrderedLayout;
+import com.vaadin.terminal.gwt.client.EventId;
 
 @SuppressWarnings("serial")
 public abstract class AbstractOrderedLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler {
 
-    private static final String CLICK_EVENT = VOrderedLayout.CLICK_EVENT_IDENTIFIER;
+    private static final String CLICK_EVENT = EventId.LAYOUT_CLICK;
 
     private static final Alignment ALIGNMENT_DEFAULT = Alignment.TOP_LEFT;
 
@@ -348,29 +347,6 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     @Deprecated
     public void setComponentAlignment(Component component, String alignment) {
         AlignmentUtils.setComponentAlignment(this, component, alignment);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
-        if (variables.containsKey(CLICK_EVENT)) {
-            fireClick((Map<String, Object>) variables.get(CLICK_EVENT));
-        }
-
-    }
-
-    private void fireClick(Map<String, Object> parameters) {
-        MouseEventDetails mouseDetails = MouseEventDetails
-                .deSerialize((String) parameters.get("mouseDetails"));
-        Component clickedComponent = (Component) parameters.get("component");
-        Component childComponent = clickedComponent;
-        while (childComponent != null && !components.contains(childComponent)) {
-            childComponent = childComponent.getParent();
-        }
-
-        fireEvent(new LayoutClickEvent(this, mouseDetails, clickedComponent,
-                childComponent));
     }
 
     /**

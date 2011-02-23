@@ -6,14 +6,13 @@ package com.vaadin.ui;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.ui.VCssLayout;
 
 /**
@@ -60,7 +59,7 @@ import com.vaadin.terminal.gwt.client.ui.VCssLayout;
 @ClientWidget(VCssLayout.class)
 public class CssLayout extends AbstractLayout {
 
-    private static final String CLICK_EVENT = VCssLayout.CLICK_EVENT_IDENTIFIER;
+    private static final String CLICK_EVENT = EventId.LAYOUT_CLICK;
 
     /**
      * Custom layout slots containing the components.
@@ -248,30 +247,6 @@ public class CssLayout extends AbstractLayout {
 
             requestRepaint();
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
-
-        if (variables.containsKey(CLICK_EVENT)) {
-            fireClick((Map<String, Object>) variables.get(CLICK_EVENT));
-        }
-
-    }
-
-    private void fireClick(Map<String, Object> parameters) {
-        MouseEventDetails mouseDetails = MouseEventDetails
-                .deSerialize((String) parameters.get("mouseDetails"));
-        Component clickedComponent = (Component) parameters.get("component");
-        Component childComponent = clickedComponent;
-        while (childComponent != null && !components.contains(childComponent)) {
-            childComponent = childComponent.getParent();
-        }
-
-        fireEvent(new LayoutClickEvent(this, mouseDetails, clickedComponent,
-                childComponent));
     }
 
     /**
