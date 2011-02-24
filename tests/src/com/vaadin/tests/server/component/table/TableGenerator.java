@@ -1,10 +1,11 @@
 package com.vaadin.tests.server.component.table;
 
+import org.junit.Test;
+
 import com.vaadin.data.Item;
 import com.vaadin.ui.Table;
 
-// abstract so that the automated testing framework would not try to run this
-public abstract class TableGenerator {
+public class TableGenerator {
     public static Table createTableWithDefaultContainer(int properties,
             int items) {
         Table t = new Table();
@@ -22,6 +23,20 @@ public abstract class TableGenerator {
         }
 
         return t;
+    }
+
+    @Test
+    public void testTableGenerator() {
+        Table t = createTableWithDefaultContainer(1, 1);
+        junit.framework.Assert.assertEquals(t.size(), 1);
+        junit.framework.Assert.assertEquals(t.getContainerPropertyIds().size(),
+                1);
+
+        t = createTableWithDefaultContainer(100, 50);
+        junit.framework.Assert.assertEquals(t.size(), 50);
+        junit.framework.Assert.assertEquals(t.getContainerPropertyIds().size(),
+                100);
+
     }
 
 }
