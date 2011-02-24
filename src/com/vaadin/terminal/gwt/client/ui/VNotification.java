@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.EventObject;
 import java.util.Iterator;
 
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -255,6 +256,10 @@ public class VNotification extends VOverlay {
                     fade();
                     return false;
                 }
+            } else if (type == Event.ONKEYDOWN
+                    && event.getKeyCode() == KeyCodes.KEY_ESCAPE) {
+                fade();
+                return false;
             }
             if (temporaryStyle == STYLE_SYSTEM) {
                 return true;
