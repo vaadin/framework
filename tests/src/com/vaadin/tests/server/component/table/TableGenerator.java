@@ -3,7 +3,8 @@ package com.vaadin.tests.server.component.table;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Table;
 
-public class TableGenerator {
+// abstract so that the automated testing framework would not try to run this
+public abstract class TableGenerator {
     public static Table createTableWithDefaultContainer(int properties,
             int items) {
         Table t = new Table();
