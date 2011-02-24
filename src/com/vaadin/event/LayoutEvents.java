@@ -3,6 +3,7 @@
  */
 package com.vaadin.event;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import com.vaadin.event.MouseEvents.ClickEvent;
@@ -25,6 +26,53 @@ public interface LayoutEvents {
          *            Component click event.
          */
         public void layoutClick(LayoutClickEvent event);
+    }
+
+    /**
+     * The interface for adding and removing <code>LayoutClickEvent</code>
+     * listeners. By implementing this interface a class explicitly announces
+     * that it will generate a <code>LayoutClickEvent</code> when a component
+     * inside it is clicked and a <code>LayoutClickListener</code> is
+     * registered.
+     * <p>
+     * Note: The general Java convention is not to explicitly declare that a
+     * class generates events, but to directly define the
+     * <code>addListener</code> and <code>removeListener</code> methods. That
+     * way the caller of these methods has no real way of finding out if the
+     * class really will send the events, or if it just defines the methods to
+     * be able to implement an interface.
+     * </p>
+     * 
+     * @since 6.5.2
+     * @see LayoutClickListener
+     * @see LayoutClickEvent
+     */
+    public interface LayoutClickNotifier extends Serializable {
+        /**
+         * Add a click listener to the layout. The listener is called whenever
+         * the user clicks inside the layout. An event is also triggered when
+         * the click targets a component inside a nested layout or Panel,
+         * provided the targeted component does not prevent the click event from
+         * propagating. A caption is not considered part of a component.
+         * 
+         * The child component that was clicked is included in the
+         * {@link LayoutClickEvent}.
+         * 
+         * Use {@link #removeListener(LayoutClickListener)} to remove the
+         * listener.
+         * 
+         * @param listener
+         *            The listener to add
+         */
+        public void addListener(LayoutClickListener listener);
+
+        /**
+         * Removes an LayoutClickListener.
+         * 
+         * @param listener
+         *            LayoutClickListener to be removed
+         */
+        public void removeListener(LayoutClickListener listener);
     }
 
     /**

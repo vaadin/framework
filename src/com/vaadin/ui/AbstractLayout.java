@@ -7,6 +7,7 @@ package com.vaadin.ui;
 import java.util.Map;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.EventId;
@@ -95,7 +96,8 @@ public abstract class AbstractLayout extends AbstractComponentContainer
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
         // not all subclasses use these events
-        if (variables.containsKey(CLICK_EVENT)) {
+        if (this instanceof LayoutClickNotifier
+                && variables.containsKey(CLICK_EVENT)) {
             fireClick((Map<String, Object>) variables.get(CLICK_EVENT));
         }
 
@@ -104,11 +106,12 @@ public abstract class AbstractLayout extends AbstractComponentContainer
     /**
      * Fire a layout click event.
      * 
-     * Note that this is only used by the subclasses that support layout click
-     * listeners, and can be overridden for custom click event firing.
+     * Note that this method is only used by the subclasses that implement
+     * {@link LayoutClickNotifier}, and can be overridden for custom click event
+     * firing.
      * 
      * @param parameters
-     *            The parameters recieved from the client side implementation
+     *            The parameters received from the client side implementation
      */
     protected void fireClick(Map<String, Object> parameters) {
         MouseEventDetails mouseDetails = MouseEventDetails

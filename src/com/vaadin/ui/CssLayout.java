@@ -9,6 +9,7 @@ import java.util.LinkedList;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
+import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Paintable;
@@ -57,7 +58,7 @@ import com.vaadin.terminal.gwt.client.ui.VCssLayout;
  * 
  */
 @ClientWidget(VCssLayout.class)
-public class CssLayout extends AbstractLayout {
+public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
 
     private static final String CLICK_EVENT = EventId.LAYOUT_CLICK;
 
@@ -249,33 +250,11 @@ public class CssLayout extends AbstractLayout {
         }
     }
 
-    /**
-     * Add a click listener to the layout. The listener is called whenever the
-     * user clicks inside the layout. Also when the click targets a component
-     * inside the Panel, provided the targeted component does not prevent the
-     * click event from propagating. A caption is not considered part of a
-     * component.
-     * 
-     * The child component that was clicked is included in the
-     * {@link LayoutClickEvent}.
-     * 
-     * Use {@link #removeListener(LayoutClickListener)} to remove the listener.
-     * 
-     * @param listener
-     *            The listener to add
-     */
     public void addListener(LayoutClickListener listener) {
         addListener(CLICK_EVENT, LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
     }
 
-    /**
-     * Remove a click listener from the layout. The listener should earlier have
-     * been added using {@link #addListener(LayoutClickListener)}.
-     * 
-     * @param listener
-     *            The listener to remove
-     */
     public void removeListener(LayoutClickListener listener) {
         removeListener(CLICK_EVENT, LayoutClickEvent.class, listener);
     }
