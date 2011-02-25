@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.datefield;
 
-import java.sql.Date;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -21,6 +22,9 @@ public class DateFieldEmptyValid extends TestBase {
     private Log log;
 
     private MyDateField df;
+
+    private DateFormat formatter = DateFormat.getDateTimeInstance(
+            DateFormat.LONG, DateFormat.LONG, new Locale("en", "US"));
 
     public class MyDateField extends PopupDateField {
         @Override
@@ -115,7 +119,13 @@ public class DateFieldEmptyValid extends TestBase {
     }
 
     private void checkEmpty() {
-        log.log("DateField value is now " + df.getValue());
+        Object value = df.getValue();
+        if (value instanceof Date) {
+            value = formatter.format(df.getValue());
+        }
+
+        log.log("DateField value is now " + value);
+        // log.log("DateField value is now " + df.getValue());
         log.log("isEmpty: " + df.isEmpty() + ", isValid: " + df.isValid());
     }
 
