@@ -77,8 +77,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
     private String width = "notinited";
 
-    private VLazyExecutor iconLoadedExecutioner = new VLazyExecutor(
-            100, new ScheduledCommand() {
+    private VLazyExecutor iconLoadedExecutioner = new VLazyExecutor(100,
+            new ScheduledCommand() {
 
                 public void execute() {
                     iLayout(true);
@@ -578,13 +578,6 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      * @param item
      */
     public void showChildMenu(CustomMenuItem item) {
-        final int shadowSpace = 10;
-
-        popup = new VOverlay(true, false, true);
-        popup.setStyleName(CLASSNAME + "-popup");
-        popup.setWidget(item.getSubMenu());
-        popup.addCloseHandler(this);
-        popup.addAutoHidePartner(item.getElement());
 
         int left = 0;
         int top = 0;
@@ -597,6 +590,18 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             top = item.getParentMenu().getAbsoluteTop()
                     + item.getParentMenu().getOffsetHeight();
         }
+        showChildMenuAt(item, top, left);
+    }
+
+    protected void showChildMenuAt(CustomMenuItem item, int top, int left) {
+        final int shadowSpace = 10;
+
+        popup = new VOverlay(true, false, true);
+        popup.setStyleName(CLASSNAME + "-popup");
+        popup.setWidget(item.getSubMenu());
+        popup.addCloseHandler(this);
+        popup.addAutoHidePartner(item.getElement());
+
         popup.setPopupPosition(left, top);
 
         item.getSubMenu().onShow();
@@ -758,7 +763,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      * A class to hold information on menu items
      * 
      */
-    private class CustomMenuItem extends Widget implements HasHTML {
+    protected static class CustomMenuItem extends Widget implements HasHTML {
 
         private ApplicationConnection client;
 
