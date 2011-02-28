@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
+import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
@@ -33,14 +34,13 @@ import com.vaadin.terminal.gwt.client.ValueMap;
 public class VCssLayout extends SimplePanel implements Paintable, Container {
     public static final String TAGNAME = "csslayout";
     public static final String CLASSNAME = "v-" + TAGNAME;
-    public static final String CLICK_EVENT_IDENTIFIER = "click";
 
     private FlowPane panel = new FlowPane();
 
     private Element margin = DOM.createDiv();
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
-            this, CLICK_EVENT_IDENTIFIER) {
+            this, EventId.LAYOUT_CLICK) {
 
         @Override
         protected Paintable getChildComponent(Element element) {
@@ -253,8 +253,8 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
         }
 
         private Paintable getComponent(Element element) {
-            return Util.getChildPaintableForElement(client, VCssLayout.this,
-                    element);
+            return Util
+                    .getPaintableForElement(client, VCssLayout.this, element);
         }
 
     }

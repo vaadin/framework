@@ -1564,14 +1564,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * If one needs to override parts of the host page, it is suggested that one
      * overrides on of several submethods which are called by this method:
      * <ul>
-     * <li> {@link #setAjaxPageHeaders(HttpServletResponse)}
-     * <li> {@link #writeAjaxPageHtmlHeadStart(BufferedWriter)}
-     * <li> {@link #writeAjaxPageHtmlHeader(BufferedWriter, String, String)}
-     * <li> {@link #writeAjaxPageHtmlBodyStart(BufferedWriter)}
+     * <li> {@link #setAjaxPageHeaders(HttpServletResponse)
+     * <li> {@link #writeAjaxPageHtmlHeadStart(BufferedWriter, HttpServletRequest)
+     * <li> {@link #writeAjaxPageHtmlHeader(BufferedWriter, String, String, HttpServletRequest)
+     * <li> {@link #writeAjaxPageHtmlBodyStart(BufferedWriter, HttpServletRequest)
      * <li>
-     * {@link #writeAjaxPageHtmlVaadinScripts(Window, String, Application, BufferedWriter, String, String, String, String, String, String)}
+     * {@link #writeAjaxPageHtmlVaadinScripts(Window, String, Application, BufferedWriter, String, String, String, HttpServletRequest)
      * <li>
-     * {@link #writeAjaxPageHtmlMainDiv(BufferedWriter, String, String, String)}
+     * {@link #writeAjaxPageHtmlMainDiv(BufferedWriter, String, String, String, HttpServletRequest)
      * <li> {@link #writeAjaxPageHtmlBodyEnd(BufferedWriter)}
      * </ul>
      * 
@@ -1622,9 +1622,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
         if (!fragment) {
             setAjaxPageHeaders(response);
-            writeAjaxPageHtmlHeadStart(page);
-            writeAjaxPageHtmlHeader(page, title, themeUri);
-            writeAjaxPageHtmlBodyStart(page);
+            writeAjaxPageHtmlHeadStart(page, request);
+            writeAjaxPageHtmlHeader(page, title, themeUri, request);
+            writeAjaxPageHtmlBodyStart(page, request);
         }
 
         String appId = appUrl;
@@ -1669,7 +1669,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     + "\"";
         }
 
-        writeAjaxPageHtmlMainDiv(page, appId, classNames, divStyle);
+        writeAjaxPageHtmlMainDiv(page, appId, classNames, divStyle, request);
 
         if (!fragment) {
             page.write("</body>\n</html>\n");
@@ -1737,10 +1737,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @param appId
      * @param classNames
      * @param divStyle
+     * @param request 
      * @throws IOException
      */
     protected void writeAjaxPageHtmlMainDiv(final BufferedWriter page,
-            String appId, String classNames, String divStyle)
+            String appId, String classNames, String divStyle, HttpServletRequest request)
             throws IOException {
         page.write("<div id=\"" + appId + "\" class=\"" + classNames + "\" "
                 + (divStyle != null ? divStyle : "") + "></div>\n");
@@ -1913,10 +1914,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * Override this method if you want to add some custom html to the page.
      * 
      * @param page
+     * @param request
      * @throws IOException
      */
-    protected void writeAjaxPageHtmlBodyStart(final BufferedWriter page)
-            throws IOException {
+    protected void writeAjaxPageHtmlBodyStart(final BufferedWriter page,
+            final HttpServletRequest request) throws IOException {
         page.write("\n</head>\n<body scroll=\"auto\" class=\""
                 + ApplicationConnection.GENERATED_BODY_CLASSNAME + "\">\n");
     }
@@ -1930,15 +1932,26 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @param page
      * @param title
      * @param themeUri
+     * @param request
      * @throws IOException
      */
     protected void writeAjaxPageHtmlHeader(final BufferedWriter page,
-            String title, String themeUri) throws IOException {
+            String title, String themeUri, final HttpServletRequest request)
+            throws IOException {
         page.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
 
-        // Force IE9 into IE8 mode. Remove when IE 9 mode works (#5546), chrome
-        // frame if available #5261
-        page.write("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=8,chrome=1\"/>\n");
+        WebBrowser browser = getApplicationContext(request.getSession())
+                .getBrowser();
+        if (browser.isIE()) {
+            // Chrome frame in all versions of IE (only if Chrome frame is
+            // installed)
+            if (browser.getBrowserMajorVersion() == 9) {
+                // Force IE9 into IE8 mode. Remove when IE 9 mode works (#5546)
+                page.write("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=8,chrome=1\"/>\n");
+            } else {
+                page.write("<meta http-equiv=\"X-UA-Compatible\" content=\"chrome=1\"/>\n");
+            }
+        }
 
         page.write("<style type=\"text/css\">"
                 + "html, body {height:100%;margin:0;}</style>");
@@ -1962,10 +1975,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * beginning of the page.
      * 
      * @param page
+     * @param request
      * @throws IOException
      */
-    protected void writeAjaxPageHtmlHeadStart(final BufferedWriter page)
-            throws IOException {
+    protected void writeAjaxPageHtmlHeadStart(final BufferedWriter page,
+            final HttpServletRequest request) throws IOException {
         // write html header
         page.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD "
                 + "XHTML 1.0 Transitional//EN\" "

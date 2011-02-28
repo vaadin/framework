@@ -85,6 +85,8 @@ import com.vaadin.ui.Window;
 public abstract class AbstractCommunicationManager implements
         Paintable.RepaintRequestListener, Serializable {
 
+    private static final String DASHDASH = "--";
+
     private static final Logger logger = Logger
             .getLogger(AbstractCommunicationManager.class.getName());
 
@@ -382,8 +384,6 @@ public abstract class AbstractCommunicationManager implements
             Response response, StreamVariable streamVariable,
             String variableName, VariableOwner owner, String boundary)
             throws IOException {
-        boundary = CRLF + "--" + boundary + "--";
-
         // multipart parsing, supports only one file for request, but that is
         // fine for our current terminal
 
@@ -417,7 +417,8 @@ public abstract class AbstractCommunicationManager implements
             }
         }
 
-        contentLength -= (boundary.length() + 2); // 2 == CRLF
+        contentLength -= (boundary.length() + CRLF.length() + 2
+                * DASHDASH.length() + 2); // 2 == CRLF
 
         /*
          * Reads bytes from the underlying stream. Compares the read bytes to
@@ -2167,7 +2168,14 @@ public abstract class AbstractCommunicationManager implements
 
     abstract protected void cleanStreamVariable(VariableOwner owner, String name);
 
-    private static class SimpleMultiPartInputStream extends InputStream {
+    /**
+     * Stream that extracts content from another stream until the boundary
+     * string is encountered.
+     * 
+     * Public only for unit tests, should be considered private for all other
+     * purposes.
+     */
+    public static class SimpleMultiPartInputStream extends InputStream {
 
         /**
          * Counter of how many characters have been matched to boundary string
@@ -2192,7 +2200,8 @@ public abstract class AbstractCommunicationManager implements
 
         public SimpleMultiPartInputStream(InputStream realInputStream,
                 String boundaryString) {
-            boundary = boundaryString.toCharArray();
+            boundary = (CRLF + DASHDASH + boundaryString + DASHDASH)
+                    .toCharArray();
             this.realInputStream = realInputStream;
         }
 

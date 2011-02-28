@@ -816,6 +816,11 @@ public class Util {
      * <literal>element</literal> is not part of any child component, null is
      * returned.
      * 
+     * This method returns the immediate child of the parent that contains the
+     * element. See
+     * {@link #getPaintableForElement(ApplicationConnection, Container, Element)}
+     * for the deepest nested paintable of parent that contains the element.
+     * 
      * @param client
      *            A reference to ApplicationConnection
      * @param parent
@@ -845,6 +850,56 @@ public class Util {
                 } catch (ClassCastException e) {
                     // We assume everything is a widget however there is no need
                     // to crash everything if there is a paintable that is not.
+                }
+            }
+
+            element = (Element) element.getParentElement();
+        }
+
+        return null;
+    }
+
+    /**
+     * Locates the nested child component of <literal>parent</literal> which
+     * contains the element <literal>element</literal>. The child component is
+     * also returned if "element" is part of its caption. If
+     * <literal>element</literal> is not part of any child component, null is
+     * returned.
+     * 
+     * This method returns the deepest nested Paintable. See
+     * {@link #getChildPaintableForElement(ApplicationConnection, Container, Element)}
+     * for the immediate child component of parent that contains the element.
+     * 
+     * @param client
+     *            A reference to ApplicationConnection
+     * @param parent
+     *            The widget that contains <literal>element</literal>.
+     * @param element
+     *            An element that is a sub element of the parent
+     * @return The Paintable which the element is a part of. Null if the element
+     *         does not belong to a child.
+     */
+    public static Paintable getPaintableForElement(
+            ApplicationConnection client, Container parent, Element element) {
+        Element rootElement = ((Widget) parent).getElement();
+        while (element != null && element != rootElement) {
+            Paintable paintable = client.getPaintable(element);
+            if (paintable == null) {
+                String ownerPid = VCaption.getCaptionOwnerPid(element);
+                if (ownerPid != null) {
+                    paintable = client.getPaintable(ownerPid);
+                }
+            }
+
+            if (paintable != null) {
+                // check that inside the rootElement
+                while (element != null && element != rootElement) {
+                    element = (Element) element.getParentElement();
+                }
+                if (element != rootElement) {
+                    return null;
+                } else {
+                    return paintable;
                 }
             }
 

@@ -138,7 +138,7 @@ public class Components extends Application {
         naviTree.setItemStyleGenerator(new ItemStyleGenerator() {
 
             public String getStyle(Object itemId) {
-                Class<? extends AbstractComponentTest<?>> cls = (Class<? extends AbstractComponentTest<?>>) itemId;
+                Class<?> cls = (Class<?>) itemId;
                 if (!isAbstract(cls)) {
                     return "blue";
                 }
@@ -148,12 +148,13 @@ public class Components extends Application {
         HierarchicalContainer hc = new HierarchicalContainer();
         naviTree.setContainerDataSource(hc);
         DefaultItemSorter sorter = new DefaultItemSorter() {
+            @SuppressWarnings("rawtypes")
             @Override
             public int compare(Object o1, Object o2) {
                 if (o1 instanceof Class && o2 instanceof Class && o1 != null
                         && o2 != null) {
-                    Class c1 = (Class) o1;
-                    Class c2 = (Class) o2;
+                    Class<?> c1 = (Class) o1;
+                    Class<?> c2 = (Class) o2;
                     boolean a1 = isAbstract(c1);
                     boolean a2 = isAbstract(c2);
 
@@ -182,8 +183,7 @@ public class Components extends Application {
         naviTree.addListener(new ItemClickListener() {
 
             public void itemClick(ItemClickEvent event) {
-                Class<? extends AbstractComponentTest<?>> cls = (Class<? extends AbstractComponentTest<?>>) event
-                        .getItemId();
+                Class<?> cls = (Class<?>) event.getItemId();
                 if (!isAbstract(cls)) {
                     String url = baseUrl + cls.getName()
                             + "?restartApplication";
@@ -221,10 +221,11 @@ public class Components extends Application {
 
     }
 
-    protected boolean isAbstract(Class<? extends AbstractComponentTest<?>> cls) {
+    protected boolean isAbstract(Class<?> cls) {
         return Modifier.isAbstract(cls.getModifiers());
     }
 
+    @SuppressWarnings("unchecked")
     private void addTreeItem(Class<? extends AbstractComponentTest<?>> cls) {
         String name = tests.get(cls);
         if (name == null) {
@@ -250,7 +251,7 @@ public class Components extends Application {
     protected Component createTestComponent(
             Class<? extends AbstractComponentTest<?>> cls) {
         try {
-            AbstractComponentTest t = cls.newInstance();
+            AbstractComponentTest<?> t = cls.newInstance();
             t.init();
             ComponentContainer c = t.getMainWindow().getContent();
             t.getMainWindow().setContent(null);

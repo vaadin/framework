@@ -659,7 +659,7 @@ public class Table extends AbstractSelect implements Action.Container,
         int i = 0;
         for (final Iterator<Object> it = visibleColumns.iterator(); it
                 .hasNext(); i++) {
-            alignments[i++] = getColumnAlignment(it.next());
+            alignments[i] = getColumnAlignment(it.next());
         }
 
         return alignments;

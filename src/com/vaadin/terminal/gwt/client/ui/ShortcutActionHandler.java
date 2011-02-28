@@ -224,6 +224,7 @@ class ShortcutKeyCombination {
     public static final int SHIFT = 16;
     public static final int CTRL = 17;
     public static final int ALT = 18;
+    public static final int META = 91;
 
     char keyCode = 0;
     private int modifiersMask;
@@ -254,6 +255,10 @@ class ShortcutKeyCombination {
                 case SHIFT:
                     modifiersMask = modifiersMask
                             | KeyboardListener.MODIFIER_SHIFT;
+                    break;
+                case META:
+                    modifiersMask = modifiersMask
+                            | KeyboardListener.MODIFIER_META;
                     break;
                 default:
                     break;

@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Container;
+import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
@@ -34,8 +35,6 @@ import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 public class VGridLayout extends SimplePanel implements Paintable, Container {
 
     public static final String CLASSNAME = "v-gridlayout";
-
-    public static final String CLICK_EVENT_IDENTIFIER = "click";
 
     private DivElement margin = Document.get().createDivElement();
 
@@ -72,7 +71,7 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
     private boolean sizeChangedDuringRendering = false;
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
-            this, CLICK_EVENT_IDENTIFIER) {
+            this, EventId.LAYOUT_CLICK) {
 
         @Override
         protected Paintable getChildComponent(Element element) {
@@ -1111,17 +1110,17 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
     }
 
     /**
-     * Returns the child component which contains "element". The child component
-     * is also returned if "element" is part of its caption.
+     * Returns the deepest nested child component which contains "element". The
+     * child component is also returned if "element" is part of its caption.
      * 
      * @param element
-     *            An element that is a sub element of the root element in this
-     *            layout
+     *            An element that is a nested sub element of the root element in
+     *            this layout
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
      */
     private Paintable getComponent(Element element) {
-        return Util.getChildPaintableForElement(client, this, element);
+        return Util.getPaintableForElement(client, this, element);
     }
 
 }

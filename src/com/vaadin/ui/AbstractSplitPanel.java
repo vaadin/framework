@@ -387,7 +387,8 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
 
     }
 
-    private void fireClick(Map<String, Object> parameters) {
+    @Override
+    protected void fireClick(Map<String, Object> parameters) {
         MouseEventDetails mouseDetails = MouseEventDetails
                 .deSerialize((String) parameters.get("mouseDetails"));
 

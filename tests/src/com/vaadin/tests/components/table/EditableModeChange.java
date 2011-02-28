@@ -1,7 +1,9 @@
 package com.vaadin.tests.components.table;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import com.vaadin.data.Container;
 import com.vaadin.event.ItemClickEvent;
@@ -32,12 +34,12 @@ public class EditableModeChange extends TestBase {
 
         Calendar cal = Calendar.getInstance();
         cal.set(2010, 7, 12, 12, 7, 54);
-        Date date = cal.getTime();
 
         for (String name : names) {
             items.addItem(name);
             items.getItem(name).getItemProperty("name").setValue(name);
-            items.getItem(name).getItemProperty("birthday").setValue(date);
+            items.getItem(name).getItemProperty("birthday")
+                    .setValue(new FormattedDate(cal.getTime().getTime()));
         }
 
         items.addListener(new ItemClickEvent.ItemClickListener() {
@@ -53,6 +55,21 @@ public class EditableModeChange extends TestBase {
         });
 
         addComponent(items);
+    }
+
+    private class FormattedDate extends Date {
+
+        private DateFormat formatter = DateFormat.getDateTimeInstance(
+                DateFormat.MEDIUM, DateFormat.MEDIUM, new Locale("en", "US"));
+
+        public FormattedDate(long time) {
+            super(time);
+        }
+
+        @Override
+        public String toString() {
+            return formatter.format(this);
+        }
     }
 
     private class ItemFieldFactory extends DefaultFieldFactory {

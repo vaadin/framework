@@ -16,27 +16,6 @@
 	<td>/run/com.vaadin.tests.components.datefield.InlineDateFieldTest?restartApplication</td>
 	<td></td>
 </tr>
-<!--Use FI locale as DATE functions on the test clients use FI locale (for some reason...)-->
-<tr>
-	<td>mouseClick</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::PID_Smenu#item0</td>
-	<td>36,14</td>
-</tr>
-<tr>
-	<td>mouseClick</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::Root/VOverlay[0]/VMenuBar[0]#item0</td>
-	<td>37,10</td>
-</tr>
-<tr>
-	<td>mouseClick</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::Root/VOverlay[1]/VMenuBar[0]#item5</td>
-	<td>45,5</td>
-</tr>
-<tr>
-	<td>mouseClick</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::Root/VOverlay[2]/VMenuBar[0]#item1</td>
-	<td>34,10</td>
-</tr>
 <!--Day resolution-->
 <tr>
 	<td>mouseClick</td>
@@ -104,7 +83,7 @@
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::PID_SLog_row_0</td>
-	<td>4. ValueChangeEvent, new value: Dec 14, 2010 12:00:00.000</td>
+	<td>3. ValueChangeEvent, new value: Dec 14, 2010 12:00:00.000</td>
 </tr>
 <tr>
 	<td>mouseClick</td>
@@ -114,7 +93,7 @@
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::PID_SLog_row_0</td>
-	<td>5. ValueChangeEvent, new value: Dec 13, 2010 12:00:00.000</td>
+	<td>4. ValueChangeEvent, new value: Dec 13, 2010 12:00:00.000</td>
 </tr>
 <tr>
 	<td>mouseClick</td>
@@ -134,7 +113,7 @@
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::PID_SLog_row_0</td>
-	<td>6. ValueChangeEvent, new value: Dec 14, 2009 12:00:00.000</td>
+	<td>5. ValueChangeEvent, new value: Dec 14, 2009 12:00:00.000</td>
 </tr>
 <tr>
 	<td>mouseClick</td>
@@ -149,7 +128,7 @@
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::PID_SLog_row_0</td>
-	<td>7. ValueChangeEvent, new value: Jan 12, 2010 12:00:00.000</td>
+	<td>6. ValueChangeEvent, new value: Jan 12, 2010 12:00:00.000</td>
 </tr>
 <!--Set value to null and ensure nothing is selected-->
 <tr>
@@ -178,6 +157,7 @@
 	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::PID_StestComponent/domChild[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]</td>
 	<td>DATE(MMMM YYYY)</td>
 </tr>
+<!--Show value-->
 <tr>
 	<td>mouseClick</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::PID_Smenu#item1</td>
@@ -197,7 +177,7 @@
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::PID_SLog_row_0</td>
-	<td>10. InlineDateField value: null</td>
+	<td>9. InlineDateField value: null</td>
 </tr>
 <tr>
 	<td>assertCSSClass</td>
@@ -212,19 +192,39 @@
 </tr>
 <tr>
 	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::PID_StestComponent/VCalendarPanel[0]#day1</td>
+	<td>v-datefield-calendarpanel-day-selected</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::PID_StestComponent/VCalendarPanel[0]#dayDATE(D)</td>
 	<td>today</td>
 </tr>
-<!--select today and assert that the value changes (today should still be the same)-->
 <tr>
-	<td>mouseClick</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::PID_StestComponent/VCalendarPanel[0]#day1</td>
-	<td>11,10</td>
-<!-- Cannot validate month here as we use FI locale and this is printed in EN locale (#6409)... -->
-</tr><tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::PID_SLog_row_0</td>
-	<td>11. ValueChangeEvent, new value: * 1, DATE(YYYY) *</td>
+	<td>10. ValueChangeEvent, new value: DATE(MMM) 1, DATE(YYYY) *</td>
+</tr>
+<!--select 2nd and assert that the value changes (today should still be the same)-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::PID_StestComponent/VCalendarPanel[0]#day2</td>
+	<td>0,0</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::PID_StestComponent/VCalendarPanel[0]#dayDATE(D)</td>
+	<td>today</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::PID_StestComponent/VCalendarPanel[0]#day2</td>
+	<td>v-datefield-calendarpanel-day-selected</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldInlineDateFieldTest::PID_SLog_row_0</td>
+	<td>11. ValueChangeEvent, new value: DATE(MMM) 2, DATE(YYYY) *</td>
 </tr>
 </tbody></table>
 </body>

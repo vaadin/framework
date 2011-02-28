@@ -218,7 +218,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     }
 
     /**
-     * Upload.Received event is sent when the upload receives a file, regardless
+     * Upload.FinishedEvent is sent when the upload receives a file, regardless
      * of whether the reception was successful or failed. If you wish to
      * distinguish between the two cases, use either SucceededEvent or
      * FailedEvent, which are both subclasses of the FinishedEvent.
@@ -303,7 +303,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     }
 
     /**
-     * Upload.Interrupted event is sent when the upload is received, but the
+     * Upload.FailedEvent event is sent when the upload is received, but the
      * reception is interrupted for some reason.
      * 
      * @author IT Mill Ltd.
@@ -391,7 +391,8 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     }
 
     /**
-     * Upload.Success event is sent when the upload is received successfully.
+     * Upload.SucceededEvent event is sent when the upload is received
+     * successfully.
      * 
      * @author IT Mill Ltd.
      * @version
@@ -415,7 +416,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     }
 
     /**
-     * Upload.Started event is sent when the upload is started to received.
+     * Upload.StartedEvent event is sent when the upload is started to received.
      * 
      * @author IT Mill Ltd.
      * @version

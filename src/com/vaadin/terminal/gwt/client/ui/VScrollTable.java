@@ -2224,6 +2224,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         RowHeadersHeaderCell() {
             super("0", "");
+            this.setStyleName(CLASSNAME + "-header-cell-rowheader");
         }
 
         @Override
@@ -3798,7 +3799,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 if (showRowHeaders) {
                     boolean sorted = tHead.getHeaderCell(col).isSorted();
                     addCell(uidl, buildCaptionHtmlSnippet(uidl), aligns[col++],
-                            "", true, sorted);
+                            "rowheader", true, sorted);
                     visibleColumnIndex++;
                 }
 

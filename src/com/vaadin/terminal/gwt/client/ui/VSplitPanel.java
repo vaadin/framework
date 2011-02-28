@@ -536,16 +536,16 @@ public class VSplitPanel extends ComplexPanel implements Container,
             }
         }
 
+        if (origX != newX) {
+            resized = true;
+        }
+
         // Reversed position
         if (positionReversed) {
             newX = getOffsetWidth() - newX - getSplitterSize();
         }
 
         setSplitPosition(newX + "px");
-
-        if (origX != newX) {
-            resized = true;
-        }
     }
 
     private void onVerticalMouseMove(int y) {
@@ -579,16 +579,16 @@ public class VSplitPanel extends ComplexPanel implements Container,
             }
         }
 
+        if (origY != newY) {
+            resized = true;
+        }
+
         // Reversed position
         if (positionReversed) {
             newY = getOffsetHeight() - newY - getSplitterSize();
         }
 
         setSplitPosition(newY + "px");
-
-        if (origY != newY) {
-            resized = true;
-        }
     }
 
     public void onMouseUp(Event event) {
