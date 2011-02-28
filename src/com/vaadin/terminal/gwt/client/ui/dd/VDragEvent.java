@@ -14,6 +14,7 @@ import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.user.client.Element;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.Util;
 
 /**
  * DragEvent used by Vaadin client side engine. Supports components, items,
@@ -174,8 +175,8 @@ public class VDragEvent {
         if (alignImageToEvent) {
             int absoluteTop = element.getAbsoluteTop();
             int absoluteLeft = element.getAbsoluteLeft();
-            int clientX = startEvent.getClientX();
-            int clientY = startEvent.getClientY();
+            int clientX = Util.getTouchOrMouseClientX(startEvent);
+            int clientY = Util.getTouchOrMouseClientY(startEvent);
             int offsetX = absoluteLeft - clientX;
             int offsetY = absoluteTop - clientY;
             setDragImage(cloneNode, offsetX, offsetY);

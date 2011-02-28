@@ -35,6 +35,7 @@ import com.vaadin.terminal.gwt.client.ValueMap;
  * Singleton. Only one drag and drop operation can be active anyways. Use
  * {@link #get()} to get instance.
  * 
+ * TODO cancel drag and drop if more than one touches !?
  */
 public class VDragAndDropManager {
 
@@ -61,15 +62,16 @@ public class VDragAndDropManager {
             updateDragImagePosition();
 
             Element targetElement = Element.as(nativeEvent.getEventTarget());
-            if (dragElement != null && dragElement.isOrHasChild(targetElement)) {
-
+            if (Util.isTouchEvent(nativeEvent)
+                    || (dragElement != null && dragElement
+                            .isOrHasChild(targetElement))) {
                 // to detect the "real" target, hide dragelement temporary and
                 // use elementFromPoint
                 String display = dragElement.getStyle().getDisplay();
                 dragElement.getStyle().setDisplay(Display.NONE);
                 try {
-                    int x = nativeEvent.getClientX();
-                    int y = nativeEvent.getClientY();
+                    int x = Util.getTouchOrMouseClientX(nativeEvent);
+                    int y = Util.getTouchOrMouseClientY(nativeEvent);
                     // Util.browserDebugger();
                     targetElement = Util.getElementFromPoint(x, y);
                     if (targetElement == null) {
@@ -94,6 +96,7 @@ public class VDragAndDropManager {
                             // "IGNORING proxy image event, fired because of hack or not significant");
                             return;
                         case Event.ONMOUSEMOVE:
+                        case Event.ONTOUCHMOVE:
                             VDropHandler findDragTarget = findDragTarget(targetElement);
                             if (findDragTarget != currentDropHandler) {
                                 // dragleave on old
@@ -187,6 +190,7 @@ public class VDragAndDropManager {
                 }
                 break;
             case Event.ONMOUSEMOVE:
+            case Event.ONTOUCHMOVE:
                 if (currentDropHandler != null) {
                     currentDropHandler.dragOver(currentDrag);
                 }
@@ -195,6 +199,7 @@ public class VDragAndDropManager {
                 break;
 
             case Event.ONMOUSEUP:
+            case Event.ONTOUCHEND:
                 endDrag();
                 break;
 
@@ -320,8 +325,9 @@ public class VDragAndDropManager {
             }
         };
 
+        final int eventType = Event.as(startEvent).getTypeInt();
         if (handleDragEvents
-                && Event.as(startEvent).getTypeInt() == Event.ONMOUSEDOWN) {
+                && (eventType == Event.ONMOUSEDOWN || eventType == Event.ONTOUCHSTART)) {
             // only really start drag event on mousemove
             deferredStartRegistration = Event
                     .addNativePreviewHandler(new NativePreviewHandler() {
@@ -364,6 +370,7 @@ public class VDragAndDropManager {
                                     break;
                                 }
                             case Event.ONMOUSEMOVE:
+                            case Event.ONTOUCHMOVE:
                                 if (deferredStartRegistration != null) {
                                     deferredStartRegistration.removeHandler();
                                     deferredStartRegistration = null;
@@ -397,8 +404,10 @@ public class VDragAndDropManager {
     private void updateDragImagePosition() {
         if (currentDrag.getCurrentGwtEvent() != null && dragElement != null) {
             Style style = dragElement.getStyle();
-            int clientY = currentDrag.getCurrentGwtEvent().getClientY();
-            int clientX = currentDrag.getCurrentGwtEvent().getClientX();
+            int clientY = Util.getTouchOrMouseClientY(currentDrag
+                    .getCurrentGwtEvent());
+            int clientX = Util.getTouchOrMouseClientX(currentDrag
+                    .getCurrentGwtEvent());
             style.setTop(clientY, Unit.PX);
             style.setLeft(clientX, Unit.PX);
         }
