@@ -9,6 +9,8 @@ import java.util.Set;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
@@ -87,6 +89,7 @@ public class VPanel extends SimplePanel implements Container,
             return addDomHandler(handler, type);
         }
     };
+    private TouchScrollDelegate touchScrollDelegate;
 
     public VPanel() {
         super();
@@ -104,10 +107,14 @@ public class VPanel extends SimplePanel implements Container,
         getElement().appendChild(bottomDecoration);
         setStyleName(CLASSNAME);
         DOM.sinkEvents(getElement(), Event.ONKEYDOWN);
-        DOM.sinkEvents(contentNode, Event.ONSCROLL);
+        DOM.sinkEvents(contentNode, Event.ONSCROLL | Event.TOUCHEVENTS);
         contentNode.getStyle().setProperty("position", "relative");
         getElement().getStyle().setProperty("overflow", "hidden");
-
+        addHandler(new TouchStartHandler() {
+            public void onTouchStart(TouchStartEvent event) {
+                getTouchScrollDelegate().onTouchStart(event);
+            }
+        }, TouchStartEvent.getType());
     }
 
     @Override
@@ -390,6 +397,14 @@ public class VPanel extends SimplePanel implements Container,
                 client.handleTooltipEvent(event, this);
             }
         }
+    }
+
+    protected TouchScrollDelegate getTouchScrollDelegate() {
+        if (touchScrollDelegate == null) {
+            touchScrollDelegate = new TouchScrollDelegate(contentNode);
+        }
+        return touchScrollDelegate;
+
     }
 
     @Override

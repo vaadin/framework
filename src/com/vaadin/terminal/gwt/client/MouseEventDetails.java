@@ -71,17 +71,17 @@ public class MouseEventDetails implements Serializable {
     }
 
     public MouseEventDetails(NativeEvent evt, Element relativeToElement) {
+        type = Event.getTypeInt(evt.getType());
+        clientX = Util.getTouchOrMouseClientX(evt);
+        clientY = Util.getTouchOrMouseClientY(evt);
         button = evt.getButton();
-        clientX = evt.getClientX();
-        clientY = evt.getClientY();
         altKey = evt.getAltKey();
         ctrlKey = evt.getCtrlKey();
         metaKey = evt.getMetaKey();
         shiftKey = evt.getShiftKey();
-        type = Event.getTypeInt(evt.getType());
         if (relativeToElement != null) {
-            relativeX = getRelativeX(evt, relativeToElement);
-            relativeY = getRelativeY(evt, relativeToElement);
+            relativeX = getRelativeX(clientX, relativeToElement);
+            relativeY = getRelativeY(clientY, relativeToElement);
         }
     }
 
@@ -136,15 +136,13 @@ public class MouseEventDetails implements Serializable {
         return type == Event.ONDBLCLICK;
     }
 
-    private static int getRelativeX(NativeEvent evt, Element target) {
-        return evt.getClientX() - target.getAbsoluteLeft()
-                + target.getScrollLeft()
+    private static int getRelativeX(int clientX, Element target) {
+        return clientX - target.getAbsoluteLeft() + target.getScrollLeft()
                 + target.getOwnerDocument().getScrollLeft();
     }
 
-    private static int getRelativeY(NativeEvent evt, Element target) {
-        return evt.getClientY() - target.getAbsoluteTop()
-                + target.getScrollTop()
+    private static int getRelativeY(int clientY, Element target) {
+        return clientY - target.getAbsoluteTop() + target.getScrollTop()
                 + target.getOwnerDocument().getScrollTop();
     }
 

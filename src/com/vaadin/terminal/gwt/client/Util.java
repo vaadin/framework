@@ -13,11 +13,14 @@ import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Touch;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -1105,7 +1108,7 @@ public class Util {
      * @return
      */
     public static int getTouchOrMouseClientX(Event event) {
-        if ((event.getTypeInt() & Event.TOUCHEVENTS) > 0) {
+        if (isTouchEvent(event)) {
             return event.getChangedTouches().get(0).getClientX();
         } else {
             return event.getClientX();
@@ -1121,11 +1124,77 @@ public class Util {
      * @return
      */
     public static int getTouchOrMouseClientY(Event event) {
-        if ((event.getTypeInt() & Event.TOUCHEVENTS) > 0) {
+        if (isTouchEvent(event)) {
             return event.getChangedTouches().get(0).getClientY();
         } else {
             return event.getClientY();
         }
+    }
+
+    /**
+     * 
+     * @see #getTouchOrMouseClientY(Event)
+     * @param currentGwtEvent
+     * @return
+     */
+    public static int getTouchOrMouseClientY(NativeEvent currentGwtEvent) {
+        return getTouchOrMouseClientY(Event.as(currentGwtEvent));
+    }
+
+    /**
+     * @see #getTouchOrMouseClientX(Event)
+     * 
+     * @param event
+     * @return
+     */
+    public static int getTouchOrMouseClientX(NativeEvent event) {
+        return getTouchOrMouseClientX(Event.as(event));
+    }
+
+    public static boolean isTouchEvent(Event event) {
+        return (event.getTypeInt() & Event.TOUCHEVENTS) > 0;
+    }
+
+    public static boolean isTouchEvent(NativeEvent event) {
+        return isTouchEvent(Event.as(event));
+    }
+
+    public static void simulateClickFromTouchEvent(Event touchevent,
+            Widget widget) {
+        Touch touch = touchevent.getChangedTouches().get(0);
+        final NativeEvent createMouseUpEvent = Document.get()
+                .createMouseUpEvent(0, touch.getScreenX(), touch.getScreenY(),
+                        touch.getClientX(), touch.getClientY(), false, false,
+                        false, false, NativeEvent.BUTTON_LEFT);
+        final NativeEvent createMouseDownEvent = Document.get()
+                .createMouseDownEvent(0, touch.getScreenX(),
+                        touch.getScreenY(), touch.getClientX(),
+                        touch.getClientY(), false, false, false, false,
+                        NativeEvent.BUTTON_LEFT);
+        final NativeEvent createMouseClickEvent = Document.get()
+                .createClickEvent(0, touch.getScreenX(), touch.getScreenY(),
+                        touch.getClientX(), touch.getClientY(), false, false,
+                        false, false);
+
+        /*
+         * Get target with element from point as we want the actual element, not
+         * the one that sunk the event.
+         */
+        final Element target = getElementFromPoint(touch.getClientX(),
+                touch.getClientY());
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            public void execute() {
+                try {
+                    target.dispatchEvent(createMouseDownEvent);
+                    target.dispatchEvent(createMouseUpEvent);
+                    target.dispatchEvent(createMouseClickEvent);
+                } catch (Exception e) {
+                    VConsole.log("Dough...");
+                }
+
+            }
+        });
+
     }
 
 }

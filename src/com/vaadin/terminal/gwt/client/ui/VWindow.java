@@ -261,7 +261,7 @@ public class VWindow extends VOverlay implements Container,
         DOM.appendChild(wrapper, wrapper2);
         DOM.appendChild(super.getContainerElement(), wrapper);
 
-        sinkEvents(Event.MOUSEEVENTS);
+        sinkEvents(Event.MOUSEEVENTS | Event.TOUCHEVENTS);
 
         setWidget(contentPanel);
 
@@ -868,43 +868,38 @@ public class VWindow extends VOverlay implements Container,
     public void onBrowserEvent(final Event event) {
         boolean bubble = true;
 
-        if (event != null) {
-            final int type = event.getTypeInt();
+        final int type = event.getTypeInt();
 
-            final Element target = DOM.eventGetTarget(event);
+        final Element target = DOM.eventGetTarget(event);
 
+        if (client != null && header.isOrHasChild(target)) {
             // Handle window caption tooltips
-            if (client != null && DOM.isOrHasChild(header, target)) {
-                client.handleTooltipEvent(event, this);
-            }
+            client.handleTooltipEvent(event, this);
+        }
 
-            if (resizing || resizeBox == target) {
-                onResizeEvent(event);
-                bubble = false;
-            } else if (target == closeBox) {
-                if (type == Event.ONCLICK && isClosable()) {
-                    onCloseClick();
-                    bubble = false;
-                }
-            } else if (dragging || !DOM.isOrHasChild(contents, target)) {
-                onDragEvent(event);
-                bubble = false;
-
-            } else if (type == Event.ONCLICK) {
-                // clicked inside window, ensure to be on top
-                if (!isActive()) {
-                    bringToFront();
-                }
+        if (resizing || resizeBox == target) {
+            onResizeEvent(event);
+            bubble = false;
+        } else if (isClosable() && type == Event.ONCLICK && target == closeBox) {
+            onCloseClick();
+            bubble = false;
+        } else if (dragging || !contents.isOrHasChild(target)) {
+            onDragEvent(event);
+            bubble = false;
+        } else if (type == Event.ONCLICK) {
+            // clicked inside window, ensure to be on top
+            if (!isActive()) {
+                bringToFront();
             }
+        }
 
-            /*
-             * If clicking on other than the content, move focus to the window.
-             * After that this windows e.g. gets all keyboard shortcuts.
-             */
-            if (type == Event.ONMOUSEDOWN
-                    && !DOM.isOrHasChild(contentPanel.getElement(), target)) {
-                contentPanel.focus();
-            }
+        /*
+         * If clicking on other than the content, move focus to the window.
+         * After that this windows e.g. gets all keyboard shortcuts.
+         */
+        if (type == Event.ONMOUSEDOWN
+                && !contentPanel.getElement().isOrHasChild(target)) {
+            contentPanel.focus();
         }
 
         if (!bubble) {
@@ -924,6 +919,7 @@ public class VWindow extends VOverlay implements Container,
         if (resizable) {
             switch (event.getTypeInt()) {
             case Event.ONMOUSEDOWN:
+            case Event.ONTOUCHSTART:
                 if (!isActive()) {
                     bringToFront();
                 }
@@ -932,29 +928,27 @@ public class VWindow extends VOverlay implements Container,
                     DOM.setStyleAttribute(resizeBox, "visibility", "hidden");
                 }
                 resizing = true;
-                startX = event.getScreenX();
-                startY = event.getScreenY();
+                startX = Util.getTouchOrMouseClientX(event);
+                startY = Util.getTouchOrMouseClientY(event);
                 origW = getElement().getOffsetWidth();
                 origH = getElement().getOffsetHeight();
                 DOM.setCapture(getElement());
                 event.preventDefault();
                 break;
             case Event.ONMOUSEUP:
-                showDraggingCurtain(false);
-                if (BrowserInfo.get().isIE()) {
-                    DOM.setStyleAttribute(resizeBox, "visibility", "");
-                }
-                resizing = false;
-                DOM.releaseCapture(getElement());
+            case Event.ONTOUCHEND:
                 setSize(event, true);
-                break;
+            case Event.ONTOUCHCANCEL:
+                DOM.releaseCapture(getElement());
             case Event.ONLOSECAPTURE:
                 showDraggingCurtain(false);
                 if (BrowserInfo.get().isIE()) {
                     DOM.setStyleAttribute(resizeBox, "visibility", "");
                 }
                 resizing = false;
+                break;
             case Event.ONMOUSEMOVE:
+            case Event.ONTOUCHMOVE:
                 if (resizing) {
                     centered = false;
                     setSize(event, false);
@@ -969,6 +963,8 @@ public class VWindow extends VOverlay implements Container,
     }
 
     /**
+     * TODO check if we need to support this with touch based devices.
+     * 
      * Checks if the cursor was inside the browser content area when the event
      * happened.
      * 
@@ -999,12 +995,12 @@ public class VWindow extends VOverlay implements Container,
             return;
         }
 
-        int w = event.getScreenX() - startX + origW;
+        int w = Util.getTouchOrMouseClientX(event) - startX + origW;
         if (w < MIN_CONTENT_AREA_WIDTH + getContentAreaToRootDifference()) {
             w = MIN_CONTENT_AREA_WIDTH + getContentAreaToRootDifference();
         }
 
-        int h = event.getScreenY() - startY + origH;
+        int h = Util.getTouchOrMouseClientY(event) - startY + origH;
         if (h < MIN_CONTENT_AREA_HEIGHT + getExtraHeight()) {
             h = MIN_CONTENT_AREA_HEIGHT + getExtraHeight();
         }
@@ -1120,8 +1116,6 @@ public class VWindow extends VOverlay implements Container,
 
     private int extraH = 0;
 
-    private boolean hasFocus;
-
     private int getExtraHeight() {
         extraH = header.getOffsetHeight() + footer.getOffsetHeight();
         return extraH;
@@ -1129,45 +1123,63 @@ public class VWindow extends VOverlay implements Container,
 
     private void onDragEvent(Event event) {
         switch (DOM.eventGetType(event)) {
+        case Event.ONTOUCHSTART:
+            if (event.getTouches().length() > 1) {
+                return;
+            }
         case Event.ONMOUSEDOWN:
             if (!isActive()) {
                 bringToFront();
             }
-            if (draggable) {
-                showDraggingCurtain(true);
-                dragging = true;
-                startX = DOM.eventGetScreenX(event);
-                startY = DOM.eventGetScreenY(event);
-                origX = DOM.getAbsoluteLeft(getElement());
-                origY = DOM.getAbsoluteTop(getElement());
-                DOM.setCapture(getElement());
-                DOM.eventPreventDefault(event);
-            }
+            beginMovingWindow(event);
             break;
         case Event.ONMOUSEUP:
-            dragging = false;
-            showDraggingCurtain(false);
-            DOM.releaseCapture(getElement());
-            break;
+        case Event.ONTOUCHEND:
+        case Event.ONTOUCHCANCEL:
         case Event.ONLOSECAPTURE:
-            showDraggingCurtain(false);
-            dragging = false;
+            stopMovingWindow();
             break;
         case Event.ONMOUSEMOVE:
-            if (dragging) {
-                centered = false;
-                if (cursorInsideBrowserContentArea(event)) {
-                    // Only drag while cursor is inside the browser client area
-                    final int x = DOM.eventGetScreenX(event) - startX + origX;
-                    final int y = DOM.eventGetScreenY(event) - startY + origY;
-                    setPopupPosition(x, y);
-                }
-                DOM.eventPreventDefault(event);
-            }
+        case Event.ONTOUCHMOVE:
+            moveWindow(event);
             break;
         default:
             break;
         }
+    }
+
+    private void moveWindow(Event event) {
+        if (dragging) {
+            centered = false;
+            if (cursorInsideBrowserContentArea(event)) {
+                // Only drag while cursor is inside the browser client area
+                final int x = Util.getTouchOrMouseClientX(event) - startX
+                        + origX;
+                final int y = Util.getTouchOrMouseClientY(event) - startY
+                        + origY;
+                setPopupPosition(x, y);
+            }
+            DOM.eventPreventDefault(event);
+        }
+    }
+
+    private void beginMovingWindow(Event event) {
+        if (draggable) {
+            showDraggingCurtain(true);
+            dragging = true;
+            startX = Util.getTouchOrMouseClientX(event);
+            startY = Util.getTouchOrMouseClientY(event);
+            origX = DOM.getAbsoluteLeft(getElement());
+            origY = DOM.getAbsoluteTop(getElement());
+            DOM.setCapture(getElement());
+            DOM.eventPreventDefault(event);
+        }
+    }
+
+    private void stopMovingWindow() {
+        dragging = false;
+        showDraggingCurtain(false);
+        DOM.releaseCapture(getElement());
     }
 
     @Override
@@ -1180,7 +1192,7 @@ public class VWindow extends VOverlay implements Container,
             return false;
         } else if (vaadinModality) {
             // return false when modal and outside window
-            final Element target = event.getTarget().cast();
+            final Element target = event.getEventTarget().cast();
             if (DOM.getCaptureElement() != null) {
                 // Allow events when capture is set
                 return true;

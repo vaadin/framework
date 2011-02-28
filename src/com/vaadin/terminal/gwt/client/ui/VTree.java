@@ -16,6 +16,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -516,7 +517,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
         public TreeNode() {
             constructDom();
             sinkEvents(Event.ONCLICK | Event.ONDBLCLICK | Event.MOUSEEVENTS
-                    | Event.ONCONTEXTMENU);
+                    | Event.TOUCHEVENTS | Event.ONCONTEXTMENU);
         }
 
         public VerticalDropLocation getDropDetail(NativeEvent currentGwtEvent) {
@@ -529,7 +530,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
             }
             VerticalDropLocation verticalDropLocation = DDUtil
                     .getVerticalDropLocation(nodeCaptionDiv, cachedHeight,
-                            currentGwtEvent.getClientY(), 0.15);
+                            currentGwtEvent, 0.15);
             return verticalDropLocation;
         }
 
@@ -716,16 +717,34 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
             }
 
             if (dragMode != 0 || dropHandler != null) {
-                if (type == Event.ONMOUSEDOWN) {
-                    if (nodeCaptionDiv.isOrHasChild(event.getTarget())) {
+                if (type == Event.ONMOUSEDOWN || type == Event.ONTOUCHSTART) {
+                    if (nodeCaptionDiv.isOrHasChild((Node) event
+                            .getEventTarget().cast())) {
                         if (dragMode > 0
-                                && event.getButton() == NativeEvent.BUTTON_LEFT) {
-                            event.preventDefault(); // prevent text selection
-                            mouseDownEvent = event;
+                                && (type == Event.ONTOUCHSTART || event
+                                        .getButton() == NativeEvent.BUTTON_LEFT)) {
+                            mouseDownEvent = event; // save event for possible
+                                                    // dd operation
+                            if (type == Event.ONMOUSEDOWN) {
+                                event.preventDefault(); // prevent text
+                                                        // selection
+                            } else {
+                                /*
+                                 * FIXME We prevent touch start event to be used
+                                 * as a scroll start event. Note that we cannot
+                                 * easily distinguish whether the user wants to
+                                 * drag or scroll. The same issue is in table
+                                 * that has scrollable area and has drag and
+                                 * drop enable. Some kind of timer might be used
+                                 * to resolve the issue.
+                                 */
+                                event.stopPropagation();
+                            }
                         }
                     }
                 } else if (type == Event.ONMOUSEMOVE
-                        || type == Event.ONMOUSEOUT) {
+                        || type == Event.ONMOUSEOUT
+                        || type == Event.ONTOUCHMOVE) {
 
                     if (mouseDownEvent != null) {
                         // start actual drag on slight move when mouse is down
@@ -1050,7 +1069,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                     left += Window.getScrollLeft();
                     client.getContextMenu().showAt(this, left, top);
                 }
-                event.cancelBubble(true);
+                event.stopPropagation();
                 event.preventDefault();
             }
         }

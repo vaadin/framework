@@ -8,7 +8,16 @@ import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.dom.client.TouchCancelEvent;
+import com.google.gwt.event.dom.client.TouchCancelHandler;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
+import com.google.gwt.event.dom.client.TouchMoveHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
@@ -26,6 +35,7 @@ import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VSplitPanel extends ComplexPanel implements Container,
         ContainerResizedListener {
@@ -136,6 +146,12 @@ public class VSplitPanel extends ComplexPanel implements Container,
     /* The current position of the split handle in either percentages or pixels */
     private String position;
 
+    protected Element scrolledContainer;
+
+    protected int origScrollTop;
+
+    private TouchScrollDelegate touchScrollDelegate;
+
     public VSplitPanel() {
         this(ORIENTATION_HORIZONTAL);
     }
@@ -157,7 +173,48 @@ public class VSplitPanel extends ComplexPanel implements Container,
         setHeight(MIN_SIZE + "px");
         constructDom();
         setOrientation(orientation);
-        DOM.sinkEvents(getElement(), (Event.MOUSEEVENTS));
+        sinkEvents(Event.MOUSEEVENTS);
+
+        addDomHandler(new TouchCancelHandler() {
+            public void onTouchCancel(TouchCancelEvent event) {
+                // TODO When does this actually happen??
+                VConsole.log("TOUCH CANCEL");
+            }
+        }, TouchCancelEvent.getType());
+        addDomHandler(new TouchStartHandler() {
+            public void onTouchStart(TouchStartEvent event) {
+                Node target = event.getTouches().get(0).getTarget().cast();
+                if (splitter.isOrHasChild(target)) {
+                    onMouseDown(Event.as(event.getNativeEvent()));
+                } else {
+                    getTouchScrollDelegate().onTouchStart(event);
+                }
+            }
+
+        }, TouchStartEvent.getType());
+        addDomHandler(new TouchMoveHandler() {
+            public void onTouchMove(TouchMoveEvent event) {
+                if (resizing) {
+                    onMouseMove(Event.as(event.getNativeEvent()));
+                }
+            }
+        }, TouchMoveEvent.getType());
+        addDomHandler(new TouchEndHandler() {
+            public void onTouchEnd(TouchEndEvent event) {
+                if (resizing) {
+                    onMouseUp(Event.as(event.getNativeEvent()));
+                }
+            }
+        }, TouchEndEvent.getType());
+
+    }
+
+    private TouchScrollDelegate getTouchScrollDelegate() {
+        if (touchScrollDelegate == null) {
+            touchScrollDelegate = new TouchScrollDelegate(firstContainer,
+                    secondContainer);
+        }
+        return touchScrollDelegate;
     }
 
     protected void constructDom() {
@@ -441,11 +498,13 @@ public class VSplitPanel extends ComplexPanel implements Container,
     public void onBrowserEvent(Event event) {
         switch (DOM.eventGetType(event)) {
         case Event.ONMOUSEMOVE:
+            // case Event.ONTOUCHMOVE:
             if (resizing) {
                 onMouseMove(event);
             }
             break;
         case Event.ONMOUSEDOWN:
+            // case Event.ONTOUCHSTART:
             onMouseDown(event);
             break;
         case Event.ONMOUSEOUT:
@@ -457,6 +516,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
             }
             break;
         case Event.ONMOUSEUP:
+            // case Event.ONTOUCHEND:
             if (resizing) {
                 onMouseUp(event);
             }
@@ -466,7 +526,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
             break;
         }
         // Only fire click event listeners if the splitter isn't moved
-        if (!resized) {
+        if (Util.isTouchEvent(event) || !resized) {
             super.onBrowserEvent(event);
         } else if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
             // Reset the resized flag after a mouseup has occured so the next
@@ -479,28 +539,28 @@ public class VSplitPanel extends ComplexPanel implements Container,
         if (locked || !isEnabled()) {
             return;
         }
-        final Element trg = DOM.eventGetTarget(event);
+        final Element trg = event.getEventTarget().cast();
         if (trg == splitter || trg == DOM.getChild(splitter, 0)) {
             resizing = true;
             DOM.setCapture(getElement());
             origX = DOM.getElementPropertyInt(splitter, "offsetLeft");
             origY = DOM.getElementPropertyInt(splitter, "offsetTop");
-            origMouseX = DOM.eventGetClientX(event);
-            origMouseY = DOM.eventGetClientY(event);
-            DOM.eventCancelBubble(event, true);
-            DOM.eventPreventDefault(event);
+            origMouseX = Util.getTouchOrMouseClientX(event);
+            origMouseY = Util.getTouchOrMouseClientY(event);
+            event.stopPropagation();
+            event.preventDefault();
         }
     }
 
     public void onMouseMove(Event event) {
         switch (orientation) {
         case ORIENTATION_HORIZONTAL:
-            final int x = DOM.eventGetClientX(event);
+            final int x = Util.getTouchOrMouseClientX(event);
             onHorizontalMouseMove(x);
             break;
         case ORIENTATION_VERTICAL:
         default:
-            final int y = DOM.eventGetClientY(event);
+            final int y = Util.getTouchOrMouseClientY(event);
             onVerticalMouseMove(y);
             break;
         }
@@ -595,7 +655,9 @@ public class VSplitPanel extends ComplexPanel implements Container,
         DOM.releaseCapture(getElement());
         hideDraggingCurtain();
         resizing = false;
-        onMouseMove(event);
+        if (!Util.isTouchEvent(event)) {
+            onMouseMove(event);
+        }
         updateSplitPositionToServer();
     }
 

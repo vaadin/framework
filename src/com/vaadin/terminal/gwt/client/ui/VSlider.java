@@ -18,6 +18,8 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
         ContainerResizedListener {
@@ -73,8 +75,8 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
     /* Temporary dragging/animation variables */
     private boolean dragging = false;
 
-    private VLazyExecutor delayedValueUpdater = new VLazyExecutor(
-            100, new ScheduledCommand() {
+    private VLazyExecutor delayedValueUpdater = new VLazyExecutor(100,
+            new ScheduledCommand() {
 
                 public void execute() {
                     updateValueToServer();
@@ -106,14 +108,8 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
         DOM.setStyleAttribute(bigger, "display", "none");
         DOM.setStyleAttribute(handle, "visibility", "hidden");
 
-        DOM.sinkEvents(getElement(), Event.MOUSEEVENTS | Event.ONMOUSEWHEEL
-                | Event.KEYEVENTS | Event.FOCUSEVENTS);
-        DOM.sinkEvents(base, Event.ONCLICK);
-        DOM.sinkEvents(handle, Event.MOUSEEVENTS);
-        DOM.sinkEvents(smaller, Event.ONMOUSEDOWN | Event.ONMOUSEUP
-                | Event.ONMOUSEOUT);
-        DOM.sinkEvents(bigger, Event.ONMOUSEDOWN | Event.ONMOUSEUP
-                | Event.ONMOUSEOUT);
+        sinkEvents(Event.MOUSEEVENTS | Event.ONMOUSEWHEEL | Event.KEYEVENTS
+                | Event.FOCUSEVENTS | Event.TOUCHEVENTS);
 
         feedbackPopup.addStyleName(CLASSNAME + "-feedback");
         feedbackPopup.setWidget(feedback);
@@ -271,10 +267,10 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
             return;
         }
 
-        if (value.doubleValue() < min) {
-            value = new Double(min);
-        } else if (value.doubleValue() > max) {
-            value = new Double(max);
+        if (value < min) {
+            value = min;
+        } else if (value > max) {
+            value = max;
         }
 
         // Update handle position
@@ -380,6 +376,7 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
     private void processHandleEvent(Event event) {
         switch (DOM.eventGetType(event)) {
         case Event.ONMOUSEDOWN:
+        case Event.ONTOUCHSTART:
             if (!disabled && !readonly) {
                 focus();
                 feedbackPopup.show();
@@ -389,20 +386,29 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
                 DOM.setCapture(getElement());
                 DOM.eventPreventDefault(event); // prevent selecting text
                 DOM.eventCancelBubble(event, true);
+                event.stopPropagation();
+                VConsole.log("Slider move start");
             }
             break;
         case Event.ONMOUSEMOVE:
+        case Event.ONTOUCHMOVE:
             if (dragging) {
+                VConsole.log("Slider move");
                 setValueByEvent(event, false);
                 updateFeedbackPosition();
+                event.stopPropagation();
             }
             break;
+        case Event.ONTOUCHEND:
+            feedbackPopup.hide();
         case Event.ONMOUSEUP:
             // feedbackPopup.hide();
+            VConsole.log("Slider move end");
             dragging = false;
             DOM.setElementProperty(handle, "className", CLASSNAME + "-handle");
             DOM.releaseCapture(getElement());
             setValueByEvent(event, true);
+            event.stopPropagation();
             break;
         default:
             break;
@@ -435,27 +441,27 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
     private void setValueByEvent(Event event, boolean updateToServer) {
         double v = min; // Fallback to min
 
-        final int coord = vertical ? DOM.eventGetClientY(event) : DOM
-                .eventGetClientX(event);
-        final String domProperty = vertical ? "offsetHeight" : "offsetWidth";
+        final int coord = getEventPosition(event);
 
-        final int handleSize = Integer.parseInt(DOM.getElementProperty(handle,
-                domProperty));
-        final double baseSize = Integer.parseInt(DOM.getElementProperty(base,
-                domProperty));
-        final double baseOffset = vertical ? DOM.getAbsoluteTop(base)
-                - Window.getScrollTop() - handleSize / 2 : DOM
-                .getAbsoluteLeft(base)
-                - Window.getScrollLeft()
-                + handleSize
-                / 2;
+        final int handleSize, baseSize, baseOffset;
+        if (vertical) {
+            handleSize = handle.getOffsetHeight();
+            baseSize = base.getOffsetHeight();
+            baseOffset = base.getAbsoluteTop() - Window.getScrollTop()
+                    - handleSize / 2;
+        } else {
+            handleSize = handle.getOffsetWidth();
+            baseSize = base.getOffsetWidth();
+            baseOffset = base.getAbsoluteLeft() - Window.getScrollLeft()
+                    + handleSize / 2;
+        }
 
         if (vertical) {
-            v = ((baseSize - (coord - baseOffset)) / (baseSize - handleSize))
+            v = ((baseSize - (coord - baseOffset)) / (double) (baseSize - handleSize))
                     * (max - min) + min;
         } else {
-            v = ((coord - baseOffset) / (baseSize - handleSize)) * (max - min)
-                    + min;
+            v = ((coord - baseOffset) / (double) (baseSize - handleSize))
+                    * (max - min) + min;
         }
 
         if (v < min) {
@@ -464,7 +470,22 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
             v = max;
         }
 
-        setValue(new Double(v), updateToServer);
+        setValue(v, updateToServer);
+    }
+
+    /**
+     * TODO consider extracting touches support to an impl class specific for
+     * webkit (only browser that really supports touches).
+     * 
+     * @param event
+     * @return
+     */
+    protected int getEventPosition(Event event) {
+        if (vertical) {
+            return Util.getTouchOrMouseClientY(event);
+        } else {
+            return Util.getTouchOrMouseClientX(event);
+        }
     }
 
     public void iLayout() {

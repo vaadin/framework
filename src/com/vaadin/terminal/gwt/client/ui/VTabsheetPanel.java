@@ -4,8 +4,13 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.Util;
@@ -22,12 +27,38 @@ import com.vaadin.terminal.gwt.client.Util;
 public class VTabsheetPanel extends ComplexPanel {
 
     private Widget visibleWidget;
+    private TouchScrollDelegate touchScrollDelegate;
 
     /**
      * Creates an empty tabsheet panel.
      */
     public VTabsheetPanel() {
         setElement(DOM.createDiv());
+        sinkEvents(Event.TOUCHEVENTS);
+        addDomHandler(new TouchStartHandler() {
+            public void onTouchStart(TouchStartEvent event) {
+                /*
+                 * All container elements needs to be scrollable by one finger.
+                 * Update the scrollable element list of touch delegate on each
+                 * touch start.
+                 */
+                NodeList<Node> childNodes = getElement().getChildNodes();
+                Element[] elements = new Element[childNodes.getLength()];
+                for (int i = 0; i < elements.length; i++) {
+                    elements[i] = (Element) childNodes.getItem(i);
+                }
+                getTouchScrollDelegate().setElements(elements);
+                getTouchScrollDelegate().onTouchStart(event);
+            }
+        }, TouchStartEvent.getType());
+    }
+
+    protected TouchScrollDelegate getTouchScrollDelegate() {
+        if (touchScrollDelegate == null) {
+            touchScrollDelegate = new TouchScrollDelegate();
+        }
+        return touchScrollDelegate;
+
     }
 
     /**

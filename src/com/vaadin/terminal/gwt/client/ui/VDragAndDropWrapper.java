@@ -12,10 +12,14 @@ import java.util.Set;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xhr.client.ReadyStateChangeHandler;
@@ -59,36 +63,61 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         setStyleName(CLASSNAME);
         addDomHandler(new MouseDownHandler() {
             public void onMouseDown(MouseDownEvent event) {
-                if (dragStarMode > 0) {
-                    VTransferable transferable = new VTransferable();
-                    transferable.setDragSource(VDragAndDropWrapper.this);
-
-                    Paintable paintable;
-                    Widget w = Util.findWidget((Element) event.getNativeEvent()
-                            .getEventTarget().cast(), null);
-                    while (w != null && !(w instanceof Paintable)) {
-                        w = w.getParent();
-                    }
-                    paintable = (Paintable) w;
-
-                    transferable.setData("component", paintable);
-                    VDragEvent startDrag = VDragAndDropManager.get().startDrag(
-                            transferable, event.getNativeEvent(), true);
-
-                    transferable.setData("mouseDown", new MouseEventDetails(
-                            event.getNativeEvent()).serialize());
-
-                    if (dragStarMode == WRAPPER) {
-                        startDrag.createDragImage(getElement(), true);
-                    } else {
-                        startDrag.createDragImage(
-                                ((Widget) paintable).getElement(), true);
-                    }
+                if (startDrag(event.getNativeEvent())) {
                     event.preventDefault(); // prevent text selection
-
                 }
             }
         }, MouseDownEvent.getType());
+
+        addDomHandler(new TouchStartHandler() {
+            public void onTouchStart(TouchStartEvent event) {
+                if (startDrag(event.getNativeEvent())) {
+                    /*
+                     * Dont let eg. panel start scrolling.
+                     */
+                    event.stopPropagation();
+                }
+            }
+        }, TouchStartEvent.getType());
+        sinkEvents(Event.TOUCHEVENTS);
+    }
+
+    /**
+     * Starts a drag and drop operation from mousedown or touchstart event if
+     * required conditions are met.
+     * 
+     * @param event
+     * @return true if the event was handled as a drag start event
+     */
+    private boolean startDrag(NativeEvent event) {
+        if (dragStarMode > 0) {
+            VTransferable transferable = new VTransferable();
+            transferable.setDragSource(VDragAndDropWrapper.this);
+
+            Paintable paintable;
+            Widget w = Util.findWidget((Element) event.getEventTarget().cast(),
+                    null);
+            while (w != null && !(w instanceof Paintable)) {
+                w = w.getParent();
+            }
+            paintable = (Paintable) w;
+
+            transferable.setData("component", paintable);
+            VDragEvent startDrag = VDragAndDropManager.get().startDrag(
+                    transferable, event, true);
+
+            transferable.setData("mouseDown",
+                    new MouseEventDetails(event).serialize());
+
+            if (dragStarMode == WRAPPER) {
+                startDrag.createDragImage(getElement(), true);
+            } else {
+                startDrag.createDragImage(((Widget) paintable).getElement(),
+                        true);
+            }
+            return true;
+        }
+        return false;
     }
 
     private ApplicationConnection client;
@@ -500,12 +529,12 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     public boolean updateDropDetails(VDragEvent drag) {
         VerticalDropLocation oldVL = verticalDropLocation;
         verticalDropLocation = DDUtil.getVerticalDropLocation(getElement(),
-                drag.getCurrentGwtEvent().getClientY(), 0.2);
+                drag.getCurrentGwtEvent(), 0.2);
         drag.getDropDetails().put("verticalLocation",
                 verticalDropLocation.toString());
         HorizontalDropLocation oldHL = horizontalDropLocation;
         horizontalDropLocation = DDUtil.getHorizontalDropLocation(getElement(),
-                drag.getCurrentGwtEvent().getClientX(), 0.2);
+                drag.getCurrentGwtEvent(), 0.2);
         drag.getDropDetails().put("horizontalLocation",
                 horizontalDropLocation.toString());
         if (oldHL != horizontalDropLocation || oldVL != verticalDropLocation) {

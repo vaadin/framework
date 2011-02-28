@@ -4,15 +4,22 @@
 
 package com.vaadin.terminal.gwt.client;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.UmbrellaException;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.DOM;
@@ -32,6 +39,7 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
 /**
@@ -227,10 +235,59 @@ public final class VDebugConsole extends VOverlay implements Console {
         if (msg == null) {
             msg = "null";
         }
+        // remoteLog(msg);
 
         logToDebugWindow(msg, false);
         GWT.log(msg);
         consoleLog(msg);
+    }
+
+    private List<String> msgQueue = new LinkedList<String>();
+
+    private ScheduledCommand doSend = new ScheduledCommand() {
+        public void execute() {
+            if (!msgQueue.isEmpty()) {
+                RequestBuilder requestBuilder = new RequestBuilder(
+                        RequestBuilder.POST,
+                        "http://matin-vehje.local:8080/remotelog/");
+                try {
+                    String requestData = "";
+                    for (String str : msgQueue) {
+                        requestData += str;
+                        requestData += "\n";
+                    }
+                    requestBuilder.sendRequest(requestData,
+                            new RequestCallback() {
+
+                                public void onResponseReceived(Request request,
+                                        Response response) {
+                                    // TODO Auto-generated method stub
+
+                                }
+
+                                public void onError(Request request,
+                                        Throwable exception) {
+                                    // TODO Auto-generated method stub
+
+                                }
+                            });
+                } catch (RequestException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                msgQueue.clear();
+            }
+        }
+    };
+    private VLazyExecutor sendToRemoteLog = new VLazyExecutor(350, doSend);
+
+    private void remoteLog(String msg) {
+        msgQueue.add(msg);
+        if (msg.length() > 4) {
+            doSend.execute();
+        } else {
+            sendToRemoteLog.trigger();
+        }
     }
 
     /**

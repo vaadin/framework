@@ -26,6 +26,7 @@ import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
+import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -39,6 +40,8 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -318,6 +321,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     private int multiselectmode;
     private int tabIndex;
+    private TouchScrollDelegate touchScrollDelegate;
 
     public VScrollTable() {
         scrollBodyPanel.setStyleName(CLASSNAME + "-body-wrapper");
@@ -338,6 +342,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         scrollBodyPanel.addBlurHandler(this);
 
         scrollBodyPanel.addScrollHandler(this);
+
+        scrollBodyPanel.sinkEvents(Event.TOUCHEVENTS);
+        scrollBodyPanel.addDomHandler(new TouchStartHandler() {
+            public void onTouchStart(TouchStartEvent event) {
+                getTouchScrollDelegate().onTouchStart(event);
+            }
+        }, TouchStartEvent.getType());
+
         scrollBodyPanel.setStyleName(CLASSNAME + "-body");
 
         setStyleName(CLASSNAME);
@@ -347,6 +359,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         add(tFoot);
 
         rowRequestHandler = new RowRequestHandler();
+    }
+
+    protected TouchScrollDelegate getTouchScrollDelegate() {
+        if (touchScrollDelegate == null) {
+            touchScrollDelegate = new TouchScrollDelegate(
+                    scrollBodyPanel.getElement());
+        }
+        return touchScrollDelegate;
+
     }
 
     /**
@@ -3688,6 +3709,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         public class VScrollTableRow extends Panel implements ActionOwner,
                 Container {
 
+            private static final int TOUCHSCROLL_TIMEOUT = 70;
             private static final int DRAGMODE_MULTIROW = 2;
             protected ArrayList<Widget> childWidgets = new ArrayList<Widget>();
             private boolean selected = false;
@@ -3698,17 +3720,22 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             private final TableRowElement rowElement;
             private boolean mDown;
             private int index;
+            private Event touchStart;
             private static final String ROW_CLASSNAME_EVEN = CLASSNAME + "-row";
             private static final String ROW_CLASSNAME_ODD = CLASSNAME
                     + "-row-odd";
+            private static final int TOUCH_CONTEXT_MENU_TIMEOUT = 500;
+            private Timer contextTouchTimeout;
+            private int touchStartY;
+            private int touchStartX;
 
             private VScrollTableRow(int rowKey) {
                 this.rowKey = rowKey;
                 rowElement = Document.get().createTRElement();
                 setElement(rowElement);
                 DOM.sinkEvents(getElement(), Event.MOUSEEVENTS
-                        | Event.ONDBLCLICK | Event.ONCONTEXTMENU
-                        | Event.ONKEYDOWN);
+                        | Event.TOUCHEVENTS | Event.ONDBLCLICK
+                        | Event.ONCONTEXTMENU | Event.ONKEYDOWN);
             }
 
             /**
@@ -3992,22 +4019,26 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
              * React on click that occur on content cells only
              */
             @Override
-            public void onBrowserEvent(Event event) {
+            public void onBrowserEvent(final Event event) {
+                VConsole.log("Event of type" + event.getType());
                 if (enabled) {
-                    int type = event.getTypeInt();
-                    Element targetTdOrTr = getEventTargetTdOrTr(event);
+                    final int type = event.getTypeInt();
+                    final Element targetTdOrTr = getEventTargetTdOrTr(event);
                     if (type == Event.ONCONTEXTMENU) {
                         showContextMenu(event);
                         event.stopPropagation();
                         return;
                     }
 
-                    if (targetTdOrTr != null) {
-                        switch (type) {
-                        case Event.ONDBLCLICK:
+                    boolean targetCellOrRowFound = targetTdOrTr != null;
+                    switch (type) {
+                    case Event.ONDBLCLICK:
+                        if (targetCellOrRowFound) {
                             handleClickEvent(event, targetTdOrTr);
-                            break;
-                        case Event.ONMOUSEUP:
+                        }
+                        break;
+                    case Event.ONMOUSEUP:
+                        if (targetCellOrRowFound) {
                             mDown = false;
                             handleClickEvent(event, targetTdOrTr);
                             scrollBodyPanel.setFocus(true);
@@ -4093,60 +4124,109 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 }
                                 sendSelectedRows();
                             }
-                            break;
-                        case Event.ONMOUSEDOWN:
-                            setRowFocus(this);
+                        }
+                        break;
+                    case Event.ONTOUCHEND:
+                    case Event.ONTOUCHCANCEL:
+                        if (touchStart != null) {
+                            /*
+                             * Touch has not been handled as neither context or
+                             * drag start, handle it as a click.
+                             */
+                            Util.simulateClickFromTouchEvent(touchStart, this);
+                            touchStart = null;
+                        }
+                        if (contextTouchTimeout != null) {
+                            contextTouchTimeout.cancel();
+                        }
+                        break;
+                    case Event.ONTOUCHMOVE:
+                        if (isSignificantMove(event)) {
+                            /*
+                             * TODO figure out scroll delegate don't eat events
+                             * if row is selected. Null check for active
+                             * delegate is as a workaround.
+                             */
                             if (dragmode != 0
-                                    && event.getButton() == NativeEvent.BUTTON_LEFT) {
-                                mDown = true;
-                                VTransferable transferable = new VTransferable();
-                                transferable.setDragSource(VScrollTable.this);
-                                transferable.setData("itemId", "" + rowKey);
-                                NodeList<TableCellElement> cells = rowElement
-                                        .getCells();
-                                for (int i = 0; i < cells.getLength(); i++) {
-                                    if (cells.getItem(i).isOrHasChild(
-                                            targetTdOrTr)) {
-                                        HeaderCell headerCell = tHead
-                                                .getHeaderCell(i);
-                                        transferable.setData("propertyId",
-                                                headerCell.cid);
-                                        break;
+                                    && touchStart != null
+                                    && (TouchScrollDelegate
+                                            .getActiveScrollDelegate() == null)) {
+                                VConsole.log("Touch move, starting row drag...");
+                                startRowDrag(touchStart, type, targetTdOrTr);
+                                VConsole.log("...done.");
+                            }
+                            if (contextTouchTimeout != null) {
+                                contextTouchTimeout.cancel();
+                            }
+                            /*
+                             * Avoid clicks and drags by clearing touch start
+                             * flag.
+                             */
+                            touchStart = null;
+                        }
+
+                        break;
+                    case Event.ONTOUCHSTART:
+                        touchStart = event;
+                        Touch touch = event.getChangedTouches().get(0);
+                        // save position to fields, touches in events are same
+                        // isntance during the operation.
+                        touchStartX = touch.getClientX();
+                        touchStartY = touch.getClientY();
+                        /*
+                         * Prevent simulated mouse events.
+                         */
+                        touchStart.preventDefault();
+                        if (dragmode != 0 || actionKeys != null) {
+                            new Timer() {
+                                @Override
+                                public void run() {
+                                    TouchScrollDelegate activeScrollDelegate = TouchScrollDelegate
+                                            .getActiveScrollDelegate();
+                                    if (activeScrollDelegate != null
+                                            && !activeScrollDelegate.isMoved()) {
+                                        VConsole.log("Cancelled scrolling...");
+                                        /*
+                                         * scrolling hasn't started. Cancel
+                                         * scrolling and let row handle this as
+                                         * drag start or context menu.
+                                         */
+                                        activeScrollDelegate.stopScrolling();
+                                    } else {
+                                        /*
+                                         * Scrolled or scrolling, clear touch
+                                         * start to indicate that row shouldn't
+                                         * handle touch move/end events.
+                                         */
+                                        touchStart = null;
                                     }
                                 }
+                            }.schedule(TOUCHSCROLL_TIMEOUT);
 
-                                VDragEvent ev = VDragAndDropManager.get()
-                                        .startDrag(transferable, event, true);
-                                if (dragmode == DRAGMODE_MULTIROW
-                                        && selectMode == SELECT_MODE_MULTI
-                                        && selectedRowKeys
-                                                .contains("" + rowKey)) {
-                                    ev.createDragImage(
-                                            (Element) scrollBody.tBodyElement
-                                                    .cast(), true);
-                                    Element dragImage = ev.getDragImage();
-                                    int i = 0;
-                                    for (Iterator<Widget> iterator = scrollBody
-                                            .iterator(); iterator.hasNext();) {
-                                        VScrollTableRow next = (VScrollTableRow) iterator
-                                                .next();
-                                        Element child = (Element) dragImage
-                                                .getChild(i++);
-                                        if (!selectedRowKeys.contains(""
-                                                + next.rowKey)) {
-                                            child.getStyle().setVisibility(
-                                                    Visibility.HIDDEN);
+                            if (contextTouchTimeout == null
+                                    && actionKeys != null) {
+                                contextTouchTimeout = new Timer() {
+                                    @Override
+                                    public void run() {
+                                        VConsole.log("Timeout contextmenu...");
+                                        if (touchStart != null) {
+                                            showContextMenu(touchStart);
+                                            touchStart = null;
                                         }
                                     }
-                                } else {
-                                    ev.createDragImage(getElement(), true);
-                                }
-                                // because we are preventing the default (due to
-                                // prevent text selection) we must ensure
-                                // gaining the focus.
-                                ensureFocus();
-                                event.preventDefault();
-                                event.stopPropagation();
+                                };
+                            }
+                            contextTouchTimeout.cancel();
+                            contextTouchTimeout
+                                    .schedule(TOUCH_CONTEXT_MENU_TIMEOUT);
+                        }
+                        break;
+                    case Event.ONMOUSEDOWN:
+                        if (targetCellOrRowFound) {
+                            setRowFocus(this);
+                            if (dragmode != 0
+                                    && (event.getButton() == NativeEvent.BUTTON_LEFT)) {
+                                startRowDrag(event, type, targetTdOrTr);
                             } else if (event.getCtrlKey()
                                     || event.getShiftKey()
                                     || event.getMetaKey()
@@ -4170,17 +4250,88 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                                 event.stopPropagation();
                             }
-
-                            break;
-                        case Event.ONMOUSEOUT:
-                            mDown = false;
-                            break;
-                        default:
-                            break;
                         }
+                        break;
+                    case Event.ONMOUSEOUT:
+                        if (targetCellOrRowFound) {
+                            mDown = false;
+                        }
+                        break;
+                    default:
+                        break;
                     }
                 }
                 super.onBrowserEvent(event);
+            }
+
+            private boolean isSignificantMove(Event event) {
+                if (touchStart == null) {
+                    // no touch start
+                    VConsole.log("no touch starte");
+                    return false;
+                }
+                /*
+                 * TODO calculate based on real distance instead of separate
+                 * axis checks
+                 */
+                Touch touch = event.getChangedTouches().get(0);
+                int deltax = touch.getClientX() - touchStartX;
+                int deltay = touch.getClientY() - touchStartY;
+                if (Math.abs(touch.getClientX() - touchStartX) > TouchScrollDelegate.SIGNIFICANT_MOVE_THRESHOLD) {
+                    return true;
+                }
+                if (Math.abs(touch.getClientY() - touchStartY) > TouchScrollDelegate.SIGNIFICANT_MOVE_THRESHOLD) {
+                    return true;
+                }
+                VConsole.log("Only a minor movement, don't stop context timer yet"
+                        + deltax + " " + deltay);
+                return false;
+            }
+
+            protected void startRowDrag(Event event, final int type,
+                    Element targetTdOrTr) {
+                mDown = true;
+                VTransferable transferable = new VTransferable();
+                transferable.setDragSource(VScrollTable.this);
+                transferable.setData("itemId", "" + rowKey);
+                NodeList<TableCellElement> cells = rowElement.getCells();
+                for (int i = 0; i < cells.getLength(); i++) {
+                    if (cells.getItem(i).isOrHasChild(targetTdOrTr)) {
+                        HeaderCell headerCell = tHead.getHeaderCell(i);
+                        transferable.setData("propertyId", headerCell.cid);
+                        break;
+                    }
+                }
+
+                VDragEvent ev = VDragAndDropManager.get().startDrag(
+                        transferable, event, true);
+                if (dragmode == DRAGMODE_MULTIROW
+                        && selectMode == SELECT_MODE_MULTI
+                        && selectedRowKeys.contains("" + rowKey)) {
+                    ev.createDragImage(
+                            (Element) scrollBody.tBodyElement.cast(), true);
+                    Element dragImage = ev.getDragImage();
+                    int i = 0;
+                    for (Iterator<Widget> iterator = scrollBody.iterator(); iterator
+                            .hasNext();) {
+                        VScrollTableRow next = (VScrollTableRow) iterator
+                                .next();
+                        Element child = (Element) dragImage.getChild(i++);
+                        if (!selectedRowKeys.contains("" + next.rowKey)) {
+                            child.getStyle().setVisibility(Visibility.HIDDEN);
+                        }
+                    }
+                } else {
+                    ev.createDragImage(getElement(), true);
+                }
+                // because we are preventing the default (due to
+                // prevent text selection) we must ensure
+                // gaining the focus.
+                ensureFocus();
+                if (type == Event.ONMOUSEDOWN) {
+                    event.preventDefault();
+                }
+                event.stopPropagation();
             }
 
             /**
@@ -4246,8 +4397,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             public void showContextMenu(Event event) {
                 if (enabled && actionKeys != null) {
-                    int left = event.getClientX();
-                    int top = event.getClientY();
+                    int left = Util.getTouchOrMouseClientX(event);
+                    int top = Util.getTouchOrMouseClientY(event);
                     top += Window.getScrollTop();
                     left += Window.getScrollLeft();
                     client.getContextMenu().showAt(this, left, top);
@@ -4948,9 +5099,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 int childIndex = DOM.getChildIndex(tr, element);
                 dropDetails.colkey = tHead.getHeaderCell(childIndex)
                         .getColKey();
-                dropDetails.dropLocation = DDUtil.getVerticalDropLocation(row
-                        .getElement(), drag.getCurrentGwtEvent().getClientY(),
-                        0.2);
+                dropDetails.dropLocation = DDUtil.getVerticalDropLocation(
+                        row.getElement(), drag.getCurrentGwtEvent(), 0.2);
             }
 
             drag.getDropDetails().put("itemIdOver", dropDetails.overkey + "");
