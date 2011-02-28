@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.datefield;
 
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -23,8 +23,8 @@ public class DateFieldEmptyValid extends TestBase {
 
     private MyDateField df;
 
-    private DateFormat formatter = DateFormat.getDateTimeInstance(
-            DateFormat.LONG, DateFormat.MEDIUM, new Locale("en", "US"));
+    private SimpleDateFormat formatter = new SimpleDateFormat(
+            "MMMM d, yyyy hh:mm:ss aaa", Locale.US);
 
     public class MyDateField extends PopupDateField {
         @Override
