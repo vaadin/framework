@@ -34,25 +34,6 @@
 
 <p>Vaadin @version@ is a maintenance release for Vaadin 6.5. It contains several important fixes.</p>
 
-<h3>Critical fixes</h3>
-
-<p>
-  Vaadin 6.5.0 contained a critical bug where the upload component would cause uploads to be corrupted.
-  This has been fixed in @version@ and thus everyone is recommended to update to @version@. (<a href="http://dev.vaadin.com/ticket/6361">#6361</a>)
-</p>
-
-<h3>Backward Incompatible Changes</h3>
-
-<p>The following changes can break backward compatibility in applications using an earlier version of Vaadin:</p>
-
-<ul>
-  <li>
-    Due to the fix for IE8 compatibility mode (<a href="http://dev.vaadin.com/ticket/6336">#6336</a>) a request parameter has been added to 
-    the <tt>writeAjaxPageHtmlBodyStart</tt>, <tt>writeAjaxPageHtmlHeader</tt>, <tt>writeAjaxPageHtmlHeadStart</tt> and
-    <tt>writeAjaxPageHtmlMainDiv</tt> methods of <b>AbstractApplicationServlet</b>.
-   </li>
-</ul>
-
 <h3>Change Log, Future Releases, and Upgrading</h3>
 
 <p>See this <a href="http://dev.vaadin.com/query?status=closed&group=resolution&order=priority&col=id&col=summary&col=owner&col=type&col=priority&col=component&col=version&milestone=Vaadin+@version@">list of closed tickets</a> for a
