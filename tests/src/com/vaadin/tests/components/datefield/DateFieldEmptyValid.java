@@ -24,7 +24,7 @@ public class DateFieldEmptyValid extends TestBase {
     private MyDateField df;
 
     private DateFormat formatter = DateFormat.getDateTimeInstance(
-            DateFormat.LONG, DateFormat.LONG, new Locale("en", "US"));
+            DateFormat.LONG, DateFormat.MEDIUM, new Locale("en", "US"));
 
     public class MyDateField extends PopupDateField {
         @Override
