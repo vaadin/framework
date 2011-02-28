@@ -34,7 +34,7 @@ import com.vaadin.data.Property;
  * <li> {@link Container.Ordered}
  * <li> {@link Container.Sortable}
  * <li> {@link Container.Filterable}
- * <li> {@link Cloneable}
+ * <li> {@link Cloneable} (deprecated, might be removed in the future)
  * <li>Sends all needed events on content changes.
  * </ul>
  * 
@@ -47,10 +47,10 @@ import com.vaadin.data.Property;
  */
 
 @SuppressWarnings("serial")
-public class IndexedContainer implements Container.Indexed,
-        Container.ItemSetChangeNotifier, Container.PropertySetChangeNotifier,
-        Property.ValueChangeNotifier, Container.Sortable, Cloneable,
-        Container.Filterable {
+public class IndexedContainer extends AbstractContainer implements
+        Container.Indexed, Container.ItemSetChangeNotifier,
+        Container.PropertySetChangeNotifier, Property.ValueChangeNotifier,
+        Container.Sortable, Cloneable, Container.Filterable {
 
     /* Internal structure */
 
@@ -96,16 +96,6 @@ public class IndexedContainer implements Container.Indexed,
      * Property identified by given Property ID and Item ID.
      */
     private Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>> singlePropertyValueChangeListeners = null;
-
-    /**
-     * List of all Property set change event listeners.
-     */
-    private LinkedList<Container.PropertySetChangeListener> propertySetChangeListeners = null;
-
-    /**
-     * List of all container Item set change event listeners.
-     */
-    private LinkedList<Container.ItemSetChangeListener> itemSetChangeListeners = null;
 
     /**
      * The item sorter which is used for sorting the container.
@@ -739,32 +729,6 @@ public class IndexedContainer implements Container.Indexed,
     }
 
     /**
-     * An <code>event</code> object specifying the list whose Property set has
-     * changed.
-     * 
-     * @author IT Mill Ltd.
-     * @version
-     * @VERSION@
-     * @since 3.0
-     */
-    private class PropertySetChangeEvent extends EventObject implements
-            Container.PropertySetChangeEvent, Serializable {
-
-        private PropertySetChangeEvent(IndexedContainer source) {
-            super(source);
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see com.vaadin.data.Container.PropertySetChangeEvent#getContainer ()
-         */
-        public Container getContainer() {
-            return (Container) getSource();
-        }
-    }
-
-    /**
      * An <code>event</code> object specifying the list whose Item set has
      * changed.
      * 
@@ -773,23 +737,13 @@ public class IndexedContainer implements Container.Indexed,
      * @VERSION@
      * @since 3.0
      */
-    public class ItemSetChangeEvent extends EventObject implements
-            Container.ItemSetChangeEvent, Serializable {
+    public class ItemSetChangeEvent extends BaseItemSetChangeEvent {
 
         private final int addedItemIndex;
 
         private ItemSetChangeEvent(IndexedContainer source, int addedItemIndex) {
             super(source);
             this.addedItemIndex = addedItemIndex;
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see com.vaadin.data.Container.ItemSetChangeEvent#getContainer()
-         */
-        public Container getContainer() {
-            return (Container) getSource();
         }
 
         /**
@@ -831,54 +785,20 @@ public class IndexedContainer implements Container.Indexed,
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.PropertySetChangeNotifier#addListener
-     * (com.vaadin.data.Container.PropertySetChangeListener)
-     */
     public void addListener(Container.PropertySetChangeListener listener) {
-        if (propertySetChangeListeners == null) {
-            propertySetChangeListeners = new LinkedList<Container.PropertySetChangeListener>();
-        }
-        propertySetChangeListeners.add(listener);
+        super.addListener(listener);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.PropertySetChangeNotifier#removeListener
-     * (com.vaadin.data.Container.PropertySetChangeListener)
-     */
     public void removeListener(Container.PropertySetChangeListener listener) {
-        if (propertySetChangeListeners != null) {
-            propertySetChangeListeners.remove(listener);
-        }
+        super.removeListener(listener);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.ItemSetChangeNotifier#addListener(com
-     * .vaadin.data.Container.ItemSetChangeListener)
-     */
     public void addListener(Container.ItemSetChangeListener listener) {
-        if (itemSetChangeListeners == null) {
-            itemSetChangeListeners = new LinkedList<Container.ItemSetChangeListener>();
-        }
-        itemSetChangeListeners.add(listener);
+        super.addListener(listener);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.ItemSetChangeNotifier#removeListener
-     * (com.vaadin.data.Container.ItemSetChangeListener)
-     */
     public void removeListener(Container.ItemSetChangeListener listener) {
-        if (itemSetChangeListeners != null) {
-            itemSetChangeListeners.remove(listener);
-        }
+        super.removeListener(listener);
     }
 
     /*
@@ -946,36 +866,14 @@ public class IndexedContainer implements Container.Indexed,
     }
 
     /**
-     * Sends a Property set change event to all interested listeners.
-     */
-    private void fireContainerPropertySetChange() {
-        if (propertySetChangeListeners != null) {
-            final Object[] l = propertySetChangeListeners.toArray();
-            final Container.PropertySetChangeEvent event = new IndexedContainer.PropertySetChangeEvent(
-                    this);
-            for (int i = 0; i < l.length; i++) {
-                ((Container.PropertySetChangeListener) l[i])
-                        .containerPropertySetChange(event);
-            }
-        }
-    }
-
-    /**
      * Sends Item set change event to all registered interested listeners.
      * 
      * @param addedItemIndex
      *            index of new item if change event was an item addition
      */
     protected void fireContentsChange(int addedItemIndex) {
-        if (itemSetChangeListeners != null) {
-            final Object[] l = itemSetChangeListeners.toArray();
-            final Container.ItemSetChangeEvent event = new IndexedContainer.ItemSetChangeEvent(
-                    this, addedItemIndex);
-            for (int i = 0; i < l.length; i++) {
-                ((Container.ItemSetChangeListener) l[i])
-                        .containerItemSetChange(event);
-            }
-        }
+        fireItemSetChange(new IndexedContainer.ItemSetChangeEvent(this,
+                addedItemIndex));
     }
 
     /**
@@ -1465,7 +1363,11 @@ public class IndexedContainer implements Container.Indexed,
      * 
      * @throws CloneNotSupportedException
      *             if an object cannot be cloned. .
+     * 
+     * @deprecated cloning support might be removed from IndexedContainer in the
+     *             future
      */
+    @Deprecated
     @Override
     public Object clone() throws CloneNotSupportedException {
 
@@ -1475,12 +1377,12 @@ public class IndexedContainer implements Container.Indexed,
         // Clone the shallow properties
         nc.itemIds = itemIds != null ? (ArrayList<Object>) itemIds.clone()
                 : null;
-        nc.itemSetChangeListeners = itemSetChangeListeners != null ? (LinkedList<Container.ItemSetChangeListener>) itemSetChangeListeners
-                .clone() : null;
+        nc.setItemSetChangeListeners(getItemSetChangeListeners() != null ? new LinkedList<Container.ItemSetChangeListener>(
+                getItemSetChangeListeners()) : null);
         nc.propertyIds = propertyIds != null ? (ArrayList<Object>) propertyIds
                 .clone() : null;
-        nc.propertySetChangeListeners = propertySetChangeListeners != null ? (LinkedList<Container.PropertySetChangeListener>) propertySetChangeListeners
-                .clone() : null;
+        nc.setPropertySetChangeListeners(getPropertySetChangeListeners() != null ? new LinkedList<Container.PropertySetChangeListener>(
+                getPropertySetChangeListeners()) : null);
         nc.propertyValueChangeListeners = propertyValueChangeListeners != null ? (LinkedList<Property.ValueChangeListener>) propertyValueChangeListeners
                 .clone() : null;
         nc.readOnlyProperties = readOnlyProperties != null ? (HashSet<Property>) readOnlyProperties

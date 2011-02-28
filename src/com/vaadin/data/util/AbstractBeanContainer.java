@@ -60,9 +60,9 @@ import com.vaadin.data.Property.ValueChangeNotifier;
  * 
  * @since 6.5
  */
-public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> implements
-        Indexed, Filterable, Sortable, ValueChangeListener,
-        ItemSetChangeNotifier {
+public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
+        AbstractContainer implements Indexed, Filterable, Sortable,
+        ValueChangeListener, ItemSetChangeNotifier {
 
     /**
      * Resolver that maps beans to their (item) identifiers, removing the need
@@ -183,12 +183,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> implements
     private transient LinkedHashMap<String, PropertyDescriptor> model;
 
     /**
-     * Collection of listeners interested in
-     * {@link Container.ItemSetChangeEvent ItemSetChangeEvent} events.
-     */
-    private List<ItemSetChangeListener> itemSetChangeListeners;
-
-    /**
      * Constructs a {@code AbstractBeanContainer} for beans of the given type.
      * 
      * @param type
@@ -274,47 +268,14 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> implements
         throw new UnsupportedOperationException();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.data.Container.ItemSetChangeNotifier#addListener(com.vaadin
-     * .data.Container.ItemSetChangeListener)
-     */
-    public void addListener(ItemSetChangeListener listener) {
-        if (itemSetChangeListeners == null) {
-            itemSetChangeListeners = new LinkedList<ItemSetChangeListener>();
-        }
-        itemSetChangeListeners.add(listener);
+    @Override
+    public void addListener(Container.ItemSetChangeListener listener) {
+        super.addListener(listener);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.data.Container.ItemSetChangeNotifier#removeListener(com.vaadin
-     * .data.Container.ItemSetChangeListener)
-     */
-    public void removeListener(ItemSetChangeListener listener) {
-        if (itemSetChangeListeners != null) {
-            itemSetChangeListeners.remove(listener);
-        }
-    }
-
-    /**
-     * Send an ItemSetChange event to all listeners.
-     */
-    protected void fireItemSetChange() {
-        if (itemSetChangeListeners != null) {
-            final Container.ItemSetChangeEvent event = new Container.ItemSetChangeEvent() {
-                public Container getContainer() {
-                    return AbstractBeanContainer.this;
-                }
-            };
-            for (ItemSetChangeListener listener : itemSetChangeListeners) {
-                listener.containerItemSetChange(event);
-            }
-        }
+    @Override
+    public void removeListener(Container.ItemSetChangeListener listener) {
+        super.removeListener(listener);
     }
 
     /*
