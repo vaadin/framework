@@ -211,9 +211,13 @@ public abstract class AbstractContainerTest extends TestCase {
             Assert.assertEquals(itemId,
                     container.getIdByIndex(itemPosition + 2));
 
-            container.removeItem(addedId);
-            container.removeItem(newFirstId);
-            container.removeItem(newLastId);
+            Assert.assertTrue(container.removeItem(addedId));
+            Assert.assertTrue(container.removeItem(newFirstId));
+            Assert.assertTrue(container.removeItem(newLastId));
+
+            Assert.assertFalse(
+                    "Removing non-existing item should indicate failure",
+                    container.removeItem(addedId));
         }
 
         // addItemAt
@@ -224,7 +228,7 @@ public abstract class AbstractContainerTest extends TestCase {
             Assert.assertEquals(newItemId, container.getIdByIndex(itemPosition));
             Assert.assertEquals(itemId,
                     container.getIdByIndex(itemPosition + 1));
-            container.removeItem(newItemId);
+            Assert.assertTrue(container.removeItem(newItemId));
             Assert.assertFalse(container.containsId(newItemId));
 
             container.addItemAt(0, newItemId);
@@ -234,7 +238,7 @@ public abstract class AbstractContainerTest extends TestCase {
             Assert.assertEquals(newItemId, container.getIdByIndex(0));
             Assert.assertEquals(itemId,
                     container.getIdByIndex(itemPosition + 1));
-            container.removeItem(newItemId);
+            Assert.assertTrue(container.removeItem(newItemId));
             Assert.assertFalse(container.containsId(newItemId));
 
             container.addItemAt(container.size(), newItemId);
@@ -245,7 +249,7 @@ public abstract class AbstractContainerTest extends TestCase {
             Assert.assertEquals(newItemId,
                     container.getIdByIndex(container.size() - 1));
             Assert.assertEquals(itemId, container.getIdByIndex(itemPosition));
-            container.removeItem(newItemId);
+            Assert.assertTrue(container.removeItem(newItemId));
             Assert.assertFalse(container.containsId(newItemId));
         }
     }
@@ -335,7 +339,7 @@ public abstract class AbstractContainerTest extends TestCase {
     }
 
     protected void initializeContainer(Container container) {
-        container.removeAllItems();
+        Assert.assertTrue(container.removeAllItems());
         Object[] propertyIds = container.getContainerPropertyIds().toArray();
         for (Object propertyId : propertyIds) {
             container.removeContainerProperty(propertyId);
