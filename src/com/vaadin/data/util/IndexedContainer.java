@@ -179,20 +179,6 @@ public class IndexedContainer extends
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.data.Container#containsId(java.lang.Object)
-     */
-    @Override
-    public boolean containsId(Object itemId) {
-        if (itemId == null) {
-            return false;
-        } else {
-            return super.containsId(itemId);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see com.vaadin.data.Container#addContainerProperty(java.lang.Object,
      * java.lang.Class, java.lang.Object)
      */

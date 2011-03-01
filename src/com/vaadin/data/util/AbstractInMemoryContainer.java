@@ -93,7 +93,11 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
 
     public boolean containsId(Object itemId) {
         // only look at visible items after filtering
-        return getVisibleItemIds().contains(itemId);
+        if (itemId == null) {
+            return false;
+        } else {
+            return getVisibleItemIds().contains(itemId);
+        }
     }
 
     public Collection<?> getItemIds() {
