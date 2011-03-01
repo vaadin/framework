@@ -181,6 +181,46 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     // internal methods
 
     /**
+     * Removes all items from the internal data structures of this class. This
+     * can be used to implement {@link #removeAllItems()} in subclasses.
+     * 
+     * No notification is sent, the caller has to fire a suitable item set
+     * change notification.
+     */
+    protected void internalRemoveAllItems() {
+        // Removes all Items
+        allItemIds.clear();
+        if (getFilteredItemIds() != null) {
+            getFilteredItemIds().clear();
+        }
+    }
+
+    /**
+     * Removes a single item from the internal data structures of this class.
+     * This can be used to implement {@link #removeItem(Object)} in subclasses.
+     * 
+     * No notification is sent, the caller has to fire a suitable item set
+     * change notification.
+     * 
+     * @param itemId
+     *            the identifier of the item to remove
+     * @return true if an item was successfully removed, false if failed to
+     *         remove or no such item
+     */
+    protected boolean internalRemoveItem(Object itemId) {
+        if (itemId == null) {
+            return false;
+        }
+
+        boolean result = allItemIds.remove(itemId);
+        if (result && getFilteredItemIds() != null) {
+            getFilteredItemIds().remove(itemId);
+        }
+
+        return result;
+    }
+
+    /**
      * Returns the internal list of visible item identifiers after filtering.
      * 
      * For internal use only.

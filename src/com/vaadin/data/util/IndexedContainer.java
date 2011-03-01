@@ -225,13 +225,9 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Container#removeAllItems()
      */
     public boolean removeAllItems() {
+        internalRemoveAllItems();
 
-        // Removes all Items
-        allItemIds.clear();
         items.clear();
-        if (getFilteredItemIds() != null) {
-            getFilteredItemIds().clear();
-        }
 
         // Sends a change event
         fireContentsChange(-1);
@@ -308,21 +304,16 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Container#removeItem(java.lang.Object)
      */
     public boolean removeItem(Object itemId) {
-        if (itemId == null) {
+        if (itemId == null || items.remove(itemId) == null) {
             return false;
         }
+        if (internalRemoveItem(itemId)) {
+            fireContentsChange(-1);
 
-        if (items.remove(itemId) == null) {
+            return true;
+        } else {
             return false;
         }
-        allItemIds.remove(itemId);
-        if (getFilteredItemIds() != null) {
-            getFilteredItemIds().remove(itemId);
-        }
-
-        fireContentsChange(-1);
-
-        return true;
     }
 
     /*
