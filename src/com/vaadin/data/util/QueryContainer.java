@@ -44,8 +44,11 @@ import com.vaadin.data.Property;
  * @author IT Mill Ltd.
  * @version
  * @since 4.0
+ * 
+ * @deprecated will be removed in the future, use the SQLContainer add-on
  */
 
+@Deprecated
 @SuppressWarnings("serial")
 public class QueryContainer implements Container, Container.Ordered,
         Container.Indexed {
