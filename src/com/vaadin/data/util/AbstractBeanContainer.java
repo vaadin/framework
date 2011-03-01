@@ -19,10 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filterable;
-import com.vaadin.data.Container.Indexed;
-import com.vaadin.data.Container.ItemSetChangeNotifier;
 import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -61,8 +58,8 @@ import com.vaadin.data.Property.ValueChangeNotifier;
  * @since 6.5
  */
 public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
-        AbstractContainer implements Indexed, Filterable, Sortable,
-        ValueChangeListener, ItemSetChangeNotifier {
+        AbstractInMemoryContainer<IDTYPE, String, BeanItem<BEANTYPE>> implements
+        Filterable, Sortable, ValueChangeListener {
 
     /**
      * Resolver that maps beans to their (item) identifiers, removing the need
@@ -153,19 +150,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
     private Set<Filter> filters = new HashSet<Filter>();
 
     /**
-     * The filteredItems variable contains the ids for items that are visible
-     * outside the container. If filters are enabled this contains a subset of
-     * allItems, if no filters are set this contains the same items as allItems.
-     */
-    private ListSet<IDTYPE> filteredItemIds = new ListSet<IDTYPE>();
-
-    /**
-     * The allItems variable always contains the ids for all the items in the
-     * container. Some or all of these are also in the filteredItems list.
-     */
-    private ListSet<IDTYPE> allItemIds = new ListSet<IDTYPE>();
-
-    /**
      * Maps all item ids in the container (including filtered) to their
      * corresponding BeanItem.
      */
@@ -191,6 +175,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      *             If {@code type} is null
      */
     protected AbstractBeanContainer(Class<? super BEANTYPE> type) {
+        super(new ListSet<IDTYPE>());
+        setFilteredItemIds(new ListSet<IDTYPE>());
         if (type == null) {
             throw new IllegalArgumentException(
                     "The bean type passed to AbstractBeanContainer must not be null");
@@ -268,25 +254,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public void addListener(Container.ItemSetChangeListener listener) {
-        super.addListener(listener);
-    }
-
-    @Override
-    public void removeListener(Container.ItemSetChangeListener listener) {
-        super.removeListener(listener);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container#size()
-     */
-    public int size() {
-        return filteredItemIds.size();
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -294,7 +261,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      */
     public boolean removeAllItems() {
         allItemIds.clear();
-        filteredItemIds.clear();
+        getFilteredItemIds().clear();
         // detach listeners from all Items
         for (Item item : itemIdToItem.values()) {
             removeAllValueChangeListeners(item);
@@ -307,18 +274,9 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.data.Container#containsId(java.lang.Object)
-     */
-    public boolean containsId(Object itemId) {
-        // only look at visible items after filtering
-        return filteredItemIds.contains(itemId);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see com.vaadin.data.Container#getItem(java.lang.Object)
      */
+    @Override
     public BeanItem<BEANTYPE> getItem(Object itemId) {
         return itemIdToItem.get(itemId);
     }
@@ -328,9 +286,10 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * 
      * @see com.vaadin.data.Container#getItemIds()
      */
+    @Override
     @SuppressWarnings("unchecked")
     public Collection<IDTYPE> getItemIds() {
-        return (Collection<IDTYPE>) filteredItemIds.clone();
+        return (Collection<IDTYPE>) super.getItemIds();
     }
 
     /*
@@ -360,7 +319,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         removeAllValueChangeListeners(getItem(itemId));
         // remove item
         itemIdToItem.remove(itemId);
-        filteredItemIds.remove(itemId);
+        getFilteredItemIds().remove(itemId);
         fireItemSetChange();
         return true;
     }
@@ -381,16 +340,17 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
     @SuppressWarnings("unchecked")
     protected void filterAll() {
         // avoid notification if the filtering had no effect
-        List<IDTYPE> originalItems = filteredItemIds;
+        List<IDTYPE> originalItems = getFilteredItemIds();
         // it is somewhat inefficient to do a (shallow) clone() every time
-        filteredItemIds = (ListSet<IDTYPE>) allItemIds.clone();
+        setFilteredItemIds((List<IDTYPE>) ((ListSet<IDTYPE>) allItemIds)
+                .clone());
         for (Filter f : filters) {
             filter(f);
         }
         // check if exactly the same items are there after filtering to avoid
         // unnecessary notifications
         // this may be slow in some cases as it uses BEANTYPE.equals()
-        if (!originalItems.equals(filteredItemIds)) {
+        if (!originalItems.equals(getFilteredItemIds())) {
             fireItemSetChange();
         }
     }
@@ -412,7 +372,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      *            The filter used to determine if items should be removed
      */
     protected void filter(Filter f) {
-        Iterator<IDTYPE> iterator = filteredItemIds.iterator();
+        Iterator<IDTYPE> iterator = getFilteredItemIds().iterator();
         while (iterator.hasNext()) {
             IDTYPE itemId = iterator.next();
             if (!f.passesFilter(getItem(itemId))) {
@@ -432,7 +392,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
         if (filters.isEmpty()) {
-            filteredItemIds = (ListSet<IDTYPE>) allItemIds.clone();
+            setFilteredItemIds((List<IDTYPE>) ((ListSet<IDTYPE>) allItemIds)
+                    .clone());
         }
         // listen to change events to be able to update filtering
         for (Item item : itemIdToItem.values()) {
@@ -535,98 +496,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         for (Object propertyId : item.getItemPropertyIds()) {
             removeValueChangeListener(item, propertyId);
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Ordered#nextItemId(java.lang.Object)
-     */
-    public IDTYPE nextItemId(Object itemId) {
-        int index = indexOfId(itemId);
-        if (index >= 0 && index < size() - 1) {
-            return getIdByIndex(index + 1);
-        } else {
-            // out of bounds
-            return null;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Ordered#prevItemId(java.lang.Object)
-     */
-    public IDTYPE prevItemId(Object itemId) {
-        int index = indexOfId(itemId);
-        if (index > 0) {
-            return getIdByIndex(index - 1);
-        } else {
-            // out of bounds
-            return null;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Ordered#firstItemId()
-     */
-    public IDTYPE firstItemId() {
-        if (size() > 0) {
-            return getIdByIndex(0);
-        } else {
-            return null;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Ordered#lastItemId()
-     */
-    public IDTYPE lastItemId() {
-        if (size() > 0) {
-            return getIdByIndex(size() - 1);
-        } else {
-            return null;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Ordered#isFirstId(java.lang.Object)
-     */
-    public boolean isFirstId(Object itemId) {
-        return firstItemId() == itemId;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Ordered#isLastId(java.lang.Object)
-     */
-    public boolean isLastId(Object itemId) {
-        return lastItemId() == itemId;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Indexed#getIdByIndex(int)
-     */
-    public IDTYPE getIdByIndex(int index) {
-        return filteredItemIds.get(index);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Indexed#indexOfId(java.lang.Object)
-     */
-    public int indexOfId(Object itemId) {
-        return filteredItemIds.indexOf(itemId);
     }
 
     /**

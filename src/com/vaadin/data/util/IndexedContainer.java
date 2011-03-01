@@ -14,11 +14,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -47,20 +45,14 @@ import com.vaadin.data.Property;
  */
 
 @SuppressWarnings("serial")
-public class IndexedContainer extends AbstractContainer implements
-        Container.Indexed, Container.ItemSetChangeNotifier,
+// item type is really IndexedContainerItem, but using Item not to show it in
+// public API
+public class IndexedContainer extends
+        AbstractInMemoryContainer<Object, Object, Item> implements
         Container.PropertySetChangeNotifier, Property.ValueChangeNotifier,
         Container.Sortable, Cloneable, Container.Filterable {
 
     /* Internal structure */
-
-    /**
-     * Linked list of ordered Item IDs.
-     */
-    private ArrayList<Object> allItemIds = new ArrayList<Object>();
-
-    /** List of item ids that passes the filtering */
-    private LinkedHashSet<Object> filteredItemIds = null;
 
     /**
      * Linked list of ordered Property IDs.
@@ -115,9 +107,11 @@ public class IndexedContainer extends AbstractContainer implements
     /* Container constructors */
 
     public IndexedContainer() {
+        super(new ArrayList<Object>());
     }
 
     public IndexedContainer(Collection<?> itemIds) {
+        this();
         if (items != null) {
             for (final Iterator<?> i = itemIds.iterator(); i.hasNext();) {
                 this.addItem(i.next());
@@ -132,27 +126,14 @@ public class IndexedContainer extends AbstractContainer implements
      * 
      * @see com.vaadin.data.Container#getItem(java.lang.Object)
      */
+    @Override
     public Item getItem(Object itemId) {
 
-        if (itemId != null
-                && items.containsKey(itemId)
-                && (getFilteredItemIds() == null || getFilteredItemIds()
-                        .contains(itemId))) {
+        if (itemId != null && items.containsKey(itemId)
+                && (getVisibleItemIds().contains(itemId))) {
             return new IndexedContainerItem(itemId);
         }
         return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container#getItemIds()
-     */
-    public Collection<?> getItemIds() {
-        if (getFilteredItemIds() != null) {
-            return Collections.unmodifiableCollection(getFilteredItemIds());
-        }
-        return Collections.unmodifiableCollection(allItemIds);
     }
 
     /*
@@ -198,28 +179,15 @@ public class IndexedContainer extends AbstractContainer implements
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.data.Container#size()
-     */
-    public int size() {
-        if (getFilteredItemIds() == null) {
-            return allItemIds.size();
-        }
-        return getFilteredItemIds().size();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see com.vaadin.data.Container#containsId(java.lang.Object)
      */
+    @Override
     public boolean containsId(Object itemId) {
         if (itemId == null) {
             return false;
+        } else {
+            return super.containsId(itemId);
         }
-        if (getFilteredItemIds() != null) {
-            return getFilteredItemIds().contains(itemId);
-        }
-        return items.containsKey(itemId);
     }
 
     /*
@@ -406,143 +374,6 @@ public class IndexedContainer extends AbstractContainer implements
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.data.Container.Ordered#firstItemId()
-     */
-    public Object firstItemId() {
-        try {
-            if (getFilteredItemIds() != null) {
-                return getFilteredItemIds().iterator().next();
-            }
-            return allItemIds.get(0);
-        } catch (final IndexOutOfBoundsException e) {
-        } catch (final NoSuchElementException e) {
-        }
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Ordered#lastItemId()
-     */
-    public Object lastItemId() {
-        try {
-            if (getFilteredItemIds() != null) {
-                final Iterator<?> i = getFilteredItemIds().iterator();
-                Object last = null;
-                while (i.hasNext()) {
-                    last = i.next();
-                }
-                return last;
-            }
-            return allItemIds.get(allItemIds.size() - 1);
-        } catch (final IndexOutOfBoundsException e) {
-        }
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Ordered#nextItemId(java.lang.Object)
-     */
-    public Object nextItemId(Object itemId) {
-        if (getFilteredItemIds() != null) {
-            if (itemId == null || !getFilteredItemIds().contains(itemId)) {
-                return null;
-            }
-            final Iterator<?> i = getFilteredItemIds().iterator();
-            while (i.hasNext() && !itemId.equals(i.next())) {
-                ;
-            }
-            if (i.hasNext()) {
-                return i.next();
-            }
-            return null;
-        }
-        try {
-            int idx = allItemIds.indexOf(itemId);
-            if (idx == -1) {
-                // If the given Item is not found in the Container,
-                // null is returned.
-                return null;
-            }
-            return allItemIds.get(idx + 1);
-        } catch (final IndexOutOfBoundsException e) {
-            return null;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Ordered#prevItemId(java.lang.Object)
-     */
-    public Object prevItemId(Object itemId) {
-        if (getFilteredItemIds() != null) {
-            if (!getFilteredItemIds().contains(itemId)) {
-                return null;
-            }
-            final Iterator<?> i = getFilteredItemIds().iterator();
-            if (itemId == null) {
-                return null;
-            }
-            Object prev = null;
-            Object current;
-            while (i.hasNext() && !itemId.equals(current = i.next())) {
-                prev = current;
-            }
-            return prev;
-        }
-        try {
-            return allItemIds.get(allItemIds.indexOf(itemId) - 1);
-        } catch (final IndexOutOfBoundsException e) {
-            return null;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Ordered#isFirstId(java.lang.Object)
-     */
-    public boolean isFirstId(Object itemId) {
-        if (getFilteredItemIds() != null) {
-            try {
-                final Object first = getFilteredItemIds().iterator().next();
-                return (itemId != null && itemId.equals(first));
-            } catch (final NoSuchElementException e) {
-                return false;
-            }
-        }
-        return (size() >= 1 && allItemIds.get(0).equals(itemId));
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Ordered#isLastId(java.lang.Object)
-     */
-    public boolean isLastId(Object itemId) {
-        if (getFilteredItemIds() != null) {
-            try {
-                Object last = null;
-                for (final Iterator<?> i = getFilteredItemIds().iterator(); i
-                        .hasNext();) {
-                    last = i.next();
-                }
-                return (itemId != null && itemId.equals(last));
-            } catch (final NoSuchElementException e) {
-                return false;
-            }
-        }
-        final int s = size();
-        return (s >= 1 && allItemIds.get(s - 1).equals(itemId));
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object,
      * java.lang.Object)
      */
@@ -579,55 +410,6 @@ public class IndexedContainer extends AbstractContainer implements
         } else {
             return null;
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Indexed#getIdByIndex(int)
-     */
-    public Object getIdByIndex(int index) {
-
-        if (getFilteredItemIds() != null) {
-            if (index < 0) {
-                throw new IndexOutOfBoundsException();
-            }
-            try {
-                final Iterator<?> i = getFilteredItemIds().iterator();
-                while (index-- > 0) {
-                    i.next();
-                }
-                return i.next();
-            } catch (final NoSuchElementException e) {
-                throw new IndexOutOfBoundsException();
-            }
-        }
-
-        return allItemIds.get(index);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Indexed#indexOfId(java.lang.Object)
-     */
-    public int indexOfId(Object itemId) {
-        if (getFilteredItemIds() != null) {
-            int index = 0;
-            if (itemId == null) {
-                return -1;
-            }
-            final Iterator<?> i = getFilteredItemIds().iterator();
-            while (i.hasNext()) {
-                Object id = i.next();
-                if (itemId.equals(id)) {
-                    return index;
-                }
-                index++;
-            }
-            return -1;
-        }
-        return allItemIds.indexOf(itemId);
     }
 
     /*
@@ -793,16 +575,6 @@ public class IndexedContainer extends AbstractContainer implements
 
     @Override
     public void removeListener(Container.PropertySetChangeListener listener) {
-        super.removeListener(listener);
-    }
-
-    @Override
-    public void addListener(Container.ItemSetChangeListener listener) {
-        super.addListener(listener);
-    }
-
-    @Override
-    public void removeListener(Container.ItemSetChangeListener listener) {
         super.removeListener(listener);
     }
 
@@ -1380,7 +1152,7 @@ public class IndexedContainer extends AbstractContainer implements
         final IndexedContainer nc = new IndexedContainer();
 
         // Clone the shallow properties
-        nc.allItemIds = allItemIds != null ? (ArrayList<Object>) allItemIds
+        nc.allItemIds = allItemIds != null ? (ArrayList<Object>) ((ArrayList<Object>) allItemIds)
                 .clone() : null;
         nc.setItemSetChangeListeners(getItemSetChangeListeners() != null ? new LinkedList<Container.ItemSetChangeListener>(
                 getItemSetChangeListeners()) : null);
@@ -1401,7 +1173,8 @@ public class IndexedContainer extends AbstractContainer implements
         nc.filters = filters == null ? null : (HashSet<Filter>) filters.clone();
 
         nc.setFilteredItemIds(getFilteredItemIds() == null ? null
-                : (LinkedHashSet<Object>) getFilteredItemIds().clone());
+                : (ListSet<Object>) ((ListSet<Object>) getFilteredItemIds())
+                        .clone());
 
         // Clone property-values
         if (items == null) {
@@ -1505,7 +1278,7 @@ public class IndexedContainer extends AbstractContainer implements
         }
         // Reset filtered list
         if (getFilteredItemIds() == null) {
-            setFilteredItemIds(new LinkedHashSet<Object>());
+            setFilteredItemIds(new ListSet<Object>());
         } else {
             getFilteredItemIds().clear();
         }
@@ -1545,14 +1318,6 @@ public class IndexedContainer extends AbstractContainer implements
             }
         }
         return true;
-    }
-
-    private void setFilteredItemIds(LinkedHashSet<Object> filteredItemIds) {
-        this.filteredItemIds = filteredItemIds;
-    }
-
-    private LinkedHashSet<Object> getFilteredItemIds() {
-        return filteredItemIds;
     }
 
 }
