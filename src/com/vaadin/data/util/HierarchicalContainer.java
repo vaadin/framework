@@ -264,7 +264,7 @@ public class HierarchicalContainer extends IndexedContainer implements
                 doFilterContainer(hasFilters());
             }
 
-            fireContentsChange(-1);
+            fireItemSetChange();
 
             return true;
         }
@@ -323,7 +323,7 @@ public class HierarchicalContainer extends IndexedContainer implements
             doFilterContainer(hasFilters());
         }
 
-        fireContentsChange(-1);
+        fireItemSetChange();
 
         return true;
     }
@@ -371,7 +371,7 @@ public class HierarchicalContainer extends IndexedContainer implements
                         "Given identifiers no not have the same parent.");
             }
         }
-        fireContentsChange(-1);
+        fireItemSetChange();
 
     }
 
@@ -401,9 +401,10 @@ public class HierarchicalContainer extends IndexedContainer implements
     }
 
     @Override
-    protected void fireContentsChange(int addedItemIndex) {
+    protected void fireItemSetChange(
+            com.vaadin.data.Container.ItemSetChangeEvent event) {
         if (contentsChangeEventsOn()) {
-            super.fireContentsChange(addedItemIndex);
+            super.fireItemSetChange(event);
         } else {
             contentsChangedEventPending = true;
         }
@@ -420,7 +421,7 @@ public class HierarchicalContainer extends IndexedContainer implements
     private void enableAndFireContentsChangeEvents() {
         contentChangedEventsDisabled = false;
         if (contentsChangedEventPending) {
-            fireContentsChange(-1);
+            fireItemSetChange();
         }
         contentsChangedEventPending = false;
     }
