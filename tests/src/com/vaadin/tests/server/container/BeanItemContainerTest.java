@@ -578,16 +578,16 @@ public class BeanItemContainerTest extends AbstractBeanContainerTest {
             }
         }.listenerTest(2, true);
 
-        // new ItemSetChangeListenerTester() {
-        // @Override
-        // protected void performModification(
-        // BeanItemContainer<ClassName> container) {
-        // container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
-        // true, false);
-        // // TODO why notified?
-        // container.removeItem(nameToBean.get(sampleData[0]));
-        // }
-        // }.listenerTest(1, true);
+        new ItemSetChangeListenerTester() {
+            @Override
+            protected void performModification(
+                    BeanItemContainer<ClassName> container) {
+                container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
+                        true, false);
+                // removed even though not visible
+                container.removeItem(nameToBean.get(sampleData[0]));
+            }
+        }.listenerTest(2, true);
 
         new ItemSetChangeListenerTester() {
             @Override
