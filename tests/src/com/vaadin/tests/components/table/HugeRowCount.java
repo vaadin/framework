@@ -53,7 +53,7 @@ public class HugeRowCount extends TestBase {
 
         public void setSize(int size) {
             this.size = size;
-            fireContentsChange(-1);
+            fireItemSetChange();
         }
 
         @Override
