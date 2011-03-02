@@ -626,7 +626,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
             return null;
         }
         // Make sure that the item has not been added previously
-        if (allItemIds.contains(bean)) {
+        if (allItemIds.contains(itemId)) {
             return null;
         }
 
