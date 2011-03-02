@@ -162,7 +162,9 @@ public abstract class AbstractContainer implements Container {
     }
 
     /**
-     * Sends a simple Item set change event to all interested listeners.
+     * Sends a simple Item set change event to all interested listeners,
+     * indicating that anything in the contents may have changed (items added,
+     * removed etc.).
      */
     protected void fireItemSetChange() {
         fireItemSetChange(new BaseItemSetChangeEvent(this));
