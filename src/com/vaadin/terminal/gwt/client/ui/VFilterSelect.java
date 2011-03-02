@@ -175,7 +175,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             DOM.appendChild(root, down);
             DOM.appendChild(root, status);
             DOM.setElementProperty(status, "className", CLASSNAME + "-status");
-
+            DOM.sinkEvents(root, Event.ONMOUSEDOWN);
             addCloseHandler(this);
         }
 
@@ -334,7 +334,24 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                     || DOM.compare(target, DOM.getChild(down, 0))) {
                 filterOptions(currentPage + 1, lastFilter);
             }
-            tb.setFocus(true);
+
+            /*
+             * Prevent the keyboard focus from leaving the textfield by
+             * preventing the default behaviour of the browser. Fixes #4285.
+             */
+            if (event.getTypeInt() == Event.ONMOUSEDOWN) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                /*
+                 * In IE the above wont work, the blur event will still trigger.
+                 * So, we set a flag here to prevent the next blur event from
+                 * happening.
+                 */
+                if (BrowserInfo.get().isIE()) {
+                    iePreventNextBlur = true;
+                }
+            }
         }
 
         /**
@@ -442,7 +459,6 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 left = getPopupLeft();
             }
             setPopupPosition(left, top);
-
         }
 
         /**
@@ -726,7 +742,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     /**
      * Used when measuring the width of the popup
      */
+    boolean iePreventNextBlur = false;
     private final HTML popupOpener = new HTML("") {
+
         /*
          * (non-Javadoc)
          * 
@@ -739,6 +757,24 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             super.onBrowserEvent(event);
             if (client != null) {
                 client.handleTooltipEvent(event, VFilterSelect.this);
+            }
+
+            /*
+             * Prevent the keyboard focus from leaving the textfield by
+             * preventing the default behaviour of the browser. Fixes #4285.
+             */
+            if (event.getTypeInt() == Event.ONMOUSEDOWN) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                /*
+                 * In IE the above wont work, the blur event will still trigger.
+                 * So, we set a flag here to prevent the next blur event from
+                 * happening.
+                 */
+                if (BrowserInfo.get().isIE()) {
+                    iePreventNextBlur = true;
+                }
             }
         }
     };
@@ -829,7 +865,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         });
 
         tb.sinkEvents(VTooltip.TOOLTIP_EVENTS);
-        popupOpener.sinkEvents(VTooltip.TOOLTIP_EVENTS);
+        popupOpener.sinkEvents(VTooltip.TOOLTIP_EVENTS | Event.ONMOUSEDOWN);
         panel.add(tb);
         panel.add(popupOpener);
         initWidget(panel);
@@ -842,6 +878,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         popupOpener.setStyleName(CLASSNAME + "-button");
         popupOpener.addClickHandler(this);
     }
+
 
     /**
      * Does the Select have more pages?
@@ -1069,6 +1106,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
         if (!initDone) {
             updateRootWidth();
+        }
+
+        // Style dependant style names are lost during the update, so we add
+        // them here back again
+        if (focused) {
+            addStyleDependentName("focus");
         }
 
         initDone = true;
@@ -1370,9 +1413,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 prompting = true;
             }
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
-            tb.setFocus(true);
+            focus();
             tb.selectAll();
-
         }
     }
 
@@ -1409,6 +1451,17 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      * .dom.client.FocusEvent)
      */
     public void onFocus(FocusEvent event) {
+
+        /*
+         * When we disable a blur event in ie we need to refocus the textfield.
+         * This will cause a focus event we do not want to process, so in that
+         * case we just ignore it.
+         */
+        if (BrowserInfo.get().isIE() && iePreventNextFocus) {
+            iePreventNextFocus = false;
+            return;
+        }
+
         focused = true;
         if (prompting && !readonly) {
             setPromptingOff("");
@@ -1427,7 +1480,24 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      * com.google.gwt.event.dom.client.BlurHandler#onBlur(com.google.gwt.event
      * .dom.client.BlurEvent)
      */
+    boolean iePreventNextFocus = false;
     public void onBlur(BlurEvent event) {
+
+        /*
+         * Sometimes we need in IE to manually disable a blur event which gets
+         * triggered by a mouseclick which we cannot prevent. In this cases we
+         * refocus the textfield and ignore the blur event.
+         */
+        if (BrowserInfo.get().isIE() && iePreventNextBlur) {
+            iePreventNextBlur = false;
+
+            // Move the focus back to the textfield without triggering a
+            // onFocus-event
+            iePreventNextFocus = true;
+            tb.setFocus(true);
+            return;
+        }
+
         focused = false;
         if (!readonly) {
             // much of the TAB handling takes place here
