@@ -221,6 +221,19 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     }
 
     /**
+     * Returns the index of an item within the unfiltered collection of items.
+     * 
+     * For internal use by subclasses only. This API is experimental and subject
+     * to change.
+     * 
+     * @param itemId
+     * @return
+     */
+    protected int internalIndexOf(ITEMIDTYPE itemId) {
+        return allItemIds.indexOf(itemId);
+    }
+
+    /**
      * Returns the internal list of visible item identifiers after filtering.
      * 
      * For internal use only.

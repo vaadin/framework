@@ -651,19 +651,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
     }
 
     /**
-     * Returns the index of an item within the unfiltered collection of items.
-     * 
-     * For internal use by subclasses only. This API is experimental and subject
-     * to change.
-     * 
-     * @param itemId
-     * @return
-     */
-    protected int internalIndexOf(IDTYPE itemId) {
-        return allItemIds.indexOf(itemId);
-    }
-
-    /**
      * Adds a bean at the given index of the internal (unfiltered) list.
      * <p>
      * The item is also added in the visible part of the list if it passes the

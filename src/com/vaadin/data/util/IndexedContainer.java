@@ -405,11 +405,11 @@ public class IndexedContainer extends
         } else if (index == size()) {
             // add just after the last item
             Object id = getIdByIndex(index - 1);
-            internalIndex = allItemIds.indexOf(id) + 1;
+            internalIndex = internalIndexOf(id) + 1;
         } else if (index > 0 && index < size()) {
             // map the index of the visible item to its unfiltered index
             Object id = getIdByIndex(index);
-            internalIndex = allItemIds.indexOf(id);
+            internalIndex = internalIndexOf(id);
         }
         if (internalIndex >= 0) {
             return addItemAtInternalIndex(internalIndex, newItemId);
