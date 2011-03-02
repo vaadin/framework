@@ -753,14 +753,10 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      */
     protected BeanItem<BEANTYPE> addBean(BEANTYPE bean)
             throws IllegalStateException, IllegalArgumentException {
-        if (beanIdResolver == null) {
-            throw new IllegalStateException(
-                    "Bean item identifier resolver is required.");
-        }
         if (bean == null) {
             return null;
         }
-        IDTYPE itemId = beanIdResolver.getIdForBean(bean);
+        IDTYPE itemId = resolveBeanId(bean);
         if (itemId == null) {
             throw new IllegalArgumentException(
                     "Resolved identifier for a bean must not be null");
@@ -790,14 +786,10 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
     protected BeanItem<BEANTYPE> addBeanAfter(IDTYPE previousItemId,
             BEANTYPE bean) throws IllegalStateException,
             IllegalArgumentException {
-        if (beanIdResolver == null) {
-            throw new IllegalStateException(
-                    "Bean item identifier resolver is required.");
-        }
         if (bean == null) {
             return null;
         }
-        IDTYPE itemId = beanIdResolver.getIdForBean(bean);
+        IDTYPE itemId = resolveBeanId(bean);
         if (itemId == null) {
             throw new IllegalArgumentException(
                     "Resolved identifier for a bean must not be null");
@@ -825,14 +817,10 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      */
     protected BeanItem<BEANTYPE> addBeanAt(int index, BEANTYPE bean)
             throws IllegalStateException, IllegalArgumentException {
-        if (beanIdResolver == null) {
-            throw new IllegalStateException(
-                    "Bean item identifier resolver is required.");
-        }
         if (bean == null) {
             return null;
         }
-        IDTYPE itemId = beanIdResolver.getIdForBean(bean);
+        IDTYPE itemId = resolveBeanId(bean);
         if (itemId == null) {
             throw new IllegalArgumentException(
                     "Resolved identifier for a bean must not be null");
@@ -854,14 +842,9 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      */
     protected void addAll(Collection<? extends BEANTYPE> collection)
             throws IllegalStateException {
-        if (beanIdResolver == null) {
-            throw new IllegalStateException(
-                    "Bean item identifier resolver is required.");
-        }
-
         int idx = internalIndexOf(lastItemId()) + 1;
         for (BEANTYPE bean : collection) {
-            IDTYPE itemId = beanIdResolver.getIdForBean(bean);
+            IDTYPE itemId = resolveBeanId(bean);
             if (internalAddAt(idx, itemId, bean) != null) {
                 idx++;
             }
@@ -869,6 +852,22 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
 
         // Filter the contents when all items have been added
         filterAll();
+    }
+
+    /**
+     * Use the bean resolver to get the identifier for a bean.
+     * 
+     * @param bean
+     * @return resolved bean identifier, null if could not be resolved
+     * @throws IllegalStateException
+     *             if no bean resolver is set
+     */
+    protected IDTYPE resolveBeanId(BEANTYPE bean) {
+        if (beanIdResolver == null) {
+            throw new IllegalStateException(
+                    "Bean item identifier resolver is required.");
+        }
+        return beanIdResolver.getIdForBean(bean);
     }
 
     /**
