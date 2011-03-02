@@ -345,7 +345,8 @@ public interface Container extends Serializable {
 
         /**
          * Gets the index of the Item corresponding to the itemId. The following
-         * is <code>true</code> for the returned index: 0 <= index < size().
+         * is <code>true</code> for the returned index: 0 <= index < size(), or
+         * index = -1 if there is no visible item with that id in the container.
          * 
          * @param itemId
          *            ID of an Item in the Container
