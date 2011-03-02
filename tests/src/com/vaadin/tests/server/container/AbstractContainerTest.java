@@ -6,12 +6,63 @@ import java.util.List;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.easymock.EasyMock;
+
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filterable;
+import com.vaadin.data.Container.ItemSetChangeEvent;
+import com.vaadin.data.Container.ItemSetChangeListener;
+import com.vaadin.data.Container.ItemSetChangeNotifier;
 import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.Item;
 
 public abstract class AbstractContainerTest extends TestCase {
+
+    // CONTAINERTYPE must also be an ItemSetChangeNotifier
+    protected abstract class BaseItemSetChangeListenerTester<CONTAINERTYPE extends Container> {
+        public void listenerTest() {
+            listenerTest(1, true);
+        }
+
+        public void listenerTest(int numEventsExpected,
+                boolean reinitializeContainer) {
+            CONTAINERTYPE container = prepareContainer();
+
+            ItemSetChangeListener listener = EasyMock
+                    .createStrictMock(ItemSetChangeListener.class);
+
+            // Expectations and start test
+            for (int i = 0; i < numEventsExpected; ++i) {
+                listener.containerItemSetChange(EasyMock
+                        .isA(ItemSetChangeEvent.class));
+            }
+            EasyMock.replay(listener);
+
+            // Add listener and add a property -> should end up in listener
+            // once
+            ((ItemSetChangeNotifier) container).addListener(listener);
+            performModification(container);
+
+            // Ensure listener was called once
+            EasyMock.verify(listener);
+
+            // Remove the listener
+            ((ItemSetChangeNotifier) container).removeListener(listener);
+
+            if (reinitializeContainer) {
+                container = prepareContainer();
+            }
+
+            performModification(container);
+
+            // Ensure listener has not been called again
+            EasyMock.verify(listener);
+        }
+
+        protected abstract CONTAINERTYPE prepareContainer();
+
+        protected abstract void performModification(CONTAINERTYPE container);
+    }
 
     // #6043: for items that have been filtered out, Container interface does
     // not specify what to return from getItem() and getContainerProperty(), so
