@@ -303,9 +303,9 @@ public class BeanItemContainerTest extends AbstractBeanContainerTest {
         counter.reset();
         container.removeAllItems();
         counter.assertOnce();
-        // TODO already empty, but causes notification anyway
+        // already empty
         container.removeAllItems();
-        counter.assertOptional();
+        counter.assertNone();
 
     }
 
@@ -466,13 +466,15 @@ public class BeanItemContainerTest extends AbstractBeanContainerTest {
 
         initializeContainer(container);
         counter.reset();
-        // TODO should or should not cause notification?
+        // not visible
         container.removeItem(nameToBean.get(sampleData[0]));
-        counter.assertOptional();
+        counter.assertNone();
 
-        // TODO should or should not cause notification?
         container.removeAllItems();
-        counter.assertOptional();
+        counter.assertOnce();
+        // no visible items
+        container.removeAllItems();
+        counter.assertNone();
     }
 
     public void testAddRemoveWhileFiltering() {

@@ -46,17 +46,6 @@ public abstract class AbstractContainerTest extends TestCase {
         }
 
         /**
-         * Check that zero or one events have occurred since the previous assert
-         * call.
-         */
-        public void assertOptional() {
-            // short-circuit evaluation prevents increment if the first
-            // condition is true
-            Assert.assertTrue(lastAssertedEventCount == eventCount
-                    || ++lastAssertedEventCount == eventCount);
-        }
-
-        /**
          * Reset the counter and the expected count.
          */
         public void reset() {
