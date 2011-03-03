@@ -25,6 +25,7 @@ public class ComboFocusBlurEvents extends TestBase {
         }
         
         ComboBox cb = new ComboBox("Combobox", list);
+        cb.setImmediate(true);
         cb.setInputPrompt("Enter text");
         cb.setDescription("Some Combobox");
         addComponent(cb);
@@ -47,7 +48,9 @@ public class ComboFocusBlurEvents extends TestBase {
             }
         });
         
-        addComponent(new TextField("Some textfield"));
+        TextField field = new TextField("Some textfield");
+        field.setImmediate(true);
+        addComponent(field);
 
         Label output = new Label(log);
         output.setCaption("Events:");
