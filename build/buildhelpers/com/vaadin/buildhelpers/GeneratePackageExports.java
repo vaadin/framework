@@ -92,6 +92,14 @@ public class GeneratePackageExports {
             Name name = (Name) attrit.next();
             keys.add(name.toString());
         }
+
+        // Jar must be closed before updating it below, as it's
+        // locked in Windows until closed. (#6045)
+        try {
+            jar.close();
+        } catch (IOException e) {
+            System.err.println("Unable to close JAR '"+jarFilename+"'");
+        }
         
         // Put the manifest version as the first line
         String orderedKeys[] = new String[keys.size()]; 
@@ -121,7 +129,8 @@ public class GeneratePackageExports {
         // the loop above, but it's not guaranteed that it exists.
         manifest.writeAttribute("Export-Package", exportPackage);
 
-        // Update the manifest in the Jar
+        // Update the manifest in the Jar. The jar must be closed
+        // before this is done.
         int status = manifest.updateJar(jarFilename);
 
         if (status != 0)
