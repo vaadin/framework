@@ -20,9 +20,14 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DragAndDropWrapper;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.PopupView;
+import com.vaadin.ui.SplitPanel;
+import com.vaadin.ui.VerticalSplitPanel;
+import com.vaadin.ui.Window;
 
+@SuppressWarnings("deprecation")
 public class VaadinClasses {
 
     public static void main(String[] args) {
@@ -64,6 +69,16 @@ public class VaadinClasses {
         classes.remove(DragAndDropWrapper.class);
         classes.remove(CustomComponent.class);
         classes.remove(LoginForm.class);
+
+        return classes;
+    }
+
+    public static List<Class<? extends ComponentContainer>> getComponentContainersSupportingUnlimitedNumberOfComponents() {
+        List<Class<? extends ComponentContainer>> classes = getComponentContainersSupportingAddRemoveComponent();
+        classes.remove(SplitPanel.class);
+        classes.remove(VerticalSplitPanel.class);
+        classes.remove(HorizontalSplitPanel.class);
+        classes.remove(Window.class);
 
         return classes;
     }
