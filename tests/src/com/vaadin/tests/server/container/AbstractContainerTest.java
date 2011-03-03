@@ -64,6 +64,69 @@ public abstract class AbstractContainerTest extends TestCase {
         protected abstract void performModification(CONTAINERTYPE container);
     }
 
+    /**
+     * Helper class for testing e.g. listeners expecting events to be fired.
+     */
+    protected abstract static class AbstractEventCounter {
+        private int eventCount = 0;
+        private int lastAssertedEventCount = 0;
+
+        /**
+         * Increment the event count. To be called by subclasses e.g. from a
+         * listener method.
+         */
+        protected void increment() {
+            ++eventCount;
+        }
+
+        /**
+         * Check that no one event has occurred since the previous assert call.
+         */
+        public void assertNone() {
+            Assert.assertEquals(lastAssertedEventCount, eventCount);
+        }
+
+        /**
+         * Check that exactly one event has occurred since the previous assert
+         * call.
+         */
+        public void assertOnce() {
+            Assert.assertEquals(++lastAssertedEventCount, eventCount);
+        }
+
+        /**
+         * Check that zero or one events have occurred since the previous assert
+         * call.
+         */
+        public void assertOptional() {
+            // short-circuit evaluation prevents increment if the first
+            // condition is true
+            Assert.assertTrue(lastAssertedEventCount == eventCount
+                    || ++lastAssertedEventCount == eventCount);
+        }
+
+        /**
+         * Reset the counter and the expected count.
+         */
+        public void reset() {
+            eventCount = 0;
+            lastAssertedEventCount = 0;
+        }
+    }
+
+    /**
+     * Test class for counting item set change events and verifying they have
+     * been received.
+     */
+    protected static class ItemSetChangeCounter extends AbstractEventCounter
+            implements ItemSetChangeListener {
+
+        public void containerItemSetChange(ItemSetChangeEvent event) {
+            increment();
+        }
+
+    }
+
     // #6043: for items that have been filtered out, Container interface does
     // not specify what to return from getItem() and getContainerProperty(), so
     // need checkGetItemNull parameter for the test to be usable for most

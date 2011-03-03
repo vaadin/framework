@@ -211,423 +211,268 @@ public class BeanItemContainerTest extends AbstractBeanContainerTest {
         }
     }
 
-    protected abstract class ItemSetChangeListenerTester extends
-            BaseItemSetChangeListenerTester<BeanItemContainer<ClassName>> {
-        @Override
-        protected BeanItemContainer<ClassName> prepareContainer() {
-            BeanItemContainer<ClassName> container = getContainer();
-            initializeContainer(container);
-            return container;
-        }
-    }
-
     public void testItemSetChangeListeners() {
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addBean(new ClassName("com.example.Test", 1111));
-            }
-        }.listenerTest(1, false);
+        BeanItemContainer<ClassName> container = getContainer();
+        ItemSetChangeCounter counter = new ItemSetChangeCounter();
+        container.addListener(counter);
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addItem(new ClassName("com.example.Test", 1111));
-            }
-        }.listenerTest();
+        ClassName cn1 = new ClassName("com.example.Test", 1111);
+        ClassName cn2 = new ClassName("com.example.Test2", 2222);
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addItem(new ClassName("com.example.Test", 1111));
-                container.addItem(new ClassName("com.example.Test2", 1112));
-            }
-        }.listenerTest(2, false);
+        initializeContainer(container);
+        counter.reset();
+        container.addBean(cn1);
+        counter.assertOnce();
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                ClassName cn = new ClassName("com.example.Test", 1111);
-                container.addItem(cn);
-                // second add is a NOP
-                container.addItem(cn);
-            }
-        }.listenerTest(1, false);
+        initializeContainer(container);
+        counter.reset();
+        container.addItem(cn1);
+        counter.assertOnce();
+        // no notification if already in container
+        container.addItem(cn1);
+        counter.assertNone();
+        container.addItem(cn2);
+        counter.assertOnce();
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addItemAfter(null, new ClassName("com.example.Test",
-                        1111));
-                Assert.assertEquals(
-                        "com.example.Test",
-                        container.getContainerProperty(container.firstItemId(),
-                                FULLY_QUALIFIED_NAME).getValue());
-            }
-        }.listenerTest();
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAfter(null, cn1);
+        counter.assertOnce();
+        Assert.assertEquals(
+                "com.example.Test",
+                container.getContainerProperty(container.firstItemId(),
+                        FULLY_QUALIFIED_NAME).getValue());
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addItemAfter(container.firstItemId(), new ClassName(
-                        "com.example.Test", 1111));
-                Assert.assertEquals(
-                        "com.example.Test",
-                        container
-                                .getContainerProperty(
-                                        container.getIdByIndex(1),
-                                        FULLY_QUALIFIED_NAME).getValue());
-            }
-        }.listenerTest();
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAfter(container.firstItemId(), cn1);
+        counter.assertOnce();
+        Assert.assertEquals(
+                "com.example.Test",
+                container.getContainerProperty(container.getIdByIndex(1),
+                        FULLY_QUALIFIED_NAME).getValue());
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addItemAfter(container.lastItemId(), new ClassName(
-                        "com.example.Test", 1111));
-                Assert.assertEquals(
-                        "com.example.Test",
-                        container.getContainerProperty(container.lastItemId(),
-                                FULLY_QUALIFIED_NAME).getValue());
-            }
-        }.listenerTest();
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAfter(container.lastItemId(), cn1);
+        counter.assertOnce();
+        Assert.assertEquals(
+                "com.example.Test",
+                container.getContainerProperty(container.lastItemId(),
+                        FULLY_QUALIFIED_NAME).getValue());
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addItemAt(0, new ClassName("com.example.Test", 1111));
-                Assert.assertEquals(
-                        "com.example.Test",
-                        container.getContainerProperty(container.firstItemId(),
-                                FULLY_QUALIFIED_NAME).getValue());
-            }
-        }.listenerTest();
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAt(0, cn1);
+        counter.assertOnce();
+        Assert.assertEquals(
+                "com.example.Test",
+                container.getContainerProperty(container.firstItemId(),
+                        FULLY_QUALIFIED_NAME).getValue());
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addItemAt(1, new ClassName("com.example.Test", 1111));
-                Assert.assertEquals(
-                        "com.example.Test",
-                        container
-                                .getContainerProperty(
-                                        container.getIdByIndex(1),
-                                        FULLY_QUALIFIED_NAME).getValue());
-            }
-        }.listenerTest();
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAt(1, cn1);
+        counter.assertOnce();
+        Assert.assertEquals(
+                "com.example.Test",
+                container.getContainerProperty(container.getIdByIndex(1),
+                        FULLY_QUALIFIED_NAME).getValue());
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addItemAt(container.size(), new ClassName(
-                        "com.example.Test", 1111));
-                Assert.assertEquals(
-                        "com.example.Test",
-                        container.getContainerProperty(container.lastItemId(),
-                                FULLY_QUALIFIED_NAME).getValue());
-            }
-        }.listenerTest();
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAt(container.size(), cn1);
+        counter.assertOnce();
+        Assert.assertEquals(
+                "com.example.Test",
+                container.getContainerProperty(container.lastItemId(),
+                        FULLY_QUALIFIED_NAME).getValue());
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addBean(new ClassName("com.example.Test", 1111));
-            }
-        }.listenerTest();
+        initializeContainer(container);
+        counter.reset();
+        container.removeItem(nameToBean.get(sampleData[0]));
+        counter.assertOnce();
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.removeItem(nameToBean.get(sampleData[0]));
-            }
-        }.listenerTest();
+        initializeContainer(container);
+        counter.reset();
+        // no notification for removing a non-existing item
+        container.removeItem(cn1);
+        counter.assertNone();
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.removeItem(new ClassName("com.example.Test", 1111));
-            }
-        }.listenerTest(0, true);
+        initializeContainer(container);
+        counter.reset();
+        container.removeAllItems();
+        counter.assertOnce();
+        // TODO already empty, but causes notification anyway
+        container.removeAllItems();
+        counter.assertOptional();
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                // this test does not check that there would be no second
-                // notification because the collection is already empty
-                container.removeAllItems();
-            }
-        }.listenerTest();
-
-        new ItemSetChangeListenerTester() {
-            private int propertyIndex = 0;
-
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                Collection<String> containerPropertyIds = container
-                        .getContainerPropertyIds();
-                container.addContainerFilter(new ArrayList<String>(
-                        containerPropertyIds).get(propertyIndex++), "a", true,
-                        false);
-            }
-        }.listenerTest();
-
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.removeContainerFilters(SIMPLE_NAME);
-            }
-
-            @Override
-            protected BeanItemContainer<ClassName> prepareContainer() {
-                BeanItemContainer<ClassName> container = super
-                        .prepareContainer();
-                container.addContainerFilter(SIMPLE_NAME, "a", true, false);
-                return container;
-            };
-        }.listenerTest();
-
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.removeAllContainerFilters();
-            }
-
-            @Override
-            protected BeanItemContainer<ClassName> prepareContainer() {
-                BeanItemContainer<ClassName> container = super
-                        .prepareContainer();
-                container.addContainerFilter(SIMPLE_NAME, "a", true, false);
-                return container;
-            };
-        }.listenerTest();
     }
 
-    public void testItemSetChangeListenersWhileFiltering() {
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
-                        true, false);
-                container.addBean(new ClassName("com.example.Test", 1111));
-            }
-        }.listenerTest(2, true);
+    public void testItemSetChangeListenersFiltering() {
+        BeanItemContainer<ClassName> container = getContainer();
+        ItemSetChangeCounter counter = new ItemSetChangeCounter();
+        container.addListener(counter);
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
-                        true, false);
-                container.addItem(new ClassName("com.example.Test", 1111));
-            }
-        }.listenerTest(2, true);
+        ClassName cn1 = new ClassName("com.example.Test", 1111);
+        ClassName cn2 = new ClassName("com.example.Test2", 2222);
+        ClassName other = new ClassName("com.example.Other", 3333);
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
-                        true, false);
-                container.addItem(new ClassName("com.example.Test", 1111));
-                // this does not cause a notification - filtered out
-                container.addItem(new ClassName("com.example.Other", 2222));
-            }
-        }.listenerTest(2, true);
+        // simply adding or removing container filters should cause event
+        // (content changes)
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
-                        true, false);
-                container.addItem(new ClassName("com.example.Test", 1111));
-                container.addItem(new ClassName("com.example.Test2", 1112));
-            }
-        }.listenerTest(3, true);
+        initializeContainer(container);
+        counter.reset();
+        container.addContainerFilter(SIMPLE_NAME, "a", true, false);
+        counter.assertOnce();
+        container.removeContainerFilters(SIMPLE_NAME);
+        counter.assertOnce();
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
-                        true, false);
-                ClassName cn = new ClassName("com.example.Test", 1111);
-                container.addItem(cn);
-                // second add is a NOP
-                container.addItem(cn);
-            }
-        }.listenerTest(2, true);
+        initializeContainer(container);
+        counter.reset();
+        container.addContainerFilter(SIMPLE_NAME, "a", true, false);
+        counter.assertOnce();
+        container.removeAllContainerFilters();
+        counter.assertOnce();
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
-                        true, false);
-                container.addItemAfter(null, new ClassName("com.example.Test",
-                        1111));
-                Assert.assertEquals(
-                        "com.example.Test",
-                        container.getContainerProperty(container.firstItemId(),
-                                FULLY_QUALIFIED_NAME).getValue());
-            }
-        }.listenerTest(2, true);
+        // perform operations while filtering container
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
-                        true, false);
-                container.addItemAfter(container.firstItemId(), new ClassName(
-                        "com.example.Test", 1111));
-                Assert.assertEquals(
-                        "com.example.Test",
-                        container
-                                .getContainerProperty(
-                                        container.getIdByIndex(1),
-                                        FULLY_QUALIFIED_NAME).getValue());
-            }
-        }.listenerTest(2, true);
+        initializeContainer(container);
+        counter.reset();
+        container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test", true, false);
+        counter.assertOnce();
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
-                        true, false);
-                container.addItemAfter(container.lastItemId(), new ClassName(
-                        "com.example.Test", 1111));
-                Assert.assertEquals(
-                        "com.example.Test",
-                        container.getContainerProperty(container.lastItemId(),
-                                FULLY_QUALIFIED_NAME).getValue());
-            }
-        }.listenerTest(2, true);
+        // passes filter
+        container.addBean(cn1);
+        counter.assertOnce();
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
-                        true, false);
-                container.addItemAt(0, new ClassName("com.example.Test", 1111));
-                Assert.assertEquals(
-                        "com.example.Test",
-                        container.getContainerProperty(container.firstItemId(),
-                                FULLY_QUALIFIED_NAME).getValue());
-            }
-        }.listenerTest(2, true);
+        // passes filter but already in the container
+        container.addBean(cn1);
+        counter.assertNone();
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
-                        true, false);
-                container.addItemAt(1, new ClassName("com.example.Test", 1111));
-                Assert.assertEquals(
-                        "com.example.Test",
-                        container
-                                .getContainerProperty(
-                                        container.getIdByIndex(1),
-                                        FULLY_QUALIFIED_NAME).getValue());
-            }
-        }.listenerTest(2, true);
+        initializeContainer(container);
+        counter.reset();
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
-                        true, false);
-                container.addItemAt(container.size(), new ClassName(
-                        "com.example.Test", 1111));
-                Assert.assertEquals(
-                        "com.example.Test",
-                        container.getContainerProperty(container.lastItemId(),
-                                FULLY_QUALIFIED_NAME).getValue());
-            }
-        }.listenerTest(2, true);
+        // passes filter
+        container.addItem(cn1);
+        counter.assertOnce();
+        // already in the container
+        container.addItem(cn1);
+        counter.assertNone();
+        container.addItem(cn2);
+        counter.assertOnce();
+        // does not pass filter
+        container.addItem(other);
+        counter.assertNone();
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
-                        true, false);
-                container.addBean(new ClassName("com.example.Test", 1111));
-            }
-        }.listenerTest(2, true);
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAfter(null, cn1);
+        counter.assertOnce();
+        Assert.assertEquals(
+                "com.example.Test",
+                container.getContainerProperty(container.firstItemId(),
+                        FULLY_QUALIFIED_NAME).getValue());
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
-                        true, false);
-                // removed even though not visible
-                container.removeItem(nameToBean.get(sampleData[0]));
-            }
-        }.listenerTest(2, true);
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAfter(container.firstItemId(), cn1);
+        counter.assertOnce();
+        Assert.assertEquals(
+                "com.example.Test",
+                container.getContainerProperty(container.getIdByIndex(1),
+                        FULLY_QUALIFIED_NAME).getValue());
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
-                        true, false);
-                container.removeItem(new ClassName("com.example.Test", 1111));
-            }
-        }.listenerTest(1, true);
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAfter(container.lastItemId(), cn1);
+        counter.assertOnce();
+        Assert.assertEquals(
+                "com.example.Test",
+                container.getContainerProperty(container.lastItemId(),
+                        FULLY_QUALIFIED_NAME).getValue());
 
-        new ItemSetChangeListenerTester() {
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
-                        true, false);
-                // this can also cause a notification (optional, no visible
-                // change)
-                container.removeAllItems();
-            }
-        }.listenerTest(2, true);
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAt(0, cn1);
+        counter.assertOnce();
+        Assert.assertEquals(
+                "com.example.Test",
+                container.getContainerProperty(container.firstItemId(),
+                        FULLY_QUALIFIED_NAME).getValue());
 
-        new ItemSetChangeListenerTester() {
-            private int propertyIndex = 0;
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAt(1, cn1);
+        counter.assertOnce();
+        Assert.assertEquals(
+                "com.example.Test",
+                container.getContainerProperty(container.getIdByIndex(1),
+                        FULLY_QUALIFIED_NAME).getValue());
 
-            @Override
-            protected void performModification(
-                    BeanItemContainer<ClassName> container) {
-                container.addContainerFilter(FULLY_QUALIFIED_NAME, "Test",
-                        true, false);
-                Collection<String> containerPropertyIds = container
-                        .getContainerPropertyIds();
-                // this causes a notification every time, could also skip here
-                container.addContainerFilter(new ArrayList<String>(
-                        containerPropertyIds).get(propertyIndex++), "a", true,
-                        false);
-            }
-        }.listenerTest(2, true);
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAt(container.size(), cn1);
+        counter.assertOnce();
+        Assert.assertEquals(
+                "com.example.Test",
+                container.getContainerProperty(container.lastItemId(),
+                        FULLY_QUALIFIED_NAME).getValue());
 
+        // does not pass filter
+        // note: testAddRemoveWhileFiltering() checks position for these after
+        // removing filter etc, here concentrating on listeners
+
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAfter(null, other);
+        counter.assertNone();
+
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAfter(container.firstItemId(), other);
+        counter.assertNone();
+
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAfter(container.lastItemId(), other);
+        counter.assertNone();
+
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAt(0, other);
+        counter.assertNone();
+
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAt(1, other);
+        counter.assertNone();
+
+        initializeContainer(container);
+        counter.reset();
+        container.addItemAt(container.size(), other);
+        counter.assertNone();
+
+        // passes filter
+
+        initializeContainer(container);
+        counter.reset();
+        container.addItem(cn1);
+        counter.assertOnce();
+        container.removeItem(cn1);
+        counter.assertOnce();
+
+        // does not pass filter
+
+        initializeContainer(container);
+        counter.reset();
+        // TODO should or should not cause notification?
+        container.removeItem(nameToBean.get(sampleData[0]));
+        counter.assertOptional();
+
+        // TODO should or should not cause notification?
+        container.removeAllItems();
+        counter.assertOptional();
     }
 
     public void testAddRemoveWhileFiltering() {
