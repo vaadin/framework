@@ -225,12 +225,16 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Container#removeAllItems()
      */
     public boolean removeAllItems() {
+        int origSize = size();
+
         internalRemoveAllItems();
 
         items.clear();
 
-        // Sends a change event
-        fireContentsChange(-1);
+        if (origSize != 0) {
+            // Sends a change event
+            fireContentsChange(-1);
+        }
 
         return true;
     }
@@ -307,8 +311,11 @@ public class IndexedContainer extends
         if (itemId == null || items.remove(itemId) == null) {
             return false;
         }
+        int origSize = size();
         if (internalRemoveItem(itemId)) {
-            fireContentsChange(-1);
+            if (size() != origSize) {
+                fireContentsChange(-1);
+            }
 
             return true;
         } else {
@@ -1253,23 +1260,27 @@ public class IndexedContainer extends
 
             return false;
         }
+
         // Reset filtered list
-        if (getFilteredItemIds() == null) {
-            setFilteredItemIds(new ListSet<Object>());
-        } else {
-            getFilteredItemIds().clear();
+        List<Object> originalFilteredItemIds = getFilteredItemIds();
+        if (originalFilteredItemIds == null) {
+            originalFilteredItemIds = Collections.emptyList();
         }
+        setFilteredItemIds(new ListSet<Object>());
 
         // Filter
+        boolean equal = true;
+        Iterator<?> origIt = originalFilteredItemIds.iterator();
         for (final Iterator<?> i = allItemIds.iterator(); i.hasNext();) {
             final Object id = i.next();
             if (passesFilters(id)) {
+                // filtered list comes from the full list, can use ==
+                equal = equal && origIt.hasNext() && origIt.next() == id;
                 getFilteredItemIds().add(id);
             }
         }
 
-        return true;
-
+        return !equal || origIt.hasNext();
     }
 
     /**

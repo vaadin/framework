@@ -260,6 +260,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @see com.vaadin.data.Container#removeAllItems()
      */
     public boolean removeAllItems() {
+        int origSize = size();
+
         internalRemoveAllItems();
 
         // detach listeners from all Items
@@ -268,7 +270,9 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         }
         itemIdToItem.clear();
 
-        fireItemSetChange();
+        if (origSize != 0) {
+            fireItemSetChange();
+        }
 
         return true;
     }
@@ -314,6 +318,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @see com.vaadin.data.Container#removeItem(java.lang.Object)
      */
     public boolean removeItem(Object itemId) {
+        int origSize = size();
         Item item = getItem(itemId);
 
         if (internalRemoveItem(itemId)) {
@@ -323,7 +328,9 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
             // remove item
             itemIdToItem.remove(itemId);
 
-            fireItemSetChange();
+            if (size() != origSize) {
+                fireItemSetChange();
+            }
 
             return true;
         } else {
