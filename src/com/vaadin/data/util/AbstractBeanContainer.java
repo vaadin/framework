@@ -209,10 +209,10 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * {@link #getBeanType()}).
      * 
      * @param bean
-     * @return
+     * @return created {@link BeanItem} or null if bean is null
      */
     protected BeanItem<BEANTYPE> createBeanItem(BEANTYPE bean) {
-        return new BeanItem<BEANTYPE>(bean, model);
+        return bean == null ? null : new BeanItem<BEANTYPE>(bean, model);
     }
 
     /**
@@ -320,6 +320,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
     public boolean removeItem(Object itemId) {
         int origSize = size();
         Item item = getItem(itemId);
+        int position = indexOfId(itemId);
 
         if (internalRemoveItem(itemId)) {
             // detach listeners from Item
@@ -329,7 +330,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
             itemIdToItem.remove(itemId);
 
             if (size() != origSize) {
-                fireItemSetChange();
+                fireItemRemoved(position, itemId);
             }
 
             return true;
@@ -346,11 +347,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         filterAll();
     }
 
-    /**
-     * Filter the view to recreate the visible item list from the unfiltered
-     * items, and send a notification if the set of visible items changed in any
-     * way.
-     */
+    @Override
     @SuppressWarnings("unchecked")
     protected void filterAll() {
         // avoid notification if the filtering had no effect
@@ -603,98 +600,44 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * Adds the bean to all internal data structures at the given position.
-     * Fails if the bean is already in the container or is not assignable to the
-     * correct type. Returns a new BeanItem if the bean was added successfully.
-     * 
-     * <p>
-     * Caller should call {@link #filterAll()} after calling this method to
-     * ensure the filtered list is updated.
-     * </p>
-     * 
-     * For internal use by subclasses only. This API is experimental and subject
-     * to change.
-     * 
-     * @param position
-     *            The position at which the bean should be inserted in the
-     *            unfiltered collection of items
-     * @param itemId
-     *            The item identifier for the bean to insert
-     * @param bean
-     *            The bean to insert
-     * 
-     * @return BeanItem<BEANTYPE> if the bean was added successfully, null
-     *         otherwise
-     */
-    protected BeanItem<BEANTYPE> internalAddAt(int position, IDTYPE itemId,
-            BEANTYPE bean) {
-        if (bean == null) {
-            return null;
-        }
-        // Make sure that the item has not been added previously
-        if (allItemIds.contains(itemId)) {
-            return null;
-        }
-
-        if (!getBeanType().isAssignableFrom(bean.getClass())) {
-            return null;
-        }
-
-        // "filteredList" will be updated in filterAll() which should be invoked
-        // by the caller after calling this method.
-        allItemIds.add(position, itemId);
-        BeanItem<BEANTYPE> beanItem = createBeanItem(bean);
-        itemIdToItem.put(itemId, beanItem);
+    @Override
+    protected void registerNewItem(int position, IDTYPE itemId,
+            BeanItem<BEANTYPE> item) {
+        itemIdToItem.put(itemId, item);
 
         // add listeners to be able to update filtering on property
         // changes
         for (Filter filter : getFilters()) {
             // addValueChangeListener avoids adding duplicates
-            addValueChangeListener(beanItem, filter.propertyId);
+            addValueChangeListener(item, filter.propertyId);
         }
-
-        return beanItem;
     }
 
     /**
-     * Adds a bean at the given index of the internal (unfiltered) list.
-     * <p>
-     * The item is also added in the visible part of the list if it passes the
-     * filters.
-     * </p>
+     * Check that a bean can be added to the container (is of the correct type
+     * for the container).
      * 
-     * @param index
-     *            Internal index to add the new item.
-     * @param newItemId
-     *            Id of the new item to be added.
      * @param bean
-     *            bean to be added
-     * @return Returns new item or null if the operation fails.
+     * @return
      */
-    private BeanItem<BEANTYPE> addItemAtInternalIndex(int index,
-            IDTYPE newItemId, BEANTYPE bean) {
-        BeanItem<BEANTYPE> beanItem = internalAddAt(index, newItemId, bean);
-        if (beanItem != null) {
-            filterAll();
-        }
-
-        return beanItem;
+    private boolean validateBean(BEANTYPE bean) {
+        return bean != null && getBeanType().isAssignableFrom(bean.getClass());
     }
 
     /**
      * Adds the bean to the Container.
      * 
+     * TODO Note: the behavior of this method changed in Vaadin 6.6 - now items
+     * are added at the very end of the unfiltered container and not after the
+     * last visible item if filtering is used.
+     * 
      * @see com.vaadin.data.Container#addItem(Object)
      */
     protected BeanItem<BEANTYPE> addItem(IDTYPE itemId, BEANTYPE bean) {
-        if (size() > 0) {
-            // add immediately after last visible item
-            int lastIndex = internalIndexOf(lastItemId());
-            return addItemAtInternalIndex(lastIndex + 1, itemId, bean);
-        } else {
-            return addItemAtInternalIndex(0, itemId, bean);
+        if (!validateBean(bean)) {
+            return null;
         }
+        return internalAddItemAtEnd(itemId, createBeanItem(bean), true);
     }
 
     /**
@@ -704,15 +647,11 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      */
     protected BeanItem<BEANTYPE> addItemAfter(IDTYPE previousItemId,
             IDTYPE newItemId, BEANTYPE bean) {
-        // only add if the previous item is visible
-        if (previousItemId == null) {
-            return addItemAtInternalIndex(0, newItemId, bean);
-        } else if (containsId(previousItemId)) {
-            return addItemAtInternalIndex(internalIndexOf(previousItemId) + 1,
-                    newItemId, bean);
-        } else {
+        if (!validateBean(bean)) {
             return null;
         }
+        return internalAddItemAfter(previousItemId, newItemId,
+                createBeanItem(bean));
     }
 
     /**
@@ -731,15 +670,10 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      */
     protected BeanItem<BEANTYPE> addItemAt(int index, IDTYPE newItemId,
             BEANTYPE bean) {
-        if (index < 0 || index > size()) {
+        if (!validateBean(bean)) {
             return null;
-        } else if (index == 0) {
-            // add before any item, visible or not
-            return addItemAtInternalIndex(0, newItemId, bean);
-        } else {
-            // if index==size(), adds immediately after last visible item
-            return addItemAfter(getIdByIndex(index - 1), newItemId, bean);
         }
+        return internalAddItemAt(index, newItemId, createBeanItem(bean));
     }
 
     /**
@@ -842,6 +776,10 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * 
      * A bean id resolver must be set before calling this method.
      * 
+     * Note: the behavior of this method changed in Vaadin 6.6 - now items are
+     * added at the very end of the unfiltered container and not after the last
+     * visible item if filtering is used.
+     * 
      * @param collection
      *            The collection of beans to add. Must not be null.
      * @throws IllegalStateException
@@ -849,12 +787,15 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      */
     protected void addAll(Collection<? extends BEANTYPE> collection)
             throws IllegalStateException {
-        int idx = internalIndexOf(lastItemId()) + 1;
         for (BEANTYPE bean : collection) {
-            IDTYPE itemId = resolveBeanId(bean);
-            if (internalAddAt(idx, itemId, bean) != null) {
-                idx++;
+            // TODO skipping invalid beans - should not allow them in javadoc?
+            if (bean == null
+                    || !getBeanType().isAssignableFrom(bean.getClass())) {
+                continue;
             }
+            IDTYPE itemId = resolveBeanId(bean);
+            // ignore result
+            internalAddItemAtEnd(itemId, createBeanItem(bean), false);
         }
 
         // Filter the contents when all items have been added

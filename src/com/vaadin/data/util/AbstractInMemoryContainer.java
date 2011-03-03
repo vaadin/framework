@@ -181,6 +181,13 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     // internal methods
 
     /**
+     * Filter the view to recreate the visible item list from the unfiltered
+     * items, and send a notification if the set of visible items changed in any
+     * way.
+     */
+    protected abstract void filterAll();
+
+    /**
      * Removes all items from the internal data structures of this class. This
      * can be used to implement {@link #removeAllItems()} in subclasses.
      * 
@@ -221,6 +228,143 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     }
 
     /**
+     * Adds the bean to all internal data structures at the given position.
+     * Fails if an item with itemId is already in the container. Returns a the
+     * item if it was added successfully, null otherwise.
+     * 
+     * <p>
+     * Caller should initiate filtering after calling this method.
+     * </p>
+     * 
+     * For internal use only - subclasses should use
+     * {@link #internalAddItemAtEnd(Object, Item, boolean)},
+     * {@link #internalAddItemAt(int, Object, Item)} and
+     * {@link #internalAddItemAfter(Object, Object, Item)} instead.
+     * 
+     * @param position
+     *            The position at which the item should be inserted in the
+     *            unfiltered collection of items
+     * @param itemId
+     *            The item identifier for the item to insert
+     * @param item
+     *            The item to insert
+     * 
+     * @return ITEMCLASS if the item was added successfully, null otherwise
+     */
+    private ITEMCLASS internalAddAt(int position, ITEMIDTYPE itemId,
+            ITEMCLASS item) {
+        if (position < 0 || position > allItemIds.size() || itemId == null
+                || item == null) {
+            return null;
+        }
+        // Make sure that the item has not been added previously
+        if (allItemIds.contains(itemId)) {
+            return null;
+        }
+
+        // "filteredList" will be updated in filterAll() which should be invoked
+        // by the caller after calling this method.
+        allItemIds.add(position, itemId);
+        registerNewItem(position, itemId, item);
+
+        return item;
+    }
+
+    /**
+     * Add an item at the end of the container, and perform filtering if
+     * necessary. An event is fired if the filtered view changes.
+     * 
+     * The new item is added at the beginning if previousItemId is null.
+     * 
+     * @param newItemId
+     * @param item
+     *            new item to add
+     * @param filter
+     *            true to perform filtering and send event after adding the
+     *            item, false to skip them
+     * @return item added or null if no item was added
+     */
+    protected ITEMCLASS internalAddItemAtEnd(ITEMIDTYPE newItemId,
+            ITEMCLASS item, boolean filter) {
+        ITEMCLASS newItem = internalAddAt(allItemIds.size(), newItemId, item);
+        if (newItem != null && filter) {
+            filterAll();
+        }
+        return newItem;
+    }
+
+    /**
+     * Add an item after a given (visible) item, and perform filtering. An event
+     * is fired if the filtered view changes.
+     * 
+     * The new item is added at the beginning if previousItemId is null.
+     * 
+     * @param previousItemId
+     *            item id of a visible item after which to add the new item, or
+     *            null to add at the beginning
+     * @param newItemId
+     * @param item
+     *            new item to add
+     * @return item added or null if no item was added
+     */
+    protected ITEMCLASS internalAddItemAfter(ITEMIDTYPE previousItemId,
+            ITEMIDTYPE newItemId, ITEMCLASS item) {
+        // only add if the previous item is visible
+        ITEMCLASS newItem = null;
+        if (previousItemId == null) {
+            newItem = internalAddAt(0, newItemId, item);
+        } else if (containsId(previousItemId)) {
+            newItem = internalAddAt(internalIndexOf(previousItemId) + 1,
+                    newItemId, item);
+        }
+        if (newItem != null) {
+            filterAll();
+        }
+        return newItem;
+    }
+
+    /**
+     * Add an item at a given (visible) item index, and perform filtering. An
+     * event is fired if the filtered view changes.
+     * 
+     * @param index
+     *            position where to att the item (visible/view index)
+     * @param newItemId
+     * @return item added or null if no item was added
+     * @return
+     */
+    protected ITEMCLASS internalAddItemAt(int index, ITEMIDTYPE newItemId,
+            ITEMCLASS item) {
+        if (index < 0 || index > size()) {
+            return null;
+        } else if (index == 0) {
+            // add before any item, visible or not
+            return internalAddItemAfter(null, newItemId, item);
+        } else {
+            // if index==size(), adds immediately after last visible item
+            return internalAddItemAfter(getIdByIndex(index - 1), newItemId,
+                    item);
+        }
+    }
+
+    /**
+     * Registers a new item as having been added to the container. This can
+     * involve storing the item or any relevant information about it in internal
+     * container-specific collections if necessary, as well as registering
+     * listeners etc.
+     * 
+     * The full identifier list in {@link AbstractInMemoryContainer} has already
+     * been updated to reflect the new item when this method is called.
+     * 
+     * @param position
+     * @param itemId
+     * @param item
+     */
+    protected void registerNewItem(int position, ITEMIDTYPE itemId,
+            ITEMCLASS item) {
+    }
+
+    /**
      * Returns the index of an item within the unfiltered collection of items.
      * 
      * For internal use by subclasses only. This API is experimental and subject
@@ -231,6 +375,42 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      */
     protected int internalIndexOf(ITEMIDTYPE itemId) {
         return allItemIds.indexOf(itemId);
+    }
+
+    /**
+     * Notify item set change listeners that an item has been added to the
+     * container.
+     * 
+     * Unless subclasses specify otherwise, the default notification indicates a
+     * full refresh.
+     * 
+     * @param postion
+     *            position of the added item in the view (if visible)
+     * @param itemId
+     *            id of the added item
+     * @param item
+     *            the added item
+     */
+    protected void fireItemAdded(int position, ITEMIDTYPE itemId, ITEMCLASS item) {
+        fireItemSetChange();
+    }
+
+    /**
+     * Notify item set change listeners that an item has been removed from the
+     * container.
+     * 
+     * Unless subclasses specify otherwise, the default notification indicates a
+     * full refresh.
+     * 
+     * @param postion
+     *            position of the removed item in the view prior to removal (if
+     *            was visible)
+     * @param itemId
+     *            id of the removed item, of type {@link Object} to satisfy
+     *            {@link Container#removeItem(Object)} API
+     */
+    protected void fireItemRemoved(int position, Object itemId) {
+        fireItemSetChange();
     }
 
     /**

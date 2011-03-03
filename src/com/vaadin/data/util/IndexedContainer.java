@@ -163,13 +163,7 @@ public class IndexedContainer extends
      * java.lang.Object)
      */
     public Property getContainerProperty(Object itemId, Object propertyId) {
-        if (itemId == null) {
-            return null;
-        } else if (getFilteredItemIds() == null) {
-            if (!items.containsKey(itemId)) {
-                return null;
-            }
-        } else if (!getFilteredItemIds().contains(itemId)) {
+        if (!containsId(itemId)) {
             return null;
         }
 
@@ -233,7 +227,7 @@ public class IndexedContainer extends
 
         if (origSize != 0) {
             // Sends a change event
-            fireContentsChange(-1);
+            fireItemSetChange();
         }
 
         return true;
@@ -261,31 +255,26 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Container#addItem(java.lang.Object)
      */
     public Item addItem(Object itemId) {
-
-        // Make sure that the Item is valid and has not been created yet
-        if (itemId == null || items.containsKey(itemId)) {
+        // TODO move filtering to superclass?
+        Item item = internalAddItemAtEnd(itemId, new IndexedContainerItem(
+                itemId), false);
+        if (item == null) {
             return null;
         }
 
-        // Adds the Item to container (at the end of the unfiltered list)
-        allItemIds.add(itemId);
-        Hashtable<Object, Object> t = new Hashtable<Object, Object>();
-        items.put(itemId, t);
-
-        addDefaultValues(t);
-
-        // this optimization is why some code is duplicated with
-        // addItemAtInternalIndex()
+        // optimization, complicates code
         if (getFilteredItemIds() != null) {
             if (passesFilters(itemId)) {
                 getFilteredItemIds().add(itemId);
+                // Send the event
+                fireItemAdded(size() - 1, itemId, item);
             }
+        } else {
+            // Send the event
+            fireItemAdded(size() - 1, itemId, item);
         }
 
-        // Sends the event
-        fireContentsChange(allItemIds.size() - 1);
-
-        return new IndexedContainerItem(itemId);
+        return item;
     }
 
     /**
@@ -312,9 +301,10 @@ public class IndexedContainer extends
             return false;
         }
         int origSize = size();
+        int position = indexOfId(itemId);
         if (internalRemoveItem(itemId)) {
             if (size() != origSize) {
-                fireContentsChange(-1);
+                fireItemRemoved(position, itemId);
             }
 
             return true;
@@ -362,21 +352,17 @@ public class IndexedContainer extends
      * java.lang.Object)
      */
     public Item addItemAfter(Object previousItemId, Object newItemId) {
-        // Adding an item after null item adds the item as first item of the
-        // ordered container.
-        if (previousItemId == null) {
-            return addItemAt(0, newItemId);
-        }
-
-        // Get the index of the addition
-        int index = -1;
-        if (previousItemId != null) {
-            index = 1 + indexOfId(previousItemId);
-            if (index <= 0 || index > size()) {
-                return null;
+        Item item = internalAddItemAfter(previousItemId, newItemId,
+                new IndexedContainerItem(newItemId));
+        if (item != null && getFilteredItemIds() == null) {
+            // in this case, not fired by filterAll()
+            // TODO now a little less efficient, new scan in list
+            int position = indexOfId(newItemId);
+            if (position >= 0) {
+                fireItemAdded(position, newItemId, item);
             }
         }
-        return addItemAt(index, newItemId);
+        return item;
     }
 
     /*
@@ -402,27 +388,17 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Container.Indexed#addItemAt(int, java.lang.Object)
      */
     public Item addItemAt(int index, Object newItemId) {
-
-        // add item based on a filtered index
-        int internalIndex = -1;
-        if (getFilteredItemIds() == null) {
-            internalIndex = index;
-        } else if (index == 0) {
-            internalIndex = 0;
-        } else if (index == size()) {
-            // add just after the last item
-            Object id = getIdByIndex(index - 1);
-            internalIndex = internalIndexOf(id) + 1;
-        } else if (index > 0 && index < size()) {
-            // map the index of the visible item to its unfiltered index
-            Object id = getIdByIndex(index);
-            internalIndex = internalIndexOf(id);
+        Item item = internalAddItemAt(index, newItemId,
+                new IndexedContainerItem(newItemId));
+        if (item != null && getFilteredItemIds() == null) {
+            // in this case, not fired by filterAll()
+            // TODO now a little less efficient, new scan in list
+            int position = indexOfId(newItemId);
+            if (position >= 0) {
+                fireItemAdded(position, newItemId, item);
+            }
         }
-        if (internalIndex >= 0) {
-            return addItemAtInternalIndex(internalIndex, newItemId);
-        } else {
-            return null;
-        }
+        return item;
     }
 
     /*
@@ -456,44 +432,14 @@ public class IndexedContainer extends
         return id;
     }
 
-    /* Event notifiers */
-
-    /**
-     * Adds new item at given index of the internal (unfiltered) list.
-     * <p>
-     * The item is also added in the visible part of the list if it passes the
-     * filters.
-     * </p>
-     * 
-     * @param index
-     *            Internal index to add the new item.
-     * @param newItemId
-     *            Id of the new item to be added.
-     * @return Returns new item or null if the operation fails.
-     */
-    private Item addItemAtInternalIndex(int index, Object newItemId) {
-        // Make sure that the Item is valid and has not been created yet
-        if (index < 0 || index > allItemIds.size() || newItemId == null
-                || items.containsKey(newItemId)) {
-            return null;
-        }
-
-        // Adds the Item to container
-        allItemIds.add(index, newItemId);
+    @Override
+    protected void registerNewItem(int index, Object newItemId, Item item) {
         Hashtable<Object, Object> t = new Hashtable<Object, Object>();
         items.put(newItemId, t);
         addDefaultValues(t);
-
-        if (getFilteredItemIds() != null) {
-            // when the item data is set later (IndexedContainerProperty),
-            // filtering is updated
-            updateContainerFiltering();
-        } else {
-            fireContentsChange(index);
-        }
-
-        return new IndexedContainerItem(newItemId);
     }
+
+    /* Event notifiers */
 
     /**
      * An <code>event</code> object specifying the list whose Item set has
@@ -626,15 +572,17 @@ public class IndexedContainer extends
 
     }
 
-    /**
-     * Sends Item set change event to all registered interested listeners.
-     * 
-     * @param addedItemIndex
-     *            index of new item if change event was an item addition
-     */
-    protected void fireContentsChange(int addedItemIndex) {
-        fireItemSetChange(new IndexedContainer.ItemSetChangeEvent(this,
-                addedItemIndex));
+    @Override
+    protected void fireItemAdded(int position, Object itemId, Item item) {
+        if (position >= 0) {
+            fireItemSetChange(new IndexedContainer.ItemSetChangeEvent(this,
+                    position));
+        }
+    }
+
+    @Override
+    protected void fireItemSetChange() {
+        fireItemSetChange(new IndexedContainer.ItemSetChangeEvent(this, -1));
     }
 
     /**
@@ -1058,9 +1006,9 @@ public class IndexedContainer extends
 
         // Post sort updates
         if (getFilteredItemIds() != null) {
-            updateContainerFiltering();
+            filterAll();
         } else {
-            fireContentsChange(-1);
+            fireItemSetChange();
         }
 
     }
@@ -1183,7 +1131,7 @@ public class IndexedContainer extends
         }
         filters.add(new Filter(propertyId, filterString, ignoreCase,
                 onlyMatchPrefix));
-        updateContainerFiltering();
+        filterAll();
     }
 
     public void removeAllContainerFilters() {
@@ -1191,7 +1139,7 @@ public class IndexedContainer extends
             return;
         }
         filters.clear();
-        updateContainerFiltering();
+        filterAll();
     }
 
     public void removeContainerFilters(Object propertyId) {
@@ -1205,7 +1153,7 @@ public class IndexedContainer extends
                 i.remove();
             }
         }
-        updateContainerFiltering();
+        filterAll();
     }
 
     private void updateContainerFiltering(Object propertyId) {
@@ -1218,24 +1166,20 @@ public class IndexedContainer extends
         while (i.hasNext()) {
             final Filter f = i.next();
             if (propertyId.equals(f.propertyId)) {
-                updateContainerFiltering();
+                filterAll();
                 return;
             }
         }
     }
 
-    /**
-     * Called when the filters have changed or when another event that effects
-     * filtering has taken place. Updates internal data structures and fires an
-     * item set change if necessary.
-     */
-    private void updateContainerFiltering() {
+    @Override
+    protected void filterAll() {
 
         // Clearing filters?
         boolean hasFilters = (filters != null && !filters.isEmpty());
 
         if (doFilterContainer(hasFilters)) {
-            fireContentsChange(-1);
+            fireItemSetChange();
         }
     }
 
