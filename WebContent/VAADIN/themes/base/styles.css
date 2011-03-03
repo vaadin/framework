@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_5_1_dev-20110207";}
-.v-theme-version-6_5_1_dev-20110207 {display: none;}
+.v-theme-version:after {content:"6_5_2_dev-20110303";}
+.v-theme-version-6_5_2_dev-20110303 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1838,6 +1838,10 @@ div.v-progressindicator-indeterminate-disabled {
 	border-top: none;
 	border-bottom: none;
 	position: relative;
+}
+.v-ie6 .v-tabsheet-content,
+.v-ie7 .v-tabsheet-content {
+	zoom: 1;
 }
 .v-tabsheet-deco {
 	height: 1px;
