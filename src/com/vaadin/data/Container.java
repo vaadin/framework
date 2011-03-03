@@ -681,7 +681,8 @@ public interface Container extends Serializable {
     public interface ItemSetChangeListener extends Serializable {
 
         /**
-         * Lets the listener know a Containers Item set has changed.
+         * Lets the listener know a Containers visible (filtered and/or sorted,
+         * if applicable) Item set has changed.
          * 
          * @param event
          *            change event text
