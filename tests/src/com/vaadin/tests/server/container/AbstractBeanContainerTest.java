@@ -10,7 +10,8 @@ import com.vaadin.data.util.BeanItemContainer;
  * Only a limited subset of the functionality is tested here, the rest in tests
  * of subclasses including {@link BeanItemContainer} and {@link BeanContainer}.
  */
-public abstract class AbstractBeanContainerTest extends AbstractContainerTest {
+public abstract class AbstractBeanContainerTest extends
+        AbstractInMemoryContainerTest {
 
     public static class Person {
         private String name;

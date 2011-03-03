@@ -7,7 +7,7 @@ import junit.framework.Assert;
 
 import com.vaadin.data.util.IndexedContainer;
 
-public class TestIndexedContainer extends AbstractContainerTest {
+public class TestIndexedContainer extends AbstractInMemoryContainerTest {
 
     public void testBasicOperations() {
         testBasicContainerOperations(new IndexedContainer());
