@@ -94,12 +94,6 @@ public class IndexedContainer extends
      */
     private ItemSorter itemSorter = new DefaultItemSorter();
 
-    /**
-     * Filters that are applied to the container to limit the items visible in
-     * it
-     */
-    private HashSet<Filter> filters;
-
     private HashMap<Object, Object> defaultPropertyValues;
 
     private int nextGeneratedItemId = 1;
@@ -129,8 +123,15 @@ public class IndexedContainer extends
     @Override
     public Item getItem(Object itemId) {
 
-        if (itemId != null && items.containsKey(itemId)
-                && (getVisibleItemIds().contains(itemId))) {
+        if (itemId != null && getVisibleItemIds().contains(itemId)) {
+            return getUnfilteredItem(itemId);
+        }
+        return null;
+    }
+
+    @Override
+    protected Item getUnfilteredItem(Object itemId) {
+        if (itemId != null && items.containsKey(itemId)) {
             return new IndexedContainerItem(itemId);
         }
         return null;
@@ -255,26 +256,8 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Container#addItem(java.lang.Object)
      */
     public Item addItem(Object itemId) {
-        // TODO move filtering to superclass?
-        Item item = internalAddItemAtEnd(itemId, new IndexedContainerItem(
-                itemId), false);
-        if (item == null) {
-            return null;
-        }
-
-        // optimization, complicates code
-        if (getFilteredItemIds() != null) {
-            if (passesFilters(itemId)) {
-                getFilteredItemIds().add(itemId);
-                // Send the event
-                fireItemAdded(size() - 1, itemId, item);
-            }
-        } else {
-            // Send the event
-            fireItemAdded(size() - 1, itemId, item);
-        }
-
-        return item;
+        return internalAddItemAtEnd(itemId, new IndexedContainerItem(itemId),
+                true);
     }
 
     /**
@@ -352,17 +335,8 @@ public class IndexedContainer extends
      * java.lang.Object)
      */
     public Item addItemAfter(Object previousItemId, Object newItemId) {
-        Item item = internalAddItemAfter(previousItemId, newItemId,
+        return internalAddItemAfter(previousItemId, newItemId,
                 new IndexedContainerItem(newItemId));
-        if (item != null && getFilteredItemIds() == null) {
-            // in this case, not fired by filterAll()
-            // TODO now a little less efficient, new scan in list
-            int position = indexOfId(newItemId);
-            if (position >= 0) {
-                fireItemAdded(position, newItemId, item);
-            }
-        }
-        return item;
     }
 
     /*
@@ -388,17 +362,8 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Container.Indexed#addItemAt(int, java.lang.Object)
      */
     public Item addItemAt(int index, Object newItemId) {
-        Item item = internalAddItemAt(index, newItemId,
-                new IndexedContainerItem(newItemId));
-        if (item != null && getFilteredItemIds() == null) {
-            // in this case, not fired by filterAll()
-            // TODO now a little less efficient, new scan in list
-            int position = indexOfId(newItemId);
-            if (position >= 0) {
-                fireItemAdded(position, newItemId, item);
-            }
-        }
-        return item;
+        return internalAddItemAt(index, newItemId, new IndexedContainerItem(
+                newItemId));
     }
 
     /*
@@ -908,7 +873,9 @@ public class IndexedContainer extends
             }
 
             // update the container filtering if this property is being filtered
-            updateContainerFiltering(propertyId);
+            if (isPropertyFiltered(propertyId)) {
+                filterAll();
+            }
 
             firePropertyValueChange(this);
         }
@@ -1102,7 +1069,8 @@ public class IndexedContainer extends
         nc.types = types != null ? (Hashtable<Object, Class<?>>) types.clone()
                 : null;
 
-        nc.filters = filters == null ? null : (HashSet<Filter>) filters.clone();
+        nc.setFilters((HashSet<Filter>) ((HashSet<Filter>) getFilters())
+                .clone());
 
         nc.setFilteredItemIds(getFilteredItemIds() == null ? null
                 : (ListSet<Object>) ((ListSet<Object>) getFilteredItemIds())
@@ -1126,130 +1094,16 @@ public class IndexedContainer extends
 
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
-        if (filters == null) {
-            filters = new HashSet<Filter>();
-        }
-        filters.add(new Filter(propertyId, filterString, ignoreCase,
+        addFilter(new Filter(propertyId, filterString, ignoreCase,
                 onlyMatchPrefix));
-        filterAll();
     }
 
     public void removeAllContainerFilters() {
-        if (filters == null) {
-            return;
-        }
-        filters.clear();
-        filterAll();
+        removeAllFilters();
     }
 
     public void removeContainerFilters(Object propertyId) {
-        if (filters == null || propertyId == null) {
-            return;
-        }
-        final Iterator<Filter> i = filters.iterator();
-        while (i.hasNext()) {
-            final Filter f = i.next();
-            if (propertyId.equals(f.propertyId)) {
-                i.remove();
-            }
-        }
-        filterAll();
-    }
-
-    private void updateContainerFiltering(Object propertyId) {
-        if (filters == null || propertyId == null) {
-            return;
-        }
-        // update container filtering if there is a filter for the given
-        // property
-        final Iterator<Filter> i = filters.iterator();
-        while (i.hasNext()) {
-            final Filter f = i.next();
-            if (propertyId.equals(f.propertyId)) {
-                filterAll();
-                return;
-            }
-        }
-    }
-
-    @Override
-    protected void filterAll() {
-
-        // Clearing filters?
-        boolean hasFilters = (filters != null && !filters.isEmpty());
-
-        if (doFilterContainer(hasFilters)) {
-            fireItemSetChange();
-        }
-    }
-
-    /**
-     * Filters the data in the container and updates internal data structures.
-     * This method should reset any internal data structures and then repopulate
-     * them so {@link #getItemIds()} and other methods only return the filtered
-     * items.
-     * 
-     * @param hasFilters
-     *            true if filters has been set for the container, false
-     *            otherwise
-     * @return true if the item set has changed as a result of the filtering
-     */
-    protected boolean doFilterContainer(boolean hasFilters) {
-        if (!hasFilters) {
-            setFilteredItemIds(null);
-            if (filters != null) {
-                filters = null;
-                return true;
-            }
-
-            return false;
-        }
-
-        // Reset filtered list
-        List<Object> originalFilteredItemIds = getFilteredItemIds();
-        if (originalFilteredItemIds == null) {
-            originalFilteredItemIds = Collections.emptyList();
-        }
-        setFilteredItemIds(new ListSet<Object>());
-
-        // Filter
-        boolean equal = true;
-        Iterator<?> origIt = originalFilteredItemIds.iterator();
-        for (final Iterator<?> i = allItemIds.iterator(); i.hasNext();) {
-            final Object id = i.next();
-            if (passesFilters(id)) {
-                // filtered list comes from the full list, can use ==
-                equal = equal && origIt.hasNext() && origIt.next() == id;
-                getFilteredItemIds().add(id);
-            }
-        }
-
-        return !equal || origIt.hasNext();
-    }
-
-    /**
-     * Checks if the given itemId passes the filters set for the container. The
-     * caller should make sure the itemId exists in the container. For
-     * non-existing itemIds the behavior is undefined.
-     * 
-     * @param itemId
-     *            An itemId that exists in the container.
-     * @return true if the itemId passes all filters or no filters are set,
-     *         false otherwise.
-     */
-    protected boolean passesFilters(Object itemId) {
-        IndexedContainerItem item = new IndexedContainerItem(itemId);
-        if (filters == null) {
-            return true;
-        }
-        final Iterator<Filter> i = filters.iterator();
-        while (i.hasNext()) {
-            final Filter f = i.next();
-            if (!f.passesFilter(item)) {
-                return false;
-            }
-        }
-        return true;
+        removeFilters(propertyId);
     }
 
 }

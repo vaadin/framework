@@ -2,7 +2,11 @@ package com.vaadin.data.util;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.ItemSetChangeNotifier;
@@ -16,14 +20,12 @@ import com.vaadin.data.Item;
  * 
  * TODO this version does not implement {@link Container.Sortable}
  * 
- * TODO this version does not implement {@link Container.Filterable}
- * 
- * TODO this version does not implement container modification methods
- * 
  * Features:
  * <ul>
  * <li> {@link Container.Ordered}
  * <li> {@link Container.Indexed}
+ * <li> {@link Filterable} (internal implementation, does not implement the
+ * interface directly)
  * </ul>
  * 
  * @param <ITEMIDTYPE>
@@ -61,6 +63,12 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      */
     private List<ITEMIDTYPE> filteredItemIds;
 
+    /**
+     * Filters that are applied to the container to limit the items visible in
+     * it
+     */
+    private Set<Filter> filters = new HashSet<Filter>();
+
     // Constructors
 
     /**
@@ -77,6 +85,16 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     // Container interface methods with more specific return class
 
     public abstract ITEMCLASS getItem(Object itemId);
+
+    /**
+     * Get an item even if filtered out.
+     * 
+     * For internal use only.
+     * 
+     * @param itemId
+     * @return
+     */
+    protected abstract ITEMCLASS getUnfilteredItem(Object itemId);
 
     // cannot override getContainerPropertyIds() and getItemIds(): if subclass
     // uses Object as ITEMIDCLASS or PROPERTYIDCLASS, Collection<Object> cannot
@@ -180,12 +198,160 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
 
     // internal methods
 
+    // Filtering support
+
     /**
      * Filter the view to recreate the visible item list from the unfiltered
      * items, and send a notification if the set of visible items changed in any
      * way.
      */
-    protected abstract void filterAll();
+    protected void filterAll() {
+        if (doFilterContainer(!getFilters().isEmpty())) {
+            fireItemSetChange();
+        }
+    }
+
+    /**
+     * Filters the data in the container and updates internal data structures.
+     * This method should reset any internal data structures and then repopulate
+     * them so {@link #getItemIds()} and other methods only return the filtered
+     * items.
+     * 
+     * @param hasFilters
+     *            true if filters has been set for the container, false
+     *            otherwise
+     * @return true if the item set has changed as a result of the filtering
+     */
+    protected boolean doFilterContainer(boolean hasFilters) {
+        if (!hasFilters) {
+            boolean changed = allItemIds.size() != getVisibleItemIds().size();
+            setFilteredItemIds(null);
+            return changed;
+        }
+
+        // Reset filtered list
+        List<ITEMIDTYPE> originalFilteredItemIds = getFilteredItemIds();
+        if (originalFilteredItemIds == null) {
+            originalFilteredItemIds = Collections.emptyList();
+        }
+        setFilteredItemIds(new ListSet<ITEMIDTYPE>());
+
+        // Filter
+        boolean equal = true;
+        Iterator<ITEMIDTYPE> origIt = originalFilteredItemIds.iterator();
+        for (final Iterator<ITEMIDTYPE> i = allItemIds.iterator(); i.hasNext();) {
+            final ITEMIDTYPE id = i.next();
+            if (passesFilters(id)) {
+                // filtered list comes from the full list, can use ==
+                equal = equal && origIt.hasNext() && origIt.next() == id;
+                getFilteredItemIds().add(id);
+            }
+        }
+
+        return !equal || origIt.hasNext();
+    }
+
+    /**
+     * Checks if the given itemId passes the filters set for the container. The
+     * caller should make sure the itemId exists in the container. For
+     * non-existing itemIds the behavior is undefined.
+     * 
+     * @param itemId
+     *            An itemId that exists in the container.
+     * @return true if the itemId passes all filters or no filters are set,
+     *         false otherwise.
+     */
+    protected boolean passesFilters(Object itemId) {
+        ITEMCLASS item = getUnfilteredItem(itemId);
+        if (getFilters().isEmpty()) {
+            return true;
+        }
+        final Iterator<Filter> i = getFilters().iterator();
+        while (i.hasNext()) {
+            final Filter f = i.next();
+            if (!f.passesFilter(item)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Add a container filter and re-filter the view
+     * 
+     * This can be used to implement
+     * {@link Filterable#addContainerFilter(Object, String, boolean, boolean)}.
+     */
+    protected void addFilter(Filter filter) {
+        getFilters().add(filter);
+        filterAll();
+    }
+
+    /**
+     * Remove all container filters for all properties and re-filter the view.
+     * 
+     * This can be used to implement
+     * {@link Filterable#removeAllContainerFilters()}.
+     */
+    protected void removeAllFilters() {
+        if (getFilters().isEmpty()) {
+            return;
+        }
+        getFilters().clear();
+        filterAll();
+    }
+
+    /**
+     * Checks if there is a filter that applies to a given property.
+     * 
+     * @param propertyId
+     * @return true if there is an active filter for the property
+     */
+    protected boolean isPropertyFiltered(Object propertyId) {
+        if (getFilters().isEmpty() || propertyId == null) {
+            return false;
+        }
+        final Iterator<Filter> i = getFilters().iterator();
+        while (i.hasNext()) {
+            final Filter f = i.next();
+            if (propertyId.equals(f.propertyId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Remove all container filters for a given property identifier and
+     * re-filter the view.
+     * 
+     * This can be used to implement
+     * {@link Filterable#removeContainerFilters(Object)}.
+     * 
+     * @param propertyId
+     * @return Collection<Filter> removed filters
+     */
+    protected Collection<Filter> removeFilters(Object propertyId) {
+        if (getFilters().isEmpty() || propertyId == null) {
+            return Collections.emptyList();
+        }
+        List<Filter> removedFilters = new LinkedList<Filter>();
+        for (Iterator<Filter> iterator = getFilters().iterator(); iterator
+                .hasNext();) {
+            Filter f = iterator.next();
+            if (f.propertyId.equals(propertyId)) {
+                removedFilters.add(f);
+                iterator.remove();
+            }
+        }
+        if (!removedFilters.isEmpty()) {
+            filterAll();
+            return removedFilters;
+        }
+        return Collections.emptyList();
+    }
+
+    // removing items
 
     /**
      * Removes all items from the internal data structures of this class. This
@@ -226,6 +392,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
 
         return result;
     }
+
+    // adding items
 
     /**
      * Adds the bean to all internal data structures at the given position.
@@ -288,7 +456,12 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
             ITEMCLASS item, boolean filter) {
         ITEMCLASS newItem = internalAddAt(allItemIds.size(), newItemId, item);
         if (newItem != null && filter) {
+            // TODO filter only this item, use fireItemAdded()
             filterAll();
+            if (getFilteredItemIds() == null) {
+                // TODO hack: does not detect change in filterAll() in this case
+                fireItemAdded(indexOfId(newItemId), newItemId, item);
+            }
         }
         return newItem;
     }
@@ -314,11 +487,16 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (previousItemId == null) {
             newItem = internalAddAt(0, newItemId, item);
         } else if (containsId(previousItemId)) {
-            newItem = internalAddAt(internalIndexOf(previousItemId) + 1,
+            newItem = internalAddAt(allItemIds.indexOf(previousItemId) + 1,
                     newItemId, item);
         }
         if (newItem != null) {
+            // TODO filter only this item, use fireItemAdded()
             filterAll();
+            if (getFilteredItemIds() == null) {
+                // TODO hack: does not detect change in filterAll() in this case
+                fireItemAdded(indexOfId(newItemId), newItemId, item);
+            }
         }
         return newItem;
     }
@@ -328,7 +506,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * event is fired if the filtered view changes.
      * 
      * @param index
-     *            position where to att the item (visible/view index)
+     *            position where to add the item (visible/view index)
      * @param newItemId
      * @return item added or null if no item was added
      * @return
@@ -364,18 +542,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
             ITEMCLASS item) {
     }
 
-    /**
-     * Returns the index of an item within the unfiltered collection of items.
-     * 
-     * For internal use by subclasses only. This API is experimental and subject
-     * to change.
-     * 
-     * @param itemId
-     * @return
-     */
-    protected int internalIndexOf(ITEMIDTYPE itemId) {
-        return allItemIds.indexOf(itemId);
-    }
+    // item set change notifications
 
     /**
      * Notify item set change listeners that an item has been added to the
@@ -413,6 +580,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         fireItemSetChange();
     }
 
+    // visible and filtered item identifier lists
+
     /**
      * Returns the internal list of visible item identifiers after filtering.
      * 
@@ -444,6 +613,26 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      */
     protected List<ITEMIDTYPE> getFilteredItemIds() {
         return filteredItemIds;
+    }
+
+    /**
+     * TODO Temporary internal helper method to set the internal list of
+     * filters.
+     * 
+     * @param filters
+     */
+    protected void setFilters(Set<Filter> filters) {
+        this.filters = filters;
+    }
+
+    /**
+     * TODO Temporary internal helper method to get the internal list of
+     * filters.
+     * 
+     * @return Set<Filter>
+     */
+    protected Set<Filter> getFilters() {
+        return filters;
     }
 
 }

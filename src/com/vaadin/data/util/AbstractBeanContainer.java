@@ -11,13 +11,9 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Container.Sortable;
@@ -37,12 +33,10 @@ import com.vaadin.data.Property.ValueChangeNotifier;
  * </p>
  * 
  * <p>
- * Subclasses should implement adding items to the container, typically calling
- * the protected methods {@link #addItem(Object, Object)},
+ * Subclasses should implement any public methods adding items to the container,
+ * typically calling the protected methods {@link #addItem(Object, Object)},
  * {@link #addItemAfter(Object, Object, Object)} and
- * {@link #addItemAt(int, Object, Object)}, and if necessary,
- * {@link #internalAddAt(int, Object, Object)} and
- * {@link #internalIndexOf(Object)}.
+ * {@link #addItemAt(int, Object, Object)}.
  * </p>
  * 
  * <p>
@@ -145,11 +139,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
     private ItemSorter itemSorter = new DefaultItemSorter();
 
     /**
-     * Filters currently applied to the container.
-     */
-    private Set<Filter> filters = new HashSet<Filter>();
-
-    /**
      * Maps all item ids in the container (including filtered) to their
      * corresponding BeanItem.
      */
@@ -176,7 +165,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      */
     protected AbstractBeanContainer(Class<? super BEANTYPE> type) {
         super(new ListSet<IDTYPE>());
-        setFilteredItemIds(new ListSet<IDTYPE>());
         if (type == null) {
             throw new IllegalArgumentException(
                     "The bean type passed to AbstractBeanContainer must not be null");
@@ -284,6 +272,12 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      */
     @Override
     public BeanItem<BEANTYPE> getItem(Object itemId) {
+        // TODO return only if visible?
+        return getUnfilteredItem(itemId);
+    }
+
+    @Override
+    protected BeanItem<BEANTYPE> getUnfilteredItem(Object itemId) {
         return itemIdToItem.get(itemId);
     }
 
@@ -347,51 +341,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         filterAll();
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    protected void filterAll() {
-        // avoid notification if the filtering had no effect
-        List<IDTYPE> originalItems = getFilteredItemIds();
-        // it is somewhat inefficient to do a (shallow) clone() every time
-        setFilteredItemIds((List<IDTYPE>) ((ListSet<IDTYPE>) allItemIds)
-                .clone());
-        for (Filter f : filters) {
-            filter(f);
-        }
-        // check if exactly the same items are there after filtering to avoid
-        // unnecessary notifications
-        // this may be slow in some cases as it uses BEANTYPE.equals()
-        if (!originalItems.equals(getFilteredItemIds())) {
-            fireItemSetChange();
-        }
-    }
-
-    /**
-     * Returns an unmodifiable collection of filters in use by the container.
-     * 
-     * @return
-     */
-    protected Set<Filter> getFilters() {
-        return Collections.unmodifiableSet(filters);
-    }
-
-    /**
-     * Remove (from the filtered list) any items that do not match the given
-     * filter.
-     * 
-     * @param f
-     *            The filter used to determine if items should be removed
-     */
-    protected void filter(Filter f) {
-        Iterator<IDTYPE> iterator = getFilteredItemIds().iterator();
-        while (iterator.hasNext()) {
-            IDTYPE itemId = iterator.next();
-            if (!f.passesFilter(getItem(itemId))) {
-                iterator.remove();
-            }
-        }
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -399,22 +348,10 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * com.vaadin.data.Container.Filterable#addContainerFilter(java.lang.Object,
      * java.lang.String, boolean, boolean)
      */
-    @SuppressWarnings("unchecked")
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
-        if (filters.isEmpty()) {
-            setFilteredItemIds((List<IDTYPE>) ((ListSet<IDTYPE>) allItemIds)
-                    .clone());
-        }
-        // listen to change events to be able to update filtering
-        for (Item item : itemIdToItem.values()) {
-            addValueChangeListener(item, propertyId);
-        }
-        Filter f = new Filter(propertyId, filterString, ignoreCase,
-                onlyMatchPrefix);
-        filter(f);
-        filters.add(f);
-        fireItemSetChange();
+        addFilter(new Filter(propertyId, filterString, ignoreCase,
+                onlyMatchPrefix));
     }
 
     /*
@@ -423,13 +360,11 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @see com.vaadin.data.Container.Filterable#removeAllContainerFilters()
      */
     public void removeAllContainerFilters() {
-        if (!filters.isEmpty()) {
-            filters = new HashSet<Filter>();
-            // stop listening to change events for any property
+        if (!getFilters().isEmpty()) {
             for (Item item : itemIdToItem.values()) {
                 removeAllValueChangeListeners(item);
             }
-            filterAll();
+            removeAllFilters();
         }
     }
 
@@ -441,22 +376,11 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * .Object)
      */
     public void removeContainerFilters(Object propertyId) {
-        if (!filters.isEmpty()) {
-            boolean filteringChanged = false;
-            for (Iterator<Filter> iterator = filters.iterator(); iterator
-                    .hasNext();) {
-                Filter f = iterator.next();
-                if (f.propertyId.equals(propertyId)) {
-                    iterator.remove();
-                    filteringChanged = true;
-                }
-            }
-            if (filteringChanged) {
-                // stop listening to change events for the property
-                for (Item item : itemIdToItem.values()) {
-                    removeValueChangeListener(item, propertyId);
-                }
-                filterAll();
+        Collection<Filter> removedFilters = super.removeFilters(propertyId);
+        if (!removedFilters.isEmpty()) {
+            // stop listening to change events for the property
+            for (Item item : itemIdToItem.values()) {
+                removeValueChangeListener(item, propertyId);
             }
         }
     }
@@ -627,9 +551,9 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
     /**
      * Adds the bean to the Container.
      * 
-     * TODO Note: the behavior of this method changed in Vaadin 6.6 - now items
-     * are added at the very end of the unfiltered container and not after the
-     * last visible item if filtering is used.
+     * Note: the behavior of this method changed in Vaadin 6.6 - now items are
+     * added at the very end of the unfiltered container and not after the last
+     * visible item if filtering is used.
      * 
      * @see com.vaadin.data.Container#addItem(Object)
      */
