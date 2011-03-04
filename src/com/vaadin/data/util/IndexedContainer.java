@@ -96,7 +96,7 @@ public class IndexedContainer extends
     /* Container constructors */
 
     public IndexedContainer() {
-        super(new ArrayList<Object>());
+        super();
     }
 
     public IndexedContainer(Collection<?> itemIds) {
@@ -192,7 +192,7 @@ public class IndexedContainer extends
         // If default value is given, set it
         if (defaultValue != null) {
             // for existing rows
-            for (final Iterator<?> i = allItemIds.iterator(); i.hasNext();) {
+            for (final Iterator<?> i = getAllItemIds().iterator(); i.hasNext();) {
                 getItem(i.next()).getItemProperty(propertyId).setValue(
                         defaultValue);
             }
@@ -311,7 +311,7 @@ public class IndexedContainer extends
         }
 
         // If remove the Property from all Items
-        for (final Iterator<Object> i = allItemIds.iterator(); i.hasNext();) {
+        for (final Iterator<Object> i = getAllItemIds().iterator(); i.hasNext();) {
             items.get(i.next()).remove(propertyId);
         }
 
@@ -1001,8 +1001,8 @@ public class IndexedContainer extends
         final IndexedContainer nc = new IndexedContainer();
 
         // Clone the shallow properties
-        nc.allItemIds = allItemIds != null ? (ArrayList<Object>) ((ArrayList<Object>) allItemIds)
-                .clone() : null;
+        nc.setAllItemIds(getAllItemIds() != null ? (ListSet<Object>) ((ListSet<Object>) getAllItemIds())
+                .clone() : null);
         nc.setItemSetChangeListeners(getItemSetChangeListeners() != null ? new LinkedList<Container.ItemSetChangeListener>(
                 getItemSetChangeListeners()) : null);
         nc.propertyIds = propertyIds != null ? (ArrayList<Object>) propertyIds

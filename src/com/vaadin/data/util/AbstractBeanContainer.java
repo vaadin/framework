@@ -157,7 +157,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      *             If {@code type} is null
      */
     protected AbstractBeanContainer(Class<? super BEANTYPE> type) {
-        super(new ListSet<IDTYPE>());
         if (type == null) {
             throw new IllegalArgumentException(
                     "The bean type passed to AbstractBeanContainer must not be null");

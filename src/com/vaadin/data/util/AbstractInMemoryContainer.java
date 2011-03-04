@@ -50,7 +50,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * 
      * Must not be null.
      */
-    protected List<ITEMIDTYPE> allItemIds;
+    private List<ITEMIDTYPE> allItemIds;
 
     /**
      * An ordered {@link List} of item identifiers in the container after
@@ -78,13 +78,9 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
 
     /**
      * Constructor for an abstract in-memory container.
-     * 
-     * @param allItemIds
-     *            the internal {@link List} of item identifiers which must not
-     *            be null; used and modified by various operations
      */
-    protected AbstractInMemoryContainer(List<ITEMIDTYPE> allItemIds) {
-        this.allItemIds = allItemIds;
+    protected AbstractInMemoryContainer() {
+        setAllItemIds(new ListSet<ITEMIDTYPE>());
     }
 
     // Container interface methods with more specific return class
@@ -229,7 +225,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      */
     protected boolean doFilterContainer(boolean hasFilters) {
         if (!hasFilters) {
-            boolean changed = allItemIds.size() != getVisibleItemIds().size();
+            boolean changed = getAllItemIds().size() != getVisibleItemIds()
+                    .size();
             setFilteredItemIds(null);
             return changed;
         }
@@ -244,7 +241,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         // Filter
         boolean equal = true;
         Iterator<ITEMIDTYPE> origIt = originalFilteredItemIds.iterator();
-        for (final Iterator<ITEMIDTYPE> i = allItemIds.iterator(); i.hasNext();) {
+        for (final Iterator<ITEMIDTYPE> i = getAllItemIds().iterator(); i
+                .hasNext();) {
             final ITEMIDTYPE id = i.next();
             if (passesFilters(id)) {
                 // filtered list comes from the full list, can use ==
@@ -423,7 +421,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * 
      */
     protected void doSort() {
-        Collections.sort(allItemIds, getItemSorter());
+        Collections.sort(getAllItemIds(), getItemSorter());
     }
 
     /**
@@ -453,7 +451,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      */
     protected void internalRemoveAllItems() {
         // Removes all Items
-        allItemIds.clear();
+        getAllItemIds().clear();
         if (getFilteredItemIds() != null) {
             getFilteredItemIds().clear();
         }
@@ -476,7 +474,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
             return false;
         }
 
-        boolean result = allItemIds.remove(itemId);
+        boolean result = getAllItemIds().remove(itemId);
         if (result && getFilteredItemIds() != null) {
             getFilteredItemIds().remove(itemId);
         }
@@ -512,18 +510,18 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      */
     private ITEMCLASS internalAddAt(int position, ITEMIDTYPE itemId,
             ITEMCLASS item) {
-        if (position < 0 || position > allItemIds.size() || itemId == null
+        if (position < 0 || position > getAllItemIds().size() || itemId == null
                 || item == null) {
             return null;
         }
         // Make sure that the item has not been added previously
-        if (allItemIds.contains(itemId)) {
+        if (getAllItemIds().contains(itemId)) {
             return null;
         }
 
         // "filteredList" will be updated in filterAll() which should be invoked
         // by the caller after calling this method.
-        allItemIds.add(position, itemId);
+        getAllItemIds().add(position, itemId);
         registerNewItem(position, itemId, item);
 
         return item;
@@ -545,7 +543,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      */
     protected ITEMCLASS internalAddItemAtEnd(ITEMIDTYPE newItemId,
             ITEMCLASS item, boolean filter) {
-        ITEMCLASS newItem = internalAddAt(allItemIds.size(), newItemId, item);
+        ITEMCLASS newItem = internalAddAt(getAllItemIds().size(), newItemId,
+                item);
         if (newItem != null && filter) {
             // TODO filter only this item, use fireItemAdded()
             filterAll();
@@ -578,8 +577,9 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (previousItemId == null) {
             newItem = internalAddAt(0, newItemId, item);
         } else if (containsId(previousItemId)) {
-            newItem = internalAddAt(allItemIds.indexOf(previousItemId) + 1,
-                    newItemId, item);
+            newItem = internalAddAt(
+                    getAllItemIds().indexOf(previousItemId) + 1, newItemId,
+                    item);
         }
         if (newItem != null) {
             // TODO filter only this item, use fireItemAdded()
@@ -682,7 +682,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (getFilteredItemIds() != null) {
             return getFilteredItemIds();
         } else {
-            return allItemIds;
+            return getAllItemIds();
         }
     }
 
@@ -704,6 +704,28 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      */
     protected List<ITEMIDTYPE> getFilteredItemIds() {
         return filteredItemIds;
+    }
+
+    /**
+     * TODO Temporary internal helper method to set the internal list of all
+     * item identifiers. Should not be used outside this class except for
+     * implementing clone(), may disappear from future versions.
+     * 
+     * @param allItemIds
+     */
+    protected void setAllItemIds(List<ITEMIDTYPE> allItemIds) {
+        this.allItemIds = allItemIds;
+    }
+
+    /**
+     * TODO Temporary internal helper method to get the internal list of all
+     * item identifiers. Should not be used outside this class without
+     * exceptional justification, may disappear in future versions.
+     * 
+     * @return List<ITEMIDTYPE>
+     */
+    protected List<ITEMIDTYPE> getAllItemIds() {
+        return allItemIds;
     }
 
     /**
