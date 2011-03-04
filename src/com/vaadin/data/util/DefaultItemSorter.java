@@ -186,21 +186,9 @@ public class DefaultItemSorter implements ItemSorter {
             int r = 0;
             // Normal non-null comparison
             if (o1 != null && o2 != null) {
-                // FIXME: Use standard Boolean comparison as Boolean implements
-                // Comaprable since JDK1.5
-                if ((o1 instanceof Boolean) && (o2 instanceof Boolean)) {
-                    if (o1.equals(o2)) {
-                        r = 0; // both have the same boolean value
-                    } else if (((Boolean) o1).booleanValue()) {
-                        return 1; // true is greater than false
-                    } else {
-                        return -1;
-                    }
-                } else {
-                    // Assume the objects can be cast to Comparable, throw
-                    // ClassCastException otherwise.
-                    r = ((Comparable<Object>) o1).compareTo(o2);
-                }
+                // Assume the objects can be cast to Comparable, throw
+                // ClassCastException otherwise.
+                r = ((Comparable<Object>) o1).compareTo(o2);
             } else if (o1 == o2) {
                 // Objects are equal if both are null
                 r = 0;
