@@ -15,7 +15,8 @@ import com.vaadin.data.Property;
  * @since 5.4
  */
 @SuppressWarnings("serial")
-public class Filter implements Serializable {
+public class Filter implements AbstractInMemoryContainer.ItemFilter,
+        Serializable {
     final Object propertyId;
     final String filterString;
     final boolean ignoreCase;
@@ -31,12 +32,6 @@ public class Filter implements Serializable {
         this.onlyMatchPrefix = onlyMatchPrefix;
     }
 
-    /**
-     * Check if an item passes the filter.
-     * 
-     * @param item
-     * @return true if the item is accepted by this filter
-     */
     public boolean passesFilter(Item item) {
         final Property p = item.getItemProperty(propertyId);
         if (p == null || p.toString() == null) {
@@ -54,6 +49,10 @@ public class Filter implements Serializable {
             }
         }
         return true;
+    }
+
+    public boolean appliesToProperty(Object propertyId) {
+        return this.propertyId.equals(propertyId);
     }
 
     @Override

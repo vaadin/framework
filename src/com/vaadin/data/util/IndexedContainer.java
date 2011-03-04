@@ -1019,7 +1019,7 @@ public class IndexedContainer extends
         nc.types = types != null ? (Hashtable<Object, Class<?>>) types.clone()
                 : null;
 
-        nc.setFilters((HashSet<Filter>) ((HashSet<Filter>) getFilters())
+        nc.setFilters((HashSet<ItemFilter>) ((HashSet<ItemFilter>) getFilters())
                 .clone());
 
         nc.setFilteredItemIds(getFilteredItemIds() == null ? null

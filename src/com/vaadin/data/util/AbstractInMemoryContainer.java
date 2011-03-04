@@ -1,5 +1,6 @@
 package com.vaadin.data.util;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -45,6 +46,38 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         Container.Indexed {
 
     /**
+     * Filter interface for item filtering in in-memory containers, including
+     * for implementing {@link Filterable}.
+     * 
+     * An ItemFilter must implement {@link #equals(Object)} and
+     * {@link #hashCode()} correctly to avoid duplicate filter registrations
+     * etc.
+     * 
+     * TODO this may change for 6.6 with the new filtering API
+     * 
+     * @since 6.6
+     */
+    public interface ItemFilter extends Serializable {
+        /**
+         * Check if an item passes the filter.
+         * 
+         * @param item
+         * @return true if the item is accepted by this filter
+         */
+        public boolean passesFilter(Item item);
+
+        /**
+         * Check if a change in the value of a property can affect the filtering
+         * result. May always return true, at the cost of performance.
+         * 
+         * @param propertyId
+         * @return true if the filtering result may/does change based on changes
+         *         to the property identified by propertyId
+         */
+        public boolean appliesToProperty(Object propertyId);
+    }
+
+    /**
      * An ordered {@link List} of all item identifiers in the container,
      * including those that have been filtered out.
      * 
@@ -67,7 +100,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * Filters that are applied to the container to limit the items visible in
      * it
      */
-    private Set<Filter> filters = new HashSet<Filter>();
+    private Set<ItemFilter> filters = new HashSet<ItemFilter>();
 
     /**
      * The item sorter which is used for sorting the container.
@@ -269,9 +302,9 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (getFilters().isEmpty()) {
             return true;
         }
-        final Iterator<Filter> i = getFilters().iterator();
+        final Iterator<ItemFilter> i = getFilters().iterator();
         while (i.hasNext()) {
-            final Filter f = i.next();
+            final ItemFilter f = i.next();
             if (!f.passesFilter(item)) {
                 return false;
             }
@@ -285,7 +318,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * This can be used to implement
      * {@link Filterable#addContainerFilter(Object, String, boolean, boolean)}.
      */
-    protected void addFilter(Filter filter) {
+    protected void addFilter(ItemFilter filter) {
         getFilters().add(filter);
         filterAll();
     }
@@ -314,10 +347,10 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (getFilters().isEmpty() || propertyId == null) {
             return false;
         }
-        final Iterator<Filter> i = getFilters().iterator();
+        final Iterator<ItemFilter> i = getFilters().iterator();
         while (i.hasNext()) {
-            final Filter f = i.next();
-            if (propertyId.equals(f.propertyId)) {
+            final ItemFilter f = i.next();
+            if (f.appliesToProperty(propertyId)) {
                 return true;
             }
         }
@@ -326,7 +359,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
 
     /**
      * Remove all container filters for a given property identifier and
-     * re-filter the view.
+     * re-filter the view. This also removes filters applying to multiple
+     * properties including the one identified by propertyId.
      * 
      * This can be used to implement
      * {@link Filterable#removeContainerFilters(Object)}.
@@ -334,15 +368,15 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * @param propertyId
      * @return Collection<Filter> removed filters
      */
-    protected Collection<Filter> removeFilters(Object propertyId) {
+    protected Collection<ItemFilter> removeFilters(Object propertyId) {
         if (getFilters().isEmpty() || propertyId == null) {
             return Collections.emptyList();
         }
-        List<Filter> removedFilters = new LinkedList<Filter>();
-        for (Iterator<Filter> iterator = getFilters().iterator(); iterator
+        List<ItemFilter> removedFilters = new LinkedList<ItemFilter>();
+        for (Iterator<ItemFilter> iterator = getFilters().iterator(); iterator
                 .hasNext();) {
-            Filter f = iterator.next();
-            if (f.propertyId.equals(propertyId)) {
+            ItemFilter f = iterator.next();
+            if (f.appliesToProperty(propertyId)) {
                 removedFilters.add(f);
                 iterator.remove();
             }
@@ -734,7 +768,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * 
      * @param filters
      */
-    protected void setFilters(Set<Filter> filters) {
+    protected void setFilters(Set<ItemFilter> filters) {
         this.filters = filters;
     }
 
@@ -742,9 +776,9 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * TODO Temporary internal helper method to get the internal list of
      * filters.
      * 
-     * @return Set<Filter>
+     * @return Set<ItemFilter>
      */
-    protected Set<Filter> getFilters() {
+    protected Set<ItemFilter> getFilters() {
         return filters;
     }
 

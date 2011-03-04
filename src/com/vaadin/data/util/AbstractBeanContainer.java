@@ -368,7 +368,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * .Object)
      */
     public void removeContainerFilters(Object propertyId) {
-        Collection<Filter> removedFilters = super.removeFilters(propertyId);
+        Collection<ItemFilter> removedFilters = super.removeFilters(propertyId);
         if (!removedFilters.isEmpty()) {
             // stop listening to change events for the property
             for (Item item : itemIdToItem.values()) {
@@ -486,9 +486,13 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
 
         // add listeners to be able to update filtering on property
         // changes
-        for (Filter filter : getFilters()) {
-            // addValueChangeListener avoids adding duplicates
-            addValueChangeListener(item, filter.propertyId);
+        for (ItemFilter filter : getFilters()) {
+            for (String propertyId : getContainerPropertyIds()) {
+                if (filter.appliesToProperty(propertyId)) {
+                    // addValueChangeListener avoids adding duplicates
+                    addValueChangeListener(item, propertyId);
+                }
+            }
         }
     }
 
