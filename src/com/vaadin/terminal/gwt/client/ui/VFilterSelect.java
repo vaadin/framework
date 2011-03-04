@@ -326,13 +326,15 @@ public class VFilterSelect extends Composite implements Paintable, Field,
          */
         @Override
         public void onBrowserEvent(Event event) {
-            final Element target = DOM.eventGetTarget(event);
-            if (DOM.compare(target, up)
-                    || DOM.compare(target, DOM.getChild(up, 0))) {
-                filterOptions(currentPage - 1, lastFilter);
-            } else if (DOM.compare(target, down)
-                    || DOM.compare(target, DOM.getChild(down, 0))) {
-                filterOptions(currentPage + 1, lastFilter);
+            if (event.getTypeInt() == Event.ONCLICK) {
+                final Element target = DOM.eventGetTarget(event);
+                if (DOM.compare(target, up)
+                        || DOM.compare(target, DOM.getChild(up, 0))) {
+                    filterOptions(currentPage - 1, lastFilter);
+                } else if (DOM.compare(target, down)
+                        || DOM.compare(target, DOM.getChild(down, 0))) {
+                    filterOptions(currentPage + 1, lastFilter);
+                }
             }
 
             /*
