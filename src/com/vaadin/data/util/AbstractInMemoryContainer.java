@@ -18,13 +18,13 @@ import com.vaadin.data.Item;
  * this class, inherit {@link AbstractContainer}, or implement the
  * {@link Container} interface directly.
  * 
- * TODO this version does not implement {@link Container.Sortable}
- * 
  * Features:
  * <ul>
  * <li> {@link Container.Ordered}
  * <li> {@link Container.Indexed}
  * <li> {@link Filterable} (internal implementation, does not implement the
+ * interface directly)
+ * <li> {@link Sortable} (internal implementation, does not implement the
  * interface directly)
  * </ul>
  * 
