@@ -667,6 +667,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      */
     protected void addAll(Collection<? extends BEANTYPE> collection)
             throws IllegalStateException {
+        boolean modified = false;
         for (BEANTYPE bean : collection) {
             // TODO skipping invalid beans - should not allow them in javadoc?
             if (bean == null
@@ -674,12 +675,19 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
                 continue;
             }
             IDTYPE itemId = resolveBeanId(bean);
-            // ignore result
-            internalAddItemAtEnd(itemId, createBeanItem(bean), false);
+            if (internalAddItemAtEnd(itemId, createBeanItem(bean), false) != null) {
+                modified = true;
+            }
         }
 
-        // Filter the contents when all items have been added
-        filterAll();
+        if (modified) {
+            // Filter the contents when all items have been added
+            if (getFilteredItemIds() != null) {
+                filterAll();
+            } else {
+                fireItemSetChange();
+            }
+        }
     }
 
     /**
