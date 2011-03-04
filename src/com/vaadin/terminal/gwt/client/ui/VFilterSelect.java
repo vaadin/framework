@@ -730,7 +730,6 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     /**
      * Used when measuring the width of the popup
      */
-
     private final HTML popupOpener = new HTML("") {
 
         /*
@@ -1709,8 +1708,11 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             /*
              * In IE the above wont work, the blur event will still trigger. So,
              * we set a flag here to prevent the next blur event from happening.
+             * This is not needed if do not already have focus, in that case
+             * there will not be any blur event and we should not cancel the
+             * next blur.
              */
-            if (BrowserInfo.get().isIE()) {
+            if (BrowserInfo.get().isIE() && focused) {
                 preventNextBlurEventInIE = true;
             }
         }
