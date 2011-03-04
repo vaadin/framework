@@ -89,11 +89,6 @@ public class IndexedContainer extends
      */
     private Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>> singlePropertyValueChangeListeners = null;
 
-    /**
-     * The item sorter which is used for sorting the container.
-     */
-    private ItemSorter itemSorter = new DefaultItemSorter();
-
     private HashMap<Object, Object> defaultPropertyValues;
 
     private int nextGeneratedItemId = 1;
@@ -964,32 +959,9 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Container.Sortable#sort(java.lang.Object[],
      * boolean[])
      */
+    @Override
     public void sort(Object[] propertyId, boolean[] ascending) {
-        // Set up the item sorter for the sort operation
-        itemSorter.setSortProperties(this, propertyId, ascending);
-
-        // Perform the actual sort
-        doSort();
-
-        // Post sort updates
-        if (getFilteredItemIds() != null) {
-            filterAll();
-        } else {
-            fireItemSetChange();
-        }
-
-    }
-
-    /**
-     * Perform the sorting of the data structures in the container. This is
-     * invoked when the <code>itemSorter</code> has been prepared for the sort
-     * operation. Typically this method calls
-     * <code>Collections.sort(aCollection, getItemSorter())</code> on all arrays
-     * (containing item ids) that need to be sorted.
-     * 
-     */
-    protected void doSort() {
-        Collections.sort(allItemIds, getItemSorter());
+        super.sort(propertyId, ascending);
     }
 
     /*
@@ -999,39 +971,17 @@ public class IndexedContainer extends
      * ()
      */
     public Collection<?> getSortableContainerPropertyIds() {
-
-        final List<Object> list = new LinkedList<Object>();
-        for (final Iterator<?> i = propertyIds.iterator(); i.hasNext();) {
-            final Object id = i.next();
-            final Class<?> type = getType(id);
-            if (type != null && Comparable.class.isAssignableFrom(type)) {
-                list.add(id);
-            }
-        }
-
-        return list;
+        return getSortablePropertyIds();
     }
 
-    /**
-     * Returns the ItemSorter used for comparing items in a sort. See
-     * {@link #setItemSorter(ItemSorter)} for more information.
-     * 
-     * @return The ItemSorter used for comparing two items in a sort.
-     */
+    @Override
     public ItemSorter getItemSorter() {
-        return itemSorter;
+        return super.getItemSorter();
     }
 
-    /**
-     * Sets the ItemSorter used for comparing items in a sort. The ItemSorter is
-     * called for each collection that needs sorting. A default ItemSorter is
-     * used if this is not explicitly set.
-     * 
-     * @param itemSorter
-     *            The ItemSorter used for comparing two items in a sort.
-     */
+    @Override
     public void setItemSorter(ItemSorter itemSorter) {
-        this.itemSorter = itemSorter;
+        super.setItemSorter(itemSorter);
     }
 
     /**

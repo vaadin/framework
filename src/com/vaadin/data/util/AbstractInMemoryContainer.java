@@ -69,6 +69,11 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      */
     private Set<Filter> filters = new HashSet<Filter>();
 
+    /**
+     * The item sorter which is used for sorting the container.
+     */
+    private ItemSorter itemSorter = new DefaultItemSorter();
+
     // Constructors
 
     /**
@@ -349,6 +354,92 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
             return removedFilters;
         }
         return Collections.emptyList();
+    }
+
+    // sorting
+
+    /**
+     * Returns the ItemSorter used for comparing items in a sort. See
+     * {@link #setItemSorter(ItemSorter)} for more information.
+     * 
+     * @return The ItemSorter used for comparing two items in a sort.
+     */
+    protected ItemSorter getItemSorter() {
+        return itemSorter;
+    }
+
+    /**
+     * Sets the ItemSorter used for comparing items in a sort. The
+     * {@link ItemSorter#compare(Object, Object)} method is called with item ids
+     * to perform the sorting. A default ItemSorter is used if this is not
+     * explicitly set.
+     * 
+     * @param itemSorter
+     *            The ItemSorter used for comparing two items in a sort (not
+     *            null).
+     */
+    protected void setItemSorter(ItemSorter itemSorter) {
+        this.itemSorter = itemSorter;
+    }
+
+    /**
+     * Sort base implementation to be used to implement {@link Sortable}.
+     * 
+     * Subclasses should override this with a public
+     * {@link #sort(Object[], boolean[])} method calling this superclass method
+     * when implementing Sortable.
+     * 
+     * @see com.vaadin.data.Container.Sortable#sort(java.lang.Object[],
+     *      boolean[])
+     */
+    protected void sort(Object[] propertyId, boolean[] ascending) {
+        if (!(this instanceof Sortable)) {
+            throw new UnsupportedOperationException(
+                    "Cannot sort a Container that does not implement Sortable");
+        }
+
+        // Set up the item sorter for the sort operation
+        getItemSorter().setSortProperties((Sortable) this, propertyId,
+                ascending);
+
+        // Perform the actual sort
+        doSort();
+
+        // Post sort updates
+        if (getFilteredItemIds() != null) {
+            filterAll();
+        } else {
+            fireItemSetChange();
+        }
+
+    }
+
+    /**
+     * Perform the sorting of the data structures in the container. This is
+     * invoked when the <code>itemSorter</code> has been prepared for the sort
+     * operation. Typically this method calls
+     * <code>Collections.sort(aCollection, getItemSorter())</code> on all arrays
+     * (containing item ids) that need to be sorted.
+     * 
+     */
+    protected void doSort() {
+        Collections.sort(allItemIds, getItemSorter());
+    }
+
+    /**
+     * Returns the sortable property identifiers for the container. Can be used
+     * to implement {@link Sortable#getSortableContainerPropertyIds()}.
+     */
+    protected Collection<?> getSortablePropertyIds() {
+        LinkedList<Object> sortables = new LinkedList<Object>();
+        for (Object propertyId : getContainerPropertyIds()) {
+            Class<?> propertyType = getType(propertyId);
+            if (Comparable.class.isAssignableFrom(propertyType)
+                    || propertyType.isPrimitive()) {
+                sortables.add(propertyId);
+            }
+        }
+        return sortables;
     }
 
     // removing items

@@ -9,10 +9,8 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 import com.vaadin.data.Container.Filterable;
@@ -132,11 +130,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * resolver has been set.
      */
     private BeanIdResolver<IDTYPE, BEANTYPE> beanIdResolver = null;
-
-    /**
-     * The item sorter which is used for sorting the container.
-     */
-    private ItemSorter itemSorter = new DefaultItemSorter();
 
     /**
      * Maps all item ids in the container (including filtered) to their
@@ -454,16 +447,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * 
      * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds()
      */
-    public Collection<Object> getSortableContainerPropertyIds() {
-        LinkedList<Object> sortables = new LinkedList<Object>();
-        for (Object propertyId : getContainerPropertyIds()) {
-            Class<?> propertyType = getType(propertyId);
-            if (Comparable.class.isAssignableFrom(propertyType)
-                    || propertyType.isPrimitive()) {
-                sortables.add(propertyId);
-            }
-        }
-        return sortables;
+    public Collection<?> getSortableContainerPropertyIds() {
+        return getSortablePropertyIds();
     }
 
     /*
@@ -472,48 +457,19 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @see com.vaadin.data.Container.Sortable#sort(java.lang.Object[],
      * boolean[])
      */
+    @Override
     public void sort(Object[] propertyId, boolean[] ascending) {
-        itemSorter.setSortProperties(this, propertyId, ascending);
-
-        doSort();
-
-        // notifies if anything changes in the filtered list, including order
-        filterAll();
+        super.sort(propertyId, ascending);
     }
 
-    /**
-     * Perform the sorting of the data structures in the container. This is
-     * invoked when the <code>itemSorter</code> has been prepared for the sort
-     * operation. Typically this method calls
-     * <code>Collections.sort(aCollection, getItemSorter())</code> on all arrays
-     * (containing item ids) that need to be sorted.
-     * 
-     */
-    protected void doSort() {
-        Collections.sort(allItemIds, getItemSorter());
-    }
-
-    /**
-     * Returns the ItemSorter that is used for sorting the container.
-     * 
-     * @see #setItemSorter(ItemSorter)
-     * 
-     * @return The ItemSorter that is used for sorting the container
-     */
+    @Override
     public ItemSorter getItemSorter() {
-        return itemSorter;
+        return super.getItemSorter();
     }
 
-    /**
-     * Sets the ItemSorter that is used for sorting the container. The
-     * {@link ItemSorter#compare(Object, Object)} method is called to compare
-     * two beans (item ids).
-     * 
-     * @param itemSorter
-     *            The ItemSorter to use when sorting the container
-     */
+    @Override
     public void setItemSorter(ItemSorter itemSorter) {
-        this.itemSorter = itemSorter;
+        super.setItemSorter(itemSorter);
     }
 
     /**
