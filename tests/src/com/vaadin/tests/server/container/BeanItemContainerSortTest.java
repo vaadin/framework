@@ -147,7 +147,7 @@ public class BeanItemContainerSortTest {
     public void testGetSortableProperties() {
         BeanItemContainer<Person> container = getContainer();
 
-        Collection<Object> sortablePropertyIds = container
+        Collection<?> sortablePropertyIds = container
                 .getSortableContainerPropertyIds();
         Assert.assertEquals(2, sortablePropertyIds.size());
         Assert.assertTrue(sortablePropertyIds.contains("name"));
@@ -160,7 +160,7 @@ public class BeanItemContainerSortTest {
 
         Assert.assertEquals(3, container.getContainerPropertyIds().size());
 
-        Collection<Object> sortablePropertyIds = container
+        Collection<?> sortablePropertyIds = container
                 .getSortableContainerPropertyIds();
         Assert.assertEquals(2, sortablePropertyIds.size());
         Assert.assertTrue(sortablePropertyIds.contains("name"));
