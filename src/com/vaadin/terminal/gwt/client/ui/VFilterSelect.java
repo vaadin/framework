@@ -48,6 +48,7 @@ import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
@@ -854,7 +855,6 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         popupOpener.addClickHandler(this);
     }
 
-
     /**
      * Does the Select have more pages?
      * 
@@ -1418,7 +1418,6 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         return w;
     }-*/;
 
-
     /**
      * A flag which prevents a focus event from taking place
      */
@@ -1470,19 +1469,29 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
     public void onBlur(BlurEvent event) {
 
-        /*
-         * Sometimes we need in IE to manually disable a blur event which gets
-         * triggered by a mouseclick which we cannot prevent. In this cases we
-         * refocus the textfield and ignore the blur event.
-         */
         if (BrowserInfo.get().isIE() && preventNextBlurEventInIE) {
+            /*
+             * Clicking in the suggestion popup or on the popup button in IE
+             * causes a blur event to be sent for the field. In other browsers
+             * this is prevented by canceling/preventing default behavior for
+             * the focus event, in IE we handle it here by refocusing the text
+             * field and ignoring the resulting focus event for the textfield
+             * (in onFocus).
+             */
             preventNextBlurEventInIE = false;
 
-            // Move the focus back to the textfield without triggering a
-            // onFocus-event
-            iePreventNextFocus = true;
-            tb.setFocus(true);
-            return;
+            Element focusedElement = Util.getIEFocusedElement();
+            if (getElement().isOrHasChild(focusedElement)
+                    || suggestionPopup.getElement()
+                            .isOrHasChild(focusedElement)) {
+
+                // IF the suggestion popup or another part of the VFilterSelect
+                // was focused, move the focus back to the textfield and prevent
+                // the triggered focus event (in onFocus).
+                iePreventNextFocus = true;
+                tb.setFocus(true);
+                return;
+            }
         }
 
         focused = false;
