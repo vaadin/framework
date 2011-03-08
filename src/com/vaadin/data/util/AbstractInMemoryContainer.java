@@ -266,8 +266,10 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
 
         // Reset filtered list
         List<ITEMIDTYPE> originalFilteredItemIds = getFilteredItemIds();
+        boolean wasUnfiltered = false;
         if (originalFilteredItemIds == null) {
             originalFilteredItemIds = Collections.emptyList();
+            wasUnfiltered = true;
         }
         setFilteredItemIds(new ListSet<ITEMIDTYPE>());
 
@@ -284,7 +286,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
             }
         }
 
-        return !equal || origIt.hasNext();
+        return wasUnfiltered || !equal || origIt.hasNext();
     }
 
     /**
