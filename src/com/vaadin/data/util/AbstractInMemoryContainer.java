@@ -286,7 +286,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
             }
         }
 
-        return wasUnfiltered || !equal || origIt.hasNext();
+        return (wasUnfiltered && !getAllItemIds().isEmpty()) || !equal
+                || origIt.hasNext();
     }
 
     /**
