@@ -252,7 +252,7 @@ public class VEmbedded extends HTML implements Paintable {
         }
 
         // End embed tag
-        html.append("</embed>");
+        html.append("></embed>");
 
         // End object tag
         html.append("</object>");
