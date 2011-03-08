@@ -158,6 +158,7 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Container#addContainerProperty(java.lang.Object,
      * java.lang.Class, java.lang.Object)
      */
+    @Override
     public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) {
 
@@ -200,6 +201,7 @@ public class IndexedContainer extends
      * 
      * @see com.vaadin.data.Container#removeAllItems()
      */
+    @Override
     public boolean removeAllItems() {
         int origSize = size();
 
@@ -220,6 +222,7 @@ public class IndexedContainer extends
      * 
      * @see com.vaadin.data.Container#addItem()
      */
+    @Override
     public Object addItem() {
 
         // Creates a new id
@@ -236,6 +239,7 @@ public class IndexedContainer extends
      * 
      * @see com.vaadin.data.Container#addItem(java.lang.Object)
      */
+    @Override
     public Item addItem(Object itemId) {
         return internalAddItemAtEnd(itemId, new IndexedContainerItem(itemId),
                 true);
@@ -260,6 +264,7 @@ public class IndexedContainer extends
      * 
      * @see com.vaadin.data.Container#removeItem(java.lang.Object)
      */
+    @Override
     public boolean removeItem(Object itemId) {
         if (itemId == null || items.remove(itemId) == null) {
             return false;
@@ -282,6 +287,7 @@ public class IndexedContainer extends
      * 
      * @see com.vaadin.data.Container#removeContainerProperty(java.lang.Object )
      */
+    @Override
     public boolean removeContainerProperty(Object propertyId) {
 
         // Fails if the Property is not present
@@ -315,6 +321,7 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object,
      * java.lang.Object)
      */
+    @Override
     public Item addItemAfter(Object previousItemId, Object newItemId) {
         return internalAddItemAfter(previousItemId, newItemId,
                 new IndexedContainerItem(newItemId));
@@ -325,6 +332,7 @@ public class IndexedContainer extends
      * 
      * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)
      */
+    @Override
     public Object addItemAfter(Object previousItemId) {
 
         // Creates a new id
@@ -342,6 +350,7 @@ public class IndexedContainer extends
      * 
      * @see com.vaadin.data.Container.Indexed#addItemAt(int, java.lang.Object)
      */
+    @Override
     public Item addItemAt(int index, Object newItemId) {
         return internalAddItemAt(index, newItemId, new IndexedContainerItem(
                 newItemId));
@@ -352,6 +361,7 @@ public class IndexedContainer extends
      * 
      * @see com.vaadin.data.Container.Indexed#addItemAt(int)
      */
+    @Override
     public Object addItemAt(int index) {
 
         // Creates a new id
@@ -945,9 +955,8 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Container.Sortable#sort(java.lang.Object[],
      * boolean[])
      */
-    @Override
     public void sort(Object[] propertyId, boolean[] ascending) {
-        super.sort(propertyId, ascending);
+        sortContainer(propertyId, ascending);
     }
 
     /*

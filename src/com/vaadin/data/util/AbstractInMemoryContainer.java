@@ -43,6 +43,17 @@ import com.vaadin.data.Item;
  * interface directly)
  * </ul>
  * 
+ * To implement {@link Sortable}, subclasses need to implement
+ * {@link #getSortablePropertyIds()} and call the superclass method
+ * {@link #sortContainer(Object[], boolean[])} in the method
+ * <code>sort(Object[], boolean[])</code>.
+ * 
+ * To implement Filterable, subclasses need to implement the methods
+ * <code>addContainerFilter()</code> (calling {@link #addFilter(ItemFilter)}),
+ * <code>removeAllContainerFilters()</code> (calling {@link #removeAllFilters()}
+ * ) and <code>removeContainerFilters(Object)</code> (calling
+ * {@link #removeFilters(Object)}).
+ * 
  * @param <ITEMIDTYPE>
  *            the class of item identifiers in the container, use Object if can
  *            be any class
@@ -499,14 +510,13 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     /**
      * Sort base implementation to be used to implement {@link Sortable}.
      * 
-     * Subclasses should override this with a public
-     * {@link #sort(Object[], boolean[])} method calling this superclass method
-     * when implementing Sortable.
+     * Subclasses should call this from a public
+     * {@link #sort(Object[], boolean[])} method when implementing Sortable.
      * 
      * @see com.vaadin.data.Container.Sortable#sort(java.lang.Object[],
      *      boolean[])
      */
-    protected void sort(Object[] propertyId, boolean[] ascending) {
+    protected void sortContainer(Object[] propertyId, boolean[] ascending) {
         if (!(this instanceof Sortable)) {
             throw new UnsupportedOperationException(
                     "Cannot sort a Container that does not implement Sortable");

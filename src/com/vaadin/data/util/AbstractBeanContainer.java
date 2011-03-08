@@ -424,9 +424,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @see com.vaadin.data.Container.Sortable#sort(java.lang.Object[],
      * boolean[])
      */
-    @Override
     public void sort(Object[] propertyId, boolean[] ascending) {
-        super.sort(propertyId, ascending);
+        sortContainer(propertyId, ascending);
     }
 
     @Override
