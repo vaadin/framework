@@ -122,8 +122,22 @@ public class AbsoluteLayout extends AbstractLayout implements
      *            The css position string
      */
     public void addComponent(Component c, String cssPosition) {
-        addComponent(c);
-        getPosition(c).setCSSString(cssPosition);
+        /*
+         * Create position instance and add it to componentToCoordinates map. We
+         * need to do this before we call addComponent so the attachListeners
+         * can access this position. #6368
+         */
+        componentToCoordinates.put(c, new ComponentPosition());
+        componentToCoordinates.get(c).setCSSString(cssPosition);
+
+        try {
+            addComponent(c);
+
+        } catch (IllegalArgumentException e) {
+            // Remove component coordinates if adding fails
+            componentToCoordinates.remove(c);
+            throw e;
+        }
     }
 
     /**
