@@ -169,25 +169,25 @@
 
 	<!-- This target runs the generated and compiled junit tests -->
 	<target name="execute-tests">
-		<junit fork="yes" printsummary="withOutAndErr">
+		<junit fork="no" printsummary="withOutAndErr">
 			<classpath>
 				<path refid="classpath" />
 				<pathelement path="${class-dir}" />
 			</classpath>
+			
+			<sysproperty key="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
+            <sysproperty key="com.vaadin.testbench.deployment.url" value="${com.vaadin.testbench.deployment.url}" />
+            <!-- Define where the reference screenshots and diff files are saved -->
+            <sysproperty key="com.vaadin.testbench.screenshot.directory" value="${com.vaadin.testbench.screenshot.directory}" />
+            <!-- Resolution for screenshots -->
+            <sysproperty key="com.vaadin.testbench.screenshot.resolution" value="${com.vaadin.testbench.screenshot.resolution}" />
 
-			<jvmarg value="-Dcom.vaadin.testbench.tester.host=${com.vaadin.testbench.tester.host}" />
-			<jvmarg value="-Dcom.vaadin.testbench.deployment.url=${com.vaadin.testbench.deployment.url}" />
-			<!-- Define where the reference screenshots and diff files are saved -->
-			<jvmarg value="-Dcom.vaadin.testbench.screenshot.directory=${com.vaadin.testbench.screenshot.directory}" />
-			<!-- Resolution for screenshots -->
-			<jvmarg value="-Dcom.vaadin.testbench.screenshot.resolution=${com.vaadin.testbench.screenshot.resolution}" />
+            <!-- true/false system arguments -->
+            <sysproperty key="com.vaadin.testbench.screenshot.softfail" value="${com.vaadin.testbench.screenshot.softfail}" />
+            <sysproperty key="com.vaadin.testbench.screenshot.reference.debug" value="${com.vaadin.testbench.screenshot.reference.debug}" />
+            <sysproperty key="com.vaadin.testbench.screenshot.cursor" value="${com.vaadin.testbench.screenshot.cursor}" />
 
-			<jvmarg value="-Djava.awt.headless=true" />
-
-			<!-- true/false system arguments -->
-			<jvmarg value="-Dcom.vaadin.testbench.screenshot.softfail=${com.vaadin.testbench.screenshot.softfail}" />
-			<jvmarg value="-Dcom.vaadin.testbench.screenshot.reference.debug=${com.vaadin.testbench.screenshot.reference.debug}" />
-			<jvmarg value="-Dcom.vaadin.testbench.screenshot.cursor=${com.vaadin.testbench.screenshot.cursor}" />
+            <sysproperty key="java.awt.headless" value="true" />
 
 			<batchtest>
 				<filelist dir="${test-output-dir}" files="${target}" />
