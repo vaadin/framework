@@ -110,20 +110,6 @@ public class IndexedContainer extends
 
     /* Container methods */
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container#getItem(java.lang.Object)
-     */
-    @Override
-    public Item getItem(Object itemId) {
-
-        if (itemId != null && getVisibleItemIds().contains(itemId)) {
-            return getUnfilteredItem(itemId);
-        }
-        return null;
-    }
-
     @Override
     protected Item getUnfilteredItem(Object itemId) {
         if (itemId != null && items.containsKey(itemId)) {

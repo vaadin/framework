@@ -118,7 +118,14 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
 
     // Container interface methods with more specific return class
 
-    public abstract ITEMCLASS getItem(Object itemId);
+    // default implementation, can be overridden
+    public ITEMCLASS getItem(Object itemId) {
+        if (containsId(itemId)) {
+            return getUnfilteredItem(itemId);
+        } else {
+            return null;
+        }
+    }
 
     /**
      * Get an item even if filtered out.
