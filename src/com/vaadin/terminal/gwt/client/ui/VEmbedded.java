@@ -209,9 +209,9 @@ public class VEmbedded extends HTML implements Paintable {
          * to http://kb2.adobe.com/cps/415/tn_4150.html to work with the above
          * given classid. Again, see more info on
          * http://kb2.adobe.com/cps/415/tn_4150.html. Limiting Flash version to
-         * 9.0.0.0 and above.
+         * 6.0.0.0 and above.
          */
-        html.append("codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0\" ");
+        html.append("codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" ");
 
         // Add width and height
         html.append("width=\"" + width + "\" ");
