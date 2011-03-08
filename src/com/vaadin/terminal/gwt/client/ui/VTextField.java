@@ -325,6 +325,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     @Override
     protected void onDetach() {
         super.onDetach();
+        textChangeEventTrigger.cancel();
         detachCutEventListener(getElement());
         if (focusedTextField == this) {
             focusedTextField = null;
