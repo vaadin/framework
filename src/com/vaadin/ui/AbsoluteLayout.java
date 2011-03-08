@@ -127,8 +127,9 @@ public class AbsoluteLayout extends AbstractLayout implements
          * need to do this before we call addComponent so the attachListeners
          * can access this position. #6368
          */
-        componentToCoordinates.put(c, new ComponentPosition());
-        componentToCoordinates.get(c).setCSSString(cssPosition);
+        ComponentPosition position = new ComponentPosition();
+        position.setCSSString(cssPosition);
+        componentToCoordinates.put(c, position);
 
         try {
             addComponent(c);
