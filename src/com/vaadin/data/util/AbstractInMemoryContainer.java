@@ -19,6 +19,20 @@ import com.vaadin.data.Item;
  * this class, inherit {@link AbstractContainer}, or implement the
  * {@link Container} interface directly.
  * 
+ * Adding and removing items (if desired) must be implemented in subclasses by
+ * overriding the appropriate add*Item() and remove*Item() and removeAllItems()
+ * methods, calling the corresponding
+ * {@link #internalAddItemAfter(Object, Object, Item)},
+ * {@link #internalAddItemAt(int, Object, Item)},
+ * {@link #internalAddItemAtEnd(Object, Item, boolean)},
+ * {@link #internalRemoveItem(Object)} and {@link #internalRemoveAllItems()}
+ * methods.
+ * 
+ * By default, adding and removing container properties is not supported, and
+ * subclasses need to implement {@link #getContainerPropertyIds()}. Optionally,
+ * subclasses can override {@link #addContainerProperty(Object, Class, Object)}
+ * and {@link #removeContainerProperty(Object)} to implement them.
+ * 
  * Features:
  * <ul>
  * <li> {@link Container.Ordered}
@@ -223,6 +237,64 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
 
     public int indexOfId(Object itemId) {
         return getVisibleItemIds().indexOf(itemId);
+    }
+
+    // methods that are unsupported by default, override to support
+
+    public Object addItemAt(int index) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException(
+                "Adding items not supported. Override the relevant addItem*() methods if required as specified in AbstractInMemoryContainer javadoc.");
+    }
+
+    public Item addItemAt(int index, Object newItemId)
+            throws UnsupportedOperationException {
+        throw new UnsupportedOperationException(
+                "Adding items not supported. Override the relevant addItem*() methods if required as specified in AbstractInMemoryContainer javadoc.");
+    }
+
+    public Object addItemAfter(Object previousItemId)
+            throws UnsupportedOperationException {
+        throw new UnsupportedOperationException(
+                "Adding items not supported. Override the relevant addItem*() methods if required as specified in AbstractInMemoryContainer javadoc.");
+    }
+
+    public Item addItemAfter(Object previousItemId, Object newItemId)
+            throws UnsupportedOperationException {
+        throw new UnsupportedOperationException(
+                "Adding items not supported. Override the relevant addItem*() methods if required as specified in AbstractInMemoryContainer javadoc.");
+    }
+
+    public Item addItem(Object itemId) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException(
+                "Adding items not supported. Override the relevant addItem*() methods if required as specified in AbstractInMemoryContainer javadoc.");
+    }
+
+    public Object addItem() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException(
+                "Adding items not supported. Override the relevant addItem*() methods if required as specified in AbstractInMemoryContainer javadoc.");
+    }
+
+    public boolean removeItem(Object itemId)
+            throws UnsupportedOperationException {
+        throw new UnsupportedOperationException(
+                "Removing items not supported. Override the removeItem() method if required as specified in AbstractInMemoryContainer javadoc.");
+    }
+
+    public boolean removeAllItems() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException(
+                "Removing items not supported. Override the removeAllItems() method if required as specified in AbstractInMemoryContainer javadoc.");
+    }
+
+    public boolean addContainerProperty(Object propertyId, Class<?> type,
+            Object defaultValue) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException(
+                "Adding container properties not supported. Override the addContainerProperty() method if required.");
+    }
+
+    public boolean removeContainerProperty(Object propertyId)
+            throws UnsupportedOperationException {
+        throw new UnsupportedOperationException(
+                "Removing container properties not supported. Override the addContainerProperty() method if required.");
     }
 
     // ItemSetChangeNotifier

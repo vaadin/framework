@@ -2,8 +2,6 @@ package com.vaadin.data.util;
 
 import java.util.Collection;
 
-import com.vaadin.data.Item;
-
 /**
  * An in-memory container for JavaBeans.
  * 
@@ -61,20 +59,6 @@ public class BeanContainer<IDTYPE, BEANTYPE> extends
 
     public BeanContainer(Class<? super BEANTYPE> type) {
         super(type);
-    }
-
-    public Item addItemAt(int index, Object newItemId)
-            throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
-
-    public Item addItemAfter(Object previousItemId, Object newItemId)
-            throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
-
-    public Item addItem(Object itemId) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
     }
 
     /**

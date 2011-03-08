@@ -24,6 +24,13 @@ import java.util.Collection;
  * </p>
  * 
  * <p>
+ * To add items to the container, use the methods {@link #addBean(Object)},
+ * {@link #addBeanAfter(Object, Object)} and {@link #addBeanAt(int, Object)}.
+ * Also {@link #addItem(Object)}, {@link #addItemAfter(Object, Object)} and
+ * {@link #addItemAt(int, Object)} can be used as synonyms for them.
+ * </p>
+ * 
+ * <p>
  * It is not possible to add additional properties to the container and nested
  * bean properties are not supported.
  * </p>
@@ -145,25 +152,6 @@ public class BeanItemContainer<BEANTYPE> extends
     }
 
     /**
-     * Unsupported operation. Use {@link #addBean(Object)} instead.
-     */
-    // overridden for javadoc only
-    @Override
-    public Object addItem() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Unsupported operation. Use {@link #addItemAfter(Object, Object)}.
-     */
-    // overridden for javadoc only
-    @Override
-    public Object addItemAfter(Object previousItemId)
-            throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
      * Adds all the beans from a {@link Collection} in one go. More efficient
      * than adding them one by one.
      * 
@@ -187,6 +175,7 @@ public class BeanItemContainer<BEANTYPE> extends
      * 
      * @see com.vaadin.data.Container.Ordered#addItemAfter(Object, Object)
      */
+    @Override
     @SuppressWarnings("unchecked")
     public BeanItem<BEANTYPE> addItemAfter(Object previousItemId,
             Object newItemId) throws IllegalArgumentException {
@@ -205,6 +194,7 @@ public class BeanItemContainer<BEANTYPE> extends
      *            The bean to add to the container.
      * @return Returns the new BeanItem or null if the operation fails.
      */
+    @Override
     @SuppressWarnings("unchecked")
     public BeanItem<BEANTYPE> addItemAt(int index, Object newItemId)
             throws IllegalArgumentException {
@@ -218,6 +208,7 @@ public class BeanItemContainer<BEANTYPE> extends
      * 
      * @see com.vaadin.data.Container#addItem(Object)
      */
+    @Override
     @SuppressWarnings("unchecked")
     public BeanItem<BEANTYPE> addItem(Object itemId) {
         return super.addBean((BEANTYPE) itemId);

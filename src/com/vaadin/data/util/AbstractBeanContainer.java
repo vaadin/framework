@@ -26,8 +26,8 @@ import com.vaadin.data.Property.ValueChangeNotifier;
  * 
  * <p>
  * The properties of the container are determined automatically by introspecting
- * the used JavaBean class. Only beans of the same type can be added to the
- * container.
+ * the used JavaBean class and explicitly adding or removing properties is not
+ * supported. Only beans of the same type can be added to the container.
  * </p>
  * 
  * <p>
@@ -216,29 +216,12 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         return model.keySet();
     }
 
-    /**
-     * Unsupported operation. Properties are determined by the introspecting the
-     * bean class.
-     */
-    public boolean addContainerProperty(Object propertyId, Class<?> type,
-            Object defaultValue) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Unsupported operation. Properties are determined by the introspecting the
-     * bean class.
-     */
-    public boolean removeContainerProperty(Object propertyId)
-            throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
-
     /*
      * (non-Javadoc)
      * 
      * @see com.vaadin.data.Container#removeAllItems()
      */
+    @Override
     public boolean removeAllItems() {
         int origSize = size();
 
@@ -303,6 +286,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * 
      * @see com.vaadin.data.Container#removeItem(java.lang.Object)
      */
+    @Override
     public boolean removeItem(Object itemId) {
         int origSize = size();
         Item item = getItem(itemId);
@@ -425,22 +409,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         }
     }
 
-    /**
-     * Unsupported operation. Use other methods to add items.
-     */
-    public Object addItemAfter(Object previousItemId)
-            throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Unsupported operation. Beans should be added through
-     * {@code addItemAt(int, ...)}.
-     */
-    public Object addItemAt(int index) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -469,14 +437,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
     @Override
     public void setItemSorter(ItemSorter itemSorter) {
         super.setItemSorter(itemSorter);
-    }
-
-    /**
-     * Unsupported operation. See subclasses of {@link AbstractBeanContainer}
-     * for the correct way to add items.
-     */
-    public Object addItem() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
     }
 
     @Override
