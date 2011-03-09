@@ -912,6 +912,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      */
     public void setButtonCaption(String buttonCaption) {
         this.buttonCaption = buttonCaption;
+        requestRepaint();
     }
 
     /*
