@@ -1126,6 +1126,31 @@
         </artifact:mvn>
     </target>
 
+    <target name="local-maven-pom.xml">
+    	<echo>Creating pom.xml for local test build</echo>
+    	<fail unless="version.major" message="Major version must be defined in version.major"/>
+    	<fail unless="version.minor" message="Major version must be defined in version.minor"/>
+        <copy tofile="build/maven/pom.xml">
+            <filterchain>
+                <expandproperties />
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="VERSION-MAJOR.MINOR" value="${version.major}.${version.minor}" />
+                </replacetokens>
+            </filterchain>
+            <fileset file="build/maven/pom-template.xml"/>
+        </copy>
+    </target>
+	
+    <target name="local-maven-publish" depends="local-maven-pom.xml">
+        <echo>Publishing ${output-dir}/WebContent/${lib-jar-name} to the local Maven repository</echo>
+    	<artifact:mvn>
+            <arg value="install:install-file"/>
+            <!-- .. is a workaround as maven runs in the build directory -->
+            <sysproperty key="file" value="../${output-dir}/WebContent/${lib-jar-name}" />
+            <sysproperty key="pomFile" value="maven/pom.xml" />
+        </artifact:mvn>
+    </target>
+
     <!-- ================================================================== -->
     <!-- Automated tests.                                                   -->
     <!-- ================================================================== -->
