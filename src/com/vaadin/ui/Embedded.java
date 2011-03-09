@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -205,8 +205,9 @@ public class Embedded extends AbstractComponent {
     }
 
     /**
-     * Gets the codebase, the root-path used to access resources with relative
-     * paths.
+     * This attribute specifies the base path used to resolve relative URIs
+     * specified by the classid, data, and archive attributes. When absent, its
+     * default value is the base URI of the current document.
      * 
      * @return the code base.
      */
@@ -233,20 +234,22 @@ public class Embedded extends AbstractComponent {
     }
 
     /**
-     * Gets the standby text displayed when the object is loading.
+     * This attribute specifies a message that a user agent may render while
+     * loading the object's implementation and data.
      * 
-     * @return the standby text.
+     * @return The text displayed when loading
      */
     public String getStandby() {
         return standby;
     }
 
     /**
-     * Sets the codebase, the root-path used to access resources with relative
-     * paths.
+     * This attribute specifies the base path used to resolve relative URIs
+     * specified by the classid, data, and archive attributes. When absent, its
+     * default value is the base URI of the current document.
      * 
      * @param codebase
-     *            the codebase to set.
+     *            The base path
      */
     public void setCodebase(String codebase) {
         if (codebase != this.codebase
@@ -257,7 +260,11 @@ public class Embedded extends AbstractComponent {
     }
 
     /**
-     * Sets the codetype, the MIME-Type of the code.
+     * This attribute specifies the content type of data expected when
+     * downloading the object specified by classid. This attribute is optional
+     * but recommended when classid is specified since it allows the user agent
+     * to avoid loading information for unsupported content types. When absent,
+     * it defaults to the value of the type attribute.
      * 
      * @param codetype
      *            the codetype to set.
@@ -296,10 +303,11 @@ public class Embedded extends AbstractComponent {
     }
 
     /**
-     * Sets the standby, the text to display while loading the object.
+     * This attribute specifies a message that a user agent may render while
+     * loading the object's implementation and data.
      * 
      * @param standby
-     *            the standby to set.
+     *            The text to display while loading
      */
     public void setStandby(String standby) {
         if (standby != this.standby
@@ -310,16 +318,18 @@ public class Embedded extends AbstractComponent {
     }
 
     /**
-     * Gets the classId attribute.
+     * This attribute may be used to specify the location of an object's
+     * implementation via a URI.
      * 
-     * @return the class id.
+     * @return the classid.
      */
     public String getClassId() {
         return classId;
     }
 
     /**
-     * Sets the classId attribute.
+     * This attribute may be used to specify the location of an object's
+     * implementation via a URI.
      * 
      * @param classId
      *            the classId to set.
@@ -410,19 +420,31 @@ public class Embedded extends AbstractComponent {
     }
 
     /**
-     * Gets the archive attribute.
+     * This attribute may be used to specify a space-separated list of URIs for
+     * archives containing resources relevant to the object, which may include
+     * the resources specified by the classid and data attributes. Preloading
+     * archives will generally result in reduced load times for objects.
+     * Archives specified as relative URIs should be interpreted relative to the
+     * codebase attribute.
      * 
-     * @return the archive attribute.
+     * @return Space-separated list of URIs with resources relevant to the
+     *         object
      */
     public String getArchive() {
         return archive;
     }
 
     /**
-     * Sets the archive attribute.
+     * This attribute may be used to specify a space-separated list of URIs for
+     * archives containing resources relevant to the object, which may include
+     * the resources specified by the classid and data attributes. Preloading
+     * archives will generally result in reduced load times for objects.
+     * Archives specified as relative URIs should be interpreted relative to the
+     * codebase attribute.
      * 
      * @param archive
-     *            the archive string to set.
+     *            Space-separated list of URIs with resources relevant to the
+     *            object
      */
     public void setArchive(String archive) {
         if (archive != this.archive
@@ -458,6 +480,12 @@ public class Embedded extends AbstractComponent {
         removeListener(CLICK_EVENT, ClickEvent.class, listener);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
+     * java.util.Map)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
@@ -468,6 +496,11 @@ public class Embedded extends AbstractComponent {
 
     }
 
+    /**
+     * Notifies click-listeners that a mouse click event has occurred.
+     * 
+     * @param parameters
+     */
     private void fireClick(Map<String, Object> parameters) {
         MouseEventDetails mouseDetails = MouseEventDetails
                 .deSerialize((String) parameters.get("mouseDetails"));
