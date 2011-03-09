@@ -159,6 +159,26 @@ public class VEmbedded extends HTML implements Paintable {
                 if (height != null) {
                     obj.getStyle().setProperty("height", "100%");
                 }
+                if (uidl.hasAttribute("classid")) {
+                    obj.setAttribute("classid",
+                            uidl.getStringAttribute(escapeAttribute("classid")));
+                }
+                if (uidl.hasAttribute("codebase")) {
+                    obj.setAttribute("codebase", uidl
+                            .getStringAttribute(escapeAttribute("codebase")));
+                }
+                if (uidl.hasAttribute("codetype")) {
+                    obj.setAttribute("codetype", uidl
+                            .getStringAttribute(escapeAttribute("codetype")));
+                }
+                if (uidl.hasAttribute("archive")) {
+                    obj.setAttribute("archive",
+                            uidl.getStringAttribute(escapeAttribute("archive")));
+                }
+                if (uidl.hasAttribute("standby")) {
+                    obj.setAttribute("standby",
+                            uidl.getStringAttribute(escapeAttribute("standby")));
+                }
                 getElement().appendChild(obj);
 
             } else {
@@ -171,7 +191,6 @@ public class VEmbedded extends HTML implements Paintable {
         if (clearBrowserElement) {
             browserElement = null;
         }
-
     }
 
     /**
@@ -200,24 +219,55 @@ public class VEmbedded extends HTML implements Paintable {
          * Add classid required for ActiveX to recognize the flash. This is a
          * predefined value which ActiveX recognizes and must be the given
          * value. More info can be found on
-         * http://kb2.adobe.com/cps/415/tn_4150.html.
+         * http://kb2.adobe.com/cps/415/tn_4150.html. Allow user to override
+         * this by setting his own classid.
          */
-        html.append("classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" ");
+        if (uidl.hasAttribute("classid")) {
+            html.append("classid=\""
+                    + escapeAttribute(uidl.getStringAttribute("classid"))
+                    + "\" ");
+        } else {
+            html.append("classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" ");
+        }
 
         /*
          * Add codebase required for ActiveX and must be exactly this according
          * to http://kb2.adobe.com/cps/415/tn_4150.html to work with the above
          * given classid. Again, see more info on
          * http://kb2.adobe.com/cps/415/tn_4150.html. Limiting Flash version to
-         * 6.0.0.0 and above.
+         * 6.0.0.0 and above. Allow user to override this by setting his own
+         * codebase
          */
-        html.append("codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" ");
+        if (uidl.hasAttribute("codebase")) {
+            html.append("codebase=\""
+                    + escapeAttribute(uidl.getStringAttribute("codebase"))
+                    + "\" ");
+        } else {
+            html.append("codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" ");
+        }
 
         // Add width and height
         html.append("width=\"" + width + "\" ");
         html.append("height=\"" + height + "\" ");
-
         html.append("type=\"application/x-shockwave-flash\" ");
+
+        // Codetype
+        if (uidl.hasAttribute("codetype")) {
+            html.append("codetype=\"" + uidl.getStringAttribute("codetype")
+                    + "\" ");
+        }
+
+        // Standby
+        if (uidl.hasAttribute("standby")) {
+            html.append("standby=\"" + uidl.getStringAttribute("standby")
+                    + "\" ");
+        }
+
+        // Archive
+        if (uidl.hasAttribute("archive")) {
+            html.append("archive=\"" + uidl.getStringAttribute("archive")
+                    + "\" ");
+        }
 
         // End object tag
         html.append(">");
