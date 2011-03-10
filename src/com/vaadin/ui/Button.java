@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -21,6 +21,7 @@ import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VButton;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 import com.vaadin.ui.themes.BaseTheme;
@@ -41,6 +42,9 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
     /* Private members */
 
     boolean switchMode = false;
+
+    /* Last mouse details from the last click event */
+    private MouseEventDetails mouseDetails;
 
     /**
      * Creates a new push button. The value of the push button is false and it
@@ -167,6 +171,12 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
             // Gets the new and old button states
             final Boolean newValue = (Boolean) variables.get("state");
             final Boolean oldValue = (Boolean) getValue();
+
+            // Handle mouse details
+            if (variables.containsKey("mousedetails")) {
+                mouseDetails = MouseEventDetails.deSerialize((String) variables
+                        .get("mousedetails"));
+            }
 
             if (isSwitchMode()) {
 
@@ -300,6 +310,8 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      */
     public class ClickEvent extends Component.Event {
 
+        private MouseEventDetails details;
+
         /**
          * New instance of text change event.
          * 
@@ -311,12 +323,76 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
         }
 
         /**
+         * Event which is trigged when the button was clicked
+         * 
+         * @param source
+         *      The Component that triggered the event
+         * @param details
+         *      Additional details about the mouse event
+         */
+        public ClickEvent(Component source, MouseEventDetails details) {
+            super(source);
+            this.details = details;
+        }
+
+        /**
          * Gets the Button where the event occurred.
          * 
          * @return the Source of the event.
          */
         public Button getButton() {
             return (Button) getSource();
+        }
+
+        /**
+         * Checks if the Alt key was down when the mouse event took place.
+         * 
+         * @return true if Alt was down when the event occured, false otherwise
+         */
+        public boolean isAltKey() {
+            if (details != null) {
+                return details.isAltKey();
+            }
+            return false;
+        }
+
+        /**
+         * Checks if the Ctrl key was down when the mouse event took place.
+         * 
+         * @return true if Ctrl was pressed when the event occured, false
+         *         otherwise
+         */
+        public boolean isCtrlKey() {
+            if (details != null) {
+                return details.isCtrlKey();
+            }
+            return false;
+        }
+
+        /**
+         * Checks if the Meta key was down when the mouse event took place.
+         * 
+         * @return true if Meta was pressed when the event occured, false
+         *         otherwise
+         */
+        public boolean isMetaKey() {
+            if (details != null) {
+                return details.isMetaKey();
+            }
+            return false;
+        }
+
+        /**
+         * Checks if the Shift key was down when the mouse event took place.
+         * 
+         * @return true if Shift was pressed when the event occured, false
+         *         otherwise
+         */
+        public boolean isShiftKey() {
+            if (details != null) {
+                return details.isShiftKey();
+            }
+            return false;
         }
     }
 
@@ -365,7 +441,7 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      * Emits the options change event.
      */
     protected void fireClick() {
-        fireEvent(new Button.ClickEvent(this));
+        fireEvent(new Button.ClickEvent(this, mouseDetails));
     }
 
     @Override
