@@ -145,7 +145,9 @@ public class TouchScrollDelegate implements NativePreviewHandler {
                 // event.stopPropagation();
             }
         } else {
-            // TODO cancel, user expects a gesture ?
+            /*
+             * Touch scroll is currenly on (possibly bouncing). Ignore.
+             */
         }
     }
 
@@ -161,17 +163,16 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }-*/;
 
     private void onTransitionEnd() {
-        if (handlerRegistration == null) {
-            if (finalScrollTop < 0) {
-                animateToScrollPosition(0, finalScrollTop);
-                finalScrollTop = 0;
-            } else if (finalScrollTop > getMaxFinalY()) {
-                animateToScrollPosition(getMaxFinalY(), finalScrollTop);
-                finalScrollTop = getMaxFinalY();
-            } else {
-                moveTransformationToScrolloffset();
-            }
+        if (finalScrollTop < 0) {
+            animateToScrollPosition(0, finalScrollTop);
+            finalScrollTop = 0;
+        } else if (finalScrollTop > getMaxFinalY()) {
+            animateToScrollPosition(getMaxFinalY(), finalScrollTop);
+            finalScrollTop = getMaxFinalY();
+        } else {
+            moveTransformationToScrolloffset();
         }
+        transitionOn = false;
     }
 
     private void animateToScrollPosition(int to, int from) {
@@ -184,10 +185,11 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     private int getAnimationTimeForDistance(int dist) {
-        if (dist < 0) {
-            dist = -dist;
-        }
-        return MAX_DURATION * dist / (scrolledElement.getClientHeight() * 3);
+        return 350; // 350ms seems to work quite fine for all distances
+//        if (dist < 0) {
+//            dist = -dist;
+//        }
+//        return MAX_DURATION * dist / (scrolledElement.getClientHeight() * 3);
     }
 
     /**
@@ -202,6 +204,9 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         }
         scrolledElement.setScrollTop(finalScrollTop);
         activeScrollDelegate = null;
+        handlerRegistration.removeHandler();
+        handlerRegistration = null;
+
     }
 
     /**
@@ -301,12 +306,10 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     private void onTouchEnd(NativeEvent event) {
-        // event.preventDefault();
-        // event.stopPropagation();
-        handlerRegistration.removeHandler();
-        handlerRegistration = null;
         if (!moved) {
             activeScrollDelegate = null;
+            handlerRegistration.removeHandler();
+            handlerRegistration = null;
             return;
         }
 
@@ -373,6 +376,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
             moveTransformationToScrolloffset();
             return;
         }
+        
         int translateY = -finalY + origScrollTop;
         translateTo(duration, translateY);
     }
@@ -434,6 +438,13 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     public void onPreviewNativeEvent(NativePreviewEvent event) {
+        if(transitionOn) {
+            /*
+             * TODO allow starting new events. See issue in onTouchStart
+             */
+            event.cancel();
+            return;
+        }
         int typeInt = event.getTypeInt();
         switch (typeInt) {
         case Event.ONTOUCHMOVE:
