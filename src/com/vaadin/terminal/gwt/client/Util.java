@@ -564,7 +564,6 @@ public class Util {
                     - scroller.getPropertyInt("clientWidth");
 
             RootPanel.getBodyElement().removeChild(scroller);
-
         }
         return detectedScrollbarSize;
     }
@@ -580,8 +579,8 @@ public class Util {
     public static void runWebkitOverflowAutoFix(final Element elem) {
         // Add max version if fix lands sometime to Webkit
         // Starting from Opera 11.00, also a problem in Opera
-        if (BrowserInfo.get().getWebkitVersion() > 0
-                || BrowserInfo.get().getOperaVersion() >= 11) {
+        if ((BrowserInfo.get().getWebkitVersion() > 0 || BrowserInfo.get()
+                .getOperaVersion() >= 11) && getNativeScrollbarSize() > 0) {
             final String originalOverflow = elem.getStyle().getProperty(
                     "overflow");
             if ("hidden".equals(originalOverflow)) {
@@ -1182,7 +1181,6 @@ public class Util {
                     target.dispatchEvent(createMouseUpEvent);
                     target.dispatchEvent(createMouseClickEvent);
                 } catch (Exception e) {
-                    VConsole.log("Dough...");
                 }
 
             }
