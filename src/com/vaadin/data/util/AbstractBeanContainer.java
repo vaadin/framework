@@ -20,6 +20,8 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Property.ValueChangeNotifier;
+import com.vaadin.data.util.filter.SimpleStringFilter;
+import com.vaadin.data.util.filter.UnsupportedFilterException;
 
 /**
  * An abstract base class for in-memory containers for JavaBeans.
@@ -326,8 +328,13 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      */
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
-        addFilter(new Filter(propertyId, filterString, ignoreCase,
-                onlyMatchPrefix));
+        try {
+            addFilter(new SimpleStringFilter(propertyId, filterString,
+                    ignoreCase, onlyMatchPrefix));
+        } catch (UnsupportedFilterException e) {
+            // the filter instance created here is always valid for in-memory
+            // containers
+        }
     }
 
     /*
@@ -352,13 +359,22 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * .Object)
      */
     public void removeContainerFilters(Object propertyId) {
-        Collection<ItemFilter> removedFilters = super.removeFilters(propertyId);
+        Collection<Filter> removedFilters = super.removeFilters(propertyId);
         if (!removedFilters.isEmpty()) {
             // stop listening to change events for the property
             for (Item item : itemIdToItem.values()) {
                 removeValueChangeListener(item, propertyId);
             }
         }
+    }
+
+    public void addContainerFilter(Filter filter)
+            throws UnsupportedFilterException {
+        addFilter(filter);
+    }
+
+    public void removeContainerFilter(Filter filter) {
+        removeFilter(filter);
     }
 
     /**
@@ -445,7 +461,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
 
         // add listeners to be able to update filtering on property
         // changes
-        for (ItemFilter filter : getFilters()) {
+        for (Filter filter : getFilters()) {
             for (String propertyId : getContainerPropertyIds()) {
                 if (filter.appliesToProperty(propertyId)) {
                     // addValueChangeListener avoids adding duplicates

@@ -7,6 +7,8 @@ package com.vaadin.data;
 import java.io.Serializable;
 import java.util.Collection;
 
+import com.vaadin.data.util.filter.UnsupportedFilterException;
+
 /**
  * <p>
  * A specialized set of identified Items. Basically the Container is a set of
@@ -34,7 +36,7 @@ import java.util.Collection;
  * 
  * <p>
  * Note that though uniquely identified, the Items in a Container are not
- * neccessarily {@link Container.Ordered ordered}or {@link Container.Indexed
+ * necessarily {@link Container.Ordered ordered} or {@link Container.Indexed
  * indexed}.
  * </p>
  * 
@@ -581,8 +583,8 @@ public interface Container extends Serializable {
      * </p>
      * <p>
      * How filtering is performed when a {@link Hierarchical} container
-     * implements {@link Filterable} is implementation specific and should be
-     * documented in the implementing class.
+     * implements {@link SimpleFilterable} is implementation specific and should
+     * be documented in the implementing class.
      * </p>
      * <p>
      * Adding items (if supported) to a filtered {@link Ordered} or
@@ -593,8 +595,10 @@ public interface Container extends Serializable {
      * </p>
      * 
      * @since 5.0
+     * @deprecated use {@link Filterable}
      */
-    public interface Filterable extends Container, Serializable {
+    @Deprecated
+    public interface SimpleFilterable extends Container, Serializable {
 
         /**
          * Add a filter for given property.
@@ -611,15 +615,130 @@ public interface Container extends Serializable {
          *            strings.
          * @param onlyMatchPrefix
          *            Only match prefixes; no other matches are included.
+         * 
+         * @deprecated use {@link Filterable#addContainerFilter(Filter)}
          */
+        @Deprecated
         public void addContainerFilter(Object propertyId, String filterString,
                 boolean ignoreCase, boolean onlyMatchPrefix);
 
         /** Remove all filters from all properties. */
         public void removeAllContainerFilters();
 
-        /** Remove all filters from given property. */
+        /**
+         * Remove all filters from given property.
+         * 
+         * @deprecated use {@link Filterable#removeContainerFilter(Filter)}
+         */
+        @Deprecated
         public void removeContainerFilters(Object propertyId);
+    }
+
+    /**
+     * Filter interface for container filtering.
+     * 
+     * If a filter does not support in-memory filtering,
+     * {@link #passesFilter(Item)} should throw
+     * {@link UnsupportedOperationException}.
+     * 
+     * Lazy containers must be able to map filters to their internal
+     * representation (e.g. SQL or JPA 2.0 Criteria).
+     * 
+     * An {@link UnsupportedFilterException} can be thrown by the container if a
+     * particular filter is not supported by the container.
+     * 
+     * An {@link Filter} should implement {@link #equals(Object)} and
+     * {@link #hashCode()} correctly to avoid duplicate filter registrations
+     * etc.
+     * 
+     * @see Filterable
+     * 
+     * @since 6.6
+     */
+    public interface Filter extends Serializable {
+
+        /**
+         * Check if an item passes the filter (in-memory filtering).
+         * 
+         * @param item
+         * @return true if the item is accepted by this filter
+         * @throws UnsupportedOperationException
+         *             if the filter cannot be used for in-memory filtering
+         */
+        public boolean passesFilter(Item item)
+                throws UnsupportedOperationException;
+
+        /**
+         * Check if a change in the value of a property can affect the filtering
+         * result. May always return true, at the cost of performance.
+         * 
+         * If the filter cannot determine whether it may depend on the property
+         * or not, should return true.
+         * 
+         * @param propertyId
+         * @return true if the filtering result may/does change based on changes
+         *         to the property identified by propertyId
+         */
+        public boolean appliesToProperty(Object propertyId);
+
+    }
+
+    /**
+     * Interface that is implemented by containers which allow reducing their
+     * visible contents based on a set of filters.
+     * <p>
+     * When a set of filters are set, only items that match the filters are
+     * included in the visible contents of the container. Still new items that
+     * do not match filters can be added to the container. Multiple filters can
+     * be added and the container remembers the state of the filters. When
+     * multiple filters are added, all filters must match for an item to be
+     * visible in the container.
+     * </p>
+     * <p>
+     * When an {@link Ordered} or {@link Indexed} container is filtered, all
+     * operations of these interfaces should only use the filtered contents and
+     * the filtered indices to the container.
+     * </p>
+     * <p>
+     * How filtering is performed when a {@link Hierarchical} container
+     * implements {@link Filterable} is implementation specific and should be
+     * documented in the implementing class.
+     * </p>
+     * <p>
+     * Adding items (if supported) to a filtered {@link Ordered} or
+     * {@link Indexed} container should insert them immediately after the
+     * indicated visible item. However, the unfiltered position of items added
+     * at index 0, at index {@link com.vaadin.data.Container#size()} or at an
+     * undefined position is up to the implementation.
+     * </p>
+     * 
+     * <p>
+     * This API replaces the old Filterable interface, renamed to
+     * {@link SimpleFilterable} in Vaadin 6.6. Currently this interface extends
+     * {@link SimpleFilterable} for backwards compatibility, but might not do so
+     * in future versions. <code>removeAllContainerFilters()</code> will remain
+     * a part of the API.
+     * </p>
+     * 
+     * @since 6.6
+     */
+    public interface Filterable extends SimpleFilterable, Serializable {
+        /**
+         * Adds a filter for the container.
+         * 
+         * @throws UnsupportedFilterException
+         *             if the filter is not supported by the container
+         */
+        public void addContainerFilter(Filter filter)
+                throws UnsupportedFilterException;
+
+        /**
+         * Removes a filter from the container.
+         * 
+         * This requires that the equals() method considers the filters as
+         * equivalent (same instance or properly implemented equals() method).
+         */
+        public void removeContainerFilter(Filter filter);
     }
 
     /**

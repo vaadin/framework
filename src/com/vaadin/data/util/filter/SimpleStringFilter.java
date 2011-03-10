@@ -1,31 +1,35 @@
-/*
-@ITMillApache2LicenseForJavaFiles@
- */
-package com.vaadin.data.util;
+package com.vaadin.data.util.filter;
 
-import java.io.Serializable;
-
+import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 
 /**
- * A default filter that can be used to implement
- * {@link com.vaadin.data.Container.Filterable}.
+ * Simple string filter for matching items that start with or contain a
+ * specified string. The matching can be case-sensitive or case-insensitive.
  * 
- * @since 5.4
+ * This filter also directly supports in-memory filtering. When performing
+ * in-memory filtering, values of other types are converted using toString(),
+ * but other (lazy container) implementations do not need to perform such
+ * conversions and might not support values of different types.
+ * 
+ * Note that this filter is modeled after the pre-6.6 filtering mechanisms, and
+ * might not be very efficient e.g. for database filtering.
+ * 
+ * TODO this might still change
+ * 
+ * @since 6.6
  */
-@SuppressWarnings("serial")
-public class Filter implements AbstractInMemoryContainer.ItemFilter,
-        Serializable {
+public class SimpleStringFilter implements Filter {
+
     final Object propertyId;
     final String filterString;
     final boolean ignoreCase;
     final boolean onlyMatchPrefix;
 
-    Filter(Object propertyId, String filterString, boolean ignoreCase,
-            boolean onlyMatchPrefix) {
+    public SimpleStringFilter(Object propertyId, String filterString,
+            boolean ignoreCase, boolean onlyMatchPrefix) {
         this.propertyId = propertyId;
-        ;
         this.filterString = ignoreCase ? filterString.toLowerCase()
                 : filterString;
         this.ignoreCase = ignoreCase;
@@ -59,10 +63,10 @@ public class Filter implements AbstractInMemoryContainer.ItemFilter,
     public boolean equals(Object obj) {
 
         // Only ones of the objects of the same class can be equal
-        if (!(obj instanceof Filter)) {
+        if (!(obj instanceof SimpleStringFilter)) {
             return false;
         }
-        final Filter o = (Filter) obj;
+        final SimpleStringFilter o = (SimpleStringFilter) obj;
 
         // Checks the properties one by one
         if (propertyId != o.propertyId && o.propertyId != null
@@ -88,5 +92,4 @@ public class Filter implements AbstractInMemoryContainer.ItemFilter,
         return (propertyId != null ? propertyId.hashCode() : 0)
                 ^ (filterString != null ? filterString.hashCode() : 0);
     }
-
 }

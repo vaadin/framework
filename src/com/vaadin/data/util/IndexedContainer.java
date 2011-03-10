@@ -21,6 +21,8 @@ import java.util.Map;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.util.filter.SimpleStringFilter;
+import com.vaadin.data.util.filter.UnsupportedFilterException;
 
 /**
  * An implementation of the <code>{@link Container.Indexed}</code> interface
@@ -1014,7 +1016,7 @@ public class IndexedContainer extends
         nc.types = types != null ? (Hashtable<Object, Class<?>>) types.clone()
                 : null;
 
-        nc.setFilters((HashSet<ItemFilter>) ((HashSet<ItemFilter>) getFilters())
+        nc.setFilters((HashSet<Filter>) ((HashSet<Filter>) getFilters())
                 .clone());
 
         nc.setFilteredItemIds(getFilteredItemIds() == null ? null
@@ -1039,8 +1041,13 @@ public class IndexedContainer extends
 
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
-        addFilter(new Filter(propertyId, filterString, ignoreCase,
-                onlyMatchPrefix));
+        try {
+            addFilter(new SimpleStringFilter(propertyId, filterString,
+                    ignoreCase, onlyMatchPrefix));
+        } catch (UnsupportedFilterException e) {
+            // the filter instance created here is always valid for in-memory
+            // containers
+        }
     }
 
     public void removeAllContainerFilters() {
@@ -1049,6 +1056,15 @@ public class IndexedContainer extends
 
     public void removeContainerFilters(Object propertyId) {
         removeFilters(propertyId);
+    }
+
+    public void addContainerFilter(Filter filter)
+            throws UnsupportedFilterException {
+        addFilter(filter);
+    }
+
+    public void removeContainerFilter(Filter filter) {
+        removeFilter(filter);
     }
 
 }

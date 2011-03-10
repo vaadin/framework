@@ -1,6 +1,5 @@
 package com.vaadin.data.util;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -12,6 +11,7 @@ import java.util.Set;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.ItemSetChangeNotifier;
 import com.vaadin.data.Item;
+import com.vaadin.data.util.filter.UnsupportedFilterException;
 
 /**
  * Abstract {@link Container} class that handles common functionality for
@@ -49,7 +49,7 @@ import com.vaadin.data.Item;
  * <code>sort(Object[], boolean[])</code>.
  * 
  * To implement Filterable, subclasses need to implement the methods
- * <code>addContainerFilter()</code> (calling {@link #addFilter(ItemFilter)}),
+ * <code>addContainerFilter()</code> (calling {@link #addFilter(Filter)}),
  * <code>removeAllContainerFilters()</code> (calling {@link #removeAllFilters()}
  * ) and <code>removeContainerFilters(Object)</code> (calling
  * {@link #removeFilters(Object)}).
@@ -69,38 +69,6 @@ import com.vaadin.data.Item;
 public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITEMCLASS extends Item>
         extends AbstractContainer implements ItemSetChangeNotifier,
         Container.Indexed {
-
-    /**
-     * Filter interface for item filtering in in-memory containers, including
-     * for implementing {@link Filterable}.
-     * 
-     * An ItemFilter must implement {@link #equals(Object)} and
-     * {@link #hashCode()} correctly to avoid duplicate filter registrations
-     * etc.
-     * 
-     * TODO this may change for 6.6 with the new filtering API
-     * 
-     * @since 6.6
-     */
-    public interface ItemFilter extends Serializable {
-        /**
-         * Check if an item passes the filter.
-         * 
-         * @param item
-         * @return true if the item is accepted by this filter
-         */
-        public boolean passesFilter(Item item);
-
-        /**
-         * Check if a change in the value of a property can affect the filtering
-         * result. May always return true, at the cost of performance.
-         * 
-         * @param propertyId
-         * @return true if the filtering result may/does change based on changes
-         *         to the property identified by propertyId
-         */
-        public boolean appliesToProperty(Object propertyId);
-    }
 
     /**
      * An ordered {@link List} of all item identifiers in the container,
@@ -125,7 +93,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * Filters that are applied to the container to limit the items visible in
      * it
      */
-    private Set<ItemFilter> filters = new HashSet<ItemFilter>();
+    private Set<Filter> filters = new HashSet<Filter>();
 
     /**
      * The item sorter which is used for sorting the container.
@@ -395,9 +363,9 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (getFilters().isEmpty()) {
             return true;
         }
-        final Iterator<ItemFilter> i = getFilters().iterator();
+        final Iterator<Filter> i = getFilters().iterator();
         while (i.hasNext()) {
-            final ItemFilter f = i.next();
+            final Filter f = i.next();
             if (!f.passesFilter(item)) {
                 return false;
             }
@@ -406,14 +374,43 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     }
 
     /**
-     * Add a container filter and re-filter the view
+     * Adds a container filter and re-filter the view.
+     * 
+     * The filter must implement Filter and its sub-filters (if any) must also
+     * be in-memory filterable.
      * 
      * This can be used to implement
      * {@link Filterable#addContainerFilter(Object, String, boolean, boolean)}.
+     * 
+     * Note that in some cases, incompatible filters cannot be detected when
+     * added and an {@link UnsupportedFilterException} may occur when performing
+     * filtering.
+     * 
+     * @throws UnsupportedFilterException
+     *             if the filter is detected as not supported by the container
      */
-    protected void addFilter(ItemFilter filter) {
+    protected void addFilter(Filter filter) throws UnsupportedFilterException {
         getFilters().add(filter);
         filterAll();
+    }
+
+    /**
+     * Remove a specific container filter and re-filter the view (if necessary).
+     * 
+     * This can be used to implement
+     * {@link Filterable#removeContainerFilter(com.vaadin.data.Container.Filter)}
+     * .
+     */
+    protected void removeFilter(Filter filter) {
+        for (Iterator<Filter> iterator = getFilters().iterator(); iterator
+                .hasNext();) {
+            Filter f = iterator.next();
+            if (f.equals(filter)) {
+                iterator.remove();
+                filterAll();
+                return;
+            }
+        }
     }
 
     /**
@@ -440,9 +437,9 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (getFilters().isEmpty() || propertyId == null) {
             return false;
         }
-        final Iterator<ItemFilter> i = getFilters().iterator();
+        final Iterator<Filter> i = getFilters().iterator();
         while (i.hasNext()) {
-            final ItemFilter f = i.next();
+            final Filter f = i.next();
             if (f.appliesToProperty(propertyId)) {
                 return true;
             }
@@ -461,14 +458,14 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * @param propertyId
      * @return Collection<Filter> removed filters
      */
-    protected Collection<ItemFilter> removeFilters(Object propertyId) {
+    protected Collection<Filter> removeFilters(Object propertyId) {
         if (getFilters().isEmpty() || propertyId == null) {
             return Collections.emptyList();
         }
-        List<ItemFilter> removedFilters = new LinkedList<ItemFilter>();
-        for (Iterator<ItemFilter> iterator = getFilters().iterator(); iterator
+        List<Filter> removedFilters = new LinkedList<Filter>();
+        for (Iterator<Filter> iterator = getFilters().iterator(); iterator
                 .hasNext();) {
-            ItemFilter f = iterator.next();
+            Filter f = iterator.next();
             if (f.appliesToProperty(propertyId)) {
                 removedFilters.add(f);
                 iterator.remove();
@@ -860,7 +857,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * 
      * @param filters
      */
-    protected void setFilters(Set<ItemFilter> filters) {
+    protected void setFilters(Set<Filter> filters) {
         this.filters = filters;
     }
 
@@ -868,9 +865,9 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * TODO Temporary internal helper method to get the internal list of
      * filters.
      * 
-     * @return Set<ItemFilter>
+     * @return Set<Filter>
      */
-    protected Set<ItemFilter> getFilters() {
+    protected Set<Filter> getFilters() {
         return filters;
     }
 
