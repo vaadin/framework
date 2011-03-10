@@ -3,6 +3,7 @@ package com.vaadin.tests.server.container.filter;
 import junit.framework.TestCase;
 
 import com.vaadin.data.Container.Filter;
+import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertysetItem;
@@ -44,6 +45,47 @@ public abstract class AbstractFilterTest<FILTERTYPE extends Filter> extends
             // do nothing
         }
 
+    }
+
+    public static class SameItemFilter implements Filter {
+
+        private final Item item;
+        private final Object propertyId;
+
+        public SameItemFilter(Item item) {
+            this(item, "");
+        }
+
+        public SameItemFilter(Item item, Object propertyId) {
+            this.item = item;
+            this.propertyId = propertyId;
+        }
+
+        public boolean passesFilter(Item item)
+                throws UnsupportedOperationException {
+            return this.item == item;
+        }
+
+        public boolean appliesToProperty(Object propertyId) {
+            return this.propertyId != null ? this.propertyId.equals(propertyId)
+                    : true;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null || !getClass().equals(obj.getClass())) {
+                return false;
+            }
+            SameItemFilter other = (SameItemFilter) obj;
+            return item == other.item
+                    && (propertyId == null ? other.propertyId == null
+                            : propertyId.equals(other.propertyId));
+        }
+
+        @Override
+        public int hashCode() {
+            return item.hashCode();
+        }
     }
 
 }
