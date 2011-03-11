@@ -281,7 +281,7 @@ public final class VDebugConsole extends VOverlay implements Console {
     };
     private VLazyExecutor sendToRemoteLog = new VLazyExecutor(350, doSend);
 
-    private void remoteLog(String msg) {
+    protected void remoteLog(String msg) {
         msgQueue.add(msg);
         if (msg.length() > 4) {
             doSend.execute();
