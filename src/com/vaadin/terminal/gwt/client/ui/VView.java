@@ -43,7 +43,7 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHan
  *
  */
 public class VView extends SimplePanel implements Container, ResizeHandler,
-        Window.ClosingHandler, ShortcutActionHandlerOwner {
+        Window.ClosingHandler, ShortcutActionHandlerOwner, Focusable {
 
     private static final String CLASSNAME = "v-view";
 
@@ -110,6 +110,10 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
     public VView() {
         super();
         setStyleName(CLASSNAME);
+
+        // Allow focusing the view by using the focus() method, the view
+        // should not be in the document focus flow
+        getElement().setTabIndex(-1);
     }
 
     /**
@@ -691,9 +695,9 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             DOM.setStyleAttribute(fElem, "position", "absolute");
             DOM.setStyleAttribute(fElem, "opacity", "0.1");
             DOM.appendChild(getElement(), fElem);
-            Util.focus(fElem);
+            fElem.focus();
         } else {
-            Util.focus(getElement());
+            getElement().focus();
         }
 
         parentFrame = getParentFrame();
@@ -701,6 +705,10 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
     public ShortcutActionHandler getShortcutActionHandler() {
         return actionHandler;
+    }
+
+    public void focus() {
+        getElement().focus();       
     }
 
 }
