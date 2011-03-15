@@ -16,14 +16,14 @@ public class AndOrFilterTest extends AbstractFilterTest {
     public void testNoFilterAnd() {
         Filter filter = new And();
 
-        Assert.assertTrue(filter.passesFilter(item1));
+        Assert.assertTrue(filter.passesFilter(null, item1));
     }
 
     public void testSingleFilterAnd() {
         Filter filter = new And(new SameItemFilter(item1));
 
-        Assert.assertTrue(filter.passesFilter(item1));
-        Assert.assertFalse(filter.passesFilter(item2));
+        Assert.assertTrue(filter.passesFilter(null, item1));
+        Assert.assertFalse(filter.passesFilter(null, item2));
     }
 
     public void testTwoFilterAnd() {
@@ -32,11 +32,11 @@ public class AndOrFilterTest extends AbstractFilterTest {
         Filter filter2 = new And(new SameItemFilter(item1), new SameItemFilter(
                 item2));
 
-        Assert.assertTrue(filter1.passesFilter(item1));
-        Assert.assertFalse(filter1.passesFilter(item2));
+        Assert.assertTrue(filter1.passesFilter(null, item1));
+        Assert.assertFalse(filter1.passesFilter(null, item2));
 
-        Assert.assertFalse(filter2.passesFilter(item1));
-        Assert.assertFalse(filter2.passesFilter(item2));
+        Assert.assertFalse(filter2.passesFilter(null, item1));
+        Assert.assertFalse(filter2.passesFilter(null, item2));
     }
 
     public void testThreeFilterAnd() {
@@ -45,24 +45,24 @@ public class AndOrFilterTest extends AbstractFilterTest {
         Filter filter2 = new And(new SameItemFilter(item1), new SameItemFilter(
                 item1), new SameItemFilter(item2));
 
-        Assert.assertTrue(filter1.passesFilter(item1));
-        Assert.assertFalse(filter1.passesFilter(item2));
+        Assert.assertTrue(filter1.passesFilter(null, item1));
+        Assert.assertFalse(filter1.passesFilter(null, item2));
 
-        Assert.assertFalse(filter2.passesFilter(item1));
-        Assert.assertFalse(filter2.passesFilter(item2));
+        Assert.assertFalse(filter2.passesFilter(null, item1));
+        Assert.assertFalse(filter2.passesFilter(null, item2));
     }
 
     public void testNoFilterOr() {
         Filter filter = new Or();
 
-        Assert.assertFalse(filter.passesFilter(item1));
+        Assert.assertFalse(filter.passesFilter(null, item1));
     }
 
     public void testSingleFilterOr() {
         Filter filter = new Or(new SameItemFilter(item1));
 
-        Assert.assertTrue(filter.passesFilter(item1));
-        Assert.assertFalse(filter.passesFilter(item2));
+        Assert.assertTrue(filter.passesFilter(null, item1));
+        Assert.assertFalse(filter.passesFilter(null, item2));
     }
 
     public void testTwoFilterOr() {
@@ -71,11 +71,11 @@ public class AndOrFilterTest extends AbstractFilterTest {
         Filter filter2 = new Or(new SameItemFilter(item1), new SameItemFilter(
                 item2));
 
-        Assert.assertTrue(filter1.passesFilter(item1));
-        Assert.assertFalse(filter1.passesFilter(item2));
+        Assert.assertTrue(filter1.passesFilter(null, item1));
+        Assert.assertFalse(filter1.passesFilter(null, item2));
 
-        Assert.assertTrue(filter2.passesFilter(item1));
-        Assert.assertTrue(filter2.passesFilter(item2));
+        Assert.assertTrue(filter2.passesFilter(null, item1));
+        Assert.assertTrue(filter2.passesFilter(null, item2));
     }
 
     public void testThreeFilterOr() {
@@ -84,11 +84,11 @@ public class AndOrFilterTest extends AbstractFilterTest {
         Filter filter2 = new Or(new SameItemFilter(item1), new SameItemFilter(
                 item1), new SameItemFilter(item2));
 
-        Assert.assertTrue(filter1.passesFilter(item1));
-        Assert.assertFalse(filter1.passesFilter(item2));
+        Assert.assertTrue(filter1.passesFilter(null, item1));
+        Assert.assertFalse(filter1.passesFilter(null, item2));
 
-        Assert.assertTrue(filter2.passesFilter(item1));
-        Assert.assertTrue(filter2.passesFilter(item2));
+        Assert.assertTrue(filter2.passesFilter(null, item1));
+        Assert.assertTrue(filter2.passesFilter(null, item2));
     }
 
     public void testAndEqualsHashCode() {

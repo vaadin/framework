@@ -17,10 +17,10 @@ public class NotFilterTest extends AbstractFilterTest {
         Filter origFilter = new SameItemFilter(item1);
         Filter filter = new Not(origFilter);
 
-        Assert.assertTrue(origFilter.passesFilter(item1));
-        Assert.assertFalse(origFilter.passesFilter(item2));
-        Assert.assertFalse(filter.passesFilter(item1));
-        Assert.assertTrue(filter.passesFilter(item2));
+        Assert.assertTrue(origFilter.passesFilter(null, item1));
+        Assert.assertFalse(origFilter.passesFilter(null, item2));
+        Assert.assertFalse(filter.passesFilter(null, item1));
+        Assert.assertTrue(filter.passesFilter(null, item2));
     }
 
     public void testNotEqualsHashCode() {

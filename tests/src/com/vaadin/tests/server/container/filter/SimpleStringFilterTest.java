@@ -23,7 +23,7 @@ public class SimpleStringFilterTest extends AbstractFilterTest {
     protected boolean passes(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
         return f(propertyId, filterString, ignoreCase, onlyMatchPrefix)
-                .passesFilter(getTestItem());
+                .passesFilter(null, getTestItem());
     }
 
     public void testStartsWithCaseSensitive() {
@@ -124,7 +124,8 @@ public class SimpleStringFilterTest extends AbstractFilterTest {
         TestItem<String, String> item = createTestItem();
         item.addItemProperty("other1", new NullProperty());
 
-        Assert.assertFalse(f("other1", "ab", false, true).passesFilter(item));
+        Assert.assertFalse(f("other1", "ab", false, true).passesFilter(null,
+                item));
     }
 
 }

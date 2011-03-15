@@ -61,7 +61,7 @@ public abstract class AbstractFilterTest<FILTERTYPE extends Filter> extends
             this.propertyId = propertyId;
         }
 
-        public boolean passesFilter(Item item)
+        public boolean passesFilter(Object itemId, Item item)
                 throws UnsupportedOperationException {
             return this.item == item;
         }
