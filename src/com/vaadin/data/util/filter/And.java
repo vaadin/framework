@@ -16,7 +16,7 @@ import com.vaadin.data.Item;
  * 
  * @since 6.6
  */
-public class And extends AbstractJunctionFilter implements Filter {
+public class And extends AbstractJunctionFilter {
 
     /**
      * 
