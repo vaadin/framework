@@ -660,12 +660,16 @@ public interface Container extends Serializable {
         /**
          * Check if an item passes the filter (in-memory filtering).
          * 
+         * @param itemId
+         *            identifier of the item being filtered; may be null when
+         *            the item is being added to the container
          * @param item
+         *            the item being filtered
          * @return true if the item is accepted by this filter
          * @throws UnsupportedOperationException
          *             if the filter cannot be used for in-memory filtering
          */
-        public boolean passesFilter(Item item)
+        public boolean passesFilter(Object itemId, Item item)
                 throws UnsupportedOperationException;
 
         /**

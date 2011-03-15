@@ -366,7 +366,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         final Iterator<Filter> i = getFilters().iterator();
         while (i.hasNext()) {
             final Filter f = i.next();
-            if (!f.passesFilter(item)) {
+            if (!f.passesFilter(itemId, item)) {
                 return false;
             }
         }

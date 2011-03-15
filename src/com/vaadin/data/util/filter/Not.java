@@ -33,8 +33,9 @@ public class Not implements Filter {
         return filter;
     }
 
-    public boolean passesFilter(Item item) throws UnsupportedOperationException {
-        return !filter.passesFilter(item);
+    public boolean passesFilter(Object itemId, Item item)
+            throws UnsupportedOperationException {
+        return !filter.passesFilter(itemId, item);
     }
 
     /**

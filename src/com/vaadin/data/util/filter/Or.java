@@ -27,9 +27,10 @@ public class Or extends AbstractJunctionFilter implements Filter {
         super(filters);
     }
 
-    public boolean passesFilter(Item item) throws UnsupportedFilterException {
+    public boolean passesFilter(Object itemId, Item item)
+            throws UnsupportedFilterException {
         for (Filter filter : getFilters()) {
-            if (filter.passesFilter(item)) {
+            if (filter.passesFilter(itemId, item)) {
                 return true;
             }
         }

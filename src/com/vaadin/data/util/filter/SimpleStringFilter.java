@@ -36,7 +36,7 @@ public class SimpleStringFilter implements Filter {
         this.onlyMatchPrefix = onlyMatchPrefix;
     }
 
-    public boolean passesFilter(Item item) {
+    public boolean passesFilter(Object itemId, Item item) {
         final Property p = item.getItemProperty(propertyId);
         if (p == null || p.toString() == null) {
             return false;
