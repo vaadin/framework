@@ -40,7 +40,7 @@ public final class IsNull implements Filter {
     }
 
     public boolean appliesToProperty(Object propertyId) {
-        return this.propertyId == propertyId;
+        return getPropertyId().equals(propertyId);
     }
 
     @Override
