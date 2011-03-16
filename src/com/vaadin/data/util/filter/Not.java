@@ -11,7 +11,7 @@ import com.vaadin.data.Item;
  * 
  * @since 6.6
  */
-public class Not implements Filter {
+public final class Not implements Filter {
     private final Filter filter;
 
     /**

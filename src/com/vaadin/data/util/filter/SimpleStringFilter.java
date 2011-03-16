@@ -20,7 +20,7 @@ import com.vaadin.data.Property;
  * 
  * @since 6.6
  */
-public class SimpleStringFilter implements Filter {
+public final class SimpleStringFilter implements Filter {
 
     final Object propertyId;
     final String filterString;
