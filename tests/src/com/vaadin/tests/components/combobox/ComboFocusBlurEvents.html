@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>ComboFocusBlurEvents</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">ComboFocusBlurEvents</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.combobox.ComboFocusBlurEvents?restartApplication</td>
+	<td></td>
+</tr>
+<!--Testing selecting several items, the focus should stay on the combo and only one focus event should trigger-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VFilterSelect[0]/domChild[1]</td>
+	<td>9,14</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::Root/VFilterSelect$SuggestionPopup[0]/VFilterSelect$SuggestionMenu[0]#item4</td>
+	<td>142,2</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VFilterSelect[0]/domChild[1]</td>
+	<td>17,12</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::Root/VFilterSelect$SuggestionPopup[0]/VFilterSelect$SuggestionMenu[0]#item7</td>
+	<td>143,6</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VFilterSelect[0]/domChild[1]</td>
+	<td>13,9</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::Root/VFilterSelect$SuggestionPopup[0]/VFilterSelect$SuggestionMenu[0]#item3</td>
+	<td>147,11</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VFilterSelect[0]/domChild[1]</td>
+	<td>16,11</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::Root/VFilterSelect$SuggestionPopup[0]/VFilterSelect$SuggestionMenu[0]#item5</td>
+	<td>146,4</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[2]/VLabel[0]</td>
+	<td>exact:0: Focus event!</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>OneFocusEvent</td>
+</tr>
+<!--Test ended.-->
+<!--Testing keyboard navigation-->
+<tr>
+	<td>pressSpecialKey</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VFilterSelect[0]/domChild[0]</td>
+	<td>down</td>
+</tr>
+<tr>
+	<td>pressSpecialKey</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VFilterSelect[0]/domChild[0]</td>
+	<td>down</td>
+</tr>
+<tr>
+	<td>pressSpecialKey</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VFilterSelect[0]/domChild[0]</td>
+	<td>down</td>
+</tr>
+<tr>
+	<td>pressSpecialKey</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VFilterSelect[0]/domChild[0]</td>
+	<td>down</td>
+</tr>
+<tr>
+	<td>pressSpecialKey</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VFilterSelect[0]/domChild[0]</td>
+	<td>down</td>
+</tr>
+<tr>
+	<td>pressSpecialKey</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VFilterSelect[0]/domChild[0]</td>
+	<td>enter</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[2]/VLabel[0]</td>
+	<td>exact:0: Focus event!</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>StillOneFocusEvent</td>
+</tr>
+<!--Test ended.-->
+<!--Move focus out with mouse-->
+<tr>
+	<td>focus</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VTextField[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboFocusBlurEvents::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[2]/VLabel[0]</td>
+	<td>0: Focus event!<br />1: Blur event!</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>OneFocusOneBlur</td>
+</tr>
+<!--End test.-->
+
+</tbody></table>
+</body>
+</html>

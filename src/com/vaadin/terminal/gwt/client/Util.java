@@ -1188,4 +1188,18 @@ public class Util {
 
     }
 
+    /**
+     * Gets the currently focused element for Internet Explorer.
+     * 
+     * @return The currently focused element
+     */
+    public native static Element getIEFocusedElement()
+    /*-{
+       if ($wnd.document.activeElement) {
+           return $wnd.document.activeElement;
+       }
+       
+       return null;
+     }-*/
+    ;
 }
