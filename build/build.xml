@@ -821,6 +821,7 @@
         </java>
     	
         <copy file="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}" tofile="${output-dir}/WebContent/${lib-jar-name}" />
+        <echo>##teamcity[publishArtifacts '${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}']</echo>
     </target>
 
 	<target name="vaadin-sources.jar" depends="init">
