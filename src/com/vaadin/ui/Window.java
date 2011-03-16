@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -1120,6 +1120,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
         if (parent == null) {
             fireClose();
         } else {
+
+            // focus is restored to the parent window
+            parent.focus();
+            
             // subwindow is removed from parent
             parent.removeWindow(this);
         }
@@ -2089,7 +2093,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
      * <code>
      *  // within the window using helper
      *  subWindow.setCloseShortcut(KeyCode.ESCAPE, null);
-     *  
+     * 
      *  // or globally
      *  getWindow().addAction(new Window.CloseShortcut(subWindow, KeyCode.ESCAPE));
      * </code>
@@ -2178,6 +2182,26 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
 
     public void removeListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * If the window is a sub-window focusing will cause the sub-window to be
+     * brought on top of other sub-windows on gain keyboard focus.
+     */
+    @Override
+    public void focus() {
+        if (getParent() != null) {
+            /*
+             * When focusing a sub-window it basically means it should be
+             * brought to the front. Instead of just moving the keyboard focus
+             * we focus the window and bring it top-most.
+             */
+            bringToFront();
+        } else {
+            super.focus();
+        }
     }
 
 }

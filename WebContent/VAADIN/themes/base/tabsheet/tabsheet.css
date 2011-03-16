@@ -111,6 +111,10 @@
 	border-bottom: none;
 	position: relative;
 }
+.v-ie6 .v-tabsheet-content,
+.v-ie7 .v-tabsheet-content {
+	zoom: 1;
+}
 .v-tabsheet-deco {
 	height: 1px;
 	background: #aaa;

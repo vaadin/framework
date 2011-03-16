@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
+import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
@@ -29,7 +30,7 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
 public class VPanel extends SimplePanel implements Container,
-        ShortcutActionHandlerOwner {
+        ShortcutActionHandlerOwner, Focusable {
 
     public static final String CLICK_EVENT_IDENTIFIER = "click";
     public static final String CLASSNAME = "v-panel";
@@ -103,7 +104,16 @@ public class VPanel extends SimplePanel implements Container,
         bottomDecoration.setClassName(CLASSNAME + "-deco");
 
         getElement().appendChild(captionWrap);
+
+        /*
+         * Make contentNode focusable only by using the setFocus() method. This
+         * behaviour can be changed by invoking setTabIndex() in the serverside
+         * implementation
+         */
+        contentNode.setTabIndex(-1);
+
         getElement().appendChild(contentNode);
+
         getElement().appendChild(bottomDecoration);
         setStyleName(CLASSNAME);
         DOM.sinkEvents(getElement(), Event.ONKEYDOWN);
@@ -115,6 +125,30 @@ public class VPanel extends SimplePanel implements Container,
                 getTouchScrollDelegate().onTouchStart(event);
             }
         }, TouchStartEvent.getType());
+    }
+
+    /**
+     * Sets the keyboard focus on the Panel
+     * 
+     * @param focus
+     *            Should the panel have focus or not.
+     */
+    public void setFocus(boolean focus) {
+        if (focus) {
+            getContainerElement().focus();
+        } else {
+            getContainerElement().blur();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.gwt.client.Focusable#focus()
+     */
+    public void focus() {
+        setFocus(true);
+
     }
 
     @Override
@@ -235,6 +269,11 @@ public class VPanel extends SimplePanel implements Container,
         // Must be run after scrollTop is set as Webkit overflow fix re-sets the
         // scrollTop
         runHacks(false);
+
+        // And apply tab index
+        if (uidl.hasVariable("tabindex")) {
+            contentNode.setTabIndex(uidl.getIntVariable("tabindex"));
+        }
 
         rendering = false;
 

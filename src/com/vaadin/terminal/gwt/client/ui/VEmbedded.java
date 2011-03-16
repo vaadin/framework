@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -137,35 +137,9 @@ public class VEmbedded extends HTML implements Paintable {
         } else if (uidl.hasAttribute("mimetype")) {
             final String mime = uidl.getStringAttribute("mimetype");
             if (mime.equals("application/x-shockwave-flash")) {
-                addStyleName(CLASSNAME + "-flash");
-                String html = "<object "
-                        + "type=\"application/x-shockwave-flash\" "
-                        + "width=\"" + width + "\" height=\"" + height + "\">";
+                // Handle embedding of Flash
+                setHTML(createFlashEmbed(uidl));
 
-                Map<String, String> parameters = getParameters(uidl);
-                if (parameters.get("movie") == null) {
-                    parameters.put("movie", getSrc(uidl, client));
-                }
-
-                // Add the parameters to the Object
-                for (String name : parameters.keySet()) {
-                    html += "<param name=\"" + escapeAttribute(name)
-                            + "\" value=\""
-                            + escapeAttribute(parameters.get(name)) + "\"/>";
-                }
-
-                html += "<embed src=\"" + getSrc(uidl, client) + "\" width=\""
-                        + width + "\" height=\"" + height + "\" "
-                        + "type=\"application/x-shockwave-flash\" ";
-
-                // Add the parameters to the Embed
-                for (String name : parameters.keySet()) {
-                    html += escapeAttribute(name) + "=\""
-                            + escapeAttribute(parameters.get(name)) + "\" ";
-                }
-
-                html += "></embed></object>";
-                setHTML(html);
             } else if (mime.equals("image/svg+xml")) {
                 addStyleName(CLASSNAME + "-svg");
                 String data;
@@ -185,6 +159,26 @@ public class VEmbedded extends HTML implements Paintable {
                 if (height != null) {
                     obj.getStyle().setProperty("height", "100%");
                 }
+                if (uidl.hasAttribute("classid")) {
+                    obj.setAttribute("classid",
+                            uidl.getStringAttribute(escapeAttribute("classid")));
+                }
+                if (uidl.hasAttribute("codebase")) {
+                    obj.setAttribute("codebase", uidl
+                            .getStringAttribute(escapeAttribute("codebase")));
+                }
+                if (uidl.hasAttribute("codetype")) {
+                    obj.setAttribute("codetype", uidl
+                            .getStringAttribute(escapeAttribute("codetype")));
+                }
+                if (uidl.hasAttribute("archive")) {
+                    obj.setAttribute("archive",
+                            uidl.getStringAttribute(escapeAttribute("archive")));
+                }
+                if (uidl.hasAttribute("standby")) {
+                    obj.setAttribute("standby",
+                            uidl.getStringAttribute(escapeAttribute("standby")));
+                }
                 getElement().appendChild(obj);
 
             } else {
@@ -197,7 +191,123 @@ public class VEmbedded extends HTML implements Paintable {
         if (clearBrowserElement) {
             browserElement = null;
         }
+    }
 
+    /**
+     * Creates the Object and Embed tags for the Flash plugin so it works
+     * cross-browser
+     * 
+     * @param uidl
+     *            The UIDL
+     * @return Tags concatenated into a string
+     */
+    private String createFlashEmbed(UIDL uidl) {
+        addStyleName(CLASSNAME + "-flash");
+
+        /*
+         * To ensure cross-browser compatibility we are using the twice-cooked
+         * method to embed flash i.e. we add a OBJECT tag for IE ActiveX and
+         * inside it a EMBED for all other browsers.
+         */
+
+        StringBuilder html = new StringBuilder();
+
+        // Start the object tag
+        html.append("<object ");
+
+        /*
+         * Add classid required for ActiveX to recognize the flash. This is a
+         * predefined value which ActiveX recognizes and must be the given
+         * value. More info can be found on
+         * http://kb2.adobe.com/cps/415/tn_4150.html. Allow user to override
+         * this by setting his own classid.
+         */
+        if (uidl.hasAttribute("classid")) {
+            html.append("classid=\""
+                    + escapeAttribute(uidl.getStringAttribute("classid"))
+                    + "\" ");
+        } else {
+            html.append("classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" ");
+        }
+
+        /*
+         * Add codebase required for ActiveX and must be exactly this according
+         * to http://kb2.adobe.com/cps/415/tn_4150.html to work with the above
+         * given classid. Again, see more info on
+         * http://kb2.adobe.com/cps/415/tn_4150.html. Limiting Flash version to
+         * 6.0.0.0 and above. Allow user to override this by setting his own
+         * codebase
+         */
+        if (uidl.hasAttribute("codebase")) {
+            html.append("codebase=\""
+                    + escapeAttribute(uidl.getStringAttribute("codebase"))
+                    + "\" ");
+        } else {
+            html.append("codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" ");
+        }
+
+        // Add width and height
+        html.append("width=\"" + width + "\" ");
+        html.append("height=\"" + height + "\" ");
+        html.append("type=\"application/x-shockwave-flash\" ");
+
+        // Codetype
+        if (uidl.hasAttribute("codetype")) {
+            html.append("codetype=\"" + uidl.getStringAttribute("codetype")
+                    + "\" ");
+        }
+
+        // Standby
+        if (uidl.hasAttribute("standby")) {
+            html.append("standby=\"" + uidl.getStringAttribute("standby")
+                    + "\" ");
+        }
+
+        // Archive
+        if (uidl.hasAttribute("archive")) {
+            html.append("archive=\"" + uidl.getStringAttribute("archive")
+                    + "\" ");
+        }
+
+        // End object tag
+        html.append(">");
+
+        // Ensure we have an movie parameter
+        Map<String, String> parameters = getParameters(uidl);
+        if (parameters.get("movie") == null) {
+            parameters.put("movie", getSrc(uidl, client));
+        }
+
+        // Add parameters to OBJECT
+        for (String name : parameters.keySet()) {
+            html.append("<param ");
+            html.append("name=\"" + escapeAttribute(name) + "\" ");
+            html.append("value=\"" + escapeAttribute(parameters.get(name))
+                    + "\" ");
+            html.append("/>");
+        }
+
+        // Build inner EMBED tag
+        html.append("<embed ");
+        html.append("src=\"" + getSrc(uidl, client) + "\" ");
+        html.append("width=\"" + width + "\" ");
+        html.append("height=\"" + height + "\" ");
+        html.append("type=\"application/x-shockwave-flash\" ");
+
+        // Add the parameters to the Embed
+        for (String name : parameters.keySet()) {
+            html.append(escapeAttribute(name));
+            html.append("=");
+            html.append("\"" + escapeAttribute(parameters.get(name)) + "\"");
+        }
+
+        // End embed tag
+        html.append("></embed>");
+
+        // End object tag
+        html.append("</object>");
+
+        return html.toString();
     }
 
     /**

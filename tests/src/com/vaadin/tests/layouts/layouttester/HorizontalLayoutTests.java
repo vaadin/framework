@@ -16,7 +16,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
@@ -490,7 +489,7 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         components[3] = getTestTabsheet();
         components[3].setIcon(new ThemeResource(LOCK_16_PNG));
 
-        AbstractField[] fields = new AbstractField[6];
+        AbstractField[] fields = new AbstractField[5];
         fields[0] = new TextField();
         fields[0].setRequired(true);
         fields[0].setValidationVisible(true);
@@ -511,14 +510,6 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         fields[4] = new CheckBox();
         fields[4]
                 .setComponentError(new UserError("component error, user error"));
-
-        fields[5] = new NativeSelect();
-        fields[5].setRequired(true);
-        fields[5].setValidationVisible(true);
-        fields[5].setRequiredError("required error");
-        fields[5]
-                .setComponentError(new UserError("component error, user error"));
-        fields[5].setIcon(new ThemeResource(CALENDAR_32_PNG));
 
         for (int i = 0; i < components.length; i++) {
             components[i].setComponentError(new UserError(

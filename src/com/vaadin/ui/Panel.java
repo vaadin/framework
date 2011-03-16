@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -17,6 +17,7 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Scrollable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VPanel;
+import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.Runo;
 
@@ -32,7 +33,7 @@ import com.vaadin.ui.themes.Runo;
 @ClientWidget(VPanel.class)
 public class Panel extends AbstractComponentContainer implements Scrollable,
         ComponentContainer.ComponentAttachListener,
-        ComponentContainer.ComponentDetachListener, Action.Notifier {
+        ComponentContainer.ComponentDetachListener, Action.Notifier, Focusable {
 
     private static final String CLICK_EVENT = VPanel.CLICK_EVENT_IDENTIFIER;
 
@@ -73,6 +74,13 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * painting and handling as well.
      */
     protected ActionManager actionManager;
+
+    /**
+     * By default the Panel is not in the normal document focus flow and can
+     * only be focused by using the focus()-method. Change this to 0 if you want
+     * to have the Panel in the normal focus flow.
+     */
+    private int tabIndex = -1;
 
     /**
      * Creates a new empty panel. A VerticalLayout is used as content.
@@ -233,6 +241,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         content.paint(target);
+
+        target.addVariable(this, "tabindex", getTabIndex());
 
         if (isScrollable()) {
             target.addVariable(this, "scrollLeft", getScrollLeft());
@@ -580,6 +590,31 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         MouseEventDetails mouseDetails = MouseEventDetails
                 .deSerialize((String) parameters.get("mouseDetails"));
         fireEvent(new ClickEvent(this, mouseDetails));
+    }
+
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int getTabIndex() {
+        return tabIndex;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setTabIndex(int tabIndex) {
+        this.tabIndex = tabIndex;
+        requestRepaint();
+    }
+
+    /**
+     * Moves keyboard focus to the component. {@see Focusable#focus()}
+     * 
+     */
+    @Override
+    public void focus() {
+        super.focus();
     }
 
 }

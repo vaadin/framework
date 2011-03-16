@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -35,6 +35,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.EventId;
+import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -50,7 +51,7 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHan
  */
 public class VWindow extends VOverlay implements Container,
         ShortcutActionHandlerOwner, ScrollHandler, KeyDownHandler,
-        FocusHandler, BlurHandler, BeforeShortcutActionListener {
+        FocusHandler, BlurHandler, BeforeShortcutActionListener, Focusable {
 
     /**
      * Minimum allowed height of a window. This refers to the content area, not
@@ -1305,6 +1306,10 @@ public class VWindow extends VOverlay implements Container,
     public void onBeforeShortcutAction(Event e) {
         // NOP, nothing to update just avoid workaround ( causes excess
         // blur/focus )
+    }
+
+    public void focus() {
+        contentPanel.focus();
     }
 
 }

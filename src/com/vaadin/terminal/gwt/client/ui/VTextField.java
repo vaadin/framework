@@ -145,12 +145,14 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
 
         @Override
         public void run() {
-            updateCursorPosition();
-            boolean textChanged = communicateTextValueToServer();
-            if (textChanged) {
-                client.sendPendingVariableChanges();
+            if (isAttached()) {
+                updateCursorPosition();
+                boolean textChanged = communicateTextValueToServer();
+                if (textChanged) {
+                    client.sendPendingVariableChanges();
+                }
+                scheduled = false;
             }
-            scheduled = false;
         }
     };
     private boolean scheduled = false;
