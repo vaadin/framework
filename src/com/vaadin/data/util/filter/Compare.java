@@ -49,9 +49,10 @@ public abstract class Compare implements Filter {
          * 
          * @param propertyId
          *            the identifier of the property whose value to compare
-         *            against value
+         *            against value, not null
          * @param value
-         *            the value to compare against
+         *            the value to compare against - null values may or may not
+         *            be supported depending on the container
          */
         public Equal(Object propertyId, Object value) {
             super(propertyId, value, Operation.EQUAL);
@@ -81,9 +82,10 @@ public abstract class Compare implements Filter {
          * 
          * @param propertyId
          *            the identifier of the property whose value to compare
-         *            against value
+         *            against value, not null
          * @param value
-         *            the value to compare against
+         *            the value to compare against - null values may or may not
+         *            be supported depending on the container
          */
         public Greater(Object propertyId, Object value) {
             super(propertyId, value, Operation.GREATER);
@@ -113,9 +115,10 @@ public abstract class Compare implements Filter {
          * 
          * @param propertyId
          *            the identifier of the property whose value to compare
-         *            against value
+         *            against value, not null
          * @param value
-         *            the value to compare against
+         *            the value to compare against - null values may or may not
+         *            be supported depending on the container
          */
         public Less(Object propertyId, Object value) {
             super(propertyId, value, Operation.LESS);
@@ -145,9 +148,10 @@ public abstract class Compare implements Filter {
          * 
          * @param propertyId
          *            the identifier of the property whose value to compare
-         *            against value
+         *            against value, not null
          * @param value
-         *            the value to compare against
+         *            the value to compare against - null values may or may not
+         *            be supported depending on the container
          */
         public GreaterOrEqual(Object propertyId, Object value) {
             super(propertyId, value, Operation.GREATER_OR_EQUAL);
@@ -177,9 +181,10 @@ public abstract class Compare implements Filter {
          * 
          * @param propertyId
          *            the identifier of the property whose value to compare
-         *            against value
+         *            against value, not null
          * @param value
-         *            the value to compare against
+         *            the value to compare against - null values may or may not
+         *            be supported depending on the container
          */
         public LessOrEqual(Object propertyId, Object value) {
             super(propertyId, value, Operation.LESS_OR_EQUAL);
@@ -206,9 +211,10 @@ public abstract class Compare implements Filter {
      * 
      * @param propertyId
      *            the identifier of the property whose value to compare against
-     *            value
+     *            value, not null
      * @param value
-     *            the value to compare against
+     *            the value to compare against - null values may or may not be
+     *            supported depending on the container
      * @param operation
      *            the comparison {@link Operation} to use
      */
@@ -290,7 +296,7 @@ public abstract class Compare implements Filter {
      * Returns the property id of the property to compare against the fixed
      * value.
      * 
-     * @return property id
+     * @return property id (not null)
      */
     public Object getPropertyId() {
         return propertyId;

@@ -32,6 +32,16 @@ public class IsNullFilterTest extends AbstractFilterTest {
         Assert.assertTrue(filter2.passesFilter(null, item2));
     }
 
+    public void testIsNullAppliesToProperty() {
+        Filter filterA = new IsNull("a");
+        Filter filterB = new IsNull("b");
+
+        Assert.assertTrue(filterA.appliesToProperty("a"));
+        Assert.assertFalse(filterA.appliesToProperty("b"));
+        Assert.assertFalse(filterB.appliesToProperty("a"));
+        Assert.assertTrue(filterB.appliesToProperty("b"));
+    }
+
     public void testIsNullEqualsHashCode() {
         Filter filter1 = new IsNull("a");
         Filter filter1b = new IsNull("a");

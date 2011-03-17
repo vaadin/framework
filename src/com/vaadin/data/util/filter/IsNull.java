@@ -61,6 +61,12 @@ public final class IsNull implements Filter {
         return (null != getPropertyId() ? getPropertyId().hashCode() : 0);
     }
 
+    /**
+     * Returns the property id of the property tested by the filter, not null
+     * for valid filters.
+     * 
+     * @return property id (not null)
+     */
     public Object getPropertyId() {
         return propertyId;
     }

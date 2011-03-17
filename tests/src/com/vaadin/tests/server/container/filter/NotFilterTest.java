@@ -23,6 +23,16 @@ public class NotFilterTest extends AbstractFilterTest {
         Assert.assertTrue(filter.passesFilter(null, item2));
     }
 
+    public void testANotAppliesToProperty() {
+        Filter filterA = new Not(new SameItemFilter(item1, "a"));
+        Filter filterB = new Not(new SameItemFilter(item1, "b"));
+
+        Assert.assertTrue(filterA.appliesToProperty("a"));
+        Assert.assertFalse(filterA.appliesToProperty("b"));
+        Assert.assertFalse(filterB.appliesToProperty("a"));
+        Assert.assertTrue(filterB.appliesToProperty("b"));
+    }
+
     public void testNotEqualsHashCode() {
         Filter origFilter = new SameItemFilter(item1);
         Filter filter1 = new Not(origFilter);
