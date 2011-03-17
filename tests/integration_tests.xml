@@ -294,6 +294,24 @@
 		</subant>
 	</target>
 	
+	<target name="integration-test-eXo-3">
+		<fileset dir="integration-testscripts" id="html-test-files" includes="eXo-3/eXo-integration.html" />
+		<pathconvert pathsep=" " property="test-gatein" refid="html-test-files" />
+		
+		<subant target="run-tests" failonerror="false" antfile="test.xml">
+			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
+			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
+			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
+			<property name="server.start.succeeded" value="1" />
+			<property name="browsers" value="winxp-firefox36" />
+			<property name="testfiles" value="${test-gatein}" />
+			<property name="test-output-dir" value="../build/integration-test-output" />
+			<property name="com.vaadin.testbench.screenshot.directory" value="c:/screenshot" />
+	
+			<fileset dir="." includes="test.xml" />
+		</subant>
+	</target>
+	
 	<target name="integration-test-start-liferay-5">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-liferay-5.2.3" />
 	</target>
@@ -324,6 +342,14 @@
 
 	<target name="integration-test-stop-gatein-3">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-gatein-3.1.0" />
+	</target>
+	
+	<target name="integration-test-start-eXo-3">
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-eXo-3.0.3" />
+	</target>
+	
+	<target name="integration-test-stop-eXo-3">
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-eXo-3.0.3" />
 	</target>
 	
 	<!-- Run sampler deployment test for WebLogic server -->
@@ -508,6 +534,12 @@
 		<antcall target="integration-test-stop-gatein-3" />
 	</target>
 	
+	<target name="integration-test-eXo3">
+		<antcall target="integration-test-start-eXo-3" />
+		<antcall target="integration-test-eXo-3" />
+		<antcall target="integration-test-stop-eXo-3" />
+	</target>
+	
 	<target name="integration-test-weblogic9">
 		<antcall target="integration-test-start-weblogic9"/>
 		<antcall target="integration-test-test-weblogic">
@@ -583,6 +615,9 @@
 				</antcall>
 				<antcall target="run-integration-test">
 					<param name="target-server" value="gatein3"/>
+				</antcall>
+				<antcall target="run-integration-test">
+					<param name="target-server" value="eXo3"/>
 				</antcall>
 				<antcall target="run-integration-test">
 					<param name="target-server" value="weblogic9"/>
