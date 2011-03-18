@@ -306,7 +306,6 @@
 			<property name="browsers" value="winxp-firefox36" />
 			<property name="testfiles" value="${test-gatein}" />
 			<property name="test-output-dir" value="../build/integration-test-output" />
-			<property name="com.vaadin.testbench.screenshot.directory" value="c:/screenshot" />
 	
 			<fileset dir="." includes="test.xml" />
 		</subant>
