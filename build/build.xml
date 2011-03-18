@@ -1159,9 +1159,9 @@
     <target name="tests" depends="compile-java, internal-package-war">
     	<!-- Run all different types of tests in parallel to decrease testing time -->
     	<parallel threadcount="3">
-    		<antcall target="integration-tests"></antcall>
-    		<antcall target="testbench-tests"></antcall>
-    		<antcall target="server-side-tests"></antcall>
+    		<antcall inheritrefs="true" inheritall="true" target="integration-tests"></antcall>
+    		<antcall inheritrefs="true" inheritall="true" target="testbench-tests"></antcall>
+    		<antcall inheritrefs="true" inheritall="true" target="server-side-tests"></antcall>
     	</parallel>
     </target>
 	

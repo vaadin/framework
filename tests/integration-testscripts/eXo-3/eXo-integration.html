@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://vaadin-integration-tests.intra.itmill.com:8080/" />
+<title>eXo-integration</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">eXo-integration</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/portal/public/default/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>link=Visit the Acme Social Intranet</td>
+	<td>121,7</td>
+</tr>
+<tr>
+	<td>setTimeout</td>
+	<td>60000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Login as John</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>link=Login as John</td>
+	<td>37,4</td>
+</tr>
+<tr>
+	<td>setTimeout</td>
+	<td>60000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Applications Registry</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClickAndWait</td>
+	<td>link=Applications Registry</td>
+	<td>138,17</td>
+</tr>
+<tr>
+	<td>expectDialog</td>
+	<td>//div[@onclick=&quot;javascript:if(confirm('This action will automatically create categories and import all the gadgets and portlets on it.'))ajaxGet('/portal/private/intranet/administration/registry?portal:componentId=09e0ea8b-7d6e-410d-9ed0-871e3e7bc17f&amp;portal:type=action&amp;uicomponent=UIApplicationOrganizer&amp;op=ImportAllApplications&amp;ajaxRequest=true')&quot;]</td>
+	<td>36,15</td>
+</tr>
+<tr>
+	<td>getConfirmation</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=demo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>link=Add New Page</td>
+	<td>64,16</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIWizardPageSetInfo']/div[2]/div[2]/div/div[2]/div[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>pageName</td>
+	<td>98,10</td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>pageName</td>
+	<td>Application_test</td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>pageDisplayName</td>
+	<td>Vaadin test</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>//div[@id='UIPageCreationWizard']/div/div[3]/div/div/div/div[2]/div/table/tbody/tr/td/div[2]/div/div/div</td>
+	<td>24,16</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIWizardPageSelectLayoutForm']/div[2]/div/div[1]/div[2]/div[1]/div[1]/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>//div[@id='UIPageCreationWizard']/div/div[3]/div/div/div/div[2]/div/table/tbody/tr/td/div[2]/div/div/div</td>
+	<td>20,12</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=demo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>link=demo</td>
+	<td>24,7</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='demo/AddressBookPortlet']/div/div/div[1]/div[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>drag</td>
+	<td>//div[@id='demo/AddressBookPortlet']/div/div/div[1]/div[2]</td>
+	<td>147,6</td>
+</tr>
+<tr>
+	<td>mouseMoveAt</td>
+	<td>//div[2]/div/div/div[1]/div/div[2]/div/div/div/div</td>
+	<td>20,20</td>
+</tr>
+<tr>
+	<td>drop</td>
+	<td>//div[@id='UIPortalApplication']/div[4]</td>
+	<td>760,138</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>//a[@onclick='eXo.core.DOMUtil.disableOnClick(this);']</td>
+	<td>10,7</td>
+</tr>
+<tr>
+	<td>setTimeout</td>
+	<td>60000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//tr[3]/td[1]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>500</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>//tr[3]/td[1]/div</td>
+	<td>64,15</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>Marge_selected</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[4]/div/div/div[3]/div/div/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>Marge_in_edit_mode</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
