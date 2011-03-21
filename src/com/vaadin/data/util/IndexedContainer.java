@@ -52,7 +52,8 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
 public class IndexedContainer extends
         AbstractInMemoryContainer<Object, Object, Item> implements
         Container.PropertySetChangeNotifier, Property.ValueChangeNotifier,
-        Container.Sortable, Cloneable, Container.Filterable {
+        Container.Sortable, Cloneable, Container.Filterable,
+        Container.SimpleFilterable {
 
     /* Internal structure */
 

@@ -7,6 +7,7 @@ package com.vaadin.data;
 import java.io.Serializable;
 import java.util.Collection;
 
+import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.util.filter.UnsupportedFilterException;
 
 /**
@@ -691,7 +692,11 @@ public interface Container extends Serializable {
 
     /**
      * Interface that is implemented by containers which allow reducing their
-     * visible contents based on a set of filters.
+     * visible contents based on a set of filters. This interface has been
+     * renamed from {@link Filterable}, and implementing the new
+     * {@link Filterable} instead of or in addition to {@link SimpleFilterable}
+     * is recommended. This interface might be removed in future Vaadin
+     * versions.
      * <p>
      * When a set of filters are set, only items that match all the filters are
      * included in the visible contents of the container. Still new items that
@@ -717,15 +722,21 @@ public interface Container extends Serializable {
      * 0, at index {@link com.vaadin.data.Container#size()} or at an undefined
      * position is up to the implementation.
      * </p>
+     * <p>
+     * SimpleFilterable can be implemented using the {@link Filterable} API and
+     * {@link SimpleStringFilter}.
+     * </p>
      * 
      * @since 5.0
-     * @deprecated use {@link Filterable}
      */
-    @Deprecated
     public interface SimpleFilterable extends Container, Serializable {
 
         /**
          * Add a filter for given property.
+         * 
+         * The API {@link Filterable#addContainerFilter(Filter)} is recommended
+         * instead of this method. A {@link SimpleStringFilter} can be used with
+         * the new API to implement the old string filtering functionality.
          * 
          * Only items where given property for which toString() contains or
          * starts with given filterString are visible in the container.
@@ -742,10 +753,7 @@ public interface Container extends Serializable {
          *            strings.
          * @param onlyMatchPrefix
          *            Only match prefixes; no other matches are included.
-         * 
-         * @deprecated use {@link Filterable#addContainerFilter(Filter)}
          */
-        @Deprecated
         public void addContainerFilter(Object propertyId, String filterString,
                 boolean ignoreCase, boolean onlyMatchPrefix);
 
@@ -754,10 +762,7 @@ public interface Container extends Serializable {
 
         /**
          * Remove all filters from given property.
-         * 
-         * @deprecated use {@link Filterable#removeContainerFilter(Filter)}
          */
-        @Deprecated
         public void removeContainerFilters(Object propertyId);
     }
 
@@ -849,15 +854,12 @@ public interface Container extends Serializable {
      * 
      * <p>
      * This API replaces the old Filterable interface, renamed to
-     * {@link SimpleFilterable} in Vaadin 6.6. Currently this interface extends
-     * {@link SimpleFilterable} for backwards compatibility, but might not do so
-     * in future versions. <code>removeAllContainerFilters()</code> will remain
-     * a part of the API.
+     * {@link SimpleFilterable} in Vaadin 6.6.
      * </p>
      * 
      * @since 6.6
      */
-    public interface Filterable extends SimpleFilterable, Serializable {
+    public interface Filterable extends Container, Serializable {
         /**
          * Adds a filter for the container.
          * 
@@ -877,6 +879,11 @@ public interface Container extends Serializable {
          * equivalent (same instance or properly implemented equals() method).
          */
         public void removeContainerFilter(Filter filter);
+
+        /**
+         * Remove all active filters from the container.
+         */
+        public void removeAllContainerFilters();
 
     }
 

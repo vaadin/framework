@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.vaadin.data.Container.Filterable;
+import com.vaadin.data.Container.SimpleFilterable;
 import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -53,7 +54,7 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
  */
 public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         AbstractInMemoryContainer<IDTYPE, String, BeanItem<BEANTYPE>> implements
-        Filterable, Sortable, ValueChangeListener {
+        Filterable, SimpleFilterable, Sortable, ValueChangeListener {
 
     /**
      * Resolver that maps beans to their (item) identifiers, removing the need
@@ -290,6 +291,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      */
     @Override
     public boolean removeItem(Object itemId) {
+        // TODO should also remove items that are filtered out
         int origSize = size();
         Item item = getItem(itemId);
         int position = indexOfId(itemId);

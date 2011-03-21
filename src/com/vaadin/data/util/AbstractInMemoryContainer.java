@@ -37,8 +37,8 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
  * <ul>
  * <li> {@link Container.Ordered}
  * <li> {@link Container.Indexed}
- * <li> {@link Filterable} (internal implementation, does not implement the
- * interface directly)
+ * <li> {@link Filterable} and {@link SimpleFilterable} (internal implementation,
+ * does not implement the interface directly)
  * <li> {@link Sortable} (internal implementation, does not implement the
  * interface directly)
  * </ul>
@@ -48,11 +48,20 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
  * {@link #sortContainer(Object[], boolean[])} in the method
  * <code>sort(Object[], boolean[])</code>.
  * 
- * To implement Filterable, subclasses need to implement the methods
- * <code>addContainerFilter()</code> (calling {@link #addFilter(Filter)}),
- * <code>removeAllContainerFilters()</code> (calling {@link #removeAllFilters()}
- * ) and <code>removeContainerFilters(Object)</code> (calling
- * {@link #removeFilters(Object)}).
+ * To implement {@link Filterable}, subclasses need to implement the methods
+ * {@link Filterable#addContainerFilter(com.vaadin.data.Container.Filter)}
+ * (calling {@link #addFilter(Filter)}),
+ * {@link Filterable#removeAllContainerFilters()} (calling
+ * {@link #removeAllFilters()}) and
+ * {@link Filterable#removeContainerFilter(com.vaadin.data.Container.Filter)}
+ * (calling {@link #removeFilter(com.vaadin.data.Container.Filter)}).
+ * 
+ * To implement {@link SimpleFilterable}, subclasses also need to implement the
+ * methods
+ * {@link SimpleFilterable#addContainerFilter(Object, String, boolean, boolean)}
+ * and {@link SimpleFilterable#removeContainerFilters(Object)} calling
+ * {@link #addFilter(com.vaadin.data.Container.Filter)} and
+ * {@link #removeFilters(Object)} respectively.
  * 
  * @param <ITEMIDTYPE>
  *            the class of item identifiers in the container, use Object if can

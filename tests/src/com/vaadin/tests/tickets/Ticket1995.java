@@ -4,6 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Item;
+import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Table;
@@ -30,7 +31,8 @@ public class Ticket1995 extends Application {
 
         Filterable filterable = (Container.Filterable) table
                 .getContainerDataSource();
-        filterable.addContainerFilter(PROPERTY_1, "Row", true, false);
+        filterable.addContainerFilter(new SimpleStringFilter(PROPERTY_1, "Row",
+                true, false));
 
         table.setColumnHeader(PROPERTY_1, "Test (filter: Row)");
 
@@ -58,7 +60,8 @@ public class Ticket1995 extends Application {
 
         getMainWindow().showNotification("Tried to add item 'abc', " + res);
 
-        filterable.addContainerFilter(PROPERTY_1, "Row", true, false);
+        filterable.addContainerFilter(new SimpleStringFilter(PROPERTY_1, "Row",
+                true, false));
 
     }
 }

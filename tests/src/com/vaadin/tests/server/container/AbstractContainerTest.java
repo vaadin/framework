@@ -12,6 +12,7 @@ import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.Container.ItemSetChangeListener;
 import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.Item;
+import com.vaadin.data.util.filter.SimpleStringFilter;
 
 public abstract class AbstractContainerTest extends TestCase {
 
@@ -312,7 +313,8 @@ public abstract class AbstractContainerTest extends TestCase {
         initializeContainer(container);
 
         // Filter by "contains ab"
-        container.addContainerFilter(FULLY_QUALIFIED_NAME, "ab", false, false);
+        container.addContainerFilter(new SimpleStringFilter(
+                FULLY_QUALIFIED_NAME, "ab", false, false));
 
         validateContainer(container, "com.vaadin.data.BufferedValidatable",
                 "com.vaadin.ui.TabSheet",
@@ -321,8 +323,8 @@ public abstract class AbstractContainerTest extends TestCase {
 
         // Filter by "contains da" (reversed as ad here)
         container.removeAllContainerFilters();
-        container.addContainerFilter(REVERSE_FULLY_QUALIFIED_NAME, "ad", false,
-                false);
+        container.addContainerFilter(new SimpleStringFilter(
+                REVERSE_FULLY_QUALIFIED_NAME, "ad", false, false));
 
         validateContainer(container, "com.vaadin.data.Buffered",
                 "com.vaadin.terminal.gwt.server.ComponentSizeValidator",
@@ -347,7 +349,8 @@ public abstract class AbstractContainerTest extends TestCase {
         initializeContainer(sortable);
 
         // Filter by "contains ab"
-        filterable.addContainerFilter(FULLY_QUALIFIED_NAME, "ab", false, false);
+        filterable.addContainerFilter(new SimpleStringFilter(
+                FULLY_QUALIFIED_NAME, "ab", false, false));
 
         // Must be able to sort based on PROP1 for this test
         assertTrue(sortable.getSortableContainerPropertyIds().contains(
