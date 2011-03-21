@@ -12,18 +12,18 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
 /**
  * <p>
  * A specialized set of identified Items. Basically the Container is a set of
- * Items, but it imposes certain constraints on its contents. These constraints
- * state the following:
+ * {@link Item}s, but it imposes certain constraints on its contents. These
+ * constraints state the following:
  * </p>
  * 
  * <ul>
- * <li>All Items in the Container must include the same number of Properties
- * <li>All Items in the Container must include the same Property ID sets (see
+ * <li>All Items in the Container must have the same number of Properties.
+ * <li>All Items in the Container must have the same Property ID's (see
  * {@link Item#getItemPropertyIds()}).
- * <li>all Properties in the Items corresponding to the same Property ID must
+ * <li>All Properties in the Items corresponding to the same Property ID must
  * have the same data type.
  * <li>All Items within a container are uniquely identified by their non-null
- * ids
+ * IDs.
  * </ul>
  * 
  * <p>
@@ -38,6 +38,20 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
  * Note that though uniquely identified, the Items in a Container are not
  * necessarily {@link Container.Ordered ordered} or {@link Container.Indexed
  * indexed}.
+ * </p>
+ * 
+ * <p>
+ * Containers can derive Item ID's from the item properties or use other,
+ * container specific or user specified identifiers.
+ * </p>
+ * 
+ * <p>
+ * If a container is {@link Filterable filtered} or {@link Sortable sorted},
+ * most of the the methods of the container interface and its subinterfaces
+ * (container size, {@link #containsId(Object)}, iteration and indices etc.)
+ * relate to the filtered and sorted view, not to the full container contents.
+ * See individual method javadoc for exceptions to this (adding and removing
+ * items).
  * </p>
  * 
  * <p>
@@ -57,13 +71,16 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
 public interface Container extends Serializable {
 
     /**
-     * Gets the Item with the given Item ID from the Container. If the Container
-     * does not contain the requested Item, <code>null</code> is returned.
+     * Gets the {@link Item} with the given Item ID from the Container. If the
+     * Container does not contain the requested Item, <code>null</code> is
+     * returned.
+     * 
+     * Containers should not return Items that are filtered out.
      * 
      * @param itemId
-     *            ID of the Item to retrieve
-     * @return the Item with the given ID or <code>null</code> if the Item is
-     *         not found in the Container
+     *            ID of the {@link Item} to retrieve
+     * @return the {@link Item} with the given ID or <code>null</code> if the
+     *         Item is not found in the Container
      */
     public Item getItem(Object itemId);
 
@@ -76,8 +93,15 @@ public interface Container extends Serializable {
     public Collection<?> getContainerPropertyIds();
 
     /**
-     * Gets the ID's of all Items stored in the Container. The ID's are returned
-     * as a unmodifiable collection.
+     * Gets the ID's of all visible (after filtering and sorting) Items stored
+     * in the Container. The ID's are returned as a unmodifiable collection.
+     * 
+     * If the container is {@link Ordered}, the collection returned by this
+     * method should follow that order. If the container is {@link Sortable},
+     * the items should be in the sorted order.
+     * 
+     * Calling this method for large lazy containers can be an expensive
+     * operation and should be avoided when practical.
      * 
      * @return unmodifiable collection of Item IDs
      */
@@ -85,11 +109,12 @@ public interface Container extends Serializable {
 
     /**
      * Gets the Property identified by the given itemId and propertyId from the
-     * Container. If the Container does not contain the Property,
-     * <code>null</code> is returned.
+     * Container. If the Container does not contain the item or it is filtered
+     * out, or the Container does not have the Property, <code>null</code> is
+     * returned.
      * 
      * @param itemId
-     *            ID of the Item which contains the Property
+     *            ID of the visible Item which contains the Property
      * @param propertyId
      *            ID of the Property to retrieve
      * @return Property with the given ID or <code>null</code>
@@ -106,14 +131,22 @@ public interface Container extends Serializable {
     public Class<?> getType(Object propertyId);
 
     /**
-     * Gets the number of Items in the Container.
+     * Gets the number of visible Items in the Container.
+     * 
+     * Filtering can hide items so that they will not be visible through the
+     * container API.
      * 
      * @return number of Items in the Container
      */
     public int size();
 
     /**
-     * Tests if the Container contains the specified Item
+     * Tests if the Container contains the specified Item.
+     * 
+     * Filtering can hide items so that they will not be visible through the
+     * container API, and this method should respect visibility of items (i.e.
+     * only indicate visible items as being in the container) if feasible for
+     * the container.
      * 
      * @param itemId
      *            ID the of Item to be tested
@@ -122,7 +155,7 @@ public interface Container extends Serializable {
     public boolean containsId(Object itemId);
 
     /**
-     * Creates a new Item with the given ID into the Container.
+     * Creates a new Item with the given ID in the Container.
      * 
      * <p>
      * The new Item is returned, and it is ready to have its Properties
@@ -137,6 +170,9 @@ public interface Container extends Serializable {
      * @param itemId
      *            ID of the Item to be created
      * @return Created new Item, or <code>null</code> in case of a failure
+     * @throws UnsupportedOperationException
+     *             if adding an item with an explicit item ID is not supported
+     *             by the container
      */
     public Item addItem(Object itemId) throws UnsupportedOperationException;
 
@@ -155,17 +191,30 @@ public interface Container extends Serializable {
      * 
      * @return ID of the newly created Item, or <code>null</code> in case of a
      *         failure
+     * @throws UnsupportedOperationException
+     *             if adding an item without an explicit item ID is not
+     *             supported by the container
      */
     public Object addItem() throws UnsupportedOperationException;
 
     /**
      * Removes the Item identified by <code>ItemId</code> from the Container.
+     * 
+     * <p>
+     * Containers that support filtering should also allow removing an item that
+     * is currently filtered out.
+     * </p>
+     * 
+     * <p>
      * This functionality is optional.
+     * </p>
      * 
      * @param itemId
      *            ID of the Item to remove
      * @return <code>true</code> if the operation succeeded, <code>false</code>
      *         if not
+     * @throws UnsupportedOperationException
+     *             if the container does not support removing individual items
      */
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException;
@@ -184,6 +233,9 @@ public interface Container extends Serializable {
      *            The value all created Properties are initialized to
      * @return <code>true</code> if the operation succeeded, <code>false</code>
      *         if not
+     * @throws UnsupportedOperationException
+     *             if the container does not support explicitly adding container
+     *             properties
      */
     public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException;
@@ -198,6 +250,9 @@ public interface Container extends Serializable {
      *            ID of the Property to remove
      * @return <code>true</code> if the operation succeeded, <code>false</code>
      *         if not
+     * @throws UnsupportedOperationException
+     *             if the container does not support removing container
+     *             properties
      */
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException;
@@ -212,11 +267,21 @@ public interface Container extends Serializable {
      * 
      * @return <code>true</code> if the operation succeeded, <code>false</code>
      *         if not
+     * @throws UnsupportedOperationException
+     *             if the container does not support removing all items
      */
     public boolean removeAllItems() throws UnsupportedOperationException;
 
     /**
-     * Interface for Container classes whose Items can be traversed in order.
+     * Interface for Container classes whose {@link Item}s can be traversed in
+     * order.
+     * 
+     * <p>
+     * If the container is filtered or sorted, the traversal applies to the
+     * filtered and sorted view. The <code>addItemAfter()</code> methods may add
+     * items that will be filtered out after addition or moved to another
+     * position based on sorting.
+     * </p>
      */
     public interface Ordered extends Container {
 
@@ -226,8 +291,8 @@ public interface Container extends Serializable {
          * the Container, <code>null</code> is returned.
          * 
          * @param itemId
-         *            ID of an Item in the Container
-         * @return ID of the next Item or <code>null</code>
+         *            ID of a visible Item in the Container
+         * @return ID of the next visible Item or <code>null</code>
          */
         public Object nextItemId(Object itemId);
 
@@ -237,22 +302,22 @@ public interface Container extends Serializable {
          * the Container, <code>null</code> is returned.
          * 
          * @param itemId
-         *            ID of an Item in the Container
-         * @return ID of the previous Item or <code>null</code>
+         *            ID of a visible Item in the Container
+         * @return ID of the previous visible Item or <code>null</code>
          */
         public Object prevItemId(Object itemId);
 
         /**
          * Gets the ID of the first Item in the Container.
          * 
-         * @return ID of the first Item in the Container
+         * @return ID of the first visible Item in the Container
          */
         public Object firstItemId();
 
         /**
          * Gets the ID of the last Item in the Container..
          * 
-         * @return ID of the last Item in the Container
+         * @return ID of the last visible Item in the Container
          */
         public Object lastItemId();
 
@@ -262,8 +327,8 @@ public interface Container extends Serializable {
          * 
          * @param itemId
          *            ID of an Item in the Container
-         * @return <code>true</code> if the Item is first in the Container,
-         *         <code>false</code> if not
+         * @return <code>true</code> if the Item is first visible item in the
+         *         Container, <code>false</code> if not
          */
         public boolean isFirstId(Object itemId);
 
@@ -271,8 +336,8 @@ public interface Container extends Serializable {
          * Tests if the Item corresponding to the given Item ID is the last Item
          * in the Container.
          * 
-         * @return <code>true</code> if the Item is last in the Container,
-         *         <code>false</code> if not
+         * @return <code>true</code> if the Item is last visible item in the
+         *         Container, <code>false</code> if not
          */
         public boolean isLastId(Object itemId);
 
@@ -283,10 +348,15 @@ public interface Container extends Serializable {
          * ordered container.
          * </p>
          * 
+         * @see Ordered Ordered: adding items in filtered or sorted containers
+         * 
          * @param previousItemId
-         *            Id of the previous item in ordered container.
-         * @return Returns item id the the created new item or null if the
-         *         operation fails.
+         *            Id of the visible item in ordered container after which to
+         *            insert the new item.
+         * @return item id the the created new item or null if the operation
+         *         fails.
+         * @throws UnsupportedOperationException
+         *             if the operation is not supported by the container
          */
         public Object addItemAfter(Object previousItemId)
                 throws UnsupportedOperationException;
@@ -298,18 +368,40 @@ public interface Container extends Serializable {
          * ordered container.
          * </p>
          * 
+         * @see Ordered Ordered: adding items in filtered or sorted containers
+         * 
          * @param previousItemId
-         *            Id of the previous item in ordered container.
+         *            Id of the visible item in ordered container after which to
+         *            insert the new item.
          * @param newItemId
          *            Id of the new item to be added.
-         * @return Returns new item or null if the operation fails.
+         * @return new item or null if the operation fails.
+         * @throws UnsupportedOperationException
+         *             if the operation is not supported by the container
          */
         public Item addItemAfter(Object previousItemId, Object newItemId)
                 throws UnsupportedOperationException;
 
     }
 
-    /** Interface for Container classes whose Items can be sorted. */
+    /**
+     * Interface for Container classes whose {@link Item}s can be sorted.
+     * <p>
+     * When an {@link Ordered} or {@link Indexed} container is sorted, all
+     * relevant operations of these interfaces should only use the filtered and
+     * sorted contents and the filtered indices to the container. Indices or
+     * item identifiers in the public API refer to the visible view unless
+     * otherwise stated. However, the <code>addItem*()</code> methods may add
+     * items that will be filtered out after addition or moved to another
+     * position based on sorting.
+     * </p>
+     * <p>
+     * How sorting is performed when a {@link Hierarchical} container implements
+     * {@link Sortable} is implementation specific and should be documented in
+     * the implementing class. However, the recommended approach is sorting the
+     * roots and the sets of children of each item separately.
+     * </p>
+     */
     public interface Sortable extends Ordered {
 
         /**
@@ -317,12 +409,14 @@ public interface Container extends Serializable {
          * 
          * Sorts the container items.
          * 
+         * Container sorting can completely replace the previous order.
+         * 
          * @param propertyId
-         *            Array of container property IDs, which values are used to
+         *            Array of container property IDs, whose values are used to
          *            sort the items in container as primary, secondary, ...
          *            sorting criterion. All of the item IDs must be in the
          *            collection returned by
-         *            <code>getSortableContainerPropertyIds</code>
+         *            {@link #getSortableContainerPropertyIds()}
          * @param ascending
          *            Array of sorting order flags corresponding to each
          *            property ID used in sorting. If this array is shorter than
@@ -334,15 +428,25 @@ public interface Container extends Serializable {
         void sort(Object[] propertyId, boolean[] ascending);
 
         /**
-         * Gets the container property IDs, which can be used to sort the item.
+         * Gets the container property IDs which can be used to sort the items.
          * 
-         * @return The sortable field ids.
+         * @return the IDs of the properties that can be used for sorting the
+         *         container
          */
         Collection<?> getSortableContainerPropertyIds();
 
     }
 
-    /** Interface for Container classes whose Items can be indexed. */
+    /**
+     * Interface for Container classes whose {@link Item}s can be accessed by
+     * their position in the container.
+     * <p>
+     * If the container is filtered or sorted, all indices refer to the filtered
+     * and sorted view. However, the <code>addItemAt()</code> methods may add
+     * items that will be filtered out after addition or moved to another
+     * position based on sorting.
+     * </p>
+     */
     public interface Indexed extends Ordered {
 
         /**
@@ -352,8 +456,8 @@ public interface Container extends Serializable {
          * 
          * @param itemId
          *            ID of an Item in the Container
-         * @return index of the Item, or -1 if the Container does not include
-         *         the Item
+         * @return index of the Item, or -1 if (the filtered and sorted view of)
+         *         the Container does not include the Item
          */
         public int indexOfId(Object itemId);
 
@@ -361,7 +465,8 @@ public interface Container extends Serializable {
          * Gets the ID of an Item by an index number.
          * 
          * @param index
-         *            Index of the requested id in the Container
+         *            Index of the requested id in (the filtered and sorted view
+         *            of) the Container
          * @return ID of the Item in the given index
          */
         public Object getIdByIndex(int index);
@@ -369,14 +474,23 @@ public interface Container extends Serializable {
         /**
          * Adds new item at given index.
          * <p>
-         * The indexes of the item currently in the given position and all the
+         * The indices of the item currently in the given position and all the
          * following items are incremented.
+         * </p>
+         * <p>
+         * If the container is sorted, the item may be inserted in its correct
+         * sorted location instead of the given position. If the container is
+         * filtered, the item may be filtered out after being added after the
+         * visible item identified by the index. See {@link Indexed},
+         * {@link Filterable} and {@link Sortable} for more information.
          * </p>
          * 
          * @param index
-         *            Index to add the new item.
-         * @return Returns item id the the created new item or null if the
-         *         operation fails.
+         *            Index (in the filtered and sorted view) to add the new
+         *            item.
+         * @return item id of the created item or null if the operation fails.
+         * @throws UnsupportedOperationException
+         *             if the operation is not supported by the container
          */
         public Object addItemAt(int index) throws UnsupportedOperationException;
 
@@ -386,12 +500,22 @@ public interface Container extends Serializable {
          * The indexes of the item currently in the given position and all the
          * following items are incremented.
          * </p>
+         * <p>
+         * If the container is sorted, the item may be inserted in its correct
+         * sorted location instead of the given position. If the container is
+         * filtered, the item may be filtered out after being added after the
+         * visible item identified by the index. See {@link Indexed},
+         * {@link Filterable} and {@link Sortable} for more information.
+         * </p>
          * 
          * @param index
-         *            Index to add the new item.
+         *            Index (in the filtered and sorted view) at which to add
+         *            the new item.
          * @param newItemId
          *            Id of the new item to be added.
-         * @return Returns new item or null if the operation fails.
+         * @return new {@link Item} or null if the operation fails.
+         * @throws UnsupportedOperationException
+         *             if the operation is not supported by the container
          */
         public Item addItemAt(int index, Object newItemId)
                 throws UnsupportedOperationException;
@@ -569,7 +693,7 @@ public interface Container extends Serializable {
      * Interface that is implemented by containers which allow reducing their
      * visible contents based on a set of filters.
      * <p>
-     * When a set of filters are set, only items that match the filters are
+     * When a set of filters are set, only items that match all the filters are
      * included in the visible contents of the container. Still new items that
      * do not match filters can be added to the container. Multiple filters can
      * be added and the container remembers the state of the filters. When
@@ -605,6 +729,9 @@ public interface Container extends Serializable {
          * 
          * Only items where given property for which toString() contains or
          * starts with given filterString are visible in the container.
+         * 
+         * If a container has multiple filters, only items accepted by all
+         * filters are visible.
          * 
          * @param propertyId
          *            Property for which the filter is applied to.
@@ -691,7 +818,7 @@ public interface Container extends Serializable {
      * Interface that is implemented by containers which allow reducing their
      * visible contents based on a set of filters.
      * <p>
-     * When a set of filters are set, only items that match the filters are
+     * When a set of filters are set, only items that match all the filters are
      * included in the visible contents of the container. Still new items that
      * do not match filters can be added to the container. Multiple filters can
      * be added and the container remembers the state of the filters. When
@@ -700,8 +827,12 @@ public interface Container extends Serializable {
      * </p>
      * <p>
      * When an {@link Ordered} or {@link Indexed} container is filtered, all
-     * operations of these interfaces should only use the filtered contents and
-     * the filtered indices to the container.
+     * operations of these interfaces should only use the filtered and sorted
+     * contents and the filtered indices to the container. Indices or item
+     * identifiers in the public API refer to the visible view unless otherwise
+     * stated. However, the <code>addItem*()</code> methods may add items that
+     * will be filtered out after addition or moved to another position based on
+     * sorting.
      * </p>
      * <p>
      * How filtering is performed when a {@link Hierarchical} container
@@ -730,6 +861,9 @@ public interface Container extends Serializable {
         /**
          * Adds a filter for the container.
          * 
+         * If a container has multiple filters, only items accepted by all
+         * filters are visible.
+         * 
          * @throws UnsupportedFilterException
          *             if the filter is not supported by the container
          */
@@ -743,6 +877,7 @@ public interface Container extends Serializable {
          * equivalent (same instance or properly implemented equals() method).
          */
         public void removeContainerFilter(Filter filter);
+
     }
 
     /**
@@ -788,7 +923,9 @@ public interface Container extends Serializable {
 
     /**
      * An <code>Event</code> object specifying the Container whose Item set has
-     * changed.
+     * changed (items added, removed or reordered).
+     * 
+     * A simple property value change is not an item set change.
      */
     public interface ItemSetChangeEvent extends Serializable {
 
@@ -800,7 +937,12 @@ public interface Container extends Serializable {
         public Container getContainer();
     }
 
-    /** Container Item set change listener interface. */
+    /**
+     * Container Item set change listener interface.
+     * 
+     * An item set change refers to addition, removal or reordering of items in
+     * the container. A simple property value change is not an item set change.
+     */
     public interface ItemSetChangeListener extends Serializable {
 
         /**
@@ -818,6 +960,10 @@ public interface Container extends Serializable {
      * listeners. By implementing this interface a class explicitly announces
      * that it will generate a <code>ItemSetChangeEvent</code> when its contents
      * are modified.
+     * 
+     * An item set change refers to addition, removal or reordering of items in
+     * the container. A simple property value change is not an item set change.
+     * 
      * <p>
      * Note: The general Java convention is not to explicitly declare that a
      * class generates events, but to directly define the
@@ -851,6 +997,11 @@ public interface Container extends Serializable {
     /**
      * An <code>Event</code> object specifying the Container whose Property set
      * has changed.
+     * 
+     * A property set change means the addition, removal or other structural
+     * changes to the properties of a container. Changes concerning the set of
+     * items in the container and their property values are not property set
+     * changes.
      */
     public interface PropertySetChangeEvent extends Serializable {
 
@@ -865,11 +1016,17 @@ public interface Container extends Serializable {
     /**
      * The listener interface for receiving <code>PropertySetChangeEvent</code>
      * objects.
+     * 
+     * A property set change means the addition, removal or other structural
+     * change of the properties (supported property IDs) of a container. Changes
+     * concerning the set of items in the container and their property values
+     * are not property set changes.
      */
     public interface PropertySetChangeListener extends Serializable {
 
         /**
-         * Notifies this listener that the Containers contents has changed.
+         * Notifies this listener that the set of property IDs supported by the
+         * Container has changed.
          * 
          * @param event
          *            Change event.
@@ -882,9 +1039,17 @@ public interface Container extends Serializable {
      * <p>
      * The interface for adding and removing <code>PropertySetChangeEvent</code>
      * listeners. By implementing this interface a class explicitly announces
-     * that it will generate a <code>PropertySetChangeEvent</code> when its
-     * contents are modified.
+     * that it will generate a <code>PropertySetChangeEvent</code> when the set
+     * of property IDs supported by the container is modified.
      * </p>
+     * 
+     * <p>
+     * A property set change means the addition, removal or other structural
+     * changes to the properties of a container. Changes concerning the set of
+     * items in the container and their property values are not property set
+     * changes.
+     * </p>
+     * 
      * <p>
      * Note that the general Java convention is not to explicitly declare that a
      * class generates events, but to directly define the
