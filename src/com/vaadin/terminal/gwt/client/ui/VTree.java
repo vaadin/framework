@@ -102,6 +102,15 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
     private boolean selectionHasChanged = false;
 
+    public VLazyExecutor iconLoaded = new VLazyExecutor(50,
+            new ScheduledCommand() {
+
+                public void execute() {
+                    Util.notifyParentOfSizeChange(VTree.this, true);
+                }
+
+            });
+
     public VTree() {
         super();
         setStyleName(CLASSNAME);
@@ -513,6 +522,11 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
         private boolean focused = false;
 
+        /**
+         * Track onload events as IE6 sends two
+         */
+        private boolean onloadHandled = false;
+
         public TreeNode() {
             constructDom();
             sinkEvents(Event.ONCLICK | Event.ONDBLCLICK | Event.MOUSEEVENTS
@@ -683,11 +697,23 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
         @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
+            final int type = DOM.eventGetType(event);
+            final Element target = DOM.eventGetTarget(event);
+
+            if (type == Event.ONLOAD && target == icon.getElement()) {
+                if (onloadHandled) {
+                    return;
+                }
+                if (BrowserInfo.get().isIE6()) {
+                    fixWidth();
+                }
+                iconLoaded.trigger();
+                onloadHandled = true;
+            }
+
             if (disabled) {
                 return;
             }
-            final int type = DOM.eventGetType(event);
-            final Element target = DOM.eventGetTarget(event);
             final boolean inCaption = target == nodeCaptionSpan
                     || (icon != null && target == icon.getElement());
             if (inCaption
@@ -872,6 +898,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
             if (uidl.hasAttribute("icon")) {
                 if (icon == null) {
+                    onloadHandled = false;
                     icon = new Icon(client);
                     DOM.insertBefore(DOM.getFirstChild(nodeCaptionDiv),
                             icon.getElement(), nodeCaptionSpan);
