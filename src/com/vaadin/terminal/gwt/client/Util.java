@@ -1144,7 +1144,7 @@ public class Util {
     }
 
     public static boolean isTouchEvent(Event event) {
-        return (event.getTypeInt() & Event.TOUCHEVENTS) > 0;
+        return event.getType().contains("touch");
     }
 
     public static boolean isTouchEvent(NativeEvent event) {
