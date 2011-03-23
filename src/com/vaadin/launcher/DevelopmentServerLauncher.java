@@ -11,6 +11,7 @@ import java.util.Map;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
+import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
 
 import com.vaadin.launcher.util.BrowserLauncher;
@@ -21,6 +22,7 @@ import com.vaadin.launcher.util.BrowserLauncher;
  */
 public class DevelopmentServerLauncher {
 
+    private static final String KEYSTORE = "src/com/vaadin/launcher/keystore";
     private final static int serverPort = 8888;
 
     /**
@@ -92,7 +94,18 @@ public class DevelopmentServerLauncher {
         final Connector connector = new SelectChannelConnector();
 
         connector.setPort(port);
-        server.setConnectors(new Connector[] { connector });
+        if (serverArgs.containsKey("withssl")) {
+            final SslSocketConnector sslConnector = new SslSocketConnector();
+            sslConnector.setPort(8444);
+            sslConnector.setTruststore(KEYSTORE);
+            sslConnector.setTrustPassword("password");
+            sslConnector.setKeystore(KEYSTORE);
+            sslConnector.setKeyPassword("password");
+            sslConnector.setPassword("password");
+            server.setConnectors(new Connector[] { connector, sslConnector });
+        } else {
+            server.setConnectors(new Connector[] { connector });
+        }
 
         final WebAppContext webappcontext = new WebAppContext();
         String path = DevelopmentServerLauncher.class.getPackage().getName()
