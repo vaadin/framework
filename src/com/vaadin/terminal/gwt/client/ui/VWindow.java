@@ -224,8 +224,16 @@ public class VWindow extends VOverlay implements Container,
     protected void setZIndex(int zIndex) {
         super.setZIndex(zIndex);
         if (vaadinModality) {
-            DOM.setStyleAttribute(modalityCurtain, "zIndex", "" + zIndex);
+            DOM.setStyleAttribute(getModalityCurtain(), "zIndex", "" + zIndex);
         }
+    }
+
+    protected Element getModalityCurtain() {
+        if (modalityCurtain == null) {
+            modalityCurtain = DOM.createDiv();
+            modalityCurtain.setClassName(CLASSNAME + "-modalitycurtain");
+        }
+        return modalityCurtain;
     }
 
     protected void constructDOM() {
@@ -740,9 +748,6 @@ public class VWindow extends VOverlay implements Container,
     private void setVaadinModality(boolean modality) {
         vaadinModality = modality;
         if (vaadinModality) {
-            modalityCurtain = DOM.createDiv();
-            DOM.setElementProperty(modalityCurtain, "className", CLASSNAME
-                    + "-modalitycurtain");
             if (isAttached()) {
                 showModalityCurtain();
             }
@@ -760,19 +765,19 @@ public class VWindow extends VOverlay implements Container,
     private void showModalityCurtain() {
         if (BrowserInfo.get().isFF2()) {
             DOM.setStyleAttribute(
-                    modalityCurtain,
+                    getModalityCurtain(),
                     "height",
                     DOM.getElementPropertyInt(RootPanel.getBodyElement(),
                             "offsetHeight") + "px");
-            DOM.setStyleAttribute(modalityCurtain, "position", "absolute");
+            DOM.setStyleAttribute(getModalityCurtain(), "position", "absolute");
         }
-        DOM.setStyleAttribute(modalityCurtain, "zIndex",
+        DOM.setStyleAttribute(getModalityCurtain(), "zIndex",
                 "" + (windowOrder.indexOf(this) + Z_INDEX));
         if (isShowing()) {
-            RootPanel.getBodyElement().insertBefore(modalityCurtain,
+            RootPanel.getBodyElement().insertBefore(getModalityCurtain(),
                     getElement());
         } else {
-            DOM.appendChild(RootPanel.getBodyElement(), modalityCurtain);
+            DOM.appendChild(RootPanel.getBodyElement(), getModalityCurtain());
         }
     }
 
