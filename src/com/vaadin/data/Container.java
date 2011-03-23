@@ -723,11 +723,11 @@ public interface Container extends Serializable {
      * position is up to the implementation.
      * </p>
      * <p>
-     * SimpleFilterable can be implemented using the {@link Filterable} API and
-     * {@link SimpleStringFilter}.
+     * The functionality of SimpleFilterable can be implemented using the
+     * {@link Filterable} API and {@link SimpleStringFilter}.
      * </p>
      * 
-     * @since 5.0
+     * @since 5.0 (renamed from Filterable to SimpleFilterable in 6.6)
      */
     public interface SimpleFilterable extends Container, Serializable {
 
@@ -738,8 +738,9 @@ public interface Container extends Serializable {
          * instead of this method. A {@link SimpleStringFilter} can be used with
          * the new API to implement the old string filtering functionality.
          * 
-         * Only items where given property for which toString() contains or
-         * starts with given filterString are visible in the container.
+         * The filter accepts items for which toString() of the value of the
+         * given property contains or starts with given filterString. Other
+         * items are not visible in the container when filtered.
          * 
          * If a container has multiple filters, only items accepted by all
          * filters are visible.
@@ -747,7 +748,7 @@ public interface Container extends Serializable {
          * @param propertyId
          *            Property for which the filter is applied to.
          * @param filterString
-         *            String that must match contents of the property
+         *            String that must match the value of the property
          * @param ignoreCase
          *            Determine if the casing can be ignored when comparing
          *            strings.
@@ -757,11 +758,16 @@ public interface Container extends Serializable {
         public void addContainerFilter(Object propertyId, String filterString,
                 boolean ignoreCase, boolean onlyMatchPrefix);
 
-        /** Remove all filters from all properties. */
+        /**
+         * Remove all filters from all properties.
+         */
         public void removeAllContainerFilters();
 
         /**
-         * Remove all filters from given property.
+         * Remove all filters from the given property.
+         * 
+         * @param propertyId
+         *            for which to remove filters
          */
         public void removeContainerFilters(Object propertyId);
     }

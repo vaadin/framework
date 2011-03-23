@@ -11,6 +11,7 @@ import java.util.Set;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.ItemSetChangeNotifier;
 import com.vaadin.data.Item;
+import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.util.filter.UnsupportedFilterException;
 
 /**
@@ -389,7 +390,10 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * be in-memory filterable.
      * 
      * This can be used to implement
-     * {@link Filterable#addContainerFilter(Object, String, boolean, boolean)}.
+     * {@link Filterable#addContainerFilter(com.vaadin.data.Container.Filter)}
+     * and optionally also
+     * {@link SimpleFilterable#addContainerFilter(Object, String, boolean, boolean)}
+     * (with {@link SimpleStringFilter}).
      * 
      * Note that in some cases, incompatible filters cannot be detected when
      * added and an {@link UnsupportedFilterException} may occur when performing
@@ -663,8 +667,6 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * Add an item at the end of the container, and perform filtering if
      * necessary. An event is fired if the filtered view changes.
      * 
-     * The new item is added at the beginning if previousItemId is null.
-     * 
      * @param newItemId
      * @param item
      *            new item to add
@@ -725,8 +727,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     }
 
     /**
-     * Add an item at a given (visible) item index, and perform filtering. An
-     * event is fired if the filtered view changes.
+     * Add an item at a given (visible after filtering) item index, and perform
+     * filtering. An event is fired if the filtered view changes.
      * 
      * @param index
      *            position where to add the item (visible/view index)
