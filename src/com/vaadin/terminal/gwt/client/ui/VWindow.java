@@ -40,6 +40,7 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VDebugConsole;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
@@ -244,10 +245,6 @@ public class VWindow extends VOverlay implements Container,
         DOM.setElementProperty(closeBox, "className", CLASSNAME + "-closebox");
         DOM.appendChild(footer, resizeBox);
 
-        DOM.sinkEvents(getElement(), Event.ONLOSECAPTURE);
-        DOM.sinkEvents(closeBox, Event.ONCLICK);
-        DOM.sinkEvents(contents, Event.ONCLICK);
-
         wrapper = DOM.createDiv();
         DOM.setElementProperty(wrapper, "className", CLASSNAME + "-wrap");
 
@@ -262,7 +259,8 @@ public class VWindow extends VOverlay implements Container,
         DOM.appendChild(wrapper, wrapper2);
         DOM.appendChild(super.getContainerElement(), wrapper);
 
-        sinkEvents(Event.MOUSEEVENTS | Event.TOUCHEVENTS);
+        sinkEvents(Event.MOUSEEVENTS | Event.TOUCHEVENTS | Event.ONCLICK
+                | Event.ONLOSECAPTURE);
 
         setWidget(contentPanel);
 
@@ -867,6 +865,7 @@ public class VWindow extends VOverlay implements Container,
 
     @Override
     public void onBrowserEvent(final Event event) {
+        VConsole.log(event.getType());
         boolean bubble = true;
 
         final int type = event.getTypeInt();
@@ -881,8 +880,10 @@ public class VWindow extends VOverlay implements Container,
         if (resizing || resizeBox == target) {
             onResizeEvent(event);
             bubble = false;
-        } else if (isClosable() && type == Event.ONCLICK && target == closeBox) {
-            onCloseClick();
+        } else if (isClosable() && target == closeBox) {
+            if (type == Event.ONCLICK) {
+                onCloseClick();
+            }
             bubble = false;
         } else if (dragging || !contents.isOrHasChild(target)) {
             onDragEvent(event);
