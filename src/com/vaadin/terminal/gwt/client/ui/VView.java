@@ -675,13 +675,15 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         DOM.setElementProperty(getElement(), "tabIndex", "1");
 
         RootPanel root = RootPanel.get(rootPanelId);
-        Element rootElement = root.getElement();
-        if (rootElement.getChildCount() == 1) {
-            // Remove any "v-app-loading" div
-            rootElement.getChild(0).removeFromParent();
-        }
-        root.add(this);
+
+        // Remove the v-app-loading or any splash screen added inside the div by
+        // the user
+        root.getElement().setInnerHTML("");
+        // For backwards compatibility with static index pages only.
+        // No longer added by AbstractApplicationServlet/Portlet
         root.removeStyleName("v-app-loading");
+
+        root.add(this);
 
         BrowserInfo browser = BrowserInfo.get();
 
