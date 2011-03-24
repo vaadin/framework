@@ -23,6 +23,8 @@ div.v-app-loading {
 	background-image: url(img/loading-indicator.gif);
 	background-repeat: no-repeat;
 	background-position: 50%;
+	width: 100%;
+	height: 100%;
 }
 .v-view {
 	height: 100%;

@@ -675,6 +675,11 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         DOM.setElementProperty(getElement(), "tabIndex", "1");
 
         RootPanel root = RootPanel.get(rootPanelId);
+        Element rootElement = root.getElement();
+        if (rootElement.getChildCount() == 1) {
+            // Remove any "v-app-loading" div
+            rootElement.getChild(0).removeFromParent();
+        }
         root.add(this);
         root.removeStyleName("v-app-loading");
 
@@ -708,7 +713,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
     }
 
     public void focus() {
-        getElement().focus();       
+        getElement().focus();
     }
 
 }
