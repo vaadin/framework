@@ -692,7 +692,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      *            Output to write (UTF-8 encoded)
      * @throws IOException
      */
-    protected static final void writeResponse(HttpServletResponse response,
+    private void writeResponse(HttpServletResponse response,
             String contentType, String output) throws IOException {
         response.setContentType(contentType);
         final ServletOutputStream out = response.getOutputStream();
