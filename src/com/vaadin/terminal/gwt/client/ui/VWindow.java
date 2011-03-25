@@ -40,7 +40,6 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VDebugConsole;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
@@ -870,7 +869,6 @@ public class VWindow extends VOverlay implements Container,
 
     @Override
     public void onBrowserEvent(final Event event) {
-        VConsole.log(event.getType());
         boolean bubble = true;
 
         final int type = event.getTypeInt();
