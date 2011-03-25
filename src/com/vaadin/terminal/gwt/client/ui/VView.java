@@ -675,8 +675,15 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         DOM.setElementProperty(getElement(), "tabIndex", "1");
 
         RootPanel root = RootPanel.get(rootPanelId);
-        root.add(this);
+
+        // Remove the v-app-loading or any splash screen added inside the div by
+        // the user
+        root.getElement().setInnerHTML("");
+        // For backwards compatibility with static index pages only.
+        // No longer added by AbstractApplicationServlet/Portlet
         root.removeStyleName("v-app-loading");
+
+        root.add(this);
 
         BrowserInfo browser = BrowserInfo.get();
 
@@ -708,7 +715,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
     }
 
     public void focus() {
-        getElement().focus();       
+        getElement().focus();
     }
 
 }

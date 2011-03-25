@@ -1660,7 +1660,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     + getDefaultTheme().replaceAll("[^a-zA-Z0-9]", "");
         }
 
-        String classNames = "v-app v-app-loading " + themeClass + " "
+        String classNames = "v-app " + themeClass + " "
                 + appClass;
 
         String divStyle = null;
@@ -1744,7 +1744,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             String appId, String classNames, String divStyle, HttpServletRequest request)
             throws IOException {
         page.write("<div id=\"" + appId + "\" class=\"" + classNames + "\" "
-                + (divStyle != null ? divStyle : "") + "></div>\n");
+                + (divStyle != null ? divStyle : "") + ">");
+        page.write("<div class=\"v-app-loading\"></div>");
+        page.write("</div>\n");
         page.write("<noscript>" + getNoScriptMessage() + "</noscript>");
     }
 

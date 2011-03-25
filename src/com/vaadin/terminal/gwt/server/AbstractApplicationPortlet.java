@@ -926,8 +926,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         String themeClass = "v-theme-"
                 + themeName.replaceAll("[^a-zA-Z0-9]", "");
 
-        String classNames = "v-app v-app-loading " + themeClass + " "
-                + appClass;
+        String classNames = "v-app " + themeClass + " " + appClass;
 
         String style = getApplicationProperty(PORTLET_PARAMETER_STYLE);
         String divStyle = "";
@@ -1225,7 +1224,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             RenderResponse response, final BufferedWriter writer, String id,
             String classNames, String divStyle) throws IOException {
         writer.write("<div id=\"" + id + "\" class=\"" + classNames + "\" "
-                + divStyle + "></div>\n");
+                + divStyle + ">");
+        writer.write("<div class=\"v-app-loading\"></div>");
+        writer.write("</div>\n");
         writer.write("<noscript>" + getNoScriptMessage() + "</noscript>");
     }
 

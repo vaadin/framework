@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_5_2_dev-20110303";}
-.v-theme-version-6_5_2_dev-20110303 {display: none;}
+.v-theme-version:after {content:"6_5_4_dev-20110324";}
+.v-theme-version-6_5_4_dev-20110324 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -276,6 +276,8 @@ div.v-app-loading {
 	background-image: url(../base/common/img/loading-indicator.gif);
 	background-repeat: no-repeat;
 	background-position: 50%;
+	width: 100%;
+	height: 100%;
 }
 .v-view {
 	height: 100%;
