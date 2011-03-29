@@ -25,6 +25,8 @@ public class WebBrowser implements Terminal {
     private Locale locale;
     private String address;
     private boolean secureConnection;
+    private int timezoneOffset = 0;
+    private int rawTimezoneOffset = 0;
 
     private VBrowserDetails browserDetails;
 
@@ -81,9 +83,14 @@ public class WebBrowser implements Terminal {
      *            Screen width
      * @param sh
      *            Screen height
+     * @param tzo
+     *            TimeZone offset in minutes from GMT
+     * @param rtzo
+     *            raw TimeZone offset in minutes from GMT (w/o DST adjustment)
      */
     void updateBrowserProperties(Locale locale, String address,
-            boolean secureConnection, String agent, String sw, String sh) {
+            boolean secureConnection, String agent, String sw, String sh,
+            String tzo, String rtzo) {
         this.locale = locale;
         this.address = address;
         this.secureConnection = secureConnection;
@@ -98,6 +105,22 @@ public class WebBrowser implements Terminal {
                 screenWidth = Integer.parseInt(sw);
             } catch (final NumberFormatException e) {
                 screenHeight = screenWidth = 0;
+            }
+        }
+        if (tzo != null) {
+            try {
+                // browser->java conversion: min->ms, reverse sign
+                timezoneOffset = -Integer.parseInt(tzo) * 60 * 1000;
+            } catch (final NumberFormatException e) {
+                timezoneOffset = 0; // default gmt+0
+            }
+        }
+        if (rtzo != null) {
+            try {
+                // browser->java conversion: min->ms, reverse sign
+                rawTimezoneOffset = -Integer.parseInt(rtzo) * 60 * 1000;
+            } catch (final NumberFormatException e) {
+                rawTimezoneOffset = 0; // default gmt+0
             }
         }
     }
@@ -254,6 +277,40 @@ public class WebBrowser implements Terminal {
      */
     public boolean isWindows() {
         return browserDetails.isWindows();
+    }
+
+    /**
+     * Returns the browser-reported TimeZone offset in milliseconds from GMT.
+     * This includes possible daylight saving adjustments, to figure out which
+     * TimeZone the user actually might be in, see
+     * {@link #getRawTimezoneOffset()}.
+     * 
+     * @see WebBrowser#getRawTimezoneOffset()
+     * @return timezone offset in milliseconds, 0 if not available
+     */
+    public Integer getTimezoneOffset() {
+        return timezoneOffset;
+    }
+
+    /**
+     * Returns the browser-reported TimeZone offset in milliseconds from GMT
+     * ignoring possible daylight saving adjustments that may be in effect in
+     * the browser.
+     * <p>
+     * You can use this to figure out which TimeZones the user could actually be
+     * in by calling {@link TimeZone#getAvailableIDs(int)}.
+     * </p>
+     * <p>
+     * If {@link #getRawTimezoneOffset()} and {@link #getTimezoneOffset()}
+     * returns the same value, the browser is either in a zone that does not
+     * currently have daylight saving time, or in a zone that never has daylight
+     * saving time.
+     * </p>
+     * 
+     * @return timezone offset in milliseconds excluding DST, 0 if not available
+     */
+    public Integer getRawTimezoneOffset() {
+        return rawTimezoneOffset;
     }
 
 }

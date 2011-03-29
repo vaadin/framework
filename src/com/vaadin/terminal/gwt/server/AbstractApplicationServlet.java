@@ -574,7 +574,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         browser.updateBrowserProperties(request.getLocale(),
                 request.getRemoteAddr(), request.isSecure(),
                 request.getHeader("user-agent"), request.getParameter("sw"),
-                request.getParameter("sh"));
+                request.getParameter("sh"), request.getParameter("tzo"),request.getParameter("rtzo"));
     }
 
     protected ClassLoader getClassLoader() throws ServletException {

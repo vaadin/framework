@@ -191,30 +191,31 @@ public class ApplicationConnection {
     private native void initializeTestbenchHooks(
             ComponentLocator componentLocator, String TTAppId)
     /*-{
-        var ap = this;
-        var client = {};
-        client.isActive = function() {
-            return ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::hasActiveRequest()() || ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::isExecutingDeferredCommands()();
-        }
-        var vi = ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::getVersionInfo()();
-        if (vi) {
-            client.getVersionInfo = function() {
-                return vi;
-            }
-        }
+    	var ap = this;
+    	var client = {};
+    	client.isActive = function() {
+    		return ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::hasActiveRequest()()
+    				|| ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::isExecutingDeferredCommands()();
+    	}
+    	var vi = ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::getVersionInfo()();
+    	if (vi) {
+    		client.getVersionInfo = function() {
+    			return vi;
+    		}
+    	}
 
-        client.getElementByPath = function(id) {
-           return componentLocator.@com.vaadin.terminal.gwt.client.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
-        }
-        client.getPathForElement = function(element) {
-           return componentLocator.@com.vaadin.terminal.gwt.client.ComponentLocator::getPathForElement(Lcom/google/gwt/user/client/Element;)(element);
-        }
+    	client.getElementByPath = function(id) {
+    		return componentLocator.@com.vaadin.terminal.gwt.client.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
+    	}
+    	client.getPathForElement = function(element) {
+    		return componentLocator.@com.vaadin.terminal.gwt.client.ComponentLocator::getPathForElement(Lcom/google/gwt/user/client/Element;)(element);
+    	}
 
-        if(!$wnd.vaadin.clients) {
-           $wnd.vaadin.clients = {};
-        }
+    	if (!$wnd.vaadin.clients) {
+    		$wnd.vaadin.clients = {};
+    	}
 
-        $wnd.vaadin.clients[TTAppId] = client;
+    	$wnd.vaadin.clients[TTAppId] = client;
     }-*/;
 
     /**
@@ -249,27 +250,27 @@ public class ApplicationConnection {
      */
     private native void initializeClientHooks()
     /*-{
-        var app = this;
-        var oldSync;
-        if($wnd.vaadin.forceSync) {
-            oldSync = $wnd.vaadin.forceSync;
-        }
-        $wnd.vaadin.forceSync = function() {
-            if(oldSync) {
-                oldSync();
-            }
-            app.@com.vaadin.terminal.gwt.client.ApplicationConnection::sendPendingVariableChanges()();
-        }
-        var oldForceLayout;
-        if($wnd.vaadin.forceLayout) {
-            oldForceLayout = $wnd.vaadin.forceLayout;
-        }
-        $wnd.vaadin.forceLayout = function() {
-            if(oldForceLayout) {
-                oldForceLayout();
-            }
-            app.@com.vaadin.terminal.gwt.client.ApplicationConnection::forceLayout()();
-        }
+    	var app = this;
+    	var oldSync;
+    	if ($wnd.vaadin.forceSync) {
+    		oldSync = $wnd.vaadin.forceSync;
+    	}
+    	$wnd.vaadin.forceSync = function() {
+    		if (oldSync) {
+    			oldSync();
+    		}
+    		app.@com.vaadin.terminal.gwt.client.ApplicationConnection::sendPendingVariableChanges()();
+    	}
+    	var oldForceLayout;
+    	if ($wnd.vaadin.forceLayout) {
+    		oldForceLayout = $wnd.vaadin.forceLayout;
+    	}
+    	$wnd.vaadin.forceLayout = function() {
+    		if (oldForceLayout) {
+    			oldForceLayout();
+    		}
+    		app.@com.vaadin.terminal.gwt.client.ApplicationConnection::forceLayout()();
+    	}
     }-*/;
 
     /**
@@ -280,15 +281,16 @@ public class ApplicationConnection {
      */
     private static native void runPostRequestHooks(String appId)
     /*-{
-        if($wnd.vaadin.postRequestHooks) {
-            for(var hook in $wnd.vaadin.postRequestHooks) {
-                if(typeof($wnd.vaadin.postRequestHooks[hook]) == "function") {
-                    try {
-                        $wnd.vaadin.postRequestHooks[hook](appId);
-                    } catch(e) {}
-                }
-            }
-        }
+    	if ($wnd.vaadin.postRequestHooks) {
+    		for ( var hook in $wnd.vaadin.postRequestHooks) {
+    			if (typeof ($wnd.vaadin.postRequestHooks[hook]) == "function") {
+    				try {
+    					$wnd.vaadin.postRequestHooks[hook](appId);
+    				} catch (e) {
+    				}
+    			}
+    		}
+    	}
     }-*/;
 
     /**
@@ -348,6 +350,8 @@ public class ApplicationConnection {
         int offsetWidth = pe.getOffsetWidth();
         int screenWidth = BrowserInfo.get().getScreenWidth();
         int screenHeight = BrowserInfo.get().getScreenHeight();
+        int tzOffset = BrowserInfo.get().getTimezoneOffset();
+        int rtzOffset = BrowserInfo.get().getRawTimezoneOffset();
 
         String token = History.getToken();
 
@@ -356,7 +360,8 @@ public class ApplicationConnection {
         // values currently only via transaction listener.
         String parameters = "repaintAll=1&" + "sh=" + screenHeight + "&sw="
                 + screenWidth + "&cw=" + clientWidth + "&ch=" + clientHeight
-                + "&vw=" + offsetWidth + "&vh=" + offsetHeight + "&fr=" + token;
+                + "&vw=" + offsetWidth + "&vh=" + offsetHeight + "&fr=" + token
+                + "&tzo=" + tzOffset + "&rtzo=" + rtzOffset;
         return parameters;
     }
 
@@ -771,11 +776,11 @@ public class ApplicationConnection {
 
     private static native ValueMap parseJSONResponse(String jsonText)
     /*-{
-        try {
-            return JSON.parse(jsonText);
-        } catch(ignored) {
-            return eval('(' + jsonText + ')');
-        }
+    	try {
+    		return JSON.parse(jsonText);
+    	} catch (ignored) {
+    		return eval('(' + jsonText + ')');
+    	}
     }-*/;
 
     private void handleReceivedJSONMessage(Date start, String jsonText,
@@ -1023,11 +1028,11 @@ public class ApplicationConnection {
     // Redirect browser, null reloads current page
     private static native void redirect(String url)
     /*-{
-        if (url) {
-           $wnd.location = url;
-        } else {
-            $wnd.location.reload(false);
-        }
+    	if (url) {
+    		$wnd.location = url;
+    	} else {
+    		$wnd.location.reload(false);
+    	}
     }-*/;
 
     public void registerPaintable(String pid, Paintable paintable) {
@@ -1039,7 +1044,7 @@ public class ApplicationConnection {
 
     private native void setPid(Element el, String pid)
     /*-{
-        el.tkPid = pid;
+    	el.tkPid = pid;
     }-*/;
 
     /**
@@ -1069,7 +1074,7 @@ public class ApplicationConnection {
      */
     public native String getPid(Element el)
     /*-{
-        return el.tkPid;
+    	return el.tkPid;
     }-*/;
 
     /**

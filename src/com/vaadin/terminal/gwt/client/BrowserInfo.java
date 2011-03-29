@@ -65,10 +65,10 @@ public class BrowserInfo {
 
     private native boolean isIE8InIE7CompatibilityMode()
     /*-{
-        var mode = $wnd.document.documentMode;
-        if (!mode)
-            return false;
-        return (mode == 7);
+    	var mode = $wnd.document.documentMode;
+    	if (!mode)
+    		return false;
+    	return (mode == 7);
     }-*/;
 
     /**
@@ -282,17 +282,53 @@ public class BrowserInfo {
 
     public native static String getBrowserString()
     /*-{
-        return $wnd.navigator.userAgent;
+    	return $wnd.navigator.userAgent;
     }-*/;
 
     public native int getScreenWidth()
-    /*-{ 
-        return $wnd.screen.width;
+    /*-{
+    	return $wnd.screen.width;
     }-*/;
 
     public native int getScreenHeight()
-    /*-{ 
-        return $wnd.screen.height;
+    /*-{
+    	return $wnd.screen.height;
+    }-*/;
+
+    /**
+     * Get's the timezone offset from GMT in minutes, as reported by the
+     * browser. DST affects this value.
+     * 
+     * @return offset to GMT in minutes
+     */
+    public native int getTimezoneOffset()
+    /*-{
+    	return new Date().getTimezoneOffset();
+    }-*/;
+
+    /**
+     * Get's the timezone offset from GMT in minutes, as reported by the browser
+     * AND adjusted to ignore daylight savings time. DST does not affect this
+     * value.
+     * 
+     * @return offset to GMT in minutes
+     */
+    public native int getRawTimezoneOffset()
+    /*-{
+        var d = new Date();
+        var tzo1 = d.getTimezoneOffset(); // current offset
+
+        for (var m=12;m>0;m--) {
+            d.setUTCMonth(m);
+            var tzo2 = d.getTimezoneOffset();
+            if (tzo1 != tzo2) {
+                // NOTE js indicates this 'backwards' (e.g -180) 
+                return (tzo1 > tzo2 ? tzo1 : tzo2); // offset w/o DST
+            }
+        }
+
+        return tzo1; // no DST
+
     }-*/;
 
 }

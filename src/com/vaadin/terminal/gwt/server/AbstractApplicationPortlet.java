@@ -545,7 +545,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         browser.updateBrowserProperties(request.getLocale(), null,
                 request.isSecure(), userAgent,
                 getHTTPRequestParameter(request, "sw"),
-                getHTTPRequestParameter(request, "sh"));
+                getHTTPRequestParameter(request, "sh"),
+                getHTTPRequestParameter(request, "tzo"),
+                getHTTPRequestParameter(request, "rtzo"));
     }
 
     @Override
