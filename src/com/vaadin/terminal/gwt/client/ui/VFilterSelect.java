@@ -48,7 +48,6 @@ import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
@@ -1100,7 +1099,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      *            the text to set in the text box
      */
     private void setTextboxText(final String text) {
-        if (BrowserInfo.get().isGecko()) {
+        if (BrowserInfo.get().isFF3()) {
             Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     tb.setText(text);

@@ -240,10 +240,10 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         setPrompting(inputPrompt != null && focusedTextField != this
                 && (text == null || text.equals("")));
 
-        if (BrowserInfo.get().isGecko()) {
+        if (BrowserInfo.get().isFF3()) {
             /*
-             * Gecko is really sluggish when updating input attached to dom.
-             * Some optimizations seems to work much better in Gecko if we
+             * Firefox 3 is really sluggish when updating input attached to dom.
+             * Some optimizations seems to work much better in Firefox3 if we
              * update the actual content lazily when the rest of the DOM has
              * stabilized. In tests, about ten times better performance is
              * achieved with this optimization. See for eg. #2898

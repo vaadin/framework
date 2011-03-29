@@ -338,7 +338,7 @@ public class VCaption extends HTML {
         }
         if (captionText != null) {
             int textWidth = captionText.getScrollWidth();
-            if (BrowserInfo.get().isFF3()) {
+            if (BrowserInfo.get().isFirefox()) {
                 /*
                  * In Firefox3 the caption might require more space than the
                  * scrollWidth returns as scrollWidth is rounded down.
