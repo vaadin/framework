@@ -1,7 +1,6 @@
 package com.vaadin.tests.application;
 
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -22,19 +21,18 @@ public class WebBrowserTest extends TestBase {
         rawOffsetLabel.setCaption("Browser raw offset");
 
         final Label diffLabel = new Label("n/a");
-        diffLabel.setCaption("Browser/server offset difference");
+        diffLabel.setCaption("Browser to Europe/Helsinki offset difference");
 
         final Label containsLabel = new Label("n/a");
-        containsLabel.setCaption("Browser TimeZones include server TimeZone");
+        containsLabel.setCaption("Browser could be in Helsinki");
 
         final Button update = new Button("Get TimeZone from browser",
                 new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        TimeZone serverTZ = Calendar.getInstance()
-                                .getTimeZone();
-                        int serverOffset = serverTZ.getOffset(new Date()
-                                .getTime());
+                        TimeZone hkiTZ = TimeZone
+                                .getTimeZone("Europe/Helsinki");
+                        int hkiOffset = hkiTZ.getOffset(new Date().getTime());
 
                         int browserOffset = getBrowser().getTimezoneOffset();
                         int browserRawOffset = getBrowser()
@@ -43,7 +41,7 @@ public class WebBrowserTest extends TestBase {
                                 .getAvailableIDs(browserRawOffset);
 
                         boolean contains = Arrays.asList(tzs).contains(
-                                serverTZ.getID());
+                                hkiTZ.getID());
 
                         offsetLabel.setValue(String.valueOf(browserOffset));
 
@@ -51,7 +49,7 @@ public class WebBrowserTest extends TestBase {
                                 .valueOf(browserRawOffset));
 
                         diffLabel.setValue(String.valueOf(browserOffset
-                                - serverOffset));
+                                - hkiOffset));
 
                         containsLabel.setValue(contains ? "Yes" : "No");
                     }
