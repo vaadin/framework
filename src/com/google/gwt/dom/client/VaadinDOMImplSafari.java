@@ -9,11 +9,15 @@ package com.google.gwt.dom.client;
 class VaadinDOMImplSafari extends DOMImplSafari {
     @Override
     public int getAbsoluteLeft(Element elem) {
+        // Chrome returns a float in certain cases (at least when zoom != 100%).
+        // The |0 ensures it is converted to an int.
         return super.getAbsoluteLeft(elem) | 0;
     }
 
     @Override
     public int getAbsoluteTop(Element elem) {
+        // Chrome returns a float in certain cases (at least when zoom != 100%).
+        // The |0 ensures it is converted to an int.
         return super.getAbsoluteTop(elem) | 0;
     }
 }
