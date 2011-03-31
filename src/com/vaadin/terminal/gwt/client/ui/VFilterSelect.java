@@ -1274,30 +1274,36 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     }
 
     /**
-     * Triggered when a key was pressed in the suggestion popup
+     * Triggered when a key was pressed in the suggestion popup.
      * 
      * @param event
      *            The KeyDownEvent of the key
      */
     private void popupKeyDown(KeyDownEvent event) {
+        // Propagation of handled events is stopped so other handlers such as
+        // shortcut key handlers do not also handle the same events.
         switch (event.getNativeKeyCode()) {
         case KeyCodes.KEY_DOWN:
             suggestionPopup.selectNextItem();
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
+            event.stopPropagation();
             break;
         case KeyCodes.KEY_UP:
             suggestionPopup.selectPrevItem();
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
+            event.stopPropagation();
             break;
         case KeyCodes.KEY_PAGEDOWN:
             if (hasNextPage()) {
                 filterOptions(currentPage + 1, lastFilter);
             }
+            event.stopPropagation();
             break;
         case KeyCodes.KEY_PAGEUP:
             if (currentPage > 0) {
                 filterOptions(currentPage - 1, lastFilter);
             }
+            event.stopPropagation();
             break;
         case KeyCodes.KEY_TAB:
             if (suggestionPopup.isAttached()) {
@@ -1316,6 +1322,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                         .get(0));
             }
             suggestionPopup.menu.doSelectedItemAction();
+
+            event.stopPropagation();
             break;
         }
 
