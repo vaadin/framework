@@ -985,7 +985,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 int widthAvailable = diff + moreItemWidth;
                 int widthGrowth = 0;
 
-                while (widthAvailable > widthGrowth) {
+                while (widthAvailable > widthGrowth
+                        && collapsedRootItems.getItems().size() > 0) {
                     // Move first item from collapsed menu to the root menu
                     CustomMenuItem expand = collapsedRootItems.getItems()
                             .get(0);
