@@ -1933,7 +1933,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                      * they lose focus.
                      */
                     if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
-                        scrollBodyPanel.setFocus(true);
+                        // scrollBodyPanel.setFocus(true);
+                        getElement().focus();
                     }
                     handleCaptionEvent(event);
                     event.stopPropagation();
