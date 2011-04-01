@@ -1,5 +1,8 @@
 package com.vaadin.tests.components.table;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
@@ -26,7 +29,9 @@ public class TableMultiSelectSimple extends TestBase {
         t.addListener(new ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
-                log.log("Selected value: " + event.getProperty().getValue());
+                TreeSet sorted = new TreeSet((Set) event.getProperty()
+                        .getValue());
+                log.log("Selected value: " + sorted);
             }
         });
 

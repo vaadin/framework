@@ -207,7 +207,34 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
     /* COMMANDS END */
 
     public void itemClick(ItemClickEvent event) {
-        log("ItemClick on itemId: " + event.getItemId() + ", propertyId: "
-                + event.getPropertyId() + " using " + event.getButtonName());
+        String type = event.getButtonName();
+        if (event.isDoubleClick()) {
+            type += " double-click";
+        } else {
+            type += " click";
+        }
+
+        String target = "source: " + event.getSource();
+        target += ", client: [" + event.getClientX() + "," + event.getClientY()
+                + "];";
+        target += ", relative: [" + event.getRelativeX() + ","
+                + event.getRelativeY() + "]";
+        target += ", itemId: " + event.getItemId();
+        target += ", propertyId: " + event.getPropertyId();
+
+        String modifierKeys = "";
+        if (event.isCtrlKey()) {
+            modifierKeys += "CTRL ";
+        }
+        if (event.isAltKey()) {
+            modifierKeys += "ALT ";
+        }
+        if (event.isMetaKey()) {
+            modifierKeys += "META ";
+        }
+        if (event.isShiftKey()) {
+            modifierKeys += "SHIFT ";
+        }
+        log(modifierKeys + type + " on " + target);
     }
 }
