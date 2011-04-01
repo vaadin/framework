@@ -98,6 +98,11 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     private int nextid;
 
     /**
+     * Flag to indicate that submitting file has been requested.
+     */
+    private boolean forceSubmit;
+
+    /**
      * Creates a new instance of Upload.
      * 
      * The receiver must be set before performing an upload.
@@ -143,6 +148,11 @@ public class Upload extends AbstractComponent implements Component.Focusable {
             notStarted = false;
             return;
         }
+        if (forceSubmit) {
+            target.addAttribute("forceSubmit", true);
+            forceSubmit = true;
+            return;
+        }
         // The field should be focused
         if (focus) {
             target.addAttribute("focus", true);
@@ -155,7 +165,9 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 
         target.addAttribute("state", isUploading);
 
-        target.addAttribute("buttoncaption", buttonCaption);
+        if (buttonCaption != null) {
+            target.addAttribute("buttoncaption", buttonCaption);
+        }
 
         target.addAttribute("nextid", nextid);
 
@@ -901,6 +913,15 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * In addition to the actual file chooser, upload components have button
      * that starts actual upload progress. This method is used to set text in
      * that button.
+     * <p>
+     * In case the button text is set to null, the button is hidden. In this
+     * case developer must explicitly initiate the upload process with
+     * {@link #submitUpload()}.
+     * <p>
+     * In case the Upload is used in immediate mode using
+     * {@link #setImmediate(boolean)}, the file choose (html input with type
+     * "file") is hidden and only the button with this text is shown.
+     * <p>
      * 
      * <p>
      * <strong>Note</strong> the string given is set as is to the button. HTML
@@ -913,6 +934,34 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     public void setButtonCaption(String buttonCaption) {
         this.buttonCaption = buttonCaption;
         requestRepaint();
+    }
+
+    /**
+     * Forces the upload the send selected file to the server.
+     * <p>
+     * In case developer wants to use this feature, he/she will most probably
+     * want to hide the uploads internal submit button by setting its caption to
+     * null with {@link #setButtonCaption(String)} method.
+     * <p>
+     * Note, that the upload runs asynchronous. Developer should use normal
+     * upload listeners to trac the process of upload. If the field is empty
+     * uploaded the file name will be empty string and file length 0 in the
+     * upload finished event.
+     * <p>
+     * Also note, that the developer should not remove or modify the upload in
+     * the same user transaction where the upload submit is requested. The
+     * upload may safely be hidden or removed once the upload started event is
+     * fired.
+     */
+    public void submitUpload() {
+        requestRepaint();
+        forceSubmit = true;
+    }
+
+    @Override
+    public void requestRepaint() {
+        forceSubmit = false;
+        super.requestRepaint();
     }
 
     /*

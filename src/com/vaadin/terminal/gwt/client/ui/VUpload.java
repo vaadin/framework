@@ -143,12 +143,21 @@ public class VUpload extends SimplePanel implements Paintable {
             t.schedule(400);
             return;
         }
+        if(uidl.hasAttribute("forceSubmit")) {
+            element.submit();
+            return;
+        }
         setImmediate(uidl.getBooleanAttribute("immediate"));
         this.client = client;
         paintableId = uidl.getId();
         nextUploadId = uidl.getIntAttribute("nextid");
         element.setAction(uidl.getStringVariable("action"));
-        submitButton.setText(uidl.getStringAttribute("buttoncaption"));
+        if(uidl.hasAttribute("buttoncaption")) {
+            submitButton.setText(uidl.getStringAttribute("buttoncaption"));
+            submitButton.setVisible(true);
+        } else {
+            submitButton.setVisible(false);
+        }
         fu.setName(paintableId + "_file");
 
         if (uidl.hasAttribute("disabled") || uidl.hasAttribute("readonly")) {
