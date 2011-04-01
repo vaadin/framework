@@ -4,6 +4,7 @@
 
 package com.vaadin.ui;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.vaadin.data.Container;
+import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -60,12 +62,37 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
 
     private String filterstring;
     private String prevfilterstring;
+
+    /**
+     * Number of options that pass the filter, excluding the null item if any.
+     */
+    private int filteredSize;
+
+    /**
+     * Cache of filtered options, used only by the in-memory filtering system.
+     */
     private List<Object> filteredOptions;
 
     /**
      * Flag to indicate that request repaint is called by filter request only
      */
     private boolean optionRequest;
+
+    /**
+     * True if the container is being filtered temporarily and item set change
+     * notifications should be suppressed.
+     */
+    private boolean filteringContainer;
+
+    /**
+     * Flag to indicate whether to scroll the selected item visible (select the
+     * page on which it is) when opening the popup or not. Only applies to
+     * single select mode.
+     * 
+     * This requires finding the index of the item, which can be expensive in
+     * many large lazy loading containers.
+     */
+    private boolean scrollToSelectedItem;
 
     /* Constructors */
 
@@ -152,8 +179,6 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
         target.addAttribute("filteringmode", getFilteringMode());
 
         // Paints the options and create array of selected id keys
-        // TODO Also use conventional rendering if lazy loading is not supported
-        // by terminal
         int keyIndex = 0;
 
         target.startTag("options");
@@ -164,12 +189,22 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
             filterstring = "";
         }
 
-        List<?> options = getFilteredOptions();
         boolean nullFilteredOut = filterstring != null
                 && !"".equals(filterstring)
                 && filteringMode != FILTERINGMODE_OFF;
-        options = sanitetizeList(options, needNullSelectOption
-                && !nullFilteredOut);
+        // null option is needed and not filtered out, even if not on current
+        // page
+        boolean nullOptionVisible = needNullSelectOption && !nullFilteredOut;
+
+        // first try if using container filters is possible
+        List<?> options = getOptionsWithFilter(nullOptionVisible);
+        if (null == options) {
+            // not able to use container filters, perform explicit in-memory
+            // filtering
+            options = getFilteredOptions();
+            filteredSize = options.size();
+            options = sanitetizeList(options, nullOptionVisible);
+        }
 
         final boolean paintNullSelection = needNullSelectOption
                 && currentPage == 0 && !nullFilteredOut;
@@ -219,9 +254,9 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
 
         target.addAttribute("totalitems", size()
                 + (needNullSelectOption ? 1 : 0));
-        if (filteredOptions != null) {
-            target.addAttribute("totalMatches", filteredOptions.size()
-                    + (needNullSelectOption && !nullFilteredOut ? 1 : 0));
+        if (filteredSize > 0 || nullOptionVisible) {
+            target.addAttribute("totalMatches", filteredSize
+                    + (nullOptionVisible ? 1 : 0));
         }
 
         // Paint variables
@@ -245,6 +280,126 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
     }
 
     /**
+     * Returns the filtered options for the current page using a container
+     * filter.
+     * 
+     * As a size effect, {@link #filteredSize} is set to the total number of
+     * items passing the filter.
+     * 
+     * The current container must be {@link Filterable} and {@link Indexed}, and
+     * the filtering mode must be suitable for container filtering (tested with
+     * {@link #canUseContainerFilter()}).
+     * 
+     * Use {@link #getFilteredOptions()} and
+     * {@link #sanitetizeList(List, boolean)} if this is not the case.
+     * 
+     * @param needNullSelectOption
+     * @return filtered list of options (may be empty) or null if cannot use
+     *         container filters
+     */
+    protected List<?> getOptionsWithFilter(boolean needNullSelectOption) {
+        Container container = getContainerDataSource();
+
+        if (pageLength == 0) {
+            // no paging: return all items
+            filteredSize = container.size();
+            return new ArrayList<Object>(container.getItemIds());
+        }
+
+        if (!(container instanceof Filterable)
+                || !(container instanceof Indexed)
+                || getItemCaptionMode() != ITEM_CAPTION_MODE_PROPERTY) {
+            return null;
+        }
+
+        Filterable filterable = (Filterable) container;
+
+        Filter filter = buildFilter(filterstring, filteringMode);
+
+        // adding and removing filters leads to extraneous item set
+        // change events from the underlying container, but the ComboBox does
+        // not process or propagate them based on the flag filteringContainer
+        if (filter != null) {
+            filteringContainer = true;
+            filterable.addContainerFilter(filter);
+        }
+
+        Indexed indexed = (Indexed) container;
+
+        int indexToEnsureInView = -1;
+
+        // if not an option request (item list when user changes page), go
+        // to page with the selected item after filtering if accepted by
+        // filter
+        Object selection = getValue();
+        if (isScrollToSelectedItem() && !optionRequest && !isMultiSelect()
+                && selection != null) {
+            // ensure proper page
+            indexToEnsureInView = indexed.indexOfId(selection);
+        }
+
+        filteredSize = container.size();
+        currentPage = adjustCurrentPage(currentPage, needNullSelectOption,
+                indexToEnsureInView, filteredSize);
+        int first = getFirstItemIndexOnCurrentPage(needNullSelectOption,
+                filteredSize);
+        int last = getLastItemIndexOnCurrentPage(needNullSelectOption,
+                filteredSize, first);
+
+        List<Object> options = new ArrayList<Object>();
+        for (int i = first; i <= last && i < filteredSize; ++i) {
+            options.add(indexed.getIdByIndex(i));
+        }
+
+        // to the outside, filtering should not be visible
+        if (filter != null) {
+            filterable.removeContainerFilter(filter);
+            filteringContainer = false;
+        }
+
+        return options;
+    }
+
+    /**
+     * Constructs a filter instance to use when using a Filterable container in
+     * the <code>ITEM_CAPTION_MODE_PROPERTY</code> mode.
+     * 
+     * Note that the client side implementation expects the filter string to
+     * apply to the item caption string it sees, so changing the behavior of
+     * this method can cause problems.
+     * 
+     * @param filterString
+     * @param filteringMode
+     * @return
+     */
+    protected Filter buildFilter(String filterString, int filteringMode) {
+        Filter filter = null;
+
+        if (null != filterString && !"".equals(filterString)) {
+            switch (filteringMode) {
+            case FILTERINGMODE_OFF:
+                break;
+            case FILTERINGMODE_STARTSWITH:
+                filter = new SimpleStringFilter(getItemCaptionPropertyId(),
+                        filterString, true, true);
+                break;
+            case FILTERINGMODE_CONTAINS:
+                filter = new SimpleStringFilter(getItemCaptionPropertyId(),
+                        filterString, true, true);
+                break;
+            }
+        }
+        return filter;
+    }
+
+    @Override
+    public void containerItemSetChange(Container.ItemSetChangeEvent event) {
+        if (!filteringContainer) {
+            super.containerItemSetChange(event);
+        }
+    }
+
+    /**
      * Makes correct sublist of given list of options.
      * 
      * If paint is not an option request (affected by page or filter change),
@@ -262,50 +417,128 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
     private List<?> sanitetizeList(List<?> options, boolean needNullSelectOption) {
 
         if (pageLength != 0 && options.size() > pageLength) {
-            // Not all options are visible, find out which ones are on the
-            // current "page".
-            int first = currentPage * pageLength;
-            int last = first + pageLength;
-            if (needNullSelectOption) {
-                if (currentPage > 0) {
-                    first--;
-                }
-                last--;
-            }
-            if (options.size() < last) {
-                last = options.size();
-            }
-            if (!optionRequest) {
-                // TODO ensure proper page
-                if (!isMultiSelect()) {
-                    Object selection = getValue();
-                    if (selection != null) {
-                        int index = options.indexOf(selection);
-                        if (index != -1 && (index < first || index >= last)) {
-                            int newPage = (index + (needNullSelectOption ? 1
-                                    : 0)) / pageLength;
-                            currentPage = newPage;
-                            return sanitetizeList(options, needNullSelectOption);
-                        }
-                    }
-                }
+
+            int indexToEnsureInView = -1;
+
+            // if not an option request (item list when user changes page), go
+            // to page with the selected item after filtering if accepted by
+            // filter
+            Object selection = getValue();
+            if (isScrollToSelectedItem() && !optionRequest && !isMultiSelect()
+                    && selection != null) {
+                // ensure proper page
+                indexToEnsureInView = options.indexOf(selection);
             }
 
-            // adjust the current page if beyond the end of the list
-            if (first >= last && currentPage > 0) {
-                currentPage -= (first - last + pageLength) / pageLength;
-                return sanitetizeList(options, needNullSelectOption);
-            }
-
-            return options.subList(first, last);
+            int size = options.size();
+            currentPage = adjustCurrentPage(currentPage, needNullSelectOption,
+                    indexToEnsureInView, size);
+            int first = getFirstItemIndexOnCurrentPage(needNullSelectOption,
+                    size);
+            int last = getLastItemIndexOnCurrentPage(needNullSelectOption,
+                    size, first);
+            return options.subList(first, last + 1);
         } else {
             return options;
         }
     }
 
+    /**
+     * Returns the index of the first item on the current page. The index is to
+     * the underlying (possibly filtered) contents. The null item, if any, does
+     * not have an index but takes up a slot on the first page.
+     * 
+     * @param needNullSelectOption
+     *            true if a null option should be shown before any other options
+     *            (takes up the first slot on the first page, not counted in
+     *            index)
+     * @param size
+     *            number of items after filtering (not including the null item,
+     *            if any)
+     * @return first item to show on the UI (index to the filtered list of
+     *         options, not taking the null item into consideration if any)
+     */
+    private int getFirstItemIndexOnCurrentPage(boolean needNullSelectOption,
+            int size) {
+        // Not all options are visible, find out which ones are on the
+        // current "page".
+        int first = currentPage * pageLength;
+        if (needNullSelectOption && currentPage > 0) {
+            first--;
+        }
+        return first;
+    }
+
+    /**
+     * Returns the index of the last item on the current page. The index is to
+     * the underlying (possibly filtered) contents. If needNullSelectOption is
+     * true, the null item takes up the first slot on the first page,
+     * effectively reducing the first page size by one.
+     * 
+     * @param needNullSelectOption
+     *            true if a null option should be shown before any other options
+     *            (takes up the first slot on the first page, not counted in
+     *            index)
+     * @param size
+     *            number of items after filtering (not including the null item,
+     *            if any)
+     * @param first
+     *            index in the filtered view of the first item of the page
+     * @return index in the filtered view of the last item on the page
+     */
+    private int getLastItemIndexOnCurrentPage(boolean needNullSelectOption,
+            int size, int first) {
+        // page length usable for non-null items
+        int effectivePageLength = pageLength
+                - (needNullSelectOption && (currentPage == 0) ? 1 : 0);
+        return Math.min(size - 1, first + effectivePageLength - 1);
+    }
+
+    /**
+     * Adjusts the index of the current page if necessary: make sure the current
+     * page is not after the end of the contents, and optionally go to the page
+     * containg a specific item. There are no side effects but the adjusted page
+     * index is returned.
+     * 
+     * @param page
+     *            page number to use as the starting point
+     * @param needNullSelectOption
+     *            true if a null option should be shown before any other options
+     *            (takes up the first slot on the first page, not counted in
+     *            index)
+     * @param indexToEnsureInView
+     *            index of an item that should be included on the page (in the
+     *            data set, not counting the null item if any), -1 for none
+     * @param size
+     *            number of items after filtering (not including the null item,
+     *            if any)
+     */
+    private int adjustCurrentPage(int page, boolean needNullSelectOption,
+            int indexToEnsureInView, int size) {
+        if (indexToEnsureInView != -1) {
+            int newPage = (indexToEnsureInView + (needNullSelectOption ? 1 : 0))
+                    / pageLength;
+            page = newPage;
+        }
+        // adjust the current page if beyond the end of the list
+        if (page * pageLength > size) {
+            page = (size + (needNullSelectOption ? 1 : 0)) / pageLength;
+        }
+        return page;
+    }
+
+    /**
+     * Filters the options in memory and returns the full filtered list.
+     * 
+     * This can be less efficient than using container filters, so use
+     * {@link #getOptionsWithFilter(boolean)} if possible (filterable container
+     * and suitable item caption mode etc.).
+     * 
+     * @return
+     */
     protected List<?> getFilteredOptions() {
-        if (filterstring == null || filterstring.equals("")
-                || filteringMode == FILTERINGMODE_OFF) {
+        if (null == filterstring || "".equals(filterstring)
+                || FILTERINGMODE_OFF == filteringMode) {
             prevfilterstring = null;
             filteredOptions = new LinkedList<Object>(getItemIds());
             return filteredOptions;
@@ -523,6 +756,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
      *             {@link TwinColSelect} instead
      * @see com.vaadin.ui.AbstractSelect#setMultiSelect(boolean)
      */
+    @Deprecated
     @Override
     public void setMultiSelect(boolean multiSelect) {
         super.setMultiSelect(multiSelect);
@@ -534,9 +768,39 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
      * 
      * @see com.vaadin.ui.AbstractSelect#isMultiSelect()
      */
+    @Deprecated
     @Override
     public boolean isMultiSelect() {
         return super.isMultiSelect();
+    }
+
+    /**
+     * Sets whether to scroll the selected item visible (directly open the page
+     * on which it is) when opening the combo box popup or not. Only applies to
+     * single select mode.
+     * 
+     * This requires finding the index of the item, which can be expensive in
+     * many large lazy loading containers.
+     * 
+     * @param scrollToSelectedItem
+     *            true to find the page with the selected item when opening the
+     *            selection popup
+     */
+    public void setScrollToSelectedItem(boolean scrollToSelectedItem) {
+        this.scrollToSelectedItem = scrollToSelectedItem;
+    }
+
+    /**
+     * Returns true if the select should find the page with the selected item
+     * when opening the popup (single select combo box only).
+     * 
+     * @see #setScrollToSelectedItem(boolean)
+     * 
+     * @return true if the page with the selected item will be shown when
+     *         opening the popup
+     */
+    public boolean isScrollToSelectedItem() {
+        return scrollToSelectedItem;
     }
 
 }
