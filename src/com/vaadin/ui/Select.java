@@ -92,7 +92,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
      * This requires finding the index of the item, which can be expensive in
      * many large lazy loading containers.
      */
-    private boolean scrollToSelectedItem;
+    private boolean scrollToSelectedItem = true;
 
     /* Constructors */
 
