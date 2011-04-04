@@ -306,6 +306,7 @@ public abstract class AbstractTextField extends AbstractField implements
      */
     public void setNullRepresentation(String nullRepresentation) {
         this.nullRepresentation = nullRepresentation;
+        requestRepaint();
     }
 
     /**
@@ -325,12 +326,13 @@ public abstract class AbstractTextField extends AbstractField implements
      * </p>
      * 
      * @param nullSettingAllowed
-     *            Should the null-string represenation be always converted to
+     *            Should the null-string representation always be converted to
      *            null-values.
      * @see TextField#getNullRepresentation()
      */
     public void setNullSettingAllowed(boolean nullSettingAllowed) {
         this.nullSettingAllowed = nullSettingAllowed;
+        requestRepaint();
     }
 
     /**
