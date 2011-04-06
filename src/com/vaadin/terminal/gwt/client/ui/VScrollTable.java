@@ -1810,13 +1810,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // ensure no clipping initially (problem on column additions)
             DOM.setStyleAttribute(captionContainer, "overflow", "visible");
 
-            DOM.sinkEvents(captionContainer, Event.MOUSEEVENTS);
+            DOM.sinkEvents(captionContainer, Event.MOUSEEVENTS
+                    | Event.KEYEVENTS);
 
             DOM.appendChild(td, captionContainer);
 
-            DOM.sinkEvents(td, Event.MOUSEEVENTS);
+            DOM.sinkEvents(td, Event.MOUSEEVENTS | Event.KEYEVENTS);
 
             setElement(td);
+
+            getElement().setTabIndex(-1);
 
             setAlign(ALIGN_LEFT);
         }
@@ -2066,9 +2069,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     updateFloatingCopysPosition(DOM.eventGetClientX(event), -1);
                 }
                 break;
+            case Event.ONKEYDOWN:
+                focusFirstRow();
+                break;
             default:
                 break;
             }
+        }
+
+        private void focusFirstRow() {
+            setRowFocus(scrollBody.getRowByRowIndex(firstRowInViewPort));
+            focusedRow.toggleSelection();
         }
 
         private void onResizeEvent(Event event) {
