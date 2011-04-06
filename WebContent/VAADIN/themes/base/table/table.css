@@ -210,7 +210,8 @@
 	text-align: center;
 }
 .v-table-body:focus,
-.v-table-body-wrapper:focus {
+.v-table-body-wrapper:focus,
+tr.v-table-focus:focus {
 	outline: none;
 }
 .v-table-body.focused {
@@ -219,6 +220,7 @@
 .v-table-focus .v-table-cell-content {
 	border-top: 1px dotted #0066bd;
 	border-bottom: 1px dotted #0066bd;
+	outline: none;
 }
 /* row in column selector */
 .v-on {

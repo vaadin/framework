@@ -94,8 +94,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
  * TODO implement unregistering for child components in Cells
  */
 public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
-        VHasDropHandler, KeyPressHandler, KeyDownHandler, FocusHandler,
-        BlurHandler, Focusable, KeyUpHandler {
+        VHasDropHandler, FocusHandler, BlurHandler, Focusable {
 
     public static final String CLASSNAME = "v-table";
     public static final String CLASSNAME_SELECTION_FOCUS = CLASSNAME + "-focus";
@@ -321,18 +320,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     public VScrollTable() {
         scrollBodyPanel.setStyleName(CLASSNAME + "-body-wrapper");
-
-        /*
-         * Firefox auto-repeat works correctly only if we use a key press
-         * handler, other browsers handle it correctly when using a key down
-         * handler
-         */
-        if (BrowserInfo.get().isGecko()) {
-            scrollBodyPanel.addKeyPressHandler(this);
-        } else {
-            scrollBodyPanel.addKeyDownHandler(this);
-        }
-        scrollBodyPanel.addKeyUpHandler(this);
 
         scrollBodyPanel.addFocusHandler(this);
         scrollBodyPanel.addBlurHandler(this);
@@ -3687,7 +3674,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         public class VScrollTableRow extends Panel implements ActionOwner,
-                Container {
+                Container, KeyPressHandler, KeyUpHandler, KeyDownHandler {
 
             private static final int DRAGMODE_MULTIROW = 2;
             protected ArrayList<Widget> childWidgets = new ArrayList<Widget>();
@@ -3709,7 +3696,20 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 setElement(rowElement);
                 DOM.sinkEvents(getElement(), Event.MOUSEEVENTS
                         | Event.ONDBLCLICK | Event.ONCONTEXTMENU
-                        | Event.KEYEVENTS);
+                /* | Event.KEYEVENTS */);
+                getElement().setTabIndex(-1);
+
+                /*
+                 * Firefox auto-repeat works correctly only if we use a key
+                 * press handler, other browsers handle it correctly when using
+                 * a key down handler
+                 */
+                if (BrowserInfo.get().isGecko()) {
+                    addDomHandler(this, KeyPressEvent.getType());
+                } else {
+                    addDomHandler(this, KeyDownEvent.getType());
+                }
+                addDomHandler(this, KeyUpEvent.getType());
             }
 
             /**
@@ -4179,59 +4179,91 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                             mDown = false;
                             break;
 
-                        /*
-                         * The ONKEYDOWN and ONKEYUP are only run in IE, see
-                         * #6197
-                         */
-                        case Event.ONKEYDOWN:
-                            if (!enabled) {
-                                // Cancel default keyboard events on a disabled
-                                // Table (prevents scrolling)
-                                event.preventDefault();
-                            } else {
-                                if (handleNavigation(
-                                        event.getKeyCode(),
-                                        event.getCtrlKey()
-                                                || event.getMetaKey(),
-                                        event.getShiftKey())) {
-                                    navKeyDown = true;
-                                    event.preventDefault();
-                                }
-                                startScrollingVelocityTimer();
-                            }
-                            break;
-
-                        case Event.ONKEYUP:
-                            int keyCode = event.getKeyCode();
-
-                            if (!isFocusable()) {
-                                cancelScrollingVelocityTimer();
-                            } else if (isNavigationKey(keyCode)) {
-                                if (keyCode == getNavigationDownKey()
-                                        || keyCode == getNavigationUpKey()) {
-                                    /*
-                                     * in multiselect mode the server may still
-                                     * have value from previous page. Clear it
-                                     * unless doing multiselection or just
-                                     * moving focus.
-                                     */
-                                    if (!event.getShiftKey()
-                                            && !event.getCtrlKey()) {
-                                        instructServerToForgetPreviousSelections();
-                                    }
-                                    sendSelectedRows();
-                                }
-                                cancelScrollingVelocityTimer();
-                                navKeyDown = false;
-                            }
-                            break;
-
                         default:
                             break;
                         }
                     }
                 }
                 super.onBrowserEvent(event);
+            }
+
+            public void onKeyPress(KeyPressEvent keyPressEvent) {
+                // This is used for Firefox only, since Firefox auto-repeat
+                // works correctly only if we use a key press handler, other
+                // browsers handle it correctly when using a key down handler
+                if (!BrowserInfo.get().isGecko()) {
+                    return;
+                }
+
+                NativeEvent event = keyPressEvent.getNativeEvent();
+                if (!enabled) {
+                    // Cancel default keyboard events on a disabled Table
+                    // (prevents scrolling)
+                    event.preventDefault();
+                } else {
+                    // Key code in Firefox/onKeyPress is present only for
+                    // special keys, otherwise 0 is returned
+                    int keyCode = event.getKeyCode();
+                    if (keyCode == 0 && event.getCharCode() == ' ') {
+                        // Provide a keyCode for space to be compatible with
+                        // FireFox keypress event
+                        keyCode = CHARCODE_SPACE;
+                    }
+
+                    if (handleNavigation(keyCode,
+                            event.getCtrlKey() || event.getMetaKey(),
+                            event.getShiftKey())) {
+                        event.preventDefault();
+                    }
+
+                    startScrollingVelocityTimer();
+                }
+            }
+
+            public void onKeyDown(KeyDownEvent keyDownEvent) {
+                NativeEvent event = keyDownEvent.getNativeEvent();
+                // This is not used for Firefox
+                if (BrowserInfo.get().isGecko()) {
+                    return;
+                }
+
+                if (!enabled) {
+                    // Cancel default keyboard events on a disabled Table
+                    // (prevents scrolling)
+                    event.preventDefault();
+                } else {
+                    if (handleNavigation(event.getKeyCode(), event.getCtrlKey()
+                            || event.getMetaKey(), event.getShiftKey())) {
+                        navKeyDown = true;
+                        event.preventDefault();
+                    }
+
+                    startScrollingVelocityTimer();
+                }
+            }
+
+            public void onKeyUp(KeyUpEvent keyUpEvent) {
+                NativeEvent event = keyUpEvent.getNativeEvent();
+                int keyCode = event.getKeyCode();
+
+                if (!isFocusable()) {
+                    cancelScrollingVelocityTimer();
+                } else if (isNavigationKey(keyCode)) {
+                    if (keyCode == getNavigationDownKey()
+                            || keyCode == getNavigationUpKey()) {
+                        /*
+                         * in multiselect mode the server may still have value
+                         * from previous page. Clear it unless doing
+                         * multiselection or just moving focus.
+                         */
+                        if (!event.getShiftKey() && !event.getCtrlKey()) {
+                            instructServerToForgetPreviousSelections();
+                        }
+                        sendSelectedRows();
+                    }
+                    cancelScrollingVelocityTimer();
+                    navKeyDown = false;
+                }
             }
 
             /**
@@ -5147,7 +5179,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // Set new focused row
             focusedRow = row;
 
-            ensureRowIsVisible(row);
+            // ensureRowIsVisible(row);
             row.getElement().focus();
 
             return true;
@@ -5187,6 +5219,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
           if (top < cur.scrollTop) {
             cur.scrollTop = top;
           }
+
           if (top + height > cur.scrollTop + cur.clientHeight) {
             cur.scrollTop = (top + height) - cur.clientHeight;
           }
@@ -5465,68 +5498,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * (non-Javadoc)
      * 
      * @see
-     * com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google
-     * .gwt.event.dom.client.KeyPressEvent)
-     */
-    public void onKeyPress(KeyPressEvent event) {
-        // This is used for Firefox only
-        if (!BrowserInfo.get().isGecko()) {
-            return;
-        }
-
-        if (!enabled) {
-            // Cancel default keyboard events on a disabled Table (prevents
-            // scrolling)
-            event.preventDefault();
-        } else if (hasFocus) {
-            // Key code in Firefox/onKeyPress is present only for special keys,
-            // otherwise 0 is returned
-            NativeEvent nativeEvent = event.getNativeEvent();
-            int keyCode = nativeEvent.getKeyCode();
-            if (keyCode == 0 && nativeEvent.getCharCode() == ' ') {
-                // Provide a keyCode for space to be compatible with FireFox
-                // keypress event
-                keyCode = CHARCODE_SPACE;
-            }
-
-            if (handleNavigation(keyCode,
-                    event.isControlKeyDown() || event.isMetaKeyDown(),
-                    event.isShiftKeyDown())) {
-                event.preventDefault();
-            }
-
-            startScrollingVelocityTimer();
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
-     * .event.dom.client.KeyDownEvent)
-     */
-    public void onKeyDown(KeyDownEvent event) {
-        if (!enabled) {
-            // Cancel default keyboard events on a disabled Table (prevents
-            // scrolling)
-            event.preventDefault();
-        } else if (hasFocus) {
-            if (handleNavigation(event.getNativeEvent().getKeyCode(),
-                    event.isControlKeyDown() || event.isMetaKeyDown(),
-                    event.isShiftKeyDown())) {
-                navKeyDown = true;
-                event.preventDefault();
-            }
-
-            startScrollingVelocityTimer();
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
      * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
      * .dom.client.FocusEvent)
      */
@@ -5647,30 +5618,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // Workaround for Opera scroll bug when changing tabIndex (#6222)
             scrollBodyPanel.setScrollPosition(storedScrollTop);
             scrollBodyPanel.setHorizontalScrollPosition(storedScrollLeft);
-        }
-    }
-
-    public void onKeyUp(KeyUpEvent event) {
-        int keyCode = event.getNativeKeyCode();
-
-        if (!isFocusable()) {
-            cancelScrollingVelocityTimer();
-        } else if (isNavigationKey(keyCode)) {
-            if (keyCode == getNavigationDownKey()
-                    || keyCode == getNavigationUpKey()) {
-                /*
-                 * in multiselect mode the server may still have value from
-                 * previous page. Clear it unless doing multiselection or just
-                 * moving focus.
-                 */
-                if (!event.getNativeEvent().getShiftKey()
-                        && !event.getNativeEvent().getCtrlKey()) {
-                    instructServerToForgetPreviousSelections();
-                }
-                sendSelectedRows();
-            }
-            cancelScrollingVelocityTimer();
-            navKeyDown = false;
         }
     }
 
