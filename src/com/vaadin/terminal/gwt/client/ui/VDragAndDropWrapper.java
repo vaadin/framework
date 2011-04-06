@@ -169,15 +169,15 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                         uploading = true;
                         final Integer fileId = fileIds.remove(0);
                         VHtml5File file = files.remove(0);
-                        final String receiverUrl = fileIdToReceiver
-                                .remove(fileId.toString());
+                        final String receiverUrl = client
+                                .translateVaadinUri(fileIdToReceiver
+                                        .remove(fileId.toString()));
                         ExtendedXHR extendedXHR = (ExtendedXHR) ExtendedXHR
                                 .create();
                         extendedXHR
                                 .setOnReadyStateChange(readyStateChangeHandler);
                         extendedXHR.open("POST", receiverUrl);
                         extendedXHR.postFile(file);
-
                     }
                 }
 
