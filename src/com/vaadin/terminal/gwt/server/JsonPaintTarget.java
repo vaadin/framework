@@ -371,16 +371,7 @@ public class JsonPaintTarget implements PaintTarget {
                         "Application not specified for resorce "
                                 + value.getClass().getName());
             }
-            String uri;
-            if (a.getURL() != null) {
-                uri = a.getURL().getPath();
-            } else {
-                uri = "";
-            }
-            if (uri.length() > 0 && uri.charAt(uri.length() - 1) != '/') {
-                uri += "/";
-            }
-            uri += a.getRelativeLocation(r);
+            final String uri = "app://" + a.getRelativeLocation(r);
             addAttribute(name, uri);
 
         } else if (value instanceof ThemeResource) {
