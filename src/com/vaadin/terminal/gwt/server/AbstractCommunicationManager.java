@@ -1358,33 +1358,24 @@ public abstract class AbstractCommunicationManager implements
     protected String getRequestPayload(Request request) throws IOException {
 
         int requestLength = request.getContentLength();
-        if (requestLength <= 0) {
-            /*
-             * TODO Browsers as we know them, know how long XHR they are sending
-             * and expose this in headers. However we have seen some -1 values
-             * in logs. Wild guess is that it is some kind of bot that tries to
-             * play well with ajax pages. Decide if we need to support those
-             * requests. See #6401
-             */
+        if (requestLength == 0) {
             return null;
         }
 
-        byte[] buffer = new byte[requestLength];
-        InputStream inputStream = request.getInputStream();
+        ByteArrayOutputStream bout = requestLength <= 0 ? new ByteArrayOutputStream()
+                : new ByteArrayOutputStream(requestLength);
 
-        int bytesRemaining = requestLength;
-        while (bytesRemaining > 0) {
-            int bytesToRead = Math.min(bytesRemaining, MAX_BUFFER_SIZE);
-            int bytesRead = inputStream.read(buffer, requestLength
-                    - bytesRemaining, bytesToRead);
-            if (bytesRead == -1) {
+        InputStream inputStream = request.getInputStream();
+        byte[] buffer = new byte[MAX_BUFFER_SIZE];
+
+        while (true) {
+            int read = inputStream.read(buffer);
+            if (read == -1) {
                 break;
             }
-
-            bytesRemaining -= bytesRead;
+            bout.write(buffer, 0, read);
         }
-
-        String result = new String(buffer, "utf-8");
+        String result = new String(bout.toByteArray(), "utf-8");
 
         return result;
     }
