@@ -396,9 +396,8 @@ public class CommunicationManager extends AbstractCommunicationManager {
             streamVariableToSeckey.put(value, seckey);
         }
 
-        return getApplication().getURL()
-                + AbstractApplicationServlet.UPLOAD_URL_PREFIX + key + "/"
-                + seckey;
+        return "app://" + AbstractApplicationServlet.UPLOAD_URL_PREFIX + key
+                + "/" + seckey;
 
     }
 

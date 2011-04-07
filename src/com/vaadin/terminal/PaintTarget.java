@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import com.vaadin.terminal.StreamVariable.StreamingStartEvent;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 
 /**
  * This interface defines the methods for painting XML to the UIDL stream.
@@ -157,6 +158,10 @@ public interface PaintTarget extends Serializable {
      * Adds details about {@link StreamVariable} to the UIDL stream. Eg. in web
      * terminals Receivers are typically rendered for the client side as URLs,
      * where the client side implementation can do an http post request.
+     * <p>
+     * The urls in UIDL message may use Vaadin specific protocol. Before
+     * actually using the urls on the client side, they should be passed via
+     * {@link ApplicationConnection#translateVaadinUri(String)}.
      * <p>
      * Note that in current terminal implementation StreamVariables are cleaned
      * from the terminal only when:

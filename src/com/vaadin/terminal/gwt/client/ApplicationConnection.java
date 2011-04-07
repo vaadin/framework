@@ -2147,6 +2147,9 @@ public class ApplicationConnection {
             }
             uidlUri = themeUri + uidlUri.substring(7);
         }
+        if (uidlUri.startsWith("app://")) {
+            uidlUri = getAppUri() + uidlUri.substring(6);
+        }
         return uidlUri;
     }
 
