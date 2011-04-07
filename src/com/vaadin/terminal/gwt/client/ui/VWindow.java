@@ -903,7 +903,8 @@ public class VWindow extends VOverlay implements Container,
              * After that this windows e.g. gets all keyboard shortcuts.
              */
             if (type == Event.ONMOUSEDOWN
-                    && !DOM.isOrHasChild(contentPanel.getElement(), target)) {
+                    && !DOM.isOrHasChild(contentPanel.getElement(), target)
+                    && target != closeBox) {
                 contentPanel.focus();
             }
         }
