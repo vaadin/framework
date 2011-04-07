@@ -211,7 +211,8 @@
 }
 .v-table-body:focus,
 .v-table-body-wrapper:focus,
-tr.v-table-focus:focus {
+tr.v-table-focus:focus,
+.v-table-header-wrap td:focus {
 	outline: none;
 }
 .v-table-body.focused {

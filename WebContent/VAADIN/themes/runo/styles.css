@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_5_5_dev-20110406";}
-.v-theme-version-6_5_5_dev-20110406 {display: none;}
+.v-theme-version:after {content:"6_5_5_dev-20110407";}
+.v-theme-version-6_5_5_dev-20110407 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1675,7 +1675,8 @@ div.v-progressindicator-indeterminate-disabled {
 }
 .v-table-body:focus,
 .v-table-body-wrapper:focus,
-tr.v-table-focus:focus {
+tr.v-table-focus:focus,
+.v-table-header-wrap td:focus {
 	outline: none;
 }
 .v-table-body.focused {
