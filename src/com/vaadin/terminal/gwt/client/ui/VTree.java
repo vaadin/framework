@@ -624,19 +624,6 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
             // always when clicking an item, focus it
             setFocusedNode(this, false);
 
-            /*
-             * Also ensure that the Tree itself is also gains focus (TreeNodes
-             * focus is kind of faked).
-             */
-            // if (BrowserInfo.get().isOpera()) {
-            /*
-             * focusing the tree in Opera would scroll long trees up on clicks
-             */
-            // getElement().focus();
-            // } else if (!BrowserInfo.get().isIE()) {
-            // focus();
-            // } // else if IE: NOP, IE will give the focus to Tree anyways
-
             ScheduledCommand command = new ScheduledCommand() {
                 public void execute() {
 
@@ -791,7 +778,6 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                 } else {
                     focusedNode.setFocused(true);
                 }
-                // focus();
             }
             final MouseEventDetails details = new MouseEventDetails(evt);
             ScheduledCommand command = new ScheduledCommand() {
@@ -836,15 +822,11 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                 DOM.appendChild(getElement(), ie6compatnode);
 
                 DOM.sinkEvents(ie6compatnode, Event.ONCLICK);
-            } // else if (BrowserInfo.get().isOpera()) {
+            }
             /*
-             * We need to focus the TreeNode itself to get keyboard navigation
-             * to work in opera at some level. Actually focusing individual
-             * TreeNodes would most likely be better option for all browsers, I
-             * don't dare to to this at bugfix release. MT.
+             * Focus the TreeNode itself to get keyboard navigation to work.
              */
             getElement().setTabIndex(-1);
-            // }
 
             nodeCaptionDiv = DOM.createDiv();
             DOM.setElementProperty(nodeCaptionDiv, "className", CLASSNAME
