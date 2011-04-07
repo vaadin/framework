@@ -3706,8 +3706,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 rowElement = Document.get().createTRElement();
                 setElement(rowElement);
                 DOM.sinkEvents(getElement(), Event.MOUSEEVENTS
-                        | Event.ONDBLCLICK | Event.ONCONTEXTMENU
-                /* | Event.KEYEVENTS */);
+                        | Event.ONDBLCLICK | Event.ONCONTEXTMENU);
                 getElement().setTabIndex(-1);
 
                 /*
