@@ -1256,7 +1256,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * <p>
      * If the property id is set to a valid value, each item is given an icon
      * got from the given property of the items. The type of the property must
-     * be assignable to Icon.
+     * be assignable to Resource.
      * </p>
      * 
      * <p>
@@ -1271,14 +1271,23 @@ public abstract class AbstractSelect extends AbstractField implements
      * .
      * 
      * @param propertyId
-     *            the Id of the property that specifies icons for items.
+     *            the id of the property that specifies icons for items or null
+     * @throws IllegalArgumentException
+     *             If the propertyId is not in the container or is not of a
+     *             valid type
      */
-    public void setItemIconPropertyId(Object propertyId) {
-        if ((propertyId != null)
-                && Resource.class.isAssignableFrom(getType(propertyId))) {
+    public void setItemIconPropertyId(Object propertyId)
+            throws IllegalArgumentException {
+        if (propertyId == null) {
+            itemIconPropertyId = null;
+        } else if (!getContainerPropertyIds().contains(propertyId)) {
+            throw new IllegalArgumentException(
+                    "Property id not found in the container");
+        } else if (Resource.class.isAssignableFrom(getType(propertyId))) {
             itemIconPropertyId = propertyId;
         } else {
-            itemIconPropertyId = null;
+            throw new IllegalArgumentException(
+                    "Property id must be assignable to Resource");
         }
         requestRepaint();
     }
