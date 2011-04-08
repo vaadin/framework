@@ -574,7 +574,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         browser.updateBrowserProperties(request.getLocale(),
                 request.getRemoteAddr(), request.isSecure(),
                 request.getHeader("user-agent"), request.getParameter("sw"),
-                request.getParameter("sh"), request.getParameter("tzo"),request.getParameter("rtzo"));
+                request.getParameter("sh"), request.getParameter("tzo"),
+                request.getParameter("rtzo"));
     }
 
     protected ClassLoader getClassLoader() throws ServletException {
@@ -1949,12 +1950,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         if (browser.isIE()) {
             // Chrome frame in all versions of IE (only if Chrome frame is
             // installed)
-            if (browser.getBrowserMajorVersion() == 9) {
-                // Force IE9 into IE8 mode. Remove when IE 9 mode works (#5546)
-                page.write("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=8,chrome=1\"/>\n");
-            } else {
-                page.write("<meta http-equiv=\"X-UA-Compatible\" content=\"chrome=1\"/>\n");
-            }
+            page.write("<meta http-equiv=\"X-UA-Compatible\" content=\"chrome=1\"/>\n");
         }
 
         page.write("<style type=\"text/css\">"
