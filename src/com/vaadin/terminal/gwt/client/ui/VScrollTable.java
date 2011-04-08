@@ -3706,7 +3706,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 rowElement = Document.get().createTRElement();
                 setElement(rowElement);
                 DOM.sinkEvents(getElement(), Event.MOUSEEVENTS
-                        | Event.ONDBLCLICK | Event.ONCONTEXTMENU);
+                        | Event.ONDBLCLICK | Event.ONCONTEXTMENU
+                        | Event.FOCUSEVENTS);
                 getElement().setTabIndex(-1);
 
                 /*
@@ -4187,6 +4188,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                         case Event.ONMOUSEOUT:
                             mDown = false;
+                            break;
+
+                        case Event.ONFOCUS:
+                            onFocus(null);
+                            break;
+
+                        case Event.ONBLUR:
+                            onBlur(null);
                             break;
 
                         default:
@@ -5177,12 +5186,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         if (row != null) {
-
             // Apply focus style to new selection
             row.addStyleName(CLASSNAME_SELECTION_FOCUS);
 
             // Trying to set focus on already focused row
             if (row == focusedRow) {
+                row.getElement().focus();
                 return false;
             }
 
