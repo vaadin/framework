@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_5_5_dev-20110407";}
-.v-theme-version-6_5_5_dev-20110407 {display: none;}
+.v-theme-version:after {content:"6_5_5_dev-20110408";}
+.v-theme-version-6_5_5_dev-20110408 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1975,7 +1975,7 @@ textarea.v-textarea-readonly:focus {
 	background: transparent url(common/img/sprites.png) no-repeat 5px -37px;
 	padding: 1px 0;
 }
-.v-tree-node:focus {
+.v-tree-node-caption:focus {
 	outline: none;
 }
 .v-tree-node-expanded {

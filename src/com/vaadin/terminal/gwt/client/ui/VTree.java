@@ -823,10 +823,6 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
                 DOM.sinkEvents(ie6compatnode, Event.ONCLICK);
             }
-            /*
-             * Focus the TreeNode itself to get keyboard navigation to work.
-             */
-            getElement().setTabIndex(-1);
 
             nodeCaptionDiv = DOM.createDiv();
             DOM.setElementProperty(nodeCaptionDiv, "className", CLASSNAME
@@ -836,6 +832,12 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
             DOM.appendChild(getElement(), nodeCaptionDiv);
             DOM.appendChild(nodeCaptionDiv, wrapper);
             DOM.appendChild(wrapper, nodeCaptionSpan);
+
+            /*
+             * Focus the caption div of the node to get keyboard navigation to
+             * work without scrolling up or down when focusing a node.
+             */
+            nodeCaptionDiv.setTabIndex(-1);
 
             childNodeContainer = new FlowPanel();
             childNodeContainer.setStyleName(CLASSNAME + "-children");
@@ -1128,7 +1130,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                     ie6compatnode.addClassName(CLASSNAME_FOCUSED);
                 }
                 this.focused = focused;
-                getElement().focus();
+                nodeCaptionDiv.focus();
                 treeHasFocus = true;
             } else if (this.focused && !focused) {
                 nodeCaptionDiv.removeClassName(CLASSNAME_FOCUSED);
