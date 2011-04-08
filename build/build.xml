@@ -139,6 +139,8 @@
         <!-- required when compiling WebContent/VAADIN/widgetsets (and also Java server-side classes) -->
         <property name="lib-gwt-dev" location="${gwt-dir}/gwt-dev-noservlet.jar" />
         <property name="lib-gwt-user" location="${gwt-dir}/gwt-user-noservlet.jar" />
+        <property name="lib-gwt-validation" location="${gwt-dir}/validation-api-1.0.0.GA.jar" />
+        <property name="lib-gwt-validation-src" location="${gwt-dir}/validation-api-1.0.0.GA-sources.jar" />
 
         <echo>We are using gwt version ${gwt-version}.</echo>
 
@@ -647,6 +649,8 @@
     <path id="widgetset-compile-classpath">
         <pathelement location="${lib-gwt-user}" />
         <pathelement location="${lib-gwt-dev}" />
+        <pathelement location="${lib-gwt-validation}" />
+        <pathelement location="${lib-gwt-validation-src}" />
         <pathelement location="${result-path}/classes" />
         <pathelement location="${result-path}/src/core" />
         <pathelement location="${result-path}/src/demo" />
