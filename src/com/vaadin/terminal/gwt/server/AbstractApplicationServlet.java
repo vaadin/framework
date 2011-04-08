@@ -1564,14 +1564,17 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * If one needs to override parts of the host page, it is suggested that one
      * overrides on of several submethods which are called by this method:
      * <ul>
-     * <li> {@link #setAjaxPageHeaders(HttpServletResponse)
-     * <li> {@link #writeAjaxPageHtmlHeadStart(BufferedWriter, HttpServletRequest)
-     * <li> {@link #writeAjaxPageHtmlHeader(BufferedWriter, String, String, HttpServletRequest)
-     * <li> {@link #writeAjaxPageHtmlBodyStart(BufferedWriter, HttpServletRequest)
+     * <li> {@link #setAjaxPageHeaders(HttpServletResponse)}
      * <li>
-     * {@link #writeAjaxPageHtmlVaadinScripts(Window, String, Application, BufferedWriter, String, String, String, HttpServletRequest)
+     * {@link #writeAjaxPageHtmlHeadStart(BufferedWriter, HttpServletRequest)}
      * <li>
-     * {@link #writeAjaxPageHtmlMainDiv(BufferedWriter, String, String, String, HttpServletRequest)
+     * {@link #writeAjaxPageHtmlHeader(BufferedWriter, String, String, HttpServletRequest)}
+     * <li>
+     * {@link #writeAjaxPageHtmlBodyStart(BufferedWriter, HttpServletRequest)}
+     * <li>
+     * {@link #writeAjaxPageHtmlVaadinScripts(Window, String, Application, BufferedWriter, String, String, String, HttpServletRequest)}
+     * <li>
+     * {@link #writeAjaxPageHtmlMainDiv(BufferedWriter, String, String, String, HttpServletRequest)}
      * <li> {@link #writeAjaxPageHtmlBodyEnd(BufferedWriter)}
      * </ul>
      * 
@@ -1660,8 +1663,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     + getDefaultTheme().replaceAll("[^a-zA-Z0-9]", "");
         }
 
-        String classNames = "v-app " + themeClass + " "
-                + appClass;
+        String classNames = "v-app " + themeClass + " " + appClass;
 
         String divStyle = null;
         if (request.getAttribute(REQUEST_APPSTYLE) != null) {
@@ -1737,12 +1739,12 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @param appId
      * @param classNames
      * @param divStyle
-     * @param request 
+     * @param request
      * @throws IOException
      */
     protected void writeAjaxPageHtmlMainDiv(final BufferedWriter page,
-            String appId, String classNames, String divStyle, HttpServletRequest request)
-            throws IOException {
+            String appId, String classNames, String divStyle,
+            HttpServletRequest request) throws IOException {
         page.write("<div id=\"" + appId + "\" class=\"" + classNames + "\" "
                 + (divStyle != null ? divStyle : "") + ">");
         page.write("<div class=\"v-app-loading\"></div>");

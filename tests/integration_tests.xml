@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <project name="Test sampler deployment" basedir="." default="integration-test-all">
-   
+
 	<!-- Target deploying demo.war -->
 	<fail unless="test.integration.server" message="test.integration.server must be set for integration tests to run"/>
 	
@@ -296,7 +296,7 @@
 	
 	<target name="integration-test-eXo-3">
 		<fileset dir="integration-testscripts" id="html-test-files" includes="eXo-3/eXo-integration.html" />
-		<pathconvert pathsep=" " property="test-gatein" refid="html-test-files" />
+		<pathconvert pathsep=" " property="test-exo" refid="html-test-files" />
 		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
 			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
@@ -304,7 +304,24 @@
 			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
 			<property name="server.start.succeeded" value="1" />
 			<property name="browsers" value="winxp-firefox36" />
-			<property name="testfiles" value="${test-gatein}" />
+			<property name="testfiles" value="${test-exo}" />
+			<property name="test-output-dir" value="../build/integration-test-output" />
+	
+			<fileset dir="." includes="test.xml" />
+		</subant>
+	</target>
+	
+	<target name="integration-test-weblogic-portal">
+		<fileset dir="integration-testscripts" id="html-test-files" includes="weblogic-portal/weblogic-portal-integration.html" />
+		<pathconvert pathsep=" " property="test-weblogic" refid="html-test-files" />
+		
+		<subant target="run-tests" failonerror="false" antfile="test.xml">
+			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
+			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
+			<property name="com.vaadin.testbench.deployment.url" value="http://${test.integration.server}:7001" />
+			<property name="server.start.succeeded" value="1" />
+			<property name="browsers" value="winxp-firefox36" />
+			<property name="testfiles" value="${test-weblogic}" />
 			<property name="test-output-dir" value="../build/integration-test-output" />
 	
 			<fileset dir="." includes="test.xml" />
@@ -385,6 +402,14 @@
 
 	<target name="integration-test-stop-weblogic10">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-weblogic-10.3" />
+	</target>
+
+	<target name="integration-test-start-weblogic-portal">
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-weblogic-portal" />
+	</target>
+
+	<target name="integration-test-stop-weblogic-portal">
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-weblogic-portal" />
 	</target>
 	
 	<!-- Run sampler deployment test on GAE -->
@@ -555,6 +580,12 @@
 		<antcall target="integration-test-stop-weblogic10"/>
 	</target>
 	
+	<target name="integration-test-weblogicPortal">
+		<antcall target="integration-test-start-weblogic-portal"/>
+		<antcall target="integration-test-weblogic-portal"/>
+		<antcall target="integration-test-stop-weblogic-portal"/>
+	</target>
+	
 	<target name="integration-test-GAE">
 		<antcall target="integration-test-deploy-to-GAE"/>
 		<antcall target="integration-test-test-GAE" />
@@ -623,6 +654,9 @@
 				</antcall>
 				<antcall target="run-integration-test">
 					<param name="target-server" value="weblogic10"/>
+				</antcall>
+				<antcall target="run-integration-test">
+					<param name="target-server" value="weblogicPortal"/>
 				</antcall>
 				<antcall target="run-integration-test">
 					<param name="target-server" value="GAE"/>

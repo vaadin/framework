@@ -56,7 +56,15 @@ public class WindowClickEvents extends TestBase {
 
         Label l = new Label("This window is centered");
         l.setSizeUndefined();
-        Button b = new Button("Clicking here should not produce an event");
+        Button b = new Button(
+                "Clicking here should not produce a layout click event");
+        b.addListener(new Button.ClickListener() {
+
+            public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
+                log.log("Click on button");
+            }
+
+        });
         centered.addComponent(l);
         centered.addComponent(b);
 
