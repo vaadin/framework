@@ -87,19 +87,13 @@
 	border: none;
 	background: transparent;
 }
-.v-ie6 .v-panel-content,
-.v-ie7 .v-panel-content,
-.v-ie8 .v-panel-content {
+.v-ie .v-panel-content {
 	border-bottom: 1px solid #babfc0;
 }
-.v-ie6 .v-panel-content-light,
-.v-ie7 .v-panel-content-light,
-.v-ie8 .v-panel-content-light {
+.v-ie .v-panel-content-light {
 	border-bottom: none;
 }
-.v-ie6 .v-panel-deco,
-.v-ie7 .v-panel-deco,
-.v-ie8 .v-panel-deco {
+.v-ie .v-panel-deco {
 	height: 0;
 	overflow: hidden;
 }

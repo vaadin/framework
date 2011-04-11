@@ -4828,7 +4828,8 @@ td.v-datefield-calendarpanel-nextyear {
 	zoom: 1;
 	display: inline;
 }
-.v-ie8 .v-tabsheet-tabs .v-errorindicator {
+.v-ie8 .v-tabsheet-tabs .v-errorindicator,
+.v-ie9 .v-tabsheet-tabs .v-errorindicator {
 	display: inline-block;
 }
 

@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_5_4_dev-20110324";}
-.v-theme-version-6_5_4_dev-20110324 {display: none;}
+.v-theme-version:after {content:"6_6_0_dev-20110411";}
+.v-theme-version-6_6_0_dev-20110411 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -3237,19 +3237,13 @@ div.v-csslayout-box-shadow {
 	border: none;
 	background: transparent;
 }
-.v-ie6 .v-panel-content,
-.v-ie7 .v-panel-content,
-.v-ie8 .v-panel-content {
+.v-ie .v-panel-content {
 	border-bottom: 1px solid #babfc0;
 }
-.v-ie6 .v-panel-content-light,
-.v-ie7 .v-panel-content-light,
-.v-ie8 .v-panel-content-light {
+.v-ie .v-panel-content-light {
 	border-bottom: none;
 }
-.v-ie6 .v-panel-deco,
-.v-ie7 .v-panel-deco,
-.v-ie8 .v-panel-deco {
+.v-ie .v-panel-deco {
 	height: 0;
 	overflow: hidden;
 }
@@ -4080,21 +4074,18 @@ tr.v-table-row-odd:hover {
 	padding: 0;
 	margin: 0;
 }
-.v-ie6 .v-tabsheet-content,
-.v-ie7 .v-tabsheet-content,
-.v-ie8 .v-tabsheet-content {
+.v-ie .v-tabsheet-content {
 	border-bottom: none;
 }
-.v-ie6 .v-tabsheet-deco,
-.v-ie7 .v-tabsheet-deco,
-.v-ie8 .v-tabsheet-deco {
+.v-ie .v-tabsheet-deco {
 	height: 1px;
 	background: #babfc0;
 	overflow: hidden;
 	margin: 0;
 }
 .v-ie7 .v-tabsheet-deco,
-.v-ie8 .v-tabsheet-deco {
+.v-ie8 .v-tabsheet-deco,
+.v-ie9 .v-tabsheet-deco {
 	width: 100%;
 }
 /* Light-style */
@@ -4217,9 +4208,7 @@ tr.v-table-row-odd:hover {
 	background: transparent url(tabsheet/img/inline-tab-left.png) no-repeat -7px 0;
 	padding: 9px 11px 0 11px;
 }
-.v-ie6 .v-tabsheet-deco-light,
-.v-ie7 .v-tabsheet-deco-light,
-.v-ie8 .v-tabsheet-deco-light {
+.v-ie .v-tabsheet-deco-light {
 	height: 0;
 }
 
