@@ -2117,6 +2117,9 @@ public class Table extends AbstractSelect implements Action.Container,
                         idsTemp[i] = columnIdMap.get(ids[i].toString());
                     }
                     setColumnOrder(idsTemp);
+                    if (hasListeners(ColumnReorderEvent.class)) {
+                        fireEvent(new ColumnReorderEvent(this));
+                    }
                 } catch (final Exception e) {
                     // FIXME: Handle exception
                     logger.log(Level.FINER,
@@ -4176,4 +4179,70 @@ public class Table extends AbstractSelect implements Action.Container,
         removeListener(VScrollTable.COLUMN_RESIZE_EVENT_ID,
                 ColumnResizeEvent.class, listener);
     }
+
+    /**
+     * This event is fired when a columns are reordered by the end user user.
+     */
+    public static class ColumnReorderEvent extends Component.Event {
+        public static final Method METHOD;
+
+        static {
+            try {
+                METHOD = ColumnReorderListener.class.getDeclaredMethod(
+                        "columnReorder",
+                        new Class[] { ColumnReorderEvent.class });
+            } catch (final java.lang.NoSuchMethodException e) {
+                // This should never happen
+                throw new java.lang.RuntimeException();
+            }
+        }
+
+        /**
+         * Constructor
+         * 
+         * @param source
+         *            The source of the event
+         */
+        public ColumnReorderEvent(Component source) {
+            super(source);
+        }
+
+    }
+
+    /**
+     * Interface for listening to column reorder events.
+     */
+    public interface ColumnReorderListener extends Serializable {
+
+        /**
+         * This method is triggered when the column has been reordered
+         * 
+         * @param event
+         */
+        public void columnReorder(ColumnReorderEvent event);
+    }
+
+    /**
+     * Adds a column reorder listener to the Table. A column reorder listener is
+     * called when a user reorders columns.
+     * 
+     * @param listener
+     *            The listener to attach to the Table
+     */
+    public void addListener(ColumnReorderListener listener) {
+        addListener(VScrollTable.COLUMN_REORDER_EVENT_ID,
+                ColumnReorderEvent.class, listener, ColumnReorderEvent.METHOD);
+    }
+
+    /**
+     * Removes a column reorder listener from the Table.
+     * 
+     * @param listener
+     *            The listener to remove
+     */
+    public void removeListener(ColumnReorderListener listener) {
+        removeListener(VScrollTable.COLUMN_REORDER_EVENT_ID,
+                ColumnReorderEvent.class, listener);
+    }
+
 }
