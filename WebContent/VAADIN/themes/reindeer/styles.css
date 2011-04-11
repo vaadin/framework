@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_5_4_dev-20110324";}
-.v-theme-version-6_5_4_dev-20110324 {display: none;}
+.v-theme-version:after {content:"6_6_0_dev-20110411";}
+.v-theme-version-6_6_0_dev-20110411 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -3675,6 +3675,12 @@ td.v-datefield-calendarpanel-nextyear {
 	background: #c8ccd0;
 	font-weight: bold;
 }
+
+.v-ie9 .v-Notification H1 {
+	/* Fix for #6793 */
+	font-weight: bold;
+}
+	
 .v-Notification p {
 	line-height: 1.3;
 }

@@ -7,6 +7,12 @@
 	background: #c8ccd0;
 	font-weight: bold;
 }
+
+.v-ie9 .v-Notification H1 {
+	/* Fix for #6793 */
+	font-weight: bold;
+}
+	
 .v-Notification p {
 	line-height: 1.3;
 }
