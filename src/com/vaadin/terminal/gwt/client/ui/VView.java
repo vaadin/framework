@@ -480,17 +480,17 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      * Called when a resize event is received.
      */
     private void onResize() {
-        if (BrowserInfo.get().isIE() || BrowserInfo.get().isFF3()) {
-            /*
-             * IE will give us some false resize events due bugs with
-             * scrollbars. Postponing layout phase to see if size was really
-             * changed.
-             */
-            delayedResizeExecutor.trigger();
-        } else {
-            windowSizeMaybeChanged(Window.getClientWidth(),
-                    Window.getClientHeight());
-        }
+        /*
+         * IE will give us some false resize events due to problems with
+         * scrollbars. Firefox 3 might also produce som extra events. We
+         * postpone both the re-layouting and the server side event for a while
+         * to deal with these issues.
+         * 
+         * We also postpone these events to avoid slowness when resizing the
+         * browser window. Constantly recalculating the layout causes the resize
+         * operation to be really slow.
+         */
+        delayedResizeExecutor.trigger();
     }
 
     /**
