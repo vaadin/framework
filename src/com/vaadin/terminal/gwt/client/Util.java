@@ -348,14 +348,14 @@ public class Util {
 
     public static int measureHorizontalBorder(Element element) {
         int borders;
-        // element.getClientWidth();
+
         if (BrowserInfo.get().isIE()) {
             String width = element.getStyle().getProperty("width");
             String height = element.getStyle().getProperty("height");
 
             int offsetWidth = element.getOffsetWidth();
             int offsetHeight = element.getOffsetHeight();
-            if (BrowserInfo.get().isIE6() || BrowserInfo.get().isIE8()) {
+            if (!BrowserInfo.get().isIE7()) {
                 if (offsetHeight < 1) {
                     offsetHeight = 1;
                 }
@@ -369,7 +369,7 @@ public class Util {
             borders = element.getOffsetWidth() - element.getClientWidth();
 
             element.getStyle().setProperty("width", width);
-            if (BrowserInfo.get().isIE6() || BrowserInfo.get().isIE8()) {
+            if (!BrowserInfo.get().isIE7()) {
                 element.getStyle().setProperty("height", height);
             }
         } else {
