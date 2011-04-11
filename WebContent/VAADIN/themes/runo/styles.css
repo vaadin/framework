@@ -3237,13 +3237,19 @@ div.v-csslayout-box-shadow {
 	border: none;
 	background: transparent;
 }
-.v-ie .v-panel-content {
+.v-ie6 .v-panel-content,
+.v-ie7 .v-panel-content,
+.v-ie8 .v-panel-content {
 	border-bottom: 1px solid #babfc0;
 }
-.v-ie .v-panel-content-light {
+.v-ie6 .v-panel-content-light, 
+.v-ie7 .v-panel-content-light, 
+.v-ie8 .v-panel-content-light {
 	border-bottom: none;
 }
-.v-ie .v-panel-deco {
+.v-ie6 .v-panel-deco, 
+.v-ie7 .v-panel-deco, 	 	 
+.v-ie8 .v-panel-deco { 
 	height: 0;
 	overflow: hidden;
 }
