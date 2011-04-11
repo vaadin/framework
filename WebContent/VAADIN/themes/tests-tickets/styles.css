@@ -333,3 +333,6 @@
 	color: blue;
 }
 
+.v-tabsheet-pg .v-tabsheet-tabitem-selected {
+	font-weight: bold
+}
