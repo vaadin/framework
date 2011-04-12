@@ -1832,7 +1832,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             DOM.setElementProperty(colResizeWidget, "className", CLASSNAME
                     + "-resizer");
-            DOM.sinkEvents(colResizeWidget, Event.MOUSEEVENTS);
 
             setText(headerText);
 
@@ -1848,11 +1847,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // ensure no clipping initially (problem on column additions)
             DOM.setStyleAttribute(captionContainer, "overflow", "visible");
 
-            DOM.sinkEvents(captionContainer, Event.MOUSEEVENTS);
-
             DOM.appendChild(td, captionContainer);
 
-            DOM.sinkEvents(td, Event.MOUSEEVENTS);
+            DOM.sinkEvents(td, Event.MOUSEEVENTS | Event.TOUCHEVENTS);
 
             setElement(td);
 
@@ -1944,7 +1941,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             if (enabled && event != null) {
                 if (isResizing
                         || event.getEventTarget().cast() == colResizeWidget) {
-                    if (dragging && DOM.eventGetType(event) == Event.ONMOUSEUP) {
+                    if (dragging
+                            && (event.getTypeInt() == Event.ONMOUSEUP || event
+                                    .getTypeInt() == Event.ONTOUCHEND)) {
                         // Handle releasing column header on spacer #5318
                         handleCaptionEvent(event);
                     } else {
@@ -1957,7 +1956,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                      * variables from other components that fire variables when
                      * they lose focus.
                      */
-                    if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
+                    if (event.getTypeInt() == Event.ONMOUSEDOWN
+                            || event.getTypeInt() == Event.ONTOUCHSTART) {
                         scrollBodyPanel.setFocus(true);
                     }
                     handleCaptionEvent(event);
@@ -2015,17 +2015,27 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         protected void handleCaptionEvent(Event event) {
             switch (DOM.eventGetType(event)) {
+            case Event.ONTOUCHSTART:
             case Event.ONMOUSEDOWN:
                 if (columnReordering) {
+                    if (event.getTypeInt() == Event.ONTOUCHSTART) {
+                        /*
+                         * prevent using this event in e.g. scrolling
+                         */
+                        event.stopPropagation();
+                    }
                     dragging = true;
                     moved = false;
                     colIndex = getColIndexByKey(cid);
                     DOM.setCapture(getElement());
                     headerX = tHead.getAbsoluteLeft();
-                    DOM.eventPreventDefault(event); // prevent selecting text
+                    event.preventDefault(); // prevent selecting text &&
+                                            // generated touch events
                 }
                 break;
             case Event.ONMOUSEUP:
+            case Event.ONTOUCHEND:
+            case Event.ONTOUCHCANCEL:
                 if (columnReordering) {
                     dragging = false;
                     DOM.releaseCapture(getElement());
@@ -2040,6 +2050,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 reOrderColumn(cid, closestSlot);
                             }
                         }
+                    }
+                    if (Util.isTouchEvent(event)) {
+                        /*
+                         * Prevent using in e.g. scrolling and prevent generated
+                         * events.
+                         */
+                        event.preventDefault();
+                        event.stopPropagation();
                     }
                 }
 
@@ -2067,18 +2085,33 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         rowRequestHandler.run(); // run immediately
                     }
                     fireHeaderClickedEvent(event);
+                    if (Util.isTouchEvent(event)) {
+                        /*
+                         * Prevent using in e.g. scrolling and prevent generated
+                         * events.
+                         */
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
                     break;
                 }
                 break;
+            case Event.ONTOUCHMOVE:
             case Event.ONMOUSEMOVE:
                 if (dragging) {
+                    if (event.getTypeInt() == Event.ONTOUCHMOVE) {
+                        /*
+                         * prevent using this event in e.g. scrolling
+                         */
+                        event.stopPropagation();
+                    }
                     if (!moved) {
                         createFloatingCopy();
                         moved = true;
                     }
-                    final int x = DOM.eventGetClientX(event)
-                            + DOM.getElementPropertyInt(tHead.hTableWrapper,
-                                    "scrollLeft");
+
+                    final int clientX = Util.getTouchOrMouseClientX(event);
+                    final int x = clientX + tHead.hTableWrapper.getScrollLeft();
                     int slotX = headerX;
                     closestSlot = colIndex;
                     int closestDistance = -1;
@@ -2100,7 +2133,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     }
                     tHead.focusSlot(closestSlot);
 
-                    updateFloatingCopysPosition(DOM.eventGetClientX(event), -1);
+                    updateFloatingCopysPosition(clientX, -1);
                 }
                 break;
             default:
