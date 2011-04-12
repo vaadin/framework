@@ -107,6 +107,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     public static final String HEADER_CLICK_EVENT_ID = "handleHeaderClick";
     public static final String FOOTER_CLICK_EVENT_ID = "handleFooterClick";
     public static final String COLUMN_RESIZE_EVENT_ID = "columnResize";
+    public static final String COLUMN_REORDER_EVENT_ID = "columnReorder";
 
     private static final double CACHE_RATE_DEFAULT = 2;
 
@@ -1329,6 +1330,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
         }
         client.updateVariable(paintableId, "columnorder", columnOrder, false);
+        if (client.hasEventListeners(this, COLUMN_REORDER_EVENT_ID)) {
+            client.sendPendingVariableChanges();
+        }
     }
 
     @Override
