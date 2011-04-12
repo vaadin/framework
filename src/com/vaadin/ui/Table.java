@@ -3853,7 +3853,7 @@ public class Table extends AbstractSelect implements Action.Container,
                                 new Class[] { HeaderClickEvent.class });
             } catch (final java.lang.NoSuchMethodException e) {
                 // This should never happen
-                throw new java.lang.RuntimeException();
+                throw new java.lang.RuntimeException(e);
             }
         }
 
@@ -3893,7 +3893,7 @@ public class Table extends AbstractSelect implements Action.Container,
                                 new Class[] { FooterClickEvent.class });
             } catch (final java.lang.NoSuchMethodException e) {
                 // This should never happen
-                throw new java.lang.RuntimeException();
+                throw new java.lang.RuntimeException(e);
             }
         }
 
@@ -4084,7 +4084,7 @@ public class Table extends AbstractSelect implements Action.Container,
                                 new Class[] { ColumnResizeEvent.class });
             } catch (final java.lang.NoSuchMethodException e) {
                 // This should never happen
-                throw new java.lang.RuntimeException();
+                throw new java.lang.RuntimeException(e);
             }
         }
 
@@ -4193,7 +4193,7 @@ public class Table extends AbstractSelect implements Action.Container,
                         new Class[] { ColumnReorderEvent.class });
             } catch (final java.lang.NoSuchMethodException e) {
                 // This should never happen
-                throw new java.lang.RuntimeException();
+                throw new java.lang.RuntimeException(e);
             }
         }
 
