@@ -19,6 +19,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
     private int subLevels = -1;
     private int subMenuDensity = -1;
     private Integer subMenuSeparatorDensity = null;
+    private Boolean openRootMenuOnHover = false;
     private int iconInterval = -1;
     private Integer iconSize;
     private Integer disabledDensity;
@@ -37,6 +38,9 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
         createSubMenuLevelsSelect(CATEGORY_MENU_ITEMS);
         createSubMenuDensitySelect(CATEGORY_MENU_ITEMS);
         createSubMenuSeparatorDensitySelect(CATEGORY_MENU_ITEMS);
+
+        createBooleanAction("OpenRootMenuOnHover", CATEGORY_FEATURES,
+                openRootMenuOnHover, setOpenRootOnHover);
 
         createMenuItemIconIntervalSelect(CATEGORY_MENU_ITEM_STATES);
         createMenuIconsSizeSelect(CATEGORY_MENU_ITEM_STATES);
@@ -183,6 +187,15 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
             subMenuSeparatorDensity = value;
             createSubItems(c);
         }
+    };
+
+    private Command<MenuBar, Boolean> setOpenRootOnHover = new Command<MenuBar, Boolean>() {
+
+        public void execute(MenuBar c, Boolean value, Object data) {
+            openRootMenuOnHover = value;
+            c.setOpenRootOnHover(value);
+        }
+
     };
 
     private Command<MenuBar, Integer> selectIcon = new Command<MenuBar, Integer>() {

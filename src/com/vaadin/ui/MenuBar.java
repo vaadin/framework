@@ -49,12 +49,16 @@ public class MenuBar extends AbstractComponent {
 
     private MenuItem moreItem;
 
+    private boolean openRootOnHover;
+
     /** Paint (serialise) the component for the client. */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         // Superclass writes any common attributes in the paint target.
         super.paintContent(target);
+
+        target.addAttribute(VMenuBar.OPEN_ROOT_MENU_ON_HOWER, openRootOnHover);
 
         target.startTag("options");
 
@@ -363,6 +367,31 @@ public class MenuBar extends AbstractComponent {
      */
     public MenuItem getMoreMenuItem() {
         return moreItem;
+    }
+    
+    /**
+     * Using this method menubar can be put into a special mode where the root
+     * level menu opens without clicking on the menu. In this mode the menu also
+     * closes itself if the mouse is moved out of the opened menu.
+     * 
+     * @param b
+     */
+    public void setOpenRootOnHover(boolean b) {
+        if(b != openRootOnHover) {
+            openRootOnHover = b;
+            requestRepaint();
+        }
+    }
+
+    /**
+     * Detects whether the menubar is in a mode where root menus are
+     * automatically opened when the mouse cursor is moved over the menubar.
+     * Normally root menu opens only by clicking on the menu.
+     * 
+     * @return true if the root menus open without click
+     */
+    public boolean isOpenRootOnHover() {
+        return openRootOnHover;
     }
 
     /**

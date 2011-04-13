@@ -8,8 +8,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -25,6 +27,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -36,6 +39,7 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VMenuBar extends SimpleFocusablePanel implements Paintable,
@@ -63,6 +67,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
     // associated
     protected static final Command emptyCommand = null;
 
+    public static final String OPEN_ROOT_MENU_ON_HOWER = "ormoh";
+
     /** Widget fields **/
     protected boolean subMenu;
     protected ArrayList<CustomMenuItem> items;
@@ -84,6 +90,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                     iLayout(true);
                 }
             });
+
+    private boolean openRootOnHover;
 
     public VMenuBar() {
         // Create an empty horizontal menubar
@@ -182,6 +190,9 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
+
+        openRootOnHover = uidl.getBooleanAttribute(OPEN_ROOT_MENU_ON_HOWER);
+
         enabled = !uidl.getBooleanAttribute("disabled");
 
         // For future connections
@@ -478,6 +489,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 break;
 
             case Event.ONMOUSEOVER:
+                LazyCloser.cancelClosing();
+
                 if (isEnabled() && targetItem.isEnabled()) {
                     itemOver(targetItem);
                 }
@@ -485,6 +498,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
             case Event.ONMOUSEOUT:
                 itemOut(targetItem);
+                LazyCloser.schedule();
                 break;
             }
         } else if (subMenu && DOM.eventGetType(e) == Event.ONCLICK && subMenu) {
@@ -542,8 +556,12 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      * @param item
      */
     public void itemOver(CustomMenuItem item) {
-        if ((subMenu || menuVisible) && !item.isSeparator()) {
+        if ((openRootOnHover || subMenu || menuVisible) && !item.isSeparator()) {
             setSelected(item);
+            if (!subMenu && openRootOnHover && !menuVisible) {
+                menuVisible = true; // start opening menus
+                LazyCloser.prepare(this);
+            }
         }
 
         if (menuVisible && visibleChildMenu != item.getSubMenu()
@@ -569,6 +587,49 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         } else if (visibleChildMenu == null) {
             setSelected(null);
         }
+    }
+
+    /**
+     * Used to autoclose submenus when they the menu is in a mode which opens
+     * root menus on mouse hover.
+     */
+    private static class LazyCloser extends Timer {
+        static LazyCloser INSTANCE;
+        private VMenuBar activeRoot;
+
+        @Override
+        public void run() {
+            activeRoot.hideChildren();
+            activeRoot.setSelected(null);
+            activeRoot.menuVisible = false;
+            activeRoot = null;
+        }
+
+        public static void cancelClosing() {
+            if (INSTANCE != null) {
+                INSTANCE.cancel();
+            }
+        }
+
+        public static void prepare(VMenuBar vMenuBar) {
+            if (INSTANCE == null) {
+                INSTANCE = new LazyCloser();
+            }
+            if (INSTANCE.activeRoot == vMenuBar) {
+                INSTANCE.cancel();
+            } else if (INSTANCE.activeRoot != null) {
+                INSTANCE.cancel();
+                INSTANCE.run();
+            }
+            INSTANCE.activeRoot = vMenuBar;
+        }
+
+        public static void schedule() {
+            if (INSTANCE != null && INSTANCE.activeRoot != null) {
+                INSTANCE.schedule(750);
+            }
+        }
+
     }
 
     /**
