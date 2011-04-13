@@ -126,14 +126,36 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                     .deSerialize((String) getData("mouseEvent"));
         }
 
-        public VerticalDropLocation verticalDropLocation() {
+        /**
+         * @return a detail about the drags vertical position over the wrapper.
+         */
+        public VerticalDropLocation getVerticalDropLocation() {
             return VerticalDropLocation
                     .valueOf((String) getData("verticalLocation"));
         }
 
-        public HorizontalDropLocation horizontalDropLocation() {
+        /**
+         * @return a detail about the drags horizontal position over the wrapper.
+         */
+        public HorizontalDropLocation getHorizontalDropLocation() {
             return HorizontalDropLocation
                     .valueOf((String) getData("horizontalLocation"));
+        }
+
+        /**
+         * @deprecated use {@link #getVerticalDropLocation()} instead
+         */
+        @Deprecated
+        public VerticalDropLocation verticalDropLocation() {
+            return getVerticalDropLocation();
+        }
+
+        /**
+         * @deprecated use {@link #getHorizontalDropLocation()} instead
+         */
+        @Deprecated
+        public HorizontalDropLocation horizontalDropLocation() {
+            return getHorizontalDropLocation();
         }
 
     }
