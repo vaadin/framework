@@ -3,6 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client.ui.dd;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
@@ -38,6 +40,8 @@ import com.vaadin.terminal.gwt.client.ValueMap;
  * TODO cancel drag and drop if more than one touches !?
  */
 public class VDragAndDropManager {
+
+    public static final String ACTIVE_DRAG_SOURCE_STYLENAME = "v-active-drag-source";
 
     private final class DefaultDragAndDropEventHandler implements
             NativePreviewHandler {
@@ -297,6 +301,7 @@ public class VDragAndDropManager {
 
             public void execute() {
                 isStarted = true;
+                addActiveDragSourceStyleName();
                 VDropHandler dh = null;
                 if (startEvent != null) {
                     dh = findDragTarget(Element.as(currentDrag
@@ -322,6 +327,13 @@ public class VDragAndDropManager {
                 }
                 // just capture something to prevent text selection in IE
                 Event.setCapture(RootPanel.getBodyElement());
+            }
+
+            private void addActiveDragSourceStyleName() {
+                Paintable dragSource = currentDrag.getTransferable()
+                        .getDragSource();
+                ((Widget) dragSource)
+                        .addStyleName(ACTIVE_DRAG_SOURCE_STYLENAME);
             }
         };
 
@@ -471,13 +483,33 @@ public class VDragAndDropManager {
             handlerRegistration.removeHandler();
             handlerRegistration = null;
         }
+        boolean sendTransferableToServer = false;
         if (currentDropHandler != null) {
             if (doDrop) {
                 // we have dropped on a drop target
-                boolean sendTransferableToServer = currentDropHandler
-                        .drop(currentDrag);
+                sendTransferableToServer = currentDropHandler.drop(currentDrag);
                 if (sendTransferableToServer) {
                     doRequest(DragEventType.DROP);
+                    /*
+                     * Clean active source class name deferred until response is
+                     * handled. E.g. hidden on start, removed in drophandler ->
+                     * would flicker in case removed eagerly.
+                     */
+                    final Paintable dragSource = currentDrag.getTransferable()
+                            .getDragSource();
+                    final ApplicationConnection client = currentDropHandler
+                            .getApplicationConnection();
+                    Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
+                        public boolean execute() {
+                            if (!client.hasActiveRequest()) {
+                                removeActiveSourceClassname(dragSource);
+                                return false;
+                            }
+                            return true;
+                        }
+
+                    }, 30);
+
                 }
             } else {
                 currentDrag.setCurrentGwtEvent(null);
@@ -488,6 +520,16 @@ public class VDragAndDropManager {
             visitId = 0; // reset to ignore ongoing server check
         }
 
+        /*
+         * Remove class name indicating drag source when server visit is done
+         * iff server visit was not initiated. Otherwise it will be removed once
+         * the server visit is done.
+         */
+        if (!sendTransferableToServer && currentDrag != null) {
+            removeActiveSourceClassname(currentDrag.getTransferable()
+                    .getDragSource());
+        }
+
         currentDrag = null;
 
         clearDragElement();
@@ -495,6 +537,10 @@ public class VDragAndDropManager {
         // release the capture (set to prevent text selection in IE)
         Event.releaseCapture(RootPanel.getBodyElement());
 
+    }
+
+    private void removeActiveSourceClassname(Paintable dragSource) {
+        ((Widget) dragSource).removeStyleName(ACTIVE_DRAG_SOURCE_STYLENAME);
     }
 
     private void clearDragElement() {
