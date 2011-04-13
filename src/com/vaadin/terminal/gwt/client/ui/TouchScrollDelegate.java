@@ -302,7 +302,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
     private boolean isMovedSignificantly() {
         return moved ? moved
-                : Math.abs(origY - lastClientY) > SIGNIFICANT_MOVE_THRESHOLD;
+                : Math.abs(origY - lastClientY) >= SIGNIFICANT_MOVE_THRESHOLD;
     }
 
     private void onTouchEnd(NativeEvent event) {
