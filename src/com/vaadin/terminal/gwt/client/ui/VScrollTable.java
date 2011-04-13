@@ -15,11 +15,14 @@ import java.util.Set;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
@@ -50,6 +53,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
@@ -274,7 +278,175 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     private final TableFooter tFoot = new TableFooter();
 
-    private final FocusableScrollPanel scrollBodyPanel = new FocusableScrollPanel();
+    private final FocusableScrollPanel scrollBodyPanel = new FocusableScrollPanel() {
+
+        private DivElement focusElement = Document.get().createDivElement();
+
+        @Override
+        public void setWidget(Widget w) {
+            super.setWidget(w);
+            if (focusElement.getParentElement() == null) {
+                Style style = focusElement.getStyle();
+                if (BrowserInfo.get().isIE6()) {
+                    style.setOverflow(Overflow.HIDDEN);
+                    style.setHeight(0, Unit.PX);
+                    style.setWidth(0, Unit.PX);
+                    style.setPosition(Position.ABSOLUTE);
+
+                    addScrollHandler(new ScrollHandler() {
+                        public void onScroll(ScrollEvent event) {
+                            Scheduler.get().scheduleDeferred(
+                                    new ScheduledCommand() {
+                                        public void execute() {
+                                            focusElement.getStyle().setTop(
+                                                    getScrollPosition(),
+                                                    Unit.PX);
+                                            focusElement
+                                                    .getStyle()
+                                                    .setLeft(
+                                                            getHorizontalScrollPosition(),
+                                                            Unit.PX);
+                                        }
+                                    });
+                        }
+                    });
+                } else {
+                    style.setPosition(Position.FIXED);
+                    style.setTop(0, Unit.PX);
+                    style.setLeft(0, Unit.PX);
+                }
+                getElement().appendChild(focusElement);
+                /* Sink from focusElemet too as focusa and blur don't bubble */
+                DOM.sinkEvents((Element) focusElement.cast(), Event.FOCUSEVENTS);
+                // revert to original, not focusable
+                getElement().setPropertyObject("tabIndex", null);
+
+                /*
+                 * Firefox auto-repeat works correctly only if we use a key
+                 * press handler, other browsers handle it correctly when using
+                 * a key down handler
+                 */
+                if (BrowserInfo.get().isGecko()) {
+                    addDomHandler(navKeyPressHandler, KeyPressEvent.getType());
+                } else {
+                    addDomHandler(navKeyDownHandler, KeyDownEvent.getType());
+                }
+                addDomHandler(navKeyUpHandler, KeyUpEvent.getType());
+            }
+        };
+
+        @Override
+        public void setFocus(boolean focus) {
+            if (focus) {
+                FocusImpl.getFocusImplForPanel().focus(
+                        (Element) focusElement.cast());
+            } else {
+                FocusImpl.getFocusImplForPanel().blur(
+                        (Element) focusElement.cast());
+            }
+        };
+
+        @Override
+        public void setTabIndex(int tabIndex) {
+            getElement().setTabIndex(-1);
+            /*
+             * GWT bug with constructors ?? focusElement is null when compiled
+             * to js. TODO ensure this works when compiled without draftCompile
+             */
+            if (focusElement != null) {
+                focusElement.setTabIndex(tabIndex);
+            }
+        };
+
+    };
+
+    private KeyPressHandler navKeyPressHandler = new KeyPressHandler() {
+        public void onKeyPress(KeyPressEvent keyPressEvent) {
+            // This is used for Firefox only, since Firefox auto-repeat
+            // works correctly only if we use a key press handler, other
+            // browsers handle it correctly when using a key down handler
+            if (!BrowserInfo.get().isGecko()) {
+                return;
+            }
+
+            NativeEvent event = keyPressEvent.getNativeEvent();
+            if (!enabled) {
+                // Cancel default keyboard events on a disabled Table
+                // (prevents scrolling)
+                event.preventDefault();
+            } else {
+                // Key code in Firefox/onKeyPress is present only for
+                // special keys, otherwise 0 is returned
+                int keyCode = event.getKeyCode();
+                if (keyCode == 0 && event.getCharCode() == ' ') {
+                    // Provide a keyCode for space to be compatible with
+                    // FireFox keypress event
+                    keyCode = CHARCODE_SPACE;
+                }
+
+                if (handleNavigation(keyCode,
+                        event.getCtrlKey() || event.getMetaKey(),
+                        event.getShiftKey())) {
+                    event.preventDefault();
+                }
+
+                startScrollingVelocityTimer();
+            }
+        }
+
+    };
+
+    private KeyUpHandler navKeyUpHandler = new KeyUpHandler() {
+
+        public void onKeyUp(KeyUpEvent keyUpEvent) {
+            NativeEvent event = keyUpEvent.getNativeEvent();
+            int keyCode = event.getKeyCode();
+
+            if (!isFocusable()) {
+                cancelScrollingVelocityTimer();
+            } else if (isNavigationKey(keyCode)) {
+                if (keyCode == getNavigationDownKey()
+                        || keyCode == getNavigationUpKey()) {
+                    /*
+                     * in multiselect mode the server may still have value from
+                     * previous page. Clear it unless doing multiselection or
+                     * just moving focus.
+                     */
+                    if (!event.getShiftKey() && !event.getCtrlKey()) {
+                        instructServerToForgetPreviousSelections();
+                    }
+                    sendSelectedRows();
+                }
+                cancelScrollingVelocityTimer();
+                navKeyDown = false;
+            }
+        }
+    };
+
+    private KeyDownHandler navKeyDownHandler = new KeyDownHandler() {
+
+        public void onKeyDown(KeyDownEvent keyDownEvent) {
+            NativeEvent event = keyDownEvent.getNativeEvent();
+            // This is not used for Firefox
+            if (BrowserInfo.get().isGecko()) {
+                return;
+            }
+
+            if (!enabled) {
+                // Cancel default keyboard events on a disabled Table
+                // (prevents scrolling)
+                event.preventDefault();
+            } else {
+                if (handleNavigation(event.getKeyCode(), event.getCtrlKey()
+                        || event.getMetaKey(), event.getShiftKey())) {
+                    navKeyDown = true;
+                    event.preventDefault();
+                }
+
+                startScrollingVelocityTimer();
+            }
+        }
+    };
 
     private int totalRows;
 
@@ -1927,8 +2099,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                      * they lose focus.
                      */
                     if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
-                        // scrollBodyPanel.setFocus(true);
-                        getElement().focus();
+                        scrollBodyPanel.setFocus(true);
                     }
                     handleCaptionEvent(event);
                     event.stopPropagation();
@@ -3689,7 +3860,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         public class VScrollTableRow extends Panel implements ActionOwner,
-                Container, KeyPressHandler, KeyUpHandler, KeyDownHandler {
+                Container {
 
             private static final int DRAGMODE_MULTIROW = 2;
             protected ArrayList<Widget> childWidgets = new ArrayList<Widget>();
@@ -3710,21 +3881,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 rowElement = Document.get().createTRElement();
                 setElement(rowElement);
                 DOM.sinkEvents(getElement(), Event.MOUSEEVENTS
-                        | Event.ONDBLCLICK | Event.ONCONTEXTMENU
-                        | Event.FOCUSEVENTS);
-                getElement().setTabIndex(-1);
-
-                /*
-                 * Firefox auto-repeat works correctly only if we use a key
-                 * press handler, other browsers handle it correctly when using
-                 * a key down handler
-                 */
-                if (BrowserInfo.get().isGecko()) {
-                    addDomHandler(this, KeyPressEvent.getType());
-                } else {
-                    addDomHandler(this, KeyDownEvent.getType());
-                }
-                addDomHandler(this, KeyUpEvent.getType());
+                        | Event.ONDBLCLICK | Event.ONCONTEXTMENU);
             }
 
             /**
@@ -4113,6 +4270,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                             break;
 
                         case Event.ONMOUSEDOWN:
+                            ensureFocus();
                             setRowFocus(this);
                             if (dragmode != 0
                                     && event.getButton() == NativeEvent.BUTTON_LEFT) {
@@ -4162,7 +4320,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 // because we are preventing the default (due to
                                 // prevent text selection) we must ensure
                                 // gaining the focus.
-                                ensureFocus();
                                 event.preventDefault();
                                 event.stopPropagation();
                             } else if (event.getCtrlKey()
@@ -4171,10 +4328,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                     && selectMode == SELECT_MODE_MULTI
                                     && multiselectmode == MULTISELECT_MODE_DEFAULT) {
 
-                                // because we are preventing the default (due to
-                                // prevent text selection) we must ensure
-                                // gaining the focus.
-                                ensureFocus();
                                 // Prevent default text selection in Firefox
                                 event.preventDefault();
 
@@ -4194,99 +4347,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                             mDown = false;
                             break;
 
-                        case Event.ONFOCUS:
-                            onFocus(null);
-                            break;
-
-                        case Event.ONBLUR:
-                            onBlur(null);
-                            break;
-
                         default:
                             break;
                         }
                     }
                 }
                 super.onBrowserEvent(event);
-            }
-
-            public void onKeyPress(KeyPressEvent keyPressEvent) {
-                // This is used for Firefox only, since Firefox auto-repeat
-                // works correctly only if we use a key press handler, other
-                // browsers handle it correctly when using a key down handler
-                if (!BrowserInfo.get().isGecko()) {
-                    return;
-                }
-
-                NativeEvent event = keyPressEvent.getNativeEvent();
-                if (!enabled) {
-                    // Cancel default keyboard events on a disabled Table
-                    // (prevents scrolling)
-                    event.preventDefault();
-                } else {
-                    // Key code in Firefox/onKeyPress is present only for
-                    // special keys, otherwise 0 is returned
-                    int keyCode = event.getKeyCode();
-                    if (keyCode == 0 && event.getCharCode() == ' ') {
-                        // Provide a keyCode for space to be compatible with
-                        // FireFox keypress event
-                        keyCode = CHARCODE_SPACE;
-                    }
-
-                    if (handleNavigation(keyCode,
-                            event.getCtrlKey() || event.getMetaKey(),
-                            event.getShiftKey())) {
-                        event.preventDefault();
-                    }
-
-                    startScrollingVelocityTimer();
-                }
-            }
-
-            public void onKeyDown(KeyDownEvent keyDownEvent) {
-                NativeEvent event = keyDownEvent.getNativeEvent();
-                // This is not used for Firefox
-                if (BrowserInfo.get().isGecko()) {
-                    return;
-                }
-
-                if (!enabled) {
-                    // Cancel default keyboard events on a disabled Table
-                    // (prevents scrolling)
-                    event.preventDefault();
-                } else {
-                    if (handleNavigation(event.getKeyCode(), event.getCtrlKey()
-                            || event.getMetaKey(), event.getShiftKey())) {
-                        navKeyDown = true;
-                        event.preventDefault();
-                    }
-
-                    startScrollingVelocityTimer();
-                }
-            }
-
-            public void onKeyUp(KeyUpEvent keyUpEvent) {
-                NativeEvent event = keyUpEvent.getNativeEvent();
-                int keyCode = event.getKeyCode();
-
-                if (!isFocusable()) {
-                    cancelScrollingVelocityTimer();
-                } else if (isNavigationKey(keyCode)) {
-                    if (keyCode == getNavigationDownKey()
-                            || keyCode == getNavigationUpKey()) {
-                        /*
-                         * in multiselect mode the server may still have value
-                         * from previous page. Clear it unless doing
-                         * multiselection or just moving focus.
-                         */
-                        if (!event.getShiftKey() && !event.getCtrlKey()) {
-                            instructServerToForgetPreviousSelections();
-                        }
-                        sendSelectedRows();
-                    }
-                    cancelScrollingVelocityTimer();
-                    navKeyDown = false;
-                }
             }
 
             /**
@@ -4557,7 +4623,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * focus only if not currently focused.
          */
         protected void ensureFocus() {
-            focus();
+            scrollBodyPanel.setFocus(true);
         }
     }
 
@@ -5193,17 +5259,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // Apply focus style to new selection
             row.addStyleName(CLASSNAME_SELECTION_FOCUS);
 
-            // Trying to set focus on already focused row
+            /*
+             * Trying to set focus on already focused row.
+             */
             if (row == focusedRow) {
-                row.getElement().focus();
                 return false;
             }
 
             // Set new focused row
             focusedRow = row;
 
-            // ensureRowIsVisible(row);
-            row.getElement().focus();
+            ensureRowIsVisible(row);
 
             return true;
         }
@@ -5526,7 +5592,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      */
     public void onFocus(FocusEvent event) {
         if (isFocusable()) {
-            scrollBodyPanel.addStyleName("focused");
             hasFocus = true;
 
             // Focus a row if no row is in focus
@@ -5546,7 +5611,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * .dom.client.BlurEvent)
      */
     public void onBlur(BlurEvent event) {
-        scrollBodyPanel.removeStyleName("focused");
         hasFocus = false;
         navKeyDown = false;
 
@@ -5606,6 +5670,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      */
     public void focus() {
         if (isFocusable()) {
+            VConsole.log("Focusing vai focus(); method  in table");
             scrollBodyPanel.focus();
         }
     }
@@ -5632,9 +5697,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         if (tabIndex == 0 && !isFocusable()) {
-            scrollBodyPanel.getElement().setTabIndex(-1);
+            scrollBodyPanel.setTabIndex(-1);
         } else {
-            scrollBodyPanel.getElement().setTabIndex(tabIndex);
+            scrollBodyPanel.setTabIndex(tabIndex);
         }
 
         if (BrowserInfo.get().getOperaVersion() >= 11) {
