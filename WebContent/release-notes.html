@@ -47,6 +47,14 @@ widget sets and refresh your project in Eclipse. If you are upgrading from earli
 6.3.0, notice that Vaadin 6.5 uses GWT 2.1 (included in the installation package). See
 <a href="#upgrading">General Upgrade Notes</a> for more details on upgrading.</p>
 
+<h3>Backwards incompatible changes</h3>
+
+<ul>
+  <li>Application resources now use app:// URLs, similar to how theme resource URLs theme:// urls. Ensure Resource references are passed through the
+        ApplicationConnection.translateVaadinUri() method on the client side. This might affect some add-ons.</li>
+</ul>
+
+
 <h2 id="widgetupgrade">Upgrading from Vaadin 6.0 or 6.1</h2>
 
 <p>The way how widget sets are defined was simplified in Vaadin 6.2.
