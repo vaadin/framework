@@ -1069,10 +1069,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (oldSortedHeader != null) {
             oldSortedHeader.resizeCaptionContainer();
         }
+        if (sortColumn != null && !sortColumn.equals("null")
+                && oldSortColumn != sortColumn) {
+            // Sorting has changed, focus the first row
+            setRowFocus(scrollBody.getRowByRowIndex(firstRowInViewPort));
+        }
 
         rendering = false;
         headerChangedDuringUpdate = false;
-
     }
 
     protected VScrollTableBody createScrollBody() {
@@ -1986,16 +1990,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // ensure no clipping initially (problem on column additions)
             DOM.setStyleAttribute(captionContainer, "overflow", "visible");
 
-            DOM.sinkEvents(captionContainer, Event.MOUSEEVENTS
-                    | Event.KEYEVENTS);
+            DOM.sinkEvents(captionContainer, Event.MOUSEEVENTS);
 
             DOM.appendChild(td, captionContainer);
 
-            DOM.sinkEvents(td, Event.MOUSEEVENTS | Event.KEYEVENTS);
+            DOM.sinkEvents(td, Event.MOUSEEVENTS);
 
             setElement(td);
-
-            getElement().setTabIndex(-1);
 
             setAlign(ALIGN_LEFT);
         }
@@ -2244,17 +2245,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     updateFloatingCopysPosition(DOM.eventGetClientX(event), -1);
                 }
                 break;
-            case Event.ONKEYDOWN:
-                focusFirstRow();
-                break;
             default:
                 break;
             }
-        }
-
-        private void focusFirstRow() {
-            setRowFocus(scrollBody.getRowByRowIndex(firstRowInViewPort));
-            focusedRow.toggleSelection();
         }
 
         private void onResizeEvent(Event event) {
@@ -5596,7 +5589,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             // Focus a row if no row is in focus
             if (focusedRow == null) {
-                setRowFocus((VScrollTableRow) scrollBody.iterator().next());
+                setRowFocus(scrollBody.getRowByRowIndex(firstRowInViewPort));
             } else {
                 setRowFocus(focusedRow);
             }
