@@ -72,16 +72,16 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                     paintable = (Paintable) w;
 
                     transferable.setData("component", paintable);
-                    VDragEvent startDrag = VDragAndDropManager.get().startDrag(
+                    VDragEvent dragEvent = VDragAndDropManager.get().startDrag(
                             transferable, event.getNativeEvent(), true);
 
                     transferable.setData("mouseDown", new MouseEventDetails(
                             event.getNativeEvent()).serialize());
 
                     if (dragStarMode == WRAPPER) {
-                        startDrag.createDragImage(getElement(), true);
+                        dragEvent.createDragImage(getElement(), true);
                     } else {
-                        startDrag.createDragImage(
+                        dragEvent.createDragImage(
                                 ((Widget) paintable).getElement(), true);
                     }
                     event.preventDefault(); // prevent text selection
