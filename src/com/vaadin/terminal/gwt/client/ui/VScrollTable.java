@@ -1048,10 +1048,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     // try to focus a row currently selected and in viewport
                     String selectedRowKey = selectedRowKeys.iterator().next();
                     if (selectedRowKey != null) {
-                        setRowFocus(getRenderedRowByKey(selectedRowKey));
+                        VScrollTableRow renderedRow = getRenderedRowByKey(selectedRowKey);
+                        if (renderedRow == null) {
+                            setRowFocus(scrollBody
+                                    .getRowByRowIndex(firstRowInViewPort));
+                        } else {
+                            setRowFocus(renderedRow);
+                        }
                     }
+                } else {
+                    // multiselect mode
+                    setRowFocus(scrollBody.getRowByRowIndex(firstRowInViewPort));
                 }
-                // TODO what should happen in multiselect mode?
             }
         }
 
@@ -1068,11 +1076,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         HeaderCell oldSortedHeader = tHead.getHeaderCell(oldSortColumn);
         if (oldSortedHeader != null) {
             oldSortedHeader.resizeCaptionContainer();
-        }
-        if (sortColumn != null && !sortColumn.equals("null")
-                && oldSortColumn != sortColumn) {
-            // Sorting has changed, focus the first row
-            setRowFocus(scrollBody.getRowByRowIndex(firstRowInViewPort));
         }
 
         rendering = false;
@@ -4263,8 +4266,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                             break;
 
                         case Event.ONMOUSEDOWN:
-                            ensureFocus();
                             setRowFocus(this);
+                            ensureFocus();
                             if (dragmode != 0
                                     && event.getButton() == NativeEvent.BUTTON_LEFT) {
                                 mDown = true;
