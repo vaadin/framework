@@ -16,13 +16,11 @@ import java.util.Set;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
@@ -53,7 +51,6 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
@@ -278,87 +275,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     private final TableFooter tFoot = new TableFooter();
 
-    private final FocusableScrollPanel scrollBodyPanel = new FocusableScrollPanel() {
-
-        private DivElement focusElement = Document.get().createDivElement();
-
-        @Override
-        public void setWidget(Widget w) {
-            super.setWidget(w);
-            if (focusElement.getParentElement() == null) {
-                Style style = focusElement.getStyle();
-                if (BrowserInfo.get().isIE6()) {
-                    style.setOverflow(Overflow.HIDDEN);
-                    style.setHeight(0, Unit.PX);
-                    style.setWidth(0, Unit.PX);
-                    style.setPosition(Position.ABSOLUTE);
-
-                    addScrollHandler(new ScrollHandler() {
-                        public void onScroll(ScrollEvent event) {
-                            Scheduler.get().scheduleDeferred(
-                                    new ScheduledCommand() {
-                                        public void execute() {
-                                            focusElement.getStyle().setTop(
-                                                    getScrollPosition(),
-                                                    Unit.PX);
-                                            focusElement
-                                                    .getStyle()
-                                                    .setLeft(
-                                                            getHorizontalScrollPosition(),
-                                                            Unit.PX);
-                                        }
-                                    });
-                        }
-                    });
-                } else {
-                    style.setPosition(Position.FIXED);
-                    style.setTop(0, Unit.PX);
-                    style.setLeft(0, Unit.PX);
-                }
-                getElement().appendChild(focusElement);
-                /* Sink from focusElemet too as focusa and blur don't bubble */
-                DOM.sinkEvents((Element) focusElement.cast(), Event.FOCUSEVENTS);
-                // revert to original, not focusable
-                getElement().setPropertyObject("tabIndex", null);
-
-                /*
-                 * Firefox auto-repeat works correctly only if we use a key
-                 * press handler, other browsers handle it correctly when using
-                 * a key down handler
-                 */
-                if (BrowserInfo.get().isGecko()) {
-                    addDomHandler(navKeyPressHandler, KeyPressEvent.getType());
-                } else {
-                    addDomHandler(navKeyDownHandler, KeyDownEvent.getType());
-                }
-                addDomHandler(navKeyUpHandler, KeyUpEvent.getType());
-            }
-        };
-
-        @Override
-        public void setFocus(boolean focus) {
-            if (focus) {
-                FocusImpl.getFocusImplForPanel().focus(
-                        (Element) focusElement.cast());
-            } else {
-                FocusImpl.getFocusImplForPanel().blur(
-                        (Element) focusElement.cast());
-            }
-        };
-
-        @Override
-        public void setTabIndex(int tabIndex) {
-            getElement().setTabIndex(-1);
-            /*
-             * GWT bug with constructors ?? focusElement is null when compiled
-             * to js. TODO ensure this works when compiled without draftCompile
-             */
-            if (focusElement != null) {
-                focusElement.setTabIndex(tabIndex);
-            }
-        };
-
-    };
+    private final FocusableScrollPanel scrollBodyPanel = new FocusableScrollPanel();
 
     private KeyPressHandler navKeyPressHandler = new KeyPressHandler() {
         public void onKeyPress(KeyPressEvent keyPressEvent) {
@@ -499,6 +416,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         scrollBodyPanel.addScrollHandler(this);
         scrollBodyPanel.setStyleName(CLASSNAME + "-body");
+
+        /*
+         * Firefox auto-repeat works correctly only if we use a key press
+         * handler, other browsers handle it correctly when using a key down
+         * handler
+         */
+        if (BrowserInfo.get().isGecko()) {
+            scrollBodyPanel.addKeyPressHandler(navKeyPressHandler);
+        } else {
+            scrollBodyPanel.addKeyDownHandler(navKeyDownHandler);
+        }
+        scrollBodyPanel.addKeyUpHandler(navKeyUpHandler);
 
         setStyleName(CLASSNAME);
 
