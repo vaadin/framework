@@ -275,7 +275,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     private final TableFooter tFoot = new TableFooter();
 
-    private final FocusableScrollPanel scrollBodyPanel = new FocusableScrollPanel();
+    private final FocusableScrollPanel scrollBodyPanel = new FocusableScrollPanel(
+            true);
 
     private KeyPressHandler navKeyPressHandler = new KeyPressHandler() {
         public void onKeyPress(KeyPressEvent keyPressEvent) {
