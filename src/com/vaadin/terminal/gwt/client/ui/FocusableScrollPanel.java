@@ -74,8 +74,17 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
                 // revert to original, not focusable
                 getElement().setPropertyObject("tabIndex", null);
 
+            } else {
+                moveFocusElementAfterWidget();
             }
         }
+    }
+
+    /**
+     * Helper to keep focus element always in domChild[1]. Aids testing.
+     */
+    private void moveFocusElementAfterWidget() {
+        getElement().insertAfter(focusElement, getWidget().getElement());
     }
 
     @Override
