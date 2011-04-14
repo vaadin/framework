@@ -1043,23 +1043,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             if (!focusedRow.isAttached()) {
                 // focused row has been orphaned, can't focus
                 focusedRow = null;
-                if (SELECT_MODE_SINGLE == selectMode
-                        && selectedRowKeys.size() > 0) {
-                    // try to focus a row currently selected and in viewport
-                    String selectedRowKey = selectedRowKeys.iterator().next();
-                    if (selectedRowKey != null) {
-                        VScrollTableRow renderedRow = getRenderedRowByKey(selectedRowKey);
-                        if (renderedRow == null) {
-                            setRowFocus(scrollBody
-                                    .getRowByRowIndex(firstRowInViewPort));
-                        } else {
-                            setRowFocus(renderedRow);
-                        }
-                    }
-                } else {
-                    // multiselect mode
-                    setRowFocus(scrollBody.getRowByRowIndex(firstRowInViewPort));
-                }
+                focusRowFromBody();
             }
         }
 
@@ -1080,6 +1064,24 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         rendering = false;
         headerChangedDuringUpdate = false;
+    }
+
+    private void focusRowFromBody() {
+        if (selectedRowKeys.size() == 1) {
+            // try to focus a row currently selected and in viewport
+            String selectedRowKey = selectedRowKeys.iterator().next();
+            if (selectedRowKey != null) {
+                VScrollTableRow renderedRow = getRenderedRowByKey(selectedRowKey);
+                if (renderedRow == null) {
+                    setRowFocus(scrollBody.getRowByRowIndex(firstRowInViewPort));
+                } else {
+                    setRowFocus(renderedRow);
+                }
+            }
+        } else {
+            // multiselect mode
+            setRowFocus(scrollBody.getRowByRowIndex(firstRowInViewPort));
+        }
     }
 
     protected VScrollTableBody createScrollBody() {
@@ -2707,11 +2709,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             String colKey;
             private boolean collapsed;
+            private VScrollTableRow currentlyFocusedRow;
 
             public VisibleColumnAction(String colKey) {
                 super(VScrollTable.TableHead.this);
                 this.colKey = colKey;
                 caption = tHead.getHeaderCell(colKey).getCaption();
+                currentlyFocusedRow = focusedRow;
             }
 
             @Override
@@ -2732,6 +2736,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 .size()]), false);
                 // let rowRequestHandler determine proper rows
                 rowRequestHandler.refreshContent();
+                lazyRevertFocusToRow(currentlyFocusedRow);
             }
 
             public void setCollapsed(boolean b) {
@@ -4525,7 +4530,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 for (int i = 0; i < actions.length; i++) {
                     final String actionKey = actionKeys[i];
                     final TreeAction a = new TreeAction(this,
-                            String.valueOf(rowKey), actionKey);
+                            String.valueOf(rowKey), actionKey) {
+                        @Override
+                        public void execute() {
+                            super.execute();
+                            lazyRevertFocusToRow(VScrollTableRow.this);
+                        }
+                    };
                     a.setCaption(getActionCaption(actionKey));
                     a.setIconUrl(getActionIcon(actionKey));
                     actions[i] = a;
@@ -5592,7 +5603,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             // Focus a row if no row is in focus
             if (focusedRow == null) {
-                setRowFocus(scrollBody.getRowByRowIndex(firstRowInViewPort));
+                focusRowFromBody();
             } else {
                 setRowFocus(focusedRow);
             }
@@ -5740,5 +5751,19 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 || keyCode == getNavigationPageDownKey()
                 || keyCode == getNavigationEndKey()
                 || keyCode == getNavigationStartKey();
+    }
+
+    public void lazyRevertFocusToRow(final VScrollTableRow currentlyFocusedRow) {
+        Scheduler.get().scheduleFinally(new ScheduledCommand() {
+            public void execute() {
+                if (currentlyFocusedRow != null) {
+                    setRowFocus(currentlyFocusedRow);
+                } else {
+                    VConsole.log("no row?");
+                    focusRowFromBody();
+                }
+                scrollBody.ensureFocus();
+            }
+        });
     }
 }
