@@ -3,6 +3,7 @@
  */
 package com.vaadin.terminal.gwt.client.ui.dd;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
@@ -242,7 +243,7 @@ public class VDragAndDropManager {
 
     public static VDragAndDropManager get() {
         if (instance == null) {
-            instance = new VDragAndDropManager();
+            instance = GWT.create(VDragAndDropManager.class);
         }
         return instance;
     }
