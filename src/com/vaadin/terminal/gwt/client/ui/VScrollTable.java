@@ -4560,7 +4560,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * focus only if not currently focused.
          */
         protected void ensureFocus() {
-            scrollBodyPanel.setFocus(true);
+            if (!hasFocus) {
+                scrollBodyPanel.setFocus(true);
+            }
         }
     }
 
