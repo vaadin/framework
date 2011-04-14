@@ -1002,7 +1002,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             String selectedRowKey = selectedRowKeys.iterator().next();
             if (selectedRowKey != null) {
                 VScrollTableRow renderedRow = getRenderedRowByKey(selectedRowKey);
-                if (renderedRow == null) {
+                if (renderedRow == null || !renderedRow.isInViewPort()) {
                     setRowFocus(scrollBody.getRowByRowIndex(firstRowInViewPort));
                 } else {
                     setRowFocus(renderedRow);
@@ -3813,6 +3813,25 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 setElement(rowElement);
                 DOM.sinkEvents(getElement(), Event.MOUSEEVENTS
                         | Event.ONDBLCLICK | Event.ONCONTEXTMENU);
+            }
+
+            /**
+             * Detects whether row is visible in tables viewport.
+             * 
+             * @return
+             */
+            public boolean isInViewPort() {
+                int absoluteTop = getAbsoluteTop();
+                int scrollPosition = scrollBodyPanel.getScrollPosition();
+                if (absoluteTop < scrollPosition) {
+                    return false;
+                }
+                int maxVisible = scrollPosition
+                        + scrollBodyPanel.getOffsetHeight() - getOffsetHeight();
+                if (absoluteTop > maxVisible) {
+                    return false;
+                }
+                return true;
             }
 
             /**
