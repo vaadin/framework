@@ -143,7 +143,7 @@ public class VUpload extends SimplePanel implements Paintable {
             t.schedule(400);
             return;
         }
-        if(uidl.hasAttribute("forceSubmit")) {
+        if (uidl.hasAttribute("forceSubmit")) {
             element.submit();
             return;
         }
@@ -154,7 +154,7 @@ public class VUpload extends SimplePanel implements Paintable {
         final String action = client.translateVaadinUri(uidl
                 .getStringVariable("action"));
         element.setAction(action);
-        if(uidl.hasAttribute("buttoncaption")) {
+        if (uidl.hasAttribute("buttoncaption")) {
             submitButton.setText(uidl.getStringAttribute("buttoncaption"));
             submitButton.setVisible(true);
         } else {
