@@ -226,7 +226,8 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         while (childIndex < uidl.getChildCount()
                 && "open".equals(uidl.getChildUIDL(childIndex).getTag())) {
             final UIDL open = uidl.getChildUIDL(childIndex);
-            final String url = open.getStringAttribute("src");
+            final String url = client.translateVaadinUri(open
+                    .getStringAttribute("src"));
             final String target = open.getStringAttribute("name");
             if (target == null) {
                 // source will be opened to this browser window, but we may have
