@@ -5210,12 +5210,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             for (Widget w : scrollBody.renderedRows) {
                 VScrollTableRow row = (VScrollTableRow) w;
                 if (details != null && details.overkey == row.rowKey) {
-                    if (row != null) {
-                        String stylename = ROWSTYLEBASE
-                                + details.dropLocation.toString().toLowerCase();
-                        VScrollTableRow.setStyleName(row.getElement(),
-                                stylename, true);
-                    }
+                    String stylename = ROWSTYLEBASE
+                            + details.dropLocation.toString().toLowerCase();
+                    VScrollTableRow.setStyleName(row.getElement(), stylename,
+                            true);
                     lastEmphasized = details;
                     return;
                 }
