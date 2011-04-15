@@ -193,6 +193,10 @@ public class BrowserInfo {
         return isIE() && browserDetails.getBrowserMajorVersion() == 8;
     }
 
+    public boolean isIE9() {
+        return isIE() && browserDetails.getBrowserMajorVersion() == 9;
+    }
+
     public boolean isChrome() {
         return browserDetails.isChrome();
     }
