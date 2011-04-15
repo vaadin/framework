@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_5_4_dev-20110324";}
-.v-theme-version-6_5_4_dev-20110324 {display: none;}
+.v-theme-version:after {content:"6_6_0_dev-20110415";}
+.v-theme-version-6_6_0_dev-20110415 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -2467,6 +2467,20 @@ div.v-app {
 .v-ie8 .v-slider-feedback,
 .v-ie8 .v-Notification,
 .v-ie8 .v-contextmenu {
+	margin-top: -16px;
+}
+
+.v-ie9 .v-menubar-popup,
+.v-ie9 .v-datefield-popup,
+.v-ie9 .v-filterselect-suggestpopup, 
+.v-ie9 .v-shadow,
+.v-ie9 .v-shadow-window,
+.v-ie9 .v-window,
+.v-ie9 .v-popupview-popup,
+.v-ie9 .v-tooltip,
+.v-ie9 .v-slider-feedback,
+.v-ie9 .v-Notification,
+.v-ie9 .v-contextmenu {
 	margin-top: -16px;
 }
 

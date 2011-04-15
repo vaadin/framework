@@ -48,6 +48,20 @@ div.v-app {
 	margin-top: -16px;
 }
 
+.v-ie9 .v-menubar-popup,
+.v-ie9 .v-datefield-popup,
+.v-ie9 .v-filterselect-suggestpopup, 
+.v-ie9 .v-shadow,
+.v-ie9 .v-shadow-window,
+.v-ie9 .v-window,
+.v-ie9 .v-popupview-popup,
+.v-ie9 .v-tooltip,
+.v-ie9 .v-slider-feedback,
+.v-ie9 .v-Notification,
+.v-ie9 .v-contextmenu {
+	margin-top: -16px;
+}
+
 .v-ie6 .v-view {
 	border-top: none;
 }
