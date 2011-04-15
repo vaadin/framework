@@ -22,7 +22,7 @@
 	padding: 0;
 	margin: 0;
 }
-.v-datefield-calendarpanel:focus{
+.v-datefield-calendarpanel:focus {
 	outline:none;	
 }
 .v-datefield-calendarpanel-header td {
@@ -60,6 +60,17 @@
 .v-datefield-calendarpanel-day-focused {
 	outline: 1px dotted black;
 }
+
+.v-ie6 .v-datefield-calendarpanel-day,
+.v-ie7 .v-datefield-calendarpanel-day {
+	margin: 1px;
+}
+.v-ie6 .v-datefield-calendarpanel-day-focused,
+.v-ie7 .v-datefield-calendarpanel-day-focused {
+	border: 1px dotted black;
+	margin: 0px;
+}
+
 .v-datefield-time {
 	white-space: nowrap;
 }
