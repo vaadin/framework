@@ -25,6 +25,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
  * 
@@ -126,6 +127,16 @@ public class VUpload extends SimplePanel implements Paintable {
         panel.add(submitButton);
 
         setStyleName(CLASSNAME);
+
+        sinkEvents(VTooltip.TOOLTIP_EVENTS);
+    }
+
+    @Override
+    public void onBrowserEvent(Event event) {
+        if ((event.getTypeInt() & VTooltip.TOOLTIP_EVENTS) > 0) {
+            client.handleTooltipEvent(event, this);
+        }
+        super.onBrowserEvent(event);
     }
 
     private static native void setEncoding(Element form, String encoding)
