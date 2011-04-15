@@ -4057,7 +4057,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
              */
             @Override
             public void onBrowserEvent(final Event event) {
-                VConsole.log("Event of type" + event.getType());
                 if (enabled) {
                     final int type = event.getTypeInt();
                     final Element targetTdOrTr = getEventTargetTdOrTr(event);
@@ -4188,9 +4187,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                     && touchStart != null
                                     && (TouchScrollDelegate
                                             .getActiveScrollDelegate() == null)) {
-                                VConsole.log("Touch move, starting row drag...");
                                 startRowDrag(touchStart, type, targetTdOrTr);
-                                VConsole.log("...done.");
                             }
                             if (contextTouchTimeout != null) {
                                 contextTouchTimeout.cancel();
@@ -4222,7 +4219,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                             .getActiveScrollDelegate();
                                     if (activeScrollDelegate != null
                                             && !activeScrollDelegate.isMoved()) {
-                                        VConsole.log("Cancelled scrolling...");
                                         /*
                                          * scrolling hasn't started. Cancel
                                          * scrolling and let row handle this as
@@ -4245,7 +4241,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 contextTouchTimeout = new Timer() {
                                     @Override
                                     public void run() {
-                                        VConsole.log("Timeout contextmenu...");
                                         if (touchStart != null) {
                                             showContextMenu(touchStart);
                                             touchStart = null;
@@ -4304,7 +4299,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             private boolean isSignificantMove(Event event) {
                 if (touchStart == null) {
                     // no touch start
-                    VConsole.log("no touch starte");
                     return false;
                 }
                 /*
@@ -4312,16 +4306,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                  * axis checks
                  */
                 Touch touch = event.getChangedTouches().get(0);
-                int deltax = touch.getClientX() - touchStartX;
-                int deltay = touch.getClientY() - touchStartY;
                 if (Math.abs(touch.getClientX() - touchStartX) > TouchScrollDelegate.SIGNIFICANT_MOVE_THRESHOLD) {
                     return true;
                 }
                 if (Math.abs(touch.getClientY() - touchStartY) > TouchScrollDelegate.SIGNIFICANT_MOVE_THRESHOLD) {
                     return true;
                 }
-                VConsole.log("Only a minor movement, don't stop context timer yet"
-                        + deltax + " " + deltay);
                 return false;
             }
 
