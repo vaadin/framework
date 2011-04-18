@@ -281,7 +281,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * Removes the component from this container.
      * 
      * @param c
-     *            The component to be added.
+     *            The component to be removed.
      * @see com.vaadin.ui.AbstractComponentContainer#removeComponent(com.vaadin.ui.Component)
      */
     @Override
@@ -592,7 +592,6 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         fireEvent(new ClickEvent(this, mouseDetails));
     }
 
-    
     /**
      * {@inheritDoc}
      */
