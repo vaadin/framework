@@ -4783,6 +4783,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
                 }
             });
+
+            if (BrowserInfo.get().isIE()) {
+                /*
+                 * IE does not fire onscroll event if scroll position is
+                 * reverted to 0 due to the content element size growth. Ensure
+                 * headers are in sync with content manually. Safe to use null
+                 * event as we don't actually use the event object in listener.
+                 */
+                onScroll(null);
+            }
         }
     };
 
