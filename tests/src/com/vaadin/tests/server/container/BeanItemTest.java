@@ -1,17 +1,21 @@
 package com.vaadin.tests.server.container;
 
-import java.beans.PropertyDescriptor;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.util.MethodProperty;
+import com.vaadin.data.util.MethodPropertyDescriptor;
+import com.vaadin.data.util.VaadinPropertyDescriptor;
 
 /**
  * Test BeanItem specific features.
@@ -175,14 +179,16 @@ public class BeanItemTest extends TestCase {
         Method method = BeanItem.class.getDeclaredMethod(
                 "getPropertyDescriptors", Class.class);
         method.setAccessible(true);
-        LinkedHashMap<String, PropertyDescriptor> propertyDescriptors = (LinkedHashMap<String, PropertyDescriptor>) method
+        LinkedHashMap<String, VaadinPropertyDescriptor<Class>> propertyDescriptors = (LinkedHashMap<String, VaadinPropertyDescriptor<Class>>) method
                 .invoke(null, MySuperInterface.class);
 
         Assert.assertEquals(2, propertyDescriptors.size());
         Assert.assertTrue(propertyDescriptors.containsKey("super1"));
         Assert.assertTrue(propertyDescriptors.containsKey("override"));
 
-        Assert.assertNull(propertyDescriptors.get("override").getWriteMethod());
+        MethodProperty<?> property = (MethodProperty<?>) propertyDescriptors
+                .get("override").createProperty(getClass());
+        Assert.assertTrue(property.isReadOnly());
     }
 
     public void testGetSuperInterfaceProperties() throws SecurityException,
@@ -191,7 +197,7 @@ public class BeanItemTest extends TestCase {
         Method method = BeanItem.class.getDeclaredMethod(
                 "getPropertyDescriptors", Class.class);
         method.setAccessible(true);
-        LinkedHashMap<String, PropertyDescriptor> propertyDescriptors = (LinkedHashMap<String, PropertyDescriptor>) method
+        LinkedHashMap<String, VaadinPropertyDescriptor<Class>> propertyDescriptors = (LinkedHashMap<String, VaadinPropertyDescriptor<Class>>) method
                 .invoke(null, MySubInterface.class);
 
         Assert.assertEquals(4, propertyDescriptors.size());
@@ -200,8 +206,9 @@ public class BeanItemTest extends TestCase {
         Assert.assertTrue(propertyDescriptors.containsKey("super2"));
         Assert.assertTrue(propertyDescriptors.containsKey("override"));
 
-        Assert.assertNotNull(propertyDescriptors.get("override")
-                .getWriteMethod());
+        MethodProperty<?> property = (MethodProperty<?>) propertyDescriptors
+                .get("override").createProperty(getClass());
+        Assert.assertFalse(property.isReadOnly());
     }
 
     public void testPropertyExplicitOrder() {
@@ -290,4 +297,41 @@ public class BeanItemTest extends TestCase {
         Assert.assertTrue(item.getItemProperty("name2").isReadOnly());
     }
 
+    public void testCustomProperties() throws Exception {
+        LinkedHashMap<String, VaadinPropertyDescriptor<MyClass>> propertyDescriptors = new LinkedHashMap<String, VaadinPropertyDescriptor<MyClass>>();
+        propertyDescriptors.put(
+                "myname",
+                new MethodPropertyDescriptor<BeanItemTest.MyClass>("myname",
+                        MyClass.class, MyClass.class
+                                .getDeclaredMethod("getName"), MyClass.class
+                                .getDeclaredMethod("setName", String.class)));
+        MyClass instance = new MyClass("bean1");
+        Constructor<BeanItem> constructor = BeanItem.class
+                .getDeclaredConstructor(Object.class, Map.class);
+        constructor.setAccessible(true);
+        BeanItem<MyClass> item = constructor.newInstance(instance,
+                propertyDescriptors);
+
+        Assert.assertEquals(1, item.getItemPropertyIds().size());
+        Assert.assertEquals("bean1", item.getItemProperty("myname").getValue());
+    }
+
+    public void testAddRemoveProperty() throws Exception {
+        MethodPropertyDescriptor<BeanItemTest.MyClass> pd = new MethodPropertyDescriptor<BeanItemTest.MyClass>(
+                "myname", MyClass.class,
+                MyClass.class.getDeclaredMethod("getName"),
+                MyClass.class.getDeclaredMethod("setName", String.class));
+
+        BeanItem<MyClass> item = new BeanItem(new MyClass("bean1"));
+
+        Assert.assertEquals(6, item.getItemPropertyIds().size());
+        Assert.assertEquals(null, item.getItemProperty("myname"));
+
+        item.addItemProperty("myname", pd.createProperty(item.getBean()));
+        Assert.assertEquals(7, item.getItemPropertyIds().size());
+        Assert.assertEquals("bean1", item.getItemProperty("myname").getValue());
+        item.removeItemProperty("myname");
+        Assert.assertEquals(6, item.getItemPropertyIds().size());
+        Assert.assertEquals(null, item.getItemProperty("myname"));
+    }
 }

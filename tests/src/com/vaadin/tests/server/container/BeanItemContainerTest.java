@@ -651,14 +651,23 @@ public class BeanItemContainerTest extends AbstractBeanContainerTest {
             // should get exception
         }
 
-        try {
-            container.removeContainerProperty("name");
-            Assert.fail();
-        } catch (UnsupportedOperationException e) {
-            // should get exception
-        }
-
         assertEquals(1, container.size());
+    }
+
+    public void testRemoveContainerProperty() {
+        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+                Person.class);
+        Person john = new Person("John");
+        container.addBean(john);
+
+        Assert.assertEquals("John", container
+                .getContainerProperty(john, "name").getValue());
+        Assert.assertTrue(container.removeContainerProperty("name"));
+        Assert.assertNull(container.getContainerProperty(john, "name"));
+
+        Assert.assertNotNull(container.getItem(john));
+        // property removed also from item
+        Assert.assertNull(container.getItem(john).getItemProperty("name"));
     }
 
     public void testAddNullBean() {
@@ -689,6 +698,22 @@ public class BeanItemContainerTest extends AbstractBeanContainerTest {
         } catch (IllegalArgumentException e) {
             // should get exception
         }
+    }
+
+    public void testAddNestedContainerProperty() {
+        BeanItemContainer<NestedMethodPropertyTest.Person> container = new BeanItemContainer<NestedMethodPropertyTest.Person>(
+                NestedMethodPropertyTest.Person.class);
+
+        NestedMethodPropertyTest.Person john = new NestedMethodPropertyTest.Person(
+                "John", new NestedMethodPropertyTest.Address("Ruukinkatu 2-4",
+                        20540));
+        container.addBean(john);
+
+        assertTrue(container.addNestedContainerProperty("address.street",
+                String.class));
+        assertEquals("Ruukinkatu 2-4",
+                container.getContainerProperty(john, "address.street")
+                        .getValue());
     }
 
 }

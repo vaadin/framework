@@ -14,8 +14,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
-
-import com.vaadin.data.Property;
+import java.util.Map;
 
 /**
  * A wrapper class for adding the Item interface to any Java Bean.
@@ -51,7 +50,7 @@ public class BeanItem<BT> extends PropertysetItem {
      * 
      */
     public BeanItem(BT bean) {
-        this(bean, getPropertyDescriptors(bean.getClass()));
+        this(bean, getPropertyDescriptors((Class<BT>) bean.getClass()));
     }
 
     /**
@@ -67,19 +66,12 @@ public class BeanItem<BT> extends PropertysetItem {
      *            pre-computed property descriptors
      */
     BeanItem(BT bean,
-            LinkedHashMap<String, PropertyDescriptor> propertyDescriptors) {
+            Map<String, VaadinPropertyDescriptor<BT>> propertyDescriptors) {
 
         this.bean = bean;
 
-        for (PropertyDescriptor pd : propertyDescriptors.values()) {
-            final Method getMethod = pd.getReadMethod();
-            final Method setMethod = pd.getWriteMethod();
-            final Class<?> type = pd.getPropertyType();
-            final String name = pd.getName();
-            final Property p = new MethodProperty<Object>(type, bean,
-                    getMethod, setMethod);
-            addItemProperty(name, p);
-
+        for (VaadinPropertyDescriptor<BT> pd : propertyDescriptors.values()) {
+            addItemProperty(pd.getName(), pd.createProperty(bean));
         }
     }
 
@@ -106,20 +98,14 @@ public class BeanItem<BT> extends PropertysetItem {
         this.bean = bean;
 
         // Create bean information
-        LinkedHashMap<String, PropertyDescriptor> pds = getPropertyDescriptors(bean
+        LinkedHashMap<String, VaadinPropertyDescriptor<BT>> pds = getPropertyDescriptors((Class<BT>) bean
                 .getClass());
 
         // Add all the bean properties as MethodProperties to this Item
         for (Object id : propertyIds) {
-            PropertyDescriptor pd = pds.get(id);
+            VaadinPropertyDescriptor<BT> pd = pds.get(id);
             if (pd != null) {
-                final String name = pd.getName();
-                final Method getMethod = pd.getReadMethod();
-                final Method setMethod = pd.getWriteMethod();
-                final Class<?> type = pd.getPropertyType();
-                final Property p = new MethodProperty<Object>(type, bean,
-                        getMethod, setMethod);
-                addItemProperty(name, p);
+                addItemProperty(pd.getName(), pd.createProperty(bean));
             }
         }
 
@@ -162,9 +148,9 @@ public class BeanItem<BT> extends PropertysetItem {
      *            the Java Bean class to get properties for.
      * @return an ordered map from property names to property descriptors
      */
-    static LinkedHashMap<String, PropertyDescriptor> getPropertyDescriptors(
-            final Class<?> beanClass) {
-        final LinkedHashMap<String, PropertyDescriptor> pdMap = new LinkedHashMap<String, PropertyDescriptor>();
+    static <BT> LinkedHashMap<String, VaadinPropertyDescriptor<BT>> getPropertyDescriptors(
+            final Class<BT> beanClass) {
+        final LinkedHashMap<String, VaadinPropertyDescriptor<BT>> pdMap = new LinkedHashMap<String, VaadinPropertyDescriptor<BT>>();
 
         // Try to introspect, if it fails, we just have an empty Item
         try {
@@ -176,7 +162,10 @@ public class BeanItem<BT> extends PropertysetItem {
                 final Method getMethod = pd.getReadMethod();
                 if ((getMethod != null)
                         && getMethod.getDeclaringClass() != Object.class) {
-                    pdMap.put(pd.getName(), pd);
+                    VaadinPropertyDescriptor<BT> vaadinPropertyDescriptor = new MethodPropertyDescriptor(
+                            pd.getName(), pd.getPropertyType(),
+                            pd.getReadMethod(), pd.getWriteMethod());
+                    pdMap.put(pd.getName(), vaadinPropertyDescriptor);
                 }
             }
         } catch (final java.beans.IntrospectionException ignored) {

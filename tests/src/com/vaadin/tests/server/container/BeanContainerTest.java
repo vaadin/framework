@@ -236,14 +236,23 @@ public class BeanContainerTest extends AbstractBeanContainerTest {
             // should get exception
         }
 
-        try {
-            container.removeContainerProperty("name");
-            Assert.fail();
-        } catch (UnsupportedOperationException e) {
-            // should get exception
-        }
-
         assertEquals(1, container.size());
+    }
+
+    public void testRemoveContainerProperty() {
+        BeanContainer<String, Person> container = new BeanContainer<String, Person>(
+                Person.class);
+        container.setBeanIdResolver(new PersonNameResolver());
+        container.addBean(new Person("John"));
+
+        Assert.assertEquals("John",
+                container.getContainerProperty("John", "name").getValue());
+        Assert.assertTrue(container.removeContainerProperty("name"));
+        Assert.assertNull(container.getContainerProperty("John", "name"));
+
+        Assert.assertNotNull(container.getItem("John"));
+        // property removed also from item
+        Assert.assertNull(container.getItem("John").getItemProperty("name"));
     }
 
     public void testAddNullBeans() {
@@ -397,6 +406,21 @@ public class BeanContainerTest extends AbstractBeanContainerTest {
         assertEquals(3, container.indexOfId("Jill"));
         assertEquals(4, container.indexOfId("Joe"));
         assertEquals(5, container.size());
+    }
+
+    public void testAddNestedContainerProperty() {
+        BeanContainer<String, NestedMethodPropertyTest.Person> container = new BeanContainer<String, NestedMethodPropertyTest.Person>(
+                NestedMethodPropertyTest.Person.class);
+        container.setBeanIdProperty("name");
+
+        container.addBean(new NestedMethodPropertyTest.Person("John",
+                new NestedMethodPropertyTest.Address("Ruukinkatu 2-4", 20540)));
+
+        assertTrue(container.addNestedContainerProperty("address.street",
+                String.class));
+        assertEquals("Ruukinkatu 2-4",
+                container.getContainerProperty("John", "address.street")
+                        .getValue());
     }
 
 }

@@ -3,17 +3,16 @@
  */
 package com.vaadin.data.util;
 
-import java.beans.PropertyDescriptor;
-import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filterable;
+import com.vaadin.data.Container.PropertySetChangeNotifier;
 import com.vaadin.data.Container.SimpleFilterable;
 import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.Item;
@@ -21,6 +20,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Property.ValueChangeNotifier;
+import com.vaadin.data.util.MethodProperty.MethodException;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.util.filter.UnsupportedFilterException;
 
@@ -40,11 +40,6 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
  * {@link #addItemAt(int, Object, Object)}.
  * </p>
  * 
- * <p>
- * It is not possible to add additional properties to the container and nested
- * bean properties are not supported.
- * </p>
- * 
  * @param <IDTYPE>
  *            The type of the item identifier
  * @param <BEANTYPE>
@@ -54,7 +49,8 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
  */
 public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         AbstractInMemoryContainer<IDTYPE, String, BeanItem<BEANTYPE>> implements
-        Filterable, SimpleFilterable, Sortable, ValueChangeListener {
+        Filterable, SimpleFilterable, Sortable, ValueChangeListener,
+        PropertySetChangeNotifier {
 
     /**
      * Resolver that maps beans to their (item) identifiers, removing the need
@@ -90,7 +86,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
             BeanIdResolver<IDTYPE, BEANTYPE> {
 
         private final Object propertyId;
-        private transient Method getMethod;
 
         public PropertyBasedBeanIdResolver(Object propertyId) {
             if (propertyId == null) {
@@ -100,25 +95,18 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
             this.propertyId = propertyId;
         }
 
-        private Method getGetter() throws IllegalStateException {
-            if (getMethod == null) {
-                if (!model.containsKey(propertyId)) {
-                    throw new IllegalStateException("Property " + propertyId
-                            + " not found");
-                }
-                getMethod = model.get(propertyId).getReadMethod();
-            }
-            return getMethod;
-        }
-
         @SuppressWarnings("unchecked")
         public IDTYPE getIdForBean(BEANTYPE bean)
                 throws IllegalArgumentException {
+            VaadinPropertyDescriptor<BEANTYPE> pd = model.get(propertyId);
+            if (null == pd) {
+                throw new IllegalStateException("Property " + propertyId
+                        + " not found");
+            }
             try {
-                return (IDTYPE) getGetter().invoke(bean);
-            } catch (IllegalAccessException e) {
-                throw new IllegalArgumentException(e);
-            } catch (InvocationTargetException e) {
+                Property property = pd.createProperty(bean);
+                return (IDTYPE) property.getValue();
+            } catch (MethodException e) {
                 throw new IllegalArgumentException(e);
             }
         }
@@ -149,7 +137,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * A description of the properties found in beans of type {@link #type}.
      * Determines the property ids that are present in the container.
      */
-    private transient LinkedHashMap<String, PropertyDescriptor> model;
+    private LinkedHashMap<String, VaadinPropertyDescriptor<BEANTYPE>> model;
 
     /**
      * Constructs a {@code AbstractBeanContainer} for beans of the given type.
@@ -165,17 +153,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
                     "The bean type passed to AbstractBeanContainer must not be null");
         }
         this.type = type;
-        model = BeanItem.getPropertyDescriptors(type);
-    }
-
-    /**
-     * A special deserialization method that resolves {@link #model} is needed
-     * as PropertyDescriptor is not {@link Serializable}.
-     */
-    private void readObject(java.io.ObjectInputStream in) throws IOException,
-            ClassNotFoundException {
-        in.defaultReadObject();
-        model = BeanItem.getPropertyDescriptors(type);
+        model = BeanItem.getPropertyDescriptors((Class<BEANTYPE>) type);
     }
 
     /*
@@ -723,6 +701,97 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
     protected BeanIdResolver<IDTYPE, BEANTYPE> createBeanPropertyResolver(
             Object propertyId) {
         return new PropertyBasedBeanIdResolver(propertyId);
+    }
+
+    @Override
+    public void addListener(Container.PropertySetChangeListener listener) {
+        super.addListener(listener);
+    }
+
+    @Override
+    public void removeListener(Container.PropertySetChangeListener listener) {
+        super.removeListener(listener);
+    }
+
+    @Override
+    public boolean addContainerProperty(Object propertyId, Class<?> type,
+            Object defaultValue) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException(
+                "Use addNestedContainerProperty(String) to add container properties to a "
+                        + getClass().getSimpleName());
+    }
+
+    /**
+     * Adds a property for the container and all its items.
+     * 
+     * Primarily for internal use, may change in future versions.
+     * 
+     * @param propertyId
+     * @param propertyDescriptor
+     * @return true if the property was added
+     */
+    protected final boolean addContainerProperty(String propertyId,
+            VaadinPropertyDescriptor<BEANTYPE> propertyDescriptor) {
+        if (null == propertyId || null == propertyDescriptor) {
+            return false;
+        }
+
+        // Fails if the Property is already present
+        if (model.containsKey(propertyId)) {
+            return false;
+        }
+
+        model.put(propertyId, propertyDescriptor);
+        for (BeanItem item : itemIdToItem.values()) {
+            item.addItemProperty(propertyId, propertyDescriptor
+                    .createProperty((BEANTYPE) item.getBean()));
+        }
+
+        // Sends a change event
+        fireContainerPropertySetChange();
+
+        return true;
+    }
+
+    /**
+     * Adds a nested container property for the container, e.g.
+     * "manager.address.street".
+     * 
+     * All intermediate getters must exist and must return non-null values when
+     * the property value is accessed.
+     * 
+     * @see NestedMethodProperty
+     * 
+     * @param propertyId
+     * @param propertyType
+     * @return true if the property was added
+     */
+    public boolean addNestedContainerProperty(String propertyId,
+            Class<?> propertyType) {
+        return addContainerProperty(propertyId, new NestedPropertyDescriptor(
+                propertyId, propertyType));
+    }
+
+    @Override
+    public boolean removeContainerProperty(Object propertyId)
+            throws UnsupportedOperationException {
+        // Fails if the Property is not present
+        if (!model.containsKey(propertyId)) {
+            return false;
+        }
+
+        // Removes the Property to Property list and types
+        model.remove(propertyId);
+
+        // If remove the Property from all Items
+        for (final Iterator<IDTYPE> i = getAllItemIds().iterator(); i.hasNext();) {
+            getUnfilteredItem(i.next()).removeItemProperty(propertyId);
+        }
+
+        // Sends a change event
+        fireContainerPropertySetChange();
+
+        return true;
     }
 
 }

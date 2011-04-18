@@ -106,17 +106,21 @@ public class MethodProperty<T> implements Property,
         out.writeObject(getArgs);
         if (setMethod != null) {
             out.writeObject(setMethod.getName());
+            SerializerHelper.writeClass(out, setMethod.getDeclaringClass());
             SerializerHelper
                     .writeClassArray(out, setMethod.getParameterTypes());
         } else {
             out.writeObject(null);
             out.writeObject(null);
+            out.writeObject(null);
         }
         if (getMethod != null) {
             out.writeObject(getMethod.getName());
+            SerializerHelper.writeClass(out, getMethod.getDeclaringClass());
             SerializerHelper
                     .writeClassArray(out, getMethod.getParameterTypes());
         } else {
+            out.writeObject(null);
             out.writeObject(null);
             out.writeObject(null);
         }
@@ -135,17 +139,19 @@ public class MethodProperty<T> implements Property,
             setArgs = (Object[]) in.readObject();
             getArgs = (Object[]) in.readObject();
             String name = (String) in.readObject();
+            Class<T> setMethodClass = (Class<T>) SerializerHelper.readClass(in);
             Class<?>[] paramTypes = SerializerHelper.readClassArray(in);
             if (name != null) {
-                setMethod = instance.getClass().getMethod(name, paramTypes);
+                setMethod = setMethodClass.getMethod(name, paramTypes);
             } else {
                 setMethod = null;
             }
 
             name = (String) in.readObject();
+            Class<T> getMethodClass = (Class<T>) SerializerHelper.readClass(in);
             paramTypes = SerializerHelper.readClassArray(in);
             if (name != null) {
-                getMethod = instance.getClass().getMethod(name, paramTypes);
+                getMethod = getMethodClass.getMethod(name, paramTypes);
             } else {
                 getMethod = null;
             }
@@ -202,21 +208,10 @@ public class MethodProperty<T> implements Property,
         // Find the get method
         getMethod = null;
         try {
-            getMethod = beanClass.getMethod("get" + beanPropertyName,
-                    new Class[] {});
+            getMethod = initGetterMethod(beanPropertyName, beanClass);
         } catch (final java.lang.NoSuchMethodException ignored) {
-            try {
-                getMethod = beanClass.getMethod("is" + beanPropertyName,
-                        new Class[] {});
-            } catch (final java.lang.NoSuchMethodException ignoredAsWell) {
-                try {
-                    getMethod = beanClass.getMethod("are" + beanPropertyName,
-                            new Class[] {});
-                } catch (final java.lang.NoSuchMethodException e) {
-                    throw new MethodException(this, "Bean property "
-                            + beanPropertyName + " can not be found");
-                }
-            }
+            throw new MethodException(this, "Bean property " + beanPropertyName
+                    + " can not be found");
         }
 
         // In case the get method is found, resolve the type
@@ -232,23 +227,8 @@ public class MethodProperty<T> implements Property,
 
         // Gets the return type from get method
         if (returnType.isPrimitive()) {
-            if (returnType.equals(Boolean.TYPE)) {
-                type = (Class<T>) Boolean.class;
-            } else if (returnType.equals(Integer.TYPE)) {
-                type = (Class<T>) Integer.class;
-            } else if (returnType.equals(Float.TYPE)) {
-                type = (Class<T>) Float.class;
-            } else if (returnType.equals(Double.TYPE)) {
-                type = (Class<T>) Double.class;
-            } else if (returnType.equals(Byte.TYPE)) {
-                type = (Class<T>) Byte.class;
-            } else if (returnType.equals(Character.TYPE)) {
-                type = (Class<T>) Character.class;
-            } else if (returnType.equals(Short.TYPE)) {
-                type = (Class<T>) Short.class;
-            } else if (returnType.equals(Long.TYPE)) {
-                type = (Class<T>) Long.class;
-            } else {
+            type = (Class<T>) convertPrimitiveType(returnType);
+            if (type.isPrimitive()) {
                 throw new MethodException(this, "Bean property "
                         + beanPropertyName
                         + " getter return type must not be void");
@@ -484,25 +464,7 @@ public class MethodProperty<T> implements Property,
         }
 
         // Gets the return type from get method
-        if (type.isPrimitive()) {
-            if (type.equals(Boolean.TYPE)) {
-                this.type = (Class<T>) Boolean.class;
-            } else if (type.equals(Integer.TYPE)) {
-                this.type = (Class<T>) Integer.class;
-            } else if (type.equals(Float.TYPE)) {
-                this.type = (Class<T>) Float.class;
-            } else if (type.equals(Double.TYPE)) {
-                this.type = (Class<T>) Double.class;
-            } else if (type.equals(Byte.TYPE)) {
-                this.type = (Class<T>) Byte.class;
-            } else if (type.equals(Character.TYPE)) {
-                this.type = (Class<T>) Character.class;
-            } else if (type.equals(Short.TYPE)) {
-                this.type = (Class<T>) Short.class;
-            } else if (type.equals(Long.TYPE)) {
-                this.type = (Class<T>) Long.class;
-            }
-        }
+        this.type = (Class<T>) convertPrimitiveType(type);
 
         setArguments(getArgs, setArgs, setArgumentIndex);
         readOnly = (setMethod == null);
@@ -560,6 +522,50 @@ public class MethodProperty<T> implements Property,
         }
 
         // Gets the return type from get method
+        type = convertPrimitiveType(type);
+
+        this.getMethod = getMethod;
+        this.setMethod = setMethod;
+        setArguments(getArgs, setArgs, setArgumentIndex);
+        readOnly = (setMethod == null);
+        this.instance = instance;
+        this.type = type;
+    }
+
+    /**
+     * Find a getter method for a property (getXyz(), isXyz() or areXyz()).
+     * 
+     * @param propertyName
+     *            name of the property
+     * @param beanClass
+     *            class in which to look for the getter methods
+     * @return Method
+     * @throws NoSuchMethodException
+     *             if no getter found
+     */
+    protected static Method initGetterMethod(String propertyName,
+            final Class<?> beanClass) throws NoSuchMethodException {
+        propertyName = propertyName.substring(0, 1).toUpperCase()
+                + propertyName.substring(1);
+
+        Method getMethod = null;
+        try {
+            getMethod = beanClass.getMethod("get" + propertyName,
+                    new Class[] {});
+        } catch (final java.lang.NoSuchMethodException ignored) {
+            try {
+                getMethod = beanClass.getMethod("is" + propertyName,
+                        new Class[] {});
+            } catch (final java.lang.NoSuchMethodException ignoredAsWell) {
+                getMethod = beanClass.getMethod("are" + propertyName,
+                        new Class[] {});
+            }
+        }
+        return getMethod;
+    }
+
+    protected static Class<?> convertPrimitiveType(Class<?> type) {
+        // Gets the return type from get method
         if (type.isPrimitive()) {
             if (type.equals(Boolean.TYPE)) {
                 type = Boolean.class;
@@ -579,13 +585,7 @@ public class MethodProperty<T> implements Property,
                 type = Long.class;
             }
         }
-
-        this.getMethod = getMethod;
-        this.setMethod = setMethod;
-        setArguments(getArgs, setArgs, setArgumentIndex);
-        readOnly = (setMethod == null);
-        this.instance = instance;
-        this.type = type;
+        return type;
     }
 
     /**
@@ -725,7 +725,7 @@ public class MethodProperty<T> implements Property,
      * 
      * @param value
      */
-    private void invokeSetMethod(Object value) {
+    protected void invokeSetMethod(Object value) {
 
         try {
             // Construct a temporary argument array only if needed
@@ -746,6 +746,25 @@ public class MethodProperty<T> implements Property,
         } catch (final Exception e) {
             throw new MethodException(this, e);
         }
+    }
+
+    /**
+     * Returns the bean instance which to which the property applies. For
+     * internal use.
+     * 
+     * @return bean instance
+     */
+    protected Object getInstance() {
+        return instance;
+    }
+
+    /**
+     * Returns the setter method to use. For internal use.
+     * 
+     * @return setter {@link Method}
+     */
+    protected Method getSetMethod() {
+        return setMethod;
     }
 
     /**
