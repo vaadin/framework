@@ -432,8 +432,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
     }
 
     public void removeListener(SplitterClickListener listener) {
-        removeListener(SPLITTER_CLICK_EVENT, SplitterClickListener.class,
-                listener);
+        removeListener(SPLITTER_CLICK_EVENT, SplitterClickEvent.class, listener);
     }
 
 }
