@@ -503,7 +503,7 @@ public class VDragAndDropManager {
                     Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
                         public boolean execute() {
                             if (!client.hasActiveRequest()) {
-                                removeActiveSourceClassname(dragSource);
+                                removeActiveDragSourceStyleName(dragSource);
                                 return false;
                             }
                             return true;
@@ -527,7 +527,7 @@ public class VDragAndDropManager {
          * the server visit is done.
          */
         if (!sendTransferableToServer && currentDrag != null) {
-            removeActiveSourceClassname(currentDrag.getTransferable()
+            removeActiveDragSourceStyleName(currentDrag.getTransferable()
                     .getDragSource());
         }
 
@@ -540,7 +540,7 @@ public class VDragAndDropManager {
 
     }
 
-    private void removeActiveSourceClassname(Paintable dragSource) {
+    private void removeActiveDragSourceStyleName(Paintable dragSource) {
         ((Widget) dragSource).removeStyleName(ACTIVE_DRAG_SOURCE_STYLENAME);
     }
 
