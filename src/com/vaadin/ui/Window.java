@@ -1123,7 +1123,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
 
             // focus is restored to the parent window
             parent.focus();
-            
+
             // subwindow is removed from parent
             parent.removeWindow(this);
         }
@@ -1379,7 +1379,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
      * @param listener
      */
     public void removeListener(ResizeListener listener) {
-        removeListener(ResizeEvent.class, this);
+        removeListener(ResizeEvent.class, listener);
     }
 
     /**
