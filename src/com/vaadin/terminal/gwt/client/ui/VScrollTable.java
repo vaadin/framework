@@ -4676,7 +4676,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             return;
         }
 
-        int rowHeight = (int) scrollBody.getRowHeight();
+        int rowHeight = (int) Math.round(scrollBody.getRowHeight());
         int bodyH = scrollBodyPanel.getOffsetHeight();
         int rowsAtOnce = bodyH / rowHeight;
         boolean anotherPartlyVisible = ((bodyH % rowHeight) != 0);
