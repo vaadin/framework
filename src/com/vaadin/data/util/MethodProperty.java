@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,8 +47,7 @@ import com.vaadin.util.SerializerHelper;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class MethodProperty<T> implements Property,
-        Property.ValueChangeNotifier, Property.ReadOnlyStatusChangeNotifier {
+public class MethodProperty<T> extends AbstractProperty {
 
     private static final Logger logger = Logger.getLogger(MethodProperty.class
             .getName());
@@ -84,18 +82,6 @@ public class MethodProperty<T> implements Property,
      * Type of the property.
      */
     private transient Class<? extends T> type;
-
-    /**
-     * List of listeners who are interested in the read-only status changes of
-     * the MethodProperty
-     */
-    private LinkedList<ReadOnlyStatusChangeListener> readOnlyStatusChangeListeners = null;
-
-    /**
-     * List of listeners who are interested in the value changes of the
-     * MethodProperty
-     */
-    private LinkedList<ValueChangeListener> valueChangeListeners = null;
 
     /* Special serialization to handle method references */
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
@@ -629,22 +615,6 @@ public class MethodProperty<T> implements Property,
     }
 
     /**
-     * Returns the value of the <code>MethodProperty</code> in human readable
-     * textual format. The return value should be assignable to the
-     * <code>setValue</code> method if the Property is not in read-only mode.
-     * 
-     * @return String representation of the value stored in the Property
-     */
-    @Override
-    public String toString() {
-        final Object value = getValue();
-        if (value == null) {
-            return null;
-        }
-        return value.toString();
-    }
-
-    /**
      * <p>
      * Sets the setter method and getter method argument lists.
      * </p>
@@ -852,140 +822,15 @@ public class MethodProperty<T> implements Property,
         }
     }
 
-    /* Events */
-
-    /**
-     * An <code>Event</code> object specifying the Property whose read-only
-     * status has been changed.
-     * 
-     * @author IT Mill Ltd.
-     * @version
-     * @VERSION@
-     * @since 3.0
-     */
-    private class ReadOnlyStatusChangeEvent extends java.util.EventObject
-            implements Property.ReadOnlyStatusChangeEvent {
-
-        /**
-         * Constructs a new read-only status change event for this object.
-         * 
-         * @param source
-         *            source object of the event.
-         */
-        protected ReadOnlyStatusChangeEvent(MethodProperty<T> source) {
-            super(source);
-        }
-
-        /**
-         * Gets the Property whose read-only state has changed.
-         * 
-         * @return source Property of the event.
-         */
-        public Property getProperty() {
-            return (Property) getSource();
-        }
-
-    }
-
-    /**
-     * Registers a new read-only status change listener for this Property.
-     * 
-     * @param listener
-     *            the new Listener to be registered.
-     */
-    public void addListener(Property.ReadOnlyStatusChangeListener listener) {
-        if (readOnlyStatusChangeListeners == null) {
-            readOnlyStatusChangeListeners = new LinkedList<ReadOnlyStatusChangeListener>();
-        }
-        readOnlyStatusChangeListeners.add(listener);
-    }
-
-    /**
-     * Removes a previously registered read-only status change listener.
-     * 
-     * @param listener
-     *            the listener to be removed.
-     */
-    public void removeListener(Property.ReadOnlyStatusChangeListener listener) {
-        if (readOnlyStatusChangeListeners != null) {
-            readOnlyStatusChangeListeners.remove(listener);
-        }
-    }
-
-    /**
-     * Sends a read only status change event to all registered listeners.
-     */
-    private void fireReadOnlyStatusChange() {
-        if (readOnlyStatusChangeListeners != null) {
-            final Object[] l = readOnlyStatusChangeListeners.toArray();
-            final Property.ReadOnlyStatusChangeEvent event = new ReadOnlyStatusChangeEvent(
-                    this);
-            for (int i = 0; i < l.length; i++) {
-                ((Property.ReadOnlyStatusChangeListener) l[i])
-                        .readOnlyStatusChange(event);
-            }
-        }
-    }
-
-    /**
-     * An <code>Event</code> object specifying the Property whose value has been
-     * changed.
-     * 
-     * @author IT Mill Ltd.
-     * @version
-     * @VERSION@
-     * @since 5.3
-     */
-    private class ValueChangeEvent extends java.util.EventObject implements
-            Property.ValueChangeEvent {
-
-        /**
-         * Constructs a new value change event for this object.
-         * 
-         * @param source
-         *            source object of the event.
-         */
-        protected ValueChangeEvent(MethodProperty<T> source) {
-            super(source);
-        }
-
-        /**
-         * Gets the Property whose value has changed.
-         * 
-         * @return source Property of the event.
-         */
-        public Property getProperty() {
-            return (Property) getSource();
-        }
-
-    }
-
-    public void addListener(ValueChangeListener listener) {
-        if (valueChangeListeners == null) {
-            valueChangeListeners = new LinkedList<ValueChangeListener>();
-        }
-        valueChangeListeners.add(listener);
-
-    }
-
-    public void removeListener(ValueChangeListener listener) {
-        if (valueChangeListeners != null) {
-            valueChangeListeners.remove(listener);
-        }
-
-    }
-
     /**
      * Sends a value change event to all registered listeners.
+     * 
+     * Public for backwards compatibility, visibility may be reduced in future
+     * versions.
      */
+    @Override
     public void fireValueChange() {
-        if (valueChangeListeners != null) {
-            final Object[] l = valueChangeListeners.toArray();
-            final Property.ValueChangeEvent event = new ValueChangeEvent(this);
-            for (int i = 0; i < l.length; i++) {
-                ((Property.ValueChangeListener) l[i]).valueChange(event);
-            }
-        }
+        super.fireValueChange();
     }
 
 }

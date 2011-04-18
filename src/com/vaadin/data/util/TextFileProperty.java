@@ -14,23 +14,23 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
-import java.util.LinkedList;
-
-import com.vaadin.data.Property;
 
 /**
  * Property implementation for wrapping a text file.
  * 
- * Supports reading and writing of a File from/to String. ValueChangeNotifiers
- * are supported, but only fire when setValue(Object) is explicitly called.
+ * Supports reading and writing of a File from/to String.
+ * 
+ * {@link ValueChangeListener}s are supported, but only fire when
+ * setValue(Object) is explicitly called. {@link ReadOnlyStatusChangeListener}s
+ * are supported but only fire when setReadOnly(boolean) is explicitly called.
+ * 
  */
 @SuppressWarnings("serial")
-public class TextFileProperty implements Property, Property.ValueChangeNotifier {
+public class TextFileProperty extends AbstractProperty {
 
     private File file;
     private boolean readonly;
     private Charset charset = null;
-    private LinkedList<Property.ValueChangeListener> valueChangeListeners = null;
 
     /**
      * Wrap given file with property interface.
@@ -115,7 +115,11 @@ public class TextFileProperty implements Property, Property.ValueChangeNotifier 
      * @see com.vaadin.data.Property#setReadOnly(boolean)
      */
     public void setReadOnly(boolean newStatus) {
+        boolean oldStatus = readonly;
         readonly = newStatus;
+        if (isReadOnly() != oldStatus) {
+            fireReadOnlyStatusChange();
+        }
     }
 
     /*
@@ -144,83 +148,6 @@ public class TextFileProperty implements Property, Property.ValueChangeNotifier 
             fireValueChange();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return (String) getValue();
-    }
-
-    /* Events */
-
-    /**
-     * An <code>Event</code> object specifying the TextFileProperty whose value
-     * has changed.
-     */
-    private class ValueChangeEvent extends java.util.EventObject implements
-            Property.ValueChangeEvent {
-
-        /**
-         * Constructs a new value change event for this object.
-         * 
-         * @param source
-         *            the source object of the event.
-         */
-        protected ValueChangeEvent(TextFileProperty source) {
-            super(source);
-        }
-
-        /**
-         * Gets the Property whose read-only state has changed.
-         * 
-         * @return source the Property of the event.
-         */
-        public Property getProperty() {
-            return (Property) getSource();
-        }
-    }
-
-    /**
-     * Removes a previously registered value change listener.
-     * 
-     * @param listener
-     *            the listener to be removed.
-     */
-    public void removeListener(Property.ValueChangeListener listener) {
-        if (valueChangeListeners != null) {
-            valueChangeListeners.remove(listener);
-        }
-    }
-
-    /**
-     * Registers a new value change listener for this TextFileProperty.
-     * 
-     * @param listener
-     *            the new Listener to be registered
-     */
-    public void addListener(Property.ValueChangeListener listener) {
-        if (valueChangeListeners == null) {
-            valueChangeListeners = new LinkedList<Property.ValueChangeListener>();
-        }
-        valueChangeListeners.add(listener);
-    }
-
-    /**
-     * Sends a value change event to all registered listeners.
-     */
-    private void fireValueChange() {
-        if (valueChangeListeners != null) {
-            final Object[] l = valueChangeListeners.toArray();
-            final ValueChangeEvent event = new ValueChangeEvent(this);
-            for (int i = 0; i < l.length; i++) {
-                ((ValueChangeListener) l[i]).valueChange(event);
-            }
         }
     }
 

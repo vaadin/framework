@@ -3,8 +3,6 @@
  */
 package com.vaadin.data.util;
 
-import java.util.LinkedList;
-
 import com.vaadin.data.Property;
 
 /**
@@ -35,20 +33,8 @@ import com.vaadin.data.Property;
  * @since 5.3.0
  */
 @SuppressWarnings("serial")
-public abstract class PropertyFormatter implements Property,
-        Property.ValueChangeNotifier, Property.ValueChangeListener,
-        Property.ReadOnlyStatusChangeListener,
-        Property.ReadOnlyStatusChangeNotifier {
-
-    /**
-     * Internal list of registered value change listeners.
-     */
-    private LinkedList<Property.ValueChangeListener> valueChangeListeners = null;
-
-    /**
-     * Internal list of registered read-only status change listeners.
-     */
-    private LinkedList<Property.ReadOnlyStatusChangeListener> readOnlyStatusChangeListeners = null;
+public abstract class PropertyFormatter extends AbstractProperty implements
+        Property.ValueChangeListener, Property.ReadOnlyStatusChangeListener {
 
     /** Datasource that stores the actual value. */
     Property dataSource;
@@ -232,144 +218,6 @@ public abstract class PropertyFormatter implements Property,
                 } else {
                     throw new ConversionException(e);
                 }
-            }
-        }
-    }
-
-    /**
-     * An <code>Event</code> object specifying the ObjectProperty whose value
-     * has changed.
-     * 
-     * @author IT Mill Ltd.
-     * @since 5.3.0
-     */
-    private class ValueChangeEvent extends java.util.EventObject implements
-            Property.ValueChangeEvent {
-
-        /**
-         * Constructs a new value change event for this object.
-         * 
-         * @param source
-         *            the source object of the event.
-         */
-        protected ValueChangeEvent(PropertyFormatter source) {
-            super(source);
-        }
-
-        /**
-         * Gets the Property whose read-only state has changed.
-         * 
-         * @return source the Property of the event.
-         */
-        public Property getProperty() {
-            return (Property) getSource();
-        }
-    }
-
-    /**
-     * An <code>Event</code> object specifying the Property whose read-only
-     * status has been changed.
-     * 
-     * @author IT Mill Ltd.
-     * @since 5.3.0
-     */
-    private class ReadOnlyStatusChangeEvent extends java.util.EventObject
-            implements Property.ReadOnlyStatusChangeEvent {
-
-        /**
-         * Constructs a new read-only status change event for this object.
-         * 
-         * @param source
-         *            source object of the event
-         */
-        protected ReadOnlyStatusChangeEvent(PropertyFormatter source) {
-            super(source);
-        }
-
-        /**
-         * Gets the Property whose read-only state has changed.
-         * 
-         * @return source Property of the event.
-         */
-        public Property getProperty() {
-            return (Property) getSource();
-        }
-    }
-
-    /**
-     * Removes a previously registered value change listener.
-     * 
-     * @param listener
-     *            the listener to be removed.
-     */
-    public void removeListener(Property.ValueChangeListener listener) {
-        if (valueChangeListeners != null) {
-            valueChangeListeners.remove(listener);
-        }
-    }
-
-    /**
-     * Registers a new value change listener for this ObjectProperty.
-     * 
-     * @param listener
-     *            the new Listener to be registered
-     */
-    public void addListener(Property.ValueChangeListener listener) {
-        if (valueChangeListeners == null) {
-            valueChangeListeners = new LinkedList<Property.ValueChangeListener>();
-        }
-        valueChangeListeners.add(listener);
-    }
-
-    /**
-     * Registers a new read-only status change listener for this Property.
-     * 
-     * @param listener
-     *            the new Listener to be registered
-     */
-    public void addListener(Property.ReadOnlyStatusChangeListener listener) {
-        if (readOnlyStatusChangeListeners == null) {
-            readOnlyStatusChangeListeners = new LinkedList<Property.ReadOnlyStatusChangeListener>();
-        }
-        readOnlyStatusChangeListeners.add(listener);
-    }
-
-    /**
-     * Removes a previously registered read-only status change listener.
-     * 
-     * @param listener
-     *            the listener to be removed.
-     */
-    public void removeListener(Property.ReadOnlyStatusChangeListener listener) {
-        if (readOnlyStatusChangeListeners != null) {
-            readOnlyStatusChangeListeners.remove(listener);
-        }
-    }
-
-    /**
-     * Sends a value change event to all registered listeners.
-     */
-    private void fireValueChange() {
-        if (valueChangeListeners != null) {
-            final Object[] l = valueChangeListeners.toArray();
-            final Property.ValueChangeEvent event = new ValueChangeEvent(this);
-            for (int i = 0; i < l.length; i++) {
-                ((Property.ValueChangeListener) l[i]).valueChange(event);
-            }
-        }
-    }
-
-    /**
-     * Sends a read only status change event to all registered listeners.
-     */
-    private void fireReadOnlyStatusChange() {
-        if (readOnlyStatusChangeListeners != null) {
-            final Object[] l = readOnlyStatusChangeListeners.toArray();
-            final Property.ReadOnlyStatusChangeEvent event = new ReadOnlyStatusChangeEvent(
-                    this);
-            for (int i = 0; i < l.length; i++) {
-                ((Property.ReadOnlyStatusChangeListener) l[i])
-                        .readOnlyStatusChange(event);
             }
         }
     }
