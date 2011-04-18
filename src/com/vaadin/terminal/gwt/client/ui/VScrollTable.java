@@ -292,7 +292,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 // Cancel default keyboard events on a disabled Table
                 // (prevents scrolling)
                 event.preventDefault();
-            } else {
+            } else if (hasFocus) {
                 // Key code in Firefox/onKeyPress is present only for
                 // special keys, otherwise 0 is returned
                 int keyCode = event.getKeyCode();
@@ -354,7 +354,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 // Cancel default keyboard events on a disabled Table
                 // (prevents scrolling)
                 event.preventDefault();
-            } else {
+            } else if (hasFocus) {
                 if (handleNavigation(event.getKeyCode(), event.getCtrlKey()
                         || event.getMetaKey(), event.getShiftKey())) {
                     navKeyDown = true;
