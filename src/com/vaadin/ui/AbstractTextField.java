@@ -439,8 +439,8 @@ public abstract class AbstractTextField extends AbstractField implements
 
     private void firePendingTextChangeEvent() {
         if (textChangeEventPending) {
-            fireEvent(new TextChangeEventImpl(this));
             textChangeEventPending = false;
+            fireEvent(new TextChangeEventImpl(this));
         }
     }
 
