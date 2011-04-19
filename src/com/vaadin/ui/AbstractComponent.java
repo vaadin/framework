@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -1141,6 +1142,32 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         if (eventRouter != null) {
             eventRouter.removeListener(eventType, target, methodName);
         }
+    }
+
+    /**
+     * Returns all listeners that are registered for the given event type or one
+     * of its subclasses.
+     * 
+     * @param eventType
+     *            The type of event to return listeners for.
+     * @return A collection with all registered listeners. Empty if no listeners
+     *         are found.
+     */
+    public Collection<?> getListeners(Class<?> eventType) {
+        if (eventType.isAssignableFrom(RepaintRequestEvent.class)) {
+            // RepaintRequestListeners are not stored in eventRouter
+            if (repaintRequestListeners == null) {
+                return Collections.EMPTY_LIST;
+            } else {
+                return Collections
+                        .unmodifiableCollection(repaintRequestListeners);
+            }
+        }
+        if (eventRouter == null) {
+            return Collections.EMPTY_LIST;
+        }
+
+        return eventRouter.getListeners(eventType);
     }
 
     /**

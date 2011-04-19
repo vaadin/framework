@@ -2,6 +2,7 @@ package com.vaadin.data.util;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EventObject;
 import java.util.LinkedList;
 
@@ -222,4 +223,24 @@ public abstract class AbstractContainer implements Container {
         return itemSetChangeListeners;
     }
 
+    public Collection<?> getListeners(Class<?> eventType) {
+        if (Container.PropertySetChangeEvent.class.isAssignableFrom(eventType)) {
+            if (propertySetChangeListeners == null) {
+                return Collections.EMPTY_LIST;
+            } else {
+                return Collections
+                        .unmodifiableCollection(propertySetChangeListeners);
+            }
+        } else if (Container.ItemSetChangeEvent.class
+                .isAssignableFrom(eventType)) {
+            if (itemSetChangeListeners == null) {
+                return Collections.EMPTY_LIST;
+            } else {
+                return Collections
+                        .unmodifiableCollection(itemSetChangeListeners);
+            }
+        }
+
+        return Collections.EMPTY_LIST;
+    }
 }

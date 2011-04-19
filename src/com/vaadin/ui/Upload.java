@@ -7,12 +7,14 @@ package com.vaadin.ui;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.StreamVariable.StreamingProgressEvent;
 import com.vaadin.terminal.gwt.client.ui.VUpload;
 import com.vaadin.terminal.gwt.server.NoInputStreamException;
 import com.vaadin.terminal.gwt.server.NoOutputStreamException;
@@ -1030,4 +1032,16 @@ public class Upload extends AbstractComponent implements Component.Focusable {
         return streamVariable;
     }
 
+    @Override
+    public java.util.Collection<?> getListeners(java.lang.Class<?> eventType) {
+        if (StreamingProgressEvent.class.isAssignableFrom(eventType)) {
+            if (progressListeners == null) {
+                return Collections.EMPTY_LIST;
+            } else {
+                return Collections.unmodifiableCollection(progressListeners);
+            }
+
+        }
+        return super.getListeners(eventType);
+    };
 }

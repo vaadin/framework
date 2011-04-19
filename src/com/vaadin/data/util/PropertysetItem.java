@@ -220,6 +220,19 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
         }
     }
 
+    public Collection<?> getListeners(Class<?> eventType) {
+        if (Item.PropertySetChangeEvent.class.isAssignableFrom(eventType)) {
+            if (propertySetChangeListeners == null) {
+                return Collections.EMPTY_LIST;
+            } else {
+                return Collections
+                        .unmodifiableCollection(propertySetChangeListeners);
+            }
+        }
+
+        return Collections.EMPTY_LIST;
+    }
+
     /**
      * Creates and returns a copy of this object.
      * <p>

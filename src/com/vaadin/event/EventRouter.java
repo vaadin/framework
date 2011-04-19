@@ -5,10 +5,12 @@
 package com.vaadin.event;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  * <code>EventRouter</code> class implementing the inheritable event listening
@@ -26,7 +28,7 @@ public class EventRouter implements MethodEventSource {
     /**
      * List of registered listeners.
      */
-    private Set<ListenerMethod> listenerList = null;
+    private LinkedHashSet<ListenerMethod> listenerList = null;
 
     /*
      * Registers a new listener with the specified activation method to listen
@@ -170,5 +172,25 @@ public class EventRouter implements MethodEventSource {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns all listeners that match or extend the given event type.
+     * 
+     * @param eventType
+     *            The type of event to return listeners for.
+     * @return A collection with all registered listeners. Empty if no listeners
+     *         are found.
+     */
+    public Collection<?> getListeners(Class<?> eventType) {
+        List<Object> listeners = new ArrayList<Object>();
+        if (listenerList != null) {
+            for (ListenerMethod lm : listenerList) {
+                if (lm.isOrExtendsType(eventType)) {
+                    listeners.add(lm.getTarget());
+                }
+            }
+        }
+        return listeners;
     }
 }

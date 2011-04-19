@@ -1,5 +1,7 @@
 package com.vaadin.data.util;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 
 import com.vaadin.data.Property;
@@ -189,6 +191,26 @@ public abstract class AbstractProperty implements Property,
                 ((Property.ValueChangeListener) l[i]).valueChange(event);
             }
         }
+    }
+
+    public Collection<?> getListeners(Class<?> eventType) {
+        if (Property.ValueChangeEvent.class.isAssignableFrom(eventType)) {
+            if (valueChangeListeners == null) {
+                return Collections.EMPTY_LIST;
+            } else {
+                return Collections.unmodifiableCollection(valueChangeListeners);
+            }
+        } else if (Property.ReadOnlyStatusChangeEvent.class
+                .isAssignableFrom(eventType)) {
+            if (readOnlyStatusChangeListeners == null) {
+                return Collections.EMPTY_LIST;
+            } else {
+                return Collections
+                        .unmodifiableCollection(readOnlyStatusChangeListeners);
+            }
+        }
+
+        return Collections.EMPTY_LIST;
     }
 
 }

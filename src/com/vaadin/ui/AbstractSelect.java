@@ -1454,6 +1454,26 @@ public abstract class AbstractSelect extends AbstractField implements
         }
     }
 
+    @Override
+    public Collection<?> getListeners(Class<?> eventType) {
+        if (Container.ItemSetChangeEvent.class.isAssignableFrom(eventType)) {
+            if (itemSetEventListeners == null)
+                return Collections.EMPTY_LIST;
+            else
+                return Collections
+                        .unmodifiableCollection(itemSetEventListeners);
+        } else if (Container.PropertySetChangeEvent.class
+                .isAssignableFrom(eventType)) {
+            if (propertySetEventListeners == null)
+                return Collections.EMPTY_LIST;
+            else
+                return Collections
+                        .unmodifiableCollection(propertySetEventListeners);
+        }
+
+        return super.getListeners(eventType);
+    }
+
     /**
      * Lets the listener know a Containers Item set has changed.
      * 

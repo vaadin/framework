@@ -532,6 +532,19 @@ public class IndexedContainer extends
     }
 
     @Override
+    public Collection<?> getListeners(Class<?> eventType) {
+        if (Property.ValueChangeEvent.class.isAssignableFrom(eventType)) {
+            if (propertyValueChangeListeners == null) {
+                return Collections.EMPTY_LIST;
+            } else {
+                return Collections
+                        .unmodifiableCollection(propertyValueChangeListeners);
+            }
+        }
+        return super.getListeners(eventType);
+    }
+
+    @Override
     protected void fireItemAdded(int position, Object itemId, Item item) {
         if (position >= 0) {
             fireItemSetChange(new IndexedContainer.ItemSetChangeEvent(this,
