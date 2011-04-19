@@ -163,8 +163,8 @@ public class ListenerMethod implements EventListener, Serializable {
      *            will not be passed to the trigger method, though it is still
      *            called.
      * @throws java.lang.IllegalArgumentException
-     *             if <code>method</code> is not a member of
-     *             <code>listener</code> .
+     *             if <code>method</code> is not a member of <code>target</code>
+     *             .
      */
     public ListenerMethod(Class<?> eventType, Object target, Method method,
             Object[] arguments, int eventArgumentIndex)
@@ -223,7 +223,7 @@ public class ListenerMethod implements EventListener, Serializable {
      *            called.
      * @throws java.lang.IllegalArgumentException
      *             unless exactly one match <code>methodName</code> is found in
-     *             <code>listener</code>.
+     *             <code>target</code>.
      */
     public ListenerMethod(Class<?> eventType, Object target, String methodName,
             Object[] arguments, int eventArgumentIndex)
@@ -283,8 +283,8 @@ public class ListenerMethod implements EventListener, Serializable {
      * @param arguments
      *            the arguments to be passed to the trigger method.
      * @throws java.lang.IllegalArgumentException
-     *             if <code>method</code> is not a member of
-     *             <code>listener</code> .
+     *             if <code>method</code> is not a member of <code>target</code>
+     *             .
      */
     public ListenerMethod(Class<?> eventType, Object target, Method method,
             Object[] arguments) throws java.lang.IllegalArgumentException {
@@ -310,7 +310,7 @@ public class ListenerMethod implements EventListener, Serializable {
      * </p>
      * 
      * <p>
-     * The actual trigger method is reflected from <code>listener</code>, and
+     * The actual trigger method is reflected from <code>target</code>, and
      * <code>java.lang.IllegalArgumentException</code> is thrown unless exactly
      * one match is found.
      * </p>
@@ -424,7 +424,7 @@ public class ListenerMethod implements EventListener, Serializable {
      *            <code>java.lang.IllegalArgumentException</code> is thrown.
      * @throws java.lang.IllegalArgumentException
      *             unless exactly one match <code>methodName</code> is found in
-     *             <code>listener</code>.
+     *             <code>target</code>.
      */
     public ListenerMethod(Class<?> eventType, Object target, String methodName)
             throws java.lang.IllegalArgumentException {
