@@ -4,14 +4,12 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Window;
 
 public class TableScrollsOnSelection extends TestBase {
 
     @Override
     protected void setup() {
-        Window mainWindow = new Window("Playground Application");
-        setMainWindow(mainWindow);
+        getMainWindow().getContent().setSizeUndefined();
 
         IndexedContainer cont = new IndexedContainer();
         cont.addContainerProperty("number", String.class, null);
@@ -23,7 +21,7 @@ public class TableScrollsOnSelection extends TestBase {
         table.setPageLength(0);
         table.setContainerDataSource(cont);
         table.setSelectable(true);
-        mainWindow.addComponent(table);
+        addComponent(table);
     }
 
     @Override

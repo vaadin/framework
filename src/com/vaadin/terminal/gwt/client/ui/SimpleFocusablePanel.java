@@ -30,7 +30,7 @@ public class SimpleFocusablePanel extends SimplePanel implements
     public SimpleFocusablePanel() {
         // make focusable, as we don't need access key magic we don't need to
         // use FocusImpl.createFocusable
-        getElement().setTabIndex(0);
+        setTabIndex(0);
     }
 
     public HandlerRegistration addFocusHandler(FocusHandler handler) {
@@ -63,5 +63,9 @@ public class SimpleFocusablePanel extends SimplePanel implements
 
     public void focus() {
         setFocus(true);
+    }
+
+    public void setTabIndex(int tabIndex) {
+        getElement().setTabIndex(tabIndex);
     }
 }

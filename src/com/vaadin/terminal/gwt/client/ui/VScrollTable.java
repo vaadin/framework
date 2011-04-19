@@ -15,6 +15,7 @@ import java.util.Set;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.NodeList;
@@ -97,8 +98,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
  * TODO implement unregistering for child components in Cells
  */
 public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
-        VHasDropHandler, KeyPressHandler, KeyDownHandler, FocusHandler,
-        BlurHandler, Focusable, KeyUpHandler {
+        VHasDropHandler, FocusHandler, BlurHandler, Focusable {
 
     public static final String CLASSNAME = "v-table";
     public static final String CLASSNAME_SELECTION_FOCUS = CLASSNAME + "-focus";
@@ -278,8 +278,96 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     private final TableFooter tFoot = new TableFooter();
 
-    private final FocusableScrollPanel scrollBodyPanel = new FocusableScrollPanel();
+    private final FocusableScrollPanel scrollBodyPanel = new FocusableScrollPanel(
+            true);
 
+    private KeyPressHandler navKeyPressHandler = new KeyPressHandler() {
+        public void onKeyPress(KeyPressEvent keyPressEvent) {
+            // This is used for Firefox only, since Firefox auto-repeat
+            // works correctly only if we use a key press handler, other
+            // browsers handle it correctly when using a key down handler
+            if (!BrowserInfo.get().isGecko()) {
+                return;
+            }
+
+            NativeEvent event = keyPressEvent.getNativeEvent();
+            if (!enabled) {
+                // Cancel default keyboard events on a disabled Table
+                // (prevents scrolling)
+                event.preventDefault();
+            } else if (hasFocus) {
+                // Key code in Firefox/onKeyPress is present only for
+                // special keys, otherwise 0 is returned
+                int keyCode = event.getKeyCode();
+                if (keyCode == 0 && event.getCharCode() == ' ') {
+                    // Provide a keyCode for space to be compatible with
+                    // FireFox keypress event
+                    keyCode = CHARCODE_SPACE;
+                }
+
+                if (handleNavigation(keyCode,
+                        event.getCtrlKey() || event.getMetaKey(),
+                        event.getShiftKey())) {
+                    event.preventDefault();
+                }
+
+                startScrollingVelocityTimer();
+            }
+        }
+
+    };
+
+    private KeyUpHandler navKeyUpHandler = new KeyUpHandler() {
+
+        public void onKeyUp(KeyUpEvent keyUpEvent) {
+            NativeEvent event = keyUpEvent.getNativeEvent();
+            int keyCode = event.getKeyCode();
+
+            if (!isFocusable()) {
+                cancelScrollingVelocityTimer();
+            } else if (isNavigationKey(keyCode)) {
+                if (keyCode == getNavigationDownKey()
+                        || keyCode == getNavigationUpKey()) {
+                    /*
+                     * in multiselect mode the server may still have value from
+                     * previous page. Clear it unless doing multiselection or
+                     * just moving focus.
+                     */
+                    if (!event.getShiftKey() && !event.getCtrlKey()) {
+                        instructServerToForgetPreviousSelections();
+                    }
+                    sendSelectedRows();
+                }
+                cancelScrollingVelocityTimer();
+                navKeyDown = false;
+            }
+        }
+    };
+
+    private KeyDownHandler navKeyDownHandler = new KeyDownHandler() {
+
+        public void onKeyDown(KeyDownEvent keyDownEvent) {
+            NativeEvent event = keyDownEvent.getNativeEvent();
+            // This is not used for Firefox
+            if (BrowserInfo.get().isGecko()) {
+                return;
+            }
+
+            if (!enabled) {
+                // Cancel default keyboard events on a disabled Table
+                // (prevents scrolling)
+                event.preventDefault();
+            } else if (hasFocus) {
+                if (handleNavigation(event.getKeyCode(), event.getCtrlKey()
+                        || event.getMetaKey(), event.getShiftKey())) {
+                    navKeyDown = true;
+                    event.preventDefault();
+                }
+
+                startScrollingVelocityTimer();
+            }
+        }
+    };
     private int totalRows;
 
     private Set<String> collapsedColumns;
@@ -326,6 +414,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     public VScrollTable() {
         scrollBodyPanel.setStyleName(CLASSNAME + "-body-wrapper");
+        scrollBodyPanel.addFocusHandler(this);
+        scrollBodyPanel.addBlurHandler(this);
+
+        scrollBodyPanel.addScrollHandler(this);
+        scrollBodyPanel.setStyleName(CLASSNAME + "-body");
 
         /*
          * Firefox auto-repeat works correctly only if we use a key press
@@ -333,16 +426,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * handler
          */
         if (BrowserInfo.get().isGecko()) {
-            scrollBodyPanel.addKeyPressHandler(this);
+            scrollBodyPanel.addKeyPressHandler(navKeyPressHandler);
         } else {
-            scrollBodyPanel.addKeyDownHandler(this);
+            scrollBodyPanel.addKeyDownHandler(navKeyDownHandler);
         }
-        scrollBodyPanel.addKeyUpHandler(this);
-
-        scrollBodyPanel.addFocusHandler(this);
-        scrollBodyPanel.addBlurHandler(this);
-
-        scrollBodyPanel.addScrollHandler(this);
+        scrollBodyPanel.addKeyUpHandler(navKeyUpHandler);
 
         scrollBodyPanel.sinkEvents(Event.TOUCHEVENTS);
         scrollBodyPanel.addDomHandler(new TouchStartHandler() {
@@ -350,8 +438,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 getTouchScrollDelegate().onTouchStart(event);
             }
         }, TouchStartEvent.getType());
-
-        scrollBodyPanel.setStyleName(CLASSNAME + "-body");
 
         setStyleName(CLASSNAME);
 
@@ -903,17 +989,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         if (focusedRow != null) {
             if (!focusedRow.isAttached()) {
-                // focused row has orphaned, can't focus
-                focusedRow = null;
-                if (SELECT_MODE_SINGLE == selectMode
-                        && selectedRowKeys.size() > 0) {
-                    // try to focusa row currently selected and in viewport
-                    String selectedRowKey = selectedRowKeys.iterator().next();
-                    if (selectedRowKey != null) {
-                        setRowFocus(getRenderedRowByKey(selectedRowKey));
-                    }
-                }
-                // TODO what should happen in multiselect mode?
+                // focused row has been orphaned, can't focus
+                focusRowFromBody();
             }
         }
 
@@ -935,6 +1012,24 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         rendering = false;
         headerChangedDuringUpdate = false;
 
+    }
+
+    private void focusRowFromBody() {
+        if (selectedRowKeys.size() == 1) {
+            // try to focus a row currently selected and in viewport
+            String selectedRowKey = selectedRowKeys.iterator().next();
+            if (selectedRowKey != null) {
+                VScrollTableRow renderedRow = getRenderedRowByKey(selectedRowKey);
+                if (renderedRow == null || !renderedRow.isInViewPort()) {
+                    setRowFocus(scrollBody.getRowByRowIndex(firstRowInViewPort));
+                } else {
+                    setRowFocus(renderedRow);
+                }
+            }
+        } else {
+            // multiselect mode
+            setRowFocus(scrollBody.getRowByRowIndex(firstRowInViewPort));
+        }
     }
 
     protected VScrollTableBody createScrollBody() {
@@ -2595,11 +2690,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             String colKey;
             private boolean collapsed;
+            private VScrollTableRow currentlyFocusedRow;
 
             public VisibleColumnAction(String colKey) {
                 super(VScrollTable.TableHead.this);
                 this.colKey = colKey;
                 caption = tHead.getHeaderCell(colKey).getCaption();
+                currentlyFocusedRow = focusedRow;
             }
 
             @Override
@@ -2620,6 +2717,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 .size()]), false);
                 // let rowRequestHandler determine proper rows
                 rowRequestHandler.refreshContent();
+                lazyRevertFocusToRow(currentlyFocusedRow);
             }
 
             public void setCollapsed(boolean b) {
@@ -3772,7 +3870,26 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 setElement(rowElement);
                 DOM.sinkEvents(getElement(), Event.MOUSEEVENTS
                         | Event.TOUCHEVENTS | Event.ONDBLCLICK
-                        | Event.ONCONTEXTMENU | Event.ONKEYDOWN);
+                        | Event.ONCONTEXTMENU);
+            }
+
+            /**
+             * Detects whether row is visible in tables viewport.
+             * 
+             * @return
+             */
+            public boolean isInViewPort() {
+                int absoluteTop = getAbsoluteTop();
+                int scrollPosition = scrollBodyPanel.getScrollPosition();
+                if (absoluteTop < scrollPosition) {
+                    return false;
+                }
+                int maxVisible = scrollPosition
+                        + scrollBodyPanel.getOffsetHeight() - getOffsetHeight();
+                if (absoluteTop > maxVisible) {
+                    return false;
+                }
+                return true;
             }
 
             /**
@@ -4077,7 +4194,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         if (targetCellOrRowFound) {
                             mDown = false;
                             handleClickEvent(event, targetTdOrTr);
-                            scrollBodyPanel.setFocus(true);
                             if (event.getButton() == Event.BUTTON_LEFT
                                     && isSelectable()) {
 
@@ -4256,6 +4372,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     case Event.ONMOUSEDOWN:
                         if (targetCellOrRowFound) {
                             setRowFocus(this);
+                            ensureFocus();
                             if (dragmode != 0
                                     && (event.getButton() == NativeEvent.BUTTON_LEFT)) {
                                 startRowDrag(event, type, targetTdOrTr);
@@ -4265,10 +4382,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                     && selectMode == SELECT_MODE_MULTI
                                     && multiselectmode == MULTISELECT_MODE_DEFAULT) {
 
-                                // because we are preventing the default (due to
-                                // prevent text selection) we must ensure
-                                // gaining the focus.
-                                ensureFocus();
                                 // Prevent default text selection in Firefox
                                 event.preventDefault();
 
@@ -4351,10 +4464,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 } else {
                     ev.createDragImage(getElement(), true);
                 }
-                // because we are preventing the default (due to
-                // prevent text selection) we must ensure
-                // gaining the focus.
-                ensureFocus();
                 if (type == Event.ONMOUSEDOWN) {
                     event.preventDefault();
                 }
@@ -4535,7 +4644,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 for (int i = 0; i < actions.length; i++) {
                     final String actionKey = actionKeys[i];
                     final TreeAction a = new TreeAction(this,
-                            String.valueOf(rowKey), actionKey);
+                            String.valueOf(rowKey), actionKey) {
+                        @Override
+                        public void execute() {
+                            super.execute();
+                            lazyRevertFocusToRow(VScrollTableRow.this);
+                        }
+                    };
                     a.setCaption(getActionCaption(actionKey));
                     a.setIconUrl(getActionIcon(actionKey));
                     actions[i] = a;
@@ -4629,7 +4744,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * focus only if not currently focused.
          */
         protected void ensureFocus() {
-            focus();
+            if (!hasFocus) {
+                scrollBodyPanel.setFocus(true);
+            }
         }
     }
 
@@ -4648,14 +4765,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         selectedRowRanges.clear();
         // also notify server that it clears all previous selections (the client
         // side does not know about the invisible ones)
-        instructServerToForgotPreviousSelections();
+        instructServerToForgetPreviousSelections();
     }
 
     /**
      * Used in multiselect mode when the client side knows that all selections
      * are in the next request.
      */
-    private void instructServerToForgotPreviousSelections() {
+    private void instructServerToForgetPreviousSelections() {
         client.updateVariable(paintableId, "clearSelections", true, false);
     }
 
@@ -4831,6 +4948,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
                 }
             });
+
+            if (BrowserInfo.get().isIE()) {
+                /*
+                 * IE does not fire onscroll event if scroll position is
+                 * reverted to 0 due to the content element size growth. Ensure
+                 * headers are in sync with content manually. Safe to use null
+                 * event as we don't actually use the event object in listener.
+                 */
+                onScroll(null);
+            }
         }
     };
 
@@ -5261,7 +5388,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // Apply focus style to new selection
             row.addStyleName(CLASSNAME_SELECTION_FOCUS);
 
-            // Trying to set focus on already focused row
+            /*
+             * Trying to set focus on already focused row
+             */
             if (row == focusedRow) {
                 return false;
             }
@@ -5586,97 +5715,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * (non-Javadoc)
      * 
      * @see
-     * com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google
-     * .gwt.event.dom.client.KeyPressEvent)
-     */
-    public void onKeyPress(KeyPressEvent event) {
-        // This is used for Firefox only
-        if (!BrowserInfo.get().isGecko()) {
-            return;
-        }
-
-        if (!enabled) {
-            // Cancel default keyboard events on a disabled Table (prevents
-            // scrolling)
-            event.preventDefault();
-        } else if (hasFocus) {
-            // Key code in Firefox/onKeyPress is present only for special keys,
-            // otherwise 0 is returned
-            NativeEvent nativeEvent = event.getNativeEvent();
-            int keyCode = nativeEvent.getKeyCode();
-            if (keyCode == 0 && nativeEvent.getCharCode() == ' ') {
-                // Provide a keyCode for space to be compatible with FireFox
-                // keypress event
-                keyCode = CHARCODE_SPACE;
-            }
-
-            if (handleNavigation(keyCode,
-                    event.isControlKeyDown() || event.isMetaKeyDown(),
-                    event.isShiftKeyDown())) {
-                event.preventDefault();
-            }
-
-            // Start the velocityTimer
-            if (scrollingVelocityTimer == null) {
-                scrollingVelocityTimer = new Timer() {
-                    @Override
-                    public void run() {
-                        scrollingVelocity++;
-                    }
-                };
-                scrollingVelocityTimer.scheduleRepeating(100);
-            }
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
-     * .event.dom.client.KeyDownEvent)
-     */
-    public void onKeyDown(KeyDownEvent event) {
-        if (!enabled) {
-            // Cancel default keyboard events on a disabled Table (prevents
-            // scrolling)
-            event.preventDefault();
-        } else if (hasFocus) {
-            if (handleNavigation(event.getNativeEvent().getKeyCode(),
-                    event.isControlKeyDown() || event.isMetaKeyDown(),
-                    event.isShiftKeyDown())) {
-                navKeyDown = true;
-                event.preventDefault();
-            }
-
-            // Start the velocityTimer
-            if (scrollingVelocityTimer == null) {
-                scrollingVelocityTimer = new Timer() {
-                    @Override
-                    public void run() {
-                        scrollingVelocity++;
-                    }
-                };
-                scrollingVelocityTimer.scheduleRepeating(100);
-            }
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
      * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
      * .dom.client.FocusEvent)
      */
     public void onFocus(FocusEvent event) {
         if (isFocusable()) {
-            scrollBodyPanel.addStyleName("focused");
             hasFocus = true;
 
             // Focus a row if no row is in focus
             if (focusedRow == null) {
-                setRowFocus((VScrollTableRow) scrollBody.iterator().next());
+                focusRowFromBody();
             } else {
                 setRowFocus(focusedRow);
             }
@@ -5691,7 +5739,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * .dom.client.BlurEvent)
      */
     public void onBlur(BlurEvent event) {
-        scrollBodyPanel.removeStyleName("focused");
         hasFocus = false;
         navKeyDown = false;
 
@@ -5777,9 +5824,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         if (tabIndex == 0 && !isFocusable()) {
-            scrollBodyPanel.getElement().setTabIndex(-1);
+            scrollBodyPanel.setTabIndex(-1);
         } else {
-            scrollBodyPanel.getElement().setTabIndex(tabIndex);
+            scrollBodyPanel.setTabIndex(tabIndex);
         }
 
         if (BrowserInfo.get().getOperaVersion() >= 11) {
@@ -5789,36 +5836,24 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
     }
 
-    public void onKeyUp(KeyUpEvent event) {
-        int keyCode = event.getNativeKeyCode();
-
-        if (!isFocusable()) {
-            if (scrollingVelocityTimer != null) {
-                // Remove velocityTimer if it exists and the Table is disabled
-                scrollingVelocityTimer.cancel();
-                scrollingVelocityTimer = null;
-                scrollingVelocity = 10;
-            }
-        } else if (isNavigationKey(keyCode)) {
-            if (keyCode == getNavigationDownKey()
-                    || keyCode == getNavigationUpKey()) {
-                /*
-                 * in multiselect mode the server may still have value from
-                 * previous page. Clear it unless doing multiselection or just
-                 * moving focus.
-                 */
-                if (!event.getNativeEvent().getShiftKey()
-                        && !event.getNativeEvent().getCtrlKey()) {
-                    instructServerToForgotPreviousSelections();
+    public void startScrollingVelocityTimer() {
+        if (scrollingVelocityTimer == null) {
+            scrollingVelocityTimer = new Timer() {
+                @Override
+                public void run() {
+                    scrollingVelocity++;
                 }
-                sendSelectedRows();
-            }
-            if (scrollingVelocityTimer != null) {
-                scrollingVelocityTimer.cancel();
-                scrollingVelocityTimer = null;
-                scrollingVelocity = 10;
-            }
-            navKeyDown = false;
+            };
+            scrollingVelocityTimer.scheduleRepeating(100);
+        }
+    }
+
+    public void cancelScrollingVelocityTimer() {
+        if (scrollingVelocityTimer != null) {
+            // Remove velocityTimer if it exists and the Table is disabled
+            scrollingVelocityTimer.cancel();
+            scrollingVelocityTimer = null;
+            scrollingVelocity = 10;
         }
     }
 
@@ -5836,5 +5871,19 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 || keyCode == getNavigationPageDownKey()
                 || keyCode == getNavigationEndKey()
                 || keyCode == getNavigationStartKey();
+    }
+
+    public void lazyRevertFocusToRow(final VScrollTableRow currentlyFocusedRow) {
+        Scheduler.get().scheduleFinally(new ScheduledCommand() {
+            public void execute() {
+                if (currentlyFocusedRow != null) {
+                    setRowFocus(currentlyFocusedRow);
+                } else {
+                    VConsole.log("no row?");
+                    focusRowFromBody();
+                }
+                scrollBody.ensureFocus();
+            }
+        });
     }
 }
