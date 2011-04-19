@@ -446,10 +446,16 @@ public abstract class AbstractTextField extends AbstractField implements
 
     @Override
     protected void setInternalValue(Object newValue) {
-        if (changingVariables) {
+        if (changingVariables && !textChangeEventPending) {
             /*
-             * Fire text change event before value change event if change is
-             * coming from the client side.
+             * Fire a "simulated" text change event before value change event if
+             * change is coming from the client side.
+             * 
+             * Iff there is both value change and textChangeEvent in same
+             * variable burst, it is a text field in non immediate mode and the
+             * text change event "flushed" queued value change event. In this
+             * case textChangeEventPending flag is already on and text change
+             * event will be fired after the value change event.
              */
             if (newValue == null && lastKnownTextContent != null
                     && !lastKnownTextContent.equals(getNullRepresentation())) {
@@ -463,9 +469,7 @@ public abstract class AbstractTextField extends AbstractField implements
                 textChangeEventPending = true;
             }
 
-            if (textChangeEventPending) {
-                firePendingTextChangeEvent();
-            }
+            firePendingTextChangeEvent();
         }
         super.setInternalValue(newValue);
     }
