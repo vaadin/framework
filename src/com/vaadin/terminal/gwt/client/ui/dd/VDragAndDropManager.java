@@ -203,8 +203,10 @@ public class VDragAndDropManager {
 
                 break;
 
-            case Event.ONMOUSEUP:
             case Event.ONTOUCHEND:
+                /* Avoid simulated event on drag end */
+                event.getNativeEvent().preventDefault();
+            case Event.ONMOUSEUP:
                 endDrag();
                 break;
 
