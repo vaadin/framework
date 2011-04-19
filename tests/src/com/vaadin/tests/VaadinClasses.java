@@ -42,11 +42,28 @@ public class VaadinClasses {
         for (Class<? extends Component> c : getComponents()) {
             System.out.println(c.getName());
         }
+        System.out.println();
+        System.out.println("Server side classes");
+        System.out.println("===================");
+        for (Class<?> c : getAllServerSideClasses()) {
+            System.out.println(c.getName());
+        }
     }
 
     public static List<Class<? extends Component>> getComponents() {
         try {
             return findClasses(Component.class, "com.vaadin.ui");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<Class<? extends Object>> getAllServerSideClasses() {
+        try {
+            return findClasses(Object.class, "com.vaadin", new String[] {
+                    "com.vaadin.tests", "com.vaadin.demo",
+                    "com.vaadin.terminal.gwt.client" });
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -97,8 +114,12 @@ public class VaadinClasses {
 
     private static <T> List<Class<? extends T>> findClasses(Class<T> baseClass,
             String basePackage) throws IOException {
-        List<Class<? extends T>> componentContainers = new ArrayList<Class<? extends T>>();
+        return findClasses(baseClass, basePackage, new String[] {});
+    }
 
+    private static <T> List<Class<? extends T>> findClasses(Class<T> baseClass,
+            String basePackage, String[] ignoredPackages) throws IOException {
+        List<Class<? extends T>> classes = new ArrayList<Class<? extends T>>();
         String basePackageDirName = "/" + basePackage.replace('.', '/');
         URL location = Application.class.getResource(basePackageDirName);
         if (location.getProtocol().equals("file")) {
@@ -108,25 +129,24 @@ public class VaadinClasses {
                     throw new IOException("Directory " + f.toString()
                             + " does not exist");
                 }
-                findPackages(f, basePackage, baseClass, componentContainers);
+                findPackages(f, basePackage, baseClass, classes,
+                        ignoredPackages);
             } catch (URISyntaxException e) {
                 throw new IOException(e.getMessage());
             }
         } else if (location.getProtocol().equals("jar")) {
             JarURLConnection juc = (JarURLConnection) location.openConnection();
-            findPackages(juc, basePackage, baseClass, componentContainers);
+            findPackages(juc, basePackage, baseClass, classes);
         }
 
-        Collections.sort(componentContainers,
-                new Comparator<Class<? extends T>>() {
+        Collections.sort(classes, new Comparator<Class<? extends T>>() {
 
-                    public int compare(Class<? extends T> o1,
-                            Class<? extends T> o2) {
-                        return o1.getName().compareTo(o2.getName());
-                    }
+            public int compare(Class<? extends T> o1, Class<? extends T> o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
 
-                });
-        return componentContainers;
+        });
+        return classes;
 
     }
 
@@ -147,11 +167,18 @@ public class VaadinClasses {
     }
 
     private static <T> void findPackages(File parent, String javaPackage,
-            Class<T> baseClass, Collection<Class<? extends T>> result) {
+            Class<T> baseClass, Collection<Class<? extends T>> result,
+            String[] ignoredPackages) {
+        for (String ignoredPackage : ignoredPackages) {
+            if (javaPackage.equals(ignoredPackage)) {
+                return;
+            }
+        }
+
         for (File file : parent.listFiles()) {
             if (file.isDirectory()) {
                 findPackages(file, javaPackage + "." + file.getName(),
-                        baseClass, result);
+                        baseClass, result, ignoredPackages);
             } else if (file.getName().endsWith(".class")) {
                 String fullyQualifiedClassName = javaPackage + "."
                         + file.getName().replace(".class", "");
@@ -176,6 +203,8 @@ public class VaadinClasses {
         } catch (Exception e) {
             // Could ignore that class cannot be loaded
             e.printStackTrace();
+        } catch (LinkageError e) {
+            // Ignore. Client side classes will at least throw LinkageErrors
         }
 
     }
