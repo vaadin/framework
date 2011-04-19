@@ -515,8 +515,8 @@ public class MethodProperty<T> extends AbstractProperty {
      * @throws NoSuchMethodException
      *             if no getter found
      */
-    protected static Method initGetterMethod(String propertyName,
-            final Class<?> beanClass) throws NoSuchMethodException {
+    static Method initGetterMethod(String propertyName, final Class<?> beanClass)
+            throws NoSuchMethodException {
         propertyName = propertyName.substring(0, 1).toUpperCase()
                 + propertyName.substring(1);
 
@@ -536,7 +536,7 @@ public class MethodProperty<T> extends AbstractProperty {
         return getMethod;
     }
 
-    protected static Class<?> convertPrimitiveType(Class<?> type) {
+    static Class<?> convertPrimitiveType(Class<?> type) {
         // Gets the return type from get method
         if (type.isPrimitive()) {
             if (type.equals(Boolean.TYPE)) {
@@ -667,7 +667,7 @@ public class MethodProperty<T> extends AbstractProperty {
      *            type into which the value should be converted
      * @return converted value
      */
-    protected static Object convertValue(Object value, Class<?> type) {
+    static Object convertValue(Object value, Class<?> type) {
         if (null == value || type.isAssignableFrom(value.getClass())) {
             return value;
         }

@@ -416,8 +416,7 @@ public class BeanContainerTest extends AbstractBeanContainerTest {
         container.addBean(new NestedMethodPropertyTest.Person("John",
                 new NestedMethodPropertyTest.Address("Ruukinkatu 2-4", 20540)));
 
-        assertTrue(container.addNestedContainerProperty("address.street",
-                String.class));
+        assertTrue(container.addNestedContainerProperty("address.street"));
         assertEquals("Ruukinkatu 2-4",
                 container.getContainerProperty("John", "address.street")
                         .getValue());

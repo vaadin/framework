@@ -766,10 +766,9 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @param propertyType
      * @return true if the property was added
      */
-    public boolean addNestedContainerProperty(String propertyId,
-            Class<?> propertyType) {
+    public boolean addNestedContainerProperty(String propertyId) {
         return addContainerProperty(propertyId, new NestedPropertyDescriptor(
-                propertyId, propertyType));
+                propertyId, type));
     }
 
     @Override

@@ -54,7 +54,7 @@ public class NestedMethodProperty extends AbstractProperty {
             ClassNotFoundException {
         in.defaultReadObject();
 
-        initialize(instance, propertyName);
+        initialize(instance.getClass(), propertyName);
     }
 
     /**
@@ -71,30 +71,44 @@ public class NestedMethodProperty extends AbstractProperty {
      */
     public NestedMethodProperty(Object instance, String propertyName) {
         this.instance = instance;
-        initialize(instance, propertyName);
+        initialize(instance.getClass(), propertyName);
+    }
+
+    /**
+     * For internal use to deduce property type etc. without a bean instance.
+     * Calling {@link #setValue(Object)} or {@link #getValue()} on properties
+     * constructed this way is not supported.
+     * 
+     * @param instanceClass
+     *            class of the top-level bean
+     * @param propertyName
+     */
+    NestedMethodProperty(Class<?> instanceClass, String propertyName) {
+        instance = null;
+        initialize(instanceClass, propertyName);
     }
 
     /**
      * Initializes most of the internal fields based on the top-level bean
      * instance and property name (dot-separated string).
      * 
-     * @param instance
-     *            top-level bean to which the property applies
+     * @param beanClass
+     *            class of the top-level bean to which the property applies
      * @param propertyName
      *            dot separated nested property name
      * @throws IllegalArgumentException
      *             if the property name is invalid
      */
-    private void initialize(Object instance, String propertyName)
+    private void initialize(Class<?> beanClass, String propertyName)
             throws IllegalArgumentException {
 
         List<Method> getMethods = new ArrayList<Method>();
 
         String lastSimplePropertyName = propertyName;
-        Class<?> lastClass = instance.getClass();
+        Class<?> lastClass = beanClass;
 
         // first top-level property, then go deeper in a loop
-        Class<?> propertyClass = instance.getClass();
+        Class<?> propertyClass = beanClass;
         String[] simplePropertyNames = propertyName.split("\\.");
         if (propertyName.endsWith(".") || 0 == simplePropertyNames.length) {
             throw new IllegalArgumentException("Invalid property name '"

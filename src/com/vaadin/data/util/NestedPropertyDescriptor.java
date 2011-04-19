@@ -24,16 +24,18 @@ public class NestedPropertyDescriptor<BT> implements
      * Creates a property descriptor that can create MethodProperty instances to
      * access the underlying bean property.
      * 
-     * The property is only validated when trying to access its value.
-     * 
      * @param name
      *            of the property in a dotted path format, e.g. "address.street"
-     * @param propertyType
-     *            type (class) of the property
+     * @param beanType
+     *            type (class) of the top-level bean
+     * @throws IllegalArgumentException
+     *             if the property name is invalid
      */
-    public NestedPropertyDescriptor(String name, Class<?> propertyType) {
+    public NestedPropertyDescriptor(String name, Class<BT> beanType)
+            throws IllegalArgumentException {
         this.name = name;
-        this.propertyType = propertyType;
+        NestedMethodProperty property = new NestedMethodProperty(beanType, name);
+        this.propertyType = property.getType();
     }
 
     public String getName() {

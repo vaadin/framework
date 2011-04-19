@@ -709,8 +709,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTest {
                         20540));
         container.addBean(john);
 
-        assertTrue(container.addNestedContainerProperty("address.street",
-                String.class));
+        assertTrue(container.addNestedContainerProperty("address.street"));
         assertEquals("Ruukinkatu 2-4",
                 container.getContainerProperty(john, "address.street")
                         .getValue());

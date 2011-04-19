@@ -43,7 +43,7 @@ public class PropertyDescriptorTest extends TestCase {
 
     public void testNestedPropertyDescriptorSerialization() throws Exception {
         NestedPropertyDescriptor<Person> pd = new NestedPropertyDescriptor<Person>(
-                "name", String.class);
+                "name", Person.class);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         new ObjectOutputStream(baos).writeObject(pd);
