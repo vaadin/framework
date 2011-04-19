@@ -29,7 +29,6 @@ import java.nio.charset.Charset;
 public class TextFileProperty extends AbstractProperty {
 
     private File file;
-    private boolean readonly;
     private Charset charset = null;
 
     /**
@@ -105,21 +104,9 @@ public class TextFileProperty extends AbstractProperty {
      * 
      * @see com.vaadin.data.Property#isReadOnly()
      */
+    @Override
     public boolean isReadOnly() {
-        return file == null || readonly || !file.canWrite();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Property#setReadOnly(boolean)
-     */
-    public void setReadOnly(boolean newStatus) {
-        boolean oldStatus = isReadOnly();
-        readonly = newStatus;
-        if (isReadOnly() != oldStatus) {
-            fireReadOnlyStatusChange();
-        }
+        return file == null || super.isReadOnly() || !file.canWrite();
     }
 
     /*

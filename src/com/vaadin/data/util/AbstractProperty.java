@@ -27,6 +27,29 @@ public abstract class AbstractProperty implements Property,
     private LinkedList<ValueChangeListener> valueChangeListeners = null;
 
     /**
+     * Is the Property read-only?
+     */
+    private boolean readOnly;
+
+    /**
+     * {@inheritDoc}
+     * 
+     * Override for additional restrictions on what is considered a read-only
+     * property.
+     */
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public void setReadOnly(boolean newStatus) {
+        boolean oldStatus = isReadOnly();
+        readOnly = newStatus;
+        if (oldStatus != isReadOnly()) {
+            fireReadOnlyStatusChange();
+        }
+    }
+
+    /**
      * Returns the value of the <code>Property</code> in human readable textual
      * format. The return value should be assignable to the
      * <code>setValue</code> method if the Property is not in read-only mode.

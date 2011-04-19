@@ -22,11 +22,6 @@ import com.vaadin.data.Property;
 public class ObjectProperty<T> extends AbstractProperty {
 
     /**
-     * A boolean value storing the Property's read-only status information.
-     */
-    private boolean readOnly = false;
-
-    /**
      * The value contained by the Property.
      */
     private T value;
@@ -110,32 +105,6 @@ public class ObjectProperty<T> extends AbstractProperty {
      */
     public T getValue() {
         return value;
-    }
-
-    /**
-     * Tests if the Property is in read-only mode. In read-only mode calls to
-     * the method <code>setValue</code> will throw
-     * <code>ReadOnlyException</code>s and will not modify the value of the
-     * Property.
-     * 
-     * @return <code>true</code> if the Property is in read-only mode,
-     *         <code>false</code> if it's not
-     */
-    public boolean isReadOnly() {
-        return readOnly;
-    }
-
-    /**
-     * Sets the Property's read-only mode to the specified status.
-     * 
-     * @param newStatus
-     *            the new read-only status of the Property.
-     */
-    public void setReadOnly(boolean newStatus) {
-        if (newStatus != readOnly) {
-            readOnly = newStatus;
-            fireReadOnlyStatusChange();
-        }
     }
 
     /**
