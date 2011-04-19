@@ -115,7 +115,7 @@ public class TextFileProperty extends AbstractProperty {
      * @see com.vaadin.data.Property#setReadOnly(boolean)
      */
     public void setReadOnly(boolean newStatus) {
-        boolean oldStatus = readonly;
+        boolean oldStatus = isReadOnly();
         readonly = newStatus;
         if (isReadOnly() != oldStatus) {
             fireReadOnlyStatusChange();
