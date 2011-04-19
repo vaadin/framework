@@ -3035,6 +3035,18 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
+     * Returns the ColumnGenerator used to generate the given column.
+     * 
+     * @param columnId
+     *            The id of the generated column
+     * @return The ColumnGenerator used for the given columnId or null.
+     */
+    public ColumnGenerator getColumnGenerator(Object columnId)
+            throws IllegalArgumentException {
+        return columnGenerators.get(columnId);
+    }
+
+    /**
      * Removes a generated column previously added with addGeneratedColumn.
      * 
      * @param columnId
