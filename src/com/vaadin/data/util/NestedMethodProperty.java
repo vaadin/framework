@@ -1,12 +1,14 @@
 package com.vaadin.data.util;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import com.vaadin.data.Property;
+import com.vaadin.data.util.MethodProperty.MethodException;
 
 /**
  * Nested accessor based property for a bean.
@@ -19,24 +21,32 @@ import java.util.List;
  * 
  * @see MethodProperty
  * 
- * @param <T>
- *            property type
- * 
  * @since 6.6
  */
-public class NestedMethodProperty<T> extends MethodProperty<T> {
+public class NestedMethodProperty extends AbstractProperty {
 
     // needed for de-serialization
     private String propertyName;
 
-    // chain of getter methods up to but not including the last method handled
-    // by the superclass
+    // chain of getter methods
     private transient List<Method> getMethods;
+    /**
+     * The setter method.
+     */
+    private transient Method setMethod;
+
+    /**
+     * Bean instance used as a starting point for accessing the property value.
+     */
+    private Object instance;
+
+    private Class<?> type;
 
     /* Special serialization to handle method references */
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
-        // getMethods is reconstructed on read based on propertyName
+        // getMethods and setMethod are reconstructed on read based on
+        // propertyName
     }
 
     /* Special serialization to handle method references */
@@ -44,22 +54,7 @@ public class NestedMethodProperty<T> extends MethodProperty<T> {
             ClassNotFoundException {
         in.defaultReadObject();
 
-        // re-build getMethods: some duplicated code with builder method
-        getMethods = new ArrayList<Method>();
-        Class<?> propertyClass = getInstance().getClass();
-        String[] simplePropertyNames = propertyName.split("\\.");
-        for (int i = 0; i < simplePropertyNames.length; i++) {
-            String simplePropertyName = simplePropertyNames[i].trim();
-            try {
-                Method getter = initGetterMethod(simplePropertyName,
-                        propertyClass);
-                propertyClass = getter.getReturnType();
-                getMethods.add(getter);
-            } catch (final java.lang.NoSuchMethodException e) {
-                throw new InvalidObjectException("Bean property '"
-                        + simplePropertyName + "' not found");
-            }
-        }
+        initialize(instance, propertyName);
     }
 
     /**
@@ -67,16 +62,32 @@ public class NestedMethodProperty<T> extends MethodProperty<T> {
      * property name is a dot separated string pointing to a nested property,
      * e.g. "manager.address.street".
      * 
-     * @param <T>
-     *            property type (deepest nested property)
      * @param instance
      *            top-level bean to which the property applies
      * @param propertyName
      *            dot separated nested property name
-     * @return new NestedMethodProperty instance
+     * @throws IllegalArgumentException
+     *             if the property name is invalid
      */
-    public static <T> NestedMethodProperty<T> buildNestedMethodProperty(
-            Object instance, String propertyName) {
+    public NestedMethodProperty(Object instance, String propertyName) {
+        this.instance = instance;
+        initialize(instance, propertyName);
+    }
+
+    /**
+     * Initializes most of the internal fields based on the top-level bean
+     * instance and property name (dot-separated string).
+     * 
+     * @param instance
+     *            top-level bean to which the property applies
+     * @param propertyName
+     *            dot separated nested property name
+     * @throws IllegalArgumentException
+     *             if the property name is invalid
+     */
+    private void initialize(Object instance, String propertyName)
+            throws IllegalArgumentException {
+
         List<Method> getMethods = new ArrayList<Method>();
 
         String lastSimplePropertyName = propertyName;
@@ -86,7 +97,7 @@ public class NestedMethodProperty<T> extends MethodProperty<T> {
         Class<?> propertyClass = instance.getClass();
         String[] simplePropertyNames = propertyName.split("\\.");
         if (propertyName.endsWith(".") || 0 == simplePropertyNames.length) {
-            throw new MethodException(null, "Invalid property name '"
+            throw new IllegalArgumentException("Invalid property name '"
                     + propertyName + "'");
         }
         for (int i = 0; i < simplePropertyNames.length; i++) {
@@ -95,16 +106,16 @@ public class NestedMethodProperty<T> extends MethodProperty<T> {
                 lastSimplePropertyName = simplePropertyName;
                 lastClass = propertyClass;
                 try {
-                    Method getter = initGetterMethod(simplePropertyName,
-                            propertyClass);
+                    Method getter = MethodProperty.initGetterMethod(
+                            simplePropertyName, propertyClass);
                     propertyClass = getter.getReturnType();
                     getMethods.add(getter);
                 } catch (final java.lang.NoSuchMethodException e) {
-                    throw new MethodException(null, "Bean property '"
-                            + simplePropertyName + "' not found");
+                    throw new IllegalArgumentException("Bean property '"
+                            + simplePropertyName + "' not found", e);
                 }
             } else {
-                throw new MethodException(null,
+                throw new IllegalArgumentException(
                         "Empty or invalid bean property identifier in '"
                                 + propertyName + "'");
             }
@@ -130,18 +141,19 @@ public class NestedMethodProperty<T> extends MethodProperty<T> {
         } catch (final NoSuchMethodException skipped) {
         }
 
-        NestedMethodProperty<T> property = new NestedMethodProperty<T>(
-                (Class<T>) convertPrimitiveType(type), instance, propertyName,
-                lastGetMethod, setMethod);
-        property.getMethods = getMethods;
-
-        return property;
+        this.type = MethodProperty.convertPrimitiveType(type);
+        this.propertyName = propertyName;
+        this.getMethods = getMethods;
+        this.setMethod = setMethod;
     }
 
-    protected NestedMethodProperty(Class<T> type, Object instance,
-            String propertyName, Method lastGetMethod, Method setMethod) {
-        super(type, instance, lastGetMethod, setMethod);
-        this.propertyName = propertyName;
+    public Class<?> getType() {
+        return type;
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return super.isReadOnly() || (null == setMethod);
     }
 
     /**
@@ -150,17 +162,43 @@ public class NestedMethodProperty<T> extends MethodProperty<T> {
      * 
      * @return the value of the Property
      */
-    @Override
     public Object getValue() {
         try {
-            Object instance = getInstance();
+            Object object = instance;
             for (Method m : getMethods) {
-                instance = m.invoke(instance);
+                object = m.invoke(object);
             }
-            return instance;
+            return object;
         } catch (final Throwable e) {
             throw new MethodException(this, e);
         }
+    }
+
+    /**
+     * Sets the value of the property. This method supports setting from
+     * <code>String</code>s if either <code>String</code> is directly assignable
+     * to property type, or the type class contains a string constructor.
+     * 
+     * @param newValue
+     *            the New value of the property.
+     * @throws <code>Property.ReadOnlyException</code> if the object is in
+     *         read-only mode.
+     * @throws <code>Property.ConversionException</code> if
+     *         <code>newValue</code> can't be converted into the Property's
+     *         native type directly or through <code>String</code>.
+     * @see #invokeSetMethod(Object)
+     */
+    public void setValue(Object newValue) throws ReadOnlyException,
+            ConversionException {
+        // Checks the mode
+        if (isReadOnly()) {
+            throw new Property.ReadOnlyException();
+        }
+
+        Object value = MethodProperty.convertValue(newValue, type);
+
+        invokeSetMethod(value);
+        fireValueChange();
     }
 
     /**
@@ -169,14 +207,13 @@ public class NestedMethodProperty<T> extends MethodProperty<T> {
      * 
      * @param value
      */
-    @Override
     protected void invokeSetMethod(Object value) {
         try {
-            Object instance = getInstance();
+            Object object = instance;
             for (int i = 0; i < getMethods.size() - 1; i++) {
-                instance = getMethods.get(i).invoke(instance);
+                object = getMethods.get(i).invoke(object);
             }
-            getSetMethod().invoke(instance, new Object[] { value });
+            setMethod.invoke(object, new Object[] { value });
         } catch (final InvocationTargetException e) {
             throw new MethodException(this, e.getTargetException());
         } catch (final Exception e) {

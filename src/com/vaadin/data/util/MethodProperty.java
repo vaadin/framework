@@ -62,11 +62,6 @@ public class MethodProperty<T> extends AbstractProperty {
     private transient Object[] setArgs, getArgs;
 
     /**
-     * Is the MethodProperty read-only?
-     */
-    private boolean readOnly;
-
-    /**
      * The getter and setter methods.
      */
     private transient Method setMethod, getMethod;
@@ -92,21 +87,17 @@ public class MethodProperty<T> extends AbstractProperty {
         out.writeObject(getArgs);
         if (setMethod != null) {
             out.writeObject(setMethod.getName());
-            SerializerHelper.writeClass(out, setMethod.getDeclaringClass());
             SerializerHelper
                     .writeClassArray(out, setMethod.getParameterTypes());
         } else {
             out.writeObject(null);
             out.writeObject(null);
-            out.writeObject(null);
         }
         if (getMethod != null) {
             out.writeObject(getMethod.getName());
-            SerializerHelper.writeClass(out, getMethod.getDeclaringClass());
             SerializerHelper
                     .writeClassArray(out, getMethod.getParameterTypes());
         } else {
-            out.writeObject(null);
             out.writeObject(null);
             out.writeObject(null);
         }
@@ -125,19 +116,17 @@ public class MethodProperty<T> extends AbstractProperty {
             setArgs = (Object[]) in.readObject();
             getArgs = (Object[]) in.readObject();
             String name = (String) in.readObject();
-            Class<T> setMethodClass = (Class<T>) SerializerHelper.readClass(in);
             Class<?>[] paramTypes = SerializerHelper.readClassArray(in);
             if (name != null) {
-                setMethod = setMethodClass.getMethod(name, paramTypes);
+                setMethod = instance.getClass().getMethod(name, paramTypes);
             } else {
                 setMethod = null;
             }
 
             name = (String) in.readObject();
-            Class<T> getMethodClass = (Class<T>) SerializerHelper.readClass(in);
             paramTypes = SerializerHelper.readClassArray(in);
             if (name != null) {
-                getMethod = getMethodClass.getMethod(name, paramTypes);
+                getMethod = instance.getClass().getMethod(name, paramTypes);
             } else {
                 getMethod = null;
             }
@@ -224,7 +213,6 @@ public class MethodProperty<T> extends AbstractProperty {
         }
 
         setArguments(new Object[] {}, new Object[] { null }, 0);
-        readOnly = (setMethod == null);
         this.instance = instance;
     }
 
@@ -453,7 +441,6 @@ public class MethodProperty<T> extends AbstractProperty {
         this.type = (Class<T>) convertPrimitiveType(type);
 
         setArguments(getArgs, setArgs, setArgumentIndex);
-        readOnly = (setMethod == null);
         this.instance = instance;
     }
 
@@ -513,7 +500,6 @@ public class MethodProperty<T> extends AbstractProperty {
         this.getMethod = getMethod;
         this.setMethod = setMethod;
         setArguments(getArgs, setArgs, setArgumentIndex);
-        readOnly = (setMethod == null);
         this.instance = instance;
         this.type = type;
     }
@@ -596,8 +582,9 @@ public class MethodProperty<T> extends AbstractProperty {
      * @return <code>true</code> if the object is in read-only mode,
      *         <code>false</code> if it's not
      */
+    @Override
     public boolean isReadOnly() {
-        return readOnly;
+        return super.isReadOnly() || (setMethod == null);
     }
 
     /**
@@ -664,29 +651,39 @@ public class MethodProperty<T> extends AbstractProperty {
             throw new Property.ReadOnlyException();
         }
 
-        // Try to assign the compatible value directly
-        if (newValue == null || type.isAssignableFrom(newValue.getClass())) {
-            invokeSetMethod(newValue);
-        } else {
+        Object value = convertValue(newValue, type);
 
-            Object value;
-            try {
-
-                // Gets the string constructor
-                final Constructor constr = getType().getConstructor(
-                        new Class[] { String.class });
-
-                value = constr
-                        .newInstance(new Object[] { newValue.toString() });
-
-            } catch (final java.lang.Exception e) {
-                throw new Property.ConversionException(e);
-            }
-
-            // Creates new object from the string
-            invokeSetMethod(value);
-        }
+        invokeSetMethod(value);
         fireValueChange();
+    }
+
+    /**
+     * Convert a value to the given type, using a constructor of the type that
+     * takes a single String parameter (toString() for the value) if necessary.
+     * 
+     * @param value
+     *            to convert
+     * @param type
+     *            type into which the value should be converted
+     * @return converted value
+     */
+    protected static Object convertValue(Object value, Class<?> type) {
+        if (null == value || type.isAssignableFrom(value.getClass())) {
+            return value;
+        }
+
+        // convert using a string constructor
+        try {
+            // Gets the string constructor
+            final Constructor constr = type
+                    .getConstructor(new Class[] { String.class });
+
+            // Create a new object from the string
+            return constr.newInstance(new Object[] { value.toString() });
+
+        } catch (final java.lang.Exception e) {
+            throw new Property.ConversionException(e);
+        }
     }
 
     /**
@@ -719,43 +716,6 @@ public class MethodProperty<T> extends AbstractProperty {
     }
 
     /**
-     * Returns the bean instance which to which the property applies. For
-     * internal use.
-     * 
-     * @return bean instance
-     */
-    protected Object getInstance() {
-        return instance;
-    }
-
-    /**
-     * Returns the setter method to use. For internal use.
-     * 
-     * @return setter {@link Method}
-     */
-    protected Method getSetMethod() {
-        return setMethod;
-    }
-
-    /**
-     * Sets the Property's read-only mode to the specified status.
-     * 
-     * @param newStatus
-     *            the new read-only status of the Property.
-     */
-    public void setReadOnly(boolean newStatus) {
-        final boolean prevStatus = readOnly;
-        if (newStatus) {
-            readOnly = true;
-        } else {
-            readOnly = (setMethod == null);
-        }
-        if (prevStatus != readOnly) {
-            fireReadOnlyStatusChange();
-        }
-    }
-
-    /**
      * <code>Exception</code> object that signals that there were problems
      * calling or finding the specified getter or setter methods of the
      * property.
@@ -772,7 +732,7 @@ public class MethodProperty<T> extends AbstractProperty {
         /**
          * The method property from which the exception originates from
          */
-        private final MethodProperty methodProperty;
+        private final Property property;
 
         /**
          * Cause of the method exception
@@ -783,26 +743,26 @@ public class MethodProperty<T> extends AbstractProperty {
          * Constructs a new <code>MethodException</code> with the specified
          * detail message.
          * 
-         * @param methodProperty
-         *            the method property.
+         * @param property
+         *            the property.
          * @param msg
          *            the detail message.
          */
-        public MethodException(MethodProperty methodProperty, String msg) {
+        public MethodException(Property property, String msg) {
             super(msg);
-            this.methodProperty = methodProperty;
+            this.property = property;
         }
 
         /**
          * Constructs a new <code>MethodException</code> from another exception.
          * 
-         * @param methodProperty
-         *            the method property.
+         * @param property
+         *            the property.
          * @param cause
          *            the cause of the exception.
          */
-        public MethodException(MethodProperty methodProperty, Throwable cause) {
-            this.methodProperty = methodProperty;
+        public MethodException(Property property, Throwable cause) {
+            this.property = property;
             this.cause = cause;
         }
 
@@ -816,9 +776,21 @@ public class MethodProperty<T> extends AbstractProperty {
 
         /**
          * Gets the method property this exception originates from.
+         * 
+         * @return MethodProperty or null if not a valid MethodProperty
          */
         public MethodProperty getMethodProperty() {
-            return methodProperty;
+            return (property instanceof MethodProperty) ? (MethodProperty) property
+                    : null;
+        }
+
+        /**
+         * Gets the method property this exception originates from.
+         * 
+         * @return Property from which the exception originates
+         */
+        public Property getProperty() {
+            return property;
         }
     }
 

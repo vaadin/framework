@@ -45,7 +45,7 @@ public class NestedPropertyDescriptor<BT> implements
     }
 
     public Property createProperty(BT bean) {
-        return NestedMethodProperty.buildNestedMethodProperty(bean, name);
+        return new NestedMethodProperty(bean, name);
     }
 
 }
