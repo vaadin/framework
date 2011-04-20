@@ -77,12 +77,12 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     /**
      * Auto commit mode.
      */
-    private boolean writeTroughMode = true;
+    private boolean writeThroughMode = true;
 
     /**
      * Reads the value from data-source, when it is not modified.
      */
-    private boolean readTroughMode = true;
+    private boolean readThroughMode = true;
 
     /**
      * Is the field modified but not committed.
@@ -327,7 +327,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * here, we use the default documentation from the implemented interface.
      */
     public boolean isWriteThrough() {
-        return writeTroughMode;
+        return writeThroughMode;
     }
 
     /*
@@ -337,11 +337,11 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      */
     public void setWriteThrough(boolean writeThrough)
             throws Buffered.SourceException, InvalidValueException {
-        if (writeTroughMode == writeThrough) {
+        if (writeThroughMode == writeThrough) {
             return;
         }
-        writeTroughMode = writeThrough;
-        if (writeTroughMode) {
+        writeThroughMode = writeThrough;
+        if (writeThroughMode) {
             commit();
         }
     }
@@ -351,7 +351,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * here, we use the default documentation from the implemented interface.
      */
     public boolean isReadThrough() {
-        return readTroughMode;
+        return readThroughMode;
     }
 
     /*
@@ -359,13 +359,13 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * JavaDoc comment here, we use the default documentation from the
      * implemented interface.
      */
-    public void setReadThrough(boolean readTrough)
+    public void setReadThrough(boolean readThrough)
             throws Buffered.SourceException {
-        if (readTroughMode == readTrough) {
+        if (readThroughMode == readThrough) {
             return;
         }
-        readTroughMode = readTrough;
-        if (!isModified() && readTroughMode && dataSource != null) {
+        readThroughMode = readThrough;
+        if (!isModified() && readThroughMode && dataSource != null) {
             setInternalValue(String.class == getType() ? dataSource.toString()
                     : dataSource.getValue());
             fireValueChange(false);
@@ -481,7 +481,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             setInternalValue(newValue);
             modified = dataSource != null;
 
-            // In write trough mode , try to commit
+            // In write through mode , try to commit
             if (isWriteThrough() && dataSource != null
                     && (isInvalidCommitted() || isValid())) {
                 try {
