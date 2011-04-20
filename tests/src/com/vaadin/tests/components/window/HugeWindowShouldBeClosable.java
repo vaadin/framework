@@ -21,7 +21,7 @@ public class HugeWindowShouldBeClosable extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return -1;
+        return 6784;
     }
 
 }
