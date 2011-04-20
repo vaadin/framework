@@ -1972,6 +1972,9 @@ textarea.v-textarea-readonly:focus {
 	background: transparent url(../base/common/img/sprites.png) no-repeat 5px -37px;
 	padding: 1px 0;
 }
+.v-tree-node:focus {
+	outline: none;
+}
 .v-tree-node-expanded {
 	background-position: -5px -10px;
 }

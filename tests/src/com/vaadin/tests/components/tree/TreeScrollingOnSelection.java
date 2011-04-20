@@ -33,6 +33,7 @@ public class TreeScrollingOnSelection extends TestBase {
                 charLabel.setValue(event.getItemId().toString());
             }
         });
+        tree.setImmediate(true);
 
         Panel panel = new Panel();
         panel.setScrollable(true);
