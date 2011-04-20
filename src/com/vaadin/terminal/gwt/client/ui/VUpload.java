@@ -243,23 +243,25 @@ public class VUpload extends SimplePanel implements Paintable {
         /* Needs to be run dereferred to avoid various browser issues. */
         Scheduler.get().scheduleDeferred(new Command() {
             public void execute() {
-                if (client != null) {
-                    if (t != null) {
-                        t.cancel();
+                if (submitted) {
+                    if (client != null) {
+                        if (t != null) {
+                            t.cancel();
+                        }
+                        VConsole.log("VUpload:Submit complete");
+                        client.sendPendingVariableChanges();
                     }
-                    VConsole.log("VUpload:Submit complete");
-                    client.sendPendingVariableChanges();
-                }
 
-                rebuildPanel();
+                    rebuildPanel();
 
-                submitted = false;
-                enableUpload();
-                if (!isAttached()) {
-                    /*
-                     * Upload is complete when upload is already abandoned.
-                     */
-                    cleanTargetFrame();
+                    submitted = false;
+                    enableUpload();
+                    if (!isAttached()) {
+                        /*
+                         * Upload is complete when upload is already abandoned.
+                         */
+                        cleanTargetFrame();
+                    }
                 }
             }
         });
