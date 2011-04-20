@@ -1042,7 +1042,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     /**
      * Sets the internal field value. This is purely used by AbstractField to
      * change the internal Field value. It does not trigger valuechange events.
-     * It can be overriden by the inheriting classes to update all dependent
+     * It can be overridden by the inheriting classes to update all dependent
      * variables.
      * 
      * @param newValue

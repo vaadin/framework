@@ -165,9 +165,9 @@ public abstract class AbstractWebApplicationContext implements
 
         final String filename = resource.getFilename();
         if (filename == null) {
-            return "APP/" + mapKey + "/";
+            return "app://APP/" + mapKey + "/";
         } else {
-            return "APP/" + mapKey + "/" + filename;
+            return "app://APP/" + mapKey + "/" + filename;
         }
 
     }

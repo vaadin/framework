@@ -228,6 +228,10 @@ public class VTabsheet extends VTabsheetBase {
                         false);
             }
             oldSelected = newSelected;
+
+            // The selected tab might need more (or less) space
+            updateCaptionSize(index);
+            updateCaptionSize(activeTabIndex);
         }
 
         public void removeTab(int i) {
