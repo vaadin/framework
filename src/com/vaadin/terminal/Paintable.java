@@ -48,6 +48,11 @@ public interface Paintable extends java.util.EventListener, Serializable {
      * Adds an unique id for component that get's transferred to terminal for
      * testing purposes. Keeping identifiers unique throughout the Application
      * instance is on programmers responsibility.
+     * <p>
+     * Note, that with the current terminal implementation the identifier cannot
+     * be changed while the component is visible. This means that the identifier
+     * should be set before the component is painted for the first time and kept
+     * the same while visible in the client.
      * 
      * @param id
      *            A short (< 20 chars) alphanumeric id
