@@ -107,7 +107,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      */
     public enum TreeDragMode {
         /**
-         * When drag mode is NONE, draggin from Tree is not supported. Browsers
+         * When drag mode is NONE, dragging from Tree is not supported. Browsers
          * may still support selecting text/icons from Tree which can initiate
          * HTML 5 style drag and drop operation.
          */
@@ -1293,6 +1293,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      */
     public void setDragMode(TreeDragMode dragMode) {
         this.dragMode = dragMode;
+        requestRepaint();
     }
 
     /**
