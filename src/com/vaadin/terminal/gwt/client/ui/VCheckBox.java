@@ -50,7 +50,7 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
         addClickHandler(new ClickHandler() {
 
             public void onClick(ClickEvent event) {
-                if (id == null || client == null) {
+                if (id == null || client == null || !isEnabled()) {
                     return;
                 }
                 client.updateVariable(id, "state", getValue(), immediate);
