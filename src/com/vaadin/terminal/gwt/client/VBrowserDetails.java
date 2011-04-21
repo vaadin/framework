@@ -237,10 +237,10 @@ public class VBrowserDetails implements Serializable {
     /**
      * Returns the browser major version e.g., 3 for Firefox 3.5, 4 for Chrome
      * 4, 8 for Internet Explorer 8.
-     * 
-     * <pre>
-     * Note that Internet Explorer 8 in compatibility mode will return 7.
-     * </pre>
+     * <p>
+     * Note that Internet Explorer 8 and newer will return the document mode so
+     * IE8 rendering as IE7 will return 7.
+     * </p>
      * 
      * @return The major version of the browser.
      */
@@ -260,15 +260,16 @@ public class VBrowserDetails implements Serializable {
     }
 
     /**
-     * Marks that IE8 is used in compatibility mode. This forces the browser
-     * version to 7 even if it otherwise was detected as 8.
+     * Sets the version for IE based on the documentMode. This is used to return
+     * the correct the correct IE version when the version from the user agent
+     * string and the value of the documentMode property do not match.
      * 
+     * @param documentMode
+     *            The current document mode
      */
-    public void setIE8InCompatibilityMode() {
-        if (isIE && browserMajorVersion == 8) {
-            browserMajorVersion = 7;
-            browserMinorVersion = 0;
-        }
+    public void setIEMode(int documentMode) {
+        browserMajorVersion = documentMode;
+        browserMinorVersion = 0;
     }
 
     /**

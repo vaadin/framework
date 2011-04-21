@@ -55,20 +55,22 @@ public class BrowserInfo {
 
     private BrowserInfo() {
         browserDetails = new VBrowserDetails(getBrowserString());
-        if (browserDetails.isIE()
-                && browserDetails.getBrowserMajorVersion() == 8
-                && isIE8InIE7CompatibilityMode()) {
-            browserDetails.setIE8InCompatibilityMode();
+        if (browserDetails.isIE()) {
+            // Use document mode instead user agent to accurately detect how we
+            // are rendering
+            int documentMode = getIEDocumentMode();
+            if (documentMode != -1) {
+                browserDetails.setIEMode(documentMode);
+            }
         }
-
     }
 
-    private native boolean isIE8InIE7CompatibilityMode()
+    private native int getIEDocumentMode()
     /*-{
     	var mode = $wnd.document.documentMode;
     	if (!mode)
-    		return false;
-    	return (mode == 7);
+    		 return -1;
+    	return mode;
     }-*/;
 
     /**

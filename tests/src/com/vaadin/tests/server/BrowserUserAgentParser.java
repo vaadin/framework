@@ -217,7 +217,7 @@ public class BrowserUserAgentParser extends TestCase {
 
     public void testIE8CompatibilityMode() {
         VBrowserDetails bd = new VBrowserDetails(IE8_IN_IE7_MODE_WINDOWS);
-        bd.setIE8InCompatibilityMode();
+        bd.setIEMode(7);
 
         // assertTrident(bd);
         assertIE(bd);
