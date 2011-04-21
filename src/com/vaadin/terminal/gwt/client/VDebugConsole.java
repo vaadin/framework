@@ -248,8 +248,7 @@ public final class VDebugConsole extends VOverlay implements Console {
         public void execute() {
             if (!msgQueue.isEmpty()) {
                 RequestBuilder requestBuilder = new RequestBuilder(
-                        RequestBuilder.POST,
-                        "http://matin-vehje.local:8080/remotelog/");
+                        RequestBuilder.POST, getRemoteLogUrl());
                 try {
                     String requestData = "";
                     for (String str : msgQueue) {
@@ -278,8 +277,13 @@ public final class VDebugConsole extends VOverlay implements Console {
                 msgQueue.clear();
             }
         }
+
     };
     private VLazyExecutor sendToRemoteLog = new VLazyExecutor(350, doSend);
+
+    protected String getRemoteLogUrl() {
+        return "http://sun-vehje.local:8080/remotelog/";
+    }
 
     protected void remoteLog(String msg) {
         msgQueue.add(msg);
