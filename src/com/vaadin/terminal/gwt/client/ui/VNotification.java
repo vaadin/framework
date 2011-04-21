@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.EventObject;
 import java.util.Iterator;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -50,6 +51,7 @@ public class VNotification extends VOverlay {
     private String temporaryStyle;
 
     private ArrayList<EventListener> listeners;
+    private static final int TOUCH_DEVICE_IDLE_DELAY = 1000;
 
     public VNotification() {
         setStyleName(STYLENAME);
@@ -60,6 +62,15 @@ public class VNotification extends VOverlay {
     public VNotification(int delayMsec) {
         this();
         this.delayMsec = delayMsec;
+        if(BrowserInfo.get().isTouchDevice()) {
+            new Timer(){
+                @Override
+                public void run() {
+                    if(isAttached()) {
+                        fade();
+                    }
+                }}.schedule(delayMsec + TOUCH_DEVICE_IDLE_DELAY );
+        }
     }
 
     public VNotification(int delayMsec, int fadeMsec, int startOpacity) {
