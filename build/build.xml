@@ -139,6 +139,7 @@
         <!-- required when compiling WebContent/VAADIN/widgetsets (and also Java server-side classes) -->
         <property name="lib-gwt-dev" location="${gwt-dir}/gwt-dev-noservlet.jar" />
         <property name="lib-gwt-user" location="${gwt-dir}/gwt-user-noservlet.jar" />
+    	<!-- FIXME: Should use ${gwt-version-dependencies} -->
         <property name="lib-gwt-validation" location="${gwt-dir}/validation-api-1.0.0.GA.jar" />
         <property name="lib-gwt-validation-src" location="${gwt-dir}/validation-api-1.0.0.GA-sources.jar" />
 
@@ -790,6 +791,7 @@
                 <attribute name="Implementation-URL" value="http://vaadin.com" />
                 <attribute name="Implementation-Version" value="${version.full}" />
                 <attribute name="GWT-Version" value="${gwt-version}" />
+                <attribute name="GWT-Version-Dependencies" value="${gwt-version-dependencies}" />
                 <attribute name="Bundle-Version" value="${version.full}" />
             </manifest>
             <fileset dir="${result-path}/classes">
