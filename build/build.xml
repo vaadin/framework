@@ -205,7 +205,7 @@
         <available file="${docdir}/manual/book.xml" property="manual.source.available"/>
     </target>
 
-    <target name="internal-package-zip">
+    <target name="internal-package-zip" depends="init">
         <antcontrib:var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
         <antcall target="add-misc-files" inheritAll="true" inheritRefs="true" />
         <zip zipfile="${result-path}/${base-name}.zip">
@@ -990,7 +990,7 @@
     <!-- ================================================================== -->
 
     <!-- Main target for the nightly build. -->
-    <target name="nightly" depends="clean-result, nightly-init, package-init, init, build, internal-package-zip">
+    <target name="nightly" depends="clean-result, nightly-init, package-init, init, build, docs, internal-package-zip">
     </target>
 
 
