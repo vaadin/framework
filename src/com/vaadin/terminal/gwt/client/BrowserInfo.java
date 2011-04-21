@@ -52,6 +52,7 @@ public class BrowserInfo {
     }
 
     private VBrowserDetails browserDetails;
+    private boolean touchDevice;
 
     private BrowserInfo() {
         browserDetails = new VBrowserDetails(getBrowserString());
@@ -63,7 +64,13 @@ public class BrowserInfo {
                 browserDetails.setIEMode(documentMode);
             }
         }
+        touchDevice = detectTouchDevice();
     }
+
+    private native boolean detectTouchDevice()
+    /*-{
+        try { document.createEvent("TouchEvent");return true;} catch(e){return false;};
+    }-*/;
 
     private native int getIEDocumentMode()
     /*-{
@@ -336,5 +343,12 @@ public class BrowserInfo {
         return tzo1; // no DST
 
     }-*/;
+
+    /**
+     * @return true if the browser runs on a touch based device.
+     */
+    public boolean isTouchDevice() {
+        return touchDevice;
+    }
 
 }
