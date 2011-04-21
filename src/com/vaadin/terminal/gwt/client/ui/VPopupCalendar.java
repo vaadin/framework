@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.DateTimeService;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -335,7 +336,13 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
     public void onClose(CloseEvent<PopupPanel> event) {
         if (event.getSource() == popup) {
             buildDate();
-            focus();
+            if (!BrowserInfo.get().isTouchDevice()) {
+                /*
+                 * Move focus to textbox, unless on touch device (avoids opening
+                 * virtual keyboard).
+                 */
+                focus();
+            }
 
             // TODO resolve what the "Sigh." is all about and document it here
             // Sigh.
