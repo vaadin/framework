@@ -94,10 +94,15 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
 
         if (mgr == null) {
             // Creates a new manager
-            mgr = new PortletCommunicationManager(application);
+            mgr = createPortletCommunicationManager(application);
             applicationToAjaxAppMgrMap.put(application, mgr);
         }
         return mgr;
+    }
+
+    protected PortletCommunicationManager createPortletCommunicationManager(
+            Application application) {
+        return new PortletCommunicationManager(application);
     }
 
     public static PortletApplicationContext2 getApplicationContext(

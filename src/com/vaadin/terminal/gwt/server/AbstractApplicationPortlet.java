@@ -349,8 +349,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                  * Get or create an application context and an application
                  * manager for the session
                  */
-                PortletApplicationContext2 applicationContext = PortletApplicationContext2
-                        .getApplicationContext(request.getPortletSession());
+                PortletApplicationContext2 applicationContext = getApplicationContext(request
+                        .getPortletSession());
                 applicationContext.setResponse(response);
                 applicationContext.setPortletConfig(getPortletConfig());
 
@@ -740,8 +740,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             throws IOException {
         final PortletSession session = request.getPortletSession();
         if (session != null) {
-            PortletApplicationContext2.getApplicationContext(session)
-                    .removeApplication(application);
+            getApplicationContext(session).removeApplication(application);
         }
         // Do not send any redirects when running inside a portlet.
     }
@@ -796,8 +795,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         application.close();
         if (session != null) {
-            PortletApplicationContext2 context = PortletApplicationContext2
-                    .getApplicationContext(session);
+            PortletApplicationContext2 context = getApplicationContext(session);
             context.removeApplication(application);
         }
     }
@@ -805,8 +803,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     private Application createApplication(PortletRequest request)
             throws PortletException, MalformedURLException {
         Application newApplication = getNewApplication(request);
-        final PortletApplicationContext2 context = PortletApplicationContext2
-                .getApplicationContext(request.getPortletSession());
+        final PortletApplicationContext2 context = getApplicationContext(request
+                .getPortletSession());
         context.addApplication(newApplication, request.getWindowID());
         return newApplication;
     }
@@ -822,8 +820,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             throw new SessionExpiredException();
         }
 
-        PortletApplicationContext2 context = PortletApplicationContext2
-                .getApplicationContext(session);
+        PortletApplicationContext2 context = getApplicationContext(session);
         Application application = context.getApplicationForWindowId(request
                 .getWindowID());
         if (application == null) {
@@ -833,8 +830,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             return application;
         }
         // application found but not running
-        PortletApplicationContext2.getApplicationContext(session)
-                .removeApplication(application);
+        context.removeApplication(application);
 
         return null;
     }
@@ -1576,6 +1572,21 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             // ignore and return null - unable to get the original request
         }
         return null;
+    }
+
+    /**
+     * 
+     * Gets the application context for a PortletSession. If no context is
+     * currently stored in a session a new context is created and stored in the
+     * session.
+     * 
+     * @param portletSession
+     *            the portlet session.
+     * @return the application context for the session.
+     */
+    protected PortletApplicationContext2 getApplicationContext(
+            PortletSession portletSession) {
+        return PortletApplicationContext2.getApplicationContext(portletSession);
     }
 
 }
