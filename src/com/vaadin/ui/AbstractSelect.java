@@ -1095,7 +1095,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * @param itemId
      *            the id of the item to be assigned an icon.
      * @param icon
-     *            the New icon.
+     *            the icon to use or null.
      */
     public void setItemIcon(Object itemId, Resource icon) {
         if (itemId != null) {
@@ -1113,7 +1113,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * 
      * @param itemId
      *            the id of the item to be assigned an icon.
-     * @return the Icon for the item or null, if not specified.
+     * @return the icon for the item or null, if not specified.
      */
     public Resource getItemIcon(Object itemId) {
         final Resource explicit = itemIcons.get(itemId);
@@ -1457,18 +1457,20 @@ public abstract class AbstractSelect extends AbstractField implements
     @Override
     public Collection<?> getListeners(Class<?> eventType) {
         if (Container.ItemSetChangeEvent.class.isAssignableFrom(eventType)) {
-            if (itemSetEventListeners == null)
+            if (itemSetEventListeners == null) {
                 return Collections.EMPTY_LIST;
-            else
+            } else {
                 return Collections
                         .unmodifiableCollection(itemSetEventListeners);
+            }
         } else if (Container.PropertySetChangeEvent.class
                 .isAssignableFrom(eventType)) {
-            if (propertySetEventListeners == null)
+            if (propertySetEventListeners == null) {
                 return Collections.EMPTY_LIST;
-            else
+            } else {
                 return Collections
                         .unmodifiableCollection(propertySetEventListeners);
+            }
         }
 
         return super.getListeners(eventType);
