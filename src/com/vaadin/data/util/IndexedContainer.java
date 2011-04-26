@@ -212,6 +212,8 @@ public class IndexedContainer extends
 
         items.clear();
 
+        // fire event only if the visible view changed, regardless of whether
+        // filtered out items were removed or not
         if (origSize != 0) {
             // Sends a change event
             fireItemSetChange();
@@ -275,6 +277,8 @@ public class IndexedContainer extends
         int origSize = size();
         int position = indexOfId(itemId);
         if (internalRemoveItem(itemId)) {
+            // fire event only if the visible view changed, regardless of
+            // whether filtered out items were removed or not
             if (size() != origSize) {
                 fireItemRemoved(position, itemId);
             }

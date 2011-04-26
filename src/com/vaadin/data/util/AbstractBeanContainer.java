@@ -214,6 +214,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         }
         itemIdToItem.clear();
 
+        // fire event only if the visible view changed, regardless of whether
+        // filtered out items were removed or not
         if (origSize != 0) {
             fireItemSetChange();
         }
@@ -281,6 +283,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
             // remove item
             itemIdToItem.remove(itemId);
 
+            // fire event only if the visible view changed, regardless of
+            // whether filtered out items were removed or not
             if (size() != origSize) {
                 fireItemRemoved(position, itemId);
             }
