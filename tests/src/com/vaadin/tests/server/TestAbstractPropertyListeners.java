@@ -8,7 +8,7 @@ import com.vaadin.data.util.AbstractProperty;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.tests.server.component.ListenerMethods;
 
-public class AbstractPropertyListeners extends ListenerMethods {
+public class TestAbstractPropertyListeners extends ListenerMethods {
     public void testValueChangeListenerAddGetRemove() throws Exception {
         testListenerAddGetRemove(AbstractProperty.class,
                 ValueChangeEvent.class, ValueChangeListener.class,

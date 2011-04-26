@@ -5,7 +5,7 @@ import com.vaadin.ui.AbstractSplitPanel.SplitterClickEvent;
 import com.vaadin.ui.AbstractSplitPanel.SplitterClickListener;
 import com.vaadin.ui.HorizontalSplitPanel;
 
-public class AbstractSplitPanelListeners extends ListenerMethods {
+public class TestAbstractSplitPanelListeners extends ListenerMethods {
     public void testSplitterClickListenerAddGetRemove() throws Exception {
         testListenerAddGetRemove(HorizontalSplitPanel.class,
                 SplitterClickEvent.class, SplitterClickListener.class);

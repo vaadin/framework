@@ -7,7 +7,7 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.server.component.ListenerMethods;
 import com.vaadin.ui.Button;
 
-public class AbstractFieldListeners extends ListenerMethods {
+public class TestAbstractFieldListeners extends ListenerMethods {
     public void testReadOnlyStatusChangeListenerAddGetRemove() throws Exception {
         testListenerAddGetRemove(Button.class, ReadOnlyStatusChangeEvent.class,
                 ReadOnlyStatusChangeListener.class);

@@ -8,7 +8,7 @@ import com.vaadin.ui.ComponentContainer.ComponentDetachListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
-public class AbstractComponentContainerListeners extends ListenerMethods {
+public class TestAbstractComponentContainerListeners extends ListenerMethods {
     public void testComponentDetachListenerAddGetRemove() throws Exception {
         testListenerAddGetRemove(HorizontalLayout.class,
                 ComponentDetachEvent.class, ComponentDetachListener.class);
