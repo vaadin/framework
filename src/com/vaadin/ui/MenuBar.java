@@ -368,29 +368,35 @@ public class MenuBar extends AbstractComponent {
     public MenuItem getMoreMenuItem() {
         return moreItem;
     }
-    
+
     /**
-     * Using this method menubar can be put into a special mode where the root
-     * level menu opens without clicking on the menu. In this mode the menu also
-     * closes itself if the mouse is moved out of the opened menu.
+     * Using this method menubar can be put into a special mode where top level
+     * menus opens without clicking on the menu, but automatically when mouse
+     * cursor is moved over the menu. In this mode the menu also closes itself
+     * if the mouse is moved out of the opened menu.
+     * <p>
+     * Note, that on touch devices the menu still opens on a click event.
      * 
-     * @param b
+     * @param autoOpenTopLevelMenu
+     *            true if menus should be opened without click, the default is
+     *            false
      */
-    public void setOpenRootOnHover(boolean b) {
-        if(b != openRootOnHover) {
-            openRootOnHover = b;
+    public void setAutoOpen(boolean autoOpenTopLevelMenu) {
+        if (autoOpenTopLevelMenu != openRootOnHover) {
+            openRootOnHover = autoOpenTopLevelMenu;
             requestRepaint();
         }
     }
 
     /**
-     * Detects whether the menubar is in a mode where root menus are
-     * automatically opened when the mouse cursor is moved over the menubar.
-     * Normally root menu opens only by clicking on the menu.
+     * Detects whether the menubar is in a mode where top level menus are
+     * automatically opened when the mouse cursor is moved over the menu.
+     * Normally root menu opens only by clicking on the menu. Submenus always
+     * open automatically.
      * 
-     * @return true if the root menus open without click
+     * @return true if the root menus open without click, the default is false
      */
-    public boolean isOpenRootOnHover() {
+    public boolean isAutoOpen() {
         return openRootOnHover;
     }
 
