@@ -83,6 +83,9 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
     private boolean immediate;
 
+    private boolean resizeLazy = false;
+
+    public static final String RESIZE_LAZY = "rL";
     /**
      * Reference to the parent frame/iframe. Null if there is no parent (i)frame
      * or if the application and parent frame are in different domains.
@@ -192,7 +195,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         connection = client;
 
         immediate = uidl.hasAttribute("immediate");
-
+        resizeLazy = uidl.hasAttribute(RESIZE_LAZY);
         String newTheme = uidl.getStringAttribute("theme");
         if (theme != null && !newTheme.equals(theme)) {
             // Complete page refresh is needed due css can affect layout
@@ -482,16 +485,25 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      */
     private void onResize() {
         /*
-         * IE will give us some false resize events due to problems with
-         * scrollbars. Firefox 3 might also produce som extra events. We
-         * postpone both the re-layouting and the server side event for a while
-         * to deal with these issues.
+         * IE (pre IE9 at least) will give us some false resize events due to
+         * problems with scrollbars. Firefox 3 might also produce some extra
+         * events. We postpone both the re-layouting and the server side event
+         * for a while to deal with these issues.
          * 
-         * We also postpone these events to avoid slowness when resizing the
+         * We may also postpone these events to avoid slowness when resizing the
          * browser window. Constantly recalculating the layout causes the resize
-         * operation to be really slow.
+         * operation to be really slow with complex layouts.
          */
-        delayedResizeExecutor.trigger();
+        boolean lazy = resizeLazy
+                || (BrowserInfo.get().isIE() && BrowserInfo.get()
+                        .getIEVersion() <= 8) || BrowserInfo.get().isFF3();
+
+        if (lazy) {
+            delayedResizeExecutor.trigger();
+        } else {
+            windowSizeMaybeChanged(Window.getClientWidth(),
+                    Window.getClientHeight());
+        }
     }
 
     /**

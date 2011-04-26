@@ -35,6 +35,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.URIHandler;
+import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VWindow;
 
 /**
@@ -197,6 +198,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
      * the screen.
      */
     private boolean centerRequested = false;
+
+    /**
+     * Should resize recalculate layouts lazily (as opposed to immediately)
+     */
+    private boolean resizeLazy = false;
 
     /**
      * Component that should be focused after the next repaint. Null if no focus
@@ -559,6 +565,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
 
         if (resizable) {
             target.addAttribute("resizable", true);
+        }
+        if (resizeLazy) {
+            target.addAttribute(VView.RESIZE_LAZY, resizeLazy);
         }
 
         if (!draggable) {
@@ -1547,6 +1556,32 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
      */
     public boolean isResizable() {
         return resizable;
+    }
+
+    /**
+     * 
+     * @return true if a delay is used before recalculating sizes, false if
+     *         sizes are recalculated immediately.
+     */
+    public boolean isResizeLazy() {
+        return resizeLazy;
+    }
+
+    /**
+     * Should resize operations be lazy, i.e. should there be a delay before
+     * layout sizes are recalculated. Speeds up resize operations in slow UIs
+     * with the penalty of slightly decreased usability.
+     * 
+     * Note, some browser send false resize events for the browser window and
+     * are therefore always lazy.
+     * 
+     * @param resizeLazy
+     *            true to use a delay before recalculating sizes, false to
+     *            calculate immediately.
+     */
+    public void setResizeLazy(boolean resizeLazy) {
+        this.resizeLazy = resizeLazy;
+        requestRepaint();
     }
 
     /**
