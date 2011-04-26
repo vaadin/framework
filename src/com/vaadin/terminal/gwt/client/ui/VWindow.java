@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.DomEvent.Type;
@@ -136,6 +137,8 @@ public class VWindow extends VOverlay implements Container,
 
     private boolean draggable = true;
 
+    private boolean resizeLazy = false;
+
     private Element modalityCurtain;
     private Element draggingCurtain;
 
@@ -177,6 +180,14 @@ public class VWindow extends VOverlay implements Container,
     private boolean visibilityChangesDisabled;
 
     private int bringToFrontSequence = -1;
+
+    private VLazyExecutor delayedContentsSizeUpdater = new VLazyExecutor(200,
+            new ScheduledCommand() {
+
+                public void execute() {
+                    updateContentsSize();
+                }
+            });
 
     public VWindow() {
         super(false, false, true); // no autohide, not modal, shadow
@@ -297,6 +308,7 @@ public class VWindow extends VOverlay implements Container,
             if (uidl.getBooleanAttribute("resizable") != resizable) {
                 setResizable(!resizable);
             }
+            resizeLazy = uidl.hasAttribute(VView.RESIZE_LAZY);
 
             setDraggable(!uidl.hasAttribute("fixedposition"));
         }
@@ -1020,6 +1032,16 @@ public class VWindow extends VOverlay implements Container,
             client.updateVariable(id, "height", h, immediate);
         }
 
+        if (updateVariables || !resizeLazy) {
+            // Resize has finished or is not lazy
+            updateContentsSize();
+        } else {
+            // Lazy resize - wait for a while before re-rendering contents
+            delayedContentsSizeUpdater.trigger();
+        }
+    }
+
+    private void updateContentsSize() {
         // Update child widget dimensions
         if (client != null) {
             client.handleComponentRelativeSize((Widget) layout);
