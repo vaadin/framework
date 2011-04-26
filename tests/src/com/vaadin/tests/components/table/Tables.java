@@ -134,7 +134,7 @@ public class Tables extends AbstractSelectTestCase<Table> implements
                     }
 
                     public Action[] getActions(Object target, Object sender) {
-                        return value.getActions();
+                        return value.getActions(target, sender);
                     }
                 });
             }
@@ -184,8 +184,20 @@ public class Tables extends AbstractSelectTestCase<Table> implements
                 ICON_64_EMAIL_REPLY_PNG_UNCACHEABLE));
         options.put("Empty", new ContextMenu() {
             @Override
-            public Action[] getActions() {
+            public Action[] getActions(Object target, Object sender) {
                 return null;
+            }
+        });
+        options.put("Edit/New", new ContextMenu() {
+            @Override
+            public Action[] getActions(Object itemId, Object component) {
+                if (itemId == null) {
+                    return new Action[] { new Action("New..."),
+                            new Action("Common action") };
+                } else {
+                    return new Action[] { new Action("Edit " + itemId),
+                            new Action("Common action") };
+                }
             }
         });
 

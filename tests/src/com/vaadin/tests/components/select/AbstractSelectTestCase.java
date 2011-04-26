@@ -38,7 +38,7 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
             items.add(new Action(caption, icon));
         }
 
-        public Action[] getActions() {
+        public Action[] getActions(Object target, Object sender) {
             Action[] actions = new Action[items.size()];
             for (int i = 0; i < items.size(); i++) {
                 actions[i] = items.get(i);

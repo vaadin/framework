@@ -92,7 +92,7 @@ public class Trees extends AbstractSelectTestCase<Tree> implements
                     }
 
                     public Action[] getActions(Object target, Object sender) {
-                        return value.getActions();
+                        return value.getActions(target, sender);
                     }
                 });
             }
