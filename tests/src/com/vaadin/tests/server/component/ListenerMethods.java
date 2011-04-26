@@ -16,6 +16,9 @@ import com.vaadin.ui.Component;
 
 public abstract class ListenerMethods extends TestCase {
 
+    public void testDummy() {
+    }
+
     public static void main(String[] args) {
         findAllListenerMethods();
     }
