@@ -644,7 +644,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
 
         if (modified) {
             // Filter the contents when all items have been added
-            if (getFilteredItemIds() != null) {
+            if (isFiltered()) {
                 filterAll();
             } else {
                 fireItemSetChange();

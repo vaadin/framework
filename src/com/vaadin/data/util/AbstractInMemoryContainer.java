@@ -540,7 +540,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         doSort();
 
         // Post sort updates
-        if (getFilteredItemIds() != null) {
+        if (isFiltered()) {
             filterAll();
         } else {
             fireItemSetChange();
@@ -588,7 +588,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     protected void internalRemoveAllItems() {
         // Removes all Items
         getAllItemIds().clear();
-        if (getFilteredItemIds() != null) {
+        if (isFiltered()) {
             getFilteredItemIds().clear();
         }
     }
@@ -611,7 +611,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         }
 
         boolean result = getAllItemIds().remove(itemId);
-        if (result && getFilteredItemIds() != null) {
+        if (result && isFiltered()) {
             getFilteredItemIds().remove(itemId);
         }
 
@@ -682,7 +682,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (newItem != null && filter) {
             // TODO filter only this item, use fireItemAdded()
             filterAll();
-            if (getFilteredItemIds() == null) {
+            if (!isFiltered()) {
                 // TODO hack: does not detect change in filterAll() in this case
                 fireItemAdded(indexOfId(newItemId), newItemId, item);
             }
@@ -718,7 +718,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (newItem != null) {
             // TODO filter only this item, use fireItemAdded()
             filterAll();
-            if (getFilteredItemIds() == null) {
+            if (!isFiltered()) {
                 // TODO hack: does not detect change in filterAll() in this case
                 fireItemAdded(indexOfId(newItemId), newItemId, item);
             }
@@ -813,7 +813,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * For internal use only.
      */
     protected List<ITEMIDTYPE> getVisibleItemIds() {
-        if (getFilteredItemIds() != null) {
+        if (isFiltered()) {
             return getFilteredItemIds();
         } else {
             return getAllItemIds();
@@ -821,18 +821,31 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     }
 
     /**
-     * TODO Temporary internal helper method to set the internal list of
-     * filtered item identifiers.
+     * Returns true is the container has active filters.
+     * 
+     * @return true if the container is currently filtered
+     */
+    protected boolean isFiltered() {
+        return filteredItemIds != null;
+    }
+
+    /**
+     * Internal helper method to set the internal list of filtered item
+     * identifiers. Should not be used outside this class except for
+     * implementing clone(), may disappear from future versions.
      * 
      * @param filteredItemIds
      */
+    @Deprecated
     protected void setFilteredItemIds(List<ITEMIDTYPE> filteredItemIds) {
         this.filteredItemIds = filteredItemIds;
     }
 
     /**
-     * TODO Temporary internal helper method to get the internal list of
-     * filtered item identifiers.
+     * Internal helper method to get the internal list of filtered item
+     * identifiers. Should not be used outside this class except for
+     * implementing clone(), may disappear from future versions - use
+     * {@link #getVisibleItemIds()} in other contexts.
      * 
      * @return List<ITEMIDTYPE>
      */
@@ -841,20 +854,21 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     }
 
     /**
-     * TODO Temporary internal helper method to set the internal list of all
-     * item identifiers. Should not be used outside this class except for
-     * implementing clone(), may disappear from future versions.
+     * Internal helper method to set the internal list of all item identifiers.
+     * Should not be used outside this class except for implementing clone(),
+     * may disappear from future versions.
      * 
      * @param allItemIds
      */
+    @Deprecated
     protected void setAllItemIds(List<ITEMIDTYPE> allItemIds) {
         this.allItemIds = allItemIds;
     }
 
     /**
-     * TODO Temporary internal helper method to get the internal list of all
-     * item identifiers. Should not be used outside this class without
-     * exceptional justification, may disappear in future versions.
+     * Internal helper method to get the internal list of all item identifiers.
+     * Avoid using this method outside this class, may disappear in future
+     * versions.
      * 
      * @return List<ITEMIDTYPE>
      */
@@ -863,8 +877,12 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     }
 
     /**
-     * TODO Temporary internal helper method to set the internal list of
-     * filters.
+     * Set the internal collection of filters without performing filtering.
+     * 
+     * This method is mostly for internal use, use
+     * {@link #addFilter(com.vaadin.data.Container.Filter)} and
+     * <code>remove*Filter*</code> (which also re-filter the container) instead
+     * when possible.
      * 
      * @param filters
      */
@@ -873,8 +891,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     }
 
     /**
-     * TODO Temporary internal helper method to get the internal list of
-     * filters.
+     * Returns the internal collection of filters. The returned collection
+     * should not be modified by callers outside this class.
      * 
      * @return Set<Filter>
      */
