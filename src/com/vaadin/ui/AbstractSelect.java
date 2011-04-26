@@ -1287,7 +1287,7 @@ public abstract class AbstractSelect extends AbstractField implements
             itemIconPropertyId = propertyId;
         } else {
             throw new IllegalArgumentException(
-                    "Property id must be assignable to Resource");
+                    "Property type must be assignable to Resource");
         }
         requestRepaint();
     }
