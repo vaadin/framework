@@ -396,8 +396,9 @@ public class ApplicationConnection {
             final String extraParams, final boolean forceSync) {
         startRequest();
         // Security: double cookie submission pattern
-        final String rd = uidlSecurityKey + VAR_BURST_SEPARATOR + requestData;
-        VConsole.log("Making UIDL Request with params: " + rd);
+        final String payload = uidlSecurityKey + VAR_BURST_SEPARATOR
+                + requestData;
+        VConsole.log("Making UIDL Request with params: " + payload);
         String uri;
         if (configuration.usePortletURLs()) {
             uri = configuration.getPortletUidlURLBase();
@@ -412,101 +413,111 @@ public class ApplicationConnection {
             uri = addGetParameters(uri, "windowName=" + windowName);
         }
 
-        if (!forceSync) {
-            final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST,
-                    uri);
-            // TODO enable timeout
-            // rb.setTimeoutMillis(timeoutMillis);
-            rb.setHeader("Content-Type", "text/plain;charset=utf-8");
-            try {
-                rb.sendRequest(rd, new RequestCallback() {
-                    public void onError(Request request, Throwable exception) {
-                        showCommunicationError(exception.getMessage());
+        doUidlRequest(uri, payload, forceSync);
+
+    }
+
+    /**
+     * Sends an asynchronous or synchronous UIDL request to the server using the
+     * given URI.
+     * 
+     * @param uri
+     *            The URI to use for the request. May includes GET parameters
+     * @param payload
+     *            The contents of the request to send
+     * @param synchronous
+     *            true if the request should be synchronous, false otherwise
+     */
+    protected void doUidlRequest(final String uri, final String payload,
+            final boolean synchronous) {
+        if (!synchronous) {
+            RequestCallback requestCallback = new RequestCallback() {
+                public void onError(Request request, Throwable exception) {
+                    showCommunicationError(exception.getMessage());
+                    endRequest();
+                    if (!applicationRunning) {
+                        // start failed, let's try to start the next app
+                        ApplicationConfiguration.startNextApplication();
+                    }
+                }
+
+                public void onResponseReceived(Request request,
+                        Response response) {
+                    VConsole.log("Server visit took "
+                            + String.valueOf((new Date()).getTime()
+                                    - requestStartTime.getTime()) + "ms");
+
+                    int statusCode = response.getStatusCode();
+
+                    switch (statusCode) {
+                    case 0:
+                        showCommunicationError("Invalid status code 0 (server down?)");
                         endRequest();
-                        if (!applicationRunning) {
-                            // start failed, let's try to start the next app
-                            ApplicationConfiguration.startNextApplication();
-                        }
+                        return;
+
+                    case 401:
+                        /*
+                         * Authorization has failed. Could be that the session
+                         * has timed out and the container is redirecting to a
+                         * login page.
+                         */
+                        showAuthenticationError("");
+                        endRequest();
+                        return;
+
+                    case 503:
+                        // We'll assume msec instead of the usual seconds
+                        int delay = Integer.parseInt(response
+                                .getHeader("Retry-After"));
+                        VConsole.log("503, retrying in " + delay + "msec");
+                        (new Timer() {
+                            @Override
+                            public void run() {
+                                activeRequests--;
+                                doUidlRequest(uri, payload, synchronous);
+                            }
+                        }).schedule(delay);
+                        return;
+
                     }
 
-                    public void onResponseReceived(Request request,
-                            Response response) {
-                        VConsole.log("Server visit took "
-                                + String.valueOf((new Date()).getTime()
-                                        - requestStartTime.getTime()) + "ms");
-
-                        int statusCode = response.getStatusCode();
-
-                        switch (statusCode) {
-                        case 0:
-                            showCommunicationError("Invalid status code 0 (server down?)");
-                            endRequest();
-                            return;
-
-                        case 401:
-                            /*
-                             * Authorization has failed. Could be that the
-                             * session has timed out and the container is
-                             * redirecting to a login page.
-                             */
-                            showAuthenticationError("");
-                            endRequest();
-                            return;
-
-                        case 503:
-                            // We'll assume msec instead of the usual seconds
-                            int delay = Integer.parseInt(response
-                                    .getHeader("Retry-After"));
-                            VConsole.log("503, retrying in " + delay + "msec");
-                            (new Timer() {
-                                @Override
-                                public void run() {
-                                    activeRequests--;
-                                    makeUidlRequest(requestData, extraParams,
-                                            forceSync);
-                                }
-                            }).schedule(delay);
-                            return;
-
-                        }
-
-                        if ((statusCode / 100) == 4) {
-                            // Handle all 4xx errors the same way as (they are
-                            // all permanent errors)
-                            showCommunicationError("UIDL could not be read from server. Check servlets mappings. Error code: "
-                                    + statusCode);
-                            endRequest();
-                            return;
-                        }
-
-                        final Date start = new Date();
-                        // for(;;);[realjson]
-                        final String jsonText = response.getText().substring(9,
-                                response.getText().length() - 1);
-                        final ValueMap json;
-                        try {
-                            json = parseJSONResponse(jsonText);
-                        } catch (final Exception e) {
-                            endRequest();
-                            showCommunicationError(e.getMessage()
-                                    + " - Original JSON-text:" + jsonText);
-                            return;
-                        }
-
-                        VConsole.log("JSON parsing took "
-                                + (new Date().getTime() - start.getTime())
-                                + "ms");
-                        if (applicationRunning) {
-                            handleReceivedJSONMessage(start, jsonText, json);
-                        } else {
-                            applicationRunning = true;
-                            handleWhenCSSLoaded(jsonText, json);
-                            ApplicationConfiguration.startNextApplication();
-                        }
+                    if ((statusCode / 100) == 4) {
+                        // Handle all 4xx errors the same way as (they are
+                        // all permanent errors)
+                        showCommunicationError("UIDL could not be read from server. Check servlets mappings. Error code: "
+                                + statusCode);
+                        endRequest();
+                        return;
                     }
 
-                });
+                    final Date start = new Date();
+                    // for(;;);[realjson]
+                    final String jsonText = response.getText().substring(9,
+                            response.getText().length() - 1);
+                    final ValueMap json;
+                    try {
+                        json = parseJSONResponse(jsonText);
+                    } catch (final Exception e) {
+                        endRequest();
+                        showCommunicationError(e.getMessage()
+                                + " - Original JSON-text:" + jsonText);
+                        return;
+                    }
 
+                    VConsole.log("JSON parsing took "
+                            + (new Date().getTime() - start.getTime()) + "ms");
+                    if (applicationRunning) {
+                        handleReceivedJSONMessage(start, jsonText, json);
+                    } else {
+                        applicationRunning = true;
+                        handleWhenCSSLoaded(jsonText, json);
+                        ApplicationConfiguration.startNextApplication();
+                    }
+                }
+
+            };
+            try {
+                doAsyncUIDLRequest(uri, payload, requestCallback);
             } catch (RequestException e) {
                 VConsole.error(e);
                 endRequest();
@@ -514,13 +525,39 @@ public class ApplicationConnection {
         } else {
             // Synchronized call, discarded response (leaving the page)
             SynchronousXHR syncXHR = (SynchronousXHR) SynchronousXHR.create();
-            syncXHR.synchronousPost(uri + "&" + PARAM_UNLOADBURST + "=1", rd);
+            syncXHR.synchronousPost(uri + "&" + PARAM_UNLOADBURST + "=1",
+                    payload);
             /*
              * Although we are in theory leaving the page, the page may still
              * stay open. End request properly here too. See #3289
              */
             endRequest();
         }
+
+    }
+
+    /**
+     * Sends an asynchronous UIDL request to the server using the given URI.
+     * 
+     * @param uri
+     *            The URI to use for the request. May includes GET parameters
+     * @param payload
+     *            The contents of the request to send
+     * @param requestCallback
+     *            The handler for the response
+     * @throws RequestException
+     *             if the request could not be sent
+     */
+    protected void doAsyncUIDLRequest(String uri, String payload,
+            RequestCallback requestCallback) throws RequestException {
+        RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
+        // TODO enable timeout
+        // rb.setTimeoutMillis(timeoutMillis);
+        rb.setHeader("Content-Type", "text/plain;charset=utf-8");
+        rb.setRequestData(payload);
+        rb.setCallback(requestCallback);
+
+        rb.send();
     }
 
     int cssWaits = 0;
