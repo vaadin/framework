@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -21,6 +21,7 @@ import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VButton;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 import com.vaadin.ui.themes.BaseTheme;
@@ -175,13 +176,15 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
                 if (newValue != null && !newValue.equals(oldValue)
                         && !isReadOnly()) {
                     setValue(newValue);
-                    fireClick();
+                    fireClick(MouseEventDetails.deSerialize((String) variables
+                            .get("mousedetails")));
                 }
             } else {
 
                 // Only send click event if the button is pushed
                 if (newValue.booleanValue()) {
-                    fireClick();
+                    fireClick(MouseEventDetails.deSerialize((String) variables
+                            .get("mousedetails")));
                 }
 
                 // If the button is true for some reason, release it
@@ -300,6 +303,8 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      */
     public class ClickEvent extends Component.Event {
 
+        private MouseEventDetails details;
+
         /**
          * New instance of text change event.
          * 
@@ -311,12 +316,106 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
         }
 
         /**
+         * Constructor with mouse details
+         * 
+         * @param source
+         *            The source where the click took place
+         * @param details
+         *            Details about the mouse click
+         */
+        public ClickEvent(Component source, MouseEventDetails details) {
+            super(source);
+            this.details = details;
+        }
+
+        /**
          * Gets the Button where the event occurred.
          * 
          * @return the Source of the event.
          */
         public Button getButton() {
             return (Button) getSource();
+        }
+
+        /**
+         * Returns the mouse position (x coordinate) when the click took place.
+         * The position is relative to the browser client area.
+         * 
+         * @return The mouse cursor x position
+         */
+        public int getClientX() {
+            return details.getClientX();
+        }
+
+        /**
+         * Returns the mouse position (y coordinate) when the click took place.
+         * The position is relative to the browser client area.
+         * 
+         * @return The mouse cursor y position
+         */
+        public int getClientY() {
+            return details.getClientY();
+        }
+
+        /**
+         * Returns the relative mouse position (x coordinate) when the click
+         * took place. The position is relative to the clicked component.
+         * 
+         * @return The mouse cursor x position relative to the clicked layout
+         *         component or -1 if no x coordinate available
+         */
+        public int getRelativeX() {
+            return details.getRelativeX();
+        }
+
+        /**
+         * Returns the relative mouse position (y coordinate) when the click
+         * took place. The position is relative to the clicked component.
+         * 
+         * @return The mouse cursor y position relative to the clicked layout
+         *         component or -1 if no y coordinate available
+         */
+        public int getRelativeY() {
+            return details.getRelativeY();
+        }
+
+        /**
+         * Checks if the Alt key was down when the mouse event took place.
+         * 
+         * @return true if Alt was down when the event occured, false otherwise
+         */
+        public boolean isAltKey() {
+            return details.isAltKey();
+        }
+
+        /**
+         * Checks if the Ctrl key was down when the mouse event took place.
+         * 
+         * @return true if Ctrl was pressed when the event occured, false
+         *         otherwise
+         */
+        public boolean isCtrlKey() {
+            return details.isCtrlKey();
+        }
+
+        /**
+         * Checks if the Meta key was down when the mouse event took place.
+         * 
+         * @return true if Meta was pressed when the event occured, false
+         *         otherwise
+         */
+        public boolean isMetaKey() {
+            return details.isMetaKey();
+        }
+
+        /**
+         * Checks if the Shift key was down when the mouse event took place.
+         * 
+         * @return true if Shift was pressed when the event occured, false
+         *         otherwise
+         */
+        public boolean isShiftKey() {
+            return details.isShiftKey();
         }
     }
 
@@ -339,6 +438,7 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
          *            An event containing information about the click.
          */
         public void buttonClick(ClickEvent event);
+
     }
 
     /**
@@ -366,6 +466,10 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      */
     protected void fireClick() {
         fireEvent(new Button.ClickEvent(this));
+    }
+
+    private void fireClick(MouseEventDetails details) {
+        fireEvent(new Button.ClickEvent(this, details));
     }
 
     @Override
