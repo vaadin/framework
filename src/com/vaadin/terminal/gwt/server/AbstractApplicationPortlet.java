@@ -127,6 +127,21 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
     }
 
+    /**
+     * Checks that the version reported by the client (widgetset) matches that
+     * of the server.
+     * 
+     * @param request
+     */
+    private void checkWidgetsetVersion(PortletRequest request) {
+        if (!AbstractApplicationServlet.VERSION.equals(getHTTPRequestParameter(
+                request, "wsver"))) {
+            logger.warning(String.format(WIDGETSET_MISMATCH_INFO,
+                    AbstractApplicationServlet.VERSION,
+                    getHTTPRequestParameter(request, "wsver")));
+        }
+    }
+
     private void checkProductionMode() {
         // Check if the application is in production mode.
         // We are in production mode if Debug=false or productionMode=true
@@ -431,6 +446,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     return;
                 } else if (requestType == RequestType.UIDL) {
                     // Handles AJAX UIDL requests
+                    if (isRepaintAll(request)) {
+                        // warn if versions do not match
+                        checkWidgetsetVersion(request);
+                    }
                     applicationManager.handleUidlRequest(
                             (ResourceRequest) request,
                             (ResourceResponse) response, this, window);

@@ -352,6 +352,7 @@ public class ApplicationConnection {
         int screenHeight = BrowserInfo.get().getScreenHeight();
         int tzOffset = BrowserInfo.get().getTimezoneOffset();
         int rtzOffset = BrowserInfo.get().getRawTimezoneOffset();
+        String widgetsetVersion = ApplicationConfiguration.VERSION;
 
         String token = History.getToken();
 
@@ -361,7 +362,8 @@ public class ApplicationConnection {
         String parameters = "repaintAll=1&" + "sh=" + screenHeight + "&sw="
                 + screenWidth + "&cw=" + clientWidth + "&ch=" + clientHeight
                 + "&vw=" + offsetWidth + "&vh=" + offsetHeight + "&fr=" + token
-                + "&tzo=" + tzOffset + "&rtzo=" + rtzOffset;
+                + "&tzo=" + tzOffset + "&rtzo=" + rtzOffset + "&wsver="
+                + widgetsetVersion;
         return parameters;
     }
 

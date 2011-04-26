@@ -236,6 +236,19 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
     }
 
+    /**
+     * Checks that the version reported by the client (widgetset) matches that
+     * of the server.
+     * 
+     * @param request
+     */
+    private void checkWidgetsetVersion(HttpServletRequest request) {
+        if (!VERSION.equals(request.getParameter("wsver"))) {
+            logger.warning(String.format(WIDGETSET_MISMATCH_INFO, VERSION,
+                    request.getParameter("wsver")));
+        }
+    }
+
     private void checkProductionMode() {
         // Check if the application is in production mode.
         // We are in production mode if Debug=false or productionMode=true
@@ -397,6 +410,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         if (requestType == RequestType.STATIC_FILE) {
             serveStaticResources(request, response);
             return;
+        }
+
+        if (isRepaintAll(request)) {
+            // warn if versions do not match
+            checkWidgetsetVersion(request);
         }
 
         Application application = null;

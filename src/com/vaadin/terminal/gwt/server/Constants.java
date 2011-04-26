@@ -29,6 +29,15 @@ public interface Constants {
             + "in web.xml. The default of 1h will be used.\n"
             + "===========================================================";
 
+    static final String WIDGETSET_MISMATCH_INFO = "\n"
+            + "=================================================================\n"
+            + "The widgetset in use does not seem to be built for the Vaadin\n"
+            + "version in use. This might cause strange problems - a\n"
+            + "recompile/deploy is strongly recommended.\n"
+            + " Vaadin version: %s\n"
+            + " Widgetset version: %s\n"
+            + "=================================================================";
+
     static final String URL_PARAMETER_RESTART_APPLICATION = "restartApplication";
     static final String URL_PARAMETER_CLOSE_APPLICATION = "closeApplication";
     static final String URL_PARAMETER_REPAINT_ALL = "repaintAll";
