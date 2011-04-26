@@ -1008,8 +1008,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * Gets the header for the specified column.
      * 
      * @param propertyId
-     *            the propertyId indentifying the column.
-     * @return the header for the specifed column if it has one.
+     *            the propertyId identifying the column.
+     * @return the header for the specified column if it has one.
      */
     public String getColumnHeader(Object propertyId) {
         if (getColumnHeaderMode() == COLUMN_HEADER_MODE_HIDDEN) {
