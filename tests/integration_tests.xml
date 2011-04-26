@@ -295,7 +295,7 @@
 	</target>
 	
 	<target name="integration-test-eXo-3">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="eXo-3/eXo-integration.html" />
+		<fileset dir="integration-testscripts" id="html-test-files" includes="eXo-3/integration-test-eXo-3.0.3-addressbook.html" />
 		<pathconvert pathsep=" " property="test-exo" refid="html-test-files" />
 		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
@@ -312,7 +312,7 @@
 	</target>
 	
 	<target name="integration-test-weblogic-portal">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="weblogic-portal/weblogic-portal-integration.html" />
+		<fileset dir="integration-testscripts" id="html-test-files" includes="weblogic-portal/integration-test-WebLogic-Portal-10.3.2-addressbook.html" />
 		<pathconvert pathsep=" " property="test-weblogic" refid="html-test-files" />
 		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
