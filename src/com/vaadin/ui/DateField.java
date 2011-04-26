@@ -132,7 +132,6 @@ public class DateField extends AbstractField implements
      * Constructs an empty <code>DateField</code> with no caption.
      */
     public DateField() {
-        setInvalidAllowed(false);
     }
 
     /**
@@ -143,7 +142,6 @@ public class DateField extends AbstractField implements
      */
     public DateField(String caption) {
         setCaption(caption);
-        setInvalidAllowed(false);
     }
 
     /**
@@ -168,7 +166,6 @@ public class DateField extends AbstractField implements
      *            the Property to be edited with this editor.
      */
     public DateField(Property dataSource) throws IllegalArgumentException {
-        setInvalidAllowed(false);
         if (!Date.class.isAssignableFrom(dataSource.getType())) {
             throw new IllegalArgumentException("Can't use "
                     + dataSource.getType().getName()
@@ -191,7 +188,6 @@ public class DateField extends AbstractField implements
      *            the Date value.
      */
     public DateField(String caption, Date value) {
-        setInvalidAllowed(false);
         setValue(value);
         setCaption(caption);
     }
