@@ -86,8 +86,8 @@ public interface Container extends Serializable {
     public Item getItem(Object itemId);
 
     /**
-     * Gets the ID's of all Properties stored in the Container. The ID's are
-     * returned as a unmodifiable collection.
+     * Gets the ID's of all Properties stored in the Container. The ID's cannot
+     * be modified through the returned collection.
      * 
      * @return unmodifiable collection of Property IDs
      */
@@ -95,7 +95,8 @@ public interface Container extends Serializable {
 
     /**
      * Gets the ID's of all visible (after filtering and sorting) Items stored
-     * in the Container. The ID's are returned as a unmodifiable collection.
+     * in the Container. The ID's cannot be modified through the returned
+     * collection.
      * 
      * If the container is {@link Ordered}, the collection returned by this
      * method should follow that order. If the container is {@link Sortable},
@@ -279,9 +280,14 @@ public interface Container extends Serializable {
      * 
      * <p>
      * If the container is filtered or sorted, the traversal applies to the
-     * filtered and sorted view. The <code>addItemAfter()</code> methods may add
-     * items that will be filtered out after addition or moved to another
-     * position based on sorting.
+     * filtered and sorted view.
+     * </p>
+     * <p>
+     * The <code>addItemAfter()</code> methods should apply filters to the added
+     * item after inserting it, possibly hiding it immediately. If the container
+     * is being sorted, they may add items at the correct sorted position
+     * instead of the given position. See also {@link Filterable} and
+     * {@link Sortable} for more information.
      * </p>
      */
     public interface Ordered extends Container {
@@ -343,7 +349,7 @@ public interface Container extends Serializable {
         public boolean isLastId(Object itemId);
 
         /**
-         * Adds new item after the given item.
+         * Adds a new item after the given item.
          * <p>
          * Adding an item after null item adds the item as first item of the
          * ordered container.
@@ -363,7 +369,7 @@ public interface Container extends Serializable {
                 throws UnsupportedOperationException;
 
         /**
-         * Adds new item after the given item.
+         * Adds a new item after the given item.
          * <p>
          * Adding an item after null item adds the item as first item of the
          * ordered container.
@@ -402,6 +408,10 @@ public interface Container extends Serializable {
      * the implementing class. However, the recommended approach is sorting the
      * roots and the sets of children of each item separately.
      * </p>
+     * <p>
+     * Depending on the container type, sorting a container may permanently
+     * change the internal order of items in the container.
+     * </p>
      */
     public interface Sortable extends Ordered {
 
@@ -410,7 +420,8 @@ public interface Container extends Serializable {
          * 
          * Sorts the container items.
          * 
-         * Container sorting can completely replace the previous order.
+         * Sorting a container can irreversibly change the order of its items or
+         * only change the order temporarily, depending on the container.
          * 
          * @param propertyId
          *            Array of container property IDs, whose values are used to
@@ -473,16 +484,16 @@ public interface Container extends Serializable {
         public Object getIdByIndex(int index);
 
         /**
-         * Adds new item at given index.
+         * Adds a new item at given index (in the filtered view).
          * <p>
          * The indices of the item currently in the given position and all the
          * following items are incremented.
          * </p>
          * <p>
-         * If the container is sorted, the item may be inserted in its correct
-         * sorted location instead of the given position. If the container is
-         * filtered, the item may be filtered out after being added after the
-         * visible item identified by the index. See {@link Indexed},
+         * This method should apply filters to the added item after inserting
+         * it, possibly hiding it immediately. If the container is being sorted,
+         * the item may be added at the correct sorted position instead of the
+         * given position. See {@link Indexed}, {@link Ordered},
          * {@link Filterable} and {@link Sortable} for more information.
          * </p>
          * 
@@ -496,17 +507,17 @@ public interface Container extends Serializable {
         public Object addItemAt(int index) throws UnsupportedOperationException;
 
         /**
-         * Adds new item at given index.
+         * Adds a new item at given index (in the filtered view).
          * <p>
          * The indexes of the item currently in the given position and all the
          * following items are incremented.
          * </p>
          * <p>
-         * If the container is sorted, the item may be inserted in its correct
-         * sorted location instead of the given position. If the container is
-         * filtered, the item may be filtered out after being added after the
-         * visible item identified by the index. See {@link Indexed},
-         * {@link Filterable} and {@link Sortable} for more information.
+         * This method should apply filters to the added item after inserting
+         * it, possibly hiding it immediately. If the container is being sorted,
+         * the item may be added at the correct sorted position instead of the
+         * given position. See {@link Indexed}, {@link Filterable} and
+         * {@link Sortable} for more information.
          * </p>
          * 
          * @param index
