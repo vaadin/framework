@@ -37,38 +37,50 @@ contains a number of significant enhancements.</p>
 
 <h3>Enhancements</h3>
 
-<ul>
-  <li>GWT has been updated to version 2.3, see below for more information about required changes</li>
-  <li>Nested bean properties are supported (<a href="http://dev.vaadin.com/ticket/4995">#4995</a>)</li>
-  <li>Abstract base class AbstractProperty for simple Property implementations (<a href="http://dev.vaadin.com/ticket/6860">#6860</a>)</li>
-</ul>
-
-<h3>Backward Incompatible Changes</h3>
-
-<p>The following changes can break backward compatibility in applications using an earlier version of Vaadin:</p>
+<p>General enhancements:</p>
 
 <ul>
+  <li>GWT has been updated to version 2.3</li>
+  <li>An error is shown to the end user when JAR and widgetset version do not match (<a href="http://dev.vaadin.com/ticket/5423">#5423</a>)</li>
+  <li>Support for touch device interfaces: one-finger touch scrolling, drag and drop, Slider, SplitPanel, sub-window handling, notifications, etc.</li>
+  <li>Support for Internet Explorer 9</li>
 </ul>
 
-<h3>Other Changes</h3>
-
-<p>The following backwards compatible class/method changes have been made:</p>
+<p>In the server-side API:</p>
 
 <ul>
+  <li>More versatile <b>Container.Filterable</b> API that allows complex filters in containers (<a href="http://dev.vaadin.com/ticket/6286">#6286</a>)</li>
+  <li>Support for specifying nested bean properties with <tt>addNestedContainerProperty()</tt> (<a href="http://dev.vaadin.com/ticket/4995">#4995</a>)</li>
+  <li>Abstract base class <b>AbstractProperty</b> for simple <b>Property</b> implementations (<a href="http://dev.vaadin.com/ticket/6860">#6860</a>)</li>
+  <li>A <tt>getListeners()</tt> method to return all listeners in all classes that support listeners (<a href="http://dev.vaadin.com/ticket/1410">#1410</a>)</li>
+  <li>New <b>AbstractContainer</b> for common functionality in containers, especially listeners (<a href="http://dev.vaadin.com/ticket/6521">#6521</a>)</li>
+  <li>New <tt>submitUpload()</tt> method in the <b>Upload</b> component to start the upload programmatically (<a href="http://dev.vaadin.com/ticket/6630">#6630</a>)</li>
+  <li><b>BrowserInfo</b> now includes browser time and timezone (<a href="http://dev.vaadin.com/ticket/6691">#6691</a>)</li>
+  <li>New <tt>getColumnGenerator()</tt> method in <b>Table</b> to get a column generator (<a href="http://dev.vaadin.com/ticket/6844">#6844</a>)</li>
+  <li>New <b>AbstractProperty</b> class for common features in <b>Property</b> implementations (<a href="http://dev.vaadin.com/ticket/6860">#6860</a>)</li>
+  <li>Renamed <tt>horizontal/verticalDropLocation()</tt> to <tt>getHorizontal/VerticalDropLocation()</tt> in <b>WrapperTargetDetails</b> (<a href="http://dev.vaadin.com/ticket/6823">#6823</a>)</li>
+  <!--  li>Support lazy loading properly in <b>ComboBox</b> (<a href="http://dev.vaadin.com/ticket/4233">#4233</a>)</li>  -->
 </ul>
 
-<h3>Theme changes</h3>
-
-<p>The following changes have to be made to themes created for earlier versions of Vaadin in order for them to work correctly with Vaadin @version@:</p>
+<p>In the client-side API:</p>
 
 <ul>
+  <li>Server communication methods in <b>ApplicationConnection</b> can now be overridden (<a href="http://dev.vaadin.com/ticket/6885">#6885</a>)</li>
 </ul>
 
+<h3>Backward-Incompatible Changes</h3>
+
+<ul>
+  <li>The <tt>addContainerFilter()</tt> in <b>Container.Filterable</b> no longer accepts a filter string as a parameter, but a <b>Filter</b> object.</li>
+</ul>
 
 <h3>Change Log, Future Releases, and Upgrading</h3>
 
-<p>See this <a href="http://dev.vaadin.com/query?status=closed&group=resolution&order=priority&col=id&col=summary&col=owner&col=type&col=priority&col=component&col=version&milestone=Vaadin+6.5.0.pre1&milestone=Vaadin+6.5.0.pre2&milestone=Vaadin+6.5.0">list of closed tickets</a> for a
-full list of tickets fixed in this release.</p>
+<p>See the following lists of closed tickets for a full list of tickets fixed in this release:</p>
+
+<ul>
+ <li> Tickets <a href="http://dev.vaadin.com/query?status=closed&group=resolution&milestone=Vaadin+6.6.0.pre1">closed in Vaadin 6.6.0.pre1</a></li>
+</ul>
 
 <p>Problem fixes and enhancements planned for upcoming releases can be found in the <a
 href="http://dev.vaadin.com/roadmap">Vaadin Roadmap</a> in Vaadin Trac.</p>
@@ -211,10 +223,10 @@ application servers:</p>
 it:</p>
 
 <ul>
-	<li>Mozilla Firefox 3, 4</li>
+	<li>Mozilla Firefox 3 and 4</li>
 	<li>Internet Explorer releases 6, 7, 8 and 9</li>
-	<li>Safari 3, 4 and 5</li>
-	<li>Opera 10, 11</li>
+	<li>Safari 4 and 5</li>
+	<li>Opera 10 and 11</li>
 	<li>Google Chrome (latest version)</li>
 </ul>
 
