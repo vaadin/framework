@@ -75,6 +75,8 @@
 
 		<java classname="com.vaadin.testbench.util.TestConverter" classpathref="classpath">
 			<sysproperty key="com.vaadin.testbench.test.retries" value="${retries}" />
+			<jvmarg value="-Duser.language=en"/>
+			<jvmarg value="-Duser.country=US"/>
 			<arg value="${test-output-dir}" />
 			<arg value="${browser}" />
 			<arg line="${testfile}" />
