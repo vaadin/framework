@@ -193,7 +193,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
 
         public void execute(MenuBar c, Boolean value, Object data) {
             openRootMenuOnHover = value;
-            c.setOpenRootOnHover(value);
+            c.setAutoOpen(value);
         }
 
     };
