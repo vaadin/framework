@@ -1,7 +1,7 @@
 package com.vaadin.tests.server.component.upload;
 
 import com.vaadin.terminal.StreamVariable.StreamingProgressEvent;
-import com.vaadin.tests.server.component.ListenerMethods;
+import com.vaadin.tests.server.component.AbstractListenerMethodsTest;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.FailedListener;
@@ -13,7 +13,7 @@ import com.vaadin.ui.Upload.StartedListener;
 import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Upload.SucceededListener;
 
-public class UploadListeners extends ListenerMethods {
+public class UploadListeners extends AbstractListenerMethodsTest {
     public void testProgressListenerAddGetRemove() throws Exception {
         testListenerAddGetRemove(Upload.class, StreamingProgressEvent.class,
                 ProgressListener.class);

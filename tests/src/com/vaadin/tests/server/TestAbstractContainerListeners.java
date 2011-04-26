@@ -5,9 +5,9 @@ import com.vaadin.data.Container.ItemSetChangeListener;
 import com.vaadin.data.Container.PropertySetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeListener;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.tests.server.component.ListenerMethods;
+import com.vaadin.tests.server.component.AbstractListenerMethodsTest;
 
-public class TestAbstractContainerListeners extends ListenerMethods {
+public class TestAbstractContainerListeners extends AbstractListenerMethodsTest {
 
     public void testItemSetChangeListenerAddGetRemove() throws Exception {
         testListenerAddGetRemove(IndexedContainer.class,

@@ -6,10 +6,10 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
-import com.vaadin.tests.server.component.ListenerMethods;
+import com.vaadin.tests.server.component.AbstractListenerMethodsTest;
 import com.vaadin.ui.TextField;
 
-public class TestAbstractTextFieldListeners extends ListenerMethods {
+public class TestAbstractTextFieldListeners extends AbstractListenerMethodsTest {
     public void testTextChangeListenerAddGetRemove() throws Exception {
         testListenerAddGetRemove(TextField.class, TextChangeEvent.class,
                 TextChangeListener.class);

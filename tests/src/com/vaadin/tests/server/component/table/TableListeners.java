@@ -2,7 +2,7 @@ package com.vaadin.tests.server.component.table;
 
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.tests.server.component.ListenerMethods;
+import com.vaadin.tests.server.component.AbstractListenerMethodsTest;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnReorderEvent;
 import com.vaadin.ui.Table.ColumnReorderListener;
@@ -13,7 +13,7 @@ import com.vaadin.ui.Table.FooterClickListener;
 import com.vaadin.ui.Table.HeaderClickEvent;
 import com.vaadin.ui.Table.HeaderClickListener;
 
-public class TableListeners extends ListenerMethods {
+public class TableListeners extends AbstractListenerMethodsTest {
     public void testColumnResizeListenerAddGetRemove() throws Exception {
         testListenerAddGetRemove(Table.class, ColumnResizeEvent.class,
                 ColumnResizeListener.class);

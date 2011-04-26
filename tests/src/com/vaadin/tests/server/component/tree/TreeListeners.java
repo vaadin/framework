@@ -2,14 +2,14 @@ package com.vaadin.tests.server.component.tree;
 
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.tests.server.component.ListenerMethods;
+import com.vaadin.tests.server.component.AbstractListenerMethodsTest;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.CollapseEvent;
 import com.vaadin.ui.Tree.CollapseListener;
 import com.vaadin.ui.Tree.ExpandEvent;
 import com.vaadin.ui.Tree.ExpandListener;
 
-public class TreeListeners extends ListenerMethods {
+public class TreeListeners extends AbstractListenerMethodsTest {
     public void testExpandListenerAddGetRemove() throws Exception {
         testListenerAddGetRemove(Tree.class, ExpandEvent.class,
                 ExpandListener.class);

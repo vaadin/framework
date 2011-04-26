@@ -14,10 +14,7 @@ import org.junit.Assert;
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.ui.Component;
 
-public abstract class ListenerMethods extends TestCase {
-
-    public void testDummy() {
-    }
+public abstract class AbstractListenerMethodsTest extends TestCase {
 
     public static void main(String[] args) {
         findAllListenerMethods();
@@ -51,11 +48,11 @@ public abstract class ListenerMethods extends TestCase {
                         System.out.println("package " + packageName + ";");
 
                         System.out.println("import "
-                                + ListenerMethods.class.getName() + ";");
+                                + AbstractListenerMethodsTest.class.getName() + ";");
                         System.out.println("import " + c.getName() + ";");
                         System.out.println("public class " + c.getSimpleName()
                                 + "Listeners extends "
-                                + ListenerMethods.class.getSimpleName() + " {");
+                                + AbstractListenerMethodsTest.class.getSimpleName() + " {");
                     }
 
                     String listenerClassName = m.getParameterTypes()[0]
