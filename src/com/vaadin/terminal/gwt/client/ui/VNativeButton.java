@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -21,6 +21,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.EventId;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -200,6 +201,11 @@ public class VNativeButton extends Button implements Paintable, ClickHandler,
         if (BrowserInfo.get().isSafari()) {
             VNativeButton.this.setFocus(true);
         }
+
+        // Add mouse details
+        MouseEventDetails details = new MouseEventDetails(
+                event.getNativeEvent(), getElement());
+        client.updateVariable(id, "mousedetails", details.serialize(), false);
 
         client.updateVariable(id, "state", true, true);
         clickPending = false;
