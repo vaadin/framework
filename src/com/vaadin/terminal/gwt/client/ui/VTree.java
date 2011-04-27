@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -19,6 +19,8 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -56,7 +58,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
  */
 public class VTree extends SimpleFocusablePanel implements Paintable,
         VHasDropHandler, FocusHandler, BlurHandler, KeyPressHandler,
-        KeyDownHandler, SubPartAware {
+        KeyDownHandler, SubPartAware, ActionOwner {
 
     public static final String CLASSNAME = "v-tree";
 
@@ -103,6 +105,8 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
     private boolean selectionHasChanged = false;
 
+    private String[] bodyActionKeys;
+
     public VLazyExecutor iconLoaded = new VLazyExecutor(50,
             new ScheduledCommand() {
 
@@ -119,6 +123,16 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
         addFocusHandler(this);
         addBlurHandler(this);
+
+        /*
+         * Listen to context menu events on the empty space in the tree
+         */
+        sinkEvents(Event.ONCONTEXTMENU);
+        addDomHandler(new ContextMenuHandler() {
+            public void onContextMenu(ContextMenuEvent event) {
+                handleBodyContextMenu(event);
+            }
+        }, ContextMenuEvent.getType());
 
         /*
          * Firefox auto-repeat works correctly only if we use a key press
@@ -236,6 +250,10 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                 .getIntAttribute("dragMode") : 0;
 
         isNullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
+
+        if (uidl.hasAttribute("alb")) {
+            bodyActionKeys = uidl.getStringArrayAttribute("alb");
+        }
 
         body.clear();
         for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
@@ -2118,6 +2136,43 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
             locator += "/" + EXPAND_IDENTIFIER;
         }
         return locator;
+    }
+
+    public Action[] getActions() {
+        if (bodyActionKeys == null) {
+            return new Action[] {};
+        }
+        final Action[] actions = new Action[bodyActionKeys.length];
+        for (int i = 0; i < actions.length; i++) {
+            final String actionKey = bodyActionKeys[i];
+            final TreeAction a = new TreeAction(this, null, actionKey);
+            a.setCaption(getActionCaption(actionKey));
+            a.setIconUrl(getActionIcon(actionKey));
+            actions[i] = a;
+        }
+        return actions;
+    }
+
+    public ApplicationConnection getClient() {
+        return client;
+    }
+
+    public String getPaintableId() {
+        return paintableId;
+    }
+
+    private void handleBodyContextMenu(ContextMenuEvent event) {
+        if (!readonly && !disabled) {
+            if (bodyActionKeys != null) {
+                int left = event.getNativeEvent().getClientX();
+                int top = event.getNativeEvent().getClientY();
+                top += Window.getScrollTop();
+                left += Window.getScrollLeft();
+                client.getContextMenu().showAt(this, left, top);
+            }
+            event.stopPropagation();
+            event.preventDefault();
+        }
     }
 
 }

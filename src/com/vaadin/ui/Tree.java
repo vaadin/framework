@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -23,6 +23,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.Action;
+import com.vaadin.event.Action.Handler;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
@@ -437,7 +438,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
         // Actions
         if (variables.containsKey("action")) {
-
             final StringTokenizer st = new StringTokenizer(
                     (String) variables.get("action"), ",");
             if (st.countTokens() == 2) {
@@ -445,9 +445,15 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 final Action action = (Action) actionMapper.get(st.nextToken());
                 if (action != null && containsId(itemId)
                         && actionHandlers != null) {
-                    for (final Iterator<Action.Handler> i = actionHandlers
-                            .iterator(); i.hasNext();) {
-                        i.next().handleAction(action, this, itemId);
+                    // Item action
+                    for (Handler ah : actionHandlers) {
+                        ah.handleAction(action, this, itemId);
+                    }
+                } else if (action != null && actionHandlers != null
+                        && itemId == null) {
+                    // Body action
+                    for (Handler ah : actionHandlers) {
+                        ah.handleAction(action, this, null);
                     }
                 }
             }
@@ -549,6 +555,28 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
         if (ids != null) {
             iteratorStack.push(ids.iterator());
+        }
+
+        /*
+         * Body actions - Actions which has the target null and can be invoked
+         * by right clicking on the Tree body
+         */
+        if (actionHandlers != null) {
+            final ArrayList<String> keys = new ArrayList<String>();
+            for (Handler ah : actionHandlers) {
+
+                // Getting action for the null item, which in this case
+                // means the body item
+                final Action[] aa = ah.getActions(null, this);
+                if (aa != null) {
+                    for (int ai = 0; ai < aa.length; ai++) {
+                        final String akey = actionMapper.key(aa[ai]);
+                        actionSet.add(aa[ai]);
+                        keys.add(akey);
+                    }
+                }
+            }
+            target.addAttribute("alb", keys.toArray());
         }
 
         while (!iteratorStack.isEmpty()) {
