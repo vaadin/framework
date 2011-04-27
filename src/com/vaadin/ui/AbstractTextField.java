@@ -190,7 +190,6 @@ public abstract class AbstractTextField extends AbstractField implements
                  * sent from the client to server. Just "commit" the value from
                  * currentText to the value.
                  */
-                textChangeEventPending = true;
                 handleInputEventTextChange(variables);
             }
 
