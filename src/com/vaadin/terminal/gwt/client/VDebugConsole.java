@@ -668,6 +668,9 @@ public final class VDebugConsole extends VOverlay implements Console {
             });
 
         }
+        log("Starting Vaadin client side engine. Widgetset: "
+                + GWT.getModuleName());
+
         log("Widget set is built on version: "
                 + ApplicationConfiguration.VERSION);
 
