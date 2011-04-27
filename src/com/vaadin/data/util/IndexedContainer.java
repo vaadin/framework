@@ -331,7 +331,7 @@ public class IndexedContainer extends
     @Override
     public Item addItemAfter(Object previousItemId, Object newItemId) {
         return internalAddItemAfter(previousItemId, newItemId,
-                new IndexedContainerItem(newItemId));
+                new IndexedContainerItem(newItemId), true);
     }
 
     /*
@@ -360,7 +360,7 @@ public class IndexedContainer extends
     @Override
     public Item addItemAt(int index, Object newItemId) {
         return internalAddItemAt(index, newItemId, new IndexedContainerItem(
-                newItemId));
+                newItemId), true);
     }
 
     /*

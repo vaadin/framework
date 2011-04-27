@@ -493,7 +493,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
             return null;
         }
         return internalAddItemAfter(previousItemId, newItemId,
-                createBeanItem(bean));
+                createBeanItem(bean), true);
     }
 
     /**
@@ -515,7 +515,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         if (!validateBean(bean)) {
             return null;
         }
-        return internalAddItemAt(index, newItemId, createBeanItem(bean));
+        return internalAddItemAt(index, newItemId, createBeanItem(bean), true);
     }
 
     /**

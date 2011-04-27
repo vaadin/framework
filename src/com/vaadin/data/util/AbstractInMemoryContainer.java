@@ -631,8 +631,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * 
      * For internal use only - subclasses should use
      * {@link #internalAddItemAtEnd(Object, Item, boolean)},
-     * {@link #internalAddItemAt(int, Object, Item)} and
-     * {@link #internalAddItemAfter(Object, Object, Item)} instead.
+     * {@link #internalAddItemAt(int, Object, Item, boolean)} and
+     * {@link #internalAddItemAfter(Object, Object, Item, boolean)} instead.
      * 
      * @param position
      *            The position at which the item should be inserted in the
@@ -672,7 +672,9 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      *            new item to add
      * @param filter
      *            true to perform filtering and send event after adding the
-     *            item, false to skip them
+     *            item, false to skip these operations for batch inserts - if
+     *            false, caller needs to make sure these operations are
+     *            performed at the end of the batch
      * @return item added or null if no item was added
      */
     protected ITEMCLASS internalAddItemAtEnd(ITEMIDTYPE newItemId,
@@ -702,10 +704,15 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * @param newItemId
      * @param item
      *            new item to add
+     * @param filter
+     *            true to perform filtering and send event after adding the
+     *            item, false to skip these operations for batch inserts - if
+     *            false, caller needs to make sure these operations are
+     *            performed at the end of the batch
      * @return item added or null if no item was added
      */
     protected ITEMCLASS internalAddItemAfter(ITEMIDTYPE previousItemId,
-            ITEMIDTYPE newItemId, ITEMCLASS item) {
+            ITEMIDTYPE newItemId, ITEMCLASS item, boolean filter) {
         // only add if the previous item is visible
         ITEMCLASS newItem = null;
         if (previousItemId == null) {
@@ -733,20 +740,26 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * @param index
      *            position where to add the item (visible/view index)
      * @param newItemId
+     * @param item
+     *            new item to add
+     * @param filter
+     *            true to perform filtering and send event after adding the
+     *            item, false to skip these operations for batch inserts - if
+     *            false, caller needs to make sure these operations are
+     *            performed at the end of the batch
      * @return item added or null if no item was added
-     * @return
      */
     protected ITEMCLASS internalAddItemAt(int index, ITEMIDTYPE newItemId,
-            ITEMCLASS item) {
+            ITEMCLASS item, boolean filter) {
         if (index < 0 || index > size()) {
             return null;
         } else if (index == 0) {
             // add before any item, visible or not
-            return internalAddItemAfter(null, newItemId, item);
+            return internalAddItemAfter(null, newItemId, item, filter);
         } else {
             // if index==size(), adds immediately after last visible item
             return internalAddItemAfter(getIdByIndex(index - 1), newItemId,
-                    item);
+                    item, filter);
         }
     }
 
