@@ -2140,9 +2140,17 @@ public class Table extends AbstractSelect implements Action.Container,
                 final Action action = (Action) actionMapper.get(st.nextToken());
                 if (action != null && containsId(itemId)
                         && actionHandlers != null) {
+                    // Item action
                     for (final Iterator<Handler> i = actionHandlers.iterator(); i
                             .hasNext();) {
                         (i.next()).handleAction(action, this, itemId);
+                    }
+                } else if (action != null && actionHandlers != null
+                        && itemId == null) {
+                    // Body action
+                    for (final Iterator<Handler> i = actionHandlers.iterator(); i
+                            .hasNext();) {
+                        (i.next()).handleAction(action, this, null);
                     }
                 }
             }
@@ -2377,6 +2385,30 @@ public class Table extends AbstractSelect implements Action.Container,
 
         target.addAttribute("colfooters", columnFootersVisible);
 
+        /*
+         * Body actions - Actions which has the target null and can be invoked
+         * by right clicking on the table body.
+         */
+        final Set<Action> actionSet = new LinkedHashSet<Action>();
+        if (actionHandlers != null) {
+            final ArrayList<String> keys = new ArrayList<String>();
+            for (final Iterator<Handler> ahi = actionHandlers.iterator(); ahi
+                    .hasNext();) {
+
+                // Getting actions for the null item, which in this case means
+                // the body item
+                final Action[] aa = (ahi.next()).getActions(null, this);
+                if (aa != null) {
+                    for (int ai = 0; ai < aa.length; ai++) {
+                        final String key = actionMapper.key(aa[ai]);
+                        actionSet.add(aa[ai]);
+                        keys.add(key);
+                    }
+                }
+            }
+            target.addAttribute("alb", keys.toArray());
+        }
+
         // Visible column order
         final Collection<?> sortables = getSortableContainerPropertyIds();
         final ArrayList<String> visibleColOrder = new ArrayList<String>();
@@ -2390,7 +2422,6 @@ public class Table extends AbstractSelect implements Action.Container,
         target.addAttribute("vcolorder", visibleColOrder.toArray());
 
         // Rows
-        final Set<Action> actionSet = new LinkedHashSet<Action>();
         final boolean selectable = isSelectable();
         final boolean[] iscomponent = new boolean[visibleColumns.size()];
         int iscomponentIndex = 0;

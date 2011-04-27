@@ -30,6 +30,8 @@ import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -98,7 +100,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
  * TODO implement unregistering for child components in Cells
  */
 public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
-        VHasDropHandler, FocusHandler, BlurHandler, Focusable {
+        VHasDropHandler, FocusHandler, BlurHandler, Focusable, ActionOwner {
 
     public static final String CLASSNAME = "v-table";
     public static final String CLASSNAME_SELECTION_FOCUS = CLASSNAME + "-focus";
@@ -193,7 +195,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      */
     private int scrollingVelocity = 10;
 
-    private Timer scrollingVelocityTimer = null;;
+    private Timer scrollingVelocityTimer = null;
+
+    private String[] bodyActionKeys;
 
     /**
      * Represents a select range of rows
@@ -439,6 +443,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
         }, TouchStartEvent.getType());
 
+        scrollBodyPanel.sinkEvents(Event.ONCONTEXTMENU);
+        scrollBodyPanel.addDomHandler(new ContextMenuHandler() {
+            public void onContextMenu(ContextMenuEvent event) {
+                handleBodyContextMenu(event);
+            }
+        }, ContextMenuEvent.getType());
+
         setStyleName(CLASSNAME);
 
         add(tHead);
@@ -455,6 +466,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
         return touchScrollDelegate;
 
+    }
+
+    private void handleBodyContextMenu(ContextMenuEvent event) {
+        if (enabled && bodyActionKeys != null) {
+            int left = Util.getTouchOrMouseClientX(event.getNativeEvent());
+            int top = Util.getTouchOrMouseClientY(event.getNativeEvent());
+            top += Window.getScrollTop();
+            left += Window.getScrollLeft();
+            client.getContextMenu().showAt(this, left, top);
+        }
+        event.stopPropagation();
+        event.preventDefault();
     }
 
     /**
@@ -786,6 +809,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         multiselectmode = uidl.hasAttribute("multiselectmode") ? uidl
                 .getIntAttribute("multiselectmode") : MULTISELECT_MODE_DEFAULT;
+
+        if (uidl.hasAttribute("alb")) {
+            bodyActionKeys = uidl.getStringArrayAttribute("alb");
+        }
 
         setCacheRate(uidl.hasAttribute("cr") ? uidl.getDoubleAttribute("cr")
                 : CACHE_RATE_DEFAULT);
@@ -5885,5 +5912,28 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 scrollBody.ensureFocus();
             }
         });
+    }
+
+    public Action[] getActions() {
+        if (bodyActionKeys == null) {
+            return new Action[] {};
+        }
+        final Action[] actions = new Action[bodyActionKeys.length];
+        for (int i = 0; i < actions.length; i++) {
+            final String actionKey = bodyActionKeys[i];
+            Action bodyAction = new TreeAction(this, null, actionKey);
+            bodyAction.setCaption(getActionCaption(actionKey));
+            bodyAction.setIconUrl(getActionIcon(actionKey));
+            actions[i] = bodyAction;
+        }
+        return actions;
+    }
+
+    public ApplicationConnection getClient() {
+        return client;
+    }
+
+    public String getPaintableId() {
+        return paintableId;
     }
 }
