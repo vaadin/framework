@@ -202,6 +202,9 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     private static final double CACHE_RATE_DEFAULT = 2;
 
+    private static final String ROW_HEADER_COLUMN_ID = "0";
+    private static final Object MAGIC_ROW_HEADER_ID = new Object();
+
     /* Private table extensions to Select */
 
     /**
@@ -723,17 +726,22 @@ public class Table extends AbstractSelect implements Action.Container,
      * Column can either have a fixed width or expand ratio. The latter one set
      * is used. See @link {@link #setColumnExpandRatio(Object, float)}.
      * 
-     * @param columnId
+     * @param propertyId
      *            colunmns property id
      * @param width
      *            width to be reserved for colunmns content
      * @since 4.0.3
      */
-    public void setColumnWidth(Object columnId, int width) {
+    public void setColumnWidth(Object propertyId, int width) {
+        if (propertyId == null) {
+            // Since propertyId is null, this is the row header. Use the magic
+            // id to store the width of the row header.
+            propertyId = MAGIC_ROW_HEADER_ID;
+        }
         if (width < 0) {
-            columnWidths.remove(columnId);
+            columnWidths.remove(propertyId);
         } else {
-            columnWidths.put(columnId, Integer.valueOf(width));
+            columnWidths.put(propertyId, Integer.valueOf(width));
         }
     }
 
@@ -764,19 +772,19 @@ public class Table extends AbstractSelect implements Action.Container,
      * implementation.
      * 
      * <p>
-     * If terminal implementation supports re-sizeable columns the column
-     * becomes fixed width column if users resizes the column.
+     * If terminal implementation supports re-sizable columns the column becomes
+     * fixed width column if users resizes the column.
      * 
-     * @param columnId
-     *            colunmns property id
+     * @param propertyId
+     *            columns property id
      * @param expandRatio
      *            the expandRatio used to divide excess space for this column
      */
-    public void setColumnExpandRatio(Object columnId, float expandRatio) {
+    public void setColumnExpandRatio(Object propertyId, float expandRatio) {
         if (expandRatio < 0) {
-            columnWidths.remove(columnId);
+            columnWidths.remove(propertyId);
         } else {
-            columnWidths.put(columnId, new Float(expandRatio));
+            columnWidths.put(propertyId, new Float(expandRatio));
         }
     }
 
@@ -794,9 +802,14 @@ public class Table extends AbstractSelect implements Action.Container,
      * Gets the pixel width of column
      * 
      * @param propertyId
-     * @return width of colun or -1 when value not set
+     * @return width of column or -1 when value not set
      */
     public int getColumnWidth(Object propertyId) {
+        if (propertyId == null) {
+            // Since propertyId is null, this is the row header. Use the magic
+            // id to retrieve the width of the row header.
+            propertyId = MAGIC_ROW_HEADER_ID;
+        }
         final Object width = columnWidths.get(propertyId);
         if (width == null || !(width instanceof Integer)) {
             return -1;
@@ -1029,7 +1042,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Sets the column header for the specified column;
      * 
      * @param propertyId
-     *            the propertyId indentifying the column.
+     *            the propertyId identifying the column.
      * @param header
      *            the header to set.
      */
@@ -1985,7 +1998,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         handleClickEvent(variables);
 
-        handleColumnResizeEvent(variables);
+        handleColumnResizeEvents(variables);
 
         disableContentRefreshing();
 
@@ -2215,36 +2228,60 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @param variables
      */
-    private void handleColumnResizeEvent(Map<String, Object> variables) {
-        if (variables.containsKey("columnResizeEventColumn")) {
-            Object cid = variables.get("columnResizeEventColumn");
-            Object propertyId = null;
-            if (cid != null) {
-                propertyId = columnIdMap.get(cid.toString());
-            }
-
-            Object prev = variables.get("columnResizeEventPrev");
-            int previousWidth = -1;
-            if (prev != null) {
-                previousWidth = Integer.valueOf(prev.toString());
-            }
-
-            Object curr = variables.get("columnResizeEventCurr");
-            int currentWidth = -1;
-            if (curr != null) {
-                currentWidth = Integer.valueOf(curr.toString());
-            }
-
-            /*
-             * Update the sizes on the server side. If a column previously had a
-             * expand ratio and the user resized the column then the expand
-             * ratio will be turned into a static pixel size.
-             */
-            setColumnWidth(propertyId, currentWidth);
-
-            fireEvent(new ColumnResizeEvent(this, propertyId, previousWidth,
-                    currentWidth));
+    private void handleColumnResizeEvents(Map<String, Object> variables) {
+        if (variables.containsKey("columnResizeEvents")) {
+            handleMultipleColumnResizeEvents(variables);
         }
+        if (variables.containsKey("columnResizeEventColumn")) {
+            handleSingleColumnResizeEvent(variables);
+        }
+    }
+
+    private void handleSingleColumnResizeEvent(Map<String, Object> variables) {
+        Object cid = variables.get("columnResizeEventColumn");
+        Object propertyId = null;
+        if (cid != null) {
+            propertyId = columnIdMap.get(cid.toString());
+        }
+
+        Object prev = variables.get("columnResizeEventPrev");
+        int previousWidth = -1;
+        if (prev != null) {
+            previousWidth = Integer.valueOf(prev.toString());
+        }
+
+        Object curr = variables.get("columnResizeEventCurr");
+        int currentWidth = -1;
+        if (curr != null) {
+            currentWidth = Integer.valueOf(curr.toString());
+        }
+
+        fireColumnResizeEvent(propertyId, previousWidth, currentWidth);
+    }
+
+    private void handleMultipleColumnResizeEvents(Map<String, Object> variables) {
+        String[] events = (String[]) variables.get("columnResizeEvents");
+        for (String str : events) {
+            String[] eventDetails = str.split(":");
+            Object propertyId = columnIdMap.get(eventDetails[0]);
+            int curWidth = Integer.valueOf(eventDetails[1]);
+            int prevWidth = getColumnWidth(propertyId);
+
+            fireColumnResizeEvent(propertyId, prevWidth, curWidth);
+        }
+    }
+
+    private void fireColumnResizeEvent(Object propertyId, int previousWidth,
+            int currentWidth) {
+        /*
+         * Update the sizes on the server side. If a column previously had a
+         * expand ratio and the user resized the column then the expand ratio
+         * will be turned into a static pixel size.
+         */
+        setColumnWidth(propertyId, currentWidth);
+
+        fireEvent(new ColumnResizeEvent(this, propertyId, previousWidth,
+                currentWidth));
     }
 
     /**
@@ -2377,7 +2414,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (colheads) {
             target.addAttribute("colheaders", true);
         }
-        if (getRowHeaderMode() != ROW_HEADER_MODE_HIDDEN) {
+        if (rowHeadersAreEnabled()) {
             target.addAttribute("rowheaders", true);
         }
 
@@ -2540,6 +2577,12 @@ public class Table extends AbstractSelect implements Action.Container,
             target.addVariable(this, "collapsedcolumns", collapsedkeys);
         }
         target.startTag("visiblecolumns");
+        if (rowHeadersAreEnabled()) {
+            target.startTag("column");
+            target.addAttribute("cid", ROW_HEADER_COLUMN_ID);
+            paintColumnWidth(target, MAGIC_ROW_HEADER_ID);
+            target.endTag("column");
+        }
         int i = 0;
         for (final Iterator<Object> it = visibleColumns.iterator(); it
                 .hasNext(); i++) {
@@ -2565,15 +2608,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 if (!ALIGN_LEFT.equals(getColumnAlignment(columnId))) {
                     target.addAttribute("align", getColumnAlignment(columnId));
                 }
-                if (columnWidths.containsKey(columnId)) {
-                    if (getColumnWidth(columnId) > -1) {
-                        target.addAttribute("width",
-                                String.valueOf(getColumnWidth(columnId)));
-                    } else {
-                        target.addAttribute("er",
-                                getColumnExpandRatio(columnId));
-                    }
-                }
+                paintColumnWidth(target, columnId);
                 target.endTag("column");
             }
         }
@@ -2582,6 +2617,22 @@ public class Table extends AbstractSelect implements Action.Container,
         if (dropHandler != null) {
             dropHandler.getAcceptCriterion().paint(target);
         }
+    }
+
+    private void paintColumnWidth(PaintTarget target, final Object columnId)
+            throws PaintException {
+        if (columnWidths.containsKey(columnId)) {
+            if (getColumnWidth(columnId) > -1) {
+                target.addAttribute("width",
+                        String.valueOf(getColumnWidth(columnId)));
+            } else {
+                target.addAttribute("er", getColumnExpandRatio(columnId));
+            }
+        }
+    }
+
+    private boolean rowHeadersAreEnabled() {
+        return getRowHeaderMode() != ROW_HEADER_MODE_HIDDEN;
     }
 
     private void paintRow(PaintTarget target, final Object[][] cells,
@@ -2677,7 +2728,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     protected void paintRowHeader(PaintTarget target, Object[][] cells,
             int indexInRowbuffer) throws PaintException {
-        if (getRowHeaderMode() != ROW_HEADER_MODE_HIDDEN) {
+        if (rowHeadersAreEnabled()) {
             if (cells[CELL_HEADER][indexInRowbuffer] != null) {
                 target.addAttribute("caption",
                         (String) cells[CELL_HEADER][indexInRowbuffer]);
@@ -2688,7 +2739,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     protected void paintRowIcon(PaintTarget target, final Object[][] cells,
             int indexInRowbuffer) throws PaintException {
-        if (getRowHeaderMode() != ROW_HEADER_MODE_HIDDEN
+        if (rowHeadersAreEnabled()
                 && cells[CELL_ICON][indexInRowbuffer] != null) {
             target.addAttribute("icon",
                     (Resource) cells[CELL_ICON][indexInRowbuffer]);

@@ -102,6 +102,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         VHasDropHandler, FocusHandler, BlurHandler, Focusable, ActionOwner {
 
+    private static final String ROW_HEADER_COLUMN_KEY = "0";
     public static final String CLASSNAME = "v-table";
     public static final String CLASSNAME_SELECTION_FOCUS = CLASSNAME + "-focus";
 
@@ -500,6 +501,24 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         client.updateVariable(paintableId, "columnResizeEventCurr", newWidth,
                 immediate);
 
+    }
+
+    /**
+     * Non-immediate variable update of column resize events for a bunch of
+     * columns.
+     * 
+     * @param columns
+     *            the columns to trigger the events for.
+     */
+    private void enqueueColumnResizeEventsForColumns(
+            Collection<HeaderCell> columns) {
+        String[] newSizes = new String[columns.size()];
+        int ix = 0;
+        for (HeaderCell cell : columns) {
+            newSizes[ix++] = cell.getColKey() + ":" + cell.getWidth();
+        }
+        client.updateVariable(paintableId, "columnResizeEvents", newSizes,
+                false);
     }
 
     /**
@@ -1162,14 +1181,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         int visibleCols = strings.length;
         int colIndex = 0;
         if (showRowHeaders) {
-            tHead.enableColumn("0", colIndex);
+            tHead.enableColumn(ROW_HEADER_COLUMN_KEY, colIndex);
             visibleCols++;
             visibleColOrder = new String[visibleCols];
-            visibleColOrder[colIndex] = "0";
+            visibleColOrder[colIndex] = ROW_HEADER_COLUMN_KEY;
             colIndex++;
         } else {
             visibleColOrder = new String[visibleCols];
-            tHead.removeCell("0");
+            tHead.removeCell(ROW_HEADER_COLUMN_KEY);
         }
 
         int i;
@@ -1201,10 +1220,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         // Add dummy column if row headers are present
         int colIndex = 0;
         if (showRowHeaders) {
-            tFoot.enableColumn("0", colIndex);
+            tFoot.enableColumn(ROW_HEADER_COLUMN_KEY, colIndex);
             colIndex++;
         } else {
-            tFoot.removeCell("0");
+            tFoot.removeCell(ROW_HEADER_COLUMN_KEY);
         }
 
         int i;
@@ -1267,7 +1286,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      */
     private int getColIndexByKey(String colKey) {
         // return 0 if asked for rowHeaders
-        if ("0".equals(colKey)) {
+        if (ROW_HEADER_COLUMN_KEY.equals(colKey)) {
             return 0;
         }
         for (int i = 0; i < visibleColOrder.length; i++) {
@@ -1978,6 +1997,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             setAlign(ALIGN_LEFT);
         }
 
+        public void disableAutoWidthCalculation() {
+            definedWidth = true;
+            expandRatio = 0;
+        }
+
         public void setWidth(int w, boolean ensureDefinedWidth) {
             if (ensureDefinedWidth) {
                 definedWidth = true;
@@ -2276,9 +2300,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             case Event.ONMOUSEUP:
                 isResizing = false;
                 DOM.releaseCapture(getElement());
-                // readjust undefined width columns
-                lazyAdjustColumnWidths.cancel();
-                lazyAdjustColumnWidths.schedule(1);
+                tHead.disableAutoColumnWidthCalculation(this);
                 fireColumnResizeEvent(cid, originalWidth, getColWidth(cid));
                 break;
             case Event.ONMOUSEMOVE:
@@ -2403,7 +2425,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     public class RowHeadersHeaderCell extends HeaderCell {
 
         RowHeadersHeaderCell() {
-            super("0", "");
+            super(ROW_HEADER_COLUMN_KEY, "");
             this.setStyleName(CLASSNAME + "-header-cell-rowheader");
         }
 
@@ -2459,7 +2481,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             DOM.sinkEvents(columnSelector, Event.ONCLICK);
 
-            availableCells.put("0", new RowHeadersHeaderCell());
+            availableCells.put(ROW_HEADER_COLUMN_KEY,
+                    new RowHeadersHeaderCell());
         }
 
         @Override
@@ -2468,13 +2491,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 removeCell(cid);
             }
             availableCells.clear();
-            availableCells.put("0", new RowHeadersHeaderCell());
+            availableCells.put(ROW_HEADER_COLUMN_KEY,
+                    new RowHeadersHeaderCell());
         }
 
         public void updateCellsFromUIDL(UIDL uidl) {
             Iterator<?> it = uidl.getChildIterator();
             HashSet<String> updated = new HashSet<String>();
-            updated.add("0");
             while (it.hasNext()) {
                 final UIDL col = (UIDL) it.next();
                 final String cid = col.getStringAttribute("cid");
@@ -2828,6 +2851,22 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
             return aligns;
         }
+
+        /**
+         * Disables the automatic calculation of all column widths by forcing
+         * the widths to be "defined" thus turning off expand ratios and such.
+         */
+        public void disableAutoColumnWidthCalculation(HeaderCell source) {
+            for (HeaderCell cell : availableCells.values()) {
+                cell.disableAutoWidthCalculation();
+            }
+            // fire column resize events for all columns but the source of the
+            // resize action, since an event will fire separately for this.
+            ArrayList<HeaderCell> columns = new ArrayList<HeaderCell>(
+                    availableCells.values());
+            columns.remove(source);
+            enqueueColumnResizeEventsForColumns(columns);
+        }
     }
 
     /**
@@ -3136,7 +3175,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     public class RowHeadersFooterCell extends FooterCell {
 
         RowHeadersFooterCell() {
-            super("0", "");
+            super(ROW_HEADER_COLUMN_KEY, "");
         }
 
         @Override
@@ -3178,7 +3217,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             setStyleName(CLASSNAME + "-footer-wrap");
 
-            availableCells.put("0", new RowHeadersFooterCell());
+            availableCells.put(ROW_HEADER_COLUMN_KEY,
+                    new RowHeadersFooterCell());
         }
 
         @Override
@@ -3187,7 +3227,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 removeCell(cid);
             }
             availableCells.clear();
-            availableCells.put("0", new RowHeadersFooterCell());
+            availableCells.put(ROW_HEADER_COLUMN_KEY,
+                    new RowHeadersFooterCell());
         }
 
         /*
@@ -3253,13 +3294,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         public void updateCellsFromUIDL(UIDL uidl) {
             Iterator<?> columnIterator = uidl.getChildIterator();
             HashSet<String> updated = new HashSet<String>();
-            updated.add("0");
             while (columnIterator.hasNext()) {
                 final UIDL col = (UIDL) columnIterator.next();
                 final String cid = col.getStringAttribute("cid");
                 updated.add(cid);
 
-                String caption = col.getStringAttribute("fcaption");
+                String caption = col.hasAttribute("fcaption") ? col
+                        .getStringAttribute("fcaption") : "";
                 FooterCell c = getFooterCell(cid);
                 if (c == null) {
                     c = new FooterCell(cid, caption);
@@ -5117,7 +5158,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * @return html snippet containing possibly an icon + caption text
      */
     protected String buildCaptionHtmlSnippet(UIDL uidl) {
-        String s = uidl.getStringAttribute("caption");
+        String s = uidl.hasAttribute("caption") ? uidl
+                .getStringAttribute("caption") : "";
         if (uidl.hasAttribute("icon")) {
             s = "<img src=\""
                     + client.translateVaadinUri(uidl.getStringAttribute("icon"))
