@@ -443,17 +443,10 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             if (st.countTokens() == 2) {
                 final Object itemId = itemIdMapper.get(st.nextToken());
                 final Action action = (Action) actionMapper.get(st.nextToken());
-                if (action != null && containsId(itemId)
+                if (action != null && (itemId == null || containsId(itemId))
                         && actionHandlers != null) {
-                    // Item action
                     for (Handler ah : actionHandlers) {
                         ah.handleAction(action, this, itemId);
-                    }
-                } else if (action != null && actionHandlers != null
-                        && itemId == null) {
-                    // Body action
-                    for (Handler ah : actionHandlers) {
-                        ah.handleAction(action, this, null);
                     }
                 }
             }
