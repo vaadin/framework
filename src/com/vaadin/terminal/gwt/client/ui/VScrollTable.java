@@ -2498,6 +2498,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         public void updateCellsFromUIDL(UIDL uidl) {
             Iterator<?> it = uidl.getChildIterator();
             HashSet<String> updated = new HashSet<String>();
+            updated.add(ROW_HEADER_COLUMN_KEY);
             while (it.hasNext()) {
                 final UIDL col = (UIDL) it.next();
                 final String cid = col.getStringAttribute("cid");
@@ -3294,6 +3295,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         public void updateCellsFromUIDL(UIDL uidl) {
             Iterator<?> columnIterator = uidl.getChildIterator();
             HashSet<String> updated = new HashSet<String>();
+            updated.add(ROW_HEADER_COLUMN_KEY);
             while (columnIterator.hasNext()) {
                 final UIDL col = (UIDL) columnIterator.next();
                 final String cid = col.getStringAttribute("cid");
