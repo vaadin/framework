@@ -2141,16 +2141,14 @@ public class Table extends AbstractSelect implements Action.Container,
                 if (action != null && containsId(itemId)
                         && actionHandlers != null) {
                     // Item action
-                    for (final Iterator<Handler> i = actionHandlers.iterator(); i
-                            .hasNext();) {
-                        (i.next()).handleAction(action, this, itemId);
+                    for (Handler ah : actionHandlers) {
+                        ah.handleAction(action, this, itemId);
                     }
                 } else if (action != null && actionHandlers != null
                         && itemId == null) {
                     // Body action
-                    for (final Iterator<Handler> i = actionHandlers.iterator(); i
-                            .hasNext();) {
-                        (i.next()).handleAction(action, this, null);
+                    for (Handler ah : actionHandlers) {
+                        ah.handleAction(action, this, null);
                     }
                 }
             }
@@ -2392,12 +2390,10 @@ public class Table extends AbstractSelect implements Action.Container,
         final Set<Action> actionSet = new LinkedHashSet<Action>();
         if (actionHandlers != null) {
             final ArrayList<String> keys = new ArrayList<String>();
-            for (final Iterator<Handler> ahi = actionHandlers.iterator(); ahi
-                    .hasNext();) {
-
+            for (Handler ah : actionHandlers) {
                 // Getting actions for the null item, which in this case means
                 // the body item
-                final Action[] aa = (ahi.next()).getActions(null, this);
+                final Action[] aa = ah.getActions(null, this);
                 if (aa != null) {
                     for (int ai = 0; ai < aa.length; ai++) {
                         final String key = actionMapper.key(aa[ai]);
@@ -2652,9 +2648,8 @@ public class Table extends AbstractSelect implements Action.Container,
         // Actions
         if (actionHandlers != null) {
             final ArrayList<String> keys = new ArrayList<String>();
-            for (final Iterator<Handler> ahi = actionHandlers.iterator(); ahi
-                    .hasNext();) {
-                final Action[] aa = (ahi.next()).getActions(itemId, this);
+            for (Handler ah : actionHandlers) {
+                final Action[] aa = ah.getActions(itemId, this);
                 if (aa != null) {
                     for (int ai = 0; ai < aa.length; ai++) {
                         final String key = actionMapper.key(aa[ai]);
