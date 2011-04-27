@@ -385,7 +385,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
                 break;
             case FILTERINGMODE_CONTAINS:
                 filter = new SimpleStringFilter(getItemCaptionPropertyId(),
-                        filterString, true, true);
+                        filterString, true, false);
                 break;
             }
         }
