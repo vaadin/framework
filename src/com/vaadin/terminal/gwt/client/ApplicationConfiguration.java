@@ -48,6 +48,7 @@ public class ApplicationConfiguration implements EntryPoint {
     private String authorizationErrorCaption;
     private String authorizationErrorMessage;
     private String authorizationErrorUrl;
+    private String requiredWidgetset;
     private boolean useDebugIdInDom = true;
     private boolean usePortletURLs = false;
     private String portletUidlURLBase;
@@ -140,6 +141,10 @@ public class ApplicationConfiguration implements EntryPoint {
         return authorizationErrorUrl;
     }
 
+    public String getRequiredWidgetset() {
+        return requiredWidgetset;
+    }
+
     private native void loadFromDOM()
     /*-{
 
@@ -180,6 +185,9 @@ public class ApplicationConfiguration implements EntryPoint {
             if (jsobj.standalone) {
                 this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::standalone = true;
             }
+            if (jsobj.widgetset) {
+                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::requiredWidgetset = jsobj.widgetset;
+            }
         } else {
             $wnd.alert("Vaadin app failed to initialize: " + this.id);
         }
@@ -202,12 +210,36 @@ public class ApplicationConfiguration implements EntryPoint {
         for (Iterator<String> it = appIds.iterator(); it.hasNext();) {
             String appId = it.next();
             ApplicationConfiguration appConf = getConfigFromDOM(appId);
-            ApplicationConnection a = GWT.create(ApplicationConnection.class);
-            a.init(widgetSet, appConf);
-            unstartedApplications.add(a);
+            if (canStartApplication(appConf)) {
+                ApplicationConnection a = GWT
+                        .create(ApplicationConnection.class);
+                a.init(widgetSet, appConf);
+                unstartedApplications.add(a);
+                consumeApplication(appId);
+            } else {
+                VConsole.log("Application "
+                        + appId
+                        + " was not started. Provided widgetset did not match with this module.");
+            }
         }
 
         deferredWidgetLoadLoop.scheduleRepeating(100);
+    }
+
+    /**
+     * Marks an applicatin with given id to be initialized. Suggesting other
+     * modules should not try to start this application anymore.
+     * 
+     * @param appId
+     */
+    private native static void consumeApplication(String appId)
+    /*-{
+         $wnd.vaadin.vaadinConfigurations[appId].initialized = true;
+    }-*/;
+
+    private static boolean canStartApplication(ApplicationConfiguration appConf) {
+        return appConf.getRequiredWidgetset() == null
+                || appConf.getRequiredWidgetset().equals(GWT.getModuleName());
     }
 
     /**
@@ -237,7 +269,9 @@ public class ApplicationConfiguration implements EntryPoint {
     /*-{
          var j;
          for(j in $wnd.vaadin.vaadinConfigurations) {
-             list.@java.util.Collection::add(Ljava/lang/Object;)(j);
+             if(!$wnd.vaadin.vaadinConfigurations[j].initialized) {
+                 list.@java.util.Collection::add(Ljava/lang/Object;)(j);
+             }
          }
      }-*/;
 
