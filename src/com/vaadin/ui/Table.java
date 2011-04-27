@@ -2236,21 +2236,21 @@ public class Table extends AbstractSelect implements Action.Container,
         Object propertyId = null;
         if (cid != null) {
             propertyId = columnIdMap.get(cid.toString());
-        }
 
-        Object prev = variables.get("columnResizeEventPrev");
-        int previousWidth = -1;
-        if (prev != null) {
-            previousWidth = Integer.valueOf(prev.toString());
-        }
+            Object prev = variables.get("columnResizeEventPrev");
+            int previousWidth = -1;
+            if (prev != null) {
+                previousWidth = Integer.valueOf(prev.toString());
+            }
 
-        Object curr = variables.get("columnResizeEventCurr");
-        int currentWidth = -1;
-        if (curr != null) {
-            currentWidth = Integer.valueOf(curr.toString());
-        }
+            Object curr = variables.get("columnResizeEventCurr");
+            int currentWidth = -1;
+            if (curr != null) {
+                currentWidth = Integer.valueOf(curr.toString());
+            }
 
-        fireColumnResizeEvent(propertyId, previousWidth, currentWidth);
+            fireColumnResizeEvent(propertyId, previousWidth, currentWidth);
+        }
     }
 
     private void handleMultipleColumnResizeEvents(Map<String, Object> variables) {
@@ -2258,10 +2258,12 @@ public class Table extends AbstractSelect implements Action.Container,
         for (String str : events) {
             String[] eventDetails = str.split(":");
             Object propertyId = columnIdMap.get(eventDetails[0]);
-            int curWidth = Integer.valueOf(eventDetails[1]);
-            int prevWidth = getColumnWidth(propertyId);
+            if (propertyId != null) {
+                int curWidth = Integer.valueOf(eventDetails[1]);
+                int prevWidth = getColumnWidth(propertyId);
 
-            fireColumnResizeEvent(propertyId, prevWidth, curWidth);
+                fireColumnResizeEvent(propertyId, prevWidth, curWidth);
+            }
         }
     }
 
