@@ -171,7 +171,7 @@ public class ApplicationConnection {
 
         initializeClientHooks();
 
-        view.init(cnf.getRootPanelId());
+        view.init(cnf.getRootPanelId(), this);
         showLoadingIndicator();
     }
 

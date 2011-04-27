@@ -1854,6 +1854,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             page.write("windowName: \""
                     + JsonPaintTarget.escapeJSON(window.getName()) + "\", ");
         }
+        if (isStandalone()) {
+            page.write("standalone: true, ");
+        }
         page.write("themeUri:");
         page.write(themeUri != null ? "\"" + themeUri + "\"" : "null");
         page.write(", versionInfo : {vaadinVersion:\"");
@@ -1925,6 +1928,15 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         page.write("setTimeout('if (typeof " + widgetset.replace('.', '_')
                 + " == \"undefined\") {alert(\"Failed to load the widgetset: "
                 + widgetsetFilePath + "\")};',15000);\n" + "//]]>\n</script>\n");
+    }
+
+    /**
+     * @return true if the served application is considered to be the only or
+     *         main content of the host page. E.g. various embedding solutions
+     *         should override this to false.
+     */
+    protected boolean isStandalone() {
+        return true;
     }
 
     /**

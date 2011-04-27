@@ -680,7 +680,8 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         return windows;
     }
 
-    public void init(String rootPanelId) {
+    public void init(String rootPanelId,
+            ApplicationConnection applicationConnection) {
         DOM.sinkEvents(getElement(), Event.ONKEYDOWN | Event.ONSCROLL);
 
         // iview is focused when created so element needs tabIndex
@@ -698,25 +699,11 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
         root.add(this);
 
-        BrowserInfo browser = BrowserInfo.get();
-
-        // set focus to iview element by default to listen possible keyboard
-        // shortcuts
-        if (browser.isOpera() || browser.isSafari()
-                && browser.getWebkitVersion() < 526) {
-            // old webkits don't support focusing div elements
-            Element fElem = DOM.createInputCheck();
-            DOM.setStyleAttribute(fElem, "margin", "0");
-            DOM.setStyleAttribute(fElem, "padding", "0");
-            DOM.setStyleAttribute(fElem, "border", "0");
-            DOM.setStyleAttribute(fElem, "outline", "0");
-            DOM.setStyleAttribute(fElem, "width", "1px");
-            DOM.setStyleAttribute(fElem, "height", "1px");
-            DOM.setStyleAttribute(fElem, "position", "absolute");
-            DOM.setStyleAttribute(fElem, "opacity", "0.1");
-            DOM.appendChild(getElement(), fElem);
-            fElem.focus();
-        } else {
+        if (applicationConnection.getConfiguration().isStandalone()) {
+            // set focus to iview element by default to listen possible keyboard
+            // shortcuts. For embedded applications this is unacceptable as we
+            // don't want to steal focus from the main page nor we don't want
+            // side-effects from focusing (scrollIntoView).
             getElement().focus();
         }
 

@@ -41,6 +41,7 @@ public class ApplicationConfiguration implements EntryPoint {
     private String appUri;
     private JavaScriptObject versionInfo;
     private String windowName;
+    private boolean standalone;
     private String communicationErrorCaption;
     private String communicationErrorMessage;
     private String communicationErrorUrl;
@@ -93,6 +94,14 @@ public class ApplicationConfiguration implements EntryPoint {
 
     public void setAppId(String appId) {
         id = appId;
+    }
+
+    /**
+     * @return true if the application is served by std. Vaadin servlet and is
+     *         considered to be the only or main content of the host page.
+     */
+    public boolean isStandalone() {
+        return standalone;
     }
 
     public void setInitialWindowName(String name) {
@@ -167,6 +176,9 @@ public class ApplicationConfiguration implements EntryPoint {
             }
             if (jsobj.portletUidlURLBase) {
                 this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::portletUidlURLBase = jsobj.portletUidlURLBase;
+            }
+            if (jsobj.standalone) {
+                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::standalone = true;
             }
         } else {
             $wnd.alert("Vaadin app failed to initialize: " + this.id);
