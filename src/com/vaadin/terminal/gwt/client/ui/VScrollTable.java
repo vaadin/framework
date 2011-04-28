@@ -2315,6 +2315,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         newWidth = getMinWidth();
                     }
                     setColWidth(colIndex, newWidth, true);
+                    forceRealignColumnHeaders();
                 }
                 break;
             default:
