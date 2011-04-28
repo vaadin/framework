@@ -202,8 +202,8 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     private static final double CACHE_RATE_DEFAULT = 2;
 
-    private static final String ROW_HEADER_COLUMN_ID = "0";
-    private static final Object MAGIC_ROW_HEADER_ID = new Object();
+    private static final String ROW_HEADER_COLUMN_KEY = "0";
+    private static final Object ROW_HEADER_FAKE_PROPERTY_ID = new Object();
 
     /* Private table extensions to Select */
 
@@ -736,7 +736,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (propertyId == null) {
             // Since propertyId is null, this is the row header. Use the magic
             // id to store the width of the row header.
-            propertyId = MAGIC_ROW_HEADER_ID;
+            propertyId = ROW_HEADER_FAKE_PROPERTY_ID;
         }
         if (width < 0) {
             columnWidths.remove(propertyId);
@@ -808,7 +808,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (propertyId == null) {
             // Since propertyId is null, this is the row header. Use the magic
             // id to retrieve the width of the row header.
-            propertyId = MAGIC_ROW_HEADER_ID;
+            propertyId = ROW_HEADER_FAKE_PROPERTY_ID;
         }
         final Object width = columnWidths.get(propertyId);
         if (width == null || !(width instanceof Integer)) {
@@ -1998,7 +1998,9 @@ public class Table extends AbstractSelect implements Action.Container,
 
         handleClickEvent(variables);
 
-        handleColumnResizeEvents(variables);
+        handleColumnResizeEvent(variables);
+
+        handleColumnWidthUpdates(variables);
 
         disableContentRefreshing();
 
@@ -2222,47 +2224,26 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @param variables
      */
-    private void handleColumnResizeEvents(Map<String, Object> variables) {
-        if (variables.containsKey("columnResizeEvents")) {
-            handleMultipleColumnResizeEvents(variables);
-        }
+    private void handleColumnResizeEvent(Map<String, Object> variables) {
         if (variables.containsKey("columnResizeEventColumn")) {
-            handleSingleColumnResizeEvent(variables);
-        }
-    }
+            Object cid = variables.get("columnResizeEventColumn");
+            Object propertyId = null;
+            if (cid != null) {
+                propertyId = columnIdMap.get(cid.toString());
 
-    private void handleSingleColumnResizeEvent(Map<String, Object> variables) {
-        Object cid = variables.get("columnResizeEventColumn");
-        Object propertyId = null;
-        if (cid != null) {
-            propertyId = columnIdMap.get(cid.toString());
+                Object prev = variables.get("columnResizeEventPrev");
+                int previousWidth = -1;
+                if (prev != null) {
+                    previousWidth = Integer.valueOf(prev.toString());
+                }
 
-            Object prev = variables.get("columnResizeEventPrev");
-            int previousWidth = -1;
-            if (prev != null) {
-                previousWidth = Integer.valueOf(prev.toString());
-            }
+                Object curr = variables.get("columnResizeEventCurr");
+                int currentWidth = -1;
+                if (curr != null) {
+                    currentWidth = Integer.valueOf(curr.toString());
+                }
 
-            Object curr = variables.get("columnResizeEventCurr");
-            int currentWidth = -1;
-            if (curr != null) {
-                currentWidth = Integer.valueOf(curr.toString());
-            }
-
-            fireColumnResizeEvent(propertyId, previousWidth, currentWidth);
-        }
-    }
-
-    private void handleMultipleColumnResizeEvents(Map<String, Object> variables) {
-        String[] events = (String[]) variables.get("columnResizeEvents");
-        for (String str : events) {
-            String[] eventDetails = str.split(":");
-            Object propertyId = columnIdMap.get(eventDetails[0]);
-            if (propertyId != null) {
-                int curWidth = Integer.valueOf(eventDetails[1]);
-                int prevWidth = getColumnWidth(propertyId);
-
-                fireColumnResizeEvent(propertyId, prevWidth, curWidth);
+                fireColumnResizeEvent(propertyId, previousWidth, currentWidth);
             }
         }
     }
@@ -2278,6 +2259,21 @@ public class Table extends AbstractSelect implements Action.Container,
 
         fireEvent(new ColumnResizeEvent(this, propertyId, previousWidth,
                 currentWidth));
+    }
+
+    private void handleColumnWidthUpdates(Map<String, Object> variables) {
+        if (variables.containsKey("columnWidthUpdates")) {
+            String[] events = (String[]) variables.get("columnWidthUpdates");
+            for (String str : events) {
+                String[] eventDetails = str.split(":");
+                Object propertyId = columnIdMap.get(eventDetails[0]);
+                if (propertyId == null) {
+                    propertyId = ROW_HEADER_FAKE_PROPERTY_ID;
+                }
+                int width = Integer.valueOf(eventDetails[1]);
+                setColumnWidth(propertyId, width);
+            }
+        }
     }
 
     /**
@@ -2575,8 +2571,8 @@ public class Table extends AbstractSelect implements Action.Container,
         target.startTag("visiblecolumns");
         if (rowHeadersAreEnabled()) {
             target.startTag("column");
-            target.addAttribute("cid", ROW_HEADER_COLUMN_ID);
-            paintColumnWidth(target, MAGIC_ROW_HEADER_ID);
+            target.addAttribute("cid", ROW_HEADER_COLUMN_KEY);
+            paintColumnWidth(target, ROW_HEADER_FAKE_PROPERTY_ID);
             target.endTag("column");
         }
         int i = 0;

@@ -103,6 +103,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         VHasDropHandler, FocusHandler, BlurHandler, Focusable, ActionOwner {
 
     private static final String ROW_HEADER_COLUMN_KEY = "0";
+
     public static final String CLASSNAME = "v-table";
     public static final String CLASSNAME_SELECTION_FOCUS = CLASSNAME + "-focus";
 
@@ -504,20 +505,19 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     }
 
     /**
-     * Non-immediate variable update of column resize events for a bunch of
+     * Non-immediate variable update of column widths for a collection of
      * columns.
      * 
      * @param columns
      *            the columns to trigger the events for.
      */
-    private void enqueueColumnResizeEventsForColumns(
-            Collection<HeaderCell> columns) {
+    private void sendColumnWidthUpdates(Collection<HeaderCell> columns) {
         String[] newSizes = new String[columns.size()];
         int ix = 0;
         for (HeaderCell cell : columns) {
             newSizes[ix++] = cell.getColKey() + ":" + cell.getWidth();
         }
-        client.updateVariable(paintableId, "columnResizeEvents", newSizes,
+        client.updateVariable(paintableId, "columnWidthUpdates", newSizes,
                 false);
     }
 
@@ -2498,7 +2498,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         public void updateCellsFromUIDL(UIDL uidl) {
             Iterator<?> it = uidl.getChildIterator();
             HashSet<String> updated = new HashSet<String>();
-            updated.add(ROW_HEADER_COLUMN_KEY);
             while (it.hasNext()) {
                 final UIDL col = (UIDL) it.next();
                 final String cid = col.getStringAttribute("cid");
@@ -2866,7 +2865,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             ArrayList<HeaderCell> columns = new ArrayList<HeaderCell>(
                     availableCells.values());
             columns.remove(source);
-            enqueueColumnResizeEventsForColumns(columns);
+            sendColumnWidthUpdates(columns);
             forceRealignColumnHeaders();
         }
     }
@@ -3296,7 +3295,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         public void updateCellsFromUIDL(UIDL uidl) {
             Iterator<?> columnIterator = uidl.getChildIterator();
             HashSet<String> updated = new HashSet<String>();
-            updated.add(ROW_HEADER_COLUMN_KEY);
             while (columnIterator.hasNext()) {
                 final UIDL col = (UIDL) columnIterator.next();
                 final String cid = col.getStringAttribute("cid");
@@ -5024,14 +5022,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
     };
-    
+
     private void forceRealignColumnHeaders() {
         if (BrowserInfo.get().isIE()) {
             /*
-             * IE does not fire onscroll event if scroll position is
-             * reverted to 0 due to the content element size growth. Ensure
-             * headers are in sync with content manually. Safe to use null
-             * event as we don't actually use the event object in listener.
+             * IE does not fire onscroll event if scroll position is reverted to
+             * 0 due to the content element size growth. Ensure headers are in
+             * sync with content manually. Safe to use null event as we don't
+             * actually use the event object in listener.
              */
             onScroll(null);
         }
