@@ -2867,6 +2867,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     availableCells.values());
             columns.remove(source);
             enqueueColumnResizeEventsForColumns(columns);
+            forceRealignColumnHeaders();
         }
     }
 
@@ -5019,17 +5020,22 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
             });
 
-            if (BrowserInfo.get().isIE()) {
-                /*
-                 * IE does not fire onscroll event if scroll position is
-                 * reverted to 0 due to the content element size growth. Ensure
-                 * headers are in sync with content manually. Safe to use null
-                 * event as we don't actually use the event object in listener.
-                 */
-                onScroll(null);
-            }
+            forceRealignColumnHeaders();
         }
+
     };
+    
+    private void forceRealignColumnHeaders() {
+        if (BrowserInfo.get().isIE()) {
+            /*
+             * IE does not fire onscroll event if scroll position is
+             * reverted to 0 due to the content element size growth. Ensure
+             * headers are in sync with content manually. Safe to use null
+             * event as we don't actually use the event object in listener.
+             */
+            onScroll(null);
+        }
+    }
 
     /**
      * helper to set pixel size of head and body part
