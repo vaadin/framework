@@ -56,7 +56,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 /**
  * 
  */
-public class VTree extends SimpleFocusablePanel implements Paintable,
+public class VTree extends FocusElementPanel implements Paintable,
         VHasDropHandler, FocusHandler, BlurHandler, KeyPressHandler,
         KeyDownHandler, SubPartAware, ActionOwner {
 
@@ -152,6 +152,13 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
          * selection patch in IE
          */
         sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEUP | Event.ONKEYUP);
+
+        /*
+         * Re-set the tab index to make sure that the FocusElementPanel's
+         * (super) focus element gets the tab index and not the element
+         * containing the tree.
+         */
+        setTabIndex(0);
     }
 
     /*
@@ -628,6 +635,10 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
             }
         }
 
+        private boolean isIE6OrOpera() {
+            return BrowserInfo.get().isIE6() || BrowserInfo.get().isOpera();
+        }
+
         /**
          * Handles mouse selection
          * 
@@ -642,6 +653,15 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
             // always when clicking an item, focus it
             setFocusedNode(this, false);
+
+            if (!isIE6OrOpera()) {
+                /*
+                 * Ensure that the tree's focus element also gains focus
+                 * (TreeNodes focus is faked using FocusElementPanel in browsers
+                 * other than IE6 and Opera).
+                 */
+                focus();
+            }
 
             ScheduledCommand command = new ScheduledCommand() {
                 public void execute() {
@@ -810,10 +830,14 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
              * previously modified field may contain dirty variables.
              */
             if (!treeHasFocus) {
-                if (focusedNode == null) {
-                    getNodeByKey(key).setFocused(true);
+                if (isIE6OrOpera()) {
+                    if (focusedNode == null) {
+                        getNodeByKey(key).setFocused(true);
+                    } else {
+                        focusedNode.setFocused(true);
+                    }
                 } else {
-                    focusedNode.setFocused(true);
+                    focus();
                 }
             }
             final MouseEventDetails details = new MouseEventDetails(evt);
@@ -870,11 +894,13 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
             DOM.appendChild(nodeCaptionDiv, wrapper);
             DOM.appendChild(wrapper, nodeCaptionSpan);
 
-            /*
-             * Focus the caption div of the node to get keyboard navigation to
-             * work without scrolling up or down when focusing a node.
-             */
-            nodeCaptionDiv.setTabIndex(-1);
+            if (isIE6OrOpera()) {
+                /*
+                 * Focus the caption div of the node to get keyboard navigation
+                 * to work without scrolling up or down when focusing a node.
+                 */
+                nodeCaptionDiv.setTabIndex(-1);
+            }
 
             childNodeContainer = new FlowPanel();
             childNodeContainer.setStyleName(CLASSNAME + "-children");
@@ -1167,7 +1193,9 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                     ie6compatnode.addClassName(CLASSNAME_FOCUSED);
                 }
                 this.focused = focused;
-                nodeCaptionDiv.focus();
+                if (isIE6OrOpera()) {
+                    nodeCaptionDiv.focus();
+                }
                 treeHasFocus = true;
             } else if (this.focused && !focused) {
                 nodeCaptionDiv.removeClassName(CLASSNAME_FOCUSED);
@@ -1776,9 +1804,10 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                             focusedNode);
                     setFocusedNode(focusedNode.getParentNode());
                 } else {
-                    setSelected(focusedNode, false);
+                    TreeNode oldFocusedNode = focusedNode;
                     setFocusedNode(focusedNode.getParentNode());
                     setSelected(focusedNode, true);
+                    setSelected(oldFocusedNode, false);
                 }
             }
             return true;
@@ -1796,9 +1825,10 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                     setFocusedNode(focusedNode.getChildren().get(0));
                     setSelected(focusedNode, true);
                 } else {
-                    setSelected(focusedNode, false);
+                    TreeNode oldFocusedNode = focusedNode;
                     setFocusedNode(focusedNode.getChildren().get(0));
                     setSelected(focusedNode, true);
+                    setSelected(oldFocusedNode, false);
                 }
             }
             return true;
