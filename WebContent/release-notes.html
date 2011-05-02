@@ -73,6 +73,7 @@ contains a number of significant enhancements.</p>
 <ul>
   <li>The <tt>addContainerFilter()</tt> in <b>Container.Filterable</b> no longer accepts a filter string as a parameter, but a <b>Filter</b> object.</li>
   <li><tt>DateField</tt>s no longer sets invalidAllowed(false) by default. The new behavior is consistent with all other fields in Vaadin and with DateField in Vaadin 6.3 and earlier.</li>
+  <li>Top level windows no more gain focus automatically when the application is loaded in embedded hosting solutions like in Portals. Thus keyboard shortcuts might not work until a Vaadin component is focused either by user or via the server side API. (<a href="http://dev.vaadin.com/ticket/6724">#6724</a>)</li>
 </ul>
 
 <h3>Change Log, Future Releases, and Upgrading</h3>
