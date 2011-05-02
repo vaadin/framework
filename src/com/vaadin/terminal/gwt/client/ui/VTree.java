@@ -1804,10 +1804,7 @@ public class VTree extends FocusElementPanel implements Paintable,
                             focusedNode);
                     setFocusedNode(focusedNode.getParentNode());
                 } else {
-                    TreeNode oldFocusedNode = focusedNode;
-                    setFocusedNode(focusedNode.getParentNode());
-                    setSelected(focusedNode, true);
-                    setSelected(oldFocusedNode, false);
+                    focusAndSelectNode(focusedNode.getParentNode());
                 }
             }
             return true;
@@ -1825,10 +1822,7 @@ public class VTree extends FocusElementPanel implements Paintable,
                     setFocusedNode(focusedNode.getChildren().get(0));
                     setSelected(focusedNode, true);
                 } else {
-                    TreeNode oldFocusedNode = focusedNode;
-                    setFocusedNode(focusedNode.getChildren().get(0));
-                    setSelected(focusedNode, true);
-                    setSelected(oldFocusedNode, false);
+                    focusAndSelectNode(focusedNode.getChildren().get(0));
                 }
             }
             return true;
@@ -1877,6 +1871,24 @@ public class VTree extends FocusElementPanel implements Paintable,
         }
 
         return false;
+    }
+
+    private void focusAndSelectNode(TreeNode node) {
+        /*
+         * Keyboard navigation doesn't work reliably if the tree is in
+         * multiselect mode as well as isNullSelectionAllowed = false. It first
+         * tries to deselect the old focused node, which fails since there must
+         * be at least one selection. After this the newly focused node is
+         * selected and we've ended up with two selected nodes even though we
+         * only navigated with the arrow keys.
+         * 
+         * Because of this, we first select the next node and later de-select
+         * the old one.
+         */
+        TreeNode oldFocusedNode = focusedNode;
+        setFocusedNode(node);
+        setSelected(focusedNode, true);
+        setSelected(oldFocusedNode, false);
     }
 
     /**
