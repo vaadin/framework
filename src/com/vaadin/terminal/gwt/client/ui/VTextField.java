@@ -24,6 +24,7 @@ import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 
@@ -419,14 +420,15 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
      * @return true iff the value was updated
      */
     protected boolean updateCursorPosition() {
-        int cursorPos = getCursorPos();
-        if (lastCursorPos != cursorPos) {
-            client.updateVariable(id, VAR_CURSOR, cursorPos, false);
-            lastCursorPos = cursorPos;
-            return true;
-        } else {
-            return false;
+        if (Util.isAttachedAndDisplayed(this)) {
+            int cursorPos = getCursorPos();
+            if (lastCursorPos != cursorPos) {
+                client.updateVariable(id, VAR_CURSOR, cursorPos, false);
+                lastCursorPos = cursorPos;
+                return true;
+            }
         }
+        return false;
     }
 
     private static VTextField focusedTextField;

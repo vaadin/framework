@@ -1202,4 +1202,39 @@ public class Util {
        return null;
      }-*/
     ;
+
+    /**
+     * Kind of stronger version of isAttached(). In addition to std isAttached,
+     * this method checks that this widget nor any of its parents is hidden. Can
+     * be e.g used to check whether component should react to some events or
+     * not.
+     * 
+     * @param widget
+     * @return true if attached and displayed
+     */
+    public static boolean isAttachedAndDisplayed(Widget widget) {
+        if (widget.isAttached()) {
+            /*
+             * Failfast using offset size, then by iterating the widget tree
+             */
+            boolean notZeroSized = widget.getOffsetHeight() > 0
+                    || widget.getOffsetWidth() > 0;
+            return notZeroSized || checkVisibilityRecursively(widget);
+        } else {
+            return false;
+        }
+    }
+
+    private static boolean checkVisibilityRecursively(Widget widget) {
+        if (widget.isVisible()) {
+            Widget parent = widget.getParent();
+            if (parent == null) {
+                return true; // root panel
+            } else {
+                return checkVisibilityRecursively(parent);
+            }
+        } else {
+            return false;
+        }
+    }
 }
