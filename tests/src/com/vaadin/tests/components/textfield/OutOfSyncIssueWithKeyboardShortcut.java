@@ -69,7 +69,7 @@ public class OutOfSyncIssueWithKeyboardShortcut extends TestBase {
             mainLayout.setSecondComponent(form);
 
             form.setImmediate(true);
-            // TODO this is critical for the problem to occur
+            // this is critical for the problem to occur
             form.setWriteThrough(false);
 
             HorizontalLayout footer = new HorizontalLayout();
@@ -90,7 +90,6 @@ public class OutOfSyncIssueWithKeyboardShortcut extends TestBase {
                                         .replaceAll("[^0-9]", "");
                         if (!fragment.equals(previousFragment)) {
                             navigateTo(fragment);
-                            previousFragment = fragment;
                         }
                     }
                 }
@@ -104,23 +103,18 @@ public class OutOfSyncIssueWithKeyboardShortcut extends TestBase {
                         entity.setId(index++);
                         toppings.put(entity.getId(), entity);
                     }
+                    refreshTable();
                     navigateTo(null);
                 }
             });
 
             // create new entity at the beginning
+            refreshTable();
             navigateTo("new");
         }
 
         public void navigateTo(String requestedDataId) {
-            // refresh table
-            BeanContainer<Long, Topping> container = new BeanContainer<Long, Topping>(
-                    Topping.class);
-            container.setBeanIdProperty("id");
-            for (Topping entity : toppings.values()) {
-                container.addBean(entity);
-            }
-            table.setContainerDataSource(container);
+            previousFragment = requestedDataId;
 
             if ("new".equals(requestedDataId)) {
                 table.setValue(null);
@@ -139,6 +133,17 @@ public class OutOfSyncIssueWithKeyboardShortcut extends TestBase {
             } else {
                 setCurrentEntity(null);
             }
+        }
+
+        private void refreshTable() {
+            // refresh table
+            BeanContainer<Long, Topping> container = new BeanContainer<Long, Topping>(
+                    Topping.class);
+            container.setBeanIdProperty("id");
+            for (Topping entity : toppings.values()) {
+                container.addBean(entity);
+            }
+            table.setContainerDataSource(container);
         }
 
         protected void setCurrentEntity(Topping entity) {
@@ -174,11 +179,10 @@ public class OutOfSyncIssueWithKeyboardShortcut extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "Open the toppings view and create a new topping \"ham\".\n"
-                + "Select the topping in the table to edit it (might require two clicks due to #6833).\n"
-                + "Edit the name to \"ahm\" and press ENTER without first moving the focus out of the field. This triggers the Save button.\n"
-                + "Deselect the row in the table (needed because of #6833).\n"
-                + "An out of sync error is displayed, as there is a variable change for the text field that is no longer on the screen.";
+        return "Focus the text field and press ENTER.\n"
+                + "Click on the table row to edit it, change the text to \"ahm\" using the keyboard and press ENTER again.\n"
+                + "Then select the table row again.\n"
+                + "This causes an Out of Sync error if the cursor position for the text field is sent too late to a component that is no longer in the layout.";
     }
 
     @Override
