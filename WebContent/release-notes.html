@@ -8,7 +8,12 @@
         <!--[if lte IE 6]>
 		<link rel="stylesheet" type="text/css" href="demo/css/ie.css" />
 		<![endif]-->
-    </head> <!-- /head -->
+        <style type="text/css">
+          .nested-list ol { counter-reset: item }
+          .nested-list li { display: block }
+          .nested-list li:before { content: counters(item, ".") ". "; counter-increment: item }
+         </style>
+     </head> <!-- /head -->
     <body>
 
 		<div id="header">
@@ -23,7 +28,7 @@
 
 <p>Version @version@ built on @builddate@.</p>
 
-<h2 id="overview">Release Notes for Vaadin @version@</h2>
+<h2 id="overview">Release Notes for Vaadin Framework @version@</h2>
 
 <ul>
   <li><a href="#overview">Overview</a></li>
@@ -41,6 +46,11 @@ contains a number of significant enhancements.</p>
 
 <ul>
   <li>GWT has been updated to version 2.3</li>
+  <ul>
+    <li>If using Eclipse, update the Vaadin Plugin for Eclipse to the latest version before upgrading a project to use the new Vaadin version</li>
+    <li>If using build scripts to compile widget sets, after upgrading GWT libraries, copy and add also the <tt>validation-api-1.0.0.GA.jar</tt> and <tt>validation-api-1.0.0.GA-sources.jar</tt> to the class path</li>
+    <li>See the <a href="#upgrading">General Upgrade Notes</a> for more information</li>
+  </ul>
   <li>An error is shown to the end user when JAR and widgetset version do not match (<a href="http://dev.vaadin.com/ticket/5423">#5423</a>)</li>
   <li>Support for touch device interfaces: one-finger touch scrolling, drag and drop, Slider, SplitPanel, sub-window handling, notifications, etc.</li>
   <li>Support for Internet Explorer 9</li>
@@ -124,26 +134,63 @@ If you package a widget set as a JAR for use in other projects:
 
 <h2 id="upgrading">General Upgrade Notes</h2>
 
-<p>When upgrading from an earlier version of the Vaadin library, you should always do the following:</p>
+<p>When upgrading from an earlier version of the Vaadin library, you should always do the following.</p>
+
+<h3>Eclipse Users</h3>
 
 <ol>
-  <li>Install the new Vaadin JAR to your project</li>
+  <li>Upgrade the Vaadin Integration Plugin for Eclipse to the latest version</li>
   <ul>
-    <li>If using the Vaadin Plugin in Eclipse, download and select the new version in project preferences.</li>
+    <li>For using pre-release versions of Vaadin and nightly builds, it is either recommended or often necessary to use the unstable "experimental" Vaadin Plugin for Eclipse.
+If that is the case, add <tt>http://vaadin.com/eclipse/experimental</tt> as a Software Site in Eclipse and upgrade the Vaadin Plugin.</li>
   </ul>
-  <li>Install new GWT JARs if the GWT version has changed</li>
-  <ul>
-    <li>The Eclipse plugin will automatically download the new GWT and update launch configurations and the project build path when you update the Vaadin version.</li>
-  </ul>  
-  <li>If you have custom widget sets, recompile them with the new Vaadin library using the included GWT compiler</li>
-  <li>If using the Eclipse IDE:
-  <ol type="a">
-    <li>Refresh the Eclipse project by selecting the project folder and pressing <strong>F5</strong></li>
-    <li>Restart the application server</li>
+  <li>Set your project to use the new Vaadin version</li>
+  <ol style="list-style-type: lower-alpha;">
+    <li>Select the new version in the <b>Vaadin</b> section in project preferences<sup>1</sup></li>
+    <li>The Eclipse plugin will automatically download the required GWT libraries and update launch configurations and the project build path</li>
+  </ol>  
+  <li>If you have custom widget sets, recompile them by selecting the project or the widget set and clicking the <b>Compile Vaadin widgets</b> button in Eclipse toolbar</li>
+  <li>Stop the development server, clean up the working directories, and restart the server.</li>
+</ol>
+
+<p><sup>1</sup> The Vaadin section is enabled only if the Vaadin Facet is configured for the project</p>
+
+<h3>NetBeans and Build Script Users</h3>
+
+<p>If you build the Vaadin application or the widget sets using an Ant script, such as in NetBeans, follow the following instructions:</p>
+
+<ol>
+  <li>Copy the <TT>vaadin-@version@.jar</TT> library to the <tt>WEB-INF/lib</tt> directory in the project and remove the old version</li>
+  <li>Refresh the project (in NetBeans or Eclipse)</li>
+  <li>If using any add-ons containing custom widget sets:</li>
+  <ol style="list-style-type: lower-alpha;">
+    <li>If the GWT version has changed, copy the GWT libraries to the compilation-time library directory of the project. The GWT libraries should not be located in the <tt>WEB-INF/lib</tt> directory, as they are not deployed together with the web application.</li>
+    <ul>
+      <li><tt>gwt-user.jar</tt></li>
+      <li><tt>gwt-dev.jar</tt></li>
+      <li><tt>validation-api-1.0.0.GA.jar</tt> (a GWT dependency)</li>
+      <li><tt>validation-api-1.0.0.GA-sources.jar</tt> (a GWT dependency)</li>
+    </ul>
+    <li>The build script must include all the mentioned libraries in its class path</li>
+    <li>Recompile the widget set using the build script</li>
   </ol>
 </ol>
 
-<p>Using the Vaadin project facet in the Eclipse IDE does the steps 1 and 2 automatically.</p>
+<p>You can use the <tt>WebContent/docs/example-source/build-widgetset.xml</tt> Ant script in the Vaadin
+   installation package as a template for a script for compiling the widget sets.</p>
+
+<h3>Maven Users</h3>
+
+<ul>
+  <li>If the Vaadin version is defined as <tt>LATEST</tt> in the <tt>pom.xml</tt>, the new version is automatically used and you simply need to recompile the project.</li>
+  <li>If the Vaadin version is defined explicitly in the <tt>pom.xml</tt>, edit the file to change the version.</li>
+</ul>
+
+<p>Maven downloads the defined Vaadin version and required GWT libraries automatically.</p>
+
+<p>Notice that there can sometimes be a delay between the official release
+   of Vaadin to when it is submitted to the central repository. Once in the central repository, the
+   replication to other repositories can take several hours.</p>
 
 <h2 id="gae">Notes and Limitations for Google App Engine</h2>
 
