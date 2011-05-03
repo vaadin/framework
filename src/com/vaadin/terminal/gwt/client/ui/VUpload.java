@@ -217,6 +217,15 @@ public class VUpload extends SimplePanel implements Paintable {
         submitButton.setEnabled(true);
         fu.getElement().setPropertyBoolean("disabled", false);
         enabled = true;
+        if (submitted) {
+            /*
+             * An old request is still in progress (most likely cancelled),
+             * ditching that target frame to make it possible to send a new
+             * file. A new target frame is created later."
+             */
+            cleanTargetFrame();
+            submitted = false;
+        }
     }
 
     /**
