@@ -188,7 +188,7 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
                 }
 
                 // If the button is true for some reason, release it
-                if (oldValue.booleanValue()) {
+                if (null == oldValue || oldValue.booleanValue()) {
                     setValue(Boolean.FALSE);
                 }
             }
@@ -240,13 +240,8 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      * @return True iff the button is pressed down or checked.
      */
     public boolean booleanValue() {
-        boolean state;
-        try {
-            state = ((Boolean) getValue()).booleanValue();
-        } catch (final NullPointerException e) {
-            state = false;
-        }
-        return state;
+        Boolean value = (Boolean) getValue();
+        return (null == value) ? false : value.booleanValue();
     }
 
     /**
@@ -475,7 +470,7 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
     @Override
     protected void setInternalValue(Object newValue) {
         // Make sure only booleans get through
-        if (!(newValue instanceof Boolean)) {
+        if (null != newValue && !(newValue instanceof Boolean)) {
             throw new IllegalArgumentException(getClass().getSimpleName()
                     + " only accepts Boolean values");
         }
