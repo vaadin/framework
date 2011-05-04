@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 
 public class VProgressIndicator extends Widget implements Paintable {
 
@@ -94,7 +95,10 @@ public class VProgressIndicator extends Widget implements Paintable {
 
         @Override
         public void run() {
-            client.sendPendingVariableChanges();
+            if (!client.hasActiveRequest()
+                    && Util.isAttachedAndDisplayed(VProgressIndicator.this)) {
+                client.sendPendingVariableChanges();
+            }
         }
 
     }
