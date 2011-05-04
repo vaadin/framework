@@ -3139,7 +3139,16 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Returns the list of items on the current page
+     * Returns item identifiers of the items which are currently rendered on the
+     * client.
+     * <p>
+     * Note, that some due to historical reasons the name of the method is bit
+     * misleading. Some items may be partly or totally out of the viewport of
+     * the table's scrollable area. Actully detecting rows which can be actually
+     * seen by the end user may be problematic due to the client server
+     * architecture. Using {@link #getCurrentPageFirstItemId()} combined with
+     * {@link #getPageLength()} may produce good enough estimates in some
+     * situations.
      * 
      * @see com.vaadin.ui.Select#getVisibleItemIds()
      */
