@@ -414,7 +414,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private boolean hasFocus = false;
     private int dragmode;
 
-    private int multiselectmode;
+    private int multiselectmode = BrowserInfo.get().isTouchDevice() ? MULTISELECT_MODE_SIMPLE
+            : MULTISELECT_MODE_DEFAULT;;
     private int tabIndex;
     private TouchScrollDelegate touchScrollDelegate;
 
@@ -826,8 +827,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         tabIndex = uidl.hasAttribute("tabindex") ? uidl
                 .getIntAttribute("tabindex") : 0;
 
-        multiselectmode = uidl.hasAttribute("multiselectmode") ? uidl
-                .getIntAttribute("multiselectmode") : MULTISELECT_MODE_DEFAULT;
+        if (!BrowserInfo.get().isTouchDevice()) {
+            multiselectmode = uidl.hasAttribute("multiselectmode") ? uidl
+                    .getIntAttribute("multiselectmode")
+                    : MULTISELECT_MODE_DEFAULT;
+        }
 
         if (uidl.hasAttribute("alb")) {
             bodyActionKeys = uidl.getStringArrayAttribute("alb");

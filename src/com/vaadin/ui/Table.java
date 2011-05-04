@@ -3815,6 +3815,10 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Sets the behavior of how the multi-select mode should behave when the
      * table is both selectable and in multi-select mode.
+     * <p>
+     * Note, that on some clients the mode may not be respected. E.g. on touch
+     * based devices CTRL/SHIFT base selection method is invalid, so touch based
+     * browsers always use the {@link MultiSelectMode#SIMPLE}.
      * 
      * @param mode
      *            The select mode of the table
