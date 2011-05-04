@@ -52,25 +52,25 @@ See configure target to adjust this buildfile.
 			      value="${base}WebContent/VAADIN/widgetsets" />
 	</target>
 		
-    <!-- NOTE: Modify this example to compile your own widgetset -->
+    <!-- Modify this configuration to compile your own widgetset -->
     <target name="configure-widgetset">
         <echo>Modify this example Ant script to compile your own widget sets.</echo>
 
         <!-- Name of the widget set -->
         <property name="widgetset" value="com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet"/>
 
-        <!-- Define if the widget set be generated automatically -->
-        <!-- from all widget sets included in the class path.    -->
-        <!-- <property name="generate.widgetset" value="1"/>     --> 
+        <!-- If generated automatically as a combining widget set -->
+        <!-- from all the widget sets included in the class path. -->
+        <!-- <property name="widgetset" value="com.vaadin.demo.widgetset.CombiningWidgetSet"/>  -->
+        <!-- <property name="generate.widgetset" value="1"/>      --> 
         
-        <!-- Path to the widgetset directory. Required only for --> 
-    	<!-- generated widget sets. Must be relative to         --> 
-    	<!-- $src-location, that is, under the first entry in   --> 
-    	<!--  class path.                                       --> 
+        <!-- Path to the generated widget set directory. Must be  --> 
+    	<!-- relative to $src-location, which must be the first   --> 
+    	<!-- entry in the class path.                             --> 
         <property name="widgetset-path" value="com/vaadin/demo/widgetset"/>
     </target>
 
-    <!-- Note: Modify this example to compile your own widgetset Jar. -->
+    <!-- Modify this configuration to package your own widgetset Jar. -->
     <target name="configure-jar">
         <!-- The compiled JAR name -->
         <property name="jar-destination" value="${base}colorpicker.jar"/>
@@ -82,7 +82,7 @@ See configure target to adjust this buildfile.
         <property name="widgetset-version" value="1.0"/>
         
         <!-- Vendor of the widget set (for JAR) -->
-        <property name="widgetset-vendor" value="IT Mill Oy"/>
+        <property name="widgetset-vendor" value="Vaadin Ltd"/>
     </target>
 	
 	<!-- ================================================== -->
@@ -94,14 +94,16 @@ See configure target to adjust this buildfile.
 		<echo>Requirements for classpath:</echo>
 		<echo>  ${gwt-location}/gwt-dev.jar</echo>
 		<echo>  ${gwt-location}/gwt-user.jar</echo>
+        <echo>  ${gwt-location}/validation-api-1.0.0.GA.jar</echo>
+        <echo>  ${gwt-location}/validation-api-1.0.0.GA-sources.jar</echo>
 		<echo>  ${vaadin-jar-location}</echo>
 		<echo>  ${src-location}</echo>
 		<echo>Output will be written into ${client-side-destination}</echo>
 
 		<!-- Check that files exist -->
 		<fail message="Some of the required files (listed above) are missing.">
-			<condition><not><resourcecount count="3">
-				<filelist files="${gwt-location}/gwt-dev.jar,${gwt-location}/gwt-user.jar,${vaadin-jar-location}"/>
+			<condition><not><resourcecount count="5">
+				<filelist files="${gwt-location}/gwt-dev.jar,${gwt-location}/gwt-user.jar,${gwt-location}/validation-api-1.0.0.GA.jar,${gwt-location}/validation-api-1.0.0.GA-sources.jar,${vaadin-jar-location}"/>
 			</resourcecount></not></condition>
 		</fail>
 
@@ -113,7 +115,9 @@ See configure target to adjust this buildfile.
 			<pathelement path="${server-side-destination}" />
 			<pathelement path="${vaadin-jar-location}" />
 			<pathelement path="${gwt-location}/gwt-user.jar" />
-			<pathelement path="${gwt-location}/gwt-dev.jar" />
+            <pathelement path="${gwt-location}/gwt-dev.jar" />
+            <pathelement path="${gwt-location}/validation-api-1.0.0.GA.jar" />
+            <pathelement path="${gwt-location}/validation-api-1.0.0.GA-sources.jar" />
 		    <fileset dir="${base}WebContent/WEB-INF/lib/">
 		    	<include name="*.jar"/>
 		     </fileset>
