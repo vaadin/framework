@@ -350,9 +350,10 @@ public class BrowserInfo {
      * Gets the difference in minutes between the browser's GMT timezone and
      * DST.
      * 
-     * @return the amount of minutes that the timezone shifts when DST is active
+     * @return the amount of minutes that the timezone shifts when DST is in
+     *         effect
      */
-    public native int getDSTDifference()
+    public native int getDSTSavings()
     /*-{
         var d = new Date();
         var tzo1 = d.getTimezoneOffset(); // current offset

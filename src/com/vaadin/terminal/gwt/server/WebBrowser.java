@@ -28,7 +28,7 @@ public class WebBrowser implements Terminal {
     private boolean secureConnection;
     private int timezoneOffset = 0;
     private int rawTimezoneOffset = 0;
-    private int dstDifference;
+    private int dstSavings;
     private boolean dstInEffect;
     private Date currentDate;
 
@@ -91,7 +91,7 @@ public class WebBrowser implements Terminal {
      *            TimeZone offset in minutes from GMT
      * @param rtzo
      *            raw TimeZone offset in minutes from GMT (w/o DST adjustment)
-     * @param dstDiff
+     * @param dstSavings
      *            the difference between the raw TimeZone and DST in minutes
      * @param dstInEffect
      *            is DST currently active in the region or not?
@@ -100,7 +100,7 @@ public class WebBrowser implements Terminal {
      */
     void updateBrowserProperties(Locale locale, String address,
             boolean secureConnection, String agent, String sw, String sh,
-            String tzo, String rtzo, String dstDiff, String dstInEffect,
+            String tzo, String rtzo, String dstSavings, String dstInEffect,
             String curDate) {
         this.locale = locale;
         this.address = address;
@@ -134,12 +134,12 @@ public class WebBrowser implements Terminal {
                 rawTimezoneOffset = 0; // default gmt+0
             }
         }
-        if (dstDiff != null) {
+        if (dstSavings != null) {
             try {
                 // browser->java conversion: min->ms
-                dstDifference = Integer.parseInt(dstDiff) * 60 * 1000;
+                this.dstSavings = Integer.parseInt(dstSavings) * 60 * 1000;
             } catch (final NumberFormatException e) {
-                dstDifference = 0; // default no difference
+                this.dstSavings = 0; // default no savings
             }
         }
         if (dstInEffect != null) {
@@ -347,10 +347,11 @@ public class WebBrowser implements Terminal {
      * Gets the difference in minutes between the browser's GMT TimeZone and
      * DST.
      * 
-     * @return the amount of minutes that the TimeZone shifts when DST is active
+     * @return the amount of minutes that the TimeZone shifts when DST is in
+     *         effect
      */
-    public int getDSTDifference() {
-        return dstDifference;
+    public int getDSTSavings() {
+        return dstSavings;
     }
 
     /**

@@ -352,7 +352,7 @@ public class ApplicationConnection {
         int screenHeight = BrowserInfo.get().getScreenHeight();
         int tzOffset = BrowserInfo.get().getTimezoneOffset();
         int rtzOffset = BrowserInfo.get().getRawTimezoneOffset();
-        int dstDiff = BrowserInfo.get().getDSTDifference();
+        int dstDiff = BrowserInfo.get().getDSTSavings();
         boolean dstInEffect = BrowserInfo.get().isDSTInEffect();
         long curDate = BrowserInfo.get().getCurrentDate().getTime();
         String widgetsetVersion = ApplicationConfiguration.VERSION;

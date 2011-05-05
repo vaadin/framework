@@ -63,7 +63,7 @@ public class WebBrowserTest extends TestBase {
                         containsLabel.setValue(contains ? "Yes" : "No");
 
                         dstDiffLabel.setValue(String.valueOf(getBrowser()
-                                .getDSTDifference()));
+                                .getDSTSavings()));
 
                         dstInEffectLabel
                                 .setValue(getBrowser().isDSTInEffect() ? "Yes"
