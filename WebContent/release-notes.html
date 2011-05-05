@@ -32,7 +32,7 @@
 
 <ul>
   <li><a href="#overview">Overview</a></li>
-  <li><a href="#upgrading">General Upgrade Notes</a></li>
+  <li><a href="#upgrading">General Upgrade Instructions</a></li>
   <li><a href="#known-problems">Important known problems in Vaadin @version@</a></li>
   <li><a href="#requirements">Requirements</a></li>
 </ul>
@@ -49,7 +49,8 @@ contains a number of significant enhancements.</p>
   <ul>
     <li>If using Eclipse, update the Vaadin Plugin for Eclipse to the latest version before upgrading a project to use the new Vaadin version</li>
     <li>If using build scripts to compile widget sets, after upgrading GWT libraries, copy and add also the <tt>validation-api-1.0.0.GA.jar</tt> and <tt>validation-api-1.0.0.GA-sources.jar</tt> to the class path</li>
-    <li>See the <a href="#upgrading">General Upgrade Notes</a> for more information</li>
+    <li>In Liferay, the latest version of Vaadin Control Panel for Liferay is needed for compiling the portal widget set</li>
+    <li>See the <a href="#upgrading">General Upgrade Instructions</a> for more information</li>
   </ul>
   <li>An error is shown to the end user when JAR and widgetset version do not match (<a href="http://dev.vaadin.com/ticket/5423">#5423</a>)</li>
   <li>Support for touch device interfaces: one-finger touch scrolling, drag and drop, Slider, SplitPanel, sub-window handling, notifications, etc.</li>
@@ -89,19 +90,20 @@ contains a number of significant enhancements.</p>
 
 <h3>Change Log, Future Releases, and Upgrading</h3>
 
-<p>See the following lists of closed tickets for a full list of tickets fixed in this release:</p>
+<p>See the following lists of closed tickets for a complete list of changes in this release:</p>
 
 <ul>
  <li> Tickets <a href="http://dev.vaadin.com/query?status=closed&group=resolution&milestone=Vaadin+6.6.0.pre1">closed in Vaadin 6.6.0.pre1</a></li>
+ <li> Tickets <a href="http://dev.vaadin.com/query?status=closed&group=resolution&milestone=Vaadin+6.6.0">closed in the final Vaadin 6.6.0</a></li>
 </ul>
 
 <p>Problem fixes and enhancements planned for upcoming releases can be found in the <a
 href="http://dev.vaadin.com/roadmap">Vaadin Roadmap</a> in Vaadin Trac.</p>
 
 <p>As always, when upgrading from an earlier version, you should recompile any custom
-widget sets and refresh your project in Eclipse. If you are upgrading from earlier than
+widget sets and refresh your project in Eclipse. If you are upgrading from
 6.5.x or earlier, notice that Vaadin 6.6 uses GWT 2.3 (included in the installation
-package). See <a href="#upgrading">General Upgrade Notes</a> for more details on upgrading.</p>
+package). See <a href="#upgrading">General Upgrade Instructions</a> for more details on upgrading.</p>
 
 <h2 id="widgetupgrade">Upgrading from Vaadin 6.0 or 6.1</h2>
 
@@ -132,9 +134,17 @@ If you package a widget set as a JAR for use in other projects:
 </ul>
 </p>
 
-<h2 id="upgrading">General Upgrade Notes</h2>
+<h2 id="upgrading">General Upgrade Instructions</h2>
 
 <p>When upgrading from an earlier version of the Vaadin library, you should always do the following.</p>
+
+<h3>All Users</h3>
+
+<ul>
+  <li>If you have extracted any built-in themes or widget sets from the Vaadin Jar to a
+      <tt>VAADIN</tt> folder that is served statically by the application server,
+      you need to delete the old themes and widget sets and re-extract them from the new Vaadin Jar.</li>
+</ul>
 
 <h3>Eclipse Users</h3>
 
@@ -191,6 +201,17 @@ If that is the case, add <tt>http://vaadin.com/eclipse/experimental</tt> as a So
 <p>Notice that there can sometimes be a delay between the official release
    of Vaadin to when it is submitted to the central repository. Once in the central repository, the
    replication to other repositories can take several hours.</p>
+
+<h3>Liferay Users</h3>
+
+<ol>
+  <li>You may need to install a new version of the <a href="http://vaadin.com/directory#addon/vaadin-control-panel-for-liferay">Vaadin Control Panel for Liferay</a></li>
+  <li>Install the new Vaadin Jar to the <tt>ROOT/WEB-INF/lib</tt> directory in the portal</li>
+  <li>Extract the contents of the <tt>VAADIN</tt> folder from the Jar to the static <tt>ROOT/html/VAADIN</tt> directory in Liferay. Only the <b>PortalDefaultWidgetSet</b> widget set is needed.</li>
+  <li>If using any add-on components or custom widget sets, use the Vaadin Control Panel to recompile the combining widget set</li>
+</ol>
+
+<p>Similar instructions apply for other portals, except that you need to recompile the widget sets for example using the <tt>build-widgetset.xml</tt> script included in the Vaadin installation package.</p>
 
 <h2 id="gae">Notes and Limitations for Google App Engine</h2>
 
