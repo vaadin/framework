@@ -4,6 +4,7 @@
 
 package com.vaadin.terminal.gwt.server;
 
+import java.util.Date;
 import java.util.Locale;
 
 import com.vaadin.terminal.Terminal;
@@ -27,6 +28,9 @@ public class WebBrowser implements Terminal {
     private boolean secureConnection;
     private int timezoneOffset = 0;
     private int rawTimezoneOffset = 0;
+    private int dstDifference;
+    private boolean dstInEffect;
+    private Date currentDate;
 
     private VBrowserDetails browserDetails;
 
@@ -87,10 +91,17 @@ public class WebBrowser implements Terminal {
      *            TimeZone offset in minutes from GMT
      * @param rtzo
      *            raw TimeZone offset in minutes from GMT (w/o DST adjustment)
+     * @param dstDiff
+     *            the difference between the raw TimeZone and DST in minutes
+     * @param dstInEffect
+     *            is DST currently active in the region or not?
+     * @param curDate
+     *            the current date in milliseconds since the epoch
      */
     void updateBrowserProperties(Locale locale, String address,
             boolean secureConnection, String agent, String sw, String sh,
-            String tzo, String rtzo) {
+            String tzo, String rtzo, String dstDiff, String dstInEffect,
+            String curDate) {
         this.locale = locale;
         this.address = address;
         this.secureConnection = secureConnection;
@@ -121,6 +132,25 @@ public class WebBrowser implements Terminal {
                 rawTimezoneOffset = -Integer.parseInt(rtzo) * 60 * 1000;
             } catch (final NumberFormatException e) {
                 rawTimezoneOffset = 0; // default gmt+0
+            }
+        }
+        if (dstDiff != null) {
+            try {
+                // browser->java conversion: min->ms
+                dstDifference = Integer.parseInt(dstDiff) * 60 * 1000;
+            } catch (final NumberFormatException e) {
+                dstDifference = 0; // default no difference
+            }
+        }
+        if (dstInEffect != null) {
+            this.dstInEffect = Boolean.parseBoolean(dstInEffect);
+        }
+        if (curDate != null) {
+            try {
+                long curTime = Long.parseLong(curDate);
+                currentDate = new Date(curTime);
+            } catch (final NumberFormatException e) {
+                currentDate = new Date();
             }
         }
     }
@@ -311,6 +341,38 @@ public class WebBrowser implements Terminal {
      */
     public Integer getRawTimezoneOffset() {
         return rawTimezoneOffset;
+    }
+
+    /**
+     * Gets the difference in minutes between the browser's GMT TimeZone and
+     * DST.
+     * 
+     * @return the amount of minutes that the TimeZone shifts when DST is active
+     */
+    public int getDSTDifference() {
+        return dstDifference;
+    }
+
+    /**
+     * Determines whether daylight savings time (DST) is currently in effect in
+     * the region of the browser or not.
+     * 
+     * @return true if the browser resides at a location that currently is in
+     *         DST
+     */
+    public boolean isDSTInEffect() {
+        return dstInEffect;
+    }
+
+    /**
+     * Returns the current date and time of the browser. This will not be
+     * entirely accurate due to varying network latencies, but should provide a
+     * close-enough value for most cases.
+     * 
+     * @return the current date and time of the browser.
+     */
+    public Date getCurrentDate() {
+        return currentDate;
     }
 
 }

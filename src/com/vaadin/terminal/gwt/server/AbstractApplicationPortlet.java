@@ -566,7 +566,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 getHTTPRequestParameter(request, "sw"),
                 getHTTPRequestParameter(request, "sh"),
                 getHTTPRequestParameter(request, "tzo"),
-                getHTTPRequestParameter(request, "rtzo"));
+                getHTTPRequestParameter(request, "rtzo"),
+                getHTTPRequestParameter(request, "dstd"),
+                getHTTPRequestParameter(request, "dstActive"),
+                getHTTPRequestParameter(request, "curdate"));
     }
 
     @Override

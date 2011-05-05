@@ -20,6 +20,15 @@ public class WebBrowserTest extends TestBase {
         final Label rawOffsetLabel = new Label("n/a");
         rawOffsetLabel.setCaption("Browser raw offset");
 
+        final Label dstDiffLabel = new Label("n/a");
+        dstDiffLabel.setCaption("Difference between raw offset and DST");
+
+        final Label dstInEffectLabel = new Label("n/a");
+        dstInEffectLabel.setCaption("Is DST currently active?");
+
+        final Label curDateLabel = new Label("n/a");
+        curDateLabel.setCaption("Current date in the browser");
+
         final Label diffLabel = new Label("n/a");
         diffLabel.setCaption("Browser to Europe/Helsinki offset difference");
 
@@ -52,12 +61,25 @@ public class WebBrowserTest extends TestBase {
                                 - hkiOffset));
 
                         containsLabel.setValue(contains ? "Yes" : "No");
+
+                        dstDiffLabel.setValue(String.valueOf(getBrowser()
+                                .getDSTDifference()));
+
+                        dstInEffectLabel
+                                .setValue(getBrowser().isDSTInEffect() ? "Yes"
+                                        : "No");
+
+                        curDateLabel.setValue(getBrowser().getCurrentDate()
+                                .toString());
                     }
                 });
 
         addComponent(update);
         addComponent(offsetLabel);
         addComponent(rawOffsetLabel);
+        addComponent(dstDiffLabel);
+        addComponent(dstInEffectLabel);
+        addComponent(curDateLabel);
         addComponent(diffLabel);
         addComponent(containsLabel);
 

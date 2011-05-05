@@ -593,7 +593,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 request.getRemoteAddr(), request.isSecure(),
                 request.getHeader("user-agent"), request.getParameter("sw"),
                 request.getParameter("sh"), request.getParameter("tzo"),
-                request.getParameter("rtzo"));
+                request.getParameter("rtzo"), request.getParameter("dstd"),
+                request.getParameter("dston"), request.getParameter("curdate"));
     }
 
     protected ClassLoader getClassLoader() throws ServletException {
