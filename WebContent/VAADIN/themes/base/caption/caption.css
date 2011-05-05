@@ -36,3 +36,8 @@
 .v-ie6 .v-required-field-indicator {
 	display: inline;
 }
+
+.v-ie9 .v-caption {
+	/* Fix possible sub pixel rounding errors that cause error indicators to drop */
+	margin-right:-0.5px;
+}
