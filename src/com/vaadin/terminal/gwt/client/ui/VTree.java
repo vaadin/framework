@@ -1606,9 +1606,6 @@ public class VTree extends FocusElementPanel implements Paintable,
      *            Scroll the node into view
      */
     public void setFocusedNode(TreeNode node, boolean scrollIntoView) {
-        if (!treeHasFocus && !isIE6OrOpera()) {
-            focus();
-        }
         // Unfocus previously focused node
         if (focusedNode != null) {
             focusedNode.setFocused(false);
