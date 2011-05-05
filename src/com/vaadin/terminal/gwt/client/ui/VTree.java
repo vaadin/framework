@@ -635,10 +635,6 @@ public class VTree extends FocusElementPanel implements Paintable,
             }
         }
 
-        private boolean isIE6OrOpera() {
-            return BrowserInfo.get().isIE6() || BrowserInfo.get().isOpera();
-        }
-
         /**
          * Handles mouse selection
          * 
@@ -752,13 +748,18 @@ public class VTree extends FocusElementPanel implements Paintable,
                 if (getElement() == target || ie6compatnode == target) {
                     // state change
                     toggleState();
-                } else if (!readonly && inCaption && selectable) {
-                    // caption click = selection change && possible click event
-
-                    if (handleClickSelection(
-                            event.getCtrlKey() || event.getMetaKey(),
-                            event.getShiftKey())) {
-                        event.preventDefault();
+                } else if (!readonly && inCaption) {
+                    if (selectable) {
+                        // caption click = selection change && possible click
+                        // event
+                        if (handleClickSelection(
+                                event.getCtrlKey() || event.getMetaKey(),
+                                event.getShiftKey())) {
+                            event.preventDefault();
+                        }
+                    } else {
+                        // Not selectable, only focus the node.
+                        setFocusedNode(this);
                     }
                 }
                 event.stopPropagation();
@@ -1605,6 +1606,9 @@ public class VTree extends FocusElementPanel implements Paintable,
      *            Scroll the node into view
      */
     public void setFocusedNode(TreeNode node, boolean scrollIntoView) {
+        if (!treeHasFocus && !isIE6OrOpera()) {
+            focus();
+        }
         // Unfocus previously focused node
         if (focusedNode != null) {
             focusedNode.setFocused(false);
@@ -1752,15 +1756,17 @@ public class VTree extends FocusElementPanel implements Paintable,
                 }
             }
 
-            if (node != null && selectable) {
+            if (node != null) {
                 setFocusedNode(node);
-                if (!ctrl && !shift) {
-                    selectNode(node, true);
-                } else if (shift && isMultiselect) {
-                    deselectAll();
-                    selectNodeRange(lastSelection.key, node.key);
-                } else if (shift) {
-                    selectNode(node, true);
+                if (selectable) {
+                    if (!ctrl && !shift) {
+                        selectNode(node, true);
+                    } else if (shift && isMultiselect) {
+                        deselectAll();
+                        selectNodeRange(lastSelection.key, node.key);
+                    } else if (shift) {
+                        selectNode(node, true);
+                    }
                 }
             }
             return true;
@@ -1775,16 +1781,17 @@ public class VTree extends FocusElementPanel implements Paintable,
             } else if (focusedNode.getParentNode() != null) {
                 node = focusedNode.getParentNode();
             }
-            if (node != null && selectable) {
+            if (node != null) {
                 setFocusedNode(node);
-
-                if (!ctrl && !shift) {
-                    selectNode(node, true);
-                } else if (shift && isMultiselect) {
-                    deselectAll();
-                    selectNodeRange(lastSelection.key, node.key);
-                } else if (shift) {
-                    selectNode(node, true);
+                if (selectable) {
+                    if (!ctrl && !shift) {
+                        selectNode(node, true);
+                    } else if (shift && isMultiselect) {
+                        deselectAll();
+                        selectNodeRange(lastSelection.key, node.key);
+                    } else if (shift) {
+                        selectNode(node, true);
+                    }
                 }
             }
             return true;
@@ -1797,7 +1804,7 @@ public class VTree extends FocusElementPanel implements Paintable,
             } else if (focusedNode.getParentNode() != null
                     && (focusedNode.isLeaf() || !focusedNode.getState())) {
 
-                if (ctrl) {
+                if (ctrl || !selectable) {
                     setFocusedNode(focusedNode.getParentNode());
                 } else if (shift) {
                     doRelationSelection(focusedNode.getParentNode(),
@@ -1815,7 +1822,7 @@ public class VTree extends FocusElementPanel implements Paintable,
             if (!focusedNode.isLeaf() && !focusedNode.getState()) {
                 focusedNode.setState(true, true);
             } else if (!focusedNode.isLeaf()) {
-                if (ctrl) {
+                if (ctrl || !selectable) {
                     setFocusedNode(focusedNode.getChildren().get(0));
                 } else if (shift) {
                     setSelected(focusedNode, true);
@@ -1831,8 +1838,10 @@ public class VTree extends FocusElementPanel implements Paintable,
         // Selection
         if (keycode == getNavigationSelectKey()) {
             if (!focusedNode.isSelected()) {
-                selectNode(focusedNode, !isMultiselect
-                        || multiSelectMode == MULTISELECT_MODE_SIMPLE);
+                selectNode(
+                        focusedNode,
+                        (!isMultiselect || multiSelectMode == MULTISELECT_MODE_SIMPLE)
+                                && selectable);
             } else {
                 deselectNode(focusedNode);
             }
@@ -1842,13 +1851,13 @@ public class VTree extends FocusElementPanel implements Paintable,
         // Home selection
         if (keycode == getNavigationStartKey()) {
             TreeNode node = getFirstRootNode();
-            if (!ctrl && !shift) {
-                selectNode(node, true);
-            } else if (ctrl) {
+            if (ctrl || !selectable) {
                 setFocusedNode(node);
             } else if (shift) {
                 deselectAll();
                 selectNodeRange(focusedNode.key, node.key);
+            } else {
+                selectNode(node, true);
             }
             sendSelectionToServer();
             return true;
@@ -1858,13 +1867,13 @@ public class VTree extends FocusElementPanel implements Paintable,
         if (keycode == getNavigationEndKey()) {
             TreeNode lastNode = getLastRootNode();
             TreeNode node = getLastVisibleChildInTree(lastNode);
-            if (!ctrl && !shift) {
-                selectNode(node, true);
-            } else if (ctrl) {
+            if (ctrl || !selectable) {
                 setFocusedNode(node);
             } else if (shift) {
                 deselectAll();
                 selectNodeRange(focusedNode.key, node.key);
+            } else {
+                selectNode(node, true);
             }
             sendSelectionToServer();
             return true;
@@ -2217,4 +2226,7 @@ public class VTree extends FocusElementPanel implements Paintable,
         }
     }
 
+    private boolean isIE6OrOpera() {
+        return BrowserInfo.get().isIE6() || BrowserInfo.get().isOpera();
+    }
 }
