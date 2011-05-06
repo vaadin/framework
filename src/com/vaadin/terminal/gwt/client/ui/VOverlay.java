@@ -28,6 +28,10 @@ public class VOverlay extends PopupPanel {
      */
     protected static int Z_INDEX = 20000;
 
+    private static int leftFix = -1;
+
+    private static int topFix = -1;
+
     /*
      * Shadow element style. If an extending class wishes to use a different
      * style of shadow, it can use setShadowStyle(String) to give the shadow
@@ -114,10 +118,38 @@ public class VOverlay extends PopupPanel {
 
     @Override
     public void setPopupPosition(int left, int top) {
+        left -= adjustByRelativeLeftBodyMargin();
+        top -= adjustByRelativeTopBodyMargin();
         super.setPopupPosition(left, top);
         if (shadow != null) {
             updateShadowSizeAndPosition(isAnimationEnabled() ? 0 : 1);
         }
+    }
+
+    private static int adjustByRelativeTopBodyMargin() {
+        if (topFix == -1) {
+            topFix = detectRelativeBodyFixes("top");
+        }
+        return topFix;
+    }
+
+    private native static int detectRelativeBodyFixes(String axis)
+    /*-{
+        try {
+            var b = $wnd.document.body;
+            var cstyle = b.currentStyle ? b.currentStyle : getComputedStyle(b);
+            if(cstyle && cstyle.position == 'relative') {
+                return b.getBoundingClientRect()[axis];
+            }
+        } catch(e){}
+        return 0;
+    }-*/;
+
+    private static int adjustByRelativeLeftBodyMargin() {
+        if (leftFix == -1) {
+            leftFix = detectRelativeBodyFixes("left");
+        }
+        return leftFix;
     }
 
     @Override
@@ -233,6 +265,8 @@ public class VOverlay extends PopupPanel {
         // body's positioning context.
         x -= Document.get().getBodyOffsetLeft();
         y -= Document.get().getBodyOffsetTop();
+        x -= adjustByRelativeLeftBodyMargin();
+        y -= adjustByRelativeTopBodyMargin();
 
         int width = getOffsetWidth();
         int height = getOffsetHeight();
