@@ -37,7 +37,7 @@
   <li><a href="#requirements">Requirements</a></li>
 </ul>
 
-<p>Vaadin @version@ is an update release for Vaadin 6. In addition to various fixes, it
+<p>Vaadin @version@ is an update release for Vaadin Framework 6. In addition to various fixes, it
 contains a number of significant enhancements.</p>
 
 <h3>Enhancements</h3>
@@ -83,8 +83,8 @@ contains a number of significant enhancements.</p>
 <h3>Backward-Incompatible Changes</h3>
 
 <ul>
-  <li>The <tt>addContainerFilter()</tt> in <b>Container.Filterable</b> no longer accepts a filter string as a parameter, but a <b>Filter</b> object.</li>
-  <li><tt>DateField</tt>s no longer sets invalidAllowed(false) by default. The new behavior is consistent with all other fields in Vaadin and with DateField in Vaadin 6.3 and earlier.</li>
+  <li>The <tt>addContainerFilter()</tt> in <b>Container.Filterable</b> no longer accepts a filter string as a parameter, but a <b>Filter</b> object. You can use <tt>addContainerFilter(new SimpleStringFilter(...))</tt> to get the same functionality of the old method.</li>
+  <li><b>DateField</b>s no longer sets <tt>invalidAllowed(false)</tt> by default. The new behavior is consistent with all other fields in Vaadin and with <b>DateField</b> in Vaadin 6.3 and earlier.</li>
   <li>Top level windows no more gain focus automatically when the application is loaded in embedded hosting solutions like in Portals. Thus keyboard shortcuts might not work until a Vaadin component is focused either by user or via the server side API. (<a href="http://dev.vaadin.com/ticket/6724">#6724</a>)</li>
 </ul>
 
@@ -149,17 +149,18 @@ If you package a widget set as a JAR for use in other projects:
 <h3>Eclipse Users</h3>
 
 <ol>
-  <li>Upgrade the Vaadin Integration Plugin for Eclipse to the latest version</li>
+  <li>Upgrade the <a href="http://vaadin.com/eclipse">Vaadin Integration Plugin for Eclipse</a> to the latest version</li>
   <ul>
+    <li>Use the <tt>http://vaadin.com/eclipse</tt> software site to upgrade or install the stable version of the Vaadin Integration Plugin in Eclipse. If you have installed an unstable version of the plugin (see below), you need to remove it first.</li>
     <li>For using pre-release versions of Vaadin and nightly builds, it is either recommended or often necessary to use the unstable "experimental" Vaadin Plugin for Eclipse.
-If that is the case, add <tt>http://vaadin.com/eclipse/experimental</tt> as a Software Site in Eclipse and upgrade the Vaadin Plugin.</li>
+In such case, add <tt>http://vaadin.com/eclipse/experimental</tt> as a Software Site in Eclipse and upgrade the Vaadin Plugin.</li>
   </ul>
   <li>Set your project to use the new Vaadin version</li>
   <ol style="list-style-type: lower-alpha;">
     <li>Select the new version in the <b>Vaadin</b> section in project preferences<sup>1</sup></li>
     <li>The Eclipse plugin will automatically download the required GWT libraries and update launch configurations and the project build path</li>
   </ol>  
-  <li>If you have custom widget sets, recompile them by selecting the project or the widget set and clicking the <b>Compile Vaadin widgets</b> button in Eclipse toolbar</li>
+  <li>If you have installed Vaadin add-ons containing custom widget sets, recompile them by selecting the project or the widget set and clicking the <b>Compile Vaadin widgets</b> button in Eclipse toolbar</li>
   <li>Stop the development server, clean up the working directories, and restart the server.</li>
 </ol>
 
@@ -305,27 +306,6 @@ it:</p>
 Windows and Mac, if available. Firefox is supported also on Linux. There may be differences between the
 exact versions of the supported browsers that may cause incompatibility with applications
 made with Vaadin.</p>
-
-<p>The following browsers are not supported but have been found to
-work to a large degree:</p>
-
-<ul>
-	<li>Safari 2</li>
-	<li>Firefox 2</li>
-    <li>Older versions of Google Chrome</li>
-	<li>iPhone (firmware 2.2)</li>
-    <li>Midori (0.1.2)</li>
-	<li>Epiphany (2.22.3), Galeon, and other Gecko-based browsers. Also WebKit-based Epiphany (2.22.3) works.</li>
-    <li>Konqueror 4.2 (3.5.x does not work)</li>
-    <li>Nokia Internet Tablet N800 and N810 (ITOS 2008, Opera-based browser).</li>
-</ul>
-
-<p>The reported versions are those that have been tested, though other versions may work
-as well.</p>
-
-<p>Nokia E-series phones, such as E90, have been known to work with older versions, but
-not with Vaadin 6. Links, Lynx, and other text-based browsers do not
-work.</p>
 
 </div> <!-- /content-->
 
