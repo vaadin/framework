@@ -37,7 +37,9 @@
 	display: inline;
 }
 
-.v-ie9 .v-caption {
+.v-ie9 .v-gridlayout-margin>div>div>.v-caption,
+.v-ie9 .v-verticallayout>div>div>.v-caption,
+.v-ie9 .v-horizontallayout>div>div>.v-caption {
 	/* Fix possible sub pixel rounding errors that cause error indicators to drop */
 	margin-right:-0.5px;
 }
