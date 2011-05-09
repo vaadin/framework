@@ -6,6 +6,8 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.DOM;
@@ -118,8 +120,13 @@ public class VOverlay extends PopupPanel {
 
     @Override
     public void setPopupPosition(int left, int top) {
-        left -= adjustByRelativeLeftBodyMargin();
-        top -= adjustByRelativeTopBodyMargin();
+        // TODO, this should in fact be part of
+        // Document.get().getBodyOffsetLeft/Top(). Would require overriding DOM
+        // for all permutations. Now adding fix as margin instead of fixing
+        // left/top because parent class saves the position.
+        Style style = getElement().getStyle();
+        style.setMarginLeft(-adjustByRelativeLeftBodyMargin(), Unit.PX);
+        style.setMarginTop(-adjustByRelativeTopBodyMargin(), Unit.PX);
         super.setPopupPosition(left, top);
         if (shadow != null) {
             updateShadowSizeAndPosition(isAnimationEnabled() ? 0 : 1);
