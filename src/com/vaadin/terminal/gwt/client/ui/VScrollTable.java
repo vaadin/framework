@@ -823,6 +823,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         dragmode = uidl.hasAttribute("dragmode") ? uidl
                 .getIntAttribute("dragmode") : 0;
+        if (BrowserInfo.get().isIE()) {
+            if (dragmode > 0) {
+                getElement().setPropertyJSO("onselectstart",
+                        getPreventTextSelectionIEHack());
+            } else {
+                getElement().setPropertyJSO("onselectstart", null);
+            }
+        }
 
         tabIndex = uidl.hasAttribute("tabindex") ? uidl
                 .getIntAttribute("tabindex") : 0;
@@ -4230,19 +4238,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
             }
 
-            /**
-             * Add this to the element mouse down event by using
-             * element.setPropertyJSO
-             * ("onselectstart",applyDisableTextSelectionIEHack()); Remove it
-             * then again when the mouse is depressed in the mouse up event.
-             * 
-             * @return Returns the JSO preventing text selection
-             */
-            private native JavaScriptObject applyDisableTextSelectionIEHack()
-            /*-{
-                    return function(){ return false; };
-            }-*/;
-
             /*
              * React on click that occur on content cells only
              */
@@ -4450,6 +4445,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                             if (dragmode != 0
                                     && (event.getButton() == NativeEvent.BUTTON_LEFT)) {
                                 startRowDrag(event, type, targetTdOrTr);
+
                             } else if (event.getCtrlKey()
                                     || event.getShiftKey()
                                     || event.getMetaKey()
@@ -4464,7 +4460,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                     ((Element) event.getEventTarget().cast())
                                             .setPropertyJSO(
                                                     "onselectstart",
-                                                    applyDisableTextSelectionIEHack());
+                                                    getPreventTextSelectionIEHack());
                                 }
 
                                 event.stopPropagation();
@@ -5989,4 +5985,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     public String getPaintableId() {
         return paintableId;
     }
+
+    /**
+     * Add this to the element mouse down event by using element.setPropertyJSO
+     * ("onselectstart",applyDisableTextSelectionIEHack()); Remove it then again
+     * when the mouse is depressed in the mouse up event.
+     * 
+     * @return Returns the JSO preventing text selection
+     */
+    private static native JavaScriptObject getPreventTextSelectionIEHack()
+    /*-{
+            return function(){ return false; };
+    }-*/;
+
 }
