@@ -14,13 +14,13 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
+import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
@@ -258,7 +258,9 @@ public class VWindow extends VOverlay implements Container,
         footer = DOM.createDiv();
         DOM.setElementProperty(footer, "className", CLASSNAME + "-footer");
         resizeBox = DOM.createDiv();
-        DOM.setElementProperty(resizeBox, "className", CLASSNAME + "-resizebox");
+        DOM
+                .setElementProperty(resizeBox, "className", CLASSNAME
+                        + "-resizebox");
         closeBox = DOM.createDiv();
         DOM.setElementProperty(closeBox, "className", CLASSNAME + "-closebox");
         DOM.appendChild(footer, resizeBox);
@@ -313,6 +315,11 @@ public class VWindow extends VOverlay implements Container,
             setDraggable(!uidl.hasAttribute("fixedposition"));
         }
 
+        if (uidl.hasAttribute("caption")) {
+            setCaption(uidl.getStringAttribute("caption"), uidl
+                    .getStringAttribute("icon"));
+        }
+
         visibilityChangesDisabled = true;
         if (client.updateComponent(this, uidl, false)) {
             return;
@@ -336,11 +343,6 @@ public class VWindow extends VOverlay implements Container,
                 positiony = 0;
             }
             setPopupPosition(positionx, positiony);
-        }
-
-        if (uidl.hasAttribute("caption")) {
-            setCaption(uidl.getStringAttribute("caption"),
-                    uidl.getStringAttribute("icon"));
         }
 
         boolean showingUrl = false;
@@ -456,7 +458,8 @@ public class VWindow extends VOverlay implements Container,
                         }
 
                         final String style = notification.hasAttribute("style") ? notification
-                                .getStringAttribute("style") : null;
+                                .getStringAttribute("style")
+                                : null;
                         final int position = notification
                                 .getIntAttribute("position");
                         final int delay = notification.getIntAttribute("delay");
@@ -676,8 +679,7 @@ public class VWindow extends VOverlay implements Container,
      * Sets the closable state of the window. Additionally hides/shows the close
      * button according to the new state.
      * 
-     * @param closable
-     *            true if the window can be closed by the user
+     * @param closable true if the window can be closed by the user
      */
     protected void setClosable(boolean closable) {
         if (this.closable == closable) {
@@ -775,15 +777,14 @@ public class VWindow extends VOverlay implements Container,
 
     private void showModalityCurtain() {
         if (BrowserInfo.get().isFF2()) {
-            DOM.setStyleAttribute(
-                    getModalityCurtain(),
-                    "height",
-                    DOM.getElementPropertyInt(RootPanel.getBodyElement(),
-                            "offsetHeight") + "px");
+            DOM.setStyleAttribute(getModalityCurtain(), "height", DOM
+                    .getElementPropertyInt(RootPanel.getBodyElement(),
+                            "offsetHeight")
+                    + "px");
             DOM.setStyleAttribute(getModalityCurtain(), "position", "absolute");
         }
-        DOM.setStyleAttribute(getModalityCurtain(), "zIndex",
-                "" + (windowOrder.indexOf(this) + Z_INDEX));
+        DOM.setStyleAttribute(getModalityCurtain(), "zIndex", ""
+                + (windowOrder.indexOf(this) + Z_INDEX));
         if (isShowing()) {
             RootPanel.getBodyElement().insertBefore(getModalityCurtain(),
                     getElement());
@@ -986,8 +987,7 @@ public class VWindow extends VOverlay implements Container,
      * Checks if the cursor was inside the browser content area when the event
      * happened.
      * 
-     * @param event
-     *            The event to be checked
+     * @param event The event to be checked
      * @return true, if the cursor is inside the browser content area
      * 
      *         false, otherwise
@@ -1075,8 +1075,8 @@ public class VWindow extends VOverlay implements Container,
                 rootPixelWidth = getElement().getOffsetWidth();
                 width = rootPixelWidth + "px";
             } else {
-                rootPixelWidth = Integer.parseInt(width.substring(0,
-                        width.indexOf("px")));
+                rootPixelWidth = Integer.parseInt(width.substring(0, width
+                        .indexOf("px")));
             }
 
             // "width" now contains the new width in pixels
@@ -1305,15 +1305,15 @@ public class VWindow extends VOverlay implements Container,
     public void onScroll(ScrollEvent event) {
         client.updateVariable(id, "scrollTop",
                 contentPanel.getScrollPosition(), false);
-        client.updateVariable(id, "scrollLeft",
-                contentPanel.getHorizontalScrollPosition(), false);
+        client.updateVariable(id, "scrollLeft", contentPanel
+                .getHorizontalScrollPosition(), false);
 
     }
 
     public void onKeyDown(KeyDownEvent event) {
         if (shortcutHandler != null) {
-            shortcutHandler
-                    .handleKeyboardEvent(Event.as(event.getNativeEvent()));
+            shortcutHandler.handleKeyboardEvent(Event
+                    .as(event.getNativeEvent()));
             return;
         }
     }
