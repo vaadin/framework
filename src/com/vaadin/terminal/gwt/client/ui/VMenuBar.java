@@ -8,10 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -39,7 +37,6 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VMenuBar extends SimpleFocusablePanel implements Paintable,
@@ -663,7 +660,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         popup.addCloseHandler(this);
         popup.addAutoHidePartner(item.getElement());
 
-        popup.setPopupPosition(left, top);
+        // at 0,0 because otherwise IE7 add extra scrollbars (#5547)
+        popup.setPopupPosition(0, 0);
 
         item.getSubMenu().onShow();
         visibleChildMenu = item.getSubMenu();
@@ -684,8 +682,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             if (left < shadowSpace) {
                 left = shadowSpace;
             }
-            popup.setPopupPosition(left, top);
         }
+        popup.setPopupPosition(left, top);
 
         // IE7 really tests one's patience sometimes
         // Part of a fix to correct #3850
