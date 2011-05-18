@@ -589,6 +589,7 @@ public class Util {
 
             // check the scrolltop value before hiding the element
             final int scrolltop = elem.getScrollTop();
+            final int scrollleft = elem.getScrollLeft();
             elem.getStyle().setProperty("overflow", "hidden");
 
             Scheduler.get().scheduleDeferred(new Command() {
@@ -598,7 +599,7 @@ public class Util {
 
                     if (scrolltop > 0 || elem.getScrollTop() > 0) {
                         int scrollvalue = scrolltop;
-                        if (scrolltop == 0) {
+                        if (scrollvalue == 0) {
                             // mysterious are the ways of webkits scrollbar
                             // handling. In some cases webkit reports bad (0)
                             // scrolltop before hiding the element temporary,
@@ -609,6 +610,25 @@ public class Util {
                         // position
                         elem.setScrollTop(scrollvalue - 1);
                         elem.setScrollTop(scrollvalue);
+                    }
+
+                    // fix for #5547: Table horizontal scroll sometimes not
+                    // updated when collapsing/expanding columns
+                    if (BrowserInfo.get().isChrome()
+                            && (scrollleft > 0 || elem.getScrollLeft() > 0)) {
+                        int scrollvalue = scrollleft;
+
+                        if (scrollvalue == 0) {
+                            // mysterious are the ways of webkits scrollbar
+                            // handling. In some cases webkit may report a bad
+                            // (0) scrollleft before hiding the element
+                            // temporary, sometimes after.
+                            scrollvalue = elem.getScrollLeft();
+                        }
+                        // fix another bug where scrollbar remains in wrong
+                        // position
+                        elem.setScrollLeft(scrollvalue - 1);
+                        elem.setScrollLeft(scrollvalue);
                     }
                 }
             });
