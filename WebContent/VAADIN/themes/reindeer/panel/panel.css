@@ -7,26 +7,30 @@
 .v-panel-nocaption,
 .white .v-panel-caption,
 .white .v-panel-nocaption {
-	border-bottom: 1px solid #dcdcdc;
+	border-bottom: 1px solid #e5e5e5;
 	line-height: 16px; /* accommodate minimum icon size */
 }
-.v-sa .v-panel-caption,
-.v-sa .v-panel-nocaption,
-.v-ff3 .v-panel-caption,
-.v-ff3 .v-panel-nocaption {
-	border-bottom-color: rgba(0,0,0,.1);
+.v-webkit .v-panel-caption,
+.v-webkit .v-panel-nocaption,
+.v-gecko .v-panel-caption,
+.v-gecko .v-panel-nocaption,
+.v-ie9 .v-panel-caption,
+.v-ie9 .v-panel-nocaption {
+	border-bottom-color: rgba(0,0,0,.08);
 }
 .v-panel-caption {
 	padding-bottom: 2px;
 }
-.v-panel-content {
+.v-panel-content,
+.white .v-panel-content {
 	border: 1px solid #dcdcdc;
 	border-bottom: none;
 	border-top: none;
 }
-.v-sa .v-panel-content,
-.v-ff3 .v-panel-content {
-	border-color: rgba(0,0,0,.1);
+.v-webkit .v-panel-content,
+.v-gecko .v-panel-content,
+.v-ie9 .v-panel-content {
+	border-top-color: rgba(0,0,0,.07);
 }
 .v-panel-content > div {
 	background: #fff;
@@ -35,18 +39,20 @@
 .v-ie6 .v-panel-content {
 	background: #fff;
 }
-.v-panel-deco {
+.blue .v-panel-deco {
+	border-color: #92a3ac;
+	background: #adc2cd;
+}
+.v-panel-deco,
+.white .v-panel-deco {
 	height: 1px;
 	border-top: 1px solid #bebebe;
 	background: #e2e2e2;
 	overflow: hidden;
 }
-.blue .v-panel-deco {
-	border-color: #92a3ac;
-	background: #adc2cd;
-}
-.v-sa .v-panel-deco,
-.v-ff3 .v-panel-deco {
+.v-wekit .v-panel-deco,
+.v-gecko .v-panel-deco,
+.v-ie9 .v-panel-deco {
 	border-top-color: rgba(0,0,0,.1);
 	background: rgba(0,0,0,.08);
 }
@@ -61,16 +67,13 @@
 .v-ie6 .v-panel-caption .v-errorindicator {
 	background-image: url(../common/icons/error-ie6.png);
 }
-.v-ff2 .v-panel-caption .v-errorindicator  {
-	display: -moz-inline-stack;
-}
 
 /* Light style */
-.v-panel-caption-light,
-.v-panel-nocaption-light {
+.v-panel-light .v-panel-caption-light,
+.v-panel-light .v-panel-nocaption-light {
 	border: none;
 }
-.v-panel-content-light {
+.v-panel-light .v-panel-content-light {
 	border: none;
 }
 .v-panel-content-light > div {
@@ -79,7 +82,7 @@
 .v-ie6 .v-panel-content-light {
 	background: transparent;
 }
-.v-panel-deco-light {
+.v-panel-light .v-panel-deco-light {
 	height: 0;
 	border: none;
 }
