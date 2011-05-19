@@ -62,3 +62,6 @@
 	font-weight: bold;
 	color: #222;
 }
+.black .v-form legend {
+	color: #e3e6e8;
+}
