@@ -74,6 +74,7 @@
 	margin-right: 3px;
 }
 
+.v-menubar:focus,
 .v-menubar-popup:focus,
 .v-menubar-popup .popupContent:focus,
 .v-menubar-popup .popupContent .v-menubar-submenu:focus{
