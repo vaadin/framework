@@ -103,11 +103,6 @@
 	padding-bottom: 3px;
 }
 
-.v-table-focus .v-table-cell-wrapper {
-	padding-top: 2px;
-	padding-bottom: 2px;
-}
-
 .v-table-cell-content {
 	border-right: 1px solid #999;
 	padding: 0 6px;

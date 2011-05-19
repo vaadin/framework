@@ -114,10 +114,6 @@
 .v-table .v-selected .v-table-cell-content {
 	border-right-color: #466c90;
 }
-.v-table-focus .v-table-cell-wrapper {
-	padding-top: 2px;
-	padding-bottom: 2px;	
-}
 .v-table-column-selector {
 	width: 16px;
 	height: 20px;

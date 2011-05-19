@@ -220,6 +220,10 @@
 	border-top: 1px dotted #0066bd;
 	border-bottom: 1px dotted #0066bd;
 }
+.v-table-focus .v-table-cell-wrapper {
+	margin-top: -1px;
+	margin-bottom: -1px;
+}
 /* row in column selector */
 .v-on {
 	
