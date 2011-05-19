@@ -1,4 +1,4 @@
-.v-tree-node {
+.v-tree .v-tree-node {
 	background: transparent url(img/arrows.png) no-repeat 6px -10px;
 }
 .v-ie6 .v-tree-node {
@@ -8,7 +8,7 @@
 .v-ie6 div.v-tree-node-leaf {
 	background: transparent;
 }
-.v-tree-node-expanded {
+.v-tree .v-tree-node-expanded {
 	background-position: -7px 5px;
 }
 .v-tree-node-caption {

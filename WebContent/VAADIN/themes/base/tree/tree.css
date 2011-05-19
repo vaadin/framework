@@ -4,17 +4,29 @@
 	padding: 1px 0;
 	outline: none;
 }
-.v-tree-node {
+.v-tree .v-tree-node {
 	background: transparent url(../common/img/sprites.png) no-repeat 5px -37px;
 	padding: 1px 0;
 }
 .v-tree-node-caption:focus {
 	outline: none;
 }
-.v-tree-node-expanded {
-	background-position: -5px -10px;
+.v-tree div.v-tree-node-leaf {
+	background: transparent;
 }
-div.v-tree-node-leaf {
+.v-tree-connectors div.v-tree-node-leaf {
+	background: transparent url(img/connector-item.png) no-repeat 8px 0;
+}
+.v-tree-connectors div.v-tree-node-leaf-last {
+	background: transparent url(img/connector-item.png) no-repeat 8px bottom;
+}
+.v-tree .v-tree-node-expanded {
+	background: transparent url(../common/img/sprites.png) no-repeat -5px -10px;
+}
+.v-tree-connectors .v-tree-node-children {
+	background: transparent url(img/connector.png) repeat-y 8px bottom;
+}
+.v-tree-connectors .v-tree-node-children-last {
 	background: transparent;
 }
 .v-tree-node-caption {
