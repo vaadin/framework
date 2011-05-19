@@ -13,11 +13,10 @@ input[type=text].v-textfield,
 textarea.v-textarea {
 	font-size: 12px;
 	height: 16px;
-	padding: 4px 2px 0;
+	padding: 2px;
 }
 textarea.v-textarea {
 	height: auto;
-	padding-bottom: 2px;
 }
 .v-textfield-focus,
 .v-textarea-focus {
