@@ -187,7 +187,8 @@
 /* row in column selector */
 .v-contextmenu .v-on,
 .v-contextmenu .v-off {
-	display: block;
+	display: inline-block;
+	zoom: 1;
 	background: transparent no-repeat 0 4px;
 	background-image: url(../common/icons/bullet.png); /** sprite-ref: verticals; sprite-margin-top: 4px; sprite-margin-bottom: 4px */
 	padding-left: 12px;
