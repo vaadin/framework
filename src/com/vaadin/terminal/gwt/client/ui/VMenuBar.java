@@ -154,8 +154,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             // special case that uses another method. Really should fix the
             // Util.setWidthExcludingPaddingAndBorder method but that will
             // probably break additional cases
-            int requestedPixelWidth = Integer.parseInt(width.substring(0, width
-                    .length() - 2));
+            int requestedPixelWidth = Integer.parseInt(width.substring(0,
+                    width.length() - 2));
             int paddingBorder = Util.measureHorizontalPaddingAndBorder(
                     getElement(), 0);
             int w = requestedPixelWidth - paddingBorder;
@@ -229,8 +229,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             itemHTML.append(moreItemText);
 
             moreItem = new CustomMenuItem(itemHTML.toString(), emptyCommand);
-            collapsedRootItems = new VMenuBar(true, (VMenuBar) client
-                    .getPaintable(uidlId));
+            collapsedRootItems = new VMenuBar(true,
+                    (VMenuBar) client.getPaintable(uidlId));
             moreItem.setSubMenu(collapsedRootItems);
             moreItem.addStyleName(CLASSNAME + "-more-menuitem");
         }
@@ -274,12 +274,10 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 itemHTML.append("<span class=\"" + CLASSNAME
                         + "-menuitem-caption\">");
                 if (item.hasAttribute("icon")) {
-                    itemHTML
-                            .append("<img src=\""
-                                    + client.translateVaadinUri(item
-                                            .getStringAttribute("icon"))
-                                    + "\" class=\"" + Icon.CLASSNAME
-                                    + "\" alt=\"\" />");
+                    itemHTML.append("<img src=\""
+                            + client.translateVaadinUri(item
+                                    .getStringAttribute("icon"))
+                            + "\" class=\"" + Icon.CLASSNAME + "\" alt=\"\" />");
                 }
                 itemHTML.append(Util.escapeHTML(itemText) + "</span>");
 
@@ -418,8 +416,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         if (items.contains(item)) {
             int index = items.indexOf(item);
 
-            DOM.removeChild(getContainerElement(), DOM.getChild(
-                    getContainerElement(), index));
+            DOM.removeChild(getContainerElement(),
+                    DOM.getChild(getContainerElement(), index));
             items.remove(index);
         }
     }
@@ -672,8 +670,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         popup.show();
 
         if (left + popup.getOffsetWidth() >= RootPanel.getBodyElement()
-                .getOffsetWidth()
-                - shadowSpace) {
+                .getOffsetWidth() - shadowSpace) {
             if (subMenu) {
                 left = item.getParentMenu().getAbsoluteLeft()
                         - popup.getOffsetWidth() - shadowSpace;
@@ -701,8 +698,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                     }
 
                     if (popup.getElement().getStyle().getProperty("width") == null
-                            || popup.getElement().getStyle().getProperty(
-                                    "width") == "") {
+                            || popup.getElement().getStyle()
+                                    .getProperty("width") == "") {
                         popup.setWidth(popup.getOffsetWidth() + "px");
                     }
                     popup.getElement().getStyle().setProperty("zoom", "1");
@@ -1111,9 +1108,9 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      * .gwt.event.dom.client.KeyPressEvent)
      */
     public void onKeyPress(KeyPressEvent event) {
-        if (handleNavigation(event.getNativeEvent().getKeyCode(), event
-                .isControlKeyDown()
-                || event.isMetaKeyDown(), event.isShiftKeyDown())) {
+        if (handleNavigation(event.getNativeEvent().getKeyCode(),
+                event.isControlKeyDown() || event.isMetaKeyDown(),
+                event.isShiftKeyDown())) {
             event.preventDefault();
         }
     }
@@ -1126,9 +1123,9 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      * .event.dom.client.KeyDownEvent)
      */
     public void onKeyDown(KeyDownEvent event) {
-        if (handleNavigation(event.getNativeEvent().getKeyCode(), event
-                .isControlKeyDown()
-                || event.isMetaKeyDown(), event.isShiftKeyDown())) {
+        if (handleNavigation(event.getNativeEvent().getKeyCode(),
+                event.isControlKeyDown() || event.isMetaKeyDown(),
+                event.isShiftKeyDown())) {
             event.preventDefault();
         }
     }
@@ -1435,9 +1432,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      * .dom.client.FocusEvent)
      */
     public void onFocus(FocusEvent event) {
-        // Focus the first element directly, so the keyboard focus becomes
-        // visible
-        setSelected(items.get(0));
+
     }
 
     private final String SUBPART_PREFIX = "item";
