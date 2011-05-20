@@ -90,12 +90,6 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
     private boolean openRootOnHover;
 
-    /*
-     * Flag to disable first root item selection when clicking on the menubar
-     * (tabbing to the menubar should select the first item)
-     */
-    private boolean preventFocusSelection = false;
-
     public VMenuBar() {
         // Create an empty horizontal menubar
         this(false, null);
@@ -486,7 +480,6 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                     while (parent.getParentMenu() != null) {
                         parent = parent.getParentMenu();
                     }
-                    preventFocusSelection = true;
                     parent.setFocus(true);
                 }
 
@@ -511,7 +504,6 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             while (parent.getParentMenu() != null) {
                 parent = parent.getParentMenu();
             }
-            preventFocusSelection = true;
             parent.setFocus(true);
         }
     }
@@ -561,9 +553,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      * @param item
      */
     public void itemOver(CustomMenuItem item) {
-        preventFocusSelection = true;
         if ((openRootOnHover || subMenu || menuVisible) && !item.isSeparator()) {
-            preventFocusSelection = true;
             setSelected(item);
             if (!subMenu && openRootOnHover && !menuVisible) {
                 menuVisible = true; // start opening menus
@@ -1442,19 +1432,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      * .dom.client.FocusEvent)
      */
     public void onFocus(FocusEvent event) {
-        if (!preventFocusSelection) {
-            setSelected(items.get(0));
-        }
-        preventFocusSelection = false;
-    }
 
-    @Override
-    public void setFocus(boolean focus) {
-        super.setFocus(focus);
-        if (!focus) {
-            setSelected(null);
-            preventFocusSelection = false;
-        }
     }
 
     private final String SUBPART_PREFIX = "item";
