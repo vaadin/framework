@@ -985,7 +985,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Gets the icon Resource for the specified column.
      * 
      * @param propertyId
-     *            the propertyId identifying the column.
+     *            the propertyId indentifying the column.
      * @return the icon for the specified column; null if the column has no icon
      *         set, or if the column is not visible.
      */

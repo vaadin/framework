@@ -2,7 +2,6 @@ package com.vaadin.tests.components.combobox;
 
 import java.util.LinkedHashMap;
 
-import com.vaadin.data.Container;
 import com.vaadin.terminal.Resource;
 import com.vaadin.tests.components.select.SelectTest;
 import com.vaadin.ui.ComboBox;
@@ -71,12 +70,6 @@ public class ComboBoxes2 extends SelectTest<ComboBox> {
                         }
                     }
                 });
-    }
-
-    @Override
-    protected void setContainer(Container newContainer) {
-        super.setContainer(newContainer);
-        // getComponent().setItemCaptionPropertyId("Property 1");
     }
 
 }

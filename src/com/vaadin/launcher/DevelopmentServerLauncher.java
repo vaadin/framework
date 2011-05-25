@@ -14,6 +14,8 @@ import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
 
+import com.vaadin.launcher.util.BrowserLauncher;
+
 /**
  * Class for running Jetty servlet container within Eclipse project.
  * 
@@ -47,7 +49,7 @@ public class DevelopmentServerLauncher {
                 System.out.println("Starting Web Browser.");
 
                 // Open browser into application URL
-                // BrowserLauncher.openBrowser(url);
+                BrowserLauncher.openBrowser(url);
             }
         } catch (Exception e) {
             // NOP exception already on console by jetty
