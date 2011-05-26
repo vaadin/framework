@@ -92,13 +92,18 @@ public class VOverlay extends PopupPanel {
 
             addCloseHandler(new CloseHandler<PopupPanel>() {
                 public void onClose(CloseEvent<PopupPanel> event) {
-                    if (shadow.getParentElement() != null) {
-                        shadow.getParentElement().removeChild(shadow);
-                    }
+                    removeShadowIfPresent();
                 }
             });
         }
         adjustZIndex();
+    }
+
+    private void removeShadowIfPresent() {
+        if (shadow != null && shadow.getParentElement() != null) {
+            shadow.getParentElement().removeChild(shadow);
+        }
+
     }
 
     private void adjustZIndex() {
@@ -177,6 +182,14 @@ public class VOverlay extends PopupPanel {
     public void hide(boolean autoClosed) {
         super.hide(autoClosed);
         Util.runIE7ZeroSizedBodyFix();
+    }
+
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+
+        // Always ensure shadow is removed when the overlay is removed.
+        removeShadowIfPresent();
     }
 
     @Override
