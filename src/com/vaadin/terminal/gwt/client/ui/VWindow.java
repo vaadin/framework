@@ -311,9 +311,9 @@ public class VWindow extends VOverlay implements Container,
             resizeLazy = uidl.hasAttribute(VView.RESIZE_LAZY);
 
             setDraggable(!uidl.hasAttribute("fixedposition"));
-        }
 
-        if (uidl.hasAttribute("caption")) {
+            // Caption must be set before required header size is measured. If
+            // the caption attribute is missing the caption should be cleared.
             setCaption(uidl.getStringAttribute("caption"),
                     uidl.getStringAttribute("icon"));
         }
