@@ -298,7 +298,7 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      */
     public class ClickEvent extends Component.Event {
 
-        private MouseEventDetails details;
+        private final MouseEventDetails details;
 
         /**
          * New instance of text change event.
@@ -308,6 +308,7 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
          */
         public ClickEvent(Component source) {
             super(source);
+            details = null;
         }
 
         /**
@@ -336,20 +337,28 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
          * Returns the mouse position (x coordinate) when the click took place.
          * The position is relative to the browser client area.
          * 
-         * @return The mouse cursor x position
+         * @return The mouse cursor x position or -1 if unknown
          */
         public int getClientX() {
-            return details.getClientX();
+            if (null != details) {
+                return details.getClientX();
+            } else {
+                return -1;
+            }
         }
 
         /**
          * Returns the mouse position (y coordinate) when the click took place.
          * The position is relative to the browser client area.
          * 
-         * @return The mouse cursor y position
+         * @return The mouse cursor y position or -1 if unknown
          */
         public int getClientY() {
-            return details.getClientY();
+            if (null != details) {
+                return details.getClientY();
+            } else {
+                return -1;
+            }
         }
 
         /**
@@ -360,7 +369,11 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
          *         component or -1 if no x coordinate available
          */
         public int getRelativeX() {
-            return details.getRelativeX();
+            if (null != details) {
+                return details.getRelativeX();
+            } else {
+                return -1;
+            }
         }
 
         /**
@@ -371,46 +384,67 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
          *         component or -1 if no y coordinate available
          */
         public int getRelativeY() {
-            return details.getRelativeY();
+            if (null != details) {
+                return details.getRelativeY();
+            } else {
+                return -1;
+            }
         }
 
         /**
          * Checks if the Alt key was down when the mouse event took place.
          * 
          * @return true if Alt was down when the event occured, false otherwise
+         *         or if unknown
          */
         public boolean isAltKey() {
-            return details.isAltKey();
+            if (null != details) {
+                return details.isAltKey();
+            } else {
+                return false;
+            }
         }
 
         /**
          * Checks if the Ctrl key was down when the mouse event took place.
          * 
          * @return true if Ctrl was pressed when the event occured, false
-         *         otherwise
+         *         otherwise or if unknown
          */
         public boolean isCtrlKey() {
-            return details.isCtrlKey();
+            if (null != details) {
+                return details.isCtrlKey();
+            } else {
+                return false;
+            }
         }
 
         /**
          * Checks if the Meta key was down when the mouse event took place.
          * 
          * @return true if Meta was pressed when the event occured, false
-         *         otherwise
+         *         otherwise or if unknown
          */
         public boolean isMetaKey() {
-            return details.isMetaKey();
+            if (null != details) {
+                return details.isMetaKey();
+            } else {
+                return false;
+            }
         }
 
         /**
          * Checks if the Shift key was down when the mouse event took place.
          * 
          * @return true if Shift was pressed when the event occured, false
-         *         otherwise
+         *         otherwise or if unknown
          */
         public boolean isShiftKey() {
-            return details.isShiftKey();
+            if (null != details) {
+                return details.isShiftKey();
+            } else {
+                return false;
+            }
         }
     }
 
@@ -457,13 +491,25 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
     }
 
     /**
-     * Emits the options change event.
+     * Fires a click event to all listeners without any event details.
+     * 
+     * In subclasses, override {@link #fireClick(MouseEventDetails)} instead of
+     * this method.
      */
     protected void fireClick() {
         fireEvent(new Button.ClickEvent(this));
     }
 
-    private void fireClick(MouseEventDetails details) {
+    /**
+     * Fires a click event to all listeners.
+     * 
+     * @param details
+     *            MouseEventDetails from which keyboard modifiers and other
+     *            information about the mouse click can be obtained. If the
+     *            button was clicked by a keyboard event, some of the fields may
+     *            be empty/undefined.
+     */
+    protected void fireClick(MouseEventDetails details) {
         fireEvent(new Button.ClickEvent(this, details));
     }
 
