@@ -589,12 +589,18 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
     private void updateBrowserProperties(WebBrowser browser,
             HttpServletRequest request) {
-        browser.updateBrowserProperties(request.getLocale(),
+        // request based details updated always
+        browser.updateRequestDetails(request.getLocale(),
                 request.getRemoteAddr(), request.isSecure(),
-                request.getHeader("user-agent"), request.getParameter("sw"),
-                request.getParameter("sh"), request.getParameter("tzo"),
-                request.getParameter("rtzo"), request.getParameter("dstd"),
-                request.getParameter("dston"), request.getParameter("curdate"));
+                request.getHeader("user-agent"));
+        if (request.getParameter("repaintAll") != null) {
+            browser.updateClientSideDetails(request.getParameter("sw"),
+                    request.getParameter("sh"), request.getParameter("tzo"),
+                    request.getParameter("rtzo"), request.getParameter("dstd"),
+                    request.getParameter("dston"),
+                    request.getParameter("curdate"),
+                    request.getParameter("td") != null);
+        }
     }
 
     protected ClassLoader getClassLoader() throws ServletException {
