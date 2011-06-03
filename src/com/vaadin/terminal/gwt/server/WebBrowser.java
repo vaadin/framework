@@ -284,8 +284,8 @@ public class WebBrowser implements Terminal {
     /**
      * Returns the current date and time of the browser. This will not be
      * entirely accurate due to varying network latencies, but should provide a
-     * close-enough value for most cases. Also not that the returned Date object
-     * uses servers default time zone, not the clients.
+     * close-enough value for most cases. Also note that the returned Date
+     * object uses servers default time zone, not the clients.
      * 
      * @return the current date and time of the browser.
      * @see #isDSTInEffect()
