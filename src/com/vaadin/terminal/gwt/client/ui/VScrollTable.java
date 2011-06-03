@@ -843,6 +843,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         if (uidl.hasAttribute("alb")) {
             bodyActionKeys = uidl.getStringArrayAttribute("alb");
+        } else {
+            // Need to clear the actions if the action handlers have been
+            // removed
+            bodyActionKeys = null;
         }
 
         setCacheRate(uidl.hasAttribute("cr") ? uidl.getDoubleAttribute("cr")
