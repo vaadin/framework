@@ -367,7 +367,8 @@ public class ApplicationConnection {
                 + "&vw=" + offsetWidth + "&vh=" + offsetHeight + "&fr=" + token
                 + "&tzo=" + tzOffset + "&rtzo=" + rtzOffset + "&dstd="
                 + dstDiff + "&dston=" + dstInEffect + "&curdate=" + curDate
-                + "&wsver=" + widgetsetVersion;
+                + "&wsver=" + widgetsetVersion
+                + (BrowserInfo.get().isTouchDevice() ? "&td=1" : "");
         return parameters;
     }
 
