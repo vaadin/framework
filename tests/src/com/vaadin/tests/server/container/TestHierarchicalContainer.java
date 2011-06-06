@@ -29,6 +29,26 @@ public class TestHierarchicalContainer extends
         testContainerSortingAndFiltering(new HierarchicalContainer());
     }
 
+    public void testRemovingItemsFromFilteredContainer() {
+        HierarchicalContainer container = new HierarchicalContainer();
+        initializeContainer(container);
+        container.setIncludeParentsWhenFiltering(true);
+        container.addContainerFilter(FULLY_QUALIFIED_NAME, "ab", false, false);
+        Object p1 = container.getParent("com.vaadin.ui.TabSheet");
+        assertEquals("com.vaadin.ui", p1);
+
+        container.removeItem("com.vaadin.ui.TabSheet");
+        // Parent for the removed item must be null because the item is no
+        // longer in the container
+        p1 = container.getParent("com.vaadin.ui.TabSheet");
+        assertNull("Parent should be null, is " + p1, p1);
+
+        container.removeAllItems();
+        p1 = container.getParent("com.vaadin.terminal.gwt.client.Focusable");
+        assertNull("Parent should be null, is " + p1, p1);
+
+    }
+
     public void testHierarchicalFilteringWithParents() {
         HierarchicalContainer container = new HierarchicalContainer();
         initializeContainer(container);

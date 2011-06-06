@@ -471,6 +471,9 @@ public class HierarchicalContainer extends IndexedContainer implements
             if (filteredChildren != null) {
                 filteredChildren = null;
             }
+            if (filteredParent != null) {
+                filteredParent = null;
+            }
         }
         enableAndFireContentsChangeEvents();
         return success;
@@ -528,6 +531,11 @@ public class HierarchicalContainer extends IndexedContainer implements
                 }
             }
             parent.remove(itemId);
+            if (filteredParent != null) {
+                // Item id no longer has a parent as the item id is not in the
+                // container.
+                filteredParent.remove(itemId);
+            }
             noChildrenAllowed.remove(itemId);
         }
 
