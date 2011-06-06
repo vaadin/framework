@@ -812,6 +812,7 @@
                     <include name="VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
                     <include name="VAADIN/themes/base/**/*" />
                     <include name="VAADIN/themes/default/**/*" />
+                    <include name="VAADIN/themes/liferay/**/*" />
                     <include name="VAADIN/themes/runo/**/*" />
                     <include name="VAADIN/themes/reindeer/**/*" />
                 </patternset>
