@@ -22,7 +22,7 @@ import com.vaadin.terminal.gwt.client.Util;
  * temporary float over other components like context menus etc. This is to deal
  * stacking order correctly with VWindow objects.
  */
-public class VOverlay extends PopupPanel {
+public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     /*
      * The z-index value from where all overlays live. This can be overridden in
@@ -84,19 +84,34 @@ public class VOverlay extends PopupPanel {
 
     public VOverlay(boolean autoHide, boolean modal, boolean showShadow) {
         super(autoHide, modal);
-        if (showShadow) {
-            shadow = DOM.createDiv();
-            shadow.setClassName(CLASSNAME_SHADOW);
-            shadow.setInnerHTML(SHADOW_HTML);
-            DOM.setStyleAttribute(shadow, "position", "absolute");
-
-            addCloseHandler(new CloseHandler<PopupPanel>() {
-                public void onClose(CloseEvent<PopupPanel> event) {
-                    removeShadowIfPresent();
-                }
-            });
-        }
+        setShadowEnabled(showShadow);
         adjustZIndex();
+    }
+
+    /**
+     * Method to controle whether DOM elements for shadow are added. With this
+     * method subclasses can control displaying of shadow also after the
+     * constructor.
+     * 
+     * @param enabled true if shadow should be displayed
+     */
+    protected void setShadowEnabled(boolean enabled) {
+        if (enabled != isShadowEnabled()) {
+            if (enabled) {
+                shadow = DOM.createDiv();
+                shadow.setClassName(CLASSNAME_SHADOW);
+                shadow.setInnerHTML(SHADOW_HTML);
+                DOM.setStyleAttribute(shadow, "position", "absolute");
+                addCloseHandler(this);
+            } else {
+                removeShadowIfPresent();
+                shadow = null;
+            }
+        }
+    }
+    
+    protected boolean isShadowEnabled() {
+        return shadow != null;
     }
 
     private void removeShadowIfPresent() {
@@ -353,5 +368,9 @@ public class VOverlay extends PopupPanel {
                 updateShadowSizeAndPosition(progress);
             }
         }
+    }
+
+    public void onClose(CloseEvent<PopupPanel> event) {
+        removeShadowIfPresent();
     }
 }
