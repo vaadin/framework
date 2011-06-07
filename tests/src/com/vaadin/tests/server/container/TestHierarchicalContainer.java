@@ -49,6 +49,49 @@ public class TestHierarchicalContainer extends
 
     }
 
+    public void testParentWhenRemovingFilterFromContainer() {
+        HierarchicalContainer container = new HierarchicalContainer();
+        initializeContainer(container);
+        container.setIncludeParentsWhenFiltering(true);
+        container.addContainerFilter(FULLY_QUALIFIED_NAME, "ab", false, false);
+        Object p1 = container.getParent("com.vaadin.ui.TabSheet");
+        assertEquals("com.vaadin.ui", p1);
+        p1 = container
+                .getParent("com.vaadin.terminal.gwt.client.ui.VPopupCalendar");
+        assertNull(p1);
+        container.removeAllContainerFilters();
+        p1 = container
+                .getParent("com.vaadin.terminal.gwt.client.ui.VPopupCalendar");
+        assertEquals("com.vaadin.terminal.gwt.client.ui", p1);
+
+    }
+
+    public void testChangeParentInFilteredContainer() {
+        HierarchicalContainer container = new HierarchicalContainer();
+        initializeContainer(container);
+        container.setIncludeParentsWhenFiltering(true);
+        container.addContainerFilter(FULLY_QUALIFIED_NAME, "Tab", false, false);
+
+        // Change parent of filtered item
+        Object p1 = container.getParent("com.vaadin.ui.TabSheet");
+        assertEquals("com.vaadin.ui", p1);
+        container.setParent("com.vaadin.ui.TabSheet", "com.vaadin");
+        p1 = container.getParent("com.vaadin.ui.TabSheet");
+        assertEquals("com.vaadin", p1);
+        container.setParent("com.vaadin.ui.TabSheet", "com");
+        p1 = container.getParent("com.vaadin.ui.TabSheet");
+        assertEquals("com", p1);
+        container.setParent("com.vaadin.ui.TabSheet", null);
+        p1 = container.getParent("com.vaadin.ui.TabSheet");
+        assertNull(p1);
+
+        // root -> non-root
+        container.setParent("com.vaadin.ui.TabSheet", "com");
+        p1 = container.getParent("com.vaadin.ui.TabSheet");
+        assertEquals("com", p1);
+
+    }
+
     public void testHierarchicalFilteringWithParents() {
         HierarchicalContainer container = new HierarchicalContainer();
         initializeContainer(container);

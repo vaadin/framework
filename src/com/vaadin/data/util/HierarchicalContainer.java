@@ -650,6 +650,7 @@ public class HierarchicalContainer extends IndexedContainer implements
             // All filters removed
             filteredRoots = null;
             filteredChildren = null;
+            filteredParent = null;
 
             return super.doFilterContainer(hasFilters);
         }
