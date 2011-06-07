@@ -155,18 +155,32 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     private static int adjustByRelativeTopBodyMargin() {
         if (topFix == -1) {
-            topFix = detectRelativeBodyFixes("top");
+            boolean ie6OrIe7 = BrowserInfo.get().isIE()
+                    && BrowserInfo.get().getIEVersion() <= 7;
+            topFix = detectRelativeBodyFixes("top", ie6OrIe7);
         }
         return topFix;
     }
 
-    private native static int detectRelativeBodyFixes(String axis)
+    private native static int detectRelativeBodyFixes(String axis,
+            boolean removeClientLeftOrTop)
     /*-{
         try {
             var b = $wnd.document.body;
             var cstyle = b.currentStyle ? b.currentStyle : getComputedStyle(b);
             if(cstyle && cstyle.position == 'relative') {
-                return b.getBoundingClientRect()[axis];
+                var offset = b.getBoundingClientRect()[axis];
+                if (removeClientLeftOrTop) {
+                    // IE6 and IE7 include the top left border of the client area into the boundingClientRect
+                    var clientTopOrLeft = 0;
+                    if (axis == "top")
+                        clientTopOrLeft = $wnd.document.documentElement.clientTop;
+                    else
+                        clientTopOrLeft = $wnd.document.documentElement.clientLeft;
+
+                    offset -= clientTopOrLeft;
+                }
+                return offset;
             }
         } catch(e){}
         return 0;
@@ -174,7 +188,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     private static int adjustByRelativeLeftBodyMargin() {
         if (leftFix == -1) {
-            leftFix = detectRelativeBodyFixes("left");
+            boolean ie6OrIe7 = BrowserInfo.get().isIE()
+                    && BrowserInfo.get().getIEVersion() <= 7;
+            leftFix = detectRelativeBodyFixes("left", ie6OrIe7);
+
         }
         return leftFix;
     }
