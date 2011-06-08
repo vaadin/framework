@@ -93,7 +93,8 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * method subclasses can control displaying of shadow also after the
      * constructor.
      * 
-     * @param enabled true if shadow should be displayed
+     * @param enabled
+     *            true if shadow should be displayed
      */
     protected void setShadowEnabled(boolean enabled) {
         if (enabled != isShadowEnabled()) {
@@ -109,16 +110,15 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             }
         }
     }
-    
+
     protected boolean isShadowEnabled() {
         return shadow != null;
     }
 
     private void removeShadowIfPresent() {
-        if (shadow != null && shadow.getParentElement() != null) {
+        if (isShadowEnabled() && shadow.getParentElement() != null) {
             shadow.getParentElement().removeChild(shadow);
         }
-
     }
 
     private void adjustZIndex() {
@@ -133,7 +133,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      */
     protected void setZIndex(int zIndex) {
         DOM.setStyleAttribute(getElement(), "zIndex", "" + zIndex);
-        if (shadow != null) {
+        if (isShadowEnabled()) {
             DOM.setStyleAttribute(shadow, "zIndex", "" + zIndex);
         }
     }
@@ -148,9 +148,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         style.setMarginLeft(-adjustByRelativeLeftBodyMargin(), Unit.PX);
         style.setMarginTop(-adjustByRelativeTopBodyMargin(), Unit.PX);
         super.setPopupPosition(left, top);
-        if (shadow != null) {
-            updateShadowSizeAndPosition(isAnimationEnabled() ? 0 : 1);
-        }
+        updateShadowSizeAndPosition(isAnimationEnabled() ? 0 : 1);
     }
 
     private static int adjustByRelativeTopBodyMargin() {
@@ -199,7 +197,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     @Override
     public void show() {
         super.show();
-        if (shadow != null) {
+        if (isShadowEnabled()) {
             if (isAnimationEnabled()) {
                 ShadowAnimation sa = new ShadowAnimation();
                 sa.run(200);
@@ -227,7 +225,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
-        if (shadow != null) {
+        if (isShadowEnabled()) {
             shadow.getStyle().setProperty("visibility",
                     visible ? "visible" : "hidden");
         }
@@ -236,17 +234,13 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     @Override
     public void setWidth(String width) {
         super.setWidth(width);
-        if (shadow != null) {
-            updateShadowSizeAndPosition(1.0);
-        }
+        updateShadowSizeAndPosition(1.0);
     }
 
     @Override
     public void setHeight(String height) {
         super.setHeight(height);
-        if (shadow != null) {
-            updateShadowSizeAndPosition(1.0);
-        }
+        updateShadowSizeAndPosition(1.0);
     }
 
     /**
@@ -260,7 +254,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      *            name=='v-shadow-foobar'.
      */
     protected void setShadowStyle(String style) {
-        if (shadow != null) {
+        if (isShadowEnabled()) {
             shadow.setClassName(CLASSNAME_SHADOW + "-" + style);
         }
     }
@@ -286,7 +280,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      */
     private void updateShadowSizeAndPosition(final double progress) {
         // Don't do anything if overlay element is not attached
-        if (!isAttached()) {
+        if (!isAttached() || shadow == null) {
             return;
         }
         // Calculate proper z-index
@@ -381,9 +375,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     protected class ShadowAnimation extends Animation {
         @Override
         protected void onUpdate(double progress) {
-            if (shadow != null) {
-                updateShadowSizeAndPosition(progress);
-            }
+            updateShadowSizeAndPosition(progress);
         }
     }
 
