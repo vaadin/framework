@@ -123,7 +123,12 @@ public class MenuBar extends AbstractComponent {
             if (description != null && description.length() > 0) {
                 target.addAttribute("description", description);
             }
-
+            if (item.isSelectable()) {
+                // if the "checked" attribute is present (either true or false),
+                // the item is selectable
+                target.addAttribute(VMenuBar.ATTRIBUTE_CHECKED,
+                        item.isSelected());
+            }
             if (item.hasChildren()) {
                 for (MenuItem child : item.getChildren()) {
                     paintItem(target, child);
@@ -167,7 +172,12 @@ public class MenuBar extends AbstractComponent {
 
             // If we got the clicked item, launch the command.
             if (found && tmpItem.isEnabled()) {
-                tmpItem.getCommand().menuSelected(tmpItem);
+                if (tmpItem.isSelectable()) {
+                    tmpItem.setSelected(!tmpItem.isSelected());
+                }
+                if (null != tmpItem.getCommand()) {
+                    tmpItem.getCommand().menuSelected(tmpItem);
+                }
             }
         }// if
     }// changeVariables
@@ -431,6 +441,8 @@ public class MenuBar extends AbstractComponent {
         private boolean isSeparator = false;
         private String styleName;
         private String description;
+        private boolean selectable = false;
+        private boolean selected = false;
 
         /**
          * Constructs a new menu item that can optionally have an icon and a
@@ -505,12 +517,18 @@ public class MenuBar extends AbstractComponent {
          *            the icon for the menu item
          * @param command
          *            the command for the menu item
+         * @throws IllegalStateException
+         *             If the item is selectable and thus cannot have children.
          */
         public MenuBar.MenuItem addItem(String caption, Resource icon,
-                MenuBar.Command command) {
+                MenuBar.Command command) throws IllegalStateException {
             if (isSeparator()) {
                 throw new UnsupportedOperationException(
                         "Cannot add items to a separator");
+            }
+            if (isSelectable()) {
+                throw new IllegalStateException(
+                        "A selectable item cannot have children");
             }
             if (caption == null) {
                 throw new IllegalArgumentException("Caption cannot be null");
@@ -544,11 +562,16 @@ public class MenuBar extends AbstractComponent {
          *            the command for the menu item
          * @param itemToAddBefore
          *            the item that will be after the new item
-         * 
+         * @throws IllegalStateException
+         *             If the item is selectable and thus cannot have children.
          */
         public MenuBar.MenuItem addItemBefore(String caption, Resource icon,
-                MenuBar.Command command, MenuBar.MenuItem itemToAddBefore) {
-
+                MenuBar.Command command, MenuBar.MenuItem itemToAddBefore)
+                throws IllegalStateException {
+            if (isSelectable()) {
+                throw new IllegalStateException(
+                        "A selectable item cannot have children");
+            }
             MenuItem newItem = null;
 
             if (hasChildren() && itsChildren.contains(itemToAddBefore)) {
@@ -812,6 +835,97 @@ public class MenuBar extends AbstractComponent {
          */
         public String getDescription() {
             return description;
+        }
+
+        /**
+         * Gets the selectable state of the item. If an item is selectable its
+         * selected state (as returned by {@link #isSelected()}) is indicated in
+         * the UI.
+         * 
+         * <p>
+         * An item is not selectable by default.
+         * </p>
+         * 
+         * @return true if the item is selectable, false otherwise
+         * @since 6.6.2
+         */
+        public boolean isSelectable() {
+            return selectable;
+        }
+
+        /**
+         * Sets the selectable state of the item. If an item is selectable its
+         * selected state (as returned by {@link #isSelected()}) is indicated in
+         * the UI.
+         * 
+         * <p>
+         * An item is not selectable by default.
+         * </p>
+         * 
+         * <p>
+         * Items with sub items cannot be selectable.
+         * </p>
+         * 
+         * @param selectable
+         *            true if the item should be selectable, false otherwise
+         * @throws IllegalStateException
+         *             If the item has children
+         * @since 6.6.2
+         */
+        public void setSelectable(boolean selectable)
+                throws IllegalStateException {
+            if (hasChildren()) {
+                throw new IllegalStateException(
+                        "A menu item with children cannot be selectable");
+            }
+            this.selectable = selectable;
+            requestRepaint();
+        }
+
+        /**
+         * Gets the selected state of the item. Only used if the item is
+         * selectable (as indicated by {@link #isSelectable()}). The selected
+         * state is indicated in the UI with the item, if the item is
+         * selectable.
+         * 
+         * <p>
+         * An item is not selected by default.
+         * </p>
+         * 
+         * <p>
+         * Note that the CSS style corresponding to selection is "-checked". The
+         * style "-selected" refers to the focused menu item (mouse hover or
+         * keyboard selection).
+         * </p>
+         * 
+         * @return true if the item is selected, false otherwise
+         * @since 6.6.2
+         */
+        public boolean isSelected() {
+            return selected;
+        }
+
+        /**
+         * Sets the selected state of the item. Only used if the item is
+         * selectable (indicated by {@link #isSelectable()}). The selected state
+         * is indicated in the UI with the item, if the item is selectable.
+         * 
+         * <p>
+         * An item is not selected by default.
+         * </p>
+         * 
+         * <p>
+         * Note that the CSS style corresponding to selection is "-checked". The
+         * style "-selected" refers to the focused menu item (mouse hover or
+         * keyboard selection).
+         * </p>
+         * 
+         * @return true if the item is selected, false otherwise
+         * @since 6.6.2
+         */
+        public void setSelected(boolean selected) {
+            this.selected = selected;
+            requestRepaint();
         }
 
     }// class MenuItem

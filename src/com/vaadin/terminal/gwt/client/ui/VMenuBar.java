@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NodeList;
@@ -65,6 +66,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
     protected static final Command emptyCommand = null;
 
     public static final String OPEN_ROOT_MENU_ON_HOWER = "ormoh";
+
+    public static final String ATTRIBUTE_CHECKED = "checked";
 
     /** Widget fields **/
     protected boolean subMenu;
@@ -228,7 +231,10 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             }
             itemHTML.append(moreItemText);
 
-            moreItem = new CustomMenuItem(itemHTML.toString(), emptyCommand);
+            moreItem = GWT.create(CustomMenuItem.class);
+            moreItem.setHTML(itemHTML.toString());
+            moreItem.setCommand(emptyCommand);
+
             collapsedRootItems = new VMenuBar(true,
                     (VMenuBar) client.getPaintable(uidlId));
             moreItem.setSubMenu(collapsedRootItems);
@@ -245,43 +251,16 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             UIDL item = (UIDL) itr.next();
             CustomMenuItem currentItem = null;
 
-            String itemText = item.getStringAttribute("text");
             final int itemId = item.getIntAttribute("id");
 
             boolean itemHasCommand = item.hasAttribute("command");
+            boolean itemIsCheckable = item.hasAttribute(ATTRIBUTE_CHECKED);
 
-            // Construct html from the text and the optional icon
-            StringBuffer itemHTML = new StringBuffer();
+            String itemHTML = buildItemHTML(item);
+
             Command cmd = null;
-
-            if (item.hasAttribute("separator")) {
-                itemHTML.append("<span>---</span>");
-            } else {
-                // Add submenu indicator
-                if (item.getChildCount() > 0) {
-                    // FIXME For compatibility reasons: remove in version 7
-                    String bgStyle = "";
-                    if (submenuIcon != null) {
-                        bgStyle = " style=\"background-image: url("
-                                + submenuIcon
-                                + "); text-indent: -999px; width: 1em;\"";
-                    }
-                    itemHTML.append("<span class=\"" + CLASSNAME
-                            + "-submenu-indicator\"" + bgStyle
-                            + ">&#x25BA;</span>");
-                }
-
-                itemHTML.append("<span class=\"" + CLASSNAME
-                        + "-menuitem-caption\">");
-                if (item.hasAttribute("icon")) {
-                    itemHTML.append("<img src=\""
-                            + client.translateVaadinUri(item
-                                    .getStringAttribute("icon"))
-                            + "\" class=\"" + Icon.CLASSNAME + "\" alt=\"\" />");
-                }
-                itemHTML.append(Util.escapeHTML(itemText) + "</span>");
-
-                if (itemHasCommand) {
+            if (!item.hasAttribute("separator")) {
+                if (itemHasCommand || itemIsCheckable) {
                     // Construct a command that fires onMenuClick(int) with the
                     // item's id-number
                     cmd = new Command() {
@@ -309,6 +288,19 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 currentItem.setSubMenu(currentMenu);
             }
 
+            if (!itr.hasNext()) {
+                boolean hasCheckableItem = false;
+                for (CustomMenuItem menuItem : currentMenu.getItems()) {
+                    hasCheckableItem = hasCheckableItem
+                            || menuItem.isCheckable();
+                }
+                if (hasCheckableItem) {
+                    currentMenu.addStyleDependentName("check-column");
+                } else {
+                    currentMenu.removeStyleDependentName("check-column");
+                }
+            }
+
             while (!itr.hasNext() && !iteratorStack.empty()) {
                 itr = iteratorStack.pop();
                 currentMenu = menuStack.pop();
@@ -318,6 +310,45 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         iLayout(false);
 
     }// updateFromUIDL
+
+    /**
+     * Build the HTML content for a menu item.
+     * 
+     * @param item
+     * @return
+     */
+    protected String buildItemHTML(UIDL item) {
+        // Construct html from the text and the optional icon
+        StringBuffer itemHTML = new StringBuffer();
+        if (item.hasAttribute("separator")) {
+            itemHTML.append("<span>---</span>");
+        } else {
+            // Add submenu indicator
+            if (item.getChildCount() > 0) {
+                // FIXME For compatibility reasons: remove in version 7
+                String bgStyle = "";
+                if (submenuIcon != null) {
+                    bgStyle = " style=\"background-image: url(" + submenuIcon
+                            + "); text-indent: -999px; width: 1em;\"";
+                }
+                itemHTML.append("<span class=\"" + CLASSNAME
+                        + "-submenu-indicator\"" + bgStyle + ">&#x25BA;</span>");
+            }
+
+            itemHTML.append("<span class=\"" + CLASSNAME
+                    + "-menuitem-caption\">");
+            if (item.hasAttribute("icon")) {
+                itemHTML.append("<img src=\""
+                        + client.translateVaadinUri(item
+                                .getStringAttribute("icon")) + "\" class=\""
+                        + Icon.CLASSNAME + "\" alt=\"\" />");
+            }
+            String itemText = item.getStringAttribute("text");
+            itemHTML.append(Util.escapeHTML(itemText));
+            itemHTML.append("</span>");
+        }
+        return itemHTML.toString();
+    }
 
     /**
      * This is called by the items in the menu and it communicates the
@@ -377,7 +408,10 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      * @return the item created
      */
     public CustomMenuItem addItem(String html, Command cmd) {
-        CustomMenuItem item = new CustomMenuItem(html, cmd);
+        CustomMenuItem item = GWT.create(CustomMenuItem.class);
+        item.setHTML(html);
+        item.setCommand(cmd);
+
         addItem(item);
         return item;
     }
@@ -832,7 +866,28 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         protected VMenuBar parentMenu = null;
         protected boolean enabled = true;
         protected boolean isSeparator = false;
+        protected boolean checkable = false;
+        protected boolean checked = false;
 
+        /**
+         * Default menu item {@link Widget} constructor for GWT.create().
+         * 
+         * Use {@link #setHTML(String)} and {@link #setCommand(Command)} after
+         * constructing a menu item.
+         */
+        public CustomMenuItem() {
+            this("", null);
+        }
+
+        /**
+         * Creates a menu item {@link Widget}.
+         * 
+         * @param html
+         * @param cmd
+         * @deprecated use the default constructor and {@link #setHTML(String)}
+         *             and {@link #setCommand(Command)} instead
+         */
+        @Deprecated
         public CustomMenuItem(String html, Command cmd) {
             // We need spans to allow inline-block in IE
             setElement(DOM.createSpan());
@@ -843,18 +898,62 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             setStyleName(CLASSNAME + "-menuitem");
 
             sinkEvents(VTooltip.TOOLTIP_EVENTS);
-
-            // Sink the onload event for any icons. The onload
-            // events are handled by the parent VMenuBar.
-            Util.sinkOnloadForImages(getElement());
         }
 
         public void setSelected(boolean selected) {
             if (selected && !isSeparator) {
                 addStyleDependentName("selected");
+                // needed for IE6 to have a single style name to match for an
+                // element
+                if (checkable) {
+                    if (checked) {
+                        removeStyleDependentName("selected-unchecked");
+                        addStyleDependentName("selected-checked");
+                    } else {
+                        removeStyleDependentName("selected-checked");
+                        addStyleDependentName("selected-unchecked");
+                    }
+                }
             } else {
                 removeStyleDependentName("selected");
+                // needed for IE6 to have a single style name to match for an
+                // element
+                removeStyleDependentName("selected-checked");
+                removeStyleDependentName("selected-unchecked");
             }
+        }
+
+        public void setChecked(boolean checked) {
+            if (checkable && !isSeparator) {
+                this.checked = checked;
+
+                if (checked) {
+                    addStyleDependentName("checked");
+                    removeStyleDependentName("unchecked");
+                } else {
+                    addStyleDependentName("unchecked");
+                    removeStyleDependentName("checked");
+                }
+            } else {
+                this.checked = false;
+            }
+        }
+
+        public boolean isChecked() {
+            return checked;
+        }
+
+        public void setCheckable(boolean checkable) {
+            if (checkable && !isSeparator) {
+                this.checkable = true;
+            } else {
+                setChecked(false);
+                this.checkable = false;
+            }
+        }
+
+        public boolean isCheckable() {
+            return checkable;
         }
 
         /*
@@ -892,6 +991,10 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         public void setHTML(String html) {
             this.html = html;
             DOM.setInnerHTML(getElement(), html);
+
+            // Sink the onload event for any icons. The onload
+            // events are handled by the parent VMenuBar.
+            Util.sinkOnloadForImages(getElement());
         }
 
         public String getText() {
@@ -933,6 +1036,15 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             this.client = client;
             setSeparator(uidl.hasAttribute("separator"));
             setEnabled(!uidl.hasAttribute("disabled"));
+
+            if (!isSeparator() && uidl.hasAttribute(ATTRIBUTE_CHECKED)) {
+                // if the selected attribute is present (either true or false),
+                // the item is selectable
+                setCheckable(true);
+                setChecked(uidl.getBooleanAttribute(ATTRIBUTE_CHECKED));
+            } else {
+                setCheckable(false);
+            }
 
             if (uidl.hasAttribute("style")) {
                 String itemStyle = uidl.getStringAttribute("style");

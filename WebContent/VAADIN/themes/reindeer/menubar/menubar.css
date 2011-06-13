@@ -50,3 +50,23 @@
 .v-menubar-submenu .v-menubar-menuitem-selected .v-menubar-submenu-indicator {
 	background-image: url(img/submenu-icon-hover.png);
 }
+
+/* Checkboxes for checkable/checked menu items */
+.v-menubar-submenu-check-column .v-menubar-menuitem {
+	padding-left: 6px;
+}
+.v-menubar-submenu-check-column .v-menubar-menuitem-caption {
+	padding-left: 18px;
+}
+.v-menubar-submenu .v-menubar-menuitem-checked .v-menubar-menuitem-caption { 
+	background: transparent url(img/checked.png) no-repeat left;
+}
+.v-menubar-submenu .v-menubar-menuitem-unchecked .v-menubar-menuitem-caption {
+	background: transparent url(img/unchecked.png) no-repeat left;
+}
+.v-menubar-submenu .v-menubar-menuitem-selected-checked .v-menubar-menuitem-caption { 
+	background: transparent url(img/checked-selected.png) no-repeat left;
+}
+.v-menubar-submenu .v-menubar-menuitem-selected-unchecked .v-menubar-menuitem-caption {
+	background: transparent url(img/unchecked-selected.png) no-repeat left;
+}
