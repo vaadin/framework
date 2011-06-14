@@ -519,13 +519,20 @@ public class HierarchicalContainer extends IndexedContainer implements
                 if (c != null) {
                     c.remove(itemId);
 
+                    if (c.isEmpty()) {
+                        children.remove(parentItemId);
+                    }
+
                     // Found in the children list so might also be in the
                     // filteredChildren list
                     if (filteredChildren != null) {
                         LinkedList<Object> f = filteredChildren
                                 .get(parentItemId);
                         if (f != null) {
-                            f.remove(parentItemId);
+                            f.remove(itemId);
+                            if (f.isEmpty()) {
+                                filteredChildren.remove(parentItemId);
+                            }
                         }
                     }
                 }

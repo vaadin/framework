@@ -1,5 +1,7 @@
 package com.vaadin.tests.server.container;
 
+import com.vaadin.data.Container.Filter;
+import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 
 public class TestHierarchicalContainer extends
@@ -141,6 +143,55 @@ public class TestHierarchicalContainer extends
                 "com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer",
                 "blah", true, expectedSize, expectedRoots, true);
 
+    }
+
+    public void testRemoveLastChild() {
+        HierarchicalContainer c = new HierarchicalContainer();
+
+        c.addItem("root");
+        assertEquals(false, c.hasChildren("root"));
+
+        c.addItem("child");
+        c.setParent("child", "root");
+        assertEquals(true, c.hasChildren("root"));
+
+        c.removeItem("child");
+        assertFalse(c.containsId("child"));
+        assertNull(c.getChildren("root"));
+        assertNull(c.getChildren("child"));
+        assertFalse(c.hasChildren("child"));
+        assertFalse(c.hasChildren("root"));
+    }
+
+    public void testRemoveLastChildFromFiltered() {
+        HierarchicalContainer c = new HierarchicalContainer();
+
+        c.addItem("root");
+        assertEquals(false, c.hasChildren("root"));
+
+        c.addItem("child");
+        c.setParent("child", "root");
+        assertEquals(true, c.hasChildren("root"));
+
+        // Dummy filter that does not remove any items
+        c.addContainerFilter(new Filter() {
+
+            public boolean passesFilter(Object itemId, Item item)
+                    throws UnsupportedOperationException {
+                return true;
+            }
+
+            public boolean appliesToProperty(Object propertyId) {
+                return true;
+            }
+        });
+        c.removeItem("child");
+
+        assertFalse(c.containsId("child"));
+        assertNull(c.getChildren("root"));
+        assertNull(c.getChildren("child"));
+        assertFalse(c.hasChildren("child"));
+        assertFalse(c.hasChildren("root"));
     }
 
     public void testHierarchicalFilteringWithoutParents() {
