@@ -24,7 +24,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
     private Integer iconSize;
     private Integer disabledDensity;
     private Integer invisibleDensity;
-    private Integer selectableDensity;
+    private Integer checkableDensity;
 
     @Override
     protected Class<MenuBar> getTestClass() {
@@ -47,7 +47,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
         createMenuIconsSizeSelect(CATEGORY_MENU_ITEM_STATES);
         createMenuItemDisabledDensitySelect(CATEGORY_MENU_ITEM_STATES);
         createMenuItemInvisibleDensitySelect(CATEGORY_MENU_ITEM_STATES);
-        createMenuItemSelectableDensitySelect(CATEGORY_MENU_ITEM_STATES);
+        createMenuItemCheckableDensitySelect(CATEGORY_MENU_ITEM_STATES);
 
     }
 
@@ -127,15 +127,15 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
                 setMenuItemInvisibleDensity);
     }
 
-    private void createMenuItemSelectableDensitySelect(String category) {
+    private void createMenuItemCheckableDensitySelect(String category) {
         LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
-        options.put("No items selectable", null);
-        options.put("All selectable", 1);
+        options.put("No items checkable", null);
+        options.put("All checkable", 1);
         options.put("Every second", 2);
         options.put("Every third", 3);
 
-        createSelectAction("Selectable", category, options,
-                "No items selectable", setMenuItemSelectableDensity);
+        createSelectAction("Checkable", category, options,
+                "No items checkable", setMenuItemCheckableDensity);
     }
 
     /* COMMANDS */
@@ -194,10 +194,10 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
         }
     };
 
-    private Command<MenuBar, Integer> setMenuItemSelectableDensity = new Command<MenuBar, Integer>() {
+    private Command<MenuBar, Integer> setMenuItemCheckableDensity = new Command<MenuBar, Integer>() {
 
         public void execute(MenuBar c, Integer value, Object data) {
-            selectableDensity = value;
+            checkableDensity = value;
             createRootItems(c);
         }
     };
@@ -273,8 +273,8 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
             }
 
             if (!subMenuItem.hasChildren() && level > 0
-                    && selectableDensity != null && i % selectableDensity == 0) {
-                subMenuItem.setSelectable(true);
+                    && checkableDensity != null && i % checkableDensity == 0) {
+                subMenuItem.setCheckable(true);
             }
         }
 
