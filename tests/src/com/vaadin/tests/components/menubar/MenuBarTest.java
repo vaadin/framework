@@ -266,14 +266,15 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
             if (invisibleDensity != null && i % invisibleDensity == 0) {
                 subMenuItem.setVisible(false);
             }
-            if (level == subLevels && selectableDensity != null
-                    && i % selectableDensity == 0) {
-                subMenuItem.setSelectable(true);
-            }
 
             if (i % subMenuDensity == 0 && level < subLevels) {
                 subMenuItem.setCommand(null);
                 createSubItems(subMenuItem, level + 1);
+            }
+
+            if (!subMenuItem.hasChildren() && level > 0
+                    && selectableDensity != null && i % selectableDensity == 0) {
+                subMenuItem.setSelectable(true);
             }
         }
 

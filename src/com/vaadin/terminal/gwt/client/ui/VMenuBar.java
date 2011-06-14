@@ -288,7 +288,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 currentItem.setSubMenu(currentMenu);
             }
 
-            if (!itr.hasNext()) {
+            while (!itr.hasNext() && !iteratorStack.empty()) {
                 boolean hasCheckableItem = false;
                 for (CustomMenuItem menuItem : currentMenu.getItems()) {
                     hasCheckableItem = hasCheckableItem
@@ -299,9 +299,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 } else {
                     currentMenu.removeStyleDependentName("check-column");
                 }
-            }
 
-            while (!itr.hasNext() && !iteratorStack.empty()) {
                 itr = iteratorStack.pop();
                 currentMenu = menuStack.pop();
             }
