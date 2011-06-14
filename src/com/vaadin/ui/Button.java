@@ -176,15 +176,29 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
                 if (newValue != null && !newValue.equals(oldValue)
                         && !isReadOnly()) {
                     setValue(newValue);
-                    fireClick(MouseEventDetails.deSerialize((String) variables
-                            .get("mousedetails")));
+                    if (variables.containsKey("mousedetails")) {
+                        fireClick(MouseEventDetails
+                                .deSerialize((String) variables
+                                        .get("mousedetails")));
+                    } else {
+                        // for compatibility with custom implementations which
+                        // don't send mouse details
+                        fireClick();
+                    }
                 }
             } else {
 
                 // Only send click event if the button is pushed
                 if (newValue.booleanValue()) {
-                    fireClick(MouseEventDetails.deSerialize((String) variables
-                            .get("mousedetails")));
+                    if (variables.containsKey("mousedetails")) {
+                        fireClick(MouseEventDetails
+                                .deSerialize((String) variables
+                                        .get("mousedetails")));
+                    } else {
+                        // for compatibility with custom implementations which
+                        // don't send mouse details
+                        fireClick();
+                    }
                 }
 
                 // If the button is true for some reason, release it
