@@ -125,7 +125,7 @@ public class MenuBar extends AbstractComponent {
             }
             if (item.isCheckable()) {
                 // if the "checked" attribute is present (either true or false),
-                // the item is selectable
+                // the item is checkable
                 target.addAttribute(VMenuBar.ATTRIBUTE_CHECKED,
                         item.isChecked());
             }
@@ -518,7 +518,7 @@ public class MenuBar extends AbstractComponent {
          * @param command
          *            the command for the menu item
          * @throws IllegalStateException
-         *             If the item is selectable and thus cannot have children.
+         *             If the item is checkable and thus cannot have children.
          */
         public MenuBar.MenuItem addItem(String caption, Resource icon,
                 MenuBar.Command command) throws IllegalStateException {
@@ -528,7 +528,7 @@ public class MenuBar extends AbstractComponent {
             }
             if (isCheckable()) {
                 throw new IllegalStateException(
-                        "A selectable item cannot have children");
+                        "A checkable item cannot have children");
             }
             if (caption == null) {
                 throw new IllegalArgumentException("Caption cannot be null");
@@ -563,14 +563,14 @@ public class MenuBar extends AbstractComponent {
          * @param itemToAddBefore
          *            the item that will be after the new item
          * @throws IllegalStateException
-         *             If the item is selectable and thus cannot have children.
+         *             If the item is checkable and thus cannot have children.
          */
         public MenuBar.MenuItem addItemBefore(String caption, Resource icon,
                 MenuBar.Command command, MenuBar.MenuItem itemToAddBefore)
                 throws IllegalStateException {
             if (isCheckable()) {
                 throw new IllegalStateException(
-                        "A selectable item cannot have children");
+                        "A checkable item cannot have children");
             }
             MenuItem newItem = null;
 
