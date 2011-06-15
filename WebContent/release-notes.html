@@ -32,15 +32,16 @@
 
 <ul>
   <li><a href="#overview">Overview</a></li>
+  <li><a href="#widgetupgrade">Upgrading from Vaadin 6.0 or 6.1</a></li>
   <li><a href="#upgrading">General Upgrade Instructions</a></li>
+  <li><a href="#gae">Notes and Limitations for Google App Engine</a></li>
   <li><a href="#known-problems">Important known problems in Vaadin @version@</a></li>
   <li><a href="#requirements">Requirements</a></li>
 </ul>
 
-<p>Vaadin @version@ is an update release for Vaadin Framework 6. In addition to various fixes, it
-contains a number of significant enhancements.</p>
+<p>Vaadin @version@ is a maintenance release for Vaadin Framework 6.6. It contains several important fixes.</p>
 
-<h3>Enhancements</h3>
+<h3>Enhancements in Vaadin Framework 6.6</h3>
 
 <p>General enhancements:</p>
 
@@ -82,7 +83,7 @@ contains a number of significant enhancements.</p>
   <li>Server communication methods in <b>ApplicationConnection</b> can now be overridden (<a href="http://dev.vaadin.com/ticket/6885">#6885</a>)</li>
 </ul>
 
-<h3>Backward-Incompatible Changes</h3>
+<h3>Backward-Incompatible Changes in Vaadin Framework 6.6</h3>
 
 <ul>
   <li>The <tt>addContainerFilter()</tt> in <b>Container.Filterable</b> no longer accepts a filter string as a parameter, but a <b>Filter</b> object. You can use <tt>addContainerFilter(new SimpleStringFilter(...))</tt> to get the same functionality of the old method.</li>
