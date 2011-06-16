@@ -807,39 +807,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         this.client = client;
         paintableId = uidl.getStringAttribute("id");
         immediate = uidl.getBooleanAttribute("immediate");
-        final int newTotalRows = uidl.getIntAttribute("totalrows");
-        if (newTotalRows != totalRows) {
-            if (scrollBody != null) {
-                if (totalRows == 0) {
-                    tHead.clear();
-                    tFoot.clear();
-                }
-                initializedAndAttached = false;
-                initialContentReceived = false;
-                isNewBody = true;
-            }
-            totalRows = newTotalRows;
-        }
 
-        dragmode = uidl.hasAttribute("dragmode") ? uidl
-                .getIntAttribute("dragmode") : 0;
-        if (BrowserInfo.get().isIE()) {
-            if (dragmode > 0) {
-                getElement().setPropertyJSO("onselectstart",
-                        getPreventTextSelectionIEHack());
-            } else {
-                getElement().setPropertyJSO("onselectstart", null);
-            }
-        }
+        updateTotalRows(uidl);
 
-        tabIndex = uidl.hasAttribute("tabindex") ? uidl
-                .getIntAttribute("tabindex") : 0;
+        updateDragMode(uidl);
 
-        if (!BrowserInfo.get().isTouchDevice()) {
-            multiselectmode = uidl.hasAttribute("multiselectmode") ? uidl
-                    .getIntAttribute("multiselectmode")
-                    : MULTISELECT_MODE_DEFAULT;
-        }
+        updateSelectionProperties(uidl);
 
         if (uidl.hasAttribute("alb")) {
             bodyActionKeys = uidl.getStringArrayAttribute("alb");
@@ -849,8 +822,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             bodyActionKeys = null;
         }
 
-        setCacheRate(uidl.hasAttribute("cr") ? uidl.getDoubleAttribute("cr")
-                : CACHE_RATE_DEFAULT);
+        setCacheRateFromUIDL(uidl);
 
         recalcWidths = uidl.hasAttribute("recalcWidths");
         if (recalcWidths) {
@@ -858,112 +830,20 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             tFoot.clear();
         }
 
-        int oldPageLength = pageLength;
-        if (uidl.hasAttribute("pagelength")) {
-            pageLength = uidl.getIntAttribute("pagelength");
-        } else {
-            // pagelenght is "0" meaning scrolling is turned off
-            pageLength = totalRows;
-        }
+        updatePageLength(uidl);
 
-        if (oldPageLength != pageLength && initializedAndAttached) {
-            // page length changed, need to update size
-            sizeInit();
-        }
-
-        firstvisible = uidl.hasVariable("firstvisible") ? uidl
-                .getIntVariable("firstvisible") : 0;
-        if (firstvisible != lastRequestedFirstvisible && scrollBody != null) {
-            // received 'surprising' firstvisible from server: scroll there
-            firstRowInViewPort = firstvisible;
-            scrollBodyPanel.setScrollPosition((int) (firstvisible * scrollBody
-                    .getRowHeight()));
-        }
+        updateFirstVisibleAndScrollIfNeeded(uidl);
 
         showRowHeaders = uidl.getBooleanAttribute("rowheaders");
         showColHeaders = uidl.getBooleanAttribute("colheaders");
 
-        nullSelectionAllowed = uidl.hasAttribute("nsa") ? uidl
-                .getBooleanAttribute("nsa") : true;
+        updateSortingProperties(uidl);
 
-        String oldSortColumn = sortColumn;
-        if (uidl.hasVariable("sortascending")) {
-            sortAscending = uidl.getBooleanVariable("sortascending");
-            sortColumn = uidl.getStringVariable("sortcolumn");
-        }
+        boolean keyboardSelectionOverRowFetchInProgress = selectSelectedRows(uidl);
 
-        boolean keyboardSelectionOverRowFetchInProgress = false;
+        updateColumnProperties(uidl);
 
-        if (uidl.hasVariable("selected")) {
-            final Set<String> selectedKeys = uidl
-                    .getStringArrayVariableAsSet("selected");
-            if (scrollBody != null) {
-                Iterator<Widget> iterator = scrollBody.iterator();
-                while (iterator.hasNext()) {
-                    /*
-                     * Make the focus reflect to the server side state unless we
-                     * are currently selecting multiple rows with keyboard.
-                     */
-                    VScrollTableRow row = (VScrollTableRow) iterator.next();
-                    boolean selected = selectedKeys.contains(row.getKey());
-                    if (!selected
-                            && unSyncedselectionsBeforeRowFetch != null
-                            && unSyncedselectionsBeforeRowFetch.contains(row
-                                    .getKey())) {
-                        selected = true;
-                        keyboardSelectionOverRowFetchInProgress = true;
-                    }
-                    if (selected != row.isSelected()) {
-                        row.toggleSelection();
-                    }
-                }
-            }
-        }
-        unSyncedselectionsBeforeRowFetch = null;
-
-        if (uidl.hasAttribute("selectmode")) {
-            if (uidl.getBooleanAttribute("readonly")) {
-                selectMode = Table.SELECT_MODE_NONE;
-            } else if (uidl.getStringAttribute("selectmode").equals("multi")) {
-                selectMode = Table.SELECT_MODE_MULTI;
-            } else if (uidl.getStringAttribute("selectmode").equals("single")) {
-                selectMode = Table.SELECT_MODE_SINGLE;
-            } else {
-                selectMode = Table.SELECT_MODE_NONE;
-            }
-        }
-
-        if (uidl.hasVariable("columnorder")) {
-            columnReordering = true;
-            columnOrder = uidl.getStringArrayVariable("columnorder");
-        } else {
-            columnReordering = false;
-            columnOrder = null;
-        }
-
-        if (uidl.hasVariable("collapsedcolumns")) {
-            tHead.setColumnCollapsingAllowed(true);
-            collapsedColumns = uidl
-                    .getStringArrayVariableAsSet("collapsedcolumns");
-        } else {
-            tHead.setColumnCollapsingAllowed(false);
-        }
-
-        UIDL rowData = null;
-        UIDL ac = null;
-        for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
-            final UIDL c = (UIDL) it.next();
-            if (c.getTag().equals("rows")) {
-                rowData = c;
-            } else if (c.getTag().equals("actions")) {
-                updateActionMap(c);
-            } else if (c.getTag().equals("visiblecolumns")) {
-                tHead.updateCellsFromUIDL(c);
-                tFoot.updateCellsFromUIDL(c);
-            } else if (c.getTag().equals("-ac")) {
-                ac = c;
-            }
-        }
+        UIDL ac = uidl.getChildByTagName("-ac");
         if (ac == null) {
             if (dropHandler != null) {
                 // remove dropHandler if not present anymore
@@ -975,42 +855,34 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
             dropHandler.updateAcceptRules(ac);
         }
-        updateHeader(uidl.getStringArrayAttribute("vcolorder"));
 
-        updateFooter(uidl.getStringArrayAttribute("vcolorder"));
-
-        if (!recalcWidths && initializedAndAttached) {
-            updateBody(rowData, uidl.getIntAttribute("firstrow"),
-                    uidl.getIntAttribute("rows"));
-            if (headerChangedDuringUpdate) {
-                lazyAdjustColumnWidths.schedule(1);
-            } else {
-                // webkits may still bug with their disturbing scrollbar bug,
-                // See #3457
-                // run overflow fix for scrollable area
-                Scheduler.get().scheduleDeferred(new Command() {
-                    public void execute() {
-                        Util.runWebkitOverflowAutoFix(scrollBodyPanel
-                                .getElement());
-                    }
-                });
-            }
+        UIDL partialRowAdditions = uidl.getChildByTagName("prows");
+        UIDL partialRowUpdates = uidl.getChildByTagName("urows");
+        if (partialRowUpdates != null || partialRowAdditions != null) {
+            updateRowsInBody(partialRowUpdates);
+            addRowsToBody(partialRowAdditions);
         } else {
-            if (scrollBody != null) {
-                scrollBody.removeFromParent();
-                lazyUnregistryBag.add(scrollBody);
+            UIDL rowData = uidl.getChildByTagName("rows");
+            if (!recalcWidths && initializedAndAttached) {
+                updateBody(rowData, uidl.getIntAttribute("firstrow"),
+                        uidl.getIntAttribute("rows"));
+                if (headerChangedDuringUpdate) {
+                    lazyAdjustColumnWidths.schedule(1);
+                } else {
+                    // webkits may still bug with their disturbing scrollbar
+                    // bug,
+                    // See #3457
+                    // run overflow fix for scrollable area
+                    Scheduler.get().scheduleDeferred(new Command() {
+                        public void execute() {
+                            Util.runWebkitOverflowAutoFix(scrollBodyPanel
+                                    .getElement());
+                        }
+                    });
+                }
+            } else {
+                initializeRows(uidl, rowData);
             }
-            scrollBody = createScrollBody();
-
-            scrollBody.renderInitialRows(rowData,
-                    uidl.getIntAttribute("firstrow"),
-                    uidl.getIntAttribute("rows"));
-            scrollBodyPanel.add(scrollBody);
-            initialContentReceived = true;
-            if (isAttached()) {
-                sizeInit();
-            }
-            scrollBody.restoreRowVisibility();
         }
 
         if (selectMode == Table.SELECT_MODE_NONE) {
@@ -1056,7 +928,106 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
         }
 
+        tabIndex = uidl.hasAttribute("tabindex") ? uidl
+                .getIntAttribute("tabindex") : 0;
         setProperTabIndex();
+
+        rendering = false;
+        headerChangedDuringUpdate = false;
+
+    }
+
+    private void initializeRows(UIDL uidl, UIDL rowData) {
+        if (scrollBody != null) {
+            scrollBody.removeFromParent();
+            lazyUnregistryBag.add(scrollBody);
+        }
+        scrollBody = createScrollBody();
+
+        scrollBody.renderInitialRows(rowData, uidl.getIntAttribute("firstrow"),
+                uidl.getIntAttribute("rows"));
+        scrollBodyPanel.add(scrollBody);
+        initialContentReceived = true;
+        if (isAttached()) {
+            sizeInit();
+        }
+        scrollBody.restoreRowVisibility();
+    }
+
+    private void updateColumnProperties(UIDL uidl) {
+        updateColumnOrder(uidl);
+
+        updateCollapsedColumns(uidl);
+
+        UIDL vc = uidl.getChildByTagName("visiblecolumns");
+        if (vc != null) {
+            tHead.updateCellsFromUIDL(vc);
+            tFoot.updateCellsFromUIDL(vc);
+        }
+
+        updateHeader(uidl.getStringArrayAttribute("vcolorder"));
+
+        updateFooter(uidl.getStringArrayAttribute("vcolorder"));
+    }
+
+    private void updateCollapsedColumns(UIDL uidl) {
+        if (uidl.hasVariable("collapsedcolumns")) {
+            tHead.setColumnCollapsingAllowed(true);
+            collapsedColumns = uidl
+                    .getStringArrayVariableAsSet("collapsedcolumns");
+        } else {
+            tHead.setColumnCollapsingAllowed(false);
+        }
+    }
+
+    private void updateColumnOrder(UIDL uidl) {
+        if (uidl.hasVariable("columnorder")) {
+            columnReordering = true;
+            columnOrder = uidl.getStringArrayVariable("columnorder");
+        } else {
+            columnReordering = false;
+            columnOrder = null;
+        }
+    }
+
+    private boolean selectSelectedRows(UIDL uidl) {
+        boolean keyboardSelectionOverRowFetchInProgress = false;
+
+        if (uidl.hasVariable("selected")) {
+            final Set<String> selectedKeys = uidl
+                    .getStringArrayVariableAsSet("selected");
+            if (scrollBody != null) {
+                Iterator<Widget> iterator = scrollBody.iterator();
+                while (iterator.hasNext()) {
+                    /*
+                     * Make the focus reflect to the server side state unless we
+                     * are currently selecting multiple rows with keyboard.
+                     */
+                    VScrollTableRow row = (VScrollTableRow) iterator.next();
+                    boolean selected = selectedKeys.contains(row.getKey());
+                    if (!selected
+                            && unSyncedselectionsBeforeRowFetch != null
+                            && unSyncedselectionsBeforeRowFetch.contains(row
+                                    .getKey())) {
+                        selected = true;
+                        keyboardSelectionOverRowFetchInProgress = true;
+                    }
+                    if (selected != row.isSelected()) {
+                        row.toggleSelection();
+                    }
+                }
+            }
+        }
+        unSyncedselectionsBeforeRowFetch = null;
+        return keyboardSelectionOverRowFetchInProgress;
+    }
+
+    private void updateSortingProperties(UIDL uidl) {
+        String oldSortColumn = sortColumn;
+        if (uidl.hasVariable("sortascending")) {
+            sortAscending = uidl.getBooleanVariable("sortascending");
+            sortColumn = uidl.getStringVariable("sortcolumn");
+        }
 
         // Force recalculation of the captionContainer element inside the header
         // cell to accomodate for the size of the sort arrow.
@@ -1070,10 +1041,91 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (oldSortedHeader != null) {
             oldSortedHeader.resizeCaptionContainer();
         }
+    }
 
-        rendering = false;
-        headerChangedDuringUpdate = false;
+    private void updateFirstVisibleAndScrollIfNeeded(UIDL uidl) {
+        firstvisible = uidl.hasVariable("firstvisible") ? uidl
+                .getIntVariable("firstvisible") : 0;
+        if (firstvisible != lastRequestedFirstvisible && scrollBody != null) {
+            // received 'surprising' firstvisible from server: scroll there
+            firstRowInViewPort = firstvisible;
+            scrollBodyPanel.setScrollPosition((int) (firstvisible * scrollBody
+                    .getRowHeight()));
+        }
+    }
 
+    private void updatePageLength(UIDL uidl) {
+        int oldPageLength = pageLength;
+        if (uidl.hasAttribute("pagelength")) {
+            pageLength = uidl.getIntAttribute("pagelength");
+        } else {
+            // pagelenght is "0" meaning scrolling is turned off
+            pageLength = totalRows;
+        }
+
+        if (oldPageLength != pageLength && initializedAndAttached) {
+            // page length changed, need to update size
+            sizeInit();
+        }
+    }
+
+    private void updateSelectionProperties(UIDL uidl) {
+        if (!BrowserInfo.get().isTouchDevice()) {
+            multiselectmode = uidl.hasAttribute("multiselectmode") ? uidl
+                    .getIntAttribute("multiselectmode")
+                    : MULTISELECT_MODE_DEFAULT;
+        }
+        nullSelectionAllowed = uidl.hasAttribute("nsa") ? uidl
+                .getBooleanAttribute("nsa") : true;
+
+        if (uidl.hasAttribute("selectmode")) {
+            if (uidl.getBooleanAttribute("readonly")) {
+                selectMode = Table.SELECT_MODE_NONE;
+            } else if (uidl.getStringAttribute("selectmode").equals("multi")) {
+                selectMode = Table.SELECT_MODE_MULTI;
+            } else if (uidl.getStringAttribute("selectmode").equals("single")) {
+                selectMode = Table.SELECT_MODE_SINGLE;
+            } else {
+                selectMode = Table.SELECT_MODE_NONE;
+            }
+        }
+    }
+
+    private void updateDragMode(UIDL uidl) {
+        dragmode = uidl.hasAttribute("dragmode") ? uidl
+                .getIntAttribute("dragmode") : 0;
+        if (BrowserInfo.get().isIE()) {
+            if (dragmode > 0) {
+                getElement().setPropertyJSO("onselectstart",
+                        getPreventTextSelectionIEHack());
+            } else {
+                getElement().setPropertyJSO("onselectstart", null);
+            }
+        }
+    }
+
+    private void updateTotalRows(UIDL uidl) {
+        int newTotalRows = uidl.getIntAttribute("totalrows");
+        if (newTotalRows != getTotalRows()) {
+            if (scrollBody != null) {
+                if (getTotalRows() == 0) {
+                    tHead.clear();
+                    tFoot.clear();
+                }
+                initializedAndAttached = false;
+                initialContentReceived = false;
+                isNewBody = true;
+            }
+            setTotalRows(newTotalRows);
+        }
+    }
+
+    protected void setTotalRows(int newTotalRows) {
+        totalRows = newTotalRows;
+    }
+
+    protected int getTotalRows() {
+        return totalRows;
     }
 
     private void focusRowFromBody() {
@@ -1141,6 +1193,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             selectFocusedRow(false, multiselectPending);
             sendSelectedRows();
         }
+    }
+
+    private void setCacheRateFromUIDL(UIDL uidl) {
+        setCacheRate(uidl.hasAttribute("cr") ? uidl.getDoubleAttribute("cr")
+                : CACHE_RATE_DEFAULT);
     }
 
     private void setCacheRate(double d) {
@@ -1274,6 +1331,22 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         scrollBody.renderRows(uidl, firstRow, reqRows);
 
+        updateCache();
+    }
+
+    private void updateRowsInBody(UIDL partialRowUpdates) {
+        if (partialRowUpdates == null) {
+            return;
+        }
+        int firstRowIx = partialRowUpdates.getIntAttribute("firsturowix");
+        int count = partialRowUpdates.getIntAttribute("numurows");
+        scrollBody.unlinkRows(firstRowIx, count);
+        scrollBody.insertRows(partialRowUpdates, firstRowIx, count);
+
+        updateCache();
+    }
+
+    private void updateCache() {
         final int optimalFirstRow = (int) (firstRowInViewPort - pageLength
                 * cache_rate);
         boolean cont = true;
@@ -1292,6 +1365,23 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         scrollBody.fixSpacers();
 
         scrollBody.restoreRowVisibility();
+    }
+
+    private void addRowsToBody(UIDL partialRowAdditions) {
+        if (partialRowAdditions == null) {
+            return;
+        }
+        if (partialRowAdditions.hasAttribute("hide")) {
+            scrollBody.unlinkRows(
+                    partialRowAdditions.getIntAttribute("firstprowix"),
+                    partialRowAdditions.getIntAttribute("numprows"));
+        } else {
+            scrollBody.insertRows(partialRowAdditions,
+                    partialRowAdditions.getIntAttribute("firstprowix"),
+                    partialRowAdditions.getIntAttribute("numprows"));
+        }
+
+        updateCache();
     }
 
     /**
@@ -3489,7 +3579,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         private double rowHeight = -1;
 
-        private final List<Widget> renderedRows = new ArrayList<Widget>();
+        private final LinkedList<Widget> renderedRows = new LinkedList<Widget>();
 
         /**
          * Due some optimizations row height measuring is deferred and initial
@@ -3610,6 +3700,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
                 fixSpacers();
             }
+
             // this may be a new set of rows due content change,
             // ensure we have proper cache rows
             int reactFirstRow = (int) (firstRowInViewPort - pageLength
@@ -3632,13 +3723,47 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                  * Branch for fetching cache above visible area.
                  * 
                  * If cache needed for both before and after visible area, this
-                 * will be rendered after-cache is reveived and rendered. So in
-                 * some rare situations table may take two cache visits to
+                 * will be rendered after-cache is received and rendered. So in
+                 * some rare situations the table may make two cache visits to
                  * server.
                  */
                 rowRequestHandler.setReqFirstRow(reactFirstRow);
                 rowRequestHandler.setReqRows(firstRendered - reactFirstRow);
                 rowRequestHandler.deferRowFetch(1);
+            }
+        }
+
+        public void insertRows(UIDL rowData, int firstIndex, int rows) {
+            aligns = tHead.getColumnAlignments();
+            final Iterator<?> it = rowData.getChildIterator();
+
+            if (firstIndex == lastRendered + 1) {
+                while (it.hasNext()) {
+                    final VScrollTableRow row = prepareRow((UIDL) it.next());
+                    addRow(row);
+                    lastRendered++;
+                }
+                fixSpacers();
+            } else if (firstIndex + rows == firstRendered) {
+                final VScrollTableRow[] rowArray = new VScrollTableRow[rows];
+                int i = rows;
+                while (it.hasNext()) {
+                    i--;
+                    rowArray[i] = prepareRow((UIDL) it.next());
+                }
+                for (i = 0; i < rows; i++) {
+                    addRowBeforeFirstRendered(rowArray[i]);
+                    firstRendered--;
+                }
+            } else {
+                // insert in the middle
+                int realIx = firstIndex - firstRendered;
+                while (it.hasNext()) {
+                    insertRowAt(prepareRow((UIDL) it.next()), realIx);
+                    lastRendered++;
+                    realIx++;
+                }
+                fixSpacers();
             }
         }
 
@@ -3692,6 +3817,31 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             renderedRows.add(row);
         }
 
+        private void insertRowAt(VScrollTableRow row, int index) {
+            row.setIndex(index);
+            if (row.isSelected()) {
+                row.addStyleName("v-selected");
+            }
+            if (index > 0) {
+                VScrollTableRow sibling = getRowByRowIndex(index - 1);
+                tBodyElement
+                        .insertAfter(row.getElement(), sibling.getElement());
+            } else {
+                VScrollTableRow sibling = getRowByRowIndex(index);
+                tBodyElement.insertBefore(row.getElement(),
+                        sibling.getElement());
+            }
+            adopt(row);
+            renderedRows.add(index, row);
+
+            // TODO: could this be made more efficient? like looping only once
+            // after all rows have been inserted
+            for (int ix = index + 1; ix < renderedRows.size(); ix++) {
+                VScrollTableRow r = (VScrollTableRow) renderedRows.get(ix);
+                r.setIndex(r.getIndex() + 1);
+            }
+        }
+
         public Iterator<Widget> iterator() {
             return renderedRows.iterator();
         }
@@ -3712,16 +3862,54 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 lastRendered--;
             }
             if (index >= 0) {
-                final VScrollTableRow toBeRemoved = (VScrollTableRow) renderedRows
-                        .get(index);
-                lazyUnregistryBag.add(toBeRemoved);
-                tBodyElement.removeChild(toBeRemoved.getElement());
-                orphan(toBeRemoved);
-                renderedRows.remove(index);
+                unlinkRowAtIndex(index);
                 fixSpacers();
                 return true;
             } else {
                 return false;
+            }
+        }
+
+        public void unlinkRows(int firstIndex, int count) {
+            if (count < 1) {
+                return;
+            }
+            if (firstRendered > firstIndex
+                    && firstRendered < firstIndex + count) {
+                firstIndex = firstRendered;
+            }
+            int lastIndex = firstIndex + count - 1;
+            if (lastRendered < lastIndex) {
+                lastIndex = lastRendered;
+            }
+            for (int ix = lastIndex; ix >= firstIndex; ix--) {
+                unlinkRowAtIndex(ix);
+                lastRendered--;
+            }
+            fixSpacers();
+        }
+
+        public void unlinkAllRowsAfter(int index) {
+            if (firstRendered > index) {
+                index = firstRendered;
+            }
+            for (int ix = renderedRows.size() - 1; ix > index; ix--) {
+                unlinkRowAtIndex(ix);
+                lastRendered--;
+            }
+            fixSpacers();
+        }
+
+        private void unlinkRowAtIndex(int index) {
+            final VScrollTableRow toBeRemoved = (VScrollTableRow) renderedRows
+                    .get(index);
+            lazyUnregistryBag.add(toBeRemoved);
+            tBodyElement.removeChild(toBeRemoved.getElement());
+            orphan(toBeRemoved);
+            renderedRows.remove(index);
+            for (int ix = index; ix < renderedRows.size(); ix++) {
+                VScrollTableRow r = (VScrollTableRow) renderedRows.get(ix);
+                r.setIndex(r.getIndex() - 1);
             }
         }
 
@@ -4001,6 +4189,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 // Inverted logic to be backwards compatible with earlier 6.4.
                 // It is very strange because rows 1,3,5 are considered "even"
                 // and 2,4,6 "odd".
+                //
+                // First remove any old styles so that both styles aren't
+                // applied when indexes are updated.
+                removeStyleName(ROW_CLASSNAME_ODD);
+                removeStyleName(ROW_CLASSNAME_EVEN);
                 if (!isOdd) {
                     addStyleName(ROW_CLASSNAME_ODD);
                 } else {

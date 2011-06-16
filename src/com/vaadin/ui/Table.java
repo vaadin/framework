@@ -1422,216 +1422,207 @@ public class Table extends AbstractSelect implements Action.Container,
             return;
         }
 
-        if (isContentRefreshesEnabled) {
-
-            HashSet<Property> oldListenedProperties = listenedProperties;
-            HashSet<Component> oldVisibleComponents = visibleComponents;
-
-            // initialize the listener collections
-            listenedProperties = new HashSet<Property>();
-            visibleComponents = new HashSet<Component>();
-
-            // Collects the basic facts about the table page
-            final Object[] colids = getVisibleColumns();
-            final int cols = colids.length;
-            final int pagelen = getPageLength();
-            int firstIndex = getCurrentPageFirstItemIndex();
-            int rows, totalRows;
-            rows = totalRows = size();
-            if (rows > 0 && firstIndex >= 0) {
-                rows -= firstIndex;
-            }
-            if (pagelen > 0 && pagelen < rows) {
-                rows = pagelen;
-            }
-
-            // If "to be painted next" variables are set, use them
-            if (lastToBeRenderedInClient - firstToBeRenderedInClient > 0) {
-                rows = lastToBeRenderedInClient - firstToBeRenderedInClient + 1;
-            }
-            Object id;
-            if (firstToBeRenderedInClient >= 0) {
-                if (firstToBeRenderedInClient < totalRows) {
-                    firstIndex = firstToBeRenderedInClient;
-                } else {
-                    firstIndex = totalRows - 1;
-                }
-            } else {
-                // initial load
-                firstToBeRenderedInClient = firstIndex;
-            }
-            if (totalRows > 0) {
-                if (rows + firstIndex > totalRows) {
-                    rows = totalRows - firstIndex;
-                }
-            } else {
-                rows = 0;
-            }
-
-            Object[][] cells = new Object[cols + CELL_FIRSTCOL][rows];
-            if (rows == 0) {
-                pageBuffer = cells;
-                unregisterPropertiesAndComponents(oldListenedProperties,
-                        oldVisibleComponents);
-
-                /*
-                 * We need to repaint so possible header or footer changes are
-                 * sent to the server
-                 */
-                requestRepaint();
-
-                return;
-            }
-
-            // Gets the first item id
-            if (items instanceof Container.Indexed) {
-                id = getIdByIndex(firstIndex);
-            } else {
-                id = firstItemId();
-                for (int i = 0; i < firstIndex; i++) {
-                    id = nextItemId(id);
-                }
-            }
-
-            final int headmode = getRowHeaderMode();
-            final boolean[] iscomponent = new boolean[cols];
-            for (int i = 0; i < cols; i++) {
-                iscomponent[i] = columnGenerators.containsKey(colids[i])
-                        || Component.class.isAssignableFrom(getType(colids[i]));
-            }
-            int firstIndexNotInCache;
-            if (pageBuffer != null && pageBuffer[CELL_ITEMID].length > 0) {
-                firstIndexNotInCache = pageBufferFirstIndex
-                        + pageBuffer[CELL_ITEMID].length;
-            } else {
-                firstIndexNotInCache = -1;
-            }
-
-            // Creates the page contents
-            int filledRows = 0;
-            for (int i = 0; i < rows && id != null; i++) {
-                cells[CELL_ITEMID][i] = id;
-                cells[CELL_KEY][i] = itemIdMapper.key(id);
-                if (headmode != ROW_HEADER_MODE_HIDDEN) {
-                    switch (headmode) {
-                    case ROW_HEADER_MODE_INDEX:
-                        cells[CELL_HEADER][i] = String.valueOf(i + firstIndex
-                                + 1);
-                        break;
-                    default:
-                        cells[CELL_HEADER][i] = getItemCaption(id);
-                    }
-                    cells[CELL_ICON][i] = getItemIcon(id);
-                }
-
-                if (cols > 0) {
-                    for (int j = 0; j < cols; j++) {
-                        if (isColumnCollapsed(colids[j])) {
-                            continue;
-                        }
-                        Property p = null;
-                        Object value = "";
-                        boolean isGenerated = columnGenerators
-                                .containsKey(colids[j]);
-
-                        if (!isGenerated) {
-                            p = getContainerProperty(id, colids[j]);
-                        }
-
-                        // check in current pageBuffer already has row
-                        int index = firstIndex + i;
-                        if (p != null || isGenerated) {
-                            if (index < firstIndexNotInCache
-                                    && index >= pageBufferFirstIndex) {
-                                // we have data already in our cache,
-                                // recycle it instead of fetching it via
-                                // getValue/getPropertyValue
-                                int indexInOldBuffer = index
-                                        - pageBufferFirstIndex;
-                                value = pageBuffer[CELL_FIRSTCOL + j][indexInOldBuffer];
-                                if (!isGenerated && iscomponent[j]
-                                        || !(value instanceof Component)) {
-                                    listenProperty(p, oldListenedProperties);
-                                }
-                            } else {
-                                if (isGenerated) {
-                                    ColumnGenerator cg = columnGenerators
-                                            .get(colids[j]);
-                                    value = cg
-                                            .generateCell(this, id, colids[j]);
-
-                                } else if (iscomponent[j]) {
-                                    value = p.getValue();
-                                    listenProperty(p, oldListenedProperties);
-                                } else if (p != null) {
-                                    value = getPropertyValue(id, colids[j], p);
-                                    /*
-                                     * If returned value is Component (via
-                                     * fieldfactory or overridden
-                                     * getPropertyValue) we excpect it to listen
-                                     * property value changes. Otherwise if
-                                     * property emits value change events, table
-                                     * will start to listen them and refresh
-                                     * content when needed.
-                                     */
-                                    if (!(value instanceof Component)) {
-                                        listenProperty(p, oldListenedProperties);
-                                    }
-                                } else {
-                                    value = getPropertyValue(id, colids[j],
-                                            null);
-                                }
-                            }
-                        }
-
-                        if (value instanceof Component) {
-                            if (oldVisibleComponents == null
-                                    || !oldVisibleComponents.contains(value)) {
-                                ((Component) value).setParent(this);
-                            }
-                            visibleComponents.add((Component) value);
-                        }
-                        cells[CELL_FIRSTCOL + j][i] = value;
-                    }
-                }
-
-                // Gets the next item id
-                if (items instanceof Container.Indexed) {
-                    int index = firstIndex + i + 1;
-                    if (index < totalRows) {
-                        id = getIdByIndex(index);
-                    } else {
-                        id = null;
-                    }
-                } else {
-                    id = nextItemId(id);
-                }
-
-                filledRows++;
-            }
-
-            // Assures that all the rows of the cell-buffer are valid
-            if (filledRows != cells[0].length) {
-                final Object[][] temp = new Object[cells.length][filledRows];
-                for (int i = 0; i < cells.length; i++) {
-                    for (int j = 0; j < filledRows; j++) {
-                        temp[i][j] = cells[i][j];
-                    }
-                }
-                cells = temp;
-            }
-
-            pageBufferFirstIndex = firstIndex;
-
-            // Saves the results to internal buffer
-            pageBuffer = cells;
-
-            unregisterPropertiesAndComponents(oldListenedProperties,
-                    oldVisibleComponents);
-
-            requestRepaint();
+        if (!isContentRefreshesEnabled) {
+            return;
         }
 
+        // initialize the listener collections
+        listenedProperties = new HashSet<Property>();
+        visibleComponents = new HashSet<Component>();
+
+        // Collects the basic facts about the table page
+        final int pagelen = getPageLength();
+        int firstIndex = getCurrentPageFirstItemIndex();
+        int rows, totalRows;
+        rows = totalRows = size();
+        if (rows > 0 && firstIndex >= 0) {
+            rows -= firstIndex;
+        }
+        if (pagelen > 0 && pagelen < rows) {
+            rows = pagelen;
+        }
+
+        // If "to be painted next" variables are set, use them
+        if (lastToBeRenderedInClient - firstToBeRenderedInClient > 0) {
+            rows = lastToBeRenderedInClient - firstToBeRenderedInClient + 1;
+        }
+        if (firstToBeRenderedInClient >= 0) {
+            if (firstToBeRenderedInClient < totalRows) {
+                firstIndex = firstToBeRenderedInClient;
+            } else {
+                firstIndex = totalRows - 1;
+            }
+        } else {
+            // initial load
+            firstToBeRenderedInClient = firstIndex;
+        }
+        if (totalRows > 0) {
+            if (rows + firstIndex > totalRows) {
+                rows = totalRows - firstIndex;
+            }
+        } else {
+            rows = 0;
+        }
+
+        // Saves the results to internal buffer
+        pageBuffer = getVisibleCellsNoCache(firstIndex, rows);
+
+        if (rows > 0) {
+            pageBufferFirstIndex = firstIndex;
+        }
+
+        requestRepaint();
+    }
+
+    private Object[][] getVisibleCellsNoCache(int firstIndex, int rows) {
+        final Object[] colids = getVisibleColumns();
+        final int cols = colids.length;
+
+        HashSet<Property> oldListenedProperties = listenedProperties;
+        HashSet<Component> oldVisibleComponents = visibleComponents;
+
+        Object[][] cells = new Object[cols + CELL_FIRSTCOL][rows];
+        if (rows == 0) {
+            unregisterPropertiesAndComponents(oldListenedProperties,
+                    oldVisibleComponents);
+            return cells;
+        }
+
+        // Gets the first item id
+        Object id;
+        if (items instanceof Container.Indexed) {
+            id = getIdByIndex(firstIndex);
+        } else {
+            id = firstItemId();
+            for (int i = 0; i < firstIndex; i++) {
+                id = nextItemId(id);
+            }
+        }
+
+        final int headmode = getRowHeaderMode();
+        final boolean[] iscomponent = new boolean[cols];
+        for (int i = 0; i < cols; i++) {
+            iscomponent[i] = columnGenerators.containsKey(colids[i])
+                    || Component.class.isAssignableFrom(getType(colids[i]));
+        }
+        int firstIndexNotInCache;
+        if (pageBuffer != null && pageBuffer[CELL_ITEMID].length > 0) {
+            firstIndexNotInCache = pageBufferFirstIndex
+                    + pageBuffer[CELL_ITEMID].length;
+        } else {
+            firstIndexNotInCache = -1;
+        }
+
+        // Creates the page contents
+        int filledRows = 0;
+        for (int i = 0; i < rows && id != null; i++) {
+            cells[CELL_ITEMID][i] = id;
+            cells[CELL_KEY][i] = itemIdMapper.key(id);
+            if (headmode != ROW_HEADER_MODE_HIDDEN) {
+                switch (headmode) {
+                case ROW_HEADER_MODE_INDEX:
+                    cells[CELL_HEADER][i] = String.valueOf(i + firstIndex + 1);
+                    break;
+                default:
+                    cells[CELL_HEADER][i] = getItemCaption(id);
+                }
+                cells[CELL_ICON][i] = getItemIcon(id);
+            }
+
+            for (int j = 0; j < cols; j++) {
+                if (isColumnCollapsed(colids[j])) {
+                    continue;
+                }
+                Property p = null;
+                Object value = "";
+                boolean isGenerated = columnGenerators.containsKey(colids[j]);
+
+                if (!isGenerated) {
+                    p = getContainerProperty(id, colids[j]);
+                }
+
+                // check in current pageBuffer already has row
+                int index = firstIndex + i;
+                if (p != null || isGenerated) {
+                    if (index < firstIndexNotInCache
+                            && index >= pageBufferFirstIndex) {
+                        // we have data already in our cache,
+                        // recycle it instead of fetching it via
+                        // getValue/getPropertyValue
+                        int indexInOldBuffer = index - pageBufferFirstIndex;
+                        value = pageBuffer[CELL_FIRSTCOL + j][indexInOldBuffer];
+                        if (!isGenerated && iscomponent[j]
+                                || !(value instanceof Component)) {
+                            listenProperty(p, oldListenedProperties);
+                        }
+                    } else {
+                        if (isGenerated) {
+                            ColumnGenerator cg = columnGenerators
+                                    .get(colids[j]);
+                            value = cg.generateCell(this, id, colids[j]);
+
+                        } else if (iscomponent[j]) {
+                            value = p.getValue();
+                            listenProperty(p, oldListenedProperties);
+                        } else if (p != null) {
+                            value = getPropertyValue(id, colids[j], p);
+                            /*
+                             * If returned value is Component (via fieldfactory
+                             * or overridden getPropertyValue) we excpect it to
+                             * listen property value changes. Otherwise if
+                             * property emits value change events, table will
+                             * start to listen them and refresh content when
+                             * needed.
+                             */
+                            if (!(value instanceof Component)) {
+                                listenProperty(p, oldListenedProperties);
+                            }
+                        } else {
+                            value = getPropertyValue(id, colids[j], null);
+                        }
+                    }
+                }
+
+                if (value instanceof Component) {
+                    if (oldVisibleComponents == null
+                            || !oldVisibleComponents.contains(value)) {
+                        ((Component) value).setParent(this);
+                    }
+                    visibleComponents.add((Component) value);
+                }
+                cells[CELL_FIRSTCOL + j][i] = value;
+            }
+
+            // Gets the next item id
+            if (items instanceof Container.Indexed) {
+                int index = firstIndex + i + 1;
+                if (index < size()) {
+                    id = getIdByIndex(index);
+                } else {
+                    id = null;
+                }
+            } else {
+                id = nextItemId(id);
+            }
+
+            filledRows++;
+        }
+
+        // Assures that all the rows of the cell-buffer are valid
+        if (filledRows != cells[0].length) {
+            final Object[][] temp = new Object[cells.length][filledRows];
+            for (int i = 0; i < cells.length; i++) {
+                for (int j = 0; j < filledRows; j++) {
+                    temp[i][j] = cells[i][j];
+                }
+            }
+            cells = temp;
+        }
+
+        unregisterPropertiesAndComponents(oldListenedProperties,
+                oldVisibleComponents);
+
+        return cells;
     }
 
     private void listenProperty(Property p,
@@ -2312,98 +2303,218 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
+        /*
+         * Body actions - Actions which has the target null and can be invoked
+         * by right clicking on the table body.
+         */
+        final Set<Action> actionSet = findAndPaintBodyActions(target);
 
-        // The tab ordering number
-        if (getTabIndex() > 0) {
-            target.addAttribute("tabindex", getTabIndex());
-        }
-
-        if (dragMode != TableDragMode.NONE) {
-            target.addAttribute("dragmode", dragMode.ordinal());
-        }
-
-        if (multiSelectMode != MultiSelectMode.DEFAULT) {
-            target.addAttribute("multiselectmode", multiSelectMode.ordinal());
-        }
-
-        // Initialize temps
-        final Object[] colids = getVisibleColumns();
-        final int cols = colids.length;
-        final int first = getCurrentPageFirstItemIndex();
-        int total = size();
-        final int pagelen = getPageLength();
-        final int colHeadMode = getColumnHeaderMode();
-        final boolean colheads = colHeadMode != COLUMN_HEADER_MODE_HIDDEN;
         final Object[][] cells = getVisibleCells();
-        final boolean iseditable = isEditable();
-        int rows;
-        if (reqRowsToPaint >= 0) {
-            rows = reqRowsToPaint;
-        } else {
-            rows = cells[0].length;
-            if (alwaysRecalculateColumnWidths) {
-                // TODO experimental feature for now: tell the client to
-                // recalculate column widths.
-                // We'll only do this for paints that do not originate from
-                // table scroll/cache requests (i.e when reqRowsToPaint<0)
-                target.addAttribute("recalcWidths", true);
-            }
-        }
+        int rows = findNumRowsToPaint(target, cells);
 
-        if (!isNullSelectionAllowed() && getNullSelectionItemId() != null
-                && containsId(getNullSelectionItemId())) {
+        int total = size();
+        if (shouldHideNullSelectionItem()) {
             total--;
             rows--;
         }
 
-        // selection support
-        LinkedList<String> selectedKeys = new LinkedList<String>();
-        if (isMultiSelect()) {
-            HashSet<?> sel = new HashSet<Object>((Set<?>) getValue());
-            Collection<?> vids = getVisibleItemIds();
-            for (Iterator<?> it = vids.iterator(); it.hasNext();) {
-                Object id = it.next();
-                if (sel.contains(id)) {
-                    selectedKeys.add(itemIdMapper.key(id));
-                }
-            }
+        // Table attributes
+        paintTableAttributes(target, rows, total);
+
+        paintVisibleColumnOrder(target);
+
+        // Rows
+        if (isPartialRowUpdate()) {
+            paintPartialRowUpdate(target, actionSet);
         } else {
-            Object value = getValue();
-            if (value == null) {
-                value = getNullSelectionItemId();
-            }
-            if (value != null) {
-                selectedKeys.add(itemIdMapper.key(value));
-            }
+            paintRows(target, cells, actionSet);
         }
 
-        // Table attributes
-        if (isSelectable()) {
-            target.addAttribute("selectmode", (isMultiSelect() ? "multi"
-                    : "single"));
-        } else {
-            target.addAttribute("selectmode", "none");
+        paintSorting(target);
+
+        resetVariablesAndPageBuffer(target);
+
+        // Actions
+        paintActions(target, actionSet);
+
+        paintColumnOrder(target);
+
+        // Available columns
+        paintAvailableColumns(target);
+
+        paintVisibleColumns(target);
+
+        if (dropHandler != null) {
+            dropHandler.getAcceptCriterion().paint(target);
         }
+    }
+
+    private void paintPartialRowUpdate(PaintTarget target, Set<Action> actionSet)
+            throws PaintException {
+        paintPartialRowUpdates(target, actionSet);
+        paintPartialRowAdditions(target, actionSet);
+    }
+
+    private void paintPartialRowUpdates(PaintTarget target,
+            Set<Action> actionSet) throws PaintException {
+        final boolean[] iscomponent = findCellsWithComponents();
+
+        int firstIx = getFirstUpdatedItemIndex();
+        int count = getUpdatedRowCount();
+
+        target.startTag("urows");
+        target.addAttribute("firsturowix", firstIx);
+        target.addAttribute("numurows", count);
+
+        // Partial row updates bypass the normal caching mechanism.
+        Object[][] cells = getVisibleCellsNoCache(firstIx, count);
+        for (int indexInRowbuffer = 0; indexInRowbuffer < count; indexInRowbuffer++) {
+            final Object itemId = cells[CELL_ITEMID][indexInRowbuffer];
+
+            if (shouldHideNullSelectionItem()) {
+                // Remove null selection item if null selection is not allowed
+                continue;
+            }
+
+            paintRow(target, cells, isEditable(), actionSet, iscomponent,
+                    indexInRowbuffer, itemId);
+        }
+        target.endTag("urows");
+    }
+
+    private void paintPartialRowAdditions(PaintTarget target,
+            Set<Action> actionSet) throws PaintException {
+        final boolean[] iscomponent = findCellsWithComponents();
+
+        int firstIx = getFirstAddedItemIndex();
+        int count = getAddedRowCount();
+
+        target.startTag("prows");
+        target.addAttribute("firstprowix", firstIx);
+        target.addAttribute("numprows", count);
+
+        if (!shouldHideAddedRows()) {
+            // Partial row additions bypass the normal caching mechanism.
+            Object[][] cells = getVisibleCellsNoCache(firstIx, count);
+            for (int indexInRowbuffer = 0; indexInRowbuffer < count; indexInRowbuffer++) {
+                final Object itemId = cells[CELL_ITEMID][indexInRowbuffer];
+                if (shouldHideNullSelectionItem()) {
+                    // Remove null selection item if null selection is not
+                    // allowed
+                    continue;
+                }
+
+                paintRow(target, cells, isEditable(), actionSet, iscomponent,
+                        indexInRowbuffer, itemId);
+            }
+        } else {
+            target.addAttribute("hide", true);
+        }
+        target.endTag("prows");
+    }
+
+    /**
+     * Subclass and override this to enable partial row updates and additions,
+     * which bypass the normal caching mechanism. This is useful for e.g.
+     * TreeTable.
+     * 
+     * @return true if this update is a partial row update, false if not. For
+     *         plain Table it is always false.
+     */
+    protected boolean isPartialRowUpdate() {
+        return false;
+    }
+
+    /**
+     * Subclass and override this to enable partial row additions, bypassing the
+     * normal caching mechanism. This is useful for e.g. TreeTable, where
+     * expanding a node should only fetch and add the items inside of that node.
+     * 
+     * @return The index of the first added item. For plain Table it is always
+     *         0.
+     */
+    protected int getFirstAddedItemIndex() {
+        return 0;
+    }
+
+    /**
+     * Subclass and override this to enable partial row additions, bypassing the
+     * normal caching mechanism. This is useful for e.g. TreeTable, where
+     * expanding a node should only fetch and add the items inside of that node.
+     * 
+     * @return the number of rows to be added, starting at the index returned by
+     *         {@link #getFirstAddedItemIndex()}. For plain Table it is always
+     *         0.
+     */
+    protected int getAddedRowCount() {
+        return 0;
+    }
+
+    /**
+     * Subclass and override this to enable removing of rows, bypassing the
+     * normal caching and lazy loading mechanism. This is useful for e.g.
+     * TreeTable, when you need to hide certain rows as a node is collapsed.
+     * 
+     * This should return true if the rows pointed to by
+     * {@link #getFirstAddedItemIndex()} and {@link #getAddedRowCount()} should
+     * be hidden instead of added.
+     * 
+     * @return whether the rows to add (see {@link #getFirstAddedItemIndex()}
+     *         and {@link #getAddedRowCount()}) should be added or hidden. For
+     *         plain Table it is always false.
+     */
+    protected boolean shouldHideAddedRows() {
+        return false;
+    }
+
+    /**
+     * Subclass and override this to enable partial row updates, bypassing the
+     * normal caching and lazy loading mechanism. This is useful for updating
+     * the state of certain rows, e.g. in the TreeTable the collapsed state of a
+     * single node is updated using this mechanism.
+     * 
+     * @return the index of the first item to be updated. For plain Table it is
+     *         always 0.
+     */
+    protected int getFirstUpdatedItemIndex() {
+        return 0;
+    }
+
+    /**
+     * Subclass and override this to enable partial row updates, bypassing the
+     * normal caching and lazy loading mechanism. This is useful for updating
+     * the state of certain rows, e.g. in the TreeTable the collapsed state of a
+     * single node is updated using this mechanism.
+     * 
+     * @return the number of rows to update, starting at the index returned by
+     *         {@link #getFirstUpdatedItemIndex()}. For plain table it is always
+     *         0.
+     */
+    protected int getUpdatedRowCount() {
+        return 0;
+    }
+
+    private void paintTableAttributes(PaintTarget target, int rows, int total)
+            throws PaintException {
+        paintTabIndex(target);
+        paintDragMode(target);
+        paintSelectMode(target);
 
         if (cacheRate != CACHE_RATE_DEFAULT) {
             target.addAttribute("cr", cacheRate);
         }
 
-        target.addAttribute("cols", cols);
+        target.addAttribute("cols", getVisibleColumns().length);
         target.addAttribute("rows", rows);
-
-        if (!isNullSelectionAllowed()) {
-            target.addAttribute("nsa", false);
-        }
 
         target.addAttribute("firstrow",
                 (reqFirstRowToPaint >= 0 ? reqFirstRowToPaint
                         : firstToBeRenderedInClient));
         target.addAttribute("totalrows", total);
-        if (pagelen != 0) {
-            target.addAttribute("pagelength", pagelen);
+        if (getPageLength() != 0) {
+            target.addAttribute("pagelength", getPageLength());
         }
-        if (colheads) {
+        if (areColumnHeadersEnabled()) {
             target.addAttribute("colheaders", true);
         }
         if (rowHeadersAreEnabled()) {
@@ -2412,55 +2523,131 @@ public class Table extends AbstractSelect implements Action.Container,
 
         target.addAttribute("colfooters", columnFootersVisible);
 
-        /*
-         * Body actions - Actions which has the target null and can be invoked
-         * by right clicking on the table body.
-         */
-        final Set<Action> actionSet = new LinkedHashSet<Action>();
-        if (actionHandlers != null) {
-            final ArrayList<String> keys = new ArrayList<String>();
-            for (Handler ah : actionHandlers) {
-                // Getting actions for the null item, which in this case means
-                // the body item
-                final Action[] aa = ah.getActions(null, this);
-                if (aa != null) {
-                    for (int ai = 0; ai < aa.length; ai++) {
-                        final String key = actionMapper.key(aa[ai]);
-                        actionSet.add(aa[ai]);
-                        keys.add(key);
+        // The cursors are only shown on pageable table
+        if (getCurrentPageFirstItemIndex() != 0 || getPageLength() > 0) {
+            target.addVariable(this, "firstvisible",
+                    getCurrentPageFirstItemIndex());
+        }
+    }
+
+    /**
+     * Resets and paints "to be painted next" variables. Also reset pageBuffer
+     */
+    private void resetVariablesAndPageBuffer(PaintTarget target)
+            throws PaintException {
+        reqFirstRowToPaint = -1;
+        reqRowsToPaint = -1;
+        containerChangeToBeRendered = false;
+        target.addVariable(this, "reqrows", reqRowsToPaint);
+        target.addVariable(this, "reqfirstrow", reqFirstRowToPaint);
+    }
+
+    private boolean areColumnHeadersEnabled() {
+        return getColumnHeaderMode() != COLUMN_HEADER_MODE_HIDDEN;
+    }
+
+    private void paintVisibleColumns(PaintTarget target) throws PaintException {
+        target.startTag("visiblecolumns");
+        if (rowHeadersAreEnabled()) {
+            target.startTag("column");
+            target.addAttribute("cid", ROW_HEADER_COLUMN_KEY);
+            paintColumnWidth(target, ROW_HEADER_FAKE_PROPERTY_ID);
+            target.endTag("column");
+        }
+        final Collection<?> sortables = getSortableContainerPropertyIds();
+        for (Object colId : visibleColumns) {
+            if (colId != null) {
+                target.startTag("column");
+                target.addAttribute("cid", columnIdMap.key(colId));
+                final String head = getColumnHeader(colId);
+                target.addAttribute("caption", (head != null ? head : ""));
+                final String foot = getColumnFooter(colId);
+                target.addAttribute("fcaption", (foot != null ? foot : ""));
+                if (isColumnCollapsed(colId)) {
+                    target.addAttribute("collapsed", true);
+                }
+                if (areColumnHeadersEnabled()) {
+                    if (getColumnIcon(colId) != null) {
+                        target.addAttribute("icon", getColumnIcon(colId));
+                    }
+                    if (sortables.contains(colId)) {
+                        target.addAttribute("sortable", true);
                     }
                 }
+                if (!ALIGN_LEFT.equals(getColumnAlignment(colId))) {
+                    target.addAttribute("align", getColumnAlignment(colId));
+                }
+                paintColumnWidth(target, colId);
+                target.endTag("column");
             }
-            target.addAttribute("alb", keys.toArray());
         }
+        target.endTag("visiblecolumns");
+    }
 
-        // Visible column order
-        final Collection<?> sortables = getSortableContainerPropertyIds();
-        final ArrayList<String> visibleColOrder = new ArrayList<String>();
-        for (final Iterator<Object> it = visibleColumns.iterator(); it
-                .hasNext();) {
-            final Object columnId = it.next();
-            if (!isColumnCollapsed(columnId)) {
-                visibleColOrder.add(columnIdMap.key(columnId));
+    private void paintAvailableColumns(PaintTarget target)
+            throws PaintException {
+        if (columnCollapsingAllowed) {
+            final HashSet<Object> collapsedCols = new HashSet<Object>();
+            for (Object colId : visibleColumns) {
+                if (isColumnCollapsed(colId)) {
+                    collapsedCols.add(colId);
+                }
             }
+            final String[] collapsedKeys = new String[collapsedCols.size()];
+            int nextColumn = 0;
+            for (Object colId : visibleColumns) {
+                if (isColumnCollapsed(colId)) {
+                    collapsedKeys[nextColumn++] = columnIdMap.key(colId);
+                }
+            }
+            target.addVariable(this, "collapsedcolumns", collapsedKeys);
         }
-        target.addAttribute("vcolorder", visibleColOrder.toArray());
+    }
 
-        // Rows
-        final boolean selectable = isSelectable();
-        final boolean[] iscomponent = new boolean[visibleColumns.size()];
-        int iscomponentIndex = 0;
-        for (final Iterator<Object> it = visibleColumns.iterator(); it
-                .hasNext() && iscomponentIndex < iscomponent.length;) {
-            final Object columnId = it.next();
-            if (columnGenerators.containsKey(columnId)) {
-                iscomponent[iscomponentIndex++] = true;
-            } else {
-                final Class<?> colType = getType(columnId);
-                iscomponent[iscomponentIndex++] = colType != null
-                        && Component.class.isAssignableFrom(colType);
+    private void paintActions(PaintTarget target, final Set<Action> actionSet)
+            throws PaintException {
+        if (!actionSet.isEmpty()) {
+            target.addVariable(this, "action", "");
+            target.startTag("actions");
+            for (Action a : actionSet) {
+                target.startTag("action");
+                if (a.getCaption() != null) {
+                    target.addAttribute("caption", a.getCaption());
+                }
+                if (a.getIcon() != null) {
+                    target.addAttribute("icon", a.getIcon());
+                }
+                target.addAttribute("key", actionMapper.key(a));
+                target.endTag("action");
             }
+            target.endTag("actions");
         }
+    }
+
+    private void paintColumnOrder(PaintTarget target) throws PaintException {
+        if (columnReorderingAllowed) {
+            final String[] colorder = new String[visibleColumns.size()];
+            int i = 0;
+            for (Object colId : visibleColumns) {
+                colorder[i++] = columnIdMap.key(colId);
+            }
+            target.addVariable(this, "columnorder", colorder);
+        }
+    }
+
+    private void paintSorting(PaintTarget target) throws PaintException {
+        // Sorting
+        if (getContainerDataSource() instanceof Container.Sortable) {
+            target.addVariable(this, "sortcolumn",
+                    columnIdMap.key(sortContainerPropertyId));
+            target.addVariable(this, "sortascending", sortAscending);
+        }
+    }
+
+    private void paintRows(PaintTarget target, final Object[][] cells,
+            final Set<Action> actionSet) throws PaintException {
+        final boolean[] iscomponent = findCellsWithComponents();
+
         target.startTag("rows");
         // cells array contains all that are supposed to be visible on client,
         // but we'll start from the one requested by client
@@ -2483,131 +2670,144 @@ public class Table extends AbstractSelect implements Action.Container,
         for (int indexInRowbuffer = start; indexInRowbuffer < end; indexInRowbuffer++) {
             final Object itemId = cells[CELL_ITEMID][indexInRowbuffer];
 
-            if (!isNullSelectionAllowed() && getNullSelectionItemId() != null
-                    && itemId == getNullSelectionItemId()) {
+            if (shouldHideNullSelectionItem()) {
                 // Remove null selection item if null selection is not allowed
                 continue;
             }
 
-            paintRow(target, cells, iseditable, actionSet, iscomponent,
+            paintRow(target, cells, isEditable(), actionSet, iscomponent,
                     indexInRowbuffer, itemId);
         }
         target.endTag("rows");
+    }
 
-        // The select variable is only enabled if selectable
-        if (selectable) {
-            target.addVariable(this, "selected",
-                    selectedKeys.toArray(new String[selectedKeys.size()]));
-        }
-
-        // The cursors are only shown on pageable table
-        if (first != 0 || getPageLength() > 0) {
-            target.addVariable(this, "firstvisible", first);
-        }
-
-        // Sorting
-        if (getContainerDataSource() instanceof Container.Sortable) {
-            target.addVariable(this, "sortcolumn",
-                    columnIdMap.key(sortContainerPropertyId));
-            target.addVariable(this, "sortascending", sortAscending);
-        }
-
-        // Resets and paints "to be painted next" variables. Also reset
-        // pageBuffer
-        reqFirstRowToPaint = -1;
-        reqRowsToPaint = -1;
-        containerChangeToBeRendered = false;
-        target.addVariable(this, "reqrows", reqRowsToPaint);
-        target.addVariable(this, "reqfirstrow", reqFirstRowToPaint);
-
-        // Actions
-        if (!actionSet.isEmpty()) {
-            target.addVariable(this, "action", "");
-            target.startTag("actions");
-            for (final Iterator<Action> it = actionSet.iterator(); it.hasNext();) {
-                final Action a = it.next();
-                target.startTag("action");
-                if (a.getCaption() != null) {
-                    target.addAttribute("caption", a.getCaption());
-                }
-                if (a.getIcon() != null) {
-                    target.addAttribute("icon", a.getIcon());
-                }
-                target.addAttribute("key", actionMapper.key(a));
-                target.endTag("action");
-            }
-            target.endTag("actions");
-        }
-        if (columnReorderingAllowed) {
-            final String[] colorder = new String[visibleColumns.size()];
-            int i = 0;
-            for (final Iterator<Object> it = visibleColumns.iterator(); it
-                    .hasNext() && i < colorder.length;) {
-                colorder[i++] = columnIdMap.key(it.next());
-            }
-            target.addVariable(this, "columnorder", colorder);
-        }
-        // Available columns
-        if (columnCollapsingAllowed) {
-            final HashSet<Object> ccs = new HashSet<Object>();
-            for (final Iterator<Object> i = visibleColumns.iterator(); i
-                    .hasNext();) {
-                final Object o = i.next();
-                if (isColumnCollapsed(o)) {
-                    ccs.add(o);
-                }
-            }
-            final String[] collapsedkeys = new String[ccs.size()];
-            int nextColumn = 0;
-            for (final Iterator<Object> it = visibleColumns.iterator(); it
-                    .hasNext() && nextColumn < collapsedkeys.length;) {
-                final Object columnId = it.next();
-                if (isColumnCollapsed(columnId)) {
-                    collapsedkeys[nextColumn++] = columnIdMap.key(columnId);
-                }
-            }
-            target.addVariable(this, "collapsedcolumns", collapsedkeys);
-        }
-        target.startTag("visiblecolumns");
-        if (rowHeadersAreEnabled()) {
-            target.startTag("column");
-            target.addAttribute("cid", ROW_HEADER_COLUMN_KEY);
-            paintColumnWidth(target, ROW_HEADER_FAKE_PROPERTY_ID);
-            target.endTag("column");
-        }
-        int i = 0;
+    private boolean[] findCellsWithComponents() {
+        final boolean[] isComponent = new boolean[visibleColumns.size()];
+        int isComponentIndex = 0;
         for (final Iterator<Object> it = visibleColumns.iterator(); it
-                .hasNext(); i++) {
+                .hasNext() && isComponentIndex < isComponent.length;) {
             final Object columnId = it.next();
-            if (columnId != null) {
-                target.startTag("column");
-                target.addAttribute("cid", columnIdMap.key(columnId));
-                final String head = getColumnHeader(columnId);
-                target.addAttribute("caption", (head != null ? head : ""));
-                final String foot = getColumnFooter(columnId);
-                target.addAttribute("fcaption", (foot != null ? foot : ""));
-                if (isColumnCollapsed(columnId)) {
-                    target.addAttribute("collapsed", true);
-                }
-                if (colheads) {
-                    if (getColumnIcon(columnId) != null) {
-                        target.addAttribute("icon", getColumnIcon(columnId));
-                    }
-                    if (sortables.contains(columnId)) {
-                        target.addAttribute("sortable", true);
-                    }
-                }
-                if (!ALIGN_LEFT.equals(getColumnAlignment(columnId))) {
-                    target.addAttribute("align", getColumnAlignment(columnId));
-                }
-                paintColumnWidth(target, columnId);
-                target.endTag("column");
+            if (columnGenerators.containsKey(columnId)) {
+                isComponent[isComponentIndex++] = true;
+            } else {
+                final Class<?> colType = getType(columnId);
+                isComponent[isComponentIndex++] = colType != null
+                        && Component.class.isAssignableFrom(colType);
             }
         }
-        target.endTag("visiblecolumns");
+        return isComponent;
+    }
 
-        if (dropHandler != null) {
-            dropHandler.getAcceptCriterion().paint(target);
+    private void paintVisibleColumnOrder(PaintTarget target) {
+        // Visible column order
+        final ArrayList<String> visibleColOrder = new ArrayList<String>();
+        for (final Iterator<Object> it = visibleColumns.iterator(); it
+                .hasNext();) {
+            final Object columnId = it.next();
+            if (!isColumnCollapsed(columnId)) {
+                visibleColOrder.add(columnIdMap.key(columnId));
+            }
+        }
+        target.addAttribute("vcolorder", visibleColOrder.toArray());
+    }
+
+    private Set<Action> findAndPaintBodyActions(PaintTarget target) {
+        Set<Action> actionSet = new LinkedHashSet<Action>();
+        if (actionHandlers != null) {
+            final ArrayList<String> keys = new ArrayList<String>();
+            for (Handler ah : actionHandlers) {
+                // Getting actions for the null item, which in this case means
+                // the body item
+                final Action[] actions = ah.getActions(null, this);
+                if (actions != null) {
+                    for (Action action : actions) {
+                        actionSet.add(action);
+                        keys.add(actionMapper.key(action));
+                    }
+                }
+            }
+            target.addAttribute("alb", keys.toArray());
+        }
+        return actionSet;
+    }
+
+    private boolean shouldHideNullSelectionItem() {
+        return !isNullSelectionAllowed() && getNullSelectionItemId() != null
+                && containsId(getNullSelectionItemId());
+    }
+
+    private int findNumRowsToPaint(PaintTarget target, final Object[][] cells)
+            throws PaintException {
+        int rows;
+        if (reqRowsToPaint >= 0) {
+            rows = reqRowsToPaint;
+        } else {
+            rows = cells[0].length;
+            if (alwaysRecalculateColumnWidths) {
+                // TODO experimental feature for now: tell the client to
+                // recalculate column widths.
+                // We'll only do this for paints that do not originate from
+                // table scroll/cache requests (i.e when reqRowsToPaint<0)
+                target.addAttribute("recalcWidths", true);
+            }
+        }
+        return rows;
+    }
+
+    private void paintSelectMode(PaintTarget target) throws PaintException {
+        if (multiSelectMode != MultiSelectMode.DEFAULT) {
+            target.addAttribute("multiselectmode", multiSelectMode.ordinal());
+        }
+        if (isSelectable()) {
+            target.addAttribute("selectmode", (isMultiSelect() ? "multi"
+                    : "single"));
+        } else {
+            target.addAttribute("selectmode", "none");
+        }
+        if (!isNullSelectionAllowed()) {
+            target.addAttribute("nsa", false);
+        }
+
+        // selection support
+        // The select variable is only enabled if selectable
+        if (isSelectable()) {
+            target.addVariable(this, "selected", findSelectedKeys());
+        }
+    }
+
+    private String[] findSelectedKeys() {
+        LinkedList<String> selectedKeys = new LinkedList<String>();
+        if (isMultiSelect()) {
+            HashSet<?> sel = new HashSet<Object>((Set<?>) getValue());
+            Collection<?> vids = getVisibleItemIds();
+            for (Iterator<?> it = vids.iterator(); it.hasNext();) {
+                Object id = it.next();
+                if (sel.contains(id)) {
+                    selectedKeys.add(itemIdMapper.key(id));
+                }
+            }
+        } else {
+            Object value = getValue();
+            if (value == null) {
+                value = getNullSelectionItemId();
+            }
+            if (value != null) {
+                selectedKeys.add(itemIdMapper.key(value));
+            }
+        }
+        return selectedKeys.toArray(new String[selectedKeys.size()]);
+    }
+
+    private void paintDragMode(PaintTarget target) throws PaintException {
+        if (dragMode != TableDragMode.NONE) {
+            target.addAttribute("dragmode", dragMode.ordinal());
+        }
+    }
+
+    private void paintTabIndex(PaintTarget target) throws PaintException {
+        // The tab ordering number
+        if (getTabIndex() > 0) {
+            target.addAttribute("tabindex", getTabIndex());
         }
     }
 

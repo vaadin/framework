@@ -304,6 +304,7 @@ public class TreeTable extends Table implements Hierarchical {
     private ContainerStrategy cStrategy;
     private Object focusedRowId = null;
     private Object hierarchyColumnId;
+    private Object toggledItemId;
 
     private ContainerStrategy getContainerStrategy() {
         if (cStrategy == null) {
@@ -415,6 +416,55 @@ public class TreeTable extends Table implements Hierarchical {
             }
         }
         super.paintContent(target);
+        toggledItemId = null;
+    }
+
+    @Override
+    protected boolean isPartialRowUpdate() {
+        return toggledItemId != null;
+    }
+
+    @Override
+    protected int getFirstAddedItemIndex() {
+        return indexOfId(toggledItemId) + 1;
+    }
+
+    @Override
+    protected int getAddedRowCount() {
+        return countSubNodesRecursively(getContainerDataSource(), toggledItemId);
+    }
+
+    private int countSubNodesRecursively(Hierarchical hc, Object itemId) {
+        int count = 0;
+        // we need the number of children for toggledItemId no matter if its
+        // collapsed or expanded. Other items' children are only counted if the
+        // item is expanded.
+        if (getContainerStrategy().isNodeOpen(itemId)
+                || itemId == toggledItemId) {
+            Collection<?> children = hc.getChildren(itemId);
+            if (children != null) {
+                count += children != null ? children.size() : 0;
+                for (Object id : children) {
+                    count += countSubNodesRecursively(hc, id);
+                }
+            }
+        }
+        return count;
+    }
+
+    @Override
+    protected int getFirstUpdatedItemIndex() {
+        return indexOfId(toggledItemId);
+    }
+
+    @Override
+    protected int getUpdatedRowCount() {
+        return 1;
+    }
+
+    @Override
+    protected boolean shouldHideAddedRows() {
+        return !getContainerStrategy().isNodeOpen(toggledItemId);
     }
 
     private void toggleChildVisibility(Object itemId) {
@@ -422,7 +472,7 @@ public class TreeTable extends Table implements Hierarchical {
         // ensure that page still has first item in page, ignore buffer refresh
         // (forced in this method)
         setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex());
-
+        toggledItemId = itemId;
         requestRepaint();
     }
 
