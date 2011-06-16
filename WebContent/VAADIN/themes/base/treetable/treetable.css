@@ -1,0 +1,20 @@
+.v-treetable-treespacer {
+    display: inline-block;
+    background: transparent;
+    height: 9px;
+    /* defines the amount of indent per level */
+    width: 18px;
+}
+
+.v-treetable-node-closed {
+    background: url(../treetable/img/arrow-right.png) right center no-repeat;
+}
+
+.v-treetable-node-open {
+    background: url(../treetable/img/arrow-down.png) right center no-repeat;
+}
+
+.v-treetable .v-checkbox {
+	display: inline-block;
+	padding-bottom: 4px;
+}

@@ -1362,7 +1362,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      *            The key to search with
      * @return
      */
-    private VScrollTableRow getRenderedRowByKey(String key) {
+    protected VScrollTableRow getRenderedRowByKey(String key) {
         if (scrollBody != null) {
             final Iterator<Widget> it = scrollBody.iterator();
             VScrollTableRow r = null;
@@ -5452,7 +5452,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      *            The row to where the selection head should move
      * @return Returns true if focus was moved successfully, else false
      */
-    private boolean setRowFocus(VScrollTableRow row) {
+    protected boolean setRowFocus(VScrollTableRow row) {
 
         if (selectMode == SELECT_MODE_NONE) {
             return false;

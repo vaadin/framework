@@ -18,8 +18,8 @@ import com.vaadin.ui.Table.FooterClickListener;
 import com.vaadin.ui.Table.HeaderClickEvent;
 import com.vaadin.ui.Table.HeaderClickListener;
 
-public class Tables extends AbstractSelectTestCase<Table> implements
-        ItemClickListener, HeaderClickListener, FooterClickListener,
+public class Tables<T extends Table> extends AbstractSelectTestCase<T>
+        implements ItemClickListener, HeaderClickListener, FooterClickListener,
         ColumnResizeListener {
 
     protected static final String CATEGORY_ROWS = "Rows";
@@ -28,12 +28,12 @@ public class Tables extends AbstractSelectTestCase<Table> implements
     private static final String CATEGORY_VISIBLE_COLUMNS = "Visible columns";
 
     @Override
-    protected Class<Table> getTestClass() {
-        return Table.class;
+    protected Class<T> getTestClass() {
+        return (Class) Table.class;
     }
 
     /* COMMANDS */
-    private Command<Table, Boolean> visibleColumnCommand = new Command<Table, Boolean>() {
+    private Command<T, Boolean> visibleColumnCommand = new Command<T, Boolean>() {
         public void execute(Table c, Boolean visible, Object propertyId) {
             List<Object> visibleColumns = new ArrayList<Object>(Arrays.asList(c
                     .getVisibleColumns()));
@@ -50,7 +50,7 @@ public class Tables extends AbstractSelectTestCase<Table> implements
         }
     };
 
-    protected Command<Table, Boolean> columnResizeListenerCommand = new Command<Table, Boolean>() {
+    protected Command<T, Boolean> columnResizeListenerCommand = new Command<T, Boolean>() {
 
         public void execute(Table c, Boolean value, Object data) {
             if (value) {
@@ -61,9 +61,9 @@ public class Tables extends AbstractSelectTestCase<Table> implements
         }
     };
 
-    protected Command<Table, Boolean> headerClickListenerCommand = new Command<Table, Boolean>() {
+    protected Command<T, Boolean> headerClickListenerCommand = new Command<T, Boolean>() {
 
-        public void execute(Table c, Boolean value, Object data) {
+        public void execute(T c, Boolean value, Object data) {
             if (value) {
                 c.addListener((HeaderClickListener) Tables.this);
             } else {
@@ -72,7 +72,7 @@ public class Tables extends AbstractSelectTestCase<Table> implements
         }
     };
 
-    protected Command<Table, Boolean> footerClickListenerCommand = new Command<Table, Boolean>() {
+    protected Command<T, Boolean> footerClickListenerCommand = new Command<T, Boolean>() {
 
         public void execute(Table c, Boolean value, Object data) {
             if (value) {
@@ -83,7 +83,7 @@ public class Tables extends AbstractSelectTestCase<Table> implements
         }
     };
 
-    protected Command<Table, Integer> rowHeaderModeCommand = new Command<Table, Integer>() {
+    protected Command<T, Integer> rowHeaderModeCommand = new Command<T, Integer>() {
 
         public void execute(Table c, Integer value, Object data) {
             if (value == Table.ROW_HEADER_MODE_PROPERTY) {
@@ -93,7 +93,7 @@ public class Tables extends AbstractSelectTestCase<Table> implements
         }
     };
 
-    protected Command<Table, String> footerTextCommand = new Command<Table, String>() {
+    protected Command<T, String> footerTextCommand = new Command<T, String>() {
 
         public void execute(Table c, String value, Object data) {
             for (Object propertyId : c.getContainerPropertyIds()) {
@@ -111,18 +111,18 @@ public class Tables extends AbstractSelectTestCase<Table> implements
 
     }
 
-    protected Command<Table, Alignments> columnAlignmentCommand = new Command<Table, Alignments>() {
+    protected Command<T, Alignments> columnAlignmentCommand = new Command<T, Alignments>() {
 
-        public void execute(Table c, Alignments value, Object data) {
+        public void execute(T c, Alignments value, Object data) {
             // TODO
             // for (Object propertyId : c.getContainerPropertyIds()) {
             // }
         }
     };
 
-    private Command<Table, ContextMenu> contextMenuCommand = new Command<Table, ContextMenu>() {
+    private Command<T, ContextMenu> contextMenuCommand = new Command<T, ContextMenu>() {
 
-        public void execute(Table c, final ContextMenu value, Object data) {
+        public void execute(T c, final ContextMenu value, Object data) {
             c.removeAllActionHandlers();
             if (value != null) {
                 c.addActionHandler(new Handler() {
@@ -207,7 +207,7 @@ public class Tables extends AbstractSelectTestCase<Table> implements
 
     private void createColumnReorderingAllowedCheckbox(String category) {
         createBooleanAction("Column reordering allowed", category, true,
-                new Command<Table, Boolean>() {
+                new Command<T, Boolean>() {
                     public void execute(Table c, Boolean value, Object data) {
                         c.setColumnReorderingAllowed(value);
                     }
@@ -216,8 +216,8 @@ public class Tables extends AbstractSelectTestCase<Table> implements
 
     private void createColumnCollapsingAllowedCheckbox(String category) {
         createBooleanAction("Column collapsing allowed", category, true,
-                new Command<Table, Boolean>() {
-                    public void execute(Table c, Boolean value, Object data) {
+                new Command<T, Boolean>() {
+                    public void execute(T c, Boolean value, Object data) {
                         c.setColumnCollapsingAllowed(value);
                     }
                 });
@@ -266,8 +266,8 @@ public class Tables extends AbstractSelectTestCase<Table> implements
         options.put("Header {id} - every second", "Header {id}");
 
         createSelectAction("Texts in header", category, options, "None",
-                new Command<Table, String>() {
-                    public void execute(Table c, String value, Object data) {
+                new Command<T, String>() {
+                    public void execute(T c, String value, Object data) {
                         int nr = 0;
                         for (Object propertyId : c.getContainerPropertyIds()) {
                             nr++;
@@ -326,9 +326,9 @@ public class Tables extends AbstractSelectTestCase<Table> implements
 
     protected void createFooterVisibilityCheckbox(String category) {
         createBooleanAction("Footer visible", category, true,
-                new Command<Table, Boolean>() {
+                new Command<T, Boolean>() {
 
-                    public void execute(Table c, Boolean value, Object data) {
+                    public void execute(T c, Boolean value, Object data) {
                         c.setFooterVisible(value);
                     }
                 });
@@ -343,9 +343,9 @@ public class Tables extends AbstractSelectTestCase<Table> implements
         options.put("Hidden", Table.COLUMN_HEADER_MODE_HIDDEN);
 
         createSelectAction("Header mode", category, options,
-                "Explicit defaults id", new Command<Table, Integer>() {
+                "Explicit defaults id", new Command<T, Integer>() {
 
-                    public void execute(Table c, Integer value, Object data) {
+                    public void execute(T c, Integer value, Object data) {
                         c.setColumnHeaderMode(value);
 
                     }
@@ -361,7 +361,7 @@ public class Tables extends AbstractSelectTestCase<Table> implements
         options.put("50", 50);
 
         createSelectAction("PageLength", category, options, "10",
-                new Command<Table, Integer>() {
+                new Command<T, Integer>() {
 
                     public void execute(Table t, Integer value, Object data) {
                         t.setPageLength(value);
@@ -381,7 +381,7 @@ public class Tables extends AbstractSelectTestCase<Table> implements
         options.put("Multi - ctrl/shift", SelectMode.MULTI);
 
         createSelectAction("Selection Mode", category, options,
-                "Multi - ctrl/shift", new Command<Table, SelectMode>() {
+                "Multi - ctrl/shift", new Command<T, SelectMode>() {
 
                     public void execute(Table t, SelectMode value, Object data) {
                         switch (value) {
