@@ -4555,54 +4555,40 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
              *         target is this element or a child of it)
              */
             private Element getEventTargetTdOrTr(Event event) {
-                Element targetTdOrTr = null;
-
-                final Element eventTarget = DOM.eventGetTarget(event);
-                final Element eventTargetParent = DOM.getParent(eventTarget);
-                final Element eventTargetGrandParent = DOM
-                        .getParent(eventTargetParent);
-
+                final Element eventTarget = event.getEventTarget().cast();
+                Widget widget = Util.findWidget(eventTarget, null);
                 final Element thisTrElement = getElement();
 
-                if (eventTarget == thisTrElement) {
-                    // This was a click on the TR element
-                    targetTdOrTr = eventTarget;
-                    // rowTarget = true;
-                } else if (thisTrElement == eventTargetParent) {
-                    // Target parent is the TR, so the actual target is the TD
-                    targetTdOrTr = eventTarget;
-                } else if (thisTrElement == eventTargetGrandParent) {
-                    // Target grand parent is the TR, so the parent is the TD
-                    targetTdOrTr = eventTargetParent;
-                } else {
+                if (widget != this) {
                     /*
                      * This is a workaround to make Labels, read only TextFields
                      * and Embedded in a Table clickable (see #2688). It is
                      * really not a fix as it does not work with a custom read
                      * only components (not extending VLabel/VEmbedded).
                      */
-                    Widget widget = Util.findWidget(eventTarget, null);
-                    if (widget != this) {
-                        while (widget != null && widget.getParent() != this) {
-                            widget = widget.getParent();
-                        }
-                        if (widget != null) {
-                            // widget is now the closest widget to this row
-                            if (widget instanceof VLabel
-                                    || widget instanceof VEmbedded
-                                    || (widget instanceof VTextField && ((VTextField) widget)
-                                            .isReadOnly())) {
-                                Element tdElement = eventTargetParent;
-                                while (DOM.getParent(tdElement) != thisTrElement) {
-                                    tdElement = DOM.getParent(tdElement);
-                                }
-                                targetTdOrTr = tdElement;
-                            }
-                        }
+                    while (widget != null && widget.getParent() != this) {
+                        widget = widget.getParent();
+                    }
+
+                    if (!(widget instanceof VLabel)
+                            && !(widget instanceof VEmbedded)
+                            && !(widget instanceof VTextField && ((VTextField) widget)
+                                    .isReadOnly())) {
+                        return null;
                     }
                 }
+                if (eventTarget == thisTrElement) {
+                    // This was a click on the TR element
+                    return thisTrElement;
+                }
 
-                return targetTdOrTr;
+                // Iterate upwards until we find the TR element
+                Element element = eventTarget;
+                while (element != null
+                        && element.getParentElement().cast() != thisTrElement) {
+                    element = element.getParentElement().cast();
+                }
+                return element;
             }
 
             public void showContextMenu(Event event) {
