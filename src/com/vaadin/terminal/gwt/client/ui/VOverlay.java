@@ -22,7 +22,7 @@ import com.vaadin.terminal.gwt.client.Util;
  * temporary float over other components like context menus etc. This is to deal
  * stacking order correctly with VWindow objects.
  */
-public class VOverlay extends PopupPanel {
+public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     /*
      * The z-index value from where all overlays live. This can be overridden in
@@ -84,21 +84,41 @@ public class VOverlay extends PopupPanel {
 
     public VOverlay(boolean autoHide, boolean modal, boolean showShadow) {
         super(autoHide, modal);
-        if (showShadow) {
-            shadow = DOM.createDiv();
-            shadow.setClassName(CLASSNAME_SHADOW);
-            shadow.setInnerHTML(SHADOW_HTML);
-            DOM.setStyleAttribute(shadow, "position", "absolute");
-
-            addCloseHandler(new CloseHandler<PopupPanel>() {
-                public void onClose(CloseEvent<PopupPanel> event) {
-                    if (shadow.getParentElement() != null) {
-                        shadow.getParentElement().removeChild(shadow);
-                    }
-                }
-            });
-        }
+        setShadowEnabled(showShadow);
         adjustZIndex();
+    }
+
+    /**
+     * Method to controle whether DOM elements for shadow are added. With this
+     * method subclasses can control displaying of shadow also after the
+     * constructor.
+     * 
+     * @param enabled
+     *            true if shadow should be displayed
+     */
+    protected void setShadowEnabled(boolean enabled) {
+        if (enabled != isShadowEnabled()) {
+            if (enabled) {
+                shadow = DOM.createDiv();
+                shadow.setClassName(CLASSNAME_SHADOW);
+                shadow.setInnerHTML(SHADOW_HTML);
+                DOM.setStyleAttribute(shadow, "position", "absolute");
+                addCloseHandler(this);
+            } else {
+                removeShadowIfPresent();
+                shadow = null;
+            }
+        }
+    }
+
+    protected boolean isShadowEnabled() {
+        return shadow != null;
+    }
+
+    private void removeShadowIfPresent() {
+        if (isShadowEnabled() && shadow.getParentElement() != null) {
+            shadow.getParentElement().removeChild(shadow);
+        }
     }
 
     private void adjustZIndex() {
@@ -113,7 +133,7 @@ public class VOverlay extends PopupPanel {
      */
     protected void setZIndex(int zIndex) {
         DOM.setStyleAttribute(getElement(), "zIndex", "" + zIndex);
-        if (shadow != null) {
+        if (isShadowEnabled()) {
             DOM.setStyleAttribute(shadow, "zIndex", "" + zIndex);
         }
     }
@@ -128,25 +148,37 @@ public class VOverlay extends PopupPanel {
         style.setMarginLeft(-adjustByRelativeLeftBodyMargin(), Unit.PX);
         style.setMarginTop(-adjustByRelativeTopBodyMargin(), Unit.PX);
         super.setPopupPosition(left, top);
-        if (shadow != null) {
-            updateShadowSizeAndPosition(isAnimationEnabled() ? 0 : 1);
-        }
+        updateShadowSizeAndPosition(isAnimationEnabled() ? 0 : 1);
     }
 
     private static int adjustByRelativeTopBodyMargin() {
         if (topFix == -1) {
-            topFix = detectRelativeBodyFixes("top");
+            boolean ie6OrIe7 = BrowserInfo.get().isIE()
+                    && BrowserInfo.get().getIEVersion() <= 7;
+            topFix = detectRelativeBodyFixes("top", ie6OrIe7);
         }
         return topFix;
     }
 
-    private native static int detectRelativeBodyFixes(String axis)
+    private native static int detectRelativeBodyFixes(String axis,
+            boolean removeClientLeftOrTop)
     /*-{
         try {
             var b = $wnd.document.body;
             var cstyle = b.currentStyle ? b.currentStyle : getComputedStyle(b);
             if(cstyle && cstyle.position == 'relative') {
-                return b.getBoundingClientRect()[axis];
+                var offset = b.getBoundingClientRect()[axis];
+                if (removeClientLeftOrTop) {
+                    // IE6 and IE7 include the top left border of the client area into the boundingClientRect
+                    var clientTopOrLeft = 0;
+                    if (axis == "top")
+                        clientTopOrLeft = $wnd.document.documentElement.clientTop;
+                    else
+                        clientTopOrLeft = $wnd.document.documentElement.clientLeft;
+
+                    offset -= clientTopOrLeft;
+                }
+                return offset;
             }
         } catch(e){}
         return 0;
@@ -154,7 +186,10 @@ public class VOverlay extends PopupPanel {
 
     private static int adjustByRelativeLeftBodyMargin() {
         if (leftFix == -1) {
-            leftFix = detectRelativeBodyFixes("left");
+            boolean ie6OrIe7 = BrowserInfo.get().isIE()
+                    && BrowserInfo.get().getIEVersion() <= 7;
+            leftFix = detectRelativeBodyFixes("left", ie6OrIe7);
+
         }
         return leftFix;
     }
@@ -162,7 +197,7 @@ public class VOverlay extends PopupPanel {
     @Override
     public void show() {
         super.show();
-        if (shadow != null) {
+        if (isShadowEnabled()) {
             if (isAnimationEnabled()) {
                 ShadowAnimation sa = new ShadowAnimation();
                 sa.run(200);
@@ -180,9 +215,17 @@ public class VOverlay extends PopupPanel {
     }
 
     @Override
+    protected void onDetach() {
+        super.onDetach();
+
+        // Always ensure shadow is removed when the overlay is removed.
+        removeShadowIfPresent();
+    }
+
+    @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
-        if (shadow != null) {
+        if (isShadowEnabled()) {
             shadow.getStyle().setProperty("visibility",
                     visible ? "visible" : "hidden");
         }
@@ -191,17 +234,13 @@ public class VOverlay extends PopupPanel {
     @Override
     public void setWidth(String width) {
         super.setWidth(width);
-        if (shadow != null) {
-            updateShadowSizeAndPosition(1.0);
-        }
+        updateShadowSizeAndPosition(1.0);
     }
 
     @Override
     public void setHeight(String height) {
         super.setHeight(height);
-        if (shadow != null) {
-            updateShadowSizeAndPosition(1.0);
-        }
+        updateShadowSizeAndPosition(1.0);
     }
 
     /**
@@ -215,7 +254,7 @@ public class VOverlay extends PopupPanel {
      *            name=='v-shadow-foobar'.
      */
     protected void setShadowStyle(String style) {
-        if (shadow != null) {
+        if (isShadowEnabled()) {
             shadow.setClassName(CLASSNAME_SHADOW + "-" + style);
         }
     }
@@ -241,7 +280,7 @@ public class VOverlay extends PopupPanel {
      */
     private void updateShadowSizeAndPosition(final double progress) {
         // Don't do anything if overlay element is not attached
-        if (!isAttached()) {
+        if (!isAttached() || shadow == null) {
             return;
         }
         // Calculate proper z-index
@@ -336,9 +375,11 @@ public class VOverlay extends PopupPanel {
     protected class ShadowAnimation extends Animation {
         @Override
         protected void onUpdate(double progress) {
-            if (shadow != null) {
-                updateShadowSizeAndPosition(progress);
-            }
+            updateShadowSizeAndPosition(progress);
         }
+    }
+
+    public void onClose(CloseEvent<PopupPanel> event) {
+        removeShadowIfPresent();
     }
 }

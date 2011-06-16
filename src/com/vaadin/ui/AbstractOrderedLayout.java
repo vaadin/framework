@@ -23,7 +23,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
 
     private static final String CLICK_EVENT = EventId.LAYOUT_CLICK;
 
-    private static final Alignment ALIGNMENT_DEFAULT = Alignment.TOP_LEFT;
+    public static final Alignment ALIGNMENT_DEFAULT = Alignment.TOP_LEFT;
 
     /**
      * Custom layout slots containing the components.

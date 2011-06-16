@@ -55,7 +55,7 @@ public class SliderTest extends AbstractFieldTest<Slider> {
         LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
         options.put("Horizontal", Slider.ORIENTATION_HORIZONTAL);
         options.put("Vertical", Slider.ORIENTATION_VERTICAL);
-        createSelectAction("Resolution", category, options, "Horizontal",
+        createSelectAction("Orientation", category, options, "Horizontal",
                 orientationCommand);
 
     }

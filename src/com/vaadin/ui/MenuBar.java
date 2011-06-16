@@ -123,7 +123,12 @@ public class MenuBar extends AbstractComponent {
             if (description != null && description.length() > 0) {
                 target.addAttribute("description", description);
             }
-
+            if (item.isCheckable()) {
+                // if the "checked" attribute is present (either true or false),
+                // the item is checkable
+                target.addAttribute(VMenuBar.ATTRIBUTE_CHECKED,
+                        item.isChecked());
+            }
             if (item.hasChildren()) {
                 for (MenuItem child : item.getChildren()) {
                     paintItem(target, child);
@@ -167,7 +172,12 @@ public class MenuBar extends AbstractComponent {
 
             // If we got the clicked item, launch the command.
             if (found && tmpItem.isEnabled()) {
-                tmpItem.getCommand().menuSelected(tmpItem);
+                if (tmpItem.isCheckable()) {
+                    tmpItem.setChecked(!tmpItem.isChecked());
+                }
+                if (null != tmpItem.getCommand()) {
+                    tmpItem.getCommand().menuSelected(tmpItem);
+                }
             }
         }// if
     }// changeVariables
@@ -431,6 +441,8 @@ public class MenuBar extends AbstractComponent {
         private boolean isSeparator = false;
         private String styleName;
         private String description;
+        private boolean checkable = false;
+        private boolean checked = false;
 
         /**
          * Constructs a new menu item that can optionally have an icon and a
@@ -505,12 +517,18 @@ public class MenuBar extends AbstractComponent {
          *            the icon for the menu item
          * @param command
          *            the command for the menu item
+         * @throws IllegalStateException
+         *             If the item is checkable and thus cannot have children.
          */
         public MenuBar.MenuItem addItem(String caption, Resource icon,
-                MenuBar.Command command) {
+                MenuBar.Command command) throws IllegalStateException {
             if (isSeparator()) {
                 throw new UnsupportedOperationException(
                         "Cannot add items to a separator");
+            }
+            if (isCheckable()) {
+                throw new IllegalStateException(
+                        "A checkable item cannot have children");
             }
             if (caption == null) {
                 throw new IllegalArgumentException("Caption cannot be null");
@@ -544,11 +562,16 @@ public class MenuBar extends AbstractComponent {
          *            the command for the menu item
          * @param itemToAddBefore
          *            the item that will be after the new item
-         * 
+         * @throws IllegalStateException
+         *             If the item is checkable and thus cannot have children.
          */
         public MenuBar.MenuItem addItemBefore(String caption, Resource icon,
-                MenuBar.Command command, MenuBar.MenuItem itemToAddBefore) {
-
+                MenuBar.Command command, MenuBar.MenuItem itemToAddBefore)
+                throws IllegalStateException {
+            if (isCheckable()) {
+                throw new IllegalStateException(
+                        "A checkable item cannot have children");
+            }
             MenuItem newItem = null;
 
             if (hasChildren() && itsChildren.contains(itemToAddBefore)) {
@@ -812,6 +835,93 @@ public class MenuBar extends AbstractComponent {
          */
         public String getDescription() {
             return description;
+        }
+
+        /**
+         * Gets the checkable state of the item - whether the item has checked
+         * and unchecked states. If an item is checkable its checked state (as
+         * returned by {@link #isChecked()}) is indicated in the UI.
+         * 
+         * <p>
+         * An item is not checkable by default.
+         * </p>
+         * 
+         * @return true if the item is checkable, false otherwise
+         * @since 6.6.2
+         */
+        public boolean isCheckable() {
+            return checkable;
+        }
+
+        /**
+         * Sets the checkable state of the item. If an item is checkable its
+         * checked state (as returned by {@link #isChecked()}) is indicated in
+         * the UI.
+         * 
+         * <p>
+         * An item is not checkable by default.
+         * </p>
+         * 
+         * <p>
+         * Items with sub items cannot be checkable.
+         * </p>
+         * 
+         * @param checkable
+         *            true if the item should be checkable, false otherwise
+         * @throws IllegalStateException
+         *             If the item has children
+         * @since 6.6.2
+         */
+        public void setCheckable(boolean checkable)
+                throws IllegalStateException {
+            if (hasChildren()) {
+                throw new IllegalStateException(
+                        "A menu item with children cannot be checkable");
+            }
+            this.checkable = checkable;
+            requestRepaint();
+        }
+
+        /**
+         * Gets the checked state of the item (checked or unchecked). Only used
+         * if the item is checkable (as indicated by {@link #isCheckable()}).
+         * The checked state is indicated in the UI with the item, if the item
+         * is checkable.
+         * 
+         * <p>
+         * An item is not checked by default.
+         * </p>
+         * 
+         * <p>
+         * The CSS style corresponding to the checked state is "-checked".
+         * </p>
+         * 
+         * @return true if the item is checked, false otherwise
+         * @since 6.6.2
+         */
+        public boolean isChecked() {
+            return checked;
+        }
+
+        /**
+         * Sets the checked state of the item. Only used if the item is
+         * checkable (indicated by {@link #isCheckable()}). The checked state is
+         * indicated in the UI with the item, if the item is checkable.
+         * 
+         * <p>
+         * An item is not checked by default.
+         * </p>
+         * 
+         * <p>
+         * The CSS style corresponding to the checked state is "-checked".
+         * </p>
+         * 
+         * @return true if the item is checked, false otherwise
+         * @since 6.6.2
+         */
+        public void setChecked(boolean checked) {
+            this.checked = checked;
+            requestRepaint();
         }
 
     }// class MenuItem

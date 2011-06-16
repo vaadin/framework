@@ -1,5 +1,7 @@
 package com.vaadin.tests.server.container;
 
+import com.vaadin.data.Container.Filter;
+import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 
 public class TestHierarchicalContainer extends
@@ -27,6 +29,69 @@ public class TestHierarchicalContainer extends
 
     public void testSortingAndFiltering() {
         testContainerSortingAndFiltering(new HierarchicalContainer());
+    }
+
+    public void testRemovingItemsFromFilteredContainer() {
+        HierarchicalContainer container = new HierarchicalContainer();
+        initializeContainer(container);
+        container.setIncludeParentsWhenFiltering(true);
+        container.addContainerFilter(FULLY_QUALIFIED_NAME, "ab", false, false);
+        Object p1 = container.getParent("com.vaadin.ui.TabSheet");
+        assertEquals("com.vaadin.ui", p1);
+
+        container.removeItem("com.vaadin.ui.TabSheet");
+        // Parent for the removed item must be null because the item is no
+        // longer in the container
+        p1 = container.getParent("com.vaadin.ui.TabSheet");
+        assertNull("Parent should be null, is " + p1, p1);
+
+        container.removeAllItems();
+        p1 = container.getParent("com.vaadin.terminal.gwt.client.Focusable");
+        assertNull("Parent should be null, is " + p1, p1);
+
+    }
+
+    public void testParentWhenRemovingFilterFromContainer() {
+        HierarchicalContainer container = new HierarchicalContainer();
+        initializeContainer(container);
+        container.setIncludeParentsWhenFiltering(true);
+        container.addContainerFilter(FULLY_QUALIFIED_NAME, "ab", false, false);
+        Object p1 = container.getParent("com.vaadin.ui.TabSheet");
+        assertEquals("com.vaadin.ui", p1);
+        p1 = container
+                .getParent("com.vaadin.terminal.gwt.client.ui.VPopupCalendar");
+        assertNull(p1);
+        container.removeAllContainerFilters();
+        p1 = container
+                .getParent("com.vaadin.terminal.gwt.client.ui.VPopupCalendar");
+        assertEquals("com.vaadin.terminal.gwt.client.ui", p1);
+
+    }
+
+    public void testChangeParentInFilteredContainer() {
+        HierarchicalContainer container = new HierarchicalContainer();
+        initializeContainer(container);
+        container.setIncludeParentsWhenFiltering(true);
+        container.addContainerFilter(FULLY_QUALIFIED_NAME, "Tab", false, false);
+
+        // Change parent of filtered item
+        Object p1 = container.getParent("com.vaadin.ui.TabSheet");
+        assertEquals("com.vaadin.ui", p1);
+        container.setParent("com.vaadin.ui.TabSheet", "com.vaadin");
+        p1 = container.getParent("com.vaadin.ui.TabSheet");
+        assertEquals("com.vaadin", p1);
+        container.setParent("com.vaadin.ui.TabSheet", "com");
+        p1 = container.getParent("com.vaadin.ui.TabSheet");
+        assertEquals("com", p1);
+        container.setParent("com.vaadin.ui.TabSheet", null);
+        p1 = container.getParent("com.vaadin.ui.TabSheet");
+        assertNull(p1);
+
+        // root -> non-root
+        container.setParent("com.vaadin.ui.TabSheet", "com");
+        p1 = container.getParent("com.vaadin.ui.TabSheet");
+        assertEquals("com", p1);
+
     }
 
     public void testHierarchicalFilteringWithParents() {
@@ -78,6 +143,55 @@ public class TestHierarchicalContainer extends
                 "com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer",
                 "blah", true, expectedSize, expectedRoots, true);
 
+    }
+
+    public void testRemoveLastChild() {
+        HierarchicalContainer c = new HierarchicalContainer();
+
+        c.addItem("root");
+        assertEquals(false, c.hasChildren("root"));
+
+        c.addItem("child");
+        c.setParent("child", "root");
+        assertEquals(true, c.hasChildren("root"));
+
+        c.removeItem("child");
+        assertFalse(c.containsId("child"));
+        assertNull(c.getChildren("root"));
+        assertNull(c.getChildren("child"));
+        assertFalse(c.hasChildren("child"));
+        assertFalse(c.hasChildren("root"));
+    }
+
+    public void testRemoveLastChildFromFiltered() {
+        HierarchicalContainer c = new HierarchicalContainer();
+
+        c.addItem("root");
+        assertEquals(false, c.hasChildren("root"));
+
+        c.addItem("child");
+        c.setParent("child", "root");
+        assertEquals(true, c.hasChildren("root"));
+
+        // Dummy filter that does not remove any items
+        c.addContainerFilter(new Filter() {
+
+            public boolean passesFilter(Object itemId, Item item)
+                    throws UnsupportedOperationException {
+                return true;
+            }
+
+            public boolean appliesToProperty(Object propertyId) {
+                return true;
+            }
+        });
+        c.removeItem("child");
+
+        assertFalse(c.containsId("child"));
+        assertNull(c.getChildren("root"));
+        assertNull(c.getChildren("child"));
+        assertFalse(c.hasChildren("child"));
+        assertFalse(c.hasChildren("root"));
     }
 
     public void testHierarchicalFilteringWithoutParents() {

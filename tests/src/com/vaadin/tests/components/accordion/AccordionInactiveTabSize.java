@@ -21,7 +21,8 @@ public class AccordionInactiveTabSize extends TestBase {
     @Override
     protected void setup() {
         HorizontalSplitPanel sp = new HorizontalSplitPanel();
-        sp.setSizeFull();
+        sp.setWidth("100%");
+        sp.setHeight("70px");
 
         Accordion acc = new Accordion();
 

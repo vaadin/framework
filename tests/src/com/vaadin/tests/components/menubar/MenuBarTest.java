@@ -24,6 +24,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
     private Integer iconSize;
     private Integer disabledDensity;
     private Integer invisibleDensity;
+    private Integer checkableDensity;
 
     @Override
     protected Class<MenuBar> getTestClass() {
@@ -46,6 +47,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
         createMenuIconsSizeSelect(CATEGORY_MENU_ITEM_STATES);
         createMenuItemDisabledDensitySelect(CATEGORY_MENU_ITEM_STATES);
         createMenuItemInvisibleDensitySelect(CATEGORY_MENU_ITEM_STATES);
+        createMenuItemCheckableDensitySelect(CATEGORY_MENU_ITEM_STATES);
 
     }
 
@@ -125,6 +127,17 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
                 setMenuItemInvisibleDensity);
     }
 
+    private void createMenuItemCheckableDensitySelect(String category) {
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        options.put("No items checkable", null);
+        options.put("All checkable", 1);
+        options.put("Every second", 2);
+        options.put("Every third", 3);
+
+        createSelectAction("Checkable", category, options,
+                "No items checkable", setMenuItemCheckableDensity);
+    }
+
     /* COMMANDS */
     Command<MenuBar, Integer> createRootMenuItems = new Command<MenuBar, Integer>() {
 
@@ -177,6 +190,14 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
 
         public void execute(MenuBar c, Integer value, Object data) {
             invisibleDensity = value;
+            createRootItems(c);
+        }
+    };
+
+    private Command<MenuBar, Integer> setMenuItemCheckableDensity = new Command<MenuBar, Integer>() {
+
+        public void execute(MenuBar c, Integer value, Object data) {
+            checkableDensity = value;
             createRootItems(c);
         }
     };
@@ -249,6 +270,11 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
             if (i % subMenuDensity == 0 && level < subLevels) {
                 subMenuItem.setCommand(null);
                 createSubItems(subMenuItem, level + 1);
+            }
+
+            if (!subMenuItem.hasChildren() && level > 0
+                    && checkableDensity != null && i % checkableDensity == 0) {
+                subMenuItem.setCheckable(true);
             }
         }
 

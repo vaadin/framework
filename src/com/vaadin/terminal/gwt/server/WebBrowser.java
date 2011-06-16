@@ -30,9 +30,10 @@ public class WebBrowser implements Terminal {
     private int rawTimezoneOffset = 0;
     private int dstSavings;
     private boolean dstInEffect;
-    private Date currentDate;
+    private boolean touchDevice;
 
     private VBrowserDetails browserDetails;
+    private long clientServerTimeDelta;
 
     /**
      * There is no default-theme for this terminal type.
@@ -68,91 +69,6 @@ public class WebBrowser implements Terminal {
      */
     public String getBrowserApplication() {
         return browserApplication;
-    }
-
-    /**
-     * For internal use by AbstractApplicationServlet/AbstractApplicationPortlet
-     * only. Updates all properties in the class according to the given
-     * information.
-     * 
-     * @param locale
-     *            The browser primary locale
-     * @param address
-     *            The browser ip address
-     * @param secureConnection
-     *            true if using an https connection
-     * @param agent
-     *            Raw userAgent string from the browser
-     * @param sw
-     *            Screen width
-     * @param sh
-     *            Screen height
-     * @param tzo
-     *            TimeZone offset in minutes from GMT
-     * @param rtzo
-     *            raw TimeZone offset in minutes from GMT (w/o DST adjustment)
-     * @param dstSavings
-     *            the difference between the raw TimeZone and DST in minutes
-     * @param dstInEffect
-     *            is DST currently active in the region or not?
-     * @param curDate
-     *            the current date in milliseconds since the epoch
-     */
-    void updateBrowserProperties(Locale locale, String address,
-            boolean secureConnection, String agent, String sw, String sh,
-            String tzo, String rtzo, String dstSavings, String dstInEffect,
-            String curDate) {
-        this.locale = locale;
-        this.address = address;
-        this.secureConnection = secureConnection;
-        if (agent != null) {
-            browserApplication = agent;
-            browserDetails = new VBrowserDetails(agent);
-        }
-
-        if (sw != null) {
-            try {
-                screenHeight = Integer.parseInt(sh);
-                screenWidth = Integer.parseInt(sw);
-            } catch (final NumberFormatException e) {
-                screenHeight = screenWidth = 0;
-            }
-        }
-        if (tzo != null) {
-            try {
-                // browser->java conversion: min->ms, reverse sign
-                timezoneOffset = -Integer.parseInt(tzo) * 60 * 1000;
-            } catch (final NumberFormatException e) {
-                timezoneOffset = 0; // default gmt+0
-            }
-        }
-        if (rtzo != null) {
-            try {
-                // browser->java conversion: min->ms, reverse sign
-                rawTimezoneOffset = -Integer.parseInt(rtzo) * 60 * 1000;
-            } catch (final NumberFormatException e) {
-                rawTimezoneOffset = 0; // default gmt+0
-            }
-        }
-        if (dstSavings != null) {
-            try {
-                // browser->java conversion: min->ms
-                this.dstSavings = Integer.parseInt(dstSavings) * 60 * 1000;
-            } catch (final NumberFormatException e) {
-                this.dstSavings = 0; // default no savings
-            }
-        }
-        if (dstInEffect != null) {
-            this.dstInEffect = Boolean.parseBoolean(dstInEffect);
-        }
-        if (curDate != null) {
-            try {
-                long curTime = Long.parseLong(curDate);
-                currentDate = new Date(curTime);
-            } catch (final NumberFormatException e) {
-                currentDate = new Date();
-            }
-        }
     }
 
     /**
@@ -368,12 +284,120 @@ public class WebBrowser implements Terminal {
     /**
      * Returns the current date and time of the browser. This will not be
      * entirely accurate due to varying network latencies, but should provide a
-     * close-enough value for most cases.
+     * close-enough value for most cases. Also note that the returned Date
+     * object uses servers default time zone, not the clients.
      * 
      * @return the current date and time of the browser.
+     * @see #isDSTInEffect()
+     * @see #getDSTSavings()
+     * @see #getTimezoneOffset()
      */
     public Date getCurrentDate() {
-        return currentDate;
+        return new Date(new Date().getTime() + clientServerTimeDelta);
+    }
+
+    /**
+     * @return true if the browser is detected to support touch events
+     */
+    public boolean isTouchDevice() {
+        return touchDevice;
+    }
+
+    /**
+     * For internal use by AbstractApplicationServlet/AbstractApplicationPortlet
+     * only. Updates all properties in the class according to the given
+     * information.
+     * 
+     * @param sw
+     *            Screen width
+     * @param sh
+     *            Screen height
+     * @param tzo
+     *            TimeZone offset in minutes from GMT
+     * @param rtzo
+     *            raw TimeZone offset in minutes from GMT (w/o DST adjustment)
+     * @param dstSavings
+     *            the difference between the raw TimeZone and DST in minutes
+     * @param dstInEffect
+     *            is DST currently active in the region or not?
+     * @param curDate
+     *            the current date in milliseconds since the epoch
+     * @param touchDevice
+     */
+    void updateClientSideDetails(String sw, String sh, String tzo, String rtzo,
+            String dstSavings, String dstInEffect, String curDate,
+            boolean touchDevice) {
+        if (sw != null) {
+            try {
+                screenHeight = Integer.parseInt(sh);
+                screenWidth = Integer.parseInt(sw);
+            } catch (final NumberFormatException e) {
+                screenHeight = screenWidth = 0;
+            }
+        }
+        if (tzo != null) {
+            try {
+                // browser->java conversion: min->ms, reverse sign
+                timezoneOffset = -Integer.parseInt(tzo) * 60 * 1000;
+            } catch (final NumberFormatException e) {
+                timezoneOffset = 0; // default gmt+0
+            }
+        }
+        if (rtzo != null) {
+            try {
+                // browser->java conversion: min->ms, reverse sign
+                rawTimezoneOffset = -Integer.parseInt(rtzo) * 60 * 1000;
+            } catch (final NumberFormatException e) {
+                rawTimezoneOffset = 0; // default gmt+0
+            }
+        }
+        if (dstSavings != null) {
+            try {
+                // browser->java conversion: min->ms
+                this.dstSavings = Integer.parseInt(dstSavings) * 60 * 1000;
+            } catch (final NumberFormatException e) {
+                this.dstSavings = 0; // default no savings
+            }
+        }
+        if (dstInEffect != null) {
+            this.dstInEffect = Boolean.parseBoolean(dstInEffect);
+        }
+        if (curDate != null) {
+            try {
+                long curTime = Long.parseLong(curDate);
+                clientServerTimeDelta = curTime - new Date().getTime();
+            } catch (final NumberFormatException e) {
+                clientServerTimeDelta = 0;
+            }
+        }
+        this.touchDevice = touchDevice;
+
+    }
+
+    /**
+     * For internal use by AbstractApplicationServlet/AbstractApplicationPortlet
+     * only. Updates all properties in the class according to the given
+     * information.
+     * 
+     * @param locale
+     *            The browser primary locale
+     * @param address
+     *            The browser ip address
+     * @param secureConnection
+     *            true if using an https connection
+     * @param agent
+     *            Raw userAgent string from the browser
+     */
+    void updateRequestDetails(Locale locale, String address,
+            boolean secureConnection, String agent) {
+        this.locale = locale;
+        this.address = address;
+        this.secureConnection = secureConnection;
+        if (agent != null) {
+            browserApplication = agent;
+            browserDetails = new VBrowserDetails(agent);
+        }
+
     }
 
 }

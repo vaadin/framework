@@ -392,6 +392,7 @@ public abstract class AbstractCommunicationManager implements
         int contentLength = request.getContentLength();
 
         boolean atStart = false;
+        boolean firstFileFieldFound = false;
 
         String rawfilename = "unknown";
         String rawMimeType = "application/octet-stream";
@@ -410,7 +411,8 @@ public abstract class AbstractCommunicationManager implements
                 rawfilename = rawfilename.substring(1);
                 rawfilename = rawfilename.substring(0,
                         rawfilename.indexOf(parenthesis));
-            } else if (readLine.equals("")) {
+                firstFileFieldFound = true;
+            } else if (firstFileFieldFound && readLine.equals("")) {
                 atStart = true;
             } else if (readLine.startsWith("Content-Type")) {
                 rawMimeType = readLine.split(": ")[1];

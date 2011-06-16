@@ -1,7 +1,7 @@
-.v-tree .v-tree-node {
+.v-tree-node {
 	background: transparent url(img/collapsed.png) no-repeat 2px 1px;
 }
-.v-tree .v-tree-node-expanded {
+.v-tree-node-expanded {
 	background: transparent url(img/expanded.png) no-repeat 2px 1px;
 }
 .v-tree-node-caption {

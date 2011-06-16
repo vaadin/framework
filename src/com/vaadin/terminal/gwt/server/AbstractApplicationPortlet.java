@@ -561,15 +561,19 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     private void updateBrowserProperties(WebBrowser browser,
             PortletRequest request) {
         String userAgent = getHTTPHeader(request, "user-agent");
-        browser.updateBrowserProperties(request.getLocale(), null,
-                request.isSecure(), userAgent,
-                getHTTPRequestParameter(request, "sw"),
-                getHTTPRequestParameter(request, "sh"),
-                getHTTPRequestParameter(request, "tzo"),
-                getHTTPRequestParameter(request, "rtzo"),
-                getHTTPRequestParameter(request, "dstd"),
-                getHTTPRequestParameter(request, "dstActive"),
-                getHTTPRequestParameter(request, "curdate"));
+        browser.updateRequestDetails(request.getLocale(), null,
+                request.isSecure(), userAgent);
+        if (getHTTPRequestParameter(request, "repaintAll") != null) {
+            browser.updateClientSideDetails(
+                    getHTTPRequestParameter(request, "sw"),
+                    getHTTPRequestParameter(request, "sh"),
+                    getHTTPRequestParameter(request, "tzo"),
+                    getHTTPRequestParameter(request, "rtzo"),
+                    getHTTPRequestParameter(request, "dstd"),
+                    getHTTPRequestParameter(request, "dstActive"),
+                    getHTTPRequestParameter(request, "curdate"),
+                    getHTTPRequestParameter(request, "td") != null);
+        }
     }
 
     @Override

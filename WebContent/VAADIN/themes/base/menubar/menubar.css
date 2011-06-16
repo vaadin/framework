@@ -80,3 +80,14 @@
 .v-menubar-popup .popupContent .v-menubar-submenu:focus{
 	outline: none;	
 }
+/* Checkboxes for checkable/checked menu items */
+/* Checked/unchecked requires combined style selected-(un)checked for IE6 */
+.v-menubar-submenu-check-column .v-menubar-menuitem {
+	padding-left: 6px;
+}
+.v-menubar-submenu-check-column .v-menubar-menuitem-caption {
+	padding-left: 18px;
+}
+.v-menubar-submenu .v-menubar-menuitem-checked .v-menubar-menuitem-caption { 
+	background: transparent url(img/check.gif) no-repeat left;
+}

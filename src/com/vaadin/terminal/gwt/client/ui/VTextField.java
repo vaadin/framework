@@ -12,6 +12,9 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -24,7 +27,6 @@ import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 
@@ -35,7 +37,8 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutAct
  * 
  */
 public class VTextField extends TextBoxBase implements Paintable, Field,
-        ChangeHandler, FocusHandler, BlurHandler, BeforeShortcutActionListener {
+        ChangeHandler, FocusHandler, BlurHandler, BeforeShortcutActionListener,
+        KeyDownHandler {
 
     public static final String VAR_CUR_TEXT = "curText";
     /**
@@ -85,6 +88,11 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         }
         setStyleName(CLASSNAME);
         addChangeHandler(this);
+        if (BrowserInfo.get().isIE()) {
+            // IE does not send change events when pressing enter in a text
+            // input so we handle it using a key listener instead
+            addKeyDownHandler(this);
+        }
         addFocusHandler(this);
         addBlurHandler(this);
         sinkEvents(VTooltip.TOOLTIP_EVENTS);
@@ -589,5 +597,11 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             Util.detachAttach(getElement());
         }
         wordwrap = enabled;
+    }
+
+    public void onKeyDown(KeyDownEvent event) {
+        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+            valueChange(false);
+        }
     }
 }
