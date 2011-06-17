@@ -1428,10 +1428,6 @@ public class Table extends AbstractSelect implements Action.Container,
             return;
         }
 
-        // initialize the listener collections
-        listenedProperties = new HashSet<Property>();
-        visibleComponents = new HashSet<Component>();
-
         // Collects the basic facts about the table page
         final int pagelen = getPageLength();
         int firstIndex = getCurrentPageFirstItemIndex();
@@ -1467,7 +1463,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Saves the results to internal buffer
-        pageBuffer = getVisibleCellsNoCache(firstIndex, rows);
+        pageBuffer = getVisibleCellsNoCache(firstIndex, rows, true);
 
         if (rows > 0) {
             pageBufferFirstIndex = firstIndex;
@@ -1478,11 +1474,23 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     private Object[][] getVisibleCellsNoCache(int firstIndex, int rows) {
+        return getVisibleCellsNoCache(firstIndex, rows, false);
+    }
+
+    private Object[][] getVisibleCellsNoCache(int firstIndex, int rows,
+            boolean replaceListeners) {
         final Object[] colids = getVisibleColumns();
         final int cols = colids.length;
 
         HashSet<Property> oldListenedProperties = listenedProperties;
         HashSet<Component> oldVisibleComponents = visibleComponents;
+
+        if (replaceListeners) {
+            // initialize the listener collections, this should only be done if
+            // the entire cache is refreshed (through refreshRenderedCells)
+            listenedProperties = new HashSet<Property>();
+            visibleComponents = new HashSet<Component>();
+        }
 
         Object[][] cells = new Object[cols + CELL_FIRSTCOL][rows];
         if (rows == 0) {
