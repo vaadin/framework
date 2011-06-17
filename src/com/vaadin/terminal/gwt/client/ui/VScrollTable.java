@@ -863,25 +863,26 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             addRowsToBody(partialRowAdditions);
         } else {
             UIDL rowData = uidl.getChildByTagName("rows");
-            if (!recalcWidths && initializedAndAttached) {
-                updateBody(rowData, uidl.getIntAttribute("firstrow"),
-                        uidl.getIntAttribute("rows"));
-                if (headerChangedDuringUpdate) {
-                    lazyAdjustColumnWidths.schedule(1);
+            if (rowData != null) {
+                if (!recalcWidths && initializedAndAttached) {
+                    updateBody(rowData, uidl.getIntAttribute("firstrow"),
+                            uidl.getIntAttribute("rows"));
+                    if (headerChangedDuringUpdate) {
+                        lazyAdjustColumnWidths.schedule(1);
+                    } else {
+                        // webkits may still bug with their disturbing scrollbar
+                        // bug, see #3457
+                        // Run overflow fix for the scrollable area
+                        Scheduler.get().scheduleDeferred(new Command() {
+                            public void execute() {
+                                Util.runWebkitOverflowAutoFix(scrollBodyPanel
+                                        .getElement());
+                            }
+                        });
+                    }
                 } else {
-                    // webkits may still bug with their disturbing scrollbar
-                    // bug,
-                    // See #3457
-                    // run overflow fix for scrollable area
-                    Scheduler.get().scheduleDeferred(new Command() {
-                        public void execute() {
-                            Util.runWebkitOverflowAutoFix(scrollBodyPanel
-                                    .getElement());
-                        }
-                    });
+                    initializeRows(uidl, rowData);
                 }
-            } else {
-                initializeRows(uidl, rowData);
             }
         }
 

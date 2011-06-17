@@ -393,6 +393,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private MultiSelectMode multiSelectMode = MultiSelectMode.DEFAULT;
 
+    private boolean rowCacheInvalidated;
+
     /* Table constructors */
 
     /**
@@ -1471,6 +1473,7 @@ public class Table extends AbstractSelect implements Action.Container,
             pageBufferFirstIndex = firstIndex;
         }
 
+        setRowCacheInvalidated(true);
         requestRepaint();
     }
 
@@ -1818,17 +1821,6 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         return itemId;
-    }
-
-    /* Overriding select behavior */
-
-    @Override
-    public void setValue(Object newValue) throws ReadOnlyException,
-            ConversionException {
-        // external selection change, need to truncate pageBuffer
-        resetPageBuffer();
-        refreshRenderedCells();
-        super.setValue(newValue);
     }
 
     @Override
@@ -2326,8 +2318,9 @@ public class Table extends AbstractSelect implements Action.Container,
         // Rows
         if (isPartialRowUpdate()) {
             paintPartialRowUpdate(target, actionSet);
-        } else {
+        } else if (target.isFullRepaint() || isRowCacheInvalidated()) {
             paintRows(target, cells, actionSet);
+            setRowCacheInvalidated(false);
         }
 
         paintSorting(target);
@@ -2347,6 +2340,14 @@ public class Table extends AbstractSelect implements Action.Container,
         if (dropHandler != null) {
             dropHandler.getAcceptCriterion().paint(target);
         }
+    }
+
+    private void setRowCacheInvalidated(boolean invalidated) {
+        rowCacheInvalidated = invalidated;
+    }
+
+    private boolean isRowCacheInvalidated() {
+        return rowCacheInvalidated;
     }
 
     private void paintPartialRowUpdate(PaintTarget target, Set<Action> actionSet)

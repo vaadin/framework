@@ -682,15 +682,14 @@ public abstract class AbstractCommunicationManager implements
         requestThemeName = request.getParameter("theme");
         maxInactiveInterval = request.getSession().getMaxInactiveInterval();
         // repaint requested or session has timed out and new one is created
-        boolean repaintAll;
         final OutputStream out;
 
-        repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null);
+        setRepaintAll(request.getParameter(GET_PARAM_REPAINT_ALL) != null);
         // || (request.getSession().isNew()); FIXME What the h*ll is this??
         out = response.getOutputStream();
 
         boolean analyzeLayouts = false;
-        if (repaintAll) {
+        if (isRepaintAll()) {
             // analyzing can be done only with repaintAll
             analyzeLayouts = (request.getParameter(GET_PARAM_ANALYZE_LAYOUTS) != null);
         }
@@ -748,12 +747,11 @@ public abstract class AbstractCommunicationManager implements
                     }
                 }
                 // No message to show, let's just repaint all.
-                repaintAll = true;
-
+                setRepaintAll(true);
             }
 
-            paintAfterVariableChanges(request, response, callback, repaintAll,
-                    outWriter, window, analyzeLayouts);
+            paintAfterVariableChanges(request, response, callback, outWriter,
+                    window, analyzeLayouts);
 
             if (closingWindowName != null) {
                 currentlyOpenWindowsInClient.remove(closingWindowName);
@@ -771,7 +769,6 @@ public abstract class AbstractCommunicationManager implements
      * @param request
      * @param response
      * @param callback
-     * @param repaintAll
      * @param outWriter
      * @param window
      * @param analyzeLayouts
@@ -779,11 +776,10 @@ public abstract class AbstractCommunicationManager implements
      * @throws IOException
      */
     private void paintAfterVariableChanges(Request request, Response response,
-            Callback callback, boolean repaintAll, final PrintWriter outWriter,
-            Window window, boolean analyzeLayouts) throws PaintException,
-            IOException {
+            Callback callback, final PrintWriter outWriter, Window window,
+            boolean analyzeLayouts) throws PaintException, IOException {
 
-        if (repaintAll) {
+        if (isRepaintAll()) {
             makeAllPaintablesDirty(window);
         }
 
@@ -823,11 +819,10 @@ public abstract class AbstractCommunicationManager implements
                     application, window);
             if (newWindow != window) {
                 window = newWindow;
-                repaintAll = true;
+                setRepaintAll(true);
             }
 
-            writeUidlResponce(callback, repaintAll, outWriter, window,
-                    analyzeLayouts);
+            writeUidlResponse(callback, outWriter, window, analyzeLayouts);
 
         }
         closeJsonMessage(outWriter);
@@ -836,7 +831,7 @@ public abstract class AbstractCommunicationManager implements
 
     }
 
-    public void writeUidlResponce(Callback callback, boolean repaintAll,
+    public void writeUidlResponse(Callback callback,
             final PrintWriter outWriter, Window window, boolean analyzeLayouts)
             throws PaintException {
         outWriter.print("\"changes\":[");
@@ -846,7 +841,7 @@ public abstract class AbstractCommunicationManager implements
         List<InvalidLayout> invalidComponentRelativeSizes = null;
 
         JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
-                !repaintAll);
+                !isRepaintAll());
         OpenWindowCache windowCache = currentlyOpenWindowsInClient.get(window
                 .getName());
         if (windowCache == null) {
@@ -855,7 +850,7 @@ public abstract class AbstractCommunicationManager implements
         }
 
         // Paints components
-        if (repaintAll) {
+        if (isRepaintAll()) {
             paintables = new ArrayList<Paintable>();
             paintables.add(window);
 
@@ -970,7 +965,7 @@ public abstract class AbstractCommunicationManager implements
         outWriter.print(", \"meta\" : {");
         boolean metaOpen = false;
 
-        if (repaintAll) {
+        if (isRepaintAll()) {
             metaOpen = true;
             outWriter.write("\"repaintAll\":true");
             if (analyzeLayouts) {
@@ -1016,7 +1011,7 @@ public abstract class AbstractCommunicationManager implements
                 && ci.getSessionExpiredCaption() == null
                 && ci.isSessionExpiredNotificationEnabled()) {
             int newTimeoutInterval = getTimeoutInterval();
-            if (repaintAll || (timeoutInterval != newTimeoutInterval)) {
+            if (isRepaintAll() || (timeoutInterval != newTimeoutInterval)) {
                 String escapedURL = ci.getSessionExpiredURL() == null ? "" : ci
                         .getSessionExpiredURL().replace("/", "\\/");
                 if (metaOpen) {
@@ -1107,6 +1102,7 @@ public abstract class AbstractCommunicationManager implements
         if (dragAndDropService != null) {
             dragAndDropService.printJSONResponse(outWriter);
         }
+        setRepaintAll(false);
     }
 
     private int getTimeoutInterval() {
@@ -1219,8 +1215,9 @@ public abstract class AbstractCommunicationManager implements
                     final PrintWriter outWriter = new PrintWriter(
                             new CharArrayWriter());
 
+                    setRepaintAll(true);
                     paintAfterVariableChanges(request, response, callback,
-                            true, outWriter, window, false);
+                            outWriter, window, false);
 
                 }
 
@@ -2122,6 +2119,8 @@ public abstract class AbstractCommunicationManager implements
     private final HashMap<Class<? extends Paintable>, Integer> typeToKey = new HashMap<Class<? extends Paintable>, Integer>();
     private int nextTypeKey = 0;
 
+    private boolean repaintAll = false;
+
     String getTagForType(Class<? extends Paintable> class1) {
         Integer object = typeToKey.get(class1);
         if (object == null) {
@@ -2310,5 +2309,17 @@ public abstract class AbstractCommunicationManager implements
             }
             return b;
         }
+    }
+
+    private void setRepaintAll(boolean repaintAll) {
+        this.repaintAll = repaintAll;
+    }
+
+    /**
+     * @return true if a RepaintAll has been requested. E.g. by refreshing the
+     *         browser window or such.
+     */
+    public boolean isRepaintAll() {
+        return repaintAll;
     }
 }

@@ -1111,4 +1111,13 @@ public class JsonPaintTarget implements PaintTarget {
 
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.PaintTarget#isFullRepaint()
+     */
+    public boolean isFullRepaint() {
+        return manager.isRepaintAll();
+    }
+
 }

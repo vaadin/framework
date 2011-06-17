@@ -474,4 +474,10 @@ public interface PaintTarget extends Serializable {
      *         paintable.
      */
     public String getTag(Paintable paintable);
+
+    /**
+     * @return true if a full repaint has been requested. E.g. refresh in a
+     *         browser window or such.
+     */
+    public boolean isFullRepaint();
 }
