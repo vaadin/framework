@@ -419,6 +419,11 @@ public class TreeTable extends Table implements Hierarchical {
         toggledItemId = null;
     }
 
+    /*
+     * Override methods for partial row updates and additions when expanding /
+     * collapsing nodes.
+     */
+
     @Override
     protected boolean isPartialRowUpdate() {
         return toggledItemId != null;

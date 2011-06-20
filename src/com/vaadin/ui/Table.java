@@ -2692,15 +2692,13 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private boolean[] findCellsWithComponents() {
         final boolean[] isComponent = new boolean[visibleColumns.size()];
-        int isComponentIndex = 0;
-        for (final Iterator<Object> it = visibleColumns.iterator(); it
-                .hasNext() && isComponentIndex < isComponent.length;) {
-            final Object columnId = it.next();
+        int ix = 0;
+        for (Object columnId : visibleColumns) {
             if (columnGenerators.containsKey(columnId)) {
-                isComponent[isComponentIndex++] = true;
+                isComponent[ix++] = true;
             } else {
                 final Class<?> colType = getType(columnId);
-                isComponent[isComponentIndex++] = colType != null
+                isComponent[ix++] = colType != null
                         && Component.class.isAssignableFrom(colType);
             }
         }
@@ -2710,9 +2708,7 @@ public class Table extends AbstractSelect implements Action.Container,
     private void paintVisibleColumnOrder(PaintTarget target) {
         // Visible column order
         final ArrayList<String> visibleColOrder = new ArrayList<String>();
-        for (final Iterator<Object> it = visibleColumns.iterator(); it
-                .hasNext();) {
-            final Object columnId = it.next();
+        for (Object columnId : visibleColumns) {
             if (!isColumnCollapsed(columnId)) {
                 visibleColOrder.add(columnIdMap.key(columnId));
             }

@@ -3734,7 +3734,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
         }
 
-        public void insertRows(UIDL rowData, int firstIndex, int rows) {
+        protected void insertRows(UIDL rowData, int firstIndex, int rows) {
             aligns = tHead.getColumnAlignments();
             final Iterator<?> it = rowData.getChildIterator();
 
@@ -3850,7 +3850,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         /**
          * @return false if couldn't remove row
          */
-        public boolean unlinkRow(boolean fromBeginning) {
+        protected boolean unlinkRow(boolean fromBeginning) {
             if (lastRendered - firstRendered < 0) {
                 return false;
             }
@@ -3871,7 +3871,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
         }
 
-        public void unlinkRows(int firstIndex, int count) {
+        protected void unlinkRows(int firstIndex, int count) {
             if (count < 1) {
                 return;
             }
@@ -3890,7 +3890,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             fixSpacers();
         }
 
-        public void unlinkAllRowsAfter(int index) {
+        protected void unlinkAllRowsAfter(int index) {
             if (firstRendered > index) {
                 index = firstRendered;
             }
