@@ -5447,9 +5447,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         final int lastRendered = scrollBody.getLastRendered();
         final int firstRendered = scrollBody.getFirstRendered();
 
-        VConsole.log("firstRendered=" + firstRendered + " preLimit=" + preLimit
-                + " lastRendered=" + lastRendered + " postLimit=" + postLimit);
-
         if (postLimit <= lastRendered && preLimit >= firstRendered) {
             // remember which firstvisible we requested, in case the server has
             // a differing opinion
