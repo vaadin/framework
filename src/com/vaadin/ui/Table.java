@@ -2399,6 +2399,15 @@ public class Table extends AbstractSelect implements Action.Container,
         int count = getAddedRowCount();
 
         target.startTag("prows");
+
+        int maxRows = (int) (getPageLength() * getCacheRate());
+        if (!shouldHideAddedRows() && count > maxRows) {
+            count = maxRows + 1;
+            // delete the rows below, since they will fall beyond the cache
+            // page.
+            target.addAttribute("delbelow", true);
+        }
+
         target.addAttribute("firstprowix", firstIx);
         target.addAttribute("numprows", count);
 

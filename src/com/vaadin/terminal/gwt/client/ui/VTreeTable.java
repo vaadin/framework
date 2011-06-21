@@ -342,4 +342,15 @@ public class VTreeTable extends VScrollTable {
         super.setStyleName(style + " v-treetable");
     }
 
+    @Override
+    protected void updateTotalRows(UIDL uidl) {
+        // Make sure that initializedAndAttached & al are not reset when the
+        // totalrows are updated on expand/collapse requests.
+        int newTotalRows = uidl.getIntAttribute("totalrows");
+        if (collapseRequest) {
+            setTotalRows(newTotalRows);
+        } else {
+            super.setTotalRows(newTotalRows);
+        }
+    }
 }

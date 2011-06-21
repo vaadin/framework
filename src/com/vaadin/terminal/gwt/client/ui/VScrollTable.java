@@ -1105,7 +1105,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
     }
 
-    private void updateTotalRows(UIDL uidl) {
+    protected void updateTotalRows(UIDL uidl) {
         int newTotalRows = uidl.getIntAttribute("totalrows");
         if (newTotalRows != getTotalRows()) {
             if (scrollBody != null) {
@@ -1376,10 +1376,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             scrollBody.unlinkRows(
                     partialRowAdditions.getIntAttribute("firstprowix"),
                     partialRowAdditions.getIntAttribute("numprows"));
+            scrollBody.ensureCacheFilled();
         } else {
-            scrollBody.insertRows(partialRowAdditions,
-                    partialRowAdditions.getIntAttribute("firstprowix"),
-                    partialRowAdditions.getIntAttribute("numprows"));
+            if (partialRowAdditions.hasAttribute("delbelow")) {
+                scrollBody.insertRowsDeleteBelow(partialRowAdditions,
+                        partialRowAdditions.getIntAttribute("firstprowix"),
+                        partialRowAdditions.getIntAttribute("numprows"));
+            } else {
+                scrollBody.insertRows(partialRowAdditions,
+                        partialRowAdditions.getIntAttribute("firstprowix"),
+                        partialRowAdditions.getIntAttribute("numprows"));
+            }
         }
 
         updateCache();
@@ -3704,6 +3711,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             // this may be a new set of rows due content change,
             // ensure we have proper cache rows
+            ensureCacheFilled();
+        }
+
+        protected void ensureCacheFilled() {
             int reactFirstRow = (int) (firstRowInViewPort - pageLength
                     * cache_react_rate);
             int reactLastRow = (int) (firstRowInViewPort + pageLength + pageLength
@@ -3766,6 +3777,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
                 fixSpacers();
             }
+        }
+
+        protected void insertRowsDeleteBelow(UIDL rowData, int firstIndex,
+                int rows) {
+            unlinkAllRowsStartingAt(firstIndex);
+            insertRows(rowData, firstIndex, rows);
         }
 
         /**
@@ -3890,11 +3907,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             fixSpacers();
         }
 
-        protected void unlinkAllRowsAfter(int index) {
+        protected void unlinkAllRowsStartingAt(int index) {
             if (firstRendered > index) {
                 index = firstRendered;
             }
-            for (int ix = renderedRows.size() - 1; ix > index; ix--) {
+            for (int ix = renderedRows.size() - 1; ix >= index; ix--) {
                 unlinkRowAtIndex(ix);
                 lastRendered--;
             }
@@ -5429,6 +5446,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
         final int lastRendered = scrollBody.getLastRendered();
         final int firstRendered = scrollBody.getFirstRendered();
+
+        VConsole.log("firstRendered=" + firstRendered + " preLimit=" + preLimit
+                + " lastRendered=" + lastRendered + " postLimit=" + postLimit);
 
         if (postLimit <= lastRendered && preLimit >= firstRendered) {
             // remember which firstvisible we requested, in case the server has
