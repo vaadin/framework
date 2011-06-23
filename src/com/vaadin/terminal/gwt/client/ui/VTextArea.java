@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -39,7 +39,7 @@ public class VTextArea extends VTextField {
         }
 
         if (getMaxLength() >= 0) {
-            sinkEvents(Event.ONKEYPRESS);
+            sinkEvents(Event.ONKEYUP);
         }
     }
 
@@ -57,7 +57,7 @@ public class VTextArea extends VTextField {
 
     @Override
     public void onBrowserEvent(Event event) {
-        if (getMaxLength() >= 0 && event.getTypeInt() == Event.ONKEYPRESS) {
+        if (getMaxLength() >= 0 && event.getTypeInt() == Event.ONKEYUP) {
             Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     if (getText().length() > getMaxLength()) {
