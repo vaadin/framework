@@ -2193,7 +2193,7 @@ public abstract class AbstractCommunicationManager implements
 
         public SimpleMultiPartInputStream(InputStream realInputStream,
                 String boundaryString) {
-            boundary = (CRLF + DASHDASH + boundaryString + DASHDASH)
+            boundary = (CRLF + DASHDASH + boundaryString)
                     .toCharArray();
             this.realInputStream = realInputStream;
         }
