@@ -117,6 +117,8 @@
         <property file="build/GWT-VERSION.properties" />
         <property file="build/html-style.properties" />
 
+    	<property name="snapshot.repository.url" value="http://oss.sonatype.org/content/repositories/vaadin-snapshots" />
+
         <!-- Current timestamp in different formats. -->
         <tstamp>
             <format property="build.date" pattern="yyyy-MM-dd"/>
@@ -985,6 +987,39 @@
 
         <echo>##teamcity[publishArtifacts '${result-path}/differences.txt']</echo>
     </target>
+	
+    <!-- ================================================================== -->
+    <!-- Custom build.                                                     -->
+    <!-- ================================================================== -->
+
+    <!-- Main target for the custom build. -->
+    <target name="custom-build" depends="clean-result, custom-build-init, nightly-init, package-init, init, build, docs, internal-package-zip">
+    </target>
+
+
+    <!-- Initialize a custom build. -->
+    <target name="custom-build-init">
+        <echo>Preparing a custom build with properties file: ${build.properties.file}</echo>
+
+    	<!-- Custom build support -->
+		<antcontrib:if>
+			<isset property="build.properties.file"/>
+			<then>
+		        <tstamp>
+		            <format property="build.date.compact" pattern="yyyyMMdd"/>
+		        </tstamp>
+		        <property file="${build.properties.file}" />
+				<property name="version" value="${vaadin.internal.version}"/>
+		        <property name="version.full" value="${version}.custom-${build.date.compact}"/>
+	   		</then>
+			<!-- Otherwise version and snapshot.repository.url come from target "init" -->
+	  	</antcontrib:if>
+	</target>
+
+    <target name="custom-build-maven-publish">
+    	<antcall target="nightly-maven-publish" />
+    </target>
+
 
     <!-- ================================================================== -->
     <!-- Nightly build.                                                     -->
@@ -1102,7 +1137,7 @@
             <sysproperty key="file" value="../${result-path}/${lib-javadoc-jar-name}" />
             <sysproperty key="pomFile" value="maven/pom.xml" />
             <sysproperty key="repositoryId" value="vaadin-snapshots" />
-            <sysproperty key="url" value="http://oss.sonatype.org/content/repositories/vaadin-snapshots" />
+            <sysproperty key="url" value="${snapshot.repository.url}" />
             <sysproperty key="classifier" value="javadoc" />
             <sysproperty key="uniqueVersion" value="false" />
             <sysproperty key="gpg.passphrase" value="${gpg.passphrase}" />
@@ -1114,7 +1149,7 @@
             <sysproperty key="file" value="../${result-path}/${lib-sources-jar-name}" />
             <sysproperty key="pomFile" value="maven/pom.xml" />
             <sysproperty key="repositoryId" value="vaadin-snapshots" />
-            <sysproperty key="url" value="http://oss.sonatype.org/content/repositories/vaadin-snapshots" />
+            <sysproperty key="url" value="${snapshot.repository.url}" />
             <sysproperty key="classifier" value="sources" />
             <sysproperty key="uniqueVersion" value="false" />
             <sysproperty key="gpg.passphrase" value="${gpg.passphrase}" />
@@ -1129,7 +1164,7 @@
             <sysproperty key="file" value="../${output-dir}/WebContent/${lib-jar-name}" />
             <sysproperty key="pomFile" value="maven/pom.xml" />
             <sysproperty key="repositoryId" value="vaadin-snapshots" />
-            <sysproperty key="url" value="http://oss.sonatype.org/content/repositories/vaadin-snapshots" />
+            <sysproperty key="url" value="${snapshot.repository.url}" />
             <sysproperty key="gpg.passphrase" value="${gpg.passphrase}" />
         </artifact:mvn>
     </target>
