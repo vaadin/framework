@@ -114,8 +114,6 @@
     	<antcontrib:propertyregex property="version.minor" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\2"/>
     	<antcontrib:propertyregex property="version.revision" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\3"/>
 
-    	<property name="vaadin.version.maven" value="${version.major}.${version.minor}-SNAPSHOT" />
-
         <property file="build/GWT-VERSION.properties" />
         <property file="build/html-style.properties" />
 
@@ -1116,6 +1114,7 @@
     
     <target name="nightly-maven-pom.xml">
     	<echo>Creating pom.xml for nightly build</echo>
+    	<property name="vaadin.version.maven" value="${version.major}.${version.minor}-SNAPSHOT" />
         <copy tofile="build/maven/pom.xml">
             <filterchain>
                 <expandproperties />
@@ -1174,11 +1173,12 @@
     	<echo>Creating pom.xml for local test build</echo>
     	<fail unless="version.major" message="Major version must be defined in version.major"/>
     	<fail unless="version.minor" message="Major version must be defined in version.minor"/>
+    	<property name="vaadin.version.maven" value="${version.major}.${version.minor}" />
         <copy tofile="build/maven/pom.xml">
             <filterchain>
                 <expandproperties />
                 <replacetokens begintoken="@" endtoken="@">
-                    <token key="VERSION-MAJOR.MINOR" value="${version.major}.${version.minor}" />
+                    <token key="MAVEN-VERSION" value="${vaadin.version.maven}" />
                 </replacetokens>
             </filterchain>
             <fileset file="build/maven/pom-template.xml"/>
