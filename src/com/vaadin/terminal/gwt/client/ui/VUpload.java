@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
@@ -44,7 +45,8 @@ public class VUpload extends SimplePanel implements Paintable {
                         && !"".equals(fu.getFilename())) {
                     submit();
                 }
-            } else if (event.getTypeInt() == Event.ONFOCUS) {
+            } else if (BrowserInfo.get().isIE()
+                    && event.getTypeInt() == Event.ONFOCUS) {
                 // IE and user has clicked on hidden textarea part of upload
                 // field. Manually open file selector, other browsers do it by
                 // default.
