@@ -601,66 +601,70 @@
 			<try>
 				<antcall target="integration-test-upload-demo" />
 		
-				<antcall target="run-integration-test">
-					<param name="target-server" value="tomcat4"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="tomcat5"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="tomcat6"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="jetty5"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="jetty6"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="jetty7"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="jboss3"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="jboss4"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="jboss5"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="glassfish2"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="glassfish3"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="liferay"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="liferay6"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="liferay6ee"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="gatein3"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="eXo3"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="weblogic9"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="weblogic10"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="weblogicPortal"/>
-				</antcall>
-				<antcall target="run-integration-test">
-					<param name="target-server" value="GAE"/>
-				</antcall>
+				<parallel>
+					<sequential>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="tomcat4"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="tomcat5"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="tomcat6"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="jetty5"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="jetty6"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="jetty7"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="jboss3"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="jboss4"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="jboss5"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="glassfish2"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="glassfish3"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="liferay"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="liferay6"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="liferay6ee"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="gatein3"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="eXo3"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="weblogic9"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="weblogic10"/>
+						</antcall>
+						<antcall target="run-integration-test">
+							<param name="target-server" value="weblogicPortal"/>
+						</antcall>
+					</sequential>
+					<antcall target="run-integration-test">
+						<param name="target-server" value="GAE"/>
+					</antcall>
+				</parallel>
 			</try>
 			<catch>
 				<echo message="Uploading of demo.war failed. ${tried}" />
