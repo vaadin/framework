@@ -56,7 +56,7 @@ import com.vaadin.terminal.gwt.client.ui.VOverlay;
  * This implementation can be overridden with GWT deferred binding.
  * 
  */
-public final class VDebugConsole extends VOverlay implements Console {
+public class VDebugConsole extends VOverlay implements Console {
 
     private static final String POS_COOKIE_NAME = "VDebugConsolePos";
 
@@ -287,11 +287,7 @@ public final class VDebugConsole extends VOverlay implements Console {
 
     protected void remoteLog(String msg) {
         msgQueue.add(msg);
-        if (msg.length() > 4) {
-            doSend.execute();
-        } else {
-            sendToRemoteLog.trigger();
-        }
+        sendToRemoteLog.trigger();
     }
 
     /**
