@@ -45,6 +45,7 @@
 
 	<!-- fileset containing tests to retry -->
 	<fileset dir=".." id="html-retry-files-ie6">
+		<include name="tests/**/LoginFormTest.html" />
 		<include name="tests/**/SubWindows**.html" />
 	</fileset>
 
