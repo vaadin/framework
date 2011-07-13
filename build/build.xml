@@ -30,16 +30,20 @@
     <target name="package-test" depends="clean-result, nightly-init, package-init, init, build, docs, internal-package-zip, nightly-publish">
     </target>
 
+    <!-- Locations of Ant task JARs - build properties not yet read at this point -->
+    <property name="ant.task.jar.antcontrib" value="build/lib/ant-contrib-1.0b3.jar" />
+    <property name="ant.task.jar.maven" value="build/lib/maven-ant-tasks-2.0.10.jar" />
+
     <!-- ant contrib required for flow control (for loop, if, property override)   -->
     <!-- Note that we have to use a namespace to avoid clash when running sub-ant. -->
     <taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml">
         <classpath>
-            <pathelement location="build/lib/ant-contrib-1.0b3.jar" />
+            <pathelement location="${ant.task.jar.antcontrib}" />
         </classpath>
     </taskdef>
 
     <!-- ant contrib for Maven integration -->
-    <path id="maven-ant-tasks.classpath" path="build/lib/maven-ant-tasks-2.0.10.jar" />
+    <path id="maven-ant-tasks.classpath" path="${ant.task.jar.maven}" />
     <typedef resource="org/apache/maven/artifact/ant/antlib.xml"
              uri="antlib:org.apache.maven.artifact.ant"
              classpathref="maven-ant-tasks.classpath" />
