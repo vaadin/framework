@@ -223,7 +223,6 @@ public class ApplicationConfiguration implements EntryPoint {
             }
         }
 
-        deferredWidgetLoadLoop.scheduleRepeating(100);
     }
 
     /**
@@ -257,6 +256,7 @@ public class ApplicationConfiguration implements EntryPoint {
             runningApplications.add(a);
             return true;
         } else {
+            deferredWidgetLoader = new DeferredWidgetLoader();
             return false;
         }
     }
@@ -361,6 +361,8 @@ public class ApplicationConfiguration implements EntryPoint {
                 cmd.execute();
             }
             callbacks.clear();
+        } else if(widgetsLoading == 0 && deferredWidgetLoader != null) {
+            deferredWidgetLoader.trigger();
         }
 
     }
@@ -368,22 +370,44 @@ public class ApplicationConfiguration implements EntryPoint {
     /*
      * This loop loads widget implementation that should be loaded deferred.
      */
-    private static final Timer deferredWidgetLoadLoop = new Timer() {
+    static class DeferredWidgetLoader extends Timer {
         private static final int FREE_LIMIT = 4;
+        private static final int FREE_CHECK_TIMEOUT = 100;
 
         int communicationFree = 0;
         int nextWidgetIndex = 0;
+        private boolean pending;
+        
+        public DeferredWidgetLoader() {
+            schedule(5000);
+        }
+
+        public void trigger() {
+            if(!pending) {
+                schedule(FREE_CHECK_TIMEOUT);
+            }
+        }
+        
+        @Override
+        public void schedule(int delayMillis) {
+            super.schedule(delayMillis);
+            pending = true;
+        }
 
         @Override
         public void run() {
+            pending = false;
             if (!isBusy()) {
                 Class<? extends Paintable> nextType = getNextType();
                 if (nextType == null) {
                     // ensured that all widgets are loaded
-                    cancel();
+                    deferredWidgetLoader = null;
                 } else {
+                    communicationFree = 0;
                     widgetSet.loadImplementation(nextType);
                 }
+            } else {
+                schedule(FREE_CHECK_TIMEOUT);
             }
         }
 
@@ -400,21 +424,23 @@ public class ApplicationConfiguration implements EntryPoint {
         private boolean isBusy() {
             if (widgetsLoading > 0) {
                 communicationFree = 0;
-                return false;
+                return true;
             }
             for (ApplicationConnection app : runningApplications) {
                 if (app.hasActiveRequest()) {
                     // if an UIDL request or widget loading is active, mark as
                     // busy
                     communicationFree = 0;
-                    return false;
+                    return true;
                 }
             }
             communicationFree++;
             return communicationFree < FREE_LIMIT;
         }
-    };
-
+    }
+    
+    private static DeferredWidgetLoader deferredWidgetLoader;
+   
     public void onModuleLoad() {
 
         // Enable IE6 Background image caching
