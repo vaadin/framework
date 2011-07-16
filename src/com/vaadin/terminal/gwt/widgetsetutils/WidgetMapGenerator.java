@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeSet;
@@ -244,10 +245,16 @@ public class WidgetMapGenerator extends Generator {
         boolean first = true;
 
         ArrayList<Class<? extends Paintable>> lazyLoadedWidgets = new ArrayList<Class<? extends Paintable>>();
+        
+        HashSet<Class<? extends com.vaadin.terminal.gwt.client.Paintable>> widgetsWithInstantiator = new HashSet<Class<? extends com.vaadin.terminal.gwt.client.Paintable>>();
+        
         for (Class<? extends Paintable> class1 : paintablesHavingWidgetAnnotation) {
             ClientWidget annotation = class1.getAnnotation(ClientWidget.class);
             Class<? extends com.vaadin.terminal.gwt.client.Paintable> clientClass = annotation
                     .value();
+            if(widgetsWithInstantiator.contains(clientClass)) {
+                continue;
+            }
             if (clientClass == VView.class) {
                 // VView's are not instantiated by widgetset
                 continue;
@@ -288,6 +295,7 @@ public class WidgetMapGenerator extends Generator {
                 sourceWriter.print(");");
             }
             sourceWriter.print("}");
+            widgetsWithInstantiator.add(clientClass);
         }
 
         sourceWriter.println("}");
