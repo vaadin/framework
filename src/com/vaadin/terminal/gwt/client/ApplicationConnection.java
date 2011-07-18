@@ -65,6 +65,8 @@ public class ApplicationConnection {
 
     private static final String MODIFIED_CLASSNAME = "v-modified";
 
+    public static final String DISABLED_CLASSNAME = "v-disabled";
+
     private static final String REQUIRED_CLASSNAME_EXT = "-required";
 
     private static final String ERROR_CLASSNAME_EXT = "-error";
@@ -1768,7 +1770,7 @@ public class ApplicationConnection {
         // first disabling and read-only status
         if (!enabled) {
             styleBuf.append(" ");
-            styleBuf.append("v-disabled");
+            styleBuf.append(DISABLED_CLASSNAME);
         }
         if (uidl.getBooleanAttribute("readonly")) {
             styleBuf.append(" ");
