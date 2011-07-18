@@ -202,6 +202,26 @@ public class TabSheet extends AbstractComponentContainer {
      * selection event is fired.
      * 
      * If the component is already present in the tab sheet, changes its caption
+     * and returns the corresponding (old) tab, preserving other tab metadata.
+     * 
+     * @param c
+     *            the component to be added onto tab - should not be null.
+     * @param caption
+     *            the caption to be set for the component and used rendered in
+     *            tab bar
+     * @return the created {@link Tab}
+     */
+    public Tab addTab(Component c, String caption) {
+        return addTab(c, caption, null);
+    }
+
+    /**
+     * Adds a new tab into TabSheet.
+     * 
+     * The first tab added to a tab sheet is automatically selected and a tab
+     * selection event is fired.
+     * 
+     * If the component is already present in the tab sheet, changes its caption
      * and icon and returns the corresponding (old) tab, preserving other tab
      * metadata.
      * 
