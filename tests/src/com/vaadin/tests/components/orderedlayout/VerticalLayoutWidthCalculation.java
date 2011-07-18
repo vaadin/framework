@@ -1,4 +1,4 @@
-package com.vaadin.tests.server.component.abstractorderedlayout;
+package com.vaadin.tests.components.orderedlayout;
 
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
