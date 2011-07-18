@@ -69,7 +69,7 @@ public class VFormLayout extends SimplePanel implements Container {
         }
 
         if (uidl.hasAttribute("disabled")) {
-            styles.add("v-disabled");
+            styles.add(ApplicationConnection.DISABLED_CLASSNAME);
         }
 
         return styles.toArray(new String[styles.size()]);
@@ -339,7 +339,8 @@ public class VFormLayout extends SimplePanel implements Container {
         public void updateCaption(UIDL uidl) {
             setVisible(!uidl.getBooleanAttribute("invisible"));
 
-            setStyleName(getElement(), "v-disabled",
+            setStyleName(getElement(),
+                    ApplicationConnection.DISABLED_CLASSNAME,
                     uidl.hasAttribute("disabled"));
 
             boolean isEmpty = true;

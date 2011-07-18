@@ -113,7 +113,8 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
             boolean enabled = !opUidl.getBooleanAttribute("disabled")
                     && !isReadonly() && !isDisabled();
             op.setEnabled(enabled);
-            setStyleName(op.getElement(), "v-disabled", !enabled);
+            setStyleName(op.getElement(),
+                    ApplicationConnection.DISABLED_CLASSNAME, !enabled);
             op.addClickHandler(this);
             optionsToKeys.put(op, opUidl.getStringAttribute("key"));
             panel.add(op);
