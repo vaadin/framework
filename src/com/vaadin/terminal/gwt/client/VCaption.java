@@ -88,7 +88,7 @@ public class VCaption extends HTML {
         }
 
         if (uidl.hasAttribute("disabled")) {
-            style += " " + "v-disabled";
+            style += " " + ApplicationConnection.DISABLED_CLASSNAME;
         }
 
         setStyleName(style);
