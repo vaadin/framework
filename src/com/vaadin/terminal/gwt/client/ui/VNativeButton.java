@@ -54,6 +54,8 @@ public class VNativeButton extends Button implements Paintable, ClickHandler,
     private HandlerRegistration focusHandlerRegistration;
     private HandlerRegistration blurHandlerRegistration;
 
+    private boolean disableOnClick = false;
+
     public VNativeButton() {
         setStyleName(CLASSNAME);
 
@@ -74,6 +76,8 @@ public class VNativeButton extends Button implements Paintable, ClickHandler,
         if (client.updateComponent(this, uidl, false)) {
             return;
         }
+
+        disableOnClick = uidl.hasAttribute(VButton.ATTR_DISABLE_ON_CLICK);
 
         focusHandlerRegistration = EventHelper.updateFocusHandler(this, client,
                 focusHandlerRegistration);
@@ -200,6 +204,10 @@ public class VNativeButton extends Button implements Paintable, ClickHandler,
 
         if (BrowserInfo.get().isSafari()) {
             VNativeButton.this.setFocus(true);
+        }
+        if (disableOnClick) {
+            setEnabled(false);
+            client.updateVariable(id, "disabledOnClick", true, false);
         }
 
         // Add mouse details

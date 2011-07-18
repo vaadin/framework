@@ -43,6 +43,8 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
 
     boolean switchMode = false;
 
+    boolean disableOnClick = false;
+
     /**
      * Creates a new push button. The value of the push button is false and it
      * is immediate by default.
@@ -148,6 +150,9 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
         }
         target.addVariable(this, "state", booleanValue());
 
+        if (isDisableOnClick()) {
+            target.addAttribute(VButton.ATTR_DISABLE_ON_CLICK, true);
+        }
         if (clickShortcut != null) {
             target.addAttribute("keycode", clickShortcut.getKeyCode());
         }
@@ -163,6 +168,12 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
+
+        if (variables.containsKey("disabledOnClick")) {
+            // Could be optimized so the button is not repainted because of this
+            // (client side has already disabled the button)
+            setEnabled(false);
+        }
 
         if (!isReadOnly() && variables.containsKey("state")) {
             // Gets the new and old button states
@@ -649,6 +660,29 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
                 button.fireClick();
             }
         }
+    }
+
+    /**
+     * Determines if a button is automatically disabled when clicked. See
+     * {@link #setDisableOnClick(boolean)} for details.
+     * 
+     * @return true if the button is disabled when clicked, false otherwise
+     */
+    public boolean isDisableOnClick() {
+        return disableOnClick;
+    }
+
+    /**
+     * Determines if a button is automatically disabled when clicked. If this is
+     * set to true the button will be automatically disabled when clicked,
+     * typically to prevent (accidental) extra clicks on a button.
+     * 
+     * @param disableOnClick
+     *            true to disable button when it is clicked, false otherwise
+     */
+    public void setDisableOnClick(boolean disableOnClick) {
+        this.disableOnClick = disableOnClick;
+        requestRepaint();
     }
 
 }

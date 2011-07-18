@@ -35,6 +35,8 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
     public static final String CLASSNAME = "v-button";
     private static final String CLASSNAME_PRESSED = "v-pressed";
 
+    public static final String ATTR_DISABLE_ON_CLICK = "dc";
+
     // mouse movement is checked before synthesizing click event on mouseout
     protected static int MOVE_THRESHOLD = 3;
     protected int mousedownX = 0;
@@ -62,6 +64,8 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
     private boolean enabled = true;
 
     private int tabIndex = 0;
+
+    private boolean disableOnClick = false;
 
     /*
      * BELOW PRIVATE MEMBERS COPY-PASTED FROM GWT CustomButton
@@ -128,6 +132,8 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
 
         // Set text
         setText(uidl.getStringAttribute("caption"));
+
+        disableOnClick = uidl.hasAttribute(ATTR_DISABLE_ON_CLICK);
 
         // handle error
         if (uidl.hasAttribute("error")) {
@@ -354,6 +360,11 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
         if (BrowserInfo.get().isSafari()) {
             VButton.this.setFocus(true);
         }
+        if (disableOnClick) {
+            setEnabled(false);
+            client.updateVariable(id, "disabledOnClick", true, false);
+        }
+
         client.updateVariable(id, "state", true, false);
 
         // Add mouse details

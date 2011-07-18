@@ -104,4 +104,10 @@ public class CheckBox extends Button {
         super.setSwitchMode(true);
     }
 
+    @Override
+    public void setDisableOnClick(boolean disableOnClick) {
+        throw new UnsupportedOperationException(
+                "CheckBox does not support disable on click");
+    }
+
 }

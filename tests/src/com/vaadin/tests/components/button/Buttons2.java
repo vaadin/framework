@@ -19,6 +19,13 @@ public class Buttons2<T extends Button> extends AbstractFieldTest<T> implements
         }
     };
 
+    private Command<T, Boolean> disableOnClickCommand = new Command<T, Boolean>() {
+
+        public void execute(T c, Boolean value, Object data) {
+            c.setDisableOnClick(value);
+        }
+    };
+
     private Command<T, Boolean> clickListenerCommand = new Command<T, Boolean>() {
 
         public void execute(T c, Boolean value, Object data) {
@@ -42,6 +49,8 @@ public class Buttons2<T extends Button> extends AbstractFieldTest<T> implements
 
         createBooleanAction("Switch mode", CATEGORY_FEATURES, false,
                 switchModeCommand);
+        createBooleanAction("Disable on click", CATEGORY_FEATURES, false,
+                disableOnClickCommand);
         addClickListener(CATEGORY_LISTENERS);
     }
 
