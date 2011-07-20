@@ -997,7 +997,7 @@
     <!-- ================================================================== -->
 
     <!-- Main target for the custom build. -->
-    <target name="custom-build" depends="clean-result, custom-build-init, nightly-init, package-init, init, compile-server-side, compile-client-side, vaadin.jar, vaadin-sources.jar">
+    <target name="custom-build" depends="clean-result, custom-build-init, nightly-init, package-init, init, build, internal-package-zip">
     </target>
 
 
@@ -1015,7 +1015,7 @@
 		        <property file="${build.properties.file}" />
 				<property name="version" value="${vaadin.version}"/>
 		        <property name="version.full" value="${version}.custom-${build.date.compact}"/>
-				<property name="compile.only.default-widgetset" value="1"/>
+				<!-- <property name="compile.only.default-widgetset" value="1"/> -->
 	   		</then>
 			<!-- Otherwise version and snapshot.repository.url come from target "init" -->
 	  	</antcontrib:if>
