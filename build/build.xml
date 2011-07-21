@@ -999,7 +999,7 @@
     <!-- ================================================================== -->
 
     <!-- Main target for the custom build. -->
-    <target name="custom-build" depends="clean-result, custom-build-init, nightly-init, package-init, init, build, internal-package-zip">
+    <target name="custom-build" depends="clean-result, custom-build-init, nightly-init, package-init, init, build">
     </target>
 
 
