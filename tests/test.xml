@@ -10,6 +10,9 @@
 	<property name="browsers-mac" value="osx-firefox3,osx-opera10,osx-googlechrome8,osx-safari4,osx-safari5" />
 
 	<property name="browsers" value="${browsers-windows}" />
+	
+	<!-- Number of times to retry a test if it fails -->
+	<property name="retries" value="1" />
 
 	<!-- Screen shot base directory -->
 	<fail unless="com.vaadin.testbench.screenshot.directory" message="The 'com.vaadin.testbench.screenshot.directory' property must be defined." />
@@ -43,17 +46,12 @@
 		<exclude name="tests/integration-testscripts/**" />
 	</fileset>
 
-	<!-- fileset containing tests to retry -->
-	<fileset dir=".." id="html-retry-files-ie6">
-		<include name="tests/**/LoginFormTest.html" />
-		<include name="tests/**/SubWindows**.html" />
-	</fileset>
-
 	<!-- This target converts HTML tests files to java junit tests. One test file for each browser is created. -->
 	<target name="create-tests" depends="remove-temp-testclasses" if="server.start.succeeded">
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 
 		<java classname="com.vaadin.testbench.util.TestConverter" classpathref="classpath" fork="true">
+			<sysproperty key="com.vaadin.testbench.test.retries" value="${retries}" />
 			<jvmarg value="-Duser.language=en"/>
 			<jvmarg value="-Duser.country=US"/>
 			<arg value="${test-output-dir}" />
@@ -63,30 +61,8 @@
 	</target>
 
 
-	<target name="create-retry-tests" if="create.retry.tests">
-		<antcall target="convert-retry-test">
-			<param name="browser" value="winxp-ie6" />
-			<param name="testfile-name" value="html-retry-files-ie6" />
-		</antcall>
-	</target>
-
-	<!-- Target converts test files so that the whole test can be re run 'retries' times -->
-	<target name="convert-retry-test" if="retries">
-		<pathconvert pathsep=" " property="testfile" refid="${testfile-name}" />
-
-		<java classname="com.vaadin.testbench.util.TestConverter" classpathref="classpath">
-			<sysproperty key="com.vaadin.testbench.test.retries" value="${retries}" />
-			<jvmarg value="-Duser.language=en"/>
-			<jvmarg value="-Duser.country=US"/>
-			<arg value="${test-output-dir}" />
-			<arg value="${browser}" />
-			<arg line="${testfile}" />
-		</java>
-
-	</target>
-
 	<!-- This target complies the generated java junit tests. -->
-	<target name="compile-tests" depends="create-tests, create-retry-tests">
+	<target name="compile-tests" depends="create-tests">
 		<mkdir dir="${class-dir}" />
 		<javac srcdir="${test-output-dir}" destdir="${class-dir}" debug="on" fork="yes" failonerror="false" encoding="UTF8">
 			<classpath>

@@ -1263,9 +1263,8 @@
             <!-- "tests" classes after unpacking the package.          -->
             <property name="output-dir" value="${output-dir}"/>
 
-        	<!-- Convert some tests to run multiple times if failed. -->
-            <property name="create.retry.tests" value="1"/>
-        	<property name="retries" value="3"/>
+        	<!-- Convert tests to run multiple times if failed. -->
+        	<property name="retries" value="1"/>
             	
             <property name="package.filename" value="${package.filename}"/>
             <property name="testing.testarea" value="/tmp/testarea"/>
