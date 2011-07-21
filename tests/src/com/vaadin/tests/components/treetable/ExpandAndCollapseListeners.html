@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>New Test</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">New Test</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.treetable.TreeTableTest?restartApplication</td>
+	<td></td>
+</tr>
+<!--expand and collapse listeners-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_Smenu#item0</td>
+	<td>23,12</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::Root/VOverlay[0]/VMenuBar[0]#item3</td>
+	<td>23,7</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::Root/VOverlay[1]/VMenuBar[0]#item7</td>
+	<td>75,11</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_Smenu#item0</td>
+	<td>4,7</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::Root/VOverlay[0]/VMenuBar[0]#item3</td>
+	<td>79,9</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::Root/VOverlay[1]/VMenuBar[0]#item8</td>
+	<td>57,11</td>
+</tr>
+<!--expand and assert events-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[0]/domChild[0]/domChild[0]/domChild[0]</td>
+	<td>9,5</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[6]/domChild[0]/domChild[0]/domChild[0]</td>
+	<td>10,4</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[4]/domChild[0]/domChild[0]/domChild[0]</td>
+	<td>25,4</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_SLog_row_2</td>
+	<td>2. ExpandEvent: Item 1</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_SLog_row_1</td>
+	<td>3. ExpandEvent: Item 3</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_SLog_row_0</td>
+	<td>4. ExpandEvent: Item 9</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[0]/domChild[0]</td>
+	<td>30,7</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[0]/domChild[0]</td>
+	<td>30,7</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_SLog_row_1</td>
+	<td>5. ExpandEvent: Item 4</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_SLog_row_0</td>
+	<td>6. CollapseEvent: Item 4</td>
+</tr>
+<!--click around to see that we do not get extra expand/collapse events-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[6]/domChild[1]/domChild[0]</td>
+	<td>60,9</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[1]/domChild[1]/domChild[0]</td>
+	<td>64,15</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[8]/domChild[1]/domChild[0]</td>
+	<td>51,14</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[4]/domChild[1]/domChild[0]</td>
+	<td>57,0</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[6]/domChild[1]/domChild[0]</td>
+	<td>66,6</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[8]/domChild[1]/domChild[0]</td>
+	<td>41,1</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[2]/domChild[1]/domChild[0]</td>
+	<td>63,0</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[0]</td>
+	<td>63,9</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]/domChild[0]</td>
+	<td>60,11</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[4]/domChild[0]/domChild[0]</td>
+	<td>58,10</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[5]/domChild[0]/domChild[0]</td>
+	<td>66,12</td>
+</tr>
+<!--some collapse testing-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[0]/domChild[0]/domChild[0]/domChild[0]</td>
+	<td>11,5</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_SLog_row_0</td>
+	<td>7. CollapseEvent: Item 1</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]/domChild[0]/domChild[0]</td>
+	<td>11,6</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstreetableTreeTableTest::PID_SLog_row_0</td>
+	<td>8. CollapseEvent: Item 3</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

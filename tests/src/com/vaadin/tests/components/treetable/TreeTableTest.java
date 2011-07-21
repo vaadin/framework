@@ -13,9 +13,11 @@ import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.Tree.CollapseEvent;
 import com.vaadin.ui.Tree.CollapseListener;
 import com.vaadin.ui.Tree.ExpandEvent;
+import com.vaadin.ui.Tree.ExpandListener;
 import com.vaadin.ui.TreeTable;
 
-public class TreeTables extends Tables<TreeTable> implements CollapseListener {
+public class TreeTableTest extends Tables<TreeTable> implements
+        CollapseListener, ExpandListener {
 
     @Override
     protected Class<TreeTable> getTestClass() {
@@ -91,7 +93,6 @@ public class TreeTables extends Tables<TreeTable> implements CollapseListener {
         createRootItemSelectAction(CATEGORY_DATA_SOURCE);
 
         createExpandCollapseActions(CATEGORY_FEATURES);
-        createSelectionModeSelect(CATEGORY_SELECTION);
         createChildrenAllowedAction(CATEGORY_DATA_SOURCE);
 
         createListeners(CATEGORY_LISTENERS);
@@ -109,12 +110,12 @@ public class TreeTables extends Tables<TreeTable> implements CollapseListener {
     }
 
     private void createListeners(String category) {
-        // createBooleanAction("Expand listener", category, false,
-        // expandListenerCommand);
-        // createBooleanAction("Collapse listener", category, false,
-        // collapseListenerCommand);
         createBooleanAction("Item click listener", category, false,
                 itemClickListenerCommand);
+        createBooleanAction("Expand listener", category, false,
+                expandListenerCommand);
+        createBooleanAction("Collapse listener", category, false,
+                collapseListenerCommand);
 
     }
 
@@ -259,27 +260,25 @@ public class TreeTables extends Tables<TreeTable> implements CollapseListener {
         }
     };
 
-    // private Command<TreeTable, Boolean> expandListenerCommand = new
-    // Command<TreeTable, Boolean>() {
-    // public void execute(TreeTable c, Boolean value, Object data) {
-    // if (value) {
-    // c.addListener((ExpandListener) TreeTables.this);
-    // } else {
-    // c.removeListener((ExpandListener) TreeTables.this);
-    // }
-    // }
-    // };
-    //
-    // private Command<TreeTable, Boolean> collapseListenerCommand = new
-    // Command<TreeTable, Boolean>() {
-    // public void execute(TreeTable c, Boolean value, Object data) {
-    // if (value) {
-    // c.addListener((CollapseListener) TreeTables.this);
-    // } else {
-    // c.removeListener((CollapseListener) TreeTables.this);
-    // }
-    // }
-    // };
+    private Command<TreeTable, Boolean> expandListenerCommand = new Command<TreeTable, Boolean>() {
+        public void execute(TreeTable c, Boolean value, Object data) {
+            if (value) {
+                c.addListener((ExpandListener) TreeTableTest.this);
+            } else {
+                c.removeListener((ExpandListener) TreeTableTest.this);
+            }
+        }
+    };
+
+    private Command<TreeTable, Boolean> collapseListenerCommand = new Command<TreeTable, Boolean>() {
+        public void execute(TreeTable c, Boolean value, Object data) {
+            if (value) {
+                c.addListener((CollapseListener) TreeTableTest.this);
+            } else {
+                c.removeListener((CollapseListener) TreeTableTest.this);
+            }
+        }
+    };
 
     public void nodeCollapse(CollapseEvent event) {
         log(event.getClass().getSimpleName() + ": " + event.getItemId());

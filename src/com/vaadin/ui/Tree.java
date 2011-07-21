@@ -826,7 +826,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @VERSION@
      * @since 3.0
      */
-    public class ExpandEvent extends Component.Event {
+    public static class ExpandEvent extends Component.Event {
 
         private final Object expandedItemId;
 
@@ -915,7 +915,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @VERSION@
      * @since 3.0
      */
-    public class CollapseEvent extends Component.Event {
+    public static class CollapseEvent extends Component.Event {
 
         private final Object collapsedItemId;
 

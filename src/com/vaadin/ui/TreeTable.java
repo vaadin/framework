@@ -22,6 +22,10 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.VTreeTable;
+import com.vaadin.ui.Tree.CollapseEvent;
+import com.vaadin.ui.Tree.CollapseListener;
+import com.vaadin.ui.Tree.ExpandEvent;
+import com.vaadin.ui.Tree.ExpandListener;
 import com.vaadin.ui.treetable.Collapsible;
 import com.vaadin.ui.treetable.HierarchicalContainerOrderedWrapper;
 
@@ -479,6 +483,12 @@ public class TreeTable extends Table implements Hierarchical {
         setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex());
         toggledItemId = itemId;
         requestRepaint();
+
+        if (isCollapsed(itemId)) {
+            fireCollapseEvent(itemId);
+        } else {
+            fireExpandEvent(itemId);
+        }
     }
 
     @Override
@@ -629,6 +639,69 @@ public class TreeTable extends Table implements Hierarchical {
      */
     public Object getHierarchyColumnId() {
         return hierarchyColumnId;
+    }
+
+    /**
+     * Adds an expand listener.
+     * 
+     * @param listener
+     *            the Listener to be added.
+     */
+    public void addListener(ExpandListener listener) {
+        addListener(ExpandEvent.class, listener, ExpandListener.EXPAND_METHOD);
+    }
+
+    /**
+     * Removes an expand listener.
+     * 
+     * @param listener
+     *            the Listener to be removed.
+     */
+    public void removeListener(ExpandListener listener) {
+        removeListener(ExpandEvent.class, listener,
+                ExpandListener.EXPAND_METHOD);
+    }
+
+    /**
+     * Emits an expand event.
+     * 
+     * @param itemId
+     *            the item id.
+     */
+    protected void fireExpandEvent(Object itemId) {
+        fireEvent(new ExpandEvent(this, itemId));
+    }
+
+    /**
+     * Adds a collapse listener.
+     * 
+     * @param listener
+     *            the Listener to be added.
+     */
+    public void addListener(CollapseListener listener) {
+        addListener(CollapseEvent.class, listener,
+                CollapseListener.COLLAPSE_METHOD);
+    }
+
+    /**
+     * Removes a collapse listener.
+     * 
+     * @param listener
+     *            the Listener to be removed.
+     */
+    public void removeListener(CollapseListener listener) {
+        removeListener(CollapseEvent.class, listener,
+                CollapseListener.COLLAPSE_METHOD);
+    }
+
+    /**
+     * Emits a collapse event.
+     * 
+     * @param itemId
+     *            the item id.
+     */
+    protected void fireCollapseEvent(Object itemId) {
+        fireEvent(new CollapseEvent(this, itemId));
     }
 
 }
