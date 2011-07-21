@@ -1264,7 +1264,7 @@
             <property name="output-dir" value="${output-dir}"/>
 
         	<!-- Convert tests to run multiple times if failed. -->
-        	<property name="retries" value="1"/>
+        	<property name="retries" value="2"/>
             	
             <property name="package.filename" value="${package.filename}"/>
             <property name="testing.testarea" value="/tmp/testarea"/>

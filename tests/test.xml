@@ -12,7 +12,7 @@
 	<property name="browsers" value="${browsers-windows}" />
 	
 	<!-- Number of times to retry a test if it fails -->
-	<property name="retries" value="1" />
+	<property name="retries" value="2" />
 
 	<!-- Screen shot base directory -->
 	<fail unless="com.vaadin.testbench.screenshot.directory" message="The 'com.vaadin.testbench.screenshot.directory' property must be defined." />
