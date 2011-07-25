@@ -61,6 +61,13 @@ public class KeepAllItemsVisible extends TestBase implements ExpandListener,
             }
         });
         addComponent(b);
+        b = new Button("Set pagelength to 0", new Button.ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                tt.setPageLength(0);
+            }
+        });
+        addComponent(b);
     }
 
     private void recalculatePageLength(TreeTable tt) {
