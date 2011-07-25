@@ -24,6 +24,13 @@
 	line-height: normal;
 }
 
+.v-ie6 .v-table-header-wrap,
+.v-ie6 .v-table-footer-wrap,
+.v-ie6 .v-table-column-selector{
+	/* Fixes IE6 overflow bug #7314 which causes Table headers to overflow and cover the column selector. */
+	position:relative;
+}
+
 .v-table-footer-wrap,
 .white .v-table-footer-wrap {
 	text-transform: none;
@@ -39,6 +46,7 @@
 .v-table-footer-container {
 	padding-right: 7px;
 }
+
 
 .v-table-header,
 .v-table-footer,
