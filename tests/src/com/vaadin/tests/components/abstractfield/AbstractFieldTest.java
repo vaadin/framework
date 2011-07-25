@@ -156,7 +156,7 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
             }
         }
     };
-    private Command<T, Object> setValueCommand = new Command<T, Object>() {
+    protected Command<T, Object> setValueCommand = new Command<T, Object>() {
 
         public void execute(T c, Object value, Object data) {
             c.setValue(value);

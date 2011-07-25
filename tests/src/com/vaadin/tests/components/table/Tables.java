@@ -87,7 +87,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
         public void execute(Table c, Integer value, Object data) {
             if (value == Table.ROW_HEADER_MODE_PROPERTY) {
-                c.setItemCaptionPropertyId("Column 3");
+                c.setItemCaptionPropertyId("Property 3");
             }
             c.setRowHeaderMode(value);
         }
@@ -150,6 +150,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         createPageLengthSelect(CATEGORY_SIZE);
 
         createSelectionModeSelect(CATEGORY_SELECTION);
+        createValueSelection(CATEGORY_SELECTION);
 
         createItemClickListener(CATEGORY_LISTENERS);
         createColumnResizeListenerCheckbox(CATEGORY_LISTENERS);
@@ -170,6 +171,16 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         createVisibleColumnsMultiToggle(CATEGORY_VISIBLE_COLUMNS);
         createContextMenuAction(CATEGORY_FEATURES);
 
+    }
+
+    private void createValueSelection(String categorySelection) {
+        LinkedHashMap<String, Object> options = new LinkedHashMap<String, Object>();
+        options.put("null", null);
+        for (int i = 1; i <= 10; i++) {
+            options.put("Item " + i, "Item " + i);
+        }
+        createSelectAction("Value", categorySelection, options, null,
+                setValueCommand);
     }
 
     private void createContextMenuAction(String category) {
@@ -243,7 +254,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         options.put("Id", Table.ROW_HEADER_MODE_ID);
         options.put("Index", Table.ROW_HEADER_MODE_INDEX);
         options.put("Item", Table.ROW_HEADER_MODE_ITEM);
-        options.put("'Column 3' property", Table.ROW_HEADER_MODE_PROPERTY);
+        options.put("'Property 3' property", Table.ROW_HEADER_MODE_PROPERTY);
 
         createSelectAction("Row header mode", category, options, "Hidden",
                 rowHeaderModeCommand);
