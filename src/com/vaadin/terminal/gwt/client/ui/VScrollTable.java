@@ -841,6 +841,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         boolean keyboardSelectionOverRowFetchInProgress = selectSelectedRows(uidl);
 
+        updateActionMap(uidl);
+
         updateColumnProperties(uidl);
 
         UIDL ac = uidl.getChildByTagName("-ac");
@@ -1221,8 +1223,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         lazyUnregistryBag.clear();
     }
 
-    private void updateActionMap(UIDL c) {
-        final Iterator<?> it = c.getChildIterator();
+    private void updateActionMap(UIDL mainUidl) {
+        UIDL actionsUidl = mainUidl.getChildByTagName("actions");
+        if (actionsUidl == null) {
+            return;
+        }
+
+        final Iterator<?> it = actionsUidl.getChildIterator();
         while (it.hasNext()) {
             final UIDL action = (UIDL) it.next();
             final String key = action.getStringAttribute("key");

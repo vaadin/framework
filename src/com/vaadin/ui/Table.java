@@ -3045,7 +3045,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
             if (!actionHandlers.contains(actionHandler)) {
                 actionHandlers.add(actionHandler);
-                requestRepaint();
+                refreshRenderedCells();
             }
 
         }
@@ -3068,7 +3068,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 actionMapper = null;
             }
 
-            requestRepaint();
+            refreshRenderedCells();
         }
     }
 
@@ -3078,7 +3078,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public void removeAllActionHandlers() {
         actionHandlers = null;
         actionMapper = null;
-        requestRepaint();
+        refreshRenderedCells();
     }
 
     /* Property value change listening support */
