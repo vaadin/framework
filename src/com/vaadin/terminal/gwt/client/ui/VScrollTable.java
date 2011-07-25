@@ -478,9 +478,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             top += Window.getScrollTop();
             left += Window.getScrollLeft();
             client.getContextMenu().showAt(this, left, top);
+
+            // Only prevent browser context menu if there are action handlers
+            // registered
+            event.stopPropagation();
+            event.preventDefault();
         }
-        event.stopPropagation();
-        event.preventDefault();
     }
 
     /**
@@ -4470,7 +4473,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     final Element targetTdOrTr = getEventTargetTdOrTr(event);
                     if (type == Event.ONCONTEXTMENU) {
                         showContextMenu(event);
-                        event.stopPropagation();
+                        if (enabled
+                                && (actionKeys != null || client
+                                        .hasEventListeners(VScrollTable.this,
+                                                ITEM_CLICK_EVENT_ID))) {
+                            // Prevent browser context menu only if there are
+                            // action handlers or item click listeners
+                            // registered
+                            event.stopPropagation();
+                            event.preventDefault();
+                        }
                         return;
                     }
 
@@ -4811,14 +4823,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             public void showContextMenu(Event event) {
                 if (enabled && actionKeys != null) {
+                    // Show context menu if there are registered action handlers
                     int left = Util.getTouchOrMouseClientX(event);
                     int top = Util.getTouchOrMouseClientY(event);
                     top += Window.getScrollTop();
                     left += Window.getScrollLeft();
                     client.getContextMenu().showAt(this, left, top);
                 }
-                event.stopPropagation();
-                event.preventDefault();
             }
 
             /**
