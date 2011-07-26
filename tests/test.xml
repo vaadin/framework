@@ -160,6 +160,9 @@
 			<jvmarg value="-Dcom.vaadin.testbench.screenshot.directory=${com.vaadin.testbench.screenshot.directory}" />
 			<!-- Resolution for screenshots -->
 			<jvmarg value="-Dcom.vaadin.testbench.screenshot.resolution=${com.vaadin.testbench.screenshot.resolution}" />
+			<jvmarg value="-Dcom.vaadin.testbench.debug=${com.vaadin.testbench.debug}" />
+			<jvmarg value="-Dcom.vaadin.testbench.screenshot.block.error=${com.vaadin.testbench.screenshot.block.error}" />
+
 
 			<jvmarg value="-Djava.awt.headless=true" />
 
