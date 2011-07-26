@@ -804,6 +804,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         enabled = !uidl.hasAttribute("disabled");
 
+        if (BrowserInfo.get().isIE8() && !enabled) {
+            /*
+             * The disabled shim will not cover the table body if it is
+             * relative in IE8. See #7324
+             */
+            scrollBodyPanel.getElement().getStyle()
+                    .setPosition(Position.STATIC);
+        } else if (BrowserInfo.get().isIE8()) {
+            scrollBodyPanel.getElement().getStyle()
+                    .setPosition(Position.RELATIVE);
+        }
+
         this.client = client;
         paintableId = uidl.getStringAttribute("id");
         immediate = uidl.getBooleanAttribute("immediate");

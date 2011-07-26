@@ -31,6 +31,12 @@
 	position:relative;
 }
 
+.v-ie6 .v-table.v-disabled,
+.v-ie7 .v-table.v-disabled{
+	/* Fixes ie issue #7324 where disabled shim does not cover table body */ 
+	position:relative;
+}
+
 .v-table-footer-wrap,
 .white .v-table-footer-wrap {
 	text-transform: none;
