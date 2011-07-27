@@ -1,4 +1,4 @@
-/*
+/* 
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -123,20 +123,7 @@ public abstract class AbstractTextField extends AbstractField implements
             throw new IllegalStateException(
                     "Null values are not allowed if the null-representation is null");
         }
-
-        if (requestRepaintInTextChangeEvent && !valueChangeInTextChangeEvent) {
-            /*
-             * If the repaint occurred in a text change event then we do not
-             * want to send back the old value since it will just overwrite the
-             * typed value so we send the last known value instead which is
-             * updated by the text change event.
-             */
-            target.addVariable(this, "text", lastKnownTextContent);
-        } else {
-            target.addVariable(this, "text", value);
-        }
-        requestRepaintInTextChangeEvent = false;
-        valueChangeInTextChangeEvent = false;
+        target.addVariable(this, "text", value);
 
         if (selectionPosition != -1) {
             target.addAttribute("selpos", selectionPosition);
@@ -182,22 +169,6 @@ public abstract class AbstractTextField extends AbstractField implements
         } catch (final IllegalArgumentException e) {
             return v;
         }
-    }
-
-    /**
-     * Flag for monitoring if a repaint gets requested in a text change event
-     */
-    private boolean requestRepaintInTextChangeEvent = false;
-
-    @Override
-    public void requestRepaint() {
-        if (textChangeEventPending) {
-            /*
-             * Textchange event listener triggered this repaint
-             */
-            requestRepaintInTextChangeEvent = true;
-        }
-        super.requestRepaint();
     }
 
     @Override
@@ -467,26 +438,13 @@ public abstract class AbstractTextField extends AbstractField implements
 
     private void firePendingTextChangeEvent() {
         if (textChangeEventPending) {
-            fireEvent(new TextChangeEventImpl(this));
             textChangeEventPending = false;
+            fireEvent(new TextChangeEventImpl(this));
         }
     }
 
-    /**
-     * Flag for monitoring if the value got changed in a TextChangeEvent
-     * listener
-     */
-    protected boolean valueChangeInTextChangeEvent = false;
-
     @Override
     protected void setInternalValue(Object newValue) {
-        if (textChangeEventPending) {
-            /*
-             * Value changed in a TextChangeEvent listener
-             */
-            valueChangeInTextChangeEvent = true;
-        }
-
         if (changingVariables && !textChangeEventPending) {
             /*
              * Fire a "simulated" text change event before value change event if

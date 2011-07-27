@@ -511,9 +511,27 @@ public class VTree extends FocusElementPanel implements Paintable,
      * Sends the selection to the server
      */
     private void sendSelectionToServer() {
-        client.updateVariable(paintableId, "selected", selectedIds
-                .toArray(new String[selectedIds.size()]), immediate);
-        selectionHasChanged = false;
+        Command command = new Command() {
+            public void execute() {
+                client.updateVariable(paintableId, "selected",
+                        selectedIds.toArray(new String[selectedIds.size()]),
+                        immediate);
+                selectionHasChanged = false;
+            }
+        };
+
+        /*
+         * Delaying the sending of the selection in webkit to ensure the
+         * selection is always sent when the tree has focus and after click
+         * events have been processed. This is due to the focusing
+         * implementation in FocusImplSafari which uses timeouts when focusing
+         * and blurring.
+         */
+        if (BrowserInfo.get().isWebkit()) {
+            Scheduler.get().scheduleDeferred(command);
+        } else {
+            command.execute();
+        }
     }
 
     /**

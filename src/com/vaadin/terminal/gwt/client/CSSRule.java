@@ -72,7 +72,7 @@ public class CSSRule {
     var j = theRules.length;
     for(var i=0; i<j; i++) {
     var r = theRules[i];
-    if(r.type == 1 || sheet.imports) {
+    if(r.type == 1 || sheet.imports) {
     var selectors = r.selectorText.toLowerCase().split(",");
     var n = selectors.length;
     for(var m=0; m<n; m++) {
