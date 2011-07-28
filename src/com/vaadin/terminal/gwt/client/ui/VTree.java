@@ -869,17 +869,24 @@ public class VTree extends FocusElementPanel implements Paintable,
             final MouseEventDetails details = new MouseEventDetails(evt);
             ScheduledCommand command = new ScheduledCommand() {
                 public void execute() {
-                    // non-immediate iff an immediate select event is going to
-                    // happen
-                    boolean imm = !immediate
-                            || !selectable
-                            || (!isNullSelectionAllowed && isSelected() && selectedIds
-                                    .size() == 1);
-                    client
-                            .updateVariable(paintableId, "clickedKey", key,
-                                    false);
-                    client.updateVariable(paintableId, "clickEvent", details
-                            .toString(), imm);
+                    if (details.getButton() == 0) {
+                        // non-immediate iff an immediate select event is going
+                        // to
+                        // happen and the left button was clicked
+                        boolean imm = !immediate
+                                || !selectable
+                                || (!isNullSelectionAllowed && isSelected() && selectedIds
+                                        .size() == 1);
+                        client.updateVariable(paintableId, "clickedKey", key,
+                                false);
+                        client.updateVariable(paintableId, "clickEvent",
+                                details.toString(), imm);
+                    } else {
+                        client.updateVariable(paintableId, "clickedKey", key,
+                                false);
+                        client.updateVariable(paintableId, "clickEvent",
+                                details.toString(), immediate);
+                    }
                 }
             };
             if (treeHasFocus) {
