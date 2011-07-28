@@ -1,0 +1,25 @@
+.v-csslayout-toolbar {
+	background: transparent url(../../img/grad-light-top.png) repeat-x;
+	border: 1px solid #b3b3b3;
+	border-width: 1px 0;
+	}
+
+.v-ie6 .v-csslayout-toolbar {
+	background-image: none;
+	}
+
+.v-csslayout-toolbar .v-csslayout-margin {
+	margin: 3px .3em 2px;
+	padding-bottom: 1px;
+	overflow: hidden;
+	}
+
+.v-csslayout-toolbar .v-button,
+.v-csslayout-toolbar .segment {
+	margin-right: 2px;
+	float: left;
+	}
+
+.v-csslayout-toolbar .segment .v-button {
+	margin-right: 0;
+	}

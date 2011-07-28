@@ -1,0 +1,288 @@
+.v-button:active,
+.v-ie7 .v-pressed.v-button,
+.v-ie8 .v-pressed.v-button,
+div.v-button-down {
+	background-image: url(../../img/grad-dark-bottom2.png);
+	background-color: #afafaf;
+	}
+
+.v-button:active .v-button-wrap,
+.v-ie7 .v-pressed.v-button .v-button-wrap,
+.v-ie8 .v-pressed.v-button .v-button-wrap,
+.v-button-down .v-button-wrap {
+	background-image: url(../../img/grad-dark-top2.png);
+	border: 1px solid #888;
+	padding: 3px 12px;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	}
+
+div.v-button-down .v-button-wrap {
+	background-image: url(../../img/grad-dark-top2.png);
+	}
+
+.v-ie6 div.v-button-down .v-button-wrap {
+	background-image: none;
+	}
+
+.v-button,
+.v-disabled.v-button:focus,
+.v-disabled.v-button:active {
+	border: 1px solid #8b8b8b;
+	background: #c9c9c9;
+	border-radius: 3px;
+	background: #c9c9c9 url(../../img/grad-dark-bottom.png) repeat-x left bottom;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-box-shadow: 0 1px 0 rgba(255,255,255,.2);
+	-moz-box-shadow: 0 1px 0 rgba(255,255,255,.2);
+	text-shadow: 0 1px 0 #fff;
+	padding: 0;
+	}
+
+.v-button-wrap,
+.v-disabled:active .v-button-wrap {
+	display: block;
+	padding: 4px 13px;
+	border: none;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	background: transparent url(../../img/grad-light-top.png) repeat-x;
+	height: 100%;
+	text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
+	}
+
+.v-sa .v-button,
+.v-sa .v-button-wrap,
+.v-ff .v-button,
+.v-ff .v-button-wrap {
+	overflow: hidden;
+	}
+	
+body.v-ie6 .v-button {
+	background-image: none;
+	}
+
+body.v-ie6 .v-button .v-button-wrap {
+	background-image: none;
+	display: inline;
+	zoom: 1;
+	}
+
+.v-button:focus {
+	outline: none;
+	}
+
+.v-button .v-icon {
+	margin-left: -0.5em;
+	}
+
+.v-button .v-button-caption {
+	line-height: 1.26;
+	}
+
+
+/*******************************************************************************
+ * Big
+ ******************************************************************************/
+.v-button-big {
+	font-size: 1.2em;
+	}
+
+
+/*******************************************************************************
+ * Small
+ ******************************************************************************/
+.v-button-small {
+	font-size: 0.85em;
+	font-weight: normal;
+	}
+
+.v-button-small .v-button-wrap {
+	padding: 3px 11px;
+	}
+
+.v-button-small:active .v-button-wrap,
+.v-ie7 .v-button-small.v-pressed .v-button-wrap,
+.v-ie8 .v-button-small.v-pressed .v-button-wrap,
+.v-button-down.small .v-button-wrap {
+	padding: 2px 10px;
+	}
+
+.v-button-small .v-icon {
+	margin-top: -4px;
+	margin-bottom: -4px;
+	}
+
+
+/*******************************************************************************
+ * Wide
+ ******************************************************************************/
+.v-button-wide .v-button-wrap {
+	padding-left: 26px;
+	padding-right: 26px;
+	}
+
+.v-button-wide:active .v-button-wrap,
+.v-ie7 .v-button-wide.v-pressed .v-button-wrap,
+.v-ie8 .v-button-wide.v-pressed .v-button-wrap {
+	padding-left: 25px;
+	padding-right: 25px;
+	}
+
+
+/*******************************************************************************
+ * Tall
+ ******************************************************************************/
+.v-button-tall .v-button-wrap {
+	padding-top: 13px;
+	padding-bottom: 13px;
+	}
+
+.v-button-tall:active .v-button-wrap,
+.v-ie7 .v-button-tall.v-pressed .v-button-wrap,
+.v-ie8 .v-button-tall.v-pressed .v-button-wrap {
+	padding-top: 12px;
+	padding-bottom: 12px;
+	}
+
+
+/*******************************************************************************
+ * Default
+ ******************************************************************************/
+.v-button-default,
+.v-disabled.v-button-default:focus {
+	font-weight: bold;
+	}
+
+
+/*******************************************************************************
+ * Link & borderless
+ ******************************************************************************/
+div.v-button-link,
+div.v-button-link:focus,
+.v-button-link:active,
+div.v-disabled.v-button-link,
+div.v-disabled.v-button-link:focus,
+body.v-ie .v-pressed.v-button-link,
+div.v-button-borderless,
+div.v-button-borderless:focus,
+.v-button-borderless:active,
+div.v-disabled.v-button-borderless,
+div.v-disabled.v-button-borderless:focus,
+body.v-ie .v-pressed.v-button-borderless {
+	background: transparent;
+	font-weight: normal;
+	text-shadow: none;
+	border: none;
+	padding: 1px;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	}
+
+.v-button-link .v-button-wrap,
+.v-button-borderless .v-button-wrap {
+	display: inline;
+	}
+
+div.v-button-link .v-button-wrap,
+div.v-button-link:focus .v-button-wrap,
+.v-button-link:active .v-button-wrap,
+div.v-disabled.v-button-link .v-button-wrap,
+div.v-disabled.v-button-link:focus .v-button-wrap,
+body.v-ie .v-pressed.v-button-link .v-button-wrap,
+div.v-button-borderless .v-button-wrap,
+div.v-button-borderless:focus .v-button-wrap,
+.v-button-borderless:active .v-button-wrap,
+div.v-disabled.v-button-borderless .v-button-wrap,
+div.v-disabled.v-button-borderless:focus .v-button-wrap,
+body.v-ie .v-pressed.v-button-borderless .v-button-wrap {
+	background: transparent;
+	font-weight: normal;
+	text-shadow: none;
+	border: none;
+	padding: 1px;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	}
+
+.v-button-link:focus .v-button-caption,
+.v-button-borderless:focus .v-button-caption {
+	border: 1px dotted gray;
+	margin: -1px;
+	}
+
+.v-button-link:active .v-button-caption,
+.v-button-borderless:active .v-button-caption {
+	border: none;
+	margin: 0;
+	}
+
+.v-button-borderless:active .v-icon {
+	opacity: .6;
+	}
+
+.v-button-link .v-icon,
+.v-button-borderless .v-icon {
+	margin-left: 0;
+	}
+
+
+/*******************************************************************************
+ * Icon-on-top
+ ******************************************************************************/
+.v-button-icon-on-top.v-button-borderless:focus .v-button-caption {
+	margin-top: 1px;
+	}
+
+.v-button-icon-on-top .v-button-caption,
+.v-button-icon-on-top:focus .v-button-caption,
+.v-button-icon-on-top.v-button-borderless:active .v-button-caption {
+	display: block;
+	margin-top: 2px;
+	}
+
+.v-button-icon-on-top .v-icon {
+	margin: 0;
+	}
+
+
+/*******************************************************************************
+ * Icon-on-right
+ ******************************************************************************/
+.v-button-icon-on-right .v-icon {
+	float: right;
+	margin-left: 3px;
+	margin-right: -0.5em;
+	}
+	
+.v-ie6 .v-button-icon-on-right,
+.v-ie7 .v-button-icon-on-right {
+	position: relative;
+	}
+
+.v-ie6 .v-button-icon-on-right .v-button-caption,
+.v-ie7 .v-button-icon-on-right .v-button-caption {
+	padding-right: 14px;
+	}
+
+.v-ie6 .v-button-icon-on-right .v-icon,
+.v-ie7 .v-button-icon-on-right .v-icon {
+	position: absolute;
+	right: 0;
+	margin: 0;
+	}
+
+/*******************************************************************************
+ * Icon-only
+ ******************************************************************************/
+.v-button-icon-only .v-button-caption {
+	display: none;
+	}
+
+.v-button-icon-only .v-icon {
+	margin-right: -.5em;
+	}

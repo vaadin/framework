@@ -1,0 +1,120 @@
+input.v-textfield,
+textarea.v-textarea,
+.v-filterselect {
+	line-height: normal;
+	border: 1px solid #b3b3b3;
+	border-top-color: #808080;
+	border-color: rgba(0,0,0,.3);
+	border-top-color: rgba(0,0,0,.5);
+	background: #fff url(../../img/input-bg.png) repeat-x;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	-webkit-box-shadow: 0 1px 0 rgba(255,255,255,.2);
+	-moz-box-shadow: 0 1px 0 rgba(255,255,255,.2);
+	padding: .1em .2em;
+	margin: 0;
+	}
+
+body input.v-textfield,
+body textarea.v-textarea,
+body input.v-filterselect-input {
+	color: #222;
+	}
+
+.v-ie input.v-textfield,
+.v-ie textarea.v-textarea,
+.v-ie .v-filterselect {
+	border-top-color: #808080;
+	}
+
+body input.v-textfield-prompt,
+body textarea.v-textarea-prompt {
+	font-style: normal;
+	color: #999;
+	}
+
+input.v-textfield-focus,
+textarea.v-textarea-focus {
+	background-color: #fffce1;
+	}
+
+
+/*******************************************************************************
+ * Readonly
+ ******************************************************************************/
+input.v-textfield-readonly,
+textarea.v-textarea-readonly {
+	border: none;
+	background: transparent;
+	}
+
+
+/*******************************************************************************
+ * Small
+ ******************************************************************************/
+body input.v-textfield-small,
+body textarea.v-textarea-small,
+.v-datefield-small .v-datefield-textfield,
+.v-datefield-small .v-datefield-button,
+.v-filterselect-small .v-filterselect-input {
+	font-size: 0.85em;
+	}
+
+
+/*******************************************************************************
+ * Big (and big search)
+ ******************************************************************************/
+body input.v-textfield-big,
+body textarea.v-textarea-big,
+.v-datefield-big .v-datefield-textfield,
+.v-datefield-big .v-datefield-button,
+.v-filterselect-big .v-filterselect-input {
+	font-size: 1.2em;
+	}
+
+input.v-textfield-big[type=text],
+.v-datefield-big input.v-datefield-textfield[type=text] {
+	padding: .3em;
+	}
+
+textarea.v-textarea,
+.v-filterselect-big {
+	padding: .3em;
+	}
+
+input.v-textfield-big.v-textfield-search,
+.v-filterselect-search.v-filterselect-big {
+	background-image: url(../../img/magnifier-big.png);
+	background-repeat: no-repeat;
+	background-position: 4px 50%;
+	}
+
+input.v-textfield-big.v-textfield-search[type=text] {
+	padding-left: 26px;
+	}
+
+.v-filterselect-search.v-filterselect-big {
+	padding-left: 26px;
+	}
+
+
+/*******************************************************************************
+ * Search
+ ******************************************************************************/
+input.v-textfield-search,
+.v-filterselect-search {
+	background-image: url(../../img/magnifier.png);
+	background-repeat: no-repeat;
+	background-position: 3px 50%;
+	}
+
+input.v-textfield-search[type=text],
+.v-filterselect-search {
+	padding-left: 17px;
+	}
+
+.v-ie6 input.v-textfield-search {
+	/* Compensate for big style as well, since IE6 doesn't handle the selector */
+	padding-left: 21px;
+	}

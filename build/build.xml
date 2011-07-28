@@ -269,10 +269,10 @@
             <zipfileset prefix="VAADIN/themes" dir="${output-dir}/WebContent/VAADIN/themes">
                 <patternset>
                     <include name="base/**/*" />
+                    <include name="chameleon/**/*" />
                     <include name="liferay/**/*" />
                     <include name="runo/**/*" />
                     <include name="reindeer/**/*" />
-                    <include name="default/**/*" />
                 </patternset>
             </zipfileset>
             
@@ -819,7 +819,7 @@
                 <patternset>
                     <include name="VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
                     <include name="VAADIN/themes/base/**/*" />
-                    <include name="VAADIN/themes/default/**/*" />
+                    <include name="VAADIN/themes/chameleon/**/*" />
                     <include name="VAADIN/themes/liferay/**/*" />
                     <include name="VAADIN/themes/runo/**/*" />
                     <include name="VAADIN/themes/reindeer/**/*" />

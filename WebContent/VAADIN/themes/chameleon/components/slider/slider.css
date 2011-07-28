@@ -1,0 +1,65 @@
+.v-slider {
+	border-top: 1px solid #9a9c9e;
+	border-bottom: 1px solid #bdbfc1;
+	margin: 3px 0;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	}
+
+.v-slider-base {
+	height: 4px;
+	background: #e0e2e2 url(../../img/grad-dark-top2.png) repeat-x;
+	border-top: 1px solid #adb0b1;
+	border-left: 1px solid #a0a3a6;
+	border-right: 1px solid #a0a3a6;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	}
+
+.v-slider-handle {
+	background: #c9c9c9 url(../../img/grad-dark-bottom2.png) repeat-x left bottom;
+	border: 1px solid #b3b3b3;
+	width: 10px;
+	height: 10px;
+	margin-top: -5px;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,.5);
+	-moz-box-shadow: 0 1px 1px rgba(0,0,0,.5);
+	cursor: pointer;
+	}
+
+.v-slider-handle-active {
+	background-color: #afafaf;
+	}
+
+.v-slider-vertical {
+	width: auto;
+	margin: 0 4px;
+	border-width: 0 1px;
+	}
+
+.v-ie6 .v-slider-vertical {
+	width: 6px;
+	}
+
+.v-slider-vertical .v-slider-base {
+	background-image: none;
+	width: 4px;
+	border-width: 1px 1px 0;
+	}
+
+.v-slider-vertical .v-slider-handle {
+	width: 10px;
+	height: 10px;
+	margin: 0;
+	margin-left: -5px;
+	}
+
+.v-ie6 .v-slider-base,
+.v-ie6 .v-slider-handle {
+	background-image: none;
+	}

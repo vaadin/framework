@@ -1,0 +1,80 @@
+.v-accordion {
+	border: 1px solid #b3b3b3;
+	}
+
+.v-accordion-item-open {
+	border-bottom: 1px solid #b3b3be;
+	}
+
+.v-accordion-item-caption,
+.v-accordion-item-open .v-accordion-item-caption:active {
+	padding: 0;
+	background: transparent url(../../img/grad-light-top.png) repeat-x;
+	border-width: 0 0 1px 0;
+	border-style: solid none;
+	}
+	
+.v-ie6 .v-accordion-item-caption {
+	background-image: none;
+	}
+
+div.v-accordion-item-caption,
+div.v-accordion-item-open .v-accordion-item-caption:active {
+	background-color: transparent;
+	}
+
+.v-accordion-item-caption .v-caption {
+	padding: .2em .9em;
+	}
+
+.v-accordion-item-caption:active {
+	background-image: url(../../img/grad-dark-bottom.png);
+	background-position: left bottom;
+	}
+
+/*******************************************************************************
+ * Opaque
+ ******************************************************************************/
+.v-accordion-opaque {
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	}
+
+.v-accordion-opaque .v-accordion-item-caption,
+.v-accordion-opaque .v-accordion-item-open {
+	border-none;
+	}
+
+.v-accordion-opaque .v-accordion-item-caption,
+.v-accordion-opaque .v-accordion-item-open .v-accordion-item-caption:active {
+	background-color: #b8b8b8;
+	}
+
+.v-accordion-opaque .v-accordion-item-open {
+	background-color: #fff;
+	}
+
+.v-accordion-opaque .v-accordion-item-first,
+.v-accordion-opaque .v-accordion-item-first .v-accordion-item-caption {
+	-webkit-border-top-left-radius: 3px;
+	-webkit-border-top-right-radius: 3px;
+	-moz-border-radius-topleft: 3px;
+	-moz-border-radius-topright: 3px;
+	overflow: hidden;
+	}
+
+
+/*******************************************************************************
+ * Borderless
+ ******************************************************************************/
+.v-accordion-borderless {
+	border: none;
+	}
+
+.v-accordion-opaque.borderless,
+.v-accordion-opaque.borderless .v-accordion-item-first .v-accordion-item-caption {
+	border-radius: 0;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	}

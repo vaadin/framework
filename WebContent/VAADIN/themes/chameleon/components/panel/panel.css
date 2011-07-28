@@ -1,0 +1,124 @@
+.v-panel-caption {
+	background: #b9dcff;
+	font-size: 1.2em;
+	border: 1px solid #b3b3b3;
+	border-bottom: none;
+	padding: .2em .6em;
+	}
+
+.v-panel-nocaption {
+	padding: 0;
+	height: 0;
+	overflow: hidden;
+	border-top: 1px solid #b3b3b3;
+	}
+
+.v-panel-content {
+	background: #fff;
+	border: 1px solid #b3b3b3;
+	border-top: none;
+	border-bottom: none;
+	}
+
+.v-panel-deco {
+	height: 0;
+	overflow: hidden;
+	border-top: 1px solid #b3b3b3;
+	}
+
+
+/*******************************************************************************
+ * Borderless
+ ******************************************************************************/
+div.v-panel-caption-borderless {
+	border: none;
+	}
+
+div.v-panel-nocaption-borderless,
+div.v-panel-content-borderless,
+div.v-panel-deco-borderless {
+	border: none;
+	background: transparent;
+	}
+
+
+/*******************************************************************************
+ * Light
+ ******************************************************************************/
+.v-panel-light .v-panel-caption-light {
+	background: transparent;
+	font-weight: normal;
+	border-bottom: 1px solid #b3b3b3;
+	}
+
+div.v-panel-content-light {
+	background: transparent;
+	}
+
+
+/*******************************************************************************
+ * Bubble
+ ******************************************************************************/
+.v-panel-bubble .v-panel-captionwrap {
+	border: 1px solid #b3b3b3;
+	border-bottom: none;
+	background: #fff;
+	-webkit-border-top-left-radius: 4px;
+	-webkit-border-top-right-radius: 4px;
+	-moz-border-radius-topleft: 4px;
+	-moz-border-radius-topright: 4px;
+	padding: 1px 2px;
+	overflow: hidden;
+	}
+
+.v-panel-bubble .v-panel-caption-bubble {
+	border: none;
+	background-image: url(../../img/grad-light-top.png);
+	background-repeat: repeat-x;
+	background-position: 0 -1px;
+	color: #fff;
+	text-shadow: 0 -1px 0 rgba(0,0,0,.4);
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	margin: 1px 0;
+	font-size: 1em;
+	line-height: 1.2;
+	padding: .3em .6em;
+	}
+
+.v-ie6 .v-panel-bubble .v-panel-caption-bubble {
+	background-image: none;
+	}
+
+.v-panel-nocaption-bubble {
+	padding: 0;
+	margin: 0;
+	border: none;
+	}
+
+.v-panel-deco-bubble {
+	height: 2px;
+	border: 1px solid #b3b3b3;
+	border-top: none;
+	background: #fff;
+	-webkit-border-bottom-left-radius: 4px;
+	-webkit-border-bottom-right-radius: 4px;
+	-moz-border-radius-bottomleft: 4px;
+	-moz-border-radius-bottomright: 4px;
+	}
+
+
+/*******************************************************************************
+ * Borderless Bubble
+ ******************************************************************************/
+div.v-panel-borderless .v-panel-captionwrap,
+div.v-panel-borderless .v-panel-deco-bubble {
+	border: none;
+	padding: 0;
+	background: transparent;
+	}
+
+div.v-panel-borderless .v-panel-content-bubble {
+	background: transparent;
+	}

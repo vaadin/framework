@@ -1,0 +1,176 @@
+.v-filterselect {
+	overflow: hidden;
+	}
+
+body input.v-filterselect-input {
+	margin: 0;
+	padding: 0;
+	border: none;
+	background: transparent;
+	line-height: normal;
+	}
+
+body input.v-filterselect-input[type=text] {
+	padding: 0;
+	}
+
+.v-filterselect-focus .v-filterselect-input,
+.v-filterselect .v-filterselect-input:focus {
+	outline: none;
+	}
+
+.v-filterselect-big.v-filterselect-search {
+	padding-left: 22px;
+	}
+
+.v-filterselect-button {
+	width: 16px;
+	height: 1.2em;
+	background-position: -5px -11px;
+	opacity: .4;
+	}
+
+.v-filterselect-button:hover {
+	opacity: .7;
+	}
+
+.v-filterselect-button:active {
+	opacity: 1;
+	}
+
+.v-filterselect-small .v-filterselect-button {
+	height: 0.95em;
+	background-position: -5px -12px;
+	}
+
+.v-filterselect-suggestpopup {
+	margin-top: .4em;
+	}
+
+body .v-filterselect-suggestpopup-small td {
+	font-size: .85em;
+	}
+
+body .v-filterselect-suggestpopup-big td {
+	font-size: 1.1em;
+	}
+
+.v-filterselect-big .v-filterselect-button {
+	height: 1.4em;
+	background-position: -5px -9px;
+	}
+
+.v-filterselect-search .v-filterselect-button {
+	width: 0;
+	overflow: hidden;
+	}
+
+.v-filterselect-prompt .v-filterselect-input {
+	font-style: normal;
+	}
+
+.v-filterselect-prevpage-off,
+.v-filterselect-nextpage-off,
+.v-filterselect-prevpage,
+.v-filterselect-nextpage {
+	border-style: solid;
+	border-width: 1px 0;
+	border-color: #b3b3b3;
+	background: #c9c9c9 url(../../img/grad-light-top.png) repeat-x;
+	height: 12px;
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	}
+
+.v-ie6 .v-filterselect-prevpage-off,
+.v-ie6 .v-filterselect-nextpage-off,
+.v-ie6 .v-filterselect-prevpage,
+.v-ie6 .v-filterselect-nextpage {
+	background-image: none;
+	}
+
+.v-filterselect-prevpage:active,
+.v-filterselect-nextpage:active {
+	background-image: (../../img/grad-dark-bottom2.png);
+	background-position: left bottom;
+	}
+
+.v-filterselect-prevpage-off span,
+.v-filterselect-nextpage-off span,
+.v-filterselect-prevpage span,
+.v-filterselect-nextpage span {
+	display: block;
+	text-indent: -9999px;
+	height: 12px;
+	background: transparent url(../../../base/common/img/sprites.png) no-repeat 50% 3px;
+	}
+
+.v-filterselect-nextpage-off span,
+.v-filterselect-nextpage span {
+	background-position: 50% -12px;
+	}
+
+.v-filterselect-status {
+	font-size: .85em;
+	margin: 1px 0 -3px;
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	}
+
+.v-filterselect-suggestpopup-small .v-filterselect-status {
+	font-size: .8em;
+	}
+
+.v-filterselect-suggestpopup-big .v-filterselect-status {
+	font-size: .9em;
+	}
+
+.v-select-small .v-select-select {
+	font-size: 0.8em;
+	}
+
+.v-select-big .v-select-select {
+	font-size: 1.2em;
+	}
+
+
+/*******************************************************************************
+ * Non-editable combobox (i.e. themable select)
+ ******************************************************************************/
+.v-filterselect-select-button {
+	background: #c9c9c9 url(../../img/grad-light-top.png) repeat-x;
+	position: relative;
+	padding: .3em .5em;
+	}
+
+.v-ie6 .v-filterselect-select-button {
+	background-image: none;
+	}
+
+.v-filterselect-select-button .v-filterselect-input {
+	display: block;
+	width: 100% !important;
+	user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	}
+
+.v-filterselect-select-button .v-filterselect-button {
+	position: absolute;
+	width: 100%;
+	top: 0;
+	left: 0;
+	height: 100%;
+	background-position: 100% -8px;
+	}
+
+.v-ie6 .v-filterselect-select-button .v-filterselect-button {
+	float: none;
+	position: relative;
+	margin: -1.8em -.5em -.3em -.5em;
+	padding: .3em .5em;
+	}

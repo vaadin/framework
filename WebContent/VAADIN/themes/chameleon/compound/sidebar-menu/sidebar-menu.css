@@ -1,0 +1,37 @@
+.sidebar-menu * {
+	white-space: normal;
+	}
+
+.sidebar-menu .v-label {
+	font-size: 0.85em;
+	text-transform: uppercase;
+	font-weight: bold;
+	letter-spacing: 0.03em;
+	padding: 1em .9em .3em;
+	text-shadow: 0 1px 0 rgba(255,255,255,1);
+	}
+
+.sidebar-menu .v-nativebutton {
+	width: 100%;
+	padding: .1em 1.1em;
+	border: none;
+	background: transparent;
+	text-align: left;
+	}
+
+.sidebar-menu .v-nativebutton:focus {
+	outline: none;
+	font-weight: bold;
+	}
+
+.sidebar-menu .tab-selected,
+.sidebar-menu .selected {
+	font-weight: bold;
+	background-color: #333;
+	color: #fff;
+	}
+
+.sidebar-menu .tab-selected:focus,
+.sidebar-menu .selected:focus {
+	outline: none;
+	}

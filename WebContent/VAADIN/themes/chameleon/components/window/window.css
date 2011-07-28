@@ -1,0 +1,62 @@
+.v-window-closebox {
+	width: 14px;
+	height: 15px;
+	overflow: hidden;
+	text-indent: -50px;
+	background: transparent url(../../img/close-btn.png) no-repeat;
+	vertical-align: middle;
+	margin: 0;
+	top: .3em;
+	right: .4em;
+	z-index: 2;
+	}
+
+.v-ie6 .v-window-closebox {
+	background-image: url(../../img/close-btn-ie6.png);
+	}
+
+.v-window-closebox:hover {
+	background-position: 0 -25px;
+	}
+
+.v-window-closebox:active {
+	background-position: 0 -50px;
+	}
+
+.v-window {
+	background-image: none;
+	}
+
+.v-window-wrap {
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	background-image: url(../../img/grad-light-top.png);
+	background-repeat: repeat-x;
+	}
+
+.v-ie6 .v-window-wrap {
+	background: transparent !important;
+	}
+
+.v-window-outerheader {
+	padding: .2em 1.7em .5em 1.2em;
+	height: auto;
+	text-align: center;
+	}
+
+.v-window-header {
+	font-weight: normal;
+	}
+
+.v-window-footer {
+	height: 0;
+	position: static;
+	}
+
+.v-window-resizebox {
+	background: transparent url(../../img/resize.png) no-repeat;
+	width: 14px;
+	height: 14px;
+	bottom: 0;
+	}

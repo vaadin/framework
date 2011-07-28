@@ -1,0 +1,178 @@
+.v-tabsheet-spacertd div {
+	border-color: #b3b3b3;
+	border-left: none;
+	}
+
+.v-tabsheet-tabitem {
+	border: none;
+	border-bottom: 1px solid #b3b3b3;
+	padding: 0;
+	}
+
+.v-tabsheet-tabitem .v-caption {
+	padding: .2em .8em;
+	margin: 1px;
+	margin-bottom: 0;
+	}
+
+.v-tabsheet-tabitem-selected {
+	background-color: #c9c9c9;
+	border: 1px solid #b3b3b3;
+	border-bottom: none;
+	-webkit-border-top-left-radius: 3px;
+	-webkit-border-top-right-radius: 3px;
+	-moz-border-radius-topleft: 3px;
+	-moz-border-radius-topright: 3px;
+	overflow: hidden;
+	}
+
+.v-tabsheet-tabitem-selected .v-caption {
+	background: transparent url(../../img/grad-light-top.png) repeat-x;
+	margin: 0;
+	padding-bottom: .25em;
+	-webkit-border-top-left-radius: 2px;
+	-webkit-border-top-right-radius: 2px;
+	-moz-border-radius-topleft: 2px;
+	-moz-border-radius-topright: 2px;
+	}
+
+.v-ie6 .v-tabsheet-tabitem-selected .v-caption {
+	background-image: none;
+	}
+
+.v-tabsheet-content {
+	background: #fff;
+	border-color: #b3b3b3;
+	}
+
+.v-tabsheet-deco {
+	height: 0;
+	background: transparent;
+	border-top: 1px solid #b3b3b3;
+	}
+
+.v-tabsheet-caption-close {
+	width: 14px;
+	height: 15px;
+	overflow: hidden;
+	text-indent: -50px;
+	background: transparent url(../../img/close-btn.png) no-repeat .5em 0;
+	vertical-align: middle;
+	padding: 0 0 0 .5em;
+	margin: .2em 0 0 0;
+	}
+
+.v-ie6 .v-tabsheet-caption-close {
+	background-image: url(../../img/close-btn-ie6.png);
+	}
+
+.v-tabsheet-caption-close:hover {
+	background-position: .5em -25px;
+	}
+
+.v-tabsheet-caption-close:active {
+	background-position: .5em -50px;
+	}
+
+/*******************************************************************************
+ * Scroller
+ ******************************************************************************/
+.v-tabsheet-scroller {
+	height: 14px;
+	margin-top: -1.6em;
+	position: relative;
+	float: right;
+	background: #c9c9c9 url(../../img/grad-light-top.png) repeat-x;
+	border: 1px solid #b3b3b3;
+	border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	}
+
+.v-ie6 .v-tabsheet-scroller {
+	background-image: none;
+	}
+
+.v-tabsheet-scrollerPrev,
+.v-tabsheet-scrollerNext,
+.v-tabsheet-scrollerPrev-disabled,
+.v-tabsheet-scrollerNext-disabled,
+.v-tabsheet-scrollerPrev-disabled:active,
+.v-tabsheet-scrollerNext-disabled:active {
+	border: 1px solid #b3b3b3;
+	border-width: 0;
+	background: transparent url(../../img/tab-arrows.png) no-repeat 6px 50%;
+	width: 16px;
+	height: 14px;
+	overflow: hidden;
+	cursor: default;
+	opacity: .5;
+	filter: alpha(opacity=50);
+	}
+
+.v-ie6 .v-tabsheet-scrollerPrev,
+.v-ie6 .v-tabsheet-scrollerNext,
+.v-ie6 .v-tabsheet-scrollerPrev-disabled,
+.v-ie6 .v-tabsheet-scrollerNext-disabled{
+	background-image: url(../../img/tab-arrows-ie6.png);
+	}
+
+.v-tabsheet-scroller button::-moz-focus-inner {
+	border: none;
+	padding: 0;
+	}
+
+.v-tabsheet-scrollerNext,
+.v-tabsheet-scrollerNext-disabled,
+.v-tabsheet-scrollerNext-disabled:active {
+	background-position: -10px 50%;
+	border-left-width: 1px;
+	}
+
+.v-tabsheet-scrollerPrev:hover,
+.v-tabsheet-scrollerNext:hover {
+	opacity: .75;
+	filter: alpha(opacity=75);
+	}
+
+.v-tabsheet-scrollerPrev:active,
+.v-tabsheet-scrollerNext:active {
+	opacity: 1;
+	filter: none;
+	}
+
+.v-tabsheet-scrollerPrev-disabled,
+.v-tabsheet-scrollerNext-disabled,
+.v-tabsheet-scrollerPrev-disabled:active,
+.v-tabsheet-scrollerNext-disabled:active {
+	opacity: .1;
+	filter: alpha(opacity=10);
+	}
+
+
+
+/*******************************************************************************
+ * open-only-closable
+ ******************************************************************************/
+.v-tabsheet-open-only-closable .v-tabsheet-caption-close {
+	visibility: hidden;
+	}
+
+.v-tabsheet-open-only-closable .v-tabsheet-tabitem-selected .v-tabsheet-caption-close {
+	visibility: visible;
+	}
+
+
+/*******************************************************************************
+ * Borderless
+ ******************************************************************************/
+.v-tabsheet-borderless .v-tabsheet-content-borderless,
+.v-tabsheet-deco-borderless {
+	border: none;
+	background: transparent;
+	}
+
+.v-tabsheet-tabs-borderless .v-tabsheet-tabitem-selected,
+.v-tabsheet-tabs-borderless .v-tabsheet-tabitem-selected .v-caption {
+	background-color: transparent;
+	}

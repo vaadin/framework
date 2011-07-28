@@ -1,0 +1,154 @@
+.v-table-header-wrap,
+.v-table-header-drag {
+	background: #c9c9c9 url(../../img/grad-light-top.png) repeat-x;
+	height: 1.4em;
+	line-height: normal;
+	}
+
+.v-ie6 .v-table-header-wrap,
+.v-ie6 .v-table-header-drag {
+	background-image: none;
+	}
+
+.v-table-caption-container,
+.v-table-header-drag {
+	padding-top: .2em;
+	padding-right: 4px;
+	}
+
+.v-table-header-drag {
+	padding-left: .3em;
+	}
+
+.v-table-resizer {
+	background: transparent;
+	border-right: 1px solid #b3b3b3;
+	padding-left: 1px;
+	height: 1.4em;
+	}
+
+/* Targets the same element as .v-table-resizer */
+div.v-table-focus-slot-left {
+	background: transparent;
+	border-left: 2px solid #b3b3b3;
+	border-right: none;
+	padding-left: 0;
+	padding-right: 1px;
+	float: left;
+	margin: 0;
+	}
+
+div.v-table-focus-slot-right {
+	background: transparent;
+	border-right: 2px solid #b3b3b3;
+	padding-left: 0;
+	margin: 0;
+	}
+
+.v-table-column-selector {
+	margin-top: -1.35em;
+	}
+
+.v-table-cell-content {
+	border-right: none;
+	padding-right: 7px;
+	}
+	
+.v-table-caption-container .v-icon {
+	vertical-align: middle;
+	margin: -0.37em 2px 0 0;
+	}
+
+.v-table-header-drag .v-icon {
+	vertical-align: middle;
+	}
+
+/* column selector */
+.v-contextmenu .v-on,
+.v-contextmenu .v-off {
+	display: block;
+	background: transparent url(../../../reindeer/common/icons/bullet.png) no-repeat 0 4px;
+	padding-left: 12px;
+	}
+
+.v-contextmenu .v-off {
+	background-image: none;
+	color: #666;
+	}
+
+.v-contextmenu .gwt-MenuItem-selected .v-on {
+	background-image: url(../../../reindeer/common/icons/bullet-white.png);
+	}
+
+.v-table-scrollposition {
+	font-size: 0.9em;
+	opacity: .85;
+	filter: alpha(opacity=85);
+	}
+
+/*******************************************************************************
+ * Small
+ ******************************************************************************/
+.v-table-small .v-table-caption-container,
+.v-table-small .v-table-body {
+	font-size: 0.85em;
+	}
+
+.v-table-small .v-table-resizer, 
+.v-table-small .v-table-header-wrap {
+	height: 1.2em;
+	}
+
+.v-table-small .v-table-column-selector {
+	margin-top: -1.2em;
+	}
+
+
+/*******************************************************************************
+ * Big
+ ******************************************************************************/
+.v-table-big .v-table-caption-container,
+.v-table-big .v-table-body {
+	font-size: 1.2em;
+	}
+
+.v-table-big .v-table-caption-container {
+	padding-top: .3em;
+	}
+
+.v-table-big .v-table-resizer, 
+.v-table-big .v-table-header-wrap {
+	height: 1.8em;
+	}
+
+.v-table-big .v-table-column-selector {
+	margin-top: -1.5em;
+	}
+
+/*******************************************************************************
+ * Striped
+ ******************************************************************************/
+.v-table-striped .v-table-row-odd {
+	background-color: #e6e6e6;
+	}
+
+
+/*******************************************************************************
+ * Strong
+ ******************************************************************************/
+.v-table-strong .v-table-caption-container {
+	font-weight: bold;
+	}
+
+
+/*******************************************************************************
+ * Borderless
+ ******************************************************************************/
+.v-table-borderless .v-table-header-wrap,
+.v-table-borderless .v-table-body {
+	border: none;
+	}
+
+div.v-table-borderless .v-table-body {
+	background: transparent;
+	}

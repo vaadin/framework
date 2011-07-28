@@ -1,0 +1,85 @@
+.v-splitpanel-hsplitter div,
+.v-splitpanel-vsplitter div {
+	background: transparent url(../../img/split-handle.png) no-repeat 2px 50%;
+	margin: 0 -1px;
+	width: 9px;
+	}
+
+.v-ie6 .v-splitpanel-hsplitter div,
+.v-ie6 .v-splitpanel-vsplitter div {
+	background-image: url(../../img/split-handle-ie6.png);
+	}
+
+.v-splitpanel-vsplitter div {
+	background-position: 50% 2px;
+	margin: -1px 0;
+	width: auto;
+	height: 9px;
+	}
+
+.v-splitpanel-hsplitter,
+.v-splitpanel-hsplitter-locked {
+	border-style: solid;
+	border-width: 0 1px;
+	border-color: #b0b0b0;
+	width: 7px;
+	background: #b3b3b3 url(../../img/grad-light-left.png) repeat-y;
+	}
+
+.v-splitpanel-vsplitter,
+.v-splitpanel-vsplitter-locked {
+	border-style: solid;
+	border-width: 1px 0;
+	border-color: #b0b0b0;
+	height: 7px;
+	background: #b3b3b3 url(../../img/grad-light-top.png) repeat-x;
+	}
+
+.v-ie6 .v-splitpanel-hsplitter,
+.v-ie6 .v-splitpanel-hsplitter-locked,
+.v-ie6 .v-splitpanel-vsplitter,
+.v-ie6 .v-splitpanel-vsplitter-locked {
+	background-image: none;
+	}
+
+/*******************************************************************************
+ * Small
+ ******************************************************************************/
+body .v-splitpanel-hsplitter-small,
+body .v-splitpanel-hsplitter-small-locked {
+	width: 1px;
+	border: none;
+	background-image: none;
+	}
+
+body .v-splitpanel-vsplitter-small,
+body .v-splitpanel-vsplitter-small-locked {
+	height: 1px;
+	border: none;
+	background-image: none;
+	font-size: 1px;
+	line-height: 1px;
+	}
+
+body.v-ie6 .v-splitpanel-vsplitter-small,
+body.v-ie6 .v-splitpanel-vsplitter-small-locked {
+	overflow: hidden;
+	}
+
+.v-splitpanel-hsplitter-small div {
+	width: 7px;
+	margin-left: -2px;
+	background: transparent;
+	}
+
+.v-splitpanel-vsplitter-small div {
+	height: 7px;
+	margin-top: -2px;
+	background: transparent;
+	overflow: hidden;
+	}
+
+.v-ie6 .v-splitpanel-hsplitter-small div,
+.v-ie6 .v-splitpanel-vsplitter-small div {
+	background-image: none;
+	}
