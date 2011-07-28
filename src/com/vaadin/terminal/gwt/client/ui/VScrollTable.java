@@ -2721,8 +2721,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         public void setHorizontalScrollPosition(int scrollLeft) {
             if (BrowserInfo.get().isIE6()) {
-                hTableWrapper.getStyle().setProperty("position", "relative");
-                hTableWrapper.getStyle().setPropertyPx("left", -scrollLeft);
+                hTableWrapper.getStyle().setPosition(Position.RELATIVE);
+                hTableWrapper.getStyle().setLeft(-scrollLeft, Unit.PX);
             } else {
                 hTableWrapper.setScrollLeft(scrollLeft);
             }
@@ -2730,19 +2730,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         public void setColumnCollapsingAllowed(boolean cc) {
             if (cc) {
-                DOM.setStyleAttribute(columnSelector, "display", "block");
+                columnSelector.getStyle().setDisplay(Display.BLOCK);
             } else {
-                DOM.setStyleAttribute(columnSelector, "display", "none");
+                columnSelector.getStyle().setDisplay(Display.NONE);
             }
         }
 
         public void disableBrowserIntelligence() {
-            DOM.setStyleAttribute(hTableContainer, "width", WRAPPER_WIDTH
-                    + "px");
+            hTableContainer.getStyle().setWidth(WRAPPER_WIDTH, Unit.PX);
         }
 
         public void enableBrowserIntelligence() {
-            DOM.setStyleAttribute(hTableContainer, "width", "");
+            hTableContainer.getStyle().clearWidth();
         }
 
         public void setHeaderCell(int index, HeaderCell cell) {
