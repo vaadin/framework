@@ -417,8 +417,7 @@ public class VTree extends FocusElementPanel implements Paintable,
                                     VerticalDropLocation curDetail = (VerticalDropLocation) event
                                             .getDropDetails().get("detail");
                                     if (curDetail == detail
-                                            && newKey
-                                                    .equals(currentMouseOverKey)) {
+                                            && newKey.equals(currentMouseOverKey)) {
                                         keyToNode.get(newKey).emphasis(detail);
                                     }
                                     /*
@@ -778,8 +777,9 @@ public class VTree extends FocusElementPanel implements Paintable,
                     if (selectable) {
                         // caption click = selection change && possible click
                         // event
-                        if (handleClickSelection(event.getCtrlKey()
-                                || event.getMetaKey(), event.getShiftKey())) {
+                        if (handleClickSelection(
+                                event.getCtrlKey() || event.getMetaKey(),
+                                event.getShiftKey())) {
                             event.preventDefault();
                         }
                     } else {
@@ -986,14 +986,14 @@ public class VTree extends FocusElementPanel implements Paintable,
                 if (icon == null) {
                     onloadHandled = false;
                     icon = new Icon(client);
-                    DOM.insertBefore(DOM.getFirstChild(nodeCaptionDiv), icon
-                            .getElement(), nodeCaptionSpan);
+                    DOM.insertBefore(DOM.getFirstChild(nodeCaptionDiv),
+                            icon.getElement(), nodeCaptionSpan);
                 }
                 icon.setUri(uidl.getStringAttribute("icon"));
             } else {
                 if (icon != null) {
-                    DOM.removeChild(DOM.getFirstChild(nodeCaptionDiv), icon
-                            .getElement());
+                    DOM.removeChild(DOM.getFirstChild(nodeCaptionDiv),
+                            icon.getElement());
                     icon = null;
                 }
             }
@@ -1066,8 +1066,9 @@ public class VTree extends FocusElementPanel implements Paintable,
                     childNodeContainer.add(childTree);
                 }
                 if (!i.hasNext()) {
-                    childTree.addStyleDependentName(childTree.isLeaf()
-                            ? "leaf-last" : "last");
+                    childTree
+                            .addStyleDependentName(childTree.isLeaf() ? "leaf-last"
+                                    : "last");
                     childTree.childNodeContainer.addStyleDependentName("last");
                 }
             }
@@ -1731,8 +1732,9 @@ public class VTree extends FocusElementPanel implements Paintable,
             // keypress event
             keyCode = CHARCODE_SPACE;
         }
-        if (handleKeyNavigation(keyCode, event.isControlKeyDown()
-                || event.isMetaKeyDown(), event.isShiftKeyDown())) {
+        if (handleKeyNavigation(keyCode,
+                event.isControlKeyDown() || event.isMetaKeyDown(),
+                event.isShiftKeyDown())) {
             event.preventDefault();
             event.stopPropagation();
         }
@@ -1746,9 +1748,9 @@ public class VTree extends FocusElementPanel implements Paintable,
      * .event.dom.client.KeyDownEvent)
      */
     public void onKeyDown(KeyDownEvent event) {
-        if (handleKeyNavigation(event.getNativeEvent().getKeyCode(), event
-                .isControlKeyDown()
-                || event.isMetaKeyDown(), event.isShiftKeyDown())) {
+        if (handleKeyNavigation(event.getNativeEvent().getKeyCode(),
+                event.isControlKeyDown() || event.isMetaKeyDown(),
+                event.isShiftKeyDown())) {
             event.preventDefault();
             event.stopPropagation();
         }
@@ -2206,8 +2208,8 @@ public class VTree extends FocusElementPanel implements Paintable,
 
         ArrayList<Integer> positions = new ArrayList<Integer>();
         while (treeNode.getParentNode() != null) {
-            positions.add(0, treeNode.getParentNode().getChildren().indexOf(
-                    treeNode));
+            positions.add(0,
+                    treeNode.getParentNode().getChildren().indexOf(treeNode));
             treeNode = treeNode.getParentNode();
         }
         positions.add(0, getRootNodes().indexOf(treeNode));
