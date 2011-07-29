@@ -869,24 +869,30 @@ public class VTree extends FocusElementPanel implements Paintable,
             final MouseEventDetails details = new MouseEventDetails(evt);
             ScheduledCommand command = new ScheduledCommand() {
                 public void execute() {
-                    if (details.getButton() == 0) {
-                        // non-immediate iff an immediate select event is going
-                        // to
-                        // happen and the left button was clicked
-                        boolean imm = !immediate
-                                || !selectable
-                                || (!isNullSelectionAllowed && isSelected() && selectedIds
-                                        .size() == 1);
-                        client.updateVariable(paintableId, "clickedKey", key,
-                                false);
-                        client.updateVariable(paintableId, "clickEvent",
-                                details.toString(), imm);
-                    } else {
-                        client.updateVariable(paintableId, "clickedKey", key,
-                                false);
-                        client.updateVariable(paintableId, "clickEvent",
-                                details.toString(), immediate);
+                    // Determine if we should send the event immediately to the
+                    // server. We do not want to send the event if there is a
+                    // selection event happening after this. In all other cases
+                    // we want to send it immediately.
+                    boolean sendClickEventNow = true;
+
+                    if (details.getButton() == NativeEvent.BUTTON_LEFT
+                            && immediate && selectable) {
+                        // Probably a selection that will cause a value change
+                        // event to be sent
+                        sendClickEventNow = false;
+
+                        // The exception is that user clicked on the
+                        // currently selected row and null selection is not
+                        // allowed == no selection event
+                        if (isSelected() && selectedIds.size() == 1
+                                && !isNullSelectionAllowed) {
+                            sendClickEventNow = true;
+                        }
                     }
+
+                    client.updateVariable(paintableId, "clickedKey", key, false);
+                    client.updateVariable(paintableId, "clickEvent",
+                            details.toString(), sendClickEventNow);
                 }
             };
             if (treeHasFocus) {
