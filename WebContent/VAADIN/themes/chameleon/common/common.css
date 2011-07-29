@@ -1,4 +1,7 @@
-@import "../../base/styles.css";
+/*
+ * Base theme is automatically included in the compiled theme.
+ * @import "../../base/styles.css";
+ */
 
 /*******************************************************************************
  * App background & tooltip
@@ -85,7 +88,7 @@
 .v-contextmenu,
 .v-Notification,
 .v-menubar-submenu {
-	background: #fff url(img/grad-light-top.png) repeat-x;
+	background: #fff url(../img/grad-light-top.png) repeat-x;
 	background-color: rgba(255,255,255,.85);
 	border: 1px solid #adadad;
 	border-color: rgba(0,0,0,.4);
@@ -147,7 +150,7 @@
 .v-errorindicator {
 	width: 13px;
 	height: 1.4em;
-	background: transparent url(img/error-indicator.png) no-repeat right 50%;
+	background: transparent url(../img/error-indicator.png) no-repeat right 50%;
 	}
 
 .v-caption-small .v-errorindicator {
@@ -161,5 +164,5 @@
 .v-tooltip .v-errormessage {
 	color: #b2320b;
 	padding-left: 14px;
-	background: transparent url(img/error-indicator.png) no-repeat 0 50%;
+	background: transparent url(../img/error-indicator.png) no-repeat 0 50%;
 	}
