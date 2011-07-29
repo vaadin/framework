@@ -2,17 +2,17 @@ package com.vaadin.tests.components.tree;
 
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Label;
+import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Tree;
 
 public class TreeItemClickListening extends TestBase {
 
     private int clickCounter = 0;
 
+    private Log log = new Log(5);
+
     @Override
     protected void setup() {
-
-        final Label output = new Label("", Label.CONTENT_PREFORMATTED);
 
         Tree tree = new Tree();
         tree.setImmediate(true);
@@ -32,19 +32,20 @@ public class TreeItemClickListening extends TestBase {
                 clickCounter++;
                 switch (event.getButton()) {
                 case ItemClickEvent.BUTTON_LEFT:
-                    output.setValue(output.getValue().toString() + clickCounter
-                            + ": Left Click\n");
+                    log.log("Left Click");
                     break;
                 case ItemClickEvent.BUTTON_RIGHT:
-                    output.setValue(output.getValue().toString() + clickCounter
-                            + ": Right Click\n");
+                    log.log("Right Click");
+                    break;
+                case ItemClickEvent.BUTTON_MIDDLE:
+                    log.log("Middle Click");
                     break;
                 }
             }
         });
 
         addComponent(tree);
-        addComponent(output);
+        addComponent(log);
     }
 
     @Override
