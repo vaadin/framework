@@ -46,8 +46,6 @@ public class CompileDefaultTheme {
         combineTheme(new String[] { BASE, RUNO }, false, ver);
         combineTheme(new String[] { BASE, REINDEER }, true, ver);
         combineTheme(new String[] { BASE, LIFERAY }, false, ver);
-        // Chameleon uses some images from reindeer but does not require
-        // compilation together with it
         combineTheme(new String[] { BASE, CHAMELEON }, false, ver);
     }
 

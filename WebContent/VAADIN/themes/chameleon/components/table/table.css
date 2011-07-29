@@ -67,7 +67,7 @@ div.v-table-focus-slot-right {
 .v-contextmenu .v-on,
 .v-contextmenu .v-off {
 	display: block;
-	background: transparent url(../../../reindeer/common/icons/bullet.png) no-repeat 0 4px;
+	background: transparent url(../../icons/bullet.png) no-repeat 0 4px;
 	padding-left: 12px;
 	}
 
@@ -77,7 +77,7 @@ div.v-table-focus-slot-right {
 	}
 
 .v-contextmenu .gwt-MenuItem-selected .v-on {
-	background-image: url(../../../reindeer/common/icons/bullet-white.png);
+	background-image: url(../../icons/bullet-white.png);
 	}
 
 .v-table-scrollposition {
