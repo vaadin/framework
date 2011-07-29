@@ -41,6 +41,22 @@
 
 <p>Vaadin @version@ is a maintenance release for Vaadin Framework 6.6. It contains several important fixes.</p>
 
+<!-- ====================================================================== -->
+<!-- For minor releases, this should be after the enhancement highlights, for maintenance releases in the beginning. -->
+<h3>Change Log, Future Releases, and Upgrading</h3>
+
+<p>See this <a href="http://dev.vaadin.com/query?status=closed&group=resolution&order=priority&col=id&col=summary&col=owner&col=type&col=priority&col=component&col=version&milestone=Vaadin+@version@">list of closed tickets</a> for a
+full list of tickets fixed in this release.</p>
+
+<p>Problem fixes and enhancements planned for upcoming releases can be found in the <a
+href="http://dev.vaadin.com/roadmap">Vaadin Roadmap</a> in Vaadin Trac.</p>
+
+<p>As always, when upgrading from an earlier version, you should recompile any custom
+widget sets and refresh your project in Eclipse. If you are upgrading from
+6.5.x or earlier, notice that Vaadin 6.6 uses GWT 2.3 (included in the installation
+package). See <a href="#upgrading">General Upgrade Instructions</a> for more details on upgrading.</p>
+<!-- ====================================================================== -->
+
 <h3>Enhancements in Vaadin Framework 6.6</h3>
 
 <p>General enhancements:</p>
@@ -91,23 +107,6 @@
   <li><b>DateField</b>s no longer sets <tt>invalidAllowed(false)</tt> by default. The new behavior is consistent with all other fields in Vaadin and with <b>DateField</b> in Vaadin 6.3 and earlier.</li>
   <li>Top level windows no more gain focus automatically when the application is loaded in embedded hosting solutions like in Portals. Thus keyboard shortcuts might not work until a Vaadin component is focused either by user or via the server side API. (<a href="http://dev.vaadin.com/ticket/6724">#6724</a>)</li>
 </ul>
-
-<h3>Change Log, Future Releases, and Upgrading</h3>
-
-<p>See the following lists of closed tickets for a complete list of changes in this release:</p>
-
-<ul>
- <li> Tickets <a href="http://dev.vaadin.com/query?status=closed&group=resolution&milestone=Vaadin+6.6.0.pre1">closed in Vaadin 6.6.0.pre1</a></li>
- <li> Tickets <a href="http://dev.vaadin.com/query?status=closed&group=resolution&milestone=Vaadin+6.6.0">closed in the final Vaadin 6.6.0</a></li>
-</ul>
-
-<p>Problem fixes and enhancements planned for upcoming releases can be found in the <a
-href="http://dev.vaadin.com/roadmap">Vaadin Roadmap</a> in Vaadin Trac.</p>
-
-<p>As always, when upgrading from an earlier version, you should recompile any custom
-widget sets and refresh your project in Eclipse. If you are upgrading from
-6.5.x or earlier, notice that Vaadin 6.6 uses GWT 2.3 (included in the installation
-package). See <a href="#upgrading">General Upgrade Instructions</a> for more details on upgrading.</p>
 
 <h2 id="widgetupgrade">Upgrading from Vaadin 6.0 or 6.1</h2>
 
