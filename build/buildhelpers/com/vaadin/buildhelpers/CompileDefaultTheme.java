@@ -144,13 +144,22 @@ public class CompileDefaultTheme {
                 if (strLine.startsWith("@import")) {
                     // All import statements must be exactly
                     // @import "file-to-import.css";
-                    // No sub-directories are allowed in the url
+                    // or
+                    // @import "subdir1[/subdir2]*/file-to-import.css"
+                    // ".." and other similar paths are not allowed in the url
                     String importFilename = strLine.split("\"")[1];
 
                     File importFile = new File(THEME_DIR + themeName + "/"
                             + folder + "/" + importFilename);
                     if (importFile.isFile()) {
-                        processCSSFile(importFile, folder, themeName,
+                        String currentFolder = folder;
+                        if (importFilename.contains("/")) {
+                            currentFolder = currentFolder
+                                    + "/"
+                                    + importFilename.substring(0,
+                                            importFilename.lastIndexOf("/"));
+                        }
+                        processCSSFile(importFile, currentFolder, themeName,
                                 combinedCss, inheritedFile);
                     } else {
                         System.out
@@ -163,23 +172,8 @@ public class CompileDefaultTheme {
                     }
                 }
 
-                // Define image url prefix
-                String urlPrefix = "";
-                if (inheritedFile) {
-                    urlPrefix = "../" + themeName + "/";
-                }
+                strLine = updateUrls(folder, themeName, inheritedFile, strLine);
 
-                if (strLine.indexOf("url(/") > 0) {
-                    // Do nothing for urls beginning with /
-                } else if (strLine.indexOf("url(../") > 0) {
-                    strLine = strLine.replaceAll("url\\(../",
-                            ("url\\(" + urlPrefix));
-
-                } else {
-                    strLine = strLine.replaceAll("url\\(", ("url\\("
-                            + urlPrefix + folder + "/"));
-
-                }
                 if (!strLine.startsWith("@import")) {
                     combinedCss.append(strLine);
                     combinedCss.append("\n");
@@ -188,6 +182,41 @@ public class CompileDefaultTheme {
             // Close the input stream
             in.close();
         }
+    }
+
+    private static String updateUrls(String folder, String themeName,
+            boolean inheritedFile, String strLine) {
+        // Define image url prefix
+        String urlPrefix = "";
+        if (inheritedFile) {
+            urlPrefix = "../" + themeName + "/";
+        }
+
+        if (strLine.indexOf("url(/") > 0) {
+            // Do nothing for urls beginning with /
+        } else if (strLine.indexOf("url(../") >= 0) {
+            // eliminate a path segment in the folder name for every
+            // "../"
+            String[] folderSegments = folder.split("/");
+            int segmentCount = folderSegments.length;
+            while (segmentCount > 0 && strLine.indexOf("url(../") >= 0) {
+                segmentCount--;
+                strLine = strLine.replaceAll("url\\(../", ("url\\("));
+            }
+            // add remaining path segments to urlPrefix
+            StringBuilder sb = new StringBuilder(urlPrefix);
+            for (int i = 0; i < segmentCount; i++) {
+                sb.append(folderSegments[i]);
+                sb.append("/");
+            }
+            strLine = strLine.replaceAll("url\\(", ("url\\(" + sb.toString()));
+
+        } else {
+            strLine = strLine.replaceAll("url\\(", ("url\\(" + urlPrefix
+                    + folder + "/"));
+
+        }
+        return strLine;
     }
 
     private static void createSprites(String themeName)
