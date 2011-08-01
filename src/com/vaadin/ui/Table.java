@@ -570,11 +570,7 @@ public class Table extends AbstractSelect implements Action.Container,
             this.columnHeaders.put(it.next(), columnHeaders[i]);
         }
 
-        // Assures the visual refresh
-        // FIXME: Is this really needed? Header captions should not affect
-        // content so requestRepaint() should be sufficient.
-        resetPageBuffer();
-        refreshRenderedCells();
+        requestRepaint();
     }
 
     /**
@@ -633,9 +629,7 @@ public class Table extends AbstractSelect implements Action.Container,
             this.columnIcons.put(it.next(), columnIcons[i]);
         }
 
-        // Assure visual refresh
-        resetPageBuffer();
-        refreshRenderedCells();
+        requestRepaint();
     }
 
     /**
@@ -1014,9 +1008,7 @@ public class Table extends AbstractSelect implements Action.Container,
             columnIcons.put(propertyId, icon);
         }
 
-        // Assures the visual refresh
-        resetPageBuffer();
-        refreshRenderedCells();
+        requestRepaint();
     }
 
     /**
@@ -1056,10 +1048,7 @@ public class Table extends AbstractSelect implements Action.Container,
             columnHeaders.put(propertyId, header);
         }
 
-        // Assures the visual refresh
-        // FIXME: Is this really needed? Header captions should not affect
-        // content so requestRepaint() should be sufficient.
-        refreshRenderedCells();
+        requestRepaint();
     }
 
     /**
@@ -1187,14 +1176,14 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Sets whether column reordering is allowed or not.
      * 
-     * @param reorderingAllowed
+     * @param columnReorderingAllowed
      *            specifies whether column reordering is allowed.
      */
-    public void setColumnReorderingAllowed(boolean reorderingAllowed) {
-        columnReorderingAllowed = reorderingAllowed;
-
-        // Assures the visual refresh
-        refreshRenderedCells();
+    public void setColumnReorderingAllowed(boolean columnReorderingAllowed) {
+        if (columnReorderingAllowed != this.columnReorderingAllowed) {
+            this.columnReorderingAllowed = columnReorderingAllowed;
+            requestRepaint();
+        }
     }
 
     /*
@@ -1407,13 +1396,13 @@ public class Table extends AbstractSelect implements Action.Container,
      *            the New value of property columnHeaderMode.
      */
     public void setColumnHeaderMode(int columnHeaderMode) {
-        if (columnHeaderMode >= COLUMN_HEADER_MODE_HIDDEN
+        if (columnHeaderMode != this.columnHeaderMode
+                && columnHeaderMode >= COLUMN_HEADER_MODE_HIDDEN
                 && columnHeaderMode <= COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID) {
             this.columnHeaderMode = columnHeaderMode;
+            requestRepaint();
         }
 
-        // Assures the visual refresh
-        refreshRenderedCells();
     }
 
     /**
@@ -3821,7 +3810,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public void setSortDisabled(boolean sortDisabled) {
         if (this.sortDisabled != sortDisabled) {
             this.sortDisabled = sortDisabled;
-            refreshRenderedCells();
+            requestRepaint();
         }
     }
 
@@ -4362,10 +4351,10 @@ public class Table extends AbstractSelect implements Action.Container,
      *            Should the footer be visible
      */
     public void setFooterVisible(boolean visible) {
-        columnFootersVisible = visible;
-
-        // Assures the visual refresh
-        refreshRenderedCells();
+        if (visible != columnFootersVisible) {
+            columnFootersVisible = visible;
+            requestRepaint();
+        }
     }
 
     /**
