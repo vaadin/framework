@@ -124,7 +124,6 @@
 		<!-- Long tests are prioritized to even out load at the end of the test run -->
 		<!-- If you are interested in certain tests they can temporarily be added here -->
 		<fileset dir="${test-output-dir}" id="priority-tests-fileset">
-			<include name="**/sampler*.java" />
 			<include name="**/reindeer*.java" />
 			<include name="**/runo*.java" />
 			<include name="**/demop*.java" />
