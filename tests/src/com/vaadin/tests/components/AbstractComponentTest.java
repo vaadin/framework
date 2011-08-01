@@ -57,6 +57,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
      * Maps the category name to a menu item
      */
     private Map<String, MenuItem> categoryToMenuItem = new HashMap<String, MenuItem>();
+    private Map<MenuItem, String> menuItemToCategory = new HashMap<MenuItem, String>();
 
     // Logging
     private Log log;
@@ -362,15 +363,16 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
     }
 
     /**
-     * Creates category "category" in parent category "parentCategory". Each
-     * category name must be globally unique.
+     * Creates category named "category" with id "categoryId" in parent category
+     * "parentCategory". Each categoryId must be globally unique.
      * 
      * @param category
+     * @param categoryId
      * @param parentCategory
      * @return
      */
     protected MenuItem createCategory(String category, String parentCategory) {
-        if (categoryToMenuItem.containsKey(category)) {
+        if (hasCategory(category)) {
             return categoryToMenuItem.get(category);
         }
         MenuItem item;
@@ -380,7 +382,33 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
             item = getCategoryMenuItem(parentCategory).addItem(category, null);
         }
         categoryToMenuItem.put(category, item);
+        menuItemToCategory.put(item, category);
         return item;
+    }
+
+    protected boolean hasCategory(String categoryId) {
+        return categoryToMenuItem.containsKey(categoryId);
+    }
+
+    protected void removeCategory(String categoryId) {
+        if (!hasCategory(categoryId)) {
+            throw new IllegalArgumentException("Category '" + categoryId
+                    + "' does not exist");
+        }
+
+        MenuItem item = getCategoryMenuItem(categoryId);
+        Object[] children = item.getChildren().toArray();
+        for (Object child : children) {
+            if (menuItemToCategory.containsKey(child)) {
+                removeCategory(menuItemToCategory.get(child));
+            }
+        }
+        // Detach from parent
+        item.getParent().removeChild(item);
+        // Clean mappings
+        categoryToMenuItem.remove(categoryId);
+        menuItemToCategory.remove(item);
+
     }
 
     private MenuBar.Command menuBooleanCommand(
