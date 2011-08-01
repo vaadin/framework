@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="Test sampler deployment" basedir="." default="integration-test-all">
+<project name="Vaadin Integration Tests" basedir="." default="integration-test-all">
 
 	<!-- Target deploying demo.war -->
 	<fail unless="test.integration.server" message="test.integration.server must be set for integration tests to run"/>
@@ -9,7 +9,7 @@
 	<fail unless="test.integration.antfile" message="test.integration.antfile must be set for integration tests to run"/>
 
 	<!-- Test with these browsers -->
-	<property name="test_browsers" value="winxp-firefox36" />
+	<property name="test_browsers" value="winxp-googlechrome" />
 
 	<!-- Path to key file. Default value -->
 	<property name="sshkey.file" value="id_dsa" />
@@ -187,7 +187,7 @@
 			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
 			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
 			<property name="server.start.succeeded" value="1" />
-			<property name="browsers" value="winxp-firefox36" />
+			<property name="browsers" value="${test_browsers}" />
 			<property name="testfiles" value="${init-liferay}" />
 			<property name="test-output-dir" value="../build/integration-test-output" />
 	
@@ -204,7 +204,7 @@
 			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
 			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
 			<property name="server.start.succeeded" value="1" />
-			<property name="browsers" value="winxp-firefox36" />
+			<property name="browsers" value="${test_browsers}" />
 			<property name="testfiles" value="${init-liferay}" />
 			<property name="test-output-dir" value="../build/integration-test-output" />
 	
@@ -221,7 +221,7 @@
 			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
 			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
 			<property name="server.start.succeeded" value="1" />
-			<property name="browsers" value="winxp-firefox36" />
+			<property name="browsers" value="${test_browsers}" />
 			<property name="testfiles" value="${test-liferay}" />
 			<property name="test-output-dir" value="../build/integration-test-output" />
 	
@@ -254,7 +254,7 @@
 				<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
 				<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
 				<property name="server.start.succeeded" value="1" />
-				<property name="browsers" value="winxp-firefox36" />
+				<property name="browsers" value="${test_browsers}" />
 				<property name="testfiles" value="${test-liferay}" />
 				<property name="test-output-dir" value="../build/integration-test-output" />
 		
@@ -287,7 +287,7 @@
 			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
 			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
 			<property name="server.start.succeeded" value="1" />
-			<property name="browsers" value="winxp-firefox36" />
+			<property name="browsers" value="${test_browsers}" />
 			<property name="testfiles" value="${test-gatein}" />
 			<property name="test-output-dir" value="../build/integration-test-output" />
 	
@@ -304,7 +304,7 @@
 			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
 			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
 			<property name="server.start.succeeded" value="1" />
-			<property name="browsers" value="winxp-firefox36" />
+			<property name="browsers" value="${test_browsers}" />
 			<property name="testfiles" value="${test-exo}" />
 			<property name="test-output-dir" value="../build/integration-test-output" />
 	
@@ -321,7 +321,7 @@
 			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
 			<property name="com.vaadin.testbench.deployment.url" value="http://${test.integration.server}:7001" />
 			<property name="server.start.succeeded" value="1" />
-			<property name="browsers" value="winxp-firefox36" />
+			<property name="browsers" value="${test_browsers}" />
 			<property name="testfiles" value="${test-weblogic}" />
 			<property name="test-output-dir" value="../build/integration-test-output" />
 	
