@@ -2673,6 +2673,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                 if (col.hasAttribute("align")) {
                     c.setAlign(col.getStringAttribute("align").charAt(0));
+                } else {
+                    c.setAlign(ALIGN_LEFT);
+
                 }
                 if (col.hasAttribute("width")) {
                     final String widthStr = col.getStringAttribute("width");
@@ -3459,6 +3462,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                 if (col.hasAttribute("align")) {
                     c.setAlign(col.getStringAttribute("align").charAt(0));
+                } else {
+                    c.setAlign(ALIGN_LEFT);
+
                 }
                 if (col.hasAttribute("width")) {
                     final String width = col.getStringAttribute("width");

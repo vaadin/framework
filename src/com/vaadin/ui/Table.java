@@ -1089,10 +1089,9 @@ public class Table extends AbstractSelect implements Action.Container,
 
         if (alignment == null || alignment.equals(ALIGN_LEFT)) {
             columnAlignments.remove(propertyId);
-            return;
+        } else {
+            columnAlignments.put(propertyId, alignment);
         }
-
-        columnAlignments.put(propertyId, alignment);
 
         // Assures the visual refresh
         refreshRenderedCells();
