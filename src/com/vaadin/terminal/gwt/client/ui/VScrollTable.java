@@ -383,6 +383,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private int firstvisible = 0;
     private boolean sortAscending;
     private String sortColumn;
+    private String oldSortColumn;
     private boolean columnReordering;
 
     /**
@@ -809,8 +810,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         if (BrowserInfo.get().isIE8() && !enabled) {
             /*
-             * The disabled shim will not cover the table body if it is
-             * relative in IE8. See #7324
+             * The disabled shim will not cover the table body if it is relative
+             * in IE8. See #7324
              */
             scrollBodyPanel.getElement().getStyle()
                     .setPosition(Position.STATIC);
@@ -950,6 +951,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 .getIntAttribute("tabindex") : 0;
         setProperTabIndex();
 
+        resizeSortedColumnForSortIndicator();
+
         rendering = false;
         headerChangedDuringUpdate = false;
 
@@ -1041,12 +1044,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     }
 
     private void updateSortingProperties(UIDL uidl) {
-        String oldSortColumn = sortColumn;
+        oldSortColumn = sortColumn;
         if (uidl.hasVariable("sortascending")) {
             sortAscending = uidl.getBooleanVariable("sortascending");
             sortColumn = uidl.getStringVariable("sortcolumn");
         }
+    }
 
+    private void resizeSortedColumnForSortIndicator() {
         // Force recalculation of the captionContainer element inside the header
         // cell to accomodate for the size of the sort arrow.
         HeaderCell sortedHeader = tHead.getHeaderCell(sortColumn);
