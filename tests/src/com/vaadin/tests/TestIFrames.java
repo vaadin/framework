@@ -19,7 +19,7 @@ public class TestIFrames extends CustomComponent {
 
     public void createNewView() {
         main.removeAllComponents();
-        main.addComponent(createEmbedded("../sampler/"));
+        main.addComponent(createEmbedded("http://demo.vaadin.com/sampler/"));
         main.addComponent(createEmbedded("../colorpicker"));
         // main.addComponent(createEmbedded("../TestForNativeWindowing"));
         main.addComponent(createEmbedded("http://demo.vaadin.com/timeline"));

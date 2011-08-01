@@ -20,6 +20,8 @@ public class ComboBoxItemIcon extends TestBase {
 
     @Override
     protected void setup() {
+        setTheme("tests-tickets");
+
         {
             ComboBox cb = new ComboBox();
             cb.addContainerProperty("icon", Resource.class, null);
@@ -27,10 +29,10 @@ public class ComboBoxItemIcon extends TestBase {
 
             Item item = cb.addItem("FI");
             item.getItemProperty("icon").setValue(
-                    new ThemeResource("../sampler/flags/fi.gif"));
+                    new ThemeResource("icons/fi.gif"));
             item = cb.addItem("SE");
             item.getItemProperty("icon").setValue(
-                    new ThemeResource("../sampler/flags/se.gif"));
+                    new ThemeResource("icons/se.gif"));
 
             addComponent(cb);
         }
@@ -41,13 +43,13 @@ public class ComboBoxItemIcon extends TestBase {
 
             Item item = cb.addItem("Finland");
             item.getItemProperty("icon").setValue(
-                    new ThemeResource("../sampler/flags/fi.gif"));
+                    new ThemeResource("icons/fi.gif"));
             item = cb.addItem("Australia");
             item.getItemProperty("icon").setValue(
-                    new ThemeResource("../sampler/flags/au.gif"));
+                    new ThemeResource("icons/au.gif"));
             item = cb.addItem("Hungary");
             item.getItemProperty("icon").setValue(
-                    new ThemeResource("../sampler/flags/hu.gif"));
+                    new ThemeResource("icons/hu.gif"));
 
             cb.setValue("Hungary");
             addComponent(cb);

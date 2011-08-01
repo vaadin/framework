@@ -74,7 +74,7 @@
 		</init-param>
 		<!--
 			As an example, we will use an optimized widget set. See
-			SamplerWidgetSet.gwt.xml
+			OptimizedWidgetSet.gwt.xml
 		-->
 		<init-param>
 			<param-name>widgetset</param-name>
@@ -93,7 +93,7 @@
 		<init-param>
 		<!--
 			As an example, we will use an optimized widget set. See
-			SamplerWidgetSet.gwt.xml
+			OptimizedWidgetSet.gwt.xml
 		-->
 			<param-name>widgetset</param-name>
 			<param-value>com.vaadin.demo.gwt.OptimizedWidgetSet</param-value>
