@@ -1615,40 +1615,78 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             final int totalWidthR = total - totalExplicitColumnsWidths;
             needsReLayout = true;
 
-            if (expandRatioDivider > 0) {
-                // visible columns have some active expand ratios, excess
-                // space is divided according to them
+            if (extraSpace == 1) {
+                // We cannot divide one single pixel so we give it the first
+                // undefined column
                 headCells = tHead.iterator();
                 i = 0;
                 while (headCells.hasNext()) {
-                    HeaderCell hCell = (HeaderCell) headCells.next();
-                    if (hCell.getExpandRatio() > 0) {
-                        int w = widths[i];
-                        final int newSpace = (int) (extraSpace * (hCell
-                                .getExpandRatio() / expandRatioDivider));
-                        w += newSpace;
-                        widths[i] = w;
+                    HeaderCell hc = (HeaderCell) headCells.next();
+                    if (!hc.isDefinedWidth()) {
+                        widths[i]++;
+                        break;
                     }
                     i++;
                 }
-            } else if (totalWidthR > 0) {
-                // no expand ratios defined, we will share extra space
-                // relatively to "natural widths" among those without
-                // explicit width
-                headCells = tHead.iterator();
-                i = 0;
-                while (headCells.hasNext()) {
-                    HeaderCell hCell = (HeaderCell) headCells.next();
-                    if (!hCell.isDefinedWidth()) {
-                        int w = widths[i];
-                        final int newSpace = extraSpace * w / totalWidthR;
-                        w += newSpace;
-                        widths[i] = w;
+
+            } else if (expandRatioDivider > 0 || totalWidthR > 0) {
+                int checksum = 0;
+                if(expandRatioDivider > 0){
+                    // visible columns have some active expand ratios, excess
+                    // space is divided according to them
+                    headCells = tHead.iterator();
+                    i = 0;
+                    checksum = 0;
+                    while (headCells.hasNext()) {
+                        HeaderCell hCell = (HeaderCell) headCells.next();
+                        if (hCell.getExpandRatio() > 0) {
+                            int w = widths[i];
+                            final int newSpace = (int) (extraSpace * (hCell
+                                    .getExpandRatio() / expandRatioDivider));
+                            w += newSpace;
+                            widths[i] = w;
+                            checksum += w;
+                        }
+                        i++;
                     }
-                    i++;
+                } else {
+                    // no expand ratios defined, we will share extra space
+                    // relatively to "natural widths" among those without
+                    // explicit width
+                    headCells = tHead.iterator();
+                    i = 0;
+                    checksum = 0;
+                    while (headCells.hasNext()) {
+                        HeaderCell hCell = (HeaderCell) headCells.next();
+                        if (!hCell.isDefinedWidth()) {
+                            int w = widths[i];
+                            final int newSpace = Math.round((float) extraSpace
+                                    * (float) w / totalWidthR);
+                            w += newSpace;
+                            widths[i] = w;
+                            checksum += w;
+                        }
+                        i++;
+                    }
+                }
+                
+                if (checksum != availW) {
+                    /*
+                     *  There might be in some cases a rounding error of 1px
+                     *  so if there is one then we give the first undefined column 1 more pixel
+                     */
+                    headCells = tHead.iterator();
+                    i = 0;
+                    while (headCells.hasNext()) {
+                        HeaderCell hc = (HeaderCell) headCells.next();
+                        if (!hc.isDefinedWidth()) {
+                            widths[i] += availW - checksum;
+                            break;
+                        }
+                        i++;
+                    }
                 }
             }
-
         } else {
             // bodys size will be more than available and scrollbar will appear
         }
@@ -4976,6 +5014,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             HeaderCell hCell;
             colIndex = 0;
             headCells = tHead.iterator();
+            int checksum = 0;
             while (headCells.hasNext()) {
                 hCell = (HeaderCell) headCells.next();
                 if (!hCell.isDefinedWidth()) {
@@ -4983,21 +5022,41 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     int newSpace;
                     if (expandRatioDivider > 0) {
                         // divide excess space by expand ratios
-                        newSpace = (int) (w + extraSpace
+                        newSpace = Math.round(w + extraSpace
                                 * hCell.getExpandRatio() / expandRatioDivider);
                     } else {
                         if (totalUndefinedNaturaWidths != 0) {
                             // divide relatively to natural column widths
-                            newSpace = w + extraSpace * w
-                                    / totalUndefinedNaturaWidths;
+                            newSpace = Math.round(w + (float) extraSpace
+                                    * (float) w / totalUndefinedNaturaWidths);
                         } else {
                             newSpace = w;
                         }
                     }
+                    checksum += newSpace;
                     setColWidth(colIndex, newSpace, false);
                 }
                 colIndex++;
             }
+            
+            if (checksum != availW) {
+                /*
+                 *  There might be in some cases a rounding error of 1px
+                 *  so if there is one then we give the first undefined column 1 more pixel
+                 */
+                headCells = tHead.iterator();
+                colIndex = 0;
+                while (headCells.hasNext()) {
+                    HeaderCell hc = (HeaderCell) headCells.next();
+                    if (!hc.isDefinedWidth()) {
+                        setColWidth(colIndex,
+                                hc.getWidth() + availW - checksum, false);
+                        break;
+                    }
+                    colIndex++;
+                }
+            }
+            
             if ((height == null || "".equals(height))
                     && totalRows == pageLength) {
                 // fix body height (may vary if lazy loading is offhorizontal
