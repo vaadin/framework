@@ -79,7 +79,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     private int errorsOpen;
 
-    private boolean fullRepaint = false;
+    private boolean cacheEnabled = false;
 
     private final Collection<Paintable> paintedComponents = new HashSet<Paintable>();
 
@@ -94,14 +94,15 @@ public class JsonPaintTarget implements PaintTarget {
      * @param manager
      * @param outWriter
      *            A character-output stream.
-     * @param fullRepaint
-     *            true if this is a full repaint, i.e. caches are to be
-     *            bypassed.
+     * @param cachingRequired
+     *            true if this is not a full repaint, i.e. caches are to be
+     *            used.
      * @throws PaintException
      *             if the paint operation failed.
      */
     public JsonPaintTarget(AbstractCommunicationManager manager,
-            PrintWriter outWriter, boolean fullRepaint) throws PaintException {
+            PrintWriter outWriter, boolean cachingRequired)
+            throws PaintException {
 
         this.manager = manager;
 
@@ -111,7 +112,7 @@ public class JsonPaintTarget implements PaintTarget {
         // Initialize tag-writing
         mOpenTags = new Stack<String>();
         openJsonTags = new Stack<JsonTag>();
-        this.fullRepaint = fullRepaint;
+        cacheEnabled = cachingRequired;
     }
 
     public void startTag(String tagName) throws PaintException {
@@ -686,7 +687,7 @@ public class JsonPaintTarget implements PaintTarget {
             customLayoutArgumentsOpen = true;
         }
 
-        return !fullRepaint && isPreviouslyPainted;
+        return cacheEnabled && isPreviouslyPainted;
     }
 
     @Deprecated
@@ -1119,7 +1120,7 @@ public class JsonPaintTarget implements PaintTarget {
      * @see com.vaadin.terminal.PaintTarget#isFullRepaint()
      */
     public boolean isFullRepaint() {
-        return fullRepaint;
+        return !cacheEnabled;
     }
 
 }

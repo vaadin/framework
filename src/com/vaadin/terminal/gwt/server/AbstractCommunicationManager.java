@@ -825,7 +825,7 @@ public abstract class AbstractCommunicationManager implements
                 repaintAll = true;
             }
 
-            writeUidlResponse(callback, repaintAll, outWriter, window,
+            writeUidlResponce(callback, repaintAll, outWriter, window,
                     analyzeLayouts);
 
         }
@@ -835,7 +835,7 @@ public abstract class AbstractCommunicationManager implements
 
     }
 
-    public void writeUidlResponse(Callback callback, boolean repaintAll,
+    public void writeUidlResponce(Callback callback, boolean repaintAll,
             final PrintWriter outWriter, Window window, boolean analyzeLayouts)
             throws PaintException {
         outWriter.print("\"changes\":[");
@@ -845,7 +845,7 @@ public abstract class AbstractCommunicationManager implements
         List<InvalidLayout> invalidComponentRelativeSizes = null;
 
         JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
-                repaintAll);
+                !repaintAll);
         OpenWindowCache windowCache = currentlyOpenWindowsInClient.get(window
                 .getName());
         if (windowCache == null) {
@@ -2192,8 +2192,7 @@ public abstract class AbstractCommunicationManager implements
 
         public SimpleMultiPartInputStream(InputStream realInputStream,
                 String boundaryString) {
-            boundary = (CRLF + DASHDASH + boundaryString)
-                    .toCharArray();
+            boundary = (CRLF + DASHDASH + boundaryString).toCharArray();
             this.realInputStream = realInputStream;
         }
 
