@@ -159,45 +159,9 @@
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-glassfish-3" />
 	</target>
 			
-	<!-- Test liferay sampler -->
-	<target name="integration-test-test-liferay-5">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-5/integration-test-liferay-5.2.3-sampler.html" />
-		<pathconvert pathsep=" " property="test-liferay" refid="html-test-files" />
-		
-		<subant target="run-tests" failonerror="false" antfile="test.xml">
-			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
-			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
-			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
-			<property name="server.start.succeeded" value="1" />
-			<property name="browsers" value="${test_browsers}" />
-			<property name="testfiles" value="${test-liferay}" />
-			<property name="test-output-dir" value="../build/integration-test-output" />
-			
-			<fileset dir="." includes="test.xml" />
-		</subant>
-	</target>
-	
-	<!-- "deploy" sampler to liferay -->
-	<target name="integration-test-init-liferay-5">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-5/Add_Sampler_to_Liferay.html" />
-		<pathconvert pathsep=" " property="init-liferay" refid="html-test-files" />
-		
-		<subant target="run-tests" failonerror="false" antfile="test.xml">
-			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
-			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
-			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
-			<property name="server.start.succeeded" value="1" />
-			<property name="browsers" value="${test_browsers}" />
-			<property name="testfiles" value="${init-liferay}" />
-			<property name="test-output-dir" value="../build/integration-test-output" />
-	
-			<fileset dir="." includes="test.xml" />
-		</subant>
-	</target>
-	
 	<target name="integration-test-liferay-5-portlet2">
 		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-5/integration-test-liferay-5.2.3-portlet2.html" />
-		<pathconvert pathsep=" " property="init-liferay" refid="html-test-files" />
+		<pathconvert pathsep=" " property="liferay-portlet2" refid="html-test-files" />
 		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
 			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
@@ -205,7 +169,7 @@
 			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
 			<property name="server.start.succeeded" value="1" />
 			<property name="browsers" value="${test_browsers}" />
-			<property name="testfiles" value="${init-liferay}" />
+			<property name="testfiles" value="${liferay-portlet2}" />
 			<property name="test-output-dir" value="../build/integration-test-output" />
 	
 			<fileset dir="." includes="test.xml" />
@@ -527,15 +491,6 @@
 	
 	<target name="integration-test-liferay">
 		<antcall target="integration-test-start-liferay-5" />
-		<trycatch property="tried">
-			<try>
-				<antcall target="integration-test-init-liferay-5" />
-				<antcall target="integration-test-test-liferay-5" />
-			</try>
-			<catch>
-				<echo message="Liferay sampler test failed. ${tried}" />
-			</catch>
-		</trycatch>
 		<antcall target="integration-test-liferay-5-portlet2" />
 		<antcall target="integration-test-stop-liferay-5" />
 	</target>
