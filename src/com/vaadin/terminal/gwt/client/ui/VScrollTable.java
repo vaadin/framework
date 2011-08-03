@@ -1074,13 +1074,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         // cell to accomodate for the size of the sort arrow.
         HeaderCell sortedHeader = tHead.getHeaderCell(sortColumn);
         if (sortedHeader != null) {
-            sortedHeader.resizeCaptionContainer();
+            tHead.resizeCaptionContainer(sortedHeader);
         }
         // Also recalculate the width of the captionContainer element in the
         // previously sorted header, since this now has more room.
         HeaderCell oldSortedHeader = tHead.getHeaderCell(oldSortColumn);
         if (oldSortedHeader != null) {
-            oldSortedHeader.resizeCaptionContainer();
+            tHead.resizeCaptionContainer(oldSortedHeader);
         }
 
         rendering = false;
@@ -1354,6 +1354,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         // Set header column width
         hcell.setWidth(w, isDefinedWidth);
+
+        // Ensure indicators have been taken into account
+        tHead.resizeCaptionContainer(hcell);
 
         // Set body column width
         scrollBody.setColWidth(colIndex, w);
@@ -2008,7 +2011,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * header cell belongs to is sorted. This is done by resizing the width
          * of the caption container element by the correct amount
          */
-        public void resizeCaptionContainer() {
+        public void resizeCaptionContainer(int rightSpacing) {
             if (BrowserInfo.get().isIE6() || td.getClassName().contains("-asc")
                     || td.getClassName().contains("-desc")) {
                 /*
@@ -2018,7 +2021,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                  */
                 int captionContainerWidth = width
                         - sortIndicator.getOffsetWidth()
-                        - colResizeWidget.getOffsetWidth();
+                        - colResizeWidget.getOffsetWidth() - rightSpacing;
                 captionContainer.getStyle().setPropertyPx("width",
                         captionContainerWidth);
             } else {
@@ -2026,7 +2029,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                  * Set the caption container element as wide as possible when
                  * the sorting indicator is not visible.
                  */
-                captionContainer.getStyle().setPropertyPx("width", width);
+                captionContainer.getStyle().setPropertyPx("width",
+                        width - rightSpacing);
+            }
+
+            // Apply/Remove spacing if defined
+            if (rightSpacing > 0) {
+                colResizeWidget.getStyle().setMarginLeft(rightSpacing, Unit.PX);
+            } else {
+                colResizeWidget.getStyle().clearMarginLeft();
             }
         }
 
@@ -2083,7 +2094,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 DOM.setStyleAttribute(captionContainer, "width", "");
                 setWidth("");
             } else {
-                resizeCaptionContainer();
+                tHead.resizeCaptionContainer(this);
 
                 /*
                  * if we already have tBody, set the header width properly, if
@@ -2367,6 +2378,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 isResizing = false;
                 DOM.releaseCapture(getElement());
                 tHead.disableAutoColumnWidthCalculation(this);
+
+                // Ensure last header cell is taking into account possible
+                // column selector
+                HeaderCell lastCell = tHead.getHeaderCell(tHead
+                        .getVisibleCellCount() - 1);
+                tHead.resizeCaptionContainer(lastCell);
+
                 fireColumnResizeEvent(cid, originalWidth, getColWidth(cid));
                 break;
             case Event.ONMOUSEMOVE:
@@ -2550,6 +2568,38 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             availableCells.put(ROW_HEADER_COLUMN_KEY,
                     new RowHeadersHeaderCell());
+        }
+
+        public void resizeCaptionContainer(HeaderCell cell) {
+            HeaderCell lastcell = getHeaderCell(visibleCells.size() - 1);
+
+            // Measure column widths
+            int columnTotalWidth = 0;
+            for (Widget w : visibleCells) {
+                columnTotalWidth += w.getOffsetWidth();
+            }
+
+            if (cell == lastcell && columnSelector.getOffsetWidth() > 0
+                    && columnTotalWidth >= div.getOffsetWidth()
+                            - columnSelector.getOffsetWidth()
+                    && !hasVerticalScrollbar()) {
+                // Ensure column caption is visible when placed under the column
+                // selector widget by shifting and resizing the caption.
+                int offset = 0;
+                int diff = div.getOffsetWidth() - columnTotalWidth;
+                if (diff < columnSelector.getOffsetWidth() && diff > 0) {
+                    // If the difference is less than the column selectors width
+                    // then just offset by the
+                    // difference
+                    offset = columnSelector.getOffsetWidth() - diff;
+                } else {
+                    // Else offset by the whole column selector
+                    offset = columnSelector.getOffsetWidth();
+                }
+                lastcell.resizeCaptionContainer(offset);
+            } else {
+                cell.resizeCaptionContainer(0);
+            }
         }
 
         @Override
@@ -5917,14 +5967,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      */
     public boolean isFocusable() {
         if (scrollBody != null && enabled) {
-            boolean hasVerticalScrollbars = scrollBody.getOffsetHeight() > scrollBodyPanel
-                    .getOffsetHeight();
-            boolean hasHorizontalScrollbars = scrollBody.getOffsetWidth() > scrollBodyPanel
-                    .getOffsetWidth();
-            return !(!hasHorizontalScrollbars && !hasVerticalScrollbars && selectMode == SELECT_MODE_NONE);
+            return !(!hasHorizontalScrollbar() && !hasVerticalScrollbar() && selectMode == SELECT_MODE_NONE);
         }
-
         return false;
+    }
+
+    private boolean hasHorizontalScrollbar() {
+        return scrollBody.getOffsetWidth() > scrollBodyPanel.getOffsetWidth();
+    }
+    
+    private boolean hasVerticalScrollbar() {
+        return scrollBody.getOffsetHeight() > scrollBodyPanel.getOffsetHeight();
     }
 
     /*
