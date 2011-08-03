@@ -414,9 +414,9 @@
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-weblogic-portal" />
 	</target>
 	
-	<!-- Run sampler deployment test on GAE -->
+	<!-- Run address book deployment test on GAE -->
 	<target name="integration-test-test-GAE">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="GoogleAppEngine/integration-test-GAE-sampler.html" />
+		<fileset dir="integration-testscripts" id="html-test-files" includes="GoogleAppEngine/integration-test-GAE-addressbook.html" />
 		<pathconvert pathsep=" " property="test-GAE" refid="html-test-files" />
 		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
