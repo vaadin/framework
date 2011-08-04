@@ -150,7 +150,7 @@
 
 	<!-- This target runs the generated and compiled junit tests -->
 	<target name="execute-tests">
-		<junit fork="yes" printsummary="withOutAndErr">
+		<junit fork="yes" printsummary="withOutAndErr" maxmemory="96m">
 			<classpath>
 				<path refid="classpath" />
 				<pathelement path="${class-dir}" />
