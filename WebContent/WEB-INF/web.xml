@@ -78,20 +78,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>Sampler</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.sampler.SamplerApplication</param-value>
-		</init-param>
-		<init-param>
-			<param-name>widgetset</param-name>
-			<param-value>com.vaadin.demo.sampler.gwt.SamplerWidgetSet</param-value>
-		</init-param>
-
-	</servlet>
-
-	<servlet>
 		<servlet-name>AddressBook</servlet-name>
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
@@ -332,11 +318,6 @@
 	<servlet-mapping>
 		<servlet-name>FeatureBrowser</servlet-name>
 		<url-pattern>/FeatureBrowser/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>Sampler</servlet-name>
-		<url-pattern>/sampler/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

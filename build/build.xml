@@ -698,12 +698,6 @@
     	</antcall>
     </target>
 
-	 <target name="compile-widgetset-sampler" unless="compile.only.default-widgetset">
-    	<antcall target="compile-widgetset">
-    		<param name="widgetset" value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet"/>
-    	</antcall>
-    </target>
-	
 	<target name="compile-widgetset-optimized" unless="compile.only.default-widgetset">
    		<antcall target="compile-widgetset">
    			<param name="widgetset" value="com.vaadin.demo.gwt.OptimizedWidgetSet"/>
@@ -723,7 +717,6 @@
         <!-- We can't call these with 'depends' because of the 'unless' specifier. -->
         <antcall target="compile-widgetset-default"/>
         <antcall target="compile-widgetset-portal-default"/>
-        <antcall target="compile-widgetset-sampler"/>
         <antcall target="compile-widgetset-optimized"/>
         <antcall target="compile-widgetset-colorpicker"/>
     </target>
@@ -735,7 +728,6 @@
         <parallel threadsperprocessor="1">
             <antcall target="compile-widgetset-default"/>
             <antcall target="compile-widgetset-portal-default"/>
-            <antcall target="compile-widgetset-sampler"/>
             <antcall target="compile-widgetset-optimized"/>
             <antcall target="compile-widgetset-colorpicker"/>
         </parallel>
@@ -771,7 +763,6 @@
     <!-- Build each widgetset locally, i.e., not for an installation package. -->
     <target name="widgetset-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-default"/>
     <target name="widgetset-portal-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-portal-default"/>
-    <target name="widgetset-sampler" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-sampler"/>
     <target name="widgetset-colorpicker" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-colorpicker"/>
 
     <!-- ================================================================== -->

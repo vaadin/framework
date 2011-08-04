@@ -76,45 +76,6 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>SamplerPortlet</portlet-name>
-		<display-name>Sampler</display-name>
-		<portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet</portlet-class>
-		<init-param>
-			<name>application</name>
-			<value>sampler</value>
-		</init-param>
-		<init-param>
-			<name>widgetset</name>
-			<value>com.vaadin.portal.gwt.PortalDefaultWidgetSet</value>
-		</init-param>
-		<init-param>
-			<name>style</name>
-			<value>height:650px</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>Sampler</title>
-			<short-title>Sampler</short-title>
-		</portlet-info>
-
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-
-	<portlet>
 		<portlet-name>Portlet Mode Example</portlet-name>
 		<display-name>Portlet Mode Example</display-name>
 		<portlet-class>com.vaadin.demo.portlet.PortletModePortlet</portlet-class>

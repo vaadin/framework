@@ -1,9 +1,0 @@
-.v-verticallayout-marginexample .v-verticallayout-margin-right {
-	/* increase the right margin */
-	padding-right: 100px;
-}
-
-.v-verticallayout-marginexample {
-	/* background for the layout, for clarity */
-	background-color: #ccc;
-}
