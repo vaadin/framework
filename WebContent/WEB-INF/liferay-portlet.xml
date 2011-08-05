@@ -29,7 +29,7 @@
     </portlet>      
     <portlet>
         <portlet-name>Vaadin Liferay Theme Portlet</portlet-name>
-        <instanceable>true</instanceable>
+        <instanceable>false</instanceable>
         <ajaxable>false</ajaxable>
     </portlet>
     
