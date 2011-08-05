@@ -1647,10 +1647,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 .getExpandRatio() / expandRatioDivider)));
                         w += newSpace;
                         widths[i] = w;
-                        checksum += w;
-                    } else {
-                        checksum += widths[i];
                     }
+                    checksum += widths[i];
                     i++;
                 }
             } else if (totalWidthR > 0) {
@@ -1667,10 +1665,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 * (float) w / totalWidthR);
                         w += newSpace;
                         widths[i] = w;
-                        checksum += w;
-                    } else {
-                        checksum += hCell.getWidth();
                     }
+                    checksum += widths[i];
                     i++;
                 }
             }
@@ -5060,7 +5056,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 extraSpace = 0;
             }
 
-            int totalUndefinedNaturaWidths = usedMinimumWidth
+            int totalUndefinedNaturalWidths = usedMinimumWidth
                     - totalExplicitColumnsWidths;
 
             // we have some space that can be divided optimally
@@ -5078,11 +5074,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         newSpace = Math.round((w + extraSpace
                                 * hCell.getExpandRatio() / expandRatioDivider));
                     } else {
-                        if (totalUndefinedNaturaWidths != 0) {
+                        if (totalUndefinedNaturalWidths != 0) {
                             // divide relatively to natural column widths
                             newSpace = Math.round(w + (float) extraSpace
                                     * (float) w
-                                    / totalUndefinedNaturaWidths);
+                                    / totalUndefinedNaturalWidths);
                         } else {
                             newSpace = w;
                         }
@@ -5095,7 +5091,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 colIndex++;
             }
 
-            if (checksum != availW) {
+            if (checksum != totalUndefinedNaturalWidths) {
                 /*
                  * There might be in some cases a rounding error of 1px so if
                  * there is one then we give the first undefined column 1 more
