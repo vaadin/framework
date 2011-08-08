@@ -160,15 +160,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>FeaturesApplication</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.featurebrowser.FeaturesApplication</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
 		<servlet-name>Parameters</servlet-name>
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
@@ -318,11 +309,6 @@
 	<servlet-mapping>
 		<servlet-name>FeatureBrowser</servlet-name>
 		<url-pattern>/FeatureBrowser/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>FeaturesApplication</servlet-name>
-		<url-pattern>/FeaturesApplication/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

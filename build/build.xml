@@ -550,8 +550,6 @@
                 <!-- TODO check what is necessary -->
                 <!-- These are needed for running tests, but are copied during testing. -->
                 <exclude name="VAADIN/themes/tests*"/>
-                <exclude name="VAADIN/themes/tests-magi/**/*" />
-                <exclude name="VAADIN/themes/tests-featurebrowser/**/*" />
                 <exclude name="VAADIN/themes/tests*/**/*"/>
 
                 <include name="demo/**/*" />
