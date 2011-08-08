@@ -2699,7 +2699,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         public void setHorizontalScrollPosition(int scrollLeft) {
-            if (BrowserInfo.get().isIE6()) {
+            if (BrowserInfo.get().isIE6() || BrowserInfo.get().isOpera()) {
                 hTableWrapper.getStyle().setPosition(Position.RELATIVE);
                 hTableWrapper.getStyle().setLeft(-scrollLeft, Unit.PX);
             } else {
@@ -3547,7 +3547,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          *            The value of the leftScroll
          */
         public void setHorizontalScrollPosition(int scrollLeft) {
-            if (BrowserInfo.get().isIE6()) {
+            if (BrowserInfo.get().isIE6() || BrowserInfo.get().isOpera()) {
                 hTableWrapper.getStyle().setProperty("position", "relative");
                 hTableWrapper.getStyle().setPropertyPx("left", -scrollLeft);
             } else {
