@@ -1056,13 +1056,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         // cell to accomodate for the size of the sort arrow.
         HeaderCell sortedHeader = tHead.getHeaderCell(sortColumn);
         if (sortedHeader != null) {
-            sortedHeader.resizeCaptionContainer();
+            tHead.resizeCaptionContainer(sortedHeader);
         }
         // Also recalculate the width of the captionContainer element in the
         // previously sorted header, since this now has more room.
         HeaderCell oldSortedHeader = tHead.getHeaderCell(oldSortColumn);
         if (oldSortedHeader != null) {
-            oldSortedHeader.resizeCaptionContainer();
+            tHead.resizeCaptionContainer(oldSortedHeader);
         }
     }
 
@@ -1468,6 +1468,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         // Set header column width
         hcell.setWidth(w, isDefinedWidth);
 
+        // Ensure indicators have been taken into account
+        tHead.resizeCaptionContainer(hcell);
+
         // Set body column width
         scrollBody.setColWidth(colIndex, w);
 
@@ -1726,9 +1729,25 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // natural size is smaller than available space
             final int extraSpace = availW - total;
             final int totalWidthR = total - totalExplicitColumnsWidths;
+            int checksum = 0;
             needsReLayout = true;
 
-            if (expandRatioDivider > 0) {
+            if (extraSpace == 1) {
+                // We cannot divide one single pixel so we give it the first
+                // undefined column
+                headCells = tHead.iterator();
+                i = 0;
+                checksum = availW;
+                while (headCells.hasNext()) {
+                    HeaderCell hc = (HeaderCell) headCells.next();
+                    if (!hc.isDefinedWidth()) {
+                        widths[i]++;
+                        break;
+                    }
+                    i++;
+                }
+
+            } else if (expandRatioDivider > 0) {
                 // visible columns have some active expand ratios, excess
                 // space is divided according to them
                 headCells = tHead.iterator();
@@ -1737,11 +1756,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     HeaderCell hCell = (HeaderCell) headCells.next();
                     if (hCell.getExpandRatio() > 0) {
                         int w = widths[i];
-                        final int newSpace = (int) (extraSpace * (hCell
-                                .getExpandRatio() / expandRatioDivider));
+                        final int newSpace = Math.round((extraSpace * (hCell
+                                .getExpandRatio() / expandRatioDivider)));
                         w += newSpace;
                         widths[i] = w;
                     }
+                    checksum += widths[i];
                     i++;
                 }
             } else if (totalWidthR > 0) {
@@ -1754,9 +1774,29 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     HeaderCell hCell = (HeaderCell) headCells.next();
                     if (!hCell.isDefinedWidth()) {
                         int w = widths[i];
-                        final int newSpace = extraSpace * w / totalWidthR;
+                        final int newSpace = Math.round((float) extraSpace
+                                * (float) w / totalWidthR);
                         w += newSpace;
                         widths[i] = w;
+                    }
+                    checksum += widths[i];
+                    i++;
+                }
+            }
+
+            if (extraSpace > 0 && checksum != availW) {
+                /*
+                 * There might be in some cases a rounding error of 1px when
+                 * extra space is divided so if there is one then we give the
+                 * first undefined column 1 more pixel
+                 */
+                headCells = tHead.iterator();
+                i = 0;
+                while (headCells.hasNext()) {
+                    HeaderCell hc = (HeaderCell) headCells.next();
+                    if (!hc.isDefinedWidth()) {
+                        widths[i] += availW - checksum;
+                        break;
                     }
                     i++;
                 }
@@ -2083,7 +2123,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * header cell belongs to is sorted. This is done by resizing the width
          * of the caption container element by the correct amount
          */
-        public void resizeCaptionContainer() {
+        public void resizeCaptionContainer(int rightSpacing) {
             if (BrowserInfo.get().isIE6() || td.getClassName().contains("-asc")
                     || td.getClassName().contains("-desc")) {
                 /*
@@ -2093,7 +2133,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                  */
                 int captionContainerWidth = width
                         - sortIndicator.getOffsetWidth()
-                        - colResizeWidget.getOffsetWidth();
+                        - colResizeWidget.getOffsetWidth() - rightSpacing;
                 captionContainer.getStyle().setPropertyPx("width",
                         captionContainerWidth);
             } else {
@@ -2101,7 +2141,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                  * Set the caption container element as wide as possible when
                  * the sorting indicator is not visible.
                  */
-                captionContainer.getStyle().setPropertyPx("width", width);
+                captionContainer.getStyle().setPropertyPx("width",
+                        width - rightSpacing);
+            }
+
+            // Apply/Remove spacing if defined
+            if (rightSpacing > 0) {
+                colResizeWidget.getStyle().setMarginLeft(rightSpacing, Unit.PX);
+            } else {
+                colResizeWidget.getStyle().clearMarginLeft();
             }
         }
 
@@ -2158,7 +2206,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 DOM.setStyleAttribute(captionContainer, "width", "");
                 setWidth("");
             } else {
-                resizeCaptionContainer();
+                tHead.resizeCaptionContainer(this);
 
                 /*
                  * if we already have tBody, set the header width properly, if
@@ -2442,6 +2490,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 isResizing = false;
                 DOM.releaseCapture(getElement());
                 tHead.disableAutoColumnWidthCalculation(this);
+
+                // Ensure last header cell is taking into account possible
+                // column selector
+                HeaderCell lastCell = tHead.getHeaderCell(tHead
+                        .getVisibleCellCount() - 1);
+                tHead.resizeCaptionContainer(lastCell);
+
                 fireColumnResizeEvent(cid, originalWidth, getColWidth(cid));
                 break;
             case Event.ONMOUSEMOVE:
@@ -2627,6 +2682,38 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     new RowHeadersHeaderCell());
         }
 
+        public void resizeCaptionContainer(HeaderCell cell) {
+            HeaderCell lastcell = getHeaderCell(visibleCells.size() - 1);
+
+            // Measure column widths
+            int columnTotalWidth = 0;
+            for (Widget w : visibleCells) {
+                columnTotalWidth += w.getOffsetWidth();
+            }
+
+            if (cell == lastcell && columnSelector.getOffsetWidth() > 0
+                    && columnTotalWidth >= div.getOffsetWidth()
+                            - columnSelector.getOffsetWidth()
+                    && !hasVerticalScrollbar()) {
+                // Ensure column caption is visible when placed under the column
+                // selector widget by shifting and resizing the caption.
+                int offset = 0;
+                int diff = div.getOffsetWidth() - columnTotalWidth;
+                if (diff < columnSelector.getOffsetWidth() && diff > 0) {
+                    // If the difference is less than the column selectors width
+                    // then just offset by the
+                    // difference
+                    offset = columnSelector.getOffsetWidth() - diff;
+                } else {
+                    // Else offset by the whole column selector
+                    offset = columnSelector.getOffsetWidth();
+                }
+                lastcell.resizeCaptionContainer(offset);
+            } else {
+                cell.resizeCaptionContainer(0);
+            }
+        }
+
         @Override
         public void clear() {
             for (String cid : availableCells.keySet()) {
@@ -2776,7 +2863,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         public HeaderCell getHeaderCell(int index) {
-            if (index < visibleCells.size()) {
+            if (index >= 0 && index < visibleCells.size()) {
                 return (HeaderCell) visibleCells.get(index);
             } else {
                 return null;
@@ -5209,13 +5296,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 extraSpace = 0;
             }
 
-            int totalUndefinedNaturaWidths = usedMinimumWidth
+            int totalUndefinedNaturalWidths = usedMinimumWidth
                     - totalExplicitColumnsWidths;
 
             // we have some space that can be divided optimally
             HeaderCell hCell;
             colIndex = 0;
             headCells = tHead.iterator();
+            int checksum = 0;
             while (headCells.hasNext()) {
                 hCell = (HeaderCell) headCells.next();
                 if (!hCell.isDefinedWidth()) {
@@ -5223,21 +5311,45 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     int newSpace;
                     if (expandRatioDivider > 0) {
                         // divide excess space by expand ratios
-                        newSpace = (int) (w + extraSpace
-                                * hCell.getExpandRatio() / expandRatioDivider);
+                        newSpace = Math.round((w + extraSpace
+                                * hCell.getExpandRatio() / expandRatioDivider));
                     } else {
-                        if (totalUndefinedNaturaWidths != 0) {
+                        if (totalUndefinedNaturalWidths != 0) {
                             // divide relatively to natural column widths
-                            newSpace = w + extraSpace * w
-                                    / totalUndefinedNaturaWidths;
+                            newSpace = Math.round(w + (float) extraSpace
+                                    * (float) w
+                                    / totalUndefinedNaturalWidths);
                         } else {
                             newSpace = w;
                         }
                     }
+                    checksum += newSpace;
                     setColWidth(colIndex, newSpace, false);
+                } else {
+                    checksum += hCell.getWidth();
                 }
                 colIndex++;
             }
+
+            if (extraSpace > 0 && checksum != availW) {
+                /*
+                 * There might be in some cases a rounding error of 1px when
+                 * extra space is divided so if there is one then we give the
+                 * first undefined column 1 more pixel
+                 */
+                headCells = tHead.iterator();
+                colIndex = 0;
+                while (headCells.hasNext()) {
+                    HeaderCell hc = (HeaderCell) headCells.next();
+                    if (!hc.isDefinedWidth()) {
+                        setColWidth(colIndex,
+                                hc.getWidth() + availW - checksum, false);
+                        break;
+                    }
+                    colIndex++;
+                }
+            }
+
             if ((height == null || "".equals(height))
                     && totalRows == pageLength) {
                 // fix body height (may vary if lazy loading is offhorizontal
@@ -6098,14 +6210,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      */
     public boolean isFocusable() {
         if (scrollBody != null && enabled) {
-            boolean hasVerticalScrollbars = scrollBody.getOffsetHeight() > scrollBodyPanel
-                    .getOffsetHeight();
-            boolean hasHorizontalScrollbars = scrollBody.getOffsetWidth() > scrollBodyPanel
-                    .getOffsetWidth();
-            return !(!hasHorizontalScrollbars && !hasVerticalScrollbars && selectMode == SELECT_MODE_NONE);
+            return !(!hasHorizontalScrollbar() && !hasVerticalScrollbar() && selectMode == SELECT_MODE_NONE);
         }
-
         return false;
+    }
+
+    private boolean hasHorizontalScrollbar() {
+        return scrollBody.getOffsetWidth() > scrollBodyPanel.getOffsetWidth();
+    }
+    
+    private boolean hasVerticalScrollbar() {
+        return scrollBody.getOffsetHeight() > scrollBodyPanel.getOffsetHeight();
     }
 
     /*
