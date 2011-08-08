@@ -1671,11 +1671,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
             }
 
-            if (checksum != availW) {
+            if (extraSpace > 0 && checksum != availW) {
                 /*
-                 * There might be in some cases a rounding error of 1px so if
-                 * there is one then we give the first undefined column 1 more
-                 * pixel
+                 * There might be in some cases a rounding error of 1px when
+                 * extra space is divided so if there is one then we give the
+                 * first undefined column 1 more pixel
                  */
                 headCells = tHead.iterator();
                 i = 0;
@@ -5091,11 +5091,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 colIndex++;
             }
 
-            if (checksum != totalUndefinedNaturalWidths) {
+            if (extraSpace > 0 && checksum != availW) {
                 /*
-                 * There might be in some cases a rounding error of 1px so if
-                 * there is one then we give the first undefined column 1 more
-                 * pixel
+                 * There might be in some cases a rounding error of 1px when
+                 * extra space is divided so if there is one then we give the
+                 * first undefined column 1 more pixel
                  */
                 headCells = tHead.iterator();
                 colIndex = 0;
