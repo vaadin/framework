@@ -31,6 +31,8 @@ import com.vaadin.terminal.gwt.client.UIDL;
 public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
         BlurHandler {
 
+    public static final String HTML_CONTENT_ALLOWED = "htmlcontentallowed";
+
     public static final String CLASSNAME = "v-select-optiongroup";
 
     private final Panel panel;
@@ -51,6 +53,8 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
      */
     private boolean blurOccured = false;
 
+    private boolean htmlItems = false;
+
     public VOptionGroup() {
         super(CLASSNAME);
         panel = (Panel) optionsContainer;
@@ -59,6 +63,12 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        if (uidl.hasAttribute(HTML_CONTENT_ALLOWED)
+                && uidl.getBooleanAttribute(HTML_CONTENT_ALLOWED)) {
+            htmlItems = true;
+        } else {
+            htmlItems = false;
+        }
         super.updateFromUIDL(uidl, client);
 
         sendFocusEvents = client.hasEventListeners(this, EventId.FOCUS);
@@ -101,11 +111,16 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
         for (final Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL opUidl = (UIDL) it.next();
             CheckBox op;
+            String caption = opUidl.getStringAttribute("caption");
             if (isMultiselect()) {
                 op = new VCheckBox();
-                op.setText(opUidl.getStringAttribute("caption"));
+                if (htmlItems) {
+                    op.setHTML(caption);
+                } else {
+                    op.setText(caption);
+                }
             } else {
-                op = new RadioButton(id, opUidl.getStringAttribute("caption"));
+                op = new RadioButton(id, caption, htmlItems);
                 op.setStyleName("v-radiobutton");
             }
             op.addStyleName(CLASSNAME_OPTION);
