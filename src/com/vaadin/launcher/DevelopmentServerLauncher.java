@@ -5,6 +5,11 @@
 package com.vaadin.launcher;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +43,20 @@ public class DevelopmentServerLauncher {
 
         // Pass-through of arguments for Jetty
         final Map<String, String> serverArgs = parseArguments(args);
+
+        if (serverArgs.containsKey("shutdownPort")) {
+            int port = Integer.parseInt(serverArgs.get("shutdownPort"));
+            try {
+                // Try to notify another instance that it's time to close
+                Socket socket = new Socket((String) null, port);
+                // Wait until the other instance says it has closed
+                socket.getInputStream().read();
+                // Then tidy up
+                socket.close();
+            } catch (IOException e) {
+                // Ignore if port is not open
+            }
+        }
 
         // Start Jetty
         System.out.println("Starting Jetty servlet container.");
@@ -118,6 +137,41 @@ public class DevelopmentServerLauncher {
 
         try {
             server.start();
+
+            if (serverArgs.containsKey("shutdownPort")) {
+                int shutdownPort = Integer.parseInt(serverArgs
+                        .get("shutdownPort"));
+                final ServerSocket serverSocket = new ServerSocket(
+                        shutdownPort, 1, InetAddress.getByName("127.0.0.1"));
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            System.out
+                                    .println("Waiting for shutdown signal on port "
+                                            + serverSocket.getLocalPort());
+                            // Start waiting for a close signal
+                            Socket accept = serverSocket.accept();
+                            // First stop listening to the port
+                            serverSocket.close();
+                            // Then stop the jetty server
+                            server.stop();
+                            // Send a byte to tell the other process that it can
+                            // start jetty
+                            OutputStream outputStream = accept
+                                    .getOutputStream();
+                            outputStream.write(0);
+                            outputStream.flush();
+                            // Finally close the socket
+                            accept.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    };
+
+                }.start();
+
+            }
         } catch (Exception e) {
             server.stop();
             throw e;
