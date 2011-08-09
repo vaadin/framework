@@ -126,7 +126,6 @@
 		<fileset dir="${test-output-dir}" id="priority-tests-fileset">
 			<include name="**/reindeer*.java" />
 			<include name="**/runo*.java" />
-			<include name="**/demop*.java" />
 		</fileset>
 
 		<fileset dir="${test-output-dir}" id="other-tests-fileset">
