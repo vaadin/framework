@@ -31,7 +31,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
         BlurHandler {
 
-    public static final String HTML_CONTENT_ALLOWED = "htmlcontentallowed";
+    public static final String HTML_CONTENT_ALLOWED = "usehtml";
 
     public static final String CLASSNAME = "v-select-optiongroup";
 
@@ -53,7 +53,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
      */
     private boolean blurOccured = false;
 
-    private boolean htmlItems = false;
+    private boolean htmlContentAllowed = false;
 
     public VOptionGroup() {
         super(CLASSNAME);
@@ -63,12 +63,8 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (uidl.hasAttribute(HTML_CONTENT_ALLOWED)
-                && uidl.getBooleanAttribute(HTML_CONTENT_ALLOWED)) {
-            htmlItems = true;
-        } else {
-            htmlItems = false;
-        }
+        htmlContentAllowed = uidl.hasAttribute(HTML_CONTENT_ALLOWED);
+
         super.updateFromUIDL(uidl, client);
 
         sendFocusEvents = client.hasEventListeners(this, EventId.FOCUS);
@@ -114,13 +110,13 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
             String caption = opUidl.getStringAttribute("caption");
             if (isMultiselect()) {
                 op = new VCheckBox();
-                if (htmlItems) {
+                if (htmlContentAllowed) {
                     op.setHTML(caption);
                 } else {
                     op.setText(caption);
                 }
             } else {
-                op = new RadioButton(id, caption, htmlItems);
+                op = new RadioButton(id, caption, htmlContentAllowed);
                 op.setStyleName("v-radiobutton");
             }
             op.addStyleName(CLASSNAME_OPTION);
