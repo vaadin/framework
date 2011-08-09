@@ -53,7 +53,7 @@ public class CustomLayoutDemo extends com.vaadin.Application implements
         setMainWindow(mainWindow);
 
         // set the application to use example -theme
-        setTheme("example");
+        setTheme("tests-components");
 
         // Create custom layout, themes/example/layout/mainLayout.html
         mainLayout = new CustomLayout("mainLayout");

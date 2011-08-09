@@ -44,7 +44,7 @@ public class TestSizeableIncomponents extends Application {
 
         Window w = new Window();
         setMainWindow(w);
-        w.setTheme("demo");
+        w.setTheme("tests-components");
 
         final VerticalLayout main = new VerticalLayout();
         w.setContent(main);
