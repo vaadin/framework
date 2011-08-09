@@ -17,7 +17,6 @@ public class OptionGroups extends AbstractSelectTestCase<OptionGroup> {
         createDisabledItemsMultiToggle("Disabled items");
         createBooleanAction("HTML content allowed", CATEGORY_STATE, false,
                 new Command<OptionGroup, Boolean>() {
-                    @Override
                     public void execute(OptionGroup og, Boolean value,
                             Object data) {
                         og.setHtmlContentAllowed(value.booleanValue());

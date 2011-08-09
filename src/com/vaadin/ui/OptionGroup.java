@@ -172,11 +172,28 @@ public class OptionGroup extends AbstractSelect implements
         return true;
     }
 
+    /**
+     * Sets whether html is allowed in the item captions. If set to true, the
+     * captions are passed to the browser as html and the developer is
+     * responsible for ensuring no harmful html is used. If set to false, the
+     * content is passed to the browser as plain text.
+     * 
+     * @param htmlContentAllowed
+     *            true if the captions are used as html, false if used as plain
+     *            text
+     */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
         this.htmlContentAllowed = htmlContentAllowed;
         requestRepaint();
     }
 
+    /**
+     * Checks whether captions are interpreted as html or plain text.
+     * 
+     * @return true if the captions are used as html, false if used as plain
+     *         text
+     * @see #setHtmlContentAllowed(boolean)
+     */
     public boolean isHtmlContentAllowed() {
         return htmlContentAllowed;
     }
