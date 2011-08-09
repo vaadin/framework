@@ -156,31 +156,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
     /* Get/Set component properties */
 
-    /**
-     * Gets the UIDL tag corresponding to the component.
-     * 
-     * <p>
-     * Note! In version 6.2 the method for mapping server side components to
-     * their client side counterparts was enhanced. This method was made final
-     * to intentionally "break" code where it is needed. If your code does not
-     * compile due overriding this method, it is very likely that you need to:
-     * <ul>
-     * <li>remove the implementation of getTag
-     * <li>add {@link ClientWidget} annotation to your component
-     * </ul>
-     * 
-     * @return the component's UIDL tag as <code>String</code>
-     * @deprecated tags are no more required for components. Instead of tags we
-     *             are now using {@link ClientWidget} annotations to map server
-     *             side components to client side counterparts. Generating
-     *             identifier for component type is delegated to terminal.
-     * @see ClientWidget
-     */
-    @Deprecated
-    public final String getTag() {
-        return "";
-    }
-
     public void setDebugId(String id) {
         testingId = id;
     }
