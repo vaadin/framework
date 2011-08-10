@@ -8,11 +8,6 @@
         <ajaxable>false</ajaxable>
     </portlet>
     <portlet>
-        <portlet-name>CalcPortlet</portlet-name>
-        <instanceable>true</instanceable>       
-        <ajaxable>false</ajaxable>
-    </portlet>
-    <portlet>
         <portlet-name>Portlet Mode Example</portlet-name>
         <instanceable>true</instanceable>
         <ajaxable>false</ajaxable>

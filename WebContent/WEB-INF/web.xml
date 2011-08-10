@@ -43,14 +43,6 @@
 
 
 	<servlet>
-		<servlet-name>DemoTestBench</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.testbench.TestBench</param-value>
-		</init-param>
-	</servlet>
-	<servlet>
 		<servlet-name>TestForNativeWindowing</servlet-name>
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
@@ -65,15 +57,6 @@
 		<init-param>
 			<param-name>application</param-name>
 			<param-value>com.vaadin.tests.TestSplitPanel</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>FeatureBrowser</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.featurebrowser.FeatureBrowser</param-value>
 		</init-param>
 	</servlet>
 
@@ -115,51 +98,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>CustomLayoutDemo</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.CustomLayoutDemo</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>LayoutDemo</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.LayoutDemo</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>VaadinTunesLayout</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.VaadinTunesLayout</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>ReindeerThemeStyles</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.themes.ReindeerThemeStyles</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>RunoTheme</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.themes.RunoTheme</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
 		<servlet-name>Parameters</servlet-name>
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
@@ -178,68 +116,11 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>TreeFilesystemContainer</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.TreeFilesystemContainer</param-value>
-		</init-param>
-		<!-- Set this property if demo cannot access context base directory because 
-			of Application Server or Servlet Container security constraints -->
-		<!-- <init-param> <param-name>sampleDirectory</param-name> <param-value>/mySampleDirectory</param-value> 
-			</init-param> -->
-	</servlet>
-
-	<servlet>
-		<servlet-name>TreeFilesystem</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.TreeFilesystem</param-value>
-		</init-param>
-		<!-- Set this property if demo cannot access context base directory because 
-			of Application Server or Servlet Container security constraints -->
-		<!-- <init-param> <param-name>sampleDirectory</param-name> <param-value>/mySampleDirectory</param-value> 
-			</init-param> -->
-	</servlet>
-
-	<servlet>
 		<servlet-name>ModalWindow</servlet-name>
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
 			<param-value>com.vaadin.tests.ModalWindow</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>HelloWorld</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.HelloWorld</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>Calc</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.Calc</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>ColorPickerApplication</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.colorpicker.ColorPickerApplication</param-value>
-		</init-param>
-		<init-param>
-			<param-name>widgetset</param-name>
-			<param-value>com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet</param-value>
 		</init-param>
 	</servlet>
 
@@ -257,10 +138,6 @@
 		<url-pattern>/run/*</url-pattern>
 	</servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>DemoTestBench</servlet-name>
-		<url-pattern>/DemoTestBench/*</url-pattern>
-	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>TestForNativeWindowing</servlet-name>
 		<url-pattern>/TestForNativeWindowing/*</url-pattern>
@@ -292,26 +169,6 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>CustomLayoutDemo</servlet-name>
-		<url-pattern>/CustomLayoutDemo/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>LayoutDemo</servlet-name>
-		<url-pattern>/LayoutDemo/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>VaadinTunesLayout</servlet-name>
-		<url-pattern>/VaadinTunesLayout/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>FeatureBrowser</servlet-name>
-		<url-pattern>/FeatureBrowser/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
 		<servlet-name>Parameters</servlet-name>
 		<url-pattern>/Parameters/*</url-pattern>
 	</servlet-mapping>
@@ -322,33 +179,8 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>TreeFilesystemContainer</servlet-name>
-		<url-pattern>/TreeFilesystemContainer/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>TreeFilesystem</servlet-name>
-		<url-pattern>/TreeFilesystem/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
 		<servlet-name>ModalWindow</servlet-name>
 		<url-pattern>/ModalWindow/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>HelloWorld</servlet-name>
-		<url-pattern>/HelloWorld/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>Calc</servlet-name>
-		<url-pattern>/Calc/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>ColorPickerApplication</servlet-name>
-		<url-pattern>/colorpicker/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -366,20 +198,8 @@
 		<url-pattern>/AddressBook/*</url-pattern>
 	</servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>ReindeerThemeStyles</servlet-name>
-		<url-pattern>/ReindeerTheme/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>RunoTheme</servlet-name>
-		<url-pattern>/RunoTheme/*</url-pattern>
-	</servlet-mapping>
-
 	<welcome-file-list>
-		<welcome-file>index.jsp</welcome-file>
 		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.htm</welcome-file>
 	</welcome-file-list>
 
 </web-app>
