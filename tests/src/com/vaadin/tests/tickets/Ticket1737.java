@@ -1,7 +1,6 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
-import com.vaadin.demo.Calc;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.Resource;
@@ -13,7 +12,8 @@ import com.vaadin.ui.Window;
 
 public class Ticket1737 extends Application {
 
-    Resource slowRes = new ClassResource(Calc.class, "m-bullet-blue.gif", this) {
+    Resource slowRes = new ClassResource(Ticket1737.class, "m-bullet-blue.gif",
+            this) {
         @Override
         public DownloadStream getStream() {
             try {

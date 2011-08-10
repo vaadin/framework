@@ -4,8 +4,6 @@ import java.util.Collection;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.demo.tutorial.addressbook.data.Person;
-import com.vaadin.demo.tutorial.addressbook.data.PersonContainer;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -13,6 +11,8 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.SourceIs;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.util.Person;
+import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.HorizontalLayout;

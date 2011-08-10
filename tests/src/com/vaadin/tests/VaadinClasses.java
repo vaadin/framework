@@ -62,8 +62,7 @@ public class VaadinClasses {
     public static List<Class<? extends Object>> getAllServerSideClasses() {
         try {
             return findClasses(Object.class, "com.vaadin", new String[] {
-                    "com.vaadin.tests", "com.vaadin.demo",
-                    "com.vaadin.terminal.gwt.client" });
+                    "com.vaadin.tests", "com.vaadin.terminal.gwt.client" });
         } catch (IOException e) {
             e.printStackTrace();
             return null;

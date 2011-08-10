@@ -43,8 +43,7 @@ public class TestBench extends com.vaadin.Application implements
         Property.ValueChangeListener {
 
     // Add here packages which are used for finding testable classes
-    String[] testablePackages = { "com.vaadin.tests", "com.vaadin.demo",
-            "com.vaadin.demo.colorpicker", "com.vaadin.demo.features",
+    String[] testablePackages = { "com.vaadin.tests",
             "com.vaadin.tests.tickets" };
 
     HierarchicalContainer testables = new HierarchicalContainer();

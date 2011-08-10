@@ -8,7 +8,7 @@ import java.io.File;
 
 import com.vaadin.data.util.FilesystemContainer;
 import com.vaadin.data.util.FilesystemContainer.FileItem;
-import com.vaadin.demo.util.SampleDirectory;
+import com.vaadin.tests.util.SampleDirectory;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.Field;

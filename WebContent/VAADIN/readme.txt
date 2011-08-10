@@ -20,8 +20,8 @@ command below in the top project directory:
 
   ant -f build-widgetsets.xml
 
-See build-widgetsets.xml, com.vaadin.demo.colorpicker package, and the
-Reference Manual for more information regarding widget sets.
+See build-widgetsets.xml and the Reference Manual for more information
+regarding widget sets.
 
 ---------------------------
 Vaadin Development

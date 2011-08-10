@@ -7,7 +7,7 @@ package com.vaadin.tests;
 import java.io.File;
 
 import com.vaadin.data.Item;
-import com.vaadin.demo.util.SampleDirectory;
+import com.vaadin.tests.util.SampleDirectory;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
