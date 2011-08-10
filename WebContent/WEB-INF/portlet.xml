@@ -86,7 +86,7 @@
         <portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet2</portlet-class>
         <init-param>
             <name>application</name>
-            <value>com.vaadin.demo.themes.LiferayThemeDemo</value>
+            <value>com.vaadin.tests.integration.LiferayThemeDemo</value>
         </init-param>
         
         <supports>
