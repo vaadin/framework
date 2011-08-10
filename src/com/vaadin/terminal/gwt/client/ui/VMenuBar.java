@@ -69,6 +69,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
     public static final String ATTRIBUTE_CHECKED = "checked";
 
+    public static final String HTML_CONTENT_ALLOWED = "usehtml";
+
     /** Widget fields **/
     protected boolean subMenu;
     protected ArrayList<CustomMenuItem> items;
@@ -92,6 +94,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             });
 
     private boolean openRootOnHover;
+
+    private boolean htmlContentAllowed;
 
     public VMenuBar() {
         // Create an empty horizontal menubar
@@ -190,6 +194,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
+
+        htmlContentAllowed = uidl.hasAttribute(HTML_CONTENT_ALLOWED);
 
         openRootOnHover = uidl.getBooleanAttribute(OPEN_ROOT_MENU_ON_HOWER);
 
@@ -342,7 +348,10 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                         + Icon.CLASSNAME + "\" alt=\"\" />");
             }
             String itemText = item.getStringAttribute("text");
-            itemHTML.append(Util.escapeHTML(itemText));
+            if (!htmlContentAllowed) {
+                itemText = Util.escapeHTML(itemText);
+            }
+            itemHTML.append(itemText);
             itemHTML.append("</span>");
         }
         return itemHTML.toString();

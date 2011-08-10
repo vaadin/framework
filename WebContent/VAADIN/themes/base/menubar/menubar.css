@@ -10,7 +10,7 @@
 	display: inline-block;
 	zoom: 1;
 }
-.v-menubar .v-menubar-menuitem-caption * {
+.v-menubar .v-menubar-menuitem-caption .v-icon {
 	vertical-align: middle;
 	white-space: nowrap;
 }

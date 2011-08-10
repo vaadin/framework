@@ -51,6 +51,8 @@ public class MenuBar extends AbstractComponent {
 
     private boolean openRootOnHover;
 
+    private boolean htmlContentAllowed;
+
     /** Paint (serialise) the component for the client. */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
@@ -59,6 +61,10 @@ public class MenuBar extends AbstractComponent {
         super.paintContent(target);
 
         target.addAttribute(VMenuBar.OPEN_ROOT_MENU_ON_HOWER, openRootOnHover);
+
+        if (isHtmlContentAllowed()) {
+            target.addAttribute(VMenuBar.HTML_CONTENT_ALLOWED, true);
+        }
 
         target.startTag("options");
 
@@ -408,6 +414,32 @@ public class MenuBar extends AbstractComponent {
      */
     public boolean isAutoOpen() {
         return openRootOnHover;
+    }
+
+    /**
+     * Sets whether html is allowed in the item captions. If set to true, the
+     * captions are passed to the browser as html and the developer is
+     * responsible for ensuring no harmful html is used. If set to false, the
+     * content is passed to the browser as plain text.
+     * 
+     * @param htmlContentAllowed
+     *            true if the captions are used as html, false if used as plain
+     *            text
+     */
+    public void setHtmlContentAllowed(boolean htmlContentAllowed) {
+        this.htmlContentAllowed = htmlContentAllowed;
+        requestRepaint();
+    }
+
+    /**
+     * Checks whether item captions are interpreted as html or plain text.
+     * 
+     * @return true if the captions are used as html, false if used as plain
+     *         text
+     * @see #setHtmlContentAllowed(boolean)
+     */
+    public boolean isHtmlContentAllowed() {
+        return htmlContentAllowed;
     }
 
     /**

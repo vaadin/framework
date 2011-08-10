@@ -30,6 +30,6 @@
 	line-height: 16px;
 	padding-left: 10px;
 }
-.v-menubar-submenu .v-menubar-menuitem-caption * { 
+.v-menubar-submenu .v-menubar-menuitem-caption .v-icon { 
 	vertical-align: middle;
 }

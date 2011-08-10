@@ -28,7 +28,7 @@
 	padding: 1px 26px 1px 10px;
 	line-height: 16px;
 }
-.v-menubar-submenu .v-menubar-menuitem-caption * { 
+.v-menubar-submenu .v-menubar-menuitem-caption .v-icon { 
 	vertical-align: middle;
 }
 .v-menubar .v-menubar-menuitem-selected,
