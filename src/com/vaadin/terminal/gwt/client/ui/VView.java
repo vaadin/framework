@@ -47,6 +47,8 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
     private static final String CLASSNAME = "v-view";
 
+    public static final String NOTIFICATION_HTML_CONTENT_ALLOWED = "usehtml";
+
     private String theme;
 
     private Paintable layout;
@@ -320,6 +322,8 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                 for (final Iterator<?> it = childUidl.getChildIterator(); it
                         .hasNext();) {
                     final UIDL notification = (UIDL) it.next();
+                    boolean htmlContentAllowed = notification
+                            .hasAttribute(NOTIFICATION_HTML_CONTENT_ALLOWED);
                     String html = "";
                     if (notification.hasAttribute("icon")) {
                         final String parsedUri = client
@@ -328,14 +332,22 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                         html += "<img src=\"" + parsedUri + "\" />";
                     }
                     if (notification.hasAttribute("caption")) {
-                        html += "<h1>"
-                                + notification.getStringAttribute("caption")
-                                + "</h1>";
+                        String caption = notification
+                                .getStringAttribute("caption");
+                        if (!htmlContentAllowed) {
+                            caption = Util.escapeHTML(caption);
+                            caption = caption.replaceAll("\\n", "<br />");
+                        }
+                        html += "<h1>" + caption + "</h1>";
                     }
                     if (notification.hasAttribute("message")) {
-                        html += "<p>"
-                                + notification.getStringAttribute("message")
-                                + "</p>";
+                        String message = notification
+                                .getStringAttribute("message");
+                        if (!htmlContentAllowed) {
+                            message = Util.escapeHTML(message);
+                            message = message.replaceAll("\\n", "<br />");
+                        }
+                        html += "<p>" + message + "</p>";
                     }
 
                     final String style = notification.hasAttribute("style") ? notification

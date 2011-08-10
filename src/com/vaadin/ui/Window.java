@@ -663,6 +663,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
                 if (n.getIcon() != null) {
                     target.addAttribute("icon", n.getIcon());
                 }
+                if (n.isHtmlContentAllowed()) {
+                    target.addAttribute(
+                            VView.NOTIFICATION_HTML_CONTENT_ALLOWED, true);
+                }
                 target.addAttribute("position", n.getPosition());
                 target.addAttribute("delay", n.getDelayMsec());
                 if (n.getStyleName() != null) {
@@ -1597,6 +1601,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
      * Shows a notification message on the middle of the window. The message
      * automatically disappears ("humanized message").
      * 
+     * Care should be taken to to avoid XSS vulnerabilities as the caption is
+     * rendered as html.
+     * 
      * @see #showNotification(com.vaadin.ui.Window.Notification)
      * @see Notification
      * 
@@ -1611,6 +1618,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
      * Shows a notification message the window. The position and behavior of the
      * message depends on the type, which is one of the basic types defined in
      * {@link Notification}, for instance Notification.TYPE_WARNING_MESSAGE.
+     * 
+     * Care should be taken to to avoid XSS vulnerabilities as the caption is
+     * rendered as html.
      * 
      * @see #showNotification(com.vaadin.ui.Window.Notification)
      * @see Notification
@@ -1628,6 +1638,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
      * Shows a notification consisting of a bigger caption and a smaller
      * description on the middle of the window. The message automatically
      * disappears ("humanized message").
+     * 
+     * Care should be taken to to avoid XSS vulnerabilities as the caption and
+     * description are rendered as html.
      * 
      * @see #showNotification(com.vaadin.ui.Window.Notification)
      * @see Notification
@@ -1648,6 +1661,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
      * type, which is one of the basic types defined in {@link Notification},
      * for instance Notification.TYPE_WARNING_MESSAGE.
      * 
+     * Care should be taken to to avoid XSS vulnerabilities as the caption and
+     * description are rendered as html.
+     * 
      * @see #showNotification(com.vaadin.ui.Window.Notification)
      * @see Notification
      * 
@@ -1660,6 +1676,34 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
      */
     public void showNotification(String caption, String description, int type) {
         addNotification(new Notification(caption, description, type));
+    }
+
+    /**
+     * Shows a notification consisting of a bigger caption and a smaller
+     * description. The position and behavior of the message depends on the
+     * type, which is one of the basic types defined in {@link Notification},
+     * for instance Notification.TYPE_WARNING_MESSAGE.
+     * 
+     * Care should be taken to avoid XSS vulnerabilities if html content is
+     * allowed.
+     * 
+     * @see #showNotification(com.vaadin.ui.Window.Notification)
+     * @see Notification
+     * 
+     * @param caption
+     *            The message caption
+     * @param description
+     *            The message description
+     * @param type
+     *            The type of message
+     * @param htmlContentAllowed
+     *            Whether html in the caption and description should be
+     *            displayed as html or as plain text
+     */
+    public void showNotification(String caption, String description, int type,
+            boolean htmlContentAllowed) {
+        addNotification(new Notification(caption, description, type,
+                htmlContentAllowed));
     }
 
     /**
@@ -1773,9 +1817,13 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
         private int position = POSITION_CENTERED;
         private int delayMsec = 0;
         private String styleName;
+        private boolean htmlContentAllowed;
 
         /**
          * Creates a "humanized" notification message.
+         * 
+         * Care should be taken to to avoid XSS vulnerabilities as the caption
+         * is by default rendered as html.
          * 
          * @param caption
          *            The message to show
@@ -1786,6 +1834,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
 
         /**
          * Creates a notification message of the specified type.
+         * 
+         * Care should be taken to to avoid XSS vulnerabilities as the caption
+         * is by default rendered as html.
          * 
          * @param caption
          *            The message to show
@@ -1800,6 +1851,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
          * Creates a "humanized" notification message with a bigger caption and
          * smaller description.
          * 
+         * Care should be taken to to avoid XSS vulnerabilities as the caption
+         * and description are by default rendered as html.
+         * 
          * @param caption
          *            The message caption
          * @param description
@@ -1813,6 +1867,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
          * Creates a notification message of the specified type, with a bigger
          * caption and smaller description.
          * 
+         * Care should be taken to to avoid XSS vulnerabilities as the caption
+         * and description are by default rendered as html.
+         * 
          * @param caption
          *            The message caption
          * @param description
@@ -1821,8 +1878,31 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
          *            The type of message
          */
         public Notification(String caption, String description, int type) {
+            this(caption, description, type, true);
+        }
+
+        /**
+         * Creates a notification message of the specified type, with a bigger
+         * caption and smaller description.
+         * 
+         * Care should be taken to to avoid XSS vulnerabilities if html is
+         * allowed.
+         * 
+         * @param caption
+         *            The message caption
+         * @param description
+         *            The message description
+         * @param type
+         *            The type of message
+         * @param htmlContentAllowed
+         *            Whether html in the caption and description should be
+         *            displayed as html or as plain text
+         */
+        public Notification(String caption, String description, int type,
+                boolean htmlContentAllowed) {
             this.caption = caption;
             this.description = description;
+            this.htmlContentAllowed = htmlContentAllowed;
             setType(type);
         }
 
@@ -1979,6 +2059,32 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
          */
         public String getStyleName() {
             return styleName;
+        }
+
+        /**
+         * Sets whether html is allowed in the caption and description. If set
+         * to true, the texts are passed to the browser as html and the
+         * developer is responsible for ensuring no harmful html is used. If set
+         * to false, the texts are passed to the browser as plain text.
+         * 
+         * @param htmlContentAllowed
+         *            true if the texts are used as html, false if used as plain
+         *            text
+         */
+        public void setHtmlContentAllowed(boolean htmlContentAllowed) {
+            this.htmlContentAllowed = htmlContentAllowed;
+        }
+
+        /**
+         * Checks whether caption and description are interpreted as html or
+         * plain text.
+         * 
+         * @return true if the texts are used as html, false if used as plain
+         *         text
+         * @see #setHtmlContentAllowed(boolean)
+         */
+        public boolean isHtmlContentAllowed() {
+            return htmlContentAllowed;
         }
     }
 
