@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.EventObject;
 import java.util.Iterator;
 
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -17,7 +16,10 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 
 public class VNotification extends VOverlay {
 
@@ -62,14 +64,15 @@ public class VNotification extends VOverlay {
     public VNotification(int delayMsec) {
         this();
         this.delayMsec = delayMsec;
-        if(BrowserInfo.get().isTouchDevice()) {
-            new Timer(){
+        if (BrowserInfo.get().isTouchDevice()) {
+            new Timer() {
                 @Override
                 public void run() {
-                    if(isAttached()) {
+                    if (isAttached()) {
                         fade();
                     }
-                }}.schedule(delayMsec + TOUCH_DEVICE_IDLE_DELAY );
+                }
+            }.schedule(delayMsec + TOUCH_DEVICE_IDLE_DELAY);
         }
     }
 
@@ -329,6 +332,40 @@ public class VNotification extends VOverlay {
                 l.notificationHidden(event);
             }
         }
+    }
+
+    public static void showNotification(ApplicationConnection client,
+            final UIDL notification) {
+        boolean htmlContentAllowed = notification
+                .hasAttribute(VView.NOTIFICATION_HTML_CONTENT_ALLOWED);
+        String html = "";
+        if (notification.hasAttribute("icon")) {
+            final String parsedUri = client.translateVaadinUri(notification
+                    .getStringAttribute("icon"));
+            html += "<img src=\"" + parsedUri + "\" />";
+        }
+        if (notification.hasAttribute("caption")) {
+            String caption = notification.getStringAttribute("caption");
+            if (!htmlContentAllowed) {
+                caption = Util.escapeHTML(caption);
+                caption = caption.replaceAll("\\n", "<br />");
+            }
+            html += "<h1>" + caption + "</h1>";
+        }
+        if (notification.hasAttribute("message")) {
+            String message = notification.getStringAttribute("message");
+            if (!htmlContentAllowed) {
+                message = Util.escapeHTML(message);
+                message = message.replaceAll("\\n", "<br />");
+            }
+            html += "<p>" + message + "</p>";
+        }
+
+        final String style = notification.hasAttribute("style") ? notification
+                .getStringAttribute("style") : null;
+        final int position = notification.getIntAttribute("position");
+        final int delay = notification.getIntAttribute("delay");
+        new VNotification(delay).show(html, position, style);
     }
 
     public class HideEvent extends EventObject {

@@ -431,36 +431,10 @@ public class VWindow extends VOverlay implements Container,
                     }
                     shortcutHandler.updateActionMap(childUidl);
                 } else if (childUidl.getTag().equals("notifications")) {
-                    // TODO needed? move ->
                     for (final Iterator<?> it = childUidl.getChildIterator(); it
                             .hasNext();) {
                         final UIDL notification = (UIDL) it.next();
-                        String html = "";
-                        if (notification.hasAttribute("icon")) {
-                            final String parsedUri = client
-                                    .translateVaadinUri(notification
-                                            .getStringAttribute("icon"));
-                            html += "<img src=\"" + parsedUri + "\" />";
-                        }
-                        if (notification.hasAttribute("caption")) {
-                            html += "<h1>"
-                                    + notification
-                                            .getStringAttribute("caption")
-                                    + "</h1>";
-                        }
-                        if (notification.hasAttribute("message")) {
-                            html += "<p>"
-                                    + notification
-                                            .getStringAttribute("message")
-                                    + "</p>";
-                        }
-
-                        final String style = notification.hasAttribute("style") ? notification
-                                .getStringAttribute("style") : null;
-                        final int position = notification
-                                .getIntAttribute("position");
-                        final int delay = notification.getIntAttribute("delay");
-                        new VNotification(delay).show(html, position, style);
+                        VNotification.showNotification(client, notification);
                     }
                 }
             }

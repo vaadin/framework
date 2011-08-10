@@ -322,40 +322,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                 for (final Iterator<?> it = childUidl.getChildIterator(); it
                         .hasNext();) {
                     final UIDL notification = (UIDL) it.next();
-                    boolean htmlContentAllowed = notification
-                            .hasAttribute(NOTIFICATION_HTML_CONTENT_ALLOWED);
-                    String html = "";
-                    if (notification.hasAttribute("icon")) {
-                        final String parsedUri = client
-                                .translateVaadinUri(notification
-                                        .getStringAttribute("icon"));
-                        html += "<img src=\"" + parsedUri + "\" />";
-                    }
-                    if (notification.hasAttribute("caption")) {
-                        String caption = notification
-                                .getStringAttribute("caption");
-                        if (!htmlContentAllowed) {
-                            caption = Util.escapeHTML(caption);
-                            caption = caption.replaceAll("\\n", "<br />");
-                        }
-                        html += "<h1>" + caption + "</h1>";
-                    }
-                    if (notification.hasAttribute("message")) {
-                        String message = notification
-                                .getStringAttribute("message");
-                        if (!htmlContentAllowed) {
-                            message = Util.escapeHTML(message);
-                            message = message.replaceAll("\\n", "<br />");
-                        }
-                        html += "<p>" + message + "</p>";
-                    }
-
-                    final String style = notification.hasAttribute("style") ? notification
-                            .getStringAttribute("style") : null;
-                    final int position = notification
-                            .getIntAttribute("position");
-                    final int delay = notification.getIntAttribute("delay");
-                    new VNotification(delay).show(html, position, style);
+                    VNotification.showNotification(client, notification);
                 }
             } else {
                 // subwindows
