@@ -3,18 +3,8 @@
 
 <liferay-portlet-app>
     <portlet>
-        <portlet-name>PortletDemoPortlet</portlet-name>
-        <instanceable>true</instanceable>       
-        <ajaxable>false</ajaxable>
-    </portlet>
-    <portlet>
-        <portlet-name>Portlet Mode Example</portlet-name>
-        <instanceable>true</instanceable>
-        <ajaxable>false</ajaxable>
-    </portlet>
-    <portlet>
-        <portlet-name>Portlet HTML Mode Example</portlet-name>
-        <instanceable>true</instanceable>
+        <portlet-name>JSR286TestPortlet</portlet-name>
+        <instanceable>false</instanceable>       
         <ajaxable>false</ajaxable>
     </portlet>
     <portlet>

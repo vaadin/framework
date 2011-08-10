@@ -831,6 +831,7 @@
         <copy todir="${output-dir}/WebContent/WEB-INF/classes">
             <fileset dir="${result-path}/classes">
                 <include name="${toolkit-package}/demo/**/*" />
+                <include name="${toolkit-package}/tests/integration/**/*" />
                 <!-- user might want to tweak launcher classes -->
                 <include name="${toolkit-package}/launcher/**" />
             </fileset>

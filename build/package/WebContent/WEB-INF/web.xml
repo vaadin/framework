@@ -40,21 +40,7 @@
 		</init-param>
 	</servlet>
 
-	<!-- Portlet demo application -->
-	<servlet>
-		<servlet-name>PortletDemo</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.portlet.PortletDemo</param-value>
-		</init-param>
-	</servlet>
-
 	<!-- Servlet Mappings below - see servlets for comments -->
-	<servlet-mapping>
-		<servlet-name>PortletDemo</servlet-name>
-		<url-pattern>/PortletDemo/*</url-pattern>
-	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>VaadinApplicationRunner</servlet-name>
 		<url-pattern>/run/*</url-pattern>

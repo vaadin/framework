@@ -3,14 +3,8 @@
 
 <display>
     <category name="Vaadin">
-        <portlet id="PortletDemoPortlet" />
-        <portlet id="Portlet Mode Example" />
-        <portlet id="Portlet HTML Mode Example" />
+        <portlet id="JSR286TestPortlet" />
         <portlet id="AddressBookPortlet" />
         <portlet id="Vaadin Liferay Theme Portlet"/>
-
-        <!-- These should be used together -->
-        <portlet id="InterPortletEventPortlet" />
-        <portlet id="VaadinInterPortletEventPortlet" />
     </category>
 </display>

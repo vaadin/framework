@@ -89,15 +89,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>PortletDemo</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.portlet.PortletDemo</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
 		<servlet-name>Parameters</servlet-name>
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
@@ -181,11 +172,6 @@
 	<servlet-mapping>
 		<servlet-name>ModalWindow</servlet-name>
 		<url-pattern>/ModalWindow/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>PortletDemo</servlet-name>
-		<url-pattern>/PortletDemo/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
