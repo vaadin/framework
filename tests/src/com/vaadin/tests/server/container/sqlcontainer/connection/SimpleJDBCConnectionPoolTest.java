@@ -9,8 +9,8 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.util.connection.JDBCConnectionPool;
-import com.vaadin.data.util.connection.SimpleJDBCConnectionPool;
+import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
+import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.tests.server.container.sqlcontainer.AllTests;
 
 public class SimpleJDBCConnectionPoolTest {

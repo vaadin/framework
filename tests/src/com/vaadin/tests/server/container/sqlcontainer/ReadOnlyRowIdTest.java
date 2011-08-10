@@ -4,7 +4,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.vaadin.data.util.ReadOnlyRowId;
+import com.vaadin.data.util.sqlcontainer.ReadOnlyRowId;
 
 public class ReadOnlyRowIdTest {
 

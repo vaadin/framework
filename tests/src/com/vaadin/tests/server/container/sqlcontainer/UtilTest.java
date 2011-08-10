@@ -4,7 +4,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.vaadin.data.util.SQLUtil;
+import com.vaadin.data.util.sqlcontainer.SQLUtil;
 
 public class UtilTest {
 

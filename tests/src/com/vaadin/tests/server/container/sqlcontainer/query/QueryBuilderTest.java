@@ -20,9 +20,9 @@ import com.vaadin.data.util.filter.Like;
 import com.vaadin.data.util.filter.Not;
 import com.vaadin.data.util.filter.Or;
 import com.vaadin.data.util.filter.SimpleStringFilter;
-import com.vaadin.data.util.query.generator.StatementHelper;
-import com.vaadin.data.util.query.generator.filter.QueryBuilder;
-import com.vaadin.data.util.query.generator.filter.StringDecorator;
+import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
+import com.vaadin.data.util.sqlcontainer.query.generator.filter.QueryBuilder;
+import com.vaadin.data.util.sqlcontainer.query.generator.filter.StringDecorator;
 
 public class QueryBuilderTest {
 

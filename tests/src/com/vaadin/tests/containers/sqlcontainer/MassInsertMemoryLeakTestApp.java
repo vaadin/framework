@@ -3,10 +3,10 @@ package com.vaadin.tests.containers.sqlcontainer;
 import java.sql.SQLException;
 
 import com.vaadin.Application;
-import com.vaadin.data.util.SQLContainer;
-import com.vaadin.data.util.connection.JDBCConnectionPool;
-import com.vaadin.data.util.connection.SimpleJDBCConnectionPool;
-import com.vaadin.data.util.query.TableQuery;
+import com.vaadin.data.util.sqlcontainer.SQLContainer;
+import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
+import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
+import com.vaadin.data.util.sqlcontainer.query.TableQuery;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

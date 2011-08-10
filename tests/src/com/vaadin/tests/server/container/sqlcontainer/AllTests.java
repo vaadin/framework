@@ -4,10 +4,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.vaadin.data.util.query.generator.DefaultSQLGenerator;
-import com.vaadin.data.util.query.generator.MSSQLGenerator;
-import com.vaadin.data.util.query.generator.OracleGenerator;
-import com.vaadin.data.util.query.generator.SQLGenerator;
+import com.vaadin.data.util.sqlcontainer.query.generator.DefaultSQLGenerator;
+import com.vaadin.data.util.sqlcontainer.query.generator.MSSQLGenerator;
+import com.vaadin.data.util.sqlcontainer.query.generator.OracleGenerator;
+import com.vaadin.data.util.sqlcontainer.query.generator.SQLGenerator;
 import com.vaadin.tests.server.container.sqlcontainer.connection.J2EEConnectionPoolTest;
 import com.vaadin.tests.server.container.sqlcontainer.connection.SimpleJDBCConnectionPoolTest;
 import com.vaadin.tests.server.container.sqlcontainer.filters.BetweenTest;

@@ -12,7 +12,7 @@ import junit.framework.Assert;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
-import com.vaadin.data.util.connection.J2EEConnectionPool;
+import com.vaadin.data.util.sqlcontainer.connection.J2EEConnectionPool;
 
 public class J2EEConnectionPoolTest {
 

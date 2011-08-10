@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 import org.junit.Assert;
 
-import com.vaadin.data.util.connection.JDBCConnectionPool;
+import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.tests.server.container.sqlcontainer.AllTests.DB;
 
 public class DataGenerator {

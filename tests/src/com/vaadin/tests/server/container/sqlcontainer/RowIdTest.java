@@ -3,7 +3,7 @@ package com.vaadin.tests.server.container.sqlcontainer;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.RowId;
+import com.vaadin.data.util.sqlcontainer.RowId;
 
 public class RowIdTest {
 

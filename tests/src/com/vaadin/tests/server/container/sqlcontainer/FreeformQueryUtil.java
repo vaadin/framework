@@ -3,8 +3,8 @@ package com.vaadin.tests.server.container.sqlcontainer;
 import java.util.List;
 
 import com.vaadin.data.Container.Filter;
-import com.vaadin.data.util.query.generator.StatementHelper;
-import com.vaadin.data.util.query.generator.filter.QueryBuilder;
+import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
+import com.vaadin.data.util.sqlcontainer.query.generator.filter.QueryBuilder;
 import com.vaadin.tests.server.container.sqlcontainer.AllTests.DB;
 
 public class FreeformQueryUtil {

@@ -7,11 +7,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.Property.ReadOnlyException;
-import com.vaadin.data.util.ColumnProperty;
-import com.vaadin.data.util.ColumnProperty.NotNullableException;
-import com.vaadin.data.util.RowId;
-import com.vaadin.data.util.RowItem;
-import com.vaadin.data.util.SQLContainer;
+import com.vaadin.data.util.sqlcontainer.ColumnProperty;
+import com.vaadin.data.util.sqlcontainer.RowId;
+import com.vaadin.data.util.sqlcontainer.RowItem;
+import com.vaadin.data.util.sqlcontainer.SQLContainer;
+import com.vaadin.data.util.sqlcontainer.ColumnProperty.NotNullableException;
 
 public class ColumnPropertyTest {
 
