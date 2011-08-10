@@ -673,6 +673,8 @@
 	        <arg value="${widgetsets-output-dir}" />
 	        <arg value="-style" />
 	        <arg value="OBF" />
+	        <arg value="-localWorkers" />
+	        <arg value="4" />
 	        <arg value="${widgetset}" />
 
 	    	<jvmarg value="-Xss8M"/>
@@ -696,18 +698,6 @@
     	</antcall>
     </target>
 
-	<target name="compile-widgetset-optimized" unless="compile.only.default-widgetset">
-   		<antcall target="compile-widgetset">
-   			<param name="widgetset" value="com.vaadin.demo.gwt.OptimizedWidgetSet"/>
-   		</antcall>
-   	</target>
-
-	 <target name="compile-widgetset-colorpicker" unless="compile.only.default-widgetset">
-	    	<antcall target="compile-widgetset">
-	    		<param name="widgetset" value="com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet"/>
-	    	</antcall>
-	    </target>
-    
     <!-- Builds the client-side engine, i.e., the widgetsets sequentially. -->
     <!-- Notice that antcall does not fulfill dependencies.                -->
     <target name="compile-client-side-sequential" unless="build.parallel">
@@ -715,8 +705,6 @@
         <!-- We can't call these with 'depends' because of the 'unless' specifier. -->
         <antcall target="compile-widgetset-default"/>
         <antcall target="compile-widgetset-portal-default"/>
-        <antcall target="compile-widgetset-optimized"/>
-        <antcall target="compile-widgetset-colorpicker"/>
     </target>
 
     <!-- Builds the client-side engine, i.e., the widgetsets in parallel. -->
@@ -726,8 +714,6 @@
         <parallel threadsperprocessor="1">
             <antcall target="compile-widgetset-default"/>
             <antcall target="compile-widgetset-portal-default"/>
-            <antcall target="compile-widgetset-optimized"/>
-            <antcall target="compile-widgetset-colorpicker"/>
         </parallel>
     </target>
 
@@ -761,7 +747,6 @@
     <!-- Build each widgetset locally, i.e., not for an installation package. -->
     <target name="widgetset-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-default"/>
     <target name="widgetset-portal-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-portal-default"/>
-    <target name="widgetset-colorpicker" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-colorpicker"/>
 
     <!-- ================================================================== -->
     <!-- Libraries and Demos                                                -->
