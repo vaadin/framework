@@ -1,5 +1,6 @@
 package com.vaadin.data.util.sqlcontainer.query.generator.filter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 
-public class QueryBuilder {
+public class QueryBuilder implements Serializable{
 
     private static ArrayList<FilterTranslator> filterTranslators = new ArrayList<FilterTranslator>();
     private static StringDecorator stringDecorator = new StringDecorator("\"",

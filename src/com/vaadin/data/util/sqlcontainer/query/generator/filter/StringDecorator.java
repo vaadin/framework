@@ -1,5 +1,7 @@
 package com.vaadin.data.util.sqlcontainer.query.generator.filter;
 
+import java.io.Serializable;
+
 /**
  * The StringDecorator knows how to produce a quoted string using the specified
  * quote start and quote end characters. It also handles grouping of a string
@@ -10,7 +12,7 @@ package com.vaadin.data.util.sqlcontainer.query.generator.filter;
  * 
  * @author Vaadin Ltd
  */
-public class StringDecorator {
+public class StringDecorator implements Serializable{
 
     private final String quoteStart;
     private final String quoteEnd;

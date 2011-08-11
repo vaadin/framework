@@ -1,5 +1,6 @@
 package com.vaadin.data.util.sqlcontainer.query.generator;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -21,7 +22,7 @@ import java.util.Map;
  * This class will also fill the values with correct setters into the
  * PreparedStatement on request.
  */
-public class StatementHelper {
+public class StatementHelper implements Serializable{
 
     private String queryString;
 
