@@ -2,6 +2,8 @@ package com.vaadin.tests.server.container.sqlcontainer;
 
 import java.util.List;
 
+import org.junit.Test;
+
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 import com.vaadin.data.util.sqlcontainer.query.generator.filter.QueryBuilder;
@@ -9,6 +11,11 @@ import com.vaadin.tests.server.container.sqlcontainer.AllTests.DB;
 
 public class FreeformQueryUtil {
 
+	@Test
+	public void testDummy(){
+		// Added dummy test so JUnit will not complain about "No runnable methods".
+	}
+	
     public static StatementHelper getQueryWithFilters(List<Filter> filters,
             int offset, int limit) {
         StatementHelper sh = new StatementHelper();

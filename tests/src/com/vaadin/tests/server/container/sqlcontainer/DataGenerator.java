@@ -6,11 +6,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.tests.server.container.sqlcontainer.AllTests.DB;
 
 public class DataGenerator {
+	
+	@Test
+	public void testDummy(){
+		// Added dummy test so JUnit will not complain about "No runnable methods".
+	}
 
     public static void addPeopleToDatabase(JDBCConnectionPool connectionPool)
             throws SQLException {
