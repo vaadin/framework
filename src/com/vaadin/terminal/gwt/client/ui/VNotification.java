@@ -57,9 +57,8 @@ public class VNotification extends VOverlay {
     private static final int TOUCH_DEVICE_IDLE_DELAY = 1000;
 
     /**
-     * @deprecated Use GWT.create instead
+     * Default constructor. You should use GWT.create instead.
      */
-    @Deprecated
     public VNotification() {
         setStyleName(STYLENAME);
         sinkEvents(Event.ONCLICK);
@@ -402,14 +401,6 @@ public class VNotification extends VOverlay {
                 }
             }.schedule(notification.delayMsec + TOUCH_DEVICE_IDLE_DELAY);
         }
-        return notification;
-    }
-
-    public static VNotification createNotification(int delayMsec, int fadeMsec,
-            int startOpacity) {
-        VNotification notification = createNotification(delayMsec);
-        notification.fadeMsec = fadeMsec;
-        notification.startOpacity = startOpacity;
         return notification;
     }
 
