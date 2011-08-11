@@ -570,7 +570,7 @@ public class ApplicationConnection {
     }
 
     int cssWaits = 0;
-    static final int MAX_CSS_WAITS = 20;
+    static final int MAX_CSS_WAITS = 100;
 
     protected void handleWhenCSSLoaded(final String jsonText,
             final ValueMap json) {

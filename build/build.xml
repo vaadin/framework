@@ -991,7 +991,7 @@
 		        </tstamp>
 		        <property file="${build.properties.file}" />
 				<property name="version" value="${vaadin.version}"/>
-		        <property name="version.full" value="${version}.custom-${build.date.compact}"/>
+		        <property name="version.full" value="${version}-${build.date.compact}"/>
 				<!-- <property name="compile.only.default-widgetset" value="1"/> -->
 	   		</then>
 			<!-- Otherwise version and snapshot.repository.url come from target "init" -->

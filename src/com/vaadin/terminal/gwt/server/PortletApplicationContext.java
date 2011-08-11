@@ -29,7 +29,7 @@ import com.vaadin.Application;
 public class PortletApplicationContext extends WebApplicationContext implements
         Serializable {
 
-    protected PortletSession portletSession;
+    protected transient PortletSession portletSession;
 
     protected Map<Application, Set<PortletListener>> portletListeners = new HashMap<Application, Set<PortletListener>>();
 
