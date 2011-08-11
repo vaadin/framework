@@ -261,7 +261,7 @@
 	</target>
 	
 	<target name="integration-test-eXo-3">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="eXo-3/integration-test-eXo-3.0.3-addressbook.html" />
+		<fileset dir="integration-testscripts" id="html-test-files" includes="eXo-3/integration-test-eXo-3.0.3-portlet2.html" />
 		<pathconvert pathsep=" " property="test-exo" refid="html-test-files" />
 		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
