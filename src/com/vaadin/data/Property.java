@@ -189,6 +189,19 @@ public interface Property extends Serializable {
         public ConversionException(Throwable cause) {
             super(cause);
         }
+
+        /**
+         * Constructs a new <code>ConversionException</code> with the specified
+         * detail message and cause.
+         * 
+         * @param message
+         *            the detail message
+         * @param cause
+         *            The cause of the the conversion failure
+         */
+        public ConversionException(String message, Throwable cause) {
+            super(message, cause);
+        }
     }
 
     /**
