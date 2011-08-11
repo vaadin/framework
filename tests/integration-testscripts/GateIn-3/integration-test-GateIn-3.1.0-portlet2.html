@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>integration-test-GateIn-3.1.0-addressbook</title>
+<title>integration-test-GateIn-3.1.0-portlet2</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">integration-test-GateIn-3.1.0-addressbook</td></tr>
+<tr><td rowspan="1" colspan="3">integration-test-GateIn-3.1.0-portlet2</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -69,7 +69,7 @@
 <tr>
 	<td>enterCharacter</td>
 	<td>pageName</td>
-	<td>AddressBook</td>
+	<td>Portlet2</td>
 </tr>
 <tr>
 	<td>mouseClick</td>
@@ -103,7 +103,7 @@
 </tr>
 <tr>
 	<td>drag</td>
-	<td>//div[@id='demo/AddressBookPortlet']/div/div/div[1]/div[2]</td>
+	<td>//div[@id='demo/JSR286TestPortlet']/div/div/div[1]/div[2]</td>
 	<td></td>
 </tr>
 <tr>
@@ -117,9 +117,14 @@
 	<td>13,5</td>
 </tr>
 <tr>
-	<td>mouseClick</td>
-	<td>//div[@id='UIPage']/div/div/div[2]/div/div/div/div/div/div/div[2]/div/div[2]/div/div/div/div[1]/div/div/div[2]/div/div[2]/div[1]/table/tbody/tr[3]/td[1]/div</td>
-	<td>62,13</td>
+	<td>mouseClickAndWait</td>
+	<td>//div[@id='UIPage']/div/div/div[2]/div/div/div/div/div/div/div[2]/div/div[3]/div/div/a</td>
+	<td>10,10</td>
+</tr>
+<tr>
+	<td>closeNotification</td>
+	<td>//body/div[2]</td>
+	<td>0,0</td>
 </tr>
 <tr>
 	<td>pause</td>
@@ -129,12 +134,17 @@
 <tr>
 	<td>screenCapture</td>
 	<td></td>
-	<td>Marge_selected</td>
+	<td>Edit_mode</td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//div[@id='UIPage']/div/div/div[2]/div/div/div/div/div/div/div[2]/div/div[2]/div/div/div/div[1]/div/div/div[1]/div/fieldset/div[4]/div/div/div[3]/div/div/span/span</td>
-	<td></td>
+	<td>mouseClickAndWait</td>
+	<td>//div[@id='UIPage']/div/div/div[2]/div/div/div/div/div/div/div[2]/div/div[3]/div/div/a</td>
+	<td>15,8</td>
+</tr>
+<tr>
+	<td>closeNotification</td>
+	<td>//body/div[2]</td>
+	<td>0,0</td>
 </tr>
 <tr>
 	<td>pause</td>
@@ -144,7 +154,7 @@
 <tr>
 	<td>screenCapture</td>
 	<td></td>
-	<td>Marge_in_edit_mode</td>
+	<td>done</td>
 </tr>
 
 </tbody></table>

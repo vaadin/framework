@@ -243,7 +243,7 @@
 		</target>	
 	
 	<target name="integration-test-gatein-3">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="GateIn-3/integration-test-GateIn-3.1.0-addressbook.html" />
+		<fileset dir="integration-testscripts" id="html-test-files" includes="GateIn-3/integration-test-GateIn-3.1.0-portlet2.html" />
 		<pathconvert pathsep=" " property="test-gatein" refid="html-test-files" />
 		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
@@ -641,7 +641,10 @@
 				<antcall target="integration-test-${target-server}" />
 			</try>
 			<catch>
-				<concat>##teamcity[testFailed name='${target-server}' flowId='${target-server}' message='Integration test for ${target-server} failed.' details='${tried}']"</concat>
+				<!-- Should also perform other escaping - see http://confluence.jetbrains.net/display/TCD65/Build+Script+Interaction+with+TeamCity -->
+				<!-- Also, the first escaped message may override any later ones (Ant properties are immutable) -->
+				<propertyregex property="tried-escaped" input="${tried}" regexp="\\n" replace="|n" global="true" />
+				<concat>##teamcity[testFailed name='${target-server}' flowId='${target-server}' message='Integration test for ${target-server} failed.' details='${tried-escaped}']"</concat>
 			</catch>
 		</trycatch>
 		<concat>##teamcity[testFinished name='${target-server}' flowId='${target-server}']"</concat>
