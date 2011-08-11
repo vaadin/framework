@@ -32,6 +32,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -175,7 +176,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             DOM.appendChild(root, down);
             DOM.appendChild(root, status);
             DOM.setElementProperty(status, "className", CLASSNAME + "-status");
-            DOM.sinkEvents(root, Event.ONMOUSEDOWN);
+            DOM.sinkEvents(root, Event.ONMOUSEDOWN | Event.ONMOUSEWHEEL);
             addCloseHandler(this);
         }
 
@@ -318,6 +319,38 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
 
         /*
+         * Timer for scrolling pages up or down.
+         */
+        private LazyPageScroller lazyPageScroller = new LazyPageScroller();
+        private class LazyPageScroller extends Timer {
+            private int pagesToScroll = 0;
+
+            @Override
+            public void run() {
+            	if(pagesToScroll != 0){
+        		   filterOptions(currentPage + pagesToScroll, lastFilter);
+                   pagesToScroll = 0;
+            	}             
+            }
+
+            public void scrollUp() {             
+            	if(currentPage - pagesToScroll >= 0){
+            		 pagesToScroll--;
+                     cancel();
+                     schedule(100);
+            	}               
+            }
+
+            public void scrollDown() {      
+            	if(totalMatches > (currentPage + pagesToScroll +1)*pageLength){
+            		 pagesToScroll++;
+                     cancel();
+                     schedule(100);
+            	}               
+            }
+        }
+        
+        /*
          * (non-Javadoc)
          * 
          * @see
@@ -329,9 +362,16 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             if (event.getTypeInt() == Event.ONCLICK) {
                 final Element target = DOM.eventGetTarget(event);
                 if (target == up || target == DOM.getChild(up, 0)) {
-                    filterOptions(currentPage - 1, lastFilter);
+                	lazyPageScroller.scrollUp();
                 } else if (target == down || target == DOM.getChild(down, 0)) {
-                    filterOptions(currentPage + 1, lastFilter);
+                	lazyPageScroller.scrollDown();                    
+                }
+            } else if (event.getTypeInt() == Event.ONMOUSEWHEEL) {                
+                int velocity = event.getMouseWheelVelocityY();
+                if (velocity > 0) {                
+                    	lazyPageScroller.scrollDown();                  
+                } else {
+                        lazyPageScroller.scrollUp();                   
                 }
             }
 
