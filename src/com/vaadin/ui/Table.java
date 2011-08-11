@@ -1559,7 +1559,12 @@ public class Table extends AbstractSelect implements Action.Container,
                             ColumnGenerator cg = columnGenerators
                                     .get(colids[j]);
                             value = cg.generateCell(this, id, colids[j]);
-
+                            if (!(value instanceof Component)
+                                    && !(value instanceof String)) {
+                                // Avoid errors if a generator returns something
+                                // other than a Component or a String
+                                value = value.toString();
+                            }
                         } else if (iscomponent[j]) {
                             value = p.getValue();
                             listenProperty(p, oldListenedProperties);
@@ -3845,9 +3850,11 @@ public class Table extends AbstractSelect implements Action.Container,
          * @param columnId
          *            the id for the generated column (as specified in
          *            addGeneratedColumn)
-         * @return
+         * @return A {@link Component} that should be rendered in the cell or a
+         *         {@link String} that should be displayed in the cell. Other
+         *         return values are not supported.
          */
-        public abstract Component generateCell(Table source, Object itemId,
+        public abstract Object generateCell(Table source, Object itemId,
                 Object columnId);
     }
 
