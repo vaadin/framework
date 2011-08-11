@@ -1559,7 +1559,7 @@ public class Table extends AbstractSelect implements Action.Container,
                             ColumnGenerator cg = columnGenerators
                                     .get(colids[j]);
                             value = cg.generateCell(this, id, colids[j]);
-                            if (!(value instanceof Component)
+                            if (value != null && !(value instanceof Component)
                                     && !(value instanceof String)) {
                                 // Avoid errors if a generator returns something
                                 // other than a Component or a String
