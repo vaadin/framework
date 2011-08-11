@@ -4,7 +4,6 @@
 <display>
     <category name="Vaadin">
         <portlet id="JSR286TestPortlet" />
-        <portlet id="AddressBookPortlet" />
         <portlet id="Vaadin Liferay Theme Portlet"/>
     </category>
 </display>

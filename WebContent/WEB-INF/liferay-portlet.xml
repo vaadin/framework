@@ -8,11 +8,6 @@
         <ajaxable>false</ajaxable>
     </portlet>
     <portlet>
-        <portlet-name>AddressBookPortlet</portlet-name>
-        <instanceable>true</instanceable>       
-        <ajaxable>false</ajaxable>
-    </portlet>      
-    <portlet>
         <portlet-name>Vaadin Liferay Theme Portlet</portlet-name>
         <instanceable>false</instanceable>
         <ajaxable>false</ajaxable>
