@@ -278,7 +278,7 @@
 	</target>
 	
 	<target name="integration-test-weblogic-portal">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="weblogic-portal/integration-test-WebLogic-Portal-10.3.2-addressbook.html" />
+		<fileset dir="integration-testscripts" id="html-test-files" includes="weblogic-portal/integration-test-WebLogic-Portal-10.3.2-portlet2.html" />
 		<pathconvert pathsep=" " property="test-weblogic" refid="html-test-files" />
 		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
@@ -371,7 +371,8 @@
 	</target>
 
 	<target name="integration-test-start-weblogic-portal">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-weblogic-portal" />
+		<!-- Note the Vaadin 6.7+ target -->
+		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-weblogic-portal-67" />
 	</target>
 
 	<target name="integration-test-stop-weblogic-portal">
