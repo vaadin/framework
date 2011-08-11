@@ -12,7 +12,6 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.ui.AbstractSelect.MultiSelectMode;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
@@ -192,13 +191,15 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     };
 
     private class GeneratedColumn {
-        private Class<? extends Component> type;
+        private Class<?> type;
         private String width;
+        private boolean html;
 
-        public GeneratedColumn(Class<? extends Component> type, String width) {
+        public GeneratedColumn(Class<?> type, String width, boolean html) {
             super();
             this.type = type;
             this.width = width;
+            this.html = html;
         }
     }
 
@@ -216,18 +217,34 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
             c.addGeneratedColumn(generatedColumnId + generatedColumnNextNr,
                     new ColumnGenerator() {
 
-                        public Component generateCell(Table source,
-                                Object itemId, Object columnId) {
+                        public Object generateCell(Table source, Object itemId,
+                                Object columnId) {
+                            String value = "";
+                            if (col.html) {
+                                value = "<i>" + itemId + "</i>" + "/" + "<b>"
+                                        + columnId + "</b>";
+                            } else {
+                                value = itemId + "/" + columnId;
+                            }
                             if (col.type == Button.class) {
                                 Button b = new Button();
-                                b.setCaption(itemId + "/" + columnId);
+                                b.setCaption(value);
                                 b.setWidth(col.width);
                                 return b;
                             } else if (col.type == Label.class) {
                                 Label l = new Label();
-                                l.setValue(itemId + "/" + columnId);
                                 l.setWidth(col.width);
+                                if (col.html) {
+                                    l.setValue(value);
+                                    l.setContentMode(Label.CONTENT_XHTML);
+                                } else {
+                                    l.setValue(value);
+                                }
                                 return l;
+                            } else if (col.type == String.class) {
+                                return value;
+                            } else if (col.type == Object.class) {
+                                return new Object();
                             }
 
                             return null;
@@ -301,24 +318,36 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         String category = "Generated columns";
         createCategory(category, categoryFeatures);
         createClickAction("Add Button", category, addGeneratedColumnCommand,
-                new GeneratedColumn(Button.class, null));
+                new GeneratedColumn(Button.class, null, false));
         createClickAction("Add 200px wide Button", category,
                 addGeneratedColumnCommand, new GeneratedColumn(Button.class,
-                        "200px"));
+                        "200px", false));
         createClickAction("Add 100% wide Button", category,
                 addGeneratedColumnCommand, new GeneratedColumn(Button.class,
-                        "100%"));
+                        "100%", false));
         createClickAction("Add Label", category, addGeneratedColumnCommand,
-                new GeneratedColumn(Label.class, null));
+                new GeneratedColumn(Label.class, null, false));
         createClickAction("Add 100px Label", category,
                 addGeneratedColumnCommand, new GeneratedColumn(Label.class,
-                        "100px"));
+                        "100px", false));
         createClickAction("Add 100% wide Label", category,
                 addGeneratedColumnCommand, new GeneratedColumn(Label.class,
-                        "100%"));
+                        "100%", false));
 
         createClickAction("Remove generated columns", category,
                 removeGeneratedColumnsCommand, null);
+        createClickAction("Add string as generated column", category,
+                addGeneratedColumnCommand, new GeneratedColumn(String.class,
+                        "", false));
+        createClickAction("Add HTML string as generated column", category,
+                addGeneratedColumnCommand, new GeneratedColumn(String.class,
+                        "", true));
+        createClickAction("Add 100px HTML Label", category,
+                addGeneratedColumnCommand, new GeneratedColumn(Label.class,
+                        "100px", true));
+        createClickAction("Add Object as generated column", category,
+                addGeneratedColumnCommand, new GeneratedColumn(Object.class,
+                        "", false));
     }
 
     private void createColumnHeaderMode(String category) {
