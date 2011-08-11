@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.EventObject;
 import java.util.Iterator;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -55,12 +56,23 @@ public class VNotification extends VOverlay {
     private ArrayList<EventListener> listeners;
     private static final int TOUCH_DEVICE_IDLE_DELAY = 1000;
 
+    /**
+     * @deprecated Use GWT.create instead
+     */
+    @Deprecated
     public VNotification() {
         setStyleName(STYLENAME);
         sinkEvents(Event.ONCLICK);
         DOM.setStyleAttribute(getElement(), "zIndex", "" + Z_INDEX_BASE);
     }
 
+    /**
+     * @deprecated Use static {@link #createNotification(int)} instead to enable
+     *             GWT deferred binding.
+     * 
+     * @param delayMsec
+     */
+    @Deprecated
     public VNotification(int delayMsec) {
         this();
         this.delayMsec = delayMsec;
@@ -76,6 +88,15 @@ public class VNotification extends VOverlay {
         }
     }
 
+    /**
+     * @deprecated Use static {@link #createNotification(int, int, int)} instead
+     *             to enable GWT deferred binding.
+     * 
+     * @param delayMsec
+     * @param fadeMsec
+     * @param startOpacity
+     */
+    @Deprecated
     public VNotification(int delayMsec, int fadeMsec, int startOpacity) {
         this(delayMsec);
         this.fadeMsec = fadeMsec;
@@ -365,7 +386,31 @@ public class VNotification extends VOverlay {
                 .getStringAttribute("style") : null;
         final int position = notification.getIntAttribute("position");
         final int delay = notification.getIntAttribute("delay");
-        new VNotification(delay).show(html, position, style);
+        createNotification(delay).show(html, position, style);
+    }
+
+    public static VNotification createNotification(int delayMsec) {
+        final VNotification notification = GWT.create(VNotification.class);
+        notification.delayMsec = delayMsec;
+        if (BrowserInfo.get().isTouchDevice()) {
+            new Timer() {
+                @Override
+                public void run() {
+                    if (notification.isAttached()) {
+                        notification.fade();
+                    }
+                }
+            }.schedule(notification.delayMsec + TOUCH_DEVICE_IDLE_DELAY);
+        }
+        return notification;
+    }
+
+    public static VNotification createNotification(int delayMsec, int fadeMsec,
+            int startOpacity) {
+        VNotification notification = createNotification(delayMsec);
+        notification.fadeMsec = fadeMsec;
+        notification.startOpacity = startOpacity;
+        return notification;
     }
 
     public class HideEvent extends EventObject {

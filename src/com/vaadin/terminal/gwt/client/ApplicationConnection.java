@@ -649,7 +649,7 @@ public class ApplicationConnection {
             html.append(details);
             html.append("</I></p>");
 
-            VNotification n = new VNotification(1000 * 60 * 45);
+            VNotification n = VNotification.createNotification(1000 * 60 * 45);
             n.addEventListener(new NotificationRedirect(url));
             n.show(html.toString(), VNotification.CENTERED_TOP,
                     VNotification.STYLE_SYSTEM);
@@ -1008,7 +1008,8 @@ public class ApplicationConnection {
 
                         if (html.length() != 0) {
                             /* 45 min */
-                            VNotification n = new VNotification(1000 * 60 * 45);
+                            VNotification n = VNotification
+                                    .createNotification(1000 * 60 * 45);
                             n.addEventListener(new NotificationRedirect(url));
                             n.show(html, VNotification.CENTERED_TOP,
                                     VNotification.STYLE_SYSTEM);
