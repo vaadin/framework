@@ -191,9 +191,6 @@
                 <exclude name="**/gwt-dev.jar"/>
                 <exclude name="**/gwt-user.jar"/>
    	        </fileset>
-        	<fileset dir="lib/demo">
-        	        <include name="**/*.jar"/>
-   	        </fileset>
         	<fileset dir="lib/tests">
         	        <include name="**/*.jar"/>
    	        </fileset>
@@ -316,7 +313,6 @@
             </filterchain>
             <fileset dir="WebContent">
                 <exclude name="**/.svn" />
-                <exclude name="windoweddemos.html" />
                 <include name="release-notes.html" />
                 <include name="*.html" />
                 <include name="license/*.html" />
@@ -406,12 +402,10 @@
     	<!--
     	Source directories in the project are
 		 * src (Vaadin core)
- 		 * demo/src (Demos and examples)
          * tests/src (Test cases)
 
 		These are copied to 
  		 * {$result-path}/src/core
-		 * {$result-path}/src/demo
 		 * {$result-path}/src/tests
 
 		Java/HTML/CSS/XML files are filtered so the license is added and the version is set. 
@@ -424,7 +418,6 @@
         <mkdir dir="${result-path}/src" />
     	
     	<mkdir dir="${result-path}/src/core" />
-    	<mkdir dir="${result-path}/src/demo" />
     	<mkdir dir="${result-path}/src/tests" />
 
     	<patternset id="preprocessable-files">
@@ -432,7 +425,6 @@
     		<include name="**/*.html" />
     		<include name="**/*.css" />
     		<include name="**/*.xml" />
-    		<exclude name="src/com/vaadin/demo/tools/*"/>
 		</patternset>
 		<patternset id="non-preprocessable-files">
 			<exclude name="**/.svn" />
@@ -461,13 +453,6 @@
             </fileset>
         </copy>
 
-        <copy todir="${result-path}/src/demo">
-        	<filterset refid="version-and-license"/>
-            <fileset dir="demo/src">
-                <patternset refid="preprocessable-files" />
-            </fileset>
-        </copy>
-
 		<antcontrib:if>
 			<isset property="build.include.tests"/>
 			<then>
@@ -491,11 +476,6 @@
 				<patternset refid="non-preprocessable-files" />
 			</fileset>
         </copy>
-        <copy todir="${result-path}/src/demo">
-            <fileset dir="demo/src">
-				<patternset refid="non-preprocessable-files" />
-			</fileset>
-        </copy>
     	<antcontrib:if>
     		<isset property="build.include.tests"/>
     		<then>
@@ -516,11 +496,6 @@
 
         <!-- copy 3rd part libraries used by demo -->
         <copy todir="${output-dir}/WebContent/demo/lib">
-            <fileset dir="lib/demo">
-                <include name="gwt-maps/**/*" />
-            </fileset>
-        </copy>
-        <copy todir="${output-dir}/WebContent/demo/lib">
             <fileset dir="lib/core">
                 <include name="jetty/**/*" />
             </fileset>
@@ -530,17 +505,6 @@
                 <include name="portlet/**/*" />
             </fileset>
         </copy>
-
-        <!-- Add demo sources -->
-        <echo>Adding demo sources to WebContent/WEB-INF/src</echo>
-        <copy todir="${output-dir}/WebContent/WEB-INF/src">
-            <fileset dir="${result-path}/src/demo">
-                <include name="**/*" />
-            </fileset>
-        </copy>
-
-        <echo>Creating demo source html files</echo>
-        <java2html srcdir="${output-dir}/WebContent/WEB-INF/src/${toolkit-package}/demo" destdir="${output-dir}/WebContent/docs/example-source/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="false" showFileName="true" showTableBorder="false" />
 
         <!-- Add WebContent -->
         <echo>Adding VAADIN/themes, demo and hsqldb.jar files.</echo>
@@ -582,7 +546,6 @@
         <mkdir dir="${result-path}/classes" />
         <javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-path}/classes" debug="true" encoding="UTF-8">
              <src path="${result-path}/src/core"/>
-             <src path="${result-path}/src/demo"/>
              <src path="${result-path}/src/tests"/>
         	
              <exclude name="${toolkit-package}/tests/**" unless="build.include.tests"/>
@@ -660,7 +623,6 @@
         <pathelement location="${lib-gwt-validation-src}" />
         <pathelement location="${result-path}/classes" />
         <pathelement location="${result-path}/src/core" />
-        <pathelement location="${result-path}/src/demo" />
     </path>
 	
 	<target name="compile-widgetset" description="Compiles the widgetset given as the first parameter">
@@ -778,7 +740,6 @@
             </manifest>
             <fileset dir="${result-path}/classes">
                 <patternset>
-                    <exclude name="${toolkit-package}/demo/**" />
                     <exclude name="${toolkit-package}/tests/**"/>
                     <exclude name="${toolkit-package}/launcher/**" />
                 </patternset>
@@ -830,7 +791,6 @@
         <echo>Adding demo class files.</echo>
         <copy todir="${output-dir}/WebContent/WEB-INF/classes">
             <fileset dir="${result-path}/classes">
-                <include name="${toolkit-package}/demo/**/*" />
                 <include name="${toolkit-package}/tests/integration/**/*" />
                 <!-- user might want to tweak launcher classes -->
                 <include name="${toolkit-package}/launcher/**" />
@@ -841,17 +801,6 @@
         <copy todir="${output-dir}/WebContent/WEB-INF/classes">
             <fileset dir="tests/src">
                 <include name="${toolkit-package}/tests/integration/*.gif" />
-            </fileset>
-        </copy>
-
-        <echo>Adding source for demos</echo>
-        <copy todir="${output-dir}/WebContent/WEB-INF/src">
-            <fileset dir="${result-path}/src/demo">
-                <include name="${toolkit-package}/demo/**/*" />
-            </fileset>
-            <fileset dir="${result-path}/src/core">
-                <!-- user might want to tweak launcher classes -->
-                <include name="${toolkit-package}/launcher/**" />
             </fileset>
         </copy>
     </target>

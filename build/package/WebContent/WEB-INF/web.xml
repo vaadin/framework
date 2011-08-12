@@ -30,24 +30,10 @@
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationRunnerServlet</servlet-class>
 	</servlet>
 
-	<!--  AddressBook demo application -->
-	<servlet>
-		<servlet-name>AddressBook</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.tutorial.addressbook.AddressBookApplication</param-value>
-		</init-param>
-	</servlet>
-
 	<!-- Servlet Mappings below - see servlets for comments -->
 	<servlet-mapping>
 		<servlet-name>VaadinApplicationRunner</servlet-name>
 		<url-pattern>/run/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>AddressBook</servlet-name>
-		<url-pattern>/AddressBook/*</url-pattern>
 	</servlet-mapping>
 
 	<welcome-file-list>

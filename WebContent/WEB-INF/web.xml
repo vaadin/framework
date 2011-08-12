@@ -33,89 +33,6 @@
 
 
 	<servlet>
-		<servlet-name>RobustnessSimple</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.robustness.RobustnessSimple</param-value>
-		</init-param>
-	</servlet>
-
-
-	<servlet>
-		<servlet-name>TestForNativeWindowing</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.TestForNativeWindowing</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>TestSplitPanel</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.TestSplitPanel</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>AddressBook</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.tutorial.addressbook.AddressBookApplication</param-value>
-		</init-param>
-
-	</servlet>
-
-	<servlet>
-		<servlet-name>TestBench</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.TestBench</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>RandomLayoutStress</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.RandomLayoutStress</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>Parameters</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.Parameters</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>UpgradingSample</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.UpgradingSample</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>ModalWindow</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.ModalWindow</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
 		<servlet-name>GAESyncTest</servlet-name>
 		<servlet-class>com.vaadin.terminal.gwt.server.GAEApplicationServlet</servlet-class>
 		<init-param>
@@ -130,58 +47,8 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>TestForNativeWindowing</servlet-name>
-		<url-pattern>/TestForNativeWindowing/*</url-pattern>
-	</servlet-mapping>
-
-
-	<servlet-mapping>
-		<servlet-name>RobustnessSimple</servlet-name>
-		<url-pattern>/RobustnessSimple/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>TestSplitPanel</servlet-name>
-		<url-pattern>/TestSplitPanel/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>RandomLayoutStress</servlet-name>
-		<url-pattern>/RandomLayoutStress/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>TestBench</servlet-name>
-		<url-pattern>/TestBench/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>TestBench</servlet-name>
-		<url-pattern>/t/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>Parameters</servlet-name>
-		<url-pattern>/Parameters/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>UpgradingSample</servlet-name>
-		<url-pattern>/UpgradingSample/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>ModalWindow</servlet-name>
-		<url-pattern>/ModalWindow/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
 		<servlet-name>GAESyncTest</servlet-name>
 		<url-pattern>/gaesynctest/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>AddressBook</servlet-name>
-		<url-pattern>/AddressBook/*</url-pattern>
 	</servlet-mapping>
 
 	<welcome-file-list>
