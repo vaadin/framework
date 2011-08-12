@@ -47,7 +47,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
     private static final String CLASSNAME = "v-view";
 
-    public static final String NOTIFICATION_HTML_CONTENT_ALLOWED = "usehtml";
+    public static final String NOTIFICATION_HTML_CONTENT_NOT_ALLOWED = "useplain";
 
     private String theme;
 

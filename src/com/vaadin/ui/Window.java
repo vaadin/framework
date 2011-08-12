@@ -663,9 +663,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
                 if (n.getIcon() != null) {
                     target.addAttribute("icon", n.getIcon());
                 }
-                if (n.isHtmlContentAllowed()) {
+                if (!n.isHtmlContentAllowed()) {
                     target.addAttribute(
-                            VView.NOTIFICATION_HTML_CONTENT_ALLOWED, true);
+                            VView.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED, true);
                 }
                 target.addAttribute("position", n.getPosition());
                 target.addAttribute("delay", n.getDelayMsec());

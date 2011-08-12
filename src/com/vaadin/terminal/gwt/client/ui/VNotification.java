@@ -356,8 +356,8 @@ public class VNotification extends VOverlay {
 
     public static void showNotification(ApplicationConnection client,
             final UIDL notification) {
-        boolean htmlContentAllowed = notification
-                .hasAttribute(VView.NOTIFICATION_HTML_CONTENT_ALLOWED);
+        boolean onlyPlainText = notification
+                .hasAttribute(VView.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED);
         String html = "";
         if (notification.hasAttribute("icon")) {
             final String parsedUri = client.translateVaadinUri(notification
@@ -366,7 +366,7 @@ public class VNotification extends VOverlay {
         }
         if (notification.hasAttribute("caption")) {
             String caption = notification.getStringAttribute("caption");
-            if (!htmlContentAllowed) {
+            if (onlyPlainText) {
                 caption = Util.escapeHTML(caption);
                 caption = caption.replaceAll("\\n", "<br />");
             }
@@ -374,7 +374,7 @@ public class VNotification extends VOverlay {
         }
         if (notification.hasAttribute("message")) {
             String message = notification.getStringAttribute("message");
-            if (!htmlContentAllowed) {
+            if (onlyPlainText) {
                 message = Util.escapeHTML(message);
                 message = message.replaceAll("\\n", "<br />");
             }
