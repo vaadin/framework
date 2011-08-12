@@ -215,6 +215,12 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
             }
             break;
         case Event.ONMOUSEDOWN:
+            if (DOM.isOrHasChild(getElement(), DOM.eventGetTarget(event))) {
+                // This was moved from mouseover, which iOS sometimes skips.
+                // We're certainly hovering at this point, and we don't actually
+                // need that information before this point.
+                setHovering(true);
+            }
             if (event.getButton() == Event.BUTTON_LEFT) {
                 // save mouse position to detect movement before synthesizing
                 // event later
@@ -269,13 +275,6 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
                 setHovering(false);
                 if (BrowserInfo.get().isIE() || BrowserInfo.get().isOpera()) {
                     removeStyleName(CLASSNAME_PRESSED);
-                }
-            }
-            break;
-        case Event.ONMOUSEOVER:
-            if (DOM.isOrHasChild(getElement(), DOM.eventGetTarget(event))) {
-                setHovering(true);
-                if (isCapturing) {
                 }
             }
             break;
