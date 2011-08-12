@@ -319,7 +319,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
 
         /*
-         * Timer for scrolling pages up or down.
+         * Using a timer to scroll up or down the pages so when we receive lots
+         * of consecutive mouse wheel events the pages does not flicker.
          */
         private LazyPageScroller lazyPageScroller = new LazyPageScroller();
         private class LazyPageScroller extends Timer {
@@ -334,7 +335,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
 
             public void scrollUp() {             
-            	if(currentPage - pagesToScroll >= 0){
+            	if(currentPage + pagesToScroll > 0){
             		 pagesToScroll--;
                      cancel();
                      schedule(100);
