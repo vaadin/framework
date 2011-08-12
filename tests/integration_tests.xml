@@ -40,9 +40,9 @@
 		<scp file="${demo.war}" todir="${user}@${test.integration.server}:integration-tests/servers/demo.war" keyfile="${sshkey.file}" passphrase="${passphrase}" />
 	</target>
 	
-	<!-- Run basic address book test -->
-	<target name="integration-test-addressbook">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-${server-name}-addressbook.html" />
+	<!-- Run basic integration test test -->
+	<target name="integration-test-servlet">
+		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-${server-name}-servlet.html" />
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
@@ -62,7 +62,7 @@
 	<!-- Start and stop methods for servers -->
 	<target name="integration-test-start-tomcat-4">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-4.1.40" />
-		<copy file="integration-testscripts/common/addressbook_deployment.tpl" tofile="integration-testscripts/integration-test-tomcat-4.1.40-addressbook.html" overwrite="true" />
+		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-tomcat-4.1.40-servlet.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-tomcat-4">
@@ -71,7 +71,7 @@
 	
 	<target name="integration-test-start-tomcat-5">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-5.5.28" />
-		<copy file="integration-testscripts/common/addressbook_deployment.tpl" tofile="integration-testscripts/integration-test-tomcat-5.5.28-addressbook.html" overwrite="true" />
+		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-tomcat-5.5.28-servlet.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-tomcat-5">
@@ -80,7 +80,7 @@
 	
 	<target name="integration-test-start-tomcat-6">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-6.0.20" />
-		<copy file="integration-testscripts/common/addressbook_deployment.tpl" tofile="integration-testscripts/integration-test-tomcat-6.0.20-addressbook.html" overwrite="true" />
+		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-tomcat-6.0.20-servlet.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-tomcat-6">
@@ -89,7 +89,7 @@
 	
 	<target name="integration-test-start-jetty-5">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-5.1.15" />
-		<copy file="integration-testscripts/common/addressbook_deployment.tpl" tofile="integration-testscripts/integration-test-jetty-5.1.15-addressbook.html" overwrite="true" />
+		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-jetty-5.1.15-servlet.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jetty-5">
@@ -98,7 +98,7 @@
 
 	<target name="integration-test-start-jetty-6">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-6.1.22" />
-		<copy file="integration-testscripts/common/addressbook_deployment.tpl" tofile="integration-testscripts/integration-test-jetty-6.1.22-addressbook.html" overwrite="true" />
+		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-jetty-6.1.22-servlet.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jetty-6">
@@ -107,7 +107,7 @@
 	
 	<target name="integration-test-start-jetty-7">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-7.0.0" />
-		<copy file="integration-testscripts/common/addressbook_deployment.tpl" tofile="integration-testscripts/integration-test-jetty-7.0.0-addressbook.html" overwrite="true" />
+		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-jetty-7.0.0-servlet.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jetty-7">
@@ -116,7 +116,7 @@
 	
 	<target name="integration-test-start-jboss-3">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-3.2.8" />
-		<copy file="integration-testscripts/common/addressbook_deployment.tpl" tofile="integration-testscripts/integration-test-jboss-3.2.8-addressbook.html" overwrite="true" />
+		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-jboss-3.2.8-servlet.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jboss-3">
@@ -125,7 +125,7 @@
 	
 	<target name="integration-test-start-jboss-4">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-4.2.3" />
-		<copy file="integration-testscripts/common/addressbook_deployment.tpl" tofile="integration-testscripts/integration-test-jboss-4.2.3-addressbook.html" overwrite="true" />
+		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-jboss-4.2.3-servlet.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jboss-4">
@@ -134,7 +134,7 @@
 	
 	<target name="integration-test-start-jboss-5">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-5.0.1" />
-		<copy file="integration-testscripts/common/addressbook_deployment.tpl" tofile="integration-testscripts/integration-test-jboss-5.0.1-addressbook.html" overwrite="true" />
+		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-jboss-5.0.1-servlet.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-jboss-5">
@@ -143,7 +143,7 @@
 	
 	<target name="integration-test-start-glassfish2">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-glassfish-2.1.1" />
-		<copy file="integration-testscripts/common/addressbook_deployment.tpl" tofile="integration-testscripts/integration-test-glassfish-2.1.1-addressbook.html" overwrite="true" />
+		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-glassfish-2.1.1-servlet.html" overwrite="true" />
 	</target>
 	
 	<target name="integration-test-stop-glassfish2">
@@ -152,7 +152,7 @@
 	
 	<target name="integration-test-start-glassfish3">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-glassfish-3" />
-		<copy file="integration-testscripts/common/addressbook_deployment.tpl" tofile="integration-testscripts/integration-test-glassfish-3-addressbook.html" overwrite="true" />
+		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-glassfish-3-servlet.html" overwrite="true" />
 	</target>
 	
 	<target name="integration-test-stop-glassfish3">
@@ -334,9 +334,9 @@
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-eXo-3.0.3" />
 	</target>
 	
-	<!-- Run address book test for WebLogic server -->
+	<!-- Run integration test for WebLogic server -->
 	<target name="integration-test-test-weblogic">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-${server-name}-addressbook.html" />
+		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-${server-name}-servlet.html" />
 		<pathconvert pathsep=" " property="test-weblogic" refid="html-test-files" />
 		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
@@ -354,7 +354,7 @@
 	
 	<target name="integration-test-start-weblogic9">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-weblogic-9.2" />
-		<copy file="integration-testscripts/common/addressbook_deployment.tpl" tofile="integration-testscripts/integration-test-weblogic-9.2-addressbook.html" overwrite="true" />
+		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-weblogic-9.2-servlet.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-weblogic9">
@@ -363,7 +363,7 @@
 	
 	<target name="integration-test-start-weblogic10">
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-weblogic-10.3" />
-		<copy file="integration-testscripts/common/addressbook_deployment.tpl" tofile="integration-testscripts/integration-test-weblogic-10.3-addressbook.html" overwrite="true" />
+		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-weblogic-10.3-servlet.html" overwrite="true" />
 	</target>
 
 	<target name="integration-test-stop-weblogic10">
@@ -379,9 +379,9 @@
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-weblogic-portal" />
 	</target>
 	
-	<!-- Run address book deployment test on GAE -->
+	<!-- Run integration test on GAE -->
 	<target name="integration-test-test-GAE">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="GoogleAppEngine/integration-test-GAE-addressbook.html" />
+		<fileset dir="integration-testscripts" id="html-test-files" includes="GoogleAppEngine/integration-test-GAE.html" />
 		<pathconvert pathsep=" " property="test-GAE" refid="html-test-files" />
 		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
@@ -404,7 +404,7 @@
 	<!-- Server setup, test and teardown targets. -->
 	<target name="integration-test-tomcat4">
 		<antcall target="integration-test-start-tomcat-4"/>
-		<antcall target="integration-test-addressbook">
+		<antcall target="integration-test-servlet">
 			<param name="server-name" value="tomcat-4.1.40" />
 		</antcall>
 		<antcall target="integration-test-stop-tomcat-4"/>
@@ -412,7 +412,7 @@
 	
 	<target name="integration-test-tomcat5">
 		<antcall target="integration-test-start-tomcat-5"/>
-		<antcall target="integration-test-addressbook">
+		<antcall target="integration-test-servlet">
 			<param name="server-name" value="tomcat-5.5.28" />
 		</antcall>
 		<antcall target="integration-test-stop-tomcat-5"/>
@@ -420,7 +420,7 @@
 	
 	<target name="integration-test-tomcat6">
 		<antcall target="integration-test-start-tomcat-6"/>
-		<antcall target="integration-test-addressbook">
+		<antcall target="integration-test-servlet">
 			<param name="server-name" value="tomcat-6.0.20" />
 		</antcall>
 		<antcall target="integration-test-stop-tomcat-6"/>
@@ -428,7 +428,7 @@
 	
 	<target name="integration-test-jetty5">
 		<antcall target="integration-test-start-jetty-5"/>
-		<antcall target="integration-test-addressbook">
+		<antcall target="integration-test-servlet">
 			<param name="server-name" value="jetty-5.1.15" />
 		</antcall>
 		<antcall target="integration-test-stop-jetty-5"/>
@@ -436,7 +436,7 @@
 	
 	<target name="integration-test-jetty6">
 		<antcall target="integration-test-start-jetty-6"/>
-		<antcall target="integration-test-addressbook">
+		<antcall target="integration-test-servlet">
 			<param name="server-name" value="jetty-6.1.22" />
 		</antcall>
 		<antcall target="integration-test-stop-jetty-6"/>
@@ -444,7 +444,7 @@
 	
 	<target name="integration-test-jetty7">
 		<antcall target="integration-test-start-jetty-7"/>
-		<antcall target="integration-test-addressbook">
+		<antcall target="integration-test-servlet">
 			<param name="server-name" value="jetty-7.0.0" />
 		</antcall>
 		<antcall target="integration-test-stop-jetty-7"/>
@@ -452,7 +452,7 @@
 	
 	<target name="integration-test-jboss3">
 		<antcall target="integration-test-start-jboss-3"/>
-		<antcall target="integration-test-addressbook">
+		<antcall target="integration-test-servlet">
 			<param name="server-name" value="jboss-3.2.8" />
 		</antcall>
 		<antcall target="integration-test-stop-jboss-3"/>
@@ -460,7 +460,7 @@
 	
 	<target name="integration-test-jboss4">
 		<antcall target="integration-test-start-jboss-4"/>
-		<antcall target="integration-test-addressbook">
+		<antcall target="integration-test-servlet">
 			<param name="server-name" value="jboss-4.2.3" />
 		</antcall>
 		<antcall target="integration-test-stop-jboss-4"/>
@@ -468,7 +468,7 @@
 	
 	<target name="integration-test-jboss5">
 		<antcall target="integration-test-start-jboss-5"/>
-		<antcall target="integration-test-addressbook">
+		<antcall target="integration-test-servlet">
 			<param name="server-name" value="jboss-5.0.1" />
 		</antcall>
 		<antcall target="integration-test-stop-jboss-5"/>
@@ -476,7 +476,7 @@
 		
 	<target name="integration-test-glassfish2">
 		<antcall target="integration-test-start-glassfish2"/>
-		<antcall target="integration-test-addressbook">
+		<antcall target="integration-test-servlet">
 			<param name="server-name" value="glassfish-2.1.1" />
 		</antcall>
 		<antcall target="integration-test-stop-glassfish2"/>
@@ -484,7 +484,7 @@
 	
 	<target name="integration-test-glassfish3">
 		<antcall target="integration-test-start-glassfish3"/>
-		<antcall target="integration-test-addressbook">
+		<antcall target="integration-test-servlet">
 			<param name="server-name" value="glassfish-3" />
 		</antcall>
 		<antcall target="integration-test-stop-glassfish3"/>

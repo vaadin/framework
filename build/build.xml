@@ -837,6 +837,13 @@
             </fileset>
         </copy>
 
+        <echo>Adding test resources.</echo>
+        <copy todir="${output-dir}/WebContent/WEB-INF/classes">
+            <fileset dir="tests/src">
+                <include name="${toolkit-package}/tests/integration/*.gif" />
+            </fileset>
+        </copy>
+
         <echo>Adding source for demos</echo>
         <copy todir="${output-dir}/WebContent/WEB-INF/src">
             <fileset dir="${result-path}/src/demo">
