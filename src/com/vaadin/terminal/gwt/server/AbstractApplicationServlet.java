@@ -887,61 +887,68 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         final InputStream data = stream.getStream();
         if (data != null) {
 
-            // Sets content type
-            response.setContentType(stream.getContentType());
+            OutputStream out = null;
+            try {
+                // Sets content type
+                response.setContentType(stream.getContentType());
 
-            // Sets cache headers
-            final long cacheTime = stream.getCacheTime();
-            if (cacheTime <= 0) {
-                response.setHeader("Cache-Control", "no-cache");
-                response.setHeader("Pragma", "no-cache");
-                response.setDateHeader("Expires", 0);
-            } else {
-                response.setHeader("Cache-Control", "max-age=" + cacheTime
-                        / 1000);
-                response.setDateHeader("Expires", System.currentTimeMillis()
-                        + cacheTime);
-                response.setHeader("Pragma", "cache"); // Required to apply
-                // caching in some
-                // Tomcats
-            }
-
-            // Copy download stream parameters directly
-            // to HTTP headers.
-            final Iterator<String> i = stream.getParameterNames();
-            if (i != null) {
-                while (i.hasNext()) {
-                    final String param = i.next();
-                    response.setHeader(param, stream.getParameter(param));
+                // Sets cache headers
+                final long cacheTime = stream.getCacheTime();
+                if (cacheTime <= 0) {
+                    response.setHeader("Cache-Control", "no-cache");
+                    response.setHeader("Pragma", "no-cache");
+                    response.setDateHeader("Expires", 0);
+                } else {
+                    response.setHeader("Cache-Control", "max-age=" + cacheTime
+                            / 1000);
+                    response.setDateHeader("Expires",
+                            System.currentTimeMillis() + cacheTime);
+                    response.setHeader("Pragma", "cache"); // Required to apply
+                    // caching in some
+                    // Tomcats
                 }
-            }
 
-            // suggest local filename from DownloadStream if Content-Disposition
-            // not explicitly set
-            String contentDispositionValue = stream
-                    .getParameter("Content-Disposition");
-            if (contentDispositionValue == null) {
-                contentDispositionValue = "filename=\"" + stream.getFileName()
-                        + "\"";
-                response.setHeader("Content-Disposition",
-                        contentDispositionValue);
-            }
+                // Copy download stream parameters directly
+                // to HTTP headers.
+                final Iterator<String> i = stream.getParameterNames();
+                if (i != null) {
+                    while (i.hasNext()) {
+                        final String param = i.next();
+                        response.setHeader(param, stream.getParameter(param));
+                    }
+                }
 
-            int bufferSize = stream.getBufferSize();
-            if (bufferSize <= 0 || bufferSize > MAX_BUFFER_SIZE) {
-                bufferSize = DEFAULT_BUFFER_SIZE;
-            }
-            final byte[] buffer = new byte[bufferSize];
-            int bytesRead = 0;
+                // suggest local filename from DownloadStream if
+                // Content-Disposition
+                // not explicitly set
+                String contentDispositionValue = stream
+                        .getParameter("Content-Disposition");
+                if (contentDispositionValue == null) {
+                    contentDispositionValue = "filename=\""
+                            + stream.getFileName() + "\"";
+                    response.setHeader("Content-Disposition",
+                            contentDispositionValue);
+                }
 
-            final OutputStream out = response.getOutputStream();
+                int bufferSize = stream.getBufferSize();
+                if (bufferSize <= 0 || bufferSize > MAX_BUFFER_SIZE) {
+                    bufferSize = DEFAULT_BUFFER_SIZE;
+                }
+                final byte[] buffer = new byte[bufferSize];
+                int bytesRead = 0;
 
-            while ((bytesRead = data.read(buffer)) > 0) {
-                out.write(buffer, 0, bytesRead);
-                out.flush();
+                out = response.getOutputStream();
+
+                while ((bytesRead = data.read(buffer)) > 0) {
+                    out.write(buffer, 0, bytesRead);
+                    out.flush();
+                }
+                out.close();
+                data.close();
+            } finally {
+                AbstractCommunicationManager.tryToCloseStream(out);
+                AbstractCommunicationManager.tryToCloseStream(data);
             }
-            out.close();
-            data.close();
         }
 
     }

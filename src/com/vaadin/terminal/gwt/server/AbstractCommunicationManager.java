@@ -607,11 +607,22 @@ public abstract class AbstractCommunicationManager implements
         return startedEvent.isDisposed();
     }
 
-    private void tryToCloseStream(OutputStream out) {
+    static void tryToCloseStream(OutputStream out) {
         try {
             // try to close output stream (e.g. file handle)
             if (out != null) {
                 out.close();
+            }
+        } catch (IOException e1) {
+            // NOP
+        }
+    }
+
+    static void tryToCloseStream(InputStream in) {
+        try {
+            // try to close output stream (e.g. file handle)
+            if (in != null) {
+                in.close();
             }
         } catch (IOException e1) {
             // NOP
