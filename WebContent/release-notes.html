@@ -45,47 +45,23 @@ contains a number of significant enhancements.</p>
 <p>General enhancements:</p>
 
 <ul>
-  <li>GWT has been updated to version 2.3</li>
-  <ul>
-    <li>If using Eclipse, update the Vaadin Plugin for Eclipse to the latest version before upgrading a project to use the new Vaadin version</li>
-    <li>If using build scripts to compile widget sets, after upgrading GWT libraries, copy and add also the <tt>validation-api-1.0.0.GA.jar</tt> and <tt>validation-api-1.0.0.GA-sources.jar</tt> to the class path</li>
-    <li>In Liferay, the latest version of Vaadin Control Panel for Liferay is needed for compiling the portal widget set</li>
-    <li>See the <a href="#upgrading">General Upgrade Instructions</a> for more information</li>
-  </ul>
-  <li>An error is shown to the end user when JAR and widgetset version do not match (<a href="http://dev.vaadin.com/ticket/5423">#5423</a>)</li>
-  <li>Support for touch device interfaces: one-finger touch scrolling, drag and drop, Slider, SplitPanel, sub-window handling, notifications, etc.</li>
-  <li>Support for Internet Explorer 9</li>
+
 </ul>
 
 <p>In the server-side API:</p>
 
 <ul>
-  <li>More versatile <b>Container.Filterable</b> API that allows complex filters in containers (<a href="http://dev.vaadin.com/ticket/6286">#6286</a>)</li>
-  <li>Support for specifying nested bean properties with <tt>addNestedContainerProperty()</tt> (<a href="http://dev.vaadin.com/ticket/4995">#4995</a>)</li>
-  <li>Abstract base class <b>AbstractProperty</b> for simple <b>Property</b> implementations (<a href="http://dev.vaadin.com/ticket/6860">#6860</a>)</li>
-  <li>A <tt>getListeners()</tt> method to return all listeners in all classes that support listeners (<a href="http://dev.vaadin.com/ticket/1410">#1410</a>)</li>
-  <li>New <b>AbstractContainer</b> for common functionality in containers, especially listeners (<a href="http://dev.vaadin.com/ticket/6521">#6521</a>)</li>
-  <li>New <tt>submitUpload()</tt> method in the <b>Upload</b> component to start the upload programmatically (<a href="http://dev.vaadin.com/ticket/6630">#6630</a>)</li>
-  <li><b>BrowserInfo</b> now includes browser time and timezone (<a href="http://dev.vaadin.com/ticket/6691">#6691</a>)</li>
-  <li>New <tt>getColumnGenerator()</tt> method in <b>Table</b> to get a column generator (<a href="http://dev.vaadin.com/ticket/6844">#6844</a>)</li>
-  <li>New <b>AbstractProperty</b> class for common features in <b>Property</b> implementations (<a href="http://dev.vaadin.com/ticket/6860">#6860</a>)</li>
-  <li>Renamed <tt>horizontal/verticalDropLocation()</tt> to <tt>getHorizontal/VerticalDropLocation()</tt> in <b>WrapperTargetDetails</b> (<a href="http://dev.vaadin.com/ticket/6823">#6823</a>)</li>
-  <!--  li>Support lazy loading properly in <b>ComboBox</b> (<a href="http://dev.vaadin.com/ticket/4233">#4233</a>)</li>  -->
-  <li><tt>CheckBox</tt> now supports null values, displayed as false (<a href="http://dev.vaadin.com/ticket/6918">#6918</a>)</li>
+  <li>Support for specifying whether the content of MenuItems, OptionGroup items and Notifications should be used as html or plain text using setHtmlContentAllowed (<a href="http://dev.vaadin.com/ticket/7187">#7187</a>), (<a href="http://dev.vaadin.com/ticket/5402">#5402</a>), (<a href="http://dev.vaadin.com/ticket/6097">#6097</a>)</li>
 </ul>
 
 <p>In the client-side API:</p>
 
 <ul>
-  <li>Server communication methods in <b>ApplicationConnection</b> can now be overridden (<a href="http://dev.vaadin.com/ticket/6885">#6885</a>)</li>
 </ul>
 
 <h3>Backward-Incompatible Changes</h3>
 
 <ul>
-  <li>The <tt>addContainerFilter()</tt> in <b>Container.Filterable</b> no longer accepts a filter string as a parameter, but a <b>Filter</b> object. You can use <tt>addContainerFilter(new SimpleStringFilter(...))</tt> to get the same functionality of the old method.</li>
-  <li><b>DateField</b>s no longer sets <tt>invalidAllowed(false)</tt> by default. The new behavior is consistent with all other fields in Vaadin and with <b>DateField</b> in Vaadin 6.3 and earlier.</li>
-  <li>Top level windows no more gain focus automatically when the application is loaded in embedded hosting solutions like in Portals. Thus keyboard shortcuts might not work until a Vaadin component is focused either by user or via the server side API. (<a href="http://dev.vaadin.com/ticket/6724">#6724</a>)</li>
 </ul>
 
 <!-- ====================================================================== -->
