@@ -231,11 +231,7 @@ public class VNativeButton extends Button implements Paintable, ClickHandler,
     public void setEnabled(boolean enabled) {
         if (isEnabled() != enabled) {
             super.setEnabled(enabled);
-            if (enabled) {
-                removeStyleName(ApplicationConnection.DISABLED_CLASSNAME);
-            } else {
-                addStyleName(ApplicationConnection.DISABLED_CLASSNAME);
-            }
+            setStyleName(ApplicationConnection.DISABLED_CLASSNAME, !enabled);
         }
     }
 
