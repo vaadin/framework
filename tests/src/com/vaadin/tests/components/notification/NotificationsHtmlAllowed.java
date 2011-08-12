@@ -22,6 +22,7 @@ public class NotificationsHtmlAllowed extends TestBase implements ClickListener 
     protected void setup() {
         captionField = new TextField("Caption", "Hello <u>world</u>");
         addComponent(captionField);
+        captionField.focus();
 
         messageField = new TextArea("Message",
                 "Hello <i>world</i>\nWith a newline <br/>And a html line break");
