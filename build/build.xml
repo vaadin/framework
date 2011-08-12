@@ -238,14 +238,6 @@
         <antcontrib:var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
         <antcall target="add-misc-files" inheritAll="true" inheritRefs="true" />
 
-        <!-- Copy source tree to class tree.                         -->
-        <!-- A workaround for not setting classpath properly in WAR. -->
-        <copy todir="${output-dir}/WebContent/WEB-INF/classes">
-            <fileset dir="${output-dir}/WebContent/WEB-INF/src">
-                <include name="**/*" />
-            </fileset>
-        </copy>
-
         <war warfile="${result-path}/${product-file}-demo-${version.full}.war"> 
             <fileset dir="${output-dir}/WebContent">
                 <include name="**/*" />
