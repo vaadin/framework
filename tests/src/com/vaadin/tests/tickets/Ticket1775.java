@@ -13,8 +13,8 @@ public class Ticket1775 extends com.vaadin.Application {
 
         final Window main = new Window("#1775");
         setMainWindow(main);
-        main.setTheme("example");
-        String layoutName = "mainLayout";
+        main.setTheme("tests-tickets");
+        String layoutName = "Ticket1775";
         final CustomLayout layout = new CustomLayout(layoutName);
 
         main.addComponent(layout);

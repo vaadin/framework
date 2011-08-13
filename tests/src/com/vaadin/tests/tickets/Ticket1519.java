@@ -10,14 +10,14 @@ public class Ticket1519 extends Application {
     @Override
     public void init() {
 
-        final Window mainWin = new Window("Test app to #1368");
+        final Window mainWin = new Window("Test app to #1519");
         setMainWindow(mainWin);
 
-        mainWin.setTheme("example");
+        mainWin.setTheme("tests-tickets");
         TabSheet ts = new TabSheet();
 
-        ts.addTab(new CustomLayout("News"), "News", null);
-        ts.addTab(new CustomLayout("Support"), "Support", null);
+        ts.addTab(new CustomLayout("Ticket1519_News"), "News", null);
+        ts.addTab(new CustomLayout("Ticket1519_Support"), "Support", null);
 
         mainWin.addComponent(ts);
 

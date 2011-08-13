@@ -25,7 +25,7 @@ public class Ticket736 extends Application {
         final Window mainWin = new Window("Test app for #736");
         setMainWindow(mainWin);
 
-        mainWin.setTheme("example");
+        mainWin.setTheme("runo");
 
         // Create form for editing address
         final Form f = new Form();
