@@ -780,12 +780,15 @@
     <!-- Demos  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <target name="demo" depends="vaadin.jar">
         <echo>Building demos</echo>
-        <echo>Adding demo class files.</echo>
+        <echo>Adding demo class files and launcher configuration.</echo>
         <copy todir="${output-dir}/WebContent/WEB-INF/classes">
             <fileset dir="${result-path}/classes">
                 <include name="${toolkit-package}/tests/integration/**/*" />
-                <!-- user might want to tweak launcher classes -->
                 <include name="${toolkit-package}/launcher/**" />
+            </fileset>
+            <fileset dir="${result-path}/src/core">
+                <include name="${toolkit-package}/launcher/**" />
+                <exclude name="${toolkit-package}/launcher/**/*.java" />
             </fileset>
         </copy>
 
