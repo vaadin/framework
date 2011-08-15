@@ -669,7 +669,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     out.write(buffer, 0, bytesRead);
                     out.flush();
                 }
-                out.close();
             } finally {
                 AbstractCommunicationManager.tryToCloseStream(data);
                 AbstractCommunicationManager.tryToCloseStream(out);

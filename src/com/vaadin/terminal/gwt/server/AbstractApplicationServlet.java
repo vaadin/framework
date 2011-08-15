@@ -943,8 +943,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     out.write(buffer, 0, bytesRead);
                     out.flush();
                 }
-                out.close();
-                data.close();
             } finally {
                 AbstractCommunicationManager.tryToCloseStream(out);
                 AbstractCommunicationManager.tryToCloseStream(data);
