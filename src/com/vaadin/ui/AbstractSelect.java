@@ -1931,4 +1931,23 @@ public abstract class AbstractSelect extends AbstractField implements
         }
     }
 
+    /**
+     * Implement this interface and pass it to Tree.setCellStyleGenerator or Table.setCellStyleGenerator to
+     * generate mouse over descriptions ("tooltips")  for the rows and cells in Table or for the items in Tree.
+     */
+    public interface ItemDescriptionGenerator {
+    	
+    	/**
+    	 * Called by Table when a cell (and row) is painted or a item is painted in Tree
+    	 * @param source
+    	 * 		The source of the generator, the Tree or Table the generator is attached to
+    	 * @param itemId
+    	 * 		The itemId of the painted cell
+    	 * @param propertyId
+    	 * 		The propertyId of the cell, null when getting row description
+    	 * @return
+    	 * 		The description or "tooltip" of the item. 
+    	 */
+    	public String generateDescription(Component source, Object itemId, Object propertyId);
+    }        
 }

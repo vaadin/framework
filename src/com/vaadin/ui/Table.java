@@ -46,6 +46,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable;
 import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
+import com.vaadin.ui.AbstractSelect.ItemDescriptionGenerator;
 
 /**
  * <p>
@@ -378,6 +379,11 @@ public class Table extends AbstractSelect implements Action.Container,
      * Table cell specific style generator
      */
     private CellStyleGenerator cellStyleGenerator = null;
+    
+    /**
+     * Table cell specific tooltip generator
+     */
+    private ItemDescriptionGenerator itemDescriptionGenerator;
 
     /*
      * EXPERIMENTAL feature: will tell the client to re-calculate column widths
@@ -2862,7 +2868,8 @@ public class Table extends AbstractSelect implements Action.Container,
                     target.addAttribute("style-" + columnIdMap.key(columnId),
                             cellStyle);
                 }
-            }
+            }           
+            
             if ((iscomponent[currentColumn] || iseditable)
                     && Component.class.isInstance(cells[CELL_FIRSTCOL
                             + currentColumn][indexInRowbuffer])) {
@@ -2870,15 +2877,35 @@ public class Table extends AbstractSelect implements Action.Container,
                         + currentColumn][indexInRowbuffer];
                 if (c == null) {
                     target.addText("");
+                    paintCellTooltips(target, itemId, columnId);
                 } else {
                     c.paint(target);
                 }
             } else {
-                target.addText((String) cells[CELL_FIRSTCOL + currentColumn][indexInRowbuffer]);
+                target.addText((String) cells[CELL_FIRSTCOL + currentColumn][indexInRowbuffer]);                
+               	paintCellTooltips(target, itemId, columnId);
             }
         }
 
         target.endTag("tr");
+    }
+    
+    private void paintCellTooltips(PaintTarget target, Object itemId, Object columnId) throws PaintException {
+    	 if(itemDescriptionGenerator != null) {
+         	String itemDescription = itemDescriptionGenerator.generateDescription(this, itemId, columnId);
+         	if(itemDescription != null && !itemDescription.equals("")) {
+         		target.addAttribute("descr-" + columnIdMap.key(columnId), itemDescription);
+         	}            	
+         }
+    }
+    
+    private void paintRowTooltips(PaintTarget target, Object itemId ) throws PaintException {    
+        if(itemDescriptionGenerator != null) {
+        	String rowDescription = itemDescriptionGenerator.generateDescription(this, itemId, null);
+        	if(rowDescription != null && !rowDescription.equals("")){
+        		target.addAttribute("rowdescr", rowDescription);
+        	}
+        }
     }
 
     private void paintRowAttributes(PaintTarget target, final Object[][] cells,
@@ -2921,8 +2948,11 @@ public class Table extends AbstractSelect implements Action.Container,
             if (rowStyle != null && !rowStyle.equals("")) {
                 target.addAttribute("rowstyle", rowStyle);
             }
-        }
-        paintRowAttributes(target, itemId);
+        }               
+        
+        paintRowTooltips(target, itemId);        
+        
+        paintRowAttributes(target, itemId);        
     }
 
     protected void paintRowHeader(PaintTarget target, Object[][] cells,
@@ -4546,6 +4576,25 @@ public class Table extends AbstractSelect implements Action.Container,
     public void removeListener(ColumnReorderListener listener) {
         removeListener(VScrollTable.COLUMN_REORDER_EVENT_ID,
                 ColumnReorderEvent.class, listener);
+    }
+    
+    /**
+     * Set the item description generator which generates tooltips 
+     * for cells and rows in the Table
+     * 
+     * @param generator
+     * 		The generator to use or null to disable
+     */
+    public void setItemDescriptionGenerator(ItemDescriptionGenerator generator){
+    	itemDescriptionGenerator = generator;
+    }
+    
+    /**
+     * Get the item description generator which generates tooltips 
+     * for cells and rows in the Table.
+     */
+    public ItemDescriptionGenerator getItemDescriptionGenerator(){
+    	return itemDescriptionGenerator;
     }
 
 }
