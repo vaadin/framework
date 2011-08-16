@@ -4756,7 +4756,19 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                                     .contains(getKey());
 
                                     if (!currentlyJustThisRowSelected) {
-                                        if (isMultiSelectModeDefault()) {
+                                        if (isSingleSelectMode()
+                                                || isMultiSelectModeSimple()) {
+                                            /*
+                                             * For default multi select mode
+                                             * (ctrl/shift) and for single
+                                             * select mode we need to clear the
+                                             * previous selection before
+                                             * selecting a new one when the user
+                                             * clicks on a row. Only in
+                                             * multiselect/simple mode the old
+                                             * selection should remain after a
+                                             * normal click.
+                                             */
                                             deselectAll();
                                         }
                                         toggleSelection();
