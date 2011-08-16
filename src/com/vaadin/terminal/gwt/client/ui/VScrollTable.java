@@ -4757,7 +4757,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                                     if (!currentlyJustThisRowSelected) {
                                         if (isSingleSelectMode()
-                                                || isMultiSelectModeSimple()) {
+                                                || isMultiSelectModeDefault()) {
                                             /*
                                              * For default multi select mode
                                              * (ctrl/shift) and for single
