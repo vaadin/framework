@@ -417,12 +417,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private boolean hasFocus = false;
     private int dragmode;
 
-    private int multiselectmode = BrowserInfo.get().isTouchDevice() ? MULTISELECT_MODE_SIMPLE
-            : MULTISELECT_MODE_DEFAULT;;
+    private int multiselectmode;
     private int tabIndex;
     private TouchScrollDelegate touchScrollDelegate;
 
     public VScrollTable() {
+        setMultiSelectMode(MULTISELECT_MODE_DEFAULT);
+
         scrollBodyPanel.setStyleName(CLASSNAME + "-body-wrapper");
         scrollBodyPanel.addFocusHandler(this);
         scrollBodyPanel.addBlurHandler(this);
@@ -613,17 +614,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 deselectAll();
                 focusedRow.toggleSelection();
                 selectionRangeStart = focusedRow;
-            }
-
-            // Ctrl+arrows moves selection head
-            else if (isSelectable() && ctrlSelect && !shiftSelect) {
+            } else if (isSelectable() && ctrlSelect && !shiftSelect) {
+                // Ctrl+arrows moves selection head
                 selectionRangeStart = focusedRow;
                 // No selection, only selection head is moved
-            }
-
-            // Shift+arrows selection selects a range
-            else if (selectMode == SELECT_MODE_MULTI && !ctrlSelect
-                    && shiftSelect) {
+            } else if (isMultiSelectModeAny() && !ctrlSelect && shiftSelect) {
+                // Shift+arrows selection selects a range
                 focusedRow.toggleShiftSelection(shiftSelect);
             }
         }
@@ -643,7 +639,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         // Note: changing the immediateness of this might require changes to
         // "clickEvent" immediateness also.
-        if (multiselectmode == MULTISELECT_MODE_DEFAULT) {
+        if (isMultiSelectModeDefault()) {
             // Convert ranges to a set of strings
             Set<String> ranges = new HashSet<String>();
             for (SelectionRange range : selectedRowRanges) {
@@ -906,7 +902,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
         }
 
-        if (selectMode == Table.SELECT_MODE_NONE) {
+        if (!isSelectable()) {
             scrollBody.addStyleName(CLASSNAME + "-body-noselection");
         } else {
             scrollBody.removeStyleName(CLASSNAME + "-body-noselection");
@@ -1095,11 +1091,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     }
 
     private void updateSelectionProperties(UIDL uidl) {
-        if (!BrowserInfo.get().isTouchDevice()) {
-            multiselectmode = uidl.hasAttribute("multiselectmode") ? uidl
-                    .getIntAttribute("multiselectmode")
-                    : MULTISELECT_MODE_DEFAULT;
-        }
+        setMultiSelectMode(uidl.hasAttribute("multiselectmode") ? uidl
+                .getIntAttribute("multiselectmode") : MULTISELECT_MODE_DEFAULT);
+
         nullSelectionAllowed = uidl.hasAttribute("nsa") ? uidl
                 .getBooleanAttribute("nsa") : true;
 
@@ -1438,6 +1432,35 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
         }
         return -1;
+    }
+
+    private boolean isMultiSelectModeSimple() {
+        return selectMode == Table.SELECT_MODE_MULTI
+                && multiselectmode == MULTISELECT_MODE_SIMPLE;
+    }
+
+    private boolean isSingleSelectMode() {
+        return selectMode == Table.SELECT_MODE_SINGLE;
+    }
+
+    private boolean isMultiSelectModeAny() {
+        return selectMode == Table.SELECT_MODE_MULTI;
+    }
+
+    private boolean isMultiSelectModeDefault() {
+        return selectMode == Table.SELECT_MODE_MULTI
+                && multiselectmode == MULTISELECT_MODE_DEFAULT;
+    }
+
+    private void setMultiSelectMode(int multiselectmode) {
+        if (BrowserInfo.get().isTouchDevice()) {
+            // Always use the simple mode for touch devices that do not have
+            // shift/ctrl keys
+            this.multiselectmode = MULTISELECT_MODE_SIMPLE;
+        } else {
+            this.multiselectmode = multiselectmode;
+        }
+
     }
 
     protected boolean isSelectable() {
@@ -4686,16 +4709,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 // Ctrl+Shift click
                                 if ((event.getCtrlKey() || event.getMetaKey())
                                         && event.getShiftKey()
-                                        && selectMode == SELECT_MODE_MULTI
-                                        && multiselectmode == MULTISELECT_MODE_DEFAULT) {
+                                        && isMultiSelectModeDefault()) {
                                     toggleShiftSelection(false);
                                     setRowFocus(this);
 
                                     // Ctrl click
                                 } else if ((event.getCtrlKey() || event
                                         .getMetaKey())
-                                        && selectMode == SELECT_MODE_MULTI
-                                        && multiselectmode == MULTISELECT_MODE_DEFAULT) {
+                                        && isMultiSelectModeDefault()) {
                                     boolean wasSelected = isSelected();
                                     toggleSelection();
                                     setRowFocus(this);
@@ -4708,10 +4729,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                         removeRowFromUnsentSelectionRanges(this);
                                     }
 
-                                    // Ctrl click (Single selection)
                                 } else if ((event.getCtrlKey() || event
-                                        .getMetaKey()
-                                        && selectMode == SELECT_MODE_SINGLE)) {
+                                        .getMetaKey()) && isSingleSelectMode()) {
+                                    // Ctrl (or meta) click (Single selection)
                                     if (!isSelected()
                                             || (isSelected() && nullSelectionAllowed)) {
 
@@ -4723,25 +4743,24 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                         setRowFocus(this);
                                     }
 
-                                    // Shift click
                                 } else if (event.getShiftKey()
-                                        && selectMode == SELECT_MODE_MULTI
-                                        && multiselectmode == MULTISELECT_MODE_DEFAULT) {
+                                        && isMultiSelectModeDefault()) {
+                                    // Shift click
                                     toggleShiftSelection(true);
 
-                                    // click
                                 } else {
+                                    // click
                                     boolean currentlyJustThisRowSelected = selectedRowKeys
                                             .size() == 1
                                             && selectedRowKeys
                                                     .contains(getKey());
 
                                     if (!currentlyJustThisRowSelected) {
-                                        if (multiselectmode == MULTISELECT_MODE_DEFAULT) {
+                                        if (isMultiSelectModeDefault()) {
                                             deselectAll();
                                         }
                                         toggleSelection();
-                                    } else if ((selectMode == SELECT_MODE_SINGLE || multiselectmode == MULTISELECT_MODE_SIMPLE)
+                                    } else if ((isSingleSelectMode() || isMultiSelectModeSimple())
                                             && nullSelectionAllowed) {
                                         toggleSelection();
                                     }/*
@@ -4866,8 +4885,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                             } else if (event.getCtrlKey()
                                     || event.getShiftKey()
                                     || event.getMetaKey()
-                                    && selectMode == SELECT_MODE_MULTI
-                                    && multiselectmode == MULTISELECT_MODE_DEFAULT) {
+                                    && isMultiSelectModeDefault()) {
 
                                 // Prevent default text selection in Firefox
                                 event.preventDefault();
@@ -4932,8 +4950,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                 VDragEvent ev = VDragAndDropManager.get().startDrag(
                         transferable, event, true);
-                if (dragmode == DRAGMODE_MULTIROW
-                        && selectMode == SELECT_MODE_MULTI
+                if (dragmode == DRAGMODE_MULTIROW && isMultiSelectModeAny()
                         && selectedRowKeys.contains("" + rowKey)) {
                     ev.createDragImage(
                             (Element) scrollBody.tBodyElement.cast(), true);
@@ -5052,7 +5069,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                  * Ensures that we are in multiselect mode and that we have a
                  * previous selection which was not a deselection
                  */
-                if (selectMode == SELECT_MODE_SINGLE) {
+                if (isSingleSelectMode()) {
                     // No previous selection found
                     deselectAll();
                     toggleSelection();
@@ -5876,7 +5893,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      */
     protected boolean setRowFocus(VScrollTableRow row) {
 
-        if (selectMode == SELECT_MODE_NONE) {
+        if (!isSelectable()) {
             return false;
         }
 
@@ -5967,31 +5984,29 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         // Down navigation
-        if (selectMode == SELECT_MODE_NONE && keycode == getNavigationDownKey()) {
+        if (!isSelectable() && keycode == getNavigationDownKey()) {
             scrollBodyPanel.setScrollPosition(scrollBodyPanel
                     .getScrollPosition() + scrollingVelocity);
             return true;
         } else if (keycode == getNavigationDownKey()) {
-            if (selectMode == SELECT_MODE_MULTI && moveFocusDown()) {
+            if (isMultiSelectModeAny() && moveFocusDown()) {
                 selectFocusedRow(ctrl, shift);
 
-            } else if (selectMode == SELECT_MODE_SINGLE && !shift
-                    && moveFocusDown()) {
+            } else if (isSingleSelectMode() && !shift && moveFocusDown()) {
                 selectFocusedRow(ctrl, shift);
             }
             return true;
         }
 
         // Up navigation
-        if (selectMode == SELECT_MODE_NONE && keycode == getNavigationUpKey()) {
+        if (!isSelectable() && keycode == getNavigationUpKey()) {
             scrollBodyPanel.setScrollPosition(scrollBodyPanel
                     .getScrollPosition() - scrollingVelocity);
             return true;
         } else if (keycode == getNavigationUpKey()) {
-            if (selectMode == SELECT_MODE_MULTI && moveFocusUp()) {
+            if (isMultiSelectModeAny() && moveFocusUp()) {
                 selectFocusedRow(ctrl, shift);
-            } else if (selectMode == SELECT_MODE_SINGLE && !shift
-                    && moveFocusUp()) {
+            } else if (isSingleSelectMode() && !shift && moveFocusUp()) {
                 selectFocusedRow(ctrl, shift);
             }
             return true;
@@ -6012,7 +6027,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         // Select navigation
         if (isSelectable() && keycode == getNavigationSelectKey()) {
-            if (selectMode == SELECT_MODE_SINGLE) {
+            if (isSingleSelectMode()) {
                 boolean wasSelected = focusedRow.isSelected();
                 deselectAll();
                 if (!wasSelected || !nullSelectionAllowed) {
@@ -6283,7 +6298,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      */
     public boolean isFocusable() {
         if (scrollBody != null && enabled) {
-            return !(!hasHorizontalScrollbar() && !hasVerticalScrollbar() && selectMode == SELECT_MODE_NONE);
+            return !(!hasHorizontalScrollbar() && !hasVerticalScrollbar() && !isSelectable());
         }
         return false;
     }
