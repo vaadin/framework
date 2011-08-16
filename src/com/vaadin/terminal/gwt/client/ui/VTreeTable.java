@@ -101,8 +101,10 @@ public class VTreeTable extends VScrollTable {
 
             @Override
             public void addCell(UIDL rowUidl, String text, char align,
-                    String style, boolean textIsHTML, boolean isSorted) {
-                super.addCell(rowUidl, text, align, style, textIsHTML, isSorted);
+                    String style, boolean textIsHTML, boolean isSorted,
+                    String description) {
+                super.addCell(rowUidl, text, align, style, textIsHTML,
+                        isSorted, description);
 
                 addTreeSpacer(rowUidl);
             }
