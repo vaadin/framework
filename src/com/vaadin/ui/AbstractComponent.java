@@ -7,7 +7,6 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -225,8 +224,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             styles = new ArrayList<String>();
         }
         styles.clear();
-        String[] styleParts = style.split(" ");
-        styles.addAll(Arrays.asList(styleParts));
+        String[] styleParts = style.split(" +");
+        for (String part : styleParts) {
+            if (part.length() > 0) {
+                styles.add(part);
+            }
+        }
         requestRepaint();
     }
 
@@ -245,8 +248,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
     public void removeStyleName(String style) {
         if (styles != null) {
-            String[] styleParts = style.split(" ");
-            styles.removeAll(Arrays.asList(styleParts));
+            String[] styleParts = style.split(" +");
+            for (String part : styleParts) {
+                if (part.length() > 0) {
+                    styles.remove(part);
+                }
+            }
             requestRepaint();
         }
     }

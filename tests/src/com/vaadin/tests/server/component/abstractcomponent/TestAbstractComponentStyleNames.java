@@ -41,11 +41,17 @@ public class TestAbstractComponentStyleNames extends TestCase {
         assertEquals(component.getStyleName(), "style2");
     }
 
-    public void testRemoveMultiple() {
+    public void testRemoveMultipleWithExtraSpaces() {
         AbstractComponent component = getComponent();
         component.setStyleName("style1 style2 style3");
-        component.removeStyleName("style1 style3");
+        component.removeStyleName(" style1  style3 ");
         assertEquals(component.getStyleName(), "style2");
+    }
+
+    public void testSetWithExtraSpaces() {
+        AbstractComponent component = getComponent();
+        component.setStyleName(" style1  style2 ");
+        assertEquals(component.getStyleName(), "style1 style2");
     }
 
     private AbstractComponent getComponent() {
