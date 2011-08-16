@@ -4423,7 +4423,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                                     .contains(getKey());
 
                                     if (!currentlyJustThisRowSelected) {
-                                        if (multiselectmode == MULTISELECT_MODE_DEFAULT) {
+                                        if (selectMode == SELECT_MODE_SINGLE
+                                                || (selectMode == SELECT_MODE_MULTI && multiselectmode == MULTISELECT_MODE_DEFAULT)) {
                                             deselectAll();
                                         }
                                         toggleSelection();
