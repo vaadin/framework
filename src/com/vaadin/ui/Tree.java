@@ -104,6 +104,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     private boolean initialPaint = true;
 
     /**
+     * Item tooltip generator
+     */
+    private ItemDescriptionGenerator itemDescriptionGenerator;
+
+    /**
      * Supported drag modes for Tree.
      */
     public enum TreeDragMode {
@@ -605,6 +610,14 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                     String stylename = itemStyleGenerator.getStyle(itemId);
                     if (stylename != null) {
                         target.addAttribute("style", stylename);
+                    }
+                }
+
+                if (itemDescriptionGenerator != null) {
+                    String description = itemDescriptionGenerator
+                            .generateDescription(this, itemId, null);
+                    if (description != null && !description.equals("")) {
+                        target.addAttribute("descr", description);
                     }
                 }
 
@@ -1560,6 +1573,28 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             target.addAttribute("key", key(rootId));
         }
 
+    }
+
+    /**
+     * Set the item description generator which generates tooltips for the tree
+     * items
+     * 
+     * @param generator
+     *            The generator to use or null to disable
+     */
+    public void setItemDescriptionGenerator(ItemDescriptionGenerator generator) {
+        if (generator != itemDescriptionGenerator) {
+            itemDescriptionGenerator = generator;
+            requestRepaint();
+        }
+    }
+
+    /**
+     * Get the item description generator which generates tooltips for tree
+     * items
+     */
+    public ItemDescriptionGenerator getItemDescriptionGenerator() {
+        return itemDescriptionGenerator;
     }
 
 }

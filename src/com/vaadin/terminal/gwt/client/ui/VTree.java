@@ -41,8 +41,10 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
@@ -760,6 +762,11 @@ public class VTree extends FocusElementPanel implements Paintable,
             if (disabled) {
                 return;
             }
+
+            if (target == nodeCaptionSpan) {
+                client.handleTooltipEvent(event, VTree.this, key);
+            }
+
             final boolean inCaption = target == nodeCaptionSpan
                     || (icon != null && target == icon.getElement());
             if (inCaption
@@ -932,6 +939,7 @@ public class VTree extends FocusElementPanel implements Paintable,
                     + "-caption");
             Element wrapper = DOM.createDiv();
             nodeCaptionSpan = DOM.createSpan();
+            DOM.sinkEvents(nodeCaptionSpan, VTooltip.TOOLTIP_EVENTS);
             DOM.appendChild(getElement(), nodeCaptionDiv);
             DOM.appendChild(nodeCaptionDiv, wrapper);
             DOM.appendChild(wrapper, nodeCaptionSpan);
@@ -975,6 +983,16 @@ public class VTree extends FocusElementPanel implements Paintable,
                         + uidl.getStringAttribute("style"), true);
                 childNodeContainer.addStyleName(CLASSNAME + "-children-"
                         + uidl.getStringAttribute("style"));
+            }
+
+            String description = uidl.getStringAttribute("descr");
+            if (description != null && client != null) {
+                // Set tooltip
+                TooltipInfo info = new TooltipInfo(description);
+                client.registerTooltip(VTree.this, key, info);
+            } else {
+                // Remove possible previous tooltip
+                client.registerTooltip(VTree.this, key, null);
             }
 
             if (uidl.getBooleanAttribute("expanded") && !getState()) {
