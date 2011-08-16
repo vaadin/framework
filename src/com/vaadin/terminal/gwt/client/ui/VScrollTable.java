@@ -4426,6 +4426,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 if (rowDescription != null && !rowDescription.equals("")) {
                     TooltipInfo info = new TooltipInfo(rowDescription);
                     client.registerTooltip(VScrollTable.this, rowElement, info);
+                } else {
+                    // Remove possibly previously set tooltip
+                    client.registerTooltip(VScrollTable.this, rowElement, null);
                 }
 
                 tHead.getColumnAlignments();
@@ -4526,9 +4529,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     }
                 }
 
-                if (description != null && client != null) {
+                if (description != null && !description.equals("")) {
                     TooltipInfo info = new TooltipInfo(description);
                     client.registerTooltip(VScrollTable.this, td, info);
+                } else {
+                    // Remove possibly previously set tooltip
+                    client.registerTooltip(VScrollTable.this, td, null);
                 }
 
                 td.appendChild(container);

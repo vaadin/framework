@@ -46,7 +46,6 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable;
 import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
-import com.vaadin.ui.AbstractSelect.ItemDescriptionGenerator;
 
 /**
  * <p>
@@ -4586,7 +4585,10 @@ public class Table extends AbstractSelect implements Action.Container,
      * 		The generator to use or null to disable
      */
     public void setItemDescriptionGenerator(ItemDescriptionGenerator generator){
-    	itemDescriptionGenerator = generator;
+        if (generator != itemDescriptionGenerator) {
+            itemDescriptionGenerator = generator;
+            refreshRenderedCells();
+        }
     }
     
     /**
