@@ -806,8 +806,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         if (BrowserInfo.get().isIE8() && !enabled) {
             /*
-             * The disabled shim will not cover the table body if it is
-             * relative in IE8. See #7324
+             * The disabled shim will not cover the table body if it is relative
+             * in IE8. See #7324
              */
             scrollBodyPanel.getElement().getStyle()
                     .setPosition(Position.STATIC);
@@ -2578,7 +2578,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 columnTotalWidth += w.getOffsetWidth();
             }
 
-            if (cell == lastcell && columnSelector.getOffsetWidth() > 0
+            if (cell == lastcell
+                    && columnSelector.getOffsetWidth() > 0
                     && columnTotalWidth >= div.getOffsetWidth()
                             - columnSelector.getOffsetWidth()
                     && !hasVerticalScrollbar()) {
@@ -5077,8 +5078,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         if (totalUndefinedNaturalWidths != 0) {
                             // divide relatively to natural column widths
                             newSpace = Math.round(w + (float) extraSpace
-                                    * (float) w
-                                    / totalUndefinedNaturalWidths);
+                                    * (float) w / totalUndefinedNaturalWidths);
                         } else {
                             newSpace = w;
                         }
@@ -5978,7 +5978,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private boolean hasHorizontalScrollbar() {
         return scrollBody.getOffsetWidth() > scrollBodyPanel.getOffsetWidth();
     }
-    
+
     private boolean hasVerticalScrollbar() {
         return scrollBody.getOffsetHeight() > scrollBodyPanel.getOffsetHeight();
     }
