@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+
+<project name="Book of Vaadin" basedir="../" default="manual">
+
+	<!-- Properties that need to be given by the caller:
+	  output-dir, result-path, version.full, product-file, checkout-path, user.name and jarsigner.bin -->
+
+    <target name="init">
+        <!-- Create result dirs unless already exist -->
+        <mkdir dir="${output-dir}" />
+        <mkdir dir="${output-dir}/WebContent" />
+        <mkdir dir="${output-dir}/WebContent/docs" />
+        <mkdir dir="${output-dir}/WebContent/docs/example-source" />
+
+        <property name="docdir" value="${checkout-path}/docs"/>
+        
+        <available file="${docdir}/manual/book.xml" property="manual.source.available"/>
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+    <!-- Manual: Build from external repository.                            -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+
+    <!-- Build manual. -->
+    <target name="manual-build" depends="init" if="manual.source.available">
+    	<!-- The HTML and Eclipse Manual must be built with separate runs --> 
+        <ant dir="${docdir}" antfile="build/build.xml" inheritAll="false">
+            <property name="result-path" value="build/result"/>
+            <property name="output-dir" value="build/result/package" />
+            <property name="version" value="${version.full}"/>
+        </ant>
+        <ant dir="${docdir}" antfile="build/build.xml" target="manual-eclipse" inheritAll="false">
+            <property name="result-path" value="build/result"/>
+            <property name="output-dir" value="build/result/package" />
+            <property name="version" value="${version.full}"/>
+        </ant>
+    </target>
+
+    <!-- Copy the manual from sub Ant results to our output directory. -->
+    <target name="manual-copy" depends="init" if="manual.source.available">
+        <copy todir="${output-dir}/WebContent/docs">
+            <fileset dir="${docdir}/build/result/package/WebContent/docs">
+                <exclude name="**/.svn" />
+                <include name="book-of-vaadin.pdf" />
+            </fileset>
+        </copy>
+    </target>
+
+	<!-- Package documentation in a documentation Zip package.   -->
+	<!-- * Built Eclipse plugin is not included in this package. -->
+    <target name="manual-package" depends="init, manual-copy" if="manual.source.available">
+        <zip destfile="${result-path}/${product-file}-docs-${version.full}.zip">
+            <zipfileset prefix="docs" dir="${output-dir}/WebContent/docs">
+                <patternset>
+                    <!-- FIXME -->
+                    <include name="api/**" />
+                    <include name="book-of-vaadin.pdf" />
+                    <include name="example-source" />
+                </patternset>
+            </zipfileset>
+            <zipfileset prefix="docs" dir="${docdir}/build/result/package/WebContent/docs">
+                <patternset>
+                    <!-- FIXME -->
+                    <include name="book/**" />
+                    <include name="tutorial/**" />
+                    <include name="vaadin-tutorial.pdf" />
+                </patternset>
+            </zipfileset>
+        </zip>
+    </target>
+
+	<!-- Publishes Eclipse plugin version of the manual as TeamCity artifacts.  -->
+	<!-- These are actually published during manual build, but with wrong path. -->
+	<target name="manual-publish-eclipse" if="manual.source.available">
+        <echo>##teamcity[publishArtifacts '${docdir}/build/result/package/eclipse/plugins/*.jar']</echo>
+        <echo>##teamcity[publishArtifacts '${docdir}/build/result/package/eclipse/features/*.jar']</echo>
+	</target>
+
+	<target name="manual-source-not-available" unless="manual.source.available">
+		<echo>Skipping Book of Vaadin build as it is not available in ${checkout-path}/docs</echo>
+	</target>
+
+	<target name="manual" depends="init, manual-source-not-available, manual-build, manual-copy, manual-package, manual-publish-eclipse">
+    </target>
+
+</project>
