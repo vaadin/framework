@@ -2693,7 +2693,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 columnTotalWidth += w.getOffsetWidth();
             }
 
-            if (cell == lastcell && columnSelector.getOffsetWidth() > 0
+            if (cell == lastcell
+                    && columnSelector.getOffsetWidth() > 0
                     && columnTotalWidth >= div.getOffsetWidth()
                             - columnSelector.getOffsetWidth()
                     && !hasVerticalScrollbar()) {
@@ -4041,14 +4042,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         private void unlinkRowAtIndex(int index) {
             final VScrollTableRow toBeRemoved = (VScrollTableRow) renderedRows
-                    .get(index);           
+                    .get(index);
             // Unregister row tooltip
-            client.registerTooltip(VScrollTable.this, toBeRemoved.getElement(), null);
-            for(int i=0; i<toBeRemoved.getElement().getChildCount(); i++){
-            	// Unregister cell tooltips
-            	Element td = toBeRemoved.getElement().getChild(i).cast();
-            	client.registerTooltip(VScrollTable.this, td, null);
-            }            
+            client.registerTooltip(VScrollTable.this, toBeRemoved.getElement(),
+                    null);
+            for (int i = 0; i < toBeRemoved.getElement().getChildCount(); i++) {
+                // Unregister cell tooltips
+                Element td = toBeRemoved.getElement().getChild(i).cast();
+                client.registerTooltip(VScrollTable.this, td, null);
+            }
             lazyUnregistryBag.add(toBeRemoved);
             tBodyElement.removeChild(toBeRemoved.getElement());
             orphan(toBeRemoved);
@@ -4396,11 +4398,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 if (rowStyle != null) {
                     addStyleName(CLASSNAME + "-row-" + rowStyle);
                 }
-                
+
                 String rowDescription = uidl.getStringAttribute("rowdescr");
-                if(rowDescription != null && !rowDescription.equals("")) {
-                	TooltipInfo info = new TooltipInfo(rowDescription);
-                	client.registerTooltip(VScrollTable.this, rowElement, info);                	
+                if (rowDescription != null && !rowDescription.equals("")) {
+                    TooltipInfo info = new TooltipInfo(rowDescription);
+                    client.registerTooltip(VScrollTable.this, rowElement, info);
                 }
 
                 tHead.getColumnAlignments();
@@ -4432,10 +4434,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     }
 
                     String description = null;
-                    if(uidl.hasAttribute("descr-" + columnId)) {
-                    	description = uidl.getStringAttribute("descr-"+columnId);
+                    if (uidl.hasAttribute("descr-" + columnId)) {
+                        description = uidl.getStringAttribute("descr-"
+                                + columnId);
                     }
-                    
+
                     boolean sorted = tHead.getHeaderCell(col).isSorted();
                     if (cell instanceof String) {
                         addCell(uidl, cell.toString(), aligns[col++], style,
@@ -4464,12 +4467,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
 
             public void addCell(UIDL rowUidl, String text, char align,
-                    String style, boolean textIsHTML, boolean sorted){
-            	addCell(rowUidl, text, align, style, textIsHTML, sorted, null);
+                    String style, boolean textIsHTML, boolean sorted) {
+                addCell(rowUidl, text, align, style, textIsHTML, sorted, null);
             }
-            
+
             public void addCell(UIDL rowUidl, String text, char align,
-                    String style, boolean textIsHTML, boolean sorted, String description) {
+                    String style, boolean textIsHTML, boolean sorted,
+                    String description) {
                 // String only content is optimized by not using Label widget
                 final Element td = DOM.createTD();
                 final Element container = DOM.createDiv();
@@ -4498,12 +4502,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         break;
                     }
                 }
-                
-                if(description != null && client != null){
-                	  TooltipInfo info = new TooltipInfo(description);
-                	  client.registerTooltip(VScrollTable.this, td, info);                	
+
+                if (description != null && client != null) {
+                    TooltipInfo info = new TooltipInfo(description);
+                    client.registerTooltip(VScrollTable.this, td, info);
                 }
-                                                              
+
                 td.appendChild(container);
                 getElement().appendChild(td);
             }
@@ -4603,37 +4607,41 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
             }
 
-            private void handleTooltips(final Event event, Element target){  
-            	if(target.hasTagName("TD")){
-            		// Table cell (td)           		
-            		Element container = target.getFirstChildElement().cast();            
-            		Element widget = container.getFirstChildElement().cast();
-            		
-            		boolean containsWidget = false;
-            		for(Widget w : childWidgets){
-            			if(widget == w.getElement()){
-            				containsWidget = true;
-            				break;
-            			}
-            		}
-            		
-            		if(!containsWidget){
-            			// Only text nodes has tooltips
-            			if(client.getTooltipTitleInfo(VScrollTable.this, target) != null){  
-            				// Cell has description, use it
-                         	client.handleTooltipEvent(event, VScrollTable.this, target);
-                         } else {                    	
-                        	 // Cell might have row description, use row description
-                        	 client.handleTooltipEvent(event, VScrollTable.this, target.getParentElement());
-                         }
-            		}            		
-            		
-            	} else {
-            		// Table row (tr)
-            		 client.handleTooltipEvent(event, VScrollTable.this, target);            		
-            	}            	            	
+            private void handleTooltips(final Event event, Element target) {
+                if (target.hasTagName("TD")) {
+                    // Table cell (td)
+                    Element container = target.getFirstChildElement().cast();
+                    Element widget = container.getFirstChildElement().cast();
+
+                    boolean containsWidget = false;
+                    for (Widget w : childWidgets) {
+                        if (widget == w.getElement()) {
+                            containsWidget = true;
+                            break;
+                        }
+                    }
+
+                    if (!containsWidget) {
+                        // Only text nodes has tooltips
+                        if (client.getTooltipTitleInfo(VScrollTable.this,
+                                target) != null) {
+                            // Cell has description, use it
+                            client.handleTooltipEvent(event, VScrollTable.this,
+                                    target);
+                        } else {
+                            // Cell might have row description, use row
+                            // description
+                            client.handleTooltipEvent(event, VScrollTable.this,
+                                    target.getParentElement());
+                        }
+                    }
+
+                } else {
+                    // Table row (tr)
+                    client.handleTooltipEvent(event, VScrollTable.this, target);
+                }
             }
-            
+
             /*
              * React on click that occur on content cells only
              */
@@ -4658,10 +4666,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     }
 
                     boolean targetCellOrRowFound = targetTdOrTr != null;
-                    if(targetCellOrRowFound){
-                    	 handleTooltips(event, targetTdOrTr);                    
+                    if (targetCellOrRowFound) {
+                        handleTooltips(event, targetTdOrTr);
                     }
-                    
+
                     switch (type) {
                     case Event.ONDBLCLICK:
                         if (targetCellOrRowFound) {
@@ -5383,8 +5391,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         if (totalUndefinedNaturalWidths != 0) {
                             // divide relatively to natural column widths
                             newSpace = Math.round(w + (float) extraSpace
-                                    * (float) w
-                                    / totalUndefinedNaturalWidths);
+                                    * (float) w / totalUndefinedNaturalWidths);
                         } else {
                             newSpace = w;
                         }
@@ -6284,7 +6291,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private boolean hasHorizontalScrollbar() {
         return scrollBody.getOffsetWidth() > scrollBodyPanel.getOffsetWidth();
     }
-    
+
     private boolean hasVerticalScrollbar() {
         return scrollBody.getOffsetHeight() > scrollBodyPanel.getOffsetHeight();
     }
