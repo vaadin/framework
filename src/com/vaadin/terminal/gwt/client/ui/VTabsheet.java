@@ -4,8 +4,10 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
@@ -187,7 +189,8 @@ public class VTabsheet extends VTabsheetBase {
 
         public void addTab(VCaption c) {
             Element td = DOM.createTD();
-            setStyleName(td, CLASSNAME + "-tabitemcell");
+            setStyleName(td, ITEMCELL_CLASSNAME);
+            tabStyles.add(null);
 
             if (getWidgetCount() == 0) {
                 setStyleName(td, CLASSNAME + "-tabitemcell-first", true);
@@ -295,6 +298,11 @@ public class VTabsheet extends VTabsheetBase {
 
     public static final String TABS_CLASSNAME = "v-tabsheet-tabcontainer";
     public static final String SCROLLER_CLASSNAME = "v-tabsheet-scroller";
+    public static final String ITEMCELL_CLASSNAME = CLASSNAME + "-tabitemcell";
+
+    // Can't use "style" as it's already in use
+    public static final String TAB_STYLE_NAME = "tabstyle";
+
     private final Element tabs; // tabbar and 'scroller' container
     private final Element scroller; // tab-scroller element
     private final Element scrollerNext; // tab-scroller next button element
@@ -328,6 +336,12 @@ public class VTabsheet extends VTabsheetBase {
     private boolean rendering = false;
 
     private String currentStyle;
+
+    /**
+     * Keeps track of the currently set styleName for each tab so it can be
+     * removed without affecting the other styles set to the same DOM element
+     */
+    private List<String> tabStyles = new ArrayList<String>();
 
     private void onTabSelected(final int tabIndex) {
         if (disabled || waitingForResponse) {
@@ -638,6 +652,30 @@ public class VTabsheet extends VTabsheetBase {
             tb.addTab(c);
         }
         c.updateCaption(tabUidl);
+
+        // Apply the styleName set for the tab
+        String styleName = tabUidl.getStringAttribute(TAB_STYLE_NAME);
+        String oldStyleName = tabStyles.get(index);
+        // Find the nth td element
+        Element td = (Element) tb.tr.getChild(index);
+        if (styleName != null && !styleName.isEmpty()) {
+            if (!styleName.equals(oldStyleName)) {
+                // If we have a new style name
+                if (oldStyleName != null && !oldStyleName.isEmpty()) {
+                    // Remove old style name if present
+                    td.removeClassName(ITEMCELL_CLASSNAME + "-" + oldStyleName);
+                }
+                // Set new style name
+                td.addClassName(ITEMCELL_CLASSNAME + "-" + styleName);
+                // Update bookkeeping
+                tabStyles.set(index, styleName);
+            }
+        } else if (oldStyleName != null) {
+            // Remove the set stylename if no stylename is present in the uidl
+            td.removeClassName(ITEMCELL_CLASSNAME + "-" + oldStyleName);
+            // Also update the bookkeeping
+            tabStyles.set(index, null);
+        }
 
         c.setHidden(hidden);
         if (scrolledOutOfView(index)) {

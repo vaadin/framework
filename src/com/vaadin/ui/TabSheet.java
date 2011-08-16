@@ -406,6 +406,11 @@ public class TabSheet extends AbstractComponentContainer {
                 componentError.paint(target);
             }
 
+            final String styleName = tab.getStyleName();
+            if (styleName != null) {
+                target.addAttribute(VTabsheet.TAB_STYLE_NAME, styleName);
+            }
+
             target.addAttribute("key", keyMapper.key(component));
             if (component.equals(selected)) {
                 target.addAttribute("selected", true);
@@ -991,6 +996,47 @@ public class TabSheet extends AbstractComponentContainer {
          * Get the component related to the Tab
          */
         public Component getComponent();
+
+        /**
+         * Sets a style name for the tab. The style name will be rendered as a
+         * HTML class name, which can be used in a CSS definition.
+         * 
+         * <pre>
+         * Tab tab = tabsheet.addTab(tabContent, &quot;Tab text&quot;);
+         * tab.setStyleName(&quot;mystyle&quot;);
+         * </pre>
+         * <p>
+         * The used style name will be prefixed with "
+         * {@code v-tabsheet-tabitemcell-}". For example, if you give a tab the
+         * style "{@code mystyle}", the tab will get a "
+         * {@code v-tabsheet-tabitemcell-mystyle}" style. You could then style
+         * the component with:
+         * </p>
+         * 
+         * <pre>
+         * .v-tabsheet-tabitemcell-mystyle {font-style: italic;}
+         * </pre>
+         * 
+         * <p>
+         * This method will trigger a
+         * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
+         * RepaintRequestEvent} on the TabSheet to which the Tab belongs.
+         * </p>
+         * 
+         * @param styleName
+         *            the new style to be set for tab
+         * @see #getStyleName()
+         */
+        public void setStyleName(String styleName);
+
+        /**
+         * Gets the user-defined CSS style name of the tab. Built-in style names
+         * defined in Vaadin or GWT are not returned.
+         * 
+         * @return the style name or of the tab
+         * @see #setStyleName(String)
+         */
+        public String getStyleName();
     }
 
     /**
@@ -1005,6 +1051,7 @@ public class TabSheet extends AbstractComponentContainer {
         private boolean closable = false;
         private String description = null;
         private ErrorMessage componentError = null;
+        private String styleName;
 
         public TabSheetTabImpl(String caption, Resource icon) {
             if (caption == null) {
@@ -1097,6 +1144,15 @@ public class TabSheet extends AbstractComponentContainer {
                 }
             }
             return null;
+        }
+
+        public void setStyleName(String styleName) {
+            this.styleName = styleName;
+            requestRepaint();
+        }
+
+        public String getStyleName() {
+            return styleName;
         }
     }
 
