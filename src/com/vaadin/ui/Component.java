@@ -174,7 +174,8 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
     public void addStyleName(String style);
 
     /**
-     * Removes the given style name from component.
+     * Removes one or more style names from component. Multiple styles can be
+     * specified as a space-separated list of style names.
      * 
      * <p>
      * The parameter must be a valid CSS style name. Only user-defined style
@@ -183,8 +184,12 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      * style names defined in Vaadin or GWT can not be removed.
      * </p>
      * 
+     * * This method will trigger a
+     * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
+     * RepaintRequestEvent}.
+     * 
      * @param style
-     *            the style name to be removed
+     *            the style name or style names to be removed
      * @see #getStyleName()
      * @see #setStyleName(String)
      * @see #addStyleName(String)
