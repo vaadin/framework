@@ -407,7 +407,7 @@ public class TabSheet extends AbstractComponentContainer {
             }
 
             final String styleName = tab.getStyleName();
-            if (styleName != null) {
+            if (styleName != null && styleName.length() != 0) {
                 target.addAttribute(VTabsheet.TAB_STYLE_NAME, styleName);
             }
 

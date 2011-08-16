@@ -658,10 +658,10 @@ public class VTabsheet extends VTabsheetBase {
         String oldStyleName = tabStyles.get(index);
         // Find the nth td element
         Element td = (Element) tb.tr.getChild(index);
-        if (styleName != null && !styleName.isEmpty()) {
+        if (styleName != null && styleName.length() != 0) {
             if (!styleName.equals(oldStyleName)) {
                 // If we have a new style name
-                if (oldStyleName != null && !oldStyleName.isEmpty()) {
+                if (oldStyleName != null && oldStyleName.length() != 0) {
                     // Remove old style name if present
                     td.removeClassName(ITEMCELL_CLASSNAME + "-" + oldStyleName);
                 }
