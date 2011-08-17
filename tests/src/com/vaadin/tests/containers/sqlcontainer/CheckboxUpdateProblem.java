@@ -167,7 +167,6 @@ public class CheckboxUpdateProblem extends Application implements
                 TableQuery q1 = new TableQuery(TABLENAME, connectionPool);
                 q1.setVersionColumn("id");
                 testContainer = new SQLContainer(q1);
-                testContainer.setDebugMode(true);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
