@@ -378,7 +378,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Table cell specific style generator
      */
     private CellStyleGenerator cellStyleGenerator = null;
-    
+
     /**
      * Table cell specific tooltip generator
      */
@@ -2867,8 +2867,8 @@ public class Table extends AbstractSelect implements Action.Container,
                     target.addAttribute("style-" + columnIdMap.key(columnId),
                             cellStyle);
                 }
-            }           
-            
+            }
+
             if ((iscomponent[currentColumn] || iseditable)
                     && Component.class.isInstance(cells[CELL_FIRSTCOL
                             + currentColumn][indexInRowbuffer])) {
@@ -2881,29 +2881,34 @@ public class Table extends AbstractSelect implements Action.Container,
                     c.paint(target);
                 }
             } else {
-                target.addText((String) cells[CELL_FIRSTCOL + currentColumn][indexInRowbuffer]);                
-               	paintCellTooltips(target, itemId, columnId);
+                target.addText((String) cells[CELL_FIRSTCOL + currentColumn][indexInRowbuffer]);
+                paintCellTooltips(target, itemId, columnId);
             }
         }
 
         target.endTag("tr");
     }
-    
-    private void paintCellTooltips(PaintTarget target, Object itemId, Object columnId) throws PaintException {
-    	 if(itemDescriptionGenerator != null) {
-         	String itemDescription = itemDescriptionGenerator.generateDescription(this, itemId, columnId);
-         	if(itemDescription != null && !itemDescription.equals("")) {
-         		target.addAttribute("descr-" + columnIdMap.key(columnId), itemDescription);
-         	}            	
-         }
+
+    private void paintCellTooltips(PaintTarget target, Object itemId,
+            Object columnId) throws PaintException {
+        if (itemDescriptionGenerator != null) {
+            String itemDescription = itemDescriptionGenerator
+                    .generateDescription(this, itemId, columnId);
+            if (itemDescription != null && !itemDescription.equals("")) {
+                target.addAttribute("descr-" + columnIdMap.key(columnId),
+                        itemDescription);
+            }
+        }
     }
-    
-    private void paintRowTooltips(PaintTarget target, Object itemId ) throws PaintException {    
-        if(itemDescriptionGenerator != null) {
-        	String rowDescription = itemDescriptionGenerator.generateDescription(this, itemId, null);
-        	if(rowDescription != null && !rowDescription.equals("")){
-        		target.addAttribute("rowdescr", rowDescription);
-        	}
+
+    private void paintRowTooltips(PaintTarget target, Object itemId)
+            throws PaintException {
+        if (itemDescriptionGenerator != null) {
+            String rowDescription = itemDescriptionGenerator
+                    .generateDescription(this, itemId, null);
+            if (rowDescription != null && !rowDescription.equals("")) {
+                target.addAttribute("rowdescr", rowDescription);
+            }
         }
     }
 
@@ -2947,11 +2952,11 @@ public class Table extends AbstractSelect implements Action.Container,
             if (rowStyle != null && !rowStyle.equals("")) {
                 target.addAttribute("rowstyle", rowStyle);
             }
-        }               
-        
-        paintRowTooltips(target, itemId);        
-        
-        paintRowAttributes(target, itemId);        
+        }
+
+        paintRowTooltips(target, itemId);
+
+        paintRowAttributes(target, itemId);
     }
 
     protected void paintRowHeader(PaintTarget target, Object[][] cells,
@@ -3895,7 +3900,7 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public void setCellStyleGenerator(CellStyleGenerator cellStyleGenerator) {
         this.cellStyleGenerator = cellStyleGenerator;
-        requestRepaint();
+        refreshRenderedCells();
     }
 
     /**
@@ -4576,27 +4581,27 @@ public class Table extends AbstractSelect implements Action.Container,
         removeListener(VScrollTable.COLUMN_REORDER_EVENT_ID,
                 ColumnReorderEvent.class, listener);
     }
-    
+
     /**
-     * Set the item description generator which generates tooltips 
-     * for cells and rows in the Table
+     * Set the item description generator which generates tooltips for cells and
+     * rows in the Table
      * 
      * @param generator
-     * 		The generator to use or null to disable
+     *            The generator to use or null to disable
      */
-    public void setItemDescriptionGenerator(ItemDescriptionGenerator generator){
+    public void setItemDescriptionGenerator(ItemDescriptionGenerator generator) {
         if (generator != itemDescriptionGenerator) {
             itemDescriptionGenerator = generator;
             refreshRenderedCells();
         }
     }
-    
+
     /**
-     * Get the item description generator which generates tooltips 
-     * for cells and rows in the Table.
+     * Get the item description generator which generates tooltips for cells and
+     * rows in the Table.
      */
-    public ItemDescriptionGenerator getItemDescriptionGenerator(){
-    	return itemDescriptionGenerator;
+    public ItemDescriptionGenerator getItemDescriptionGenerator() {
+        return itemDescriptionGenerator;
     }
 
 }

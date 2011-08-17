@@ -18,3 +18,41 @@
 	display: inline-block;
 	padding-bottom: 4px;
 }
+
+.v-treetable .v-table-row .v-table-cell-content,
+.v-treetable .v-table-row-odd .v-table-cell-content {
+    position: relative;
+    z-index: 10;
+}
+
+.v-treetable .v-table-body .v-table-table .v-table-row-animating {
+	zoom:1;
+	z-index:1;
+}
+
+.v-treetable .v-table-body .v-table-table .v-table-row-animating,
+.v-treetable .v-table-body .v-table-table .v-table-row-animating .v-table-cell-content {
+    background:transparent;
+}
+
+.v-treetable-animation-clone {
+	border-spacing: 0;
+	zoom:1;
+}
+
+div.v-treetable-animation-clone-wrapper {
+	position: absolute;
+    z-index: 2;
+    background-color:#fff;
+}
+
+div.v-treetable-animation-clone-wrapper table.v-treetable-animation-clone {
+    background-color:#fff;
+}
+
+div table.v-treetable-animation-clone tr.v-table-row,
+div table.v-treetable-animation-clone tr.v-table-row-odd,
+div table.v-treetable-animation-clone tr.v-table-row td.v-table-cell-content,
+div table.v-treetable-animation-clone tr.v-table-row-odd td.v-table-cell-content {
+	visibility: visible;
+}

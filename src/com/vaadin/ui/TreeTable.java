@@ -309,6 +309,7 @@ public class TreeTable extends Table implements Hierarchical {
     private Object focusedRowId = null;
     private Object hierarchyColumnId;
     private Object toggledItemId;
+    private boolean animationsEnabled;
 
     private ContainerStrategy getContainerStrategy() {
         if (cStrategy == null) {
@@ -408,6 +409,7 @@ public class TreeTable extends Table implements Hierarchical {
             target.addAttribute("focusedRow", itemIdMapper.key(focusedRowId));
             focusedRowId = null;
         }
+        target.addAttribute("animate", animationsEnabled);
         if (hierarchyColumnId != null) {
             Object[] visibleColumns2 = getVisibleColumns();
             for (int i = 0; i < visibleColumns2.length; i++) {
@@ -702,6 +704,26 @@ public class TreeTable extends Table implements Hierarchical {
      */
     protected void fireCollapseEvent(Object itemId) {
         fireEvent(new CollapseEvent(this, itemId));
+    }
+
+    /**
+     * @return true if animations are enabled
+     */
+    public boolean isAnimationsEnabled() {
+        return animationsEnabled;
+    }
+
+    /**
+     * Animations can be enabled by passing true to this method. Currently
+     * expanding rows slide in from the top and collapsing rows slide out the
+     * same way. NOTE! not supported in Internet Explorer 6 or 7.
+     * 
+     * @param animationsEnabled
+     *            true or false whether to enable animations or not.
+     */
+    public void setAnimationsEnabled(boolean animationsEnabled) {
+        this.animationsEnabled = animationsEnabled;
+        requestRepaint();
     }
 
 }

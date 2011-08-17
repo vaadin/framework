@@ -136,6 +136,7 @@
 }
 .v-table-row,
 .v-table-row-odd {
+    background: #fff;
 	border: 0;
 	margin: 0;
 	padding: 0;

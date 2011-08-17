@@ -14,6 +14,7 @@ import com.vaadin.ui.AbstractSelect.MultiSelectMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.Table.ColumnResizeEvent;
 import com.vaadin.ui.Table.ColumnResizeListener;
@@ -269,6 +270,44 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
         }
     };
+
+    private class CellStyleInfo {
+        private final String styleName;
+        private final Object itemId;
+        private final Object propertyId;
+
+        public CellStyleInfo(String styleName, Object itemId, Object propertyId) {
+            this.styleName = styleName;
+            this.itemId = itemId;
+            this.propertyId = propertyId;
+        }
+
+        public boolean appliesTo(Object itemId, Object propertyId) {
+            return (this.itemId != null && this.itemId.equals(itemId))
+                    && (this.propertyId == propertyId || (this.propertyId != null && this.propertyId
+                            .equals(propertyId)));
+        }
+    }
+
+    private Command<T, CellStyleInfo> cellStyleCommand = new Command<T, CellStyleInfo>() {
+
+        public void execute(T c, final CellStyleInfo cellStyleInfo, Object data) {
+            if (cellStyleInfo == null) {
+                c.setCellStyleGenerator(null);
+            } else {
+                c.setCellStyleGenerator(new CellStyleGenerator() {
+
+                    public String getStyle(Object itemId, Object propertyId) {
+                        if (cellStyleInfo.appliesTo(itemId, propertyId)) {
+                            return cellStyleInfo.styleName;
+                        }
+                        return null;
+                    }
+                });
+            }
+        }
+    };
+
     private Command<T, Boolean> setSortEnabledCommand = new Command<T, Boolean>() {
 
         public void execute(T c, Boolean value, Object data) {
@@ -308,6 +347,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
         createColumnHeaderMode(CATEGORY_FEATURES);
         createAddGeneratedColumnAction(CATEGORY_FEATURES);
+        createCellStyleAction(CATEGORY_FEATURES);
 
         createBooleanAction("Sort enabled", CATEGORY_FEATURES, true,
                 setSortEnabledCommand);
@@ -348,6 +388,17 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         createClickAction("Add Object as generated column", category,
                 addGeneratedColumnCommand, new GeneratedColumn(Object.class,
                         "", false));
+    }
+
+    private void createCellStyleAction(String categoryFeatures) {
+        LinkedHashMap<String, CellStyleInfo> options = new LinkedHashMap<String, CellStyleInfo>();
+        options.put("None", null);
+        options.put("Red row", new CellStyleInfo(
+                "tables-test-cell-style-red-row", "Item 2", null));
+        options.put("Red cell", new CellStyleInfo(
+                "tables-test-cell-style-red-row", "Item 2", "Property 2"));
+        createSelectAction("Cell style generator", categoryFeatures, options,
+                "None", cellStyleCommand, true);
     }
 
     private void createColumnHeaderMode(String category) {
@@ -600,7 +651,6 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
     // TODO:
     // setCurrentPageFirstItemIndex()
-    // Cell style generator
     // Editable
     // Cache rate
     // CurrentPageFirstItemId

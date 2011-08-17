@@ -876,7 +876,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         UIDL partialRowUpdates = uidl.getChildByTagName("urows");
         if (partialRowUpdates != null || partialRowAdditions != null) {
             updateRowsInBody(partialRowUpdates);
-            addRowsToBody(partialRowAdditions);
+            addAndRemoveRows(partialRowAdditions);
         } else {
             UIDL rowData = uidl.getChildByTagName("rows");
             if (rowData != null) {
@@ -1355,7 +1355,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         scrollBody.renderRows(uidl, firstRow, reqRows);
 
-        updateCache();
+        discardRowsOutsideCacheWindow();
     }
 
     private void updateRowsInBody(UIDL partialRowUpdates) {
@@ -1367,10 +1367,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         scrollBody.unlinkRows(firstRowIx, count);
         scrollBody.insertRows(partialRowUpdates, firstRowIx, count);
 
-        updateCache();
+        discardRowsOutsideCacheWindow();
     }
 
-    private void updateCache() {
+    /**
+     * Updates the internal cache by unlinking rows that fall outside of the
+     * caching window.
+     */
+    protected void discardRowsOutsideCacheWindow() {
         final int optimalFirstRow = (int) (firstRowInViewPort - pageLength
                 * cache_rate);
         boolean cont = true;
@@ -1391,7 +1395,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         scrollBody.restoreRowVisibility();
     }
 
-    private void addRowsToBody(UIDL partialRowAdditions) {
+    /**
+     * Inserts rows in the table body or removes them from the table body based
+     * on the commands in the UIDL.
+     * 
+     * @param partialRowAdditions
+     *            the UIDL containing row updates.
+     */
+    protected void addAndRemoveRows(UIDL partialRowAdditions) {
         if (partialRowAdditions == null) {
             return;
         }
@@ -1412,7 +1423,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
         }
 
-        updateCache();
+        discardRowsOutsideCacheWindow();
     }
 
     /**
@@ -3890,14 +3901,26 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
         }
 
-        protected void insertRows(UIDL rowData, int firstIndex, int rows) {
+        /**
+         * Inserts rows as provided in the rowData starting at firstIndex.
+         * 
+         * @param rowData
+         * @param firstIndex
+         * @param rows
+         *            the number of rows
+         * @return a list of the rows added.
+         */
+        protected List<VScrollTableRow> insertRows(UIDL rowData,
+                int firstIndex, int rows) {
             aligns = tHead.getColumnAlignments();
             final Iterator<?> it = rowData.getChildIterator();
+            List<VScrollTableRow> insertedRows = new ArrayList<VScrollTableRow>();
 
             if (firstIndex == lastRendered + 1) {
                 while (it.hasNext()) {
                     final VScrollTableRow row = prepareRow((UIDL) it.next());
                     addRow(row);
+                    insertedRows.add(row);
                     lastRendered++;
                 }
                 fixSpacers();
@@ -3910,18 +3933,22 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
                 for (i = 0; i < rows; i++) {
                     addRowBeforeFirstRendered(rowArray[i]);
+                    insertedRows.add(rowArray[i]);
                     firstRendered--;
                 }
             } else {
                 // insert in the middle
                 int realIx = firstIndex - firstRendered;
                 while (it.hasNext()) {
-                    insertRowAt(prepareRow((UIDL) it.next()), realIx);
+                    VScrollTableRow row = prepareRow((UIDL) it.next());
+                    insertRowAt(row, realIx);
+                    insertedRows.add(row);
                     lastRendered++;
                     realIx++;
                 }
                 fixSpacers();
             }
+            return insertedRows;
         }
 
         protected void insertRowsDeleteBelow(UIDL rowData, int firstIndex,

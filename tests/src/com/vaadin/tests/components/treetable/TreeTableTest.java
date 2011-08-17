@@ -98,6 +98,9 @@ public class TreeTableTest extends Tables<TreeTable> implements
         createListeners(CATEGORY_LISTENERS);
         // createItemStyleGenerator(CATEGORY_FEATURES);
 
+        createBooleanAction("Animate collapse/expand", CATEGORY_STATE, false,
+                animationCommand);
+
         // TODO: DropHandler
         // TODO: DragMode
         // TODO: ActionHandler
@@ -277,6 +280,13 @@ public class TreeTableTest extends Tables<TreeTable> implements
             } else {
                 c.removeListener((CollapseListener) TreeTableTest.this);
             }
+        }
+    };
+
+    protected Command<TreeTable, Boolean> animationCommand = new Command<TreeTable, Boolean>() {
+
+        public void execute(TreeTable c, Boolean enabled, Object data) {
+            c.setAnimationsEnabled(enabled);
         }
     };
 

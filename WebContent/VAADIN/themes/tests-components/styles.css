@@ -32,3 +32,8 @@
 .border-blue-2px {
 	border: 2px solid blue;
 }
+
+.v-table-row-tables-test-cell-style-red-row,
+.v-table-cell-content-tables-test-cell-style-red-row {
+	background: #f00;
+}
