@@ -9,6 +9,6 @@ with Java 1.5, you can force build with 1.6 by adding the option
 Some of the most common targets to build:
 - Distribution ZIP-file will be built with target package-zip
 - Distribution JAR-file will be built with target package-jar
-- Demo package will be built with target package-war
+- Test WAR will be built with target package-war
 
 For more detailed info, see build.xml

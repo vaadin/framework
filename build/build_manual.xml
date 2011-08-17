@@ -10,7 +10,6 @@
         <mkdir dir="${output-dir}" />
         <mkdir dir="${output-dir}/WebContent" />
         <mkdir dir="${output-dir}/WebContent/docs" />
-        <mkdir dir="${output-dir}/WebContent/docs/example-source" />
 
         <property name="docdir" value="${checkout-path}/docs"/>
         
@@ -55,7 +54,6 @@
                     <!-- FIXME -->
                     <include name="api/**" />
                     <include name="book-of-vaadin.pdf" />
-                    <include name="example-source" />
                 </patternset>
             </zipfileset>
             <zipfileset prefix="docs" dir="${docdir}/build/result/package/WebContent/docs">
