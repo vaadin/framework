@@ -391,7 +391,7 @@
 			<property name="server.start.succeeded" value="1" />
 			<property name="browsers" value="${test_browsers}" />
 			<property name="testfiles" value="${test-GAE}" />
-			<property name="test-output-dir" value="../build/integration-test-output" />
+			<property name="test-output-dir" value="../build/integration-test-gae-output" />
 			
 			<fileset dir="." includes="test.xml" />
 		</subant>
