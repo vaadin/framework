@@ -15,7 +15,7 @@
     <target name="package-war" depends="clean-result, init, build, docs, internal-package-war, differences">
     </target>
 
-    <target name="package-liferay-zip" depends="clean-result, init, build, docs, internal-package-liferay, differences">
+    <target name="package-liferay-zip" depends="clean-result, init, build, internal-package-liferay">
     </target>
 
     <!-- Locations of Ant task JARs - build properties not yet read at this point -->
@@ -80,17 +80,6 @@
     <!-- ================================================================== -->
 
     <target name="init" depends="check-java-version">
-        <property file="build/build.properties" />
-        <property file="build/VERSION.properties" />
-    	<antcontrib:propertyregex property="version.major" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\1"/>
-    	<antcontrib:propertyregex property="version.minor" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\2"/>
-    	<antcontrib:propertyregex property="version.revision" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\3"/>
-
-        <property file="build/GWT-VERSION.properties" />
-        <property file="build/html-style.properties" />
-
-    	<property name="snapshot.repository.url" value="http://oss.sonatype.org/content/repositories/vaadin-snapshots" />
-
         <!-- Current timestamp in different formats. -->
         <tstamp>
             <format property="build.date" pattern="yyyy-MM-dd"/>
@@ -99,23 +88,27 @@
             <format property="build.date.compact" pattern="yyyyMMdd"/>
         </tstamp>
 
+        <property file="build/VERSION.properties" />
+        <property file="build/GWT-VERSION.properties" />
+
+    	<antcontrib:propertyregex property="version.major" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\1"/>
+    	<antcontrib:propertyregex property="version.minor" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\2"/>
+    	<antcontrib:propertyregex property="version.revision" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\3"/>
+
         <!-- Default full version name. -->
         <!-- Nightly and other TeamCity builds will define their own. -->
         <property name="version.full" value="${version}.dev-${build.date.compact}"/>
         <echo>Base Version: ${version}</echo>
         <echo>Full Version: ${version.full}</echo>
 
+    	<!-- Other properties -->
+        <property file="build/build.properties" />
+        <property file="build/html-style.properties" />
+
         <echo>Vaadin package is: ${toolkit-package}</echo>
 
         <!-- Create result dir unless already exists -->
         <mkdir dir="${result-path}" />
-
-        <!-- required when compiling WebContent/VAADIN/widgetsets (and also Java server-side classes) -->
-        <property name="lib-gwt-dev" location="${gwt-dir}/gwt-dev-noservlet.jar" />
-        <property name="lib-gwt-user" location="${gwt-dir}/gwt-user-noservlet.jar" />
-    	<!-- FIXME: Should use ${gwt-version-dependencies} -->
-        <property name="lib-gwt-validation" location="${gwt-dir}/validation-api-1.0.0.GA.jar" />
-        <property name="lib-gwt-validation-src" location="${gwt-dir}/validation-api-1.0.0.GA-sources.jar" />
 
         <echo>We are using gwt version ${gwt-version}.</echo>
 
@@ -124,6 +117,7 @@
         <property name="lib-jar-name" value="${base-name}.jar" />
         <property name="lib-sources-jar-name" value="${base-name}-sources.jar" />
         <property name="lib-javadoc-jar-name" value="${base-name}-javadoc.jar" />
+    	<property name="test-war-filename" value="${product-file}-tests-${version.full}.war"/>
 
         <echo message="Prepared to build ${product-file} version ${version.full} packages" />
 
@@ -180,8 +174,6 @@
         <!-- Add the files. -->
         <antcall target="add-test-war-files" inheritAll="true" inheritRefs="true" />
 
-    	<property name="test-war-filename" value="${product-file}-tests-${version.full}.war"/>
-
         <war warfile="${result-path}/${test-war-filename}"> 
             <fileset dir="${output-dir}/WebContent">
             	<!-- Already in JAR -->
@@ -191,6 +183,10 @@
                 <exclude name="themes/runo/**/*" />
                 <exclude name="themes/reindeer/**/*" />
                 <exclude name="widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
+
+            	<!-- Not needed for testing -->
+                <exclude name="docs/**/*" />
+                <exclude name="docs" />
             	
                 <include name="**/*" />
             </fileset>
@@ -542,16 +538,13 @@
 
     <!-- Definitions for building local components, i.e., not for an installation package. -->
     <target name="init-nonpackage">
-        <property file="build/build.properties" />
         <property file="build/VERSION.properties" />
         <property file="build/GWT-VERSION.properties" />
 
+        <property file="build/build.properties" />
+
         <!-- Definitions for building the client-side. -->
         <property name="widgetsets-output-dir" value="WebContent/VAADIN/widgetsets" />
-
-        <!-- required when compiling WebContent/VAADIN/widgetsets (and also Java server-side classes) -->
-        <property name="lib-gwt-dev" location="${gwt-dir}/gwt-dev.jar" />
-        <property name="lib-gwt-user" location="${gwt-dir}/gwt-user.jar" />
 
         <echo>We are using ${lib-gwt-dev}.</echo>
         <echo>Widget sets output dir: ${widgetsets-output-dir}</echo>
@@ -624,7 +617,6 @@
             </classpath>
         </java>
     	
-        <copy file="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}" tofile="${output-dir}/WebContent/${lib-jar-name}" />
         <echo>##teamcity[publishArtifacts '${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}']</echo>
     </target>
 
@@ -646,6 +638,7 @@
     </target>
 
 	<target name="manual">
+    	<!-- Only pass the necessary properties -->
         <ant antfile="build/build_manual.xml" target="manual" inheritall="false" inheritrefs="false">
             <property name="version.full" value="${version.full}"/>
         	<property name="checkout-path" value="${checkout-path}" />
@@ -726,9 +719,8 @@
 		        <property file="${build.properties.file}" />
 				<property name="version" value="${vaadin.version}"/>
 		        <property name="version.full" value="${version}-${build.date.compact}"/>
-				<!-- <property name="compile.only.default-widgetset" value="1"/> -->
 	   		</then>
-			<!-- Otherwise version and snapshot.repository.url come from target "init" -->
+			<!-- Otherwise version is set by the target "init" -->
 	  	</antcontrib:if>
 	</target>
 
@@ -785,15 +777,16 @@
     <!-- Copies the nightly build artifacts to the download server. -->
     <target name="nightly-download-publish" if="nightly.publish">
         <!-- Publish to the download server. -->
-        <echo>Installing ${output-dir}/WebContent/${lib-jar-name} to ${nightly.publish}</echo>
+        <echo>Installing ${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name} to ${nightly.publish}</echo>
         <echo>Hopefully you have permissions for the copy operation with SSH.</echo>
 
+    	<!-- FIXME tries to publish a ZIP; how does the download site handle these? -->
         <property name="package.filename" value="${result-path}/${base-name}.zip"/>
 
         <!-- Copy the linux installation package and the JAR. -->
         <exec executable="scp" searchpath="true" resultproperty="nightly.install.scp.result">
             <arg value="-B"/>
-            <arg value="${output-dir}/WebContent/${lib-jar-name}"/>
+            <arg value="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}"/>
             <arg value="${package.filename}"/>
             <arg value="${nightly.publish}"/>
         </exec>
@@ -844,11 +837,11 @@
     <target name="nightly-maven-publish" depends="nightly-maven-pom.xml">
         <property file="${gpg.passphrase.file}" />
 
-        <echo>Publishing ${output-dir}/WebContent/${lib-jar-name} to Maven repository</echo>
+        <echo>Publishing ${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name} to Maven repository</echo>
     	<artifact:mvn>
             <arg value="gpg:sign-and-deploy-file"/>
             <!-- .. is a workaround as maven runs in the build directory -->
-            <sysproperty key="file" value="../${output-dir}/WebContent/${lib-jar-name}" />
+            <sysproperty key="file" value="../${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}" />
             <sysproperty key="pomFile" value="maven/pom.xml" />
             <sysproperty key="repositoryId" value="vaadin-snapshots" />
             <sysproperty key="url" value="${snapshot.repository.url}" />
@@ -873,11 +866,11 @@
     </target>
 	
     <target name="local-maven-publish" depends="local-maven-pom.xml">
-        <echo>Publishing ${output-dir}/WebContent/${lib-jar-name} to the local Maven repository</echo>
+        <echo>Publishing ${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name} to the local Maven repository</echo>
     	<artifact:mvn>
             <arg value="install:install-file"/>
             <!-- .. is a workaround as maven runs in the build directory -->
-            <sysproperty key="file" value="../${output-dir}/WebContent/${lib-jar-name}" />
+            <sysproperty key="file" value="../${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}" />
             <sysproperty key="pomFile" value="maven/pom.xml" />
         </artifact:mvn>
     </target>

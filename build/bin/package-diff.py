@@ -103,7 +103,7 @@ except OSError:
 
 # List files in built version.
 builtversion = sys.argv[1]
-builtpackage = "build/result/vaadin-%s/WebContent/vaadin-%s.jar" % (builtversion, builtversion)
+builtpackage = "build/result/vaadin-%s/WebContent/WEB-INF/lib/vaadin-%s.jar" % (builtversion, builtversion)
 
 # Report differences
 
