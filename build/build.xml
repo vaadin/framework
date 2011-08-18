@@ -171,8 +171,26 @@
     <target name="internal-package-war">
         <echo>Building Test WAR</echo>
 
-        <!-- Add the files. -->
-        <antcall target="add-test-war-files" inheritAll="true" inheritRefs="true" />
+        <echo>Adding test class files and resources and launcher configuration.</echo>
+        <copy todir="${output-dir}/WebContent/WEB-INF/classes">
+            <fileset dir="${result-path}/classes">
+                <include name="${toolkit-package}/tests/**/*" />
+                <include name="${toolkit-package}/launcher/**" />
+            </fileset>
+            <fileset dir="${result-path}/src/core">
+                <include name="${toolkit-package}/launcher/**" />
+                <exclude name="${toolkit-package}/launcher/**/*.java" />
+            </fileset>
+        	<!-- test resources -->
+            <fileset dir="tests/src">
+                <include name="${toolkit-package}/tests/**/*" />
+            	<!-- Pre-processed versions of these copied above -->
+        		<exclude name="**/*.java" />
+        		<exclude name="**/*.html" />
+        		<exclude name="**/*.css" />
+        		<exclude name="**/*.xml" />
+            </fileset>
+        </copy>
 
         <war warfile="${result-path}/${test-war-filename}"> 
             <fileset dir="${output-dir}/WebContent">
@@ -216,32 +234,6 @@
         </zip>
         
         <echo>##teamcity[publishArtifacts '${result-path}/${base-name}-liferay.zip']</echo>
-    </target>
-
-    <target name="add-test-war-files">
-        <echo>Adding test class files and launcher configuration.</echo>
-        <copy todir="${output-dir}/WebContent/WEB-INF/classes">
-            <fileset dir="${result-path}/classes">
-                <include name="${toolkit-package}/tests/**/*" />
-                <include name="${toolkit-package}/launcher/**" />
-            </fileset>
-            <fileset dir="${result-path}/src/core">
-                <include name="${toolkit-package}/launcher/**" />
-                <exclude name="${toolkit-package}/launcher/**/*.java" />
-            </fileset>
-        </copy>
-
-        <echo>Adding test resources.</echo>
-        <copy todir="${output-dir}/WebContent/WEB-INF/classes">
-            <fileset dir="tests/src">
-                <include name="${toolkit-package}/tests/**/*" />
-            	<!-- These come from pre-processing -->
-        		<exclude name="**/*.java" />
-        		<exclude name="**/*.html" />
-        		<exclude name="**/*.css" />
-        		<exclude name="**/*.xml" />
-            </fileset>
-        </copy>
     </target>
 
     <!-- Build server-side, client-side, libraries, and tests.                   -->
