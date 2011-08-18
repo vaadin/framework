@@ -218,7 +218,6 @@
         <echo>##teamcity[publishArtifacts '${result-path}/${base-name}-liferay.zip']</echo>
     </target>
 
-	<!-- TODO some files should go to the JAR instead of test WAR -->
     <target name="add-test-war-files">
         <echo>Adding test class files and launcher configuration.</echo>
         <copy todir="${output-dir}/WebContent/WEB-INF/classes">
@@ -241,54 +240,6 @@
         		<exclude name="**/*.html" />
         		<exclude name="**/*.css" />
         		<exclude name="**/*.xml" />
-            </fileset>
-        </copy>
-
-    	<delete includeemptydirs="true" defaultexcludes="false">
-            <fileset dir="${output-dir}">
-                <include name="*.txt" />
-                <include name="build-widgetset.xml" />
-            </fileset>
-        </delete>
-        <copy todir="${output-dir}">
-            <filterchain>
-                <expandproperties />
-                <replacetokens begintoken="@" endtoken="@">
-                    <token key="version" value="${version.full}" />
-                </replacetokens>
-            </filterchain>
-            <fileset dir="WebContent/license">
-                <include name="COPYING" />
-            </fileset>
-        </copy>
-        <copy todir="${output-dir}/WebContent">
-            <filterchain>
-                <expandproperties />
-                <replacetokens begintoken="@" endtoken="@">
-                    <token key="version" value="${version.full}" />
-                </replacetokens>
-                <replacetokens begintoken="@" endtoken="@">
-                    <token key="builddate" value="${build.date}" />
-                </replacetokens>
-            </filterchain>
-            <fileset dir="WebContent">
-                <exclude name="**/.svn" />
-                <include name="release-notes.html" />
-                <include name="*.html" />
-                <include name="license/*.html" />
-                <include name="license/*.txt" />
-            </fileset>
-        </copy>
-        <copy todir="${output-dir}">
-            <filterchain>
-                <expandproperties />
-                <replacetokens begintoken="@" endtoken="@">
-                    <token key="version" value="${version.full}" />
-                </replacetokens>
-            </filterchain>
-            <fileset dir="build/package">
-                <include name="readme.txt" />
-                <include name="build-widgetset.xml" />
             </fileset>
         </copy>
     </target>
@@ -418,6 +369,29 @@
                 <include name="liferay-*.xml" />
                 <include name="portlet.xml" />
                 <include name="web.xml" />
+            </fileset>
+        </copy>
+    	
+        <!-- These should go to various JARs -->
+        <copy todir="${output-dir}/WebContent">
+            <filterchain>
+                <expandproperties />
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="version" value="${version.full}" />
+                </replacetokens>
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="builddate" value="${build.date}" />
+                </replacetokens>
+            </filterchain>
+            <fileset dir="WebContent">
+                <exclude name="**/.svn" />
+                <include name="release-notes.html" />
+                <include name="*.html" />
+                <include name="license/*.html" />
+                <include name="license/*.txt" />
+            </fileset>
+            <fileset dir="WebContent/license">
+                <include name="COPYING" />
             </fileset>
         </copy>
     </target>
@@ -605,6 +579,10 @@
                     <include name="VAADIN/themes/liferay/**/*" />
                     <include name="VAADIN/themes/runo/**/*" />
                     <include name="VAADIN/themes/reindeer/**/*" />
+                	
+                    <include name="release-notes.html" />
+                    <include name="license/**/*" />
+                    <include name="COPYING" />
                 </patternset>
             </fileset>
         </jar>
@@ -628,6 +606,13 @@
 		    		<include name="**/*.java" />
 				</patternset>
 		    </fileset>
+            <fileset dir="${output-dir}/WebContent">
+                <patternset>
+                    <include name="release-notes.html" />
+                    <include name="license/**/*" />
+                    <include name="COPYING" />
+                </patternset>
+            </fileset>
         </jar>
 	</target>
 	
@@ -673,6 +658,13 @@
 		    		<include name="**" />
 				</patternset>
 		    </fileset>
+            <fileset dir="${output-dir}/WebContent">
+                <patternset>
+                    <include name="release-notes.html" />
+                    <include name="license/**/*" />
+                    <include name="COPYING" />
+                </patternset>
+            </fileset>
         </jar>
 
         <!-- Append local style definitions. -->
