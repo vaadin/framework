@@ -6,13 +6,13 @@
          basedir="../" default="package-all">
 
     <!--Call one of package-* targets unless you understand what you are doing. -->
-    <target name="package-all" depends="clean-all, init, build, docs, internal-package-war, differences, internal-package-liferay" description="Build public packages.">
+    <target name="package-all" depends="clean-all, init, build, javadoc, internal-package-war, differences, internal-package-liferay" description="Build public packages.">
     </target>
 
     <target name="package-jar" depends="clean-result, init, vaadin.jar" description="Create vaadin-x.y.z.jar file.">
     </target>
 
-    <target name="package-war" depends="clean-result, init, build, docs, internal-package-war, differences">
+    <target name="package-war" depends="clean-result, init, build, javadoc, internal-package-war, differences">
     </target>
 
     <target name="package-liferay-zip" depends="clean-result, init, build, internal-package-liferay">
@@ -619,20 +619,6 @@
     <!-- ================================================================== -->
     <!-- Documentation                                                      -->
     <!-- ================================================================== -->
-    <target name="docs" depends="init, javadoc, manual">
-    </target>
-
-	<target name="manual">
-    	<!-- Only pass the necessary properties -->
-        <ant antfile="build/build_manual.xml" target="manual" inheritall="false" inheritrefs="false">
-            <property name="version.full" value="${version.full}"/>
-        	<property name="checkout-path" value="${checkout-path}" />
-            <property name="result-path" value="${result-path}"/>
-            <property name="output-dir" value="${output-dir}"/>
-            <property name="product-file" value="${product-file}"/>
-        </ant>
-    </target>
-	
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
     <!-- Documentation: Add Javadoc to doc                                  -->
@@ -726,7 +712,7 @@
     <!-- ================================================================== -->
 
     <!-- Main target for the nightly build. -->
-	<target name="nightly" depends="clean-result, nightly-init, init, build, docs, differences">
+	<target name="nightly" depends="clean-result, nightly-init, init, build, javadoc, differences">
     </target>
 
 
