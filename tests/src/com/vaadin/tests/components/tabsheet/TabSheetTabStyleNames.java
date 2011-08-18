@@ -9,10 +9,12 @@ import com.vaadin.ui.TabSheet.Tab;
 
 public class TabSheetTabStyleNames extends TestBase {
 
-    private static final String STYLE_NAME = "ticket5880";
+    private static final String STYLE_NAME = "TabSheetTabStyleNames";
 
     @Override
     public void setup() {
+        setTheme("tests-tickets");
+
         TabSheet tabsheet = new TabSheet();
         final Tab tab1 = tabsheet.addTab(new Label(), "Tab 1");
         final Tab tab2 = tabsheet.addTab(new Label(), "Tab 2");

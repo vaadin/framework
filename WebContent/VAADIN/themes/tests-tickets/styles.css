@@ -336,3 +336,26 @@
 .v-tabsheet-pg .v-tabsheet-tabitem-selected {
 	font-weight: bold
 }
+
+.v-tabsheet-tabitemcell-TabSheetTabStyleNames .v-tabsheet-tabitem-selected .v-caption {
+	background-color: green;
+}
+
+.v-tabsheet-tabitemcell-TabSheetTabStyleNames .v-caption {
+	font-weight: bold;
+	background: none;
+	margin-left: 0px;
+	background-color: blue;
+}
+.v-tabsheet-tabitemcell-TabSheetTabStyleNames_0 .v-caption {
+	color: blue;
+}
+
+.v-tabsheet-tabitemcell-TabSheetTabStyleNames_1 .v-caption {
+	color: red;
+}
+
+.v-tabsheet-tabitemcell-TabSheetTabStyleNames .v-tabsheet-tabitem {
+	background: none;
+	border: 2px solid red;
+}
