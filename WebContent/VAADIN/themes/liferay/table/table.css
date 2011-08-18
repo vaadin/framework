@@ -92,6 +92,10 @@
 	background: #dde1e6;
 }
 
+.v-table-row {
+	background: #eef0f2;
+}
+
 .v-table .v-selected {
 	background-color: #5B677D;
 	color: #FFF;
