@@ -4,10 +4,7 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
@@ -22,6 +19,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -35,14 +33,162 @@ import com.vaadin.terminal.gwt.client.VCaption;
 
 public class VTabsheet extends VTabsheetBase {
 
-    private class TabSheetCaption extends VCaption {
+    private static class VCloseEvent {
+        private Tab tab;
 
-        private boolean hidden = false;
+        VCloseEvent(Tab tab) {
+            this.tab = tab;
+        }
+
+        public Tab getTab() {
+            return tab;
+        }
+
+    }
+
+    private interface VCloseHandler {
+        public void onClose(VCloseEvent event);
+    }
+
+    /**
+     * Representation of a single "tab" shown in the TabBar
+     * 
+     */
+    private static class Tab extends SimplePanel {
+        private static final String TD_CLASSNAME = CLASSNAME + "-tabitemcell";
+        private static final String TD_FIRST_CLASSNAME = TD_CLASSNAME
+                + "-first";
+        private static final String TD_SELECTED_CLASSNAME = TD_CLASSNAME
+                + "-selected";
+        private static final String TD_SELECTED_FIRST_CLASSNAME = TD_SELECTED_CLASSNAME
+                + "-first";
+
+        private static final String DIV_CLASSNAME = CLASSNAME + "-tabitem";
+        private static final String DIV_SELECTED_CLASSNAME = DIV_CLASSNAME
+                + "-selected";
+
+        private TabCaption tabCaption;
+        Element td = getElement();
+        private VCloseHandler closeHandler;
+
+        private boolean enabledOnServer = true;
+        private Element div;
+        private TabBar tabBar;
+        private boolean hiddenOnServer = false;
+
+        private String styleName;
+
+        private Tab(TabBar tabBar) {
+            super(DOM.createTD());
+            this.tabBar = tabBar;
+            setStyleName(td, TD_CLASSNAME);
+
+            div = DOM.createDiv();
+            setStyleName(div, DIV_CLASSNAME);
+
+            DOM.appendChild(td, div);
+
+            tabCaption = new TabCaption(this, getTabsheet()
+                    .getApplicationConnection());
+            add(tabCaption);
+
+        }
+
+        public boolean isHiddenOnServer() {
+            return hiddenOnServer;
+        }
+
+        public void setHiddenOnServer(boolean hiddenOnServer) {
+            this.hiddenOnServer = hiddenOnServer;
+        }
+
+        @Override
+        protected Element getContainerElement() {
+            // Attach caption element to div, not td
+            return div;
+        }
+
+        public boolean isEnabledOnServer() {
+            return enabledOnServer;
+        }
+
+        public void setEnabledOnServer(boolean enabled) {
+            enabledOnServer = enabled;
+        }
+
+        public void addClickHandler(ClickHandler handler) {
+            tabCaption.addClickHandler(handler);
+        }
+
+        public void setCloseHandler(VCloseHandler closeHandler) {
+            this.closeHandler = closeHandler;
+        }
+
+        /**
+         * Toggles the style names for the Tab
+         * 
+         * @param selected
+         *            true if the Tab is selected
+         * @param first
+         *            true if the Tab is the first visible Tab
+         */
+        public void setStyleNames(boolean selected, boolean first) {
+            setStyleName(td, TD_FIRST_CLASSNAME, first);
+            setStyleName(td, TD_SELECTED_CLASSNAME, selected);
+            setStyleName(td, TD_SELECTED_FIRST_CLASSNAME, selected && first);
+            setStyleName(div, DIV_SELECTED_CLASSNAME, selected);
+        }
+
+        public void onClose() {
+            closeHandler.onClose(new VCloseEvent(this));
+        }
+
+        public VTabsheet getTabsheet() {
+            return tabBar.getTabsheet();
+        }
+
+        public void updateFromUIDL(UIDL tabUidl) {
+            tabCaption.updateCaption(tabUidl);
+
+            // Apply the styleName set for the tab
+            String newStyleName = tabUidl.getStringAttribute(TAB_STYLE_NAME);
+            // Find the nth td element
+            if (newStyleName != null && newStyleName.length() != 0) {
+                if (!newStyleName.equals(styleName)) {
+                    // If we have a new style name
+                    if (styleName != null && styleName.length() != 0) {
+                        // Remove old style name if present
+                        td.removeClassName(TD_CLASSNAME + "-" + styleName);
+                    }
+                    // Set new style name
+                    td.addClassName(TD_CLASSNAME + "-" + newStyleName);
+                    styleName = newStyleName;
+                }
+            } else if (styleName != null) {
+                // Remove the set stylename if no stylename is present in the
+                // uidl
+                td.removeClassName(TD_CLASSNAME + "-" + styleName);
+                styleName = null;
+            }
+        }
+
+        public void recalculateCaptionWidth() {
+            tabCaption.setWidth(tabCaption.getRequiredWidth() + "px");
+        }
+
+    }
+
+    private static class TabCaption extends VCaption {
+
         private boolean closable = false;
         private Element closeButton;
+        private Tab tab;
+        private ApplicationConnection client;
 
-        TabSheetCaption() {
+        TabCaption(Tab tab, ApplicationConnection client) {
             super(null, client);
+            this.client = client;
+            this.tab = tab;
         }
 
         @Override
@@ -55,10 +201,9 @@ public class VTabsheet extends VTabsheetBase {
                 if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
                     tooltipInfo.setErrorUidl(uidl.getErrors());
                 }
-                client.registerTooltip(VTabsheet.this, getElement(),
-                        tooltipInfo);
+                client.registerTooltip(getTabsheet(), getElement(), tooltipInfo);
             } else {
-                client.registerTooltip(VTabsheet.this, getElement(), null);
+                client.registerTooltip(getTabsheet(), getElement(), null);
             }
 
             boolean ret = super.updateCaption(uidl);
@@ -68,30 +213,29 @@ public class VTabsheet extends VTabsheetBase {
             return ret;
         }
 
+        private VTabsheet getTabsheet() {
+            return tab.getTabsheet();
+        }
+
         @Override
         public void onBrowserEvent(Event event) {
             if (closable && event.getTypeInt() == Event.ONCLICK
                     && event.getEventTarget().cast() == closeButton) {
-                final String tabKey = tabKeys.get(tb.getTabIndex(this))
-                        .toString();
-                if (!disabledTabKeys.contains(tabKey)) {
-                    client.updateVariable(id, "close", tabKey, true);
-                    event.stopPropagation();
-                    event.preventDefault();
-                    return;
-                }
+                tab.onClose();
+                event.stopPropagation();
+                event.preventDefault();
             }
 
             super.onBrowserEvent(event);
 
             if (event.getTypeInt() == Event.ONLOAD) {
-                // icon onloads may change total width of tabsheet
-                if (isDynamicWidth()) {
-                    updateDynamicWidth();
-                }
-                updateTabScroller();
+                getTabsheet().tabSizeMightHaveChanged(getTab());
             }
-            client.handleTooltipEvent(event, VTabsheet.this, getElement());
+            client.handleTooltipEvent(event, getTabsheet(), getElement());
+        }
+
+        public Tab getTab() {
+            return tab;
         }
 
         @Override
@@ -119,14 +263,6 @@ public class VTabsheet extends VTabsheetBase {
                 captionWidth = scrollWidth;
             }
             captionText.getStyle().setPropertyPx("width", captionWidth);
-        }
-
-        public boolean isHidden() {
-            return hidden;
-        }
-
-        public void setHidden(boolean hidden) {
-            this.hidden = hidden;
         }
 
         public void setClosable(boolean closable) {
@@ -160,13 +296,20 @@ public class VTabsheet extends VTabsheetBase {
 
     }
 
-    class TabBar extends ComplexPanel implements ClickHandler {
+    static class TabBar extends ComplexPanel implements ClickHandler,
+            VCloseHandler {
 
         private final Element tr = DOM.createTR();
 
         private final Element spacerTd = DOM.createTD();
 
-        TabBar() {
+        private Tab selected;
+
+        private VTabsheet tabsheet;
+
+        TabBar(VTabsheet tabsheet) {
+            this.tabsheet = tabsheet;
+
             Element el = DOM.createTable();
             Element tbody = DOM.createTBody();
             DOM.appendChild(el, tbody);
@@ -177,119 +320,165 @@ public class VTabsheet extends VTabsheetBase {
             setElement(el);
         }
 
+        public void onClose(VCloseEvent event) {
+            Tab tab = event.getTab();
+            if (!tab.isEnabledOnServer()) {
+                return;
+            }
+            int tabIndex = getWidgetIndex(tab);
+            getTabsheet().sendTabClosedEvent(tabIndex);
+        }
+
         protected Element getContainerElement() {
             return tr;
         }
-
-        private Widget oldSelected;
 
         public int getTabCount() {
             return getWidgetCount();
         }
 
-        public void addTab(VCaption c) {
-            Element td = DOM.createTD();
-            setStyleName(td, ITEMCELL_CLASSNAME);
-            tabStyles.add(null);
+        public Tab addTab() {
+            Tab t = new Tab(this);
 
-            if (getWidgetCount() == 0) {
-                setStyleName(td, CLASSNAME + "-tabitemcell-first", true);
+            // Logical attach
+            int spacerIndex = getTabCount();
+            insert(t, tr, spacerIndex, true);
+
+            if (getTabCount() == 0) {
+                // Set the "first" style
+                t.setStyleNames(false, true);
             }
 
-            Element div = DOM.createDiv();
-            setStyleName(div, CLASSNAME + "-tabitem");
-            DOM.appendChild(td, div);
-            DOM.insertBefore(tr, td, spacerTd);
-            c.addClickHandler(this);
-            add(c, div);
+            t.addClickHandler(this);
+            t.setCloseHandler(this);
+
+            return t;
         }
 
         public void onClick(ClickEvent event) {
-            int index = getWidgetIndex((Widget) event.getSource());
-            onTabSelected(index);
+            Widget caption = (Widget) event.getSource();
+            int index = getWidgetIndex(caption.getParent());
+            getTabsheet().onTabSelected(index);
+        }
+
+        public VTabsheet getTabsheet() {
+            return tabsheet;
+        }
+
+        public Tab getTab(int index) {
+            if (index < 0 || index >= getTabCount()) {
+                return null;
+            }
+            return (Tab) super.getWidget(index);
         }
 
         public void selectTab(int index) {
-            final String classname = CLASSNAME + "-tabitem-selected";
-            String classname2 = CLASSNAME + "-tabitemcell-selected"
-                    + (index == 0 ? "-first" : "");
+            final Tab newSelected = getTab(index);
+            final Tab oldSelected = selected;
 
-            final Widget newSelected = getWidget(index);
-            final com.google.gwt.dom.client.Element div = newSelected
-                    .getElement().getParentElement();
-
-            Widget.setStyleName(div, classname, true);
-            Widget.setStyleName(div.getParentElement(), classname2, true);
+            newSelected.setStyleNames(true, isFirstVisibleTab(index));
 
             if (oldSelected != null && oldSelected != newSelected) {
-                classname2 = CLASSNAME + "-tabitemcell-selected"
-                        + (getWidgetIndex(oldSelected) == 0 ? "-first" : "");
-                final com.google.gwt.dom.client.Element divOld = oldSelected
-                        .getElement().getParentElement();
-                Widget.setStyleName(divOld, classname, false);
-                Widget.setStyleName(divOld.getParentElement(), classname2,
-                        false);
+                oldSelected.setStyleNames(false,
+                        isFirstVisibleTab(getWidgetIndex(oldSelected)));
             }
-            oldSelected = newSelected;
+
+            // Update the field holding the currently selected tab
+            selected = newSelected;
 
             // The selected tab might need more (or less) space
-            updateCaptionSize(index);
-            updateCaptionSize(activeTabIndex);
+            newSelected.recalculateCaptionWidth();
+            getTab(tabsheet.activeTabIndex).recalculateCaptionWidth();
         }
 
         public void removeTab(int i) {
-            Widget w = getWidget(i);
-            if (w == null) {
+            Tab tab = getTab(i);
+            if (tab == null) {
                 return;
             }
 
-            Element caption = w.getElement();
-            Element div = DOM.getParent(caption);
-            Element td = DOM.getParent(div);
-            Element tr = DOM.getParent(td);
-            remove(w);
-
-            /*
-             * Widget is the Caption but we want to remove everything up to and
-             * including the parent TD
-             */
-
-            DOM.removeChild(tr, td);
+            remove(tab);
 
             /*
              * If this widget was selected we need to unmark it as the last
              * selected
              */
-            if (w == oldSelected) {
-                oldSelected = null;
+            if (tab == selected) {
+                selected = null;
             }
+
+            // FIXME: Shouldn't something be selected instead?
         }
 
-        public TabSheetCaption getTab(int index) {
-            if (index >= getWidgetCount()) {
-                return null;
-            }
-            return (TabSheetCaption) getWidget(index);
+        private boolean isFirstVisibleTab(int index) {
+            return getFirstVisibleTab() == index;
         }
 
-        public int getTabIndex(TabSheetCaption tab) {
-            return getChildren().indexOf(tab);
+        /**
+         * Returns the index of the first visible tab
+         * 
+         * @return
+         */
+        private int getFirstVisibleTab() {
+            return getNextVisibleTab(-1);
         }
 
-        public void setVisible(int index, boolean visible) {
-            com.google.gwt.dom.client.Element e = getTab(index).getElement()
-                    .getParentElement().getParentElement();
-            if (visible) {
-                e.getStyle().setProperty("display", "");
+        /**
+         * Find the next visible tab. Returns -1 if none is found.
+         * 
+         * @param i
+         * @return
+         */
+        private int getNextVisibleTab(int i) {
+            int tabs = getTabCount();
+            do {
+                i++;
+            } while (i < tabs && getTab(i).isHiddenOnServer());
+
+            if (i == tabs) {
+                return -1;
             } else {
-                e.getStyle().setProperty("display", "none");
+                return i;
             }
         }
 
-        public void updateCaptionSize(int index) {
-            VCaption c = getTab(index);
-            c.setWidth(c.getRequiredWidth() + "px");
+        /**
+         * Find the previous visible tab. Returns -1 if none is found.
+         * 
+         * @param i
+         * @return
+         */
+        private int getPreviousVisibleTab(int i) {
+            do {
+                i--;
+            } while (i >= 0 && getTab(i).isHiddenOnServer());
 
+            return i;
+
+        }
+
+        public int scrollLeft(int currentFirstVisible) {
+            int prevVisible = getPreviousVisibleTab(currentFirstVisible);
+            if (prevVisible == -1) {
+                return -1;
+            }
+
+            Tab newFirst = getTab(prevVisible);
+            newFirst.setVisible(true);
+            newFirst.recalculateCaptionWidth();
+
+            return prevVisible;
+        }
+
+        public int scrollRight(int currentFirstVisible) {
+            int nextVisible = getNextVisibleTab(currentFirstVisible);
+            if (nextVisible == -1) {
+                return -1;
+            }
+            Tab currentFirst = getTab(currentFirstVisible);
+            currentFirst.setVisible(false);
+            currentFirst.recalculateCaptionWidth();
+            return nextVisible;
         }
 
     }
@@ -298,7 +487,6 @@ public class VTabsheet extends VTabsheetBase {
 
     public static final String TABS_CLASSNAME = "v-tabsheet-tabcontainer";
     public static final String SCROLLER_CLASSNAME = "v-tabsheet-scroller";
-    public static final String ITEMCELL_CLASSNAME = CLASSNAME + "-tabitemcell";
 
     // Can't use "style" as it's already in use
     public static final String TAB_STYLE_NAME = "tabstyle";
@@ -313,11 +501,9 @@ public class VTabsheet extends VTabsheetBase {
      */
     private int scrollerIndex = 0;
 
-    private final TabBar tb = new TabBar();
+    private final TabBar tb = new TabBar(this);
     private final VTabsheetPanel tp = new VTabsheetPanel();
     private final Element contentNode, deco;
-
-    private final HashMap<String, VCaption> captions = new HashMap<String, VCaption>();
 
     private String height;
     private String width;
@@ -336,12 +522,6 @@ public class VTabsheet extends VTabsheetBase {
     private boolean rendering = false;
 
     private String currentStyle;
-
-    /**
-     * Keeps track of the currently set styleName for each tab so it can be
-     * removed without affecting the other styles set to the same DOM element
-     */
-    private List<String> tabStyles = new ArrayList<String>();
 
     private void onTabSelected(final int tabIndex) {
         if (disabled || waitingForResponse) {
@@ -368,6 +548,23 @@ public class VTabsheet extends VTabsheetBase {
             });
             waitingForResponse = true;
         }
+    }
+
+    public ApplicationConnection getApplicationConnection() {
+        return client;
+    }
+
+    public void tabSizeMightHaveChanged(Tab tab) {
+        // icon onloads may change total width of tabsheet
+        if (isDynamicWidth()) {
+            updateDynamicWidth();
+        }
+        updateTabScroller();
+
+    }
+
+    void sendTabClosedEvent(int tabIndex) {
+        client.updateVariable(id, "close", tabKeys.get(tabIndex), true);
     }
 
     private boolean isDynamicWidth() {
@@ -430,59 +627,21 @@ public class VTabsheet extends VTabsheetBase {
 
         // Tab scrolling
         if (isScrolledTabs() && DOM.eventGetTarget(event) == scrollerPrev) {
-            int prevVisible = getPreviousVisibleTab(scrollerIndex);
-            if (prevVisible != -1) {
-                tb.setVisible(prevVisible, true);
-                tb.updateCaptionSize(prevVisible);
-                scrollerIndex = prevVisible;
+            int newFirstIndex = tb.scrollLeft(scrollerIndex);
+            if (newFirstIndex != -1) {
+                scrollerIndex = newFirstIndex;
                 updateTabScroller();
             }
         } else if (isClippedTabs() && DOM.eventGetTarget(event) == scrollerNext) {
-            int firstVisible = scrollerIndex;
-            int nextVisible = getNextVisibleTab(firstVisible);
-            if (nextVisible != -1) {
-                tb.setVisible(firstVisible, false);
-                tb.updateCaptionSize(firstVisible);
-                scrollerIndex = nextVisible;
+            int newFirstIndex = tb.scrollRight(scrollerIndex);
+
+            if (newFirstIndex != -1) {
+                scrollerIndex = newFirstIndex;
                 updateTabScroller();
             }
         } else {
             super.onBrowserEvent(event);
         }
-    }
-
-    /**
-     * Find the next visible tab. Returns -1 if none is found.
-     * 
-     * @param i
-     * @return
-     */
-    private int getNextVisibleTab(int i) {
-        int tabs = tb.getTabCount();
-        do {
-            i++;
-        } while (i < tabs && tb.getTab(i).isHidden());
-
-        if (i == tabs) {
-            return -1;
-        } else {
-            return i;
-        }
-    }
-
-    /**
-     * Find the previous visible tab. Returns -1 if none is found.
-     * 
-     * @param i
-     * @return
-     */
-    private int getPreviousVisibleTab(int i) {
-        do {
-            i--;
-        } while (i >= 0 && tb.getTab(i).isHidden());
-
-        return i;
-
     }
 
     /**
@@ -646,51 +805,26 @@ public class VTabsheet extends VTabsheetBase {
     @Override
     protected void renderTab(final UIDL tabUidl, int index, boolean selected,
             boolean hidden) {
-        TabSheetCaption c = tb.getTab(index);
-        if (c == null) {
-            c = new TabSheetCaption();
-            tb.addTab(c);
+        Tab tab = tb.getTab(index);
+        if (tab == null) {
+            tab = tb.addTab();
         }
-        c.updateCaption(tabUidl);
+        tab.updateFromUIDL(tabUidl);
+        tab.setEnabledOnServer((!disabledTabKeys.contains(tabKeys.get(index))));
+        tab.setHiddenOnServer(hidden);
 
-        // Apply the styleName set for the tab
-        String styleName = tabUidl.getStringAttribute(TAB_STYLE_NAME);
-        String oldStyleName = tabStyles.get(index);
-        // Find the nth td element
-        Element td = (Element) tb.tr.getChild(index);
-        if (styleName != null && styleName.length() != 0) {
-            if (!styleName.equals(oldStyleName)) {
-                // If we have a new style name
-                if (oldStyleName != null && oldStyleName.length() != 0) {
-                    // Remove old style name if present
-                    td.removeClassName(ITEMCELL_CLASSNAME + "-" + oldStyleName);
-                }
-                // Set new style name
-                td.addClassName(ITEMCELL_CLASSNAME + "-" + styleName);
-                // Update bookkeeping
-                tabStyles.set(index, styleName);
-            }
-        } else if (oldStyleName != null) {
-            // Remove the set stylename if no stylename is present in the uidl
-            td.removeClassName(ITEMCELL_CLASSNAME + "-" + oldStyleName);
-            // Also update the bookkeeping
-            tabStyles.set(index, null);
-        }
-
-        c.setHidden(hidden);
         if (scrolledOutOfView(index)) {
             // Should not set tabs visible if they are scrolled out of view
             hidden = true;
         }
         // Set the current visibility of the tab (in the browser)
-        tb.setVisible(index, !hidden);
+        tab.setVisible(!hidden);
 
         /*
          * Force the width of the caption container so the content will not wrap
          * and tabs won't be too narrow in certain browsers
          */
-        c.setWidth(c.getRequiredWidth() + "px");
-        captions.put("" + index, c);
+        tab.recalculateCaptionWidth();
 
         UIDL tabContentUIDL = null;
         Paintable tabContent = null;
@@ -910,9 +1044,10 @@ public class VTabsheet extends VTabsheetBase {
 
         // Make sure scrollerIndex is valid
         if (scrollerIndex < 0 || scrollerIndex > tb.getTabCount()) {
-            scrollerIndex = getNextVisibleTab(-1);
-        } else if (tb.getTabCount() > 0 && tb.getTab(scrollerIndex).isHidden()) {
-            scrollerIndex = getNextVisibleTab(scrollerIndex);
+            scrollerIndex = tb.getFirstVisibleTab();
+        } else if (tb.getTabCount() > 0
+                && tb.getTab(scrollerIndex).isHiddenOnServer()) {
+            scrollerIndex = tb.getNextVisibleTab(scrollerIndex);
         }
 
         boolean scrolled = isScrolledTabs();
@@ -950,16 +1085,17 @@ public class VTabsheet extends VTabsheetBase {
     }
 
     private void showAllTabs() {
-        scrollerIndex = getNextVisibleTab(-1);
+        scrollerIndex = tb.getFirstVisibleTab();
         for (int i = 0; i < tb.getTabCount(); i++) {
-            if (!tb.getTab(i).isHidden()) {
-                tb.setVisible(i, true);
+            Tab t = tb.getTab(i);
+            if (!t.isHiddenOnServer()) {
+                t.setVisible(true);
             }
         }
     }
 
     private boolean isScrolledTabs() {
-        return scrollerIndex > getNextVisibleTab(-1);
+        return scrollerIndex > tb.getFirstVisibleTab();
     }
 
     private boolean isClippedTabs() {
@@ -1052,7 +1188,7 @@ public class VTabsheet extends VTabsheetBase {
 
     @Override
     protected int getTabCount() {
-        return tb.getWidgetCount();
+        return tb.getTabCount();
     }
 
     @Override
