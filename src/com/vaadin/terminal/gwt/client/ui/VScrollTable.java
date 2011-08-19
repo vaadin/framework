@@ -1075,7 +1075,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
     }
 
-    protected void updatePageLength(UIDL uidl) {
+    private void updatePageLength(UIDL uidl) {
         int oldPageLength = pageLength;
         if (uidl.hasAttribute("pagelength")) {
             pageLength = uidl.getIntAttribute("pagelength");
