@@ -76,7 +76,7 @@ public class CustomComponent extends AbstractComponentContainer {
      * 
      * @return the Component Composition root.
      */
-    protected final Component getCompositionRoot() {
+    protected Component getCompositionRoot() {
         return root;
     }
 
@@ -90,7 +90,7 @@ public class CustomComponent extends AbstractComponentContainer {
      * @param compositionRoot
      *            the root of the composition component tree.
      */
-    protected final void setCompositionRoot(Component compositionRoot) {
+    protected void setCompositionRoot(Component compositionRoot) {
         if (compositionRoot != root) {
             if (root != null) {
                 // remove old component

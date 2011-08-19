@@ -979,7 +979,7 @@ public class GridLayout extends AbstractLayout implements
      * 
      * @return the number of columns in the grid.
      */
-    public final int getColumns() {
+    public int getColumns() {
         return cols;
     }
 
@@ -1023,7 +1023,7 @@ public class GridLayout extends AbstractLayout implements
      * 
      * @return the number of rows in the grid.
      */
-    public final int getRows() {
+    public int getRows() {
         return rows;
     }
 

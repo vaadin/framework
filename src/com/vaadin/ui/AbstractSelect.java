@@ -1615,7 +1615,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * @see #isSelected(Object)
      * @see #select(Object)
      */
-    public final Object getNullSelectionItemId() {
+    public Object getNullSelectionItemId() {
         return nullSelectionItemId;
     }
 
