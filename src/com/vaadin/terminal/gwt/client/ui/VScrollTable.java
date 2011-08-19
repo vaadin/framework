@@ -1679,9 +1679,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     /**
      * Run only once when component is attached and received its initial
-     * content. This function : * Syncs headers and bodys "natural widths and
-     * saves the values. * Sets proper width and height * Makes deferred request
-     * to get some cache rows
+     * content. This function:
+     * 
+     * * Syncs headers and bodys "natural widths and saves the values.
+     * 
+     * * Sets proper width and height
+     * 
+     * * Makes deferred request to get some cache rows
      */
     private void sizeInit() {
         /*
@@ -3968,22 +3972,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          */
         private VScrollTableRow prepareRow(UIDL uidl) {
             final VScrollTableRow row = createRow(uidl, aligns);
-            final int cells = DOM.getChildCount(row.getElement());
-            for (int i = 0; i < cells; i++) {
-                final Element cell = DOM.getChild(row.getElement(), i);
-                int w = VScrollTable.this.getColWidth(getColKeyByIndex(i));
-                if (w < 0) {
-                    w = 0;
-                }
-                cell.getFirstChildElement().getStyle()
-                        .setPropertyPx("width", w);
-                cell.getStyle().setPropertyPx("width", w);
-            }
+            row.initCellWidths();
             return row;
         }
 
         protected VScrollTableRow createRow(UIDL uidl, char[] aligns2) {
-            return new VScrollTableRow(uidl, aligns);
+            if (uidl.hasAttribute("gen_html")) {
+                // This is a generated row.
+                return new VScrollTableGeneratedRow(uidl, aligns2);
+            }
+            return new VScrollTableRow(uidl, aligns2);
         }
 
         private void addRowBeforeFirstRendered(VScrollTableRow row) {
@@ -4187,16 +4185,19 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          */
         public int getColWidth(int columnIndex) {
             if (tBodyMeasurementsDone) {
-                NodeList<TableRowElement> rows = tBodyElement.getRows();
-                if (rows.getLength() == 0) {
+                if (renderedRows.isEmpty()) {
                     // no rows yet rendered
                     return 0;
-                } else {
-                    com.google.gwt.dom.client.Element wrapperdiv = rows
-                            .getItem(0).getCells().getItem(columnIndex)
-                            .getFirstChildElement();
-                    return wrapperdiv.getOffsetWidth();
                 }
+                for (Widget row : renderedRows) {
+                    if (!(row instanceof VScrollTableGeneratedRow)) {
+                        TableRowElement tr = row.getElement().cast();
+                        Element wrapperdiv = tr.getCells().getItem(columnIndex)
+                                .getFirstChildElement().cast();
+                        return wrapperdiv.getOffsetWidth();
+                    }
+                }
+                return 0;
             } else {
                 return 0;
             }
@@ -4216,14 +4217,22 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * @param w
          */
         public void setColWidth(int colIndex, int w) {
-            NodeList<TableRowElement> rows2 = tBodyElement.getRows();
-            final int rows = rows2.getLength();
-            for (int i = 0; i < rows; i++) {
-                TableRowElement row = rows2.getItem(i);
-                TableCellElement cell = row.getCells().getItem(colIndex);
-                cell.getFirstChildElement().getStyle()
-                        .setPropertyPx("width", w);
-                cell.getStyle().setPropertyPx("width", w);
+            for (Widget row : renderedRows) {
+                TableRowElement tr = row.getElement().cast();
+                TableCellElement cell = tr.getCells().getItem(colIndex);
+                boolean spanned = false;
+                if (row instanceof VScrollTableGeneratedRow) {
+                    spanned = ((VScrollTableGeneratedRow) row).isSpanColumns();
+                }
+                if (!spanned) {
+                    cell.getFirstChildElement().getStyle()
+                            .setPropertyPx("width", w);
+                    cell.getStyle().setPropertyPx("width", w);
+                } else if (colIndex == 0) {
+                    cell.getFirstChildElement().getStyle()
+                            .clearProperty("width");
+                    cell.getStyle().clearProperty("width");
+                }
             }
         }
 
@@ -4323,8 +4332,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             protected final int rowKey;
             private List<UIDL> pendingComponentPaints;
 
-            private String[] actionKeys = null;
-            private final TableRowElement rowElement;
+            protected String[] actionKeys = null;
+            protected final TableRowElement rowElement;
             private boolean mDown;
             private int index;
             private Event touchStart;
@@ -4343,6 +4352,120 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 DOM.sinkEvents(getElement(), Event.MOUSEEVENTS
                         | Event.TOUCHEVENTS | Event.ONDBLCLICK
                         | Event.ONCONTEXTMENU | VTooltip.TOOLTIP_EVENTS);
+            }
+
+            public VScrollTableRow(UIDL uidl, char[] aligns) {
+                this(uidl.getIntAttribute("key"));
+
+                /*
+                 * Rendering the rows as hidden improves Firefox and Safari
+                 * performance drastically.
+                 */
+                getElement().getStyle().setProperty("visibility", "hidden");
+
+                String rowStyle = uidl.getStringAttribute("rowstyle");
+                if (rowStyle != null) {
+                    addStyleName(CLASSNAME + "-row-" + rowStyle);
+                }
+
+                String rowDescription = uidl.getStringAttribute("rowdescr");
+                if (rowDescription != null && !rowDescription.equals("")) {
+                    TooltipInfo info = new TooltipInfo(rowDescription);
+                    client.registerTooltip(VScrollTable.this, rowElement, info);
+                } else {
+                    // Remove possibly previously set tooltip
+                    client.registerTooltip(VScrollTable.this, rowElement, null);
+                }
+
+                tHead.getColumnAlignments();
+                int col = 0;
+                int visibleColumnIndex = -1;
+
+                // row header
+                if (showRowHeaders) {
+                    boolean sorted = tHead.getHeaderCell(col).isSorted();
+                    addCell(uidl, buildCaptionHtmlSnippet(uidl), aligns[col++],
+                            "rowheader", true, sorted);
+                    visibleColumnIndex++;
+                }
+
+                if (uidl.hasAttribute("al")) {
+                    actionKeys = uidl.getStringArrayAttribute("al");
+                }
+
+                addCellsFromUIDL(uidl, aligns, col, visibleColumnIndex);
+
+                if (uidl.hasAttribute("selected") && !isSelected()) {
+                    toggleSelection();
+                }
+            }
+
+            /**
+             * Add a dummy row, used for measurements if Table is empty.
+             */
+            public VScrollTableRow() {
+                this(0);
+                addStyleName(CLASSNAME + "-row");
+                addCell(null, "_", 'b', "", true, false);
+            }
+
+            protected void initCellWidths() {
+                final int cells = DOM.getChildCount(getElement());
+                for (int i = 0; i < cells; i++) {
+                    final Element cell = DOM.getChild(getElement(), i);
+                    int w = VScrollTable.this.getColWidth(getColKeyByIndex(i));
+                    if (w < 0) {
+                        w = 0;
+                    }
+                    cell.getFirstChildElement().getStyle()
+                            .setPropertyPx("width", w);
+                    cell.getStyle().setPropertyPx("width", w);
+                }
+            }
+
+            protected void addCellsFromUIDL(UIDL uidl, char[] aligns, int col,
+                    int visibleColumnIndex) {
+                final Iterator<?> cells = uidl.getChildIterator();
+                while (cells.hasNext()) {
+                    final Object cell = cells.next();
+                    visibleColumnIndex++;
+
+                    String columnId = visibleColOrder[visibleColumnIndex];
+
+                    String style = "";
+                    if (uidl.hasAttribute("style-" + columnId)) {
+                        style = uidl.getStringAttribute("style-" + columnId);
+                    }
+
+                    String description = null;
+                    if (uidl.hasAttribute("descr-" + columnId)) {
+                        description = uidl.getStringAttribute("descr-"
+                                + columnId);
+                    }
+
+                    boolean sorted = tHead.getHeaderCell(col).isSorted();
+                    if (cell instanceof String) {
+                        addCell(uidl, cell.toString(), aligns[col++], style,
+                                isRenderCellsAsHtml(), sorted, description);
+                    } else {
+                        final Paintable cellContent = client
+                                .getPaintable((UIDL) cell);
+
+                        addCell(uidl, (Widget) cellContent, aligns[col++],
+                                style, sorted);
+                        paintComponent(cellContent, (UIDL) cell);
+                    }
+                }
+            }
+
+            /**
+             * Overriding this and returning true causes all text cells to be
+             * rendered as HTML.
+             * 
+             * @return always returns false in the default implementation
+             */
+            protected boolean isRenderCellsAsHtml() {
+                return false;
             }
 
             /**
@@ -4403,7 +4526,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 return index;
             }
 
-            private void paintComponent(Paintable p, UIDL uidl) {
+            protected void paintComponent(Paintable p, UIDL uidl) {
                 if (isAttached()) {
                     p.updateFromUIDL(uidl, client);
                 } else {
@@ -4435,90 +4558,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 return String.valueOf(rowKey);
             }
 
-            public VScrollTableRow(UIDL uidl, char[] aligns) {
-                this(uidl.getIntAttribute("key"));
-
-                /*
-                 * Rendering the rows as hidden improves Firefox and Safari
-                 * performance drastically.
-                 */
-                getElement().getStyle().setProperty("visibility", "hidden");
-
-                String rowStyle = uidl.getStringAttribute("rowstyle");
-                if (rowStyle != null) {
-                    addStyleName(CLASSNAME + "-row-" + rowStyle);
-                }
-
-                String rowDescription = uidl.getStringAttribute("rowdescr");
-                if (rowDescription != null && !rowDescription.equals("")) {
-                    TooltipInfo info = new TooltipInfo(rowDescription);
-                    client.registerTooltip(VScrollTable.this, rowElement, info);
-                } else {
-                    // Remove possibly previously set tooltip
-                    client.registerTooltip(VScrollTable.this, rowElement, null);
-                }
-
-                tHead.getColumnAlignments();
-                int col = 0;
-                int visibleColumnIndex = -1;
-
-                // row header
-                if (showRowHeaders) {
-                    boolean sorted = tHead.getHeaderCell(col).isSorted();
-                    addCell(uidl, buildCaptionHtmlSnippet(uidl), aligns[col++],
-                            "rowheader", true, sorted);
-                    visibleColumnIndex++;
-                }
-
-                if (uidl.hasAttribute("al")) {
-                    actionKeys = uidl.getStringArrayAttribute("al");
-                }
-
-                final Iterator<?> cells = uidl.getChildIterator();
-                while (cells.hasNext()) {
-                    final Object cell = cells.next();
-                    visibleColumnIndex++;
-
-                    String columnId = visibleColOrder[visibleColumnIndex];
-
-                    String style = "";
-                    if (uidl.hasAttribute("style-" + columnId)) {
-                        style = uidl.getStringAttribute("style-" + columnId);
-                    }
-
-                    String description = null;
-                    if (uidl.hasAttribute("descr-" + columnId)) {
-                        description = uidl.getStringAttribute("descr-"
-                                + columnId);
-                    }
-
-                    boolean sorted = tHead.getHeaderCell(col).isSorted();
-                    if (cell instanceof String) {
-                        addCell(uidl, cell.toString(), aligns[col++], style,
-                                false, sorted, description);
-                    } else {
-                        final Paintable cellContent = client
-                                .getPaintable((UIDL) cell);
-
-                        addCell(uidl, (Widget) cellContent, aligns[col++],
-                                style, sorted);
-                        paintComponent(cellContent, (UIDL) cell);
-                    }
-                }
-                if (uidl.hasAttribute("selected") && !isSelected()) {
-                    toggleSelection();
-                }
-            }
-
-            /**
-             * Add a dummy row, used for measurements if Table is empty.
-             */
-            public VScrollTableRow() {
-                this(0);
-                addStyleName(CLASSNAME + "-row");
-                addCell(null, "_", 'b', "", true, false);
-            }
-
             public void addCell(UIDL rowUidl, String text, char align,
                     String style, boolean textIsHTML, boolean sorted) {
                 addCell(rowUidl, text, align, style, textIsHTML, sorted, null);
@@ -4528,7 +4567,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     String style, boolean textIsHTML, boolean sorted,
                     String description) {
                 // String only content is optimized by not using Label widget
-                final Element td = DOM.createTD();
+                final TableCellElement td = DOM.createTD().cast();
+                initCellWithText(text, align, style, textIsHTML, sorted,
+                        description, td);
+            }
+
+            protected void initCellWithText(String text, char align,
+                    String style, boolean textIsHTML, boolean sorted,
+                    String description, final TableCellElement td) {
                 final Element container = DOM.createDiv();
                 String className = CLASSNAME + "-cell-content";
                 if (style != null && !style.equals("")) {
@@ -4570,7 +4616,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             public void addCell(UIDL rowUidl, Widget w, char align,
                     String style, boolean sorted) {
-                final Element td = DOM.createTD();
+                final TableCellElement td = DOM.createTD().cast();
+                initCellWithWidget(w, align, style, sorted, td);
+            }
+
+            protected void initCellWithWidget(Widget w, char align,
+                    String style, boolean sorted, final TableCellElement td) {
                 final Element container = DOM.createDiv();
                 String className = CLASSNAME + "-cell-content";
                 if (style != null && !style.equals("")) {
@@ -5223,7 +5274,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 };
             }
 
-            private int getColIndexOf(Widget child) {
+            protected int getColIndexOf(Widget child) {
                 com.google.gwt.dom.client.Element widgetCell = child
                         .getElement().getParentElement().getParentElement();
                 NodeList<TableCellElement> cells = rowElement.getCells();
@@ -5266,6 +5317,75 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 // Should never be called,
                 // Component container interface faked here to get layouts
                 // render properly
+            }
+        }
+
+        protected class VScrollTableGeneratedRow extends VScrollTableRow {
+
+            private boolean spanColumns;
+            private boolean renderAsHtml;
+
+            public VScrollTableGeneratedRow(UIDL uidl, char[] aligns) {
+                super(uidl, aligns);
+                addStyleName("v-table-generated-row");
+            }
+
+            @Override
+            protected void initCellWidths() {
+                if (!spanColumns) {
+                    super.initCellWidths();
+                }
+            }
+
+            public boolean isSpanColumns() {
+                return spanColumns;
+            }
+
+            @Override
+            protected boolean isRenderCellsAsHtml() {
+                return renderAsHtml;
+            }
+
+            @Override
+            protected void addCellsFromUIDL(UIDL uidl, char[] aligns, int col,
+                    int visibleColumnIndex) {
+                renderAsHtml = uidl.getBooleanAttribute("gen_html");
+                spanColumns = uidl.getBooleanAttribute("gen_span");
+
+                final Iterator<?> cells = uidl.getChildIterator();
+                if (spanColumns) {
+                    int colCount = uidl.getChildCount();
+                    if (cells.hasNext()) {
+                        final Object cell = cells.next();
+                        if (cell instanceof String) {
+                            addSpannedCell(uidl, cell.toString(), aligns[0],
+                                    "", renderAsHtml, false, null, colCount);
+                        } else {
+                            addSpannedCell(uidl, (Widget) cell, aligns[0], "",
+                                    false, colCount);
+                        }
+                    }
+                } else {
+                    super.addCellsFromUIDL(uidl, aligns, col,
+                            visibleColumnIndex);
+                }
+            }
+
+            private void addSpannedCell(UIDL rowUidl, Widget w, char align,
+                    String style, boolean sorted, int colCount) {
+                TableCellElement td = DOM.createTD().cast();
+                td.setColSpan(colCount);
+                initCellWithWidget(w, align, style, sorted, td);
+            }
+
+            private void addSpannedCell(UIDL rowUidl, String text, char align,
+                    String style, boolean textIsHTML, boolean sorted,
+                    String description, int colCount) {
+                // String only content is optimized by not using Label widget
+                final TableCellElement td = DOM.createTD().cast();
+                td.setColSpan(colCount);
+                initCellWithText(text, align, style, textIsHTML, sorted,
+                        description, td);
             }
         }
 

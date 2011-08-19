@@ -96,6 +96,15 @@
 	background: #eef0f2;
 }
 
+.v-table-generated-row {
+    color: #336699;
+    font-weight: bold;
+    font-size: 11px;
+    padding-left: 0px;
+    padding-top: 6px;
+    background: #c0c2c5;
+}
+
 .v-table .v-selected {
 	background-color: #5B677D;
 	color: #FFF;

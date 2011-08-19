@@ -143,6 +143,10 @@
 	cursor: pointer;
 }
 
+.v-table-generated-row {
+	   background: #efefef;
+}
+
 .v-table-body-noselection .v-table-row,
 .v-table-body-noselection .v-table-row-odd {
 	cursor: default;

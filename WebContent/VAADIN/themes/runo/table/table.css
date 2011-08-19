@@ -67,6 +67,13 @@ tr.v-table-row-odd:hover {
 .v-table-body-noselection .v-table-row-odd:hover {
 	background-color: #f6f7f7;
 }
+.v-table-generated-row {
+    color: #393a3c;
+    font-size: 15px;
+    padding: 9px 2px 9px 0;
+    text-shadow: #ffffff 0 1px 0;
+    background: #e7e9ea;
+}
 .v-table tr.v-selected {
 	background: #57a7ed;
 	color: #fff;

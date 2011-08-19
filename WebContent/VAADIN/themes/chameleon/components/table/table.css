@@ -38,6 +38,11 @@ div.v-table-focus-slot-left {
 	margin: 0;
 	}
 
+.v-table-generated-row {
+    background: #c9c9c9;
+    }
+
+
 div.v-table-focus-slot-right {
 	background: transparent;
 	border-right: 2px solid #b3b3b3;

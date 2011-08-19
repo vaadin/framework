@@ -109,7 +109,9 @@ public class Table extends AbstractSelect implements Action.Container,
 
     protected static final int CELL_ITEMID = 3;
 
-    protected static final int CELL_FIRSTCOL = 4;
+    protected static final int CELL_GENERATED_ROW = 4;
+
+    protected static final int CELL_FIRSTCOL = 5;
 
     /**
      * Left column alignment. <b>This is the default behaviour. </b>
@@ -399,6 +401,8 @@ public class Table extends AbstractSelect implements Action.Container,
     private MultiSelectMode multiSelectMode = MultiSelectMode.DEFAULT;
 
     private boolean rowCacheInvalidated;
+
+    private RowGenerator rowGenerator = null;
 
     /* Table constructors */
 
@@ -1533,61 +1537,79 @@ public class Table extends AbstractSelect implements Action.Container,
                 cells[CELL_ICON][i] = getItemIcon(id);
             }
 
+            GeneratedRow generatedRow = rowGenerator != null ? rowGenerator
+                    .generateRow(this, id) : null;
+            cells[CELL_GENERATED_ROW][i] = generatedRow;
+
             for (int j = 0; j < cols; j++) {
                 if (isColumnCollapsed(colids[j])) {
                     continue;
                 }
                 Property p = null;
                 Object value = "";
-                boolean isGenerated = columnGenerators.containsKey(colids[j]);
+                boolean isGeneratedRow = generatedRow != null;
+                boolean isGeneratedColumn = columnGenerators
+                        .containsKey(colids[j]);
+                boolean isGenerated = isGeneratedRow || isGeneratedColumn;
 
                 if (!isGenerated) {
                     p = getContainerProperty(id, colids[j]);
                 }
 
-                // check in current pageBuffer already has row
-                int index = firstIndex + i;
-                if (p != null || isGenerated) {
-                    if (index < firstIndexNotInCache
-                            && index >= pageBufferFirstIndex) {
-                        // we have data already in our cache,
-                        // recycle it instead of fetching it via
-                        // getValue/getPropertyValue
+                if (isGeneratedRow) {
+                    if (generatedRow.isSpanColumns() && j > 0) {
+                        value = null;
+                    } else if (generatedRow.getText().length > j) {
+                        value = generatedRow.getText()[j];
+                    }
+                } else {
+                    // check in current pageBuffer already has row
+                    int index = firstIndex + i;
+                    if (p != null || isGenerated) {
                         int indexInOldBuffer = index - pageBufferFirstIndex;
-                        value = pageBuffer[CELL_FIRSTCOL + j][indexInOldBuffer];
-                        if (!isGenerated && iscomponent[j]
-                                || !(value instanceof Component)) {
-                            listenProperty(p, oldListenedProperties);
-                        }
-                    } else {
-                        if (isGenerated) {
-                            ColumnGenerator cg = columnGenerators
-                                    .get(colids[j]);
-                            value = cg.generateCell(this, id, colids[j]);
-                            if (value != null && !(value instanceof Component)
-                                    && !(value instanceof String)) {
-                                // Avoid errors if a generator returns something
-                                // other than a Component or a String
-                                value = value.toString();
-                            }
-                        } else if (iscomponent[j]) {
-                            value = p.getValue();
-                            listenProperty(p, oldListenedProperties);
-                        } else if (p != null) {
-                            value = getPropertyValue(id, colids[j], p);
-                            /*
-                             * If returned value is Component (via fieldfactory
-                             * or overridden getPropertyValue) we excpect it to
-                             * listen property value changes. Otherwise if
-                             * property emits value change events, table will
-                             * start to listen them and refresh content when
-                             * needed.
-                             */
-                            if (!(value instanceof Component)) {
+                        if (index < firstIndexNotInCache
+                                && index >= pageBufferFirstIndex
+                                && pageBuffer[CELL_GENERATED_ROW][indexInOldBuffer] == null) {
+                            // we have data already in our cache,
+                            // recycle it instead of fetching it via
+                            // getValue/getPropertyValue
+                            value = pageBuffer[CELL_FIRSTCOL + j][indexInOldBuffer];
+                            if (!isGeneratedColumn && iscomponent[j]
+                                    || !(value instanceof Component)) {
                                 listenProperty(p, oldListenedProperties);
                             }
                         } else {
-                            value = getPropertyValue(id, colids[j], null);
+                            if (isGeneratedColumn) {
+                                ColumnGenerator cg = columnGenerators
+                                        .get(colids[j]);
+                                value = cg.generateCell(this, id, colids[j]);
+                                if (value != null
+                                        && !(value instanceof Component)
+                                        && !(value instanceof String)) {
+                                    // Avoid errors if a generator returns
+                                    // something
+                                    // other than a Component or a String
+                                    value = value.toString();
+                                }
+                            } else if (iscomponent[j]) {
+                                value = p.getValue();
+                                listenProperty(p, oldListenedProperties);
+                            } else if (p != null) {
+                                value = getPropertyValue(id, colids[j], p);
+                                /*
+                                 * If returned value is Component (via
+                                 * fieldfactory or overridden getPropertyValue)
+                                 * we excpect it to listen property value
+                                 * changes. Otherwise if property emits value
+                                 * change events, table will start to listen
+                                 * them and refresh content when needed.
+                                 */
+                                if (!(value instanceof Component)) {
+                                    listenProperty(p, oldListenedProperties);
+                                }
+                            } else {
+                                value = getPropertyValue(id, colids[j], null);
+                            }
                         }
                     }
                 }
@@ -2919,6 +2941,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         paintRowIcon(target, cells, indexInRowbuffer);
         paintRowHeader(target, cells, indexInRowbuffer);
+        paintGeneratedRowInfo(target, cells, indexInRowbuffer);
         target.addAttribute("key",
                 Integer.parseInt(cells[CELL_KEY][indexInRowbuffer].toString()));
 
@@ -2957,6 +2980,15 @@ public class Table extends AbstractSelect implements Action.Container,
         paintRowTooltips(target, itemId);
 
         paintRowAttributes(target, itemId);
+    }
+
+    private void paintGeneratedRowInfo(PaintTarget target, Object[][] cells,
+            int indexInRowBuffer) throws PaintException {
+        GeneratedRow generatedRow = (GeneratedRow) cells[CELL_GENERATED_ROW][indexInRowBuffer];
+        if (generatedRow != null) {
+            target.addAttribute("gen_html", generatedRow.isRenderAsHtml());
+            target.addAttribute("gen_span", generatedRow.isSpanColumns());
+        }
     }
 
     protected void paintRowHeader(PaintTarget target, Object[][] cells,
@@ -4604,4 +4636,114 @@ public class Table extends AbstractSelect implements Action.Container,
         return itemDescriptionGenerator;
     }
 
+    public interface RowGenerator {
+        /**
+         * Called for every row that is painted in the Table. Returning a
+         * GeneratedRow object will cause the row to be painted based on the
+         * contents of the GeneratedRow. A generated row is by default styled
+         * similarly to a header or footer row.
+         * <p>
+         * The GeneratedRow data object contains the text that should be
+         * rendered in the row. The itemId in the container thus works only as a
+         * placeholder.
+         * <p>
+         * If GeneratedRow.setSpanColumns(true) is used, there will be one
+         * String spanning all columns (use setText("Spanning text")). Otherwise
+         * you can define one String per visible column.
+         * <p>
+         * If GeneratedRow.setRenderAsHtml(true) is used, the strings can
+         * contain HTML markup, otherwise all strings will be rendered as text
+         * (the default).
+         * <p>
+         * A "v-table-generated-row" CSS class is added to all generated rows.
+         * For custom styling of a generated row you can combine a RowGenerator
+         * with a CellStyleGenerator.
+         * <p>
+         * 
+         * @param table
+         *            The Table that is being painted
+         * @param itemId
+         *            The itemId for the row
+         * @return A GeneratedRow describing how the row should be painted or
+         *         null to paint the row with the contents from the container
+         */
+        public GeneratedRow generateRow(Table table, Object itemId);
+    }
+
+    public static class GeneratedRow {
+        private boolean renderAsHtml = false;
+        private boolean spanColumns = false;
+        private String[] text = null;
+
+        /**
+         * Creates a new generated row. If only one string is passed in, columns
+         * are automatically spanned.
+         * 
+         * @param text
+         */
+        public GeneratedRow(String... text) {
+            setRenderAsHtml(false);
+            setSpanColumns(text.length == 1);
+            setText(text);
+        }
+
+        /**
+         * Pass one String if spanColumns is used, one String for each visible
+         * column otherwise
+         */
+        public void setText(String... text) {
+            this.text = text;
+        }
+
+        protected String[] getText() {
+            return text;
+        }
+
+        protected boolean isRenderAsHtml() {
+            return renderAsHtml;
+        }
+
+        /**
+         * If set to true, all strings passed to {@link #setText(String...)}
+         * will be rendered as HTML.
+         * 
+         * @param renderAsHtml
+         */
+        public void setRenderAsHtml(boolean renderAsHtml) {
+            this.renderAsHtml = renderAsHtml;
+        }
+
+        protected boolean isSpanColumns() {
+            return spanColumns;
+        }
+
+        /**
+         * If set to true, only one string will be rendered, spanning the entire
+         * row.
+         * 
+         * @param spanColumns
+         */
+        public void setSpanColumns(boolean spanColumns) {
+            this.spanColumns = spanColumns;
+        }
+    }
+
+    /**
+     * Assigns a row generator to the table. The row generator will be able to
+     * replace rows in the table when it is rendered.
+     * 
+     * @param generator
+     *            the new row generator
+     */
+    public void setRowGenerator(RowGenerator generator) {
+        rowGenerator = generator;
+        refreshRenderedCells();
+    }
+
+    /**
+     * @return the current row generator
+     */
+    public RowGenerator getRowGenerator() {
+        return rowGenerator;
+    }
 }

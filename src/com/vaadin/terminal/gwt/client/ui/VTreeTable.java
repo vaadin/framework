@@ -15,6 +15,7 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
+import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -122,6 +123,10 @@ public class VTreeTable extends VScrollTable {
 
         @Override
         protected VScrollTableRow createRow(UIDL uidl, char[] aligns2) {
+            if (uidl.hasAttribute("gen_html")) {
+                // This is a generated row.
+                return new VTreeTableGeneratedRow(uidl, aligns2);
+            }
             return new VTreeTableRow(uidl, aligns2);
         }
 
@@ -133,7 +138,7 @@ public class VTreeTable extends VScrollTable {
             private boolean open;
             private int depth;
             private boolean canHaveChildren;
-            private Widget widgetInHierarchyColumn;
+            protected Widget widgetInHierarchyColumn;
 
             public VTreeTableRow(UIDL uidl, char[] aligns2) {
                 super(uidl, aligns2);
@@ -149,7 +154,7 @@ public class VTreeTable extends VScrollTable {
                 addTreeSpacer(rowUidl);
             }
 
-            private boolean addTreeSpacer(UIDL rowUidl) {
+            protected boolean addTreeSpacer(UIDL rowUidl) {
                 if (cellShowsTreeHierarchy(getElement().getChildCount() - 1)) {
                     Element container = (Element) getElement().getLastChild()
                             .getFirstChild();
@@ -263,6 +268,79 @@ public class VTreeTable extends VScrollTable {
                 return consumedSpace;
             }
 
+        }
+
+        protected class VTreeTableGeneratedRow extends VTreeTableRow {
+
+            private boolean spanColumns;
+            private boolean renderAsHtml;
+
+            public VTreeTableGeneratedRow(UIDL uidl, char[] aligns) {
+                super(uidl, aligns);
+                addStyleName("v-table-generated-row");
+            }
+
+            @Override
+            protected void initCellWidths() {
+                if (!spanColumns) {
+                    super.initCellWidths();
+                }
+            }
+
+            public boolean isSpanColumns() {
+                return spanColumns;
+            }
+
+            @Override
+            protected boolean isRenderCellsAsHtml() {
+                return renderAsHtml;
+            }
+
+            @Override
+            protected void addCellsFromUIDL(UIDL uidl, char[] aligns, int col,
+                    int visibleColumnIndex) {
+                renderAsHtml = uidl.getBooleanAttribute("gen_html");
+                spanColumns = uidl.getBooleanAttribute("gen_span");
+
+                final Iterator<?> cells = uidl.getChildIterator();
+                if (spanColumns) {
+                    int colCount = uidl.getChildCount();
+                    if (cells.hasNext()) {
+                        final Object cell = cells.next();
+                        if (cell instanceof String) {
+                            addSpannedCell(uidl, cell.toString(), aligns[0],
+                                    "", renderAsHtml, false, null, colCount);
+                        } else {
+                            addSpannedCell(uidl, (Widget) cell, aligns[0], "",
+                                    false, colCount);
+                        }
+                    }
+                } else {
+                    super.addCellsFromUIDL(uidl, aligns, col,
+                            visibleColumnIndex);
+                }
+            }
+
+            private void addSpannedCell(UIDL rowUidl, Widget w, char align,
+                    String style, boolean sorted, int colCount) {
+                TableCellElement td = DOM.createTD().cast();
+                td.setColSpan(colCount);
+                initCellWithWidget(w, align, style, sorted, td);
+                if (addTreeSpacer(rowUidl)) {
+                    widgetInHierarchyColumn = w;
+                }
+            }
+
+            private void addSpannedCell(UIDL rowUidl, String text, char align,
+                    String style, boolean textIsHTML, boolean sorted,
+                    String description, int colCount) {
+                // String only content is optimized by not using Label widget
+                final TableCellElement td = DOM.createTD().cast();
+                td.setColSpan(colCount);
+                initCellWithText(text, align, style, textIsHTML, sorted,
+                        description, td);
+                addTreeSpacer(rowUidl);
+            }
         }
 
         private int getIdentWidth() {

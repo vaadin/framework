@@ -20,8 +20,10 @@ import com.vaadin.ui.Table.ColumnResizeEvent;
 import com.vaadin.ui.Table.ColumnResizeListener;
 import com.vaadin.ui.Table.FooterClickEvent;
 import com.vaadin.ui.Table.FooterClickListener;
+import com.vaadin.ui.Table.GeneratedRow;
 import com.vaadin.ui.Table.HeaderClickEvent;
 import com.vaadin.ui.Table.HeaderClickListener;
+import com.vaadin.ui.Table.RowGenerator;
 
 public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         implements ItemClickListener, HeaderClickListener, FooterClickListener,
@@ -308,6 +310,48 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         }
     };
 
+    private class GeneratedRowInfo {
+
+        private final int nth;
+        private final String[] text;
+        private final boolean isHtml;
+
+        public GeneratedRowInfo(int nth, boolean isHtml, String... text) {
+            this.nth = nth;
+            this.isHtml = isHtml;
+            this.text = text;
+        }
+
+        public boolean appliesTo(Object itemId) {
+            int ix = Integer.valueOf(itemId.toString().substring(5));
+            return ix % nth == 0;
+        }
+    }
+
+    private Command<T, GeneratedRowInfo> rowGeneratorCommand = new Command<T, GeneratedRowInfo>() {
+
+        public void execute(T c, final GeneratedRowInfo generatedRowInfo,
+                Object data) {
+            if (generatedRowInfo == null) {
+                c.setRowGenerator(null);
+            } else {
+                c.setRowGenerator(new RowGenerator() {
+
+                    public GeneratedRow generateRow(Table table, Object itemId) {
+                        if (generatedRowInfo.appliesTo(itemId)) {
+                            GeneratedRow generatedRow = new GeneratedRow(
+                                    generatedRowInfo.text);
+                            generatedRow
+                                    .setRenderAsHtml(generatedRowInfo.isHtml);
+                            return generatedRow;
+                        }
+                        return null;
+                    }
+                });
+            }
+        }
+    };
+
     private Command<T, Boolean> setSortEnabledCommand = new Command<T, Boolean>() {
 
         public void execute(T c, Boolean value, Object data) {
@@ -348,6 +392,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         createColumnHeaderMode(CATEGORY_FEATURES);
         createAddGeneratedColumnAction(CATEGORY_FEATURES);
         createCellStyleAction(CATEGORY_FEATURES);
+        createGeneratedRowAction(CATEGORY_FEATURES);
 
         createBooleanAction("Sort enabled", CATEGORY_FEATURES, true,
                 setSortEnabledCommand);
@@ -399,6 +444,26 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
                 "tables-test-cell-style-red-row", "Item 2", "Property 2"));
         createSelectAction("Cell style generator", categoryFeatures, options,
                 "None", cellStyleCommand, true);
+    }
+
+    private void createGeneratedRowAction(String categoryFeatures) {
+        LinkedHashMap<String, GeneratedRowInfo> options = new LinkedHashMap<String, GeneratedRowInfo>();
+        options.put("None", null);
+        options.put("Every fifth row, spanned", new GeneratedRowInfo(5, false,
+                "foobarbaz this is a long one that should span."));
+        int props = getComponent().getContainerPropertyIds().size();
+        String[] text = new String[props];
+        for (int ix = 0; ix < props; ix++) {
+            text[ix] = "foo" + ix;
+        }
+        options.put("Every tenth row, no spanning", new GeneratedRowInfo(10,
+                false, text));
+        options.put(
+                "Every eight row, spanned, html formatted",
+                new GeneratedRowInfo(8, true,
+                        "<b>foo</b> <i>bar</i> <span style='color:red;text-size:0.5em;'>baz</span>"));
+        createSelectAction("Row generator", categoryFeatures, options, "None",
+                rowGeneratorCommand, true);
     }
 
     private void createColumnHeaderMode(String category) {
