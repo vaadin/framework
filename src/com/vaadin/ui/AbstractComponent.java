@@ -654,9 +654,24 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         }
     }
 
-    /*
-     * Gets the parent application of the component. Don't add a JavaDoc comment
-     * here, we use the default documentation from implemented interface.
+    /**
+     * Gets the application object to which the component is attached.
+     * 
+     * <p>
+     * The method will return {@code null} if the component is not currently
+     * attached to an application. This is often a problem in constructors of
+     * regular components and in the initializers of custom composite
+     * components. A standard workaround is to move the problematic
+     * initialization to {@link #attach()}, as described in the documentation of
+     * the method.
+     * </p>
+     * <p>
+     * <b>This method is not meant to be overridden. Due to CDI requirements we
+     * cannot declare it as final even though it should be final.</b>
+     * </p>
+     * 
+     * @return the parent application of the component or <code>null</code>.
+     * @see #attach()
      */
     public Application getApplication() {
         if (parent == null) {
@@ -673,11 +688,32 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         repaintRequestListenersNotified = false;
     }
 
-    /*
-     * Paints the component into a UIDL stream. Don't add a JavaDoc comment
-     * here, we use the default documentation from implemented interface.
+    /**
+     * 
+     * <p>
+     * Paints the Paintable into a UIDL stream. This method creates the UIDL
+     * sequence describing it and outputs it to the given UIDL stream.
+     * </p>
+     * 
+     * <p>
+     * It is called when the contents of the component should be painted in
+     * response to the component first being shown or having been altered so
+     * that its visual representation is changed.
+     * </p>
+     * 
+     * <p>
+     * <b>Do not override this to paint your component.</b> Override
+     * {@link #paintContent(PaintTarget)} instead.
+     * </p>
+     * 
+     * 
+     * @param target
+     *            the target UIDL stream where the component should paint itself
+     *            to.
+     * @throws PaintException
+     *             if the paint operation failed.
      */
-    public final void paint(PaintTarget target) throws PaintException {
+    public void paint(PaintTarget target) throws PaintException {
         final String tag = target.getTag(this);
         if (!target.startTag(this, tag) || repaintRequestListenersNotified) {
 

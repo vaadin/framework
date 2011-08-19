@@ -285,12 +285,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
      * <p>
      * This is always the window itself.
      * </p>
+     * <p>
+     * <b>This method is not meant to be overridden. Due to CDI requirements we
+     * cannot declare it as final even though it should be final.</b>
+     * </p>
      * 
      * @see Component#getWindow()
      * @return the window itself
      */
     @Override
-    public final Window getWindow() {
+    public Window getWindow() {
         return this;
     }
 
@@ -300,11 +304,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
      * @see com.vaadin.ui.AbstractComponent#getApplication()
      */
     @Override
-    public final Application getApplication() {
+    public Application getApplication() {
         if (getParent() == null) {
             return application;
         }
-        return (getParent()).getApplication();
+        return getParent().getApplication();
     }
 
     /**
@@ -314,12 +318,17 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
      * The parent of an application window is always null. The parent of a sub
      * window is the application window the sub window is attached to.
      * </p>
+     * <p>
+     * <b>This method is not meant to be overridden. Due to CDI requirements we
+     * cannot declare it as final even though it should be final.</b>
+     * </p>
+     * 
      * 
      * @return the parent window
      * @see Component#getParent()
      */
     @Override
-    public final Window getParent() {
+    public Window getParent() {
         return (Window) super.getParent();
     }
 
