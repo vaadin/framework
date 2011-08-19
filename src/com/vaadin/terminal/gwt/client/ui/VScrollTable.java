@@ -884,7 +884,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     updateBody(rowData, uidl.getIntAttribute("firstrow"),
                             uidl.getIntAttribute("rows"));
                     if (headerChangedDuringUpdate) {
-                        lazyAdjustColumnWidths.schedule(1);
+                        triggerLazyColumnAdjustment(true);
                     } else {
                         // webkits may still bug with their disturbing scrollbar
                         // bug, see #3457
@@ -1075,7 +1075,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
     }
 
-    private void updatePageLength(UIDL uidl) {
+    protected void updatePageLength(UIDL uidl) {
         int oldPageLength = pageLength;
         if (uidl.hasAttribute("pagelength")) {
             pageLength = uidl.getIntAttribute("pagelength");
@@ -3030,7 +3030,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 } else {
                     tHead.removeCell(colKey);
                     collapsedColumns.add(colKey);
-                    lazyAdjustColumnWidths.schedule(1);
+                    triggerLazyColumnAdjustment(true);
                 }
 
                 // update variable to server
@@ -5488,8 +5488,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             setContentWidth(innerPixels);
 
             // readjust undefined width columns
-            lazyAdjustColumnWidths.cancel();
-            lazyAdjustColumnWidths.schedule(LAZY_COLUMN_ADJUST_TIMEOUT);
+            triggerLazyColumnAdjustment(false);
 
         } else {
             // Undefined width
@@ -5499,8 +5498,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             sizeInit();
 
             // readjust undefined width columns
-            lazyAdjustColumnWidths.cancel();
-            lazyAdjustColumnWidths.schedule(LAZY_COLUMN_ADJUST_TIMEOUT);
+            triggerLazyColumnAdjustment(false);
         }
 
         /*
@@ -6607,4 +6605,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             return function(){ return false; };
     }-*/;
 
+    protected void triggerLazyColumnAdjustment(boolean now) {
+        lazyAdjustColumnWidths.cancel();
+        if (now) {
+            lazyAdjustColumnWidths.run();
+        } else {
+            lazyAdjustColumnWidths.schedule(LAZY_COLUMN_ADJUST_TIMEOUT);
+        }
+    }
 }

@@ -26,7 +26,6 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComputedStyle;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.terminal.gwt.client.ui.VTreeTable.VTreeTableScrollBody.VTreeTableRow;
 
@@ -64,10 +63,21 @@ public class VTreeTable extends VScrollTable {
 
             int scrollPosition2 = widget.getScrollPosition();
             if (scrollPosition != scrollPosition2) {
-                VConsole.log("TT scrollpos from " + scrollPosition + " to "
-                        + scrollPosition2);
                 widget.setScrollPosition(scrollPosition);
             }
+
+            /*
+             * Triggers row calculations, removes cached rows etc. Basically
+             * cleans up state. Be careful if touching this, you will brake
+             * pageLength=0 if you remove this.
+             */
+            onScroll(null);
+
+            /*
+             * Ensure that possibly removed/added scrollbars are considered.
+             */
+            triggerLazyColumnAdjustment(true);
+
             collapseRequest = false;
         }
         if (uidl.hasAttribute("focusedRow")) {
@@ -765,10 +775,6 @@ public class VTreeTable extends VScrollTable {
         // Make sure that initializedAndAttached & al are not reset when the
         // totalrows are updated on expand/collapse requests.
         int newTotalRows = uidl.getIntAttribute("totalrows");
-        if (collapseRequest) {
-            setTotalRows(newTotalRows);
-        } else {
-            super.setTotalRows(newTotalRows);
-        }
+        setTotalRows(newTotalRows);        
     }
 }
