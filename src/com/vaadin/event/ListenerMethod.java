@@ -172,19 +172,26 @@ public class ListenerMethod implements EventListener, Serializable {
 
         // Checks that the object is of correct type
         if (!method.getDeclaringClass().isAssignableFrom(target.getClass())) {
-            throw new java.lang.IllegalArgumentException();
+            throw new java.lang.IllegalArgumentException("The method "
+                    + method.getName()
+                    + " cannot be used for the given target: "
+                    + target.getClass().getName());
         }
 
         // Checks that the event argument is null
         if (eventArgumentIndex >= 0 && arguments[eventArgumentIndex] != null) {
-            throw new java.lang.IllegalArgumentException();
+            throw new java.lang.IllegalArgumentException("argument["
+                    + eventArgumentIndex + "] must be null");
         }
 
         // Checks the event type is supported by the method
         if (eventArgumentIndex >= 0
                 && !method.getParameterTypes()[eventArgumentIndex]
                         .isAssignableFrom(eventType)) {
-            throw new java.lang.IllegalArgumentException();
+            throw new java.lang.IllegalArgumentException("The method "
+                    + method.getName()
+                    + " does not accept the given eventType: "
+                    + eventType.getName());
         }
 
         this.eventType = eventType;
@@ -238,19 +245,24 @@ public class ListenerMethod implements EventListener, Serializable {
             }
         }
         if (method == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Method " + methodName
+                    + " not found in class " + target.getClass().getName());
         }
 
         // Checks that the event argument is null
         if (eventArgumentIndex >= 0 && arguments[eventArgumentIndex] != null) {
-            throw new java.lang.IllegalArgumentException();
+            throw new java.lang.IllegalArgumentException("argument["
+                    + eventArgumentIndex + "] must be null");
         }
 
         // Checks the event type is supported by the method
         if (eventArgumentIndex >= 0
                 && !method.getParameterTypes()[eventArgumentIndex]
                         .isAssignableFrom(eventType)) {
-            throw new java.lang.IllegalArgumentException();
+            throw new java.lang.IllegalArgumentException("The method "
+                    + method.getName()
+                    + " does not accept the given eventType: "
+                    + eventType.getName());
         }
 
         this.eventType = eventType;
@@ -291,7 +303,10 @@ public class ListenerMethod implements EventListener, Serializable {
 
         // Check that the object is of correct type
         if (!method.getDeclaringClass().isAssignableFrom(target.getClass())) {
-            throw new java.lang.IllegalArgumentException();
+            throw new java.lang.IllegalArgumentException("The method "
+                    + method.getName()
+                    + " cannot be used for the given target: "
+                    + target.getClass().getName());
         }
 
         this.eventType = eventType;
@@ -342,7 +357,8 @@ public class ListenerMethod implements EventListener, Serializable {
             }
         }
         if (method == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Method " + methodName
+                    + " not found in class " + target.getClass().getName());
         }
 
         this.eventType = eventType;
@@ -380,7 +396,10 @@ public class ListenerMethod implements EventListener, Serializable {
 
         // Checks that the object is of correct type
         if (!method.getDeclaringClass().isAssignableFrom(target.getClass())) {
-            throw new java.lang.IllegalArgumentException();
+            throw new java.lang.IllegalArgumentException("The method "
+                    + method.getName()
+                    + " cannot be used for the given target: "
+                    + target.getClass().getName());
         }
 
         this.eventType = eventType;
@@ -396,7 +415,8 @@ public class ListenerMethod implements EventListener, Serializable {
             arguments = new Object[] { null };
             eventArgumentIndex = 0;
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                    "Method requires unknown parameters");
         }
     }
 
@@ -438,7 +458,8 @@ public class ListenerMethod implements EventListener, Serializable {
             }
         }
         if (method == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Method " + methodName
+                    + " not found in class " + target.getClass().getName());
         }
 
         this.eventType = eventType;
@@ -454,7 +475,8 @@ public class ListenerMethod implements EventListener, Serializable {
             arguments = new Object[] { null };
             eventArgumentIndex = 0;
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                    "Method requires unknown parameters");
         }
     }
 
