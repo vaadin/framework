@@ -95,6 +95,17 @@ public class PortletApplicationContext extends WebApplicationContext implements
         super.removeApplication(application);
     }
 
+    /**
+     * Reinitializing the session is not supported from portlets.
+     * 
+     * @see com.vaadin.terminal.gwt.server.WebApplicationContext#reinitializeSession()
+     */
+    @Override
+    public void reinitializeSession() {
+        throw new UnsupportedOperationException(
+                "Reinitializing the session is not supported from portlets");
+    }
+
     public void setPortletApplication(Portlet portlet, Application app) {
         portletToApplication.put(portlet, app);
     }
