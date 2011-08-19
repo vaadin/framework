@@ -3,7 +3,6 @@
  */
 package com.vaadin.ui.themes;
 
-
 public class ChameleonTheme extends BaseTheme {
 
     public static final String THEME_NAME = "Chameleon";
@@ -203,6 +202,11 @@ public class ChameleonTheme extends BaseTheme {
      * browsers)
      */
     public static final String PANEL_BUBBLE = "bubble";
+
+    /**
+     * Removes borders and background color from the panel
+     */
+    public static final String PANEL_LIGHT = "light";
 
     /***************************************************************************
      * SplitPanel styles
