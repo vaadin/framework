@@ -6,7 +6,7 @@
          basedir="../" default="package-all">
 
     <!--Call one of package-* targets unless you understand what you are doing. -->
-    <target name="package-all" depends="clean-all, init, build, javadoc, internal-package-war, differences, internal-package-liferay" description="Build public packages.">
+    <target name="package-all" depends="clean-all, init, build, javadoc, internal-package-war, internal-package-liferay, differences, internal-package-liferay" description="Build public packages.">
     </target>
 
     <target name="package-jar" depends="clean-result, init, vaadin.jar" description="Create vaadin-x.y.z.jar file.">
