@@ -35,3 +35,8 @@
 .sidebar-menu .selected:focus {
 	outline: none;
 	}
+
+.sidebar-menu .v-nativebutton::-moz-focus-inner {
+	border: none;
+	padding: 0;
+	}
