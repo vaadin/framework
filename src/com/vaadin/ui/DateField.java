@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator;
@@ -125,6 +126,8 @@ public class DateField extends AbstractField implements
     private String currentParseErrorMessage;
 
     private String defaultParseErrorMessage = "Date format not recognized";
+
+    private TimeZone timeZone = null;
 
     /* Constructors */
 
@@ -290,7 +293,7 @@ public class DateField extends AbstractField implements
                         || variables.containsKey("min")
                         || variables.containsKey("sec")
                         || variables.containsKey("msec") || variables
-                        .containsKey("dateString"))) {
+                            .containsKey("dateString"))) {
 
             // Old and new dates
             final Date oldDate = (Date) getValue();
@@ -511,6 +514,10 @@ public class DateField extends AbstractField implements
             // Try to parse the given string value to Date
             try {
                 final SimpleDateFormat parser = new SimpleDateFormat();
+                final TimeZone currentTimeZone = getTimeZone();
+                if (currentTimeZone != null) {
+                    parser.setTimeZone(currentTimeZone);
+                }
                 final Date val = parser.parse(newValue.toString());
                 super.setValue(val, repaintIsNotNeeded);
             } catch (final ParseException e) {
@@ -633,6 +640,11 @@ public class DateField extends AbstractField implements
         final Date currentDate = (Date) getValue();
         if (currentDate != null) {
             newCal.setTime(currentDate);
+        }
+
+        final TimeZone currentTimeZone = getTimeZone();
+        if (currentTimeZone != null) {
+            newCal.setTimeZone(currentTimeZone);
         }
 
         return newCal;
@@ -789,6 +801,37 @@ public class DateField extends AbstractField implements
      */
     public void setParseErrorMessage(String parsingErrorMessage) {
         defaultParseErrorMessage = parsingErrorMessage;
+    }
+
+    /**
+     * Sets the time zone used by this date field. The time zone is used to
+     * convert the absolute time in a Date object to a logical time displayed in
+     * the selector and to convert the select time back to a Date object.
+     * 
+     * If no time zone has been set, the current default time zone returned by
+     * {@code TimeZone.getDefault()} is used.
+     * 
+     * @see #getTimeZone()
+     * @param timeZone
+     *            the time zone to use for time calculations.
+     */
+    public void setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone;
+        requestRepaint();
+    }
+
+    /**
+     * Gets the time zone used by this field. The time zone is used to convert
+     * the absolute time in a Date object to a logical time displayed in the
+     * selector and to convert the select time back to a Date object.
+     * 
+     * If {@code null} is returned, the current default time zone returned by
+     * {@code TimeZone.getDefault()} is used.
+     * 
+     * @return the current time zone
+     */
+    public TimeZone getTimeZone() {
+        return timeZone;
     }
 
     public static class UnparsableDateString extends
