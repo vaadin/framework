@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -60,10 +61,12 @@ public abstract class AbstractWebApplicationContext implements
      *            the HTTP or portlet request that triggered the transaction.
      */
     protected void startTransaction(Application application, Object request) {
+        ArrayList<TransactionListener> currentListeners;
         synchronized (listeners) {
-            for (TransactionListener listener : listeners) {
-                listener.transactionStart(application, request);
-            }
+            currentListeners = new ArrayList<TransactionListener>(listeners);
+        }
+        for (TransactionListener listener : currentListeners) {
+            listener.transactionStart(application, request);
         }
     }
 
@@ -78,16 +81,19 @@ public abstract class AbstractWebApplicationContext implements
     protected void endTransaction(Application application, Object request) {
         LinkedList<Exception> exceptions = null;
 
+        ArrayList<TransactionListener> currentListeners;
         synchronized (listeners) {
-            for (TransactionListener listener : listeners) {
-                try {
-                    listener.transactionEnd(application, request);
-                } catch (final RuntimeException t) {
-                    if (exceptions == null) {
-                        exceptions = new LinkedList<Exception>();
-                    }
-                    exceptions.add(t);
+            currentListeners = new ArrayList<TransactionListener>(listeners);
+        }
+
+        for (TransactionListener listener : currentListeners) {
+            try {
+                listener.transactionEnd(application, request);
+            } catch (final RuntimeException t) {
+                if (exceptions == null) {
+                    exceptions = new LinkedList<Exception>();
                 }
+                exceptions.add(t);
             }
         }
 
