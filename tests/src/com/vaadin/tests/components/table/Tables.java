@@ -342,7 +342,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
                             GeneratedRow generatedRow = new GeneratedRow(
                                     generatedRowInfo.text);
                             generatedRow
-                                    .setRenderAsHtml(generatedRowInfo.isHtml);
+                                    .setHtmlContentAllowed(generatedRowInfo.isHtml);
                             return generatedRow;
                         }
                         return null;
@@ -462,6 +462,8 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
                 "Every eight row, spanned, html formatted",
                 new GeneratedRowInfo(8, true,
                         "<b>foo</b> <i>bar</i> <span style='color:red;text-size:0.5em;'>baz</span>"));
+        options.put("Every row, spanned", new GeneratedRowInfo(1, false,
+                "spanned"));
         createSelectAction("Row generator", categoryFeatures, options, "None",
                 rowGeneratorCommand, true);
     }

@@ -115,7 +115,11 @@ public class ComputedStyle {
     }-*/;
 
     public final int getIntProperty(String name) {
-        return parseInt(getProperty(name)).intValue();
+        Integer parsed = parseInt(getProperty(name));
+        if (parsed != null) {
+            return parsed.intValue();
+        }
+        return 0;
     }
 
     /**

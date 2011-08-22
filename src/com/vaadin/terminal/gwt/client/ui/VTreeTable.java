@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.animation.client.Animation;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.SpanElement;
@@ -26,6 +28,7 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComputedStyle;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.terminal.gwt.client.ui.VTreeTable.VTreeTableScrollBody.VTreeTableRow;
 
@@ -281,20 +284,12 @@ public class VTreeTable extends VScrollTable {
         }
 
         protected class VTreeTableGeneratedRow extends VTreeTableRow {
-
             private boolean spanColumns;
-            private boolean renderAsHtml;
+            private boolean htmlContentAllowed;
 
             public VTreeTableGeneratedRow(UIDL uidl, char[] aligns) {
                 super(uidl, aligns);
                 addStyleName("v-table-generated-row");
-            }
-
-            @Override
-            protected void initCellWidths() {
-                if (!spanColumns) {
-                    super.initCellWidths();
-                }
             }
 
             public boolean isSpanColumns() {
@@ -302,14 +297,40 @@ public class VTreeTable extends VScrollTable {
             }
 
             @Override
-            protected boolean isRenderCellsAsHtml() {
-                return renderAsHtml;
+            protected void initCellWidths() {
+                if (spanColumns) {
+                    setSpannedColumnWidthAfterDOMFullyInited();
+                } else {
+                    super.initCellWidths();
+                }
+            }
+
+            private void setSpannedColumnWidthAfterDOMFullyInited() {
+                // Defer setting width on spanned columns to make sure that
+                // they are added to the DOM before trying to calculate
+                // widths.
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+                    public void execute() {
+                        if (showRowHeaders) {
+                            setCellWidth(0, tHead.getHeaderCell(0).getWidth());
+                            calcAndSetSpanWidthOnCell(1);
+                        } else {
+                            calcAndSetSpanWidthOnCell(0);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            protected boolean isRenderHtmlInCells() {
+                return htmlContentAllowed;
             }
 
             @Override
             protected void addCellsFromUIDL(UIDL uidl, char[] aligns, int col,
                     int visibleColumnIndex) {
-                renderAsHtml = uidl.getBooleanAttribute("gen_html");
+                htmlContentAllowed = uidl.getBooleanAttribute("gen_html");
                 spanColumns = uidl.getBooleanAttribute("gen_span");
 
                 final Iterator<?> cells = uidl.getChildIterator();
@@ -319,7 +340,8 @@ public class VTreeTable extends VScrollTable {
                         final Object cell = cells.next();
                         if (cell instanceof String) {
                             addSpannedCell(uidl, cell.toString(), aligns[0],
-                                    "", renderAsHtml, false, null, colCount);
+                                    "", htmlContentAllowed, false, null,
+                                    colCount);
                         } else {
                             addSpannedCell(uidl, (Widget) cell, aligns[0], "",
                                     false, colCount);
@@ -336,6 +358,7 @@ public class VTreeTable extends VScrollTable {
                 TableCellElement td = DOM.createTD().cast();
                 td.setColSpan(colCount);
                 initCellWithWidget(w, align, style, sorted, td);
+                td.getStyle().setHeight(getRowHeight(), Unit.PX);
                 if (addTreeSpacer(rowUidl)) {
                     widgetInHierarchyColumn = w;
                 }
@@ -349,7 +372,38 @@ public class VTreeTable extends VScrollTable {
                 td.setColSpan(colCount);
                 initCellWithText(text, align, style, textIsHTML, sorted,
                         description, td);
+                td.getStyle().setHeight(getRowHeight(), Unit.PX);
                 addTreeSpacer(rowUidl);
+            }
+
+            @Override
+            protected void setCellWidth(int cellIx, int width) {
+                if (isSpanColumns()) {
+                    if (showRowHeaders) {
+                        if (cellIx == 0) {
+                            super.setCellWidth(0, width);
+                        } else {
+                            // We need to recalculate the spanning TDs width for
+                            // every cellIx in order to support column resizing.
+                            calcAndSetSpanWidthOnCell(1);
+                        }
+                    } else {
+                        // Same as above.
+                        calcAndSetSpanWidthOnCell(0);
+                    }
+                } else {
+                    super.setCellWidth(cellIx, width);
+                }
+            }
+
+            private void calcAndSetSpanWidthOnCell(final int cellIx) {
+                int spanWidth = 0;
+                for (int ix = (showRowHeaders ? 1 : 0); ix < tHead
+                        .getVisibleCellCount(); ix++) {
+                    spanWidth += tHead.getHeaderCell(ix).getOffsetWidth();
+                }
+                Util.setWidthExcludingPaddingAndBorder((Element) getElement()
+                        .getChild(cellIx), spanWidth, 13, false);
             }
         }
 
@@ -775,6 +829,6 @@ public class VTreeTable extends VScrollTable {
         // Make sure that initializedAndAttached & al are not reset when the
         // totalrows are updated on expand/collapse requests.
         int newTotalRows = uidl.getIntAttribute("totalrows");
-        setTotalRows(newTotalRows);        
+        setTotalRows(newTotalRows);
     }
 }

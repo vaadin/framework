@@ -282,7 +282,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      */
     private boolean headerChangedDuringUpdate = false;
 
-    private final TableHead tHead = new TableHead();
+    protected final TableHead tHead = new TableHead();
 
     private final TableFooter tFoot = new TableFooter();
 
@@ -4218,21 +4218,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          */
         public void setColWidth(int colIndex, int w) {
             for (Widget row : renderedRows) {
-                TableRowElement tr = row.getElement().cast();
-                TableCellElement cell = tr.getCells().getItem(colIndex);
-                boolean spanned = false;
-                if (row instanceof VScrollTableGeneratedRow) {
-                    spanned = ((VScrollTableGeneratedRow) row).isSpanColumns();
-                }
-                if (!spanned) {
-                    cell.getFirstChildElement().getStyle()
-                            .setPropertyPx("width", w);
-                    cell.getStyle().setPropertyPx("width", w);
-                } else if (colIndex == 0) {
-                    cell.getFirstChildElement().getStyle()
-                            .clearProperty("width");
-                    cell.getStyle().clearProperty("width");
-                }
+                ((VScrollTableRow) row).setCellWidth(colIndex, w);
             }
         }
 
@@ -4304,10 +4290,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 final VScrollTableRow row = (VScrollTableRow) rows.next();
 
                 final Element td = DOM.getChild(row.getElement(), oldIndex);
-                DOM.removeChild(row.getElement(), td);
+                if (td != null) {
+                    DOM.removeChild(row.getElement(), td);
 
-                DOM.insertChild(row.getElement(), td, newIndex);
-
+                    DOM.insertChild(row.getElement(), td, newIndex);
+                }
             }
 
         }
@@ -4332,8 +4319,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             protected final int rowKey;
             private List<UIDL> pendingComponentPaints;
 
-            protected String[] actionKeys = null;
-            protected final TableRowElement rowElement;
+            private String[] actionKeys = null;
+            private final TableRowElement rowElement;
             private boolean mDown;
             private int index;
             private Event touchStart;
@@ -4410,17 +4397,21 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
 
             protected void initCellWidths() {
-                final int cells = DOM.getChildCount(getElement());
+                final int cells = tHead.getVisibleCellCount();
                 for (int i = 0; i < cells; i++) {
-                    final Element cell = DOM.getChild(getElement(), i);
                     int w = VScrollTable.this.getColWidth(getColKeyByIndex(i));
                     if (w < 0) {
                         w = 0;
                     }
-                    cell.getFirstChildElement().getStyle()
-                            .setPropertyPx("width", w);
-                    cell.getStyle().setPropertyPx("width", w);
+                    setCellWidth(i, w);
                 }
+            }
+
+            protected void setCellWidth(int cellIx, int width) {
+                final Element cell = DOM.getChild(getElement(), cellIx);
+                cell.getFirstChildElement().getStyle()
+                        .setPropertyPx("width", width);
+                cell.getStyle().setPropertyPx("width", width);
             }
 
             protected void addCellsFromUIDL(UIDL uidl, char[] aligns, int col,
@@ -4446,7 +4437,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     boolean sorted = tHead.getHeaderCell(col).isSorted();
                     if (cell instanceof String) {
                         addCell(uidl, cell.toString(), aligns[col++], style,
-                                isRenderCellsAsHtml(), sorted, description);
+                                isRenderHtmlInCells(), sorted, description);
                     } else {
                         final Paintable cellContent = client
                                 .getPaintable((UIDL) cell);
@@ -4464,7 +4455,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
              * 
              * @return always returns false in the default implementation
              */
-            protected boolean isRenderCellsAsHtml() {
+            protected boolean isRenderHtmlInCells() {
                 return false;
             }
 
@@ -5274,7 +5265,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 };
             }
 
-            protected int getColIndexOf(Widget child) {
+            private int getColIndexOf(Widget child) {
                 com.google.gwt.dom.client.Element widgetCell = child
                         .getElement().getParentElement().getParentElement();
                 NodeList<TableCellElement> cells = rowElement.getCells();
@@ -5323,18 +5314,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         protected class VScrollTableGeneratedRow extends VScrollTableRow {
 
             private boolean spanColumns;
-            private boolean renderAsHtml;
+            private boolean htmlContentAllowed;
 
             public VScrollTableGeneratedRow(UIDL uidl, char[] aligns) {
                 super(uidl, aligns);
                 addStyleName("v-table-generated-row");
-            }
-
-            @Override
-            protected void initCellWidths() {
-                if (!spanColumns) {
-                    super.initCellWidths();
-                }
             }
 
             public boolean isSpanColumns() {
@@ -5342,14 +5326,40 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
 
             @Override
-            protected boolean isRenderCellsAsHtml() {
-                return renderAsHtml;
+            protected void initCellWidths() {
+                if (spanColumns) {
+                    setSpannedColumnWidthAfterDOMFullyInited();
+                } else {
+                    super.initCellWidths();
+                }
+            }
+
+            private void setSpannedColumnWidthAfterDOMFullyInited() {
+                // Defer setting width on spanned columns to make sure that
+                // they are added to the DOM before trying to calculate
+                // widths.
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+                    public void execute() {
+                        if (showRowHeaders) {
+                            setCellWidth(0, tHead.getHeaderCell(0).getWidth());
+                            calcAndSetSpanWidthOnCell(1);
+                        } else {
+                            calcAndSetSpanWidthOnCell(0);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            protected boolean isRenderHtmlInCells() {
+                return htmlContentAllowed;
             }
 
             @Override
             protected void addCellsFromUIDL(UIDL uidl, char[] aligns, int col,
                     int visibleColumnIndex) {
-                renderAsHtml = uidl.getBooleanAttribute("gen_html");
+                htmlContentAllowed = uidl.getBooleanAttribute("gen_html");
                 spanColumns = uidl.getBooleanAttribute("gen_span");
 
                 final Iterator<?> cells = uidl.getChildIterator();
@@ -5359,7 +5369,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         final Object cell = cells.next();
                         if (cell instanceof String) {
                             addSpannedCell(uidl, cell.toString(), aligns[0],
-                                    "", renderAsHtml, false, null, colCount);
+                                    "", htmlContentAllowed, false, null,
+                                    colCount);
                         } else {
                             addSpannedCell(uidl, (Widget) cell, aligns[0], "",
                                     false, colCount);
@@ -5376,6 +5387,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 TableCellElement td = DOM.createTD().cast();
                 td.setColSpan(colCount);
                 initCellWithWidget(w, align, style, sorted, td);
+                td.getStyle().setHeight(getRowHeight(), Unit.PX);
             }
 
             private void addSpannedCell(UIDL rowUidl, String text, char align,
@@ -5386,6 +5398,37 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 td.setColSpan(colCount);
                 initCellWithText(text, align, style, textIsHTML, sorted,
                         description, td);
+                td.getStyle().setHeight(getRowHeight(), Unit.PX);
+            }
+
+            @Override
+            protected void setCellWidth(int cellIx, int width) {
+                if (isSpanColumns()) {
+                    if (showRowHeaders) {
+                        if (cellIx == 0) {
+                            super.setCellWidth(0, width);
+                        } else {
+                            // We need to recalculate the spanning TDs width for
+                            // every cellIx in order to support column resizing.
+                            calcAndSetSpanWidthOnCell(1);
+                        }
+                    } else {
+                        // Same as above.
+                        calcAndSetSpanWidthOnCell(0);
+                    }
+                } else {
+                    super.setCellWidth(cellIx, width);
+                }
+            }
+
+            private void calcAndSetSpanWidthOnCell(final int cellIx) {
+                int spanWidth = 0;
+                for (int ix = (showRowHeaders ? 1 : 0); ix < tHead
+                        .getVisibleCellCount(); ix++) {
+                    spanWidth += tHead.getHeaderCell(ix).getOffsetWidth();
+                }
+                Util.setWidthExcludingPaddingAndBorder((Element) getElement()
+                        .getChild(cellIx), spanWidth, 13, false);
             }
         }
 

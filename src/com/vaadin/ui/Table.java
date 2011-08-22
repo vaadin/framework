@@ -2986,7 +2986,7 @@ public class Table extends AbstractSelect implements Action.Container,
             int indexInRowBuffer) throws PaintException {
         GeneratedRow generatedRow = (GeneratedRow) cells[CELL_GENERATED_ROW][indexInRowBuffer];
         if (generatedRow != null) {
-            target.addAttribute("gen_html", generatedRow.isRenderAsHtml());
+            target.addAttribute("gen_html", generatedRow.isHtmlContentAllowed());
             target.addAttribute("gen_span", generatedRow.isSpanColumns());
         }
     }
@@ -4636,6 +4636,13 @@ public class Table extends AbstractSelect implements Action.Container,
         return itemDescriptionGenerator;
     }
 
+    /**
+     * Row generators can be used to replace certain items in a table with a
+     * generated string. The generator is called each time the table is
+     * rendered, which means that new strings can be generated each time.
+     * 
+     * Row generators can be used for e.g. summary rows or grouping of items.
+     */
     public interface RowGenerator {
         /**
          * Called for every row that is painted in the Table. Returning a
@@ -4671,7 +4678,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     public static class GeneratedRow {
-        private boolean renderAsHtml = false;
+        private boolean htmlContentAllowed = false;
         private boolean spanColumns = false;
         private String[] text = null;
 
@@ -4682,8 +4689,8 @@ public class Table extends AbstractSelect implements Action.Container,
          * @param text
          */
         public GeneratedRow(String... text) {
-            setRenderAsHtml(false);
-            setSpanColumns(text.length == 1);
+            setHtmlContentAllowed(false);
+            setSpanColumns(text == null || text.length == 1);
             setText(text);
         }
 
@@ -4692,6 +4699,9 @@ public class Table extends AbstractSelect implements Action.Container,
          * column otherwise
          */
         public void setText(String... text) {
+            if (text == null || (text.length == 1 && text[0] == null)) {
+                text = new String[] { "" };
+            }
             this.text = text;
         }
 
@@ -4699,18 +4709,18 @@ public class Table extends AbstractSelect implements Action.Container,
             return text;
         }
 
-        protected boolean isRenderAsHtml() {
-            return renderAsHtml;
+        protected boolean isHtmlContentAllowed() {
+            return htmlContentAllowed;
         }
 
         /**
          * If set to true, all strings passed to {@link #setText(String...)}
          * will be rendered as HTML.
          * 
-         * @param renderAsHtml
+         * @param htmlContentAllowed
          */
-        public void setRenderAsHtml(boolean renderAsHtml) {
-            this.renderAsHtml = renderAsHtml;
+        public void setHtmlContentAllowed(boolean htmlContentAllowed) {
+            this.htmlContentAllowed = htmlContentAllowed;
         }
 
         protected boolean isSpanColumns() {
