@@ -287,7 +287,8 @@ public class VTree extends FocusElementPanel implements Paintable,
             childTree.childNodeContainer.addStyleDependentName("root");
         }
         if (childTree != null) {
-            childTree.addStyleDependentName("last");
+            boolean leaf = !uidl.getTag().equals("node");
+            childTree.addStyleDependentName(leaf ? "leaf-last" : "last");
             childTree.childNodeContainer.addStyleDependentName("last");
         }
         final String selectMode = uidl.getStringAttribute("selectmode");
@@ -1090,9 +1091,8 @@ public class VTree extends FocusElementPanel implements Paintable,
                     childNodeContainer.add(childTree);
                 }
                 if (!i.hasNext()) {
-                    childTree
-                            .addStyleDependentName(childTree.isLeaf() ? "leaf-last"
-                                    : "last");
+                    childTree.addStyleDependentName(childTree.isLeaf()
+                            ? "leaf-last" : "last");
                     childTree.childNodeContainer.addStyleDependentName("last");
                 }
             }

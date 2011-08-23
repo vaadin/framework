@@ -44,4 +44,10 @@ public class BaseTheme {
     @Deprecated
     public static final String PANEL_LIGHT = "light";
 
+    /**
+     * Adds the connector lines between a parent node and its child nodes to
+     * indicate the tree hierarchy better.
+     */
+    public static final String TREE_CONNECTORS = "connectors";
+
 }

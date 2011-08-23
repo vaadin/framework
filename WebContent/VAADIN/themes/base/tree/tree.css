@@ -11,10 +11,24 @@
 .v-tree-node-caption:focus {
 	outline: none;
 }
-.v-tree-node-expanded {
-	background-position: -5px -10px;
-}
 div.v-tree-node-leaf {
+	background: transparent;
+}
+.v-tree-connectors .v-tree-node-leaf,
+.v-tree-connectors .v-tree-node-leaf:hover {
+	background: transparent url(img/connector-item.png) no-repeat 8px 0;
+}
+.v-tree-connectors .v-tree-node-leaf-last,
+.v-tree-connectors .v-tree-node-leaf-last:hover {
+	background: transparent url(img/connector-item-last.png) no-repeat 8px 0;
+}
+.v-tree-node-expanded {
+	background: transparent url(../common/img/sprites.png) no-repeat -5px -10px;
+}
+.v-tree-connectors .v-tree-node-children {
+	background: transparent url(img/connector.png) repeat-y 8px bottom;
+}
+.v-tree-connectors .v-tree-node-children-last {
 	background: transparent;
 }
 .v-tree-node-caption {
