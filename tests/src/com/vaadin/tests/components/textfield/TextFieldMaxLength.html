@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>New Test</title>
+<title>TextFieldMaxLength</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">New Test</td></tr>
+<tr><td rowspan="1" colspan="3">TextFieldMaxLength</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -153,6 +153,43 @@
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_SLog/ChildComponentContainer[0]/VLabel[0]</td>
 	<td>6. ValueChangeEvent, new value: '123456789012345'</td>
+</tr>
+<!--MaxLength 0-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_Smenu#item0</td>
+	<td>20,8</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::Root/VOverlay[0]/VMenuBar[0]#item5</td>
+	<td>33,5</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::Root/VOverlay[1]/VMenuBar[0]#item2</td>
+	<td>51,3</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::Root/VOverlay[2]/VMenuBar[0]#item0</td>
+	<td>9,9</td>
+</tr>
+<!--Enter some text-->
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
+	<td>123456789012345</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_SLog/ChildComponentContainer[0]/VLabel[0]</td>
+	<td>8. ValueChangeEvent, new value: ''</td>
 </tr>
 </tbody></table>
 </body>
