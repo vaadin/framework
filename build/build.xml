@@ -378,12 +378,7 @@
             <fileset dir="WebContent">
                 <exclude name="**/.svn" />
                 <include name="release-notes.html" />
-                <include name="*.html" />
-                <include name="license/*.html" />
-                <include name="license/*.txt" />
-            </fileset>
-            <fileset dir="WebContent/license">
-                <include name="COPYING" />
+                <include name="license.html" />
             </fileset>
         </copy>
     </target>
