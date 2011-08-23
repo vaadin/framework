@@ -45,6 +45,8 @@
 			<li><a href="#enhancements">Enhancements in Vaadin @version@</a>
 			</li>
 			<li><a href="#fixes">Fixes in Vaadin @version@</a></li>
+			<li><a href="#backwardsincompatibilities">Backwards
+					incompatible changes in Vaadin @version@</a></li>
 			<li><a href="#dependencies">Vaadin @version@ dependencies</a></li>
 			<li><a href="#upgrading">Upgrading to Vaadin @version-minor@</a>
 			</li>
@@ -127,13 +129,13 @@
 			id to prevent session fixation attacks
 		</p>
 		<p>
-			<b>Notification</b> now supports plain text its contents
+			<b>Notification</b> now supports a plain text mode for its contents
 		</p>
 		<p>
-			<b>OptionGroup</b> now supports HTML for the items
+			<b>OptionGroup</b> now supports a HTML mode for the item captions
 		</p>
 		<p>
-			<b>MenuBar</b> now supports HTML for the items
+			<b>MenuBar</b> now supports a HTML mode for the item captions
 		</p>
 		<p>
 			<b>ComboBox</b> now supports scrolling using the mouse wheel
@@ -149,11 +151,11 @@
 			<b>Button</b> can be automatically disabled when clicked
 		</p>
 		<p>
-			<b>Tree, Table</b>and <b>TreeTable</b> supports tooltips for
+			<b>Tree, Table</b> and <b>TreeTable</b> support tooltips for
 			individual items or cells
 		</p>
 		<p>
-			<b>Table</b>and <b>TreeTable</b> now supports GeneratedRows that can
+			<b>Table</b> and <b>TreeTable</b> now support GeneratedRows that can
 			be used for grouping or summary rows
 		</p>
 		<p>
@@ -164,7 +166,8 @@
 			<b>TreeTable</b> supports expand and collapse listeners
 		</p>
 		<p>
-			<b>PopupDateField</b>and<b>InlineDateField</b> now supports Timezones
+			<b>PopupDateField</b> and <b>InlineDateField</b> now supports time
+			zones
 		</p>
 		<p>
 			<b>Sampler</b> is no longer distributed as part of Vaadin @version@.
@@ -199,6 +202,16 @@
 				details of the defects</a> can be found at dev.vaadin.com.
 		</p>
 
+		<h2 id="backwardsincompatibilities">Backwards incompatible
+			changes in Vaadin @version@</h2>
+		<p>Table.ColumnGenerator.generateCell has been changed to return
+			Object instead of Component to enable generation of plain text.</p>
+		<p>Package names for SQLContainer, TreeTable and Chameleon Theme
+			java files have been changed from com.vaadin.addons.* to com.vaadin.*</p>
+		</p>
+		<p>If you have been using SQLContainer, TreeTable or Chameleon
+			Theme as add-ons, remove the add-on jars from the project.</p>
+
 		<h2 id="dependencies">Vaadin @version@ dependencies</h2>
 		Vaadin uses GWT @gwt-version@ for widget set compilation. GWT can be
 		downloaded from <a href="http://code.google.com/webtoolkit/">http://code.google.com/webtoolkit/</a>.
@@ -211,15 +224,15 @@
 		<p>
 			When upgrading from an earlier Vaadin version, you must
 			<ul>
-				<li>Recompile your classes using the new Vaadin @version@ jar.
-					Binary compatibility is not guaranteed for new minor versions like
-					Vaadin @version-minor@.</li>
+				<li>Recompile your classes using the new Vaadin JAR. Binary
+					compatibility is only guaranteed for maintenance releases of
+					Vaadin.</li>
 				<li>Recompile any add-ons you have created using the new Vaadin
-					@version@ jar.</li>
-				<li>Recompile your widget set using the new Vaadin @version@
-					jar and the newly compiled add-ons.</li>
-				<li>If you have extracted a theme from the Vaadin jar, you need
-					to update it with the theme provided in the Vaadin @version@ jar.</li>
+					JAR.</li>
+				<li>Recompile your widget set using the new Vaadin JAR and the
+					newly compiled add-ons.</li>
+				<li>If you have extracted a theme from the Vaadin JAR, you need
+					to update it with the theme provided in the new Vaadin JAR.</li>
 			</ul>
 		</p>
 		<p>Remember also to refresh the project in your IDE to ensure that
@@ -244,15 +257,12 @@
 		</p>
 
 		<b>Liferay and other portal</b> users must install the new
-		vaadin-@version@.jar to the
-		<tt>ROOT/WEB-INF/lib</tt>
-		directory in the portal
-		</li>. Additionally the contents of the
-		<tt>VAADIN</tt>
-		folder from the jar must be extracted to the
-		<tt>ROOT/html/VAADIN</tt>
-		directory in the Liferay installation. If your portal uses custom
-		widgets, install the latest version of <a
+		vaadin-@version@.jar as
+		<t>ROOT/WEB-INF/lib/vaadin.jar</b> in the portal. Additionally the
+		contents of the <tt>VAADIN</tt> folder from the JAR must be extracted
+		to the <tt>ROOT/html/VAADIN</tt> directory in the Liferay
+		installation. If your portal uses custom widgets, install the latest
+		version of <a
 			href="http://vaadin.com/directory#addon/vaadin-control-panel-for-liferay">Vaadin
 			Control Panel for Liferay</a> for easy widget set compilation.
 
@@ -389,8 +399,8 @@
 		</ul>
 		<p>
 			Vaadin supports JSR-168 and JSR-286 Portlet specifications. All
-			portals that implementated either of the portlet specifications
-			should work. The following <b>portals</b> are supported:
+			portals that implement either of the portlet specifications should
+			work. The following <b>portals</b> are supported:
 		</p>
 		<ul>
 			<li>Liferay Portal 5.2 or later</li>
@@ -450,7 +460,6 @@
 				</li>
 			</ul>
 		</p>
-
 	</div>
 	<!-- /content-->
 
