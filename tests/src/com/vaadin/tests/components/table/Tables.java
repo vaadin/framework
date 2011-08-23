@@ -326,6 +326,12 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
             int ix = Integer.valueOf(itemId.toString().substring(5));
             return ix % nth == 0;
         }
+
+        @Override
+        public String toString() {
+            return String.format("%d, %s, %s", nth, isHtml ? "true" : "false",
+                    Arrays.toString(text));
+        }
     }
 
     private Command<T, GeneratedRowInfo> rowGeneratorCommand = new Command<T, GeneratedRowInfo>() {
