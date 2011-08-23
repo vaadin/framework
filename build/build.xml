@@ -568,8 +568,7 @@
                     <include name="VAADIN/themes/reindeer/**/*" />
                 	
                     <include name="release-notes.html" />
-                    <include name="license/**/*" />
-                    <include name="COPYING" />
+                    <include name="license.html" />
                 </patternset>
             </fileset>
         </jar>
@@ -596,8 +595,7 @@
             <fileset dir="${output-dir}/WebContent">
                 <patternset>
                     <include name="release-notes.html" />
-                    <include name="license/**/*" />
-                    <include name="COPYING" />
+                    <include name="license.html" />
                 </patternset>
             </fileset>
         </jar>
@@ -634,8 +632,7 @@
             <fileset dir="${output-dir}/WebContent">
                 <patternset>
                     <include name="release-notes.html" />
-                    <include name="license/**/*" />
-                    <include name="COPYING" />
+                    <include name="license.html" />
                 </patternset>
             </fileset>
         </jar>
