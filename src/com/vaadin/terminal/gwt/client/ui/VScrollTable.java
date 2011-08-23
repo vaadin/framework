@@ -5387,7 +5387,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 TableCellElement td = DOM.createTD().cast();
                 td.setColSpan(colCount);
                 initCellWithWidget(w, align, style, sorted, td);
-                td.getStyle().setHeight(getRowHeight(), Unit.PX);
             }
 
             private void addSpannedCell(UIDL rowUidl, String text, char align,
@@ -5398,7 +5397,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 td.setColSpan(colCount);
                 initCellWithText(text, align, style, textIsHTML, sorted,
                         description, td);
-                td.getStyle().setHeight(getRowHeight(), Unit.PX);
             }
 
             @Override

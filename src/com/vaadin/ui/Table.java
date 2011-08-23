@@ -4643,7 +4643,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * Row generators can be used for e.g. summary rows or grouping of items.
      */
-    public interface RowGenerator {
+    public interface RowGenerator extends Serializable {
         /**
          * Called for every row that is painted in the Table. Returning a
          * GeneratedRow object will cause the row to be painted based on the
@@ -4677,7 +4677,7 @@ public class Table extends AbstractSelect implements Action.Container,
         public GeneratedRow generateRow(Table table, Object itemId);
     }
 
-    public static class GeneratedRow {
+    public static class GeneratedRow implements Serializable {
         private boolean htmlContentAllowed = false;
         private boolean spanColumns = false;
         private String[] text = null;

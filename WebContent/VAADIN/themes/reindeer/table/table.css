@@ -122,13 +122,17 @@
 	background: #eff0f1;
 }
 .v-table-generated-row {
-	background: #dcdee0;
+    background: #dcdee0;
     text-transform: uppercase;
     font-size: 10px;
     font-weight: bold;
     color: #222;
     text-shadow: #f3f5f8 0 1px 0;
     line-height: normal;
+}
+.v-table-generated-row .v-table-cell-content {
+    padding-top: 1px;
+    padding-bottom: 2px;
 }
 .v-table-cell-content:last-child {
 	border-right-color: transparent;
