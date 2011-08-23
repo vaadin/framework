@@ -372,7 +372,13 @@
                     <token key="version" value="${version.full}" />
                 </replacetokens>
                 <replacetokens begintoken="@" endtoken="@">
+                    <token key="version-minor" value="${version.major}.${version.minor}" />
+                </replacetokens>
+                <replacetokens begintoken="@" endtoken="@">
                     <token key="builddate" value="${build.date}" />
+                </replacetokens>
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="gwt-version" value="${gwt-version}" />
                 </replacetokens>
             </filterchain>
             <fileset dir="WebContent">
