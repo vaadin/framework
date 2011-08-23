@@ -41,20 +41,27 @@
 		<h2 id="tableofcontents">Release Notes for Vaadin Framework
 			@version@</h2>
 		<ul>
-			<li><a href="#overview">Package contents</a></li>
+			<li><a href="#overview">Package contents</a>
+			</li>
 			<li><a href="#enhancements">Enhancements in Vaadin @version@</a>
 			</li>
-			<li><a href="#fixes">Fixes in Vaadin @version@</a></li>
+			<li><a href="#fixes">Fixes in Vaadin @version@</a>
+			</li>
 			<li><a href="#backwardsincompatibilities">Backwards
-					incompatible changes in Vaadin @version@</a></li>
-			<li><a href="#dependencies">Vaadin @version@ dependencies</a></li>
+					incompatible changes in Vaadin @version@</a>
+			</li>
+			<li><a href="#dependencies">Vaadin @version@ dependencies</a>
+			</li>
 			<li><a href="#upgrading">Upgrading to Vaadin @version-minor@</a>
 			</li>
 			<li><a href="#knownissues">Known problems and limitations in
-					Vaadin @version@</a></li>
-			<li><a href="#supportedversions">Supported technologies</a></li>
+					Vaadin @version@</a>
 			</li>
-			<li><a href="#vaadinontheweb">Vaadin on the Web</a></li>
+			<li><a href="#supportedversions">Supported technologies</a>
+			</li>
+			</li>
+			<li><a href="#vaadinontheweb">Vaadin on the Web</a>
+			</li>
 		</ul>
 		<h2 id="overview">Package Contents</h2>
 		<p>
@@ -125,10 +132,6 @@
 			</p>
 		</p>
 		<p>
-			<b>WebApplicationContext</b> now provides a way to switch the session
-			id to prevent session fixation attacks
-		</p>
-		<p>
 			<b>Notification</b> now supports a plain text mode for its contents
 		</p>
 		<p>
@@ -184,18 +187,27 @@
 				details of the enhancements</a> can be found at dev.vaadin.com.</a>
 		</p>
 		<h2 id="fixes">Fixes in Vaadin @version@</h2>
-		<p>#7179 PortalDefaultWidgetset no longer automatically tries to
-			load Google Analytics scripts</p>
-		<p>#5924 Browser context menu is no longer prevented in Table if
-			there is no click handler or no actions enabled</p>
-		<p>#7292 TreeTable now renders correctly when pagelength is set to
-			zero</p>
-		<p>#6499 AbstractApplicationServlet.handleDownload now closes
-			streams properly in case of exceptions</p>
-		<p>#7369 It is now possible to use Vaadin components as
-			SessionScoped beans</p>
-		<p>#5738 TabSheet's first visible tab is now always rendered with
-			the correct style name</p>
+		
+	<p>
+	#7224	Table context menu does not work before refreshing table contents<br/>
+	#7369	Vaadin and CDI - can't use SessionScoped beans<br/>
+	#5924	Link as generated table column does not present browser context menu on right click<br/>
+	#6499	AbstractApplicationServle#handleDownload() does not close streams in case of exception<br/>
+	#7292	Changing pagelength in an expand/collapse listener does not redraw a TreeTable correctly<br/>
+	#7322	Column header moves downwards when selected<br/>
+	#7387	TreeTable loses formatting when using addGeneratedColumn<br/>
+	#7433	GAE integration test should use GAEApplicationServlet<br/>
+	#5488	Link: Error when trying to use a link to a file with a percent in the filename<br/>
+	#5738	TabSheet's first visible tab should be rendered as if it is the first tab<br/>
+	#7032	LoginForm should explicitly define utf-8 charset in getLoginHTML() method<br/>
+	#7065	ConcurrentModificationException in AbstractWebApplicationContext.endTransaction() and startTransaction()<br/>
+	#7092	TextField does not support setting maxLength=0<br/>
+	#7284	Disabling a VNativeButton should set v-disabled style<br/>
+	#7338	Column alignment cannot be changed from right/center to left<br/>
+	#7340	The rendering is wrong the first time a table column is sorted<br/>
+	#7388	Expand/collapse icon offset in IE7<br/>
+	#7422	AbstractComponent.setStyleName containing spaces causes illogical results<br/>
+	</p>
 		<p>
 			The <a
 				href="http://dev.vaadin.com/query?type=defect&group=component&milestone=Vaadin+6.7.0.beta1">full
@@ -301,7 +313,8 @@
 					obscure message in other versions of Windows. Workaround: use <a
 						href="http://www.7-zip.org/">7-Zip</a> or some other good unzip
 					program for Windows.
-				</p></li>
+				</p>
+			</li>
 		</ul>
 		<h4 id="gae">Notes and Limitations for Google App Engine</h4>
 
@@ -314,7 +327,8 @@
 					in
 					<tt>web.xml</tt>
 					.
-				</p></li>
+				</p>
+			</li>
 
 			<li><p>
 					Session support must be enabled in
@@ -324,13 +338,15 @@
 			</li>
 
 			<li><p>Avoid using the session for storage, usual App Engine
-					limitations apply (no synchronization, i.e, unreliable).</p></li>
+					limitations apply (no synchronization, i.e, unreliable).</p>
+			</li>
 
 			<li><p>
 					Vaadin uses memcache for mutex, the key is of the form
 					<tt>_vmutex&lt;sessionid&gt;</tt>
 					.
-				</p></li>
+				</p>
+			</li>
 
 			<li><p>
 					The Vaadin <b>WebApplicationContext</b> class is serialized
@@ -341,12 +357,14 @@
 					with identifiers of the type
 					<tt>_vac&lt;sessionid&gt;</tt>
 					.
-				</p></li>
+				</p>
+			</li>
 
 			<li><p>
 					DO NOT update application state when serving an <b>ApplicationResource</b>
 					(e.g <b>ClassResource</b>.<i>getStream()</i>).
-				</p></li>
+				</p>
+			</li>
 
 			<li><p>
 					AVOID (or be very careful when) updating application state in a <b>TransactionListener</b>
@@ -355,10 +373,12 @@
 					and changes can thus go missing (it should be safe to update things
 					that can be safely discarded later - i.e valid only for the current
 					request)
-				</p></li>
+				</p>
+			</li>
 
 			<li><p>The application remains locked during uploads - a
-					progress bar is not possible</p></li>
+					progress bar is not possible</p>
+			</li>
 		</ul>
 
 
@@ -426,11 +446,11 @@
 		<p>
 			<ul>
 				<li><a href="http://vaadin.com">vaadin.com - The developer
-						portal containing everything you need to know about Vaadin</a></li>
+						portal containing everything you need to know about Vaadin</a>
+				</li>
 
 				<li><a href="http://vaadin.com/learn">vaadin.com/learn -
-						Getting started with Vaadin</a>
-				</li>
+						Getting started with Vaadin</a></li>
 				<li><a href="http://vaadin.com/forum">vaadin.com/forum -
 						Forums for Vaadin related discussions 
 				</li>
