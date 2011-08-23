@@ -259,7 +259,8 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
             if (filename == null) {
                 resourceURL.setResourceID("APP/" + mapKey + "/");
             } else {
-                resourceURL.setResourceID("APP/" + mapKey + "/" + filename);
+                resourceURL.setResourceID("APP/" + mapKey + "/"
+                        + urlEncode(filename));
             }
             return resourceURL.toString();
         } else {

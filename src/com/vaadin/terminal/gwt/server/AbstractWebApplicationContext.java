@@ -6,7 +6,9 @@ package com.vaadin.terminal.gwt.server;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -173,9 +175,19 @@ public abstract class AbstractWebApplicationContext implements
         if (filename == null) {
             return "app://APP/" + mapKey + "/";
         } else {
-            return "app://APP/" + mapKey + "/" + filename;
+            return "app://APP/" + mapKey + "/" + urlEncode(filename);
         }
 
+    }
+
+    static String urlEncode(String filename) {
+        try {
+            return URLEncoder.encode(filename, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(
+                    "UTF-8 charset not available (\"this should never happen\")",
+                    e);
+        }
     }
 
     public boolean isApplicationResourceURL(URL context, String relativeUri) {
