@@ -18,7 +18,7 @@ public class LicenseInJavaFiles extends TestCase {
     public static String SRC_DIR = "../src";
 
     public void testJavaFilesContainsLicense() throws IOException {
-        File srcDir = new File("src");
+        File srcDir = new File(SRC_DIR);
         System.out.println(new File(".").getAbsolutePath());
         HashSet<String> missing = new HashSet<String>();
         checkForLicense(srcDir, missing);
