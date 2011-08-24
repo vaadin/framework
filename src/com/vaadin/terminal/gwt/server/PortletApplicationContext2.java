@@ -107,8 +107,16 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
 
     public static PortletApplicationContext2 getApplicationContext(
             PortletSession session) {
-        PortletApplicationContext2 cx = (PortletApplicationContext2) session
-                .getAttribute(PortletApplicationContext2.class.getName());
+        Object cxattr = session.getAttribute(PortletApplicationContext2.class
+                .getName());
+        PortletApplicationContext2 cx = null;
+        // can be false also e.g. if old context comes from another
+        // classloader when using
+        // <private-session-attributes>false</private-session-attributes>
+        // and redeploying the portlet - see #7461
+        if (cxattr instanceof PortletApplicationContext2) {
+            cx = (PortletApplicationContext2) cxattr;
+        }
         if (cx == null) {
             cx = new PortletApplicationContext2();
             session.setAttribute(PortletApplicationContext2.class.getName(), cx);

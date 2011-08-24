@@ -879,7 +879,7 @@ public class IndexedContainer extends
                     throw new Property.ConversionException(
                             "Conversion for value '" + newValue + "' of class "
                                     + newValue.getClass().getName() + " to "
-                                    + getType().getName() + " failed");
+                                    + getType().getName() + " failed", e);
                 }
             }
 
