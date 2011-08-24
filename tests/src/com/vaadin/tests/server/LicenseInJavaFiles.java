@@ -12,6 +12,11 @@ import org.apache.commons.io.IOUtils;
 
 public class LicenseInJavaFiles extends TestCase {
 
+    /**
+     * The tests are run in the build directory.
+     */
+    public static String SRC_DIR = "../src";
+
     public void testJavaFilesContainsLicense() throws IOException {
         File srcDir = new File("src");
         System.out.println(new File(".").getAbsolutePath());
