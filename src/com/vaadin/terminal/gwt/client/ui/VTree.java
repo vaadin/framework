@@ -266,8 +266,9 @@ public class VTree extends FocusElementPanel implements Paintable,
 
         body.clear();
         TreeNode childTree = null;
+        UIDL childUidl = null;
         for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
-            final UIDL childUidl = (UIDL) i.next();
+            childUidl = (UIDL) i.next();
             if ("actions".equals(childUidl.getTag())) {
                 updateActionMap(childUidl);
                 continue;
@@ -286,8 +287,8 @@ public class VTree extends FocusElementPanel implements Paintable,
             childTree.addStyleDependentName("root");
             childTree.childNodeContainer.addStyleDependentName("root");
         }
-        if (childTree != null) {
-            boolean leaf = !uidl.getTag().equals("node");
+        if (childTree != null && childUidl != null) {
+            boolean leaf = !childUidl.getTag().equals("node");
             childTree.addStyleDependentName(leaf ? "leaf-last" : "last");
             childTree.childNodeContainer.addStyleDependentName("last");
         }
