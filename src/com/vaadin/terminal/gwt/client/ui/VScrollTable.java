@@ -3969,8 +3969,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     // for measuring
                     noCells = true;
                     VScrollTableRow next = (VScrollTableRow) iterator().next();
-                    next.addCell(null, "", ALIGN_LEFT, "", true, tHead
-                            .getHeaderCell(0).isSorted());
+                    boolean sorted = tHead.getHeaderCell(0) != null ? tHead
+                            .getHeaderCell(0).isSorted() : false;
+                    next.addCell(null, "", ALIGN_LEFT, "", true, sorted);
                     firstTD = item.getCells().getItem(0);
                 }
                 com.google.gwt.dom.client.Element wrapper = firstTD
