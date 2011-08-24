@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.data.util.sqlcontainer.query.generator.filter;
 
 import com.vaadin.data.Container.Filter;
@@ -15,12 +18,10 @@ public class NotTranslator implements FilterTranslator {
         Not not = (Not) filter;
         if (not.getFilter() instanceof IsNull) {
             IsNull in = (IsNull) not.getFilter();
-            return QueryBuilder.quote(in.getPropertyId())
-                    + " IS NOT NULL";
+            return QueryBuilder.quote(in.getPropertyId()) + " IS NOT NULL";
         }
         return "NOT "
-                + QueryBuilder.getWhereStringForFilter(
-                        not.getFilter(), sh);
+                + QueryBuilder.getWhereStringForFilter(not.getFilter(), sh);
     }
 
 }

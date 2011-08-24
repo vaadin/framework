@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.data.util.sqlcontainer.connection;
 
 import java.sql.Connection;

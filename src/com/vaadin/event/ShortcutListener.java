@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.event;
 
 import com.vaadin.event.Action.Listener;

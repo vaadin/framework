@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.ui.themes;
 
 public class LiferayTheme extends BaseTheme {

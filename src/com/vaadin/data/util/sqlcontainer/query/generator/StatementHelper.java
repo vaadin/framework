@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.data.util.sqlcontainer.query.generator;
 
 import java.io.Serializable;
@@ -22,7 +25,7 @@ import java.util.Map;
  * This class will also fill the values with correct setters into the
  * PreparedStatement on request.
  */
-public class StatementHelper implements Serializable{
+public class StatementHelper implements Serializable {
 
     private String queryString;
 

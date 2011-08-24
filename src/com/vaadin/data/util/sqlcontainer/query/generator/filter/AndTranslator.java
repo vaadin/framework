@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.data.util.sqlcontainer.query.generator.filter;
 
 import com.vaadin.data.Container.Filter;
@@ -11,8 +14,8 @@ public class AndTranslator implements FilterTranslator {
     }
 
     public String getWhereStringForFilter(Filter filter, StatementHelper sh) {
-        return QueryBuilder.group(QueryBuilder
-                .getJoinedFilterString(((And) filter).getFilters(), "AND", sh));
+        return QueryBuilder.group(QueryBuilder.getJoinedFilterString(
+                ((And) filter).getFilters(), "AND", sh));
     }
 
 }

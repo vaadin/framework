@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.data.util.sqlcontainer;
 
 import java.io.IOException;
@@ -35,7 +38,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     private static final Logger logger = Logger.getLogger(SQLContainer.class
             .getName());
-    
+
     /** Query delegate */
     private QueryDelegate delegate;
     /** Auto commit mode, default = false */

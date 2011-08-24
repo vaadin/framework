@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal.gwt.server;
 
 import com.vaadin.terminal.StreamVariable.StreamingStartEvent;

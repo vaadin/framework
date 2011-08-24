@@ -1,8 +1,10 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.ui.treetable;
 
 import java.util.Collection;
 
-import com.vaadin.data.Container;
 import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.data.util.ContainerOrderedWrapper;
 

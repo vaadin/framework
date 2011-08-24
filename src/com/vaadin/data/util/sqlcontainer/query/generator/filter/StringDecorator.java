@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.data.util.sqlcontainer.query.generator.filter;
 
 import java.io.Serializable;
@@ -12,7 +15,7 @@ import java.io.Serializable;
  * 
  * @author Vaadin Ltd
  */
-public class StringDecorator implements Serializable{
+public class StringDecorator implements Serializable {
 
     private final String quoteStart;
     private final String quoteEnd;

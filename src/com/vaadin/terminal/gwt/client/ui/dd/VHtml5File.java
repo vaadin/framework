@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.google.gwt.core.client.JavaScriptObject;

@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.data.util.sqlcontainer.query.generator;
 
 import java.util.List;
@@ -56,8 +59,7 @@ public class MSSQLGenerator extends DefaultSQLGenerator {
                     "SELECT COUNT(*) AS %s FROM (SELECT * FROM %s",
                     QueryBuilder.quote("rowcount"), tableName));
             if (filters != null && !filters.isEmpty()) {
-                query.append(QueryBuilder.getWhereStringForFilters(
-                        filters, sh));
+                query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
             }
             query.append(") AS t");
             sh.setQueryString(query.toString());
@@ -69,8 +71,7 @@ public class MSSQLGenerator extends DefaultSQLGenerator {
             query.append("SELECT ").append(toSelect).append(" FROM ")
                     .append(tableName);
             if (filters != null) {
-                query.append(QueryBuilder.getWhereStringForFilters(
-                        filters, sh));
+                query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
             }
             if (orderBys != null) {
                 for (OrderBy o : orderBys) {
@@ -90,8 +91,7 @@ public class MSSQLGenerator extends DefaultSQLGenerator {
         }
         query.append(") AS rownum, " + toSelect + " FROM ").append(tableName);
         if (filters != null) {
-            query.append(QueryBuilder.getWhereStringForFilters(
-                    filters, sh));
+            query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
         }
         query.append(") AS a WHERE a.rownum BETWEEN ").append(offset)
                 .append(" AND ").append(Integer.toString(offset + pagelength));

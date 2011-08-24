@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal.gwt.client;
 
 import static com.vaadin.terminal.gwt.client.EventId.BLUR;

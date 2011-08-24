@@ -1,9 +1,12 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.data.util.sqlcontainer;
 
 import java.io.Serializable;
 
-public class SQLUtil implements Serializable{
-	/**
+public class SQLUtil implements Serializable {
+    /**
      * Escapes different special characters in strings that are passed to SQL.
      * Replaces the following:
      * 

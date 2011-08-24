@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.data.util.sqlcontainer.query;
 
 import java.io.IOException;
@@ -111,7 +114,7 @@ public class TableQuery implements QueryDelegate,
      * 
      * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#getCount()
      */
-    public int getCount() throws SQLException {   
+    public int getCount() throws SQLException {
         logger.log(Level.FINE, "Fetching count...");
         StatementHelper sh = sqlGenerator.generateSelectQuery(tableName,
                 filters, null, 0, 0, "COUNT(*)");

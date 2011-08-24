@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.data.util.sqlcontainer.query.generator.filter;
 
 import com.vaadin.data.Container.Filter;
@@ -14,12 +17,10 @@ public class LikeTranslator implements FilterTranslator {
         Like like = (Like) filter;
         if (like.isCaseSensitive()) {
             sh.addParameterValue(like.getValue());
-            return QueryBuilder.quote(like.getPropertyId())
-                    + " LIKE ?";
+            return QueryBuilder.quote(like.getPropertyId()) + " LIKE ?";
         } else {
             sh.addParameterValue(like.getValue().toUpperCase());
-            return "UPPER("
-                    + QueryBuilder.quote(like.getPropertyId())
+            return "UPPER(" + QueryBuilder.quote(like.getPropertyId())
                     + ") LIKE ?";
         }
     }

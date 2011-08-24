@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.data.util.sqlcontainer.query.generator.filter;
 
 import com.vaadin.data.Container.Filter;
@@ -14,8 +17,7 @@ public class BetweenTranslator implements FilterTranslator {
         Between between = (Between) filter;
         sh.addParameterValue(between.getStartValue());
         sh.addParameterValue(between.getEndValue());
-        return QueryBuilder.quote(between.getPropertyId())
-                + " BETWEEN ? AND ?";
+        return QueryBuilder.quote(between.getPropertyId()) + " BETWEEN ? AND ?";
     }
 
 }

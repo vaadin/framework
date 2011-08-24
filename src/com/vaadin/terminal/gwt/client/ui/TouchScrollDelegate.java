@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
@@ -186,10 +189,10 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
     private int getAnimationTimeForDistance(int dist) {
         return 350; // 350ms seems to work quite fine for all distances
-//        if (dist < 0) {
-//            dist = -dist;
-//        }
-//        return MAX_DURATION * dist / (scrolledElement.getClientHeight() * 3);
+        // if (dist < 0) {
+        // dist = -dist;
+        // }
+        // return MAX_DURATION * dist / (scrolledElement.getClientHeight() * 3);
     }
 
     /**
@@ -376,7 +379,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
             moveTransformationToScrolloffset();
             return;
         }
-        
+
         int translateY = -finalY + origScrollTop;
         translateTo(duration, translateY);
     }
@@ -438,7 +441,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     public void onPreviewNativeEvent(NativePreviewEvent event) {
-        if(transitionOn) {
+        if (transitionOn) {
             /*
              * TODO allow starting new events. See issue in onTouchStart
              */

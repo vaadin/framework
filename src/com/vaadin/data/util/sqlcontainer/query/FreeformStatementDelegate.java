@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.data.util.sqlcontainer.query;
 
 import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;

@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.ui;
 
 import java.io.Serializable;
@@ -11,7 +14,7 @@ import com.vaadin.terminal.StreamVariable;
  * information about dragged file on server side.
  */
 public class Html5File implements Serializable {
-    
+
     private String name;
     private long size;
     private StreamVariable streamVariable;
@@ -39,8 +42,8 @@ public class Html5File implements Serializable {
      * Sets the {@link StreamVariable} that into which the file contents will be
      * written. Usage of StreamVariable is similar to {@link Upload} component.
      * <p>
-     * If the {@link StreamVariable} is not set in the {@link DropHandler} the file
-     * contents will not be sent to server.
+     * If the {@link StreamVariable} is not set in the {@link DropHandler} the
+     * file contents will not be sent to server.
      * <p>
      * <em>Note!</em> receiving file contents is experimental feature depending
      * on HTML 5 API's. It is supported only by modern web browsers like Firefox
@@ -59,5 +62,4 @@ public class Html5File implements Serializable {
         return streamVariable;
     }
 
-    
 }
