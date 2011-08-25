@@ -248,7 +248,14 @@ public class Util {
      */
     public static String escapeHTML(String html) {
         DOM.setInnerText(escapeHtmlHelper, html);
-        return DOM.getInnerHTML(escapeHtmlHelper);
+        String escapedText = DOM.getInnerHTML(escapeHtmlHelper);
+        if (BrowserInfo.get().isIE() && BrowserInfo.get().getIEVersion() < 9) {
+            // #7478 IE6-IE8 "incorrectly" returns "<br>" for newlines set using
+            // setInnerText. The same for " " which is converted to "&nbsp;"
+            escapedText = escapedText.replaceAll("<(BR|br)>", "\n");
+            escapedText = escapedText.replaceAll("&nbsp;", " ");
+        }
+        return escapedText;
     }
 
     /**
