@@ -16,8 +16,11 @@ import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
@@ -25,8 +28,10 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 
 public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
         BlurHandler {
@@ -43,6 +48,16 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
     private boolean sendBlurEvents = false;
     private List<HandlerRegistration> focusHandlers = null;
     private List<HandlerRegistration> blurHandlers = null;
+
+    private final LoadHandler iconLoadHandler = new LoadHandler() {
+        public void onLoad(LoadEvent event) {
+            if (BrowserInfo.get().isIE6()) {
+                Util.doIE6PngFix((Element) Element.as(event.getNativeEvent()
+                        .getEventTarget()));
+            }
+            Util.notifyParentOfSizeChange(VOptionGroup.this, true);
+        }
+    };
 
     /**
      * used to check whether a blur really was a blur of the complete
@@ -107,18 +122,32 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
         for (final Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL opUidl = (UIDL) it.next();
             CheckBox op;
-            String caption = opUidl.getStringAttribute("caption");
+
+            String itemHtml = opUidl.getStringAttribute("caption");
+            if (!htmlContentAllowed) {
+                itemHtml = Util.escapeHTML(itemHtml);
+            }
+
+            String icon = opUidl.getStringAttribute("icon");
+            if (icon != null && icon.length() != 0) {
+                String iconUrl = client.translateVaadinUri(icon);
+                itemHtml = "<img src=\"" + iconUrl + "\" class=\""
+                        + Icon.CLASSNAME + "\" alt=\"\" />" + itemHtml;
+            }
+
             if (isMultiselect()) {
                 op = new VCheckBox();
-                if (htmlContentAllowed) {
-                    op.setHTML(caption);
-                } else {
-                    op.setText(caption);
-                }
+                op.setHTML(itemHtml);
             } else {
-                op = new RadioButton(id, caption, htmlContentAllowed);
+                op = new RadioButton(id, itemHtml, true);
                 op.setStyleName("v-radiobutton");
             }
+
+            if (icon != null && icon.length() != 0) {
+                Util.sinkOnloadForImages(op.getElement());
+                op.addHandler(iconLoadHandler, LoadEvent.getType());
+            }
+
             op.addStyleName(CLASSNAME_OPTION);
             op.setValue(opUidl.getBooleanAttribute("selected"));
             boolean enabled = !opUidl.getBooleanAttribute("disabled")

@@ -5,6 +5,11 @@
 	display: block;
 	white-space: nowrap;
 }
+.v-select-optiongroup .v-icon {
+	vertical-align: middle;
+	white-space: nowrap;
+	margin: 0 2px;	
+}
 .v-ie .v-select-optiongroup .v-select-option {
 	zoom: 1;
 }

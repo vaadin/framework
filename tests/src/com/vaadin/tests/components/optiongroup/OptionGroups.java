@@ -1,5 +1,9 @@
 package com.vaadin.tests.components.optiongroup;
 
+import java.util.Collection;
+import java.util.LinkedHashMap;
+
+import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.ui.OptionGroup;
 
@@ -20,6 +24,27 @@ public class OptionGroups extends AbstractSelectTestCase<OptionGroup> {
                     public void execute(OptionGroup og, Boolean value,
                             Object data) {
                         og.setHtmlContentAllowed(value.booleanValue());
+                    }
+                });
+        createIconToggle("Item icons");
+    }
+
+    private void createIconToggle(String string) {
+        LinkedHashMap<String, ThemeResource> options = new LinkedHashMap<String, ThemeResource>();
+        options.put("-", null);
+        options.put("16x16", ICON_16_USER_PNG_CACHEABLE);
+        options.put("32x32", ICON_32_ATTENTION_PNG_CACHEABLE);
+        options.put("64x64", ICON_64_EMAIL_REPLY_PNG_CACHEABLE);
+
+        createSelectAction(string, CATEGORY_DECORATIONS, options, options
+                .keySet().iterator().next(),
+                new Command<OptionGroup, ThemeResource>() {
+                    public void execute(OptionGroup c, ThemeResource icon,
+                            Object data) {
+                        Collection<?> itemIds = c.getItemIds();
+                        for (Object itemId : itemIds) {
+                            c.setItemIcon(itemId, icon);
+                        }
                     }
                 });
     }
