@@ -669,7 +669,8 @@
     <!-- ================================================================== -->
 
     <!-- Main target for the custom build. -->
-    <target name="custom-build" depends="clean-result, custom-build-init, nightly-init, init, build">
+	<!-- Need to read custom build configuration before calling clean-result -->
+    <target name="custom-build" depends="custom-build-init, clean-result, nightly-init, init, build">
     </target>
 
 
