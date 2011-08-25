@@ -12,6 +12,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -118,6 +119,17 @@ public class VLabel extends HTML implements Paintable {
             setStyleName(getElement(), CLASSNAME_UNDEFINED_WIDTH, true);
         } else {
             setStyleName(getElement(), CLASSNAME_UNDEFINED_WIDTH, false);
+        }
+    }
+
+    @Override
+    public void setText(String text) {
+        if (BrowserInfo.get().isIE() && BrowserInfo.get().getIEVersion() < 9) {
+            // #3983 - IE6-IE8 incorrectly replaces \n with <br> so we do the
+            // escaping manually and set as HTML
+            super.setHTML(Util.escapeHTML(text));
+        } else {
+            super.setText(text);
         }
     }
 }
