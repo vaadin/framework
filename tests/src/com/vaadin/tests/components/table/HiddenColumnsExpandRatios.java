@@ -14,6 +14,7 @@ public class HiddenColumnsExpandRatios extends TestBase {
     @Override
     protected void setup() {
         final Table table = new Table();
+        table.setColumnCollapsingAllowed(true);
         table.setWidth("800px");
         addComponent(table);
         table.addContainerProperty("foo", String.class, "");
