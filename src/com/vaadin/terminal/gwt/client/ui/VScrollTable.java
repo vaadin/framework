@@ -2489,6 +2489,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         public void setExpandRatio(float floatAttribute) {
+            if (floatAttribute != expandRatio) {
+                lazyAdjustColumnWidths.cancel();
+                lazyAdjustColumnWidths.schedule(LAZY_COLUMN_ADJUST_TIMEOUT);
+            }
             expandRatio = floatAttribute;
         }
 
@@ -2681,6 +2685,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 if (!updated.contains(cid)) {
                     removeCell(cid);
                     cit.remove();
+                    // we will need a column width recalculation, since columns
+                    // with expand ratios should expand to fill the void.
+                    initializedAndAttached = false;
+                    initialContentReceived = false;
+                    isNewBody = true;
                 }
             }
         }
