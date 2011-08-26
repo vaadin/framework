@@ -12,8 +12,14 @@ textarea.v-textarea,
 	-moz-border-radius: 2px;
 	-webkit-box-shadow: 0 1px 0 rgba(255,255,255,.2);
 	-moz-box-shadow: 0 1px 0 rgba(255,255,255,.2);
-	padding: .1em .2em;
 	margin: 0;
+	}
+
+input.v-textfield[type="text"],
+textarea.v-textarea,
+.v-filterselect {
+	padding: .2em;
+	height: 1.2em;
 	}
 
 body input.v-textfield,

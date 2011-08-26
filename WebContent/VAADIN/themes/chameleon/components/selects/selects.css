@@ -121,6 +121,11 @@ body .v-filterselect-suggestpopup-big td {
 	-ms-user-select: none;
 	}
 
+.v-filterselect-suggestmenu .gwt-menuItem-selected {
+	background-image: url(../../img/grad-light-top2.png);
+	background-position: 0 -1px;
+	}
+
 .v-filterselect-suggestpopup-small .v-filterselect-status {
 	font-size: .8em;
 	}

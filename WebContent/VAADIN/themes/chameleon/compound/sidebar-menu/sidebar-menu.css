@@ -28,6 +28,8 @@
 .sidebar-menu .selected {
 	font-weight: bold;
 	background-color: #333;
+	background-image: url(../../img/grad-light-top2.png);
+	background-position: 0 -1px;
 	color: #fff;
 	}
 

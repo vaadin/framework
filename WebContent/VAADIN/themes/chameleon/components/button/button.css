@@ -26,6 +26,10 @@ div.v-button-down .v-button-wrap {
 	background-image: none;
 	}
 
+.v-button {
+	overflow: hidden;
+	}
+
 .v-button,
 .v-disabled.v-button:focus,
 .v-disabled.v-button:active {

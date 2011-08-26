@@ -5,9 +5,50 @@
 	-webkit-border-bottom-right-radius: 3px;
 	-moz-border-radius-topright: 3px;
 	-moz-border-radius-bottomright: 3px;
-	height: 1.614999em;
-	padding: 0;
 	width: 25px;
+	height: 1.2em;
+	padding: .2em 0;
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	-ms-box-sizing: content-box;
+	box-sizing: content-box;
+	}
+
+.v-datefield-small .v-datefield-button {
+	height: 1.2em;
+	}
+
+.v-datefield-big .v-datefield-button {
+	padding: .3em 0;
+	height: 1.2em;
+	}
+
+.v-ie6 .v-datefield-button,
+.v-ie7 .v-datefield-button {
+	height: 1.55em;
+	margin-top: 1px;
+	padding: 0;
+	}
+
+.v-ie7 .v-datefield-button {
+	height: 1.85em;
+	}
+
+.v-ie7 .v-datefield-small .v-datefield-button {
+	height: 1.75em;
+	}
+
+.v-ie7 .v-datefield-big .v-datefield-button {
+	height: 2em;
+	}
+
+.v-ie8 .v-datefield-button {
+	height: 1.6em;
+	padding: 0;
+	}
+
+.v-ie8 .v-datefield-big .v-datefield-button {
+	height: 1.8em;
 	}
 
 input.v-datefield-textfield {
@@ -23,7 +64,6 @@ input.v-datefield-textfield {
  * Big
  ******************************************************************************/
 .v-datefield-big .v-datefield-button {
-	height: 1.85em;
 	width: 32px;
 	background-image: url(../../img/date-btn-big.png);
 	}
@@ -33,7 +73,6 @@ input.v-datefield-textfield {
  * Small
  ******************************************************************************/
 .v-datefield-small .v-datefield-button {
-	height: 1.62em;
 	width: 19px;
 	background-position: 50% -2px;
 	}
@@ -239,9 +278,11 @@ td.v-datefield-calendarpanel-nextyear {
 	-moz-border-radius: 2px;
 	}
 
+.v-datefield-calendarpanel-day-focused,
 .v-datefield-calendarpanel-day:hover {
 	margin: 0 0 0 .2em;
 	border: 1px solid #b3b3b3;
+	outline: none;
 	}
 
 .v-datefield-calendarpanel-day-today {

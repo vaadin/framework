@@ -21,3 +21,8 @@
 .v-menubar-submenu .v-menubar-submenu-indicator {
 	margin-top: .1em;
 	}
+
+.v-menubar-submenu .v-menubar-menuitem-selected {
+	background-image: url(../../img/grad-light-top2.png);
+	background-position: 0 -1px;
+	}

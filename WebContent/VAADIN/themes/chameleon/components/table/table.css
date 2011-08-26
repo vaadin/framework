@@ -38,10 +38,19 @@ div.v-table-focus-slot-left {
 	margin: 0;
 	}
 
+.v-table-row,
+.v-table-row-odd {
+	background: transparent;
+	}
+
 .v-table-generated-row {
     background: #c9c9c9;
     }
 
+.v-table tr.v-selected {
+	background-image: url(/vaadin-demo-site/VAADIN/themes/chameleon/img/grad-light-top2.png);
+	background-position: 0 -1px;
+	}
 
 div.v-table-focus-slot-right {
 	background: transparent;
