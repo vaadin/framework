@@ -2643,6 +2643,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         public void setExpandRatio(float floatAttribute) {
             expandRatio = floatAttribute;
+            triggerLazyColumnAdjustment(false);
         }
 
         public float getExpandRatio() {
