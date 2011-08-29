@@ -19,6 +19,10 @@ input.v-textfield[type="text"],
 textarea.v-textarea,
 .v-filterselect {
 	padding: .2em;
+	}
+
+input.v-textfield[type="text"],
+.v-filterselect {
 	height: 1.2em;
 	}
 
