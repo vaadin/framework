@@ -2346,9 +2346,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             floatingCopyOfHeaderCell = DOM.createDiv();
             DOM.setInnerHTML(floatingCopyOfHeaderCell, DOM.getInnerHTML(td));
             floatingCopyOfHeaderCell = DOM
-                    .getChild(floatingCopyOfHeaderCell, 1);
+                    .getChild(floatingCopyOfHeaderCell, 2);
             DOM.setElementProperty(floatingCopyOfHeaderCell, "className",
                     CLASSNAME + "-header-drag");
+            // otherwise might wrap or be cut if narrow column
+            DOM.setStyleAttribute(floatingCopyOfHeaderCell, "width", "auto");
             updateFloatingCopysPosition(DOM.getAbsoluteLeft(td),
                     DOM.getAbsoluteTop(td));
             DOM.appendChild(RootPanel.get().getElement(),
