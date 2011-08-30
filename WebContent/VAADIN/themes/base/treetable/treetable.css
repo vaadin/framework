@@ -1,6 +1,7 @@
 .v-treetable-treespacer {
     display: inline-block;
     background: transparent;
+    position: relative;
     height: 9px;
     /* defines the amount of indent per level */
     width: 18px;
@@ -15,6 +16,29 @@
 
 .v-treetable-node-open {
     background: url(../treetable/img/arrow-down.png) right center no-repeat;
+}
+
+/* Show the tree arrows in a separate element in IE 6 to emulate background-position: right when using AlphaImageLoader */
+.v-ie6 .v-treetable-node-closed, .v-ie6 .v-treetable-node-open  {
+	background-image: none;
+}
+
+.v-treetable-spacer-ie {
+	position: absolute;
+	height: 9px;
+	width: 10px;
+	right: 0;
+	top: -1px;
+}
+
+.v-treetable-node-closed .v-treetable-spacer-ie {
+	/* vaadin.setAlphaImageLoader used to get relative paths (relative to the themeUrl) with AlphaImageLoader */
+	zoom: expression((function(e) {vaadin.setAlphaImageLoader(e, "../base/treetable/img/arrow-right.png")})(this));
+}
+
+.v-treetable-node-open .v-treetable-spacer-ie {
+	/* vaadin.setAlphaImageLoader used to get relative paths (relative to the themeUrl) with AlphaImageLoader */
+	zoom: expression((function(e) {vaadin.setAlphaImageLoader(e, "../base/treetable/img/arrow-down.png")})(this));
 }
 
 .v-treetable .v-checkbox {
