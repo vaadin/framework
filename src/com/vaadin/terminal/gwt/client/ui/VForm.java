@@ -175,6 +175,10 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
         }
         lo.updateFromUIDL(layoutUidl, client);
 
+        // recalculate size the footer for forms of undefined size - see #3710
+        updateSize();
+        client.runDescendentsLayout(this);
+
         // We may have actions attached
         if (uidl.getChildCount() > 1) {
             UIDL childUidl = uidl.getChildByTagName("actions");
@@ -291,7 +295,7 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
     @Override
     public void setWidth(String width) {
         if (borderPaddingHorizontal < 0) {
-            // measure excess size lazyly after stylename setting, but before
+            // measure excess size lazily after stylename setting, but before
             // setting width
             int ow = getOffsetWidth();
             int dow = desc.getOffsetWidth();
