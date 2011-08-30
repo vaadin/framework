@@ -192,16 +192,6 @@ public class VTreeTable extends VScrollTable {
 
                     treeSpacer = Document.get().createSpanElement();
 
-                    if (BrowserInfo.get().isIE6()) {
-                        // Must add an absolutely positioned element with right:
-                        // 0 to get the background aligned to the right in IE 6
-                        // where AlphaImageLoader is used for the background
-                        SpanElement ieSpacerHolder = Document.get()
-                                .createSpanElement();
-                        ieSpacerHolder.addClassName("v-treetable-spacer-ie");
-                        treeSpacer.insertFirst(ieSpacerHolder);
-                    }
-
                     treeSpacer.setClassName(classname);
                     container.insertFirst(treeSpacer);
                     depth = rowUidl.hasAttribute("depth") ? rowUidl
@@ -223,8 +213,7 @@ public class VTreeTable extends VScrollTable {
 
             @Override
             public void onBrowserEvent(Event event) {
-                SpanElement target = event.getEventTarget().cast();
-                if ((target == treeSpacer || target.getParentElement() == treeSpacer)
+                if (event.getEventTarget().cast() == treeSpacer
                         && treeSpacer.getClassName().contains("node")) {
                     if (event.getTypeInt() == Event.ONMOUSEUP) {
                         sendToggleCollapsedUpdate(getKey());
