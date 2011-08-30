@@ -193,7 +193,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
     }
 
     @Override
-    String getRequestPathInfo(HttpServletRequest request) {
+    protected String getRequestPathInfo(HttpServletRequest request) {
         String path = request.getPathInfo();
         if (path == null) {
             return null;

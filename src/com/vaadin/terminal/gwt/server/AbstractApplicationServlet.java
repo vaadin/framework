@@ -2225,12 +2225,18 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
     /**
      * Returns the path info; note that this _can_ be different than
-     * request.getPathInfo() (e.g application runner).
+     * request.getPathInfo(). Examples where this might be useful:
+     * <ul>
+     * <li>An application runner servlet that runs different Vaadin applications
+     * based on an identifier.</li>
+     * <li>Providing a REST interface in the context root, while serving a
+     * Vaadin UI on a sub-URI using only one servlet (e.g. REST on
+     * http://example.com/foo, UI on http://example.com/foo/vaadin)</li>
      * 
      * @param request
      * @return
      */
-    String getRequestPathInfo(HttpServletRequest request) {
+    protected String getRequestPathInfo(HttpServletRequest request) {
         return request.getPathInfo();
     }
 
