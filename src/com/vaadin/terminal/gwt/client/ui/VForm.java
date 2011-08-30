@@ -133,8 +133,6 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
         }
 
         updateSize();
-        // TODO Check if this is needed
-        client.runDescendentsLayout(this);
 
         // first render footer so it will be easier to handle relative height of
         // main layout
@@ -153,11 +151,13 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
             }
             footer = newFooter;
             footer.updateFromUIDL(uidl.getChildUIDL(1), client);
+            // needed for the main layout to know the space it has available
             updateSize();
         } else {
             if (footer != null) {
                 remove((Widget) footer);
                 client.unregisterPaintable(footer);
+                // needed for the main layout to know the space it has available
                 updateSize();
             }
         }
@@ -175,7 +175,8 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
         }
         lo.updateFromUIDL(layoutUidl, client);
 
-        // recalculate size the footer for forms of undefined size - see #3710
+        // also recalculates size of the footer if undefined size form - see
+        // #3710
         updateSize();
         client.runDescendentsLayout(this);
 
