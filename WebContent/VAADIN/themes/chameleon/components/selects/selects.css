@@ -126,6 +126,10 @@ body .v-filterselect-suggestpopup-big td {
 	background-position: 0 -1px;
 	}
 
+.v-ie6 .v-filterselect-suggestmenu .gwt-menuItem-selected {
+	background-image: none;
+	}
+
 .v-filterselect-suggestpopup-small .v-filterselect-status {
 	font-size: .8em;
 	}

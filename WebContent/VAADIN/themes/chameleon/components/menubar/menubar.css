@@ -26,3 +26,7 @@
 	background-image: url(../../img/grad-light-top2.png);
 	background-position: 0 -1px;
 	}
+
+.v-ie6 .v-menubar-submenu .v-menubar-menuitem-selected {
+	background-image: none;
+	}

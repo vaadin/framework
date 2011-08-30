@@ -52,6 +52,10 @@ div.v-table-focus-slot-left {
 	background-position: 0 -1px;
 	}
 
+.v-ie6 .v-table tr.v-selected {
+	background-image: none;
+	}
+
 div.v-table-focus-slot-right {
 	background: transparent;
 	border-right: 2px solid #b3b3b3;
