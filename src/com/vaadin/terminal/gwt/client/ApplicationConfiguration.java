@@ -361,7 +361,7 @@ public class ApplicationConfiguration implements EntryPoint {
                 cmd.execute();
             }
             callbacks.clear();
-        } else if (widgetsLoading == 0 && deferredWidgetLoader != null) {
+        } else if(widgetsLoading == 0 && deferredWidgetLoader != null) {
             deferredWidgetLoader.trigger();
         }
 
@@ -377,17 +377,17 @@ public class ApplicationConfiguration implements EntryPoint {
         int communicationFree = 0;
         int nextWidgetIndex = 0;
         private boolean pending;
-
+        
         public DeferredWidgetLoader() {
             schedule(5000);
         }
 
         public void trigger() {
-            if (!pending) {
+            if(!pending) {
                 schedule(FREE_CHECK_TIMEOUT);
             }
         }
-
+        
         @Override
         public void schedule(int delayMillis) {
             super.schedule(delayMillis);
@@ -438,14 +438,13 @@ public class ApplicationConfiguration implements EntryPoint {
             return communicationFree < FREE_LIMIT;
         }
     }
-
+    
     private static DeferredWidgetLoader deferredWidgetLoader;
-
+   
     public void onModuleLoad() {
 
-        boolean isIE6 = BrowserInfo.get().isIE6();
         // Enable IE6 Background image caching
-        if (isIE6) {
+        if (BrowserInfo.get().isIE6()) {
             enableIE6BackgroundImageCache();
         }
         // Prepare VConsole for debugging
@@ -474,24 +473,8 @@ public class ApplicationConfiguration implements EntryPoint {
         });
 
         initConfigurations();
-
-        // Set up hack for finding transparent theme resources in IE6
-        if (isIE6 && !unstartedApplications.isEmpty()) {
-            String themeUri = unstartedApplications.get(0).getThemeUri();
-            initAlphaImageLoader(themeUri);
-        }
-
         startNextApplication();
     }
-
-    private static native void initAlphaImageLoader(String themeBase)
-    /*-{
-       // Used to enable defining AlphaImageLoader filters with the src path relative to the theme directory for IE6
-       $wnd.vaadin.setAlphaImageLoader = function(element, image, sizingMethod) {
-           element.runtimeStyle.zoom="1"; //Reset the zoom definition to avoid running the expression again
-           element.runtimeStyle.filter="progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+themeBase+'/'+image+"', sizingMethod='"+(themeBase||"crop")+"')";
-       }
-    }-*/;
 
     // From ImageSrcIE6
     private static native void enableIE6BackgroundImageCache()
