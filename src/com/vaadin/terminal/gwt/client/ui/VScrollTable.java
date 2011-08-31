@@ -2280,7 +2280,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * @return true if defined, false if "natural" width
          */
         public boolean isDefinedWidth() {
-            return definedWidth;
+            return definedWidth && width > 0;
         }
 
         public int getWidth() {
