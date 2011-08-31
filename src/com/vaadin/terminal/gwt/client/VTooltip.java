@@ -76,9 +76,11 @@ public class VTooltip extends VOverlay {
 
                     if (offsetWidth > MAX_WIDTH) {
                         setWidth(MAX_WIDTH + "px");
-                    }
 
-                    offsetWidth = getOffsetWidth();
+                        // Check new height and width with reflowed content
+                        offsetWidth = getOffsetWidth();
+                        offsetHeight = getOffsetHeight();
+                    }
 
                     int x = tooltipEventMouseX + 10 + Window.getScrollLeft();
                     int y = tooltipEventMouseY + 10 + Window.getScrollTop();
