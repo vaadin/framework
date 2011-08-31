@@ -46,6 +46,7 @@ public class VTooltip extends VOverlay {
         layout.add(em);
         DOM.setElementProperty(description, "className", CLASSNAME + "-text");
         DOM.appendChild(layout.getElement(), description);
+        setSinkShadowEvents(true);
     }
 
     /**

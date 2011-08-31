@@ -67,6 +67,8 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      */
     private static final String SHADOW_HTML = "<div class=\"top-left\"></div><div class=\"top\"></div><div class=\"top-right\"></div><div class=\"left\"></div><div class=\"center\"></div><div class=\"right\"></div><div class=\"bottom-left\"></div><div class=\"bottom\"></div><div class=\"bottom-right\"></div>";
 
+    private boolean sinkShadowEvents = false;
+
     public VOverlay() {
         super();
         adjustZIndex();
@@ -116,9 +118,16 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     }
 
     private void removeShadowIfPresent() {
-        if (isShadowEnabled() && shadow.getParentElement() != null) {
+        if (isShadowAttached()) {
             shadow.getParentElement().removeChild(shadow);
+
+            // Remove event listener from the shadow
+            unsinkShadowEvents();
         }
+    }
+
+    private boolean isShadowAttached() {
+        return isShadowEnabled() && shadow.getParentElement() != null;
     }
 
     private void adjustZIndex() {
@@ -366,8 +375,9 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
 
         // Attach to dom if not there already
-        if (shadow.getParentElement() == null) {
+        if (!isShadowAttached()) {
             RootPanel.get().getElement().insertBefore(shadow, getElement());
+            sinkShadowEvents();
         }
 
     }
@@ -381,5 +391,51 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     public void onClose(CloseEvent<PopupPanel> event) {
         removeShadowIfPresent();
+    }
+
+    @Override
+    public void sinkEvents(int eventBitsToAdd) {
+        super.sinkEvents(eventBitsToAdd);
+        // Also sink events on the shadow if present
+        sinkShadowEvents();
+    }
+
+    private void sinkShadowEvents() {
+        if (isSinkShadowEvents() && isShadowAttached()) {
+            // Sink the same events as the actual overlay has sunk
+            DOM.sinkEvents(shadow, DOM.getEventsSunk(getElement()));
+            // Send events to VOverlay.onBrowserEvent
+            DOM.setEventListener(shadow, this);
+        }
+    }
+
+    private void unsinkShadowEvents() {
+        if (isShadowAttached()) {
+            DOM.setEventListener(shadow, null);
+            DOM.sinkEvents(shadow, 0);
+        }
+    }
+
+    /**
+     * Enables or disables sinking the events of the shadow to the same
+     * onBrowserEvent as events to the actual overlay goes.
+     * 
+     * Please note, that if you enable this, you can't assume that e.g.
+     * event.getEventTarget returns an element inside the DOM structure of the
+     * overlay
+     * 
+     * @param sinkShadowEvents
+     */
+    protected void setSinkShadowEvents(boolean sinkShadowEvents) {
+        this.sinkShadowEvents = sinkShadowEvents;
+        if (sinkShadowEvents) {
+            sinkShadowEvents();
+        } else {
+            unsinkShadowEvents();
+        }
+    }
+
+    protected boolean isSinkShadowEvents() {
+        return sinkShadowEvents;
     }
 }
