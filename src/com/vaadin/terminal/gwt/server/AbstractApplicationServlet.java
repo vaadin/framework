@@ -2195,7 +2195,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      *             if an exception has occurred that interferes with the
      *             servlet's normal operation.
      */
-    private Window getApplicationWindow(HttpServletRequest request,
+    protected Window getApplicationWindow(HttpServletRequest request,
             CommunicationManager applicationManager, Application application)
             throws ServletException {
 
