@@ -178,6 +178,10 @@ public class TreeTable extends Table implements Hierarchical {
         }
 
         public boolean isLastId(Object itemId) {
+            if (itemId == null) {
+                return false;
+            }
+
             return itemId.equals(lastItemId());
         }
 
