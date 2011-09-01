@@ -5,12 +5,14 @@ import java.io.OutputStream;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Upload;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.Receiver;
+import com.vaadin.ui.Upload.StartedEvent;
 
 public class ForceSubmit extends TestBase implements Receiver {
 
@@ -25,6 +27,9 @@ public class ForceSubmit extends TestBase implements Receiver {
 
     @Override
     protected void setup() {
+
+        final TextField textField = new TextField("Test field");
+        addComponent(textField);
 
         final Upload u;
 
@@ -49,6 +54,13 @@ public class ForceSubmit extends TestBase implements Receiver {
             }
         });
 
+        u.addListener(new Upload.StartedListener() {
+            public void uploadStarted(StartedEvent event) {
+                getMainWindow().showNotification(
+                        "Started upload. TF value :" + textField.getValue());
+            }
+        });
+
         Button button = new Button(
                 "I'm an external button (not the uploads builtin), hit me to start upload.");
         button.addListener(new ClickListener() {
@@ -63,11 +75,11 @@ public class ForceSubmit extends TestBase implements Receiver {
 
     @Override
     protected String getDescription() {
-        return "Some wireframists are just so web 1.0. If requirements " +
-        		"say the upload must not start until the whole form " +
-        		"is 'Oukeyd', that is what we gotta do. In these cases " +
-        		"developers most probably also want to hide the uploads" +
-        		" internal button by setting its caption to null.";
+        return "Some wireframists are just so web 1.0. If requirements "
+                + "say the upload must not start until the whole form "
+                + "is 'Oukeyd', that is what we gotta do. In these cases "
+                + "developers most probably also want to hide the uploads"
+                + " internal button by setting its caption to null.";
     }
 
 }
