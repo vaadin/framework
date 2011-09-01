@@ -5,7 +5,9 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -279,22 +281,10 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         return selectedItemKeys.toArray(new String[selectedItemKeys.size()]);
     }
 
-    private boolean[] getItemsToAdd() {
-        final boolean[] selectedIndexes = new boolean[options.getItemCount()];
-        for (int i = 0; i < options.getItemCount(); i++) {
-            if (options.isItemSelected(i)) {
-                selectedIndexes[i] = true;
-            } else {
-                selectedIndexes[i] = false;
-            }
-        }
-        return selectedIndexes;
-    }
-
-    private boolean[] getItemsToRemove() {
-        final boolean[] selectedIndexes = new boolean[selections.getItemCount()];
-        for (int i = 0; i < selections.getItemCount(); i++) {
-            if (selections.isItemSelected(i)) {
+    private boolean[] getSelectionBitmap(ListBox listBox) {
+        final boolean[] selectedIndexes = new boolean[listBox.getItemCount()];
+        for (int i = 0; i < listBox.getItemCount(); i++) {
+            if (listBox.isItemSelected(i)) {
                 selectedIndexes[i] = true;
             } else {
                 selectedIndexes[i] = false;
@@ -304,33 +294,8 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     }
 
     private void addItem() {
-        final boolean[] sel = getItemsToAdd();
-        for (int i = 0; i < sel.length; i++) {
-            if (sel[i]) {
-                final int optionIndex = i
-                        - (sel.length - options.getItemCount());
-                selectedKeys.add(options.getValue(optionIndex));
-
-                // Move selection to another column
-                final String text = options.getItemText(optionIndex);
-                final String value = options.getValue(optionIndex);
-                selections.addItem(text, value);
-                selections.setItemSelected(selections.getItemCount() - 1, true);
-                options.removeItem(optionIndex);
-
-                if (options.getItemCount() > 0) {
-                    options.setItemSelected(optionIndex > 0 ? optionIndex - 1
-                            : 0, true);
-                }
-            }
-        }
-
-        // If no items are left move the focus to the selections
-        if (options.getItemCount() == 0) {
-            selections.setFocus(true);
-        } else {
-            options.setFocus(true);
-        }
+        Set<String> movedItems = moveSelectedItems(options, selections);
+        selectedKeys.addAll(movedItems);
 
         client.updateVariable(id, "selected",
                 selectedKeys.toArray(new String[selectedKeys.size()]),
@@ -338,37 +303,49 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     }
 
     private void removeItem() {
-        final boolean[] sel = getItemsToRemove();
-        for (int i = 0; i < sel.length; i++) {
-            if (sel[i]) {
-                final int selectionIndex = i
-                        - (sel.length - selections.getItemCount());
-                selectedKeys.remove(selections.getValue(selectionIndex));
-
-                // Move selection to another column
-                final String text = selections.getItemText(selectionIndex);
-                final String value = selections.getValue(selectionIndex);
-                options.addItem(text, value);
-                options.setItemSelected(options.getItemCount() - 1, true);
-                selections.removeItem(selectionIndex);
-
-                if (selections.getItemCount() > 0) {
-                    selections.setItemSelected(
-                            selectionIndex > 0 ? selectionIndex - 1 : 0, true);
-                }
-            }
-        }
-
-        // If no items are left move the focus to the selections
-        if (selections.getItemCount() == 0) {
-            options.setFocus(true);
-        } else {
-            selections.setFocus(true);
-        }
+        Set<String> movedItems = moveSelectedItems(selections, options);
+        selectedKeys.removeAll(movedItems);
 
         client.updateVariable(id, "selected",
                 selectedKeys.toArray(new String[selectedKeys.size()]),
                 isImmediate());
+    }
+
+    private Set<String> moveSelectedItems(ListBox source, ListBox target) {
+        final boolean[] sel = getSelectionBitmap(source);
+        final Set<String> movedItems = new HashSet<String>();
+        int lastSelected = 0;
+        for (int i = 0; i < sel.length; i++) {
+            if (sel[i]) {
+                final int optionIndex = i
+                        - (sel.length - source.getItemCount());
+                movedItems.add(source.getValue(optionIndex));
+
+                // Move selection to another column
+                final String text = source.getItemText(optionIndex);
+                final String value = source.getValue(optionIndex);
+                target.addItem(text, value);
+                target.setItemSelected(target.getItemCount() - 1, true);
+                source.removeItem(optionIndex);
+
+                if (source.getItemCount() > 0) {
+                    lastSelected = optionIndex > 0 ? optionIndex - 1 : 0;
+                }
+            }
+        }
+
+        if (source.getItemCount() > 0) {
+            source.setSelectedIndex(lastSelected);
+        }
+
+        // If no items are left move the focus to the selections
+        if (source.getItemCount() == 0) {
+            target.setFocus(true);
+        } else {
+            source.setFocus(true);
+        }
+
+        return movedItems;
     }
 
     @Override
