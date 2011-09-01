@@ -725,7 +725,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
                     getAllItemIds().indexOf(previousItemId) + 1, newItemId,
                     item);
         }
-        if (newItem != null) {
+        if (newItem != null && filter) {
             // TODO filter only this item, use fireItemAdded()
             filterAll();
             if (!isFiltered()) {

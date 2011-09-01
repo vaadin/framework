@@ -157,7 +157,7 @@ public class VUpload extends SimplePanel implements Paintable {
             return;
         }
         if (uidl.hasAttribute("forceSubmit")) {
-            element.submit();
+            submit();
             return;
         }
         setImmediate(uidl.getBooleanAttribute("immediate"));
