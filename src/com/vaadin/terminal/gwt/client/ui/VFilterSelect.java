@@ -323,34 +323,36 @@ public class VFilterSelect extends Composite implements Paintable, Field,
          * of consecutive mouse wheel events the pages does not flicker.
          */
         private LazyPageScroller lazyPageScroller = new LazyPageScroller();
+
         private class LazyPageScroller extends Timer {
             private int pagesToScroll = 0;
 
             @Override
             public void run() {
-            	if(pagesToScroll != 0){
-        		   filterOptions(currentPage + pagesToScroll, lastFilter);
-                   pagesToScroll = 0;
-            	}             
+                if (pagesToScroll != 0) {
+                    filterOptions(currentPage + pagesToScroll, lastFilter);
+                    pagesToScroll = 0;
+                }
             }
 
-            public void scrollUp() {             
-            	if(currentPage + pagesToScroll > 0){
-            		 pagesToScroll--;
-                     cancel();
-                     schedule(100);
-            	}               
+            public void scrollUp() {
+                if (currentPage + pagesToScroll > 0) {
+                    pagesToScroll--;
+                    cancel();
+                    schedule(100);
+                }
             }
 
-            public void scrollDown() {      
-            	if(totalMatches > (currentPage + pagesToScroll +1)*pageLength){
-            		 pagesToScroll++;
-                     cancel();
-                     schedule(100);
-            	}               
+            public void scrollDown() {
+                if (totalMatches > (currentPage + pagesToScroll + 1)
+                        * pageLength) {
+                    pagesToScroll++;
+                    cancel();
+                    schedule(100);
+                }
             }
         }
-        
+
         /*
          * (non-Javadoc)
          * 
@@ -363,16 +365,16 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             if (event.getTypeInt() == Event.ONCLICK) {
                 final Element target = DOM.eventGetTarget(event);
                 if (target == up || target == DOM.getChild(up, 0)) {
-                	lazyPageScroller.scrollUp();
+                    lazyPageScroller.scrollUp();
                 } else if (target == down || target == DOM.getChild(down, 0)) {
-                	lazyPageScroller.scrollDown();                    
+                    lazyPageScroller.scrollDown();
                 }
-            } else if (event.getTypeInt() == Event.ONMOUSEWHEEL) {                
+            } else if (event.getTypeInt() == Event.ONMOUSEWHEEL) {
                 int velocity = event.getMouseWheelVelocityY();
-                if (velocity > 0) {                
-                    	lazyPageScroller.scrollDown();                  
+                if (velocity > 0) {
+                    lazyPageScroller.scrollDown();
                 } else {
-                        lazyPageScroller.scrollUp();                   
+                    lazyPageScroller.scrollUp();
                 }
             }
 
@@ -507,6 +509,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
          * com.google.gwt.event.logical.shared.CloseHandler#onClose(com.google
          * .gwt.event.logical.shared.CloseEvent)
          */
+        @Override
         public void onClose(CloseEvent<PopupPanel> event) {
             if (event.isAutoClosed()) {
                 lastAutoClosed = (new Date()).getTime();
