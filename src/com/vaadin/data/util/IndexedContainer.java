@@ -106,8 +106,11 @@ public class IndexedContainer extends
         this();
         if (items != null) {
             for (final Iterator<?> i = itemIds.iterator(); i.hasNext();) {
-                this.addItem(i.next());
+                Object itemId = i.next();
+                internalAddItemAtEnd(itemId, new IndexedContainerItem(itemId),
+                        false);
             }
+            filterAll();
         }
     }
 
@@ -246,8 +249,17 @@ public class IndexedContainer extends
      */
     @Override
     public Item addItem(Object itemId) {
-        return internalAddItemAtEnd(itemId, new IndexedContainerItem(itemId),
-                true);
+        Item item = internalAddItemAtEnd(itemId, new IndexedContainerItem(
+                itemId), false);
+        if (!isFiltered()) {
+            // always the last item
+            fireItemAdded(size() - 1, itemId, item);
+        } else if (passesFilters(itemId)) {
+            getFilteredItemIds().add(itemId);
+            // always the last item
+            fireItemAdded(size() - 1, itemId, item);
+        }
+        return item;
     }
 
     /**
