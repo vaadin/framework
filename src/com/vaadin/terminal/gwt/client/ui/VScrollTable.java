@@ -966,6 +966,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         scrollBody.renderInitialRows(rowData, uidl.getIntAttribute("firstrow"),
                 uidl.getIntAttribute("rows"));
         scrollBodyPanel.add(scrollBody);
+
+        // New body starts scrolled to the left, make sure the header and footer
+        // are also scrolled to the left
+        tHead.setHorizontalScrollPosition(0);
+        tFoot.setHorizontalScrollPosition(0);
+
         initialContentReceived = true;
         if (isAttached()) {
             sizeInit();
