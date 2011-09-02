@@ -84,10 +84,8 @@ public class VTreeTable extends VScrollTable {
             collapseRequest = false;
         }
         if (uidl.hasAttribute("focusedRow")) {
-            // TODO figure out if the row needs to focused at all
-
-            // scrolled to parent by the server, focusedRow is probably the sam
-            // as the first row in view port
+            String key = uidl.getStringAttribute("focusedRow");
+            setRowFocus(getRenderedRowByKey(key));
         }
     }
 

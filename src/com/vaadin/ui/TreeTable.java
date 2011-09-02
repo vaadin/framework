@@ -390,16 +390,15 @@ public class TreeTable extends Table implements Hierarchical {
         if (!inView) {
             setCurrentPageFirstItemId(itemId);
         }
+        // Select the row if it is selectable.
         if (isSelectable()) {
             if (isMultiSelect()) {
                 setValue(Collections.singleton(itemId));
             } else {
                 setValue(itemId);
             }
-        } else {
-            // just instruct the VTreeTable to set focus the row (not to select)
-            setFocusedRow(itemId);
         }
+        setFocusedRow(itemId);
     }
 
     private void setFocusedRow(Object itemId) {
