@@ -254,7 +254,7 @@ public class IndexedContainer extends
         if (!isFiltered()) {
             // always the last item
             fireItemAdded(size() - 1, itemId, item);
-        } else if (passesFilters(itemId)) {
+        } else if (passesFilters(itemId) && !containsId(itemId)) {
             getFilteredItemIds().add(itemId);
             // always the last item
             fireItemAdded(size() - 1, itemId, item);
