@@ -2106,8 +2106,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     unSyncedselectionsBeforeRowFetch = new HashSet<Object>(
                             selectedRowKeys);
                 }
+                isRunning = false;
             }
-            isRunning = false;
         }
 
         public int getReqFirstRow() {
