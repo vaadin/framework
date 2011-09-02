@@ -157,7 +157,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     protected ApplicationConnection client;
     protected String paintableId;
 
-    private boolean immediate;
+    protected boolean immediate;
     private boolean nullSelectionAllowed = true;
 
     private int selectMode = Table.SELECT_MODE_NONE;

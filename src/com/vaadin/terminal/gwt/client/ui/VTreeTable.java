@@ -745,6 +745,7 @@ public class VTreeTable extends VScrollTable {
                     client.updateVariable(paintableId, "selectCollapsed", true,
                             false);
                 }
+                sendSelectedRowsNonImmediate();
                 sendToggleCollapsedUpdate(focusedRow.getKey());
                 return true;
             } else if (keycode == KeyCodes.KEY_RIGHT && focusedRow.open) {
@@ -801,6 +802,13 @@ public class VTreeTable extends VScrollTable {
         if (event.getTypeInt() == Event.ONKEYUP && selectionPending) {
             sendSelectedRows();
         }
+    }
+
+    private void sendSelectedRowsNonImmediate() {
+        boolean oldImmediate = immediate;
+        immediate = false;
+        sendSelectedRows();
+        immediate = oldImmediate;
     }
 
     @Override
