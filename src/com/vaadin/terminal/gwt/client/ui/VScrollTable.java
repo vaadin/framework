@@ -801,9 +801,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             return;
         }
 
-        // we may have pending cache row fetch, cancel it. See #2136
-        rowRequestHandler.cancel();
-
         enabled = !uidl.hasAttribute("disabled");
 
         if (BrowserInfo.get().isIE8() && !enabled) {
@@ -875,11 +872,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         UIDL partialRowAdditions = uidl.getChildByTagName("prows");
         UIDL partialRowUpdates = uidl.getChildByTagName("urows");
         if (partialRowUpdates != null || partialRowAdditions != null) {
+            // we may have pending cache row fetch, cancel it. See #2136
+            rowRequestHandler.cancel();
+
             updateRowsInBody(partialRowUpdates);
             addAndRemoveRows(partialRowAdditions);
         } else {
             UIDL rowData = uidl.getChildByTagName("rows");
             if (rowData != null) {
+                // we may have pending cache row fetch, cancel it. See #2136
+                rowRequestHandler.cancel();
+
                 if (!recalcWidths && initializedAndAttached) {
                     updateBody(rowData, uidl.getIntAttribute("firstrow"),
                             uidl.getIntAttribute("rows"));
@@ -939,7 +942,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         multiselectPending = false;
 
         if (focusedRow != null) {
-            if (!focusedRow.isAttached()) {
+            if (!focusedRow.isAttached() && !rowRequestHandler.isRunning()) {
                 // focused row has been orphaned, can't focus
                 focusRowFromBody();
             }
@@ -2007,12 +2010,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         private int reqFirstRow = 0;
         private int reqRows = 0;
+        private boolean isRunning = false;
 
         public void deferRowFetch() {
             deferRowFetch(250);
         }
 
+        public boolean isRunning() {
+            return isRunning;
+        }
+
         public void deferRowFetch(int msec) {
+            isRunning = true;
             if (reqRows > 0 && reqFirstRow < totalRows) {
                 schedule(msec);
 
@@ -2098,6 +2107,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                             selectedRowKeys);
                 }
             }
+            isRunning = false;
         }
 
         public int getReqFirstRow() {
@@ -2108,6 +2118,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * Sends request to refresh content at this position.
          */
         public void refreshContent() {
+            isRunning = true;
             int first = (int) (firstRowInViewPort - pageLength * cache_rate);
             int reqRows = (int) (2 * pageLength * cache_rate + pageLength);
             if (first < 0) {

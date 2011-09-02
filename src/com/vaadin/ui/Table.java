@@ -3151,7 +3151,8 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
-        if (event.getProperty() == this) {
+        if (event.getProperty() == this
+                || event.getProperty() == getPropertyDataSource()) {
             super.valueChange(event);
         } else {
             resetPageBuffer();
