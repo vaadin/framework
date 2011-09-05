@@ -273,8 +273,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
         optionRequest = true;
 
         // Hide the error indicator if needed
-        if (isRequired() && isEmpty() && getComponentError() == null
-                && getErrorMessage() != null) {
+        if (shouldHideErrors()) {
             target.addAttribute("hideErrors", true);
         }
     }

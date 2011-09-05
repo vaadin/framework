@@ -276,6 +276,11 @@ public class DateField extends AbstractField implements
         }
     }
 
+    @Override
+    protected boolean shouldHideErrors() {
+        return super.shouldHideErrors() && uiHasValidDateString;
+    }
+
     /*
      * Invoked when a variable of the component changes. Don't add a JavaDoc
      * comment here, we use the default documentation from implemented
@@ -293,7 +298,7 @@ public class DateField extends AbstractField implements
                         || variables.containsKey("min")
                         || variables.containsKey("sec")
                         || variables.containsKey("msec") || variables
-                            .containsKey("dateString"))) {
+                        .containsKey("dateString"))) {
 
             // Old and new dates
             final Date oldDate = (Date) getValue();

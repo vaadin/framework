@@ -163,10 +163,25 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         }
 
         // Hide the error indicator if needed
-        if (isRequired() && isEmpty() && getComponentError() == null
-                && getErrorMessage() != null) {
+        if (shouldHideErrors()) {
             target.addAttribute("hideErrors", true);
         }
+    }
+
+    /**
+     * Returns true if the error indicator be hidden when painting the component
+     * even when there are errors.
+     * 
+     * This is a mostly internal method, but can be overridden in subclasses
+     * e.g. if the error indicator should also be shown for empty fields in some
+     * cases.
+     * 
+     * @return true to hide the error indicator, false to use the normal logic
+     *         to show it when there are errors
+     */
+    protected boolean shouldHideErrors() {
+        return isRequired() && isEmpty() && getComponentError() == null
+                && getErrorMessage() != null;
     }
 
     /*
