@@ -1733,4 +1733,10 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
         }
     }
+
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        suggestionPopup.hide();
+    }
 }
