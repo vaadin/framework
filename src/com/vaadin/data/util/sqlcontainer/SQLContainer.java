@@ -414,6 +414,17 @@ public class SQLContainer implements Container, Container.Filterable,
                             ee);
                 }
                 return false;
+            } catch (OptimisticLockException e) {
+                logger.log(Level.WARNING, "Failed to remove row, rolling back",
+                        e);
+                try {
+                    delegate.rollback();
+                } catch (SQLException ee) {
+                    /* Nothing can be done here */
+                    logger.log(Level.SEVERE, "Failed to rollback row removal",
+                            ee);
+                }
+                throw e;
             }
         } else {
             removedItems.put((RowId) itemId, (RowItem) getItem(itemId));
@@ -460,6 +471,16 @@ public class SQLContainer implements Container, Container.Filterable,
                     logger.log(Level.SEVERE, "Failed to roll back", ee);
                 }
                 return false;
+            } catch (OptimisticLockException e) {
+                logger.log(Level.WARNING,
+                        "removeAllItems() failed, rolling back", e);
+                try {
+                    delegate.rollback();
+                } catch (SQLException ee) {
+                    /* Nothing can be done here */
+                    logger.log(Level.SEVERE, "Failed to roll back", ee);
+                }
+                throw e;
             }
         } else {
             for (Object id : getItemIds()) {
@@ -889,6 +910,9 @@ public class SQLContainer implements Container, Container.Filterable,
                 CacheFlushNotifier.notifyOfCacheFlush(this);
             }
         } catch (SQLException e) {
+            delegate.rollback();
+            throw e;
+        } catch (OptimisticLockException e) {
             delegate.rollback();
             throw e;
         }

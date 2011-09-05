@@ -19,12 +19,11 @@ import com.vaadin.tests.server.container.sqlcontainer.query.TableQueryTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({ SimpleJDBCConnectionPoolTest.class,
-        J2EEConnectionPoolTest.class, LikeTest.class,
-        QueryBuilderTest.class, FreeformQueryTest.class,
-        RowIdTest.class, SQLContainerTest.class,
+        J2EEConnectionPoolTest.class, LikeTest.class, QueryBuilderTest.class,
+        FreeformQueryTest.class, RowIdTest.class, SQLContainerTest.class,
         SQLContainerTableQueryTest.class, ColumnPropertyTest.class,
         TableQueryTest.class, SQLGeneratorsTest.class, UtilTest.class,
-        TicketTests.class, BetweenTest.class, ReadOnlyRowIdTest.class})
+        TicketTests.class, BetweenTest.class, ReadOnlyRowIdTest.class })
 public class AllTests {
     /* Set the DB used for testing here! */
     public enum DB {
@@ -83,7 +82,7 @@ public class AllTests {
             versionStatements = new String[] {
                     "create table VERSIONED (ID integer auto_increment not null, TEXT varchar(255), VERSION tinyint default 0, primary key(ID))",
                     "CREATE TRIGGER upd_version BEFORE UPDATE ON VERSIONED"
-                            + " FOR EACH ROW SET NEW.VERSION = @VERSION+1" };
+                            + " FOR EACH ROW SET NEW.VERSION = OLD.VERSION+1" };
             break;
         case POSTGRESQL:
             offset = 1;

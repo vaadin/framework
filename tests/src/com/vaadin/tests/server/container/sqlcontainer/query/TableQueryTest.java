@@ -616,4 +616,48 @@ public class TableQueryTest {
         container.commit();
     }
 
+    @Test
+    public void removeRow_throwsOptimisticLockException_shouldStillWork()
+            throws SQLException {
+        if (AllTests.db == AllTests.DB.HSQLDB) {
+            // HSQLDB doesn't support versioning, so this is to make the test
+            // green.
+            return;
+        }
+        DataGenerator.addVersionedData(connectionPool);
+
+        TableQuery tQuery = new TableQuery("versioned", connectionPool,
+                AllTests.sqlGen);
+        tQuery.setVersionColumn("VERSION");
+        SQLContainer container = new SQLContainer(tQuery);
+        RowItem row = (RowItem) container.getItem(container.firstItemId());
+        Assert.assertEquals("Junk", row.getItemProperty("TEXT").getValue());
+
+        // Update the version using another connection.
+        Connection conn = connectionPool.reserveConnection();
+        PreparedStatement stmt = conn
+                .prepareStatement("UPDATE VERSIONED SET \"TEXT\" = ? WHERE \"ID\" = ?");
+        stmt.setString(1, "asdf");
+        stmt.setObject(2, row.getItemProperty("ID").getValue());
+        stmt.executeUpdate();
+        stmt.close();
+        conn.commit();
+        connectionPool.releaseConnection(conn);
+
+        Object itemToRemove = container.firstItemId();
+        try {
+            container.removeItem(itemToRemove);
+            container.commit();
+        } catch (OptimisticLockException e) {
+            // This is expected, refresh and try again.
+            container.rollback();
+            container.removeItem(itemToRemove);
+            container.commit();
+        }
+        Object id = container.addItem();
+        RowItem item = (RowItem) container.getItem(id);
+        item.getItemProperty("TEXT").setValue("foo");
+        container.commit();
+    }
+
 }
