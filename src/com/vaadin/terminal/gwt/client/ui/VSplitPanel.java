@@ -806,8 +806,8 @@ public class VSplitPanel extends ComplexPanel implements Container,
     private void updateSplitPositionToServer() {
         int pos = 0;
         if (position.indexOf("%") > 0) {
-            pos = Float.valueOf(position.substring(0, position.length() - 1))
-                    .intValue();
+            pos = Math.round(Float.valueOf(position.substring(0,
+                    position.length() - 1)));
         } else {
             pos = Integer
                     .parseInt(position.substring(0, position.length() - 2));
