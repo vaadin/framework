@@ -211,9 +211,9 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
             }
         }
 
-        distributeColSpanWidths();
         colExpandRatioArray = uidl.getIntArrayAttribute("colExpand");
         rowExpandRatioArray = uidl.getIntArrayAttribute("rowExpand");
+        distributeColSpanWidths();
 
         minColumnWidths = cloneArray(columnWidths);
         expandColumns();
@@ -553,7 +553,7 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
                 // subsequent renders
                 int width = cell.hasRelativeWidth() ? 0 : cell.getWidth();
                 distributeSpanSize(columnWidths, cell.col, cell.colspan,
-                        spacingPixelsHorizontal, width);
+                        spacingPixelsHorizontal, width, colExpandRatioArray);
             }
         }
     }
@@ -569,32 +569,56 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
                 // subsequent renders
                 int height = cell.hasRelativeHeight() ? 0 : cell.getHeight();
                 distributeSpanSize(rowHeights, cell.row, cell.rowspan,
-                        spacingPixelsVertical, height);
+                        spacingPixelsVertical, height, rowExpandRatioArray);
             }
         }
     }
 
-    private static void distributeSpanSize(int[] dimensions, int itemIndex,
-            int spanSize, int spacingSize, int size) {
-        int allocated = dimensions[itemIndex];
+    private static void distributeSpanSize(int[] dimensions,
+            int spanStartIndex, int spanSize, int spacingSize, int size,
+            int[] expansionRatios) {
+        int allocated = dimensions[spanStartIndex];
         for (int i = 1; i < spanSize; i++) {
-            allocated += spacingSize + dimensions[itemIndex + i];
+            allocated += spacingSize + dimensions[spanStartIndex + i];
         }
         if (allocated < size) {
-            // columnWidths needs to be expanded due colspanned cell
+            // dimensions needs to be expanded due spanned cell
             int neededExtraSpace = size - allocated;
-            int spaceForColunms = neededExtraSpace / spanSize;
+            int allocatedExtraSpace = 0;
+
+            // Divide space according to expansion ratios if any span has a
+            // ratio
+            int totalExpansion = 0;
             for (int i = 0; i < spanSize; i++) {
-                int col = itemIndex + i;
-                dimensions[col] += spaceForColunms;
-                neededExtraSpace -= spaceForColunms;
+                int itemIndex = spanStartIndex + i;
+                totalExpansion += expansionRatios[itemIndex];
             }
-            if (neededExtraSpace > 0) {
+
+            for (int i = 0; i < spanSize; i++) {
+                int itemIndex = spanStartIndex + i;
+                int expansion;
+                if (totalExpansion == 0) {
+                    // Divide equally among all cells if there are no
+                    // expansion ratios
+                    expansion = neededExtraSpace / spanSize;
+                } else {
+                    expansion = neededExtraSpace * expansionRatios[itemIndex]
+                            / totalExpansion;
+                }
+                dimensions[itemIndex] += expansion;
+                allocatedExtraSpace += expansion;
+            }
+
+            // We might still miss a couple of pixels because of
+            // rounding errors...
+            if (neededExtraSpace > allocatedExtraSpace) {
                 for (int i = 0; i < spanSize; i++) {
-                    int col = itemIndex + i;
-                    dimensions[col] += 1;
-                    neededExtraSpace -= 1;
-                    if (neededExtraSpace == 0) {
+                    // Add one pixel to every cell until we have
+                    // compensated for any rounding error
+                    int itemIndex = spanStartIndex + i;
+                    dimensions[itemIndex] += 1;
+                    allocatedExtraSpace += 1;
+                    if (neededExtraSpace == allocatedExtraSpace) {
                         break;
                     }
                 }
