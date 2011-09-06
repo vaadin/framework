@@ -552,31 +552,8 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
                 // cells with relative content may return non 0 here if on
                 // subsequent renders
                 int width = cell.hasRelativeWidth() ? 0 : cell.getWidth();
-                int allocated = columnWidths[cell.col];
-                for (int i = 1; i < cell.colspan; i++) {
-                    allocated += spacingPixelsHorizontal
-                            + columnWidths[cell.col + i];
-                }
-                if (allocated < width) {
-                    // columnWidths needs to be expanded due colspanned cell
-                    int neededExtraSpace = width - allocated;
-                    int spaceForColunms = neededExtraSpace / cell.colspan;
-                    for (int i = 0; i < cell.colspan; i++) {
-                        int col = cell.col + i;
-                        columnWidths[col] += spaceForColunms;
-                        neededExtraSpace -= spaceForColunms;
-                    }
-                    if (neededExtraSpace > 0) {
-                        for (int i = 0; i < cell.colspan; i++) {
-                            int col = cell.col + i;
-                            columnWidths[col] += 1;
-                            neededExtraSpace -= 1;
-                            if (neededExtraSpace == 0) {
-                                break;
-                            }
-                        }
-                    }
-                }
+                distributeSpanSize(columnWidths, cell.col, cell.colspan,
+                        spacingPixelsHorizontal, width);
             }
         }
     }
@@ -591,29 +568,34 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
                 // cells with relative content may return non 0 here if on
                 // subsequent renders
                 int height = cell.hasRelativeHeight() ? 0 : cell.getHeight();
-                int allocated = rowHeights[cell.row];
-                for (int i = 1; i < cell.rowspan; i++) {
-                    allocated += spacingPixelsVertical
-                            + rowHeights[cell.row + i];
-                }
-                if (allocated < height) {
-                    // columnWidths needs to be expanded due colspanned cell
-                    int neededExtraSpace = height - allocated;
-                    int spaceForColunms = neededExtraSpace / cell.rowspan;
-                    for (int i = 0; i < cell.rowspan; i++) {
-                        int row = cell.row + i;
-                        rowHeights[row] += spaceForColunms;
-                        neededExtraSpace -= spaceForColunms;
-                    }
-                    if (neededExtraSpace > 0) {
-                        for (int i = 0; i < cell.rowspan; i++) {
-                            int row = cell.row + i;
-                            rowHeights[row] += 1;
-                            neededExtraSpace -= 1;
-                            if (neededExtraSpace == 0) {
-                                break;
-                            }
-                        }
+                distributeSpanSize(rowHeights, cell.row, cell.rowspan,
+                        spacingPixelsVertical, height);
+            }
+        }
+    }
+
+    private static void distributeSpanSize(int[] dimensions, int itemIndex,
+            int spanSize, int spacingSize, int size) {
+        int allocated = dimensions[itemIndex];
+        for (int i = 1; i < spanSize; i++) {
+            allocated += spacingSize + dimensions[itemIndex + i];
+        }
+        if (allocated < size) {
+            // columnWidths needs to be expanded due colspanned cell
+            int neededExtraSpace = size - allocated;
+            int spaceForColunms = neededExtraSpace / spanSize;
+            for (int i = 0; i < spanSize; i++) {
+                int col = itemIndex + i;
+                dimensions[col] += spaceForColunms;
+                neededExtraSpace -= spaceForColunms;
+            }
+            if (neededExtraSpace > 0) {
+                for (int i = 0; i < spanSize; i++) {
+                    int col = itemIndex + i;
+                    dimensions[col] += 1;
+                    neededExtraSpace -= 1;
+                    if (neededExtraSpace == 0) {
+                        break;
                     }
                 }
             }
