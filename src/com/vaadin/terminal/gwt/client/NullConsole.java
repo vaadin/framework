@@ -15,7 +15,7 @@ import com.google.gwt.core.client.GWT;
  */
 public class NullConsole implements Console {
 
-    public void dirUIDL(UIDL u, ApplicationConfiguration cnf) {
+    public void dirUIDL(ValueMap u, ApplicationConfiguration cnf) {
     }
 
     public void error(String msg) {

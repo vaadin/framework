@@ -11,9 +11,14 @@ import java.util.Set;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.FontWeight;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -25,6 +30,8 @@ import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.EventPreview;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
@@ -35,8 +42,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.Tree;
-import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
@@ -58,18 +63,75 @@ import com.vaadin.terminal.gwt.client.ui.VOverlay;
  */
 public class VDebugConsole extends VOverlay implements Console {
 
+    private final class HighlightModeHandler implements
+            NativePreviewHandler {
+        private final Label label;
+
+        private HighlightModeHandler(Label label) {
+            this.label = label;
+        }
+
+        public void onPreviewNativeEvent(NativePreviewEvent event) {
+            if(event.getTypeInt() == Event.ONKEYDOWN && event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE) {
+                highlightModeRegistration.removeHandler();
+                VUIDLBrowser.deHiglight();
+                return;
+            }
+            if(event.getTypeInt() == Event.ONMOUSEMOVE) {
+                VUIDLBrowser.deHiglight();
+                Element eventTarget = Util.getElementFromPoint(event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY());
+                if(getElement().isOrHasChild(eventTarget)) {
+                    return;
+                }
+
+                
+                for(ApplicationConnection a : ApplicationConfiguration.getRunningApplications()) {
+                    Paintable paintable = Util.getPaintableForElement(a, a.getView(), eventTarget);
+                                                        if(paintable != null) {
+                        String pid = a.getPid(paintable);
+                        VUIDLBrowser.highlight(paintable);
+                        label.setText("Currently focused  :" + paintable.getClass() + " ID:" + pid);
+                        event.cancel();
+                        event.consume();
+                        event.getNativeEvent().stopPropagation();
+                        return;
+                    }
+                }
+            }
+            if(event.getTypeInt() == Event.ONCLICK) {
+                VUIDLBrowser.deHiglight();
+                event.cancel();
+                event.consume();
+                event.getNativeEvent().stopPropagation();
+                highlightModeRegistration.removeHandler();
+                Element eventTarget = Util.getElementFromPoint(event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY());
+                for(ApplicationConnection a : ApplicationConfiguration.getRunningApplications()) {
+                    Paintable paintable = Util.getPaintableForElement(a, a.getView(), eventTarget);
+                    if(paintable != null) {
+                        a.highlightComponent(paintable);
+                        return;
+                    }
+                }
+            }
+            event.cancel();
+        }
+    }
+
     private static final String POS_COOKIE_NAME = "VDebugConsolePos";
+
+    private HandlerRegistration highlightModeRegistration;
 
     Element caption = DOM.createDiv();
 
     private Panel panel;
 
-    private Button clear = new Button("Clear console");
-    private Button restart = new Button("Restart app");
-    private Button forceLayout = new Button("Force layout");
-    private Button analyzeLayout = new Button("Analyze layouts");
-    private Button savePosition = new Button("Save pos");
-    private CheckBox hostedMode = new CheckBox("GWT dev mode ");
+    private Button clear = new Button("C");
+    private Button restart = new Button("R");
+    private Button forceLayout = new Button("FL");
+    private Button analyzeLayout = new Button("AL");
+    private Button savePosition = new Button("S");
+    private Button highlight = new Button("H");
+    private CheckBox hostedMode = new CheckBox("GWT");
     private CheckBox autoScroll = new CheckBox("Autoscroll ");
     private HorizontalPanel actions;
     private boolean collapsed = false;
@@ -91,6 +153,11 @@ public class VDebugConsole extends VOverlay implements Console {
 
     public VDebugConsole() {
         super(false, false);
+        clear.setTitle("Clear console");
+        restart.setTitle("Restart app");
+        forceLayout.setTitle("Force layout");
+        analyzeLayout.setTitle("Analyze layouts");
+        savePosition.setTitle("Save pos");
     }
 
     private EventPreview dragpreview = new EventPreview() {
@@ -355,15 +422,17 @@ public class VDebugConsole extends VOverlay implements Console {
      * @see com.vaadin.terminal.gwt.client.Console#dirUIDL(com.vaadin
      * .terminal.gwt.client.UIDL)
      */
-    public void dirUIDL(UIDL u, ApplicationConfiguration conf) {
+    public void dirUIDL(ValueMap u, ApplicationConfiguration conf) {
         if (panel.isAttached()) {
-            panel.add(new VUIDLBrowser(u, conf));
+            VUIDLBrowser vuidlBrowser = new VUIDLBrowser(u, conf);
+            vuidlBrowser.setText("Response:");
+            panel.add(vuidlBrowser);
         }
         consoleDir(u);
         // consoleLog(u.getChildrenAsXML());
     }
 
-    private static native void consoleDir(UIDL u)
+    private static native void consoleDir(ValueMap u)
     /*-{
          if($wnd.console && $wnd.console.log) {
              if($wnd.console.dir) {
@@ -402,17 +471,12 @@ public class VDebugConsole extends VOverlay implements Console {
                 + "<h4>Layouts analyzed on server, total top level problems: "
                 + size + " </h4>"));
         if (size > 0) {
-            Tree tree = new Tree();
+            SimpleTree root = new SimpleTree("Root problems");
 
-            // Position relative does not work here in IE7
-            DOM.setStyleAttribute(tree.getElement(), "position", "");
-
-            TreeItem root = new TreeItem("Root problems");
             for (int i = 0; i < size; i++) {
                 printLayoutError(valueMapArray.get(i), root, ac);
             }
-            panel.add(tree);
-            tree.addItem(root);
+            panel.add(root);
 
         }
         if (zeroHeightComponents.size() > 0 || zeroWidthComponents.size() > 0) {
@@ -459,12 +523,12 @@ public class VDebugConsole extends VOverlay implements Console {
         }
     }
 
-    private void printLayoutError(ValueMap valueMap, TreeItem parent,
+    private void printLayoutError(ValueMap valueMap, SimpleTree root,
             final ApplicationConnection ac) {
         final String pid = valueMap.getString("id");
         final Paintable paintable = ac.getPaintable(pid);
 
-        TreeItem errorNode = new TreeItem();
+        SimpleTree errorNode = new SimpleTree();
         VerticalPanel errorDetails = new VerticalPanel();
         errorDetails.add(new Label(Util.getSimpleName(paintable) + " id: "
                 + pid));
@@ -487,7 +551,7 @@ public class VDebugConsole extends VOverlay implements Console {
             }
         });
         errorDetails.add(emphasisInUi);
-        errorNode.setWidget(errorDetails);
+        errorNode.add(errorDetails);
         if (valueMap.containsKey("subErrors")) {
             HTML l = new HTML(
                     "<em>Expand this node to show problems that may be dependent on this problem.</em>");
@@ -500,7 +564,7 @@ public class VDebugConsole extends VOverlay implements Console {
             }
 
         }
-        parent.addItem(errorNode);
+        root.add(errorNode);
     }
 
     public void log(Throwable e) {
@@ -544,16 +608,25 @@ public class VDebugConsole extends VOverlay implements Console {
             panel.setStyleName("v-debug-console-content");
 
             caption.setInnerHTML("Debug window");
+            caption.getStyle().setHeight(25, Unit.PX);
             caption.setTitle(help);
 
             show();
             setToDefaultSizeAndPos();
 
             actions = new HorizontalPanel();
+            Style style = actions.getElement().getStyle();
+            style.setPosition(Position.ABSOLUTE);
+            style.setBackgroundColor("grey");
+            style.setRight(0, Unit.PX);
+            style.setHeight(25, Unit.PX);
+            style.setTop(0, Unit.PX);
             actions.add(clear);
             actions.add(restart);
             actions.add(forceLayout);
             actions.add(analyzeLayout);
+            actions.add(highlight);
+            highlight.setTitle("Select a component and print details about it to the server log and client side console.");
             actions.add(savePosition);
             savePosition
                     .setTitle("Saves the position and size of debug console to a cookie");
@@ -590,7 +663,6 @@ public class VDebugConsole extends VOverlay implements Console {
                     .setTitle("Automatically scroll so that new messages are visible");
 
             panel.add(actions);
-
             panel.add(new HTML("<i>" + help + "</i>"));
 
             clear.addClickHandler(new ClickHandler() {
@@ -660,6 +732,17 @@ public class VDebugConsole extends VOverlay implements Console {
                             + "," + getOffsetWidth() + "," + getOffsetHeight()
                             + "," + autoScroll.getValue();
                     Cookies.setCookie(POS_COOKIE_NAME, pos);
+                }
+            });
+            
+            highlight.addClickHandler(new ClickHandler() {
+
+                public void onClick(ClickEvent event) {
+                    final Label label = new Label("--");
+                    log("<i>Use mouse to select a component or click ESC to exit highlight mode.</i>");
+                    panel.add(label);
+                    highlightModeRegistration = Event.addNativePreviewHandler(new HighlightModeHandler(label));
+                    
                 }
             });
 

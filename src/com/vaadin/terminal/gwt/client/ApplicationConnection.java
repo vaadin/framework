@@ -389,6 +389,17 @@ public class ApplicationConnection {
     }
 
     /**
+     * Sends a request to the server to print details to console that will help
+     * developer to locate component in the source code.
+     * 
+     * @param paintable
+     */
+    void highlightComponent(Paintable paintable) {
+        String params = getRepaintAllParameters() + "&hightlightComponent=" + getPid(paintable);
+        makeUidlRequest("", params, false);
+    }
+
+    /**
      * Makes an UIDL request to the server.
      * 
      * @param requestData
@@ -866,6 +877,7 @@ public class ApplicationConnection {
 
         Command c = new Command() {
             public void execute() {
+                VConsole.dirUIDL(json, configuration);
 
                 if (json.containsKey("locales")) {
                     // Store locale data
@@ -917,7 +929,6 @@ public class ApplicationConnection {
                 for (int i = 0; i < length; i++) {
                     try {
                         final UIDL change = changes.get(i).cast();
-                        VConsole.dirUIDL(change, configuration);
                         final UIDL uidl = change.getChildUIDL(0);
                         // TODO optimize
                         final Paintable paintable = getPaintable(uidl.getId());

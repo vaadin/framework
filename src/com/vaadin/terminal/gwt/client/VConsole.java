@@ -76,7 +76,7 @@ public class VConsole {
         impl.printObject(msg);
     }
 
-    public static void dirUIDL(UIDL u, ApplicationConfiguration cnf) {
+    public static void dirUIDL(ValueMap u, ApplicationConfiguration cnf) {
         impl.dirUIDL(u, cnf);
     }
 

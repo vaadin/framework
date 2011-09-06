@@ -30,6 +30,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -61,6 +62,7 @@ import com.vaadin.terminal.URIHandler;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Window;
@@ -356,6 +358,10 @@ public abstract class AbstractCommunicationManager implements
     private static final String CRLF = "\r\n";
 
     private static final String UTF8 = "UTF8";
+
+    private static final String GET_PARAM_HIGHLIGHT_COMPONENT = "hightlightComponent";
+
+    private Paintable hightLightedPaintable;
 
     private static String readLine(InputStream stream) throws IOException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -704,6 +710,13 @@ public abstract class AbstractCommunicationManager implements
         if (repaintAll) {
             // analyzing can be done only with repaintAll
             analyzeLayouts = (request.getParameter(GET_PARAM_ANALYZE_LAYOUTS) != null);
+
+            if (request.getParameter(GET_PARAM_HIGHLIGHT_COMPONENT) != null) {
+                String pid = request
+                        .getParameter(GET_PARAM_HIGHLIGHT_COMPONENT);
+                hightLightedPaintable = idPaintableMap.get(pid);
+                highlightPaintable(hightLightedPaintable);
+            }
         }
 
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
@@ -773,6 +786,65 @@ public abstract class AbstractCommunicationManager implements
 
         outWriter.close();
         requestThemeName = null;
+    }
+
+    protected void highlightPaintable(Paintable hightLightedPaintable2) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("*** Debug details of a component:  *** \n");
+        sb.append("Type: ");
+        sb.append(hightLightedPaintable2.getClass().getName());
+        if (hightLightedPaintable2 instanceof AbstractComponent) {
+            AbstractComponent component = (AbstractComponent) hightLightedPaintable2;
+            sb.append("\nId:");
+            sb.append(paintableIdMap.get(component));
+            if (component.getCaption() != null) {
+                sb.append("\nCaption:");
+                sb.append(component.getCaption());
+            }
+
+            printHighlightedComponentHierarchy(sb, component);
+        }
+        logger.info(sb.toString());
+    }
+
+    protected void printHighlightedComponentHierarchy(StringBuilder sb, AbstractComponent component) {
+        LinkedList<Component> h = new LinkedList<Component>();
+        h.add(component);
+        Component parent = component.getParent();
+        while (parent != null) {
+            h.addFirst(parent);
+            parent = parent.getParent();
+        }
+
+        sb.append("\nComponent hierarchy:\n");
+        Application application2 = component.getApplication();
+        sb.append(application2.getClass().getName());
+        sb.append(".");
+        sb.append(application2.getClass().getSimpleName());
+        sb.append("(");
+        sb.append(application2.getClass().getSimpleName());
+        sb.append(".java");
+        sb.append(":1)");
+        int l = 1;
+        for (Component component2 : h) {
+            sb.append("\n");
+            for (int i = 0; i < l; i++) {
+                sb.append("  ");
+            }
+            l++;
+            Class<? extends Component> componentClass = component2
+                    .getClass();
+            Class<?> topClass = componentClass;
+            while (topClass.getEnclosingClass() != null) {
+                topClass = topClass.getEnclosingClass();
+            }
+            sb.append(componentClass.getName());
+            sb.append(".");
+            sb.append(componentClass.getSimpleName());
+            sb.append("(");
+            sb.append(topClass.getSimpleName());
+            sb.append(".java:1)");
+        }
     }
 
     /**
@@ -999,7 +1071,14 @@ public abstract class AbstractCommunicationManager implements
                 }
                 outWriter.write("]");
             }
+            if (hightLightedPaintable != null) {
+                outWriter.write(", \"hl\":\"");
+                outWriter.write(paintableIdMap.get(hightLightedPaintable));
+                outWriter.write("\"");
+                hightLightedPaintable = null;
+            }
         }
+        
 
         SystemMessages ci = null;
         try {

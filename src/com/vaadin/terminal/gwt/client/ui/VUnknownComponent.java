@@ -5,17 +5,17 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.SimpleTree;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VUIDLBrowser;
 
 public class VUnknownComponent extends Composite implements Paintable {
 
     com.google.gwt.user.client.ui.Label caption = new com.google.gwt.user.client.ui.Label();;
-    Tree uidlTree;
+    SimpleTree uidlTree;
     private VerticalPanel panel;
     private String serverClassName = "unkwnown";
 
@@ -48,6 +48,8 @@ public class VUnknownComponent extends Composite implements Paintable {
         }
 
         uidlTree = new VUIDLBrowser(uidl, client.getConfiguration());
+        uidlTree.open(true);
+        uidlTree.setText("Unrendered UIDL");
         panel.add(uidlTree);
     }
 

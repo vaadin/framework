@@ -10,88 +10,69 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Tree;
-import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VWindow;
 
-public class VUIDLBrowser extends Tree implements MouseOutHandler {
-    /**
-     * 
-     */
-    private final UIDL uidl;
+public class VUIDLBrowser extends SimpleTree {
+    private static final String HELP = "Shift click handle to open recursively. Click components to hightlight them on client side. Shift click components to highlight them also on the server side.";
     private ApplicationConfiguration conf;
+    private String highlightedPid;
 
     public VUIDLBrowser(final UIDL uidl, ApplicationConfiguration conf) {
         this.conf = conf;
-        this.uidl = uidl;
-        DOM.setStyleAttribute(getElement(), "position", "");
-
-        final UIDLItem root = new UIDLItem(this.uidl, conf);
-        addItem(root);
-        addOpenHandler(new OpenHandler<TreeItem>() {
-            public void onOpen(OpenEvent<TreeItem> event) {
-                TreeItem item = event.getTarget();
-                if (item.getChildCount() == 1
-                        && item.getChild(0).getText().equals("LOADING")) {
-                    ((UIDLItem) item).dir();
-                }
-            }
-        });
-
-        addSelectionHandler(new SelectionHandler<TreeItem>() {
-            public void onSelection(SelectionEvent<TreeItem> event) {
-                TreeItem item = event.getSelectedItem();
-                if (!(item instanceof UIDLItem)) {
-                    // e.g. "variables" and its sub items are not UIDLItems
-                    return;
-                }
-                UIDLItem selectedItem = (UIDLItem) item;
-                List<ApplicationConnection> runningApplications = ApplicationConfiguration
-                        .getRunningApplications();
-
-                // TODO this does not work properly with multiple application on
-                // same
-                // host page
-                for (ApplicationConnection applicationConnection : runningApplications) {
-                    Paintable paintable = applicationConnection
-                            .getPaintable(selectedItem.uidl.getId());
-                    highlight(paintable);
-                }
-
-            }
-        });
-
-        addMouseOutHandler(VUIDLBrowser.this);
-
+        final UIDLItem root = new UIDLItem(uidl, conf);
+        add(root);
     }
 
-    @Override
-    protected boolean isKeyboardNavigationEnabled(TreeItem currentItem) {
-        return false;
+    public VUIDLBrowser(ValueMap u, ApplicationConfiguration conf) {
+        this.conf = conf;
+        ValueMap valueMap = u.getValueMap("meta");
+        if (valueMap.containsKey("hl")) {
+            highlightedPid = valueMap.getString("hl");
+        }
+        Set<String> keySet = u.getKeySet();
+        for (String key : keySet) {
+            if (key.equals("changes")) {
+                JsArray<UIDL> jsValueMapArray = u.getJSValueMapArray("changes")
+                        .cast();
+                for (int i = 0; i < jsValueMapArray.length(); i++) {
+                    UIDL uidl = jsValueMapArray.get(i);
+                    UIDLItem change = new UIDLItem(uidl, conf);
+                    change.setTitle("change " + i);
+                    add(change);
+                }
+            } else if (key.equals("meta")) {
+
+            } else {
+                // TODO consider pretty printing other request data
+                // addItem(key + " : " + u.getAsString(key));
+            }
+        }
+        open(highlightedPid != null);
+        setTitle(HELP);
     }
 
-    class UIDLItem extends TreeItem {
+    class UIDLItem extends SimpleTree {
 
         private UIDL uidl;
 
         UIDLItem(UIDL uidl, ApplicationConfiguration conf) {
+            setTitle(HELP);
             this.uidl = uidl;
             try {
                 String name = uidl.getTag();
@@ -106,6 +87,12 @@ public class VUIDLBrowser extends Tree implements MouseOutHandler {
             } catch (Exception e) {
                 setText(uidl.toString());
             }
+
+            addDomHandler(new MouseOutHandler() {
+                public void onMouseOut(MouseOutEvent event) {
+                    deHiglight();
+                }
+            }, MouseOutEvent.getType());
 
         }
 
@@ -124,9 +111,38 @@ public class VUIDLBrowser extends Tree implements MouseOutHandler {
             }
         }
 
+        @Override
+        public void open(boolean recursive) {
+            if (getWidgetCount() == 1
+                    && getWidget(0).getElement().getInnerText()
+                            .equals("LOADING")) {
+                dir();
+            }
+            super.open(recursive);
+        }
+
+        @Override
+        protected void select(ClickEvent event) {
+            List<ApplicationConnection> runningApplications = ApplicationConfiguration
+                    .getRunningApplications();
+
+            // TODO this does not work properly with multiple application on
+            // same
+            // host page
+            for (ApplicationConnection applicationConnection : runningApplications) {
+                Paintable paintable = applicationConnection.getPaintable(uidl
+                        .getId());
+                highlight(paintable);
+                if (event != null && event.getNativeEvent().getShiftKey()) {
+                    applicationConnection.highlightComponent(paintable);
+                }
+            }
+
+            super.select(event);
+        }
+
         public void dir() {
-            TreeItem temp = getChild(0);
-            removeItem(temp);
+            remove(0);
 
             String nodeName = uidl.getTag();
             try {
@@ -159,7 +175,7 @@ public class VUIDLBrowser extends Tree implements MouseOutHandler {
             setText(nodeName);
 
             try {
-                TreeItem tmp = null;
+                SimpleTree tmp = null;
                 Set<String> variableNames = uidl.getVariableNames();
                 for (String name : variableNames) {
                     String value = "";
@@ -180,12 +196,12 @@ public class VUIDLBrowser extends Tree implements MouseOutHandler {
                         }
                     }
                     if (tmp == null) {
-                        tmp = new TreeItem("variables");
+                        tmp = new SimpleTree("variables");
                     }
                     tmp.addItem(name + "=" + value);
                 }
                 if (tmp != null) {
-                    addItem(tmp);
+                    tmp.add(tmp);
                 }
             } catch (final Exception e) {
                 // Ignored, no variables
@@ -196,12 +212,20 @@ public class VUIDLBrowser extends Tree implements MouseOutHandler {
                 final Object child = i.next();
                 try {
                     final UIDL c = (UIDL) child;
-                    final TreeItem childItem = new UIDLItem(c, conf);
-                    addItem(childItem);
+                    final UIDLItem childItem = new UIDLItem(c, conf);
+                    add(childItem);
 
                 } catch (final Exception e) {
                     addItem(child.toString());
                 }
+            }
+            if (highlightedPid != null && highlightedPid.equals(uidl.getId())) {
+                getElement().getStyle().setBackgroundColor("#fdd");
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    public void execute() {
+                        getElement().scrollIntoView();
+                    }
+                });
             }
         }
     }
@@ -219,7 +243,7 @@ public class VUIDLBrowser extends Tree implements MouseOutHandler {
         }
     }
 
-    private static void highlight(Paintable paintable) {
+    static void highlight(Paintable paintable) {
         Widget w = (Widget) paintable;
         if (w != null) {
             Style style = highlight.getStyle();
@@ -231,14 +255,10 @@ public class VUIDLBrowser extends Tree implements MouseOutHandler {
         }
     }
 
-    private static void deHiglight() {
+    static void deHiglight() {
         if (highlight.getParentElement() != null) {
             highlight.getParentElement().removeChild(highlight);
         }
-    }
-
-    public void onMouseOut(MouseOutEvent event) {
-        deHiglight();
     }
 
 }
