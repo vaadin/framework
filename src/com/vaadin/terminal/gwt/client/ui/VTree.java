@@ -265,6 +265,8 @@ public class VTree extends FocusElementPanel implements Paintable,
         }
 
         body.clear();
+        // clear out any references to nodes that no longer are attached
+        keyToNode.clear();
         TreeNode childTree = null;
         UIDL childUidl = null;
         for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
@@ -301,6 +303,17 @@ public class VTree extends FocusElementPanel implements Paintable,
         }
 
         selectedIds = uidl.getStringArrayVariableAsSet("selected");
+
+        // Update lastSelection and focusedNode to point to *actual* nodes again
+        // after the old ones have been cleared from the body. This fixes focus
+        // and keyboard navigation issues as described in #7057 and other
+        // tickets.
+        if (lastSelection != null) {
+            lastSelection = keyToNode.get(lastSelection.key);
+        }
+        if (focusedNode != null) {
+            setFocusedNode(keyToNode.get(focusedNode.key));
+        }
 
         if (lastSelection == null && focusedNode == null
                 && !selectedIds.isEmpty()) {
@@ -1092,8 +1105,9 @@ public class VTree extends FocusElementPanel implements Paintable,
                     childNodeContainer.add(childTree);
                 }
                 if (!i.hasNext()) {
-                    childTree.addStyleDependentName(childTree.isLeaf()
-                            ? "leaf-last" : "last");
+                    childTree
+                            .addStyleDependentName(childTree.isLeaf() ? "leaf-last"
+                                    : "last");
                     childTree.childNodeContainer.addStyleDependentName("last");
                 }
             }
@@ -1794,7 +1808,6 @@ public class VTree extends FocusElementPanel implements Paintable,
      */
     protected boolean handleKeyNavigation(int keycode, boolean ctrl,
             boolean shift) {
-
         // Navigate down
         if (keycode == getNavigationDownKey()) {
             TreeNode node = null;
