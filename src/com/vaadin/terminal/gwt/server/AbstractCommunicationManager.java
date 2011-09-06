@@ -1373,7 +1373,7 @@ public abstract class AbstractCommunicationManager implements
                                     variable[VAR_VALUE]));
                 }
                 try {
-                    owner.changeVariables(source, m);
+                    changeVariables(source, owner, m);
 
                     // Special-case of closing browser-level windows:
                     // track browser-windows currently open in client
@@ -1421,6 +1421,11 @@ public abstract class AbstractCommunicationManager implements
             }
         }
         return success;
+    }
+
+    protected void changeVariables(Object source, final VariableOwner owner,
+            Map<String, Object> m) {
+        owner.changeVariables(source, m);
     }
 
     protected VariableOwner getVariableOwner(String string) {
