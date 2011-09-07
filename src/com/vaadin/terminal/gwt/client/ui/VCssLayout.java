@@ -4,8 +4,9 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -133,6 +134,7 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
 
         private final HashMap<Widget, VCaption> widgetToCaption = new HashMap<Widget, VCaption>();
         private ApplicationConnection client;
+        private int lastIndex;
 
         public FlowPane() {
             super();
@@ -152,36 +154,37 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
             // for later requests
             this.client = client;
 
-            final ArrayList<Widget> oldWidgets = new ArrayList<Widget>();
+            final Collection<Widget> oldWidgets = new HashSet<Widget>();
             for (final Iterator<Widget> iterator = iterator(); iterator
                     .hasNext();) {
                 oldWidgets.add(iterator.next());
             }
-            clear();
 
             ValueMap mapAttribute = null;
             if (uidl.hasAttribute("css")) {
                 mapAttribute = uidl.getMapAttribute("css");
             }
 
+            lastIndex = 0;
             for (final Iterator<Object> i = uidl.getChildIterator(); i
                     .hasNext();) {
                 final UIDL r = (UIDL) i.next();
                 final Paintable child = client.getPaintable(r);
-                if (oldWidgets.contains(child)) {
+                final Widget widget = (Widget) child;
+                if (widget.getParent() == this) {
                     oldWidgets.remove(child);
                     VCaption vCaption = widgetToCaption.get(child);
                     if (vCaption != null) {
-                        add(vCaption);
+                        addOrMove(vCaption, lastIndex++);
                         oldWidgets.remove(vCaption);
                     }
                 }
 
-                add((Widget) child);
+                addOrMove(widget, lastIndex++);
                 if (mapAttribute != null && mapAttribute.containsKey(r.getId())) {
                     String css = null;
                     try {
-                        Style style = ((Widget) child).getElement().getStyle();
+                        Style style = widget.getElement().getStyle();
                         css = mapAttribute.getString(r.getId());
                         String[] cssRules = css.split(";");
                         for (int j = 0; j < cssRules.length; j++) {
@@ -208,12 +211,26 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
             // loop oldWidgetWrappers that where not re-attached and unregister
             // them
             for (Widget w : oldWidgets) {
+                remove(w);
                 if (w instanceof Paintable) {
                     final Paintable p = (Paintable) w;
                     client.unregisterPaintable(p);
                 }
-                widgetToCaption.remove(w);
+                VCaption vCaption = widgetToCaption.remove(w);
+                if (vCaption != null) {
+                    remove(vCaption);
+                }
             }
+        }
+
+        private void addOrMove(Widget child, int index) {
+            if (child.getParent() == this) {
+                int currentIndex = getWidgetIndex(child);
+                if (index == currentIndex) {
+                    return;
+                }
+            }
+            insert(child, index);
         }
 
         public boolean hasChildComponent(Widget component) {
@@ -242,8 +259,10 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
                     caption = new VCaption(component, client);
                     widgetToCaption.put(widget, caption);
                     insert(caption, getWidgetIndex(widget));
+                    lastIndex++;
                 } else if (!caption.isAttached()) {
                     insert(caption, getWidgetIndex(widget));
+                    lastIndex++;
                 }
                 caption.updateCaption(uidl);
             } else if (caption != null) {
