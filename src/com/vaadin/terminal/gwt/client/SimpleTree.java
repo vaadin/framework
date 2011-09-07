@@ -24,7 +24,7 @@ public class SimpleTree extends ComplexPanel {
         Style style = getElement().getStyle();
         style.setProperty("whiteSpace", "nowrap");
         style.setPadding(3, Unit.PX);
-        
+
         style = handle.getStyle();
         style.setDisplay(Display.NONE);
         style.setProperty("textAlign", "center");
@@ -34,33 +34,34 @@ public class SimpleTree extends ComplexPanel {
         style.setBorderColor("grey");
         style.setBorderWidth(1, Unit.PX);
         style.setMarginRight(3, Unit.PX);
-        style.setProperty("border-radius", "4px");
+        style.setProperty("borderRadius", "4px");
         handle.setInnerHTML("+");
         getElement().appendChild(handle);
         getElement().appendChild(text);
         style = children.getStyle();
         style.setPaddingLeft(20, Unit.PX);
         style.setDisplay(Display.NONE);
-        
+
         getElement().appendChild(children);
         addDomHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 if (event.getNativeEvent().getEventTarget().cast() == handle) {
-                    if(children.getStyle().getDisplay().intern() == Display.NONE.getCssName()) {
+                    if (children.getStyle().getDisplay().intern() == Display.NONE
+                            .getCssName()) {
                         open(event.getNativeEvent().getShiftKey());
                     } else {
                         close();
                     }
-                    
+
                 } else if (event.getNativeEvent().getEventTarget().cast() == text) {
                     select(event);
                 }
             }
         }, ClickEvent.getType());
     }
-    
+
     protected void select(ClickEvent event) {
-        
+
     }
 
     public void close() {
@@ -71,7 +72,7 @@ public class SimpleTree extends ComplexPanel {
     public void open(boolean recursive) {
         handle.setInnerHTML("-");
         children.getStyle().setDisplay(Display.BLOCK);
-        if(recursive) {
+        if (recursive) {
             for (Widget w : getChildren()) {
                 if (w instanceof SimpleTree) {
                     SimpleTree str = (SimpleTree) w;
@@ -85,21 +86,21 @@ public class SimpleTree extends ComplexPanel {
         this();
         setText(caption);
     }
-        
+
     public void setText(String text) {
         this.text.setInnerText(text);
     }
-    
+
     public void addItem(String text) {
         Label label = new Label(text);
         add(label, children);
     }
-    
+
     @Override
     public void add(Widget child) {
         add(child, children);
     }
-    
+
     @Override
     protected void add(Widget child, Element container) {
         super.add(child, container);
