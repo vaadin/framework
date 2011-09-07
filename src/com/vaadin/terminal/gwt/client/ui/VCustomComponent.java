@@ -123,6 +123,15 @@ public class VCustomComponent extends SimplePanel implements Container {
     }
 
     public boolean requestLayout(Set<Paintable> child) {
+        // If a child grows in size, it will not necessarily be calculated
+        // correctly unless we remove previous size definitions
+        if (isDynamicWidth()) {
+            getElement().getStyle().setProperty("width", "");
+        }
+        if (isDynamicHeight()) {
+            getElement().getStyle().setProperty("width", "");
+        }
+
         return !updateDynamicSize();
     }
 
