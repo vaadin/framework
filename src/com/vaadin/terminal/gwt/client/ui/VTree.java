@@ -1291,7 +1291,7 @@ public class VTree extends FocusElementPanel implements Paintable,
          * Scrolls the caption into view
          */
         public void scrollIntoView() {
-            nodeCaptionDiv.scrollIntoView();
+            Util.scrollIntoViewVertically(nodeCaptionDiv);
         }
 
     }

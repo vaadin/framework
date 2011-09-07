@@ -6164,43 +6164,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      *            The row to ensure is visible
      */
     private void ensureRowIsVisible(VScrollTableRow row) {
-        scrollIntoViewVertically(row.getElement());
+        Util.scrollIntoViewVertically(row.getElement());
     }
-
-    /**
-     * Scrolls an element into view vertically only. Modified version of
-     * Element.scrollIntoView.
-     * 
-     * @param elem
-     *            The element to scroll into view
-     */
-    private native void scrollIntoViewVertically(Element elem)
-    /*-{
-        var top = elem.offsetTop;
-        var height = elem.offsetHeight;
-    
-        if (elem.parentNode != elem.offsetParent) {
-          top -= elem.parentNode.offsetTop;
-        }
-    
-        var cur = elem.parentNode;
-        while (cur && (cur.nodeType == 1)) {
-          if (top < cur.scrollTop) {
-            cur.scrollTop = top;
-          }
-          if (top + height > cur.scrollTop + cur.clientHeight) {
-            cur.scrollTop = (top + height) - cur.clientHeight;
-          }
-    
-          var offsetTop = cur.offsetTop;
-          if (cur.parentNode != cur.offsetParent) {
-            offsetTop -= cur.parentNode.offsetTop;
-          }
-           
-          top += offsetTop - cur.scrollTop;
-          cur = cur.parentNode;
-        }
-     }-*/;
 
     /**
      * Handles the keyboard events handled by the table
