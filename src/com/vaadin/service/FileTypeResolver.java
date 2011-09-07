@@ -134,6 +134,9 @@ public class FileTypeResolver implements Serializable {
             + "audio/x-pn-realaudio                            ra rm ram,"
             + "audio/x-scpls                                   pls,"
             + "audio/x-wav                                     wav,"
+            + "audio/ogg                                       ogg,"
+            + "audio/mp4                                       m4a,"
+            + "audio/x-aac                                     aac,"
             + "image/bitmap                                    bmp,"
             + "image/gif                                       gif,"
             + "image/ief                                       ief,"
@@ -190,6 +193,8 @@ public class FileTypeResolver implements Serializable {
             + "video/x-ms-asf                                  asf asx,"
             + "video/x-msvideo                                 avi,"
             + "video/x-sgi-movie                               movie,"
+            + "video/ogg                                       ogv,"
+            + "video/mp4                                       mp4,"
             + "x-world/x-vrml                                  vrm vrml wrl";
 
     /**
