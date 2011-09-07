@@ -393,6 +393,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private MultiSelectMode multiSelectMode = MultiSelectMode.DEFAULT;
 
+    private final Map<Field, Property> associatedProperties = new HashMap<Field, Property>();
+
     /* Table constructors */
 
     /**
@@ -1707,7 +1709,15 @@ public class Table extends AbstractSelect implements Action.Container,
          * fields in memory.
          */
         if (component instanceof Field) {
-            ((Field) component).setPropertyDataSource(null);
+            Field field = (Field) component;
+            Property associatedProperty = associatedProperties
+                    .remove(component);
+            if (associatedProperty != null
+                    && field.getPropertyDataSource() == associatedProperty) {
+                // Remove the property data source only if it's the one we
+                // added in getPropertyValue
+                field.setPropertyDataSource(null);
+            }
         }
     }
 
@@ -2784,6 +2794,9 @@ public class Table extends AbstractSelect implements Action.Container,
             final Field f = fieldFactory.createField(getContainerDataSource(),
                     rowId, colId, this);
             if (f != null) {
+                // Remember that we have made this association so we can remove
+                // it when the component is removed
+                associatedProperties.put(f, property);
                 f.setPropertyDataSource(property);
                 return f;
             }
