@@ -157,7 +157,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     protected ApplicationConnection client;
     protected String paintableId;
 
-    protected boolean immediate;
+    private boolean immediate;
     private boolean nullSelectionAllowed = true;
 
     private int selectMode = Table.SELECT_MODE_NONE;
@@ -629,6 +629,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * Sends the selection to the server if changed since the last update/visit.
      */
     protected void sendSelectedRows() {
+        sendSelectedRows(immediate);
+    }
+
+    /**
+     * Sends the selection to the server if it has been changed since the last
+     * update/visit.
+     * 
+     * @param immediately
+     *            set to true to immediately send the rows
+     */
+    protected void sendSelectedRows(boolean immediately) {
         // Don't send anything if selection has not changed
         if (!selectionChanged) {
             return;
@@ -672,7 +683,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         // Send the selected rows
         client.updateVariable(paintableId, "selected",
                 selectedRowKeys.toArray(new String[selectedRowKeys.size()]),
-                immediate);
+                immediately);
 
     }
 
