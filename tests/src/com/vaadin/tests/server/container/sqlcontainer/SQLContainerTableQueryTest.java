@@ -19,14 +19,12 @@ import com.vaadin.data.Container.ItemSetChangeListener;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.filter.Like;
 import com.vaadin.data.util.sqlcontainer.RowId;
-import com.vaadin.data.util.sqlcontainer.RowItem;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.util.sqlcontainer.TemporaryRowId;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.OrderBy;
 import com.vaadin.data.util.sqlcontainer.query.TableQuery;
-import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.tests.server.container.sqlcontainer.AllTests.DB;
 
 public class SQLContainerTableQueryTest {
@@ -143,6 +141,35 @@ public class SQLContainerTableQueryTest {
         }
         Assert.assertNotNull(item);
         Assert.assertEquals("Ville", item.getItemProperty("NAME").getValue());
+    }
+
+    @Test
+    public void getItem_commitedModifiedAndRefreshed() throws SQLException {
+        String OLD_VALUE = "SomeValue"; //$NON-NLS-1$
+        String NEW_VALUE = "OtherValue"; //$NON-NLS-1$
+
+        SQLContainer container = new SQLContainer(new TableQuery("people", //$NON-NLS-1$
+                connectionPool, AllTests.sqlGen));
+        Object itemID = container.addItem();
+        Item item = container.getItem(itemID);
+        item.getItemProperty("NAME").setValue(OLD_VALUE); //$NON-NLS-1$
+        container.commit();
+
+        itemID = container.getIdByIndex(container.size() - 1);
+        item = container.getItem(itemID);
+        Assert.assertEquals(OLD_VALUE, item.getItemProperty("NAME") //$NON-NLS-1$
+                .getValue());
+        item.getItemProperty("NAME").setValue(NEW_VALUE); //$NON-NLS-1$
+
+        // refresh the container which free's the caches
+        // and the modified cache keeps untouched which is a really powerful
+        // feature
+        container.refresh();
+
+        // access the item again will use the item from the modified cache.
+        item = container.getItem(itemID);
+        Assert.assertEquals(NEW_VALUE, item.getItemProperty("NAME") //$NON-NLS-1$
+                .getValue());
     }
 
     @Test

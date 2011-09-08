@@ -1199,7 +1199,18 @@ public class SQLContainer implements Container, Container.Filterable,
                     }
                     /* Cache item */
                     itemIndexes.put(rowCount, id);
-                    cachedItems.put(id, new RowItem(this, id, itemProperties));
+
+                    // if an item with the id is contained in the modified
+                    // cache, then use this record and add it to the cached
+                    // items. Otherwise create a new item
+                    int modifiedIndex = indexInModifiedCache(id);
+                    if (modifiedIndex != -1) {
+                        cachedItems.put(id, modifiedItems.get(modifiedIndex));
+                    } else {
+                        cachedItems.put(id, new RowItem(this, id,
+                                itemProperties));
+                    }
+
                     rowCount++;
                 }
             }
@@ -1227,6 +1238,24 @@ public class SQLContainer implements Container, Container.Filterable,
             }
             throw new RuntimeException("Failed to fetch page.", e);
         }
+    }
+
+    /**
+     * Returns the index of the item with the given itemId for the modified
+     * cache.
+     * 
+     * @param itemId
+     * @return the index of the item with the itemId in the modified cache. Or
+     *         -1 if not found.
+     */
+    private int indexInModifiedCache(Object itemId) {
+        for (int ix = 0; ix < modifiedItems.size(); ix++) {
+            RowItem item = modifiedItems.get(ix);
+            if (item.getId().equals(itemId)) {
+                return ix;
+            }
+        }
+        return -1;
     }
 
     private int sizeOfAddedItems() {
