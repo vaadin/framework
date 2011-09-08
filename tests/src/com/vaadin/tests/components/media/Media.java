@@ -1,3 +1,7 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.tests.components.media;
 
 import com.vaadin.terminal.ExternalResource;

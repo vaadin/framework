@@ -1,3 +1,7 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.terminal.gwt.client;
 
 import com.google.gwt.dom.client.Document;

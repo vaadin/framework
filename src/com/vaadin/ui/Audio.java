@@ -1,3 +1,7 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.ui;
 
 import com.vaadin.terminal.Resource;

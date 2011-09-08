@@ -1,3 +1,7 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.dom.client.AudioElement;
