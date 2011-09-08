@@ -395,7 +395,8 @@ public class ApplicationConnection {
      * @param paintable
      */
     void highlightComponent(Paintable paintable) {
-        String params = getRepaintAllParameters() + "&hightlightComponent=" + getPid(paintable);
+        String params = getRepaintAllParameters() + "&highlightComponent="
+                + getPid(paintable);
         makeUidlRequest("", params, false);
     }
 

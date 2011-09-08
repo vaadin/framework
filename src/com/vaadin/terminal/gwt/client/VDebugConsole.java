@@ -13,6 +13,7 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.FontWeight;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -63,8 +64,7 @@ import com.vaadin.terminal.gwt.client.ui.VOverlay;
  */
 public class VDebugConsole extends VOverlay implements Console {
 
-    private final class HighlightModeHandler implements
-            NativePreviewHandler {
+    private final class HighlightModeHandler implements NativePreviewHandler {
         private final Label label;
 
         private HighlightModeHandler(Label label) {
@@ -72,25 +72,30 @@ public class VDebugConsole extends VOverlay implements Console {
         }
 
         public void onPreviewNativeEvent(NativePreviewEvent event) {
-            if(event.getTypeInt() == Event.ONKEYDOWN && event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE) {
+            if (event.getTypeInt() == Event.ONKEYDOWN
+                    && event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE) {
                 highlightModeRegistration.removeHandler();
                 VUIDLBrowser.deHiglight();
                 return;
             }
-            if(event.getTypeInt() == Event.ONMOUSEMOVE) {
+            if (event.getTypeInt() == Event.ONMOUSEMOVE) {
                 VUIDLBrowser.deHiglight();
-                Element eventTarget = Util.getElementFromPoint(event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY());
-                if(getElement().isOrHasChild(eventTarget)) {
+                Element eventTarget = Util.getElementFromPoint(event
+                        .getNativeEvent().getClientX(), event.getNativeEvent()
+                        .getClientY());
+                if (getElement().isOrHasChild(eventTarget)) {
                     return;
                 }
 
-                
-                for(ApplicationConnection a : ApplicationConfiguration.getRunningApplications()) {
-                    Paintable paintable = Util.getPaintableForElement(a, a.getView(), eventTarget);
-                                                        if(paintable != null) {
+                for (ApplicationConnection a : ApplicationConfiguration
+                        .getRunningApplications()) {
+                    Paintable paintable = Util.getPaintableForElement(a,
+                            a.getView(), eventTarget);
+                    if (paintable != null) {
                         String pid = a.getPid(paintable);
                         VUIDLBrowser.highlight(paintable);
-                        label.setText("Currently focused  :" + paintable.getClass() + " ID:" + pid);
+                        label.setText("Currently focused  :"
+                                + paintable.getClass() + " ID:" + pid);
                         event.cancel();
                         event.consume();
                         event.getNativeEvent().stopPropagation();
@@ -98,16 +103,20 @@ public class VDebugConsole extends VOverlay implements Console {
                     }
                 }
             }
-            if(event.getTypeInt() == Event.ONCLICK) {
+            if (event.getTypeInt() == Event.ONCLICK) {
                 VUIDLBrowser.deHiglight();
                 event.cancel();
                 event.consume();
                 event.getNativeEvent().stopPropagation();
                 highlightModeRegistration.removeHandler();
-                Element eventTarget = Util.getElementFromPoint(event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY());
-                for(ApplicationConnection a : ApplicationConfiguration.getRunningApplications()) {
-                    Paintable paintable = Util.getPaintableForElement(a, a.getView(), eventTarget);
-                    if(paintable != null) {
+                Element eventTarget = Util.getElementFromPoint(event
+                        .getNativeEvent().getClientX(), event.getNativeEvent()
+                        .getClientY());
+                for (ApplicationConnection a : ApplicationConfiguration
+                        .getRunningApplications()) {
+                    Paintable paintable = Util.getPaintableForElement(a,
+                            a.getView(), eventTarget);
+                    if (paintable != null) {
                         a.highlightComponent(paintable);
                         return;
                     }
@@ -148,11 +157,12 @@ public class VDebugConsole extends VOverlay implements Console {
 
     private int origLeft;
 
-    private static final String help = "Drag=move, shift-drag=resize, doubleclick=min/max."
+    private static final String help = "Drag title=move, shift-drag=resize, doubleclick title=min/max."
             + "Use debug=quiet to log only to browser console.";
 
     public VDebugConsole() {
         super(false, false);
+        getElement().getStyle().setOverflow(Overflow.HIDDEN);
         clear.setTitle("Clear console");
         restart.setTitle("Restart app");
         forceLayout.setTitle("Force layout");
@@ -291,6 +301,7 @@ public class VDebugConsole extends VOverlay implements Console {
         }
         panel.setHeight((height - 20) + "px");
         panel.setWidth((width - 2) + "px");
+        getElement().getStyle().setWidth(width, Unit.PX);
     }
 
     /*
@@ -598,8 +609,8 @@ public class VDebugConsole extends VOverlay implements Console {
             setWidget(panel);
             caption.setClassName("v-debug-console-caption");
             setStyleName("v-debug-console");
-            DOM.setStyleAttribute(getElement(), "zIndex", 20000 + "");
-            DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+            getElement().getStyle().setZIndex(20000);
+            getElement().getStyle().setOverflow(Overflow.HIDDEN);
 
             sinkEvents(Event.ONDBLCLICK);
 
@@ -617,16 +628,18 @@ public class VDebugConsole extends VOverlay implements Console {
             actions = new HorizontalPanel();
             Style style = actions.getElement().getStyle();
             style.setPosition(Position.ABSOLUTE);
-            style.setBackgroundColor("grey");
-            style.setRight(0, Unit.PX);
+            style.setBackgroundColor("#666");
+            style.setLeft(135, Unit.PX);
             style.setHeight(25, Unit.PX);
             style.setTop(0, Unit.PX);
+
             actions.add(clear);
             actions.add(restart);
             actions.add(forceLayout);
             actions.add(analyzeLayout);
             actions.add(highlight);
-            highlight.setTitle("Select a component and print details about it to the server log and client side console.");
+            highlight
+                    .setTitle("Select a component and print details about it to the server log and client side console.");
             actions.add(savePosition);
             savePosition
                     .setTitle("Saves the position and size of debug console to a cookie");
@@ -663,6 +676,7 @@ public class VDebugConsole extends VOverlay implements Console {
                     .setTitle("Automatically scroll so that new messages are visible");
 
             panel.add(actions);
+
             panel.add(new HTML("<i>" + help + "</i>"));
 
             clear.addClickHandler(new ClickHandler() {
@@ -734,15 +748,17 @@ public class VDebugConsole extends VOverlay implements Console {
                     Cookies.setCookie(POS_COOKIE_NAME, pos);
                 }
             });
-            
+
             highlight.addClickHandler(new ClickHandler() {
 
                 public void onClick(ClickEvent event) {
                     final Label label = new Label("--");
                     log("<i>Use mouse to select a component or click ESC to exit highlight mode.</i>");
                     panel.add(label);
-                    highlightModeRegistration = Event.addNativePreviewHandler(new HighlightModeHandler(label));
-                    
+                    highlightModeRegistration = Event
+                            .addNativePreviewHandler(new HighlightModeHandler(
+                                    label));
+
                 }
             });
 

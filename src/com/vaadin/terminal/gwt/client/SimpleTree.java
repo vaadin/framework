@@ -35,7 +35,7 @@ public class SimpleTree extends ComplexPanel {
         style.setWidth(10, Unit.PX);
         style.setCursor(Cursor.POINTER);
         style.setBorderStyle(BorderStyle.SOLID);
-        style.setBorderColor("grey");
+        style.setBorderColor("#666");
         style.setBorderWidth(1, Unit.PX);
         style.setMarginRight(3, Unit.PX);
         style.setProperty("borderRadius", "4px");
@@ -109,6 +109,7 @@ public class SimpleTree extends ComplexPanel {
     protected void add(Widget child, Element container) {
         super.add(child, container);
         handle.getStyle().setDisplay(Display.INLINE_BLOCK);
+
     }
 
 }

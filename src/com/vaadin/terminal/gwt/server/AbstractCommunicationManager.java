@@ -359,9 +359,9 @@ public abstract class AbstractCommunicationManager implements
 
     private static final String UTF8 = "UTF8";
 
-    private static final String GET_PARAM_HIGHLIGHT_COMPONENT = "hightlightComponent";
+    private static final String GET_PARAM_HIGHLIGHT_COMPONENT = "highlightComponent";
 
-    private Paintable hightLightedPaintable;
+    private Paintable highLightedPaintable;
 
     private static String readLine(InputStream stream) throws IOException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -714,8 +714,8 @@ public abstract class AbstractCommunicationManager implements
             if (request.getParameter(GET_PARAM_HIGHLIGHT_COMPONENT) != null) {
                 String pid = request
                         .getParameter(GET_PARAM_HIGHLIGHT_COMPONENT);
-                hightLightedPaintable = idPaintableMap.get(pid);
-                highlightPaintable(hightLightedPaintable);
+                highLightedPaintable = idPaintableMap.get(pid);
+                highlightPaintable(highLightedPaintable);
             }
         }
 
@@ -788,13 +788,13 @@ public abstract class AbstractCommunicationManager implements
         requestThemeName = null;
     }
 
-    protected void highlightPaintable(Paintable hightLightedPaintable2) {
+    protected void highlightPaintable(Paintable highLightedPaintable2) {
         StringBuilder sb = new StringBuilder();
         sb.append("*** Debug details of a component:  *** \n");
         sb.append("Type: ");
-        sb.append(hightLightedPaintable2.getClass().getName());
-        if (hightLightedPaintable2 instanceof AbstractComponent) {
-            AbstractComponent component = (AbstractComponent) hightLightedPaintable2;
+        sb.append(highLightedPaintable2.getClass().getName());
+        if (highLightedPaintable2 instanceof AbstractComponent) {
+            AbstractComponent component = (AbstractComponent) highLightedPaintable2;
             sb.append("\nId:");
             sb.append(paintableIdMap.get(component));
             if (component.getCaption() != null) {
@@ -807,7 +807,8 @@ public abstract class AbstractCommunicationManager implements
         logger.info(sb.toString());
     }
 
-    protected void printHighlightedComponentHierarchy(StringBuilder sb, AbstractComponent component) {
+    protected void printHighlightedComponentHierarchy(StringBuilder sb,
+            AbstractComponent component) {
         LinkedList<Component> h = new LinkedList<Component>();
         h.add(component);
         Component parent = component.getParent();
@@ -832,8 +833,7 @@ public abstract class AbstractCommunicationManager implements
                 sb.append("  ");
             }
             l++;
-            Class<? extends Component> componentClass = component2
-                    .getClass();
+            Class<? extends Component> componentClass = component2.getClass();
             Class<?> topClass = componentClass;
             while (topClass.getEnclosingClass() != null) {
                 topClass = topClass.getEnclosingClass();
@@ -1071,14 +1071,13 @@ public abstract class AbstractCommunicationManager implements
                 }
                 outWriter.write("]");
             }
-            if (hightLightedPaintable != null) {
+            if (highLightedPaintable != null) {
                 outWriter.write(", \"hl\":\"");
-                outWriter.write(paintableIdMap.get(hightLightedPaintable));
+                outWriter.write(paintableIdMap.get(highLightedPaintable));
                 outWriter.write("\"");
-                hightLightedPaintable = null;
+                highLightedPaintable = null;
             }
         }
-        
 
         SystemMessages ci = null;
         try {
