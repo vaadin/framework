@@ -128,7 +128,7 @@ final public class ColumnProperty implements Property {
              * If the value to be set is the same that has already been set, do
              * not set it again.
              */
-            if (newValue.equals(value)) {
+            if (isValueAlreadySet(newValue)) {
                 return;
             }
         }
@@ -137,6 +137,15 @@ final public class ColumnProperty implements Property {
         changedValue = newValue;
         owner.getContainer().itemChangeNotification(owner);
         modified = true;
+    }
+
+    private boolean isValueAlreadySet(Object newValue) {
+        if (isModified()) {
+            return (isNullable() && newValue == null && changedValue == null)
+                    || newValue.equals(changedValue);
+        }
+        return (isNullable() && newValue == null && value == null)
+                || newValue.equals(value);
     }
 
     public Class<?> getType() {

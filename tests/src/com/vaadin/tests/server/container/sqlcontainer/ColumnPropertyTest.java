@@ -11,7 +11,6 @@ import com.vaadin.data.util.sqlcontainer.ColumnProperty;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.RowItem;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
-import com.vaadin.data.util.sqlcontainer.ColumnProperty.NotNullableException;
 
 public class ColumnPropertyTest {
 
@@ -56,7 +55,7 @@ public class ColumnPropertyTest {
         Assert.assertEquals("Kalle", cp.getValue());
         EasyMock.verify(container);
     }
-    */
+     */
 
     @Test(expected = ReadOnlyException.class)
     public void setValue_readOnlyNullable_shouldFail() {
@@ -101,7 +100,7 @@ public class ColumnPropertyTest {
         Assert.assertNotNull(cp.getValue());
         EasyMock.verify(container);
     }
-    */
+     */
 
     @Test
     public void getType_normal_returnsStringClass() {
@@ -165,7 +164,7 @@ public class ColumnPropertyTest {
         Assert.assertTrue(cp.isModified());
         EasyMock.verify(container);
     }
-    */
+     */
 
     @Test
     public void isModified_valueNotModified_returnsFalse() {
@@ -174,4 +173,25 @@ public class ColumnPropertyTest {
         Assert.assertFalse(cp.isModified());
     }
 
+    @Test
+    public void setValue_nullOnNullable_shouldWork() {
+        ColumnProperty cp = new ColumnProperty("NAME", false, true, true,
+                "asdf", String.class);
+        SQLContainer container = EasyMock.createMock(SQLContainer.class);
+        new RowItem(container, new RowId(new Object[] { 1 }), Arrays.asList(cp));
+        cp.setValue(null);
+        Assert.assertNull(cp.getValue());
+    }
+
+    @Test
+    public void setValue_resetTonullOnNullable_shouldWork() {
+        ColumnProperty cp = new ColumnProperty("NAME", false, true, true, null,
+                String.class);
+        SQLContainer container = EasyMock.createMock(SQLContainer.class);
+        new RowItem(container, new RowId(new Object[] { 1 }), Arrays.asList(cp));
+        cp.setValue("asdf");
+        Assert.assertEquals("asdf", cp.getValue());
+        cp.setValue(null);
+        Assert.assertNull(cp.getValue());
+    }
 }

@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Container.Filter;
+import com.vaadin.data.Item;
 import com.vaadin.data.util.filter.Compare.Equal;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
@@ -154,4 +155,29 @@ public class TicketTests {
         }
     }
 
+    @Test
+    public void ticket7434_getItem_Modified_Changed_Unchanged()
+            throws SQLException {
+        SQLContainer container = new SQLContainer(new TableQuery("people",
+                connectionPool, AllTests.sqlGen));
+
+        Object id = container.firstItemId();
+        Item item = container.getItem(id);
+        String name = (String) item.getItemProperty("NAME").getValue();
+
+        // set a different name
+        item.getItemProperty("NAME").setValue("otherName");
+        Assert.assertEquals("otherName", item.getItemProperty("NAME")
+                .getValue());
+
+        // access the item and reset the name to its old value
+        Item item2 = container.getItem(id);
+        item2.getItemProperty("NAME").setValue(name);
+        Assert.assertEquals(name, item2.getItemProperty("NAME").getValue());
+
+        Item item3 = container.getItem(id);
+        String name3 = (String) item3.getItemProperty("NAME").getValue();
+
+        Assert.assertEquals(name, name3);
+    }
 }
