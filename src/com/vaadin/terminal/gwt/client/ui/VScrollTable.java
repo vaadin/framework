@@ -3980,13 +3980,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
             } else {
                 // insert in the middle
-                int realIx = firstIndex - firstRendered;
+                int ix = firstIndex;
                 while (it.hasNext()) {
                     VScrollTableRow row = prepareRow((UIDL) it.next());
-                    insertRowAt(row, realIx);
+                    insertRowAt(row, ix);
                     insertedRows.add(row);
                     lastRendered++;
-                    realIx++;
+                    ix++;
                 }
                 fixSpacers();
             }
@@ -4058,11 +4058,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         sibling.getElement());
             }
             adopt(row);
-            renderedRows.add(index, row);
+            int actualIx = index - firstRendered;
+            renderedRows.add(actualIx, row);
 
             // TODO: could this be made more efficient? like looping only once
             // after all rows have been inserted
-            for (int ix = index + 1; ix < renderedRows.size(); ix++) {
+            for (int ix = actualIx + 1; ix < renderedRows.size(); ix++) {
                 VScrollTableRow r = (VScrollTableRow) renderedRows.get(ix);
                 r.setIndex(r.getIndex() + 1);
             }
@@ -4079,21 +4080,20 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             if (lastRendered - firstRendered < 0) {
                 return false;
             }
-            int index;
+            int actualIx;
             if (fromBeginning) {
-                index = 0;
+                actualIx = 0;
                 firstRendered++;
             } else {
-                index = renderedRows.size() - 1;
+                actualIx = renderedRows.size() - 1;
                 lastRendered--;
             }
-            if (index >= 0) {
-                unlinkRowAtIndex(index);
+            if (actualIx >= 0) {
+                unlinkRowAtActualIndex(actualIx);
                 fixSpacers();
                 return true;
-            } else {
-                return false;
             }
+            return false;
         }
 
         protected void unlinkRows(int firstIndex, int count) {
@@ -4109,7 +4109,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 lastIndex = lastRendered;
             }
             for (int ix = lastIndex; ix >= firstIndex; ix--) {
-                unlinkRowAtIndex(ix);
+                unlinkRowAtActualIndex(actualIndex(ix));
                 lastRendered--;
             }
             fixSpacers();
@@ -4120,13 +4120,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 index = firstRendered;
             }
             for (int ix = renderedRows.size() - 1; ix >= index; ix--) {
-                unlinkRowAtIndex(ix);
+                unlinkRowAtActualIndex(actualIndex(ix));
                 lastRendered--;
             }
             fixSpacers();
         }
 
-        private void unlinkRowAtIndex(int index) {
+        private int actualIndex(int index) {
+            return index - firstRendered;
+        }
+
+        private void unlinkRowAtActualIndex(int index) {
             final VScrollTableRow toBeRemoved = (VScrollTableRow) renderedRows
                     .get(index);
             // Unregister row tooltip
