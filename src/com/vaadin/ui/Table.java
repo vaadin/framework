@@ -1617,11 +1617,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 }
 
                 if (value instanceof Component) {
-                    if (oldVisibleComponents == null
-                            || !oldVisibleComponents.contains(value)) {
-                        ((Component) value).setParent(this);
-                    }
-                    visibleComponents.add((Component) value);
+                    registerComponent((Component) value);
                 }
                 cells[CELL_FIRSTCOL + j][i] = value;
             }
@@ -1656,6 +1652,13 @@ public class Table extends AbstractSelect implements Action.Container,
                 oldVisibleComponents);
 
         return cells;
+    }
+
+    protected void registerComponent(Component component) {
+        if (component.getParent() != this) {
+            component.setParent(this);
+        }
+        visibleComponents.add(component);
     }
 
     private void listenProperty(Property p,
