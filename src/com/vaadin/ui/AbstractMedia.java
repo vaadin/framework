@@ -6,6 +6,7 @@ package com.vaadin.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.vaadin.terminal.PaintException;
@@ -79,7 +80,7 @@ public class AbstractMedia extends AbstractComponent {
      * @return The sources pointed to in this media.
      */
     public List<Resource> getSources() {
-        return sources;
+        return Collections.unmodifiableList(sources);
     }
 
     /**
@@ -181,6 +182,9 @@ public class AbstractMedia extends AbstractComponent {
      * Pauses the media.
      */
     public void pause() {
+        // cancel any possible play command
+        play = false;
+
         pause = true;
         requestRepaint();
     }
@@ -189,6 +193,9 @@ public class AbstractMedia extends AbstractComponent {
      * Starts playback of the media.
      */
     public void play() {
+        // cancel any possible pause command.
+        pause = false;
+
         play = true;
         requestRepaint();
     }
