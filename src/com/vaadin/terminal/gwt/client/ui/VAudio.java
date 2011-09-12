@@ -25,6 +25,9 @@ public class VAudio extends VMediaBase {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        if (client.updateComponent(this, uidl, true)) {
+            return;
+        }
         super.updateFromUIDL(uidl, client);
         Style style = audio.getStyle();
 

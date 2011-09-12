@@ -22,6 +22,11 @@ import com.vaadin.terminal.gwt.client.ui.VVideo;
  * "https://developer.mozilla.org/En/Using_audio_and_video_in_Firefox#Using_Flash"
  * >Mozilla Developer Network</a>.
  * 
+ * Multiple sources can be specified. Which of the sources is used is selected
+ * by the browser depending on which file formats it supports. See <a
+ * href="http://en.wikipedia.org/wiki/HTML5_video#Table">wikipedia</a> for a
+ * table of formats supported by different browsers.
+ * 
  * @author Vaadin Ltd
  * @since 6.7.0
  */
