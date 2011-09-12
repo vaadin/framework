@@ -129,7 +129,7 @@ public class VCustomComponent extends SimplePanel implements Container {
             getElement().getStyle().setProperty("width", "");
         }
         if (isDynamicHeight()) {
-            getElement().getStyle().setProperty("width", "");
+            getElement().getStyle().setProperty("height", "");
         }
 
         return !updateDynamicSize();
