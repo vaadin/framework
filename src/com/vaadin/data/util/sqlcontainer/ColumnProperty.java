@@ -140,12 +140,10 @@ final public class ColumnProperty implements Property {
     }
 
     private boolean isValueAlreadySet(Object newValue) {
-        if (isModified()) {
-            return (isNullable() && newValue == null && changedValue == null)
-                    || newValue.equals(changedValue);
-        }
-        return (isNullable() && newValue == null && value == null)
-                || newValue.equals(value);
+        Object referenceValue = isModified() ? changedValue : value;
+
+        return (isNullable() && newValue == null && referenceValue == null)
+                || newValue.equals(referenceValue);
     }
 
     public Class<?> getType() {
