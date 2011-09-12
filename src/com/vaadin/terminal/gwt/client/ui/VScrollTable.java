@@ -2566,6 +2566,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 HeaderCell lastCell = tHead.getHeaderCell(tHead
                         .getVisibleCellCount() - 1);
                 tHead.resizeCaptionContainer(lastCell);
+                triggerLazyColumnAdjustment(true);
 
                 fireColumnResizeEvent(cid, originalWidth, getColWidth(cid));
                 break;
@@ -2581,6 +2582,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         newWidth = getMinWidth();
                     }
                     setColWidth(colIndex, newWidth, true);
+                    triggerLazyColumnAdjustment(false);
                     forceRealignColumnHeaders();
                 }
                 break;
