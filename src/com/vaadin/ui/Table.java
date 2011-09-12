@@ -750,6 +750,7 @@ public class Table extends AbstractSelect implements Action.Container,
         } else {
             columnWidths.put(propertyId, Integer.valueOf(width));
         }
+        requestRepaint();
     }
 
     /**

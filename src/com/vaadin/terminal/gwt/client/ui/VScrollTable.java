@@ -2803,6 +2803,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         public void updateCellsFromUIDL(UIDL uidl) {
             Iterator<?> it = uidl.getChildIterator();
             HashSet<String> updated = new HashSet<String>();
+            boolean refreshContentWidths = false;
             while (it.hasNext()) {
                 final UIDL col = (UIDL) it.next();
                 final String cid = col.getStringAttribute("cid");
@@ -2848,7 +2849,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     if (width < c.getMinWidth()) {
                         width = c.getMinWidth();
                     }
-                    c.setWidth(width, true);
+                    if (width != c.getWidth() && scrollBody != null) {
+                        // Do a more thorough update if a column is resized from
+                        // the server
+                        setColWidth(getColIndexByKey(c.cid), width, true);
+                        refreshContentWidths = true;
+                    } else {
+                        c.setWidth(width, true);
+                    }
                 } else if (recalcWidths) {
                     c.setUndefinedWidth();
                 }
@@ -2863,6 +2871,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         headerChangedDuringUpdate = true;
                     }
                 }
+            }
+
+            if (refreshContentWidths) {
+                // Recalculate the column sizings if any column has changed
+                triggerLazyColumnAdjustment(true);
             }
 
             // check for orphaned header cells
@@ -3635,8 +3648,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                 }
                 if (col.hasAttribute("width")) {
-                    final String width = col.getStringAttribute("width");
-                    c.setWidth(Integer.parseInt(width), true);
+                    if (scrollBody == null) {
+                        // Already updated by setColWidth called from
+                        // TableHeads.updateCellsFromUIDL in case of a server
+                        // side resize
+                        final String width = col.getStringAttribute("width");
+                        c.setWidth(Integer.parseInt(width), true);
+                    }
                 } else if (recalcWidths) {
                     c.setUndefinedWidth();
                 }
@@ -5604,6 +5622,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          */
         @Override
         public void run() {
+            if (scrollBody == null) {
+                // Try again later if we get here before scrollBody has been
+                // initalized
+                triggerLazyColumnAdjustment(false);
+                return;
+            }
 
             Iterator<Widget> headCells = tHead.iterator();
             int usedMinimumWidth = 0;
