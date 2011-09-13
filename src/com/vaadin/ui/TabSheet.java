@@ -414,8 +414,13 @@ public class TabSheet extends AbstractComponentContainer {
             target.addAttribute("key", keyMapper.key(component));
             if (component.equals(selected)) {
                 target.addAttribute("selected", true);
+                if (!paintedTabs.contains(component)) {
+                    // Ensure the component is painted if it hasn't already been
+                    // painted in this tabsheet
+                    component.requestRepaint();
+                    paintedTabs.add(component);
+                }
                 component.paint(target);
-                paintedTabs.add(component);
             } else if (paintedTabs.contains(component)) {
                 component.paint(target);
             } else {
