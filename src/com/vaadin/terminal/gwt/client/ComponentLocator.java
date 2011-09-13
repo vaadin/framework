@@ -326,7 +326,7 @@ public class ComponentLocator {
         String parts[] = path.split(SUBPART_SEPARATOR, 2);
         String widgetPath = parts[0];
         Widget w = getWidgetFromPath(widgetPath);
-        if (w == null) {
+        if (w == null || !Util.isAttachedAndDisplayed(w)) {
             return null;
         }
 
