@@ -6497,6 +6497,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         hasFocus = false;
         navKeyDown = false;
 
+        if (BrowserInfo.get().isIE()) {
+            // IE sometimes moves focus to a clicked table cell...
+            Element focusedElement = Util.getIEFocusedElement();
+            if (getElement().isOrHasChild(focusedElement)) {
+                // ..in that case, steal the focus back to the focus handler
+                focus();
+                return;
+            }
+        }
+
         if (isFocusable()) {
             // Unfocus any row
             setRowFocus(null);
