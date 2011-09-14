@@ -1253,6 +1253,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 // Same reaction to enter no matter on whether the popup is open
                 if (suggestionPopup.isAttached()) {
                     filterOptions(currentPage);
+                } else if (currentSuggestion != null
+                        && tb.getText().equals(
+                                currentSuggestion.getReplacementString())) {
+                    // Retain behavior from #6686 by returning without stopping
+                    // propagation if there's nothing to do
+                    return;
                 }
                 if (currentSuggestions.size() == 1 && !allowNewItem) {
                     // If there is only one suggestion, select that
