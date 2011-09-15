@@ -1032,7 +1032,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
 
         final UIDL options = uidl.getChildUIDL(0);
-        totalMatches = uidl.getIntAttribute("totalMatches");
+        if (uidl.hasAttribute("totalMatches")) {
+            totalMatches = uidl.getIntAttribute("totalMatches");
+        }
 
         String captions = inputPrompt;
 
@@ -1043,8 +1045,17 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             currentSuggestions.add(suggestion);
             if (optionUidl.hasAttribute("selected")) {
                 if (!filtering || popupOpenerClicked) {
-                    setPromptingOff(suggestion.getReplacementString());
-                    selectedOptionKey = "" + suggestion.getOptionKey();
+                    String newSelectedOptionKey = Integer.toString(suggestion
+                            .getOptionKey());
+                    if (!newSelectedOptionKey.equals(selectedOptionKey)
+                            || suggestion.getReplacementString().equals(
+                                    tb.getText())) {
+                        // Update text field if we've got a new selection
+                        // Also update if we've got the same text to retain old
+                        // text selection behavior
+                        setPromptingOff(suggestion.getReplacementString());
+                        selectedOptionKey = newSelectedOptionKey;
+                    }
                 }
                 currentSuggestion = suggestion;
                 setSelectedItemIcon(suggestion.getIconUri());
@@ -1281,7 +1292,27 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      */
     public void onKeyDown(KeyDownEvent event) {
         if (enabled && !readonly) {
-            if (suggestionPopup.isAttached()) {
+            if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+                // Same reaction to enter no matter on whether the popup is open
+                if (suggestionPopup.isAttached()) {
+                    filterOptions(currentPage);
+                } else if (currentSuggestion != null
+                        && tb.getText().equals(
+                                currentSuggestion.getReplacementString())) {
+                    // Retain behavior from #6686 by returning without stopping
+                    // propagation if there's nothing to do
+                    return;
+                }
+                if (currentSuggestions.size() == 1 && !allowNewItem) {
+                    // If there is only one suggestion, select that
+                    suggestionPopup.menu.selectItem(suggestionPopup.menu
+                            .getItems().get(0));
+                }
+                suggestionPopup.menu.doSelectedItemAction();
+
+                event.stopPropagation();
+                return;
+            } else if (suggestionPopup.isAttached()) {
                 popupKeyDown(event);
             } else {
                 inputFieldKeyDown(event);
@@ -1356,19 +1387,6 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
             // onBlur() takes care of the rest
             break;
-        case KeyCodes.KEY_ENTER:
-            if (suggestionPopup.isAttached()) {
-                filterOptions(currentPage);
-            }
-            if (currentSuggestions.size() == 1 && !allowNewItem) {
-                // If there is only one suggestion, select that
-                suggestionPopup.menu.selectItem(suggestionPopup.menu.getItems()
-                        .get(0));
-            }
-            suggestionPopup.menu.doSelectedItemAction();
-
-            event.stopPropagation();
-            break;
         }
 
     }
@@ -1434,9 +1452,6 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 filterOptions(-1, "");
                 popupOpenerClicked = true;
                 lastFilter = "";
-            } else if (selectedOptionKey == null) {
-                tb.setText(inputPrompt);
-                prompting = true;
             }
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
             focus();
@@ -1558,6 +1573,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
             if (selectedOptionKey == null) {
                 setPromptingOn();
+            } else if (currentSuggestion != null) {
+                setPromptingOff(currentSuggestion.caption);
             }
         }
         removeStyleDependentName("focus");
