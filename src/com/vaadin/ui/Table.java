@@ -2358,7 +2358,7 @@ public class Table extends AbstractSelect implements Action.Container,
         paintVisibleColumnOrder(target);
 
         // Rows
-        if (isPartialRowUpdate()) {
+        if (isPartialRowUpdate() && !target.isFullRepaint()) {
             paintPartialRowUpdate(target, actionSet);
         } else if (target.isFullRepaint() || isRowCacheInvalidated()) {
             paintRows(target, cells, actionSet);
