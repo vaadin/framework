@@ -483,9 +483,9 @@ public class TreeTable extends Table implements Hierarchical {
 
     private void toggleChildVisibility(Object itemId) {
         getContainerStrategy().toggleChildVisibility(itemId);
-        // ensure that page still has first item in page, ignore buffer refresh
-        // (forced in this method)
-        setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex());
+        // ensure that page still has first item in page, DON'T clear the
+        // caches.
+        setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex(), false);
         toggledItemId = itemId;
         requestRepaint();
 

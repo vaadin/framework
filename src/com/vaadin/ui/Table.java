@@ -1238,8 +1238,7 @@ public class Table extends AbstractSelect implements Action.Container,
         return currentPageFirstItemIndex;
     }
 
-    private void setCurrentPageFirstItemIndex(int newIndex,
-            boolean needsPageBufferReset) {
+    void setCurrentPageFirstItemIndex(int newIndex, boolean needsPageBufferReset) {
 
         if (newIndex < 0) {
             newIndex = 0;
@@ -1572,8 +1571,9 @@ public class Table extends AbstractSelect implements Action.Container,
                         int indexInOldBuffer = index - pageBufferFirstIndex;
                         if (index < firstIndexNotInCache
                                 && index >= pageBufferFirstIndex
-                                && pageBuffer[CELL_GENERATED_ROW][indexInOldBuffer] == null) {
-                            // we have data already in our cache,
+                                && pageBuffer[CELL_GENERATED_ROW][indexInOldBuffer] == null
+                                && pageBuffer[CELL_ITEMID][indexInOldBuffer] == id) {
+                            // we already have data in our cache,
                             // recycle it instead of fetching it via
                             // getValue/getPropertyValue
                             value = pageBuffer[CELL_FIRSTCOL + j][indexInOldBuffer];
