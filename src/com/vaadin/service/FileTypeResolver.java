@@ -280,10 +280,10 @@ public class FileTypeResolver implements Serializable {
      * @return the icon corresponding to the given file
      */
     public static Resource getIcon(String fileName) {
-        return getIconByMineType(getMIMEType(fileName));
+        return getIconByMimeType(getMIMEType(fileName));
     }
 
-    private static Resource getIconByMineType(String mimeType) {
+    private static Resource getIconByMimeType(String mimeType) {
         final Resource icon = MIMEToIconMap.get(mimeType);
         if (icon != null) {
             return icon;
@@ -305,7 +305,7 @@ public class FileTypeResolver implements Serializable {
      * @return the icon corresponding to the given file
      */
     public static Resource getIcon(File file) {
-        return getIconByMineType(getMIMEType(file));
+        return getIconByMimeType(getMIMEType(file));
     }
 
     /**
