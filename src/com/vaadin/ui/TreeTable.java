@@ -314,6 +314,7 @@ public class TreeTable extends Table implements Hierarchical {
     private Object hierarchyColumnId;
     private Object toggledItemId;
     private boolean animationsEnabled;
+    private boolean clearFocusedRowPending;
 
     private ContainerStrategy getContainerStrategy() {
         if (cStrategy == null) {
@@ -403,6 +404,11 @@ public class TreeTable extends Table implements Hierarchical {
 
     private void setFocusedRow(Object itemId) {
         focusedRowId = itemId;
+        if (focusedRowId == null) {
+            // Must still inform the client that the focusParent request has
+            // been processed
+            clearFocusedRowPending = true;
+        }
         requestRepaint();
     }
 
@@ -411,6 +417,11 @@ public class TreeTable extends Table implements Hierarchical {
         if (focusedRowId != null) {
             target.addAttribute("focusedRow", itemIdMapper.key(focusedRowId));
             focusedRowId = null;
+        } else if (clearFocusedRowPending) {
+            // Must still inform the client that the focusParent request has
+            // been processed
+            target.addAttribute("clearFocusPending", true);
+            clearFocusedRowPending = false;
         }
         target.addAttribute("animate", animationsEnabled);
         if (hierarchyColumnId != null) {

@@ -6,6 +6,7 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.google.gwt.animation.client.Animation;
@@ -34,6 +35,30 @@ import com.vaadin.terminal.gwt.client.ui.VTreeTable.VTreeTableScrollBody.VTreeTa
 
 public class VTreeTable extends VScrollTable {
 
+    private static class PendingNavigationEvent {
+        private final int keycode;
+        private final boolean ctrl;
+        private final boolean shift;
+
+        public PendingNavigationEvent(int keycode, boolean ctrl, boolean shift) {
+            this.keycode = keycode;
+            this.ctrl = ctrl;
+            this.shift = shift;
+        }
+
+        @Override
+        public String toString() {
+            String string = "Keyboard event: " + keycode;
+            if (ctrl) {
+                string += " + ctrl";
+            }
+            if (shift) {
+                string += " + shift";
+            }
+            return string;
+        }
+    }
+
     public static final String ATTRIBUTE_HIERARCHY_COLUMN_INDEX = "hci";
     private boolean collapseRequest;
     private boolean selectionPending;
@@ -41,6 +66,8 @@ public class VTreeTable extends VScrollTable {
     private String collapsedRowKey;
     private VTreeTableScrollBody scrollBody;
     private boolean animationsEnabled;
+    private LinkedList<PendingNavigationEvent> pendingNavigationEvents = new LinkedList<VTreeTable.PendingNavigationEvent>();
+    private boolean focusParentResponsePending;
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -86,6 +113,21 @@ public class VTreeTable extends VScrollTable {
         if (uidl.hasAttribute("focusedRow")) {
             String key = uidl.getStringAttribute("focusedRow");
             setRowFocus(getRenderedRowByKey(key));
+            focusParentResponsePending = false;
+        } else if (uidl.hasAttribute("clearFocusPending")) {
+            // Special case to detect a response to a focusParent request that
+            // does not return any focusedRow because the selected node has no
+            // parent
+            focusParentResponsePending = false;
+        }
+
+        while (!collapseRequest && !focusParentResponsePending
+                && !pendingNavigationEvents.isEmpty()) {
+            // Keep replaying any queued events as long as we don't have any
+            // potential content changes pending
+            PendingNavigationEvent event = pendingNavigationEvents
+                    .removeFirst();
+            handleNavigation(event.keycode, event.ctrl, event.shift);
         }
     }
 
@@ -737,6 +779,18 @@ public class VTreeTable extends VScrollTable {
 
     @Override
     protected boolean handleNavigation(int keycode, boolean ctrl, boolean shift) {
+        if (collapseRequest || focusParentResponsePending) {
+            // Enqueue the event if there might be pending content changes from
+            // the server
+            if (pendingNavigationEvents.size() < 10) {
+                // Only keep 10 keyboard events in the queue
+                PendingNavigationEvent pendingNavigationEvent = new PendingNavigationEvent(
+                        keycode, ctrl, shift);
+                pendingNavigationEvents.add(pendingNavigationEvent);
+            }
+            return true;
+        }
+
         VTreeTableRow focusedRow = (VTreeTableRow) getFocusedRow();
         if (focusedRow != null) {
             if (focusedRow.canHaveChildren
@@ -784,6 +838,11 @@ public class VTreeTable extends VScrollTable {
 
                 client.updateVariable(paintableId, "focusParent",
                         focusedRow.getKey(), true);
+
+                // Set flag that we should enqueue navigation events until we
+                // get a response to this request
+                focusParentResponsePending = true;
+
                 return true;
             }
         }
