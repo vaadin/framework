@@ -12,6 +12,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
@@ -715,6 +717,47 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 left = shadowSpace;
             }
         }
+
+        // Check that the popup will fit the screen
+        int availableHeight = RootPanel.getBodyElement().getOffsetHeight()
+                - top - shadowSpace;
+        int missingHeight = popup.getOffsetHeight() - availableHeight;
+        if (missingHeight > 0) {
+            // First move the top of the popup to get more space
+            // Don't move above top of screen, don't move more than needed
+            int moveUpBy = Math.min(top - shadowSpace, missingHeight);
+
+            // Update state
+            top -= moveUpBy;
+            missingHeight -= moveUpBy;
+            availableHeight += moveUpBy;
+
+            if (missingHeight > 0) {
+                int contentWidth = visibleChildMenu.getOffsetWidth();
+
+                // If there's still not enough room, limit height to fit and add
+                // a scroll bar
+                Style style = popup.getElement().getStyle();
+                style.setHeight(availableHeight, Unit.PX);
+                style.setOverflowY(Overflow.SCROLL);
+
+                // Make room for the scroll bar
+                if (BrowserInfo.get().isIE6()) {
+                    // IE6 renders the sub menu arrow icons on the scroll bar
+                    // unless we add some padding
+                    style.setPaddingRight(Util.getNativeScrollbarSize(),
+                            Unit.PX);
+                } else {
+                    // For other browsers, adjusting the width of the popup is
+                    // enough
+                    style.setWidth(
+                            contentWidth + Util.getNativeScrollbarSize(),
+                            Unit.PX);
+                }
+                popup.updateShadowSizeAndPosition();
+            }
+        }
+
         popup.setPopupPosition(left, top);
 
         // IE7 really tests one's patience sometimes
