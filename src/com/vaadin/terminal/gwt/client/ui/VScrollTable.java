@@ -5836,6 +5836,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         this.height = height;
         super.setHeight(height);
         setContainerHeight();
+
+        // Changing height might cause a scrollbar to appear or disappear,
+        // potentially affecting the column widths
+        triggerLazyColumnAdjustment(true);
+
         if (initializedAndAttached) {
             updatePageLength();
         }
