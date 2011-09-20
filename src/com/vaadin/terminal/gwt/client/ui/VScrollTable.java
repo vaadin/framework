@@ -1090,9 +1090,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (firstvisible != lastRequestedFirstvisible && scrollBody != null) {
             // received 'surprising' firstvisible from server: scroll there
             firstRowInViewPort = firstvisible;
-            scrollBodyPanel.setScrollPosition((int) (firstvisible * scrollBody
-                    .getRowHeight()));
+            scrollBodyPanel
+                    .setScrollPosition(measureScrollPositionOfRow(firstvisible));
         }
+    }
+
+    protected int measureScrollPositionOfRow(int rowIx) {
+        return (int) (rowIx * scrollBody.getRowHeight());
     }
 
     private void updatePageLength(UIDL uidl) {
@@ -1926,8 +1930,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     scrollBodyPanel
-                            .setScrollPosition((int) (firstvisible * scrollBody
-                                    .getRowHeight()));
+                            .setScrollPosition(measureScrollPositionOfRow(firstvisible));
                     firstRowInViewPort = firstvisible;
                 }
             });
@@ -5864,8 +5867,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     Scheduler.get().scheduleDeferred(new Command() {
                         public void execute() {
                             scrollBodyPanel
-                                    .setScrollPosition((int) (firstRowInViewPort * scrollBody
-                                            .getRowHeight()));
+                                    .setScrollPosition(measureScrollPositionOfRow(firstRowInViewPort));
                         }
                     });
                 }
@@ -5903,8 +5905,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
         if (!enabled) {
             scrollBodyPanel
-                    .setScrollPosition((int) (firstRowInViewPort * scrollBody
-                            .getRowHeight()));
+                    .setScrollPosition(measureScrollPositionOfRow(firstRowInViewPort));
             return;
         }
 
@@ -5929,8 +5930,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         // fix footers horizontal scrolling
         tFoot.setHorizontalScrollPosition(scrollLeft);
 
-        firstRowInViewPort = (int) Math.ceil(scrollTop
-                / scrollBody.getRowHeight());
+        firstRowInViewPort = calcFirstRowInViewPort();
         if (firstRowInViewPort > totalRows - pageLength) {
             firstRowInViewPort = totalRows - pageLength;
         }
@@ -5990,6 +5990,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     + pageLength + pageLength * cache_rate) - lastRendered));
             rowRequestHandler.deferRowFetch();
         }
+    }
+
+    protected int calcFirstRowInViewPort() {
+        return (int) Math.ceil(scrollTop / scrollBody.getRowHeight());
     }
 
     public VScrollTableDropHandler getDropHandler() {
@@ -6456,8 +6460,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     }
 
     private void scrollByPagelenght(int i) {
-        int pixels = i
-                * (int) (getFullyVisibleRowCount() * scrollBody.getRowHeight());
+        int pixels = i * scrollBodyPanel.getOffsetHeight();
         int newPixels = scrollBodyPanel.getScrollPosition() + pixels;
         if (newPixels < 0) {
             newPixels = 0;
