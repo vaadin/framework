@@ -2579,6 +2579,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     if (deltaX == 0) {
                         return;
                     }
+                    tHead.disableAutoColumnWidthCalculation(this);
 
                     int newWidth = originalWidth + deltaX;
                     if (newWidth < getMinWidth()) {
