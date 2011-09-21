@@ -718,6 +718,34 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             }
         }
 
+        top = adjustPopupHeight(top, shadowSpace);
+
+        popup.setPopupPosition(left, top);
+
+        // IE7 really tests one's patience sometimes
+        // Part of a fix to correct #3850
+        if (BrowserInfo.get().isIE7()) {
+            popup.getElement().getStyle().setProperty("zoom", "");
+            Scheduler.get().scheduleDeferred(new Command() {
+                public void execute() {
+                    if (popup == null) {
+                        // The child menu can be hidden before this command is
+                        // run.
+                        return;
+                    }
+
+                    if (popup.getElement().getStyle().getProperty("width") == null
+                            || popup.getElement().getStyle()
+                                    .getProperty("width") == "") {
+                        popup.setWidth(popup.getOffsetWidth() + "px");
+                    }
+                    popup.getElement().getStyle().setProperty("zoom", "1");
+                }
+            });
+        }
+    }
+
+    private int adjustPopupHeight(int top, final int shadowSpace) {
         // Check that the popup will fit the screen
         int availableHeight = RootPanel.getBodyElement().getOffsetHeight()
                 - top - shadowSpace;
@@ -757,30 +785,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 popup.updateShadowSizeAndPosition();
             }
         }
-
-        popup.setPopupPosition(left, top);
-
-        // IE7 really tests one's patience sometimes
-        // Part of a fix to correct #3850
-        if (BrowserInfo.get().isIE7()) {
-            popup.getElement().getStyle().setProperty("zoom", "");
-            Scheduler.get().scheduleDeferred(new Command() {
-                public void execute() {
-                    if (popup == null) {
-                        // The child menu can be hidden before this command is
-                        // run.
-                        return;
-                    }
-
-                    if (popup.getElement().getStyle().getProperty("width") == null
-                            || popup.getElement().getStyle()
-                                    .getProperty("width") == "") {
-                        popup.setWidth(popup.getOffsetWidth() + "px");
-                    }
-                    popup.getElement().getStyle().setProperty("zoom", "1");
-                }
-            });
-        }
+        return top;
     }
 
     /**
