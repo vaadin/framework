@@ -1472,8 +1472,85 @@ public class Table extends AbstractSelect implements Action.Container,
         requestRepaint();
     }
 
-    private Object[][] getVisibleCellsNoCache(int firstIndex, int rows) {
-        return getVisibleCellsNoCache(firstIndex, rows, false);
+    private void removeRowsFromCacheAndFillBottom(int firstIndex, int rows) {
+        int totalCachedRows = pageBuffer[CELL_ITEMID].length;
+        int totalRows = size();
+        int cacheIx = firstIndex - pageBufferFirstIndex;
+
+        // Make sure that no components leak.
+        unregisterComponentsAndPropertiesInRows(firstIndex, rows);
+
+        int newCachedRowCount = totalRows < totalCachedRows ? totalRows
+                : totalCachedRows;
+        int firstAppendedRow = newCachedRowCount - rows;
+        Object[][] cells = getVisibleCellsNoCache(firstAppendedRow, rows, false);
+
+        // Create the new cache buffer by copying data from the old one and
+        // appending more rows if applicable.
+        Object[][] newPageBuffer = new Object[pageBuffer.length][newCachedRowCount];
+        for (int ix = 0; ix < newCachedRowCount; ix++) {
+            for (int i = 0; i < pageBuffer.length; i++) {
+                if (ix >= newCachedRowCount - rows) {
+                    newPageBuffer[i][ix] = cells[i][ix
+                            - (newCachedRowCount - rows)];
+                } else if (ix >= cacheIx) {
+                    newPageBuffer[i][ix] = pageBuffer[i][ix + rows];
+                } else {
+                    newPageBuffer[i][ix] = pageBuffer[i][ix];
+                }
+            }
+        }
+        pageBuffer = newPageBuffer;
+    }
+
+    private Object[][] getVisibleCellsUpdateCacheRows(int firstIndex, int rows) {
+        Object[][] cells = getVisibleCellsNoCache(firstIndex, rows, false);
+        int cacheIx = firstIndex - pageBufferFirstIndex;
+        // update the new rows in the cache.
+        for (int ix = cacheIx; ix < cacheIx + rows; ix++) {
+            for (int i = 0; i < pageBuffer.length; i++) {
+                pageBuffer[i][ix] = cells[i][ix - cacheIx];
+            }
+        }
+        return cells;
+    }
+
+    private Object[][] getVisibleCellsInsertIntoCache(int firstIndex, int rows) {
+        Object[][] cells = getVisibleCellsNoCache(firstIndex, rows, false);
+        int currentlyCachedRowCount = pageBuffer[CELL_ITEMID].length;
+        int lastCachedRow = currentlyCachedRowCount - rows;
+        int cacheIx = firstIndex - pageBufferFirstIndex;
+
+        // Unregister all components that fall beyond the cache limits after
+        // inserting the new rows.
+        unregisterComponentsAndPropertiesInRows(lastCachedRow + 1,
+                currentlyCachedRowCount - lastCachedRow);
+
+        // Calculate the new cache size
+        int newCachedRowCount = currentlyCachedRowCount;
+        if (currentlyCachedRowCount < pageLength) {
+            newCachedRowCount = currentlyCachedRowCount + rows;
+            if (newCachedRowCount > pageLength) {
+                newCachedRowCount = pageLength;
+            }
+        }
+
+        // Create the new cache buffer and fill it with the data from the old
+        // buffer as well as the inserted rows.
+        Object[][] newPageBuffer = new Object[pageBuffer.length][newCachedRowCount];
+        for (int ix = 0; ix < newCachedRowCount; ix++) {
+            for (int i = 0; i < pageBuffer.length; i++) {
+                if (ix >= cacheIx && ix < cacheIx + rows) {
+                    newPageBuffer[i][ix] = cells[i][ix - cacheIx];
+                } else if (ix >= cacheIx + rows) {
+                    newPageBuffer[i][ix] = pageBuffer[i][ix - rows];
+                } else {
+                    newPageBuffer[i][ix] = pageBuffer[i][ix];
+                }
+            }
+        }
+        pageBuffer = newPageBuffer;
+        return cells;
     }
 
     private Object[][] getVisibleCellsNoCache(int firstIndex, int rows,
@@ -1676,6 +1753,39 @@ public class Table extends AbstractSelect implements Action.Container,
              */
             listenedProperties.add(p);
 
+        }
+    }
+
+    /**
+     * @param firstIx
+     * @param count
+     */
+    private void unregisterComponentsAndPropertiesInRows(int firstIx, int count) {
+        Object[] colids = getVisibleColumns();
+        if (pageBuffer != null && pageBuffer[CELL_ITEMID].length > 0) {
+            int bufSize = pageBuffer[CELL_ITEMID].length;
+            int ix = firstIx - pageBufferFirstIndex;
+            if (ix < bufSize) {
+                count = count > bufSize - ix ? bufSize - ix : count;
+                for (int i = 0; i < count; i++) {
+                    for (int c = 0; c < colids.length; c++) {
+                        Object cellVal = pageBuffer[CELL_FIRSTCOL + c][i + ix];
+                        if (cellVal instanceof Component
+                                && visibleComponents.contains(cellVal)) {
+                            visibleComponents.remove(cellVal);
+                            unregisterComponent((Component) cellVal);
+                        } else {
+                            Property p = getContainerProperty(
+                                    pageBuffer[CELL_ITEMID][i + ix], colids[c]);
+                            if (p instanceof ValueChangeNotifier
+                                    && listenedProperties.contains(p)) {
+                                listenedProperties.remove(p);
+                                ((ValueChangeNotifier) p).removeListener(this);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -2410,7 +2520,7 @@ public class Table extends AbstractSelect implements Action.Container,
         target.addAttribute("numurows", count);
 
         // Partial row updates bypass the normal caching mechanism.
-        Object[][] cells = getVisibleCellsNoCache(firstIx, count);
+        Object[][] cells = getVisibleCellsUpdateCacheRows(firstIx, count);
         for (int indexInRowbuffer = 0; indexInRowbuffer < count; indexInRowbuffer++) {
             final Object itemId = cells[CELL_ITEMID][indexInRowbuffer];
 
@@ -2447,7 +2557,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         if (!shouldHideAddedRows()) {
             // Partial row additions bypass the normal caching mechanism.
-            Object[][] cells = getVisibleCellsNoCache(firstIx, count);
+            Object[][] cells = getVisibleCellsInsertIntoCache(firstIx, count);
             for (int indexInRowbuffer = 0; indexInRowbuffer < count; indexInRowbuffer++) {
                 final Object itemId = cells[CELL_ITEMID][indexInRowbuffer];
                 if (shouldHideNullSelectionItem()) {
@@ -2460,6 +2570,7 @@ public class Table extends AbstractSelect implements Action.Container,
                         indexInRowbuffer, itemId);
             }
         } else {
+            removeRowsFromCacheAndFillBottom(firstIx, count);
             target.addAttribute("hide", true);
         }
         target.endTag("prows");
