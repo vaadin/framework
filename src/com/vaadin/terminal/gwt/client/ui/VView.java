@@ -14,6 +14,8 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -560,11 +562,38 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
         @Override
         public int getWidth() {
-            int w = getElement().getOffsetWidth() - getExcessWidth();
+            int w = getRealWidth();
             if (w < 10 && BrowserInfo.get().isIE7()) {
                 // Overcome an IE7 bug #3295
                 Util.shakeBodyElement();
-                w = getElement().getOffsetWidth() - getExcessWidth();
+                w = getRealWidth();
+            }
+            return w;
+        }
+
+        private int getRealWidth() {
+            if (connection.getConfiguration().isStandalone()) {
+                return getElement().getOffsetWidth() - getExcessWidth();
+            }
+
+            // If not running standalone, we might be inside elements that don't
+            // shrink with the browser window if our own components have
+            // calculated widths (#3125)
+            Element layoutElement = ((Widget) layout).getElement();
+            Style layoutStyle = layoutElement.getStyle();
+
+            // Set display:none to the entire application to get a width not
+            // influenced by the contents
+            String originalDisplay = layoutStyle.getDisplay();
+            layoutStyle.setDisplay(Display.NONE);
+
+            int w = getElement().getOffsetWidth() - getExcessWidth();
+
+            // Then restore the old display style before returning
+            if (originalDisplay.length() == 0) {
+                layoutStyle.clearDisplay();
+            } else {
+                layoutStyle.setDisplay(Display.valueOf(originalDisplay));
             }
             return w;
         }
