@@ -597,9 +597,9 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                 return getElement().getOffsetWidth() - getExcessWidth();
             }
 
-            // If not running standalone, we might be inside elements that does
-            // not shrink with the browser window with the our own components
-            // having calculated widths (#3125)
+            // If not running standalone, we might be inside elements that don't
+            // shrink with the browser window if our own components have
+            // calculated widths (#3125)
             Element layoutElement = ((Widget) layout).getElement();
             Style layoutStyle = layoutElement.getStyle();
 
