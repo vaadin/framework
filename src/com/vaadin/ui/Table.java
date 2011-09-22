@@ -1644,8 +1644,12 @@ public class Table extends AbstractSelect implements Action.Container,
                 }
 
                 if (isGeneratedRow) {
-                    if (generatedRow.isSpanColumns() && j > 0) {
-                        value = null;
+                    if (generatedRow.isSpanColumns()) {
+                        if (j > 0) {
+                            value = null;
+                        } else if (generatedRow.getValue() instanceof Component) {
+                            value = generatedRow.getValue();
+                        }
                     } else if (generatedRow.getText().length > j) {
                         value = generatedRow.getText()[j];
                     }
@@ -3122,6 +3126,8 @@ public class Table extends AbstractSelect implements Action.Container,
         if (generatedRow != null) {
             target.addAttribute("gen_html", generatedRow.isHtmlContentAllowed());
             target.addAttribute("gen_span", generatedRow.isSpanColumns());
+            target.addAttribute("gen_widget",
+                    generatedRow.getValue() instanceof Component);
         }
     }
 
@@ -4845,6 +4851,10 @@ public class Table extends AbstractSelect implements Action.Container,
 
         protected String[] getText() {
             return text;
+        }
+
+        protected Object getValue() {
+            return getText();
         }
 
         protected boolean isHtmlContentAllowed() {

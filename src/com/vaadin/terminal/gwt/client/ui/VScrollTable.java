@@ -1091,11 +1091,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // received 'surprising' firstvisible from server: scroll there
             firstRowInViewPort = firstvisible;
             scrollBodyPanel
-                    .setScrollPosition(measureScrollPositionOfRow(firstvisible));
+                    .setScrollPosition(measureRowHeightOffset(firstvisible));
         }
     }
 
-    protected int measureScrollPositionOfRow(int rowIx) {
+    protected int measureRowHeightOffset(int rowIx) {
         return (int) (rowIx * scrollBody.getRowHeight());
     }
 
@@ -1930,7 +1930,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     scrollBodyPanel
-                            .setScrollPosition(measureScrollPositionOfRow(firstvisible));
+                            .setScrollPosition(measureRowHeightOffset(firstvisible));
                     firstRowInViewPort = firstvisible;
                 }
             });
@@ -4192,17 +4192,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          */
         private void setContainerHeight() {
             fixSpacers();
-            DOM.setStyleAttribute(container, "height", totalRows
-                    * getRowHeight() + "px");
+            DOM.setStyleAttribute(container, "height",
+                    measureRowHeightOffset(totalRows) + "px");
         }
 
         private void fixSpacers() {
-            int prepx = (int) Math.round(getRowHeight() * firstRendered);
+            int prepx = measureRowHeightOffset(firstRendered);
             if (prepx < 0) {
                 prepx = 0;
             }
             preSpacer.getStyle().setPropertyPx("height", prepx);
-            int postpx = (int) (getRowHeight() * (totalRows - 1 - lastRendered));
+            int postpx = measureRowHeightOffset(totalRows - 1)
+                    - measureRowHeightOffset(lastRendered);
             if (postpx < 0) {
                 postpx = 0;
             }
@@ -5869,7 +5870,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     Scheduler.get().scheduleDeferred(new Command() {
                         public void execute() {
                             scrollBodyPanel
-                                    .setScrollPosition(measureScrollPositionOfRow(firstRowInViewPort));
+                                    .setScrollPosition(measureRowHeightOffset(firstRowInViewPort));
                         }
                     });
                 }
@@ -5907,7 +5908,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
         if (!enabled) {
             scrollBodyPanel
-                    .setScrollPosition(measureScrollPositionOfRow(firstRowInViewPort));
+                    .setScrollPosition(measureRowHeightOffset(firstRowInViewPort));
             return;
         }
 
