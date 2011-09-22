@@ -406,6 +406,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private final Map<Field, Property> associatedProperties = new HashMap<Field, Property>();
 
+    private boolean painted = false;
+
     /* Table constructors */
 
     /**
@@ -2481,7 +2483,7 @@ public class Table extends AbstractSelect implements Action.Container,
         paintVisibleColumnOrder(target);
 
         // Rows
-        if (isPartialRowUpdate() && !target.isFullRepaint()) {
+        if (isPartialRowUpdate() && painted && !target.isFullRepaint()) {
             paintPartialRowUpdate(target, actionSet);
         } else if (target.isFullRepaint() || isRowCacheInvalidated()) {
             paintRows(target, cells, actionSet);
@@ -2505,6 +2507,8 @@ public class Table extends AbstractSelect implements Action.Container,
         if (dropHandler != null) {
             dropHandler.getAcceptCriterion().paint(target);
         }
+
+        painted = true;
     }
 
     private void setRowCacheInvalidated(boolean invalidated) {
