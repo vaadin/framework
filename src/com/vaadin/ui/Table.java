@@ -3033,7 +3033,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 }
             }
 
-            if ((iscomponent[currentColumn] || iseditable)
+            if ((iscomponent[currentColumn] || iseditable || cells[CELL_GENERATED_ROW][indexInRowbuffer] != null)
                     && Component.class.isInstance(cells[CELL_FIRSTCOL
                             + currentColumn][indexInRowbuffer])) {
                 final Component c = (Component) cells[CELL_FIRSTCOL
