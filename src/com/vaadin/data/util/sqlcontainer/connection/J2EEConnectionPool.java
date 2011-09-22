@@ -5,12 +5,16 @@ package com.vaadin.data.util.sqlcontainer.connection;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 public class J2EEConnectionPool implements JDBCConnectionPool {
+    private static final Logger logger = Logger
+            .getLogger(J2EEConnectionPool.class.getName());
 
     private String dataSourceJndiName;
 
@@ -50,10 +54,12 @@ public class J2EEConnectionPool implements JDBCConnectionPool {
     }
 
     public void releaseConnection(Connection conn) {
-        try {
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                logger.log(Level.FINE, "Could not release SQL connection", e);
+            }
         }
     }
 

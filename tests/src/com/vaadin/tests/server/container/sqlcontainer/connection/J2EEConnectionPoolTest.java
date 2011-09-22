@@ -65,7 +65,8 @@ public class J2EEConnectionPoolTest {
         ds.getConnection();
         EasyMock.expectLastCall().andReturn(connection);
 
-        System.setProperty("java.naming.factory.initial",
+        System.setProperty(
+                "java.naming.factory.initial",
                 "com.vaadin.tests.server.container.sqlcontainer.connection.MockInitialContextFactory");
         Context context = EasyMock.createMock(Context.class);
         context.lookup("testDataSource");
@@ -94,8 +95,17 @@ public class J2EEConnectionPoolTest {
         EasyMock.replay(context);
 
         J2EEConnectionPool pool = new J2EEConnectionPool("foo");
-        Connection c = pool.reserveConnection();
+        pool.reserveConnection();
         EasyMock.verify(context);
     }
 
+    @Test
+    public void releaseConnection_null_shouldSucceed() throws SQLException {
+        DataSource ds = EasyMock.createMock(DataSource.class);
+        EasyMock.replay(ds);
+
+        J2EEConnectionPool pool = new J2EEConnectionPool(ds);
+        pool.releaseConnection(null);
+        EasyMock.verify(ds);
+    }
 }
