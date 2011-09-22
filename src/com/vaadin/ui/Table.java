@@ -1482,18 +1482,26 @@ public class Table extends AbstractSelect implements Action.Container,
 
         int newCachedRowCount = totalRows < totalCachedRows ? totalRows
                 : totalCachedRows;
-        int firstAppendedRow = newCachedRowCount - rows;
-        Object[][] cells = getVisibleCellsNoCache(firstAppendedRow, rows, false);
+        int firstAppendedRow = newCachedRowCount > rows ? newCachedRowCount
+                - rows : firstIndex;
+        int rowsToAdd = rows;
+        if (rowsToAdd > totalCachedRows - firstAppendedRow) {
+            rowsToAdd = totalCachedRows - firstAppendedRow;
+        }
+        if (rowsToAdd > totalRows - (firstAppendedRow + pageBufferFirstIndex)) {
+            rowsToAdd = totalRows - (firstAppendedRow + pageBufferFirstIndex);
+        }
+        Object[][] cells = getVisibleCellsNoCache(firstAppendedRow, rowsToAdd,
+                false);
 
         // Create the new cache buffer by copying data from the old one and
         // appending more rows if applicable.
         Object[][] newPageBuffer = new Object[pageBuffer.length][newCachedRowCount];
         for (int ix = 0; ix < newCachedRowCount; ix++) {
             for (int i = 0; i < pageBuffer.length; i++) {
-                if (ix >= newCachedRowCount - rows) {
-                    newPageBuffer[i][ix] = cells[i][ix
-                            - (newCachedRowCount - rows)];
-                } else if (ix >= cacheIx) {
+                if (ix >= firstAppendedRow) {
+                    newPageBuffer[i][ix] = cells[i][ix - firstAppendedRow];
+                } else if (ix >= cacheIx && ix + rows < totalCachedRows) {
                     newPageBuffer[i][ix] = pageBuffer[i][ix + rows];
                 } else {
                     newPageBuffer[i][ix] = pageBuffer[i][ix];
@@ -1765,6 +1773,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (pageBuffer != null && pageBuffer[CELL_ITEMID].length > 0) {
             int bufSize = pageBuffer[CELL_ITEMID].length;
             int ix = firstIx - pageBufferFirstIndex;
+            ix = ix < 0 ? 0 : ix;
             if (ix < bufSize) {
                 count = count > bufSize - ix ? bufSize - ix : count;
                 for (int i = 0; i < count; i++) {
