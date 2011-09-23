@@ -1517,7 +1517,10 @@ public class Table extends AbstractSelect implements Action.Container,
         Object[][] cells = getVisibleCellsNoCache(firstIndex, rows, false);
         int cacheIx = firstIndex - pageBufferFirstIndex;
         // update the new rows in the cache.
-        for (int ix = cacheIx; ix < cacheIx + rows; ix++) {
+        int totalCachedRows = pageBuffer[CELL_ITEMID].length;
+        int end = cacheIx + rows > totalCachedRows ? totalCachedRows : cacheIx
+                + rows;
+        for (int ix = cacheIx; ix < end; ix++) {
             for (int i = 0; i < pageBuffer.length; i++) {
                 pageBuffer[i][ix] = cells[i][ix - cacheIx];
             }
