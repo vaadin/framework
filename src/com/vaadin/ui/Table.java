@@ -1646,12 +1646,11 @@ public class Table extends AbstractSelect implements Action.Container,
                 }
 
                 if (isGeneratedRow) {
-                    if (generatedRow.isSpanColumns()) {
-                        if (j > 0) {
-                            value = null;
-                        } else if (generatedRow.getValue() instanceof Component) {
-                            value = generatedRow.getValue();
-                        }
+                    if (generatedRow.isSpanColumns() && j > 0) {
+                        value = null;
+                    } else if (generatedRow.isSpanColumns() && j == 0
+                            && generatedRow.getValue() instanceof Component) {
+                        value = generatedRow.getValue();
                     } else if (generatedRow.getText().length > j) {
                         value = generatedRow.getText()[j];
                     }
