@@ -743,6 +743,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 
         // If the new datasource is null, just set null datasource
         if (itemDatasource == null) {
+            requestRepaint();
             return;
         }
 
