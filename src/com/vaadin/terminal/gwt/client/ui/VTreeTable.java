@@ -479,7 +479,7 @@ public class VTreeTable extends VScrollTable {
                     super.onComplete();
                     // Actually unlink the rows and update the cache after the
                     // animation is done.
-                    unlinkRows(firstIndex, rows);
+                    unlinkAndReindexRows(firstIndex, rows);
                     discardRowsOutsideCacheWindow();
                     ensureCacheFilled();
                 }
@@ -489,7 +489,7 @@ public class VTreeTable extends VScrollTable {
 
         protected List<VScrollTableRow> insertRowsAnimated(UIDL rowData,
                 int firstIndex, int rows) {
-            List<VScrollTableRow> insertedRows = insertRows(rowData,
+            List<VScrollTableRow> insertedRows = insertAndReindexRows(rowData,
                     firstIndex, rows);
             RowExpandAnimation anim = new RowExpandAnimation(insertedRows);
             anim.run(150);

@@ -1431,7 +1431,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             return;
         }
         if (partialRowAdditions.hasAttribute("hide")) {
-            scrollBody.unlinkRows(
+            scrollBody.unlinkAndReindexRows(
                     partialRowAdditions.getIntAttribute("firstprowix"),
                     partialRowAdditions.getIntAttribute("numprows"));
             scrollBody.ensureCacheFilled();
@@ -1441,7 +1441,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         partialRowAdditions.getIntAttribute("firstprowix"),
                         partialRowAdditions.getIntAttribute("numprows"));
             } else {
-                scrollBody.insertRows(partialRowAdditions,
+                scrollBody.insertAndReindexRows(partialRowAdditions,
                         partialRowAdditions.getIntAttribute("firstprowix"),
                         partialRowAdditions.getIntAttribute("numprows"));
             }
@@ -4017,6 +4017,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             return insertedRows;
         }
 
+        protected List<VScrollTableRow> insertAndReindexRows(UIDL rowData,
+                int firstIndex, int rows) {
+            List<VScrollTableRow> inserted = insertRows(rowData, firstIndex,
+                    rows);
+            for (int ix = firstIndex + 1; ix < renderedRows.size(); ix++) {
+                VScrollTableRow r = (VScrollTableRow) renderedRows.get(ix);
+                r.setIndex(r.getIndex() + rows);
+            }
+            fixSpacers();
+            return inserted;
+        }
+
         protected void insertRowsDeleteBelow(UIDL rowData, int firstIndex,
                 int rows) {
             unlinkAllRowsStartingAt(firstIndex);
@@ -4084,13 +4096,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             adopt(row);
             int actualIx = index - firstRendered;
             renderedRows.add(actualIx, row);
-
-            // TODO: could this be made more efficient? like looping only once
-            // after all rows have been inserted
-            for (int ix = actualIx + 1; ix < renderedRows.size(); ix++) {
-                VScrollTableRow r = (VScrollTableRow) renderedRows.get(ix);
-                r.setIndex(r.getIndex() + 1);
-            }
         }
 
         public Iterator<Widget> iterator() {
@@ -4139,6 +4144,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             fixSpacers();
         }
 
+        protected void unlinkAndReindexRows(int firstIndex, int count) {
+            unlinkRows(firstIndex, count);
+            for (int ix = firstIndex; ix < renderedRows.size(); ix++) {
+                VScrollTableRow r = (VScrollTableRow) renderedRows.get(ix);
+                r.setIndex(r.getIndex() - count);
+            }
+            fixSpacers();
+        }
+
         protected void unlinkAllRowsStartingAt(int index) {
             if (firstRendered > index) {
                 index = firstRendered;
@@ -4169,10 +4183,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             tBodyElement.removeChild(toBeRemoved.getElement());
             orphan(toBeRemoved);
             renderedRows.remove(index);
-            for (int ix = index; ix < renderedRows.size(); ix++) {
-                VScrollTableRow r = (VScrollTableRow) renderedRows.get(ix);
-                r.setIndex(r.getIndex() - 1);
-            }
         }
 
         @Override
