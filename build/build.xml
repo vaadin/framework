@@ -385,6 +385,8 @@
                 <exclude name="**/.svn" />
                 <include name="release-notes.html" />
                 <include name="license.html" />
+                <include name="css/**" />
+                <include name="img/**" />
             </fileset>
         </copy>
     </target>
@@ -575,6 +577,8 @@
                 	
                     <include name="release-notes.html" />
                     <include name="license.html" />
+                    <include name="css/**" />
+                    <include name="img/**" />
                 </patternset>
             </fileset>
         </jar>
@@ -602,6 +606,8 @@
                 <patternset>
                     <include name="release-notes.html" />
                     <include name="license.html" />
+                    <include name="css/**" />
+                    <include name="img/**" />
                 </patternset>
             </fileset>
         </jar>
@@ -639,6 +645,8 @@
                 <patternset>
                     <include name="release-notes.html" />
                     <include name="license.html" />
+                    <include name="css/**" />
+                    <include name="img/**" />
                 </patternset>
             </fileset>
         </jar>
