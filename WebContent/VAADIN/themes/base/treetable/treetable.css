@@ -1,7 +1,7 @@
 .v-treetable-treespacer {
     display: inline-block;
     background: transparent;
-    height: 9px;
+    height: 10px;
     /* defines the amount of indent per level */
     width: 18px;
 }
