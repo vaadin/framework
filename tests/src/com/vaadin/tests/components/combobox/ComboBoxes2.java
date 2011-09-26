@@ -32,6 +32,26 @@ public class ComboBoxes2 extends SelectTest<ComboBox> {
         createItemIconSelect(CATEGORY_DATA_SOURCE);
         createInputPromptAction(CATEGORY_FEATURES);
         createFilteringModeAction(CATEGORY_FEATURES);
+        createNewItemsAllowedAction(CATEGORY_STATE);
+        createTextInputAlowedAction(CATEGORY_STATE);
+    }
+
+    private void createTextInputAlowedAction(String category) {
+        createBooleanAction("Text input allowed", category, true,
+                new Command<ComboBox, Boolean>() {
+                    public void execute(ComboBox c, Boolean value, Object data) {
+                        c.setTextInputAllowed(value.booleanValue());
+                    }
+                });
+    }
+
+    private void createNewItemsAllowedAction(String category) {
+        createBooleanAction("New items allowed", category, false,
+                new Command<ComboBox, Boolean>() {
+                    public void execute(ComboBox c, Boolean value, Object data) {
+                        c.setNewItemsAllowed(value.booleanValue());
+                    }
+                });
     }
 
     private void createFilteringModeAction(String category) {

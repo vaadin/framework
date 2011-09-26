@@ -25,6 +25,13 @@ public class ComboBox extends Select {
 
     private String inputPrompt = null;
 
+    /**
+     * If text input is not allowed, the ComboBox behaves like a pretty
+     * NativeSelect - the user can not enter any text and clicking the text
+     * field opens the drop down with options
+     */
+    private boolean textInputAllowed = true;
+
     public ComboBox() {
         setMultiSelect(false);
         setNewItemsAllowed(false);
@@ -84,6 +91,36 @@ public class ComboBox extends Select {
             target.addAttribute("prompt", inputPrompt);
         }
         super.paintContent(target);
+
+        if (!textInputAllowed) {
+            target.addAttribute(VFilterSelect.ATTR_NO_TEXT_INPUT, true);
+        }
+    }
+
+    /**
+     * Sets whether it is possible to input text into the field or whether the
+     * field area of the component is just used to show what is selected.
+     * 
+     * @see #isTextInputAllowed()
+     * 
+     * @param textInputAllowed
+     *            true to allow entering text, false to just show the current
+     *            selection
+     */
+    public void setTextInputAllowed(boolean textInputAllowed) {
+        this.textInputAllowed = textInputAllowed;
+        requestRepaint();
+    }
+
+    /**
+     * Returns true if the user can enter text into the field to either filter
+     * the selections or enter a new value if {@link #isNewItemsAllowed()}
+     * returns true.
+     * 
+     * @return
+     */
+    public boolean isTextInputAllowed() {
+        return textInputAllowed;
     }
 
 }

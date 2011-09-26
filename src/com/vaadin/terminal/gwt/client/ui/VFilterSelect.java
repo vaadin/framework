@@ -12,6 +12,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -767,6 +768,16 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 client.handleTooltipEvent(event, VFilterSelect.this);
             }
         }
+
+        @Override
+        // Overridden to avoid selecting text when text input is disabled
+        public void setSelectionRange(int pos, int length) {
+            if (textInputEnabled) {
+                super.setSelectionRange(pos, length);
+            } else {
+                super.setSelectionRange(getValue().length(), 0);
+            }
+        };
     };
 
     private final SuggestionPopup suggestionPopup = new SuggestionPopup();
@@ -843,6 +854,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     // shown in unfocused empty field, disappears on focus (e.g "Search here")
     private static final String CLASSNAME_PROMPT = "prompt";
     private static final String ATTR_INPUTPROMPT = "prompt";
+    public static final String ATTR_NO_TEXT_INPUT = "noInput";
     private String inputPrompt = "";
     private boolean prompting = false;
 
@@ -862,6 +874,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     private String lastNewItemString;
     private boolean focused = false;
     private int horizPaddingAndBorder = 2;
+
+    /**
+     * If set to false, the component should not allow entering text to the
+     * field even for filtering.
+     */
+    private boolean textInputEnabled = true;
 
     /**
      * Default constructor
@@ -894,6 +912,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         tb.setStyleName(CLASSNAME + "-input");
         tb.addFocusHandler(this);
         tb.addBlurHandler(this);
+        tb.addClickHandler(this);
         popupOpener.setStyleName(CLASSNAME + "-button");
         popupOpener.addClickHandler(this);
     }
@@ -972,11 +991,15 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         enabled = !uidl.hasAttribute("disabled");
 
         tb.setEnabled(enabled);
-        tb.setReadOnly(readonly);
+        tb.setReadOnly(readonly || !textInputEnabled);
 
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
+
+        boolean noTextInput = uidl.hasAttribute(ATTR_NO_TEXT_INPUT)
+                && uidl.getBooleanAttribute(ATTR_NO_TEXT_INPUT);
+        setTextInputEnabled(!noTextInput);
 
         // not a FocusWidget -> needs own tabindex handling
         if (uidl.hasAttribute("tabindex")) {
@@ -1144,6 +1167,21 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
 
         initDone = true;
+    }
+
+    private void setTextInputEnabled(boolean textInputEnabled) {
+        if (this.textInputEnabled == textInputEnabled) {
+            return;
+        }
+
+        this.textInputEnabled = textInputEnabled;
+        tb.setReadOnly(!textInputEnabled);
+
+        if (textInputEnabled) {
+            tb.getElement().getStyle().clearCursor();
+        } else {
+            tb.getElement().getStyle().setCursor(Cursor.DEFAULT);
+        }
     }
 
     /**
@@ -1415,7 +1453,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 reset();
                 break;
             default:
-                filterOptions(currentPage);
+                if (textInputEnabled) {
+                    filterOptions(currentPage);
+                }
                 break;
             }
         }
@@ -1445,6 +1485,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      * Listener for popupopener
      */
     public void onClick(ClickEvent event) {
+        if (textInputEnabled
+                && event.getNativeEvent().getEventTarget().cast() == tb
+                        .getElement()) {
+            // Don't process clicks on the text field if text input is enabled
+            return;
+        }
         if (enabled && !readonly) {
             // ask suggestionPopup if it was just closed, we are using GWT
             // Popup's auto close feature
