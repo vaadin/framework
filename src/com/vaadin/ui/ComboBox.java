@@ -99,7 +99,9 @@ public class ComboBox extends Select {
 
     /**
      * Sets whether it is possible to input text into the field or whether the
-     * field area of the component is just used to show what is selected.
+     * field area of the component is just used to show what is selected. By
+     * disabling text input, the comboBox will work in the same way as a
+     * {@link NativeSelect}
      * 
      * @see #isTextInputAllowed()
      * 
@@ -115,7 +117,8 @@ public class ComboBox extends Select {
     /**
      * Returns true if the user can enter text into the field to either filter
      * the selections or enter a new value if {@link #isNewItemsAllowed()}
-     * returns true.
+     * returns true. If text input is disabled, the comboBox will work in the
+     * same way as a {@link NativeSelect}
      * 
      * @return
      */

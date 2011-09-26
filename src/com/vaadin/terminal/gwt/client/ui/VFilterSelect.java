@@ -991,12 +991,14 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         enabled = !uidl.hasAttribute("disabled");
 
         tb.setEnabled(enabled);
-        tb.setReadOnly(readonly || !textInputEnabled);
+        updateReadOnly();
 
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
 
+        // Inverse logic here to make the default case (text input enabled)
+        // work without additional UIDL messages
         boolean noTextInput = uidl.hasAttribute(ATTR_NO_TEXT_INPUT)
                 && uidl.getBooleanAttribute(ATTR_NO_TEXT_INPUT);
         setTextInputEnabled(!noTextInput);
@@ -1169,13 +1171,17 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         initDone = true;
     }
 
+    private void updateReadOnly() {
+        tb.setReadOnly(readonly || !textInputEnabled);
+    }
+
     private void setTextInputEnabled(boolean textInputEnabled) {
         if (this.textInputEnabled == textInputEnabled) {
             return;
         }
 
         this.textInputEnabled = textInputEnabled;
-        tb.setReadOnly(!textInputEnabled);
+        updateReadOnly();
 
         if (textInputEnabled) {
             tb.getElement().getStyle().clearCursor();
