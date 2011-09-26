@@ -1486,13 +1486,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 : totalCachedRows;
         int firstAppendedRow = newCachedRowCount > rows ? newCachedRowCount
                 - rows : firstIndex;
-        int rowsToAdd = rows;
-        if (rowsToAdd > totalCachedRows - firstAppendedRow) {
-            rowsToAdd = totalCachedRows - firstAppendedRow;
-        }
-        if (rowsToAdd > totalRows - (firstAppendedRow + pageBufferFirstIndex)) {
-            rowsToAdd = totalRows - (firstAppendedRow + pageBufferFirstIndex);
-        }
+        int rowsToAdd = Math.min(rows, totalCachedRows - firstAppendedRow);
+        rowsToAdd = Math.min(rowsToAdd, totalRows
+                - (firstAppendedRow + pageBufferFirstIndex));
         Object[][] cells = getVisibleCellsNoCache(firstAppendedRow, rowsToAdd,
                 false);
 
@@ -1518,8 +1514,7 @@ public class Table extends AbstractSelect implements Action.Container,
         int cacheIx = firstIndex - pageBufferFirstIndex;
         // update the new rows in the cache.
         int totalCachedRows = pageBuffer[CELL_ITEMID].length;
-        int end = cacheIx + rows > totalCachedRows ? totalCachedRows : cacheIx
-                + rows;
+        int end = Math.min(cacheIx + rows, totalCachedRows);
         for (int ix = cacheIx; ix < end; ix++) {
             for (int i = 0; i < pageBuffer.length; i++) {
                 pageBuffer[i][ix] = cells[i][ix - cacheIx];
