@@ -4021,7 +4021,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 int firstIndex, int rows) {
             List<VScrollTableRow> inserted = insertRows(rowData, firstIndex,
                     rows);
-            for (int ix = firstIndex + 1; ix < renderedRows.size(); ix++) {
+            int actualIxOfFirstRowAfterInserted = firstIndex + rows
+                    - firstRendered;
+            for (int ix = actualIxOfFirstRowAfterInserted; ix < renderedRows
+                    .size(); ix++) {
                 VScrollTableRow r = (VScrollTableRow) renderedRows.get(ix);
                 r.setIndex(r.getIndex() + rows);
             }
@@ -4146,7 +4149,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         protected void unlinkAndReindexRows(int firstIndex, int count) {
             unlinkRows(firstIndex, count);
-            for (int ix = firstIndex; ix < renderedRows.size(); ix++) {
+            int actualFirstIx = firstIndex - firstRendered;
+            for (int ix = actualFirstIx; ix < renderedRows.size(); ix++) {
                 VScrollTableRow r = (VScrollTableRow) renderedRows.get(ix);
                 r.setIndex(r.getIndex() - count);
             }
