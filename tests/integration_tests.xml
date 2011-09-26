@@ -685,7 +685,8 @@
 				<antcall target="integration-test-${target-server}" />
 			</try>
 			<catch>
-				<concat>##teamcity[testFailed name='${target-server}' flowId='${target-server}' message='Integration test for ${target-server} failed.' details='${tried}']"</concat>
+				<concat>##teamcity[testFailed name='${target-server}' flowId='${target-server}' message='Integration test for ${target-server} failed.']"</concat>
+				<concat>Reason for integration test failure on ${target-server}: '${tried}'"</concat>
 			</catch>
 		</trycatch>
 		<concat>##teamcity[testFinished name='${target-server}' flowId='${target-server}']"</concat>
