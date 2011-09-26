@@ -619,9 +619,11 @@ public class Util {
                         elem.setScrollTop(scrollvalue);
                     }
 
-                    // fix for #5547: Table horizontal scroll sometimes not
+                    // fix for #6940 : Table horizontal scroll sometimes not
                     // updated when collapsing/expanding columns
-                    if (BrowserInfo.get().isChrome()
+                    // Also appeared in Safari 5.1 with webkit 534 (#7667)
+                    if ((BrowserInfo.get().isChrome() || (BrowserInfo.get()
+                            .isSafari() && BrowserInfo.get().getWebkitVersion() >= 534))
                             && (scrollleft > 0 || elem.getScrollLeft() > 0)) {
                         int scrollvalue = scrollleft;
 
