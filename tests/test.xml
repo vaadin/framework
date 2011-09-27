@@ -126,7 +126,7 @@
 		</fileset>
 
 
-		<for threadCount="50" parallel="true" keepgoing="true" param="target">
+		<for threadCount="30" parallel="true" keepgoing="true" param="target">
 			<path>
 				<fileset refid="tests-fileset" />
 			</path>
