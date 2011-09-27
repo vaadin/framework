@@ -121,15 +121,13 @@ public class VEmbedded extends HTML implements Paintable {
             } else if (type.equals("browser")) {
                 addStyleName(CLASSNAME + "-browser");
                 if (browserElement == null) {
-                    setHTML("<iframe width=\"100%\" height=\"100%\" frameborder=\"0\" allowTransparency=\"true\" src=\""
-                            + getSrc(uidl, client)
-                            + "\" name=\""
-                            + uidl.getId() + "\"></iframe>");
+                    setHTML("<iframe width=\"100%\" height=\"100%\" frameborder=\"0\""
+                            + " allowTransparency=\"true\" src=\"\""
+                            + " name=\"" + uidl.getId() + "\"></iframe>");
                     browserElement = DOM.getFirstChild(getElement());
-                } else {
-                    DOM.setElementAttribute(browserElement, "src",
-                            getSrc(uidl, client));
                 }
+                DOM.setElementAttribute(browserElement, "src",
+                        getSrc(uidl, client));
                 clearBrowserElement = false;
             } else {
                 VConsole.log("Unknown Embedded type '" + type + "'");
@@ -138,6 +136,7 @@ public class VEmbedded extends HTML implements Paintable {
             final String mime = uidl.getStringAttribute("mimetype");
             if (mime.equals("application/x-shockwave-flash")) {
                 // Handle embedding of Flash
+                addStyleName(CLASSNAME + "-flash");
                 setHTML(createFlashEmbed(uidl));
 
             } else if (mime.equals("image/svg+xml")) {
@@ -161,23 +160,23 @@ public class VEmbedded extends HTML implements Paintable {
                 }
                 if (uidl.hasAttribute("classid")) {
                     obj.setAttribute("classid",
-                            uidl.getStringAttribute(escapeAttribute("classid")));
+                            uidl.getStringAttribute("classid"));
                 }
                 if (uidl.hasAttribute("codebase")) {
-                    obj.setAttribute("codebase", uidl
-                            .getStringAttribute(escapeAttribute("codebase")));
+                    obj.setAttribute("codebase",
+                            uidl.getStringAttribute("codebase"));
                 }
                 if (uidl.hasAttribute("codetype")) {
-                    obj.setAttribute("codetype", uidl
-                            .getStringAttribute(escapeAttribute("codetype")));
+                    obj.setAttribute("codetype",
+                            uidl.getStringAttribute("codetype"));
                 }
                 if (uidl.hasAttribute("archive")) {
                     obj.setAttribute("archive",
-                            uidl.getStringAttribute(escapeAttribute("archive")));
+                            uidl.getStringAttribute("archive"));
                 }
                 if (uidl.hasAttribute("standby")) {
                     obj.setAttribute("standby",
-                            uidl.getStringAttribute(escapeAttribute("standby")));
+                            uidl.getStringAttribute("standby"));
                 }
                 getElement().appendChild(obj);
 
@@ -202,8 +201,6 @@ public class VEmbedded extends HTML implements Paintable {
      * @return Tags concatenated into a string
      */
     private String createFlashEmbed(UIDL uidl) {
-        addStyleName(CLASSNAME + "-flash");
-
         /*
          * To ensure cross-browser compatibility we are using the twice-cooked
          * method to embed flash i.e. we add a OBJECT tag for IE ActiveX and
@@ -224,7 +221,7 @@ public class VEmbedded extends HTML implements Paintable {
          */
         if (uidl.hasAttribute("classid")) {
             html.append("classid=\""
-                    + escapeAttribute(uidl.getStringAttribute("classid"))
+                    + Util.escapeAttribute(uidl.getStringAttribute("classid"))
                     + "\" ");
         } else {
             html.append("classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" ");
@@ -240,32 +237,35 @@ public class VEmbedded extends HTML implements Paintable {
          */
         if (uidl.hasAttribute("codebase")) {
             html.append("codebase=\""
-                    + escapeAttribute(uidl.getStringAttribute("codebase"))
+                    + Util.escapeAttribute(uidl.getStringAttribute("codebase"))
                     + "\" ");
         } else {
             html.append("codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" ");
         }
 
         // Add width and height
-        html.append("width=\"" + width + "\" ");
-        html.append("height=\"" + height + "\" ");
+        html.append("width=\"" + Util.escapeAttribute(width) + "\" ");
+        html.append("height=\"" + Util.escapeAttribute(height) + "\" ");
         html.append("type=\"application/x-shockwave-flash\" ");
 
         // Codetype
         if (uidl.hasAttribute("codetype")) {
-            html.append("codetype=\"" + uidl.getStringAttribute("codetype")
+            html.append("codetype=\""
+                    + Util.escapeAttribute(uidl.getStringAttribute("codetype"))
                     + "\" ");
         }
 
         // Standby
         if (uidl.hasAttribute("standby")) {
-            html.append("standby=\"" + uidl.getStringAttribute("standby")
+            html.append("standby=\""
+                    + Util.escapeAttribute(uidl.getStringAttribute("standby"))
                     + "\" ");
         }
 
         // Archive
         if (uidl.hasAttribute("archive")) {
-            html.append("archive=\"" + uidl.getStringAttribute("archive")
+            html.append("archive=\""
+                    + Util.escapeAttribute(uidl.getStringAttribute("archive"))
                     + "\" ");
         }
 
@@ -281,24 +281,26 @@ public class VEmbedded extends HTML implements Paintable {
         // Add parameters to OBJECT
         for (String name : parameters.keySet()) {
             html.append("<param ");
-            html.append("name=\"" + escapeAttribute(name) + "\" ");
-            html.append("value=\"" + escapeAttribute(parameters.get(name))
+            html.append("name=\"" + Util.escapeAttribute(name) + "\" ");
+            html.append("value=\"" + Util.escapeAttribute(parameters.get(name))
                     + "\" ");
             html.append("/>");
         }
 
         // Build inner EMBED tag
         html.append("<embed ");
-        html.append("src=\"" + getSrc(uidl, client) + "\" ");
-        html.append("width=\"" + width + "\" ");
-        html.append("height=\"" + height + "\" ");
+        html.append("src=\"" + Util.escapeAttribute(getSrc(uidl, client))
+                + "\" ");
+        html.append("width=\"" + Util.escapeAttribute(width) + "\" ");
+        html.append("height=\"" + Util.escapeAttribute(height) + "\" ");
         html.append("type=\"application/x-shockwave-flash\" ");
 
         // Add the parameters to the Embed
         for (String name : parameters.keySet()) {
-            html.append(escapeAttribute(name));
+            html.append(Util.escapeAttribute(name));
             html.append("=");
-            html.append("\"" + escapeAttribute(parameters.get(name)) + "\"");
+            html.append("\"" + Util.escapeAttribute(parameters.get(name))
+                    + "\"");
         }
 
         // End embed tag
@@ -308,22 +310,6 @@ public class VEmbedded extends HTML implements Paintable {
         html.append("</object>");
 
         return html.toString();
-    }
-
-    /**
-     * Escapes the string so it is safe to write inside an HTML attribute.
-     * 
-     * @param attribute
-     *            The string to escape
-     * @return An escaped version of <literal>attribute</literal>.
-     */
-    private String escapeAttribute(String attribute) {
-        attribute = attribute.replace("\"", "&quot;");
-        attribute = attribute.replace("'", "&#39;");
-        attribute = attribute.replace(">", "&gt;");
-        attribute = attribute.replace("<", "&lt;");
-        attribute = attribute.replace("&", "&amp;");
-        return attribute;
     }
 
     /**

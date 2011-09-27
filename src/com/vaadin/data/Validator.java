@@ -9,6 +9,7 @@ import java.io.Serializable;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 
 /**
  * Interface that implements a method for validating if an {@link Object} is
@@ -62,6 +63,12 @@ public interface Validator extends Serializable {
 
     /**
      * Exception that is thrown by a {@link Validator} when a value is invalid.
+     * 
+     * <p>
+     * The default implementation of InvalidValueException does not support HTML
+     * in error messages. To enable HTML support, override
+     * {@link #getHtmlMessage()} and use the subclass in validators.
+     * </p>
      * 
      * @author IT Mill Ltd.
      * @version
@@ -154,7 +161,7 @@ public interface Validator extends Serializable {
             target.addAttribute("level", "error");
 
             // Error message
-            final String message = getLocalizedMessage();
+            final String message = getHtmlMessage();
             if (message != null) {
                 target.addText(message);
             }
@@ -165,6 +172,16 @@ public interface Validator extends Serializable {
             }
 
             target.endTag("error");
+        }
+
+        /**
+         * Returns the message of the error in HTML.
+         * 
+         * Note that this API may change in future versions.
+         */
+        protected String getHtmlMessage() {
+            return AbstractApplicationServlet
+                    .safeEscapeForHtml(getLocalizedMessage());
         }
 
         /*

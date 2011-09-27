@@ -362,7 +362,7 @@ public class VNotification extends VOverlay {
         if (notification.hasAttribute("icon")) {
             final String parsedUri = client.translateVaadinUri(notification
                     .getStringAttribute("icon"));
-            html += "<img src=\"" + parsedUri + "\" />";
+            html += "<img src=\"" + Util.escapeAttribute(parsedUri) + "\" />";
         }
         if (notification.hasAttribute("caption")) {
             String caption = notification.getStringAttribute("caption");

@@ -228,9 +228,10 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
             if (moreItemUIDL.hasAttribute("icon")) {
                 itemHTML.append("<img src=\""
-                        + client.translateVaadinUri(moreItemUIDL
-                                .getStringAttribute("icon")) + "\" class=\""
-                        + Icon.CLASSNAME + "\" alt=\"\" />");
+                        + Util.escapeAttribute(client
+                                .translateVaadinUri(moreItemUIDL
+                                        .getStringAttribute("icon")))
+                        + "\" class=\"" + Icon.CLASSNAME + "\" alt=\"\" />");
             }
 
             String moreItemText = moreItemUIDL.getStringAttribute("text");
@@ -334,7 +335,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 // FIXME For compatibility reasons: remove in version 7
                 String bgStyle = "";
                 if (submenuIcon != null) {
-                    bgStyle = " style=\"background-image: url(" + submenuIcon
+                    bgStyle = " style=\"background-image: url("
+                            + Util.escapeAttribute(submenuIcon)
                             + "); text-indent: -999px; width: 1em;\"";
                 }
                 itemHTML.append("<span class=\"" + CLASSNAME
@@ -345,8 +347,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                     + "-menuitem-caption\">");
             if (item.hasAttribute("icon")) {
                 itemHTML.append("<img src=\""
-                        + client.translateVaadinUri(item
-                                .getStringAttribute("icon")) + "\" class=\""
+                        + Util.escapeAttribute(client.translateVaadinUri(item
+                                .getStringAttribute("icon"))) + "\" class=\""
                         + Icon.CLASSNAME + "\" alt=\"\" />");
             }
             String itemText = item.getStringAttribute("text");

@@ -5904,7 +5904,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 .getStringAttribute("caption") : "";
         if (uidl.hasAttribute("icon")) {
             s = "<img src=\""
-                    + client.translateVaadinUri(uidl.getStringAttribute("icon"))
+                    + Util.escapeAttribute(client.translateVaadinUri(uidl
+                            .getStringAttribute("icon")))
                     + "\" alt=\"icon\" class=\"v-icon\">" + s;
         }
         return s;
