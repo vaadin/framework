@@ -1267,6 +1267,16 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
+
+            // security check: do not permit navigation out of the VAADIN
+            // directory
+            if (!isAllowedVAADINResourceUrl(request, resourceUrl)) {
+                logger.info("Requested resource ["
+                        + filename
+                        + "] not accessible in the VAADIN directory or access to it is forbidden.");
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
         }
 
         // Find the modification timestamp
@@ -1321,6 +1331,47 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             os.write(buffer, 0, bytes);
         }
         is.close();
+    }
+
+    /**
+     * Check whether a URL obtained from a classloader refers to a valid static
+     * resource in the directory VAADIN.
+     * 
+     * Warning: Overriding of this method is not recommended, but is possible to
+     * support non-default classloaders or servers that may produce URLs
+     * different from the normal ones. The method prototype may change in the
+     * future. Care should be taken not to expose class files or other resources
+     * outside the VAADIN directory if the method is overridden.
+     * 
+     * @param request
+     * @param resourceUrl
+     * @return
+     * 
+     * @since 6.6.7
+     */
+    protected boolean isAllowedVAADINResourceUrl(HttpServletRequest request,
+            URL resourceUrl) {
+        if ("jar".equals(resourceUrl.getProtocol())) {
+            // This branch is used for accessing resources directly from the
+            // Vaadin JAR in development environments and in similar cases.
+
+            // Inside a JAR, a ".." would mean a real directory named ".." so
+            // using it in paths should just result in the file not being found.
+            // However, performing a check in case some servers or class loaders
+            // try to normalize the path by collapsing ".." before the class
+            // loader sees it.
+
+            if (!resourceUrl.getPath().contains("!/VAADIN/")) {
+                logger.warning("Attempted access to a JAR entry not starting with /VAADIN/: "
+                        + resourceUrl);
+                return false;
+            }
+            return true;
+        }
+
+        // when using the class loader fall-back, other protocols than jar: are
+        // not supported
+        return false;
     }
 
     /**
@@ -1506,8 +1557,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     /**
-     * The default method to fetch static files location. This method does not
-     * check for request attribute {@value #REQUEST_VAADIN_STATIC_FILE_PATH}.
+     * The default method to fetch static files location (URL). This method does
+     * not check for request attribute {@value #REQUEST_VAADIN_STATIC_FILE_PATH}
      * 
      * @param request
      * @return
@@ -2404,7 +2455,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @param unsafe
      * @return a safe string to be added inside an html tag
      */
-    protected static final String safeEscapeForHtml(String unsafe) {
+    public static final String safeEscapeForHtml(String unsafe) {
         StringBuilder safe = new StringBuilder();
         char[] charArray = unsafe.toCharArray();
         for (int i = 0; i < charArray.length; i++) {
