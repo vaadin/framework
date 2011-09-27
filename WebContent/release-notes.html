@@ -137,6 +137,9 @@
 		<p>
 			<b>OptionGroup</b> now supports a HTML mode for the item captions
 		</p>
+        <p>
+            <b>OptionGroup</b> now supports item icons
+        </p>        
 		<p>
 			<b>MenuBar</b> now supports a HTML mode for the item captions
 		</p>
@@ -172,6 +175,12 @@
 			<b>PopupDateField</b> and <b>InlineDateField</b> now support time
 			zones
 		</p>
+        <p>
+            <b>ComboBox</b> can now be used as a replacement for NativeSelect
+        </p>
+        <p>
+            <b>Audio</b> and <b>Video</b> components implement support for HTML5 &lt;audio&gt; and &lt;video&gt; elements.
+        </p>
 		<p>
 			<b>Sampler</b> is no longer distributed as part of Vaadin @version@.
 			It will be available as a separate download
@@ -183,7 +192,7 @@
 		</p>
 		<p>
 			The <a
-				href="http://dev.vaadin.com/query?type=enhancement&group=component&milestone=Vaadin+6.7.0.beta1">full
+				href="http://dev.vaadin.com/query?status=closed&type=enhancement&milestone=Vaadin+6.7.0.rc1&or&status=closed&type=enhancement&milestone=Vaadin+6.7.0.beta1&group=status&col=id&col=summary&col=type&col=owner&col=priority&col=component&col=version&order=priority">full
 				details of the enhancements</a> can be found at dev.vaadin.com.</a>
 		</p>
 		<h2 id="fixes">Fixes in Vaadin @version@</h2>
@@ -207,10 +216,69 @@
 	#7340	The rendering is wrong the first time a table column is sorted<br/>
 	#7388	Expand/collapse icon offset in IE7<br/>
 	#7422	AbstractComponent.setStyleName containing spaces causes illogical results<br/>
+	#7555   Debug Window broken in IE6 and IE7<br/>
+    #7001   Create TestBench test for Chameleon theme<br/>
+    #7186   SQLContainer leaves transactions open if an OptimisticLockException occurrs<br/>
+    #7228   Selectable Table with requestRepaint() calling ValueChangeListener makes focus jump<br/>
+    #7479   Vaadin apps cannot current be deployed on IBM WebSphere v8<br/>
+    #7561   TreeTable: expanding a row far down in the table causes IndexOutOfBoundsException<br/>
+    #7626   Form size is calculated incorrectly after clearing its data source<br/>
+    #5780   TreeTable uses images that not display transparent in IE6<br/>
+    #7005   Using a Filter with a Tree breaks focusing with keyboard navigation<br/>
+    #7012   Table content cells & column headers get out of sync when uncollapsing columns<br/>
+    #7028   TreeTable: Navigating too fast with keyboard makes selection jump<br/>
+    #7057   Table and tree keyboard navigation completely broken if validators are used<br/>
+    #7428   Decide what version of Firefox to support<br/>
+    #7434   SQLContainer - reseting value of Property fails<br/>
+    #7443   Chameleon datefield text part and button have different heights<br/>
+    #7446   Keyboard Navigation with problems on Table<br/>
+    #7454   Table keyboard navigation breaks in IE on multiple keyboard multiselections<br/>
+    #7490   Multi-line text fields visual and height issues in Chameleon theme<br/>
+    #7530   Disable auto update of Chrome<br/>
+    #7597   NullPointerException with SQLContainer's J2EEConnectionPool<br/>
+    #3710   Width is miscalculated for the footer layouts in forms of undefined size<br/>
+    #5170   Allow using ComboBox as a replacement for NativeSelect<br/>
+    #5382   Table headers and content not aligned after content modification<br/>
+    #5510   TreeTable scrolls to wrong position when collapsing directly after expanding<br/>
+    #5608   Item icons do not work in OptionGroup<br/>
+    #5683   TwinColSelect keyboard navigation selects wrong item<br/>
+    #5851   isLastId() may throw NullPointerException<br/>
+    #5868   GridLayout's size is calculated wrong when elements span over multiple cells.<br/>
+    #6148   Multiselect breaks TreeTable keyboard navigation<br/>
+    #6591   Out of sync - Event triggered by Clicklistener and Handler on same Panel<br/>
+    #6770   DateField: Error indicator not shown if required<br/>
+    #6882   Change filesize from Integer to Long<br/>
+    #6909   Embedded should support &lt;audio&gt;, &lt;video&gt; and PDFs<br/>
+    #6917   Make AbstractApplicationServlet.getApplicationWindow protected<br/>
+    #7018   Table column drag&drop visually broken<br/>
+    #7097   Tooltip with long contents flickers<br/>
+    #7100   Tooltip is displayed off screen when component is at the lower edge of the screen<br/>
+    #7101   ComponentLocator should only return elements that are attached to the DOM<br/>
+    #7208   Adding SplitterClickListener to SplitPanel causes splitter to jump in Chrome when clicked.<br/>
+    #7230   Key Navigation in Tree-Component - Scrolling-"Bug"<br/>
+    #7326   Width recalculation does not work for GridLayout inside CustomComponent<br/>
+    #7331   Table Column Sizing with generatedColumn and align right<br/>
+    #7391   SQLContainer unconsiders modified cache<br/>
+    #7393   Resizing a Table column does not resize contents<br/>
+    #7444   Chameleon Editor color selector theme is broken<br/>
+    #7462   Inserting a panel in a scrolling panel scrolls up to the top<br/>
+    #7485   Build script doesn't include resources for release-notes.html<br/>
+    #7493   Release notes should only list versions supported by this particular release<br/>
+    #7505   TreeTable arrow icons clipped in FF, IE9 & Opera<br/>
+    #7534   TreeTable: navigating with the left arrow key has focus issues<br/>
+    #7535   TreeTable: navigating with the right arrow key in a multiselect table selects too much<br/>
+    #7537   Enable Off/On formatter tags in eclipse Vaadin formatter profile<br/>
+    #7564   Resizing table column from the server only resizes the header<br/>
+    #7605   VTreeTable throws NPE<br/>
+    #7620   TreeTable generated columns Components out of sync after node expand<br/>
+    #7644   Table: Odd/even row styles get mixed up when lazy loading<br/>
+    #7667   Resizing column in Safari 5.1 causes scrollbar to return to the left<br/>
+    #7491   Link to source code in release notes should point to correct directory<br/>
+    #2669   Tabsheet failes to render cached tab<br/>
 	</p>
 		<p>
 			The <a
-				href="http://dev.vaadin.com/query?type=defect&group=component&milestone=Vaadin+6.7.0.beta1">full
+				href="http://dev.vaadin.com/query?status=closed&type=defect&milestone=Vaadin+6.7.0.rc1&or&status=closed&type=defect&milestone=Vaadin+6.7.0.beta1&group=status&col=id&col=summary&col=owner&col=type&col=priority&col=component&col=version&order=priority">full
 				details of the defects</a> can be found at dev.vaadin.com.
 		</p>
 
