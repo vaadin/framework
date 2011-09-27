@@ -68,7 +68,6 @@
 
 .v-table-caption-container,
 .v-table-header-drag {
-	height: 16px;
 	padding-top: 4px;
 	padding-right: 4px;
 }
@@ -81,9 +80,6 @@
 .v-ie .v-table-caption-container .v-icon,
 .v-ie .v-table-header-drag .v-icon {
 	margin-top: -3px;
-}
-.v-table-footer-container {
-	heigth: 16px;	
 }
 .v-table-resizer {
 	height: 20px;
