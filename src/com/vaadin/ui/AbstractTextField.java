@@ -252,8 +252,8 @@ public abstract class AbstractTextField extends AbstractField implements
     @Override
     protected void setValue(Object newValue, boolean repaintIsNotNeeded)
             throws ReadOnlyException, ConversionException {
-        if (isChanged(newValue, getValue())
-                || isChanged(newValue, lastKnownTextContent)) {
+        if (notEqual(newValue, getValue())
+                || notEqual(newValue, lastKnownTextContent)) {
             // The client should use the new value
             localValueChanged = true;
             if (!repaintIsNotNeeded) {
@@ -264,7 +264,7 @@ public abstract class AbstractTextField extends AbstractField implements
         super.setValue(newValue, repaintIsNotNeeded);
     }
 
-    private static boolean isChanged(Object newValue, Object oldValue) {
+    private static boolean notEqual(Object newValue, Object oldValue) {
         return oldValue != newValue
                 && (newValue == null || !newValue.equals(oldValue));
     }
