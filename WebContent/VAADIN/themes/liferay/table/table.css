@@ -81,6 +81,11 @@
 	background: #999;
 }
 
+.v-table-focus-slot-left {
+	margin-bottom: -26px;
+	background: transparent;
+}
+
 .v-table-column-selector {
 	background: transparent url(columnselect.png);
 	width: 16px;

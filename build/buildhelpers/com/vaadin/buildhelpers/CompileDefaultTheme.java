@@ -42,11 +42,15 @@ public class CompileDefaultTheme {
                 break;
             }
         }
+        // Compile Reindeer last, since it requires the spriting operation
+        // (makes testing the other themes a bit faster, since you don't need to
+        // wait for the spriting operation to finish before the theme CSS is
+        // compiled)
         combineTheme(new String[] { BASE }, false, ver);
         combineTheme(new String[] { BASE, RUNO }, false, ver);
-        combineTheme(new String[] { BASE, REINDEER }, true, ver);
         combineTheme(new String[] { BASE, LIFERAY }, false, ver);
         combineTheme(new String[] { BASE, CHAMELEON }, false, ver);
+        combineTheme(new String[] { BASE, REINDEER }, true, ver);
     }
 
     /**

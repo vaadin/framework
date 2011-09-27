@@ -58,7 +58,7 @@
 	border-top: none;
 	background: #efefef;
 }
-.v-table-footer table{
+.v-table-footer table {
 	border-spacing: 0;
 	border-collapse: collapse;
 	margin: 0;
@@ -69,10 +69,10 @@
 	padding: 0;
 	border-right: 1px solid #aaa;
 }
-.v-table-footer-cell{
+.v-table-footer-cell {
 	cursor: pointer;
 }
-.v-table-footer-container{	
+.v-table-footer-container {	
 	float:right;	
 	padding-right:6px;
 	overflow:hidden;
@@ -187,7 +187,11 @@
 }
 .v-table-focus-slot-left {
 	border-left: 2px solid #999;
-	margin-right: -2px;
+	float: none;
+	margin-bottom: -1.2em;
+	width: auto;
+	background: transparent;
+	border-right: 1px solid #aaa;
 }
 .v-table-focus-slot-right {
 	border-right: 2px solid #999;

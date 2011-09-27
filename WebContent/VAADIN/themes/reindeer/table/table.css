@@ -11,7 +11,8 @@
 .v-table-header-wrap,
 .white .v-table-header-wrap,
 .v-table-footer-wrap,
-.white .v-table-footer-wrap {
+.white .v-table-footer-wrap,
+.v-table-header-drag {
 	border-color: #c2c3c4;
 	background: transparent repeat-x;
 	background-image: url(img/header-bg-light.png); /** sprite-ref: verticals; sprite-alignment: repeat */
@@ -27,19 +28,19 @@
 .v-ie6 .v-table,
 .v-ie6 .v-table-header-wrap,
 .v-ie6 .v-table-footer-wrap,
-.v-ie6 .v-table-column-selector{
+.v-ie6 .v-table-column-selector {
 	/* The header will overflow the Table due to a bug in IE6 after changes in #3003. To fix this (#7314) 
 	 * we need to apply position:relative to the wrappers and selector to make them appear on top of the 
-	 * header. We also need to apply it to the table root div to get rid of a really wierd IE6 rendering bug
+	 * header. We also need to apply it to the table root div to get rid of a really weird IE6 rendering bug
 	 * caused by all this relativeness (see attachment in #7314).  
 	 */
-	position:relative;
+	position: relative;
 }
 
 .v-ie6 .v-table.v-disabled,
-.v-ie7 .v-table.v-disabled{
+.v-ie7 .v-table.v-disabled {
 	/* Fixes ie issue #7324 where disabled shim does not cover table body */ 
-	position:relative;
+	position: relative;
 }
 
 .v-table-footer-wrap,
@@ -65,17 +66,20 @@
 	height: 20px;
 }
 
-.v-table-caption-container {
-	heigth: 16px;
+.v-table-caption-container,
+.v-table-header-drag {
+	height: 16px;
 	padding-top: 4px;
 	padding-right: 4px;
 }
-.v-table-caption-container .v-icon {
+.v-table-caption-container .v-icon,
+.v-table-header-drag .v-icon {
 	height: 16px;
 	margin: -4px 3px 0 0;
 	vertical-align: middle;
 }
-.v-ie .v-table-caption-container .v-icon {
+.v-ie .v-table-caption-container .v-icon,
+.v-ie .v-table-header-drag .v-icon {
 	margin-top: -3px;
 }
 .v-table-footer-container {
@@ -157,27 +161,16 @@
 	background-image: url(img/col-sel-light-pressed.png); /** sprite-ref: verticals */
 }
 .v-table-focus-slot-left {
-	border-left-color: #222;
-	margin-left: 0;
+	border-left: 1px solid #222;
+	margin-bottom: -20px;
+	width: auto;
 }
 .v-table-focus-slot-right {
 	border-right-color: #222;
 	margin-right: 0;
 }
 .v-table-header-drag {
-	font-family: arial, helvetica, verdana, sans-serif;
-	background: transparent repeat-x;
-	background-image: url(img/header-bg-light.png); /** sprite-ref: verticals; sprite-alignment: repeat */
-	padding: 4px;
-	text-transform: uppercase;
-	font-size: 10px;
-	font-weight: bold;
-	color: #222;
-	text-shadow: #fff 0 1px 0;
-	line-height: normal;
-}
-.v-table-header-drag * {
-	vertical-align: middle;
+	padding-left: 6px;
 }
 .v-table-header-drag img {
 	height: 16px;
@@ -232,7 +225,8 @@
 
 
 /* Strong style */
-.v-table-strong .v-table-header-wrap {
+.v-table-strong .v-table-header-wrap,
+.v-table-strong .v-table-header-drag {
 	border-color: #2b3033;
 	border-top-color: #2b3033;
 	background-image: url(img/header-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
@@ -257,11 +251,6 @@
 .v-table-strong .v-table-column-selector:active {
 	background-image: url(img/col-sel-pressed.png); /** sprite-ref: verticals */
 }
-.v-table-strong .v-table-header-drag {
-	background-image: url(img/header-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
-	color: #e7e9ea;
-	text-shadow: #000 0 -1px 0;
-}
 .v-table-strong .v-table-focus-slot-left,
 .v-table-strong .v-table-focus-slot-right {
 	border-color: #9ca1a5;
@@ -269,7 +258,8 @@
 
 
 /* Table on black background (normal style) */
-.black .v-table-header-wrap {
+.black .v-table-header-wrap,
+.black .v-table-header-drag {
 	border-color: #252729;
 	background-image: url(img/header-bg-black.png); /** sprite-ref: black-verticals; sprite-alignment: repeat */
 	color: #e7eaee;
@@ -290,11 +280,6 @@
 .black .v-table-column-selector:active {
 	background-image: url(img/col-sel-black-pressed.png); /** sprite-ref: black-verticals */
 }
-.black .v-table-header-drag {
-	background-image: url(img/header-bg-black.png); /** sprite-ref: black-verticals; sprite-alignment: repeat */
-	color: #e7eaee;
-	text-shadow: #000 0 -1px 0;
-}
 .black .v-table-focus-slot-left,
 .black .v-table-focus-slot-right {
 	border-color: #9ca1a5;
@@ -313,16 +298,13 @@
 .black .v-table-row-odd {
 	background: transparent;
 }
-/* Selection background-color combined with default style selector, so we don't have to duplicate the sprite image in the final sprite collection */
+/* Selection background-color combined with the default (white) style selector, so we don't have to duplicate the sprite image in the final sprite collection */
 .black .v-table .v-selected .v-table-cell-content {
 	border-bottom: 1px solid #4d749f;
 }
-
 
 /* Borderless style */
 .v-table-borderless .v-table-header-wrap,
 .v-table-borderless .v-table-body {
 	border: none;
 }
-
-

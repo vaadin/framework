@@ -116,6 +116,9 @@ tr.v-table-row-odd:hover {
 }
 .v-table-focus-slot-left {
 	border-color: #b6bbbc;
+	margin-bottom: -36px;
+	width: auto;
+	border-right: none;
 }
 .v-table-focus-slot-right {
 	border-color: #b6bbbc;
