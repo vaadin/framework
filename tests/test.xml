@@ -135,7 +135,7 @@
 		</fileset>
 
 
-		<for threadCount="50" parallel="true" keepgoing="true" param="target">
+		<for threadCount="30" parallel="true" keepgoing="true" param="target">
 			<!-- A path element APPARENTLY removes duplicates and therefore this works. Could not find this documented anywhere... -->
 			<path>
 				<fileset refid="priority-tests-fileset" />
