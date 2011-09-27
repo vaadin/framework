@@ -252,6 +252,22 @@ public class Util {
     }
 
     /**
+     * Escapes the string so it is safe to write inside an HTML attribute.
+     * 
+     * @param attribute
+     *            The string to escape
+     * @return An escaped version of <literal>attribute</literal>.
+     */
+    public static String escapeAttribute(String attribute) {
+        attribute = attribute.replace("\"", "&quot;");
+        attribute = attribute.replace("'", "&#39;");
+        attribute = attribute.replace(">", "&gt;");
+        attribute = attribute.replace("<", "&lt;");
+        attribute = attribute.replace("&", "&amp;");
+        return attribute;
+    }
+
+    /**
      * Adds transparent PNG fix to image element; only use for IE6.
      * 
      * @param el

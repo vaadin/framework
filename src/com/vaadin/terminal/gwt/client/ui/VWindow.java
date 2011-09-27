@@ -865,7 +865,8 @@ public class VWindow extends VOverlay implements Container,
         String html = Util.escapeHTML(c);
         if (icon != null) {
             icon = client.translateVaadinUri(icon);
-            html = "<img src=\"" + icon + "\" class=\"v-icon\" />" + html;
+            html = "<img src=\"" + Util.escapeAttribute(icon)
+                    + "\" class=\"v-icon\" />" + html;
         }
         DOM.setInnerHTML(headerText, html);
     }

@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.Command;
+import com.vaadin.terminal.gwt.client.Util;
 
 /**
  * 
@@ -30,7 +31,8 @@ public abstract class Action implements Command {
         final StringBuffer sb = new StringBuffer();
         sb.append("<div>");
         if (getIconUrl() != null) {
-            sb.append("<img src=\"" + getIconUrl() + "\" alt=\"icon\" />");
+            sb.append("<img src=\"" + Util.escapeAttribute(getIconUrl())
+                    + "\" alt=\"icon\" />");
         }
         sb.append(getCaption());
         sb.append("</div>");

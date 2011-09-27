@@ -92,7 +92,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             final StringBuffer sb = new StringBuffer();
             if (iconUri != null) {
                 sb.append("<img src=\"");
-                sb.append(iconUri);
+                sb.append(Util.escapeAttribute(iconUri));
                 sb.append("\" alt=\"\" class=\"v-icon\" />");
             }
             sb.append("<span>" + Util.escapeHTML(caption) + "</span>");
@@ -993,7 +993,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             totalMatches = uidl.getIntAttribute("totalMatches");
         }
 
-        String captions = inputPrompt;
+        // used only to calculate minimum popup width
+        String captions = Util.escapeHTML(inputPrompt);
 
         for (final Iterator<?> i = options.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();
@@ -1022,7 +1023,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             if (captions.length() > 0) {
                 captions += "|";
             }
-            captions += suggestion.getReplacementString();
+            captions += Util.escapeHTML(suggestion.getReplacementString());
         }
 
         if ((!filtering || popupOpenerClicked) && uidl.hasVariable("selected")

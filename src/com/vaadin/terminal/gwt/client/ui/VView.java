@@ -327,7 +327,8 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                         final String parsedUri = client
                                 .translateVaadinUri(notification
                                         .getStringAttribute("icon"));
-                        html += "<img src=\"" + parsedUri + "\" />";
+                        html += "<img src=\"" + Util.escapeAttribute(parsedUri)
+                                + "\" />";
                     }
                     if (notification.hasAttribute("caption")) {
                         html += "<h1>"
