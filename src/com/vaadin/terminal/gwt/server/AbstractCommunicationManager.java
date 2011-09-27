@@ -1568,7 +1568,7 @@ public abstract class AbstractCommunicationManager implements
                 case VAR_FIELD_SEPARATOR + 0x30:
                 case VAR_ARRAYITEM_SEPARATOR + 0x30:
                     // +0x30 makes these letters for easier reading
-                    result.append((character - 0x30));
+                    result.append((char) (character - 0x30));
                     break;
                 case CharacterIterator.DONE:
                     // error
