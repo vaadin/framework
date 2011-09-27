@@ -12,7 +12,6 @@ import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -745,6 +744,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     public static final int FILTERINGMODE_CONTAINS = 2;
 
     private static final String CLASSNAME = "v-filterselect";
+    private static final String STYLE_NO_INPUT = "no-input";
 
     protected int pageLength = 10;
 
@@ -1176,18 +1176,19 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     }
 
     private void setTextInputEnabled(boolean textInputEnabled) {
+        // Always update styles as they might have been overwritten
+        if (textInputEnabled) {
+            removeStyleDependentName(STYLE_NO_INPUT);
+        } else {
+            addStyleDependentName(STYLE_NO_INPUT);
+        }
+
         if (this.textInputEnabled == textInputEnabled) {
             return;
         }
 
         this.textInputEnabled = textInputEnabled;
         updateReadOnly();
-
-        if (textInputEnabled) {
-            tb.getElement().getStyle().clearCursor();
-        } else {
-            tb.getElement().getStyle().setCursor(Cursor.DEFAULT);
-        }
     }
 
     /**

@@ -132,6 +132,10 @@
 	text-align: center;
 }
 
+.v-filterselect-no-input .v-filterselect-input {
+	cursor: default;
+}
+
 /* Error styles (disabled by default)
 
 .v-filterselect-error .v-filterselect-input,
