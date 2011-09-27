@@ -202,6 +202,8 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        // Required to always check text value sent from server when initalizing
+        // even if server did not send ATTR_TEXT_CHANGED
         boolean firstPaint = (this.client == null);
         this.client = client;
         id = uidl.getId();
@@ -250,7 +252,8 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         if (uidl.hasVariable("text")
                 && (firstPaint || (uidl.hasAttribute(ATTR_TEXT_CHANGED) && uidl
                         .getBooleanAttribute(ATTR_TEXT_CHANGED)))) {
-            // Use value from UIDL only if something has changed on the server
+            // Use value from UIDL if this is the first time the component is
+            // painted or if something has changed on the server
             text = uidl.getStringVariable("text");
         } else {
             // Use what we already have if no change from the server
