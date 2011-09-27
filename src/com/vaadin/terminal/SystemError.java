@@ -7,11 +7,17 @@ package com.vaadin.terminal;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
+
 /**
  * <code>SystemError</code> is a runtime exception caused by error in system.
  * The system error can be shown to the user as it implements
  * <code>ErrorMessage</code> interface, but contains technical information such
  * as stack trace and exception.
+ * 
+ * SystemError does not support HTML in error messages or stack traces. If HTML
+ * messages are required, use {@link UserError} or a custom implementation of
+ * {@link ErrorMessage}.
  * 
  * @author IT Mill Ltd.
  * @version
@@ -75,11 +81,26 @@ public class SystemError extends RuntimeException implements ErrorMessage {
         target.startTag("error");
         target.addAttribute("level", "system");
 
+        String message = getHtmlMessage();
+
+        target.addXMLSection("div", message,
+                "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd");
+
+        target.endTag("error");
+
+    }
+
+    /**
+     * Returns the message of the error in HTML.
+     * 
+     * Note that this API may change in future versions.
+     */
+    protected String getHtmlMessage() {
         StringBuilder sb = new StringBuilder();
         final String message = getLocalizedMessage();
         if (message != null) {
             sb.append("<h2>");
-            sb.append(message);
+            sb.append(AbstractApplicationServlet.safeEscapeForHtml(message));
             sb.append("</h2>");
         }
 
@@ -89,15 +110,11 @@ public class SystemError extends RuntimeException implements ErrorMessage {
             final StringWriter buffer = new StringWriter();
             cause.printStackTrace(new PrintWriter(buffer));
             sb.append("<pre>");
-            sb.append(buffer.toString());
+            sb.append(AbstractApplicationServlet.safeEscapeForHtml(buffer
+                    .toString()));
             sb.append("</pre>");
         }
-
-        target.addXMLSection("div", sb.toString(),
-                "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd");
-
-        target.endTag("error");
-
+        return sb.toString();
     }
 
     /**

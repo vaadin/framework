@@ -15,6 +15,12 @@ import com.vaadin.data.Validator;
  * (converted to string using {@link #toString()}) or "null" if the value is
  * null.
  * </p>
+ * <p>
+ * The default implementation of AbstractValidator does not support HTML in
+ * error messages. To enable HTML support, override
+ * {@link InvalidValueException#getHtmlMessage()} and throw such exceptions from
+ * {@link #validate(Object)}.
+ * </p>
  * 
  * @author IT Mill Ltd.
  * @version

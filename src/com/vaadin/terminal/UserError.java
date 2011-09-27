@@ -4,6 +4,8 @@
 
 package com.vaadin.terminal;
 
+import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
+
 /**
  * <code>UserError</code> is a controlled error occurred in application. User
  * errors are occur in normal usage of the application and guide the user.
@@ -31,6 +33,11 @@ public class UserError implements ErrorMessage {
      * 1.0 formatting markups.
      */
     public static final int CONTENT_UIDL = 2;
+
+    /**
+     * Content mode, where the error contains XHTML.
+     */
+    public static final int CONTENT_XHTML = 3;
 
     /**
      * Content mode.
@@ -80,24 +87,24 @@ public class UserError implements ErrorMessage {
         level = errorLevel;
     }
 
-    /* Documenten in interface */
+    /* Documented in interface */
     public int getErrorLevel() {
         return level;
     }
 
-    /* Documenten in interface */
+    /* Documented in interface */
     public void addListener(RepaintRequestListener listener) {
     }
 
-    /* Documenten in interface */
+    /* Documented in interface */
     public void removeListener(RepaintRequestListener listener) {
     }
 
-    /* Documenten in interface */
+    /* Documented in interface */
     public void requestRepaint() {
     }
 
-    /* Documenten in interface */
+    /* Documented in interface */
     public void paint(PaintTarget target) throws PaintException {
 
         target.startTag("error");
@@ -118,21 +125,25 @@ public class UserError implements ErrorMessage {
         // Paint the message
         switch (mode) {
         case CONTENT_TEXT:
-            target.addText(msg);
+            target.addText(AbstractApplicationServlet.safeEscapeForHtml(msg));
             break;
         case CONTENT_UIDL:
             target.addUIDL(msg);
             break;
         case CONTENT_PREFORMATTED:
-            target.startTag("pre");
+            target.addText("<pre>"
+                    + AbstractApplicationServlet.safeEscapeForHtml(msg)
+                    + "</pre>");
+            break;
+        case CONTENT_XHTML:
             target.addText(msg);
-            target.endTag("pre");
+            break;
         }
 
         target.endTag("error");
     }
 
-    /* Documenten in interface */
+    /* Documented in interface */
     public void requestRepaintRequests() {
     }
 
