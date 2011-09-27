@@ -159,24 +159,24 @@ public class VEmbedded extends HTML implements Paintable {
                     obj.getStyle().setProperty("height", "100%");
                 }
                 if (uidl.hasAttribute("classid")) {
-                    obj.setAttribute("classid", Util.escapeAttribute(uidl
-                            .getStringAttribute("classid")));
+                    obj.setAttribute("classid",
+                            uidl.getStringAttribute("classid"));
                 }
                 if (uidl.hasAttribute("codebase")) {
-                    obj.setAttribute("codebase", Util.escapeAttribute(uidl
-                            .getStringAttribute("codebase")));
+                    obj.setAttribute("codebase",
+                            uidl.getStringAttribute("codebase"));
                 }
                 if (uidl.hasAttribute("codetype")) {
-                    obj.setAttribute("codetype", Util.escapeAttribute(uidl
-                            .getStringAttribute("codetype")));
+                    obj.setAttribute("codetype",
+                            uidl.getStringAttribute("codetype"));
                 }
                 if (uidl.hasAttribute("archive")) {
-                    obj.setAttribute("archive", Util.escapeAttribute(uidl
-                            .getStringAttribute("archive")));
+                    obj.setAttribute("archive",
+                            uidl.getStringAttribute("archive"));
                 }
                 if (uidl.hasAttribute("standby")) {
-                    obj.setAttribute("standby", Util.escapeAttribute(uidl
-                            .getStringAttribute("standby")));
+                    obj.setAttribute("standby",
+                            uidl.getStringAttribute("standby"));
                 }
                 getElement().appendChild(obj);
 
