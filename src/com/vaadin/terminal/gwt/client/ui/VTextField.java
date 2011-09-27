@@ -64,6 +64,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     private static final String CLASSNAME_PROMPT = "prompt";
     private static final String ATTR_INPUTPROMPT = "prompt";
     public static final String ATTR_TEXTCHANGE_TIMEOUT = "iet";
+    public static final String ATTR_TEXT_CHANGED = "textChanged";
     public static final String VAR_CURSOR = "c";
     public static final String ATTR_TEXTCHANGE_EVENTMODE = "iem";
     private static final String TEXTCHANGE_MODE_EAGER = "EAGER";
@@ -244,8 +245,16 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             setColumns(new Integer(uidl.getStringAttribute("cols")).intValue());
         }
 
-        final String text = uidl.hasVariable("text") ? uidl
-                .getStringVariable("text") : null;
+        final String text;
+        if (uidl.hasAttribute(ATTR_TEXT_CHANGED)
+                && uidl.getBooleanAttribute(ATTR_TEXT_CHANGED)
+                && uidl.hasVariable("text")) {
+            // Use value from UIDL only if something hans changed on the server
+            text = uidl.getStringVariable("text");
+        } else {
+            // Use what we already have if no change from the server
+            text = prompting ? null : getText();
+        }
         setPrompting(inputPrompt != null && focusedTextField != this
                 && (text == null || text.equals("")));
 

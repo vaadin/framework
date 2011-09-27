@@ -92,6 +92,12 @@ public abstract class AbstractTextField extends AbstractField implements
      */
     private boolean changingVariables;
 
+    /**
+     * Track whether the value on the server has actually changed to avoid
+     * updating the text in the input element on every repaint
+     */
+    private boolean localValueChanged = true;
+
     protected AbstractTextField() {
         super();
     }
@@ -122,6 +128,11 @@ public abstract class AbstractTextField extends AbstractField implements
         if (value == null) {
             throw new IllegalStateException(
                     "Null values are not allowed if the null-representation is null");
+        }
+
+        if (localValueChanged || target.isFullRepaint()) {
+            target.addAttribute(VTextField.ATTR_TEXT_CHANGED, true);
+            localValueChanged = false;
         }
         target.addVariable(this, "text", value);
 
@@ -213,7 +224,8 @@ public abstract class AbstractTextField extends AbstractField implements
                 if (newValue != oldValue
                         && (newValue == null || !newValue.equals(oldValue))) {
                     boolean wasModified = isModified();
-                    setValue(newValue, true);
+                    // Don't update the local change flag
+                    super.setValue(newValue, true);
 
                     // If the modified status changes, or if we have a
                     // formatter, repaint is needed after all.
@@ -235,6 +247,26 @@ public abstract class AbstractTextField extends AbstractField implements
 
         }
 
+    }
+
+    @Override
+    protected void setValue(Object newValue, boolean repaintIsNotNeeded)
+            throws ReadOnlyException, ConversionException {
+        if (isChanged(newValue, getValue())
+                || isChanged(newValue, lastKnownTextContent)) {
+            // The client should use the new value
+            localValueChanged = true;
+            if (!repaintIsNotNeeded) {
+                // Repaint even if super.setValue doesn't detect any change
+                requestRepaint();
+            }
+        }
+        super.setValue(newValue, repaintIsNotNeeded);
+    }
+
+    private static boolean isChanged(Object newValue, Object oldValue) {
+        return oldValue != newValue
+                && (newValue == null || !newValue.equals(oldValue));
     }
 
     @Override
