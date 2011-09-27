@@ -69,13 +69,15 @@ public class ApplicationConnection {
 
     private static final String ERROR_CLASSNAME_EXT = "-error";
 
-    public static final String VAR_RECORD_SEPARATOR = "\u001e";
+    public static final char VAR_RECORD_SEPARATOR = '\u001e';
 
-    public static final String VAR_FIELD_SEPARATOR = "\u001f";
+    public static final char VAR_FIELD_SEPARATOR = '\u001f';
 
-    public static final String VAR_BURST_SEPARATOR = "\u001d";
+    public static final char VAR_BURST_SEPARATOR = '\u001d';
 
-    public static final String VAR_ARRAYITEM_SEPARATOR = "\u001c";
+    public static final char VAR_ARRAYITEM_SEPARATOR = '\u001c';
+
+    public static final char VAR_ESCAPE_CHARACTER = '\u001b';
 
     public static final String UIDL_SECURITY_TOKEN_ID = "Vaadin-Security-Key";
 
@@ -1372,7 +1374,8 @@ public class ApplicationConnection {
 
     public void updateVariable(String paintableId, String variableName,
             String newValue, boolean immediate) {
-        addVariableToQueue(paintableId, variableName, newValue, immediate, 's');
+        addVariableToQueue(paintableId, variableName,
+                escapeVariableValue(newValue), immediate, 's');
     }
 
     /**
@@ -1521,12 +1524,12 @@ public class ApplicationConnection {
             Object value = map.get(key);
             char transportType = getTransportType(value);
             buf.append(transportType);
-            buf.append(key);
+            buf.append(escapeVariableValue(key));
             buf.append(VAR_ARRAYITEM_SEPARATOR);
             if (transportType == 'p') {
                 buf.append(getPid((Paintable) value));
             } else {
-                buf.append(value);
+                buf.append(escapeVariableValue(String.valueOf(value)));
             }
 
             if (iterator.hasNext()) {
@@ -1582,7 +1585,7 @@ public class ApplicationConnection {
         final StringBuffer buf = new StringBuffer();
         if (values != null) {
             for (int i = 0; i < values.length; i++) {
-                buf.append(values[i]);
+                buf.append(escapeVariableValue(values[i]));
                 // there will be an extra separator at the end to differentiate
                 // between an empty array and one containing an empty string
                 // only
@@ -1627,12 +1630,45 @@ public class ApplicationConnection {
                 if (transportType == 'p') {
                     buf.append(getPid((Paintable) value));
                 } else {
-                    buf.append(value);
+                    buf.append(escapeVariableValue(String.valueOf(value)));
                 }
             }
         }
         addVariableToQueue(paintableId, variableName, buf.toString(),
                 immediate, 'a');
+    }
+
+    /**
+     * Encode burst, record, field and array item separator characters in a
+     * String for transport over the network. This protects from separator
+     * injection attacks.
+     * 
+     * @param value
+     *            to encode
+     * @return encoded value
+     */
+    protected String escapeVariableValue(String value) {
+        final StringBuilder result = new StringBuilder();
+        for (int i = 0; i < value.length(); ++i) {
+            char character = value.charAt(i);
+            switch (character) {
+            case VAR_ESCAPE_CHARACTER:
+                // fall-through - escape character is duplicated
+            case VAR_BURST_SEPARATOR:
+            case VAR_RECORD_SEPARATOR:
+            case VAR_FIELD_SEPARATOR:
+            case VAR_ARRAYITEM_SEPARATOR:
+                result.append(VAR_ESCAPE_CHARACTER);
+                // encode as letters for easier reading
+                result.append(((char) (character + 0x30)));
+                break;
+            default:
+                // the char is not a special one - add it to the result as is
+                result.append(character);
+                break;
+            }
+        }
+        return result.toString();
     }
 
     /**

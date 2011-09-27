@@ -1066,8 +1066,10 @@ public class Util {
             ArrayList<String[]> vars = new ArrayList<String[]>();
             for (int i = 0; i < loggedBurst.size(); i++) {
                 String value = loggedBurst.get(i++);
-                String[] split = loggedBurst.get(i).split(
-                        ApplicationConnection.VAR_FIELD_SEPARATOR);
+                String[] split = loggedBurst
+                        .get(i)
+                        .split(String
+                                .valueOf(ApplicationConnection.VAR_FIELD_SEPARATOR));
                 String id = split[0];
 
                 if (curId == null) {

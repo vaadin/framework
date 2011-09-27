@@ -18,9 +18,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.text.CharacterIterator;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -292,13 +294,15 @@ public abstract class AbstractCommunicationManager implements
     private static final char VTYPE_STRINGARRAY = 'c';
     private static final char VTYPE_MAP = 'm';
 
-    private static final String VAR_RECORD_SEPARATOR = "\u001e";
+    private static final char VAR_RECORD_SEPARATOR = '\u001e';
 
-    private static final String VAR_FIELD_SEPARATOR = "\u001f";
+    private static final char VAR_FIELD_SEPARATOR = '\u001f';
 
-    public static final String VAR_BURST_SEPARATOR = "\u001d";
+    public static final char VAR_BURST_SEPARATOR = '\u001d';
 
-    public static final String VAR_ARRAYITEM_SEPARATOR = "\u001c";
+    public static final char VAR_ARRAYITEM_SEPARATOR = '\u001c';
+
+    public static final char VAR_ESCAPE_CHARACTER = '\u001b';
 
     private final HashMap<String, OpenWindowCache> currentlyOpenWindowsInClient = new HashMap<String, OpenWindowCache>();
 
@@ -1176,7 +1180,8 @@ public abstract class AbstractCommunicationManager implements
         if (changes != null) {
 
             // Manage bursts one by one
-            final String[] bursts = changes.split(VAR_BURST_SEPARATOR);
+            final String[] bursts = changes.split(String
+                    .valueOf(VAR_BURST_SEPARATOR));
 
             // Security: double cookie submission pattern unless disabled by
             // property
@@ -1238,10 +1243,11 @@ public abstract class AbstractCommunicationManager implements
     public boolean handleVariableBurst(Object source, Application app,
             boolean success, final String burst) {
         // extract variables to two dim string array
-        final String[] tmp = burst.split(VAR_RECORD_SEPARATOR);
+        final String[] tmp = burst.split(String.valueOf(VAR_RECORD_SEPARATOR));
         final String[][] variableRecords = new String[tmp.length][4];
         for (int i = 0; i < tmp.length; i++) {
-            variableRecords[i] = tmp[i].split(VAR_FIELD_SEPARATOR);
+            variableRecords[i] = tmp[i].split(String
+                    .valueOf(VAR_FIELD_SEPARATOR));
         }
 
         for (int i = 0; i < variableRecords.length; i++) {
@@ -1256,7 +1262,7 @@ public abstract class AbstractCommunicationManager implements
                 if (nextVariable != null
                         && variable[VAR_PID].equals(nextVariable[VAR_PID])) {
                     // we have more than one value changes in row for
-                    // one variable owner, collect em in HashMap
+                    // one variable owner, collect them in HashMap
                     m = new HashMap<String, Object>();
                     m.put(variable[VAR_NAME],
                             convertVariableValue(variable[VAR_TYPE].charAt(0),
@@ -1453,7 +1459,8 @@ public abstract class AbstractCommunicationManager implements
             val = convertStringArray(strValue);
             break;
         case VTYPE_STRING:
-            val = strValue;
+            // decode encoded separators
+            val = decodeVariableValue(strValue);
             break;
         case VTYPE_INTEGER:
             val = Integer.valueOf(strValue);
@@ -1479,14 +1486,18 @@ public abstract class AbstractCommunicationManager implements
     }
 
     private Object convertMap(String strValue) {
-        String[] parts = strValue.split(VAR_ARRAYITEM_SEPARATOR);
+        String[] parts = strValue
+                .split(String.valueOf(VAR_ARRAYITEM_SEPARATOR));
         HashMap<String, Object> map = new HashMap<String, Object>();
         for (int i = 0; i < parts.length; i += 2) {
             String key = parts[i];
             if (key.length() > 0) {
                 char variabletype = key.charAt(0);
-                Object value = convertVariableValue(variabletype, parts[i + 1]);
-                map.put(key.substring(1), value);
+                // decode encoded separators
+                String decodedValue = decodeVariableValue(parts[i + 1]);
+                String decodedKey = decodeVariableValue(key.substring(1));
+                Object value = convertVariableValue(variabletype, decodedValue);
+                map.put(decodedKey, value);
             }
         }
         return map;
@@ -1496,15 +1507,18 @@ public abstract class AbstractCommunicationManager implements
         // need to return delimiters and filter them out; otherwise empty
         // strings are lost
         // an extra empty delimiter at the end is automatically eliminated
+        final String arrayItemSeparator = String
+                .valueOf(VAR_ARRAYITEM_SEPARATOR);
         StringTokenizer tokenizer = new StringTokenizer(strValue,
-                VAR_ARRAYITEM_SEPARATOR, true);
+                arrayItemSeparator, true);
         List<String> tokens = new ArrayList<String>();
-        String prevToken = VAR_ARRAYITEM_SEPARATOR;
+        String prevToken = arrayItemSeparator;
         while (tokenizer.hasMoreTokens()) {
             String token = tokenizer.nextToken();
-            if (!VAR_ARRAYITEM_SEPARATOR.equals(token)) {
-                tokens.add(token);
-            } else if (VAR_ARRAYITEM_SEPARATOR.equals(prevToken)) {
+            if (!arrayItemSeparator.equals(token)) {
+                // decode encoded separators
+                tokens.add(decodeVariableValue(token));
+            } else if (arrayItemSeparator.equals(prevToken)) {
                 tokens.add("");
             }
             prevToken = token;
@@ -1513,7 +1527,7 @@ public abstract class AbstractCommunicationManager implements
     }
 
     private Object convertArray(String strValue) {
-        String[] val = strValue.split(VAR_ARRAYITEM_SEPARATOR);
+        String[] val = strValue.split(String.valueOf(VAR_ARRAYITEM_SEPARATOR));
         if (val.length == 0 || (val.length == 1 && val[0].length() == 0)) {
             return new Object[0];
         }
@@ -1525,6 +1539,54 @@ public abstract class AbstractCommunicationManager implements
             values[i] = convertVariableValue(variableType, string.substring(1));
         }
         return values;
+    }
+
+    /**
+     * Decode encoded burst, record, field and array item separator characters
+     * in a variable value String received from the client. This protects from
+     * separator injection attacks.
+     * 
+     * @param encodedValue
+     *            to decode
+     * @return decoded value
+     */
+    protected String decodeVariableValue(String encodedValue) {
+        final StringBuilder result = new StringBuilder();
+        final StringCharacterIterator iterator = new StringCharacterIterator(
+                encodedValue);
+        char character = iterator.current();
+        while (character != CharacterIterator.DONE) {
+            if (VAR_ESCAPE_CHARACTER == character) {
+                character = iterator.next();
+                switch (character) {
+                case VAR_ESCAPE_CHARACTER + 0x30:
+                    // escaped escape character
+                    result.append(VAR_ESCAPE_CHARACTER);
+                    break;
+                case VAR_BURST_SEPARATOR + 0x30:
+                case VAR_RECORD_SEPARATOR + 0x30:
+                case VAR_FIELD_SEPARATOR + 0x30:
+                case VAR_ARRAYITEM_SEPARATOR + 0x30:
+                    // +0x30 makes these letters for easier reading
+                    result.append((character - 0x30));
+                    break;
+                case CharacterIterator.DONE:
+                    // error
+                    throw new RuntimeException(
+                            "Communication error: Unexpected end of message");
+                default:
+                    // other escaped character - probably a client-server
+                    // version mismatch
+                    throw new RuntimeException(
+                            "Invalid escaped character from the client - check that the widgetset and server versions match");
+                }
+            } else {
+                // not a special character - add it to the result as is
+                result.append(character);
+            }
+            character = iterator.next();
+        }
+        return result.toString();
     }
 
     /**
@@ -2193,8 +2255,7 @@ public abstract class AbstractCommunicationManager implements
 
         public SimpleMultiPartInputStream(InputStream realInputStream,
                 String boundaryString) {
-            boundary = (CRLF + DASHDASH + boundaryString)
-                    .toCharArray();
+            boundary = (CRLF + DASHDASH + boundaryString).toCharArray();
             this.realInputStream = realInputStream;
         }
 
