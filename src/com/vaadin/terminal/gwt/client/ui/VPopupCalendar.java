@@ -60,7 +60,8 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         calendarToggle.setStyleName(CLASSNAME + "-button");
         calendarToggle.setText("");
         calendarToggle.addClickHandler(this);
-        calendarToggle.getElement().setTabIndex(-1);
+        // -2 instead of -1 to avoid FocusWidget.onAttach to reset it
+        calendarToggle.getElement().setTabIndex(-2);
         add(calendarToggle);
 
         calendar = GWT.create(VCalendarPanel.class);
