@@ -2456,6 +2456,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @return a safe string to be added inside an html tag
      */
     public static final String safeEscapeForHtml(String unsafe) {
+        if (null == unsafe) {
+            return null;
+        }
         StringBuilder safe = new StringBuilder();
         char[] charArray = unsafe.toCharArray();
         for (int i = 0; i < charArray.length; i++) {
