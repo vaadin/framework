@@ -202,6 +202,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        boolean firstPaint = (this.client == null);
         this.client = client;
         id = uidl.getId();
 
@@ -246,10 +247,10 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         }
 
         final String text;
-        if (uidl.hasAttribute(ATTR_TEXT_CHANGED)
-                && uidl.getBooleanAttribute(ATTR_TEXT_CHANGED)
-                && uidl.hasVariable("text")) {
-            // Use value from UIDL only if something hans changed on the server
+        if (uidl.hasVariable("text")
+                && (firstPaint || (uidl.hasAttribute(ATTR_TEXT_CHANGED) && uidl
+                        .getBooleanAttribute(ATTR_TEXT_CHANGED)))) {
+            // Use value from UIDL only if something has changed on the server
             text = uidl.getStringVariable("text");
         } else {
             // Use what we already have if no change from the server

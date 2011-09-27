@@ -130,7 +130,7 @@ public abstract class AbstractTextField extends AbstractField implements
                     "Null values are not allowed if the null-representation is null");
         }
 
-        if (localValueChanged || target.isFullRepaint()) {
+        if (localValueChanged) {
             target.addAttribute(VTextField.ATTR_TEXT_CHANGED, true);
             localValueChanged = false;
         }
