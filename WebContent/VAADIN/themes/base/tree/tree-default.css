@@ -1,0 +1,119 @@
+.v-tree {
+	text-align: left; /* Force default alignment */
+	overflow: hidden;
+	padding: 1px 0;
+	outline: none;
+}
+.v-tree-node {
+	background: transparent url(../common/img/sprites.png) no-repeat 5px -37px;
+	padding: 1px 0;
+}
+.v-tree-node-caption:focus {
+	outline: none;
+}
+div.v-tree-node-leaf {
+	background: transparent;
+}
+.v-tree-node-expanded {
+	background: transparent url(../common/img/sprites.png) no-repeat -5px -10px;
+}
+.v-tree-node-caption {
+	margin-left: 1em;
+}
+.v-tree-node span {
+	cursor: pointer;
+}
+.v-tree-node-caption div {
+	white-space: nowrap;
+}
+.v-tree-node-caption span,
+.v-tree-node-caption .v-icon {
+	vertical-align: middle;
+}
+.v-tree-node-selected span {
+	background: #999;
+	color: #fff;
+}
+.v-tree-node-children {
+	padding-left: 1em;
+}
+/* ie6compatnode is hidden from non ie6 browsers, for ie6 
+ * uses weird hack to sink all events properly 
+ */
+.v-tree-node-ie6compatnode {
+	display: none;
+}
+/* IMPORTANT keep the offsetWidth of this element the same as the margin-left of v-tree-node-caption */
+.v-ie6 .v-tree-node-ie6compatnode {
+	display: inline;
+	float: left;
+	background: orange;
+	margin: 0;
+	width: 0.8em;
+	height: 0.8em;
+	padding: 0.1em;
+	filter: alpha(opacity=0);
+}
+.v-ie6 .v-tree-node,
+.v-ie6 .v-tree-node-children {
+	clear: left;
+}
+/***************************************
+ * Drag'n'drop styles
+ ***************************************/
+.v-tree .v-tree-node-drag-top {
+	border-top: 2px solid #1d9dff;
+	margin-top: -1px;
+	padding-top: 0;
+}
+.v-tree .v-tree-node-drag-bottom {
+	border-bottom: 2px solid #1d9dff;
+	margin-bottom: -1px;
+	padding-bottom: 0;
+}
+.v-tree .v-tree-node-drag-top:before,
+.v-tree .v-tree-node-drag-bottom:after,
+.v-tree .v-tree-node-caption-drag-center:after {
+	display: block;
+	content: "";
+	position: absolute;
+	width: 6px;
+	height: 6px;
+	margin-top: -4px;
+	background: transparent url(../common/img/drag-slot-dot.png);
+}
+.v-tree .v-tree-node-drag-bottom:after {
+	margin-top: -2px;
+}
+.v-tree .v-tree-node-caption-drag-center:after {
+	margin-left: 14px;
+}
+.v-ff .v-tree .v-tree-node-caption-drag-center:after,
+.v-ie .v-tree .v-tree-node-caption-drag-center:after {
+	margin-top: -2px;
+}
+.v-tree .v-tree-node-drag-top {
+	background-position: 5px -38px;
+}
+.v-tree .v-tree-node-drag-top.v-tree-node-expanded {
+	background-position: -5px -11px;
+}
+.v-tree .v-tree-node-caption-drag-center div {
+	border: 2px solid #1d9dff;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	margin: -2px 2px -2px -2px;
+	background-color: #bcdcff;
+}
+.v-ie6 .v-tree .v-tree-node-caption-drag-center div {
+	margin: -2px ;
+}
+.v-tree .v-tree-node-caption-drag-center div {
+	background-color: rgba(169,209,255,.6);
+}
+.v-tree .v-tree-node-caption-drag-center div,
+.v-tree .v-tree-node-drag-top,
+.v-tree .v-tree-node-drag-bottom {
+	border-color: rgba(0,109,232,.6);
+}

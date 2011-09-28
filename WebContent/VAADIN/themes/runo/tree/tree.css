@@ -7,6 +7,9 @@
 .v-tree-node-caption {
 	margin-left: 18px;
 }
+.v-tree-connectors .v-tree-node-caption {
+	padding-bottom: 1px;
+}
 .v-tree-node-caption .v-icon {
 	margin: 0 2px 0 -2px;
 }
@@ -53,4 +56,11 @@
 .v-tree .v-tree-node-drag-top,
 .v-tree .v-tree-node-drag-top.v-tree-node-expanded {
 	background-position: 2px 0;
+}
+.v-tree-connectors .v-tree-node-drag-top,
+.v-tree-connectors .v-tree-node-expanded.v-tree-node-drag-top {
+	background-position: 2px -53px;
+}
+.v-tree-connectors .v-tree-node-drag-top.v-tree-node-leaf {
+	background-position: 2px 50%;
 }

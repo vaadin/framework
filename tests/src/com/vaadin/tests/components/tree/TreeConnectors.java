@@ -2,8 +2,15 @@ package com.vaadin.tests.components.tree;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
+import com.vaadin.event.dd.DragAndDropEvent;
+import com.vaadin.event.dd.DropHandler;
+import com.vaadin.event.dd.acceptcriteria.AcceptAll;
+import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.Tree.TreeDragMode;
 import com.vaadin.ui.themes.BaseTheme;
 
 @SuppressWarnings("serial")
@@ -11,19 +18,60 @@ public class TreeConnectors extends TestBase {
 
     @Override
     protected void setup() {
+        HorizontalLayout l = new HorizontalLayout();
+        l.setSpacing(true);
+
+        l.addComponent(createTree());
+        Tree connectors = createTree();
+        connectors.addStyleName(BaseTheme.TREE_CONNECTORS);
+        l.addComponent(connectors);
+
+        addComponent(l);
+    }
+
+    private Tree createTree() {
         final Tree tree = new Tree(null, createContainer());
-        tree.addStyleName(BaseTheme.TREE_CONNECTORS);
+        tree.setWidth("300px");
         for (Object rootItems : tree.rootItemIds()) {
             tree.expandItemsRecursively(rootItems);
         }
         tree.setChildrenAllowed("Item 73", false);
 
-        addComponent(tree);
+        tree.setDragMode(TreeDragMode.NODE);
+        tree.setDropHandler(new DropHandler() {
+
+            @Override
+            public void drop(DragAndDropEvent event) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public AcceptCriterion getAcceptCriterion() {
+                return AcceptAll.get();
+            }
+
+        });
+
+        tree.setItemIcon("Item 1", new ThemeResource(
+                "../runo/icons/32/folder.png"));
+        tree.setItemIcon("Item 3", new ThemeResource(
+                "../runo/icons/32/document.png"));
+        tree.setItemIcon("Item 13", new ThemeResource(
+                "../runo/icons/64/user.png"));
+        tree.setItemIcon("Item 72", new ThemeResource(
+                "../runo/icons/64/users.png"));
+        tree.setItemIcon("Item 17", new ThemeResource(
+                "../runo/icons/16/document-pdf.png"));
+        tree.setItemIcon("Item 6", new ThemeResource(
+                "../runo/icons/16/folder-add.png"));
+
+        return tree;
     }
 
     @Override
     protected String getDescription() {
-        return "Tree nodes should be connected with lines indicating the hierarchy.";
+        return "The second tree's nodes should be connected with lines indicating the hierarchy. The first tree should be without connectors.";
     }
 
     @Override

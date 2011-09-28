@@ -16,3 +16,7 @@
 .v-tree-node-selected span {
 	background-color: #333;
 	}
+
+.v-tree-connectors .v-tree-node-caption {
+	padding-bottom: 1px;
+	}

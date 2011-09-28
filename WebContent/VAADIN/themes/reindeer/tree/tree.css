@@ -11,18 +11,6 @@
 .v-tree-node-expanded {
 	background-position: -7px 5px;
 }
-.v-tree-connectors .v-tree-node-leaf,
-.v-tree-connectors .v-tree-node-leaf:hover {
-	background-position: 8px -1px;
-}
-.v-ie6 .v-tree-connectors div.v-tree-node-leaf,
-.v-ie6 .v-tree-connectors div.v-tree-node-leaf:hover {
-	background: transparent url(../../base/tree/img/connector-item.png) no-repeat 8px -1px;
-}
-.v-ie6 .v-tree-connectors div.v-tree-node-leaf-last,
-.v-ie6 .v-tree-connectors div.v-tree-node-leaf-last:hover {
-	background: transparent url(../../base/tree/img/connector-item-last.png) no-repeat 8px -1px;
-}
 .v-tree-node-caption {
 	margin-left: 16px;
 	padding-bottom: 1px;
@@ -69,4 +57,11 @@
 }
 .v-tree .v-tree-node-drag-top.v-tree-node-expanded {
 	background-position: -7px 4px;
+}
+.v-tree-connectors .v-tree-node-drag-top,
+.v-tree-connectors .v-tree-node-expanded.v-tree-node-drag-top {
+	background-position: 2px -53px;
+}
+.v-tree-connectors .v-tree-node-drag-top.v-tree-node-leaf {
+	background-position: 2px 50%;
 }
