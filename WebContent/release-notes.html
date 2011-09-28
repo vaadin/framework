@@ -41,6 +41,35 @@
 
 <p>Vaadin @version@ is a maintenance release for Vaadin Framework 6.6. It contains several important fixes.</p>
 
+<h3>Security fixes in Vaadin Framework 6.6.7</h3>
+
+<p>
+Vaadin 6.6.7 fixes several security issues discovered by Wouter Coekaerts (<a href="http://wouter.coekaerts.be/">http://wouter.coekaerts.be/</a>) and an internal review.
+Immediate upgrade to a version containing the fixes is strongly recommended for all users. The issues are:
+</p>
+
+<ul>
+  <li><a href="http://dev.vaadin.com/ticket/7670">#7670 Directory traversal vulnerability through AbstractApplicationServlet.serveStaticResourcesInVAADIN() (critical)</a></li>
+  <li><a href="http://dev.vaadin.com/ticket/7669">#7669 CSRF/XSS vulnerability through separator injection (important)</a></li>
+  <li><a href="http://dev.vaadin.com/ticket/7671">#7671 Contributory XSS: Possibility to inject HTML/javascript in system error messages (important)</a></li>
+  <li><a href="http://dev.vaadin.com/ticket/7672">#7672 Contributory XSS: possibility for injection in certain components (moderate)</a></li>
+</ul>
+
+<p>
+The most serious of these issues is the directory traversal attack that can allow read access to the class files of an application as well as some configuration information. 
+</p> 
+
+<p>
+If unable to immediately upgrade Vaadin to a version containing the fixes, the directory traversal vulnerability can be mitigated by not mapping the context path
+"/VAADIN" to a Vaadin servlet in web.xml but instead deploying such static resources (themes and widgetsets) directly on the server and serving them as files. 
+</p>
+
+<p>
+The other vulnerabilities typically require user actions (pasting text crafted by the attacker into the application or following a link crafted by the attacker)
+for a successful attack, but may be exploitable more directly in certain applications. They can allow the attacker to control the user session for the application
+in the browser.
+</p>
+
 <!-- ====================================================================== -->
 <!-- For minor releases, this should be after the enhancement highlights, for maintenance releases in the beginning. -->
 <h3>Change Log, Future Releases, and Upgrading</h3>
@@ -56,14 +85,6 @@ widget sets and refresh your project in Eclipse. If you are upgrading from
 6.5.x or earlier, notice that Vaadin 6.6 uses GWT 2.3 (included in the installation
 package). See <a href="#upgrading">General Upgrade Instructions</a> for more details on upgrading.</p>
 <!-- ====================================================================== -->
-
-<h3>Security fixes in Vaadin Framework 6.6.7</h3>
-<ul>
-    <li><a href="http://dev.vaadin.com/ticket/7669">#7669</a> CSRF/XSS vulnerability through separator injection</li>
-    <li><a href="http://dev.vaadin.com/ticket/7670">#7670</a> Directory traversal vulnerability</li>
-    <li><a href="http://dev.vaadin.com/ticket/7671">#7671</a> Contributory XSS: Possibility to inject HTML/JavaScript in system error messages</li>
-    <li><a href="http://dev.vaadin.com/ticket/7672">#7672</a> Contributory XSS: possibility for injection in certain components</li>
-</ul>
 
 <h3>Enhancements in Vaadin Framework 6.6</h3>
 
