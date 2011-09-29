@@ -6,6 +6,7 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Set;
 
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -65,21 +66,19 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
 
     public VForm() {
         setElement(DOM.createDiv());
-        DOM.appendChild(getElement(), fieldSet);
+        getElement().appendChild(fieldSet);
         setStyleName(CLASSNAME);
-        DOM.appendChild(fieldSet, legend);
-        DOM.appendChild(legend, caption);
-        DOM.setElementProperty(errorIndicatorElement, "className",
-                "v-errorindicator");
-        DOM.setStyleAttribute(errorIndicatorElement, "display", "none");
-        DOM.setInnerText(errorIndicatorElement, " "); // needed for IE
-        DOM.setElementProperty(desc, "className", "v-form-description");
-        DOM.appendChild(fieldSet, desc);
-        DOM.appendChild(fieldSet, fieldContainer);
+        fieldSet.appendChild(legend);
+        legend.appendChild(caption);
+        errorIndicatorElement.setClassName("v-errorindicator");
+        errorIndicatorElement.getStyle().setDisplay(Display.NONE);
+        errorIndicatorElement.setInnerText(" "); // needed for IE
+        desc.setClassName("v-form-description");
+        fieldSet.appendChild(fieldContainer);
         errorMessage.setVisible(false);
         errorMessage.setStyleName(CLASSNAME + "-errormessage");
-        DOM.appendChild(fieldSet, errorMessage.getElement());
-        DOM.appendChild(fieldSet, footerContainer);
+        fieldSet.appendChild(errorMessage.getElement());
+        fieldSet.appendChild(footerContainer);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -94,21 +93,21 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
 
         boolean legendEmpty = true;
         if (uidl.hasAttribute("caption")) {
-            DOM.setInnerText(caption, uidl.getStringAttribute("caption"));
+            caption.setInnerText(uidl.getStringAttribute("caption"));
             legendEmpty = false;
         } else {
-            DOM.setInnerText(caption, "");
+            caption.setInnerText("");
         }
         if (uidl.hasAttribute("icon")) {
             if (icon == null) {
                 icon = new Icon(client);
-                DOM.insertChild(legend, icon.getElement(), 0);
+                legend.insertFirst(icon.getElement());
             }
             icon.setUri(uidl.getStringAttribute("icon"));
             legendEmpty = false;
         } else {
             if (icon != null) {
-                DOM.removeChild(legend, icon.getElement());
+                legend.removeChild(icon.getElement());
             }
         }
         if (legendEmpty) {
@@ -127,9 +126,11 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
         }
 
         if (uidl.hasAttribute("description")) {
-            DOM.setInnerHTML(desc, uidl.getStringAttribute("description"));
+            desc.setInnerHTML(uidl.getStringAttribute("description"));
+            fieldSet.insertFirst(desc);
         } else {
-            DOM.setInnerHTML(desc, "");
+            fieldSet.removeChild(desc);
+            desc.setInnerHTML("");
         }
 
         updateSize();
