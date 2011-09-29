@@ -1367,10 +1367,25 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 return false;
             }
             return true;
+        } else if ("file".equals(resourceUrl.getProtocol())) {
+            // Some servers such as GlassFish extract files from JARs. In such
+            // cases, the class loader sees them as file URLs.
+
+            // Check that the URL is in a VAADIN directory and does not contain
+            // "/../"
+            if (!resourceUrl.getPath().contains("/VAADIN/")
+                    || resourceUrl.getPath().contains("/../")) {
+                logger.info("Blocked attempted access to the file : "
+                        + resourceUrl);
+                return false;
+            }
+            logger.fine("Accepting access to a file using a class loader: "
+                    + resourceUrl);
+            return true;
         }
 
-        // when using the class loader fall-back, other protocols than jar: are
-        // not supported
+        // when using the class loader fall-back, other protocols than jar: and
+        // file: are not supported
         return false;
     }
 
