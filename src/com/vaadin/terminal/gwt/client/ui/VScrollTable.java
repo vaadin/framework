@@ -5601,20 +5601,37 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             return;
         }
 
-        this.width = width;
         if (width != null && !"".equals(width)) {
             super.setWidth(width);
-            int innerPixels = getOffsetWidth() - getBorderWidth();
+            int innerPixels = Util.getRequiredWidth(this) - getBorderWidth();
             if (innerPixels < 0) {
-                innerPixels = 0;
+                /*
+                 * If innerPixels becomes negative it means that something has
+                 * gone wrong with the width calculations (most likely a timing
+                 * issue where offsetWidth is returning 0). Setting innerPixels
+                 * to 0 here and hope for the best will cause issues like #6494.
+                 * Instead we defer the width setting so we know that the
+                 * offsetwidth return a sane value
+                 */
+                final String deferredWidth = width;
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    public void execute() {
+                        setWidth(deferredWidth);
+                    }
+                });
+                return;
             }
+
+            this.width = width;
             setContentWidth(innerPixels);
 
             // readjust undefined width columns
             triggerLazyColumnAdjustment(false);
 
         } else {
+
             // Undefined width
+            this.width = width;
             super.setWidth("");
 
             // Readjust size of table
@@ -5777,6 +5794,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * @param pixels
      */
     private void setContentWidth(int pixels) {
+        if (pixels == 0) {
+            VConsole.error("Setting width " + pixels + "px");
+        }
         tHead.setWidth(pixels + "px");
         scrollBodyPanel.setWidth(pixels + "px");
         tFoot.setWidth(pixels + "px");
