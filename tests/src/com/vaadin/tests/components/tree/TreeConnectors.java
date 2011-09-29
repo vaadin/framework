@@ -40,13 +40,11 @@ public class TreeConnectors extends TestBase {
         tree.setDragMode(TreeDragMode.NODE);
         tree.setDropHandler(new DropHandler() {
 
-            @Override
             public void drop(DragAndDropEvent event) {
                 // TODO Auto-generated method stub
 
             }
 
-            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return AcceptAll.get();
             }
