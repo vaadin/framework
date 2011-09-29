@@ -1362,10 +1362,12 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             // loader sees it.
 
             if (!resourceUrl.getPath().contains("!/VAADIN/")) {
-                logger.warning("Attempted access to a JAR entry not starting with /VAADIN/: "
+                logger.warning("Blocked attempt to access a JAR entry not starting with /VAADIN/: "
                         + resourceUrl);
                 return false;
             }
+            logger.fine("Accepted access to a JAR entry using a class loader: "
+                    + resourceUrl);
             return true;
         } else if ("file".equals(resourceUrl.getProtocol())) {
             // Some servers such as GlassFish extract files from JARs. In such
@@ -1375,11 +1377,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             // "/../"
             if (!resourceUrl.getPath().contains("/VAADIN/")
                     || resourceUrl.getPath().contains("/../")) {
-                logger.info("Blocked attempted access to the file : "
-                        + resourceUrl);
+                logger.info("Blocked attempt to access file: " + resourceUrl);
                 return false;
             }
-            logger.fine("Accepting access to a file using a class loader: "
+            logger.fine("Accepted access to a file using a class loader: "
                     + resourceUrl);
             return true;
         }
