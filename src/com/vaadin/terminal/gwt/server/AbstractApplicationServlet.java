@@ -1362,7 +1362,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             // loader sees it.
 
             if (!resourceUrl.getPath().contains("!/VAADIN/")) {
-                logger.warning("Blocked attempt to access a JAR entry not starting with /VAADIN/: "
+                logger.info("Blocked attempt to access a JAR entry not starting with /VAADIN/: "
                         + resourceUrl);
                 return false;
             }
