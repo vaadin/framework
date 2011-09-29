@@ -42,10 +42,10 @@
 		<fileset dir="${com.vaadin.testbench.lib.dir}" includes="**/*.jar" />
 	</path>
 
-	<!-- fileset containing all tests to run -->
+	<!-- fileset containing all TestBench tests to run -->
 	<fileset dir=".." id="html-test-files">
 		<include name="tests/**/**.html" />
-		<include name="src/com/vaadin/tests/**/**.html" />
+		<include name="testbench/com/vaadin/tests/**/**.html" />
 		<exclude name="tests/integration-testscripts/**" />
 	</fileset>
 
@@ -76,7 +76,7 @@
 
 
 	<!-- ================================================================== -->
-	<!-- Toolkit Server Management                                          -->
+	<!-- Vaadin Server Management                                           -->
 	<!-- ================================================================== -->
 
 	<target name="server-start">
@@ -90,7 +90,7 @@
 		<echo>Testing area: ${testing.testarea}</echo>
 
 		<exec executable="python" searchpath="true" dir=".." resultproperty="server.start.result">
-			<arg value="build/testing/toolkit-server.py" />
+			<arg value="build/testing/vaadin-server.py" />
 			<arg value="start" />
 			<arg value="${package.name}" />
 			<arg value="${package.filename}" />
@@ -105,7 +105,7 @@
 
 	<target name="server-stop">
 		<exec executable="python" dir=".." searchpath="true" resultproperty="server.stop.result">
-			<arg value="build/testing/toolkit-server.py" />
+			<arg value="build/testing/vaadin-server.py" />
 			<arg value="stop" />
 		</exec>
 	</target>
