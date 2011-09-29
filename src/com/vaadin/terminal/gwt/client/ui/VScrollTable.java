@@ -419,6 +419,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private int tabIndex;
     private TouchScrollDelegate touchScrollDelegate;
 
+    private int lastRenderedHeight;
+
     public VScrollTable() {
         scrollBodyPanel.setStyleName(CLASSNAME + "-body-wrapper");
         scrollBodyPanel.addFocusHandler(this);
@@ -820,7 +822,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         paintableId = uidl.getStringAttribute("id");
         immediate = uidl.getBooleanAttribute("immediate");
         final int newTotalRows = uidl.getIntAttribute("totalrows");
-        if (newTotalRows != totalRows) {
+        boolean totalRowsChanged = newTotalRows != totalRows;
+        if (totalRowsChanged) {
             if (scrollBody != null) {
                 if (totalRows == 0) {
                     tHead.clear();
@@ -996,10 +999,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     uidl.getIntAttribute("rows"));
             if (headerChangedDuringUpdate) {
                 lazyAdjustColumnWidths.schedule(1);
-            } else {
+            } else if (!isScrollPositionVisible() || totalRowsChanged
+                    || lastRenderedHeight != scrollBody.getOffsetHeight()) {
                 // webkits may still bug with their disturbing scrollbar bug,
                 // See #3457
                 // run overflow fix for scrollable area
+                // #6698 - If there's a scroll going on, don't abort it by
+                // changing overflows as the length of the contents *shouldn't*
+                // have changed (unless the number of rows or the height of the
+                // widget has also changed)
                 Scheduler.get().scheduleDeferred(new Command() {
                     public void execute() {
                         Util.runWebkitOverflowAutoFix(scrollBodyPanel
@@ -1082,6 +1090,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (oldSortedHeader != null) {
             tHead.resizeCaptionContainer(oldSortedHeader);
         }
+
+        // Remember this to detect situations where overflow hack might be
+        // needed during scrolling
+        lastRenderedHeight = scrollBody.getOffsetHeight();
 
         rendering = false;
         headerChangedDuringUpdate = false;
@@ -1842,6 +1854,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (scrollPositionElement != null) {
             DOM.setStyleAttribute(scrollPositionElement, "display", "none");
         }
+    }
+
+    private boolean isScrollPositionVisible() {
+        return scrollPositionElement != null
+                && !scrollPositionElement.getStyle().getDisplay()
+                        .equals(Display.NONE.toString());
     }
 
     private class RowRequestHandler extends Timer {
