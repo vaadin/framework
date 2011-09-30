@@ -94,6 +94,26 @@
         <li><a href="http://dev.vaadin.com/ticket/7672">#7672</a> Contributory XSS: possibility for injection in certain components</li>
     </ul>
 
+		<p>
+		These issue were discovered by Wouter Coekaerts (<a href="http://wouter.coekaerts.be/">http://wouter.coekaerts.be/</a>) and an internal review.
+		Immediate upgrade to a version containing the fixes (6.6.7 or later or 6.7.0 or later) is strongly recommended for all users.
+		</p>
+
+		<p>
+		The most serious of these issues is the directory traversal attack that can allow read access to the class files of an application as well as some configuration information. 
+		</p> 
+
+		<p>
+		If unable to immediately upgrade Vaadin to a version containing the fixes, the directory traversal vulnerability can be mitigated by not mapping the context path
+		"/VAADIN" to a Vaadin servlet in web.xml but instead deploying such static resources (themes and widgetsets) directly on the server and serving them as files. 
+		</p>
+
+		<p>
+		The other vulnerabilities typically require user actions (pasting text crafted by the attacker into the application or following a link crafted by the attacker)
+		for a successful attack, but may be exploitable more directly in certain applications. They can allow the attacker to control the user session for the application
+		in the browser.
+		</p>
+    
 		<h2 id="enhancements">Enhancements in Vaadin @version@</h2>
 		<p>
 			<b>SQLContainer</b>
