@@ -7,6 +7,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
@@ -811,6 +814,31 @@ public class SQLContainerTest {
         Object id = container.firstItemId();
         Assert.assertTrue(container.removeItem(id));
         Assert.assertFalse(container.containsId(id));
+    }
+
+    @Test
+    public void containsId_unknownObject() throws SQLException {
+        SQLContainer container = new SQLContainer(new FreeformQuery(
+                "SELECT * FROM people", connectionPool, "ID"));
+        Logger logger = Logger.getLogger(SQLContainer.class.getName());
+        logger.addHandler(new Handler() {
+
+            @Override
+            public void publish(LogRecord record) {
+                Assert.fail("No messages should be logged");
+
+            }
+
+            @Override
+            public void flush() {
+            }
+
+            @Override
+            public void close() throws SecurityException {
+            }
+        });
+
+        Assert.assertFalse(container.containsId(new Object()));
     }
 
     @Test

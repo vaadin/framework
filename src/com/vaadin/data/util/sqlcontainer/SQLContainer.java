@@ -210,7 +210,7 @@ public class SQLContainer implements Container, Container.Filterable,
             return rowNum >= 0 && rowNum < size;
         }
 
-        if (!(itemId instanceof TemporaryRowId)) {
+        if (itemId instanceof RowId && !(itemId instanceof TemporaryRowId)) {
             try {
                 return delegate.containsRowWithKey(((RowId) itemId).getId());
             } catch (Exception e) {
