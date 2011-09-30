@@ -421,6 +421,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private int tabIndex;
     private TouchScrollDelegate touchScrollDelegate;
 
+    private int lastRenderedHeight;
+
     public VScrollTable() {
         setMultiSelectMode(MULTISELECT_MODE_DEFAULT);
 
@@ -830,7 +832,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         paintableId = uidl.getStringAttribute("id");
         immediate = uidl.getBooleanAttribute("immediate");
 
+        int previousTotalRows = totalRows;
         updateTotalRows(uidl);
+        boolean totalRowsChanged = (totalRows != previousTotalRows);
 
         updateDragMode(uidl);
 
@@ -899,10 +903,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                             uidl.getIntAttribute("rows"));
                     if (headerChangedDuringUpdate) {
                         triggerLazyColumnAdjustment(true);
-                    } else {
+                    } else if (!isScrollPositionVisible()
+                            || totalRowsChanged
+                            || lastRenderedHeight != scrollBody
+                                    .getOffsetHeight()) {
                         // webkits may still bug with their disturbing scrollbar
                         // bug, see #3457
                         // Run overflow fix for the scrollable area
+                        // #6698 - If there's a scroll going on, don't abort it
+                        // by changing overflows as the length of the contents
+                        // *shouldn't* have changed (unless the number of rows
+                        // or the height of the widget has also changed)
                         Scheduler.get().scheduleDeferred(new Command() {
                             public void execute() {
                                 Util.runWebkitOverflowAutoFix(scrollBodyPanel
@@ -964,6 +975,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         setProperTabIndex();
 
         resizeSortedColumnForSortIndicator();
+
+        // Remember this to detect situations where overflow hack might be
+        // needed during scrolling
+        lastRenderedHeight = scrollBody.getOffsetHeight();
 
         rendering = false;
         headerChangedDuringUpdate = false;
@@ -2018,6 +2033,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (scrollPositionElement != null) {
             DOM.setStyleAttribute(scrollPositionElement, "display", "none");
         }
+    }
+
+    private boolean isScrollPositionVisible() {
+        return scrollPositionElement != null
+                && !scrollPositionElement.getStyle().getDisplay()
+                        .equals(Display.NONE.toString());
     }
 
     private class RowRequestHandler extends Timer {
