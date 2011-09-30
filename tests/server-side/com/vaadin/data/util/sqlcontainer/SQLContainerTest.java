@@ -818,10 +818,8 @@ public class SQLContainerTest {
 
     @Test
     public void containsId_unknownObject() throws SQLException {
-        SQLContainer container = new SQLContainer(new FreeformQuery(
-                "SELECT * FROM people", connectionPool, "ID"));
-        Logger logger = Logger.getLogger(SQLContainer.class.getName());
-        logger.addHandler(new Handler() {
+
+        Handler ensureNoLogging = new Handler() {
 
             @Override
             public void publish(LogRecord record) {
@@ -836,9 +834,18 @@ public class SQLContainerTest {
             @Override
             public void close() throws SecurityException {
             }
-        });
+        };
 
-        Assert.assertFalse(container.containsId(new Object()));
+        SQLContainer container = new SQLContainer(new FreeformQuery(
+                "SELECT * FROM people", connectionPool, "ID"));
+        Logger logger = Logger.getLogger(SQLContainer.class.getName());
+
+        logger.addHandler(ensureNoLogging);
+        try {
+            Assert.assertFalse(container.containsId(new Object()));
+        } finally {
+            logger.removeHandler(ensureNoLogging);
+        }
     }
 
     @Test
