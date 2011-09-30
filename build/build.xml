@@ -195,12 +195,12 @@
         <war warfile="${result-path}/${test-war-filename}"> 
             <fileset dir="${output-dir}/WebContent">
                 <!-- Already in JAR -->
-                <exclude name="themes/base/**/*" />
-                <exclude name="themes/chameleon/**/*" />
-                <exclude name="themes/liferay/**/*" />
-                <exclude name="themes/runo/**/*" />
-                <exclude name="themes/reindeer/**/*" />
-                <exclude name="widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
+                <exclude name="VAADIN/themes/base/**/*" />
+                <exclude name="VAADIN/themes/chameleon/**/*" />
+                <exclude name="VAADIN/themes/liferay/**/*" />
+                <exclude name="VAADIN/themes/reindeer/**/*" />
+                <exclude name="VAADIN/themes/runo/**/*" />
+                <exclude name="VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
 
                 <!-- Not needed for testing -->
                 <exclude name="docs/**/*" />
