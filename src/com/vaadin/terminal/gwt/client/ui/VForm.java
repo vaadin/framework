@@ -127,10 +127,14 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
 
         if (uidl.hasAttribute("description")) {
             desc.setInnerHTML(uidl.getStringAttribute("description"));
-            fieldSet.insertFirst(desc);
+            if (desc.getParentElement() == null) {
+                fieldSet.insertFirst(desc);
+            }
         } else {
-            fieldSet.removeChild(desc);
             desc.setInnerHTML("");
+            if (desc.getParentElement() != null) {
+                fieldSet.removeChild(desc);
+            }
         }
 
         updateSize();
