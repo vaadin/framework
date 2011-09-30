@@ -1043,7 +1043,13 @@ public class VTree extends FocusElementPanel implements Paintable,
         }
 
         public boolean isLeaf() {
-            return getStyleName().contains("leaf");
+            String[] styleNames = getStyleName().split(" ");
+            for (String styleName : styleNames) {
+                if (styleName.equals(CLASSNAME + "-leaf")) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void setState(boolean state, boolean notifyServer) {
