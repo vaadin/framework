@@ -252,6 +252,12 @@
         <war warfile="${result-path}/${product-file}-demo-${version.full}.war"> 
             <fileset dir="${output-dir}/WebContent">
                 <include name="**/*" />
+            	<!-- In Vaadin JAR -->
+                <exclude name="VAADIN/themes/base/**/*" />
+                <exclude name="VAADIN/themes/liferay/**/*" />
+                <exclude name="VAADIN/themes/reindeer/**/*" />
+                <exclude name="VAADIN/themes/runo/**/*" />
+                <exclude name="VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
             </fileset>
         </war>
     </target>

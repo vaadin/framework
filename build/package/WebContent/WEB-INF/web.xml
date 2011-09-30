@@ -202,6 +202,10 @@
 		<servlet-name>RunoTheme</servlet-name>
 		<url-pattern>/RunoTheme/*</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Sampler</servlet-name>
+		<url-pattern>/VAADIN/*</url-pattern>
+	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 		<welcome-file>index.html</welcome-file>
