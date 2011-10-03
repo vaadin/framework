@@ -253,11 +253,13 @@
             <fileset dir="${output-dir}/WebContent">
                 <include name="**/*" />
             	<!-- In Vaadin JAR -->
+            	<!-- Included as copied from WAR in portal integration tests.
                 <exclude name="VAADIN/themes/base/**/*" />
                 <exclude name="VAADIN/themes/liferay/**/*" />
                 <exclude name="VAADIN/themes/reindeer/**/*" />
                 <exclude name="VAADIN/themes/runo/**/*" />
                 <exclude name="VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
+                -->
             </fileset>
         </war>
     </target>
