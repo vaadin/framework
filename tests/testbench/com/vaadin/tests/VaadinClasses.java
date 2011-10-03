@@ -2,6 +2,7 @@ package com.vaadin.tests;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.JarURLConnection;
 import java.net.URISyntaxException;
@@ -13,6 +14,8 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
+
+import org.junit.Test;
 
 import com.vaadin.Application;
 import com.vaadin.tests.components.AbstractComponentTest;
@@ -61,7 +64,7 @@ public class VaadinClasses {
 
     public static List<Class<? extends Object>> getAllServerSideClasses() {
         try {
-            return findClasses(Object.class, "com.vaadin", new String[] {
+            return findClassesNoTests(Object.class, "com.vaadin", new String[] {
                     "com.vaadin.tests", "com.vaadin.terminal.gwt.client" });
         } catch (IOException e) {
             e.printStackTrace();
@@ -146,7 +149,29 @@ public class VaadinClasses {
 
         });
         return classes;
+    }
 
+    private static <T> List<Class<? extends T>> findClassesNoTests(
+            Class<T> baseClass, String basePackage, String[] ignoredPackages)
+            throws IOException {
+        List<Class<? extends T>> classes = findClasses(baseClass, basePackage,
+                ignoredPackages);
+        List<Class<? extends T>> classesNoTests = new ArrayList<Class<? extends T>>();
+        for (Class<? extends T> clazz : classes) {
+            if (!clazz.getName().contains("Test")) {
+                boolean testPresent = false;
+                for (Method method : clazz.getMethods()) {
+                    if (method.isAnnotationPresent(Test.class)) {
+                        testPresent = true;
+                        break;
+                    }
+                }
+                if (!testPresent) {
+                    classesNoTests.add(clazz);
+                }
+            }
+        }
+        return classesNoTests;
     }
 
     private static <T> void findPackages(JarURLConnection juc,

@@ -3,6 +3,7 @@ package com.vaadin.tests.server;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,6 +14,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import junit.framework.TestCase;
+
+import org.junit.Test;
 
 public class TestClassesSerializable extends TestCase {
 
@@ -70,6 +73,18 @@ public class TestClassesSerializable extends TestCase {
             if (cls.isAnnotation() || cls.isSynthetic()) {
                 continue;
             }
+            // Don't add classes that have a @Test annotation on any methods
+            boolean testPresent = false;
+            for (Method method : cls.getMethods()) {
+                if (method.isAnnotationPresent(Test.class)) {
+                    testPresent = true;
+                    break;
+                }
+            }
+            if (testPresent) {
+                continue;
+            }
+
             // report non-serializable classes and interfaces
             if (!Serializable.class.isAssignableFrom(cls)) {
                 nonSerializableClasses.add(cls);
@@ -164,6 +179,12 @@ public class TestClassesSerializable extends TestCase {
                     break;
                 }
             }
+
+            // Don't add test classes
+            if (className.contains("Test")) {
+                ok = false;
+            }
+
             if (ok) {
                 filteredClasses.add(className);
             }
