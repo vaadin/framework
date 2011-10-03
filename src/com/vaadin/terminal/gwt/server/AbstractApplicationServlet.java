@@ -1374,9 +1374,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             logger.fine("Accepted access to a JAR entry using a class loader: "
                     + resourceUrl);
             return true;
-        } else if ("file".equals(resourceUrl.getProtocol())) {
-            // Some servers such as GlassFish extract files from JARs. In such
-            // cases, the class loader sees them as file URLs.
+        } else {
+            // Some servers such as GlassFish extract files from JARs (file:)
+            // and e.g. JBoss 5+ use protocols vsf: and vfsfile: .
 
             // Check that the URL is in a VAADIN directory and does not contain
             // "/../"
@@ -1389,10 +1389,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     + resourceUrl);
             return true;
         }
-
-        // when using the class loader fall-back, other protocols than jar: and
-        // file: are not supported
-        return false;
     }
 
     /**
