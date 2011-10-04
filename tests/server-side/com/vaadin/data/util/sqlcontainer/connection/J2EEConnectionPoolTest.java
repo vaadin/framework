@@ -12,8 +12,6 @@ import junit.framework.Assert;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
-import com.vaadin.data.util.sqlcontainer.connection.J2EEConnectionPool;
-
 public class J2EEConnectionPoolTest {
 
     @Test
@@ -65,9 +63,8 @@ public class J2EEConnectionPoolTest {
         ds.getConnection();
         EasyMock.expectLastCall().andReturn(connection);
 
-        System.setProperty(
-                "java.naming.factory.initial",
-                "com.vaadin.tests.server.container.sqlcontainer.connection.MockInitialContextFactory");
+        System.setProperty("java.naming.factory.initial",
+                "com.vaadin.data.util.sqlcontainer.connection.MockInitialContextFactory");
         Context context = EasyMock.createMock(Context.class);
         context.lookup("testDataSource");
         EasyMock.expectLastCall().andReturn(ds);
