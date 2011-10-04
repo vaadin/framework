@@ -317,7 +317,13 @@
 		<p>If you have been using SQLContainer, TreeTable or Chameleon
 			Theme as add-ons, remove the add-on jars from the project.</p>
 		<p>The DOM structure of Forms without descriptions has changed, which means
-		    that any TestBench scripts testing this kind of Form need to be updated.</p>
+		    that any TestBench scripts testing this kind of Form need to be updated.
+		    If your tests start failing, subtract one from the index in the test script,
+		    e.g. change
+		    <pre class="codeblock">VForm[0]/domChild[0]/domChild[3]</pre>
+		    into
+		    <pre class="codeblock">VForm[0]/domChild[0]/domChild[2]</pre>
+		    and your tests will pass again.</p>
 
 		<h2 id="dependencies">Vaadin @version@ dependencies</h2>
 		Vaadin uses GWT @gwt-version@ for widget set compilation. GWT can be
