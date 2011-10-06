@@ -300,9 +300,9 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
 
     @Override
     public void setWidth(String width) {
-        if (borderPaddingHorizontal < 0) {
+        if (borderPaddingHorizontal < 0 && desc.hasParentElement()) {
             // measure excess size lazily after stylename setting, but before
-            // setting width
+            // setting width if description is attached
             int ow = getOffsetWidth();
             int dow = desc.getOffsetWidth();
             borderPaddingHorizontal = ow - dow;
