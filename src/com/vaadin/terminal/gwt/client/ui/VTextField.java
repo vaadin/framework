@@ -64,7 +64,6 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     private static final String CLASSNAME_PROMPT = "prompt";
     private static final String ATTR_INPUTPROMPT = "prompt";
     public static final String ATTR_TEXTCHANGE_TIMEOUT = "iet";
-    public static final String ATTR_TEXT_CHANGED = "textChanged";
     public static final String VAR_CURSOR = "c";
     public static final String ATTR_TEXTCHANGE_EVENTMODE = "iem";
     private static final String TEXTCHANGE_MODE_EAGER = "EAGER";
@@ -202,9 +201,6 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // Required to always check text value sent from server when initalizing
-        // even if server did not send ATTR_TEXT_CHANGED
-        boolean firstPaint = (this.client == null);
         this.client = client;
         id = uidl.getId();
 
@@ -248,17 +244,8 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             setColumns(new Integer(uidl.getStringAttribute("cols")).intValue());
         }
 
-        final String text;
-        if (uidl.hasVariable("text")
-                && (firstPaint || (uidl.hasAttribute(ATTR_TEXT_CHANGED) && uidl
-                        .getBooleanAttribute(ATTR_TEXT_CHANGED)))) {
-            // Use value from UIDL if this is the first time the component is
-            // painted or if something has changed on the server
-            text = uidl.getStringVariable("text");
-        } else {
-            // Use what we already have if no change from the server
-            text = prompting ? null : getText();
-        }
+        final String text = uidl.hasVariable("text") ? uidl
+                .getStringVariable("text") : null;
         setPrompting(inputPrompt != null && focusedTextField != this
                 && (text == null || text.equals("")));
 
