@@ -12,6 +12,22 @@ public class Person implements Serializable {
     private Integer postalCode = null;
     private String city = "";
 
+    public Person() {
+
+    }
+
+    public Person(String firstName, String lastName, String email,
+            String phoneNumber, String streetAddress, int postalCode,
+            String city) {
+        setFirstName(firstName);
+        setLastName(lastName);
+        setEmail(email);
+        setPhoneNumber(phoneNumber);
+        setStreetAddress(streetAddress);
+        setPostalCode(postalCode);
+        setCity(city);
+    }
+
     /**
      * @return the firstName
      */
