@@ -18,7 +18,7 @@ import com.vaadin.ui.AbstractSelect;
 public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
         AbstractFieldTest<T> implements ItemClickListener {
 
-    protected static final String CATEGORY_DATA_SOURCE = "Data source";
+    public static final String CATEGORY_DATA_SOURCE = "Data source";
 
     private int items = 0;
     private int properties = 0;
