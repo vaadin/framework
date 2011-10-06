@@ -74,6 +74,9 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
         errorIndicatorElement.getStyle().setDisplay(Display.NONE);
         errorIndicatorElement.setInnerText(" "); // needed for IE
         desc.setClassName("v-form-description");
+        fieldSet.appendChild(desc); // Adding description for initial padding
+                                    // measurements, removed later if no
+                                    // description is set
         fieldSet.appendChild(fieldContainer);
         errorMessage.setVisible(false);
         errorMessage.setStyleName(CLASSNAME + "-errormessage");
@@ -300,9 +303,9 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
 
     @Override
     public void setWidth(String width) {
-        if (borderPaddingHorizontal < 0 && desc.hasParentElement()) {
+        if (borderPaddingHorizontal < 0) {
             // measure excess size lazily after stylename setting, but before
-            // setting width if description is attached
+            // setting width
             int ow = getOffsetWidth();
             int dow = desc.getOffsetWidth();
             borderPaddingHorizontal = ow - dow;
