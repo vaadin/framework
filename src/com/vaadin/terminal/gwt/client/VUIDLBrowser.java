@@ -201,7 +201,7 @@ public class VUIDLBrowser extends SimpleTree {
                     tmp.addItem(name + "=" + value);
                 }
                 if (tmp != null) {
-                    tmp.add(tmp);
+                   add(tmp);
                 }
             } catch (final Exception e) {
                 // Ignored, no variables
