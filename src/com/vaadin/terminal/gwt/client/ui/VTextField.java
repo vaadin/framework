@@ -41,6 +41,8 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         KeyDownHandler {
 
     public static final String VAR_CUR_TEXT = "curText";
+
+    public static final String ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS = "nvc";
     /**
      * The input node CSS classname.
      */
@@ -244,10 +246,46 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             setColumns(new Integer(uidl.getStringAttribute("cols")).intValue());
         }
 
-        final String text = uidl.hasVariable("text") ? uidl
-                .getStringVariable("text") : null;
+        final String text = uidl.getStringVariable("text");
+
+        /*
+         * We skip the text content update if field has been repainted, but text has
+         * not been changed. Additional sanity check verifies there is no change
+         * in the que (in which case we count more on the server side value).
+         */
+        if (!(uidl.getBooleanAttribute(ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS) && valueBeforeEdit != null && text
+                .equals(valueBeforeEdit))) {
+            updateFieldContent(text);
+        }
+        
+
+        if (uidl.hasAttribute("selpos")) {
+            final int pos = uidl.getIntAttribute("selpos");
+            final int length = uidl.getIntAttribute("sellen");
+            /*
+             * Gecko defers setting the text so we need to defer the selection.
+             */
+            Scheduler.get().scheduleDeferred(new Command() {
+                public void execute() {
+                    setSelectionRange(pos, length);
+                }
+            });
+        }
+
+        // Here for backward compatibility; to be moved to TextArea.
+        // Optimization: server does not send attribute for the default 'true'
+        // state.
+        if (uidl.hasAttribute("wordwrap")
+                && uidl.getBooleanAttribute("wordwrap") == false) {
+            setWordwrap(false);
+        } else {
+            setWordwrap(true);
+        }
+    }
+
+    private void updateFieldContent(final String text) {
         setPrompting(inputPrompt != null && focusedTextField != this
-                && (text == null || text.equals("")));
+                && (text.equals("")));
 
         if (BrowserInfo.get().isFF3()) {
             /*
@@ -288,30 +326,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             setText(fieldValue);
         }
 
-        lastTextChangeString = valueBeforeEdit = uidl.getStringVariable("text");
-
-        if (uidl.hasAttribute("selpos")) {
-            final int pos = uidl.getIntAttribute("selpos");
-            final int length = uidl.getIntAttribute("sellen");
-            /*
-             * Gecko defers setting the text so we need to defer the selection.
-             */
-            Scheduler.get().scheduleDeferred(new Command() {
-                public void execute() {
-                    setSelectionRange(pos, length);
-                }
-            });
-        }
-
-        // Here for backward compatibility; to be moved to TextArea.
-        // Optimization: server does not send attribute for the default 'true'
-        // state.
-        if (uidl.hasAttribute("wordwrap")
-                && uidl.getBooleanAttribute("wordwrap") == false) {
-            setWordwrap(false);
-        } else {
-            setWordwrap(true);
-        }
+        lastTextChangeString = valueBeforeEdit = text;
     }
 
     protected void onCut() {

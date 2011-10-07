@@ -54,7 +54,8 @@ public abstract class AbstractTextField extends AbstractField implements
     private String inputPrompt = null;
 
     /**
-     * The text content when the last messages to the server was sent.
+     * The text content when the last messages to the server was sent. Cleared
+     * when value is changed.
      */
     private String lastKnownTextContent;
 
@@ -136,6 +137,17 @@ public abstract class AbstractTextField extends AbstractField implements
                     getTextChangeEventMode().toString());
             target.addAttribute(VTextField.ATTR_TEXTCHANGE_TIMEOUT,
                     getTextChangeTimeout());
+            if (lastKnownTextContent != null) {
+                /*
+                 * The field has be repainted for some reason (e.g. caption,
+                 * size, stylename), but the value has not been changed since
+                 * the last text change event. Let the client side know about
+                 * the value the server side knows. Client side may then ignore
+                 * the actual value, depending on its state.
+                 */
+                target.addAttribute(
+                        VTextField.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS, true);
+            }
         }
 
     }
@@ -446,6 +458,18 @@ public abstract class AbstractTextField extends AbstractField implements
     @Override
     protected void setInternalValue(Object newValue) {
         if (changingVariables && !textChangeEventPending) {
+
+            /*
+             * TODO check for possible (minor?) issue (not tested)
+             * 
+             * -field with e.g. PropertyFormatter.
+             * 
+             * -TextChangeListener and it changes value.
+             * 
+             * -if formatter again changes the value, do we get an extra
+             * simulated text change event ?
+             */
+
             /*
              * Fire a "simulated" text change event before value change event if
              * change is coming from the client side.
@@ -467,10 +491,32 @@ public abstract class AbstractTextField extends AbstractField implements
                 lastKnownTextContent = newValue.toString();
                 textChangeEventPending = true;
             }
-
             firePendingTextChangeEvent();
         }
+
+        /*
+         * Reset lastKnownTextContent field on value change. We know the value
+         * now.
+         */
+        lastKnownTextContent = null;
         super.setInternalValue(newValue);
+    }
+
+    @Override
+    public void setValue(Object newValue) throws ReadOnlyException,
+            ConversionException {
+        super.setValue(newValue);
+        /*
+         * Make sure w reset lastKnownTextContent field on value change. The
+         * clearing must happen here as well because TextChangeListener can
+         * revert the original value. Client must respect the value in this
+         * case. AbstractField optimizes value change if the existing value is
+         * reset. Also we need to force repaint if the flag is on.
+         */
+        if(lastKnownTextContent != null) {
+            lastKnownTextContent = null;
+            requestRepaint();
+        }
     }
 
     private void handleInputEventTextChange(Map<String, Object> variables) {
