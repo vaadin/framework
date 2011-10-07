@@ -20,6 +20,7 @@ import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext2;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext2.PortletListener;
+import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.TextField;
@@ -43,6 +44,9 @@ public class JSR286PortletApplication extends Application {
         main = new Window();
         setMainWindow(main);
 
+        Embedded appResourceTest = new Embedded("Test of ApplicationResources",
+                new FlagSeResource(this));
+        main.addComponent(appResourceTest);
         userInfo.setCaption("User info");
         userInfo.setContentMode(Label.CONTENT_PREFORMATTED);
         main.addComponent(userInfo);

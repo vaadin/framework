@@ -32,15 +32,7 @@ public class IntegrationTestApplication extends Application {
                 .setValue(new ClassResource("fi.gif", this));
         item.getItemProperty("country").setValue("Finland");
         item = table.addItem("SE");
-        item.getItemProperty("icon").setValue(
-                new ClassResource("/"
-                        + IntegrationTestApplication.class
-                                .getName()
-                                .replace('.', '/')
-                                .replaceAll(
-                                        IntegrationTestApplication.class
-                                                .getSimpleName() + "$", "")
-                        + "/se.gif", this));
+        item.getItemProperty("icon").setValue(new FlagSeResource(this));
         item.getItemProperty("country").setValue("Sweden");
 
         final Label selectedLabel = new Label();
