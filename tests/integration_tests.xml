@@ -600,9 +600,12 @@
 						<antcall target="run-integration-test">
 							<param name="target-server" value="liferay6"/>
 						</antcall>
+						<!-- FIXME Disabled due to WAR deployment problems in Liferay - to be re-enabled after installing the latest Liferay 6 EE. -->
+						<!--
 						<antcall target="run-integration-test">
 							<param name="target-server" value="liferay6ee"/>
 						</antcall>
+						-->
 						<antcall target="run-integration-test">
 							<param name="target-server" value="gatein3"/>
 						</antcall>
