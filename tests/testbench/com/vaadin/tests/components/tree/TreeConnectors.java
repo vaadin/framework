@@ -1,6 +1,8 @@
 package com.vaadin.tests.components.tree;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -8,7 +10,7 @@ import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.TreeDragMode;
 import com.vaadin.ui.themes.BaseTheme;
@@ -16,17 +18,25 @@ import com.vaadin.ui.themes.BaseTheme;
 @SuppressWarnings("serial")
 public class TreeConnectors extends TestBase {
 
+    private Tree tree = createTree();
+
     @Override
     protected void setup() {
-        HorizontalLayout l = new HorizontalLayout();
-        l.setSpacing(true);
+        CheckBox cb = new CheckBox("Connectors");
+        cb.setValue(false);
+        cb.setImmediate(true);
+        cb.addListener(new ValueChangeListener() {
 
-        l.addComponent(createTree());
-        Tree connectors = createTree();
-        connectors.addStyleName(BaseTheme.TREE_CONNECTORS);
-        l.addComponent(connectors);
-
-        addComponent(l);
+            public void valueChange(ValueChangeEvent event) {
+                if ((Boolean) event.getProperty().getValue()) {
+                    tree.addStyleName(BaseTheme.TREE_CONNECTORS);
+                } else {
+                    tree.removeStyleName(BaseTheme.TREE_CONNECTORS);
+                }
+            }
+        });
+        addComponent(cb);
+        addComponent(tree);
     }
 
     private Tree createTree() {
@@ -61,8 +71,6 @@ public class TreeConnectors extends TestBase {
                 "../runo/icons/64/users.png"));
         tree.setItemIcon("Item 17", new ThemeResource(
                 "../runo/icons/16/document-pdf.png"));
-        tree.setItemIcon("Item 6", new ThemeResource(
-                "../runo/icons/16/folder-add.png"));
 
         return tree;
     }
