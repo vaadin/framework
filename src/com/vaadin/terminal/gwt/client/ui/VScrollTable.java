@@ -1382,7 +1382,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private void updateBody(UIDL uidl, int firstRow, int reqRows) {
         if (uidl == null || reqRows < 1) {
             // container is empty, remove possibly existing rows
-            if (firstRow < 0) {
+            if (firstRow <= 0) {
                 while (scrollBody.getLastRendered() > scrollBody.firstRendered) {
                     scrollBody.unlinkRow(false);
                 }
