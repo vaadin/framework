@@ -1020,7 +1020,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         updateHeader(uidl.getStringArrayAttribute("vcolorder"));
-
         updateFooter(uidl.getStringArrayAttribute("vcolorder"));
     }
 
@@ -2876,8 +2875,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     }
                     if (width != c.getWidth() && scrollBody != null) {
                         // Do a more thorough update if a column is resized from
-                        // the server
-                        setColWidth(getColIndexByKey(c.cid), width, true);
+                        // the server *after* the header has been properly
+                        // initialized
+                        final int colIx = getColIndexByKey(c.cid);
+                        final int newWidth = width;
+                        Scheduler.get().scheduleDeferred(
+                                new ScheduledCommand() {
+                                    public void execute() {
+                                        setColWidth(colIx, newWidth, true);
+                                    }
+                                });
                         refreshContentWidths = true;
                     } else {
                         c.setWidth(width, true);
@@ -2900,7 +2907,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             if (refreshContentWidths) {
                 // Recalculate the column sizings if any column has changed
-                triggerLazyColumnAdjustment(true);
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    public void execute() {
+                        triggerLazyColumnAdjustment(true);
+                    }
+                });
             }
 
             // check for orphaned header cells
