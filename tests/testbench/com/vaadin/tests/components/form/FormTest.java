@@ -132,7 +132,7 @@ public class FormTest extends AbstractFieldTest<Form> {
     private void createFormFactorySelect(String category) {
         LinkedHashMap<String, FormFieldFactory> options = new LinkedHashMap<String, FormFieldFactory>();
         options.put("Default", DefaultFieldFactory.get());
-        options.put("Type aware", new FormFieldFactory() {
+        options.put("Custom FieldFactory", new FormFieldFactory() {
 
             public Field createField(Item item, Object propertyId,
                     Component uiContext) {
@@ -162,6 +162,11 @@ public class FormTest extends AbstractFieldTest<Form> {
                     c.setWidth("200px");
                 }
                 return c;
+            }
+
+            @Override
+            public String toString() {
+                return "Custom FieldFactory";
             }
         });
 
