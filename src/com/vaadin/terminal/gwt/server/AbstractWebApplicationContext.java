@@ -175,7 +175,13 @@ public abstract class AbstractWebApplicationContext implements
         if (filename == null) {
             return "app://APP/" + mapKey + "/";
         } else {
-            return "app://APP/" + mapKey + "/" + urlEncode(filename);
+            // #5488 At least Tomcat and JBoss refuses requests containing
+            // encoded slashes or backslashes in URLs. Application resource URLs
+            // should really be passed in another way than as part of the path
+            // in the future.
+            String encodedFileName = urlEncode(filename).replace("%2F", "/")
+                    .replace("%5C", "\\");
+            return "app://APP/" + mapKey + "/" + encodedFileName;
         }
 
     }
