@@ -101,20 +101,10 @@ public class TextChangeEvents extends TestBase {
                 // autocomplete if garret is at the end of the text
                 if (atTheEndOfText) {
                     suggest(match, matchlenght);
-                } else {
-                    keepCurrentText(event.getText());
                 }
             } else {
-                keepCurrentText(event.getText());
                 setStyleName("nomatch");
             }
-        }
-
-        private void keepCurrentText(String curText) {
-            // keep the current text in the field despite the repaint due to
-            // classname change
-            setValue(curText);
-            setCursorPosition(getCursorPosition());
         }
 
         private void suggest(String match, int matchlenght) {
