@@ -56,19 +56,14 @@
 </tr>
 <!--Enter "abc" and ensure there is one event for each change-->
 <tr>
-	<td>keyDown</td>
+	<td>mouseClick</td>
 	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>a</td>
+	<td>3,3</td>
 </tr>
 <tr>
-	<td>keyPress</td>
+	<td>focus</td>
 	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>a</td>
-</tr>
-<tr>
-	<td>keyUp</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>a</td>
+	<td></td>
 </tr>
 <tr>
 	<td>pause</td>
@@ -76,51 +71,42 @@
 	<td></td>
 </tr>
 <tr>
-	<td>keyDown</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>b</td>
-</tr>
-<tr>
-	<td>keyPress</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>b</td>
-</tr>
-<tr>
-	<td>keyUp</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>b</td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>100</td>
+	<td>keyPressNative</td>
+	<td>65</td>
 	<td></td>
 </tr>
 <tr>
-	<td>keyDown</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>c</td>
+	<td>pause</td>
+	<td>200</td>
+	<td></td>
 </tr>
 <tr>
-	<td>keyPress</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>c</td>
-</tr>
-<tr>
-	<td>keyUp</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>c</td>
+	<td>keyPressNative</td>
+	<td>66</td>
+	<td></td>
 </tr>
 <tr>
 	<td>pause</td>
-	<td>100</td>
+	<td>200</td>
 	<td></td>
 </tr>
-<!--Type is needed for a ValueChange to be sent when blurring the field-->
+<tr>
+	<td>keyPressNative</td>
+	<td>67</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>200</td>
+	<td></td>
+</tr>
+<!--Type is needed for a ValueChange to be sent when blurring the field
 <tr>
 	<td>type</td>
 	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
 	<td>abc</td>
 </tr>
+-->
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_SLog/ChildComponentContainer[2]/VLabel[0]</td>
@@ -180,19 +166,14 @@
 </tr>
 <!--Enter "def" and ensure there is only one text change event-->
 <tr>
-	<td>keyDown</td>
+	<td>focus</td>
 	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>d</td>
+	<td></td>
 </tr>
 <tr>
-	<td>keyPress</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>d</td>
-</tr>
-<tr>
-	<td>keyUp</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>d</td>
+	<td>keyPressNative</td>
+	<td>68</td>
+	<td></td>
 </tr>
 <tr>
 	<td>pause</td>
@@ -200,19 +181,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>keyDown</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>e</td>
-</tr>
-<tr>
-	<td>keyPress</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>e</td>
-</tr>
-<tr>
-	<td>keyUp</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>e</td>
+	<td>keyPressNative</td>
+	<td>69</td>
+	<td></td>
 </tr>
 <tr>
 	<td>pause</td>
@@ -220,19 +191,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>keyDown</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>f</td>
-</tr>
-<tr>
-	<td>keyPress</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>f</td>
-</tr>
-<tr>
-	<td>keyUp</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>f</td>
+	<td>keyPressNative</td>
+	<td>70</td>
+	<td></td>
 </tr>
 <!--Wait for the timeout-->
 <tr>
@@ -284,19 +245,14 @@
 </tr>
 <!--Slowly enter "def" and ensure there are several events (one after 500ms with de, another one afterwards with def)-->
 <tr>
-	<td>keyDown</td>
+	<td>focus</td>
 	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>d</td>
+	<td></td>
 </tr>
 <tr>
-	<td>keyPress</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>d</td>
-</tr>
-<tr>
-	<td>keyUp</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>d</td>
+	<td>keyPressNative</td>
+	<td>68</td>
+	<td></td>
 </tr>
 <tr>
 	<td>pause</td>
@@ -304,19 +260,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>keyDown</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>e</td>
-</tr>
-<tr>
-	<td>keyPress</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>e</td>
-</tr>
-<tr>
-	<td>keyUp</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>e</td>
+	<td>keyPressNative</td>
+	<td>69</td>
+	<td></td>
 </tr>
 <tr>
 	<td>pause</td>
@@ -329,19 +275,9 @@
 	<td>10. TextChangeEvent: text='de', cursor position=2 (field cursor pos: 2)</td>
 </tr>
 <tr>
-	<td>keyDown</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>f</td>
-</tr>
-<tr>
-	<td>keyPress</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>f</td>
-</tr>
-<tr>
-	<td>keyUp</td>
-	<td>vaadin=runcomvaadintestscomponentstextfieldTextFieldTest::PID_StestComponent</td>
-	<td>f</td>
+	<td>keyPressNative</td>
+	<td>70</td>
+	<td></td>
 </tr>
 <!--Wait for the timeout-->
 <tr>
