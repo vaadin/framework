@@ -215,7 +215,7 @@ public class SQLContainer implements Container, Container.Filterable,
                 return delegate.containsRowWithKey(((RowId) itemId).getId());
             } catch (Exception e) {
                 /* Query failed, just return false. */
-                logger.log(Level.FINE, "containsId query failed", e);
+                logger.log(Level.WARNING, "containsId query failed", e);
             }
         }
         return false;
