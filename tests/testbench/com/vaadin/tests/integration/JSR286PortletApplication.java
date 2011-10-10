@@ -44,9 +44,15 @@ public class JSR286PortletApplication extends Application {
         main = new Window();
         setMainWindow(main);
 
-        Embedded appResourceTest = new Embedded("Test of ApplicationResources",
+        Embedded appResourceTest = new Embedded(
+                "Test of ApplicationResources with full path",
                 new FlagSeResource(this));
         main.addComponent(appResourceTest);
+        Embedded specialNameResourceTest = new Embedded(
+                "Test ApplicationResources with special names",
+                new SpecialNameResource(this));
+        main.addComponent(specialNameResourceTest);
+
         userInfo.setCaption("User info");
         userInfo.setContentMode(Label.CONTENT_PREFORMATTED);
         main.addComponent(userInfo);
