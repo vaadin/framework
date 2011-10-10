@@ -162,7 +162,7 @@ public class SQLContainer implements Container, Container.Filterable,
                 if (notificationsEnabled) {
                     CacheFlushNotifier.notifyOfCacheFlush(this);
                 }
-                logger.log(Level.INFO, "Row added to DB...");
+                logger.log(Level.FINER, "Row added to DB...");
                 return itemId;
             } catch (SQLException e) {
                 logger.log(Level.WARNING,
@@ -215,7 +215,7 @@ public class SQLContainer implements Container, Container.Filterable,
                 return delegate.containsRowWithKey(((RowId) itemId).getId());
             } catch (Exception e) {
                 /* Query failed, just return false. */
-                logger.log(Level.INFO, "containsId query failed", e);
+                logger.log(Level.FINE, "containsId query failed", e);
             }
         }
         return false;
@@ -400,7 +400,7 @@ public class SQLContainer implements Container, Container.Filterable,
                     CacheFlushNotifier.notifyOfCacheFlush(this);
                 }
                 if (success) {
-                    logger.log(Level.INFO, "Row removed from DB...");
+                    logger.log(Level.FINER, "Row removed from DB...");
                 }
                 return success;
             } catch (SQLException e) {
@@ -452,7 +452,7 @@ public class SQLContainer implements Container, Container.Filterable,
                 }
                 if (success) {
                     delegate.commit();
-                    logger.log(Level.INFO, "All rows removed from DB...");
+                    logger.log(Level.FINER, "All rows removed from DB...");
                     refresh();
                     if (notificationsEnabled) {
                         CacheFlushNotifier.notifyOfCacheFlush(this);
@@ -872,7 +872,7 @@ public class SQLContainer implements Container, Container.Filterable,
      */
     public void commit() throws UnsupportedOperationException, SQLException {
         try {
-            logger.log(Level.INFO, "Commiting changes through delegate...");
+            logger.log(Level.FINER, "Commiting changes through delegate...");
             delegate.beginTransaction();
             /* Perform buffered deletions */
             for (RowItem item : removedItems.values()) {
@@ -926,7 +926,7 @@ public class SQLContainer implements Container, Container.Filterable,
      * @throws SQLException
      */
     public void rollback() throws UnsupportedOperationException, SQLException {
-        logger.log(Level.INFO, "Rolling back changes...");
+        logger.log(Level.FINE, "Rolling back changes...");
         removedItems.clear();
         addedItems.clear();
         modifiedItems.clear();
@@ -956,7 +956,7 @@ public class SQLContainer implements Container, Container.Filterable,
                 if (notificationsEnabled) {
                     CacheFlushNotifier.notifyOfCacheFlush(this);
                 }
-                logger.log(Level.INFO, "Row updated to DB...");
+                logger.log(Level.FINER, "Row updated to DB...");
             } catch (SQLException e) {
                 logger.log(Level.WARNING,
                         "itemChangeNotification failed, rolling back...", e);
@@ -1009,13 +1009,13 @@ public class SQLContainer implements Container, Container.Filterable,
             try {
                 delegate.setFilters(filters);
             } catch (UnsupportedOperationException e) {
-                logger.log(Level.INFO,
+                logger.log(Level.FINE,
                         "The query delegate doesn't support filtering", e);
             }
             try {
                 delegate.setOrderBy(sorters);
             } catch (UnsupportedOperationException e) {
-                logger.log(Level.INFO,
+                logger.log(Level.FINE,
                         "The query delegate doesn't support filtering", e);
             }
             int newSize = delegate.getCount();
@@ -1025,7 +1025,7 @@ public class SQLContainer implements Container, Container.Filterable,
             }
             sizeUpdated = new Date();
             sizeDirty = false;
-            logger.log(Level.INFO, "Updated row count. New count is: " + size);
+            logger.log(Level.FINER, "Updated row count. New count is: " + size);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to update item set size.", e);
         }
@@ -1095,7 +1095,7 @@ public class SQLContainer implements Container, Container.Filterable,
             rs.getStatement().close();
             rs.close();
             delegate.commit();
-            logger.log(Level.INFO, "Property IDs fetched.");
+            logger.log(Level.FINER, "Property IDs fetched.");
         } catch (SQLException e) {
             logger.log(Level.WARNING,
                     "Failed to fetch property ids, rolling back", e);
@@ -1135,7 +1135,7 @@ public class SQLContainer implements Container, Container.Filterable,
             } catch (UnsupportedOperationException e) {
                 /* The query delegate doesn't support sorting. */
                 /* No need to do anything. */
-                logger.log(Level.INFO,
+                logger.log(Level.FINE,
                         "The query delegate doesn't support sorting", e);
             }
             delegate.beginTransaction();
@@ -1217,7 +1217,7 @@ public class SQLContainer implements Container, Container.Filterable,
             rs.getStatement().close();
             rs.close();
             delegate.commit();
-            logger.log(Level.INFO, "Fetched " + pageLength * CACHE_RATIO
+            logger.log(Level.FINER, "Fetched " + pageLength * CACHE_RATIO
                     + " rows starting from " + currentOffset);
         } catch (SQLException e) {
             logger.log(Level.WARNING, "Failed to fetch rows, rolling back", e);
