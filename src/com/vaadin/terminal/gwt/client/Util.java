@@ -920,8 +920,8 @@ public class Util {
      *         does not belong to a child.
      */
     public static Paintable getPaintableForElement(
-            ApplicationConnection client, Container parent, Element element) {
-        Element rootElement = ((Widget) parent).getElement();
+            ApplicationConnection client, Widget parent, Element element) {
+        Element rootElement = parent.getElement();
         while (element != null && element != rootElement) {
             Paintable paintable = client.getPaintable(element);
             if (paintable == null) {
