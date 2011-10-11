@@ -43,6 +43,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
@@ -91,6 +92,10 @@ public class VDebugConsole extends VOverlay implements Console {
                         .getRunningApplications()) {
                     Paintable paintable = Util.getPaintableForElement(a,
                             a.getView(), eventTarget);
+                    if (paintable == null) {
+                        paintable = Util.getPaintableForElement(a,
+                                RootPanel.get(), eventTarget);
+                    }
                     if (paintable != null) {
                         String pid = a.getPid(paintable);
                         VUIDLBrowser.highlight(paintable);
@@ -116,6 +121,11 @@ public class VDebugConsole extends VOverlay implements Console {
                         .getRunningApplications()) {
                     Paintable paintable = Util.getPaintableForElement(a,
                             a.getView(), eventTarget);
+                    if (paintable == null) {
+                        paintable = Util.getPaintableForElement(a,
+                                RootPanel.get(), eventTarget);
+                    }
+
                     if (paintable != null) {
                         a.highlightComponent(paintable);
                         return;
