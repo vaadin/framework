@@ -2173,6 +2173,12 @@ public class VTree extends FocusElementPanel implements Paintable,
      * .lang.String)
      */
     public Element getSubPartElement(String subPart) {
+        if ("fe".equals(subPart)) {
+            if (isIE6OrOpera() && focusedNode != null) {
+                return focusedNode.getElement();
+            }
+            return getFocusElement();
+        }
 
         if (subPart.startsWith(SUBPART_NODE_PREFIX + "[")) {
             boolean expandCollapse = false;
@@ -2235,6 +2241,10 @@ public class VTree extends FocusElementPanel implements Paintable,
 
         if (!getElement().isOrHasChild(subElement)) {
             return null;
+        }
+
+        if (subElement == getFocusElement()) {
+            return "fe";
         }
 
         TreeNode treeNode = Util.findWidget(subElement, TreeNode.class);

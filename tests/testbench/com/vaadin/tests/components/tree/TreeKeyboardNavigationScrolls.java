@@ -31,8 +31,13 @@ public class TreeKeyboardNavigationScrolls extends TestBase {
             cont.addItem(i);
             for (int j = 1; j < 3; j++) {
                 String id = i
-                        + " foo bar baz make this node really wide so that we don't have to fiddle with resizing the browser window -> what would you do if you had one of your legs on backwards? it's legs time! everybody get your legs! "
-                        + j;
+                        + " foo bar baz make this node really wide so that we don't have to fiddle with resizing the browser window -> "
+                        + "what would you do if you had one of your legs on backwards? it's legs time! everybody get your legs! "
+                        + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore "
+                        + "et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+                        + "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+                        + "dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui "
+                        + "officia deserunt mollit anim id est laborum." + j;
                 cont.addItem(id);
                 cont.setChildrenAllowed(id, false);
                 cont.setParent(id, i);

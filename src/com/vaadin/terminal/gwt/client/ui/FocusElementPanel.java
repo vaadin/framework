@@ -82,4 +82,11 @@ public class FocusElementPanel extends SimpleFocusablePanel {
             }
         }
     }
+
+    /**
+     * @return the focus element
+     */
+    public Element getFocusElement() {
+        return focusElement.cast();
+    }
 }
