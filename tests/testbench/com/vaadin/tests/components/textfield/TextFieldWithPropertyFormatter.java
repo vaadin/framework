@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.textfield;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -59,15 +58,17 @@ public class TextFieldWithPropertyFormatter extends TestBase {
         };
 
         formatter = new PropertyFormatter(property) {
+
             private final DecimalFormat df = new DecimalFormat("#,##0.00",
-                    DecimalFormatSymbols.getInstance(Locale.UK));
+                    new DecimalFormatSymbols(new Locale("en", "UK")));
             {
                 df.setParseBigDecimal(true);
-                df.setRoundingMode(RoundingMode.HALF_UP);
+                // df.setRoundingMode(RoundingMode.HALF_UP);
             }
 
             @Override
             public String format(Object value) {
+
                 final String retVal;
                 if (value == null) {
                     retVal = "";
