@@ -5,7 +5,6 @@
 package com.vaadin.terminal.gwt.server;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -1085,8 +1084,7 @@ public class JsonPaintTarget implements PaintTarget {
             Class<? extends Paintable> class1) {
 
         try {
-            String name = class1.getName().replace('.', File.separatorChar)
-                    + ".class";
+            String name = class1.getName().replace('.', '/') + ".class";
 
             InputStream stream = class1.getClassLoader().getResourceAsStream(
                     name);
