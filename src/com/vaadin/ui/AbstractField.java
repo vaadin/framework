@@ -90,11 +90,10 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     private boolean modified = false;
 
     /**
-     * Should value change event propagation from property data source to
-     * listeners of the field be suppressed. This is used internally while the
-     * field makes changes to the property value.
+     * Flag to indicate that the field is currently committing its value to the
+     * datasource.
      */
-    private boolean suppressValueChangePropagation = false;
+    private boolean committingValueToDataSource = false;
 
     /**
      * Current source exception.
@@ -137,6 +136,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * handling/notifying is delegated, usually to the containing window.
      */
     private ActionManager actionManager;
+
+    private boolean valueWasModifiedByDataSourceDuringCommit;
 
     /* Component basics */
 
@@ -240,7 +241,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                 try {
 
                     // Commits the value to datasource.
-                    suppressValueChangePropagation = true;
+                    valueWasModifiedByDataSourceDuringCommit = false;
+                    committingValueToDataSource = true;
                     dataSource.setValue(newValue);
 
                 } catch (final Throwable e) {
@@ -253,7 +255,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                     // Throws the source exception.
                     throw currentBufferedSourceException;
                 } finally {
-                    suppressValueChangePropagation = false;
+                    committingValueToDataSource = false;
                 }
             } else {
                 /* An invalid value and we don't allow them, throw the exception */
@@ -278,6 +280,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         if (repaintNeeded) {
             requestRepaint();
         }
+
+        valueWasModifiedByDataSourceDuringCommit = false;
     }
 
     /*
@@ -496,13 +500,14 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             setInternalValue(newValue);
             modified = dataSource != null;
 
+            valueWasModifiedByDataSourceDuringCommit = false;
             // In write through mode , try to commit
             if (isWriteThrough() && dataSource != null
                     && (isInvalidCommitted() || isValid())) {
                 try {
 
                     // Commits the value to datasource
-                    suppressValueChangePropagation = true;
+                    committingValueToDataSource = true;
                     dataSource.setValue(newValue);
 
                     // The buffer is now unmodified
@@ -518,7 +523,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                     // Throws the source exception
                     throw currentBufferedSourceException;
                 } finally {
-                    suppressValueChangePropagation = false;
+                    committingValueToDataSource = false;
                 }
             }
 
@@ -528,8 +533,14 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                 requestRepaint();
             }
 
-            // Fires the value change
-            fireValueChange(repaintIsNotNeeded);
+            if (!valueWasModifiedByDataSourceDuringCommit) {
+                // Fires the value change
+                fireValueChange(repaintIsNotNeeded);
+            } else {
+                // value change event already fired in valueChange()
+                valueWasModifiedByDataSourceDuringCommit = false;
+
+            }
         }
     }
 
@@ -996,11 +1007,31 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      *            changed.
      */
     public void valueChange(Property.ValueChangeEvent event) {
-        if (!suppressValueChangePropagation
-                && (isReadThrough() && !isModified())) {
-            setInternalValue(event.getProperty().getValue());
-            fireValueChange(false);
+        if (isReadThrough()) {
+            if (committingValueToDataSource) {
+                boolean propertyNotifiesOfTheBufferedValue = event
+                        .getProperty().getValue() == value
+                        || (value != null && value.equals(event.getProperty()
+                                .getValue()));
+                if (!propertyNotifiesOfTheBufferedValue) {
+                    /*
+                     * Property (or chained property like PropertyFormatter) now
+                     * reports different value than the one the field has just
+                     * committed to it. In this case we respect the property
+                     * value, fire value change listeners and repaint the field.
+                     */
+                    readValueFromProperty(event);
+                    valueWasModifiedByDataSourceDuringCommit = true;
+                }
+            } else if (!isModified()) {
+                readValueFromProperty(event);
+            }
         }
+    }
+
+    private void readValueFromProperty(Property.ValueChangeEvent event) {
+        setInternalValue(event.getProperty().getValue());
+        fireValueChange(false);
     }
 
     @Override
