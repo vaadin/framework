@@ -277,11 +277,13 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             repaintNeeded = true;
         }
 
-        if (repaintNeeded) {
+        if (valueWasModifiedByDataSourceDuringCommit) {
+            valueWasModifiedByDataSourceDuringCommit = false;
+            fireValueChange(false);
+        } else if (repaintNeeded) {
             requestRepaint();
         }
 
-        valueWasModifiedByDataSourceDuringCommit = false;
     }
 
     /*
@@ -533,14 +535,17 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                 requestRepaint();
             }
 
-            if (!valueWasModifiedByDataSourceDuringCommit) {
-                // Fires the value change
-                fireValueChange(repaintIsNotNeeded);
-            } else {
-                // value change event already fired in valueChange()
-                valueWasModifiedByDataSourceDuringCommit = false;
-
+            if (valueWasModifiedByDataSourceDuringCommit) {
+                /*
+                 * Value was modified by datasource. Force repaint even if
+                 * repaint was not requested.
+                 */
+                valueWasModifiedByDataSourceDuringCommit = repaintIsNotNeeded = false;
             }
+
+            // Fires the value change
+            fireValueChange(repaintIsNotNeeded);
+
         }
     }
 
@@ -1018,20 +1023,24 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                      * Property (or chained property like PropertyFormatter) now
                      * reports different value than the one the field has just
                      * committed to it. In this case we respect the property
-                     * value, fire value change listeners and repaint the field.
+                     * value.
+                     * 
+                     * Still, we don't fire value change yet, but instead
+                     * postpone it until "commit" is done. See setValue(Object,
+                     * boolean) and commit().
                      */
                     readValueFromProperty(event);
                     valueWasModifiedByDataSourceDuringCommit = true;
                 }
             } else if (!isModified()) {
                 readValueFromProperty(event);
+                fireValueChange(false);
             }
         }
     }
 
     private void readValueFromProperty(Property.ValueChangeEvent event) {
         setInternalValue(event.getProperty().getValue());
-        fireValueChange(false);
     }
 
     @Override
