@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<project name="test" basedir=".">
+	<property file="deploy.properties" />
+    <property name="lock" value="deploy/lock.file" />
+    <property name="deployDir" value="deploy/${server}" />
+    <property name="serverPort" value="8080" />
+    <property name="war" value="demo.war" />
+    <property name="startupSpawn" value="false" />
+    <property name="JAVA_HOME" value="/usr/lib/jvm/default-java" />
+	<property name="waitMinutes" value="3" />
+    <property name="waitUrl" value="http://localhost:${serverPort}/demo/VAADIN/themes/reindeer/styles.css" />
+
+    
+    <target name="afterDeploy">
+    	<!-- Empty default -->
+    </target>
+    
+    <target name="beforeDeploy">
+    	<!-- Empty default -->
+    </target>
+    
+	<target name="deploy">
+		<antcall target="beforeDeploy" />
+	 	<echo message="${server}: Deploying ${war} to ${deployDir}/${autodeployDir}" />
+		<copy file="${war}" todir="${deployDir}/${autodeployDir}"/>
+		<antcall target="afterDeploy" />
+	</target>
+
+	<target name="deployStatic">
+		<unzip src="${war}" dest="${staticDeployDir}">
+			<patternset>
+				<include name="VAADIN/**" />
+			</patternset>
+		</unzip>
+	</target>    
+    
+	 <target name="unpack-server">
+	 	<echo message="${server}: Unpacking ${server}.tar.gz" />
+	 	<delete dir="${server}" />
+		<exec executable="tar">
+		      <arg value="-xf"/>
+		      <arg value="${server}.tar.gz"/>
+		</exec>
+		<move file="${server}" tofile="${deployDir}" />
+		<echo message="Done." />
+	</target>
+	
+	<target name="doStartup">
+		<exec executable="./run.sh" spawn="${startupSpawn}">
+			<env key="JAVA_HOME" value="${JAVA_HOME}" />
+		</exec>
+	</target>
+	
+	<target name="startup">
+		<antcall target="doStartup" />
+		<echo message="${server}: Waiting for ${waitUrl} to become available." />
+		<waitfor maxwait="${waitMinutes}" maxwaitunit="minute" checkevery="10000" timeoutproperty="timeout">
+			 <http url="${waitUrl}" />
+		</waitfor>
+		<fail if="timeout" message="${server} failed to deploy" />
+
+		<echo message="${server}: Demo deployed successfully." />
+	</target>
+	
+	<target name="shutdown">
+		<exec executable="./stop.sh" >
+			<env key="JAVA_HOME" value="${JAVA_HOME}" />
+		</exec>
+		<sleep seconds="15" />
+	</target>
+	
+	<target name="check-port">
+		<fail message="Something is still listening on port ${serverPort}">
+			<condition>
+				<socket server="localhost" port="${serverPort}" />
+			</condition>
+		</fail>
+	</target>
+	
+	<target name="check-lock">
+	  <available file="${lock}" property="lockAvailable" />
+	  <fail unless="lockAvailable" message="Instance is not locked!" />
+  	</target>
+	 
+	 <target name="get-lock">
+	 	<mkdir dir="deploy" /> 
+	 	<exec executable="lockfile">
+	 		<arg value="${lock}" />
+	 	</exec>
+	 	<echo>${server}: Got the lock</echo>
+	 </target>
+	 
+	 <target name="clean">
+		<delete dir="${deployDir}" />
+	 </target>
+	 
+	 <target name="release-lock">
+<!--	 	<exec executable="rm">
+	 		<arg value="-f" />
+	 		<arg value="${lock}" />
+	 	</exec> -->
+	 	 <delete>
+		 	 <fileset dir="." includes="${lock}" />
+		 </delete>
+	 	<echo>${server}: Released the lock</echo>
+	 </target>
+	 
+	<target name="startup-and-deploy" depends="check-lock,check-port,unpack-server,deploy,startup" />
+	
+	<target name="shutdown-and-cleanup" depends="shutdown,clean,release-lock" />
+	 
+	 
+</project>

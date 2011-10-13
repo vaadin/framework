@@ -44,7 +44,6 @@
 	<target name="integration-test-servlet">
 		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-${server-name}-servlet.html" />
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
-		
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
 			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
 			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
@@ -52,331 +51,24 @@
 			<property name="server.start.succeeded" value="1" />
 			<property name="browsers" value="${test_browsers}" />
 			<property name="testfiles" value="${testfiles}" />
-			<property name="test-output-dir" value="../build/integration-test-output" />
+			<property name="test-output-dir" value="../build/integration-test-output/${server-name}" />
 			<property name="retries" value="0" />
 			
 			<fileset dir="." includes="test.xml" />
 		</subant>
 	</target>
 	
-	<!-- Start and stop methods for servers -->
-	<target name="integration-test-start-tomcat-4">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-4.1.40" />
-		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-tomcat-4.1.40-servlet.html" overwrite="true" />
-	</target>
-
-	<target name="integration-test-stop-tomcat-4">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-tomcat-4.1.40" />
-	</target>
-	
-	<target name="integration-test-start-tomcat-5">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-5.5.28" />
-		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-tomcat-5.5.28-servlet.html" overwrite="true" />
-	</target>
-
-	<target name="integration-test-stop-tomcat-5">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-tomcat-5.5.28" />
-	</target>
-	
-	<target name="integration-test-start-tomcat-6">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-6.0.20" />
-		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-tomcat-6.0.20-servlet.html" overwrite="true" />
-	</target>
-
-	<target name="integration-test-stop-tomcat-6">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-tomcat-6.0.20" />
-	</target>
-	
-	<target name="integration-test-start-jetty-5">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-5.1.15" />
-		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-jetty-5.1.15-servlet.html" overwrite="true" />
-	</target>
-
-	<target name="integration-test-stop-jetty-5">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jetty-5.1.15" />
-	</target>
-
-	<target name="integration-test-start-jetty-6">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-6.1.22" />
-		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-jetty-6.1.22-servlet.html" overwrite="true" />
-	</target>
-
-	<target name="integration-test-stop-jetty-6">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jetty-6.1.22" />
-	</target>
-	
-	<target name="integration-test-start-jetty-7">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-7.0.0" />
-		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-jetty-7.0.0-servlet.html" overwrite="true" />
-	</target>
-
-	<target name="integration-test-stop-jetty-7">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jetty-7.0.0" />
-	</target>
-	
-	<target name="integration-test-start-jboss-3">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-3.2.8" />
-		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-jboss-3.2.8-servlet.html" overwrite="true" />
-	</target>
-
-	<target name="integration-test-stop-jboss-3">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jboss-3.2.8" />
-	</target>
-	
-	<target name="integration-test-start-jboss-4">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-4.2.3" />
-		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-jboss-4.2.3-servlet.html" overwrite="true" />
-	</target>
-
-	<target name="integration-test-stop-jboss-4">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jboss-4.2.3" />
-	</target>
-	
-	<target name="integration-test-start-jboss-5">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-5.0.1" />
-		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-jboss-5.0.1-servlet.html" overwrite="true" />
-	</target>
-
-	<target name="integration-test-stop-jboss-5">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jboss-5.0.1" />
-	</target>
-	
-	<target name="integration-test-start-glassfish2">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-glassfish-2.1.1" />
-		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-glassfish-2.1.1-servlet.html" overwrite="true" />
-	</target>
-	
-	<target name="integration-test-stop-glassfish2">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-glassfish-2.1.1" />
-	</target>
-	
-	<target name="integration-test-start-glassfish3">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-glassfish-3" />
-		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-glassfish-3-servlet.html" overwrite="true" />
-	</target>
-	
-	<target name="integration-test-stop-glassfish3">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-glassfish-3" />
-	</target>
-			
-	<target name="integration-test-liferay-5-portlet2">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-5/integration-test-liferay-5.2.3-portlet2.html" />
-		<pathconvert pathsep=" " property="liferay-portlet2" refid="html-test-files" />
-		
+	<target name="integration-test-theme">
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
 			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
 			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
 			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
 			<property name="server.start.succeeded" value="1" />
-			<property name="browsers" value="${test_browsers}" />
-			<property name="testfiles" value="${liferay-portlet2}" />
-			<property name="test-output-dir" value="../build/integration-test-output" />
-	
-			<fileset dir="." includes="test.xml" />
-		</subant>
-	</target>
-		
-	<target name="integration-test-liferay-6">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6/integration-test-liferay-6.0.5.html" />
-		<pathconvert pathsep=" " property="test-liferay" refid="html-test-files" />
-		
-		<subant target="run-tests" failonerror="false" antfile="test.xml">
-			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
-			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
-			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
-			<property name="server.start.succeeded" value="1" />
-			<property name="browsers" value="${test_browsers}" />
-			<property name="testfiles" value="${test-liferay}" />
-			<property name="test-output-dir" value="../build/integration-test-output" />
-	
-			<fileset dir="." includes="test.xml" />
-		</subant>
-	</target>
-	
-	<target name="test-theme-liferay-6">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6/Liferay6-theme.html" />
-		<pathconvert pathsep=" " property="test-liferay" refid="html-test-files" />
-			
-		<subant target="run-tests" failonerror="false" antfile="test.xml">
-			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
-			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
-			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
-			<property name="server.start.succeeded" value="1" />
-			<property name="testfiles" value="${test-liferay}" />
-			<property name="test-output-dir" value="../build/integration-test-output" />
+			<property name="testfiles" value="${testfiles-theme}" />
+			<property name="test-output-dir" value="../build/integration-test-output/${server-name}" />
 		
 			<fileset dir="." includes="test.xml" />
 		</subant>
-	</target>
-	
-	<target name="integration-test-liferay-6ee">
-			<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6EE/integration-test-liferay-6ee.html" />
-			<pathconvert pathsep=" " property="test-liferay" refid="html-test-files" />
-			
-			<subant target="run-tests" failonerror="false" antfile="test.xml">
-				<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
-				<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
-				<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
-				<property name="server.start.succeeded" value="1" />
-				<property name="browsers" value="${test_browsers}" />
-				<property name="testfiles" value="${test-liferay}" />
-				<property name="test-output-dir" value="../build/integration-test-output" />
-		
-				<fileset dir="." includes="test.xml" />
-			</subant>
-		</target>
-	
-	<target name="test-theme-liferay-6ee">
-			<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6EE/Liferay6EE-theme.html" />
-			<pathconvert pathsep=" " property="test-liferay" refid="html-test-files" />
-				
-			<subant target="run-tests" failonerror="false" antfile="test.xml">
-				<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
-				<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
-				<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
-				<property name="server.start.succeeded" value="1" />
-				<property name="testfiles" value="${test-liferay}" />
-				<property name="test-output-dir" value="../build/integration-test-output" />
-			
-				<fileset dir="." includes="test.xml" />
-			</subant>
-		</target>	
-	
-	<target name="integration-test-gatein-3">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="GateIn-3/integration-test-GateIn-3.1.0-portlet2.html" />
-		<pathconvert pathsep=" " property="test-gatein" refid="html-test-files" />
-		
-		<subant target="run-tests" failonerror="false" antfile="test.xml">
-			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
-			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
-			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
-			<property name="server.start.succeeded" value="1" />
-			<property name="browsers" value="${test_browsers}" />
-			<property name="testfiles" value="${test-gatein}" />
-			<property name="test-output-dir" value="../build/integration-test-output" />
-			<property name="retries" value="0" />
-	
-			<fileset dir="." includes="test.xml" />
-		</subant>
-	</target>
-	
-	<target name="integration-test-eXo-3">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="eXo-3/integration-test-eXo-3.0.3-portlet2.html" />
-		<pathconvert pathsep=" " property="test-exo" refid="html-test-files" />
-		
-		<subant target="run-tests" failonerror="false" antfile="test.xml">
-			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
-			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
-			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
-			<property name="server.start.succeeded" value="1" />
-			<property name="browsers" value="${test_browsers}" />
-			<property name="testfiles" value="${test-exo}" />
-			<property name="test-output-dir" value="../build/integration-test-output" />
-	
-			<fileset dir="." includes="test.xml" />
-		</subant>
-	</target>
-	
-	<target name="integration-test-weblogic-portal">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="weblogic-portal/integration-test-WebLogic-Portal-10.3.2-portlet2.html" />
-		<pathconvert pathsep=" " property="test-weblogic" refid="html-test-files" />
-		
-		<subant target="run-tests" failonerror="false" antfile="test.xml">
-			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
-			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
-			<property name="com.vaadin.testbench.deployment.url" value="http://${test.integration.server}:7001" />
-			<property name="server.start.succeeded" value="1" />
-			<property name="browsers" value="${test_browsers}" />
-			<property name="testfiles" value="${test-weblogic}" />
-			<property name="test-output-dir" value="../build/integration-test-output" />
-	
-			<fileset dir="." includes="test.xml" />
-		</subant>
-	</target>
-	
-	<target name="integration-test-start-liferay-5">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-liferay-5.2.3" />
-	</target>
-
-	<target name="integration-test-stop-liferay-5">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-liferay-5.2.3" />
-	</target>
-	
-	<target name="integration-test-start-liferay-6">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-liferay-6.0.5" />
-	</target>
-
-	<target name="integration-test-stop-liferay-6">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-liferay-6.0.5" />
-	</target>
-	
-	<target name="integration-test-start-liferay-6ee">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-liferay-6.0-ee" />
-	</target>
-
-	<target name="integration-test-stop-liferay-6ee">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-liferay-6.0-ee" />
-	</target>
-			
-	<target name="integration-test-start-gatein-3">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-gatein-3.1.0" />
-	</target>
-
-	<target name="integration-test-stop-gatein-3">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-gatein-3.1.0" />
-	</target>
-	
-	<target name="integration-test-start-eXo-3">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-eXo-3.0.3" />
-	</target>
-	
-	<target name="integration-test-stop-eXo-3">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-eXo-3.0.3" />
-	</target>
-	
-	<!-- Run integration test for WebLogic server -->
-	<target name="integration-test-test-weblogic">
-		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-${server-name}-servlet.html" />
-		<pathconvert pathsep=" " property="test-weblogic" refid="html-test-files" />
-		
-		<subant target="run-tests" failonerror="false" antfile="test.xml">
-			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
-			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
-			<property name="com.vaadin.testbench.deployment.url" value="http://${test.integration.server}:7001" />
-			<property name="server.start.succeeded" value="1" />
-			<property name="browsers" value="${test_browsers}" />
-			<property name="testfiles" value="${test-weblogic}" />
-			<property name="test-output-dir" value="../build/integration-test-output" />
-			
-			<fileset dir="." includes="test.xml" />
-		</subant>
-	</target>
-	
-	<target name="integration-test-start-weblogic9">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-weblogic-9.2" />
-		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-weblogic-9.2-servlet.html" overwrite="true" />
-	</target>
-
-	<target name="integration-test-stop-weblogic9">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-weblogic-9.2" />
-	</target>
-	
-	<target name="integration-test-start-weblogic10">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-weblogic-10.3" />
-		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-weblogic-10.3-servlet.html" overwrite="true" />
-	</target>
-
-	<target name="integration-test-stop-weblogic10">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-weblogic-10.3" />
-	</target>
-
-	<target name="integration-test-start-weblogic-portal">
-		<!-- Note the Vaadin 6.7+ target -->
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-weblogic-portal-67" />
-	</target>
-
-	<target name="integration-test-stop-weblogic-portal">
-		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-weblogic-portal" />
 	</target>
 	
 	<!-- Run integration test on GAE -->
@@ -401,147 +93,152 @@
 		<sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} deploy-to-GAE" />
 	</target>
 			
-	<!-- Server setup, test and teardown targets. -->
-	<target name="integration-test-tomcat4">
-		<antcall target="integration-test-start-tomcat-4"/>
-		<antcall target="integration-test-servlet">
-			<param name="server-name" value="tomcat-4.1.40" />
+	
+	<target name="integration-test-tomcat7">
+		<antcall target="run-generic-integration-test">
+			<param name="target-server" value="tomcat7" />
 		</antcall>
-		<antcall target="integration-test-stop-tomcat-4"/>
+	</target>
+	
+	<target name="integration-test-tomcat4">
+		<antcall target="run-generic-integration-test">
+			<param name="target-server" value="tomcat4" />
+		</antcall>
 	</target>
 	
 	<target name="integration-test-tomcat5">
-		<antcall target="integration-test-start-tomcat-5"/>
-		<antcall target="integration-test-servlet">
-			<param name="server-name" value="tomcat-5.5.28" />
+		<antcall target="run-generic-integration-test">
+			<param name="target-server" value="tomcat5" />
 		</antcall>
-		<antcall target="integration-test-stop-tomcat-5"/>
 	</target>	
 	
 	<target name="integration-test-tomcat6">
-		<antcall target="integration-test-start-tomcat-6"/>
-		<antcall target="integration-test-servlet">
-			<param name="server-name" value="tomcat-6.0.20" />
+		<antcall target="run-generic-integration-test">
+			<param name="target-server" value="tomcat6" />
 		</antcall>
-		<antcall target="integration-test-stop-tomcat-6"/>
-	</target>
+	</target>	
 	
 	<target name="integration-test-jetty5">
-		<antcall target="integration-test-start-jetty-5"/>
-		<antcall target="integration-test-servlet">
-			<param name="server-name" value="jetty-5.1.15" />
+		<antcall target="run-generic-integration-test">
+			<param name="target-server" value="jetty5" />
 		</antcall>
-		<antcall target="integration-test-stop-jetty-5"/>
 	</target>
 	
 	<target name="integration-test-jetty6">
-		<antcall target="integration-test-start-jetty-6"/>
-		<antcall target="integration-test-servlet">
-			<param name="server-name" value="jetty-6.1.22" />
+		<antcall target="run-generic-integration-test">
+			<param name="target-server" value="jetty6" />
 		</antcall>
-		<antcall target="integration-test-stop-jetty-6"/>
 	</target>
 	
 	<target name="integration-test-jetty7">
-		<antcall target="integration-test-start-jetty-7"/>
-		<antcall target="integration-test-servlet">
-			<param name="server-name" value="jetty-7.0.0" />
+		<antcall target="run-generic-integration-test">
+			<param name="target-server" value="jetty7" />
 		</antcall>
-		<antcall target="integration-test-stop-jetty-7"/>
 	</target>
 	
 	<target name="integration-test-jboss3">
-		<antcall target="integration-test-start-jboss-3"/>
-		<antcall target="integration-test-servlet">
-			<param name="server-name" value="jboss-3.2.8" />
+		<antcall target="run-generic-integration-test">
+			<param name="target-server" value="jboss3" />
 		</antcall>
-		<antcall target="integration-test-stop-jboss-3"/>
 	</target>
 	
 	<target name="integration-test-jboss4">
-		<antcall target="integration-test-start-jboss-4"/>
-		<antcall target="integration-test-servlet">
-			<param name="server-name" value="jboss-4.2.3" />
+		<antcall target="run-generic-integration-test">
+			<param name="target-server" value="jboss4" />
 		</antcall>
-		<antcall target="integration-test-stop-jboss-4"/>
 	</target>
 	
 	<target name="integration-test-jboss5">
-		<antcall target="integration-test-start-jboss-5"/>
-		<antcall target="integration-test-servlet">
-			<param name="server-name" value="jboss-5.0.1" />
+		<antcall target="run-generic-integration-test">
+			<param name="target-server" value="jboss5" />
 		</antcall>
-		<antcall target="integration-test-stop-jboss-5"/>
 	</target>
 		
 	<target name="integration-test-glassfish2">
-		<antcall target="integration-test-start-glassfish2"/>
-		<antcall target="integration-test-servlet">
-			<param name="server-name" value="glassfish-2.1.1" />
+		<antcall target="run-generic-integration-test">
+			<param name="target-server" value="glassfish2" />
 		</antcall>
-		<antcall target="integration-test-stop-glassfish2"/>
 	</target>
 	
 	<target name="integration-test-glassfish3">
-		<antcall target="integration-test-start-glassfish3"/>
-		<antcall target="integration-test-servlet">
-			<param name="server-name" value="glassfish-3" />
+		<antcall target="run-generic-integration-test">
+			<param name="target-server" value="glassfish3" />
 		</antcall>
-		<antcall target="integration-test-stop-glassfish3"/>
 	</target>
 	
-	<target name="integration-test-liferay">
-		<antcall target="integration-test-start-liferay-5" />
-		<antcall target="integration-test-liferay-5-portlet2" />
-		<antcall target="integration-test-stop-liferay-5" />
+	
+	<target name="integration-test-liferay6">
+		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6/integration-test-liferay-6.0.5.html" />
+		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
+		
+		<fileset dir="integration-testscripts" id="html-theme-files" includes="Liferay-6/Liferay6-theme.html" />
+		<pathconvert pathsep=" " property="testfiles-theme" refid="html-theme-files" />
+		
+		
+		<antcall target="run-generic-integration-test">
+			<param name="target-server" value="liferay6" />
+		</antcall>
+	</target>
+	
+	<target name="integration-test-liferay5">
+		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-5/integration-test-liferay-5.2.3-portlet2.html" />
+		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
+		
+		<antcall target="run-generic-integration-test">
+			<param name="target-server" value="liferay5" />
+		</antcall>
 	</target>
 
-	<target name="integration-test-liferay6">
-		<antcall target="integration-test-start-liferay-6" />
-		<antcall target="integration-test-liferay-6" />
-		<antcall target="test-theme-liferay-6" />
-		<antcall target="integration-test-stop-liferay-6" />
-	</target>
-	
 	<target name="integration-test-liferay6ee">
-		<antcall target="integration-test-start-liferay-6ee" />
-		<antcall target="integration-test-liferay-6ee" />
-		<antcall target="test-theme-liferay-6ee" />
-		<antcall target="integration-test-stop-liferay-6ee" />
+		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6EE/integration-test-liferay-6ee.html" />
+		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
+		
+		<fileset dir="integration-testscripts" id="html-theme-files" includes="Liferay-6EE/Liferay6EE-theme.html" />
+		<pathconvert pathsep=" " property="testfiles-theme" refid="html-theme-files" />
+		
+		<antcall target="run-generic-integration-test">
+			<param name="target-server" value="liferay6ee" />
+		</antcall>		
 	</target>
 	
 	<target name="integration-test-gatein3">
-		<antcall target="integration-test-start-gatein-3" />
-		<antcall target="integration-test-gatein-3" />
-		<antcall target="integration-test-stop-gatein-3" />
+		<fileset dir="integration-testscripts" id="html-test-files" includes="GateIn-3/integration-test-GateIn-3.1.0-portlet2.html" />
+		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
+		<antcall target="run-generic-integration-test">
+			<param name="target-server" value="gatein3" />
+		</antcall>
 	</target>
 	
-	<target name="integration-test-eXo3">
-		<antcall target="integration-test-start-eXo-3" />
-		<antcall target="integration-test-eXo-3" />
-		<antcall target="integration-test-stop-eXo-3" />
+	<target name="integration-test-exo3">
+		<fileset dir="integration-testscripts" id="html-test-files" includes="eXo-3/integration-test-eXo-3.0.3-portlet2.html" />
+		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
+		<antcall target="run-generic-integration-test">
+			<param name="target-server" value="exo3" />
+		</antcall>
 	</target>
 	
 	<target name="integration-test-weblogic9">
-		<antcall target="integration-test-start-weblogic9"/>
-		<antcall target="integration-test-test-weblogic">
-			<param name="server-name" value="weblogic-9.2" />
+		<antcall target="run-generic-integration-test">
+			<param name="target-port" value="7001" />
+			<param name="target-server" value="weblogic9" />
 		</antcall>
-		<antcall target="integration-test-stop-weblogic9"/>
 	</target>
 	
 	<target name="integration-test-weblogic10">
-		<antcall target="integration-test-start-weblogic10"/>
-		<antcall target="integration-test-test-weblogic">
-			<param name="server-name" value="weblogic-10.3" />
+		<antcall target="run-generic-integration-test">
+			<param name="target-port" value="7001" />
+			<param name="target-server" value="weblogic10" />
 		</antcall>
-		<antcall target="integration-test-stop-weblogic10"/>
 	</target>
 	
+	
 	<target name="integration-test-weblogicPortal">
-		<antcall target="integration-test-start-weblogic-portal"/>
-		<antcall target="integration-test-weblogic-portal"/>
-		<antcall target="integration-test-stop-weblogic-portal"/>
+		<fileset dir="integration-testscripts" id="html-test-files" includes="weblogic-portal/integration-test-WebLogic-Portal-10.3.2-portlet2.html" />
+		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
+		<antcall target="run-generic-integration-test">
+			<param name="target-port" value="7001" />
+			<param name="target-server" value="weblogicportal" />
+		</antcall>
 	</target>
 	
 	<target name="integration-test-GAE">
@@ -551,93 +248,100 @@
 			
 	<!-- Upload demo, clean error screenshots and test deployment on all servers -->
 	<target name="integration-test-all">
-		<echo message="Getting lock" />
-		<antcall target="integration-test-get-lock" />
-		<echo message="Got lock" />
 		
-		<trycatch property="tried">
-			<try>
-				<antcall target="integration-test-upload-demo" />
-		
-				<parallel>
-					<sequential>
-						<antcall target="run-integration-test">
-							<param name="target-server" value="tomcat4"/>
-						</antcall>
-						<antcall target="run-integration-test">
-							<param name="target-server" value="tomcat5"/>
-						</antcall>
-						<antcall target="run-integration-test">
-							<param name="target-server" value="tomcat6"/>
-						</antcall>
-						<antcall target="run-integration-test">
-							<param name="target-server" value="jetty5"/>
-						</antcall>
-						<antcall target="run-integration-test">
-							<param name="target-server" value="jetty6"/>
-						</antcall>
-						<antcall target="run-integration-test">
-							<param name="target-server" value="jetty7"/>
-						</antcall>
-						<antcall target="run-integration-test">
-							<param name="target-server" value="jboss3"/>
-						</antcall>
-						<antcall target="run-integration-test">
-							<param name="target-server" value="jboss4"/>
-						</antcall>
-						<antcall target="run-integration-test">
-							<param name="target-server" value="jboss5"/>
-						</antcall>
-						<antcall target="run-integration-test">
-							<param name="target-server" value="glassfish2"/>
-						</antcall>
-						<antcall target="run-integration-test">
-							<param name="target-server" value="glassfish3"/>
-						</antcall>
-						<antcall target="run-integration-test">
-							<param name="target-server" value="liferay"/>
-						</antcall>
-						<antcall target="run-integration-test">
-							<param name="target-server" value="liferay6"/>
-						</antcall>
-						<!-- FIXME Disabled due to WAR deployment problems in Liferay - to be re-enabled after installing the latest Liferay 6 EE. -->
-						<!--
-						<antcall target="run-integration-test">
-							<param name="target-server" value="liferay6ee"/>
-						</antcall>
-						-->
-						<antcall target="run-integration-test">
-							<param name="target-server" value="gatein3"/>
-						</antcall>
-						<antcall target="run-integration-test">
-							<param name="target-server" value="eXo3"/>
-						</antcall>
-						<antcall target="run-integration-test">
-							<param name="target-server" value="weblogic9"/>
-						</antcall>
-						<antcall target="run-integration-test">
-							<param name="target-server" value="weblogic10"/>
-						</antcall>
-						<antcall target="run-integration-test">
-							<param name="target-server" value="weblogicPortal"/>
-						</antcall>
-					</sequential>
+		<parallel>
+			<trycatch property="tried">
+				<try>
+					<!-- Still running GAE test from the old server which requires its own lock -->
+					<echo message="Getting lock" />
+					<antcall target="integration-test-get-lock" />
+					<echo message="Got lock" />
+					<antcall target="integration-test-upload-demo" />
+	
 					<antcall target="run-integration-test">
 						<param name="target-server" value="GAE"/>
 					</antcall>
-				</parallel>
-			</try>
-			<catch>
-				<echo message="Uploading of demo.war failed. ${tried}" />
-			</catch>
-		</trycatch>
+					
+					<antcall target="integration-test-clean" />
+					<echo message="Getting lock" />
+					<antcall target="integration-test-release-lock" />
+					<echo message="Lock released" />
+					
+				</try>
+				<catch>
+					<echo message="Uploading of demo.war failed. ${tried}" />
+				</catch>
+			</trycatch>
+							
+			<antcall target="integration-test-liferay6" />
+			<antcall target="integration-test-liferay6ee" />
+			<antcall target="integration-test-exo3" />
+			<antcall target="integration-test-weblogicPortal" />
+			<antcall target="integration-test-liferay5" />
+			<antcall target="integration-test-weblogic9" />
+			<antcall target="integration-test-weblogic10" />
+			<antcall target="integration-test-gatein3" />
+			<antcall target="integration-test-glassfish2" />
+			<antcall target="integration-test-glassfish3" />
+			<antcall target="integration-test-jboss3" />
+			<antcall target="integration-test-jboss4" />
+			<antcall target="integration-test-jboss5" />
+			<antcall target="integration-test-jetty5" />
+			<antcall target="integration-test-jetty6" />
+			<antcall target="integration-test-jetty7" />
+			<antcall target="integration-test-tomcat4" />
+			<antcall target="integration-test-tomcat5" />
+			<antcall target="integration-test-tomcat6" />
+			<antcall target="integration-test-tomcat7" />
+			
+		</parallel>
 		
-		<antcall target="integration-test-clean" />
-		<echo message="Getting lock" />
-		<antcall target="integration-test-release-lock" />
-		<echo message="Lock released" />
 	</target>
 	
+	<target name="do-run-generic-test">
+		<property name="target-host" value="${target-server}.devnet.vaadin.com" />
+		<property name="target-port" value="8080" />
+		
+		<scp file="deploy-base.xml" todir="${user}@${target-host}:base.xml" keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" />
+		<sshexec host="${target-host}" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml get-lock" />
+		<scp file="${demo.war}" todir="${user}@${target-host}:demo.war" keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" />
+		<sshexec host="${target-host}" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml startup-and-deploy" />
+		
+		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-${target-server}-servlet.html" overwrite="true" />
+		<antcall target="integration-test-servlet">
+			<param name="server-name" value="${target-server}" />
+			<param name="deployment.url" value="http://${target-host}:${target-port}" />
+		</antcall>
+		
+		<!-- Run theme tests in all browsers if there's a property with the test files -->
+		<if>
+			<isset property="testfiles-theme" />
+			<then>
+				<antcall target="integration-test-theme">
+					<param name="server-name" value="${target-server}" />
+					<param name="deployment.url" value="http://${target-host}:${target-port}" />
+				</antcall>
+			</then>
+		</if>
+		<sshexec host="${target-host}" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml shutdown-and-cleanup" />
+	</target>
+	
+	<target name="run-generic-integration-test">
+		<concat>##teamcity[testStarted name='${target-server}' flowId='${target-server}']</concat>
+		<trycatch property="tried">
+			<try>
+				<antcall target="do-run-generic-test" />
+			</try>
+			<catch>
+				<!-- Should also perform other escaping - see http://confluence.jetbrains.net/display/TCD65/Build+Script+Interaction+with+TeamCity -->
+				<!-- Also, the first escaped message may override any later ones (Ant properties are immutable) -->
+				<propertyregex property="tried-escaped" input="${tried}" regexp="\\n" replace="|n" global="true" />
+				<concat>##teamcity[testFailed name='${target-server}' flowId='${target-server}' message='Integration test for ${target-server} failed.' details='${tried-escaped}']"</concat>
+			</catch>
+		</trycatch>
+		<concat>##teamcity[testFinished name='${target-server}' flowId='${target-server}']"</concat>
+	</target>	
+
 	<target name="run-integration-test">
 		<concat>##teamcity[testStarted name='${target-server}' flowId='${target-server}']</concat>
 		<trycatch property="tried">
