@@ -643,9 +643,15 @@
 						<antcall target="run-integration-test">
 							<param name="target-server" value="liferay6"/>
 						</antcall>
+						<!--
+						  Disabled due to expired Liferay 6 EE license.
+						  Tested in the new parallelized integration tests for Vaadin 6.7+
+						-->
+						<!--
 						<antcall target="run-integration-test">
 							<param name="target-server" value="liferay6ee"/>
 						</antcall>
+						-->
 						<antcall target="run-integration-test">
 							<param name="target-server" value="gatein3"/>
 						</antcall>
