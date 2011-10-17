@@ -96,72 +96,84 @@
 	
 	<target name="integration-test-tomcat7">
 		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="300" />
 			<param name="target-server" value="tomcat7" />
 		</antcall>
 	</target>
 	
 	<target name="integration-test-tomcat4">
 		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="300" />
 			<param name="target-server" value="tomcat4" />
 		</antcall>
 	</target>
 	
 	<target name="integration-test-tomcat5">
 		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="300" />
 			<param name="target-server" value="tomcat5" />
 		</antcall>
 	</target>	
 	
 	<target name="integration-test-tomcat6">
 		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="300" />
 			<param name="target-server" value="tomcat6" />
 		</antcall>
 	</target>	
 	
 	<target name="integration-test-jetty5">
 		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="300" />
 			<param name="target-server" value="jetty5" />
 		</antcall>
 	</target>
 	
 	<target name="integration-test-jetty6">
 		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="300" />
 			<param name="target-server" value="jetty6" />
 		</antcall>
 	</target>
 	
 	<target name="integration-test-jetty7">
 		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="300" />
 			<param name="target-server" value="jetty7" />
 		</antcall>
 	</target>
 	
 	<target name="integration-test-jboss3">
 		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="300" />
 			<param name="target-server" value="jboss3" />
 		</antcall>
 	</target>
 	
 	<target name="integration-test-jboss4">
 		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="300" />
 			<param name="target-server" value="jboss4" />
 		</antcall>
 	</target>
 	
 	<target name="integration-test-jboss5">
 		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="300" />
 			<param name="target-server" value="jboss5" />
 		</antcall>
 	</target>
 		
 	<target name="integration-test-glassfish2">
 		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="300" />
 			<param name="target-server" value="glassfish2" />
 		</antcall>
 	</target>
 	
 	<target name="integration-test-glassfish3">
 		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="300" />
 			<param name="target-server" value="glassfish3" />
 		</antcall>
 	</target>
@@ -302,8 +314,28 @@
 		<property name="target-host" value="${target-server}.devnet.vaadin.com" />
 		<property name="target-port" value="8080" />
 		
-		<scp file="deploy-base.xml" todir="${user}@${target-host}:base.xml" keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" />
-		<sshexec host="${target-host}" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml get-lock" />
+		<if>
+			<isset property="startDelay" />
+			<then>
+				<math result="sleepTime" datatype="int">
+					<op op="rint">
+						<op op="*">
+							<num value="${startDelay}"/>
+							<op op="random"/>
+						</op>
+					</op>
+				</math>
+				<echo>Delaying startup of ${target-server} with ${sleepTime} seconds</echo>		
+				<sleep seconds="${sleepTime}" />
+			</then>
+		</if>
+		
+		<scp todir="${user}@${target-host}:." keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" >
+			<fileset dir="integration_base_files">
+				<include name="*" />
+			</fileset>
+		</scp>
+		<sshexec host="${target-host}" username="${user}" keyfile="${sshkey.file}" trust="yes" command="chmod +x *.sh; ant -f deploy.xml get-lock" />
 		<scp file="${demo.war}" todir="${user}@${target-host}:demo.war" keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" />
 		<sshexec host="${target-host}" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml startup-and-deploy" />
 		
