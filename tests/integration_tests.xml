@@ -333,10 +333,12 @@
 				<antcall target="do-run-generic-test" />
 			</try>
 			<catch>
-				<!-- Should also perform other escaping - see http://confluence.jetbrains.net/display/TCD65/Build+Script+Interaction+with+TeamCity -->
-				<!-- Also, the first escaped message may override any later ones (Ant properties are immutable) -->
-				<propertyregex property="tried-escaped" input="${tried}" regexp="\\n" replace="|n" global="true" />
-				<concat>##teamcity[testFailed name='${target-server}' flowId='${target-server}' message='Integration test for ${target-server} failed.' details='${tried-escaped}']"</concat>
+				<!-- Should also perform other escaping (\u0085, \u2028 and \u2029) - see http://confluence.jetbrains.net/display/TCD65/Build+Script+Interaction+with+TeamCity -->
+				<!-- Immutable properties -> needs to create a new one every time -->
+				<propertyregex property="tried-escaped1" input="${tried}" regexp="['|\[\]]" replace="|\0" global="true" defaultValue="${tried}" />
+				<propertyregex property="tried-escaped2" input="${tried-escaped1}" regexp="\n" replace="|n" global="true" defaultValue="${tried-escaped1}" />
+				<propertyregex property="tried-escaped3" input="${tried-escaped2}" regexp="\r" replace="|r" global="true" defaultValue="${tried-escaped2}" />
+				<concat>##teamcity[testFailed name='${target-server}' flowId='${target-server}' message='Integration test for ${target-server} failed.' details='${tried-escaped3}']"</concat>
 			</catch>
 		</trycatch>
 		<concat>##teamcity[testFinished name='${target-server}' flowId='${target-server}']"</concat>
