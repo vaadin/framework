@@ -883,7 +883,11 @@
     <target name="tests" depends="compile-java, internal-package-war">
         <!-- Run all different types of tests in parallel to decrease testing time -->
         <parallel threadcount="3">
-            <antcall inheritrefs="true" inheritall="true" target="integration-tests"></antcall>
+        	<sequential>
+                <!-- Sleep before running integration tests so testbench tests have time to compile and start -->
+                <sleep minutes="4" /> 
+                <antcall inheritrefs="true" inheritall="true" target="integration-tests"></antcall>
+        	</sequential>
             <antcall inheritrefs="true" inheritall="true" target="testbench-tests"></antcall>
             <antcall inheritrefs="true" inheritall="true" target="server-side-tests"></antcall>
         </parallel>
@@ -954,9 +958,6 @@
         <!-- Empty passphrase if no passphrase defined -->
         <property name="passphrase" value="" />
         <property name="tests.war" location="${result-path}/${test-war-filename}" />
-
-        <!-- Sleep before running integration tests so testbench tests have time to compile and start -->
-        <sleep minutes="4" />
         
         <!-- Run the separate test script. -->
         <ant antfile="tests/integration_tests.xml" target="integration-test-all" inheritall="false" inheritrefs="true">
