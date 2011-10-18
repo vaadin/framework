@@ -43,14 +43,14 @@
 		<ul>
 			<li><a href="#overview">Package contents</a>
 			</li>
-			<li><a href="#security-fixes">Security fixes in Vaadin @version@</a>
+			<li><a href="#security-fixes">Security fixes in Vaadin @version-minor@</a>
 			</li>
-			<li><a href="#enhancements">Enhancements in Vaadin @version@</a>
+			<li><a href="#enhancements">Enhancements in Vaadin @version-minor@</a>
 			</li>
 			<li><a href="#fixes">Fixes in Vaadin @version@</a>
 			</li>
 			<li><a href="#backwardsincompatibilities">Backwards
-					incompatible changes in Vaadin @version@</a>
+					incompatible changes in Vaadin @version-minor@</a>
 			</li>
 			<li><a href="#dependencies">Vaadin @version@ dependencies</a>
 			</li>
@@ -85,8 +85,8 @@
 			</ul>
 		</p>
 
-		<h2 id="security-fixes">Security fixes in Vaadin @version@</h2>
-		<p>Vaadin @version@ incorporates fixes for the following security issues:</p>
+		<h2 id="security-fixes">Security fixes in Vaadin @version-minor@</h2>
+		<p>Vaadin 6.7.0 and later incorporates fixes for the following security issues:</p>
     <ul>
         <li><a href="http://dev.vaadin.com/ticket/7669">#7669</a> CSRF/XSS vulnerability through separator injection</li>
         <li><a href="http://dev.vaadin.com/ticket/7670">#7670</a> Directory traversal vulnerability</li>
@@ -95,7 +95,7 @@
     </ul>
 
 		<p>
-		These issue were discovered by Wouter Coekaerts (<a href="http://wouter.coekaerts.be/">http://wouter.coekaerts.be/</a>) and an internal review.
+		These issues were discovered by Wouter Coekaerts (<a href="http://wouter.coekaerts.be/">http://wouter.coekaerts.be/</a>) and an internal review.
 		Immediate upgrade to a version containing the fixes (6.6.7 or later or 6.7.0 or later) is strongly recommended for all users.
 		</p>
 
@@ -114,7 +114,7 @@
 		in the browser.
 		</p>
     
-		<h2 id="enhancements">Enhancements in Vaadin @version@</h2>
+		<h2 id="enhancements">Enhancements in Vaadin @version-minor@</h2>
 		<p>
 			<b>SQLContainer</b>
 		</p>
@@ -231,83 +231,29 @@
 		<h2 id="fixes">Fixes in Vaadin @version@</h2>
 		
 	<p>
-    #7186   SQLContainer leaves transactions open if an OptimisticLockException occurrs<br/>
-    #7224   Table context menu does not work before refreshing table contents<br/>
-    #7369   Vaadin and CDI - can't use SessionScoped beans<br/>
+    #7788   Field.setProperyDatasource() does not reflect value for 6.7.0<br/>
     #7479   Vaadin apps cannot current be deployed on IBM WebSphere v8<br/>
-    #7561   TreeTable: expanding a row far down in the table causes IndexOutOfBoundsException<br/>
-    #7626   Form size is calculated incorrectly after clearing its data source<br/>
-    #7687   Drag between table and the last top level item in tree broken<br/>
-    #5780   TreeTable uses images that not display transparent in IE6<br/>
-    #5924   Link as generated table column does not present browser context menu on right click<br/>
-    #6499   AbstractApplicationServlet#handleDownload() does not close streams in case of exception<br/>
+    #7724   TextField with PropertyFormatter did not repaint in 6.7.0 (event with requestRepaint() call)<br/>
+    #7731   Javascript error when adding an item to an empty Table when setColumnWidth is used<br/>
+    #7776   AbstractField don't respect value change events from property during commit<br/>
+    #7778   Table rendering problem<br/>
     #6588   Repainting in TextChangeListener will send wrong value to client.<br/>
-    #7012   Table content cells & column headers get out of sync when uncollapsing columns<br/>
-    #7028   TreeTable: Navigating too fast with keyboard makes selection jump<br/>
-    #7057   Table and tree keyboard navigation completely broken if validators are used<br/>
-    #7292   Changing pagelength in an expand/collapse listener does not redraw a TreeTable correctly<br/>
-    #7433   GAE integration test should use GAEApplicationServlet<br/>
-    #7434   SQLContainer - reseting value of Property fails<br/>
-    #7443   Chameleon datefield text part and button have different heights<br/>
-    #7446   Keyboard Navigation with problems on Table<br/>
-    #7454   Table keyboard navigation breaks in IE on multiple keyboard multiselections<br/>
-    #7478   Util.escapeHtml incorrectly converts newline to &lt;br&gt; and space to "&amp;nbsp;" in IE6-IE8<br/>
-    #7490   Multi-line text fields visual and height issues in Chameleon theme<br/>
-    #7597   NullPointerException with SQLContainer's J2EEConnectionPool<br/>
-    #7697   SQLContainer.containsId logs a ClassCastException<br/>
-    #7699   All tests that check properties of Vaadin classes fail<br/>
+    #7720   TreeTable doesn't get refreshed if all entries are removed<br/>
+    #7738   Slashes or backslahes in ApplicationResources URLs should not be encoded<br/>
+    #7753   TreeTable gets into a state that causes internal error when getChildren throws an exception.<br/>
     #3710   Width is miscalculated for the footer layouts in forms of undefined size<br/>
-    #3725   Form adds a description tag to the DOM even if there is no description.<br/>
-    #3983   Labels in IE7 are rendered as preformatted by default<br/>
-    #5382   Table headers and content not aligned after content modification<br/>
-    #5488   Link: Error when trying to use a link to a file with a percent in the filename<br/>
-    #5608   Item icons do not work in OptionGroup<br/>
-    #5683   TwinColSelect keyboard navigation selects wrong item<br/>
-    #5738   TabSheet's first visible tab should be rendered as if it is the first tab<br/>
-    #5851   isLastId() may throw NullPointerException<br/>
-    #5868   GridLayout's size is calculated wrong when elements span over multiple cells.<br/>
-    #6148   Multiselect breaks TreeTable keyboard navigation<br/>
-    #6770   DateField: Error indicator not shown if required<br/>
-    #7018   Table column drag&drop visually broken<br/>
-    #7032   LoginForm should explicitly define utf-8 charset in getLoginHTML() method<br/>
-    #7065   ConcurrentModificationException in AbstractWebApplicationContext.endTransaction() and startTransaction()<br/>
-    #7092   TextField does not support setting maxLength=0<br/>
-    #7097   Tooltip with long contents flickers<br/>
-    #7100   Tooltip is displayed off screen when component is at the lower edge of the screen<br/>
-    #7101   ComponentLocator should only return elements that are attached to the DOM<br/>
-    #7208   Adding SplitterClickListener to SplitPanel causes splitter to jump in Chrome when clicked.<br/>
-    #7230   Key Navigation in Tree-Component - Scrolling-"Bug"<br/>
-    #7284   Disabling a VNativeButton should set v-disabled style<br/>
-    #7326   Width recalculation does not work for GridLayout inside CustomComponent<br/>
-    #7338   Column alignment cannot be changed from right/center to left<br/>
-    #7340   The rendering is wrong the first time a table column is sorted<br/>
-    #7388   Expand/collapse icon offset in IE7<br/>
-    #7391   SQLContainer unconsiders modified cache<br/>
-    #7393   Resizing a Table column does not resize contents<br/>
-    #7422   AbstractComponent.setStyleName containing spaces causes illogical results<br/>
-    #7462   Inserting a panel in a scrolling panel scrolls up to the top<br/>
-    #7472   PopupDatefield button should not be focusable<br/>
-    #7485   Build script doesn't include resources for release-notes.html<br/>
-    #7493   Release notes should only list versions supported by this particular release<br/>
-    #7505   TreeTable arrow icons clipped in FF, IE9 & Opera<br/>
-    #7534   TreeTable: navigating with the left arrow key has focus issues<br/>
-    #7535   TreeTable: navigating with the right arrow key in a multiselect table selects too much<br/>
-    #7564   Resizing table column from the server only resizes the header<br/>
-    #7605   VTreeTable throws NPE<br/>
-    #7620   TreeTable generated columns Components out of sync after node expand<br/>
-    #7644   Table: Odd/even row styles get mixed up when lazy loading<br/>
-    #7667   Resizing column in Safari 5.1 causes scrollbar to return to the left<br/>
-    #7508   Table column being dragged has pixels from following sprite at the bottom with reindeer<br/>
-    #2669   Tabsheet failes to render cached tab<br/>
-	</p>
+    #7548   TestBench pressSpecialKey (arrows) doesn't work on Tree in IE6<br/>
+    #7708   DragAndDropWrapper.setDescription("foo") does not work<br/>
+    #7736   Logging level of SqlContainer is too high<br/>
+    #7755   Debug window "highlight component" does not work with sub windows<br/>
+    	</p>
 		<p>
-			The <a
-				href="http://dev.vaadin.com/query?status=closed&type=defect&milestone=Vaadin+6.7.0.rc1&or&status=closed&type=defect&milestone=Vaadin+6.7.0.beta1&or&status=closed&type=defect&milestone=Vaadin+6.7.0&group=status&col=id&col=summary&col=type&col=owner&col=priority&col=component&col=version&order=priority">full
+			The <a href="http://dev.vaadin.com/query?status=closed&type=defect&milestone=Vaadin%20@version@">full
 				details of the defects</a> can be found at dev.vaadin.com.
 		</p>
 
 		<h2 id="backwardsincompatibilities">Backwards incompatible
-			changes in Vaadin @version@</h2>
+			changes in Vaadin @version-minor@</h2>
 		<p>Table.ColumnGenerator.generateCell has been changed to return
 			Object instead of Component to enable generation of plain text.</p>
 		<p>Package names for SQLContainer, TreeTable and Chameleon Theme
