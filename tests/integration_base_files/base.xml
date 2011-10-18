@@ -84,7 +84,12 @@
 	 
 	 <target name="get-lock">
 	 	<mkdir dir="deploy" /> 
-	 	<exec executable="lockfile">
+	 	<echo>${server}: Getting the lock</echo>
+	 	<exec executable="lockfile" failonerror="true">
+	 		<!-- Check every 10 seconds -->
+	 		<arg value="-10" />
+	 		<!--  Retry for 55 minutes (build server gives up after 60 minutes) -->
+	 		<arg value="-r330" />
 	 		<arg value="${lock}" />
 	 	</exec>
 	 	<echo>${server}: Got the lock</echo>

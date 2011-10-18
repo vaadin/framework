@@ -335,10 +335,21 @@
 				<include name="*" />
 			</fileset>
 		</scp>
-		<sshexec host="${target-host}" username="${user}" keyfile="${sshkey.file}" trust="yes" command="chmod +x *.sh; ant -f deploy.xml get-lock" />
+		<!-- timeout in one hour (remote end should timeout in 55 minutes) -->
+		<sshexec host="${target-host}" outputproperty="lock-output" timeout="3600000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="chmod +x *.sh; ant -f deploy.xml get-lock" />
+		<antcall target="echo-prefix">
+			<param name="prefix" value="${target-server}: " />
+			<param name="message" value="${lock-output}" />
+		</antcall>
+
 		<scp file="${demo.war}" todir="${user}@${target-host}:demo.war" keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" />
-		<sshexec host="${target-host}" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml startup-and-deploy" />
-		
+		<!-- timeout in 15 minutes -->
+		<sshexec host="${target-host}" outputproperty="start-output" timeout="900000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml startup-and-deploy" />
+		<antcall target="echo-prefix">
+			<param name="prefix" value="${target-server}: " />
+			<param name="message" value="${start-output}" />
+		</antcall>
+
 		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-${target-server}-servlet.html" overwrite="true" />
 		<antcall target="integration-test-servlet">
 			<param name="server-name" value="${target-server}" />
@@ -355,7 +366,17 @@
 				</antcall>
 			</then>
 		</if>
-		<sshexec host="${target-host}" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml shutdown-and-cleanup" />
+		<!-- timeout in five minutes -->
+		<sshexec host="${target-host}" outputproperty="stop-output" timeout="300000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml shutdown-and-cleanup" />
+		<antcall target="echo-prefix">
+			<param name="prefix" value="${target-server}: " />
+			<param name="message" value="${stop-output}" />
+		</antcall>
+	</target>
+	
+	<target name="echo-prefix">
+		<propertyregex property="message-prefixed" input="${prefix}${message}" regexp="\n" replace="\0${prefix}" global="true" defaultValue="${prefix}${message}" />
+		<echo message="${message-prefixed}" />
 	</target>
 	
 	<target name="run-generic-integration-test">
@@ -365,17 +386,28 @@
 				<antcall target="do-run-generic-test" />
 			</try>
 			<catch>
-				<!-- Should also perform other escaping (\u0085, \u2028 and \u2029) - see http://confluence.jetbrains.net/display/TCD65/Build+Script+Interaction+with+TeamCity -->
-				<!-- Immutable properties -> needs to create a new one every time -->
-				<propertyregex property="tried-escaped1" input="${tried}" regexp="['|\[\]]" replace="|\0" global="true" defaultValue="${tried}" />
-				<propertyregex property="tried-escaped2" input="${tried-escaped1}" regexp="\n" replace="|n" global="true" defaultValue="${tried-escaped1}" />
-				<propertyregex property="tried-escaped3" input="${tried-escaped2}" regexp="\r" replace="|r" global="true" defaultValue="${tried-escaped2}" />
-				<concat>##teamcity[testFailed name='${target-server}' flowId='${target-server}' message='Integration test for ${target-server} failed.' details='${tried-escaped3}']"</concat>
+				<antcallback target="teamcity-escape" return="tried-escaped">
+					<param name="returnTo" value="tried-escaped" />
+					<param name="message" value="${tried}" />
+				</antcallback>
+				<concat>##teamcity[testFailed name='${target-server}' flowId='${target-server}' message='Integration test for ${target-server} failed.' details='${tried-escaped}']</concat>
 			</catch>
 		</trycatch>
 		<concat>##teamcity[testFinished name='${target-server}' flowId='${target-server}']"</concat>
 	</target>	
 
+	<target name="teamcity-escape">
+		<property name="returnTo" value="return" />
+		
+		<!-- Should also perform other escaping (\u0085, \u2028 and \u2029) - see http://confluence.jetbrains.net/display/TCD65/Build+Script+Interaction+with+TeamCity -->
+		<!-- Immutable properties -> needs to create a new one every time -->
+		<propertyregex property="details-escaped1" input="${message}" regexp="['|\[\]]" replace="|\0" global="true" defaultValue="${message}" />
+		<propertyregex property="details-escaped2" input="${details-escaped1}" regexp="\n" replace="|n" global="true" defaultValue="${details-escaped1}" />
+		<propertyregex property="details-escaped3" input="${details-escaped2}" regexp="\r" replace="|r" global="true" defaultValue="${details-escaped2}" />
+		
+		<property name="${returnTo}" value="${details-escaped3}" />
+	</target>
+	
 	<target name="run-integration-test">
 		<concat>##teamcity[testStarted name='${target-server}' flowId='${target-server}']</concat>
 		<trycatch property="tried">
@@ -383,9 +415,10 @@
 				<antcall target="integration-test-${target-server}" />
 			</try>
 			<catch>
-				<!-- Should also perform other escaping - see http://confluence.jetbrains.net/display/TCD65/Build+Script+Interaction+with+TeamCity -->
-				<!-- Also, the first escaped message may override any later ones (Ant properties are immutable) -->
-				<propertyregex property="tried-escaped" input="${tried}" regexp="\\n" replace="|n" global="true" />
+				<antcallback target="teamcity-escape" return="tried-escaped">
+					<param name="returnTo" value="tried-escaped" />
+					<param name="message" value="${tried}" />
+				</antcallback>
 				<concat>##teamcity[testFailed name='${target-server}' flowId='${target-server}' message='Integration test for ${target-server} failed.' details='${tried-escaped}']"</concat>
 			</catch>
 		</trycatch>
