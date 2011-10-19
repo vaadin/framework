@@ -40,6 +40,7 @@
 	<!-- classpath must include test bench jar and its dependencies -->
 	<path id="classpath">
 		<fileset dir="${com.vaadin.testbench.lib.dir}" includes="**/*.jar" />
+		<fileset dir="../build/lib" includes="emma*.jar" />
 	</path>
 
 	<!-- fileset containing all TestBench tests to run -->
@@ -104,10 +105,12 @@
 	</target>
 
 	<target name="server-stop">
+		<sleep seconds="5" />
 		<exec executable="python" dir=".." searchpath="true" resultproperty="server.stop.result">
 			<arg value="build/testing/vaadin-server.py" />
 			<arg value="stop" />
 		</exec>
+		<move file="${testing.testarea}/${package.name}/war.ec" todir="../build/result" />
 	</target>
 
 	<!-- ================================================================== -->
