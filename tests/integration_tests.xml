@@ -343,35 +343,45 @@
 		</antcall>
 
 		<scp file="${demo.war}" todir="${user}@${target-host}:demo.war" keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" />
-		<!-- timeout in 15 minutes -->
-		<sshexec host="${target-host}" outputproperty="start-output" timeout="900000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml startup-and-deploy" />
-		<antcall target="echo-prefix">
-			<param name="prefix" value="${target-server}: " />
-			<param name="message" value="${start-output}" />
-		</antcall>
-
-		<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-${target-server}-servlet.html" overwrite="true" />
-		<antcall target="integration-test-servlet">
-			<param name="server-name" value="${target-server}" />
-			<param name="deployment.url" value="http://${target-host}:${target-port}" />
-		</antcall>
 		
-		<!-- Run theme tests in all browsers if there's a property with the test files -->
-		<if>
-			<isset property="testfiles-theme" />
-			<then>
-				<antcall target="integration-test-theme">
+		<trycatch property="error_message">
+			<try>
+				<!-- timeout in 15 minutes -->
+				<sshexec host="${target-host}" outputproperty="start-output" timeout="900000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml startup-and-deploy" />
+				<antcall target="echo-prefix">
+					<param name="prefix" value="${target-server}: " />
+					<param name="message" value="${start-output}" />
+				</antcall>
+
+				<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-${target-server}-servlet.html" overwrite="true" />
+				<antcall target="integration-test-servlet">
 					<param name="server-name" value="${target-server}" />
 					<param name="deployment.url" value="http://${target-host}:${target-port}" />
 				</antcall>
-			</then>
-		</if>
-		<!-- timeout in five minutes -->
-		<sshexec host="${target-host}" outputproperty="stop-output" timeout="300000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml shutdown-and-cleanup" />
-		<antcall target="echo-prefix">
-			<param name="prefix" value="${target-server}: " />
-			<param name="message" value="${stop-output}" />
-		</antcall>
+				
+				<!-- Run theme tests in all browsers if there's a property with the test files -->
+				<if>
+					<isset property="testfiles-theme" />
+					<then>
+						<antcall target="integration-test-theme">
+							<param name="server-name" value="${target-server}" />
+							<param name="deployment.url" value="http://${target-host}:${target-port}" />
+						</antcall>
+					</then>
+				</if>
+			</try>
+			<catch>
+				<fail message="${error_message}" />
+			</catch>
+			<finally>
+				<!-- timeout in five minutes -->
+				<sshexec host="${target-host}" outputproperty="stop-output" timeout="300000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml shutdown-and-cleanup" />
+				<antcall target="echo-prefix">
+					<param name="prefix" value="${target-server}: " />
+					<param name="message" value="${stop-output}" />
+				</antcall>
+			</finally>
+		</trycatch>
 	</target>
 	
 	<target name="echo-prefix">
