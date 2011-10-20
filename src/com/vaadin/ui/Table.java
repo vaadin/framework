@@ -1539,9 +1539,9 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Calculate the new cache size
         int newCachedRowCount = currentlyCachedRowCount;
-        if (currentlyCachedRowCount < pageLength) {
+        if (pageLength == 0 || currentlyCachedRowCount < pageLength) {
             newCachedRowCount = currentlyCachedRowCount + rows;
-            if (newCachedRowCount > pageLength) {
+            if (pageLength > 0 && newCachedRowCount > pageLength) {
                 newCachedRowCount = pageLength;
             }
         }
