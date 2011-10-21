@@ -1041,9 +1041,7 @@ public class JsonPaintTarget implements PaintTarget {
         try {
             return class1.isAnnotationPresent(ClientWidget.class);
         } catch (NoClassDefFoundError e) {
-            StringWriter writer = new StringWriter();
-            e.printStackTrace(new PrintWriter(writer));
-            String stacktrace = writer.toString();
+            String stacktrace = getStacktraceString(e);
             if (stacktrace
                     .contains("com.ibm.oti.reflect.AnnotationParser.parseClass")) {
                 // #7479 IBM JVM apparently tries to eagerly load the classes
@@ -1051,6 +1049,23 @@ public class JsonPaintTarget implements PaintTarget {
                 // code to be sure that we are dealing the this case and not
                 // some other class loading issue.
                 if (bytecodeContainsClientWidgetAnnotation(class1)) {
+                    return true;
+                }
+            } else {
+                // throw exception forward
+                throw e;
+            }
+        } catch (LinkageError e) {
+            String stacktrace = getStacktraceString(e);
+            if (stacktrace
+                    .contains("org.jboss.modules.ModuleClassLoader.defineClass")) {
+                // #7822 JBoss AS 7 apparently tries to eagerly load the classes
+                // referred to by annotations. Checking the annotation from byte
+                // code to be sure that we are dealing the this case and not
+                // some other class loading issue.
+                if (bytecodeContainsClientWidgetAnnotation(class1)) {
+                    // Seems that JBoss still prints a stacktrace to the logs
+                    // even though the LinkageError has been caught
                     return true;
                 }
             } else {
@@ -1078,6 +1093,13 @@ public class JsonPaintTarget implements PaintTarget {
             }
         }
         return false;
+    }
+
+    private static String getStacktraceString(Throwable e) {
+        StringWriter writer = new StringWriter();
+        e.printStackTrace(new PrintWriter(writer));
+        String stacktrace = writer.toString();
+        return stacktrace;
     }
 
     private boolean bytecodeContainsClientWidgetAnnotation(
