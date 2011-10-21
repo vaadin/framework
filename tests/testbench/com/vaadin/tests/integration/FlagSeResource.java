@@ -11,6 +11,7 @@ public class FlagSeResource extends ClassResource {
                         .getName()
                         .replace('.', '/')
                         .replaceAll(FlagSeResource.class.getSimpleName() + "$",
-                                "") + "/se.gif", application);
+                                "") + "se.gif", application);
+
     }
 }
