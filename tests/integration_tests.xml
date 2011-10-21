@@ -163,7 +163,21 @@
 			<param name="target-server" value="jboss5" />
 		</antcall>
 	</target>
-		
+	
+	<target name="integration-test-jboss6">
+		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="300" />
+			<param name="target-server" value="jboss6" />
+		</antcall>
+	</target>
+	
+	<target name="integration-test-jboss7">
+		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="300" />
+			<param name="target-server" value="jboss7" />
+		</antcall>
+	</target>
+	
 	<target name="integration-test-glassfish2">
 		<antcall target="run-generic-integration-test">
 			<param name="startDelay" value="300" />
@@ -298,6 +312,8 @@
 			<antcall target="integration-test-jboss3" />
 			<antcall target="integration-test-jboss4" />
 			<antcall target="integration-test-jboss5" />
+			<antcall target="integration-test-jboss6" />
+			<antcall target="integration-test-jboss7" />
 			<antcall target="integration-test-jetty5" />
 			<antcall target="integration-test-jetty6" />
 			<antcall target="integration-test-jetty7" />
@@ -335,17 +351,18 @@
 				<include name="*" />
 			</fileset>
 		</scp>
-		<!-- timeout in one hour (remote end should timeout in 55 minutes) -->
-		<sshexec host="${target-host}" outputproperty="lock-output" timeout="3600000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="chmod +x *.sh; ant -f deploy.xml get-lock" />
-		<antcall target="echo-prefix">
-			<param name="prefix" value="${target-server}: " />
-			<param name="message" value="${lock-output}" />
-		</antcall>
-
-		<scp file="${demo.war}" todir="${user}@${target-host}:demo.war" keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" />
 		
 		<trycatch property="error_message">
 			<try>
+				<!-- timeout in one hour (remote end should timeout in 55 minutes) -->
+				<sshexec host="${target-host}" outputproperty="lock-output" timeout="3600000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="chmod +x *.sh; ant -f deploy.xml get-lock" />
+				<antcall target="echo-prefix">
+					<param name="prefix" value="${target-server}: " />
+					<param name="message" value="${lock-output}" />
+				</antcall>
+
+				<scp file="${demo.war}" todir="${user}@${target-host}:demo.war" keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" />
+				
 				<!-- timeout in 15 minutes -->
 				<sshexec host="${target-host}" outputproperty="start-output" timeout="900000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml startup-and-deploy" />
 				<antcall target="echo-prefix">
