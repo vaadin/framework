@@ -9,6 +9,7 @@
     <property name="JAVA_HOME" value="/usr/lib/jvm/default-java" />
 	<property name="waitMinutes" value="3" />
     <property name="waitUrl" value="http://localhost:${serverPort}/demo/VAADIN/themes/reindeer/styles.css" />
+	<property name="shutdownWait" value="10" />
 
     
     <target name="afterDeploy">
@@ -66,7 +67,11 @@
 		<exec executable="./stop.sh" >
 			<env key="JAVA_HOME" value="${JAVA_HOME}" />
 		</exec>
-		<sleep seconds="15" />
+		<sleep seconds="${shutdownWait}" />
+	</target>
+	
+	<target name="force-shutdown">
+		<exec executable="./cleanup.sh" />
 	</target>
 	
 	<target name="check-port">
@@ -112,7 +117,6 @@
 	 
 	<target name="startup-and-deploy" depends="check-lock,check-port,unpack-server,deploy,startup" />
 	
-	<target name="shutdown-and-cleanup" depends="shutdown,clean,release-lock" />
-	 
+	<target name="shutdown-and-cleanup" depends="shutdown,clean,release-lock,force-shutdown" />
 	 
 </project>
