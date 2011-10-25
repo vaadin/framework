@@ -1,3 +1,4 @@
+#! /bin/bash
 echo checking and killing open servers
 
 # Find all java processes, except
