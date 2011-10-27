@@ -68,6 +68,13 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     private boolean ordered = false;
 
     /**
+     * The last known size of the wrapped container. Used to check whether items
+     * have been added or removed to the wrapped container, when the wrapped
+     * container does not send ItemSetChangeEvents.
+     */
+    private int lastKnownSize = -1;
+
+    /**
      * Constructs a new ordered wrapper for an existing Container. Works even if
      * the to-be-wrapped container already implements the Container.Ordered
      * interface.
@@ -457,7 +464,15 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      * here, we use the default documentation from implemented interface.
      */
     public int size() {
-        return container.size();
+        int newSize = container.size();
+        if (lastKnownSize != -1 && newSize != lastKnownSize
+                && !(container instanceof Container.ItemSetChangeNotifier)) {
+            // Update the internal cache when the size of the container changes
+            // and the container is incapable of sending ItemSetChangeEvents
+            updateOrderWrapper();
+        }
+        lastKnownSize = newSize;
+        return newSize;
     }
 
     /*
