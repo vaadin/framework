@@ -364,11 +364,19 @@
 				<scp file="${demo.war}" todir="${user}@${target-host}:demo.war" keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" />
 				
 				<!-- timeout in 15 minutes -->
-				<sshexec host="${target-host}" outputproperty="start-output" timeout="900000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml startup-and-deploy" />
+				<sshexec host="${target-host}" outputproperty="start-output" timeout="900000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml startup-and-deploy" failonerror="false" />
 				<antcall target="echo-prefix">
 					<param name="prefix" value="${target-server}: " />
 					<param name="message" value="${start-output}" />
 				</antcall>
+				
+				<fail message="${start-output}">
+					<condition>
+						<not>
+							<contains string="${start-output}" substring="Demo deployed successfully" />
+						</not>
+					</condition>
+				</fail>
 
 				<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-${target-server}-servlet.html" overwrite="true" />
 				<antcall target="integration-test-servlet">
@@ -392,7 +400,7 @@
 			</catch>
 			<finally>
 				<!-- timeout in five minutes -->
-				<sshexec host="${target-host}" outputproperty="stop-output" timeout="300000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml shutdown-and-cleanup" />
+				<sshexec host="${target-host}" outputproperty="stop-output" timeout="300000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml shutdown-and-cleanup" failonerror="false" />
 				<antcall target="echo-prefix">
 					<param name="prefix" value="${target-server}: " />
 					<param name="message" value="${stop-output}" />

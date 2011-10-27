@@ -58,6 +58,8 @@
 		<waitfor maxwait="${waitMinutes}" maxwaitunit="minute" checkevery="10000" timeoutproperty="timeout">
 			 <http url="${waitUrl}" />
 		</waitfor>
+		<!-- Print load averages to get an indicator on whether the server still attempts to start up -->
+		<exec executable="uptime" />
 		<fail if="timeout" message="${server} failed to deploy" />
 
 		<echo message="${server}: Demo deployed successfully." />
