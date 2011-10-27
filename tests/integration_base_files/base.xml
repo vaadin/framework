@@ -101,7 +101,7 @@
 	 </target>
 	 
 	 <target name="clean">
-		<delete dir="${deployDir}" />
+		<delete dir="${deployDir}" failonerror="false" />
 	 </target>
 	 
 	 <target name="release-lock">
