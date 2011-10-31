@@ -1489,7 +1489,7 @@ public class Table extends AbstractSelect implements Action.Container,
         int rowsToAdd = Math.min(rows, totalCachedRows - firstAppendedRow);
         rowsToAdd = Math.min(rowsToAdd, totalRows
                 - (firstAppendedRow + pageBufferFirstIndex));
-        if (rowsToAdd == 0) {
+        if (rowsToAdd <= 0) {
             return;
         }
         Object[][] cells = getVisibleCellsNoCache(firstAppendedRow, rowsToAdd,
