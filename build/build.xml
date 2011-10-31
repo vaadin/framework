@@ -151,8 +151,6 @@
                 <!-- Exclude these as they contain Servlet API 2.4. -->
                 <!-- The gwt-*-noservlet.jar are then used instead. -->
                 <exclude name="**/servlet-api*.jar"/>
-                <exclude name="**/gwt-dev.jar"/>
-                <exclude name="**/gwt-user.jar"/>
             </fileset>
             <fileset dir="lib/tests">
                     <include name="**/*.jar"/>
