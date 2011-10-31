@@ -70,18 +70,6 @@
       <echo>Java version is ${ant.java.version} as required.</echo>
     </target>
 
-    <!-- Check Servlet API version. -->
-    <!-- We must use Servlet API 2.3 to catch incompatibilities.. -->
-    <target name="check-servlet-version">
-      <available classpathref="compile.classpath" classname="javax.servlet.Servlet" property="servlet.available"/>
-      <fail unless="servlet.available" message="Java Servlet API library is not available."/>
-      <echo>Java Servlet API is available.</echo>
-
-      <available classpathref="compile.classpath" classname="javax.servlet.ServletRequestListener" property="servlet.version.is-2.4"/>
-      <fail if="servlet.version.is-2.4" message="Java Servlet API 2.4 or later detected. Vaadin must be compiled exactly with Servlet API 2.3."/>
-      <echo>Java Servlet API specification 2.3 used.</echo>
-    </target>
-
     <!-- ================================================================== -->
     <!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- ================================================================== -->
@@ -429,7 +417,7 @@
         </copy>
     </target>
 
-    <target name="compile-java" depends="init, check-servlet-version, webcontent">
+    <target name="compile-java" depends="init, webcontent">
         <echo>Compiling src (server-side)</echo>
         
         <!-- Compile all sources at the same time as they depend on each other -->
