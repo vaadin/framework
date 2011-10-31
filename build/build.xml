@@ -86,7 +86,7 @@
     <!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- ================================================================== -->
 
-    <target name="init" depends="check-java-version">
+    <target name="init">
         <!-- Current timestamp in different formats. -->
         <tstamp>
             <format property="build.date" pattern="yyyy-MM-dd"/>
