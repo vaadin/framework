@@ -609,11 +609,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * Gets the parent window of the component. Don't add a JavaDoc comment
      * here, we use the default documentation from implemented interface.
      */
-    public Window getWindow() {
+    public Root getRoot() {
         if (parent == null) {
             return null;
         } else {
-            return parent.getWindow();
+            return parent.getRoot();
         }
     }
 
@@ -651,7 +651,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         if (this instanceof Focusable) {
             final Application app = getApplication();
             if (app != null) {
-                getWindow().setFocusedComponent((Focusable) this);
+                // getRoot().setFocusedComponent((Focusable) this);
                 delayedFocus = false;
             } else {
                 delayedFocus = true;

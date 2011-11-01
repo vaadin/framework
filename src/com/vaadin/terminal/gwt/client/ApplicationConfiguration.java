@@ -317,7 +317,7 @@ public class ApplicationConfiguration implements EntryPoint {
                     unknownComponents = new HashMap<String, String>();
                 }
                 unknownComponents.put("" + value, key);
-            } else if (key == "com.vaadin.ui.Window") {
+            } else if (key == "com.vaadin.ui.DefaultRoot") {
                 windowId = "" + value;
             }
         }

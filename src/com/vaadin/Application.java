@@ -7,13 +7,10 @@ package com.vaadin;
 import java.io.Serializable;
 import java.net.SocketException;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.EventListener;
 import java.util.EventObject;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Properties;
@@ -33,6 +30,7 @@ import com.vaadin.terminal.gwt.server.ChangeVariablesErrorEvent;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Window;
 
 /**
@@ -95,11 +93,11 @@ public abstract class Application implements URIHandler,
     private final static Logger logger = Logger.getLogger(Application.class
             .getName());
 
-    /**
-     * Id use for the next window that is opened. Access to this must be
-     * synchronized.
-     */
-    private int nextWindowId = 1;
+    // /**
+    // * Id use for the next window that is opened. Access to this must be
+    // * synchronized.
+    // */
+    // private int nextWindowId = 1;
 
     /**
      * Application context the application is running in.
@@ -111,25 +109,26 @@ public abstract class Application implements URIHandler,
      */
     private Object user;
 
-    /**
-     * Mapping from window name to window instance.
-     */
-    private final Hashtable<String, Window> windows = new Hashtable<String, Window>();
+    // /**
+    // * Mapping from window name to window instance.
+    // */
+    // private final Hashtable<String, Window> windows = new Hashtable<String,
+    // Window>();
 
-    /**
-     * Main window of the application.
-     */
-    private Window mainWindow = null;
+    // /**
+    // * Main window of the application.
+    // */
+    // private Window mainWindow = null;
 
     /**
      * The application's URL.
      */
     private URL applicationUrl;
 
-    /**
-     * Name of the theme currently used by the application.
-     */
-    private String theme = null;
+    // /**
+    // * Name of the theme currently used by the application.
+    // */
+    // private String theme = null;
 
     /**
      * Application status.
@@ -151,15 +150,15 @@ public abstract class Application implements URIHandler,
      */
     private LinkedList<UserChangeListener> userChangeListeners = null;
 
-    /**
-     * Window attach listeners.
-     */
-    private LinkedList<WindowAttachListener> windowAttachListeners = null;
-
-    /**
-     * Window detach listeners.
-     */
-    private LinkedList<WindowDetachListener> windowDetachListeners = null;
+    // /**
+    // * Window attach listeners.
+    // */
+    // private LinkedList<WindowAttachListener> windowAttachListeners = null;
+    //
+    // /**
+    // * Window detach listeners.
+    // */
+    // private LinkedList<WindowDetachListener> windowDetachListeners = null;
 
     /**
      * Application resource mapping: key <-> resource.
@@ -188,238 +187,252 @@ public abstract class Application implements URIHandler,
      */
     private Terminal.ErrorListener errorHandler = this;
 
-    /**
-     * <p>
-     * Gets a window by name. Returns <code>null</code> if the application is
-     * not running or it does not contain a window corresponding to the name.
-     * </p>
-     * 
-     * <p>
-     * All windows can be referenced by their names in url
-     * <code>http://host:port/foo/bar/</code> where
-     * <code>http://host:port/foo/</code> is the application url as returned by
-     * getURL() and <code>bar</code> is the name of the window.
-     * </p>
-     * 
-     * <p>
-     * One should note that this method can, as a side effect create new windows
-     * if needed by the application. This can be achieved by overriding the
-     * default implementation.
-     * </p>
-     * 
-     * <p>
-     * If for some reason user opens another window with same url that is
-     * already open, name is modified by adding "_12345678" postfix to the name,
-     * where 12345678 is a random number. One can decide to create another
-     * window-object for those windows (recommended) or to discard the postfix.
-     * If the user has two browser windows pointing to the same window-object on
-     * server, synchronization errors are likely to occur.
-     * </p>
-     * 
-     * <p>
-     * If no browser-level windowing is used, all defaults are fine and this
-     * method can be left as is. In case browser-level windows are needed, it is
-     * recommended to create new window-objects on this method from their names
-     * if the super.getWindow() does not find existing windows. See below for
-     * implementation example: <code><pre>
-        // If we already have the requested window, use it
-        Window w = super.getWindow(name);
-        if (w == null) {
-            // If no window found, create it
-            w = new Window(name);
-            // set windows name to the one requested
-            w.setName(name);
-            // add it to this application
-            addWindow(w);
-            // ensure use of window specific url
-            w.open(new ExternalResource(w.getURL().toString()));
-            // add some content
-            w.addComponent(new Label("Test window"));
-        }
-        return w;</pre></code>
-     * </p>
-     * 
-     * <p>
-     * <strong>Note</strong> that all returned Window objects must be added to
-     * this application instance.
-     * 
-     * <p>
-     * The method should return null if the window does not exists (and is not
-     * created as a side-effect) or if the application is not running anymore.
-     * </p>
-     * 
-     * @param name
-     *            the name of the window.
-     * @return the window associated with the given URI or <code>null</code>
-     */
-    public Window getWindow(String name) {
+    // /**
+    // * <p>
+    // * Gets a window by name. Returns <code>null</code> if the application is
+    // * not running or it does not contain a window corresponding to the name.
+    // * </p>
+    // *
+    // * <p>
+    // * All windows can be referenced by their names in url
+    // * <code>http://host:port/foo/bar/</code> where
+    // * <code>http://host:port/foo/</code> is the application url as returned
+    // by
+    // * getURL() and <code>bar</code> is the name of the window.
+    // * </p>
+    // *
+    // * <p>
+    // * One should note that this method can, as a side effect create new
+    // windows
+    // * if needed by the application. This can be achieved by overriding the
+    // * default implementation.
+    // * </p>
+    // *
+    // * <p>
+    // * If for some reason user opens another window with same url that is
+    // * already open, name is modified by adding "_12345678" postfix to the
+    // name,
+    // * where 12345678 is a random number. One can decide to create another
+    // * window-object for those windows (recommended) or to discard the
+    // postfix.
+    // * If the user has two browser windows pointing to the same window-object
+    // on
+    // * server, synchronization errors are likely to occur.
+    // * </p>
+    // *
+    // * <p>
+    // * If no browser-level windowing is used, all defaults are fine and this
+    // * method can be left as is. In case browser-level windows are needed, it
+    // is
+    // * recommended to create new window-objects on this method from their
+    // names
+    // * if the super.getWindow() does not find existing windows. See below for
+    // * implementation example: <code><pre>
+    // // If we already have the requested window, use it
+    // Window w = super.getWindow(name);
+    // if (w == null) {
+    // // If no window found, create it
+    // w = new Window(name);
+    // // set windows name to the one requested
+    // w.setName(name);
+    // // add it to this application
+    // addWindow(w);
+    // // ensure use of window specific url
+    // w.open(new ExternalResource(w.getURL().toString()));
+    // // add some content
+    // w.addComponent(new Label("Test window"));
+    // }
+    // return w;</pre></code>
+    // * </p>
+    // *
+    // * <p>
+    // * <strong>Note</strong> that all returned Window objects must be added to
+    // * this application instance.
+    // *
+    // * <p>
+    // * The method should return null if the window does not exists (and is not
+    // * created as a side-effect) or if the application is not running anymore.
+    // * </p>
+    // *
+    // * @param name
+    // * the name of the window.
+    // * @return the window associated with the given URI or <code>null</code>
+    // */
+    // public Window getWindow(String name) {
+    //
+    // // For closed app, do not give any windows
+    // if (!isRunning()) {
+    // return null;
+    // }
+    //
+    // // Gets the window by name
+    // final Window window = windows.get(name);
+    //
+    // return window;
+    // }
 
-        // For closed app, do not give any windows
-        if (!isRunning()) {
-            return null;
-        }
+    // /**
+    // * Adds a new window to the application.
+    // *
+    // * <p>
+    // * This implicitly invokes the
+    // * {@link com.vaadin.ui.Window#setApplication(Application)} method.
+    // * </p>
+    // *
+    // * <p>
+    // * Note that all application-level windows can be accessed by their names
+    // in
+    // * url <code>http://host:port/foo/bar/</code> where
+    // * <code>http://host:port/foo/</code> is the application url as returned
+    // by
+    // * getURL() and <code>bar</code> is the name of the window. Also note that
+    // * not all windows should be added to application - one can also add
+    // windows
+    // * inside other windows - these windows show as smaller windows inside
+    // those
+    // * windows.
+    // * </p>
+    // *
+    // * @param window
+    // * the new <code>Window</code> to add. If the name of the window
+    // * is <code>null</code>, an unique name is automatically given
+    // * for the window.
+    // * @throws IllegalArgumentException
+    // * if a window with the same name as the new window already
+    // * exists in the application.
+    // * @throws NullPointerException
+    // * if the given <code>Window</code> is <code>null</code>.
+    // */
+    // public void addWindow(Window window) throws IllegalArgumentException,
+    // NullPointerException {
+    //
+    // // Nulls can not be added to application
+    // if (window == null) {
+    // return;
+    // }
+    //
+    // // Check that one is not adding a sub-window to application
+    // if (window.getParent() != null) {
+    // throw new IllegalArgumentException(
+    // "Window was already added inside another window"
+    // + " - it can not be added to application also.");
+    // }
+    //
+    // // Gets the naming proposal from window
+    // String name = window.getName();
+    //
+    // // Checks that the application does not already contain
+    // // window having the same name
+    // if (name != null && windows.containsKey(name)) {
+    //
+    // // If the window is already added
+    // if (window == windows.get(name)) {
+    // return;
+    // }
+    //
+    // // Otherwise complain
+    // throw new IllegalArgumentException("Window with name '"
+    // + window.getName()
+    // + "' is already present in the application");
+    // }
+    //
+    // // If the name of the window is null, the window is automatically named
+    // if (name == null) {
+    // boolean accepted = false;
+    // while (!accepted) {
+    //
+    // // Try another name
+    // synchronized (this) {
+    // name = String.valueOf(nextWindowId);
+    // nextWindowId++;
+    // }
+    //
+    // if (!windows.containsKey(name)) {
+    // accepted = true;
+    // }
+    // }
+    // window.setName(name);
+    // }
+    //
+    // // Adds the window to application
+    // windows.put(name, window);
+    // window.setApplication(this);
+    //
+    // fireWindowAttachEvent(window);
+    //
+    // // If no main window is set, declare the window to be main window
+    // if (getMainWindow() == null) {
+    // mainWindow = window;
+    // }
+    // }
 
-        // Gets the window by name
-        final Window window = windows.get(name);
+    // /**
+    // * Send information to all listeners about new Windows associated with
+    // this
+    // * application.
+    // *
+    // * @param window
+    // */
+    // private void fireWindowAttachEvent(Window window) {
+    // // Fires the window attach event
+    // if (windowAttachListeners != null) {
+    // final Object[] listeners = windowAttachListeners.toArray();
+    // final WindowAttachEvent event = new WindowAttachEvent(window);
+    // for (int i = 0; i < listeners.length; i++) {
+    // ((WindowAttachListener) listeners[i]).windowAttached(event);
+    // }
+    // }
+    // }
 
-        return window;
-    }
+    // /**
+    // * Removes the specified window from the application.
+    // *
+    // * <p>
+    // * Removing the main window of the Application also sets the main window
+    // to
+    // * null. One must another window to be the main window after this with
+    // * {@link #setMainWindow(Window)}.
+    // * </p>
+    // *
+    // * <p>
+    // * Note that removing window from the application does not close the
+    // browser
+    // * window - the window is only removed from the server-side.
+    // * </p>
+    // *
+    // * @param window
+    // * the window to be removed.
+    // */
+    // public void removeWindow(Window window) {
+    // if (window != null && windows.contains(window)) {
+    //
+    // // Removes the window from application
+    // windows.remove(window.getName());
+    //
+    // // If the window was main window, clear it
+    // if (getMainWindow() == window) {
+    // setMainWindow(null);
+    // }
+    //
+    // // Removes the application from window
+    // if (window.getApplication() == this) {
+    // window.setApplication(null);
+    // }
+    //
+    // fireWindowDetachEvent(window);
+    // }
+    // }
 
-    /**
-     * Adds a new window to the application.
-     * 
-     * <p>
-     * This implicitly invokes the
-     * {@link com.vaadin.ui.Window#setApplication(Application)} method.
-     * </p>
-     * 
-     * <p>
-     * Note that all application-level windows can be accessed by their names in
-     * url <code>http://host:port/foo/bar/</code> where
-     * <code>http://host:port/foo/</code> is the application url as returned by
-     * getURL() and <code>bar</code> is the name of the window. Also note that
-     * not all windows should be added to application - one can also add windows
-     * inside other windows - these windows show as smaller windows inside those
-     * windows.
-     * </p>
-     * 
-     * @param window
-     *            the new <code>Window</code> to add. If the name of the window
-     *            is <code>null</code>, an unique name is automatically given
-     *            for the window.
-     * @throws IllegalArgumentException
-     *             if a window with the same name as the new window already
-     *             exists in the application.
-     * @throws NullPointerException
-     *             if the given <code>Window</code> is <code>null</code>.
-     */
-    public void addWindow(Window window) throws IllegalArgumentException,
-            NullPointerException {
-
-        // Nulls can not be added to application
-        if (window == null) {
-            return;
-        }
-
-        // Check that one is not adding a sub-window to application
-        if (window.getParent() != null) {
-            throw new IllegalArgumentException(
-                    "Window was already added inside another window"
-                            + " - it can not be added to application also.");
-        }
-
-        // Gets the naming proposal from window
-        String name = window.getName();
-
-        // Checks that the application does not already contain
-        // window having the same name
-        if (name != null && windows.containsKey(name)) {
-
-            // If the window is already added
-            if (window == windows.get(name)) {
-                return;
-            }
-
-            // Otherwise complain
-            throw new IllegalArgumentException("Window with name '"
-                    + window.getName()
-                    + "' is already present in the application");
-        }
-
-        // If the name of the window is null, the window is automatically named
-        if (name == null) {
-            boolean accepted = false;
-            while (!accepted) {
-
-                // Try another name
-                synchronized (this) {
-                    name = String.valueOf(nextWindowId);
-                    nextWindowId++;
-                }
-
-                if (!windows.containsKey(name)) {
-                    accepted = true;
-                }
-            }
-            window.setName(name);
-        }
-
-        // Adds the window to application
-        windows.put(name, window);
-        window.setApplication(this);
-
-        fireWindowAttachEvent(window);
-
-        // If no main window is set, declare the window to be main window
-        if (getMainWindow() == null) {
-            mainWindow = window;
-        }
-    }
-
-    /**
-     * Send information to all listeners about new Windows associated with this
-     * application.
-     * 
-     * @param window
-     */
-    private void fireWindowAttachEvent(Window window) {
-        // Fires the window attach event
-        if (windowAttachListeners != null) {
-            final Object[] listeners = windowAttachListeners.toArray();
-            final WindowAttachEvent event = new WindowAttachEvent(window);
-            for (int i = 0; i < listeners.length; i++) {
-                ((WindowAttachListener) listeners[i]).windowAttached(event);
-            }
-        }
-    }
-
-    /**
-     * Removes the specified window from the application.
-     * 
-     * <p>
-     * Removing the main window of the Application also sets the main window to
-     * null. One must another window to be the main window after this with
-     * {@link #setMainWindow(Window)}.
-     * </p>
-     * 
-     * <p>
-     * Note that removing window from the application does not close the browser
-     * window - the window is only removed from the server-side.
-     * </p>
-     * 
-     * @param window
-     *            the window to be removed.
-     */
-    public void removeWindow(Window window) {
-        if (window != null && windows.contains(window)) {
-
-            // Removes the window from application
-            windows.remove(window.getName());
-
-            // If the window was main window, clear it
-            if (getMainWindow() == window) {
-                setMainWindow(null);
-            }
-
-            // Removes the application from window
-            if (window.getApplication() == this) {
-                window.setApplication(null);
-            }
-
-            fireWindowDetachEvent(window);
-        }
-    }
-
-    private void fireWindowDetachEvent(Window window) {
-        // Fires the window detach event
-        if (windowDetachListeners != null) {
-            final Object[] listeners = windowDetachListeners.toArray();
-            final WindowDetachEvent event = new WindowDetachEvent(window);
-            for (int i = 0; i < listeners.length; i++) {
-                ((WindowDetachListener) listeners[i]).windowDetached(event);
-            }
-        }
-    }
+    // private void fireWindowDetachEvent(Window window) {
+    // // Fires the window detach event
+    // if (windowDetachListeners != null) {
+    // final Object[] listeners = windowDetachListeners.toArray();
+    // final WindowDetachEvent event = new WindowDetachEvent(window);
+    // for (int i = 0; i < listeners.length; i++) {
+    // ((WindowDetachListener) listeners[i]).windowDetached(event);
+    // }
+    // }
+    // }
 
     /**
      * Gets the user of the application.
@@ -559,18 +572,18 @@ public abstract class Application implements URIHandler,
         return applicationIsRunning;
     }
 
-    /**
-     * Gets the set of windows contained by the application.
-     * 
-     * <p>
-     * Note that the returned set of windows can not be modified.
-     * </p>
-     * 
-     * @return the Unmodifiable collection of windows.
-     */
-    public Collection<Window> getWindows() {
-        return Collections.unmodifiableCollection(windows.values());
-    }
+    // /**
+    // * Gets the set of windows contained by the application.
+    // *
+    // * <p>
+    // * Note that the returned set of windows can not be modified.
+    // * </p>
+    // *
+    // * @return the Unmodifiable collection of windows.
+    // */
+    // public Collection<Window> getWindows() {
+    // return Collections.unmodifiableCollection(windows.values());
+    // }
 
     /**
      * <p>
@@ -582,85 +595,87 @@ public abstract class Application implements URIHandler,
      */
     public abstract void init();
 
-    /**
-     * Gets the application's theme. The application's theme is the default
-     * theme used by all the windows in it that do not explicitly specify a
-     * theme. If the application theme is not explicitly set, the
-     * <code>null</code> is returned.
-     * 
-     * @return the name of the application's theme.
-     */
-    public String getTheme() {
-        return theme;
-    }
+    // /**
+    // * Gets the application's theme. The application's theme is the default
+    // * theme used by all the windows in it that do not explicitly specify a
+    // * theme. If the application theme is not explicitly set, the
+    // * <code>null</code> is returned.
+    // *
+    // * @return the name of the application's theme.
+    // */
+    // public String getTheme() {
+    // return theme;
+    // }
 
-    /**
-     * Sets the application's theme.
-     * <p>
-     * Note that this theme can be overridden in the the application level
-     * windows with {@link com.vaadin.ui.Window#setTheme(String)}. Setting theme
-     * to be <code>null</code> selects the default theme. For the available
-     * theme names, see the contents of the VAADIN/themes directory.
-     * </p>
-     * 
-     * @param theme
-     *            the new theme for this application.
-     */
-    public void setTheme(String theme) {
-        // Collect list of windows not having the current or future theme
-        final LinkedList<Window> toBeUpdated = new LinkedList<Window>();
-        final String oldAppTheme = getTheme();
-        for (final Iterator<Window> i = getWindows().iterator(); i.hasNext();) {
-            final Window w = i.next();
-            final String windowTheme = w.getTheme();
-            if ((windowTheme == null)
-                    || (!windowTheme.equals(theme) && windowTheme
-                            .equals(oldAppTheme))) {
-                toBeUpdated.add(w);
-            }
-        }
+    // /**
+    // * Sets the application's theme.
+    // * <p>
+    // * Note that this theme can be overridden in the the application level
+    // * windows with {@link com.vaadin.ui.Window#setTheme(String)}. Setting
+    // theme
+    // * to be <code>null</code> selects the default theme. For the available
+    // * theme names, see the contents of the VAADIN/themes directory.
+    // * </p>
+    // *
+    // * @param theme
+    // * the new theme for this application.
+    // */
+    // public void setTheme(String theme) {
+    // // Collect list of windows not having the current or future theme
+    // final LinkedList<Window> toBeUpdated = new LinkedList<Window>();
+    // final String oldAppTheme = getTheme();
+    // for (final Iterator<Window> i = getWindows().iterator(); i.hasNext();) {
+    // final Window w = i.next();
+    // final String windowTheme = w.getTheme();
+    // if ((windowTheme == null)
+    // || (!windowTheme.equals(theme) && windowTheme
+    // .equals(oldAppTheme))) {
+    // toBeUpdated.add(w);
+    // }
+    // }
+    //
+    // // Updates the theme
+    // this.theme = theme;
+    //
+    // // Ask windows to update themselves
+    // for (final Iterator<Window> i = toBeUpdated.iterator(); i.hasNext();) {
+    // i.next().requestRepaint();
+    // }
+    // }
 
-        // Updates the theme
-        this.theme = theme;
+    // /**
+    // * Gets the mainWindow of the application.
+    // *
+    // * <p>
+    // * The main window is the window attached to the application URL (
+    // * {@link #getURL()}) and thus which is show by default to the user.
+    // * </p>
+    // * <p>
+    // * Note that each application must have at least one main window.
+    // * </p>
+    // *
+    // * @return the main window.
+    // */
+    // public Window getMainWindow() {
+    // return mainWindow;
+    // }
 
-        // Ask windows to update themselves
-        for (final Iterator<Window> i = toBeUpdated.iterator(); i.hasNext();) {
-            i.next().requestRepaint();
-        }
-    }
-
-    /**
-     * Gets the mainWindow of the application.
-     * 
-     * <p>
-     * The main window is the window attached to the application URL (
-     * {@link #getURL()}) and thus which is show by default to the user.
-     * </p>
-     * <p>
-     * Note that each application must have at least one main window.
-     * </p>
-     * 
-     * @return the main window.
-     */
-    public Window getMainWindow() {
-        return mainWindow;
-    }
-
-    /**
-     * <p>
-     * Sets the mainWindow. If the main window is not explicitly set, the main
-     * window defaults to first created window. Setting window as a main window
-     * of this application also adds the window to this application.
-     * </p>
-     * 
-     * @param mainWindow
-     *            the mainWindow to set.
-     */
-    public void setMainWindow(Window mainWindow) {
-
-        addWindow(mainWindow);
-        this.mainWindow = mainWindow;
-    }
+    // /**
+    // * <p>
+    // * Sets the mainWindow. If the main window is not explicitly set, the main
+    // * window defaults to first created window. Setting window as a main
+    // window
+    // * of this application also adds the window to this application.
+    // * </p>
+    // *
+    // * @param mainWindow
+    // * the mainWindow to set.
+    // */
+    // public void setMainWindow(Window mainWindow) {
+    //
+    // addWindow(mainWindow);
+    // this.mainWindow = mainWindow;
+    // }
 
     /**
      * Returns an enumeration of all the names in this application.
@@ -1060,67 +1075,67 @@ public abstract class Application implements URIHandler,
         public void windowDetached(WindowDetachEvent event);
     }
 
-    /**
-     * Adds the window attach listener.
-     * 
-     * Use this to get notifications each time a window is attached to the
-     * application with {@link #addWindow(Window)}.
-     * 
-     * @param listener
-     *            the window attach listener to add.
-     */
-    public void addListener(WindowAttachListener listener) {
-        if (windowAttachListeners == null) {
-            windowAttachListeners = new LinkedList<WindowAttachListener>();
-        }
-        windowAttachListeners.add(listener);
-    }
+    // /**
+    // * Adds the window attach listener.
+    // *
+    // * Use this to get notifications each time a window is attached to the
+    // * application with {@link #addWindow(Window)}.
+    // *
+    // * @param listener
+    // * the window attach listener to add.
+    // */
+    // public void addListener(WindowAttachListener listener) {
+    // if (windowAttachListeners == null) {
+    // windowAttachListeners = new LinkedList<WindowAttachListener>();
+    // }
+    // windowAttachListeners.add(listener);
+    // }
 
-    /**
-     * Adds the window detach listener.
-     * 
-     * Use this to get notifications each time a window is remove from the
-     * application with {@link #removeWindow(Window)}.
-     * 
-     * @param listener
-     *            the window detach listener to add.
-     */
-    public void addListener(WindowDetachListener listener) {
-        if (windowDetachListeners == null) {
-            windowDetachListeners = new LinkedList<WindowDetachListener>();
-        }
-        windowDetachListeners.add(listener);
-    }
+    // /**
+    // * Adds the window detach listener.
+    // *
+    // * Use this to get notifications each time a window is remove from the
+    // * application with {@link #removeWindow(Window)}.
+    // *
+    // * @param listener
+    // * the window detach listener to add.
+    // */
+    // public void addListener(WindowDetachListener listener) {
+    // if (windowDetachListeners == null) {
+    // windowDetachListeners = new LinkedList<WindowDetachListener>();
+    // }
+    // windowDetachListeners.add(listener);
+    // }
 
-    /**
-     * Removes the window attach listener.
-     * 
-     * @param listener
-     *            the window attach listener to remove.
-     */
-    public void removeListener(WindowAttachListener listener) {
-        if (windowAttachListeners != null) {
-            windowAttachListeners.remove(listener);
-            if (windowAttachListeners.isEmpty()) {
-                windowAttachListeners = null;
-            }
-        }
-    }
+    // /**
+    // * Removes the window attach listener.
+    // *
+    // * @param listener
+    // * the window attach listener to remove.
+    // */
+    // public void removeListener(WindowAttachListener listener) {
+    // if (windowAttachListeners != null) {
+    // windowAttachListeners.remove(listener);
+    // if (windowAttachListeners.isEmpty()) {
+    // windowAttachListeners = null;
+    // }
+    // }
+    // }
 
-    /**
-     * Removes the window detach listener.
-     * 
-     * @param listener
-     *            the window detach listener to remove.
-     */
-    public void removeListener(WindowDetachListener listener) {
-        if (windowDetachListeners != null) {
-            windowDetachListeners.remove(listener);
-            if (windowDetachListeners.isEmpty()) {
-                windowDetachListeners = null;
-            }
-        }
-    }
+    // /**
+    // * Removes the window detach listener.
+    // *
+    // * @param listener
+    // * the window detach listener to remove.
+    // */
+    // public void removeListener(WindowDetachListener listener) {
+    // if (windowDetachListeners != null) {
+    // windowDetachListeners.remove(listener);
+    // if (windowDetachListeners.isEmpty()) {
+    // windowDetachListeners = null;
+    // }
+    // }
+    // }
 
     /**
      * Returns the URL user is redirected to on application close. If the URL is
@@ -1906,4 +1921,6 @@ public abstract class Application implements URIHandler,
         }
 
     }
+
+    public abstract Root getRoot();
 }

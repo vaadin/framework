@@ -30,29 +30,29 @@
 	</servlet>
 
 	<!-- For testing GAE - the deployment script changes this to use GAEApplicationServlet -->
-	<servlet>
+<!-- 	<servlet>
 		<servlet-name>IntegrationTest</servlet-name>
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
 			<param-value>com.vaadin.tests.integration.IntegrationTestApplication</param-value>
 		</init-param>
-	</servlet>
+	</servlet>  -->
 
 	<servlet-mapping>
 		<servlet-name>VaadinApplicationRunner</servlet-name>
 		<url-pattern>/run/*</url-pattern>
 	</servlet-mapping>
 
-	<servlet-mapping>
+<!--	<servlet-mapping>
 		<servlet-name>IntegrationTest</servlet-name>
 		<url-pattern>/integration/*</url-pattern>
-	</servlet-mapping>
+	</servlet-mapping>  -->
 
-	<servlet-mapping>
+<!-- 	<servlet-mapping>
 		<servlet-name>IntegrationTest</servlet-name>
 		<url-pattern>/VAADIN/*</url-pattern>
-	</servlet-mapping>
+	</servlet-mapping>  -->
 
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>

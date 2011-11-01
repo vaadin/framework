@@ -79,7 +79,7 @@ public class LoginForm extends CustomComponent {
 
         public void handleParameters(Map<String, String[]> parameters) {
             if (parameters.containsKey("username")) {
-                getWindow().addURIHandler(uriHandler);
+                // getWindow().addURIHandler(uriHandler);
 
                 HashMap<String, String> params = new HashMap<String, String>();
                 // expecting single params
@@ -102,9 +102,9 @@ public class LoginForm extends CustomComponent {
 
         public DownloadStream handleURI(URL context, String relativeUri) {
             if (relativeUri != null && relativeUri.contains("loginHandler")) {
-                if (window != null) {
-                    window.removeURIHandler(this);
-                }
+                // if (window != null) {
+                // window.removeURIHandler(this);
+                // }
                 DownloadStream downloadStream = new DownloadStream(
                         new ByteArrayInputStream(responce.getBytes()),
                         "text/html", "loginSuccesfull");
@@ -116,7 +116,7 @@ public class LoginForm extends CustomComponent {
         }
     };
 
-    private Window window;
+    // private Window window;
 
     public LoginForm() {
         iframe.setType(Embedded.TYPE_BROWSER);
@@ -135,7 +135,8 @@ public class LoginForm extends CustomComponent {
      */
     protected byte[] getLoginHTML() {
         String appUri = getApplication().getURL().toString()
-                + getWindow().getName() + "/";
+        // + getWindow().getName()
+                + "/";
 
         try {
             return ("<!DOCTYPE html PUBLIC \"-//W3C//DTD "
@@ -190,21 +191,21 @@ public class LoginForm extends CustomComponent {
     public void attach() {
         super.attach();
         getApplication().addResource(loginPage);
-        getWindow().addParameterHandler(paramHandler);
+        // getWindow().addParameterHandler(paramHandler);
         iframe.setSource(loginPage);
     }
 
     @Override
     public void detach() {
         getApplication().removeResource(loginPage);
-        getWindow().removeParameterHandler(paramHandler);
+        // getWindow().removeParameterHandler(paramHandler);
         // store window temporary to properly remove uri handler once
         // response is handled. (May happen if login handler removes login
         // form
-        window = getWindow();
-        if (window.getParent() != null) {
-            window = window.getParent();
-        }
+        // window = getRoot();
+        // if (window.getParent() != null) {
+        // window = window.getParent();
+        // }
         super.detach();
     }
 

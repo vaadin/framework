@@ -1118,17 +1118,17 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     @Override
     public void attach() {
         super.attach();
-        if (actionManager != null) {
-            actionManager.setViewer(getWindow());
-        }
+        // if (actionManager != null) {
+        // actionManager.setViewer(getRoot());
+        // }
     }
 
     @Override
     public void detach() {
         super.detach();
-        if (actionManager != null) {
-            actionManager.setViewer((Window) null);
-        }
+        // if (actionManager != null) {
+        // actionManager.setViewer((Window) null);
+        // }
     }
 
     /**
@@ -1257,9 +1257,9 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     protected ActionManager getActionManager() {
         if (actionManager == null) {
             actionManager = new ActionManager();
-            if (getWindow() != null) {
-                actionManager.setViewer(getWindow());
-            }
+            // if (getRoot() != null) {
+            // actionManager.setViewer(getRoot());
+            // }
         }
         return actionManager;
     }

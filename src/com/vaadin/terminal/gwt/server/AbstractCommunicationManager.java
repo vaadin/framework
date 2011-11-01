@@ -16,7 +16,6 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.text.CharacterIterator;
 import java.text.DateFormat;
@@ -67,6 +66,7 @@ import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Window;
 
 /**
@@ -690,14 +690,14 @@ public abstract class AbstractCommunicationManager implements
      * @param request
      * @param response
      * @param callback
-     * @param window
+     * @param root
      *            target window for the UIDL request, can be null if target not
      *            found
      * @throws IOException
      * @throws InvalidUIDLSecurityKeyException
      */
     protected void doHandleUidlRequest(Request request, Response response,
-            Callback callback, Window window) throws IOException,
+            Callback callback, Root root) throws IOException,
             InvalidUIDLSecurityKeyException {
 
         requestThemeName = request.getParameter("theme");
@@ -734,7 +734,7 @@ public abstract class AbstractCommunicationManager implements
             // Finds the window within the application
             if (application.isRunning()) {
                 // Returns if no window found
-                if (window == null) {
+                if (root == null) {
                     // This should not happen, no windows exists but
                     // application is still open.
                     logger.warning("Could not get window for application with request ID "
@@ -748,8 +748,7 @@ public abstract class AbstractCommunicationManager implements
             }
 
             // Change all variables based on request parameters
-            if (!handleVariables(request, response, callback, application,
-                    window)) {
+            if (!handleVariables(request, response, callback, application, root)) {
 
                 // var inconsistency; the client is probably out-of-sync
                 SystemMessages ci = null;
@@ -780,7 +779,7 @@ public abstract class AbstractCommunicationManager implements
             }
 
             paintAfterVariableChanges(request, response, callback, repaintAll,
-                    outWriter, window, analyzeLayouts);
+                    outWriter, root, analyzeLayouts);
 
             if (closingWindowName != null) {
                 currentlyOpenWindowsInClient.remove(closingWindowName);
@@ -866,11 +865,11 @@ public abstract class AbstractCommunicationManager implements
      */
     private void paintAfterVariableChanges(Request request, Response response,
             Callback callback, boolean repaintAll, final PrintWriter outWriter,
-            Window window, boolean analyzeLayouts) throws PaintException,
+            Root root, boolean analyzeLayouts) throws PaintException,
             IOException {
 
         if (repaintAll) {
-            makeAllPaintablesDirty(window);
+            makeAllPaintablesDirty(root);
         }
 
         // Removes application if it has stopped during variable changes
@@ -901,18 +900,18 @@ public abstract class AbstractCommunicationManager implements
 
         // If the browser-window has been closed - we do not need to paint it at
         // all
-        if (window.getName().equals(closingWindowName)) {
+        if (root.getName().equals(closingWindowName)) {
             outWriter.print("\"changes\":[]");
         } else {
             // re-get window - may have been changed
-            Window newWindow = doGetApplicationWindow(request, callback,
-                    application, window);
-            if (newWindow != window) {
-                window = newWindow;
+            Root newRoot = doGetApplicationWindow(request, callback,
+                    application, root);
+            if (newRoot != root) {
+                root = newRoot;
                 repaintAll = true;
             }
 
-            writeUidlResponce(callback, repaintAll, outWriter, window,
+            writeUidlResponce(callback, repaintAll, outWriter, root,
                     analyzeLayouts);
 
         }
@@ -923,7 +922,7 @@ public abstract class AbstractCommunicationManager implements
     }
 
     public void writeUidlResponce(Callback callback, boolean repaintAll,
-            final PrintWriter outWriter, Window window, boolean analyzeLayouts)
+            final PrintWriter outWriter, Root root, boolean analyzeLayouts)
             throws PaintException {
         outWriter.print("\"changes\":[");
 
@@ -933,17 +932,17 @@ public abstract class AbstractCommunicationManager implements
 
         JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
                 !repaintAll);
-        OpenWindowCache windowCache = currentlyOpenWindowsInClient.get(window
+        OpenWindowCache windowCache = currentlyOpenWindowsInClient.get(root
                 .getName());
         if (windowCache == null) {
             windowCache = new OpenWindowCache();
-            currentlyOpenWindowsInClient.put(window.getName(), windowCache);
+            currentlyOpenWindowsInClient.put(root.getName(), windowCache);
         }
 
         // Paints components
         if (repaintAll) {
             paintables = new ArrayList<Paintable>();
-            paintables.add(window);
+            paintables.add(root);
 
             // Reset sent locales
             locales = null;
@@ -967,7 +966,7 @@ public abstract class AbstractCommunicationManager implements
                     dirtyPaintables.remove(p);
                 }
             }
-            paintables = getDirtyVisibleComponents(window);
+            paintables = getDirtyVisibleComponents(root);
         }
         if (paintables != null) {
 
@@ -1003,10 +1002,10 @@ public abstract class AbstractCommunicationManager implements
                 final Paintable p = i.next();
 
                 // TODO CLEAN
-                if (p instanceof Window) {
-                    final Window w = (Window) p;
-                    if (w.getTerminal() == null) {
-                        w.setTerminal(application.getMainWindow().getTerminal());
+                if (p instanceof Root) {
+                    final Root r = (Root) p;
+                    if (r.getTerminal() == null) {
+                        r.setTerminal(application.getRoot().getTerminal());
                     }
                 }
                 /*
@@ -1037,15 +1036,15 @@ public abstract class AbstractCommunicationManager implements
                             .validateComponentRelativeSizes(w.getContent(),
                                     null, null);
 
-                    // Also check any existing subwindows
-                    if (w.getChildWindows() != null) {
-                        for (Window subWindow : w.getChildWindows()) {
-                            invalidComponentRelativeSizes = ComponentSizeValidator
-                                    .validateComponentRelativeSizes(
-                                            subWindow.getContent(),
-                                            invalidComponentRelativeSizes, null);
-                        }
-                    }
+                    // // Also check any existing subwindows
+                    // if (w.getChildWindows() != null) {
+                    // for (Window subWindow : w.getChildWindows()) {
+                    // invalidComponentRelativeSizes = ComponentSizeValidator
+                    // .validateComponentRelativeSizes(
+                    // subWindow.getContent(),
+                    // invalidComponentRelativeSizes, null);
+                    // }
+                    // }
                 }
             }
         }
@@ -1134,8 +1133,8 @@ public abstract class AbstractCommunicationManager implements
             final String resource = (String) i.next();
             InputStream is = null;
             try {
-                is = callback.getThemeResourceAsStream(getTheme(window),
-                        resource);
+                is = callback
+                        .getThemeResourceAsStream(getTheme(root), resource);
             } catch (final Exception e) {
                 // FIXME: Handle exception
                 logger.log(Level.FINER, "Failed to get theme resource stream.",
@@ -1205,8 +1204,8 @@ public abstract class AbstractCommunicationManager implements
         return maxInactiveInterval;
     }
 
-    private String getTheme(Window window) {
-        String themeName = window.getTheme();
+    private String getTheme(Root root) {
+        String themeName = null;// window.getTheme();
         String requestThemeName = getRequestTheme();
 
         if (requestThemeName != null) {
@@ -1222,19 +1221,19 @@ public abstract class AbstractCommunicationManager implements
         return requestThemeName;
     }
 
-    public void makeAllPaintablesDirty(Window window) {
+    public void makeAllPaintablesDirty(Root root) {
         // If repaint is requested, clean all ids in this root window
         for (final Iterator<String> it = idPaintableMap.keySet().iterator(); it
                 .hasNext();) {
             final Component c = (Component) idPaintableMap.get(it.next());
-            if (isChildOf(window, c)) {
+            if (isChildOf(root, c)) {
                 it.remove();
                 paintableIdMap.remove(c);
             }
         }
         // clean WindowCache
-        OpenWindowCache openWindowCache = currentlyOpenWindowsInClient
-                .get(window.getName());
+        OpenWindowCache openWindowCache = currentlyOpenWindowsInClient.get(root
+                .getName());
         if (openWindowCache != null) {
             openWindowCache.clear();
         }
@@ -1260,7 +1259,7 @@ public abstract class AbstractCommunicationManager implements
      * @return true if successful, false if there was an inconsistency
      */
     private boolean handleVariables(Request request, Response response,
-            Callback callback, Application application2, Window window)
+            Callback callback, Application application2, Root root)
             throws IOException, InvalidUIDLSecurityKeyException {
         boolean success = true;
 
@@ -1313,7 +1312,7 @@ public abstract class AbstractCommunicationManager implements
                             new CharArrayWriter());
 
                     paintAfterVariableChanges(request, response, callback,
-                            true, outWriter, window, false);
+                            true, outWriter, root, false);
 
                 }
 
@@ -1386,7 +1385,7 @@ public abstract class AbstractCommunicationManager implements
                             && ((Window) owner).getParent() == null) {
                         final Boolean close = (Boolean) m.get("close");
                         if (close != null && close.booleanValue()) {
-                            closingWindowName = ((Window) owner).getName();
+                            closingWindowName = ((Root) owner).getName();
                         }
                     }
                 } catch (Exception e) {
@@ -1827,97 +1826,99 @@ public abstract class AbstractCommunicationManager implements
      * @param assumedWindow
      * @return
      */
-    protected Window doGetApplicationWindow(Request request, Callback callback,
-            Application application, Window assumedWindow) {
+    protected Root doGetApplicationWindow(Request request, Callback callback,
+            Application application, Root assumedRoot) {
+        return application.getRoot();
 
-        Window window = null;
-
-        // If the client knows which window to use, use it if possible
-        String windowClientRequestedName = request.getParameter("windowName");
-
-        if (assumedWindow != null
-                && application.getWindows().contains(assumedWindow)) {
-            windowClientRequestedName = assumedWindow.getName();
-        }
-        if (windowClientRequestedName != null) {
-            window = application.getWindow(windowClientRequestedName);
-            if (window != null) {
-                return window;
-            }
-        }
-
-        // If client does not know what window it wants
-        if (window == null && !request.isRunningInPortlet()) {
-            // This is only supported if the application is running inside a
-            // servlet
-
-            // Get the path from URL
-            String path = callback.getRequestPathInfo(request);
-
-            /*
-             * If the path is specified, create name from it.
-             * 
-             * An exception is if UIDL request have come this far. This happens
-             * if main window is refreshed. In that case we always return main
-             * window (infamous hacky support for refreshes if only main window
-             * is used). However we are not returning with main window here (we
-             * will later if things work right), because the code is so cryptic
-             * that nobody really knows what it does.
-             */
-            boolean pathMayContainWindowName = path != null
-                    && path.length() > 0 && !path.equals("/");
-            if (pathMayContainWindowName) {
-                boolean uidlRequest = path.startsWith("/UIDL");
-                if (!uidlRequest) {
-                    String windowUrlName = null;
-                    if (path.charAt(0) == '/') {
-                        path = path.substring(1);
-                    }
-                    final int index = path.indexOf('/');
-                    if (index < 0) {
-                        windowUrlName = path;
-                        path = "";
-                    } else {
-                        windowUrlName = path.substring(0, index);
-                        path = path.substring(index + 1);
-                    }
-
-                    window = application.getWindow(windowUrlName);
-                }
-            }
-
-        }
-
-        // By default, use mainwindow
-        if (window == null) {
-            window = application.getMainWindow();
-            // Return null if no main window was found
-            if (window == null) {
-                return null;
-            }
-        }
-
-        // If the requested window is already open, resolve conflict
-        if (currentlyOpenWindowsInClient.containsKey(window.getName())) {
-            String newWindowName = window.getName();
-
-            synchronized (AbstractCommunicationManager.class) {
-                while (currentlyOpenWindowsInClient.containsKey(newWindowName)) {
-                    newWindowName = window.getName() + "_"
-                            + nextUnusedWindowSuffix++;
-                }
-            }
-
-            window = application.getWindow(newWindowName);
-
-            // If everything else fails, use main window even in case of
-            // conflicts
-            if (window == null) {
-                window = application.getMainWindow();
-            }
-        }
-
-        return window;
+        // Window window = null;
+        //
+        // // If the client knows which window to use, use it if possible
+        // String windowClientRequestedName =
+        // request.getParameter("windowName");
+        //
+        // if (assumedWindow != null
+        // && application.getWindows().contains(assumedWindow)) {
+        // windowClientRequestedName = assumedWindow.getName();
+        // }
+        // if (windowClientRequestedName != null) {
+        // window = application.getWindow(windowClientRequestedName);
+        // if (window != null) {
+        // return window;
+        // }
+        // }
+        //
+        // // If client does not know what window it wants
+        // if (window == null && !request.isRunningInPortlet()) {
+        // // This is only supported if the application is running inside a
+        // // servlet
+        //
+        // // Get the path from URL
+        // String path = callback.getRequestPathInfo(request);
+        //
+        // /*
+        // * If the path is specified, create name from it.
+        // *
+        // * An exception is if UIDL request have come this far. This happens
+        // * if main window is refreshed. In that case we always return main
+        // * window (infamous hacky support for refreshes if only main window
+        // * is used). However we are not returning with main window here (we
+        // * will later if things work right), because the code is so cryptic
+        // * that nobody really knows what it does.
+        // */
+        // boolean pathMayContainWindowName = path != null
+        // && path.length() > 0 && !path.equals("/");
+        // if (pathMayContainWindowName) {
+        // boolean uidlRequest = path.startsWith("/UIDL");
+        // if (!uidlRequest) {
+        // String windowUrlName = null;
+        // if (path.charAt(0) == '/') {
+        // path = path.substring(1);
+        // }
+        // final int index = path.indexOf('/');
+        // if (index < 0) {
+        // windowUrlName = path;
+        // path = "";
+        // } else {
+        // windowUrlName = path.substring(0, index);
+        // path = path.substring(index + 1);
+        // }
+        //
+        // window = application.getWindow(windowUrlName);
+        // }
+        // }
+        //
+        // }
+        //
+        // // By default, use mainwindow
+        // if (window == null) {
+        // window = application.getMainWindow();
+        // // Return null if no main window was found
+        // if (window == null) {
+        // return null;
+        // }
+        // }
+        //
+        // // If the requested window is already open, resolve conflict
+        // if (currentlyOpenWindowsInClient.containsKey(window.getName())) {
+        // String newWindowName = window.getName();
+        //
+        // synchronized (AbstractCommunicationManager.class) {
+        // while (currentlyOpenWindowsInClient.containsKey(newWindowName)) {
+        // newWindowName = window.getName() + "_"
+        // + nextUnusedWindowSuffix++;
+        // }
+        // }
+        //
+        // window = application.getWindow(newWindowName);
+        //
+        // // If everything else fails, use main window even in case of
+        // // conflicts
+        // if (window == null) {
+        // window = application.getMainWindow();
+        // }
+        // }
+        //
+        // return window;
     }
 
     /**
@@ -2029,7 +2030,7 @@ public abstract class AbstractCommunicationManager implements
      *            root window for which dirty components is to be fetched
      * @return
      */
-    private ArrayList<Paintable> getDirtyVisibleComponents(Window w) {
+    private ArrayList<Paintable> getDirtyVisibleComponents(Root r) {
         final ArrayList<Paintable> resultset = new ArrayList<Paintable>(
                 dirtyPaintables);
 
@@ -2048,18 +2049,18 @@ public abstract class AbstractCommunicationManager implements
                     resultset.remove(p);
                     i.remove();
                 } else {
-                    Window componentsRoot = component.getWindow();
+                    Root componentsRoot = component.getRoot();
                     if (componentsRoot == null) {
                         // This should not happen unless somebody has overriden
                         // getApplication or getWindow in an illegal way.
                         throw new IllegalStateException(
                                 "component.getWindow() returned null for a component attached to the application");
                     }
-                    if (componentsRoot.getParent() != null) {
-                        // this is a subwindow
-                        componentsRoot = componentsRoot.getParent();
-                    }
-                    if (componentsRoot != w) {
+                    // if (componentsRoot.getParent() != null) {
+                    // // this is a subwindow
+                    // componentsRoot = componentsRoot.getParent();
+                    // }
+                    if (componentsRoot != r) {
                         resultset.remove(p);
                     } else if (component.getParent() != null
                             && !component.getParent().isVisible()) {
@@ -2240,32 +2241,34 @@ public abstract class AbstractCommunicationManager implements
 
         // Handles the uri
         try {
-            URL context = application.getURL();
-            if (window == application.getMainWindow()) {
-                DownloadStream stream = null;
-                /*
-                 * Application.handleURI run first. Handles possible
-                 * ApplicationResources.
-                 */
-                stream = application.handleURI(context, uri);
-                if (stream == null) {
-                    stream = window.handleURI(context, uri);
-                }
-                return stream;
-            } else {
-                // Resolve the prefix end index
-                final int index = uri.indexOf('/');
-                if (index > 0) {
-                    String prefix = uri.substring(0, index);
-                    URL windowContext;
-                    windowContext = new URL(context, prefix + "/");
-                    final String windowUri = (uri.length() > prefix.length() + 1) ? uri
-                            .substring(prefix.length() + 1) : "";
-                    return window.handleURI(windowContext, windowUri);
-                } else {
-                    return null;
-                }
-            }
+            throw new RuntimeException("Not ported to use roots");
+            // URL context = application.getURL();
+            // if (window == application.getMainWindow()) {
+            // DownloadStream stream = null;
+            // /*
+            // * Application.handleURI run first. Handles possible
+            // * ApplicationResources.
+            // */
+            // stream = application.handleURI(context, uri);
+            // if (stream == null) {
+            // stream = window.handleURI(context, uri);
+            // }
+            // return stream;
+            // } else {
+            // // Resolve the prefix end index
+            // final int index = uri.indexOf('/');
+            // if (index > 0) {
+            // String prefix = uri.substring(0, index);
+            // URL windowContext;
+            // windowContext = new URL(context, prefix + "/");
+            // final String windowUri = (uri.length() > prefix.length() + 1) ?
+            // uri
+            // .substring(prefix.length() + 1) : "";
+            // return window.handleURI(windowContext, windowUri);
+            // } else {
+            // return null;
+            // }
+            // }
 
         } catch (final Throwable t) {
             application.getErrorHandler().terminalError(

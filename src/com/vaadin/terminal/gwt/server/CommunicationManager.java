@@ -23,6 +23,7 @@ import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Window;
 
 /**
@@ -278,13 +279,13 @@ public class CommunicationManager extends AbstractCommunicationManager {
      */
     public void handleUidlRequest(HttpServletRequest request,
             HttpServletResponse response,
-            AbstractApplicationServlet applicationServlet, Window window)
+            AbstractApplicationServlet applicationServlet, Root root)
             throws IOException, ServletException,
             InvalidUIDLSecurityKeyException {
         doHandleUidlRequest(new HttpServletRequestWrapper(request),
                 new HttpServletResponseWrapper(response),
                 new AbstractApplicationServletWrapper(applicationServlet),
-                window);
+                root);
     }
 
     /**
@@ -295,7 +296,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
      *            the HTTP Request.
      * @param application
      *            the Application to query for window.
-     * @param assumedWindow
+     * @param assumedRoot
      *            if the window has been already resolved once, this parameter
      *            must contain the window.
      * @return Window matching the given URI or null if not found.
@@ -303,13 +304,12 @@ public class CommunicationManager extends AbstractCommunicationManager {
      *             if an exception has occurred that interferes with the
      *             servlet's normal operation.
      */
-    Window getApplicationWindow(HttpServletRequest request,
+    Root getApplicationRoot(HttpServletRequest request,
             AbstractApplicationServlet applicationServlet,
-            Application application, Window assumedWindow)
-            throws ServletException {
+            Application application, Root assumedRoot) throws ServletException {
         return doGetApplicationWindow(new HttpServletRequestWrapper(request),
                 new AbstractApplicationServletWrapper(applicationServlet),
-                application, assumedWindow);
+                application, assumedRoot);
     }
 
     /**

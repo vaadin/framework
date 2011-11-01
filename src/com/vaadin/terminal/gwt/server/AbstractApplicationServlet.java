@@ -23,7 +23,6 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,7 +43,7 @@ import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.URIHandler;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
 /**
  * Abstract implementation of the ApplicationServlet which handles all
@@ -484,10 +483,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 return;
             } else if (requestType == RequestType.UIDL) {
                 // Handles AJAX UIDL requests
-                Window window = applicationManager.getApplicationWindow(
-                        request, this, application, null);
+                Root root = applicationManager.getApplicationRoot(request,
+                        this, application, null);
                 applicationManager.handleUidlRequest(request, response, this,
-                        window);
+                        root);
                 return;
             }
 
@@ -498,34 +497,35 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 return;
             }
 
-            // Finds the window within the application
-            Window window = getApplicationWindow(request, applicationManager,
+            // Finds the root within the application
+            Root root = getApplicationRoot(request, applicationManager,
                     application);
-            if (window == null) {
+            if (root == null) {
                 throw new ServletException(ERROR_NO_WINDOW_FOUND);
             }
 
-            // Sets terminal type for the window, if not already set
-            if (window.getTerminal() == null) {
-                window.setTerminal(webApplicationContext.getBrowser());
+            // Sets terminal type for the root, if not already set
+            if (root.getTerminal() == null) {
+                root.setTerminal(webApplicationContext.getBrowser());
             }
 
             // Handle parameters
-            final Map<String, String[]> parameters = request.getParameterMap();
-            if (window != null && parameters != null) {
-                window.handleParameters(parameters);
-            }
+            // final Map<String, String[]> parameters =
+            // request.getParameterMap();
+            // if (root != null && parameters != null) {
+            // root.handleParameters(parameters);
+            // }
 
             /*
              * Call the URI handlers and if this turns out to be a download
              * request, send the file to the client
              */
-            if (handleURI(applicationManager, window, request, response)) {
-                return;
-            }
+            // if (handleURI(applicationManager, root, request, response)) {
+            // return;
+            // }
 
             // Send initial AJAX page that kickstarts a Vaadin application
-            writeAjaxPage(request, response, window, application);
+            writeAjaxPage(request, response, root, application);
 
         } catch (final SessionExpiredException e) {
             // Session has expired, notify user
@@ -995,24 +995,25 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     /**
-     * Returns the theme for given request/window
+     * Returns the theme for given request/root
      * 
      * @param request
-     * @param window
+     * @param root
      * @return
      */
-    private String getThemeForWindow(HttpServletRequest request, Window window) {
+    private String getThemeForRoot(HttpServletRequest request, Root root) {
         // Finds theme name
         String themeName;
 
         if (request.getParameter(URL_PARAMETER_THEME) != null) {
             themeName = request.getParameter(URL_PARAMETER_THEME);
         } else {
-            themeName = window.getTheme();
+            // TODO Should read annotation
+            themeName = null;
         }
 
         if (themeName == null) {
-            // no explicit theme for window defined
+            // no explicit theme for root defined
             if (request.getAttribute(REQUEST_DEFAULT_THEME) != null) {
                 // the default theme is defined in request (by portal)
                 themeName = (String) request
@@ -1063,33 +1064,34 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         return DEFAULT_THEME_NAME;
     }
 
-    /**
-     * Calls URI handlers for the request. If an URI handler returns a
-     * DownloadStream the stream is passed to the client for downloading.
-     * 
-     * @param applicationManager
-     * @param window
-     * @param request
-     * @param response
-     * @return true if an DownloadStream was sent to the client, false otherwise
-     * @throws IOException
-     */
-    protected boolean handleURI(CommunicationManager applicationManager,
-            Window window, HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
-        // Handles the URI
-        DownloadStream download = applicationManager.handleURI(window, request,
-                response, this);
-
-        // A download request
-        if (download != null) {
-            // Client downloads an resource
-            handleDownload(download, request, response);
-            return true;
-        }
-
-        return false;
-    }
+    // /**
+    // * Calls URI handlers for the request. If an URI handler returns a
+    // * DownloadStream the stream is passed to the client for downloading.
+    // *
+    // * @param applicationManager
+    // * @param window
+    // * @param request
+    // * @param response
+    // * @return true if an DownloadStream was sent to the client, false
+    // otherwise
+    // * @throws IOException
+    // */
+    // protected boolean handleURI(CommunicationManager applicationManager,
+    // Root window, HttpServletRequest request,
+    // HttpServletResponse response) throws IOException {
+    // // Handles the URI
+    // DownloadStream download = applicationManager.handleURI(window, request,
+    // response, this);
+    //
+    // // A download request
+    // if (download != null) {
+    // // Client downloads an resource
+    // handleDownload(download, request, response);
+    // return true;
+    // }
+    //
+    // return false;
+    // }
 
     void handleServiceSessionExpired(HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException {
@@ -1666,7 +1668,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * <li>
      * {@link #writeAjaxPageHtmlBodyStart(BufferedWriter, HttpServletRequest)}
      * <li>
-     * {@link #writeAjaxPageHtmlVaadinScripts(Window, String, Application, BufferedWriter, String, String, String, HttpServletRequest)}
+     * {@link #writeAjaxPageHtmlVaadinScripts(Root, String, Application, BufferedWriter, String, String, String, HttpServletRequest)}
      * <li>
      * {@link #writeAjaxPageHtmlMainDiv(BufferedWriter, String, String, String, HttpServletRequest)}
      * <li> {@link #writeAjaxPageHtmlBodyEnd(BufferedWriter)}
@@ -1678,7 +1680,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      *            the HTTP response to write to.
      * @param out
      * @param unhandledParameters
-     * @param window
+     * @param root
      * @param terminalType
      * @param theme
      * @throws IOException
@@ -1688,7 +1690,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      *             represented by the given URL.
      */
     protected void writeAjaxPage(HttpServletRequest request,
-            HttpServletResponse response, Window window, Application application)
+            HttpServletResponse response, Root root, Application application)
             throws IOException, MalformedURLException, ServletException {
 
         // e.g portlets only want a html fragment
@@ -1702,7 +1704,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getOutputStream(), "UTF-8"));
 
-        String title = ((window.getCaption() == null) ? "Vaadin 6" : window
+        String title = ((root.getCaption() == null) ? "Vaadin 6" : root
                 .getCaption());
 
         /* Fetch relative url to application */
@@ -1713,7 +1715,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             appUrl = appUrl.substring(0, appUrl.length() - 1);
         }
 
-        String themeName = getThemeForWindow(request, window);
+        String themeName = getThemeForRoot(request, root);
 
         String themeUri = getThemeUri(themeName, request);
 
@@ -1737,8 +1739,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
         appId = appId + "-" + hashCode;
 
-        writeAjaxPageHtmlVaadinScripts(window, themeName, application, page,
-                appUrl, themeUri, appId, request);
+        writeAjaxPageHtmlVaadinScripts(themeName, application, page, appUrl,
+                themeUri, appId, request);
 
         /*- Add classnames;
          *      .v-app
@@ -1852,7 +1854,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * <p>
      * Override this method if you want to add some custom html around scripts.
      * 
-     * @param window
      * @param themeName
      * @param application
      * @param page
@@ -1863,7 +1864,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @throws ServletException
      * @throws IOException
      */
-    protected void writeAjaxPageHtmlVaadinScripts(Window window,
+    protected void writeAjaxPageHtmlVaadinScripts(
+            // Window window,
             String themeName, Application application,
             final BufferedWriter page, String appUrl, String themeUri,
             String appId, HttpServletRequest request) throws ServletException,
@@ -1925,10 +1927,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         page.write("vaadin.vaadinConfigurations[\"" + appId + "\"] = {");
         page.write("appUri:'" + appUrl + "', ");
 
-        if (window != application.getMainWindow()) {
-            page.write("windowName: \""
-                    + JsonPaintTarget.escapeJSON(window.getName()) + "\", ");
-        }
+        // if (window != application.getMainWindow()) {
+        // page.write("windowName: \""
+        // + JsonPaintTarget.escapeJSON(window.getName()) + "\", ");
+        // }
         if (isStandalone()) {
             page.write("standalone: true, ");
         }
@@ -2246,49 +2248,50 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     /**
-     * Gets the existing application or create a new one. Get a window within an
+     * Gets the existing application or create a new one. Get a root within an
      * application based on the requested URI.
      * 
      * @param request
      *            the HTTP Request.
      * @param application
-     *            the Application to query for window.
-     * @return Window matching the given URI or null if not found.
+     *            the Application to query for root.
+     * @return Root matching the given URI or null if not found.
      * @throws ServletException
      *             if an exception has occurred that interferes with the
      *             servlet's normal operation.
      */
-    protected Window getApplicationWindow(HttpServletRequest request,
+    protected Root getApplicationRoot(HttpServletRequest request,
             CommunicationManager applicationManager, Application application)
             throws ServletException {
-
-        // Finds the window where the request is handled
-        Window assumedWindow = null;
-        String path = getRequestPathInfo(request);
-
-        // Main window as the URI is empty
-        if (!(path == null || path.length() == 0 || path.equals("/"))) {
-            if (path.startsWith("/APP/")) {
-                // Use main window for application resources
-                return application.getMainWindow();
-            }
-            String windowName = null;
-            if (path.charAt(0) == '/') {
-                path = path.substring(1);
-            }
-            final int index = path.indexOf('/');
-            if (index < 0) {
-                windowName = path;
-                path = "";
-            } else {
-                windowName = path.substring(0, index);
-            }
-            assumedWindow = application.getWindow(windowName);
-
-        }
-
-        return applicationManager.getApplicationWindow(request, this,
-                application, assumedWindow);
+        return application.getRoot();
+        //
+        // // Finds the window where the request is handled
+        // Window assumedWindow = null;
+        // String path = getRequestPathInfo(request);
+        //
+        // // Main window as the URI is empty
+        // if (!(path == null || path.length() == 0 || path.equals("/"))) {
+        // if (path.startsWith("/APP/")) {
+        // // Use main window for application resources
+        // return application.getMainWindow();
+        // }
+        // String windowName = null;
+        // if (path.charAt(0) == '/') {
+        // path = path.substring(1);
+        // }
+        // final int index = path.indexOf('/');
+        // if (index < 0) {
+        // windowName = path;
+        // path = "";
+        // } else {
+        // windowName = path.substring(0, index);
+        // }
+        // assumedWindow = application.getWindow(windowName);
+        //
+        // }
+        //
+        // return applicationManager.getApplicationWindow(request, this,
+        // application, assumedWindow);
     }
 
     /**

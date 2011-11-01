@@ -573,7 +573,7 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      * @return the parent window of the component or <code>null</code> if it is
      *         not attached to a window or is itself a window
      */
-    public Window getWindow();
+    public Root getRoot();
 
     /**
      * Gets the application object to which the component is attached.
@@ -606,7 +606,7 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      * <p>
      * Reimplementing the {@code attach()} method is useful for tasks that need
      * to get a reference to the parent, window, or application object with the
-     * {@link #getParent()}, {@link #getWindow()}, and {@link #getApplication()}
+     * {@link #getParent()}, {@link #getRoot()}, and {@link #getApplication()}
      * methods. A component does not yet know these objects in the constructor,
      * so in such case, the methods will return {@code null}. For example, the
      * following is invalid:
@@ -661,7 +661,7 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      * Notifies the component that it is detached from the application.
      * 
      * <p>
-     * The {@link #getApplication()} and {@link #getWindow()} methods might
+     * The {@link #getApplication()} and {@link #getRoot()} methods might
      * return <code>null</code> after this method is called.
      * </p>
      * 
