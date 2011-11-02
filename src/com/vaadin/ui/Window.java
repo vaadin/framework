@@ -136,14 +136,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      */
     private int positionX = -1;
 
-    // /**
-    // * <b>Application window only</b>. A list of notifications that are
-    // waiting
-    // * to be sent to the client. Cleared (set to null) when the notifications
-    // * have been sent.
-    // */
-    // private LinkedList<Notification> notifications;
-
     /**
      * <b>Sub window only</b>. Modality flag for sub window.
      */
@@ -497,38 +489,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
 
         // Window closing
         target.addVariable(this, "close", false);
-
-        // // Paint notifications
-        // if (notifications != null) {
-        // target.startTag("notifications");
-        // for (final Iterator<Notification> it = notifications.iterator(); it
-        // .hasNext();) {
-        // final Notification n = it.next();
-        // target.startTag("notification");
-        // if (n.getCaption() != null) {
-        // target.addAttribute("caption", n.getCaption());
-        // }
-        // if (n.getMessage() != null) {
-        // target.addAttribute("message", n.getMessage());
-        // }
-        // if (n.getIcon() != null) {
-        // target.addAttribute("icon", n.getIcon());
-        // }
-        // if (!n.isHtmlContentAllowed()) {
-        // target.addAttribute(
-        // VView.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED, true);
-        // }
-        // target.addAttribute("position", n.getPosition());
-        // target.addAttribute("delay", n.getDelayMsec());
-        // if (n.getStyleName() != null) {
-        // target.addAttribute("style", n.getStyleName());
-        // }
-        // target.endTag("notification");
-        // }
-        // target.endTag("notifications");
-        // notifications = null;
-        // }
-
     }
 
     /* ********************************************************************* */
@@ -1313,142 +1273,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
         requestRepaint();
     }
 
-    // /**
-    // * Shows a notification message on the middle of the window. The message
-    // * automatically disappears ("humanized message").
-    // *
-    // * Care should be taken to to avoid XSS vulnerabilities as the caption is
-    // * rendered as html.
-    // *
-    // * @see #showNotification(com.vaadin.ui.Window.Notification)
-    // * @see Notification
-    // *
-    // * @param caption
-    // * The message
-    // */
-    // public void showNotification(String caption) {
-    // addNotification(new Notification(caption));
-    // }
-
-    // /**
-    // * Shows a notification message the window. The position and behavior of
-    // the
-    // * message depends on the type, which is one of the basic types defined in
-    // * {@link Notification}, for instance Notification.TYPE_WARNING_MESSAGE.
-    // *
-    // * Care should be taken to to avoid XSS vulnerabilities as the caption is
-    // * rendered as html.
-    // *
-    // * @see #showNotification(com.vaadin.ui.Window.Notification)
-    // * @see Notification
-    // *
-    // * @param caption
-    // * The message
-    // * @param type
-    // * The message type
-    // */
-    // public void showNotification(String caption, int type) {
-    // addNotification(new Notification(caption, type));
-    // }
-
-    // /**
-    // * Shows a notification consisting of a bigger caption and a smaller
-    // * description on the middle of the window. The message automatically
-    // * disappears ("humanized message").
-    // *
-    // * Care should be taken to to avoid XSS vulnerabilities as the caption and
-    // * description are rendered as html.
-    // *
-    // * @see #showNotification(com.vaadin.ui.Window.Notification)
-    // * @see Notification
-    // *
-    // * @param caption
-    // * The caption of the message
-    // * @param description
-    // * The message description
-    // *
-    // */
-    // public void showNotification(String caption, String description) {
-    // addNotification(new Notification(caption, description));
-    // }
-
-    // /**
-    // * Shows a notification consisting of a bigger caption and a smaller
-    // * description. The position and behavior of the message depends on the
-    // * type, which is one of the basic types defined in {@link Notification},
-    // * for instance Notification.TYPE_WARNING_MESSAGE.
-    // *
-    // * Care should be taken to to avoid XSS vulnerabilities as the caption and
-    // * description are rendered as html.
-    // *
-    // * @see #showNotification(com.vaadin.ui.Window.Notification)
-    // * @see Notification
-    // *
-    // * @param caption
-    // * The caption of the message
-    // * @param description
-    // * The message description
-    // * @param type
-    // * The message type
-    // */
-    // public void showNotification(String caption, String description, int
-    // type) {
-    // addNotification(new Notification(caption, description, type));
-    // }
-
-    // /**
-    // * Shows a notification consisting of a bigger caption and a smaller
-    // * description. The position and behavior of the message depends on the
-    // * type, which is one of the basic types defined in {@link Notification},
-    // * for instance Notification.TYPE_WARNING_MESSAGE.
-    // *
-    // * Care should be taken to avoid XSS vulnerabilities if html content is
-    // * allowed.
-    // *
-    // * @see #showNotification(com.vaadin.ui.Window.Notification)
-    // * @see Notification
-    // *
-    // * @param caption
-    // * The message caption
-    // * @param description
-    // * The message description
-    // * @param type
-    // * The type of message
-    // * @param htmlContentAllowed
-    // * Whether html in the caption and description should be
-    // * displayed as html or as plain text
-    // */
-    // public void showNotification(String caption, String description, int
-    // type,
-    // boolean htmlContentAllowed) {
-    // addNotification(new Notification(caption, description, type,
-    // htmlContentAllowed));
-    // }
-
-    // /**
-    // * Shows a notification message.
-    // *
-    // * @see Notification
-    // * @see #showNotification(String)
-    // * @see #showNotification(String, int)
-    // * @see #showNotification(String, String)
-    // * @see #showNotification(String, String, int)
-    // *
-    // * @param notification
-    // * The notification message to show
-    // */
-    // public void showNotification(Notification notification) {
-    // addNotification(notification);
-    // }
-    //
-    // private void addNotification(Notification notification) {
-    // if (notifications == null) {
-    // notifications = new LinkedList<Notification>();
-    // }
-    // notifications.add(notification);
-    // requestRepaint();
-    // }
-
     /**
      * A notification message, used to display temporary messages to the user -
      * for example "Document saved", or "Save failed".
@@ -1641,24 +1465,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
          */
         public void setCaption(String caption) {
             this.caption = caption;
-        }
-
-        /**
-         * @deprecated Use {@link #getDescription()} instead.
-         * @return
-         */
-        @Deprecated
-        public String getMessage() {
-            return description;
-        }
-
-        /**
-         * @deprecated Use {@link #setDescription(String)} instead.
-         * @param description
-         */
-        @Deprecated
-        public void setMessage(String description) {
-            this.description = description;
         }
 
         /**

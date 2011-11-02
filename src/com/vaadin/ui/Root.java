@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.Terminal;
+import com.vaadin.ui.Window.Notification;
 
 public interface Root extends Component, com.vaadin.ui.Component.Focusable {
 
@@ -34,5 +35,19 @@ public interface Root extends Component, com.vaadin.ui.Component.Focusable {
     public Collection<Window> getWindows();
 
     public void setFocusedComponent(Focusable focusable);
+
+    public void showNotification(Notification notification);
+
+    public void showNotification(String caption, String description,
+            int type, boolean htmlContentAllowed);
+
+    public void showNotification(String caption, String description,
+            int type);
+
+    public void showNotification(String caption, String description);
+
+    public void showNotification(String caption, int type);
+
+    public void showNotification(String caption);
 
 }
