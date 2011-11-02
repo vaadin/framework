@@ -786,7 +786,7 @@
         <tstamp>
             <format property="nightly.date" pattern="yyyyMMdd"/>
         </tstamp>
-        <property name="version.full" value="${version}.${build.tag}-${nightly.date}-c${build.number}"/>
+        <property name="version.full" value="${version}.${build.tag}-${nightly.date}-${build.number}"/>
 
         <echo>Version will be: ${version.full}</echo>
 
