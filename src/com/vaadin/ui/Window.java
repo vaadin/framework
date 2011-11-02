@@ -6,6 +6,7 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import com.vaadin.Application;
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -93,17 +94,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
     public static final int BORDER_DEFAULT = 2;
 
     // /**
-    // * <b>Application window only</b>. The user terminal for this window.
-    // */
-    // private Terminal terminal = null;
-    //
-    // /**
-    // * <b>Application window only</b>. The application this window is attached
-    // * to or null.
-    // */
-    // private Application application = null;
-    //
-    // /**
     // * <b>Application window only</b>. List of URI handlers for this window.
     // */
     // private LinkedList<URIHandler> uriHandlerList = null;
@@ -113,21 +103,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
     // * window.
     // */
     // private LinkedList<ParameterHandler> parameterHandlerList = null;
-    //
-    // /**
-    // * <b>Application window only</b>. List of sub windows in this window. A
-    // sub
-    // * window cannot have other sub windows.
-    // */
-    // private final LinkedHashSet<Window> subwindows = new
-    // LinkedHashSet<Window>();
-    //
-    // /**
-    // * <b>Application window only</b>. Explicitly specified theme of this
-    // window
-    // * or null if the application theme should be used.
-    // */
-    // private String theme = null;
     //
     // /**
     // * <b>Application window only</b>. Resources to be opened automatically on
@@ -196,12 +171,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      */
     private boolean resizeLazy = false;
 
-    /**
-     * Component that should be focused after the next repaint. Null if no focus
-     * change should take place.
-     */
-    private Focusable pendingFocus;
-
     // /**
     // * <b>Application window only</b>. A list of javascript commands that are
     // * waiting to be sent to the client. Cleared (set to null) when the
@@ -261,71 +230,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
         }
         super.addComponent(c);
     }
-
-    // /**
-    // * <b>Application window only</b>. Gets the user terminal.
-    // *
-    // * @return the user terminal
-    // */
-    // public Terminal getTerminal() {
-    // return terminal;
-    // }
-
-    /* ********************************************************************* */
-
-    // /**
-    // * Gets the parent window of the component.
-    // * <p>
-    // * This is always the window itself.
-    // * </p>
-    // * <p>
-    // * <b>This method is not meant to be overridden. Due to CDI requirements
-    // we
-    // * cannot declare it as final even though it should be final.</b>
-    // * </p>
-    // *
-    // * @see Component#getRoot()
-    // * @return the window itself
-    // */
-    // @Override
-    // public Root getRoot() {
-    // return this;
-    // }
-
-    // /*
-    // * (non-Javadoc)
-    // *
-    // * @see com.vaadin.ui.AbstractComponent#getApplication()
-    // */
-    // @Override
-    // public Application getApplication() {
-    // if (getParent() == null) {
-    // return application;
-    // }
-    // return getParent().getApplication();
-    // }
-
-    // /**
-    // * Gets the parent component of the window.
-    // *
-    // * <p>
-    // * The parent of an application window is always null. The parent of a sub
-    // * window is the application window the sub window is attached to.
-    // * </p>
-    // * <p>
-    // * <b>This method is not meant to be overridden. Due to CDI requirements
-    // we
-    // * cannot declare it as final even though it should be final.</b>
-    // * </p>
-    // *
-    // *
-    // * @return the parent window
-    // * @see Component#getParent()
-    // */
-    // @Override
-    // public Window getParent() {
-    // return (Window) super.getParent();
-    // }
 
     /* ********************************************************************* */
 
@@ -504,56 +408,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
 
     /* ********************************************************************* */
 
-    // /**
-    // * <b>Application window only</b>. Gets the theme for this window.
-    // * <p>
-    // * If the theme for this window is not explicitly set, the application
-    // theme
-    // * name is returned. If the window is not attached to an application, the
-    // * terminal default theme name is returned. If the theme name cannot be
-    // * determined, null is returned
-    // * </p>
-    // * <p>
-    // * Subwindows do not support themes and return the theme used by the
-    // parent
-    // * window
-    // * </p>
-    // *
-    // * @return the name of the theme used for the window
-    // */
-    // public String getTheme() {
-    // if (getParent() != null) {
-    // return (getParent()).getTheme();
-    // }
-    // if (theme != null) {
-    // return theme;
-    // }
-    // if ((application != null) && (application.getTheme() != null)) {
-    // return application.getTheme();
-    // }
-    // if (terminal != null) {
-    // return terminal.getDefaultTheme();
-    // }
-    // return null;
-    // }
-
-    // /**
-    // * <b>Application window only</b>. Sets the name of the theme to use for
-    // * this window. Changing the theme will cause the page to be reloaded.
-    // *
-    // * @param theme
-    // * the name of the new theme for this window or null to use the
-    // * application theme.
-    // */
-    // public void setTheme(String theme) {
-    // if (getParent() != null) {
-    // throw new UnsupportedOperationException(
-    // "Setting theme for sub-windows is not supported.");
-    // }
-    // this.theme = theme;
-    // requestRepaint();
-    // }
-
     /*
      * (non-Javadoc)
      * 
@@ -566,10 +420,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
         // Sets the window name
         // final String name = getName();
         // target.addAttribute("name", name == null ? "" : name);
-
-        // Sets the window theme
-        // final String theme = getTheme();
-        // target.addAttribute("theme", theme == null ? "" : theme);
 
         if (modal) {
             target.addAttribute("modal", true);
@@ -648,18 +498,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
         // Window closing
         target.addVariable(this, "close", false);
 
-        // if (getParent() == null) {
-        // // Paint subwindows
-        // for (final Iterator<Window> i = subwindows.iterator(); i.hasNext();)
-        // {
-        // final Window w = i.next();
-        // w.paint(target);
-        // }
-        // } else {
-        // // mark subwindows
-        // target.addAttribute("sub", true);
-        // }
-
         // // Paint notifications
         // if (notifications != null) {
         // target.startTag("notifications");
@@ -690,16 +528,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
         // target.endTag("notifications");
         // notifications = null;
         // }
-
-        if (pendingFocus != null) {
-            // ensure focused component is still attached to this main window
-            if (pendingFocus.getRoot() == this
-                    || (pendingFocus.getRoot() != null && pendingFocus
-                            .getRoot().getParent() == this)) {
-                target.addAttribute("focused", pendingFocus);
-            }
-            pendingFocus = null;
-        }
 
     }
 
@@ -903,47 +731,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
     // }
 
     // /**
-    // * Sets the application this window is attached to.
-    // *
-    // * <p>
-    // * This method is called by the framework and should not be called
-    // directly
-    // * from application code. {@link com.vaadin.Application#addWindow(Window)}
-    // * should be used to add the window to an application and
-    // * {@link com.vaadin.Application#removeWindow(Window)} to remove the
-    // window
-    // * from the application.
-    // * </p>
-    // * <p>
-    // * This method invokes {@link Component#attach()} and
-    // * {@link Component#detach()} methods when necessary.
-    // * <p>
-    // *
-    // * @param application
-    // * the application the window is attached to
-    // */
-    // public void setApplication(Application application) {
-    //
-    // // If the application is not changed, dont do nothing
-    // if (application == this.application) {
-    // return;
-    // }
-    //
-    // // Sends detach event if the window is connected to application
-    // if (this.application != null) {
-    // detach();
-    // }
-    //
-    // // Connects to new parent
-    // this.application = application;
-    //
-    // // Sends the attach event if connected to a window
-    // if (application != null) {
-    // attach();
-    // }
-    // }
-
-    // /**
     // * <b>Application window only</b>. Sets the unique name of the window. The
     // * name of the window is used to uniquely identify it inside the
     // * application.
@@ -979,17 +766,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
     // }
     //
     // this.name = name;
-    // }
-
-    // /**
-    // * Sets the user terminal. Used by the terminal adapter, should never be
-    // * called from application code.
-    // *
-    // * @param type
-    // * the terminal to set.
-    // */
-    // public void setTerminal(Terminal type) {
-    // terminal = type;
     // }
 
     // /**
@@ -1078,68 +854,68 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
     // }
     // }
     //
-    // /*
-    // * (non-Javadoc)
-    // *
-    // * @see com.vaadin.ui.Panel#changeVariables(java.lang.Object,
-    // java.util.Map)
-    // */
-    // @Override
-    // public void changeVariables(Object source, Map<String, Object> variables)
-    // {
-    //
-    // boolean sizeHasChanged = false;
-    // // size is handled in super class, but resize events only in windows ->
-    // // so detect if size change occurs before super.changeVariables()
-    // if (variables.containsKey("height")
-    // && (getHeightUnits() != UNITS_PIXELS || (Integer) variables
-    // .get("height") != getHeight())) {
-    // sizeHasChanged = true;
-    // }
-    // if (variables.containsKey("width")
-    // && (getWidthUnits() != UNITS_PIXELS || (Integer) variables
-    // .get("width") != getWidth())) {
-    // sizeHasChanged = true;
-    // }
-    //
-    // super.changeVariables(source, variables);
-    //
-    // // Positioning
-    // final Integer positionx = (Integer) variables.get("positionx");
-    // if (positionx != null) {
-    // final int x = positionx.intValue();
-    // // This is information from the client so it is already using the
-    // // position. No need to repaint.
-    // setPositionX(x < 0 ? -1 : x, false);
-    // }
-    // final Integer positiony = (Integer) variables.get("positiony");
-    // if (positiony != null) {
-    // final int y = positiony.intValue();
-    // // This is information from the client so it is already using the
-    // // position. No need to repaint.
-    // setPositionY(y < 0 ? -1 : y, false);
-    // }
-    //
-    // if (isClosable()) {
-    // // Closing
-    // final Boolean close = (Boolean) variables.get("close");
-    // if (close != null && close.booleanValue()) {
-    // close();
-    // }
-    // }
-    //
-    // // fire event if size has really changed
-    // if (sizeHasChanged) {
-    // fireResize();
-    // }
-    //
-    // if (variables.containsKey(FocusEvent.EVENT_ID)) {
-    // fireEvent(new FocusEvent(this));
-    // } else if (variables.containsKey(BlurEvent.EVENT_ID)) {
-    // fireEvent(new BlurEvent(this));
-    // }
-    //
-    // }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Panel#changeVariables(java.lang.Object, java.util.Map)
+     */
+    @Override
+    public void changeVariables(Object source, Map<String, Object> variables) {
+
+        // TODO Are these for top level windows or sub windows?
+        boolean sizeHasChanged = false;
+        // size is handled in super class, but resize events only in windows ->
+        // so detect if size change occurs before super.changeVariables()
+        if (variables.containsKey("height")
+                && (getHeightUnits() != UNITS_PIXELS || (Integer) variables
+                        .get("height") != getHeight())) {
+            sizeHasChanged = true;
+        }
+        if (variables.containsKey("width")
+                && (getWidthUnits() != UNITS_PIXELS || (Integer) variables
+                        .get("width") != getWidth())) {
+            sizeHasChanged = true;
+        }
+
+        super.changeVariables(source, variables);
+
+        // Positioning
+        final Integer positionx = (Integer) variables.get("positionx");
+        if (positionx != null) {
+            final int x = positionx.intValue();
+            // This is information from the client so it is already using the
+            // position. No need to repaint.
+            setPositionX(x < 0 ? -1 : x, false);
+        }
+        final Integer positiony = (Integer) variables.get("positiony");
+        if (positiony != null) {
+            final int y = positiony.intValue();
+            // This is information from the client so it is already using the
+            // position. No need to repaint.
+            setPositionY(y < 0 ? -1 : y, false);
+        }
+
+        if (isClosable()) {
+            // Closing
+            final Boolean close = (Boolean) variables.get("close");
+            if (close != null && close.booleanValue()) {
+                close();
+            }
+        }
+
+        // fire event if size has really changed
+        if (sizeHasChanged) {
+            fireResize();
+        }
+
+        if (variables.containsKey(FocusEvent.EVENT_ID)) {
+            fireEvent(new FocusEvent(this));
+        } else if (variables.containsKey(BlurEvent.EVENT_ID)) {
+            fireEvent(new BlurEvent(this));
+        }
+
+    }
 
     /**
      * Method that handles window closing (from UI).
@@ -1158,17 +934,11 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      * </p>
      */
     protected void close() {
-        Window parent = (Window) getParent();
-        if (parent == null) {
-            fireClose();
-        } else {
-
-            // focus is restored to the parent window
-            parent.focus();
-
-            // subwindow is removed from parent
-            parent.removeWindow(this);
-        }
+        Root root = getRoot();
+        // focus is restored to the parent window
+        root.focus();
+        // subwindow is removed from the root
+        root.removeWindow(this);
     }
 
     /**
@@ -1431,130 +1201,43 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
         fireEvent(new ResizeEvent(this));
     }
 
-    // private void attachWindow(Window w) {
-    // // subwindows.add(w);
-    // w.setParent(this);
-    // requestRepaint();
-    // }
-
-    // /**
-    // * Adds a window inside another window.
-    // *
-    // * <p>
-    // * Adding windows inside another window creates "subwindows". These
-    // windows
-    // * should not be added to application directly and are not accessible
-    // * directly with any url. Addding windows implicitly sets their parents.
-    // * </p>
-    // *
-    // * <p>
-    // * Only one level of subwindows are supported. Thus you can add windows
-    // * inside such windows whose parent is <code>null</code>.
-    // * </p>
-    // *
-    // * @param window
-    // * @throws IllegalArgumentException
-    // * if a window is added inside non-application level window.
-    // * @throws NullPointerException
-    // * if the given <code>Window</code> is <code>null</code>.
-    // */
-    // public void addWindow(Window window) throws IllegalArgumentException,
-    // NullPointerException {
-    //
-    // if (window == null) {
-    // throw new NullPointerException("Argument must not be null");
-    // }
-    //
-    // if (window.getApplication() != null) {
-    // throw new IllegalArgumentException(
-    // "Window was already added to application"
-    // + " - it can not be added to another window also.");
-    // } else if (getParent() != null) {
-    // throw new IllegalArgumentException(
-    // "You can only add windows inside application-level windows.");
-    // } else if (window.subwindows.size() > 0) {
-    // throw new IllegalArgumentException(
-    // "Only one level of subwindows are supported.");
-    // }
-    //
-    // attachWindow(window);
-    // }
-
     /**
-     * Remove the given subwindow from this window.
-     * 
-     * Since Vaadin 6.5, {@link CloseListener}s are called also when explicitly
-     * removing a window by calling this method.
-     * 
-     * Since Vaadin 6.5, returns a boolean indicating if the window was removed
-     * or not.
-     * 
-     * @param window
-     *            Window to be removed.
-     * @return true if the subwindow was removed, false otherwise
-     */
-    public boolean removeWindow(Window window) {
-        // if (!subwindows.remove(window)) {
-        // // Window window is not a subwindow of this window.
-        // return false;
-        // }
-        window.setParent(null);
-        window.fireClose();
-        requestRepaint();
-
-        return true;
-    }
-
-    private Integer bringToFront = null;
-
-    /*
-     * This sequesnce is used to keep the right order of windows if multiple
-     * windows are brought to front in a single changeset. Incremented and saved
-     * by childwindows. If sequence is not used, the order is quite random
-     * (depends on the order getting to dirty list. e.g. which window got
+     * Used to keep the right order of windows if multiple windows are brought
+     * to front in a single changeset. If this is not used, the order is quite
+     * random (depends on the order getting to dirty list. e.g. which window got
      * variable changes).
      */
-    // private int bringToFrontSequence = 0;
+    private Integer bringToFront = null;
 
-    // /**
-    // * If there are currently several sub windows visible, calling this method
-    // * makes this window topmost.
-    // * <p>
-    // * This method can only be called if this window is a sub window and
-    // * connected a top level window. Else an illegal state exception is
-    // thrown.
-    // * Also if there are modal windows and this window is not modal, and
-    // illegal
-    // * state exception is thrown.
-    // * <p>
-    // * <strong> Note, this API works on sub windows only. Browsers can't
-    // reorder
-    // * OS windows.</strong>
-    // */
-    // public void bringToFront() {
-    // Window parent = getParent();
-    // if (parent == null) {
-    // throw new IllegalStateException(
-    // "Window must be attached to parent before calling bringToFront method.");
-    // }
-    // for (Window w : parent.getChildWindows()) {
-    // if (w.isModal() && !isModal()) {
-    // throw new IllegalStateException(
-    // "There are modal windows currently visible, non-modal window cannot be brought to front.");
-    // }
-    // }
-    // bringToFront = getParent().bringToFrontSequence++;
-    // requestRepaint();
-    // }
-
-    // /**
-    // * Get the set of all child windows.
-    // *
-    // * @return Set of child windows.
-    // */
-    // public Set<Window> getChildWindows() {
-    // return Collections.unmodifiableSet(subwindows);
-    // }
+    /**
+     * If there are currently several windows visible, calling this method makes
+     * this window topmost.
+     * <p>
+     * This method can only be called if this window connected a root. Else an
+     * illegal state exception is thrown. Also if there are modal windows and
+     * this window is not modal, and illegal state exception is thrown.
+     * <p>
+     */
+    public void bringToFront() {
+        Root root = getRoot();
+        if (root == null) {
+            throw new IllegalStateException(
+                    "Window must be attached to parent before calling bringToFront method.");
+        }
+        int maxBringToFront = -1;
+        for (Window w : root.getWindows()) {
+            if (!isModal() && w.isModal()) {
+                throw new IllegalStateException(
+                        "The root contains modal windows, non-modal window cannot be brought to front.");
+            }
+            if (w.bringToFront != null) {
+                maxBringToFront = Math.max(maxBringToFront,
+                        w.bringToFront.intValue());
+            }
+        }
+        bringToFront = Integer.valueOf(maxBringToFront + 1);
+        requestRepaint();
+    }
 
     /**
      * Sets sub-window modal, so that widgets behind it cannot be accessed.
@@ -1764,30 +1447,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
     // }
     // notifications.add(notification);
     // requestRepaint();
-    // }
-
-    // /**
-    // * This method is used by Component.Focusable objects to request focus to
-    // * themselves. Focus renders must be handled at window level (instead of
-    // * Component.Focusable) due we want the last focused component to be
-    // focused
-    // * in client too. Not the one that is rendered last (the case we'd get if
-    // * implemented in Focusable only).
-    // *
-    // * To focus component from Vaadin application, use Focusable.focus(). See
-    // * {@link Focusable}.
-    // *
-    // * @param focusable
-    // * to be focused on next paint
-    // */
-    // void setFocusedComponent(Focusable focusable) {
-    // if (getParent() != null) {
-    // // focus is handled by main windows
-    // (getParent()).setFocusedComponent(focusable);
-    // } else {
-    // pendingFocus = focusable;
-    // requestRepaint();
-    // }
     // }
 
     /**
@@ -2365,24 +2024,21 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
 
-    // /**
-    // * {@inheritDoc}
-    // *
-    // * If the window is a sub-window focusing will cause the sub-window to be
-    // * brought on top of other sub-windows on gain keyboard focus.
-    // */
-    // @Override
-    // public void focus() {
-    // if (getParent() != null) {
-    // /*
-    // * When focusing a sub-window it basically means it should be
-    // * brought to the front. Instead of just moving the keyboard focus
-    // * we focus the window and bring it top-most.
-    // */
-    // bringToFront();
-    // } else {
-    // super.focus();
-    // }
-    // }
+    /**
+     * {@inheritDoc}
+     * 
+     * If the window is a sub-window focusing will cause the sub-window to be
+     * brought on top of other sub-windows on gain keyboard focus.
+     */
+    @Override
+    public void focus() {
+        /*
+         * When focusing a sub-window it basically means it should be brought to
+         * the front. Instead of just moving the keyboard focus we focus the
+         * window and bring it top-most.
+         */
+        super.focus();
+        bringToFront();
+    }
 
 }

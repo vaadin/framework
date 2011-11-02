@@ -1381,8 +1381,7 @@ public abstract class AbstractCommunicationManager implements
 
                     // Special-case of closing browser-level windows:
                     // track browser-windows currently open in client
-                    if (owner instanceof Window
-                            && ((Window) owner).getParent() == null) {
+                    if (owner instanceof Root) {
                         final Boolean close = (Boolean) m.get("close");
                         if (close != null && close.booleanValue()) {
                             closingWindowName = ((Root) owner).getName();
