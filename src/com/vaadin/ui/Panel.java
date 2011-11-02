@@ -405,8 +405,16 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         return scrollable;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Sets the panel as programmatically scrollable.
+     * 
+     * <p>
+     * Panel is by default not scrollable programmatically with
+     * {@link #setScrollLeft(int)} and {@link #setScrollTop(int)}, so if you use
+     * those methods, you need to enable scrolling with this method. Components
+     * that extend Panel may have a different default for the programmatic
+     * scrollability.
+     * </p>
      * 
      * @see com.vaadin.terminal.Scrollable#setScrollable(boolean)
      */
@@ -417,10 +425,19 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Sets the horizontal scroll position.
+     * 
+     * <p>
+     * Setting the horizontal scroll position with this method requires that
+     * programmatic scrolling of the component has been enabled. For Panel it is
+     * disabled by default, so you have to call {@link #setScrollable(boolean)}.
+     * Components extending Panel may have a different default for programmatic
+     * scrollability.
+     * </p>
      * 
      * @see com.vaadin.terminal.Scrollable#setScrollLeft(int)
+     * @see #setScrollable(boolean)
      */
     public void setScrollLeft(int pixelsScrolled) {
         if (pixelsScrolled < 0) {
@@ -441,7 +458,20 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         setScrollLeft(pixels);
     }
 
-    /* Documented in interface */
+    /**
+     * Sets the vertical scroll position.
+     * 
+     * <p>
+     * Setting the vertical scroll position with this method requires that
+     * programmatic scrolling of the component has been enabled. For Panel it is
+     * disabled by default, so you have to call {@link #setScrollable(boolean)}.
+     * Components extending Panel may have a different default for programmatic
+     * scrollability.
+     * </p>
+     * 
+     * @see com.vaadin.terminal.Scrollable#setScrollTop(int)
+     * @see #setScrollable(boolean)
+     */
     public void setScrollTop(int pixelsScrolledDown) {
         if (pixelsScrolledDown < 0) {
             throw new IllegalArgumentException(
