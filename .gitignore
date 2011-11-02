@@ -48,6 +48,7 @@
 /WebContent/VAADIN/widgetsets/com.vaadin.demo.sampler.gwt.SamplerWidgetSet
 /WebContent/VAADIN/widgetsets/com.vaadin.portal.gwt.PortalDefaultWidgetSet
 /WebContent/VAADIN/widgetsets/com.vaadin.demo.gwt.OptimizedWidgetSet
+/WebContent/VAADIN/gwt-unitCache*
 
 # /WebContent/WEB-INF/
 /WebContent/WEB-INF/classes
@@ -62,3 +63,4 @@
 
 # /build/buildhelpers/com/vaadin/buildhelpers/
 /build/buildhelpers/com/vaadin/buildhelpers/*.class
+/bin
