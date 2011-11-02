@@ -50,4 +50,6 @@ public interface Root extends Component, com.vaadin.ui.Component.Focusable {
 
     public void showNotification(String caption);
 
+    public void executeJavaScript(String script);
+
 }

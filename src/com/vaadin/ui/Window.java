@@ -163,14 +163,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      */
     private boolean resizeLazy = false;
 
-    // /**
-    // * <b>Application window only</b>. A list of javascript commands that are
-    // * waiting to be sent to the client. Cleared (set to null) when the
-    // commands
-    // * have been sent.
-    // */
-    // private ArrayList<String> jsExecQueue = null;
-
     /**
      * The component that should be scrolled into view after the next repaint.
      * Null if nothing should be scrolled into view.
@@ -472,16 +464,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
 
         // Contents of the window panel is painted
         super.paintContent(target);
-
-        // // Add executable javascripts if needed
-        // if (jsExecQueue != null) {
-        // for (String script : jsExecQueue) {
-        // target.startTag("execJS");
-        // target.addAttribute("script", script);
-        // target.endTag("execJS");
-        // }
-        // jsExecQueue = null;
-        // }
 
         // Window position
         target.addVariable(this, "positionx", getPositionX());
@@ -1589,45 +1571,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
             return htmlContentAllowed;
         }
     }
-
-    // /**
-    // * Executes JavaScript in this window.
-    // *
-    // * <p>
-    // * This method allows one to inject javascript from the server to client.
-    // A
-    // * client implementation is not required to implement this functionality,
-    // * but currently all web-based clients do implement this.
-    // * </p>
-    // *
-    // * <p>
-    // * Executing javascript this way often leads to cross-browser
-    // compatibility
-    // * issues and regressions that are hard to resolve. Use of this method
-    // * should be avoided and instead it is recommended to create new widgets
-    // * with GWT. For more info on creating own, reusable client-side widgets
-    // in
-    // * Java, read the corresponding chapter in Book of Vaadin.
-    // * </p>
-    // *
-    // * @param script
-    // * JavaScript snippet that will be executed.
-    // */
-    // public void executeJavaScript(String script) {
-    //
-    // if (getParent() != null) {
-    // throw new UnsupportedOperationException(
-    // "Only application level windows can execute javascript.");
-    // }
-    //
-    // if (jsExecQueue == null) {
-    // jsExecQueue = new ArrayList<String>();
-    // }
-    //
-    // jsExecQueue.add(script);
-    //
-    // requestRepaint();
-    // }
 
     /**
      * Returns the closable status of the sub window. If a sub window is

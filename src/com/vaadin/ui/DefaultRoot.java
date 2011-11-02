@@ -1,5 +1,6 @@
 package com.vaadin.ui;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -26,6 +27,12 @@ public class DefaultRoot extends AbstractComponentContainer implements Root {
      * Cleared (set to null) when the notifications have been sent.
      */
     private List<Notification> notifications;
+
+    /**
+     * A list of javascript commands that are waiting to be sent to the client.
+     * Cleared (set to null) when the commands have been sent.
+     */
+    private List<String> jsExecQueue = null;
 
     /**
      * List of windows in this root.
@@ -90,6 +97,16 @@ public class DefaultRoot extends AbstractComponentContainer implements Root {
             }
             target.endTag("notifications");
             notifications = null;
+        }
+
+        // Add executable javascripts if needed
+        if (jsExecQueue != null) {
+            for (String script : jsExecQueue) {
+                target.startTag("execJS");
+                target.addAttribute("script", script);
+                target.endTag("execJS");
+            }
+            jsExecQueue = null;
         }
 
         if (pendingFocus != null) {
@@ -366,6 +383,36 @@ public class DefaultRoot extends AbstractComponentContainer implements Root {
             notifications = new LinkedList<Notification>();
         }
         notifications.add(notification);
+        requestRepaint();
+    }
+
+    /**
+     * Executes JavaScript in this root.
+     * 
+     * <p>
+     * This method allows one to inject javascript from the server to client. A
+     * client implementation is not required to implement this functionality,
+     * but currently all web-based clients do implement this.
+     * </p>
+     * 
+     * <p>
+     * Executing javascript this way often leads to cross-browser compatibility
+     * issues and regressions that are hard to resolve. Use of this method
+     * should be avoided and instead it is recommended to create new widgets
+     * with GWT. For more info on creating own, reusable client-side widgets in
+     * Java, read the corresponding chapter in Book of Vaadin.
+     * </p>
+     * 
+     * @param script
+     *            JavaScript snippet that will be executed.
+     */
+    public void executeJavaScript(String script) {
+        if (jsExecQueue == null) {
+            jsExecQueue = new ArrayList<String>();
+        }
+
+        jsExecQueue.add(script);
+
         requestRepaint();
     }
 }

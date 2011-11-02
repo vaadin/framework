@@ -9,7 +9,7 @@ public class RootTestApplication extends Application {
     private final Root root = new DefaultRoot(new Button("Roots, bloody roots",
             new Button.ClickListener() {
                 public void buttonClick(ClickEvent event) {
-                    root.showNotification("Testing");
+                    root.executeJavaScript("window.alert(\"Here\");");
                 }
             }));
 
