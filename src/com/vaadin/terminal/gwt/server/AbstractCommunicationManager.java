@@ -2223,7 +2223,7 @@ public abstract class AbstractCommunicationManager implements
      * @see com.vaadin.terminal.URIHandler
      */
     @SuppressWarnings("deprecation")
-    protected DownloadStream handleURI(Window window, Request request,
+    protected DownloadStream handleURI(Root root, Request request,
             Response response, Callback callback) {
 
         String uri = callback.getRequestPathInfo(request);

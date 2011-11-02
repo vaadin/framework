@@ -284,8 +284,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
             InvalidUIDLSecurityKeyException {
         doHandleUidlRequest(new HttpServletRequestWrapper(request),
                 new HttpServletResponseWrapper(response),
-                new AbstractApplicationServletWrapper(applicationServlet),
-                root);
+                new AbstractApplicationServletWrapper(applicationServlet), root);
     }
 
     /**
@@ -324,16 +323,16 @@ public class CommunicationManager extends AbstractCommunicationManager {
      * @see AbstractCommunicationManager#handleURI(Window, Request, Response,
      *      Callback)
      * 
-     * @param window
+     * @param root
      * @param request
      * @param response
      * @param applicationServlet
      * @return
      */
-    DownloadStream handleURI(Window window, HttpServletRequest request,
+    DownloadStream handleURI(Root root, HttpServletRequest request,
             HttpServletResponse response,
             AbstractApplicationServlet applicationServlet) {
-        return handleURI(window, new HttpServletRequestWrapper(request),
+        return handleURI(root, new HttpServletRequestWrapper(request),
                 new HttpServletResponseWrapper(response),
                 new AbstractApplicationServletWrapper(applicationServlet));
     }
