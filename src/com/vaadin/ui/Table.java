@@ -522,7 +522,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.visibleColumns = newVC;
 
         // Assures visual refresh
-        updateRowCache();
+        refreshRowCache();
     }
 
     /**
@@ -721,7 +721,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.columnAlignments = newCA;
 
         // Assures the visual refresh
-        updateRowCache();
+        refreshRowCache();
     }
 
     /**
@@ -858,7 +858,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (pageLength >= 0 && this.pageLength != pageLength) {
             this.pageLength = pageLength;
             // Assures the visual refresh
-            updateRowCache();
+            refreshRowCache();
         }
     }
 
@@ -979,7 +979,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assures the visual refresh
-        updateRowCache();
+        refreshRowCache();
 
     }
 
@@ -1104,7 +1104,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assures the visual refresh
-        refreshRenderedCells();
+        refreshRowCache();
     }
 
     /**
@@ -1143,7 +1143,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assures the visual refresh
-        updateRowCache();
+        refreshRowCache();
     }
 
     /**
@@ -1169,7 +1169,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assures the visual refresh
-        refreshRenderedCells();
+        refreshRowCache();
     }
 
     /**
@@ -1222,7 +1222,7 @@ public class Table extends AbstractSelect implements Action.Container,
         visibleColumns = newOrder;
 
         // Assure visual refresh
-        updateRowCache();
+        refreshRowCache();
     }
 
     /**
@@ -1316,7 +1316,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         if (needsPageBufferReset) {
             // Assures the visual refresh
-            updateRowCache();
+            refreshRowCache();
         }
     }
 
@@ -1471,8 +1471,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * Requests that the Table should be repainted as soon as possible.
      * 
      * Note that a {@code Table} does not necessarily repaint its contents when
-     * this method has been called. See {@link #updateRowCache()} for forcing an
-     * update of the contents.
+     * this method has been called. See {@link #refreshRowCache()} for forcing
+     * an update of the contents.
      */
     @Override
     public void requestRepaint() {
@@ -1924,7 +1924,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assure visual refresh
-        refreshRenderedCells();
+        refreshRowCache();
     }
 
     /**
@@ -1989,7 +1989,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         if (!(items instanceof Container.ItemSetChangeNotifier)) {
-            updateRowCache();
+            refreshRowCache();
         }
 
         return itemId;
@@ -2013,7 +2013,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @since 6.7.2
      */
-    private void updateRowCache() {
+    public void refreshRowCache() {
         resetPageBuffer();
         refreshRenderedCells();
     }
@@ -3279,7 +3279,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
             if (!actionHandlers.contains(actionHandler)) {
                 actionHandlers.add(actionHandler);
-                refreshRenderedCells();
+                refreshRowCache();
             }
 
         }
@@ -3302,7 +3302,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 actionMapper = null;
             }
 
-            refreshRenderedCells();
+            refreshRowCache();
         }
     }
 
@@ -3312,7 +3312,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public void removeAllActionHandlers() {
         actionHandlers = null;
         actionMapper = null;
-        refreshRenderedCells();
+        refreshRowCache();
     }
 
     /* Property value change listening support */
@@ -3330,7 +3330,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 || event.getProperty() == getPropertyDataSource()) {
             super.valueChange(event);
         } else {
-            updateRowCache();
+            refreshRowCache();
             containerChangeToBeRendered = true;
         }
         requestRepaint();
@@ -3405,7 +3405,7 @@ public class Table extends AbstractSelect implements Action.Container,
             currentPageFirstItemId = nextItemId;
         }
         if (!(items instanceof Container.ItemSetChangeNotifier)) {
-            updateRowCache();
+            refreshRowCache();
         }
         return ret;
     }
@@ -3458,7 +3458,7 @@ public class Table extends AbstractSelect implements Action.Container,
             return false;
         }
         if (!(items instanceof Container.PropertySetChangeNotifier)) {
-            updateRowCache();
+            refreshRowCache();
         }
         return true;
     }
@@ -3544,7 +3544,7 @@ public class Table extends AbstractSelect implements Action.Container,
             if (!visibleColumns.contains(id)) {
                 visibleColumns.add(id);
             }
-            updateRowCache();
+            refreshRowCache();
         }
     }
 
@@ -3575,7 +3575,7 @@ public class Table extends AbstractSelect implements Action.Container,
             if (!items.getContainerPropertyIds().contains(columnId)) {
                 visibleColumns.remove(columnId);
             }
-            updateRowCache();
+            refreshRowCache();
             return true;
         } else {
             return false;
@@ -3634,7 +3634,7 @@ public class Table extends AbstractSelect implements Action.Container,
         // (forced in this method)
         setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex(), false);
 
-        updateRowCache();
+        refreshRowCache();
     }
 
     /**
@@ -3761,7 +3761,7 @@ public class Table extends AbstractSelect implements Action.Container,
         Object itemId = ((Container.Ordered) items)
                 .addItemAfter(previousItemId);
         if (!(items instanceof Container.ItemSetChangeNotifier)) {
-            updateRowCache();
+            refreshRowCache();
         }
         return itemId;
     }
@@ -3777,7 +3777,7 @@ public class Table extends AbstractSelect implements Action.Container,
         Item item = ((Container.Ordered) items).addItemAfter(previousItemId,
                 newItemId);
         if (!(items instanceof Container.ItemSetChangeNotifier)) {
-            updateRowCache();
+            refreshRowCache();
         }
         return item;
     }
@@ -3844,7 +3844,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.fieldFactory = fieldFactory;
 
         // Assure visual refresh
-        updateRowCache();
+        refreshRowCache();
     }
 
     /**
@@ -3886,7 +3886,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.editable = editable;
 
         // Assure visual refresh
-        updateRowCache();
+        refreshRowCache();
     }
 
     /**
@@ -3906,7 +3906,7 @@ public class Table extends AbstractSelect implements Action.Container,
             final int pageIndex = getCurrentPageFirstItemIndex();
             ((Container.Sortable) c).sort(propertyId, ascending);
             setCurrentPageFirstItemIndex(pageIndex);
-            updateRowCache();
+            refreshRowCache();
 
         } else if (c != null) {
             throw new UnsupportedOperationException(
@@ -3978,7 +3978,7 @@ public class Table extends AbstractSelect implements Action.Container,
             if (doSort) {
                 sort();
                 // Assures the visual refresh
-                refreshRenderedCells();
+                refreshRowCache();
             }
         }
     }
@@ -4018,7 +4018,7 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
         // Assures the visual refresh
-        refreshRenderedCells();
+        refreshRowCache();
     }
 
     /**
@@ -4097,7 +4097,7 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public void setCellStyleGenerator(CellStyleGenerator cellStyleGenerator) {
         this.cellStyleGenerator = cellStyleGenerator;
-        refreshRenderedCells();
+        refreshRowCache();
     }
 
     /**
@@ -4789,7 +4789,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public void setItemDescriptionGenerator(ItemDescriptionGenerator generator) {
         if (generator != itemDescriptionGenerator) {
             itemDescriptionGenerator = generator;
-            refreshRenderedCells();
+            refreshRowCache();
         }
     }
 
@@ -4916,7 +4916,7 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public void setRowGenerator(RowGenerator generator) {
         rowGenerator = generator;
-        refreshRenderedCells();
+        refreshRowCache();
     }
 
     /**
