@@ -317,7 +317,7 @@ public class ApplicationConfiguration implements EntryPoint {
                     unknownComponents = new HashMap<String, String>();
                 }
                 unknownComponents.put("" + value, key);
-            } else if (key == "com.vaadin.ui.DefaultRoot") {
+            } else if (key == "com.vaadin.ui.Root") {
                 windowId = "" + value;
             }
         }
@@ -361,7 +361,7 @@ public class ApplicationConfiguration implements EntryPoint {
                 cmd.execute();
             }
             callbacks.clear();
-        } else if(widgetsLoading == 0 && deferredWidgetLoader != null) {
+        } else if (widgetsLoading == 0 && deferredWidgetLoader != null) {
             deferredWidgetLoader.trigger();
         }
 
@@ -377,17 +377,17 @@ public class ApplicationConfiguration implements EntryPoint {
         int communicationFree = 0;
         int nextWidgetIndex = 0;
         private boolean pending;
-        
+
         public DeferredWidgetLoader() {
             schedule(5000);
         }
 
         public void trigger() {
-            if(!pending) {
+            if (!pending) {
                 schedule(FREE_CHECK_TIMEOUT);
             }
         }
-        
+
         @Override
         public void schedule(int delayMillis) {
             super.schedule(delayMillis);
@@ -438,9 +438,9 @@ public class ApplicationConfiguration implements EntryPoint {
             return communicationFree < FREE_LIMIT;
         }
     }
-    
+
     private static DeferredWidgetLoader deferredWidgetLoader;
-   
+
     public void onModuleLoad() {
 
         // Enable IE6 Background image caching

@@ -164,12 +164,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
     private boolean resizeLazy = false;
 
     /**
-     * The component that should be scrolled into view after the next repaint.
-     * Null if nothing should be scrolled into view.
-     */
-    private Component scrollIntoView;
-
-    /**
      * Creates a new unnamed window with a default layout.
      */
     public Window() {
@@ -431,11 +425,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
             centerRequested = false;
         }
 
-        if (scrollIntoView != null) {
-            target.addAttribute("scrollTo", scrollIntoView);
-            scrollIntoView = null;
-        }
-
         // Marks the main window
         // if (getApplication() != null
         // && this == getApplication().getMainWindow()) {
@@ -474,26 +463,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
     }
 
     /* ********************************************************************* */
-
-    /**
-     * Scrolls any component between the component and window to a suitable
-     * position so the component is visible to the user. The given component
-     * must be inside this window.
-     * 
-     * @param component
-     *            the component to be scrolled into view
-     * @throws IllegalArgumentException
-     *             if {@code component} is not inside this window
-     */
-    public void scrollIntoView(Component component)
-            throws IllegalArgumentException {
-        if (component.getRoot() != this) {
-            throw new IllegalArgumentException(
-                    "The component where to scroll must be inside this window.");
-        }
-        scrollIntoView = component;
-        requestRepaint();
-    }
 
     // /**
     // * Opens the given resource in this window. The contents of this Window is
