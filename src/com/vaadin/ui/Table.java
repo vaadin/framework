@@ -1488,36 +1488,77 @@ public class Table extends AbstractSelect implements Action.Container,
     private void removeRowsFromCacheAndFillBottom(int firstIndex, int rows) {
         int totalCachedRows = pageBuffer[CELL_ITEMID].length;
         int totalRows = size();
-        int cacheIx = firstIndex - pageBufferFirstIndex;
+        int firstIndexInPageBuffer = firstIndex - pageBufferFirstIndex;
 
-        // Make sure that no components leak.
+        /*
+         * firstIndexInPageBuffer is the first row to be removed. "rows" rows
+         * after that should be removed. If the page buffer does not contain
+         * that many rows, we only remove the rows that actually are in the page
+         * buffer.
+         */
+        if (firstIndexInPageBuffer + rows > totalCachedRows) {
+            rows = totalCachedRows - firstIndexInPageBuffer;
+        }
+
+        /*
+         * Unregister components that will no longer be in the page buffer to
+         * make sure that no components leak.
+         */
         unregisterComponentsAndPropertiesInRows(firstIndex, rows);
 
-        int newCachedRowCount = totalRows < totalCachedRows ? totalRows
-                : totalCachedRows;
-        int firstAppendedRow = newCachedRowCount > rows ? newCachedRowCount
-                - rows : firstIndex;
-        int rowsToAdd = Math.min(rows, totalCachedRows - firstAppendedRow);
-        rowsToAdd = Math.min(rowsToAdd, totalRows
-                - (firstAppendedRow + pageBufferFirstIndex));
-        if (rowsToAdd <= 0) {
-            return;
+        /*
+         * The number of rows that should be in the cache after this operation
+         * is done (pageBuffer currently contains the expanded items).
+         */
+        int newCachedRowCount = totalCachedRows;
+        if (newCachedRowCount + pageBufferFirstIndex > totalRows) {
+            newCachedRowCount = totalRows - pageBufferFirstIndex;
         }
-        Object[][] cells = getVisibleCellsNoCache(firstAppendedRow, rowsToAdd,
-                false);
 
-        // Create the new cache buffer by copying data from the old one and
-        // appending more rows if applicable.
+        /*
+         * The index at which we should render the first row that does not come
+         * from the previous page buffer.
+         */
+        int firstAppendedRowInPageBuffer = totalCachedRows - rows;
+        int firstAppendedRow = firstAppendedRowInPageBuffer
+                + pageBufferFirstIndex;
+
+        /*
+         * Calculate the maximum number of new rows that we can add to the page
+         * buffer. Less than the rows we removed if the container does not
+         * contain that many items afterwards.
+         */
+        int maxRowsToRender = (totalRows - firstAppendedRow);
+        int rowsToAdd = rows;
+        if (rowsToAdd > maxRowsToRender) {
+            rowsToAdd = maxRowsToRender;
+        }
+
+        Object[][] cells = null;
+        if (rowsToAdd > 0) {
+            cells = getVisibleCellsNoCache(firstAppendedRow, rowsToAdd, false);
+        }
+        /*
+         * Create the new cache buffer by copying the first rows from the old
+         * buffer, moving the following rows upwards and appending more rows if
+         * applicable.
+         */
         Object[][] newPageBuffer = new Object[pageBuffer.length][newCachedRowCount];
-        for (int ix = 0; ix < newCachedRowCount; ix++) {
-            for (int i = 0; i < pageBuffer.length; i++) {
-                if (ix >= firstAppendedRow) {
-                    newPageBuffer[i][ix] = cells[i][ix - firstAppendedRow];
-                } else if (ix >= cacheIx && ix + rows < totalCachedRows) {
-                    newPageBuffer[i][ix] = pageBuffer[i][ix + rows];
-                } else {
-                    newPageBuffer[i][ix] = pageBuffer[i][ix];
-                }
+
+        for (int i = 0; i < pageBuffer.length; i++) {
+            for (int row = 0; row < firstIndexInPageBuffer; row++) {
+                // Copy the first rows
+                newPageBuffer[i][row] = pageBuffer[i][row];
+            }
+            for (int row = firstIndexInPageBuffer; row < firstAppendedRowInPageBuffer; row++) {
+                // Move the rows that were after the expanded rows
+                newPageBuffer[i][row] = pageBuffer[i][row + rows];
+            }
+            for (int row = firstAppendedRowInPageBuffer; row < newCachedRowCount; row++) {
+                // Add the newly rendered rows. Only used if rowsToAdd > 0
+                // (cells != null)
+                newPageBuffer[i][row] = cells[i][row
+                        - firstAppendedRowInPageBuffer];
             }
         }
         pageBuffer = newPageBuffer;
@@ -1537,23 +1578,84 @@ public class Table extends AbstractSelect implements Action.Container,
         return cells;
     }
 
+    /**
+     * @param firstIndex
+     *            The position where new rows should be inserted
+     * @param rows
+     *            The number of rows that should be inserted
+     * @param maxRows
+     *            The maximum number of rows that
+     * @return
+     */
     private Object[][] getVisibleCellsInsertIntoCache(int firstIndex, int rows) {
         Object[][] cells = getVisibleCellsNoCache(firstIndex, rows, false);
-        int currentlyCachedRowCount = pageBuffer[CELL_ITEMID].length;
-        int lastCachedRow = currentlyCachedRowCount - rows;
-        int cacheIx = firstIndex - pageBufferFirstIndex;
+        logger.finest("Insert " + rows + " rows at index " + firstIndex
+                + " to existing page buffer with " + cells.length + " items");
 
-        // Unregister all components that fall beyond the cache limits after
-        // inserting the new rows.
-        unregisterComponentsAndPropertiesInRows(lastCachedRow + 1,
-                currentlyCachedRowCount - lastCachedRow);
+        // Page buffer must not become larger than pageLength*cacheRate before
+        // or after the current page
+        int minPageBufferIndex = getCurrentPageFirstItemIndex()
+                - (int) (getPageLength() * getCacheRate());
+        if (minPageBufferIndex < 0) {
+            minPageBufferIndex = 0;
+        }
+
+        int maxPageBufferIndex = getCurrentPageFirstItemIndex()
+                + (int) (getPageLength() * (1 + getCacheRate()));
+        int maxBufferSize = maxPageBufferIndex - minPageBufferIndex;
+
+        /*
+         * Number of rows that were previously cached. This is not necessarily
+         * the same as pageLength if we do not have enough rows in the
+         * container.
+         */
+        int currentlyCachedRowCount = pageBuffer[CELL_ITEMID].length;
+
+        /*
+         * firstIndexInPageBuffer is the offset in pageBuffer where the new rows
+         * will be inserted (firstIndex is the index in the whole table).
+         * 
+         * E.g. scrolled down to row 1000: firstIndex==1010,
+         * pageBufferFirstIndex==1000 -> cacheIx==10
+         */
+        int firstIndexInPageBuffer = firstIndex - pageBufferFirstIndex;
+
+        /*
+         * "rows" rows will be inserted at firstIndex. Find out how many old
+         * rows fall outside the new buffer so we can unregister components in
+         * the cache.
+         */
+
+        /* All rows until the insertion point remain, always. */
+        int firstCacheRowToRemoveInPageBuffer = firstIndexInPageBuffer;
+
+        /*
+         * IF there is space remaining in the buffer after the rows have been
+         * inserted, we can keep more rows.
+         */
+        int numberOfOldRowsAfterInsertedRows = maxBufferSize - firstIndex
+                - rows;
+        if (numberOfOldRowsAfterInsertedRows > 0) {
+            firstCacheRowToRemoveInPageBuffer += numberOfOldRowsAfterInsertedRows;
+        }
+
+        if (firstCacheRowToRemoveInPageBuffer <= currentlyCachedRowCount) {
+            /*
+             * Unregister all components that fall beyond the cache limits after
+             * inserting the new rows.
+             */
+            unregisterComponentsAndPropertiesInRows(
+                    firstCacheRowToRemoveInPageBuffer + pageBufferFirstIndex,
+                    currentlyCachedRowCount - firstCacheRowToRemoveInPageBuffer
+                            + pageBufferFirstIndex);
+        }
 
         // Calculate the new cache size
         int newCachedRowCount = currentlyCachedRowCount;
-        if (pageLength == 0 || currentlyCachedRowCount < pageLength) {
+        if (maxBufferSize == 0 || currentlyCachedRowCount < maxBufferSize) {
             newCachedRowCount = currentlyCachedRowCount + rows;
-            if (pageLength > 0 && newCachedRowCount > pageLength) {
-                newCachedRowCount = pageLength;
+            if (maxBufferSize > 0 && newCachedRowCount > maxBufferSize) {
+                newCachedRowCount = maxBufferSize;
             }
         }
 
@@ -1562,9 +1664,10 @@ public class Table extends AbstractSelect implements Action.Container,
         Object[][] newPageBuffer = new Object[pageBuffer.length][newCachedRowCount];
         for (int ix = 0; ix < newCachedRowCount; ix++) {
             for (int i = 0; i < pageBuffer.length; i++) {
-                if (ix >= cacheIx && ix < cacheIx + rows) {
-                    newPageBuffer[i][ix] = cells[i][ix - cacheIx];
-                } else if (ix >= cacheIx + rows) {
+                if (ix >= firstIndexInPageBuffer
+                        && ix < firstIndexInPageBuffer + rows) {
+                    newPageBuffer[i][ix] = cells[i][ix - firstIndexInPageBuffer];
+                } else if (ix >= firstIndexInPageBuffer + rows) {
                     newPageBuffer[i][ix] = pageBuffer[i][ix - rows];
                 } else {
                     newPageBuffer[i][ix] = pageBuffer[i][ix];
@@ -2638,7 +2741,12 @@ public class Table extends AbstractSelect implements Action.Container,
 
         target.startTag("prows");
 
-        int maxRows = (int) (getPageLength() * getCacheRate());
+        /*
+         * Caching says we should cache the current page and
+         * cacheRate*pageLength rows below it (and the same above). We only add
+         * rows below in this case.
+         */
+        int maxRows = (int) (getPageLength() * (1 + getCacheRate()));
         if (!shouldHideAddedRows() && count > maxRows) {
             count = maxRows + 1;
             // delete the rows below, since they will fall beyond the cache

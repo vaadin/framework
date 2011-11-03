@@ -104,6 +104,9 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         VHasDropHandler, FocusHandler, BlurHandler, Focusable, ActionOwner {
 
+    public static final String ATTRIBUTE_PAGEBUFFER_FIRST = "pb-ft";
+    public static final String ATTRIBUTE_PAGEBUFFER_LAST = "pb-l";
+
     private static final String ROW_HEADER_COLUMN_KEY = "0";
 
     public static final String CLASSNAME = "v-table";
@@ -202,6 +205,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private Timer scrollingVelocityTimer = null;
 
     private String[] bodyActionKeys;
+
+    private boolean enableDebug = false;
 
     /**
      * Represents a select range of rows
@@ -422,6 +427,21 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private TouchScrollDelegate touchScrollDelegate;
 
     private int lastRenderedHeight;
+
+    /**
+     * Values (serverCacheFirst+serverCacheLast) sent by server that tells which
+     * rows (indexes) are in the server side cache (page buffer). -1 means
+     * unknown. The server side cache row MUST MATCH the client side cache rows.
+     * 
+     * If the client side cache contains additional rows with e.g. buttons, it
+     * will cause out of sync when such a button is pressed.
+     * 
+     * If the server side cache contains additional rows with e.g. buttons,
+     * scrolling in the client will cause empty buttons to be rendered
+     * (cached=true request for non-existing components)
+     */
+    private int serverCacheFirst = -1;
+    private int serverCacheLast = -1;
 
     public VScrollTable() {
         setMultiSelectMode(MULTISELECT_MODE_DEFAULT);
@@ -798,6 +818,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
 
+        if (uidl.hasAttribute(ATTRIBUTE_PAGEBUFFER_FIRST)) {
+            serverCacheFirst = uidl.getIntAttribute(ATTRIBUTE_PAGEBUFFER_FIRST);
+            serverCacheLast = uidl.getIntAttribute(ATTRIBUTE_PAGEBUFFER_LAST);
+        } else {
+            serverCacheFirst = -1;
+            serverCacheLast = -1;
+        }
         /*
          * We need to do this before updateComponent since updateComponent calls
          * this.setHeight() which will calculate a new body height depending on
@@ -1413,24 +1440,67 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * caching window.
      */
     protected void discardRowsOutsideCacheWindow() {
-        final int optimalFirstRow = (int) (firstRowInViewPort - pageLength
+        int firstRowToKeep = (int) (firstRowInViewPort - pageLength
                 * cache_rate);
-        boolean cont = true;
-        while (cont && scrollBody.getLastRendered() > optimalFirstRow
-                && scrollBody.getFirstRendered() < optimalFirstRow) {
-            // removing row from start
-            cont = scrollBody.unlinkRow(true);
-        }
-        final int optimalLastRow = (int) (firstRowInViewPort + pageLength + pageLength
+        int lastRowToKeep = (int) (firstRowInViewPort + pageLength + pageLength
                 * cache_rate);
-        cont = true;
-        while (cont && scrollBody.getLastRendered() > optimalLastRow) {
-            // removing row from the end
-            cont = scrollBody.unlinkRow(false);
+        debug("Client side calculated cache rows to keep: " + firstRowToKeep
+                + "-" + lastRowToKeep);
+
+        if (serverCacheFirst != -1) {
+            firstRowToKeep = serverCacheFirst;
+            lastRowToKeep = serverCacheLast;
+            debug("Server cache rows that override: " + serverCacheFirst + "-"
+                    + serverCacheLast);
+            if (firstRowToKeep < scrollBody.getFirstRendered()
+                    || lastRowToKeep > scrollBody.getLastRendered()) {
+                debug("*** Server wants us to keep " + serverCacheFirst + "-"
+                        + serverCacheLast + " but we only have rows "
+                        + scrollBody.getFirstRendered() + "-"
+                        + scrollBody.getLastRendered() + " rendered!");
+            }
         }
+        discardCacheRows(firstRowToKeep, lastRowToKeep);
+
         scrollBody.fixSpacers();
 
         scrollBody.restoreRowVisibility();
+    }
+
+    private void discardCacheRows(int optimalFirstRow, int optimalLastRow) {
+        int firstDiscarded = -1, lastDiscarded = -1;
+        boolean cont = true;
+        while (cont && scrollBody.getLastRendered() > optimalFirstRow
+                && scrollBody.getFirstRendered() < optimalFirstRow) {
+            if (firstDiscarded == -1) {
+                firstDiscarded = scrollBody.getFirstRendered();
+            }
+
+            // removing row from start
+            cont = scrollBody.unlinkRow(true);
+        }
+        if (firstDiscarded != -1) {
+            lastDiscarded = scrollBody.getFirstRendered() - 1;
+            debug("Discarded rows " + firstDiscarded + "-" + lastDiscarded);
+        }
+        firstDiscarded = lastDiscarded = -1;
+
+        cont = true;
+        while (cont && scrollBody.getLastRendered() > optimalLastRow) {
+            if (lastDiscarded == -1) {
+                lastDiscarded = scrollBody.getLastRendered();
+            }
+
+            // removing row from the end
+            cont = scrollBody.unlinkRow(false);
+        }
+        if (lastDiscarded != -1) {
+            firstDiscarded = scrollBody.getLastRendered() + 1;
+            debug("Discarded rows " + firstDiscarded + "-" + lastDiscarded);
+        }
+
+        debug("Now in cache: " + scrollBody.getFirstRendered() + "-"
+                + scrollBody.getLastRendered());
     }
 
     /**
@@ -6750,6 +6820,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             lazyAdjustColumnWidths.run();
         } else {
             lazyAdjustColumnWidths.schedule(LAZY_COLUMN_ADJUST_TIMEOUT);
+        }
+    }
+
+    private void debug(String msg) {
+        if (enableDebug) {
+            VConsole.error(msg);
         }
     }
 }
