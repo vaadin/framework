@@ -1572,11 +1572,29 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
         pageBuffer = newPageBuffer;
+        logger.finest("Page Buffer now contains "
+                + pageBuffer[CELL_ITEMID].length + " rows ("
+                + pageBufferFirstIndex + "-"
+                + (pageBufferFirstIndex + pageBuffer[CELL_ITEMID].length - 1)
+                + ")");
         return cells;
     }
 
+    /**
+     * Render rows with index "firstIndex" to "firstIndex+rows-1" to a new
+     * buffer.
+     * 
+     * Reuses values from the current page buffer if the rows are found there.
+     * 
+     * @param firstIndex
+     * @param rows
+     * @param replaceListeners
+     * @return
+     */
     private Object[][] getVisibleCellsNoCache(int firstIndex, int rows,
             boolean replaceListeners) {
+        logger.finest("Render visible cells for rows " + firstIndex + "-"
+                + (firstIndex + rows - 1));
         final Object[] colids = getVisibleColumns();
         final int cols = colids.length;
 
@@ -1758,6 +1776,8 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     protected void registerComponent(Component component) {
+        logger.finest("Registered " + component.getClass().getSimpleName()
+                + ": " + component.getCaption());
         if (component.getParent() != this) {
             component.setParent(this);
         }
@@ -1783,9 +1803,13 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * @param firstIx
+     *            Index of the first row to process. Global index, not relative
+     *            to page buffer.
      * @param count
      */
     private void unregisterComponentsAndPropertiesInRows(int firstIx, int count) {
+        logger.finest("Unregistering components in rows " + firstIx + "-"
+                + (firstIx + count - 1));
         Object[] colids = getVisibleColumns();
         if (pageBuffer != null && pageBuffer[CELL_ITEMID].length > 0) {
             int bufSize = pageBuffer[CELL_ITEMID].length;
@@ -1865,6 +1889,8 @@ public class Table extends AbstractSelect implements Action.Container,
      *            a set of components that should be unregistered.
      */
     protected void unregisterComponent(Component component) {
+        logger.finest("Unregistered " + component.getClass().getSimpleName()
+                + ": " + component.getCaption());
         component.setParent(null);
         /*
          * Also remove property data sources to unregister listeners keeping the
@@ -2254,6 +2280,8 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                 }
             }
+            logger.finest("Client wants rows " + reqFirstRowToPaint + "-"
+                    + (reqFirstRowToPaint + reqRowsToPaint - 1));
             clientNeedsContentRefresh = true;
         }
 
@@ -2622,6 +2650,8 @@ public class Table extends AbstractSelect implements Action.Container,
         target.addAttribute("numprows", count);
 
         if (!shouldHideAddedRows()) {
+            logger.finest("Paint rows for add. Index: " + firstIx + ", count: "
+                    + count + ". Max rows: " + maxRows);
             // Partial row additions bypass the normal caching mechanism.
             Object[][] cells = getVisibleCellsInsertIntoCache(firstIx, count);
             for (int indexInRowbuffer = 0; indexInRowbuffer < count; indexInRowbuffer++) {
@@ -2636,6 +2666,8 @@ public class Table extends AbstractSelect implements Action.Container,
                         indexInRowbuffer, itemId);
             }
         } else {
+            logger.finest("Paint rows for remove. Index: " + firstIx
+                    + ", count: " + count + ". Max rows: " + maxRows);
             removeRowsFromCacheAndFillBottom(firstIx, count);
             target.addAttribute("hide", true);
         }
