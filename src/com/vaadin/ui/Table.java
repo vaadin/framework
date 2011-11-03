@@ -4012,8 +4012,9 @@ public class Table extends AbstractSelect implements Action.Container,
 
             if (doSort) {
                 sort();
-                // Assures the visual refresh
-                refreshRowCache();
+                // Assures the visual refresh. This should not be necessary as
+                // sort() calls refreshRowCache
+                refreshRenderedCells();
             }
         }
     }
@@ -4050,10 +4051,11 @@ public class Table extends AbstractSelect implements Action.Container,
             sortAscending = ascending;
             if (doSort) {
                 sort();
+                // Assures the visual refresh. This should not be necessary as
+                // sort() calls refreshRowCache
+                refreshRenderedCells();
             }
         }
-        // Assures the visual refresh
-        refreshRowCache();
     }
 
     /**
