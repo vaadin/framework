@@ -422,8 +422,8 @@
         <mkdir dir="${result-path}/classes" />
         <javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-path}/classes" debug="true" encoding="UTF-8">
              <src path="${result-path}/src/core"/>
-             <src path="${result-path}/src/tests"/>
-             <src path="${result-path}/src/junit"/>
+<!--             <src path="${result-path}/src/tests"/>
+             <src path="${result-path}/src/junit"/> -->
         </javac>
     </target>
 
