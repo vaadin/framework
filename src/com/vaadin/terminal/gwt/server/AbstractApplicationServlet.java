@@ -467,7 +467,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 requestStarted = true;
             }
 
-            // Start the newly created application
+            // Start the application if it's newly created
             startApplication(request, application, webApplicationContext);
 
             /*
@@ -496,6 +496,13 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 endApplication(request, response, application);
                 return;
             }
+
+            if (application.handleRequest(
+                    new WrappedHttpServletRequest(request),
+                    new WrappedHttpServletResponse(response))) {
+                return;
+            }
+            // TODO Should return 404 error here and not do anything more
 
             // Finds the root within the application
             Root root = getApplicationRoot(request, applicationManager,

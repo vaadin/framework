@@ -7,6 +7,9 @@ package com.vaadin;
 import java.io.Serializable;
 import java.net.SocketException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.EventListener;
 import java.util.EventObject;
@@ -22,10 +25,13 @@ import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.ParameterHandler;
+import com.vaadin.terminal.RequestHandler;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.URIHandler;
 import com.vaadin.terminal.VariableOwner;
+import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.server.ChangeVariablesErrorEvent;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
@@ -186,6 +192,8 @@ public abstract class Application implements URIHandler,
      * left unhandled.
      */
     private Terminal.ErrorListener errorHandler = this;
+
+    private Collection<RequestHandler> requestHandlers = new ArrayList<RequestHandler>();
 
     // /**
     // * <p>
@@ -1923,4 +1931,28 @@ public abstract class Application implements URIHandler,
     }
 
     public abstract Root getRoot();
+
+    public boolean handleRequest(WrappedRequest request,
+            WrappedResponse response) {
+        for (RequestHandler handler : new ArrayList<RequestHandler>(
+                requestHandlers)) {
+            if (handler.handleRequest(request, response)) {
+                return true;
+            }
+        }
+        // If not handled
+        return false;
+    }
+
+    public void addRequestHandler(RequestHandler handler) {
+        requestHandlers.add(handler);
+    }
+
+    public void removeRequestHandler(RequestHandler handler) {
+        requestHandlers.remove(handler);
+    }
+
+    public Collection<RequestHandler> getRequestHandlers() {
+        return Collections.unmodifiableCollection(requestHandlers);
+    }
 }
