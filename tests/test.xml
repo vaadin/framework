@@ -110,7 +110,7 @@
 			<arg value="build/testing/vaadin-server.py" />
 			<arg value="stop" />
 		</exec>
-		<move file="${testing.testarea}/${package.name}/war.ec" todir="../build/result" />
+		<move file="${testing.testarea}/${package.name}/war.ec" todir="../build/result" failonerror="false" />
 	</target>
 
 	<!-- ================================================================== -->
