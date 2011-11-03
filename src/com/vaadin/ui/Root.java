@@ -18,7 +18,7 @@ import com.vaadin.ui.Window.Notification;
 
 @ClientWidget(VView.class)
 public class Root extends AbstractComponentContainer {
-    private final Component content;
+    private final RootLayout rootLayout;
     private Terminal terminal;
     private Application application;
 
@@ -45,9 +45,10 @@ public class Root extends AbstractComponentContainer {
      */
     private Component scrollIntoView;
 
-    public Root(Component content) {
-        this.content = content;
-        addComponent(content);
+    public Root(RootLayout rootLayout) {
+        this.rootLayout = rootLayout;
+        addComponent(rootLayout);
+        rootLayout.init();
     }
 
     @Override
@@ -66,7 +67,7 @@ public class Root extends AbstractComponentContainer {
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        content.paint(target);
+        rootLayout.paint(target);
 
         // Paint subwindows
         for (final Iterator<Window> i = windows.iterator(); i.hasNext();) {
@@ -132,7 +133,7 @@ public class Root extends AbstractComponentContainer {
     }
 
     public Iterator<Component> getComponentIterator() {
-        return Collections.singleton(content).iterator();
+        return Collections.singleton((Component) rootLayout).iterator();
     }
 
     public String getName() {
@@ -437,5 +438,9 @@ public class Root extends AbstractComponentContainer {
         }
         scrollIntoView = component;
         requestRepaint();
+    }
+
+    public RootLayout getRootLayout() {
+        return rootLayout;
     }
 }
