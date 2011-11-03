@@ -720,8 +720,9 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         this.columnAlignments = newCA;
 
-        // Assures the visual refresh
-        refreshRowCache();
+        // Assures the visual refresh. No need to reset the page buffer before
+        // as the content has not changed, only the alignments.
+        refreshRenderedCells();
     }
 
     /**
@@ -1103,8 +1104,9 @@ public class Table extends AbstractSelect implements Action.Container,
             columnAlignments.put(propertyId, alignment);
         }
 
-        // Assures the visual refresh
-        refreshRowCache();
+        // Assures the visual refresh. No need to reset the page buffer before
+        // as the content has not changed, only the alignments.
+        refreshRenderedCells();
     }
 
     /**
@@ -1168,8 +1170,9 @@ public class Table extends AbstractSelect implements Action.Container,
             collapsedColumns.clear();
         }
 
-        // Assures the visual refresh
-        refreshRowCache();
+        // Assures the visual refresh. No need to reset the page buffer before
+        // as the content has not changed, only the alignments.
+        refreshRenderedCells();
     }
 
     /**
@@ -1411,7 +1414,9 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Refreshes rendered rows
+     * Refreshes the rows in the internal cache. Only if
+     * {@link #resetPageBuffer()} is called before this then all values are
+     * guaranteed to be recreated.
      */
     protected void refreshRenderedCells() {
         if (getParent() == null) {
@@ -1923,8 +1928,9 @@ public class Table extends AbstractSelect implements Action.Container,
             setItemCaptionMode(mode);
         }
 
-        // Assure visual refresh
-        refreshRowCache();
+        // Assures the visual refresh. No need to reset the page buffer before
+        // as the content has not changed, only the alignments.
+        refreshRenderedCells();
     }
 
     /**
@@ -2513,6 +2519,21 @@ public class Table extends AbstractSelect implements Action.Container,
         // Rows
         if (isPartialRowUpdate() && painted && !target.isFullRepaint()) {
             paintPartialRowUpdate(target, actionSet);
+            /*
+             * Send the page buffer indexes to ensure that the client side stays
+             * in sync. Otherwise we _might_ have the situation where the client
+             * side discards too few or too many rows, causing out of sync
+             * issues.
+             * 
+             * This could probably be done for full repaints also to simplify
+             * the client side.
+             */
+            int pageBufferLastIndex = pageBufferFirstIndex
+                    + pageBuffer[CELL_ITEMID].length - 1;
+            target.addAttribute(VScrollTable.ATTRIBUTE_PAGEBUFFER_FIRST,
+                    pageBufferFirstIndex);
+            target.addAttribute(VScrollTable.ATTRIBUTE_PAGEBUFFER_LAST,
+                    pageBufferLastIndex);
         } else if (target.isFullRepaint() || isRowCacheInvalidated()) {
             paintRows(target, cells, actionSet);
             setRowCacheInvalidated(false);
@@ -3279,7 +3300,10 @@ public class Table extends AbstractSelect implements Action.Container,
 
             if (!actionHandlers.contains(actionHandler)) {
                 actionHandlers.add(actionHandler);
-                refreshRowCache();
+                // Assures the visual refresh. No need to reset the page buffer
+                // before as the content has not changed, only the action
+                // handlers.
+                refreshRenderedCells();
             }
 
         }
@@ -3302,7 +3326,10 @@ public class Table extends AbstractSelect implements Action.Container,
                 actionMapper = null;
             }
 
-            refreshRowCache();
+            // Assures the visual refresh. No need to reset the page buffer
+            // before as the content has not changed, only the action
+            // handlers.
+            refreshRenderedCells();
         }
     }
 
@@ -3312,7 +3339,10 @@ public class Table extends AbstractSelect implements Action.Container,
     public void removeAllActionHandlers() {
         actionHandlers = null;
         actionMapper = null;
-        refreshRowCache();
+        // Assures the visual refresh. No need to reset the page buffer
+        // before as the content has not changed, only the action
+        // handlers.
+        refreshRenderedCells();
     }
 
     /* Property value change listening support */
@@ -3336,6 +3366,11 @@ public class Table extends AbstractSelect implements Action.Container,
         requestRepaint();
     }
 
+    /**
+     * Clears the current page buffer. Call this before
+     * {@link #refreshRenderedCells()} to ensure that all content is updated
+     * from the properties.
+     */
     protected void resetPageBuffer() {
         firstToBeRenderedInClient = -1;
         lastToBeRenderedInClient = -1;
@@ -4097,7 +4132,10 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public void setCellStyleGenerator(CellStyleGenerator cellStyleGenerator) {
         this.cellStyleGenerator = cellStyleGenerator;
-        refreshRowCache();
+        // Assures the visual refresh. No need to reset the page buffer
+        // before as the content has not changed, only the style generators
+        refreshRenderedCells();
+
     }
 
     /**
@@ -4789,7 +4827,9 @@ public class Table extends AbstractSelect implements Action.Container,
     public void setItemDescriptionGenerator(ItemDescriptionGenerator generator) {
         if (generator != itemDescriptionGenerator) {
             itemDescriptionGenerator = generator;
-            refreshRowCache();
+            // Assures the visual refresh. No need to reset the page buffer
+            // before as the content has not changed, only the descriptions
+            refreshRenderedCells();
         }
     }
 
