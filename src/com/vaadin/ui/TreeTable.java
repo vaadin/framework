@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.google.gwt.user.client.ui.Tree;
 import com.vaadin.data.Container;
@@ -49,6 +50,9 @@ import com.vaadin.ui.treetable.HierarchicalContainerOrderedWrapper;
 @SuppressWarnings({ "serial" })
 @ClientWidget(VTreeTable.class)
 public class TreeTable extends Table implements Hierarchical {
+
+    private static final Logger logger = Logger.getLogger(TreeTable.class
+            .getName());
 
     private interface ContainerStrategy extends Serializable {
         public int size();
@@ -220,6 +224,9 @@ public class TreeTable extends Table implements Hierarchical {
             boolean removed = openItems.remove(itemId);
             if (!removed) {
                 openItems.add(itemId);
+                logger.finest("Item " + itemId + " is now expanded");
+            } else {
+                logger.finest("Item " + itemId + " is now collapsed");
             }
             clearPreorderCache();
         }
@@ -312,6 +319,16 @@ public class TreeTable extends Table implements Hierarchical {
     private ContainerStrategy cStrategy;
     private Object focusedRowId = null;
     private Object hierarchyColumnId;
+
+    /**
+     * The item id that was expanded or collapsed during this request. Reset at
+     * the end of paint and only used for determining if a partial or full paint
+     * should be done.
+     * 
+     * Can safely be reset to null whenever a change occurs that would prevent a
+     * partial update from rendering the correct result, e.g. rows added or
+     * removed during an expand operation.
+     */
     private Object toggledItemId;
     private boolean animationsEnabled;
     private boolean clearFocusedRowPending;
@@ -361,6 +378,7 @@ public class TreeTable extends Table implements Hierarchical {
         if (variables.containsKey("toggleCollapsed")) {
             String object = (String) variables.get("toggleCollapsed");
             Object itemId = itemIdMapper.get(object);
+            toggledItemId = itemId;
             toggleChildVisibility(itemId);
             if (variables.containsKey("selectCollapsed")) {
                 // ensure collapsed is selected unless opened with selection
@@ -497,7 +515,6 @@ public class TreeTable extends Table implements Hierarchical {
         // ensure that page still has first item in page, DON'T clear the
         // caches.
         setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex(), false);
-        toggledItemId = itemId;
         requestRepaint();
 
         if (isCollapsed(itemId)) {
@@ -535,6 +552,9 @@ public class TreeTable extends Table implements Hierarchical {
     @Override
     public void containerItemSetChange(
             com.vaadin.data.Container.ItemSetChangeEvent event) {
+        // Can't do partial repaints if items are added or removed during the
+        // expand/collapse request
+        toggledItemId = null;
         getContainerStrategy().containerItemSetChange(event);
         super.containerItemSetChange(event);
     }

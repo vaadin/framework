@@ -82,7 +82,7 @@ public class DynamicallyModified extends TestBase implements
 
     @Override
     protected String getDescription() {
-        return "Expanding and collapsing nodes should actually expand and collapse them even when modifying the container in a collapse listener.";
+        return "Collaps 'Customer Project 1' will cause the first child if it to be removed. Expanding 'Custom Project 2' will cause a new child to be added. These events should be rendered correctly.";
     }
 
     @Override
@@ -90,12 +90,29 @@ public class DynamicallyModified extends TestBase implements
         return 7780;
     }
 
-    public void nodeExpand(ExpandEvent event) {
+    private int newChild = 1;
 
+    public void nodeExpand(ExpandEvent event) {
+        Object expandedItemId = event.getItemId();
+        // 7 == "Customer Project 1"
+        if (expandedItemId != Integer.valueOf(7)) {
+            return;
+        }
+        Object newChildId = treetable.addItem(new Object[] {
+                "New child " + newChild++, 5, new Date() }, null);
+        treetable.setParent(newChildId, expandedItemId);
+        treetable.setChildrenAllowed(newChildId, false);
     }
 
     public void nodeCollapse(CollapseEvent event) {
 
+        Object collapsedItemId = event.getItemId();
+
+        // 3 == "Customer Project 1"
+        if (collapsedItemId != Integer.valueOf(3)) {
+            return;
+        }
+        @SuppressWarnings("unchecked")
         Collection<Object> childs = (Collection<Object>) treetable
                 .getChildren(event.getItemId());
 
@@ -104,9 +121,8 @@ public class DynamicallyModified extends TestBase implements
         }
         Object[] arr = childs.toArray();
 
-        for (Object obj : arr) {
-            System.out.println("remove  " + obj.toString());
-            treetable.removeItem(obj);
+        if (arr.length > 0) {
+            treetable.removeItem(arr[0]);
         }
 
     }
