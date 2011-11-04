@@ -1582,13 +1582,14 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param firstIndex
      *            The position where new rows should be inserted
      * @param rows
-     *            The number of rows that should be inserted
+     *            The maximum number of rows that should be inserted at position
+     *            firstIndex. Less rows will be inserted if the page buffer is
+     *            too small.
      * @return
      */
     private Object[][] getVisibleCellsInsertIntoCache(int firstIndex, int rows) {
-        Object[][] cells = getVisibleCellsNoCache(firstIndex, rows, false);
         logger.finest("Insert " + rows + " rows at index " + firstIndex
-                + " to existing page buffer with " + cells.length + " items");
+                + " to existing page buffer requested");
 
         // Page buffer must not become larger than pageLength*cacheRate before
         // or after the current page
@@ -1602,6 +1603,10 @@ public class Table extends AbstractSelect implements Action.Container,
                 + (int) (getPageLength() * (1 + getCacheRate()));
         int maxBufferSize = maxPageBufferIndex - minPageBufferIndex;
 
+        if (getPageLength() == 0) {
+            // If pageLength == 0 then all rows should be rendered
+            maxBufferSize = pageBuffer[0].length + rows;
+        }
         /*
          * Number of rows that were previously cached. This is not necessarily
          * the same as pageLength if we do not have enough rows in the
@@ -1617,6 +1622,11 @@ public class Table extends AbstractSelect implements Action.Container,
          * pageBufferFirstIndex==1000 -> cacheIx==10
          */
         int firstIndexInPageBuffer = firstIndex - pageBufferFirstIndex;
+
+        /* If rows > size available in page buffer */
+        if (firstIndexInPageBuffer + rows > maxBufferSize) {
+            rows = maxBufferSize - firstIndexInPageBuffer;
+        }
 
         /*
          * "rows" rows will be inserted at firstIndex. Find out how many old
@@ -1656,6 +1666,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 newCachedRowCount = maxBufferSize;
             }
         }
+
+        /* Paint the new rows into a separate buffer */
+        Object[][] cells = getVisibleCellsNoCache(firstIndex, rows, false);
 
         /*
          * Create the new cache buffer and fill it with the data from the old
@@ -2745,27 +2758,19 @@ public class Table extends AbstractSelect implements Action.Container,
 
         target.startTag("prows");
 
-        /*
-         * Caching says we should cache the current page and
-         * cacheRate*pageLength rows below it (and the same above). We only add
-         * rows below in this case.
-         */
-        int maxRows = (int) (getPageLength() * (1 + getCacheRate()));
-        if (!shouldHideAddedRows() && count > maxRows) {
-            count = maxRows + 1;
-            // delete the rows below, since they will fall beyond the cache
-            // page.
-            target.addAttribute("delbelow", true);
-        }
-
-        target.addAttribute("firstprowix", firstIx);
-        target.addAttribute("numprows", count);
-
         if (!shouldHideAddedRows()) {
             logger.finest("Paint rows for add. Index: " + firstIx + ", count: "
-                    + count + ". Max rows: " + maxRows);
+                    + count + ".");
+
             // Partial row additions bypass the normal caching mechanism.
             Object[][] cells = getVisibleCellsInsertIntoCache(firstIx, count);
+            if (cells[0].length < count) {
+                // delete the rows below, since they will fall beyond the cache
+                // page.
+                target.addAttribute("delbelow", true);
+                count = cells[0].length;
+            }
+
             for (int indexInRowbuffer = 0; indexInRowbuffer < count; indexInRowbuffer++) {
                 final Object itemId = cells[CELL_ITEMID][indexInRowbuffer];
                 if (shouldHideNullSelectionItem()) {
@@ -2779,10 +2784,13 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         } else {
             logger.finest("Paint rows for remove. Index: " + firstIx
-                    + ", count: " + count + ". Max rows: " + maxRows);
+                    + ", count: " + count + ".");
             removeRowsFromCacheAndFillBottom(firstIx, count);
             target.addAttribute("hide", true);
         }
+
+        target.addAttribute("firstprowix", firstIx);
+        target.addAttribute("numprows", count);
         target.endTag("prows");
     }
 
