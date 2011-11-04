@@ -1431,8 +1431,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         int count = partialRowUpdates.getIntAttribute("numurows");
         scrollBody.unlinkRows(firstRowIx, count);
         scrollBody.insertRows(partialRowUpdates, firstRowIx, count);
-
-        discardRowsOutsideCacheWindow();
     }
 
     /**
@@ -1460,14 +1458,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         + scrollBody.getLastRendered() + " rendered!");
             }
         }
-        discardCacheRows(firstRowToKeep, lastRowToKeep);
+        discardRowsOutsideOf(firstRowToKeep, lastRowToKeep);
 
         scrollBody.fixSpacers();
 
         scrollBody.restoreRowVisibility();
     }
 
-    private void discardCacheRows(int optimalFirstRow, int optimalLastRow) {
+    private void discardRowsOutsideOf(int optimalFirstRow, int optimalLastRow) {
+        /*
+         * firstDiscarded and lastDiscarded are only calculated for debug
+         * purposes
+         */
         int firstDiscarded = -1, lastDiscarded = -1;
         boolean cont = true;
         while (cont && scrollBody.getLastRendered() > optimalFirstRow
