@@ -2,7 +2,6 @@ package com.vaadin.tests.components.treetable;
 
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Tree;
@@ -37,8 +36,8 @@ public class DynamicallyModified extends TestBase implements
         // Add Table columns
         treetable.addContainerProperty(NAME_PROPERTY, String.class, "");
         treetable.addContainerProperty(HOURS_PROPERTY, Integer.class, 0);
-        treetable.addContainerProperty(MODIFIED_PROPERTY, Date.class,
-                cal.getTime());
+        treetable.addContainerProperty(MODIFIED_PROPERTY, String.class,
+                "Wed Nov 30 14:40:26 EET 2011");
 
         // Populate table
         Object allProjects = treetable.addItem(new Object[] { "All Projects",
@@ -99,7 +98,8 @@ public class DynamicallyModified extends TestBase implements
             return;
         }
         Object newChildId = treetable.addItem(new Object[] {
-                "New child " + newChild++, 5, new Date() }, null);
+                "New child " + newChild++, 5, "Fri Nov 04 10:53:16 EET 2011" },
+                null);
         treetable.setParent(newChildId, expandedItemId);
         treetable.setChildrenAllowed(newChildId, false);
     }
