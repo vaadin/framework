@@ -1633,8 +1633,8 @@ public class Table extends AbstractSelect implements Action.Container,
          * IF there is space remaining in the buffer after the rows have been
          * inserted, we can keep more rows.
          */
-        int numberOfOldRowsAfterInsertedRows = maxBufferSize - firstIndex
-                - rows;
+        int numberOfOldRowsAfterInsertedRows = maxBufferSize
+                - firstIndexInPageBuffer - rows;
         if (numberOfOldRowsAfterInsertedRows > 0) {
             firstCacheRowToRemoveInPageBuffer += numberOfOldRowsAfterInsertedRows;
         }
