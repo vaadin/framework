@@ -7,7 +7,6 @@ package com.vaadin.terminal.gwt.client.ui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
@@ -430,12 +429,6 @@ public class VWindow extends VOverlay implements Container,
                         shortcutHandler = new ShortcutActionHandler(id, client);
                     }
                     shortcutHandler.updateActionMap(childUidl);
-                } else if (childUidl.getTag().equals("notifications")) {
-                    for (final Iterator<?> it = childUidl.getChildIterator(); it
-                            .hasNext();) {
-                        final UIDL notification = (UIDL) it.next();
-                        VNotification.showNotification(client, notification);
-                    }
                 }
             }
 
