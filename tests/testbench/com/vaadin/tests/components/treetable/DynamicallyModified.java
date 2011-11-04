@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.treetable;
 
-import java.util.Calendar;
 import java.util.Collection;
 
 import com.vaadin.tests.components.TestBase;
@@ -14,16 +13,13 @@ public class DynamicallyModified extends TestBase implements
     protected static final String NAME_PROPERTY = "Name";
     protected static final String HOURS_PROPERTY = "Hours done";
     protected static final String MODIFIED_PROPERTY = "Last Modified";
+    private static final String DEFAULT_DATE = "Wed Nov 30 14:40:26 EET 2011";
 
     protected TreeTable treetable;
 
     @Override
     protected void setup() {
         getLayout().setWidth("100%");
-
-        // Calendar
-        Calendar cal = Calendar.getInstance();
-        cal.set(2011, 10, 30, 14, 40, 26);
 
         // Create the treetable
         treetable = new TreeTable();
@@ -37,25 +33,25 @@ public class DynamicallyModified extends TestBase implements
         treetable.addContainerProperty(NAME_PROPERTY, String.class, "");
         treetable.addContainerProperty(HOURS_PROPERTY, Integer.class, 0);
         treetable.addContainerProperty(MODIFIED_PROPERTY, String.class,
-                "Wed Nov 30 14:40:26 EET 2011");
+                DEFAULT_DATE);
 
         // Populate table
         Object allProjects = treetable.addItem(new Object[] { "All Projects",
-                18, cal.getTime() }, null);
-        Object year2010 = treetable.addItem(
-                new Object[] { "Year 2010", 18, cal.getTime() }, null);
+                18, DEFAULT_DATE }, null);
+        Object year2010 = treetable.addItem(new Object[] { "Year 2010", 18,
+                DEFAULT_DATE }, null);
         Object customerProject1 = treetable.addItem(new Object[] {
-                "Customer Project 1", 13, cal.getTime() }, null);
+                "Customer Project 1", 13, DEFAULT_DATE }, null);
         Object customerProject1Implementation = treetable.addItem(new Object[] {
-                "Implementation", 5, cal.getTime() }, null);
+                "Implementation", 5, DEFAULT_DATE }, null);
         Object customerProject1Planning = treetable.addItem(new Object[] {
-                "Planning", 2, cal.getTime() }, null);
+                "Planning", 2, DEFAULT_DATE }, null);
         Object customerProject1Prototype = treetable.addItem(new Object[] {
-                "Prototype", 5, cal.getTime() }, null);
+                "Prototype", 5, DEFAULT_DATE }, null);
         Object customerProject2 = treetable.addItem(new Object[] {
-                "Customer Project 2", 5, cal.getTime() }, null);
+                "Customer Project 2", 5, DEFAULT_DATE }, null);
         Object customerProject2Planning = treetable.addItem(new Object[] {
-                "Planning", 5, cal.getTime() }, null);
+                "Planning", 5, DEFAULT_DATE }, null);
 
         // Set hierarchy
         treetable.setParent(year2010, allProjects);
