@@ -33,7 +33,6 @@ import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.server.ChangeVariablesErrorEvent;
-import com.vaadin.terminal.gwt.server.PortletApplicationContext;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Root;
