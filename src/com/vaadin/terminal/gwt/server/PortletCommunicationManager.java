@@ -77,6 +77,11 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             return value;
         }
 
+        public Map<String, String[]> getParameterMap() {
+            return request.getParameterMap();
+            // TODO GateIn hack required here as well?
+        }
+
         public String getRequestID() {
             return "WindowID:" + request.getWindowID();
         }

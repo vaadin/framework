@@ -8,6 +8,7 @@ import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.RootLayout;
 import com.vaadin.ui.VerticalLayout;
@@ -15,7 +16,16 @@ import com.vaadin.ui.VerticalLayout;
 public class RootTestApplication extends Application {
     private static class MyRootLayout extends VerticalLayout implements
             RootLayout {
+        private final String rootText;
+
+        public MyRootLayout(String rootText) {
+            this.rootText = rootText;
+        }
+
         public void init() {
+            if (rootText != null && rootText.trim().length() != 0) {
+                addComponent(new Label(rootText));
+            }
             addComponent(new Button("Roots, bloody roots",
                     new Button.ClickListener() {
                         public void buttonClick(ClickEvent event) {
@@ -28,13 +38,10 @@ public class RootTestApplication extends Application {
         }
     }
 
-    private final Root root = new Root(new MyRootLayout());
+    private Root root;
 
     @Override
     public void init() {
-        // TODO Should be done by Application during init
-        root.setApplication(this);
-
         addRequestHandler(new RequestHandler() {
             public boolean handleRequest(WrappedRequest request,
                     WrappedResponse response) {
@@ -56,7 +63,15 @@ public class RootTestApplication extends Application {
     }
 
     @Override
-    public Root getRoot() {
+    public Root getRoot(WrappedRequest request) {
+        if (root == null) {
+            String rootText = request.getParameter("rootText");
+            root = new Root(new MyRootLayout(rootText));
+
+            // TODO Should be done by Application during init
+            root.setApplication(this);
+        }
+
         return root;
     }
 

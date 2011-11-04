@@ -71,6 +71,10 @@ public class CommunicationManager extends AbstractCommunicationManager {
             return request.getParameter(name);
         }
 
+        public Map<String, String[]> getParameterMap() {
+            return request.getParameterMap();
+        }
+
         public String getRequestID() {
             return "RequestURL:" + request.getRequestURI();
         }

@@ -61,6 +61,7 @@ import com.vaadin.terminal.Terminal.ErrorEvent;
 import com.vaadin.terminal.Terminal.ErrorListener;
 import com.vaadin.terminal.URIHandler;
 import com.vaadin.terminal.VariableOwner;
+import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.ui.AbstractComponent;
@@ -105,7 +106,7 @@ public abstract class AbstractCommunicationManager implements
      * 
      * @author peholmst
      */
-    public interface Request {
+    public interface Request extends WrappedRequest {
 
         /**
          * Gets a {@link Session} wrapper implementation representing the
@@ -1001,13 +1002,13 @@ public abstract class AbstractCommunicationManager implements
                     .hasNext();) {
                 final Paintable p = i.next();
 
-                // TODO CLEAN
-                if (p instanceof Root) {
-                    final Root r = (Root) p;
-                    if (r.getTerminal() == null) {
-                        r.setTerminal(application.getRoot().getTerminal());
-                    }
-                }
+                // // TODO CLEAN
+                // if (p instanceof Root) {
+                // final Root r = (Root) p;
+                // if (r.getTerminal() == null) {
+                // r.setTerminal(application.getRoot().getTerminal());
+                // }
+                // }
                 /*
                  * This does not seem to happen in tk5, but remember this case:
                  * else if (p instanceof Component) { if (((Component)
@@ -1827,7 +1828,7 @@ public abstract class AbstractCommunicationManager implements
      */
     protected Root doGetApplicationWindow(Request request, Callback callback,
             Application application, Root assumedRoot) {
-        return application.getRoot();
+        return application.getRoot(request);
 
         // Window window = null;
         //

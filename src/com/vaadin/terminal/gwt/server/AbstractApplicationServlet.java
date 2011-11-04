@@ -2270,10 +2270,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     protected Root getApplicationRoot(HttpServletRequest request,
             CommunicationManager applicationManager, Application application)
             throws ServletException {
-        return application.getRoot();
         //
         // // Finds the window where the request is handled
-        // Window assumedWindow = null;
+        Root assumedRoot = null;
         // String path = getRequestPathInfo(request);
         //
         // // Main window as the URI is empty
@@ -2297,8 +2296,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         //
         // }
         //
-        // return applicationManager.getApplicationWindow(request, this,
-        // application, assumedWindow);
+        return applicationManager.getApplicationRoot(request, this,
+                application, assumedRoot);
     }
 
     /**

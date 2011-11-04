@@ -1930,7 +1930,7 @@ public abstract class Application implements URIHandler,
 
     }
 
-    public abstract Root getRoot();
+    public abstract Root getRoot(WrappedRequest request);
 
     public boolean handleRequest(WrappedRequest request,
             WrappedResponse response) {

@@ -408,7 +408,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                             break;
                         case APPLICATION_RESOURCE:
                             // use main window - should not need any window
-                            root = application.getRoot();
+                            // root = application.getRoot();
                             break;
                         default:
                             root = applicationManager.getApplicationRoot(
