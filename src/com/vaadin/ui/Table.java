@@ -1583,8 +1583,6 @@ public class Table extends AbstractSelect implements Action.Container,
      *            The position where new rows should be inserted
      * @param rows
      *            The number of rows that should be inserted
-     * @param maxRows
-     *            The maximum number of rows that
      * @return
      */
     private Object[][] getVisibleCellsInsertIntoCache(int firstIndex, int rows) {
@@ -1659,19 +1657,25 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
 
-        // Create the new cache buffer and fill it with the data from the old
-        // buffer as well as the inserted rows.
+        /*
+         * Create the new cache buffer and fill it with the data from the old
+         * buffer as well as the inserted rows.
+         */
         Object[][] newPageBuffer = new Object[pageBuffer.length][newCachedRowCount];
-        for (int ix = 0; ix < newCachedRowCount; ix++) {
-            for (int i = 0; i < pageBuffer.length; i++) {
-                if (ix >= firstIndexInPageBuffer
-                        && ix < firstIndexInPageBuffer + rows) {
-                    newPageBuffer[i][ix] = cells[i][ix - firstIndexInPageBuffer];
-                } else if (ix >= firstIndexInPageBuffer + rows) {
-                    newPageBuffer[i][ix] = pageBuffer[i][ix - rows];
-                } else {
-                    newPageBuffer[i][ix] = pageBuffer[i][ix];
-                }
+
+        for (int i = 0; i < pageBuffer.length; i++) {
+            for (int row = 0; row < firstIndexInPageBuffer; row++) {
+                // Copy the first rows
+                newPageBuffer[i][row] = pageBuffer[i][row];
+            }
+            for (int row = firstIndexInPageBuffer; row < firstIndexInPageBuffer
+                    + rows; row++) {
+                // Copy the newly created rows
+                newPageBuffer[i][row] = cells[i][row - firstIndexInPageBuffer];
+            }
+            for (int row = firstIndexInPageBuffer + rows; row < newCachedRowCount; row++) {
+                // Move the old rows down below the newly inserted rows
+                newPageBuffer[i][row] = pageBuffer[i][row - rows];
             }
         }
         pageBuffer = newPageBuffer;
