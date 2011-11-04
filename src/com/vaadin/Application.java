@@ -1407,7 +1407,7 @@ public abstract class Application implements URIHandler,
         }
 
         /**
-         * @return
+         * @return 
          *         "Take note of any unsaved data, and <u>click here</u> to continue."
          */
         public String getSessionExpiredMessage() {
@@ -1439,7 +1439,7 @@ public abstract class Application implements URIHandler,
         }
 
         /**
-         * @return
+         * @return 
          *         "Take note of any unsaved data, and <u>click here</u> to continue."
          */
         public String getCommunicationErrorMessage() {
@@ -1471,7 +1471,7 @@ public abstract class Application implements URIHandler,
         }
 
         /**
-         * @return
+         * @return 
          *         "Take note of any unsaved data, and <u>click here</u> to continue."
          */
         public String getAuthenticationErrorMessage() {
