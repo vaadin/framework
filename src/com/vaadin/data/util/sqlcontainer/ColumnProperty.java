@@ -178,7 +178,8 @@ final public class ColumnProperty implements Property {
     @Deprecated
     @Override
     public String toString() {
-        return getStringValue();
+        throw new UnsupportedOperationException(
+                "Use ColumnProperty.getValue() instead of ColumnProperty.toString()");
     }
 
     /**

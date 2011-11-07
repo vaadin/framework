@@ -66,7 +66,9 @@ public abstract class AbstractProperty implements Property,
     @Deprecated
     @Override
     public String toString() {
-        return getStringValue();
+        throw new UnsupportedOperationException(
+                "Use Property.getValue() instead of " + getClass()
+                        + ".toString()");
     }
 
     /**

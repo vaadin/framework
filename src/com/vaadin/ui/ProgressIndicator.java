@@ -155,11 +155,8 @@ public class ProgressIndicator extends AbstractField implements Property,
     @Deprecated
     @Override
     public String toString() {
-        if (dataSource == null) {
-            throw new IllegalStateException("Datasource must be set");
-        }
-        Object value = dataSource.getValue();
-        return (null != value) ? value.toString() : null;
+        throw new UnsupportedOperationException(
+                "Use Property.getValue() instead of ProgressIndicator.toString()");
     }
 
     /**

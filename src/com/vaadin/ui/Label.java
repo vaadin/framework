@@ -252,7 +252,8 @@ public class Label extends AbstractComponent implements Property,
     @Deprecated
     @Override
     public String toString() {
-        return getStringValue();
+        throw new UnsupportedOperationException(
+                "Use Property.getValue() instead of Label.toString()");
     }
 
     /**

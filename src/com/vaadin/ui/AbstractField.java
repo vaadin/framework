@@ -410,7 +410,9 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     @Deprecated
     @Override
     public String toString() {
-        return getStringValue();
+        throw new UnsupportedOperationException(
+                "Use Property.getValue() instead of " + getClass()
+                        + ".toString()");
     }
 
     /**

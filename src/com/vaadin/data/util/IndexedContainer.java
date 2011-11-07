@@ -917,7 +917,8 @@ public class IndexedContainer extends
         @Deprecated
         @Override
         public String toString() {
-            return getStringValue();
+            throw new UnsupportedOperationException(
+                    "Use Property.getValue() instead of IndexedContainerProperty.toString()");
         }
 
         /**
