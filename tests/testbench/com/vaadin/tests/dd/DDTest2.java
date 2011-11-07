@@ -94,6 +94,7 @@ public class DDTest2 extends TestBase {
                 if (transferable instanceof TableTransferable) {
                     TableTransferable tr = (TableTransferable) transferable;
                     System.out.println("From table row" + tr.getPropertyId());
+                    // TODO should not use Property.toString()
                     data = tr.getSourceContainer().getItem(tr.getItemId())
                             .getItemProperty(tr.getPropertyId()).toString();
 
@@ -147,6 +148,7 @@ public class DDTest2 extends TestBase {
                     // if the source is from table (not from tree1 itself),
                     // transfer Name property and use it as an identifier in
                     // tree1
+                    // TODO should not use Property.toString()
                     String name = sourceContainer.getItem(itemId)
                             .getItemProperty("Name").toString();
 

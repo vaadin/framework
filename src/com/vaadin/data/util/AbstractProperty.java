@@ -60,9 +60,23 @@ public abstract class AbstractProperty implements Property,
      * <code>setValue</code> method if the Property is not in read-only mode.
      * 
      * @return String representation of the value stored in the Property
+     * @deprecated use the property value directly, or {@link #getStringValue()}
+     *             during migration period
      */
+    @Deprecated
     @Override
     public String toString() {
+        return getStringValue();
+    }
+
+    /**
+     * Returns the value of the <code>Property</code> in human readable textual
+     * format.
+     * 
+     * @return String representation of the value stored in the Property
+     * @since 7.0
+     */
+    public String getStringValue() {
         final Object value = getValue();
         if (value == null) {
             return null;

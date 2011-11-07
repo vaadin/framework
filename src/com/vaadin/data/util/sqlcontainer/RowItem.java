@@ -113,7 +113,8 @@ public final class RowItem implements Item {
             s.append("|");
             s.append(propId.toString());
             s.append(":");
-            s.append(getItemProperty(propId).toString());
+            Object value = getItemProperty(propId).getValue();
+            s.append((null != value) ? value.toString() : null);
         }
         return s.toString();
     }

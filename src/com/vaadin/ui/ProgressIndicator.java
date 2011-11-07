@@ -150,13 +150,16 @@ public class ProgressIndicator extends AbstractField implements Property,
 
     /**
      * @see com.vaadin.ui.AbstractField#toString()
+     * @deprecated use the data source value instead of toString()
      */
+    @Deprecated
     @Override
     public String toString() {
         if (dataSource == null) {
             throw new IllegalStateException("Datasource must be set");
         }
-        return dataSource.toString();
+        Object value = dataSource.getValue();
+        return (null != value) ? value.toString() : null;
     }
 
     /**

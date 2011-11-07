@@ -298,8 +298,10 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             try {
 
                 // Discards buffer by overwriting from datasource
-                newValue = String.class == getType() ? dataSource.toString()
-                        : dataSource.getValue();
+                newValue = dataSource.getValue();
+                if (String.class == getType()) {
+                    newValue = newValue.toString();
+                }
 
                 // If successful, remove set the buffering state to be ok
                 if (currentBufferedSourceException != null) {
@@ -387,8 +389,11 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         }
         readThroughMode = readThrough;
         if (!isModified() && readThroughMode && dataSource != null) {
-            setInternalValue(String.class == getType() ? dataSource.toString()
-                    : dataSource.getValue());
+            Object newValue = dataSource.getValue();
+            if (String.class == getType()) {
+                newValue = newValue.toString();
+            }
+            setInternalValue(newValue);
             fireValueChange(false);
         }
     }
@@ -399,14 +404,33 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * Returns the value of the Property in human readable textual format.
      * 
      * @see java.lang.Object#toString()
+     * @deprecated get the string representation from the data source, or use
+     *             getStringValue() during migration
      */
+    @Deprecated
     @Override
     public String toString() {
+        return getStringValue();
+    }
+
+    /**
+     * Returns the (UI type) value of the field converted to a String using
+     * toString().
+     * 
+     * This method exists to help migration from the use of Property.toString()
+     * to get the field value - for new applications, access getValue()
+     * directly. This method may disappear in future Vaadin versions.
+     * 
+     * @return string representation of the field value or null if the value is
+     *         null
+     * @since 7.0
+     */
+    public String getStringValue() {
         final Object value = getValue();
         if (value == null) {
             return null;
         }
-        return getValue().toString();
+        return value.toString();
     }
 
     /**
@@ -441,10 +465,11 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             return value;
         }
 
-        Object newValue = String.class == getType() ? dataSource.toString()
-                : dataSource.getValue();
-
-        return newValue;
+        Object result = dataSource.getValue();
+        if (String.class == getType()) {
+            result = result.toString();
+        }
+        return result;
     }
 
     /**
@@ -612,8 +637,11 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         // Gets the value from source
         try {
             if (dataSource != null) {
-                setInternalValue(String.class == getType() ? dataSource
-                        .toString() : dataSource.getValue());
+                Object newValue = dataSource.getValue();
+                if (String.class == getType()) {
+                    newValue = newValue.toString();
+                }
+                setInternalValue(newValue);
             }
             modified = false;
         } catch (final Throwable e) {

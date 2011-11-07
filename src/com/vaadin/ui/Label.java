@@ -194,24 +194,24 @@ public class Label extends AbstractComponent implements Property,
             target.addAttribute("mode", CONTENT_MODE_NAME[contentMode]);
         }
         if (contentMode == CONTENT_TEXT) {
-            target.addText(toString());
+            target.addText(getStringValue());
         } else if (contentMode == CONTENT_UIDL) {
-            target.addUIDL(toString());
+            target.addUIDL(getStringValue());
         } else if (contentMode == CONTENT_XHTML) {
             target.startTag("data");
-            target.addXMLSection("div", toString(),
+            target.addXMLSection("div", getStringValue(),
                     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd");
             target.endTag("data");
         } else if (contentMode == CONTENT_PREFORMATTED) {
             target.startTag("pre");
-            target.addText(toString());
+            target.addText(getStringValue());
             target.endTag("pre");
         } else if (contentMode == CONTENT_XML) {
-            target.addXMLSection("data", toString(), null);
+            target.addXMLSection("data", getStringValue(), null);
         } else if (contentMode == CONTENT_RAW) {
             target.startTag("data");
             target.addAttribute("escape", false);
-            target.addText(toString());
+            target.addText(getStringValue());
             target.endTag("data");
         }
 
@@ -246,12 +246,25 @@ public class Label extends AbstractComponent implements Property,
 
     /**
      * @see java.lang.Object#toString()
+     * @deprecated use the data source value or {@link #getStringValue()}
+     *             instead
      */
+    @Deprecated
     @Override
     public String toString() {
+        return getStringValue();
+    }
+
+    /**
+     * TODO temporary method to help eliminate the use of toString()
+     * 
+     * @return
+     */
+    public String getStringValue() {
         if (dataSource == null) {
             throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
         }
+        // TODO do not use Property.toString()
         return dataSource.toString();
     }
 
@@ -489,17 +502,19 @@ public class Label extends AbstractComponent implements Property,
 
         if (contentMode == CONTENT_XML || contentMode == CONTENT_UIDL
                 || contentMode == CONTENT_XHTML) {
-            thisValue = stripTags(toString());
+            thisValue = stripTags(getStringValue());
         } else {
-            thisValue = toString();
+            thisValue = getStringValue();
         }
 
         if (other instanceof Label
                 && (((Label) other).getContentMode() == CONTENT_XML
                         || ((Label) other).getContentMode() == CONTENT_UIDL || ((Label) other)
                         .getContentMode() == CONTENT_XHTML)) {
-            otherValue = stripTags(other.toString());
+            otherValue = stripTags(((Label) other).getStringValue());
         } else {
+            // TODO not a good idea - and might assume that Field.toString()
+            // returns a string representation of the value
             otherValue = other.toString();
         }
 

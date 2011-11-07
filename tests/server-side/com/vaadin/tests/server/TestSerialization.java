@@ -10,6 +10,7 @@ import java.io.Serializable;
 import junit.framework.TestCase;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.validator.RegexpValidator;
@@ -78,13 +79,23 @@ public class TestSerialization extends TestCase {
                 data));
         Serializable s2 = (Serializable) in.readObject();
 
+        // using special toString(Object) method to avoid calling
+        // Property.toString(), which will be temporarily disabled
         if (s.equals(s2)) {
-            System.out.println(s + " equals " + s2);
+            System.out.println(toString(s) + " equals " + toString(s2));
         } else {
-            System.out.println(s + " does NOT equal " + s2);
+            System.out.println(toString(s) + " does NOT equal " + toString(s2));
         }
 
         return s2;
+    }
+
+    private static String toString(Object o) {
+        if (o instanceof Property) {
+            return String.valueOf(((Property) o).getValue());
+        } else {
+            return String.valueOf(o);
+        }
     }
 
     public static class Data implements Serializable {

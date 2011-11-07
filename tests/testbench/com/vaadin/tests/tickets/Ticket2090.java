@@ -30,7 +30,7 @@ public class Ticket2090 extends Application {
         height.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
                 try {
-                    target.setHeight(height.toString());
+                    target.setHeight(height.getStringValue());
                     height.setComponentError(null);
                     updateLabel();
                 } catch (Exception e) {
@@ -41,7 +41,7 @@ public class Ticket2090 extends Application {
         width.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
                 try {
-                    target.setWidth(width.toString());
+                    target.setWidth(width.getStringValue());
                     width.setComponentError(null);
                     updateLabel();
                 } catch (Exception e) {

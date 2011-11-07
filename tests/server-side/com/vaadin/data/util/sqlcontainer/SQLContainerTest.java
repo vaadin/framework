@@ -1344,7 +1344,7 @@ public class SQLContainerTest {
                         Statement statement = conn.createStatement();
                         statement
                                 .executeUpdate("DELETE FROM people WHERE \"ID\"="
-                                        + item.getItemProperty("ID"));
+                                        + item.getItemProperty("ID").getValue());
                         statement.close();
                         return true;
                     }

@@ -60,6 +60,8 @@ public interface Property extends Serializable {
      * should at least understand the format returned by the
      * <code>toString</code> method of the Property.
      * 
+     * TODO correct this comment as eliminating Property.toString()
+     * 
      * @param newValue
      *            New value of the Property. This should be assignable to the
      *            type returned by getType, but also String type should be
@@ -73,16 +75,6 @@ public interface Property extends Serializable {
      */
     public void setValue(Object newValue) throws Property.ReadOnlyException,
             Property.ConversionException;
-
-    /**
-     * Returns the value of the Property in human readable textual format. The
-     * return value should be assignable to the <code>setValue</code> method if
-     * the Property is not in read-only mode.
-     * 
-     * @return <code>String</code> representation of the value stored in the
-     *         Property
-     */
-    public String toString();
 
     /**
      * Returns the type of the Property. The methods <code>getValue</code> and

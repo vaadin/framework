@@ -98,7 +98,7 @@ public abstract class PropertyFormatter extends AbstractProperty implements
                         .removeListener(this);
             }
             readOnly = isReadOnly();
-            prevValue = toString();
+            prevValue = getStringValue();
         }
 
         dataSource = newDataSource;
@@ -116,7 +116,7 @@ public abstract class PropertyFormatter extends AbstractProperty implements
         if (isReadOnly() != readOnly) {
             fireReadOnlyStatusChange();
         }
-        String newVal = toString();
+        String newVal = getStringValue();
         if ((prevValue == null && newVal != null)
                 || (prevValue != null && !prevValue.equals(newVal))) {
             fireValueChange();
@@ -135,17 +135,18 @@ public abstract class PropertyFormatter extends AbstractProperty implements
      *         String given by format().
      */
     public Object getValue() {
-        return toString();
+        return getStringValue();
     }
 
     /**
-     * Get the formatted value.
+     * Get the formatted value. For PropertyFormatter, this is identical with
+     * {@link #getValue()}.
      * 
      * @return If the datasource returns null, this is null. Otherwise this is
      *         String given by format().
      */
     @Override
-    public String toString() {
+    public String getStringValue() {
         Object value = dataSource == null ? false : dataSource.getValue();
         if (value == null) {
             return null;
@@ -154,6 +155,7 @@ public abstract class PropertyFormatter extends AbstractProperty implements
     }
 
     /** Reflects the read-only status of the datasource. */
+    @Override
     public boolean isReadOnly() {
         return dataSource == null ? false : dataSource.isReadOnly();
     }
@@ -190,6 +192,7 @@ public abstract class PropertyFormatter extends AbstractProperty implements
      * @param newStatus
      *            the new read-only status of the Property.
      */
+    @Override
     public void setReadOnly(boolean newStatus) {
         if (dataSource != null) {
             dataSource.setReadOnly(newStatus);
@@ -209,7 +212,7 @@ public abstract class PropertyFormatter extends AbstractProperty implements
         } else {
             try {
                 dataSource.setValue(parse((String) newValue));
-                if (!newValue.equals(toString())) {
+                if (!newValue.equals(getStringValue())) {
                     fireValueChange();
                 }
             } catch (Exception e) {

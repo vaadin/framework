@@ -9,8 +9,6 @@ import org.easymock.EasyMock;
 
 import com.vaadin.data.Item.PropertySetChangeEvent;
 import com.vaadin.data.Item.PropertySetChangeListener;
-import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.util.PropertysetItem;
 
 public class PropertySetItemTest extends TestCase {
 
@@ -395,13 +393,13 @@ public class PropertySetItemTest extends TestCase {
 
         item.addItemProperty(ID1, prop1);
 
-        Assert.assertEquals(String.valueOf(prop1), item.toString());
+        Assert.assertEquals(String.valueOf(prop1.getValue()), item.toString());
 
         item.addItemProperty(ID2, prop2);
 
         Assert.assertEquals(
-                String.valueOf(prop1) + " " + String.valueOf(prop2),
-                item.toString());
+                String.valueOf(prop1.getValue()) + " "
+                        + String.valueOf(prop2.getValue()), item.toString());
     }
 
 }

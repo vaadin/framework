@@ -3230,7 +3230,8 @@ public class Table extends AbstractSelect implements Action.Container,
         if (property == null) {
             return "";
         }
-        return property.toString();
+        Object value = property.getValue();
+        return (null != value) ? value.toString() : "";
     }
 
     /* Action container */

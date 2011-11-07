@@ -143,7 +143,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
 
         for (final Iterator<?> i = getItemPropertyIds().iterator(); i.hasNext();) {
             final Object propertyId = i.next();
-            retValue += getItemProperty(propertyId).toString();
+            retValue += getItemProperty(propertyId).getValue();
             if (i.hasNext()) {
                 retValue += " ";
             }

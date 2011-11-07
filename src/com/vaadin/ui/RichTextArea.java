@@ -342,7 +342,7 @@ public class RichTextArea extends AbstractField {
 
     @Override
     protected boolean isEmpty() {
-        return super.isEmpty() || toString().length() == 0;
+        return super.isEmpty() || getStringValue().length() == 0;
     }
 
 }
