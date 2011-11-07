@@ -50,7 +50,7 @@ public class Ticket736 extends Application {
 
         // Add some validators for the form
         f.getField("zip").addValidator(new IsInteger());
-        f.getField("zip").setDescription("Jepjep");
+        ((AbstractComponent) f.getField("zip")).setDescription("Jepjep");
         ((AbstractComponent) f.getField("zip")).setIcon(new ThemeResource(
                 "../runo/icons/16/folder.png"));
         f.getField("state").addValidator(new IsValidState());

@@ -10,27 +10,10 @@ import com.vaadin.ui.Component.Focusable;
 
 /**
  * @author IT Mill Ltd.
- * 
  */
 public interface Field extends Component, BufferedValidatable, Property,
         Property.ValueChangeNotifier, Property.ValueChangeListener,
         Property.Editor, Focusable {
-
-    /**
-     * Sets the Caption.
-     * 
-     * @param caption
-     */
-    void setCaption(String caption);
-
-    String getDescription();
-
-    /**
-     * Sets the Description.
-     * 
-     * @param caption
-     */
-    void setDescription(String caption);
 
     /**
      * Is this field required.
