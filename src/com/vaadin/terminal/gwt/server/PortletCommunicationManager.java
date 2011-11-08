@@ -5,12 +5,9 @@ package com.vaadin.terminal.gwt.server;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.portlet.MimeResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.ResourceRequest;
@@ -38,40 +35,6 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
 
     private transient ResourceResponse currentUidlResponse;
 
-    private static class PortletResponseWrapper implements WrappedResponse {
-
-        private final PortletResponse response;
-
-        public PortletResponseWrapper(PortletResponse response) {
-            this.response = response;
-        }
-
-        public OutputStream getOutputStream() throws IOException {
-            return ((MimeResponse) response).getPortletOutputStream();
-        }
-
-        public MimeResponse getPortletResponse() {
-            return (MimeResponse) response;
-        }
-
-        public void setContentType(String type) {
-            ((MimeResponse) response).setContentType(type);
-        }
-
-        public PrintWriter getWriter() throws IOException {
-            return ((MimeResponse) response).getWriter();
-        }
-
-        public void setStatus(int responseStatus) {
-            response.setProperty(ResourceResponse.HTTP_STATUS_CODE,
-                    Integer.toString(responseStatus));
-        }
-
-        public void setHeader(String name, String value) {
-            response.setProperty(name, value);
-        }
-    }
-
     private static class AbstractApplicationPortletWrapper implements Callback {
 
         private final AbstractApplicationPortlet portlet;
@@ -86,7 +49,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                 String details, String outOfSyncURL) throws IOException {
             portlet.criticalNotification(
                     ((WrappedPortletRequest) request).getPortletRequest(),
-                    ((PortletResponseWrapper) response).getPortletResponse(),
+                    ((WrappedPortletResponse) response).getPortletResponse(),
                     cap, msg, details, outOfSyncURL);
         }
 
@@ -119,11 +82,11 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         if (contentType.contains("boundary")) {
             doHandleSimpleMultipartFileUpload(
                     new WrappedPortletRequest(request),
-                    new PortletResponseWrapper(response), streamVariable, name,
+                    new WrappedPortletResponse(response), streamVariable, name,
                     variableOwner, contentType.split("boundary=")[1]);
         } else {
             doHandleXhrFilePost(new WrappedPortletRequest(request),
-                    new PortletResponseWrapper(response), streamVariable, name,
+                    new WrappedPortletResponse(response), streamVariable, name,
                     variableOwner, request.getContentLength());
         }
 
@@ -143,7 +106,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             throws InvalidUIDLSecurityKeyException, IOException {
         currentUidlResponse = response;
         doHandleUidlRequest(new WrappedPortletRequest(request),
-                new PortletResponseWrapper(response),
+                new WrappedPortletResponse(response),
                 new AbstractApplicationPortletWrapper(applicationPortlet), root);
         currentUidlResponse = null;
     }
@@ -211,7 +174,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     public boolean handleApplicationRequest(PortletRequest request,
             PortletResponse response) throws IOException {
         return handleApplicationRequest(new WrappedPortletRequest(request),
-                new PortletResponseWrapper(response));
+                new WrappedPortletResponse(response));
     }
 
 }
