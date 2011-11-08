@@ -96,4 +96,8 @@ public class WrappedPortletRequest implements WrappedRequest {
         return request;
     }
 
+    public String getContentType() {
+        return ((ResourceRequest) request).getContentType();
+    }
+
 }

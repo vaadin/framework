@@ -22,8 +22,8 @@ public class WrappedPortletResponse implements WrappedResponse {
         return ((MimeResponse) response).getPortletOutputStream();
     }
 
-    public MimeResponse getPortletResponse() {
-        return (MimeResponse) response;
+    public PortletResponse getPortletResponse() {
+        return response;
     }
 
     public void setContentType(String type) {

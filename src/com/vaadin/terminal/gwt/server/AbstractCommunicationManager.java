@@ -539,7 +539,7 @@ public abstract class AbstractCommunicationManager implements
      * @throws IOException
      * @throws InvalidUIDLSecurityKeyException
      */
-    protected void doHandleUidlRequest(WrappedRequest request,
+    public void handleUidlRequest(WrappedRequest request,
             WrappedResponse response, Callback callback, Root root)
             throws IOException, InvalidUIDLSecurityKeyException {
 
@@ -746,8 +746,8 @@ public abstract class AbstractCommunicationManager implements
             outWriter.print("\"changes\":[]");
         } else {
             // re-get window - may have been changed
-            Root newRoot = doGetApplicationWindow(request, callback,
-                    application, root);
+            Root newRoot = getApplicationRoot(request, callback, application,
+                    root);
             if (newRoot != root) {
                 root = newRoot;
                 repaintAll = true;
@@ -1661,16 +1661,21 @@ public abstract class AbstractCommunicationManager implements
     }
 
     /**
-     * TODO New method - document me!
+     * Gets the existing application or creates a new one. Get a window within
+     * an application based on the requested URI.
      * 
      * @param request
-     * @param callback
+     *            the HTTP Request.
      * @param application
-     * @param assumedWindow
-     * @return
+     *            the Application to query for window.
+     * @param assumedRoot
+     *            if the window has been already resolved once, this parameter
+     *            must contain the window.
+     * @param callback
+     * @return Window matching the given URI or null if not found.
      */
-    protected Root doGetApplicationWindow(WrappedRequest request,
-            Callback callback, Application application, Root assumedRoot) {
+    public Root getApplicationRoot(WrappedRequest request, Callback callback,
+            Application application, Root assumedRoot) {
         return application.getRoot(request);
 
         // Window window = null;

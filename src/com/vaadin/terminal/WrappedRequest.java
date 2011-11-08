@@ -56,4 +56,6 @@ public interface WrappedRequest {
 
     public void setSessionAttribute(String name, Object attribute);
 
+    public String getContentType();
+
 }

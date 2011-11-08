@@ -85,10 +85,13 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         public void criticalNotification(WrappedRequest request,
                 WrappedResponse response, String cap, String msg,
                 String details, String outOfSyncURL) throws IOException {
-            portlet.criticalNotification(
-                    ((WrappedPortletRequest) request).getPortletRequest(),
-                    ((WrappedPortletResponse) response).getPortletResponse(),
-                    cap, msg, details, outOfSyncURL);
+            PortletRequest portletRequest = ((WrappedPortletRequest) request)
+                    .getPortletRequest();
+            PortletResponse portletResponse = ((WrappedPortletResponse) response)
+                    .getPortletResponse();
+            portlet.criticalNotification(portletRequest,
+                    (MimeResponse) portletResponse, cap, msg, details,
+                    outOfSyncURL);
         }
 
         public InputStream getThemeResourceAsStream(String themeName,
@@ -357,6 +360,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             PortletResponse response) throws PortletException, IOException {
         AbstractApplicationPortletWrapper portletWrapper = new AbstractApplicationPortletWrapper(
                 this);
+        WrappedPortletRequest wrappedRequest = new WrappedPortletRequest(
+                request);
+        WrappedPortletResponse wrappedResponse = new WrappedPortletResponse(
+                response);
+
         RequestType requestType = getRequestType(request);
 
         if (requestType == RequestType.UNKNOWN) {
@@ -443,7 +451,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                             break;
                         default:
                             root = applicationManager.getApplicationRoot(
-                                    request, portletWrapper, application, null);
+                                    wrappedRequest, portletWrapper,
+                                    application, null);
                         }
                         // if window not found, not a problem - use null
                     }
@@ -471,9 +480,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                 /* Handle the request */
                 if (requestType == RequestType.FILE_UPLOAD) {
-                    applicationManager.handleFileUpload(
-                            (ResourceRequest) request,
-                            (ResourceResponse) response);
+                    applicationManager.handleFileUpload(wrappedRequest,
+                            wrappedResponse);
                     return;
                 } else if (requestType == RequestType.UIDL) {
                     // Handles AJAX UIDL requests
@@ -481,9 +489,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                         // warn if versions do not match
                         checkWidgetsetVersion(request);
                     }
-                    applicationManager.handleUidlRequest(
-                            (ResourceRequest) request,
-                            (ResourceResponse) response, portletWrapper, root);
+                    applicationManager.handleUidlRequest(wrappedRequest,
+                            wrappedResponse, portletWrapper, root);
                     return;
                 } else {
                     /*
@@ -494,8 +501,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                         return;
                     }
 
-                    handleOtherRequest(request, response, requestType,
-                            application, root, applicationContext,
+                    handleOtherRequest(wrappedRequest, wrappedResponse,
+                            requestType, application, root, applicationContext,
                             applicationManager);
                 }
             } catch (final SessionExpiredException e) {
@@ -548,8 +555,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @throws IOException
      * @throws MalformedURLException
      */
-    private void handleOtherRequest(PortletRequest request,
-            PortletResponse response, RequestType requestType,
+    private void handleOtherRequest(WrappedRequest request,
+            WrappedResponse response, RequestType requestType,
             Application application, Root root,
             PortletApplicationContext2 applicationContext,
             PortletCommunicationManager applicationManager)
@@ -575,11 +582,15 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         if (requestType == RequestType.APPLICATION_RESOURCE) {
             if (!applicationManager.handleApplicationRequest(request, response)) {
-                response.setProperty(ResourceResponse.HTTP_STATUS_CODE, "404");
+                response.setStatus(404);
             }
         } else if (requestType == RequestType.RENDER) {
-            writeAjaxPage((RenderRequest) request, (RenderResponse) response,
-                    root, application);
+            PortletRequest portletRequest = ((WrappedPortletRequest) request)
+                    .getPortletRequest();
+            PortletResponse portletResponse = ((WrappedPortletResponse) response)
+                    .getPortletResponse();
+            writeAjaxPage((RenderRequest) portletRequest,
+                    (RenderResponse) portletResponse, root, application);
         } else if (requestType == RequestType.EVENT) {
             // nothing to do, listeners do all the work
         } else if (requestType == RequestType.ACTION) {

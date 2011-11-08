@@ -7,17 +7,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
-import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceURL;
-import javax.servlet.ServletException;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.VariableOwner;
+import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Root;
 
@@ -36,8 +34,8 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         super(application);
     }
 
-    public void handleFileUpload(ResourceRequest request,
-            ResourceResponse response) throws IOException {
+    public void handleFileUpload(WrappedRequest request,
+            WrappedResponse response) throws IOException {
         String contentType = request.getContentType();
         String name = request.getParameter("name");
         String ownerId = request.getParameter("rec-owner");
@@ -46,13 +44,11 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                 variableOwner).get(name);
 
         if (contentType.contains("boundary")) {
-            doHandleSimpleMultipartFileUpload(
-                    new WrappedPortletRequest(request),
-                    new WrappedPortletResponse(response), streamVariable, name,
-                    variableOwner, contentType.split("boundary=")[1]);
+            doHandleSimpleMultipartFileUpload(request, response,
+                    streamVariable, name, variableOwner,
+                    contentType.split("boundary=")[1]);
         } else {
-            doHandleXhrFilePost(new WrappedPortletRequest(request),
-                    new WrappedPortletResponse(response), streamVariable, name,
+            doHandleXhrFilePost(request, response, streamVariable, name,
                     variableOwner, request.getContentLength());
         }
 
@@ -66,37 +62,14 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         }
     }
 
-    public void handleUidlRequest(ResourceRequest request,
-            ResourceResponse response, Callback callback, Root root)
-            throws InvalidUIDLSecurityKeyException, IOException {
-        currentUidlResponse = response;
-        doHandleUidlRequest(new WrappedPortletRequest(request),
-                new WrappedPortletResponse(response), callback, root);
+    @Override
+    public void handleUidlRequest(WrappedRequest request,
+            WrappedResponse response, Callback callback, Root root)
+            throws IOException, InvalidUIDLSecurityKeyException {
+        currentUidlResponse = (ResourceResponse) ((WrappedPortletResponse) response)
+                .getPortletResponse();
+        super.handleUidlRequest(request, response, callback, root);
         currentUidlResponse = null;
-    }
-
-    /**
-     * Gets the existing application or creates a new one. Get a window within
-     * an application based on the requested URI.
-     * 
-     * @param request
-     *            the portlet Request.
-     * @param applicationPortlet
-     * @param application
-     *            the Application to query for window.
-     * @param assumedRoot
-     *            if the window has been already resolved once, this parameter
-     *            must contain the window.
-     * @return Window matching the given URI or null if not found.
-     * @throws ServletException
-     *             if an exception has occurred that interferes with the
-     *             servlet's normal operation.
-     */
-    Root getApplicationRoot(PortletRequest request, Callback callback,
-            Application application, Root assumedRoot) {
-
-        return doGetApplicationWindow(new WrappedPortletRequest(request),
-                callback, application, assumedRoot);
     }
 
     private Map<VariableOwner, Map<String, StreamVariable>> ownerToNameToStreamVariable;
@@ -131,12 +104,6 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         if (map.isEmpty()) {
             ownerToNameToStreamVariable.remove(owner);
         }
-    }
-
-    public boolean handleApplicationRequest(PortletRequest request,
-            PortletResponse response) throws IOException {
-        return handleApplicationRequest(new WrappedPortletRequest(request),
-                new WrappedPortletResponse(response));
     }
 
 }

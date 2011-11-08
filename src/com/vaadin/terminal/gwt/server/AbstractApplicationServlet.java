@@ -432,6 +432,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             HttpServletResponse response) throws ServletException, IOException {
         AbstractApplicationServletWrapper servletWrapper = new AbstractApplicationServletWrapper(
                 this);
+        WrappedHttpServletRequest wrappedRequest = new WrappedHttpServletRequest(
+                request, this);
+        WrappedHttpServletResponse wrappedResponse = new WrappedHttpServletResponse(
+                response);
 
         RequestType requestType = getRequestType(request);
         if (!ensureCookiesEnabled(requestType, request, response)) {
@@ -511,14 +515,15 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             /* Handle the request */
             if (requestType == RequestType.FILE_UPLOAD) {
-                applicationManager.handleFileUpload(request, response, this);
+                applicationManager.handleFileUpload(wrappedRequest,
+                        wrappedResponse);
                 return;
             } else if (requestType == RequestType.UIDL) {
                 // Handles AJAX UIDL requests
-                Root root = applicationManager.getApplicationRoot(request,
-                        this, servletWrapper, application, null);
-                applicationManager.handleUidlRequest(request, response, this,
-                        servletWrapper, root);
+                Root root = applicationManager.getApplicationRoot(
+                        wrappedRequest, servletWrapper, application, null);
+                applicationManager.handleUidlRequest(wrappedRequest,
+                        wrappedResponse, servletWrapper, root);
                 return;
             }
 
@@ -529,14 +534,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 return;
             }
 
-            if (applicationManager.handleApplicationRequest(request, response,
-                    this)) {
+            if (applicationManager.handleApplicationRequest(wrappedRequest,
+                    wrappedResponse)) {
                 return;
             }
             // TODO Should return 404 error here and not do anything more
 
             // Finds the root within the application
-            Root root = getApplicationRoot(request, applicationManager,
+            Root root = getApplicationRoot(wrappedRequest, applicationManager,
                     servletWrapper, application);
             if (root == null) {
                 throw new ServletException(ERROR_NO_WINDOW_FOUND);
@@ -2160,7 +2165,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      *             if an exception has occurred that interferes with the
      *             servlet's normal operation.
      */
-    protected Root getApplicationRoot(HttpServletRequest request,
+    protected Root getApplicationRoot(WrappedRequest request,
             CommunicationManager applicationManager, Callback servletWrapper,
             Application application) throws ServletException {
         //
@@ -2189,8 +2194,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         //
         // }
         //
-        return applicationManager.getApplicationRoot(request, this,
-                servletWrapper, application, assumedRoot);
+        return applicationManager.getApplicationRoot(request, servletWrapper,
+                application, assumedRoot);
     }
 
     /**

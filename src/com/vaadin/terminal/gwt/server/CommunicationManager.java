@@ -9,16 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.vaadin.Application;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.VariableOwner;
+import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Root;
 
 /**
  * Application manager processes changes and paints for single application
@@ -63,19 +60,18 @@ public class CommunicationManager extends AbstractCommunicationManager {
      * 
      * @param request
      * @param response
-     * @param servlet
      * @throws IOException
      * @throws InvalidUIDLSecurityKeyException
      */
-    public void handleFileUpload(HttpServletRequest request,
-            HttpServletResponse response, AbstractApplicationServlet servlet)
-            throws IOException, InvalidUIDLSecurityKeyException {
+    public void handleFileUpload(WrappedRequest request,
+            WrappedResponse response) throws IOException,
+            InvalidUIDLSecurityKeyException {
 
         /*
          * URI pattern: APP/UPLOAD/[PID]/[NAME]/[SECKEY] See #createReceiverUrl
          */
 
-        String pathInfo = request.getPathInfo();
+        String pathInfo = request.getRequestPathInfo();
         // strip away part until the data we are interested starts
         int startOfData = pathInfo
                 .indexOf(AbstractApplicationServlet.UPLOAD_URL_PREFIX)
@@ -92,75 +88,22 @@ public class CommunicationManager extends AbstractCommunicationManager {
 
             VariableOwner source = getVariableOwner(paintableId);
             String contentType = request.getContentType();
-            if (request.getContentType().contains("boundary")) {
+            if (contentType.contains("boundary")) {
                 // Multipart requests contain boundary string
-                doHandleSimpleMultipartFileUpload(
-                        new WrappedHttpServletRequest(request, servlet),
-                        new WrappedHttpServletResponse(response),
+                doHandleSimpleMultipartFileUpload(request, response,
                         streamVariable, variableName, source,
                         contentType.split("boundary=")[1]);
             } else {
                 // if boundary string does not exist, the posted file is from
                 // XHR2.post(File)
-                doHandleXhrFilePost(new WrappedHttpServletRequest(request,
-                        servlet), new WrappedHttpServletResponse(response),
-                        streamVariable, variableName, source,
-                        request.getContentLength());
+                doHandleXhrFilePost(request, response, streamVariable,
+                        variableName, source, request.getContentLength());
             }
         } else {
             throw new InvalidUIDLSecurityKeyException(
                     "Security key in upload post did not match!");
         }
 
-    }
-
-    /**
-     * Handles UIDL request
-     * 
-     * TODO document
-     * 
-     * @param request
-     * @param response
-     * @param applicationServlet
-     * @param callback
-     * @param window
-     *            target window of the UIDL request, can be null if window not
-     *            found
-     * @throws IOException
-     * @throws ServletException
-     */
-    public void handleUidlRequest(HttpServletRequest request,
-            HttpServletResponse response,
-            AbstractApplicationServlet applicationServlet, Callback callback,
-            Root root) throws IOException, ServletException,
-            InvalidUIDLSecurityKeyException {
-        doHandleUidlRequest(new WrappedHttpServletRequest(request,
-                applicationServlet), new WrappedHttpServletResponse(response),
-                callback, root);
-    }
-
-    /**
-     * Gets the existing application or creates a new one. Get a window within
-     * an application based on the requested URI.
-     * 
-     * @param request
-     *            the HTTP Request.
-     * @param application
-     *            the Application to query for window.
-     * @param assumedRoot
-     *            if the window has been already resolved once, this parameter
-     *            must contain the window.
-     * @param callback
-     * @return Window matching the given URI or null if not found.
-     * @throws ServletException
-     *             if an exception has occurred that interferes with the
-     *             servlet's normal operation.
-     */
-    Root getApplicationRoot(HttpServletRequest request,
-            AbstractApplicationServlet applicationServlet, Callback callback,
-            Application application, Root assumedRoot) throws ServletException {
-        return doGetApplicationWindow(new WrappedHttpServletRequest(request,
-                applicationServlet), callback, application, assumedRoot);
     }
 
     @Override
@@ -235,12 +178,4 @@ public class CommunicationManager extends AbstractCommunicationManager {
             pidToNameToStreamVariable.remove(getPaintableId((Paintable) owner));
         }
     }
-
-    public boolean handleApplicationRequest(HttpServletRequest request,
-            HttpServletResponse response, AbstractApplicationServlet servlet)
-            throws IOException {
-        return handleApplicationRequest(new WrappedHttpServletRequest(request,
-                servlet), new WrappedHttpServletResponse(response));
-    }
-
 }
