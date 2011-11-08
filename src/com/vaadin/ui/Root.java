@@ -12,6 +12,7 @@ import com.vaadin.Application;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Terminal;
+import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.ui.Window.CloseListener;
 import com.vaadin.ui.Window.Notification;
@@ -443,7 +444,7 @@ public class Root extends AbstractComponentContainer {
         return rootLayout;
     }
 
-    public void init() {
-        getRootLayout().init();
+    public void init(WrappedRequest request) {
+        getRootLayout().init(request);
     }
 }

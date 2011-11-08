@@ -27,7 +27,7 @@ public class RootTestApplication extends Application {
             this.rootText = rootText;
         }
 
-        public void init() {
+        public void init(WrappedRequest request) {
             if (rootText != null && rootText.trim().length() != 0) {
                 addComponent(new Label(rootText));
             }
@@ -109,7 +109,7 @@ public class RootTestApplication extends Application {
 
             // TODO Should be done by Application during init
             root.setApplication(this);
-            root.init();
+            root.init(request);
         }
 
         return root;
