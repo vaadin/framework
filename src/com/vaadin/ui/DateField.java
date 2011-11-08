@@ -48,7 +48,7 @@ import com.vaadin.terminal.gwt.client.ui.VPopupCalendar;
  */
 @SuppressWarnings("serial")
 @ClientWidget(VPopupCalendar.class)
-public class DateField extends AbstractField implements
+public class DateField extends AbstractField<Date> implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
     /* Private members */
@@ -228,7 +228,7 @@ public class DateField extends AbstractField implements
 
         // Gets the calendar
         final Calendar calendar = getCalendar();
-        final Date currentDate = (Date) getValue();
+        final Date currentDate = getValue();
 
         for (int r = resolution; r <= largestModifiable; r++) {
             switch (r) {
@@ -298,10 +298,10 @@ public class DateField extends AbstractField implements
                         || variables.containsKey("min")
                         || variables.containsKey("sec")
                         || variables.containsKey("msec") || variables
-                        .containsKey("dateString"))) {
+                            .containsKey("dateString"))) {
 
             // Old and new dates
-            final Date oldDate = (Date) getValue();
+            final Date oldDate = getValue();
             Date newDate = null;
 
             // this enables analyzing invalid input on the server
@@ -469,7 +469,7 @@ public class DateField extends AbstractField implements
      * the default documentation from implemented interface.
      */
     @Override
-    public Class<?> getType() {
+    public Class<Date> getType() {
         return Date.class;
     }
 
@@ -642,7 +642,7 @@ public class DateField extends AbstractField implements
         final Calendar newCal = (Calendar) calendar.clone();
 
         // Assigns the current time tom calendar.
-        final Date currentDate = (Date) getValue();
+        final Date currentDate = getValue();
         if (currentDate != null) {
             newCal.setTime(currentDate);
         }

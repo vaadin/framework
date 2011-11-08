@@ -17,7 +17,7 @@ import com.vaadin.data.Property;
  * 
  * @since 6.6
  */
-public abstract class AbstractProperty implements Property,
+public abstract class AbstractProperty<T> implements Property<T>,
         Property.ValueChangeNotifier, Property.ReadOnlyStatusChangeNotifier {
 
     /**
@@ -56,8 +56,7 @@ public abstract class AbstractProperty implements Property,
 
     /**
      * Returns the value of the <code>Property</code> in human readable textual
-     * format. The return value should be assignable to the
-     * <code>setValue</code> method if the Property is not in read-only mode.
+     * format.
      * 
      * @return String representation of the value stored in the Property
      * @deprecated use the property value directly, or {@link #getStringValue()}

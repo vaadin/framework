@@ -26,7 +26,7 @@ import com.vaadin.terminal.gwt.client.ui.VProgressIndicator;
  */
 @SuppressWarnings("serial")
 @ClientWidget(VProgressIndicator.class)
-public class ProgressIndicator extends AbstractField implements Property,
+public class ProgressIndicator extends AbstractField<Number> implements
         Property.Viewer, Property.ValueChangeListener {
 
     /**
@@ -125,11 +125,12 @@ public class ProgressIndicator extends AbstractField implements Property,
      * @see com.vaadin.ui.AbstractField#getValue()
      */
     @Override
-    public Object getValue() {
+    public Number getValue() {
         if (dataSource == null) {
             throw new IllegalStateException("Datasource must be set");
         }
-        return dataSource.getValue();
+        // TODO conversions to eliminate cast
+        return (Number) dataSource.getValue();
     }
 
     /**
@@ -138,7 +139,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      * 
      * @param newValue
      *            the New value of the ProgressIndicator.
-     * @see com.vaadin.ui.AbstractField#setValue(java.lang.Object)
+     * @see com.vaadin.ui.AbstractField#setValue()
      */
     @Override
     public void setValue(Object newValue) {
@@ -163,7 +164,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      * @see com.vaadin.ui.AbstractField#getType()
      */
     @Override
-    public Class<?> getType() {
+    public Class<? extends Number> getType() {
         if (dataSource == null) {
             throw new IllegalStateException("Datasource must be set");
         }

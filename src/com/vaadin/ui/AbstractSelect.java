@@ -55,7 +55,8 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
  * @since 5.0
  */
 @SuppressWarnings("serial")
-public abstract class AbstractSelect extends AbstractField implements
+// TODO currently cannot specify type more precisely in case of multi-select
+public abstract class AbstractSelect extends AbstractField<Object> implements
         Container, Container.Viewer, Container.PropertySetChangeListener,
         Container.PropertySetChangeNotifier, Container.ItemSetChangeNotifier,
         Container.ItemSetChangeListener {

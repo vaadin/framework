@@ -4,8 +4,6 @@ import junit.framework.TestCase;
 
 import org.junit.Assert;
 
-import com.vaadin.data.util.ObjectProperty;
-
 public class ObjectPropertyTest extends TestCase {
 
     public static class TestSuperClass {
@@ -70,7 +68,7 @@ public class ObjectPropertyTest extends TestCase {
         ObjectProperty<TestSuperClass> prop = new ObjectProperty<TestSuperClass>(
                 super1, TestSuperClass.class);
         Assert.assertEquals("super1", prop.getValue().getName());
-        prop.setValue("super2");
+        prop.setValue(new TestSuperClass("super2"));
         Assert.assertEquals("super1", super1.getName());
         Assert.assertEquals("super2", prop.getValue().getName());
     }
@@ -79,7 +77,7 @@ public class ObjectPropertyTest extends TestCase {
         ObjectProperty<TestSubClass> prop = new ObjectProperty<TestSubClass>(
                 sub1, TestSubClass.class);
         Assert.assertEquals("Subclass: sub1", prop.getValue().getName());
-        prop.setValue("sub2");
+        prop.setValue(new TestSubClass("sub2"));
         Assert.assertEquals("Subclass: sub1", sub1.getName());
         Assert.assertEquals("Subclass: sub2", prop.getValue().getName());
     }
@@ -92,7 +90,7 @@ public class ObjectPropertyTest extends TestCase {
         // create correct subclass based on the runtime type of the instance
         // given to ObjectProperty constructor, which is a subclass of the type
         // parameter
-        prop.setValue("sub2");
+        prop.setValue(new TestSubClass("sub2"));
         Assert.assertEquals("Subclass: sub2", prop.getValue().getName());
     }
 

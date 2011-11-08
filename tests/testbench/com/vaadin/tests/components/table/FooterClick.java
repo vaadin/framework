@@ -43,7 +43,7 @@ public class FooterClick extends TestBase {
         // Add a footer click listener
         table.addListener(new Table.FooterClickListener() {
             public void footerClick(FooterClickEvent event) {
-                columnField.setValue(event.getPropertyId());
+                columnField.setValue(String.valueOf(event.getPropertyId()));
                 log.log("Clicked on footer: " + event.getPropertyId());
             }
         });

@@ -104,8 +104,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
                         + " not found");
             }
             try {
-                Property property = pd.createProperty(bean);
-                return (IDTYPE) property.getValue();
+                Property<IDTYPE> property = pd.createProperty(bean);
+                return property.getValue();
             } catch (MethodException e) {
                 throw new IllegalArgumentException(e);
             }
@@ -746,9 +746,9 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         }
 
         model.put(propertyId, propertyDescriptor);
-        for (BeanItem item : itemIdToItem.values()) {
-            item.addItemProperty(propertyId, propertyDescriptor
-                    .createProperty((BEANTYPE) item.getBean()));
+        for (BeanItem<BEANTYPE> item : itemIdToItem.values()) {
+            item.addItemProperty(propertyId,
+                    propertyDescriptor.createProperty(item.getBean()));
         }
 
         // Sends a change event

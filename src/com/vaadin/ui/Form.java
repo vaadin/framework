@@ -61,8 +61,8 @@ import com.vaadin.terminal.gwt.client.ui.VForm;
  */
 @SuppressWarnings("serial")
 @ClientWidget(VForm.class)
-public class Form extends AbstractField implements Item.Editor, Buffered, Item,
-        Validatable, Action.Notifier {
+public class Form extends AbstractField<Object> implements Item.Editor,
+        Buffered, Item, Validatable, Action.Notifier {
 
     private Object propertyValue;
 

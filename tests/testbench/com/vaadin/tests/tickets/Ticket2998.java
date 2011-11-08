@@ -129,7 +129,7 @@ public class Ticket2998 extends Application {
                 close();
             } else {
                 date.setValue(run.getDate());
-                kilomiters.setValue(run.getKilometers());
+                kilomiters.setValue(String.valueOf(run.getKilometers()));
                 title.setValue(run.getTitle());
                 if (getParent() == null) {
                     workoutLog.getMainWindow().addWindow(this);

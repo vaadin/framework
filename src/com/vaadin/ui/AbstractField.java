@@ -53,8 +53,8 @@ import com.vaadin.terminal.PaintTarget;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public abstract class AbstractField extends AbstractComponent implements Field,
-        Property.ReadOnlyStatusChangeListener,
+public abstract class AbstractField<T> extends AbstractComponent implements
+        Field<T>, Property.ReadOnlyStatusChangeListener,
         Property.ReadOnlyStatusChangeNotifier, Action.ShortcutNotifier {
 
     /* Private members */
@@ -62,12 +62,12 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     /**
      * Value of the abstract field.
      */
-    private Object value;
+    private T value;
 
     /**
      * Connected data-source.
      */
-    private Property dataSource = null;
+    private Property<?> dataSource = null;
 
     /**
      * The list of validators.
@@ -189,7 +189,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * Gets the field type Don't add a JavaDoc comment here, we use the default
      * documentation from the implemented interface.
      */
-    public abstract Class<?> getType();
+    public abstract Class<? extends T> getType();
 
     /**
      * The abstract field is read only also if the data source is in read only
@@ -237,13 +237,14 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     public void commit() throws Buffered.SourceException, InvalidValueException {
         if (dataSource != null && !dataSource.isReadOnly()) {
             if ((isInvalidCommitted() || isValid())) {
-                final Object newValue = getValue();
+                final T newValue = getValue();
                 try {
 
                     // Commits the value to datasource.
                     valueWasModifiedByDataSourceDuringCommit = false;
                     committingValueToDataSource = true;
-                    dataSource.setValue(newValue);
+                    // TODO cast required until conversions applied
+                    ((Property) dataSource).setValue(newValue);
 
                 } catch (final Throwable e) {
 
@@ -325,6 +326,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             // If the new value differs from the previous one
             if ((newValue == null && value != null)
                     || (newValue != null && !newValue.equals(value))) {
+                // TODO use converter
                 setInternalValue(newValue);
                 fireValueChange(false);
             }
@@ -393,6 +395,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             if (String.class == getType() && newValue != null) {
                 newValue = newValue.toString();
             }
+            // TODO use converter
             setInternalValue(newValue);
             fireValueChange(false);
         }
@@ -416,12 +419,11 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /**
-     * Returns the (UI type) value of the field converted to a String using
-     * toString().
+     * Returns the (UI type) value of the field converted to a String.
      * 
      * This method exists to help migration from the use of Property.toString()
-     * to get the field value - for new applications, access getValue()
-     * directly. This method may disappear in future Vaadin versions.
+     * to get the field value. For new applications, it is often better to
+     * access getValue() directly.
      * 
      * @return string representation of the field value or null if the value is
      *         null
@@ -440,27 +442,25 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * 
      * <p>
      * This is the visible, modified and possible invalid value the user have
-     * entered to the field. In the read-through mode, the abstract buffer is
-     * also updated and validation is performed.
+     * entered to the field.
      * </p>
      * 
      * <p>
      * Note that the object returned is compatible with getType(). For example,
      * if the type is String, this returns Strings even when the underlying
-     * datasource is of some other type. In order to access the datasources
-     * native type, use getPropertyDatasource().getValue() instead.
+     * datasource is of some other type. In order to access the native type of
+     * the datasource, use getPropertyDatasource().getValue() instead.
      * </p>
      * 
      * <p>
-     * Note that when you extend AbstractField, you must reimplement this method
-     * if datasource.getValue() is not assignable to class returned by getType()
-     * AND getType() is not String. In case of Strings, getValue() calls
-     * datasource.toString() instead of datasource.getValue().
+     * Since Vaadin 7.0, no implicit conversions between other data types and
+     * String are performed, but the converter is used if set.
      * </p>
      * 
      * @return the current value of the field.
+     * @throws Property.ConversionException
      */
-    public Object getValue() {
+    public T getValue() {
 
         // Give the value from abstract buffers if the field if possible
         if (dataSource == null || !isReadThrough() || isModified()) {
@@ -468,10 +468,11 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         }
 
         Object result = dataSource.getValue();
+        // TODO perform correct conversion, no cast or toString()
         if (String.class == getType() && result != null) {
             result = result.toString();
         }
-        return result;
+        return (T) result;
     }
 
     /**
@@ -537,7 +538,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
                     // Commits the value to datasource
                     committingValueToDataSource = true;
-                    dataSource.setValue(newValue);
+                    ((Property) dataSource).setValue(newValue);
 
                     // The buffer is now unmodified
                     modified = false;
@@ -643,6 +644,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                 if (String.class == getType() && newValue != null) {
                     newValue = newValue.toString();
                 }
+                // TODO use converter
                 setInternalValue(newValue);
             }
             modified = false;
@@ -1070,6 +1072,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     private void readValueFromProperty(Property.ValueChangeEvent event) {
+        // TODO use converter or check type otherwise
         setInternalValue(event.getProperty().getValue());
     }
 
@@ -1134,7 +1137,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      *            the new value to be set.
      */
     protected void setInternalValue(Object newValue) {
-        value = newValue;
+        value = (T) newValue;
         if (validators != null && !validators.isEmpty()) {
             requestRepaint();
         }

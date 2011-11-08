@@ -36,8 +36,9 @@ import com.vaadin.ui.themes.BaseTheme;
  */
 @SuppressWarnings("serial")
 @ClientWidget(value = VButton.class, loadStyle = LoadStyle.EAGER)
-public class Button extends AbstractField implements FieldEvents.BlurNotifier,
-        FieldEvents.FocusNotifier {
+// FIXME Button should not be a Field, but CheckBox should
+public class Button extends AbstractField<Boolean> implements
+        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
     /* Private members */
 
@@ -125,7 +126,7 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      * @deprecated use {@link CheckBox} instead of Button in "switchmode"
      */
     @Deprecated
-    public Button(String caption, Property dataSource) {
+    public Button(String caption, Property<Boolean> dataSource) {
         setCaption(caption);
         setSwitchMode(true);
         setPropertyDataSource(dataSource);
@@ -178,7 +179,7 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
         if (!isReadOnly() && variables.containsKey("state")) {
             // Gets the new and old button states
             final Boolean newValue = (Boolean) variables.get("state");
-            final Boolean oldValue = (Boolean) getValue();
+            final Boolean oldValue = getValue();
 
             if (isSwitchMode()) {
 
@@ -265,7 +266,7 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      * @return True iff the button is pressed down or checked.
      */
     public boolean booleanValue() {
-        Boolean value = (Boolean) getValue();
+        Boolean value = getValue();
         return (null == value) ? false : value.booleanValue();
     }
 
@@ -286,7 +287,7 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      * @see com.vaadin.data.Property#getType()
      */
     @Override
-    public Class getType() {
+    public Class<Boolean> getType() {
         return Boolean.class;
     }
 

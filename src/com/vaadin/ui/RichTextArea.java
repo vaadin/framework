@@ -21,7 +21,7 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * into length of field.
  */
 @ClientWidget(value = VRichTextArea.class, loadStyle = LoadStyle.LAZY)
-public class RichTextArea extends AbstractField {
+public class RichTextArea extends AbstractField<String> {
 
     /**
      * Value formatter used to format the string contents.
@@ -175,8 +175,8 @@ public class RichTextArea extends AbstractField {
     }
 
     @Override
-    public Object getValue() {
-        Object v = super.getValue();
+    public String getValue() {
+        String v = super.getValue();
         if (format == null || v == null) {
             return v;
         }

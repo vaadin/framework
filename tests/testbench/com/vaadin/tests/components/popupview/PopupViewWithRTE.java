@@ -28,7 +28,7 @@ public class PopupViewWithRTE extends TestBase {
             VerticalLayout vl = new VerticalLayout();
 
             public String getMinimizedValueAsHTML() {
-                Object value = rte.getValue();
+                String value = rte.getValue();
                 if (value == null || "".equals(value)) {
                     value = "Initial <b>content</b> for <h3>rte</h3>.";
                     rte.setValue(value);

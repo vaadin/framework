@@ -40,6 +40,7 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  */
 @SuppressWarnings("serial")
 @ClientWidget(value = VLabel.class, loadStyle = LoadStyle.EAGER)
+// TODO generics for interface Property
 public class Label extends AbstractComponent implements Property,
         Property.Viewer, Property.ValueChangeListener,
         Property.ValueChangeNotifier, Comparable<Object> {

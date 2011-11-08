@@ -47,7 +47,7 @@ import com.vaadin.util.SerializerHelper;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class MethodProperty<T> extends AbstractProperty {
+public class MethodProperty<T> extends AbstractProperty<T> {
 
     private static final Logger logger = Logger.getLogger(MethodProperty.class
             .getName());
@@ -349,7 +349,7 @@ public class MethodProperty<T> extends AbstractProperty {
             }
 
             // Tests the parameter types
-            final Class[] c = m[i].getParameterTypes();
+            final Class<?>[] c = m[i].getParameterTypes();
             if (c.length != getArgs.length) {
 
                 // not the right amount of parameters, try next method
@@ -398,7 +398,7 @@ public class MethodProperty<T> extends AbstractProperty {
                 }
 
                 // Checks parameter compatibility
-                final Class[] c = m[i].getParameterTypes();
+                final Class<?>[] c = m[i].getParameterTypes();
                 if (c.length != setArgs.length) {
 
                     // not the right amount of parameters, try next method
@@ -569,8 +569,7 @@ public class MethodProperty<T> extends AbstractProperty {
      * 
      * @return type of the Property
      */
-    @SuppressWarnings("unchecked")
-    public final Class getType() {
+    public final Class<? extends T> getType() {
         return type;
     }
 
@@ -593,9 +592,9 @@ public class MethodProperty<T> extends AbstractProperty {
      * 
      * @return the value of the Property
      */
-    public Object getValue() {
+    public T getValue() {
         try {
-            return getMethod.invoke(instance, getArgs);
+            return (T) getMethod.invoke(instance, getArgs);
         } catch (final Throwable e) {
             throw new MethodException(this, e);
         }
@@ -642,7 +641,6 @@ public class MethodProperty<T> extends AbstractProperty {
      *         native type directly or through <code>String</code>.
      * @see #invokeSetMethod(Object)
      */
-    @SuppressWarnings("unchecked")
     public void setValue(Object newValue) throws Property.ReadOnlyException,
             Property.ConversionException {
 

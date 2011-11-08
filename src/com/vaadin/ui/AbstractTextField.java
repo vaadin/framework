@@ -20,7 +20,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VTextField;
 
-public abstract class AbstractTextField extends AbstractField implements
+public abstract class AbstractTextField extends AbstractField<String> implements
         BlurNotifier, FocusNotifier, TextChangeNotifier {
 
     /**
@@ -171,8 +171,8 @@ public abstract class AbstractTextField extends AbstractField implements
     }
 
     @Override
-    public Object getValue() {
-        Object v = super.getValue();
+    public String getValue() {
+        String v = super.getValue();
         if (format == null || v == null) {
             return v;
         }
@@ -250,7 +250,7 @@ public abstract class AbstractTextField extends AbstractField implements
     }
 
     @Override
-    public Class getType() {
+    public Class<String> getType() {
         return String.class;
     }
 
@@ -513,7 +513,7 @@ public abstract class AbstractTextField extends AbstractField implements
          * case. AbstractField optimizes value change if the existing value is
          * reset. Also we need to force repaint if the flag is on.
          */
-        if(lastKnownTextContent != null) {
+        if (lastKnownTextContent != null) {
             lastKnownTextContent = null;
             requestRepaint();
         }

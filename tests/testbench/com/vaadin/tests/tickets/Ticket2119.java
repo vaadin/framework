@@ -74,7 +74,9 @@ public class Ticket2119 extends Application {
 
         globalValue.addListener(new Property.ValueChangeListener() {
             public void valueChange(Property.ValueChangeEvent event) {
-                valueProperty.setValue(event.getProperty().getValue());
+                Object value = event.getProperty().getValue();
+                valueProperty.setValue((null != value) ? value.toString()
+                        : null);
             }
         });
 
