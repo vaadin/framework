@@ -52,8 +52,11 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
 import com.vaadin.terminal.Terminal;
+import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.server.AbstractCommunicationManager.Callback;
 import com.vaadin.ui.Root;
 
 /**
@@ -69,6 +72,37 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     private static final Logger logger = Logger
             .getLogger(AbstractApplicationPortlet.class.getName());
+
+    private static class AbstractApplicationPortletWrapper implements Callback {
+
+        private final AbstractApplicationPortlet portlet;
+
+        public AbstractApplicationPortletWrapper(
+                AbstractApplicationPortlet portlet) {
+            this.portlet = portlet;
+        }
+
+        public void criticalNotification(WrappedRequest request,
+                WrappedResponse response, String cap, String msg,
+                String details, String outOfSyncURL) throws IOException {
+            portlet.criticalNotification(
+                    ((WrappedPortletRequest) request).getPortletRequest(),
+                    ((WrappedPortletResponse) response).getPortletResponse(),
+                    cap, msg, details, outOfSyncURL);
+        }
+
+        public String getRequestPathInfo(WrappedRequest request) {
+            return request.getRequestPathInfo();
+        }
+
+        public InputStream getThemeResourceAsStream(String themeName,
+                String resource) throws IOException {
+            return portlet.getPortletContext().getResourceAsStream(
+                    "/" + AbstractApplicationPortlet.THEME_DIRECTORY_PATH
+                            + themeName + "/" + resource);
+        }
+
+    }
 
     /**
      * This portlet parameter is used to add styles to the main element. E.g
@@ -325,6 +359,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     protected void handleRequest(PortletRequest request,
             PortletResponse response) throws PortletException, IOException {
+        AbstractApplicationPortletWrapper portletWrapper = new AbstractApplicationPortletWrapper(
+                this);
         RequestType requestType = getRequestType(request);
 
         if (requestType == RequestType.UNKNOWN) {
@@ -411,7 +447,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                             break;
                         default:
                             root = applicationManager.getApplicationRoot(
-                                    request, this, application, null);
+                                    request, portletWrapper, application, null);
                         }
                         // if window not found, not a problem - use null
                     }
@@ -451,7 +487,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     }
                     applicationManager.handleUidlRequest(
                             (ResourceRequest) request,
-                            (ResourceResponse) response, this, root);
+                            (ResourceResponse) response, portletWrapper, root);
                     return;
                 } else {
                     /*

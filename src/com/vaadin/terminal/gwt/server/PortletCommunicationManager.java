@@ -4,7 +4,6 @@
 package com.vaadin.terminal.gwt.server;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,8 +18,6 @@ import com.vaadin.Application;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.VariableOwner;
-import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Root;
 
@@ -34,37 +31,6 @@ import com.vaadin.ui.Root;
 public class PortletCommunicationManager extends AbstractCommunicationManager {
 
     private transient ResourceResponse currentUidlResponse;
-
-    private static class AbstractApplicationPortletWrapper implements Callback {
-
-        private final AbstractApplicationPortlet portlet;
-
-        public AbstractApplicationPortletWrapper(
-                AbstractApplicationPortlet portlet) {
-            this.portlet = portlet;
-        }
-
-        public void criticalNotification(WrappedRequest request,
-                WrappedResponse response, String cap, String msg,
-                String details, String outOfSyncURL) throws IOException {
-            portlet.criticalNotification(
-                    ((WrappedPortletRequest) request).getPortletRequest(),
-                    ((WrappedPortletResponse) response).getPortletResponse(),
-                    cap, msg, details, outOfSyncURL);
-        }
-
-        public String getRequestPathInfo(WrappedRequest request) {
-            return request.getRequestPathInfo();
-        }
-
-        public InputStream getThemeResourceAsStream(String themeName,
-                String resource) throws IOException {
-            return portlet.getPortletContext().getResourceAsStream(
-                    "/" + AbstractApplicationPortlet.THEME_DIRECTORY_PATH
-                            + themeName + "/" + resource);
-        }
-
-    }
 
     public PortletCommunicationManager(Application application) {
         super(application);
@@ -101,13 +67,11 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     }
 
     public void handleUidlRequest(ResourceRequest request,
-            ResourceResponse response,
-            AbstractApplicationPortlet applicationPortlet, Root root)
+            ResourceResponse response, Callback callback, Root root)
             throws InvalidUIDLSecurityKeyException, IOException {
         currentUidlResponse = response;
         doHandleUidlRequest(new WrappedPortletRequest(request),
-                new WrappedPortletResponse(response),
-                new AbstractApplicationPortletWrapper(applicationPortlet), root);
+                new WrappedPortletResponse(response), callback, root);
         currentUidlResponse = null;
     }
 
@@ -128,13 +92,11 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
      *             if an exception has occurred that interferes with the
      *             servlet's normal operation.
      */
-    Root getApplicationRoot(PortletRequest request,
-            AbstractApplicationPortlet applicationPortlet,
+    Root getApplicationRoot(PortletRequest request, Callback callback,
             Application application, Root assumedRoot) {
 
         return doGetApplicationWindow(new WrappedPortletRequest(request),
-                new AbstractApplicationPortletWrapper(applicationPortlet),
-                application, assumedRoot);
+                callback, application, assumedRoot);
     }
 
     private Map<VariableOwner, Map<String, StreamVariable>> ownerToNameToStreamVariable;
