@@ -66,7 +66,7 @@ public class WidgetSetBuilder {
                 if (!parent.mkdirs()) {
                     throw new IOException(
                             "Could not create directory for the widgetset: "
-                                    + parent.getCanonicalPath());
+                                    + parent.getPath());
                 }
             }
             widgetsetFile.createNewFile();

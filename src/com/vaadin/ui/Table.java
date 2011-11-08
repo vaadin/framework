@@ -522,8 +522,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.visibleColumns = newVC;
 
         // Assures visual refresh
-        resetPageBuffer();
-        refreshRenderedCells();
+        refreshRowCache();
     }
 
     /**
@@ -721,8 +720,8 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         this.columnAlignments = newCA;
 
-        // Assures the visual refresh
-        resetPageBuffer();
+        // Assures the visual refresh. No need to reset the page buffer before
+        // as the content has not changed, only the alignments.
         refreshRenderedCells();
     }
 
@@ -860,8 +859,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (pageLength >= 0 && this.pageLength != pageLength) {
             this.pageLength = pageLength;
             // Assures the visual refresh
-            resetPageBuffer();
-            refreshRenderedCells();
+            refreshRowCache();
         }
     }
 
@@ -982,8 +980,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assures the visual refresh
-        resetPageBuffer();
-        refreshRenderedCells();
+        refreshRowCache();
 
     }
 
@@ -1107,7 +1104,8 @@ public class Table extends AbstractSelect implements Action.Container,
             columnAlignments.put(propertyId, alignment);
         }
 
-        // Assures the visual refresh
+        // Assures the visual refresh. No need to reset the page buffer before
+        // as the content has not changed, only the alignments.
         refreshRenderedCells();
     }
 
@@ -1147,8 +1145,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assures the visual refresh
-        resetPageBuffer();
-        refreshRenderedCells();
+        refreshRowCache();
     }
 
     /**
@@ -1173,7 +1170,8 @@ public class Table extends AbstractSelect implements Action.Container,
             collapsedColumns.clear();
         }
 
-        // Assures the visual refresh
+        // Assures the visual refresh. No need to reset the page buffer before
+        // as the content has not changed, only the alignments.
         refreshRenderedCells();
     }
 
@@ -1227,8 +1225,7 @@ public class Table extends AbstractSelect implements Action.Container,
         visibleColumns = newOrder;
 
         // Assure visual refresh
-        resetPageBuffer();
-        refreshRenderedCells();
+        refreshRowCache();
     }
 
     /**
@@ -1322,8 +1319,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         if (needsPageBufferReset) {
             // Assures the visual refresh
-            resetPageBuffer();
-            refreshRenderedCells();
+            refreshRowCache();
         }
     }
 
@@ -1418,7 +1414,9 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Refreshes rendered rows
+     * Refreshes the rows in the internal cache. Only if
+     * {@link #resetPageBuffer()} is called before this then all values are
+     * guaranteed to be recreated.
      */
     protected void refreshRenderedCells() {
         if (getParent() == null) {
@@ -1474,39 +1472,93 @@ public class Table extends AbstractSelect implements Action.Container,
         requestRepaint();
     }
 
+    /**
+     * Requests that the Table should be repainted as soon as possible.
+     * 
+     * Note that a {@code Table} does not necessarily repaint its contents when
+     * this method has been called. See {@link #refreshRowCache()} for forcing
+     * an update of the contents.
+     */
+    @Override
+    public void requestRepaint() {
+        // Overridden only for javadoc
+        super.requestRepaint();
+    }
+
     private void removeRowsFromCacheAndFillBottom(int firstIndex, int rows) {
         int totalCachedRows = pageBuffer[CELL_ITEMID].length;
         int totalRows = size();
-        int cacheIx = firstIndex - pageBufferFirstIndex;
+        int firstIndexInPageBuffer = firstIndex - pageBufferFirstIndex;
 
-        // Make sure that no components leak.
+        /*
+         * firstIndexInPageBuffer is the first row to be removed. "rows" rows
+         * after that should be removed. If the page buffer does not contain
+         * that many rows, we only remove the rows that actually are in the page
+         * buffer.
+         */
+        if (firstIndexInPageBuffer + rows > totalCachedRows) {
+            rows = totalCachedRows - firstIndexInPageBuffer;
+        }
+
+        /*
+         * Unregister components that will no longer be in the page buffer to
+         * make sure that no components leak.
+         */
         unregisterComponentsAndPropertiesInRows(firstIndex, rows);
 
-        int newCachedRowCount = totalRows < totalCachedRows ? totalRows
-                : totalCachedRows;
-        int firstAppendedRow = newCachedRowCount > rows ? newCachedRowCount
-                - rows : firstIndex;
-        int rowsToAdd = Math.min(rows, totalCachedRows - firstAppendedRow);
-        rowsToAdd = Math.min(rowsToAdd, totalRows
-                - (firstAppendedRow + pageBufferFirstIndex));
-        if (rowsToAdd == 0) {
-            return;
+        /*
+         * The number of rows that should be in the cache after this operation
+         * is done (pageBuffer currently contains the expanded items).
+         */
+        int newCachedRowCount = totalCachedRows;
+        if (newCachedRowCount + pageBufferFirstIndex > totalRows) {
+            newCachedRowCount = totalRows - pageBufferFirstIndex;
         }
-        Object[][] cells = getVisibleCellsNoCache(firstAppendedRow, rowsToAdd,
-                false);
 
-        // Create the new cache buffer by copying data from the old one and
-        // appending more rows if applicable.
+        /*
+         * The index at which we should render the first row that does not come
+         * from the previous page buffer.
+         */
+        int firstAppendedRowInPageBuffer = totalCachedRows - rows;
+        int firstAppendedRow = firstAppendedRowInPageBuffer
+                + pageBufferFirstIndex;
+
+        /*
+         * Calculate the maximum number of new rows that we can add to the page
+         * buffer. Less than the rows we removed if the container does not
+         * contain that many items afterwards.
+         */
+        int maxRowsToRender = (totalRows - firstAppendedRow);
+        int rowsToAdd = rows;
+        if (rowsToAdd > maxRowsToRender) {
+            rowsToAdd = maxRowsToRender;
+        }
+
+        Object[][] cells = null;
+        if (rowsToAdd > 0) {
+            cells = getVisibleCellsNoCache(firstAppendedRow, rowsToAdd, false);
+        }
+        /*
+         * Create the new cache buffer by copying the first rows from the old
+         * buffer, moving the following rows upwards and appending more rows if
+         * applicable.
+         */
         Object[][] newPageBuffer = new Object[pageBuffer.length][newCachedRowCount];
-        for (int ix = 0; ix < newCachedRowCount; ix++) {
-            for (int i = 0; i < pageBuffer.length; i++) {
-                if (ix >= firstAppendedRow) {
-                    newPageBuffer[i][ix] = cells[i][ix - firstAppendedRow];
-                } else if (ix >= cacheIx && ix + rows < totalCachedRows) {
-                    newPageBuffer[i][ix] = pageBuffer[i][ix + rows];
-                } else {
-                    newPageBuffer[i][ix] = pageBuffer[i][ix];
-                }
+
+        for (int i = 0; i < pageBuffer.length; i++) {
+            for (int row = 0; row < firstIndexInPageBuffer; row++) {
+                // Copy the first rows
+                newPageBuffer[i][row] = pageBuffer[i][row];
+            }
+            for (int row = firstIndexInPageBuffer; row < firstAppendedRowInPageBuffer; row++) {
+                // Move the rows that were after the expanded rows
+                newPageBuffer[i][row] = pageBuffer[i][row + rows];
+            }
+            for (int row = firstAppendedRowInPageBuffer; row < newCachedRowCount; row++) {
+                // Add the newly rendered rows. Only used if rowsToAdd > 0
+                // (cells != null)
+                newPageBuffer[i][row] = cells[i][row
+                        - firstAppendedRowInPageBuffer];
             }
         }
         pageBuffer = newPageBuffer;
@@ -1526,46 +1578,143 @@ public class Table extends AbstractSelect implements Action.Container,
         return cells;
     }
 
+    /**
+     * @param firstIndex
+     *            The position where new rows should be inserted
+     * @param rows
+     *            The maximum number of rows that should be inserted at position
+     *            firstIndex. Less rows will be inserted if the page buffer is
+     *            too small.
+     * @return
+     */
     private Object[][] getVisibleCellsInsertIntoCache(int firstIndex, int rows) {
-        Object[][] cells = getVisibleCellsNoCache(firstIndex, rows, false);
-        int currentlyCachedRowCount = pageBuffer[CELL_ITEMID].length;
-        int lastCachedRow = currentlyCachedRowCount - rows;
-        int cacheIx = firstIndex - pageBufferFirstIndex;
+        logger.finest("Insert " + rows + " rows at index " + firstIndex
+                + " to existing page buffer requested");
 
-        // Unregister all components that fall beyond the cache limits after
-        // inserting the new rows.
-        unregisterComponentsAndPropertiesInRows(lastCachedRow + 1,
-                currentlyCachedRowCount - lastCachedRow);
+        // Page buffer must not become larger than pageLength*cacheRate before
+        // or after the current page
+        int minPageBufferIndex = getCurrentPageFirstItemIndex()
+                - (int) (getPageLength() * getCacheRate());
+        if (minPageBufferIndex < 0) {
+            minPageBufferIndex = 0;
+        }
+
+        int maxPageBufferIndex = getCurrentPageFirstItemIndex()
+                + (int) (getPageLength() * (1 + getCacheRate()));
+        int maxBufferSize = maxPageBufferIndex - minPageBufferIndex;
+
+        if (getPageLength() == 0) {
+            // If pageLength == 0 then all rows should be rendered
+            maxBufferSize = pageBuffer[0].length + rows;
+        }
+        /*
+         * Number of rows that were previously cached. This is not necessarily
+         * the same as pageLength if we do not have enough rows in the
+         * container.
+         */
+        int currentlyCachedRowCount = pageBuffer[CELL_ITEMID].length;
+
+        /*
+         * firstIndexInPageBuffer is the offset in pageBuffer where the new rows
+         * will be inserted (firstIndex is the index in the whole table).
+         * 
+         * E.g. scrolled down to row 1000: firstIndex==1010,
+         * pageBufferFirstIndex==1000 -> cacheIx==10
+         */
+        int firstIndexInPageBuffer = firstIndex - pageBufferFirstIndex;
+
+        /* If rows > size available in page buffer */
+        if (firstIndexInPageBuffer + rows > maxBufferSize) {
+            rows = maxBufferSize - firstIndexInPageBuffer;
+        }
+
+        /*
+         * "rows" rows will be inserted at firstIndex. Find out how many old
+         * rows fall outside the new buffer so we can unregister components in
+         * the cache.
+         */
+
+        /* All rows until the insertion point remain, always. */
+        int firstCacheRowToRemoveInPageBuffer = firstIndexInPageBuffer;
+
+        /*
+         * IF there is space remaining in the buffer after the rows have been
+         * inserted, we can keep more rows.
+         */
+        int numberOfOldRowsAfterInsertedRows = maxBufferSize
+                - firstIndexInPageBuffer - rows;
+        if (numberOfOldRowsAfterInsertedRows > 0) {
+            firstCacheRowToRemoveInPageBuffer += numberOfOldRowsAfterInsertedRows;
+        }
+
+        if (firstCacheRowToRemoveInPageBuffer <= currentlyCachedRowCount) {
+            /*
+             * Unregister all components that fall beyond the cache limits after
+             * inserting the new rows.
+             */
+            unregisterComponentsAndPropertiesInRows(
+                    firstCacheRowToRemoveInPageBuffer + pageBufferFirstIndex,
+                    currentlyCachedRowCount - firstCacheRowToRemoveInPageBuffer
+                            + pageBufferFirstIndex);
+        }
 
         // Calculate the new cache size
         int newCachedRowCount = currentlyCachedRowCount;
-        if (pageLength == 0 || currentlyCachedRowCount < pageLength) {
+        if (maxBufferSize == 0 || currentlyCachedRowCount < maxBufferSize) {
             newCachedRowCount = currentlyCachedRowCount + rows;
-            if (pageLength > 0 && newCachedRowCount > pageLength) {
-                newCachedRowCount = pageLength;
+            if (maxBufferSize > 0 && newCachedRowCount > maxBufferSize) {
+                newCachedRowCount = maxBufferSize;
             }
         }
 
-        // Create the new cache buffer and fill it with the data from the old
-        // buffer as well as the inserted rows.
+        /* Paint the new rows into a separate buffer */
+        Object[][] cells = getVisibleCellsNoCache(firstIndex, rows, false);
+
+        /*
+         * Create the new cache buffer and fill it with the data from the old
+         * buffer as well as the inserted rows.
+         */
         Object[][] newPageBuffer = new Object[pageBuffer.length][newCachedRowCount];
-        for (int ix = 0; ix < newCachedRowCount; ix++) {
-            for (int i = 0; i < pageBuffer.length; i++) {
-                if (ix >= cacheIx && ix < cacheIx + rows) {
-                    newPageBuffer[i][ix] = cells[i][ix - cacheIx];
-                } else if (ix >= cacheIx + rows) {
-                    newPageBuffer[i][ix] = pageBuffer[i][ix - rows];
-                } else {
-                    newPageBuffer[i][ix] = pageBuffer[i][ix];
-                }
+
+        for (int i = 0; i < pageBuffer.length; i++) {
+            for (int row = 0; row < firstIndexInPageBuffer; row++) {
+                // Copy the first rows
+                newPageBuffer[i][row] = pageBuffer[i][row];
+            }
+            for (int row = firstIndexInPageBuffer; row < firstIndexInPageBuffer
+                    + rows; row++) {
+                // Copy the newly created rows
+                newPageBuffer[i][row] = cells[i][row - firstIndexInPageBuffer];
+            }
+            for (int row = firstIndexInPageBuffer + rows; row < newCachedRowCount; row++) {
+                // Move the old rows down below the newly inserted rows
+                newPageBuffer[i][row] = pageBuffer[i][row - rows];
             }
         }
         pageBuffer = newPageBuffer;
+        logger.finest("Page Buffer now contains "
+                + pageBuffer[CELL_ITEMID].length + " rows ("
+                + pageBufferFirstIndex + "-"
+                + (pageBufferFirstIndex + pageBuffer[CELL_ITEMID].length - 1)
+                + ")");
         return cells;
     }
 
+    /**
+     * Render rows with index "firstIndex" to "firstIndex+rows-1" to a new
+     * buffer.
+     * 
+     * Reuses values from the current page buffer if the rows are found there.
+     * 
+     * @param firstIndex
+     * @param rows
+     * @param replaceListeners
+     * @return
+     */
     private Object[][] getVisibleCellsNoCache(int firstIndex, int rows,
             boolean replaceListeners) {
+        logger.finest("Render visible cells for rows " + firstIndex + "-"
+                + (firstIndex + rows - 1));
         final Object[] colids = getVisibleColumns();
         final int cols = colids.length;
 
@@ -1747,6 +1896,8 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     protected void registerComponent(Component component) {
+        logger.finest("Registered " + component.getClass().getSimpleName()
+                + ": " + component.getCaption());
         if (component.getParent() != this) {
             component.setParent(this);
         }
@@ -1772,9 +1923,13 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * @param firstIx
+     *            Index of the first row to process. Global index, not relative
+     *            to page buffer.
      * @param count
      */
     private void unregisterComponentsAndPropertiesInRows(int firstIx, int count) {
+        logger.finest("Unregistering components in rows " + firstIx + "-"
+                + (firstIx + count - 1));
         Object[] colids = getVisibleColumns();
         if (pageBuffer != null && pageBuffer[CELL_ITEMID].length > 0) {
             int bufSize = pageBuffer[CELL_ITEMID].length;
@@ -1854,6 +2009,8 @@ public class Table extends AbstractSelect implements Action.Container,
      *            a set of components that should be unregistered.
      */
     protected void unregisterComponent(Component component) {
+        logger.finest("Unregistered " + component.getClass().getSimpleName()
+                + ": " + component.getCaption());
         component.setParent(null);
         /*
          * Also remove property data sources to unregister listeners keeping the
@@ -1917,7 +2074,8 @@ public class Table extends AbstractSelect implements Action.Container,
             setItemCaptionMode(mode);
         }
 
-        // Assure visual refresh
+        // Assures the visual refresh. No need to reset the page buffer before
+        // as the content has not changed, only the alignments.
         refreshRenderedCells();
     }
 
@@ -1983,11 +2141,33 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         if (!(items instanceof Container.ItemSetChangeNotifier)) {
-            resetPageBuffer();
-            refreshRenderedCells();
+            refreshRowCache();
         }
 
         return itemId;
+    }
+
+    /**
+     * Discards and recreates the internal row cache. Call this if you make
+     * changes that affect the rows but the information about the changes are
+     * not automatically propagated to the Table.
+     * <p>
+     * Do not call this e.g. if you have updated the data model through a
+     * Property. These types of changes are automatically propagated to the
+     * Table.
+     * <p>
+     * A typical case when this is needed is if you update a generator (e.g.
+     * CellStyleGenerator) and want to ensure that the rows are redrawn with new
+     * styles.
+     * <p>
+     * <i>Note that calling this method is not cheap so avoid calling it
+     * unnecessarily.</i>
+     * 
+     * @since 6.7.2
+     */
+    public void refreshRowCache() {
+        resetPageBuffer();
+        refreshRenderedCells();
     }
 
     @Override
@@ -2220,6 +2400,8 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                 }
             }
+            logger.finest("Client wants rows " + reqFirstRowToPaint + "-"
+                    + (reqFirstRowToPaint + reqRowsToPaint - 1));
             clientNeedsContentRefresh = true;
         }
 
@@ -2485,6 +2667,21 @@ public class Table extends AbstractSelect implements Action.Container,
         // Rows
         if (isPartialRowUpdate() && painted && !target.isFullRepaint()) {
             paintPartialRowUpdate(target, actionSet);
+            /*
+             * Send the page buffer indexes to ensure that the client side stays
+             * in sync. Otherwise we _might_ have the situation where the client
+             * side discards too few or too many rows, causing out of sync
+             * issues.
+             * 
+             * This could probably be done for full repaints also to simplify
+             * the client side.
+             */
+            int pageBufferLastIndex = pageBufferFirstIndex
+                    + pageBuffer[CELL_ITEMID].length - 1;
+            target.addAttribute(VScrollTable.ATTRIBUTE_PAGEBUFFER_FIRST,
+                    pageBufferFirstIndex);
+            target.addAttribute(VScrollTable.ATTRIBUTE_PAGEBUFFER_LAST,
+                    pageBufferLastIndex);
         } else if (target.isFullRepaint() || isRowCacheInvalidated()) {
             paintRows(target, cells, actionSet);
             setRowCacheInvalidated(false);
@@ -2561,20 +2758,19 @@ public class Table extends AbstractSelect implements Action.Container,
 
         target.startTag("prows");
 
-        int maxRows = (int) (getPageLength() * getCacheRate());
-        if (!shouldHideAddedRows() && count > maxRows) {
-            count = maxRows + 1;
-            // delete the rows below, since they will fall beyond the cache
-            // page.
-            target.addAttribute("delbelow", true);
-        }
-
-        target.addAttribute("firstprowix", firstIx);
-        target.addAttribute("numprows", count);
-
         if (!shouldHideAddedRows()) {
+            logger.finest("Paint rows for add. Index: " + firstIx + ", count: "
+                    + count + ".");
+
             // Partial row additions bypass the normal caching mechanism.
             Object[][] cells = getVisibleCellsInsertIntoCache(firstIx, count);
+            if (cells[0].length < count) {
+                // delete the rows below, since they will fall beyond the cache
+                // page.
+                target.addAttribute("delbelow", true);
+                count = cells[0].length;
+            }
+
             for (int indexInRowbuffer = 0; indexInRowbuffer < count; indexInRowbuffer++) {
                 final Object itemId = cells[CELL_ITEMID][indexInRowbuffer];
                 if (shouldHideNullSelectionItem()) {
@@ -2587,9 +2783,14 @@ public class Table extends AbstractSelect implements Action.Container,
                         indexInRowbuffer, itemId);
             }
         } else {
+            logger.finest("Paint rows for remove. Index: " + firstIx
+                    + ", count: " + count + ".");
             removeRowsFromCacheAndFillBottom(firstIx, count);
             target.addAttribute("hide", true);
         }
+
+        target.addAttribute("firstprowix", firstIx);
+        target.addAttribute("numprows", count);
         target.endTag("prows");
     }
 
@@ -3252,6 +3453,9 @@ public class Table extends AbstractSelect implements Action.Container,
 
             if (!actionHandlers.contains(actionHandler)) {
                 actionHandlers.add(actionHandler);
+                // Assures the visual refresh. No need to reset the page buffer
+                // before as the content has not changed, only the action
+                // handlers.
                 refreshRenderedCells();
             }
 
@@ -3275,6 +3479,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 actionMapper = null;
             }
 
+            // Assures the visual refresh. No need to reset the page buffer
+            // before as the content has not changed, only the action
+            // handlers.
             refreshRenderedCells();
         }
     }
@@ -3285,6 +3492,9 @@ public class Table extends AbstractSelect implements Action.Container,
     public void removeAllActionHandlers() {
         actionHandlers = null;
         actionMapper = null;
+        // Assures the visual refresh. No need to reset the page buffer
+        // before as the content has not changed, only the action
+        // handlers.
         refreshRenderedCells();
     }
 
@@ -3303,13 +3513,17 @@ public class Table extends AbstractSelect implements Action.Container,
                 || event.getProperty() == getPropertyDataSource()) {
             super.valueChange(event);
         } else {
-            resetPageBuffer();
-            refreshRenderedCells();
+            refreshRowCache();
             containerChangeToBeRendered = true;
         }
         requestRepaint();
     }
 
+    /**
+     * Clears the current page buffer. Call this before
+     * {@link #refreshRenderedCells()} to ensure that all content is updated
+     * from the properties.
+     */
     protected void resetPageBuffer() {
         firstToBeRenderedInClient = -1;
         lastToBeRenderedInClient = -1;
@@ -3379,8 +3593,7 @@ public class Table extends AbstractSelect implements Action.Container,
             currentPageFirstItemId = nextItemId;
         }
         if (!(items instanceof Container.ItemSetChangeNotifier)) {
-            resetPageBuffer();
-            refreshRenderedCells();
+            refreshRowCache();
         }
         return ret;
     }
@@ -3433,8 +3646,7 @@ public class Table extends AbstractSelect implements Action.Container,
             return false;
         }
         if (!(items instanceof Container.PropertySetChangeNotifier)) {
-            resetPageBuffer();
-            refreshRenderedCells();
+            refreshRowCache();
         }
         return true;
     }
@@ -3520,8 +3732,7 @@ public class Table extends AbstractSelect implements Action.Container,
             if (!visibleColumns.contains(id)) {
                 visibleColumns.add(id);
             }
-            resetPageBuffer();
-            refreshRenderedCells();
+            refreshRowCache();
         }
     }
 
@@ -3552,8 +3763,7 @@ public class Table extends AbstractSelect implements Action.Container,
             if (!items.getContainerPropertyIds().contains(columnId)) {
                 visibleColumns.remove(columnId);
             }
-            resetPageBuffer();
-            refreshRenderedCells();
+            refreshRowCache();
             return true;
         } else {
             return false;
@@ -3612,8 +3822,7 @@ public class Table extends AbstractSelect implements Action.Container,
         // (forced in this method)
         setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex(), false);
 
-        resetPageBuffer();
-        refreshRenderedCells();
+        refreshRowCache();
     }
 
     /**
@@ -3740,8 +3949,7 @@ public class Table extends AbstractSelect implements Action.Container,
         Object itemId = ((Container.Ordered) items)
                 .addItemAfter(previousItemId);
         if (!(items instanceof Container.ItemSetChangeNotifier)) {
-            resetPageBuffer();
-            refreshRenderedCells();
+            refreshRowCache();
         }
         return itemId;
     }
@@ -3757,8 +3965,7 @@ public class Table extends AbstractSelect implements Action.Container,
         Item item = ((Container.Ordered) items).addItemAfter(previousItemId,
                 newItemId);
         if (!(items instanceof Container.ItemSetChangeNotifier)) {
-            resetPageBuffer();
-            refreshRenderedCells();
+            refreshRowCache();
         }
         return item;
     }
@@ -3825,8 +4032,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.fieldFactory = fieldFactory;
 
         // Assure visual refresh
-        resetPageBuffer();
-        refreshRenderedCells();
+        refreshRowCache();
     }
 
     /**
@@ -3868,8 +4074,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.editable = editable;
 
         // Assure visual refresh
-        resetPageBuffer();
-        refreshRenderedCells();
+        refreshRowCache();
     }
 
     /**
@@ -3889,8 +4094,7 @@ public class Table extends AbstractSelect implements Action.Container,
             final int pageIndex = getCurrentPageFirstItemIndex();
             ((Container.Sortable) c).sort(propertyId, ascending);
             setCurrentPageFirstItemIndex(pageIndex);
-            resetPageBuffer();
-            refreshRenderedCells();
+            refreshRowCache();
 
         } else if (c != null) {
             throw new UnsupportedOperationException(
@@ -3961,7 +4165,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
             if (doSort) {
                 sort();
-                // Assures the visual refresh
+                // Assures the visual refresh. This should not be necessary as
+                // sort() calls refreshRowCache
                 refreshRenderedCells();
             }
         }
@@ -3999,10 +4204,11 @@ public class Table extends AbstractSelect implements Action.Container,
             sortAscending = ascending;
             if (doSort) {
                 sort();
+                // Assures the visual refresh. This should not be necessary as
+                // sort() calls refreshRowCache
+                refreshRenderedCells();
             }
         }
-        // Assures the visual refresh
-        refreshRenderedCells();
     }
 
     /**
@@ -4081,7 +4287,10 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public void setCellStyleGenerator(CellStyleGenerator cellStyleGenerator) {
         this.cellStyleGenerator = cellStyleGenerator;
+        // Assures the visual refresh. No need to reset the page buffer
+        // before as the content has not changed, only the style generators
         refreshRenderedCells();
+
     }
 
     /**
@@ -4773,6 +4982,8 @@ public class Table extends AbstractSelect implements Action.Container,
     public void setItemDescriptionGenerator(ItemDescriptionGenerator generator) {
         if (generator != itemDescriptionGenerator) {
             itemDescriptionGenerator = generator;
+            // Assures the visual refresh. No need to reset the page buffer
+            // before as the content has not changed, only the descriptions
             refreshRenderedCells();
         }
     }
@@ -4900,7 +5111,7 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public void setRowGenerator(RowGenerator generator) {
         rowGenerator = generator;
-        refreshRenderedCells();
+        refreshRowCache();
     }
 
     /**
