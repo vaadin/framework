@@ -48,12 +48,11 @@ import javax.servlet.ServletResponse;
 
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
-import com.vaadin.terminal.ApplicationResource;
-import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.Paintable.RepaintRequestEvent;
+import com.vaadin.terminal.RequestHandler;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.StreamVariable.StreamingEndEvent;
 import com.vaadin.terminal.StreamVariable.StreamingErrorEvent;
@@ -62,6 +61,7 @@ import com.vaadin.terminal.Terminal.ErrorListener;
 import com.vaadin.terminal.URIHandler;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.ui.AbstractComponent;
@@ -94,6 +94,8 @@ public abstract class AbstractCommunicationManager implements
 
     private static final Logger logger = Logger
             .getLogger(AbstractCommunicationManager.class.getName());
+
+    private static final RequestHandler APP_RESOURCE_HANDLER = new ApplicationResourceHandler();
 
     /**
      * Generic interface of a (HTTP or Portlet) request to the application.
@@ -183,6 +185,8 @@ public abstract class AbstractCommunicationManager implements
          */
         public Object getWrappedRequest();
 
+        public abstract String getRequestPathInfo();
+
     }
 
     /**
@@ -196,7 +200,7 @@ public abstract class AbstractCommunicationManager implements
      * 
      * @author peholmst
      */
-    public interface Response {
+    public interface Response extends WrappedResponse {
 
         /**
          * Gets the output stream to which the response can be written.
@@ -351,6 +355,7 @@ public abstract class AbstractCommunicationManager implements
      */
     public AbstractCommunicationManager(Application application) {
         this.application = application;
+        application.addRequestHandler(APP_RESOURCE_HANDLER);
         requireLocale(application.getLocale().toString());
     }
 
@@ -2204,79 +2209,6 @@ public abstract class AbstractCommunicationManager implements
 
     }
 
-    /**
-     * Calls the Window URI handler for a request and returns the
-     * {@link DownloadStream} returned by the handler.
-     * 
-     * If the window is the main window of an application, the (deprecated)
-     * {@link Application#handleURI(java.net.URL, String)} is called first to
-     * handle {@link ApplicationResource}s, and the window handler is only
-     * called if it returns null.
-     * 
-     * @param window
-     *            the target window of the request
-     * @param request
-     *            the request instance
-     * @param response
-     *            the response to write to
-     * @return DownloadStream if the request was handled and further processing
-     *         should be suppressed, null otherwise.
-     * @see com.vaadin.terminal.URIHandler
-     */
-    @SuppressWarnings("deprecation")
-    protected DownloadStream handleURI(Root root, Request request,
-            Response response, Callback callback) {
-
-        String uri = callback.getRequestPathInfo(request);
-
-        // If no URI is available
-        if (uri == null) {
-            uri = "";
-        } else {
-            // Removes the leading /
-            while (uri.startsWith("/") && uri.length() > 0) {
-                uri = uri.substring(1);
-            }
-        }
-
-        // Handles the uri
-        try {
-            throw new RuntimeException("Not ported to use roots");
-            // URL context = application.getURL();
-            // if (window == application.getMainWindow()) {
-            // DownloadStream stream = null;
-            // /*
-            // * Application.handleURI run first. Handles possible
-            // * ApplicationResources.
-            // */
-            // stream = application.handleURI(context, uri);
-            // if (stream == null) {
-            // stream = window.handleURI(context, uri);
-            // }
-            // return stream;
-            // } else {
-            // // Resolve the prefix end index
-            // final int index = uri.indexOf('/');
-            // if (index > 0) {
-            // String prefix = uri.substring(0, index);
-            // URL windowContext;
-            // windowContext = new URL(context, prefix + "/");
-            // final String windowUri = (uri.length() > prefix.length() + 1) ?
-            // uri
-            // .substring(prefix.length() + 1) : "";
-            // return window.handleURI(windowContext, windowUri);
-            // } else {
-            // return null;
-            // }
-            // }
-
-        } catch (final Throwable t) {
-            application.getErrorHandler().terminalError(
-                    new URIHandlerErrorImpl(application, t));
-            return null;
-        }
-    }
-
     private final HashMap<Class<? extends Paintable>, Integer> typeToKey = new HashMap<Class<? extends Paintable>, Integer>();
     private int nextTypeKey = 0;
 
@@ -2318,6 +2250,11 @@ public abstract class AbstractCommunicationManager implements
             String name, StreamVariable value);
 
     abstract protected void cleanStreamVariable(VariableOwner owner, String name);
+
+    protected boolean handleApplicationRequest(WrappedRequest request,
+            WrappedResponse response) throws IOException {
+        return application.handleRequest(request, response);
+    }
 
     /**
      * Stream that extracts content from another stream until the boundary

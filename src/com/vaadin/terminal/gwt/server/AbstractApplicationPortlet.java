@@ -51,7 +51,6 @@ import com.liferay.portal.kernel.util.PortalClassInvoker;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
-import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -543,8 +542,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         // }
 
         if (requestType == RequestType.APPLICATION_RESOURCE) {
-            handleURI(applicationManager, root, (ResourceRequest) request,
-                    (ResourceResponse) response);
+            if (!applicationManager.handleApplicationRequest(request, response)) {
+                response.setProperty(ResourceResponse.HTTP_STATUS_CODE, "404");
+            }
         } else if (requestType == RequestType.RENDER) {
             writeAjaxPage((RenderRequest) request, (RenderResponse) response,
                     root, application);
@@ -580,100 +580,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     public void processEvent(EventRequest request, EventResponse response)
             throws PortletException, IOException {
         handleRequest(request, response);
-    }
-
-    private boolean handleURI(PortletCommunicationManager applicationManager,
-            Root root, ResourceRequest request, ResourceResponse response)
-            throws IOException {
-        // Handles the URI
-        DownloadStream download = applicationManager.handleURI(root, request,
-                response, this);
-
-        // A download request
-        if (download != null) {
-            // Client downloads an resource
-            handleDownload(download, request, response);
-            return true;
-        }
-
-        return false;
-    }
-
-    private void handleDownload(DownloadStream stream, ResourceRequest request,
-            ResourceResponse response) throws IOException {
-
-        if (stream.getParameter("Location") != null) {
-            response.setProperty(ResourceResponse.HTTP_STATUS_CODE,
-                    Integer.toString(HttpServletResponse.SC_MOVED_TEMPORARILY));
-            response.setProperty("Location", stream.getParameter("Location"));
-            return;
-        }
-
-        // Download from given stream
-        final InputStream data = stream.getStream();
-        if (data != null) {
-
-            OutputStream out = null;
-            try {
-
-                // Sets content type
-                response.setContentType(stream.getContentType());
-
-                // Sets cache headers
-                final long cacheTime = stream.getCacheTime();
-                if (cacheTime <= 0) {
-                    response.setProperty("Cache-Control", "no-cache");
-                    response.setProperty("Pragma", "no-cache");
-                    response.setProperty("Expires", "0");
-                } else {
-                    response.setProperty("Cache-Control", "max-age="
-                            + cacheTime / 1000);
-                    response.setProperty("Expires",
-                            "" + System.currentTimeMillis() + cacheTime);
-                    // Required to apply caching in some Tomcats
-                    response.setProperty("Pragma", "cache");
-                }
-
-                // Copy download stream parameters directly
-                // to HTTP headers.
-                final Iterator<String> i = stream.getParameterNames();
-                if (i != null) {
-                    while (i.hasNext()) {
-                        final String param = i.next();
-                        response.setProperty(param, stream.getParameter(param));
-                    }
-                }
-
-                // suggest local filename from DownloadStream if
-                // Content-Disposition
-                // not explicitly set
-                String contentDispositionValue = stream
-                        .getParameter("Content-Disposition");
-                if (contentDispositionValue == null) {
-                    contentDispositionValue = "filename=\""
-                            + stream.getFileName() + "\"";
-                    response.setProperty("Content-Disposition",
-                            contentDispositionValue);
-                }
-
-                int bufferSize = stream.getBufferSize();
-                if (bufferSize <= 0 || bufferSize > MAX_BUFFER_SIZE) {
-                    bufferSize = DEFAULT_BUFFER_SIZE;
-                }
-                final byte[] buffer = new byte[bufferSize];
-                int bytesRead = 0;
-
-                out = response.getPortletOutputStream();
-
-                while ((bytesRead = data.read(buffer)) > 0) {
-                    out.write(buffer, 0, bytesRead);
-                    out.flush();
-                }
-            } finally {
-                AbstractCommunicationManager.tryToCloseStream(data);
-                AbstractCommunicationManager.tryToCloseStream(out);
-            }
-        }
     }
 
     private void serveStaticResources(ResourceRequest request,

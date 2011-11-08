@@ -1,8 +1,12 @@
 package com.vaadin.terminal;
 
+import java.io.IOException;
+
+import com.vaadin.Application;
 
 public interface RequestHandler {
 
-    boolean handleRequest(WrappedRequest request, WrappedResponse response);
+    boolean handleRequest(Application application, WrappedRequest request, WrappedResponse response)
+            throws IOException;
 
 }

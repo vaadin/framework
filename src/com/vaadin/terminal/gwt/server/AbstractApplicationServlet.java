@@ -37,7 +37,6 @@ import javax.servlet.http.HttpSession;
 
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
-import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.ThemeResource;
@@ -479,7 +478,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             /* Handle the request */
             if (requestType == RequestType.FILE_UPLOAD) {
-                applicationManager.handleFileUpload(request, response);
+                applicationManager.handleFileUpload(request, response, this);
                 return;
             } else if (requestType == RequestType.UIDL) {
                 // Handles AJAX UIDL requests
@@ -497,9 +496,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 return;
             }
 
-            if (application.handleRequest(
-                    new WrappedHttpServletRequest(request),
-                    new WrappedHttpServletResponse(response))) {
+            if (applicationManager.handleApplicationRequest(request, response,
+                    this)) {
                 return;
             }
             // TODO Should return 404 error here and not do anything more
@@ -515,21 +513,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             if (root.getTerminal() == null) {
                 root.setTerminal(webApplicationContext.getBrowser());
             }
-
-            // Handle parameters
-            // final Map<String, String[]> parameters =
-            // request.getParameterMap();
-            // if (root != null && parameters != null) {
-            // root.handleParameters(parameters);
-            // }
-
-            /*
-             * Call the URI handlers and if this turns out to be a download
-             * request, send the file to the client
-             */
-            // if (handleURI(applicationManager, root, request, response)) {
-            // return;
-            // }
 
             // Send initial AJAX page that kickstarts a Vaadin application
             writeAjaxPage(request, response, root, application);
@@ -864,101 +847,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     /**
-     * Handles the requested URI. An application can add handlers to do special
-     * processing, when a certain URI is requested. The handlers are invoked
-     * before any windows URIs are processed and if a DownloadStream is returned
-     * it is sent to the client.
-     * 
-     * @param stream
-     *            the download stream.
-     * 
-     * @param request
-     *            the HTTP request instance.
-     * @param response
-     *            the HTTP response to write to.
-     * @throws IOException
-     * 
-     * @see com.vaadin.terminal.URIHandler
-     */
-    private void handleDownload(DownloadStream stream,
-            HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-
-        if (stream.getParameter("Location") != null) {
-            response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
-            response.addHeader("Location", stream.getParameter("Location"));
-            return;
-        }
-
-        // Download from given stream
-        final InputStream data = stream.getStream();
-        if (data != null) {
-
-            OutputStream out = null;
-            try {
-                // Sets content type
-                response.setContentType(stream.getContentType());
-
-                // Sets cache headers
-                final long cacheTime = stream.getCacheTime();
-                if (cacheTime <= 0) {
-                    response.setHeader("Cache-Control", "no-cache");
-                    response.setHeader("Pragma", "no-cache");
-                    response.setDateHeader("Expires", 0);
-                } else {
-                    response.setHeader("Cache-Control", "max-age=" + cacheTime
-                            / 1000);
-                    response.setDateHeader("Expires",
-                            System.currentTimeMillis() + cacheTime);
-                    response.setHeader("Pragma", "cache"); // Required to apply
-                    // caching in some
-                    // Tomcats
-                }
-
-                // Copy download stream parameters directly
-                // to HTTP headers.
-                final Iterator<String> i = stream.getParameterNames();
-                if (i != null) {
-                    while (i.hasNext()) {
-                        final String param = i.next();
-                        response.setHeader(param, stream.getParameter(param));
-                    }
-                }
-
-                // suggest local filename from DownloadStream if
-                // Content-Disposition
-                // not explicitly set
-                String contentDispositionValue = stream
-                        .getParameter("Content-Disposition");
-                if (contentDispositionValue == null) {
-                    contentDispositionValue = "filename=\""
-                            + stream.getFileName() + "\"";
-                    response.setHeader("Content-Disposition",
-                            contentDispositionValue);
-                }
-
-                int bufferSize = stream.getBufferSize();
-                if (bufferSize <= 0 || bufferSize > MAX_BUFFER_SIZE) {
-                    bufferSize = DEFAULT_BUFFER_SIZE;
-                }
-                final byte[] buffer = new byte[bufferSize];
-                int bytesRead = 0;
-
-                out = response.getOutputStream();
-
-                while ((bytesRead = data.read(buffer)) > 0) {
-                    out.write(buffer, 0, bytesRead);
-                    out.flush();
-                }
-            } finally {
-                AbstractCommunicationManager.tryToCloseStream(out);
-                AbstractCommunicationManager.tryToCloseStream(data);
-            }
-        }
-
-    }
-
-    /**
      * Creates a new application and registers it into WebApplicationContext
      * (aka session). This is not meant to be overridden. Override
      * getNewApplication to create the application instance in a custom way.
@@ -1070,35 +958,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     public static String getDefaultTheme() {
         return DEFAULT_THEME_NAME;
     }
-
-    // /**
-    // * Calls URI handlers for the request. If an URI handler returns a
-    // * DownloadStream the stream is passed to the client for downloading.
-    // *
-    // * @param applicationManager
-    // * @param window
-    // * @param request
-    // * @param response
-    // * @return true if an DownloadStream was sent to the client, false
-    // otherwise
-    // * @throws IOException
-    // */
-    // protected boolean handleURI(CommunicationManager applicationManager,
-    // Root window, HttpServletRequest request,
-    // HttpServletResponse response) throws IOException {
-    // // Handles the URI
-    // DownloadStream download = applicationManager.handleURI(window, request,
-    // response, this);
-    //
-    // // A download request
-    // if (download != null) {
-    // // Client downloads an resource
-    // handleDownload(download, request, response);
-    // return true;
-    // }
-    //
-    // return false;
-    // }
 
     void handleServiceSessionExpired(HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException {

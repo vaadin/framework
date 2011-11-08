@@ -7,4 +7,6 @@ public interface WrappedRequest {
 
     public Map<String, String[]> getParameterMap();
 
+    public String getRequestPathInfo();
+
 }

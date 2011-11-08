@@ -10,7 +10,7 @@ public interface WrappedResponse {
 
     public void setContentType(String contentType);
 
-    public void setContentLenght(int contentLength);
+    public void setHeader(String name, String value);
 
     public OutputStream getOutputStream() throws IOException;
 

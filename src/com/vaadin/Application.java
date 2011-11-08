@@ -4,6 +4,7 @@
 
 package com.vaadin;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.SocketException;
 import java.net.URL;
@@ -160,7 +161,7 @@ public abstract class Application implements URIHandler,
      */
     private Terminal.ErrorListener errorHandler = this;
 
-    private Collection<RequestHandler> requestHandlers = new ArrayList<RequestHandler>();
+    private LinkedList<RequestHandler> requestHandlers = new LinkedList<RequestHandler>();
 
     /**
      * Gets the user of the application.
@@ -1496,10 +1497,10 @@ public abstract class Application implements URIHandler,
     public abstract Root getRoot(WrappedRequest request);
 
     public boolean handleRequest(WrappedRequest request,
-            WrappedResponse response) {
+            WrappedResponse response) throws IOException {
         for (RequestHandler handler : new ArrayList<RequestHandler>(
                 requestHandlers)) {
-            if (handler.handleRequest(request, response)) {
+            if (handler.handleRequest(this, request, response)) {
                 return true;
             }
         }
@@ -1508,7 +1509,7 @@ public abstract class Application implements URIHandler,
     }
 
     public void addRequestHandler(RequestHandler handler) {
-        requestHandlers.add(handler);
+        requestHandlers.addFirst(handler);
     }
 
     public void removeRequestHandler(RequestHandler handler) {
@@ -1517,5 +1518,9 @@ public abstract class Application implements URIHandler,
 
     public Collection<RequestHandler> getRequestHandlers() {
         return Collections.unmodifiableCollection(requestHandlers);
+    }
+
+    public ApplicationResource getResource(String key) {
+        return keyResourceMap.get(key);
     }
 }

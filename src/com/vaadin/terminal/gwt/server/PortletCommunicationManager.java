@@ -6,6 +6,7 @@ package com.vaadin.terminal.gwt.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +23,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.VariableOwner;
@@ -102,6 +102,16 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             request.setAttribute(name, o);
         }
 
+        public String getRequestPathInfo() {
+            if (request instanceof ResourceRequest) {
+                return ((ResourceRequest) request).getResourceID();
+            } else {
+                // We do not use paths in portlet mode
+                throw new UnsupportedOperationException(
+                        "PathInfo only available when using ResourceRequests");
+            }
+        }
+
     }
 
     private static class PortletResponseWrapper implements Response {
@@ -122,6 +132,19 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
 
         public void setContentType(String type) {
             ((MimeResponse) response).setContentType(type);
+        }
+
+        public PrintWriter getWriter() throws IOException {
+            return ((MimeResponse) response).getWriter();
+        }
+
+        public void setStatus(int responseStatus) {
+            response.setProperty(ResourceResponse.HTTP_STATUS_CODE,
+                    Integer.toString(responseStatus));
+        }
+
+        public void setHeader(String name, String value) {
+            response.setProperty(name, value);
         }
     }
 
@@ -174,14 +197,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         }
 
         public String getRequestPathInfo(Request request) {
-            if (request.getWrappedRequest() instanceof ResourceRequest) {
-                return ((ResourceRequest) request.getWrappedRequest())
-                        .getResourceID();
-            } else {
-                // We do not use paths in portlet mode
-                throw new UnsupportedOperationException(
-                        "PathInfo only available when using ResourceRequests");
-            }
+            return request.getRequestPathInfo();
         }
 
         public InputStream getThemeResourceAsStream(String themeName,
@@ -236,14 +252,6 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                 new PortletResponseWrapper(response),
                 new AbstractApplicationPortletWrapper(applicationPortlet), root);
         currentUidlResponse = null;
-    }
-
-    DownloadStream handleURI(Root root, ResourceRequest request,
-            ResourceResponse response,
-            AbstractApplicationPortlet applicationPortlet) {
-        return handleURI(root, new PortletRequestWrapper(request),
-                new PortletResponseWrapper(response),
-                new AbstractApplicationPortletWrapper(applicationPortlet));
     }
 
     /**
@@ -304,6 +312,13 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         if (map.isEmpty()) {
             ownerToNameToStreamVariable.remove(owner);
         }
+    }
+
+    public boolean handleApplicationRequest(PortletRequest request,
+            PortletResponse response)
+            throws IOException {
+        return handleApplicationRequest(new PortletRequestWrapper(request),
+                new PortletResponseWrapper(response));
     }
 
 }
