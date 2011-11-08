@@ -91,10 +91,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     cap, msg, details, outOfSyncURL);
         }
 
-        public String getRequestPathInfo(WrappedRequest request) {
-            return request.getRequestPathInfo();
-        }
-
         public InputStream getThemeResourceAsStream(String themeName,
                 String resource) throws IOException {
             return portlet.getPortletContext().getResourceAsStream(

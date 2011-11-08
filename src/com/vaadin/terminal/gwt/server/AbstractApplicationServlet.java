@@ -84,12 +84,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     outOfSyncURL);
         }
 
-        public String getRequestPathInfo(WrappedRequest request) {
-            return servlet
-                    .getRequestPathInfo(((WrappedHttpServletRequest) request)
-                            .getHttpServletRequest());
-        }
-
         public InputStream getThemeResourceAsStream(String themeName,
                 String resource) throws IOException {
             return servlet.getServletContext().getResourceAsStream(

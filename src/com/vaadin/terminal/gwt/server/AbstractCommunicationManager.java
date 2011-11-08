@@ -103,8 +103,6 @@ public abstract class AbstractCommunicationManager implements
                 WrappedResponse response, String cap, String msg,
                 String details, String outOfSyncURL) throws IOException;
 
-        public String getRequestPathInfo(WrappedRequest request);
-
         public InputStream getThemeResourceAsStream(String themeName,
                 String resource) throws IOException;
 
