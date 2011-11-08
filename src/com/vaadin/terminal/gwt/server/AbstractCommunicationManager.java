@@ -111,16 +111,6 @@ public abstract class AbstractCommunicationManager implements
     public interface Request extends WrappedRequest {
 
         /**
-         * Gets a {@link Session} wrapper implementation representing the
-         * session for which this request was sent.
-         * 
-         * Multiple Vaadin applications can be associated with a single session.
-         * 
-         * @return Session
-         */
-        public Session getSession();
-
-        /**
          * Are the applications in this session running in a portlet or directly
          * as servlets.
          * 
@@ -225,32 +215,6 @@ public abstract class AbstractCommunicationManager implements
          * @return wrapped request object
          */
         public Object getWrappedResponse();
-
-    }
-
-    /**
-     * Generic wrapper interface for a (HTTP or Portlet) session.
-     * 
-     * Several applications can be associated with a single session.
-     * 
-     * TODO Document me!
-     * 
-     * @see javax.servlet.http.HttpSession
-     * @see javax.portlet.PortletSession
-     * 
-     * @author peholmst
-     */
-    protected interface Session {
-
-        public boolean isNew();
-
-        public Object getAttribute(String name);
-
-        public void setAttribute(String name, Object o);
-
-        public int getMaxInactiveInterval();
-
-        public Object getWrappedSession();
 
     }
 
@@ -707,7 +671,7 @@ public abstract class AbstractCommunicationManager implements
             InvalidUIDLSecurityKeyException {
 
         requestThemeName = request.getParameter("theme");
-        maxInactiveInterval = request.getSession().getMaxInactiveInterval();
+        maxInactiveInterval = request.getSessionMaxInactiveInterval();
         // repaint requested or session has timed out and new one is created
         boolean repaintAll;
         final OutputStream out;
@@ -891,11 +855,11 @@ public abstract class AbstractCommunicationManager implements
                 .getAttribute(WRITE_SECURITY_TOKEN_FLAG);
 
         if (writeSecurityTokenFlag != null) {
-            String seckey = (String) request.getSession().getAttribute(
-                    ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
+            String seckey = (String) request
+                    .getSessionAttribute(ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
             if (seckey == null) {
                 seckey = UUID.randomUUID().toString();
-                request.getSession().setAttribute(
+                request.setSessionAttribute(
                         ApplicationConnection.UIDL_SECURITY_TOKEN_ID, seckey);
             }
             outWriter.print("\"" + ApplicationConnection.UIDL_SECURITY_TOKEN_ID
@@ -1289,8 +1253,8 @@ public abstract class AbstractCommunicationManager implements
                 } else {
                     // ApplicationServlet has stored the security token in the
                     // session; check that it matched the one sent in the UIDL
-                    String sessId = (String) request.getSession().getAttribute(
-                            ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
+                    String sessId = (String) request
+                            .getSessionAttribute(ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
 
                     if (sessId == null || !sessId.equals(bursts[0])) {
                         throw new InvalidUIDLSecurityKeyException(

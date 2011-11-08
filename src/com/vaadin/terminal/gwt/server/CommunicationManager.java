@@ -15,7 +15,6 @@ import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.Paintable;
@@ -80,10 +79,6 @@ public class CommunicationManager extends AbstractCommunicationManager {
             return "RequestURL:" + request.getRequestURI();
         }
 
-        public Session getSession() {
-            return new HttpSessionWrapper(request.getSession());
-        }
-
         public Object getWrappedRequest() {
             return request;
         }
@@ -98,6 +93,18 @@ public class CommunicationManager extends AbstractCommunicationManager {
 
         public String getRequestPathInfo() {
             return servlet.getRequestPathInfo(request);
+        }
+
+        public int getSessionMaxInactiveInterval() {
+            return request.getSession().getMaxInactiveInterval();
+        }
+
+        public Object getSessionAttribute(String name) {
+            return request.getSession().getAttribute(name);
+        }
+
+        public void setSessionAttribute(String name, Object attribute) {
+            request.getSession().setAttribute(name, attribute);
         }
     }
 
@@ -136,41 +143,6 @@ public class CommunicationManager extends AbstractCommunicationManager {
 
         public void setHeader(String name, String value) {
             response.setHeader(name, value);
-        }
-
-    }
-
-    /**
-     * Concrete wrapper class for {@link HttpSession}.
-     * 
-     * @see Session
-     */
-    private static class HttpSessionWrapper implements Session {
-
-        private final HttpSession session;
-
-        public HttpSessionWrapper(HttpSession session) {
-            this.session = session;
-        }
-
-        public Object getAttribute(String name) {
-            return session.getAttribute(name);
-        }
-
-        public int getMaxInactiveInterval() {
-            return session.getMaxInactiveInterval();
-        }
-
-        public Object getWrappedSession() {
-            return session;
-        }
-
-        public boolean isNew() {
-            return session.isNew();
-        }
-
-        public void setAttribute(String name, Object o) {
-            session.setAttribute(name, o);
         }
 
     }

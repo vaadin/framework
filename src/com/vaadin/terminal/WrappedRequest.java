@@ -9,4 +9,10 @@ public interface WrappedRequest {
 
     public String getRequestPathInfo();
 
+    public int getSessionMaxInactiveInterval();
+
+    public Object getSessionAttribute(String name);
+
+    public void setSessionAttribute(String name, Object attribute);
+
 }

@@ -15,7 +15,6 @@ import javax.portlet.ClientDataRequest;
 import javax.portlet.MimeResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
-import javax.portlet.PortletSession;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceURL;
@@ -86,10 +85,6 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             return "WindowID:" + request.getWindowID();
         }
 
-        public Session getSession() {
-            return new PortletSessionWrapper(request.getPortletSession());
-        }
-
         public Object getWrappedRequest() {
             return request;
         }
@@ -110,6 +105,18 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                 throw new UnsupportedOperationException(
                         "PathInfo only available when using ResourceRequests");
             }
+        }
+
+        public int getSessionMaxInactiveInterval() {
+            return request.getPortletSession().getMaxInactiveInterval();
+        }
+
+        public Object getSessionAttribute(String name) {
+            return request.getPortletSession().getAttribute(name);
+        }
+
+        public void setSessionAttribute(String name, Object attribute) {
+            request.getPortletSession().setAttribute(name, attribute);
         }
 
     }
@@ -146,36 +153,6 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         public void setHeader(String name, String value) {
             response.setProperty(name, value);
         }
-    }
-
-    private static class PortletSessionWrapper implements Session {
-
-        private final PortletSession session;
-
-        public PortletSessionWrapper(PortletSession session) {
-            this.session = session;
-        }
-
-        public Object getAttribute(String name) {
-            return session.getAttribute(name);
-        }
-
-        public int getMaxInactiveInterval() {
-            return session.getMaxInactiveInterval();
-        }
-
-        public Object getWrappedSession() {
-            return session;
-        }
-
-        public boolean isNew() {
-            return session.isNew();
-        }
-
-        public void setAttribute(String name, Object o) {
-            session.setAttribute(name, o);
-        }
-
     }
 
     private static class AbstractApplicationPortletWrapper implements Callback {
@@ -315,8 +292,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     }
 
     public boolean handleApplicationRequest(PortletRequest request,
-            PortletResponse response)
-            throws IOException {
+            PortletResponse response) throws IOException {
         return handleApplicationRequest(new PortletRequestWrapper(request),
                 new PortletResponseWrapper(response));
     }
