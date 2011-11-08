@@ -41,9 +41,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
-import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import com.vaadin.Application;
@@ -98,88 +96,6 @@ public abstract class AbstractCommunicationManager implements
     private static final RequestHandler APP_RESOURCE_HANDLER = new ApplicationResourceHandler();
 
     /**
-     * Generic interface of a (HTTP or Portlet) request to the application.
-     * 
-     * This is a wrapper interface that allows
-     * {@link AbstractCommunicationManager} to use a unified API.
-     * 
-     * @see javax.servlet.ServletRequest
-     * @see javax.portlet.PortletRequest
-     * 
-     * @author peholmst
-     */
-    public interface Request extends WrappedRequest {
-
-        /**
-         * Are the applications in this session running in a portlet or directly
-         * as servlets.
-         * 
-         * @return true if in a portlet
-         */
-        public boolean isRunningInPortlet();
-
-        /**
-         * Get the named HTTP or portlet request parameter.
-         * 
-         * @see javax.servlet.ServletRequest#getParameter(String)
-         * @see javax.portlet.PortletRequest#getParameter(String)
-         * 
-         * @param name
-         * @return
-         */
-        public String getParameter(String name);
-
-        /**
-         * Returns the length of the request content that can be read from the
-         * input stream returned by {@link #getInputStream()}.
-         * 
-         * @return content length in bytes
-         */
-        public int getContentLength();
-
-        /**
-         * Returns an input stream from which the request content can be read.
-         * The request content length can be obtained with
-         * {@link #getContentLength()} without reading the full stream contents.
-         * 
-         * @return
-         * @throws IOException
-         */
-        public InputStream getInputStream() throws IOException;
-
-        /**
-         * Returns the request identifier that identifies the target Vaadin
-         * window for the request.
-         * 
-         * @return String identifier for the request target window
-         */
-        public String getRequestID();
-
-        /**
-         * @see javax.servlet.ServletRequest#getAttribute(String)
-         * @see javax.portlet.PortletRequest#getAttribute(String)
-         */
-        public Object getAttribute(String name);
-
-        /**
-         * @see javax.servlet.ServletRequest#setAttribute(String, Object)
-         * @see javax.portlet.PortletRequest#setAttribute(String, Object)
-         */
-        public void setAttribute(String name, Object value);
-
-        /**
-         * Gets the underlying request object. The request is typically either a
-         * {@link ServletRequest} or a {@link PortletRequest}.
-         * 
-         * @return wrapped request object
-         */
-        public Object getWrappedRequest();
-
-        public abstract String getRequestPathInfo();
-
-    }
-
-    /**
      * Generic interface of a (HTTP or Portlet) response from the application.
      * 
      * This is a wrapper interface that allows
@@ -225,11 +141,11 @@ public abstract class AbstractCommunicationManager implements
      */
     public interface Callback {
 
-        public void criticalNotification(Request request, Response response,
-                String cap, String msg, String details, String outOfSyncURL)
-                throws IOException;
+        public void criticalNotification(WrappedRequest request,
+                Response response, String cap, String msg, String details,
+                String outOfSyncURL) throws IOException;
 
-        public String getRequestPathInfo(Request request);
+        public String getRequestPathInfo(WrappedRequest request);
 
         public InputStream getThemeResourceAsStream(String themeName,
                 String resource) throws IOException;
@@ -360,7 +276,7 @@ public abstract class AbstractCommunicationManager implements
      * @param boundary
      * @throws IOException
      */
-    protected void doHandleSimpleMultipartFileUpload(Request request,
+    protected void doHandleSimpleMultipartFileUpload(WrappedRequest request,
             Response response, StreamVariable streamVariable,
             String variableName, VariableOwner owner, String boundary)
             throws IOException {
@@ -459,9 +375,10 @@ public abstract class AbstractCommunicationManager implements
      * @param contentLength
      * @throws IOException
      */
-    protected void doHandleXhrFilePost(Request request, Response response,
-            StreamVariable streamVariable, String variableName,
-            VariableOwner owner, int contentLength) throws IOException {
+    protected void doHandleXhrFilePost(WrappedRequest request,
+            Response response, StreamVariable streamVariable,
+            String variableName, VariableOwner owner, int contentLength)
+            throws IOException {
 
         // These are unknown in filexhr ATM, maybe add to Accept header that
         // is accessible in portlets
@@ -631,7 +548,7 @@ public abstract class AbstractCommunicationManager implements
      * @param response
      * @throws IOException
      */
-    protected void sendUploadResponse(Request request, Response response)
+    protected void sendUploadResponse(WrappedRequest request, Response response)
             throws IOException {
         response.setContentType("text/html");
         final OutputStream out = response.getOutputStream();
@@ -666,9 +583,9 @@ public abstract class AbstractCommunicationManager implements
      * @throws IOException
      * @throws InvalidUIDLSecurityKeyException
      */
-    protected void doHandleUidlRequest(Request request, Response response,
-            Callback callback, Root root) throws IOException,
-            InvalidUIDLSecurityKeyException {
+    protected void doHandleUidlRequest(WrappedRequest request,
+            Response response, Callback callback, Root root)
+            throws IOException, InvalidUIDLSecurityKeyException {
 
         requestThemeName = request.getParameter("theme");
         maxInactiveInterval = request.getSessionMaxInactiveInterval();
@@ -707,8 +624,7 @@ public abstract class AbstractCommunicationManager implements
                 if (root == null) {
                     // This should not happen, no windows exists but
                     // application is still open.
-                    logger.warning("Could not get window for application with request ID "
-                            + request.getRequestID());
+                    logger.warning("Could not get root for application");
                     return;
                 }
             } else {
@@ -833,10 +749,10 @@ public abstract class AbstractCommunicationManager implements
      * @throws PaintException
      * @throws IOException
      */
-    private void paintAfterVariableChanges(Request request, Response response,
-            Callback callback, boolean repaintAll, final PrintWriter outWriter,
-            Root root, boolean analyzeLayouts) throws PaintException,
-            IOException {
+    private void paintAfterVariableChanges(WrappedRequest request,
+            Response response, Callback callback, boolean repaintAll,
+            final PrintWriter outWriter, Root root, boolean analyzeLayouts)
+            throws PaintException, IOException {
 
         if (repaintAll) {
             makeAllPaintablesDirty(root);
@@ -1228,7 +1144,7 @@ public abstract class AbstractCommunicationManager implements
      * 
      * @return true if successful, false if there was an inconsistency
      */
-    private boolean handleVariables(Request request, Response response,
+    private boolean handleVariables(WrappedRequest request, Response response,
             Callback callback, Application application2, Root root)
             throws IOException, InvalidUIDLSecurityKeyException {
         boolean success = true;
@@ -1424,7 +1340,8 @@ public abstract class AbstractCommunicationManager implements
      * @return
      * @throws IOException
      */
-    protected String getRequestPayload(Request request) throws IOException {
+    protected String getRequestPayload(WrappedRequest request)
+            throws IOException {
 
         int requestLength = request.getContentLength();
         if (requestLength == 0) {
@@ -1795,8 +1712,8 @@ public abstract class AbstractCommunicationManager implements
      * @param assumedWindow
      * @return
      */
-    protected Root doGetApplicationWindow(Request request, Callback callback,
-            Application application, Root assumedRoot) {
+    protected Root doGetApplicationWindow(WrappedRequest request,
+            Callback callback, Application application, Root assumedRoot) {
         return application.getRoot(request);
 
         // Window window = null;
@@ -1906,7 +1823,7 @@ public abstract class AbstractCommunicationManager implements
      * @throws IOException
      *             if the writing failed due to input/output error.
      */
-    private void endApplication(Request request, Response response,
+    private void endApplication(WrappedRequest request, Response response,
             Application application) throws IOException {
 
         String logoutUrl = application.getLogoutURL();

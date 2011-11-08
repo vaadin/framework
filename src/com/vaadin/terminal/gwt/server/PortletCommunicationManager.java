@@ -7,11 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.portlet.ClientDataRequest;
 import javax.portlet.MimeResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -19,12 +17,12 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceURL;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequestWrapper;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.VariableOwner;
+import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Root;
 
@@ -38,88 +36,6 @@ import com.vaadin.ui.Root;
 public class PortletCommunicationManager extends AbstractCommunicationManager {
 
     private transient ResourceResponse currentUidlResponse;
-
-    private static class PortletRequestWrapper implements Request {
-
-        private final PortletRequest request;
-
-        public PortletRequestWrapper(PortletRequest request) {
-            this.request = request;
-        }
-
-        public Object getAttribute(String name) {
-            return request.getAttribute(name);
-        }
-
-        public int getContentLength() {
-            return ((ClientDataRequest) request).getContentLength();
-        }
-
-        public InputStream getInputStream() throws IOException {
-            return ((ClientDataRequest) request).getPortletInputStream();
-        }
-
-        public String getParameter(String name) {
-            String value = request.getParameter(name);
-            if (value == null) {
-                // for GateIn portlet container simple-portal
-                try {
-                    Method getRealReq = request.getClass().getMethod(
-                            "getRealRequest");
-                    HttpServletRequestWrapper origRequest = (HttpServletRequestWrapper) getRealReq
-                            .invoke(request);
-                    value = origRequest.getParameter(name);
-                } catch (Exception e) {
-                    // do nothing - not on GateIn simple-portal
-                }
-            }
-            return value;
-        }
-
-        public Map<String, String[]> getParameterMap() {
-            return request.getParameterMap();
-            // TODO GateIn hack required here as well?
-        }
-
-        public String getRequestID() {
-            return "WindowID:" + request.getWindowID();
-        }
-
-        public Object getWrappedRequest() {
-            return request;
-        }
-
-        public boolean isRunningInPortlet() {
-            return true;
-        }
-
-        public void setAttribute(String name, Object o) {
-            request.setAttribute(name, o);
-        }
-
-        public String getRequestPathInfo() {
-            if (request instanceof ResourceRequest) {
-                return ((ResourceRequest) request).getResourceID();
-            } else {
-                // We do not use paths in portlet mode
-                throw new UnsupportedOperationException(
-                        "PathInfo only available when using ResourceRequests");
-            }
-        }
-
-        public int getSessionMaxInactiveInterval() {
-            return request.getPortletSession().getMaxInactiveInterval();
-        }
-
-        public Object getSessionAttribute(String name) {
-            return request.getPortletSession().getAttribute(name);
-        }
-
-        public void setSessionAttribute(String name, Object attribute) {
-            request.getPortletSession().setAttribute(name, attribute);
-        }
-
-    }
 
     private static class PortletResponseWrapper implements Response {
 
@@ -164,16 +80,16 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             this.portlet = portlet;
         }
 
-        public void criticalNotification(Request request, Response response,
-                String cap, String msg, String details, String outOfSyncURL)
-                throws IOException {
+        public void criticalNotification(WrappedRequest request,
+                Response response, String cap, String msg, String details,
+                String outOfSyncURL) throws IOException {
             portlet.criticalNotification(
-                    (PortletRequest) request.getWrappedRequest(),
+                    ((WrappedPortletRequest) request).getPortletRequest(),
                     (MimeResponse) response.getWrappedResponse(), cap, msg,
                     details, outOfSyncURL);
         }
 
-        public String getRequestPathInfo(Request request) {
+        public String getRequestPathInfo(WrappedRequest request) {
             return request.getRequestPathInfo();
         }
 
@@ -201,11 +117,11 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
 
         if (contentType.contains("boundary")) {
             doHandleSimpleMultipartFileUpload(
-                    new PortletRequestWrapper(request),
+                    new WrappedPortletRequest(request),
                     new PortletResponseWrapper(response), streamVariable, name,
                     variableOwner, contentType.split("boundary=")[1]);
         } else {
-            doHandleXhrFilePost(new PortletRequestWrapper(request),
+            doHandleXhrFilePost(new WrappedPortletRequest(request),
                     new PortletResponseWrapper(response), streamVariable, name,
                     variableOwner, request.getContentLength());
         }
@@ -225,7 +141,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             AbstractApplicationPortlet applicationPortlet, Root root)
             throws InvalidUIDLSecurityKeyException, IOException {
         currentUidlResponse = response;
-        doHandleUidlRequest(new PortletRequestWrapper(request),
+        doHandleUidlRequest(new WrappedPortletRequest(request),
                 new PortletResponseWrapper(response),
                 new AbstractApplicationPortletWrapper(applicationPortlet), root);
         currentUidlResponse = null;
@@ -252,7 +168,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             AbstractApplicationPortlet applicationPortlet,
             Application application, Root assumedRoot) {
 
-        return doGetApplicationWindow(new PortletRequestWrapper(request),
+        return doGetApplicationWindow(new WrappedPortletRequest(request),
                 new AbstractApplicationPortletWrapper(applicationPortlet),
                 application, assumedRoot);
     }
@@ -293,7 +209,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
 
     public boolean handleApplicationRequest(PortletRequest request,
             PortletResponse response) throws IOException {
-        return handleApplicationRequest(new PortletRequestWrapper(request),
+        return handleApplicationRequest(new WrappedPortletRequest(request),
                 new PortletResponseWrapper(response));
     }
 

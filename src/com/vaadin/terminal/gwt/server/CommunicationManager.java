@@ -20,6 +20,7 @@ import com.vaadin.Application;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.VariableOwner;
+import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Root;
 
@@ -38,75 +39,6 @@ import com.vaadin.ui.Root;
  */
 @SuppressWarnings("serial")
 public class CommunicationManager extends AbstractCommunicationManager {
-
-    /**
-     * Concrete wrapper class for {@link HttpServletRequest}.
-     * 
-     * @see Request
-     */
-    private static class HttpServletRequestWrapper implements Request {
-
-        private final HttpServletRequest request;
-        private final AbstractApplicationServlet servlet;
-
-        public HttpServletRequestWrapper(HttpServletRequest request,
-                AbstractApplicationServlet servlet) {
-            this.request = request;
-            this.servlet = servlet;
-        }
-
-        public Object getAttribute(String name) {
-            return request.getAttribute(name);
-        }
-
-        public int getContentLength() {
-            return request.getContentLength();
-        }
-
-        public InputStream getInputStream() throws IOException {
-            return request.getInputStream();
-        }
-
-        public String getParameter(String name) {
-            return request.getParameter(name);
-        }
-
-        public Map<String, String[]> getParameterMap() {
-            return request.getParameterMap();
-        }
-
-        public String getRequestID() {
-            return "RequestURL:" + request.getRequestURI();
-        }
-
-        public Object getWrappedRequest() {
-            return request;
-        }
-
-        public boolean isRunningInPortlet() {
-            return false;
-        }
-
-        public void setAttribute(String name, Object o) {
-            request.setAttribute(name, o);
-        }
-
-        public String getRequestPathInfo() {
-            return servlet.getRequestPathInfo(request);
-        }
-
-        public int getSessionMaxInactiveInterval() {
-            return request.getSession().getMaxInactiveInterval();
-        }
-
-        public Object getSessionAttribute(String name) {
-            return request.getSession().getAttribute(name);
-        }
-
-        public void setSessionAttribute(String name, Object attribute) {
-            request.getSession().setAttribute(name, attribute);
-        }
-    }
 
     /**
      * Concrete wrapper class for {@link HttpServletResponse}.
@@ -156,18 +88,18 @@ public class CommunicationManager extends AbstractCommunicationManager {
             this.servlet = servlet;
         }
 
-        public void criticalNotification(Request request, Response response,
-                String cap, String msg, String details, String outOfSyncURL)
-                throws IOException {
-            servlet.criticalNotification(
-                    (HttpServletRequest) request.getWrappedRequest(),
-                    (HttpServletResponse) response.getWrappedResponse(), cap,
-                    msg, details, outOfSyncURL);
+        public void criticalNotification(WrappedRequest request,
+                Response response, String cap, String msg, String details,
+                String outOfSyncURL) throws IOException {
+            servlet.criticalNotification(((WrappedHttpServletRequest) request)
+                    .getHttpServletRequest(), (HttpServletResponse) response
+                    .getWrappedResponse(), cap, msg, details, outOfSyncURL);
         }
 
-        public String getRequestPathInfo(Request request) {
-            return servlet.getRequestPathInfo((HttpServletRequest) request
-                    .getWrappedRequest());
+        public String getRequestPathInfo(WrappedRequest request) {
+            return servlet
+                    .getRequestPathInfo(((WrappedHttpServletRequest) request)
+                            .getHttpServletRequest());
         }
 
         public InputStream getThemeResourceAsStream(String themeName,
@@ -238,14 +170,14 @@ public class CommunicationManager extends AbstractCommunicationManager {
             if (request.getContentType().contains("boundary")) {
                 // Multipart requests contain boundary string
                 doHandleSimpleMultipartFileUpload(
-                        new HttpServletRequestWrapper(request, servlet),
+                        new WrappedHttpServletRequest(request, servlet),
                         new HttpServletResponseWrapper(response),
                         streamVariable, variableName, source,
                         contentType.split("boundary=")[1]);
             } else {
                 // if boundary string does not exist, the posted file is from
                 // XHR2.post(File)
-                doHandleXhrFilePost(new HttpServletRequestWrapper(request,
+                doHandleXhrFilePost(new WrappedHttpServletRequest(request,
                         servlet), new HttpServletResponseWrapper(response),
                         streamVariable, variableName, source,
                         request.getContentLength());
@@ -276,7 +208,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
             AbstractApplicationServlet applicationServlet, Root root)
             throws IOException, ServletException,
             InvalidUIDLSecurityKeyException {
-        doHandleUidlRequest(new HttpServletRequestWrapper(request,
+        doHandleUidlRequest(new WrappedHttpServletRequest(request,
                 applicationServlet), new HttpServletResponseWrapper(response),
                 new AbstractApplicationServletWrapper(applicationServlet), root);
     }
@@ -300,7 +232,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
     Root getApplicationRoot(HttpServletRequest request,
             AbstractApplicationServlet applicationServlet,
             Application application, Root assumedRoot) throws ServletException {
-        return doGetApplicationWindow(new HttpServletRequestWrapper(request,
+        return doGetApplicationWindow(new WrappedHttpServletRequest(request,
                 applicationServlet), new AbstractApplicationServletWrapper(
                 applicationServlet), application, assumedRoot);
     }
@@ -381,7 +313,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
     public boolean handleApplicationRequest(HttpServletRequest request,
             HttpServletResponse response, AbstractApplicationServlet servlet)
             throws IOException {
-        return handleApplicationRequest(new HttpServletRequestWrapper(request,
+        return handleApplicationRequest(new WrappedHttpServletRequest(request,
                 servlet), new HttpServletResponseWrapper(response));
     }
 
