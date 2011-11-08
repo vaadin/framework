@@ -1,0 +1,4 @@
+@import url(../reindeer/styles.css);
+
+.table-equal-rowheight .v-table-row {height: 30px;}
+.table-equal-rowheight .v-table-row-odd {height: 30px;}

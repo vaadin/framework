@@ -948,7 +948,8 @@
 			>
 				<filter includes="com.vaadin.*" />
 				<filter excludes="com.vaadin.tests.*" />
-				<filter excludes="com.vaadin.terminal.gwt.*" />
+				<filter excludes="com.vaadin.terminal.gwt.client.*" />
+				<filter excludes="com.vaadin.terminal.gwt.widgetsetutils.*" />
 				<filter excludes="*Test*" />
 				<filter excludes="com.vaadin.launcher.*" />
 			</instr>

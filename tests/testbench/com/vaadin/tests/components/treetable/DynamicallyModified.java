@@ -1,8 +1,6 @@
 package com.vaadin.tests.components.treetable;
 
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Tree;
@@ -15,16 +13,13 @@ public class DynamicallyModified extends TestBase implements
     protected static final String NAME_PROPERTY = "Name";
     protected static final String HOURS_PROPERTY = "Hours done";
     protected static final String MODIFIED_PROPERTY = "Last Modified";
+    private static final String DEFAULT_DATE = "Wed Nov 30 14:40:26 EET 2011";
 
     protected TreeTable treetable;
 
     @Override
     protected void setup() {
         getLayout().setWidth("100%");
-
-        // Calendar
-        Calendar cal = Calendar.getInstance();
-        cal.set(2011, 10, 30, 14, 40, 26);
 
         // Create the treetable
         treetable = new TreeTable();
@@ -37,26 +32,26 @@ public class DynamicallyModified extends TestBase implements
         // Add Table columns
         treetable.addContainerProperty(NAME_PROPERTY, String.class, "");
         treetable.addContainerProperty(HOURS_PROPERTY, Integer.class, 0);
-        treetable.addContainerProperty(MODIFIED_PROPERTY, Date.class,
-                cal.getTime());
+        treetable.addContainerProperty(MODIFIED_PROPERTY, String.class,
+                DEFAULT_DATE);
 
         // Populate table
         Object allProjects = treetable.addItem(new Object[] { "All Projects",
-                18, cal.getTime() }, null);
-        Object year2010 = treetable.addItem(
-                new Object[] { "Year 2010", 18, cal.getTime() }, null);
+                18, DEFAULT_DATE }, null);
+        Object year2010 = treetable.addItem(new Object[] { "Year 2010", 18,
+                DEFAULT_DATE }, null);
         Object customerProject1 = treetable.addItem(new Object[] {
-                "Customer Project 1", 13, cal.getTime() }, null);
+                "Customer Project 1", 13, DEFAULT_DATE }, null);
         Object customerProject1Implementation = treetable.addItem(new Object[] {
-                "Implementation", 5, cal.getTime() }, null);
+                "Implementation", 5, DEFAULT_DATE }, null);
         Object customerProject1Planning = treetable.addItem(new Object[] {
-                "Planning", 2, cal.getTime() }, null);
+                "Planning", 2, DEFAULT_DATE }, null);
         Object customerProject1Prototype = treetable.addItem(new Object[] {
-                "Prototype", 5, cal.getTime() }, null);
+                "Prototype", 5, DEFAULT_DATE }, null);
         Object customerProject2 = treetable.addItem(new Object[] {
-                "Customer Project 2", 5, cal.getTime() }, null);
+                "Customer Project 2", 5, DEFAULT_DATE }, null);
         Object customerProject2Planning = treetable.addItem(new Object[] {
-                "Planning", 5, cal.getTime() }, null);
+                "Planning", 5, DEFAULT_DATE }, null);
 
         // Set hierarchy
         treetable.setParent(year2010, allProjects);
@@ -82,7 +77,7 @@ public class DynamicallyModified extends TestBase implements
 
     @Override
     protected String getDescription() {
-        return "Expanding and collapsing nodes should actually expand and collapse them even when modifying the container in a collapse listener.";
+        return "Collaps 'Customer Project 1' will cause the first child if it to be removed. Expanding 'Custom Project 2' will cause a new child to be added. These events should be rendered correctly.";
     }
 
     @Override
@@ -90,12 +85,30 @@ public class DynamicallyModified extends TestBase implements
         return 7780;
     }
 
-    public void nodeExpand(ExpandEvent event) {
+    private int newChild = 1;
 
+    public void nodeExpand(ExpandEvent event) {
+        Object expandedItemId = event.getItemId();
+        // 7 == "Customer Project 1"
+        if (expandedItemId != Integer.valueOf(7)) {
+            return;
+        }
+        Object newChildId = treetable.addItem(new Object[] {
+                "New child " + newChild++, 5, "Fri Nov 04 10:53:16 EET 2011" },
+                null);
+        treetable.setParent(newChildId, expandedItemId);
+        treetable.setChildrenAllowed(newChildId, false);
     }
 
     public void nodeCollapse(CollapseEvent event) {
 
+        Object collapsedItemId = event.getItemId();
+
+        // 3 == "Customer Project 1"
+        if (collapsedItemId != Integer.valueOf(3)) {
+            return;
+        }
+        @SuppressWarnings("unchecked")
         Collection<Object> childs = (Collection<Object>) treetable
                 .getChildren(event.getItemId());
 
@@ -104,9 +117,8 @@ public class DynamicallyModified extends TestBase implements
         }
         Object[] arr = childs.toArray();
 
-        for (Object obj : arr) {
-            System.out.println("remove  " + obj.toString());
-            treetable.removeItem(obj);
+        if (arr.length > 0) {
+            treetable.removeItem(arr[0]);
         }
 
     }
