@@ -6,8 +6,6 @@ package com.vaadin.terminal.gwt.server;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -41,45 +39,6 @@ import com.vaadin.ui.Root;
 @SuppressWarnings("serial")
 public class CommunicationManager extends AbstractCommunicationManager {
 
-    /**
-     * Concrete wrapper class for {@link HttpServletResponse}.
-     * 
-     * @see Response
-     */
-    private static class HttpServletResponseWrapper implements WrappedResponse {
-
-        private final HttpServletResponse response;
-
-        public HttpServletResponseWrapper(HttpServletResponse response) {
-            this.response = response;
-        }
-
-        public OutputStream getOutputStream() throws IOException {
-            return response.getOutputStream();
-        }
-
-        public HttpServletResponse getHttpServletResponse() {
-            return response;
-        }
-
-        public void setContentType(String type) {
-            response.setContentType(type);
-        }
-
-        public PrintWriter getWriter() throws IOException {
-            return response.getWriter();
-        }
-
-        public void setStatus(int responseStatus) {
-            response.setStatus(responseStatus);
-        }
-
-        public void setHeader(String name, String value) {
-            response.setHeader(name, value);
-        }
-
-    }
-
     private static class AbstractApplicationServletWrapper implements Callback {
 
         private final AbstractApplicationServlet servlet;
@@ -94,7 +53,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
                 String details, String outOfSyncURL) throws IOException {
             servlet.criticalNotification(((WrappedHttpServletRequest) request)
                     .getHttpServletRequest(),
-                    ((HttpServletResponseWrapper) response)
+                    ((WrappedHttpServletResponse) response)
                             .getHttpServletResponse(), cap, msg, details,
                     outOfSyncURL);
         }
@@ -174,14 +133,14 @@ public class CommunicationManager extends AbstractCommunicationManager {
                 // Multipart requests contain boundary string
                 doHandleSimpleMultipartFileUpload(
                         new WrappedHttpServletRequest(request, servlet),
-                        new HttpServletResponseWrapper(response),
+                        new WrappedHttpServletResponse(response),
                         streamVariable, variableName, source,
                         contentType.split("boundary=")[1]);
             } else {
                 // if boundary string does not exist, the posted file is from
                 // XHR2.post(File)
                 doHandleXhrFilePost(new WrappedHttpServletRequest(request,
-                        servlet), new HttpServletResponseWrapper(response),
+                        servlet), new WrappedHttpServletResponse(response),
                         streamVariable, variableName, source,
                         request.getContentLength());
             }
@@ -212,7 +171,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
             throws IOException, ServletException,
             InvalidUIDLSecurityKeyException {
         doHandleUidlRequest(new WrappedHttpServletRequest(request,
-                applicationServlet), new HttpServletResponseWrapper(response),
+                applicationServlet), new WrappedHttpServletResponse(response),
                 new AbstractApplicationServletWrapper(applicationServlet), root);
     }
 
@@ -317,7 +276,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
             HttpServletResponse response, AbstractApplicationServlet servlet)
             throws IOException {
         return handleApplicationRequest(new WrappedHttpServletRequest(request,
-                servlet), new HttpServletResponseWrapper(response));
+                servlet), new WrappedHttpServletResponse(response));
     }
 
 }
