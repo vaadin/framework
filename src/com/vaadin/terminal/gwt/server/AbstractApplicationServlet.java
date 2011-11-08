@@ -41,7 +41,10 @@ import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.URIHandler;
+import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.server.AbstractCommunicationManager.Callback;
 import com.vaadin.ui.Root;
 
 /**
@@ -61,6 +64,40 @@ import com.vaadin.ui.Root;
 @SuppressWarnings("serial")
 public abstract class AbstractApplicationServlet extends HttpServlet implements
         Constants {
+
+    private static class AbstractApplicationServletWrapper implements Callback {
+
+        private final AbstractApplicationServlet servlet;
+
+        public AbstractApplicationServletWrapper(
+                AbstractApplicationServlet servlet) {
+            this.servlet = servlet;
+        }
+
+        public void criticalNotification(WrappedRequest request,
+                WrappedResponse response, String cap, String msg,
+                String details, String outOfSyncURL) throws IOException {
+            servlet.criticalNotification(((WrappedHttpServletRequest) request)
+                    .getHttpServletRequest(),
+                    ((WrappedHttpServletResponse) response)
+                            .getHttpServletResponse(), cap, msg, details,
+                    outOfSyncURL);
+        }
+
+        public String getRequestPathInfo(WrappedRequest request) {
+            return servlet
+                    .getRequestPathInfo(((WrappedHttpServletRequest) request)
+                            .getHttpServletRequest());
+        }
+
+        public InputStream getThemeResourceAsStream(String themeName,
+                String resource) throws IOException {
+            return servlet.getServletContext().getResourceAsStream(
+                    "/" + AbstractApplicationServlet.THEME_DIRECTORY_PATH
+                            + themeName + "/" + resource);
+        }
+
+    }
 
     // TODO Move some (all?) of the constants to a separate interface (shared
     // with portlet)
@@ -399,6 +436,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     @Override
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
+        AbstractApplicationServletWrapper servletWrapper = new AbstractApplicationServletWrapper(
+                this);
 
         RequestType requestType = getRequestType(request);
         if (!ensureCookiesEnabled(requestType, request, response)) {
@@ -483,9 +522,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             } else if (requestType == RequestType.UIDL) {
                 // Handles AJAX UIDL requests
                 Root root = applicationManager.getApplicationRoot(request,
-                        this, application, null);
+                        this, servletWrapper, application, null);
                 applicationManager.handleUidlRequest(request, response, this,
-                        root);
+                        servletWrapper, root);
                 return;
             }
 
@@ -504,7 +543,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             // Finds the root within the application
             Root root = getApplicationRoot(request, applicationManager,
-                    application);
+                    servletWrapper, application);
             if (root == null) {
                 throw new ServletException(ERROR_NO_WINDOW_FOUND);
             }
@@ -2121,14 +2160,15 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      *            the HTTP Request.
      * @param application
      *            the Application to query for root.
+     * @param servletWrapper
      * @return Root matching the given URI or null if not found.
      * @throws ServletException
      *             if an exception has occurred that interferes with the
      *             servlet's normal operation.
      */
     protected Root getApplicationRoot(HttpServletRequest request,
-            CommunicationManager applicationManager, Application application)
-            throws ServletException {
+            CommunicationManager applicationManager, Callback servletWrapper,
+            Application application) throws ServletException {
         //
         // // Finds the window where the request is handled
         Root assumedRoot = null;
@@ -2156,7 +2196,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         // }
         //
         return applicationManager.getApplicationRoot(request, this,
-                application, assumedRoot);
+                servletWrapper, application, assumedRoot);
     }
 
     /**

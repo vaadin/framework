@@ -5,7 +5,6 @@
 package com.vaadin.terminal.gwt.server;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -18,8 +17,6 @@ import com.vaadin.Application;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.VariableOwner;
-import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Root;
 
@@ -38,40 +35,6 @@ import com.vaadin.ui.Root;
  */
 @SuppressWarnings("serial")
 public class CommunicationManager extends AbstractCommunicationManager {
-
-    private static class AbstractApplicationServletWrapper implements Callback {
-
-        private final AbstractApplicationServlet servlet;
-
-        public AbstractApplicationServletWrapper(
-                AbstractApplicationServlet servlet) {
-            this.servlet = servlet;
-        }
-
-        public void criticalNotification(WrappedRequest request,
-                WrappedResponse response, String cap, String msg,
-                String details, String outOfSyncURL) throws IOException {
-            servlet.criticalNotification(((WrappedHttpServletRequest) request)
-                    .getHttpServletRequest(),
-                    ((WrappedHttpServletResponse) response)
-                            .getHttpServletResponse(), cap, msg, details,
-                    outOfSyncURL);
-        }
-
-        public String getRequestPathInfo(WrappedRequest request) {
-            return servlet
-                    .getRequestPathInfo(((WrappedHttpServletRequest) request)
-                            .getHttpServletRequest());
-        }
-
-        public InputStream getThemeResourceAsStream(String themeName,
-                String resource) throws IOException {
-            return servlet.getServletContext().getResourceAsStream(
-                    "/" + AbstractApplicationServlet.THEME_DIRECTORY_PATH
-                            + themeName + "/" + resource);
-        }
-
-    }
 
     /**
      * @deprecated use {@link #CommunicationManager(Application)} instead
@@ -159,6 +122,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
      * @param request
      * @param response
      * @param applicationServlet
+     * @param callback
      * @param window
      *            target window of the UIDL request, can be null if window not
      *            found
@@ -167,12 +131,12 @@ public class CommunicationManager extends AbstractCommunicationManager {
      */
     public void handleUidlRequest(HttpServletRequest request,
             HttpServletResponse response,
-            AbstractApplicationServlet applicationServlet, Root root)
-            throws IOException, ServletException,
+            AbstractApplicationServlet applicationServlet, Callback callback,
+            Root root) throws IOException, ServletException,
             InvalidUIDLSecurityKeyException {
         doHandleUidlRequest(new WrappedHttpServletRequest(request,
                 applicationServlet), new WrappedHttpServletResponse(response),
-                new AbstractApplicationServletWrapper(applicationServlet), root);
+                callback, root);
     }
 
     /**
@@ -186,17 +150,17 @@ public class CommunicationManager extends AbstractCommunicationManager {
      * @param assumedRoot
      *            if the window has been already resolved once, this parameter
      *            must contain the window.
+     * @param callback
      * @return Window matching the given URI or null if not found.
      * @throws ServletException
      *             if an exception has occurred that interferes with the
      *             servlet's normal operation.
      */
     Root getApplicationRoot(HttpServletRequest request,
-            AbstractApplicationServlet applicationServlet,
+            AbstractApplicationServlet applicationServlet, Callback callback,
             Application application, Root assumedRoot) throws ServletException {
         return doGetApplicationWindow(new WrappedHttpServletRequest(request,
-                applicationServlet), new AbstractApplicationServletWrapper(
-                applicationServlet), application, assumedRoot);
+                applicationServlet), callback, application, assumedRoot);
     }
 
     @Override
