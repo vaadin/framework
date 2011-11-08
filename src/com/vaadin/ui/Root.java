@@ -48,7 +48,6 @@ public class Root extends AbstractComponentContainer {
     public Root(RootLayout rootLayout) {
         this.rootLayout = rootLayout;
         addComponent(rootLayout);
-        rootLayout.init();
     }
 
     @Override
@@ -67,7 +66,7 @@ public class Root extends AbstractComponentContainer {
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        rootLayout.paint(target);
+        getRootLayout().paint(target);
 
         // Paint subwindows
         for (final Iterator<Window> i = windows.iterator(); i.hasNext();) {
@@ -133,7 +132,7 @@ public class Root extends AbstractComponentContainer {
     }
 
     public Iterator<Component> getComponentIterator() {
-        return Collections.singleton((Component) rootLayout).iterator();
+        return Collections.singleton((Component) getRootLayout()).iterator();
     }
 
     public String getName() {
@@ -442,5 +441,9 @@ public class Root extends AbstractComponentContainer {
 
     public RootLayout getRootLayout() {
         return rootLayout;
+    }
+
+    public void init() {
+        getRootLayout().init();
     }
 }
