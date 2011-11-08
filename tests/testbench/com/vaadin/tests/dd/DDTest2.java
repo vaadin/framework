@@ -94,13 +94,13 @@ public class DDTest2 extends TestBase {
                 if (transferable instanceof TableTransferable) {
                     TableTransferable tr = (TableTransferable) transferable;
                     System.out.println("From table row" + tr.getPropertyId());
-                    // TODO should not use Property.toString()
-                    data = tr.getSourceContainer().getItem(tr.getItemId())
-                            .getItemProperty(tr.getPropertyId()).toString();
-
+                    Object value = tr.getSourceContainer()
+                            .getItem(tr.getItemId())
+                            .getItemProperty(tr.getPropertyId()).getValue();
+                    data = (null != value) ? value.toString() : null;
                 }
                 if (data == null) {
-                    data = "-no Text data flawor-";
+                    data = "-no Text data flavor-";
                 }
                 tree3.addItem(data);
                 AbstractSelect.AbstractSelectTargetDetails dropTargetData = (AbstractSelect.AbstractSelectTargetDetails) dropEvent
@@ -138,7 +138,7 @@ public class DDTest2 extends TestBase {
             public void drop(DragAndDropEvent event) {
                 /*
                  * We know transferrable is from table, so it is of type
-                 * DataBindedTransferrable
+                 * DataBoundTransferrable
                  */
                 DataBoundTransferable tr = (DataBoundTransferable) event
                         .getTransferable();
@@ -148,9 +148,10 @@ public class DDTest2 extends TestBase {
                     // if the source is from table (not from tree1 itself),
                     // transfer Name property and use it as an identifier in
                     // tree1
-                    // TODO should not use Property.toString()
-                    String name = sourceContainer.getItem(itemId)
-                            .getItemProperty("Name").toString();
+                    Object nameValue = sourceContainer.getItem(itemId)
+                            .getItemProperty("Name").getValue();
+                    String name = (null != nameValue) ? nameValue.toString()
+                            : null;
 
                     tree1.addItem(name);
                     tree1.setChildrenAllowed(name, false);

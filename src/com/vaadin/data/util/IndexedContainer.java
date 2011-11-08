@@ -691,8 +691,8 @@ public class IndexedContainer extends
         /**
          * Gets the <code>String</code> representation of the contents of the
          * Item. The format of the string is a space separated catenation of the
-         * <code>String</code> representations of the Properties contained by
-         * the Item.
+         * <code>String</code> representations of the values of the Properties
+         * contained by the Item.
          * 
          * @return <code>String</code> representation of the Item contents
          */
@@ -702,8 +702,7 @@ public class IndexedContainer extends
 
             for (final Iterator<?> i = propertyIds.iterator(); i.hasNext();) {
                 final Object propertyId = i.next();
-                // TODO do not use Property.toString()
-                retValue += getItemProperty(propertyId).toString();
+                retValue += getItemProperty(propertyId).getValue();
                 if (i.hasNext()) {
                     retValue += " ";
                 }

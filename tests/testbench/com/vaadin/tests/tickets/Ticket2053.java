@@ -41,7 +41,6 @@ public class Ticket2053 extends Application {
                 c.addComponent(tf);
                 tf.addListener(new Property.ValueChangeListener() {
                     public void valueChange(ValueChangeEvent event) {
-                        // TODO should not use Property.toString()
                         main.addComponent(new Label(name + " send text:"
                                 + tf.getStringValue()));
                     }

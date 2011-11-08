@@ -257,16 +257,22 @@ public class Label extends AbstractComponent implements Property,
     }
 
     /**
-     * TODO temporary method to help eliminate the use of toString()
+     * Returns the value of the <code>Property</code> in human readable textual
+     * format.
      * 
-     * @return
+     * This method exists to help migration from previous Vaadin versions by
+     * providing a simple replacement for {@link #toString()}. However, it is
+     * normally better to use the value of the label directly.
+     * 
+     * @return String representation of the value stored in the Property
+     * @since 7.0
      */
     public String getStringValue() {
         if (dataSource == null) {
             throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
         }
-        // TODO do not use Property.toString()
-        return dataSource.toString();
+        Object value = dataSource.getValue();
+        return (null != value) ? value.toString() : null;
     }
 
     /**

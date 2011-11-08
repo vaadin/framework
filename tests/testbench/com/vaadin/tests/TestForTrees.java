@@ -142,7 +142,7 @@ public class TestForTrees extends CustomComponent implements Handler {
         t.addListener(new Listener() {
             public void componentEvent(Event event) {
                 status.addComponent(new Label(event.getClass().getName()));
-                // TODO should not use Property.toString()
+                // TODO should not use Field.toString()
                 status.addComponent(new Label("selected: "
                         + event.getSource().toString()));
             }

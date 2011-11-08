@@ -1080,7 +1080,10 @@ public abstract class AbstractSelect extends AbstractField implements
             final Property p = getContainerProperty(itemId,
                     getItemCaptionPropertyId());
             if (p != null) {
-                caption = p.toString();
+                Object value = p.getValue();
+                if (value != null) {
+                    caption = value.toString();
+                }
             }
             break;
         }

@@ -299,7 +299,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
                 // Discards buffer by overwriting from datasource
                 newValue = dataSource.getValue();
-                if (String.class == getType()) {
+                if (String.class == getType() && newValue != null) {
                     newValue = newValue.toString();
                 }
 
@@ -390,7 +390,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         readThroughMode = readThrough;
         if (!isModified() && readThroughMode && dataSource != null) {
             Object newValue = dataSource.getValue();
-            if (String.class == getType()) {
+            if (String.class == getType() && newValue != null) {
                 newValue = newValue.toString();
             }
             setInternalValue(newValue);
@@ -468,7 +468,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         }
 
         Object result = dataSource.getValue();
-        if (String.class == getType()) {
+        if (String.class == getType() && result != null) {
             result = result.toString();
         }
         return result;
@@ -640,7 +640,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         try {
             if (dataSource != null) {
                 Object newValue = dataSource.getValue();
-                if (String.class == getType()) {
+                if (String.class == getType() && newValue != null) {
                     newValue = newValue.toString();
                 }
                 setInternalValue(newValue);
