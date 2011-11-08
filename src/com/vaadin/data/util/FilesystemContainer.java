@@ -395,6 +395,11 @@ public class FilesystemContainer implements Container.Hierarchical {
         } else {
             l = f.listFiles();
         }
+        if (l == null) {
+            // File.listFiles returns null if File does not exist or if there
+            // was an IO error (permission denied)
+            return;
+        }
         final List<File> ll = Arrays.asList(l);
         Collections.sort(ll);
 
