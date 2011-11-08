@@ -23,6 +23,7 @@ import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Root;
 
@@ -37,7 +38,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
 
     private transient ResourceResponse currentUidlResponse;
 
-    private static class PortletResponseWrapper implements Response {
+    private static class PortletResponseWrapper implements WrappedResponse {
 
         private final PortletResponse response;
 
@@ -49,8 +50,8 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             return ((MimeResponse) response).getPortletOutputStream();
         }
 
-        public Object getWrappedResponse() {
-            return response;
+        public MimeResponse getPortletResponse() {
+            return (MimeResponse) response;
         }
 
         public void setContentType(String type) {
@@ -81,12 +82,12 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         }
 
         public void criticalNotification(WrappedRequest request,
-                Response response, String cap, String msg, String details,
-                String outOfSyncURL) throws IOException {
+                WrappedResponse response, String cap, String msg,
+                String details, String outOfSyncURL) throws IOException {
             portlet.criticalNotification(
                     ((WrappedPortletRequest) request).getPortletRequest(),
-                    (MimeResponse) response.getWrappedResponse(), cap, msg,
-                    details, outOfSyncURL);
+                    ((PortletResponseWrapper) response).getPortletResponse(),
+                    cap, msg, details, outOfSyncURL);
         }
 
         public String getRequestPathInfo(WrappedRequest request) {

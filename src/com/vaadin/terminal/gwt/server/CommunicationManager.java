@@ -21,6 +21,7 @@ import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Root;
 
@@ -45,7 +46,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
      * 
      * @see Response
      */
-    private static class HttpServletResponseWrapper implements Response {
+    private static class HttpServletResponseWrapper implements WrappedResponse {
 
         private final HttpServletResponse response;
 
@@ -57,7 +58,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
             return response.getOutputStream();
         }
 
-        public Object getWrappedResponse() {
+        public HttpServletResponse getHttpServletResponse() {
             return response;
         }
 
@@ -89,11 +90,13 @@ public class CommunicationManager extends AbstractCommunicationManager {
         }
 
         public void criticalNotification(WrappedRequest request,
-                Response response, String cap, String msg, String details,
-                String outOfSyncURL) throws IOException {
+                WrappedResponse response, String cap, String msg,
+                String details, String outOfSyncURL) throws IOException {
             servlet.criticalNotification(((WrappedHttpServletRequest) request)
-                    .getHttpServletRequest(), (HttpServletResponse) response
-                    .getWrappedResponse(), cap, msg, details, outOfSyncURL);
+                    .getHttpServletRequest(),
+                    ((HttpServletResponseWrapper) response)
+                            .getHttpServletResponse(), cap, msg, details,
+                    outOfSyncURL);
         }
 
         public String getRequestPathInfo(WrappedRequest request) {

@@ -41,9 +41,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.portlet.PortletResponse;
-import javax.servlet.ServletResponse;
-
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
 import com.vaadin.terminal.PaintException;
@@ -96,45 +93,6 @@ public abstract class AbstractCommunicationManager implements
     private static final RequestHandler APP_RESOURCE_HANDLER = new ApplicationResourceHandler();
 
     /**
-     * Generic interface of a (HTTP or Portlet) response from the application.
-     * 
-     * This is a wrapper interface that allows
-     * {@link AbstractCommunicationManager} to use a unified API.
-     * 
-     * @see javax.servlet.ServletResponse
-     * @see javax.portlet.PortletResponse
-     * 
-     * @author peholmst
-     */
-    public interface Response extends WrappedResponse {
-
-        /**
-         * Gets the output stream to which the response can be written.
-         * 
-         * @return
-         * @throws IOException
-         */
-        public OutputStream getOutputStream() throws IOException;
-
-        /**
-         * Sets the MIME content type for the response to be communicated to the
-         * browser.
-         * 
-         * @param type
-         */
-        public void setContentType(String type);
-
-        /**
-         * Gets the wrapped response object, usually a class implementing either
-         * {@link ServletResponse} or {@link PortletResponse}.
-         * 
-         * @return wrapped request object
-         */
-        public Object getWrappedResponse();
-
-    }
-
-    /**
      * TODO Document me!
      * 
      * @author peholmst
@@ -142,8 +100,8 @@ public abstract class AbstractCommunicationManager implements
     public interface Callback {
 
         public void criticalNotification(WrappedRequest request,
-                Response response, String cap, String msg, String details,
-                String outOfSyncURL) throws IOException;
+                WrappedResponse response, String cap, String msg,
+                String details, String outOfSyncURL) throws IOException;
 
         public String getRequestPathInfo(WrappedRequest request);
 
@@ -277,7 +235,7 @@ public abstract class AbstractCommunicationManager implements
      * @throws IOException
      */
     protected void doHandleSimpleMultipartFileUpload(WrappedRequest request,
-            Response response, StreamVariable streamVariable,
+            WrappedResponse response, StreamVariable streamVariable,
             String variableName, VariableOwner owner, String boundary)
             throws IOException {
         // multipart parsing, supports only one file for request, but that is
@@ -376,7 +334,7 @@ public abstract class AbstractCommunicationManager implements
      * @throws IOException
      */
     protected void doHandleXhrFilePost(WrappedRequest request,
-            Response response, StreamVariable streamVariable,
+            WrappedResponse response, StreamVariable streamVariable,
             String variableName, VariableOwner owner, int contentLength)
             throws IOException {
 
@@ -548,8 +506,8 @@ public abstract class AbstractCommunicationManager implements
      * @param response
      * @throws IOException
      */
-    protected void sendUploadResponse(WrappedRequest request, Response response)
-            throws IOException {
+    protected void sendUploadResponse(WrappedRequest request,
+            WrappedResponse response) throws IOException {
         response.setContentType("text/html");
         final OutputStream out = response.getOutputStream();
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
@@ -584,7 +542,7 @@ public abstract class AbstractCommunicationManager implements
      * @throws InvalidUIDLSecurityKeyException
      */
     protected void doHandleUidlRequest(WrappedRequest request,
-            Response response, Callback callback, Root root)
+            WrappedResponse response, Callback callback, Root root)
             throws IOException, InvalidUIDLSecurityKeyException {
 
         requestThemeName = request.getParameter("theme");
@@ -750,7 +708,7 @@ public abstract class AbstractCommunicationManager implements
      * @throws IOException
      */
     private void paintAfterVariableChanges(WrappedRequest request,
-            Response response, Callback callback, boolean repaintAll,
+            WrappedResponse response, Callback callback, boolean repaintAll,
             final PrintWriter outWriter, Root root, boolean analyzeLayouts)
             throws PaintException, IOException {
 
@@ -1144,9 +1102,10 @@ public abstract class AbstractCommunicationManager implements
      * 
      * @return true if successful, false if there was an inconsistency
      */
-    private boolean handleVariables(WrappedRequest request, Response response,
-            Callback callback, Application application2, Root root)
-            throws IOException, InvalidUIDLSecurityKeyException {
+    private boolean handleVariables(WrappedRequest request,
+            WrappedResponse response, Callback callback,
+            Application application2, Root root) throws IOException,
+            InvalidUIDLSecurityKeyException {
         boolean success = true;
 
         String changes = getRequestPayload(request);
@@ -1823,8 +1782,9 @@ public abstract class AbstractCommunicationManager implements
      * @throws IOException
      *             if the writing failed due to input/output error.
      */
-    private void endApplication(WrappedRequest request, Response response,
-            Application application) throws IOException {
+    private void endApplication(WrappedRequest request,
+            WrappedResponse response, Application application)
+            throws IOException {
 
         String logoutUrl = application.getLogoutURL();
         if (logoutUrl == null) {
@@ -1855,7 +1815,8 @@ public abstract class AbstractCommunicationManager implements
      * @param outWriter
      * @param response
      */
-    protected void openJsonMessage(PrintWriter outWriter, Response response) {
+    protected void openJsonMessage(PrintWriter outWriter,
+            WrappedResponse response) {
         // Sets the response type
         response.setContentType("application/json; charset=UTF-8");
         // some dirt to prevent cross site scripting
