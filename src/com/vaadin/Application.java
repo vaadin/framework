@@ -1523,4 +1523,14 @@ public abstract class Application implements URIHandler,
     public ApplicationResource getResource(String key) {
         return keyResourceMap.get(key);
     }
+
+    private static final ThreadLocal<Application> currentApplication = new ThreadLocal<Application>();
+
+    public static Application getCurrentApplication() {
+        return currentApplication.get();
+    }
+
+    public static void setCurrentApplication(Application application) {
+        currentApplication.set(application);
+    }
 }

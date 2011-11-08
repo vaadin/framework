@@ -398,6 +398,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 if (application == null) {
                     return;
                 }
+                Application.setCurrentApplication(application);
 
                 /*
                  * Get or create an application context and an application
@@ -523,10 +524,14 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                                 .endTransaction(application, request);
                     }
                 } finally {
-                    if (requestStarted) {
-                        ((PortletRequestListener) application).onRequestEnd(
-                                request, response);
+                    try {
+                        if (requestStarted) {
+                            ((PortletRequestListener) application)
+                                    .onRequestEnd(request, response);
 
+                        }
+                    } finally {
+                        Application.setCurrentApplication(null);
                     }
                 }
             }

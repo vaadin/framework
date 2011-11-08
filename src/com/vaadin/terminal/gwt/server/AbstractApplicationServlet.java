@@ -480,6 +480,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             if (application == null) {
                 return;
             }
+            Application.setCurrentApplication(application);
 
             /*
              * Get or create a WebApplicationContext and an ApplicationManager
@@ -572,9 +573,13 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 }
 
             } finally {
-                if (requestStarted) {
-                    ((HttpServletRequestListener) application).onRequestEnd(
-                            request, response);
+                try {
+                    if (requestStarted) {
+                        ((HttpServletRequestListener) application)
+                                .onRequestEnd(request, response);
+                    }
+                } finally {
+                    Application.setCurrentApplication(null);
                 }
 
             }
