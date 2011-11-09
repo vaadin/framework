@@ -53,7 +53,6 @@ import com.vaadin.terminal.StreamVariable.StreamingEndEvent;
 import com.vaadin.terminal.StreamVariable.StreamingErrorEvent;
 import com.vaadin.terminal.Terminal.ErrorEvent;
 import com.vaadin.terminal.Terminal.ErrorListener;
-import com.vaadin.terminal.URIHandler;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
@@ -1938,41 +1937,6 @@ public abstract class AbstractCommunicationManager implements
     private void paintablePainted(Paintable paintable) {
         dirtyPaintables.remove(paintable);
         paintable.requestRepaintRequests();
-    }
-
-    /**
-     * Implementation of {@link URIHandler.ErrorEvent} interface.
-     */
-    public class URIHandlerErrorImpl implements URIHandler.ErrorEvent,
-            Serializable {
-
-        private final URIHandler owner;
-
-        private final Throwable throwable;
-
-        /**
-         * 
-         * @param owner
-         * @param throwable
-         */
-        private URIHandlerErrorImpl(URIHandler owner, Throwable throwable) {
-            this.owner = owner;
-            this.throwable = throwable;
-        }
-
-        /**
-         * @see com.vaadin.terminal.Terminal.ErrorEvent#getThrowable()
-         */
-        public Throwable getThrowable() {
-            return throwable;
-        }
-
-        /**
-         * @see com.vaadin.terminal.URIHandler.ErrorEvent#getURIHandler()
-         */
-        public URIHandler getURIHandler() {
-            return owner;
-        }
     }
 
     /**

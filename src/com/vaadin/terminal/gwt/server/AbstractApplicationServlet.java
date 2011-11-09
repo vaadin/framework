@@ -40,7 +40,6 @@ import com.vaadin.Application.SystemMessages;
 import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.ThemeResource;
-import com.vaadin.terminal.URIHandler;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -2301,45 +2300,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             return owner;
         }
 
-    }
-
-    /**
-     * Implementation of URIHandler.ErrorEvent interface.
-     */
-    public class URIHandlerErrorImpl implements URIHandler.ErrorEvent,
-            Serializable {
-
-        private final URIHandler owner;
-
-        private final Throwable throwable;
-
-        /**
-         * 
-         * @param owner
-         * @param throwable
-         */
-        private URIHandlerErrorImpl(URIHandler owner, Throwable throwable) {
-            this.owner = owner;
-            this.throwable = throwable;
-        }
-
-        /**
-         * Gets the contained throwable.
-         * 
-         * @see com.vaadin.terminal.Terminal.ErrorEvent#getThrowable()
-         */
-        public Throwable getThrowable() {
-            return throwable;
-        }
-
-        /**
-         * Gets the source URIHandler.
-         * 
-         * @see com.vaadin.terminal.URIHandler.ErrorEvent#getURIHandler()
-         */
-        public URIHandler getURIHandler() {
-            return owner;
-        }
     }
 
     public class RequestError implements Terminal.ErrorEvent, Serializable {

@@ -23,13 +23,11 @@ import java.util.logging.Logger;
 
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.ApplicationResource;
-import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.RequestHandler;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.terminal.Terminal;
-import com.vaadin.terminal.URIHandler;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
@@ -93,8 +91,8 @@ import com.vaadin.ui.Window;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public abstract class Application implements URIHandler,
-        Terminal.ErrorListener, Serializable {
+public abstract class Application implements Terminal.ErrorListener,
+        Serializable {
 
     private final static Logger logger = Logger.getLogger(Application.class
             .getName());
@@ -405,50 +403,6 @@ public abstract class Application implements URIHandler,
         }
 
         return context.generateApplicationResourceURL(resource, key);
-    }
-
-    /**
-     * Application URI handling hub.
-     * 
-     * <p>
-     * This method gets called by terminal. It has lots of duties like to pass
-     * uri handler to proper uri handlers registered to windows etc.
-     * </p>
-     * 
-     * <p>
-     * In most situations developers should NOT OVERRIDE this method. Instead
-     * developers should implement and register uri handlers to windows.
-     * </p>
-     * 
-     * @deprecated this method is called be the terminal implementation only and
-     *             might be removed or moved in the future. Instead of
-     *             overriding this method, add your {@link URIHandler} to a top
-     *             level {@link Window} (eg.
-     *             getMainWindow().addUriHanler(handler) instead.
-     */
-    @Deprecated
-    public DownloadStream handleURI(URL context, String relativeUri) {
-
-        if (this.context.isApplicationResourceURL(context, relativeUri)) {
-
-            // Handles the resource request
-            final String key = this.context.getURLKey(context, relativeUri);
-            final ApplicationResource resource = keyResourceMap.get(key);
-            if (resource != null) {
-                DownloadStream stream = resource.getStream();
-                if (stream != null) {
-                    stream.setCacheTime(resource.getCacheTime());
-                    return stream;
-                } else {
-                    return null;
-                }
-            } else {
-                // Resource requests override uri handling
-                return null;
-            }
-        } else {
-            return null;
-        }
     }
 
     /**
@@ -787,8 +741,6 @@ public abstract class Application implements URIHandler,
         Object owner = null;
         if (event instanceof VariableOwner.ErrorEvent) {
             owner = ((VariableOwner.ErrorEvent) event).getVariableOwner();
-        } else if (event instanceof URIHandler.ErrorEvent) {
-            owner = ((URIHandler.ErrorEvent) event).getURIHandler();
         } else if (event instanceof ParameterHandler.ErrorEvent) {
             owner = ((ParameterHandler.ErrorEvent) event).getParameterHandler();
         } else if (event instanceof ChangeVariablesErrorEvent) {
