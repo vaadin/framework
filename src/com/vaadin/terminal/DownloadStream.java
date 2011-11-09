@@ -4,11 +4,17 @@
 
 package com.vaadin.terminal;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import com.vaadin.terminal.gwt.server.Constants;
 
 /**
  * Downloadable stream.
@@ -201,6 +207,94 @@ public class DownloadStream implements Serializable {
      */
     public void setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
+    }
+
+    public void writeTo(WrappedResponse response) throws IOException {
+        if (getParameter("Location") != null) {
+            response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
+            response.setHeader("Location", getParameter("Location"));
+            return;
+        }
+
+        // Download from given stream
+        final InputStream data = getStream();
+        if (data != null) {
+
+            OutputStream out = null;
+            try {
+                // Sets content type
+                response.setContentType(getContentType());
+
+                // Sets cache headers
+                response.setCacheTime(getCacheTime());
+
+                // Copy download stream parameters directly
+                // to HTTP headers.
+                final Iterator<String> i = getParameterNames();
+                if (i != null) {
+                    while (i.hasNext()) {
+                        final String param = i.next();
+                        response.setHeader(param, getParameter(param));
+                    }
+                }
+
+                // suggest local filename from DownloadStream if
+                // Content-Disposition
+                // not explicitly set
+                String contentDispositionValue = getParameter("Content-Disposition");
+                if (contentDispositionValue == null) {
+                    contentDispositionValue = "filename=\"" + getFileName()
+                            + "\"";
+                    response.setHeader("Content-Disposition",
+                            contentDispositionValue);
+                }
+
+                int bufferSize = getBufferSize();
+                if (bufferSize <= 0 || bufferSize > Constants.MAX_BUFFER_SIZE) {
+                    bufferSize = Constants.DEFAULT_BUFFER_SIZE;
+                }
+                final byte[] buffer = new byte[bufferSize];
+                int bytesRead = 0;
+
+                out = response.getOutputStream();
+
+                long totalWritten = 0;
+                while ((bytesRead = data.read(buffer)) > 0) {
+                    out.write(buffer, 0, bytesRead);
+
+                    totalWritten += bytesRead;
+                    if (totalWritten >= buffer.length) {
+                        // Avoid chunked encoding for small resources
+                        out.flush();
+                    }
+                }
+            } finally {
+                tryToCloseStream(out);
+                tryToCloseStream(data);
+            }
+        }
+    }
+
+    static void tryToCloseStream(OutputStream out) {
+        try {
+            // try to close output stream (e.g. file handle)
+            if (out != null) {
+                out.close();
+            }
+        } catch (IOException e1) {
+            // NOP
+        }
+    }
+
+    static void tryToCloseStream(InputStream in) {
+        try {
+            // try to close output stream (e.g. file handle)
+            if (in != null) {
+                in.close();
+            }
+        } catch (IOException e1) {
+            // NOP
+        }
     }
 
 }
