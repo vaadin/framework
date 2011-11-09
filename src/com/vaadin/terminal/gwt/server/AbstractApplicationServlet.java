@@ -37,7 +37,6 @@ import javax.servlet.http.HttpSession;
 
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
-import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.WrappedRequest;
@@ -2270,36 +2269,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
          * the whole creation logic should be here. MT 1101
          */
         return WebApplicationContext.getApplicationContext(session);
-    }
-
-    /**
-     * Implementation of ParameterHandler.ErrorEvent interface.
-     */
-    public class ParameterHandlerErrorImpl implements
-            ParameterHandler.ErrorEvent, Serializable {
-
-        private ParameterHandler owner;
-
-        private Throwable throwable;
-
-        /**
-         * Gets the contained throwable.
-         * 
-         * @see com.vaadin.terminal.Terminal.ErrorEvent#getThrowable()
-         */
-        public Throwable getThrowable() {
-            return throwable;
-        }
-
-        /**
-         * Gets the source ParameterHandler.
-         * 
-         * @see com.vaadin.terminal.ParameterHandler.ErrorEvent#getParameterHandler()
-         */
-        public ParameterHandler getParameterHandler() {
-            return owner;
-        }
-
     }
 
     public class RequestError implements Terminal.ErrorEvent, Serializable {

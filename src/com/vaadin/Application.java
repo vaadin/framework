@@ -24,7 +24,6 @@ import java.util.logging.Logger;
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.ErrorMessage;
-import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.RequestHandler;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.terminal.Terminal;
@@ -741,8 +740,6 @@ public abstract class Application implements Terminal.ErrorListener,
         Object owner = null;
         if (event instanceof VariableOwner.ErrorEvent) {
             owner = ((VariableOwner.ErrorEvent) event).getVariableOwner();
-        } else if (event instanceof ParameterHandler.ErrorEvent) {
-            owner = ((ParameterHandler.ErrorEvent) event).getParameterHandler();
         } else if (event instanceof ChangeVariablesErrorEvent) {
             owner = ((ChangeVariablesErrorEvent) event).getComponent();
         }
