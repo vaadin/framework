@@ -4,10 +4,10 @@
 package com.vaadin.ui;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -15,8 +15,9 @@ import java.util.Map;
 import com.vaadin.Application;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.DownloadStream;
-import com.vaadin.terminal.ParameterHandler;
-import com.vaadin.terminal.URIHandler;
+import com.vaadin.terminal.RequestHandler;
+import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 
 /**
@@ -75,11 +76,20 @@ public class LoginForm extends CustomComponent {
         }
     };
 
-    private ParameterHandler paramHandler = new ParameterHandler() {
+    private final RequestHandler requestHandler = new RequestHandler() {
+        public boolean handleRequest(Application application,
+                WrappedRequest request, WrappedResponse response)
+                throws IOException {
+            String requestPathInfo = request.getRequestPathInfo();
+            if ("/loginHandler".equals(requestPathInfo)) {
+                response.setCacheTime(-1);
+                response.setContentType("text/html; charset=utf-8");
+                response.getWriter()
+                        .write("<html><body>Login form handled."
+                                + "<script type='text/javascript'>top.vaadin.forceSync();"
+                                + "</script></body></html>");
 
-        public void handleParameters(Map<String, String[]> parameters) {
-            if (parameters.containsKey("username")) {
-                // getWindow().addURIHandler(uriHandler);
+                Map<String, String[]> parameters = request.getParameterMap();
 
                 HashMap<String, String> params = new HashMap<String, String>();
                 // expecting single params
@@ -91,32 +101,11 @@ public class LoginForm extends CustomComponent {
                 }
                 LoginEvent event = new LoginEvent(params);
                 fireEvent(event);
+                return true;
             }
+            return false;
         }
     };
-
-    private URIHandler uriHandler = new URIHandler() {
-        private final String responce = "<html><body>Login form handeled."
-                + "<script type='text/javascript'>top.vaadin.forceSync();"
-                + "</script></body></html>";
-
-        public DownloadStream handleURI(URL context, String relativeUri) {
-            if (relativeUri != null && relativeUri.contains("loginHandler")) {
-                // if (window != null) {
-                // window.removeURIHandler(this);
-                // }
-                DownloadStream downloadStream = new DownloadStream(
-                        new ByteArrayInputStream(responce.getBytes()),
-                        "text/html", "loginSuccesfull");
-                downloadStream.setCacheTime(-1);
-                return downloadStream;
-            } else {
-                return null;
-            }
-        }
-    };
-
-    // private Window window;
 
     public LoginForm() {
         iframe.setType(Embedded.TYPE_BROWSER);
@@ -134,9 +123,7 @@ public class LoginForm extends CustomComponent {
      * @return byte array containing login page html
      */
     protected byte[] getLoginHTML() {
-        String appUri = getApplication().getURL().toString()
-        // + getWindow().getName()
-                + "/";
+        String appUri = getApplication().getURL().toString();
 
         try {
             return ("<!DOCTYPE html PUBLIC \"-//W3C//DTD "
@@ -191,21 +178,15 @@ public class LoginForm extends CustomComponent {
     public void attach() {
         super.attach();
         getApplication().addResource(loginPage);
-        // getWindow().addParameterHandler(paramHandler);
+        getApplication().addRequestHandler(requestHandler);
         iframe.setSource(loginPage);
     }
 
     @Override
     public void detach() {
         getApplication().removeResource(loginPage);
-        // getWindow().removeParameterHandler(paramHandler);
-        // store window temporary to properly remove uri handler once
-        // response is handled. (May happen if login handler removes login
-        // form
-        // window = getRoot();
-        // if (window.getParent() != null) {
-        // window = window.getParent();
-        // }
+        getApplication().removeRequestHandler(requestHandler);
+
         super.detach();
     }
 

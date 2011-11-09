@@ -14,6 +14,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
+import com.vaadin.ui.LoginForm;
+import com.vaadin.ui.LoginForm.LoginEvent;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.RootLayout;
 import com.vaadin.ui.VerticalLayout;
@@ -74,6 +76,17 @@ public class RootTestApplication extends Application {
             };
             getApplication().addResource(resource);
             addComponent(new Link("Resource", resource));
+
+            LoginForm loginForm = new LoginForm();
+            loginForm.addListener(new LoginForm.LoginListener() {
+                public void onLogin(LoginEvent event) {
+                    System.out.println("User: "
+                            + event.getLoginParameter("username")
+                            + ", Password: "
+                            + event.getLoginParameter("password"));
+                }
+            });
+            addComponent(loginForm);
         }
     }
 
