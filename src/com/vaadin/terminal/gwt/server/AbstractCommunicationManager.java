@@ -471,17 +471,6 @@ public abstract class AbstractCommunicationManager implements
         }
     }
 
-    static void tryToCloseStream(InputStream in) {
-        try {
-            // try to close output stream (e.g. file handle)
-            if (in != null) {
-                in.close();
-            }
-        } catch (IOException e1) {
-            // NOP
-        }
-    }
-
     /**
      * Removes any possible path information from the filename and returns the
      * filename. Separators / and \\ are used.
