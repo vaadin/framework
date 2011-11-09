@@ -46,13 +46,7 @@ public class Buttons extends ComponentTestCase<Button> {
             l.setWidth("100%");
             l.setHeight("65px");
 
-            boolean ie6 = (getBrowser().isIE() && getBrowser()
-                    .getBrowserMajorVersion() == 6);
-            if (!ie6 || !nat) {
-                // Skip this NativeButton for IE6 as it can't decide how to
-                // render it
-                addTestComponent(l);
-            }
+            addTestComponent(l);
         }
 
     }

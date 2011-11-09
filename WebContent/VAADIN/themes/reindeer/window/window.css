@@ -9,23 +9,19 @@
 .v-op .v-window-wrap {
 	border-color: rgba(0,0,0,.2);
 }
-.v-ff2 .v-window-wrap,
-.v-ie6 .v-window-wrap {
+.v-ff2 .v-window-wrap {
 	border: none;
 }
-.v-ff2 .v-window-outerheader,
-.v-ie6 .v-window-outerheader {
+.v-ff2 .v-window-outerheader {
 	border: 1px solid #808386;
 	border-bottom: none;
 }
-.v-ff2 .v-window-contents,
-.v-ie6 .v-window-contents {
+.v-ff2 .v-window-contents {
 	border: 1px solid #808386;
 	border-top: none;
 	border-bottom: none;
 }
-.v-ff2 .v-window-footer,
-.v-ie6 .v-window-footer {
+.v-ff2 .v-window-footer {
 	border: 1px solid #808386;
 	border-top: none;
 }
@@ -49,9 +45,6 @@
 .v-window-error .v-window-header {
 	padding-left: 13px;
 	background: transparent url(../common/icons/error.png) no-repeat 0 50%;
-}
-.v-ie6 .v-window-error .v-window-header {
-	background-image: url(../common/icons/error-ie6.png);
 }
 .v-window-resizebox {
 	width: 15px;
@@ -136,12 +129,6 @@
 	background: #f7f7f8 repeat-x;
 	background-image: url(img/content-bg-light.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 }
-.v-ie6 .v-window-light .v-window-wrap2 {
-	background-image: none;
-}
-
-
-
 
 
 /**
@@ -202,12 +189,6 @@
 	background-image: url(img/black/resize.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 4px */
 	width: 14px;
 	height: 14px;
-}
-.v-ie6 .v-window-black .v-window-resizebox {
-	background-image: url(img/black/resize-ie6.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 4px */
-}
-.v-ie6 .v-window-black .v-window-contents {
-	background: transparent url(img/black/content-bg-ie6.png) repeat-x;
 }
 /* Must be last to make this image last in the sprites */
 .v-window-black .v-window-contents {

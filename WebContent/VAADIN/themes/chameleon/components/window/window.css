@@ -11,10 +11,6 @@
 	z-index: 2;
 	}
 
-.v-ie6 .v-window-closebox {
-	background-image: url(../../img/close-btn-ie6.png);
-	}
-
 .v-window-closebox:hover {
 	background-position: 0 -25px;
 	}
@@ -33,10 +29,6 @@
 	-moz-border-radius: 3px;
 	background-image: url(../../img/grad-light-top.png);
 	background-repeat: repeat-x;
-	}
-
-.v-ie6 .v-window-wrap {
-	background: transparent !important;
 	}
 
 .v-window-outerheader {

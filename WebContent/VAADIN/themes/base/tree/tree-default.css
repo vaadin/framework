@@ -37,27 +37,6 @@ div.v-tree-node-leaf {
 .v-tree-node-children {
 	padding-left: 1em;
 }
-/* ie6compatnode is hidden from non ie6 browsers, for ie6 
- * uses weird hack to sink all events properly 
- */
-.v-tree-node-ie6compatnode {
-	display: none;
-}
-/* IMPORTANT keep the offsetWidth of this element the same as the margin-left of v-tree-node-caption */
-.v-ie6 .v-tree-node-ie6compatnode {
-	display: inline;
-	float: left;
-	background: orange;
-	margin: 0;
-	width: 0.8em;
-	height: 0.8em;
-	padding: 0.1em;
-	filter: alpha(opacity=0);
-}
-.v-ie6 .v-tree-node,
-.v-ie6 .v-tree-node-children {
-	clear: left;
-}
 /***************************************
  * Drag'n'drop styles
  ***************************************/
@@ -105,9 +84,6 @@ div.v-tree-node-leaf {
 	border-radius: 4px;
 	margin: -2px 2px -2px -2px;
 	background-color: #bcdcff;
-}
-.v-ie6 .v-tree .v-tree-node-caption-drag-center div {
-	margin: -2px ;
 }
 .v-tree .v-tree-node-caption-drag-center div {
 	background-color: rgba(169,209,255,.6);

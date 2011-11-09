@@ -87,10 +87,6 @@ div.v-panel-content-light {
 	padding: .3em .6em;
 	}
 
-.v-ie6 .v-panel-bubble .v-panel-caption-bubble {
-	background-image: none;
-	}
-
 .v-panel-nocaption-bubble {
 	padding: 0;
 	margin: 0;

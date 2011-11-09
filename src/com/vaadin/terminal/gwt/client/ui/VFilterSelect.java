@@ -12,7 +12,6 @@ import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -726,12 +725,6 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
 
         public void onLoad(LoadEvent event) {
-            if (BrowserInfo.get().isIE6()) {
-                // Ensure PNG transparency works in IE6
-                Util.doIE6PngFix((Element) Element.as(event.getNativeEvent()
-                        .getEventTarget()));
-            }
-
             // Handle icon onload events to ensure shadow is resized
             // correctly
             delayedImageLoadExecutioner.trigger();
@@ -1315,13 +1308,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     private void updateSelectedIconPosition() {
         // Position icon vertically to middle
         int availableHeight = 0;
-        if (BrowserInfo.get().isIE6()) {
-            getElement().getStyle().setOverflow(Overflow.HIDDEN);
-            availableHeight = getOffsetHeight();
-            getElement().getStyle().setProperty("overflow", "");
-        } else {
-            availableHeight = getOffsetHeight();
-        }
+        availableHeight = getOffsetHeight();
 
         int iconHeight = Util.getRequiredHeight(selectedItemIcon);
         int marginTop = (availableHeight - iconHeight) / 2;
@@ -1664,16 +1651,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             this.width = width;
         }
 
-        if (BrowserInfo.get().isIE6()) {
-            // Required in IE when textfield is wider than this.width
-            getElement().getStyle().setOverflow(Overflow.HIDDEN);
-            horizPaddingAndBorder = Util.setWidthExcludingPaddingAndBorder(
-                    this, width, horizPaddingAndBorder);
-            getElement().getStyle().setProperty("overflow", "");
-        } else {
-            horizPaddingAndBorder = Util.setWidthExcludingPaddingAndBorder(
-                    this, width, horizPaddingAndBorder);
-        }
+        horizPaddingAndBorder = Util.setWidthExcludingPaddingAndBorder(this,
+                width, horizPaddingAndBorder);
 
         if (initDone) {
             updateRootWidth();
@@ -1763,16 +1742,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      * @return The width in pixels
      */
     private int getMainWidth() {
-        int componentWidth;
-        if (BrowserInfo.get().isIE6()) {
-            // Required in IE when textfield is wider than this.width
-            getElement().getStyle().setOverflow(Overflow.HIDDEN);
-            componentWidth = getOffsetWidth();
-            getElement().getStyle().setProperty("overflow", "");
-        } else {
-            componentWidth = getOffsetWidth();
-        }
-        return componentWidth;
+        return getOffsetWidth();
     }
 
     /**

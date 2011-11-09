@@ -1,13 +1,6 @@
 .v-tree-node {
 	background: transparent url(img/arrows.png) no-repeat 6px -10px;
 }
-.v-ie6 .v-tree-node {
-	background-image: url(img/arrows-ie6.png);
-	background-repeat: no-repeat;
-}
-.v-ie6 div.v-tree-node-leaf {
-	background: transparent;
-}
 .v-tree-node-expanded {
 	background-position: -7px 5px;
 }
@@ -32,12 +25,6 @@
 .v-tree-node-children {
 	padding-left: 16px;
 }
-/* IMPORTANT keep the offsetWidth (width + padding) of this element the same as the margin-left of v-tree-node-caption */
-.v-ie6 .v-tree-node-ie6compatnode {
-	width: 14px;
-	height: 10px;
-	padding: 1px;
-}
 .v-tree-node-caption.v-tree-node-focused span{
 	padding-left: 1px;
 	padding-top: 0px;
@@ -45,9 +32,6 @@
 }
 .v-tree-node-focused span{
 	border: 1px dotted black;	
-}
-.v-ie6 .v-tree-node-ie6compatnode.v-tree-node-focused{
-	padding-left: 0px;
 }
 /***************************************
  * Drag'n'drop styles

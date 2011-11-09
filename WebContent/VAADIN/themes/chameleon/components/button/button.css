@@ -22,10 +22,6 @@ div.v-button-down .v-button-wrap {
 	background-image: url(../../img/grad-dark-top2.png);
 	}
 
-.v-ie6 div.v-button-down .v-button-wrap {
-	background-image: none;
-	}
-
 .v-button {
 	overflow: hidden;
 	}
@@ -66,16 +62,6 @@ div.v-button-down .v-button-wrap {
 	overflow: hidden;
 	}
 	
-body.v-ie6 .v-button {
-	background-image: none;
-	}
-
-body.v-ie6 .v-button .v-button-wrap {
-	background-image: none;
-	display: inline;
-	zoom: 1;
-	}
-
 .v-button:focus {
 	outline: none;
 	}
@@ -263,17 +249,14 @@ body.v-ie .v-pressed.v-button-borderless .v-button-wrap {
 	margin-right: -0.5em;
 	}
 	
-.v-ie6 .v-button-icon-on-right,
 .v-ie7 .v-button-icon-on-right {
 	position: relative;
 	}
 
-.v-ie6 .v-button-icon-on-right .v-button-caption,
 .v-ie7 .v-button-icon-on-right .v-button-caption {
 	padding-right: 14px;
 	}
 
-.v-ie6 .v-button-icon-on-right .v-icon,
 .v-ie7 .v-button-icon-on-right .v-icon {
 	position: absolute;
 	right: 0;

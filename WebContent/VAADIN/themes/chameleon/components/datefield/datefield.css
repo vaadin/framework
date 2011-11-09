@@ -23,7 +23,6 @@
 	height: 1.2em;
 	}
 
-.v-ie6 .v-datefield-button,
 .v-ie7 .v-datefield-button {
 	height: 1.55em;
 	margin-top: 1px;
@@ -116,10 +115,6 @@ td.v-datefield-calendarpanel-month {
 	text-shadow: 0 1px 0 rgba(255,255,255,.7);
 	}
 
-.v-ie6 td.v-datefield-calendarpanel-month {
-	background-image: none;
-	}
-
 span.v-datefield-calendarpanel-month {
 	display: block;
 	text-align: center;
@@ -170,10 +165,6 @@ td.v-datefield-calendarpanel-nextyear {
 .v-datefield-popup .v-datefield-calendarpanel-month,
 .v-datefield-popup .v-datefield-calendarpanel-header button {
 	background-position: 0 0;
-	}
-
-.v-ie6 .v-datefield-calendarpanel-header button {
-	background-image: none;
 	}
 
 .v-datefield-calendarpanel-header button:active {
@@ -239,10 +230,6 @@ td.v-datefield-calendarpanel-nextyear {
 	margin-bottom: 2px;
 	}
 
-.v-ie6 .v-datefield-calendarpanel-weekdays strong {
-	background-image: none;
-	}
-
 .v-datefield-calendarpanel .v-first strong {
 	-webkit-border-bottom-left-radius: 3px;
 	-moz-border-radius-bottomleft: 3px;
@@ -291,10 +278,6 @@ td.v-datefield-calendarpanel-nextyear {
 	margin: 0 0 0 .2em;
 	font-weight: bold;
 	border: 1px solid #c9c9c9;
-	}
-
-.v-ie6 .v-datefield-calendarpanel-day-today {
-	background-image: none;
 	}
 
 .v-datefield-calendarpanel-day-selected,

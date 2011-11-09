@@ -123,8 +123,3 @@ input.v-textfield-search[type=text],
 .v-filterselect-search {
 	padding-left: 17px;
 	}
-
-.v-ie6 input.v-textfield-search {
-	/* Compensate for big style as well, since IE6 doesn't handle the selector */
-	padding-left: 21px;
-	}

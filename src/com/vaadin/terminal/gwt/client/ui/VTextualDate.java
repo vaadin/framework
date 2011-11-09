@@ -12,7 +12,6 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.TextBox;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -341,10 +340,6 @@ public class VTextualDate extends VDateField implements Paintable, Field,
     @Override
     public void setWidth(String newWidth) {
         if (!"".equals(newWidth) && (width == null || !newWidth.equals(width))) {
-            if (BrowserInfo.get().isIE6()) {
-                // in IE6 cols ~ min-width
-                DOM.setElementProperty(text.getElement(), "size", "1");
-            }
             needLayout = true;
             width = newWidth;
             super.setWidth(width);
@@ -354,10 +349,6 @@ public class VTextualDate extends VDateField implements Paintable, Field,
             }
         } else {
             if ("".equals(newWidth) && width != null && !"".equals(width)) {
-                if (BrowserInfo.get().isIE6()) {
-                    // revert IE6 hack
-                    DOM.setElementProperty(text.getElement(), "size", "");
-                }
                 super.setWidth("");
                 needLayout = true;
                 iLayout();

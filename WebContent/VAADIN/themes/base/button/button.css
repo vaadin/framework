@@ -29,10 +29,6 @@
 	cursor: default;
 }
 
-.v-ie6 .v-button {
-	display: inline;
-}
-
 .v-ie7 .v-button {
    display: inline;
 }
@@ -117,10 +113,7 @@
 	zoom: 1;
 	float: none;
 }
-/* Fixes streched buttons in IE6 and IE7*/
-.v-ie6 .v-nativebutton {
-	width: 1px;
-}
+/* Fixes stretched buttons in IE7*/
 .v-ie .v-nativebutton {
 	overflow: visible;
 	padding-left: 1em;
@@ -147,8 +140,7 @@
 	white-space: nowrap;
 }
 
-/* Fix for IE6/IE7 issue where checkbox moves 1 pixel down after selection (#4636) */
-.v-ie6 .v-checkbox,
+/* Fix for IE7 issue where checkbox moves 1 pixel down after selection (#4636) */
 .v-ie7 .v-checkbox {
 	vertical-align: baseline;
 }

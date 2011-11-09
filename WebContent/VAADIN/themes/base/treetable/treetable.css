@@ -13,17 +13,9 @@
     background: url(../treetable/img/arrow-right.png) right center no-repeat;
 }
 
-.v-ie6 .v-treetable-node-closed {
-	background-image: url(../treetable/img/arrow-right.gif); 
-} 
-
 .v-treetable-node-open {
     background: url(../treetable/img/arrow-down.png) right center no-repeat;
 }
-
-.v-ie6 .v-treetable-node-open {
-	background-image: url(../treetable/img/arrow-down.gif); 
-} 
 
 .v-treetable .v-checkbox {
 	display: inline-block;

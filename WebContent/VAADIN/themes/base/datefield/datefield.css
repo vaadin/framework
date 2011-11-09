@@ -61,11 +61,9 @@
 	outline: 1px dotted black;
 }
 
-.v-ie6 .v-datefield-calendarpanel-day,
 .v-ie7 .v-datefield-calendarpanel-day {
 	margin: 1px;
 }
-.v-ie6 .v-datefield-calendarpanel-day-focused,
 .v-ie7 .v-datefield-calendarpanel-day-focused {
 	border: 1px dotted black;
 	margin: 0px;
@@ -95,8 +93,6 @@
 }
 */
 /* IE somehow loses generic v-disabled alpha. See #1960 */
-.v-ie6 .v-disabled .v-datefield-button,
-.v-ie6 .v-disabled .v-datefield-textfield,
 .v-ie7 .v-disabled .v-datefield-button,
 .v-ie7 .v-disabled .v-datefield-textfield {
 	filter: alpha(opacity=30);

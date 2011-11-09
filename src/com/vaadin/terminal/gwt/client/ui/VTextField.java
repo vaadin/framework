@@ -468,10 +468,6 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             setText("");
             removeStyleDependentName(CLASSNAME_PROMPT);
             setPrompting(false);
-            if (BrowserInfo.get().isIE6()) {
-                // IE6 does not show the cursor when tabbing into the field
-                setCursorPos(0);
-            }
         }
         focusedTextField = this;
         if (client.hasEventListeners(this, EventId.FOCUS)) {

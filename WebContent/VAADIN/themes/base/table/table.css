@@ -181,7 +181,6 @@
 	position: relative; /* hide this from IE, it works without it */
 	cursor: pointer;
 }
-.v-ie6 .v-table-column-selector,
 .v-ie7 .v-table-column-selector {
 	position: static;
 }

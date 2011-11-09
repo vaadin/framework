@@ -21,7 +21,6 @@
 	letter-spacing: -0.03em;
 	color: #f14c1a;
 	text-shadow: 0 1px 0 #fff;
-	/* This element is 100% wide in IE6 */
 }
 .v-window-contents {
 	background: #fff;

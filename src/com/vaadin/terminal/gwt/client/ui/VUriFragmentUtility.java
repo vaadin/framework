@@ -10,7 +10,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
@@ -30,10 +29,6 @@ public class VUriFragmentUtility extends Widget implements Paintable,
 
     public VUriFragmentUtility() {
         setElement(Document.get().createDivElement());
-        if (BrowserInfo.get().isIE6()) {
-            getElement().getStyle().setProperty("overflow", "hidden");
-            getElement().getStyle().setProperty("height", "0");
-        }
     }
 
     @Override

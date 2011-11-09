@@ -10,19 +10,8 @@
 	background: #fff url(top-left.png) no-repeat;
 }
 
-.v-ie6 .v-window-wrap,
 .v-ie7 .v-window-wrap {
 	background-position: 1px 1px;
-}
-
-.v-ie6 .v-window-wrap {
-	border-bottom: none;
-}
-
-.v-ie6 .v-window-footer {
-	border-bottom: 1px solid #c8c9ca;
-	margin-top: -1px;
-	padding-top: 1px;
 }
 
 .v-window-outerheader {

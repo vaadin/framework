@@ -14,10 +14,6 @@
 	border-style: solid none;
 	}
 	
-.v-ie6 .v-accordion-item-caption {
-	background-image: none;
-	}
-
 div.v-accordion-item-caption,
 div.v-accordion-item-open .v-accordion-item-caption:active {
 	background-color: transparent;

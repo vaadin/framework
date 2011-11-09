@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
@@ -209,18 +208,6 @@ public class Util {
     }
 
     /**
-     * Detects if current browser is IE6.
-     * 
-     * @deprecated use BrowserInfo class instead
-     * 
-     * @return true if IE6
-     */
-    @Deprecated
-    public static boolean isIE6() {
-        return BrowserInfo.get().isIE6();
-    }
-
-    /**
      * @deprecated use BrowserInfo class instead
      * @return
      */
@@ -250,7 +237,7 @@ public class Util {
         DOM.setInnerText(escapeHtmlHelper, html);
         String escapedText = DOM.getInnerHTML(escapeHtmlHelper);
         if (BrowserInfo.get().isIE() && BrowserInfo.get().getIEVersion() < 9) {
-            // #7478 IE6-IE8 "incorrectly" returns "<br>" for newlines set using
+            // #7478 IE7-IE8 "incorrectly" returns "<br>" for newlines set using
             // setInnerText. The same for " " which is converted to "&nbsp;"
             escapedText = escapedText.replaceAll("<(BR|br)>", "\n");
             escapedText = escapedText.replaceAll("&nbsp;", " ");
@@ -275,48 +262,6 @@ public class Util {
     }
 
     /**
-     * Adds transparent PNG fix to image element; only use for IE6.
-     * 
-     * @param el
-     *            IMG element
-     */
-    public native static void addPngFix(Element el)
-    /*-{
-        el.attachEvent("onload", function() {
-            @com.vaadin.terminal.gwt.client.Util::doIE6PngFix(Lcom/google/gwt/user/client/Element;)(el);
-        },false);
-    }-*/;
-
-    private native static void doPngFix(Element el, String blankImageUrl)
-    /*-{
-        var src = el.src;
-        if (src.indexOf(".png") < 1) return;
-        var w = el.width || 16; 
-        var h = el.height || 16;
-        if(h==30 || w==28) {
-            setTimeout(function(){
-                el.style.height = el.height + "px";
-                el.style.width = el.width + "px";
-                el.src = blankImageUrl;
-            },10);
-        } else {
-            el.src = blankImageUrl;
-            el.style.height = h + "px";
-            el.style.width = w + "px";
-        }
-        el.style.padding = "0";
-        el.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+src+"', sizingMethod='crop')";  
-       }-*/;
-
-    public static void doIE6PngFix(Element el) {
-        String blankImageUrl = GWT.getModuleBaseURL() + "ie6pngfix/blank.gif";
-        String src = el.getAttribute("src");
-        if (src != null && !src.equals(blankImageUrl)) {
-            doPngFix(el, blankImageUrl);
-        }
-    }
-
-    /**
      * Clones given element as in JavaScript.
      * 
      * Deprecate this if there appears similar method into GWT someday.
@@ -334,11 +279,7 @@ public class Util {
     public static int measureHorizontalPaddingAndBorder(Element element,
             int paddingGuess) {
         String originalWidth = DOM.getStyleAttribute(element, "width");
-        String originalOverflow = "";
-        if (BrowserInfo.get().isIE6()) {
-            originalOverflow = DOM.getStyleAttribute(element, "overflow");
-            DOM.setStyleAttribute(element, "overflow", "hidden");
-        }
+
         int originalOffsetWidth = element.getOffsetWidth();
         int widthGuess = (originalOffsetWidth - paddingGuess);
         if (widthGuess < 1) {
@@ -348,9 +289,7 @@ public class Util {
         int padding = element.getOffsetWidth() - widthGuess;
 
         DOM.setStyleAttribute(element, "width", originalWidth);
-        if (BrowserInfo.get().isIE6()) {
-            DOM.setStyleAttribute(element, "overflow", originalOverflow);
-        }
+
         return padding;
     }
 
@@ -412,7 +351,6 @@ public class Util {
 
             int offsetWidth = element.getOffsetWidth();
             int offsetHeight = element.getOffsetHeight();
-            // if (BrowserInfo.get().isIE6()) {
             if (offsetHeight < 1) {
                 offsetHeight = 1;
             }
@@ -420,7 +358,6 @@ public class Util {
                 offsetWidth = 10;
             }
             element.getStyle().setPropertyPx("width", offsetWidth);
-            // }
 
             element.getStyle().setPropertyPx("height", offsetHeight);
 
@@ -428,9 +365,7 @@ public class Util {
                     - element.getPropertyInt("clientHeight");
 
             element.getStyle().setProperty("height", height);
-            // if (BrowserInfo.get().isIE6()) {
             element.getStyle().setProperty("width", width);
-            // }
         } else {
             borders = element.getOffsetHeight()
                     - element.getPropertyInt("clientHeight");

@@ -36,23 +36,6 @@
 	margin: -1px 0;
 }
 
-/* IE6 specific styles */
-
-.v-ie6 .v-splitpanel-hsplitter div,
-.v-ie6 .v-splitpanel-hsplitter-locked div {
-	height: 99%;
-}
-
-.v-ie6 .v-splitpanel-vsplitter,
-.v-ie6 .v-splitpanel-vsplitter-locked {
-	height: 8px;
-}
-
-.v-ie6 .v-splitpanel-vsplitter div,
-.v-ie6 .v-splitpanel-vsplitter-locked div {
-	margin: 0;
-}
-
 
 /* Rounded style */
 .v-splitpanel-hsplitter-rounded div,
@@ -71,10 +54,6 @@
 .v-splitpanel-vsplitter-rounded div,
 .v-splitpanel-vsplitter-rounded-locked div {
 	margin: -1px 4px;
-}
-.v-ie6 .v-splitpanel-hsplitter-rounded div,
-.v-ie6 .v-splitpanel-hsplitter-rounded-locked div {
-	height: 97%;
 }
 
 

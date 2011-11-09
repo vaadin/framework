@@ -36,9 +36,6 @@
 	margin-top: 5px;
 	min-height: 20px;
 }
-.v-ie6 .v-form-errormessage {
-	height: 20px
-}
 .v-form fieldset {
 	border: none;
 	border-top: 1px solid #babfc0;

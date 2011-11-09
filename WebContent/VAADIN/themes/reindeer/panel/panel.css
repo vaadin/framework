@@ -36,9 +36,6 @@
 	background: #fff;
 	min-height: 100%;
 }
-.v-ie6 .v-panel-content {
-	background: #fff;
-}
 .blue .v-panel-deco {
 	border-color: #92a3ac;
 	background: #adc2cd;
@@ -64,9 +61,6 @@
 	display: inline-block;
 	vertical-align: middle;
 }
-.v-ie6 .v-panel-caption .v-errorindicator {
-	background-image: url(../common/icons/error-ie6.png);
-}
 
 /* Light style */
 .v-panel-light .v-panel-caption-light,
@@ -77,9 +71,6 @@
 	border: none;
 }
 .v-panel-content-light > div {
-	background: transparent;
-}
-.v-ie6 .v-panel-content-light {
 	background: transparent;
 }
 .v-panel-light .v-panel-deco-light {
