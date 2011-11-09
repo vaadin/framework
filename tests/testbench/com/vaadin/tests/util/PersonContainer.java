@@ -13,8 +13,8 @@ public class PersonContainer extends BeanItemContainer<Person> implements
      * Natural property order for Person bean. Used in tables and forms.
      */
     public static final Object[] NATURAL_COL_ORDER = new Object[] {
-            "firstName", "lastName", "email", "phoneNumber", "streetAddress",
-            "postalCode", "city" };
+            "firstName", "lastName", "email", "phoneNumber",
+            "address.streetAddress", "address.postalCode", "address.city" };
 
     /**
      * "Human readable" captions for properties in same order as in
@@ -27,6 +27,9 @@ public class PersonContainer extends BeanItemContainer<Person> implements
     public PersonContainer() throws InstantiationException,
             IllegalAccessException {
         super(Person.class);
+        addNestedContainerProperty("address.streetAddress");
+        addNestedContainerProperty("address.postalCode");
+        addNestedContainerProperty("address.city");
     }
 
     public static PersonContainer createWithTestData() {
@@ -67,7 +70,7 @@ public class PersonContainer extends BeanItemContainer<Person> implements
                 Person p = new Person();
                 p.setFirstName(fnames[r.nextInt(fnames.length)]);
                 p.setLastName(lnames[r.nextInt(lnames.length)]);
-                p.setCity(cities[r.nextInt(cities.length)]);
+                p.getAddress().setCity(cities[r.nextInt(cities.length)]);
                 p.setEmail(p.getFirstName().toLowerCase() + "."
                         + p.getLastName().toLowerCase() + "@vaadin.com");
                 p.setPhoneNumber("+358 02 555 " + r.nextInt(10) + r.nextInt(10)
@@ -76,8 +79,9 @@ public class PersonContainer extends BeanItemContainer<Person> implements
                 if (n < 10000) {
                     n += 10000;
                 }
-                p.setPostalCode(n);
-                p.setStreetAddress(streets[r.nextInt(streets.length)]);
+                p.getAddress().setPostalCode(n);
+                p.getAddress().setStreetAddress(
+                        streets[r.nextInt(streets.length)]);
                 c.addItem(p);
             }
         } catch (InstantiationException e) {
