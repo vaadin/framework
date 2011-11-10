@@ -489,7 +489,7 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
         components[3] = getTestTabsheet();
         components[3].setIcon(new ThemeResource(LOCK_16_PNG));
 
-        AbstractField[] fields = new AbstractField[5];
+        AbstractField<?>[] fields = new AbstractField<?>[5];
         fields[0] = new TextField();
         fields[0].setRequired(true);
         fields[0].setValidationVisible(true);

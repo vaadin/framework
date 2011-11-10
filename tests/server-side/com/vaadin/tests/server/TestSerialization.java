@@ -92,7 +92,7 @@ public class TestSerialization extends TestCase {
 
     private static String toString(Object o) {
         if (o instanceof Property) {
-            return String.valueOf(((Property) o).getValue());
+            return String.valueOf(((Property<?>) o).getValue());
         } else {
             return String.valueOf(o);
         }

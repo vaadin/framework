@@ -77,7 +77,7 @@ public class EmptyFieldErrorIndicators extends TestBase {
         // hand-crafted form, not using form field factory
         final Form form = new Form() {
             @Override
-            public void addField(Object propertyId, Field field) {
+            public void addField(Object propertyId, Field<?> field) {
                 super.addField(propertyId, field);
                 field.setRequired(required);
                 field.setRequiredError("Missing required value!");

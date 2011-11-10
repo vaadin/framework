@@ -74,7 +74,7 @@ public class EditableModeChange extends TestBase {
 
     private class ItemFieldFactory extends DefaultFieldFactory {
         @Override
-        public Field createField(Container container, Object itemId,
+        public Field<?> createField(Container container, Object itemId,
                 Object propertyId, Component uiContext) {
             if (selectionEvent != null) {
                 if ((selectionEvent.getItemId().equals(itemId))

@@ -23,7 +23,7 @@ public class RichTextAreaWithKeyboardShortcuts extends TestBase {
             msg += " From : " + sender.getClass().getSimpleName() + " '"
                     + ((Component) sender).getCaption() + "'";
 
-            AbstractField f = (AbstractField) target;
+            AbstractField<String> f = (AbstractField<String>) target;
             msg += " Target:" + target.getClass().getSimpleName() + " '"
                     + f.getCaption() + "'";
 

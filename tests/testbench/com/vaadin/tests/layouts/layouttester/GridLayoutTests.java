@@ -510,17 +510,17 @@ public class GridLayoutTests extends AbstractLayoutTests {
         glo.replaceComponent(row2, row2 = new NativeSelect());
         glo.replaceComponent(row3, row3 = getTestTabsheet());
 
-        ((AbstractField) col1).setRequired(true);
-        ((AbstractField) col1).setValidationVisible(true);
-        ((AbstractField) col1).setRequiredError("required error");
+        ((AbstractField<?>) col1).setRequired(true);
+        ((AbstractField<?>) col1).setValidationVisible(true);
+        ((AbstractField<?>) col1).setRequiredError("required error");
 
-        ((AbstractField) row1).setRequired(true);
-        ((AbstractField) row1).setValidationVisible(true);
-        ((AbstractField) row1).setRequiredError("required error");
+        ((AbstractField<?>) row1).setRequired(true);
+        ((AbstractField<?>) row1).setValidationVisible(true);
+        ((AbstractField<?>) row1).setRequiredError("required error");
 
-        ((AbstractField) row2).setRequired(true);
-        ((AbstractField) row2).setValidationVisible(true);
-        ((AbstractField) row2).setRequiredError("required error");
+        ((AbstractField<?>) row2).setRequired(true);
+        ((AbstractField<?>) row2).setValidationVisible(true);
+        ((AbstractField<?>) row2).setRequiredError("required error");
         row2.setComponentError(new UserError("component error, user error"));
 
         row3.setComponentError(new UserError("component error, user error"));

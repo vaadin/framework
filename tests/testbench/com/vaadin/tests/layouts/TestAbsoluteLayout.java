@@ -33,7 +33,7 @@ public class TestAbsoluteLayout extends TestBase {
     private static class MFieldFactory extends DefaultFieldFactory {
 
         @Override
-        public Field createField(Item item, Object propertyId,
+        public Field<?> createField(Item item, Object propertyId,
                 Component uiContext) {
             if (propertyId.equals("CSSString")) {
                 TextArea f = new TextArea();
@@ -155,7 +155,8 @@ public class TestAbsoluteLayout extends TestBase {
                                 + getDebugId();
 
                         if (next instanceof Property) {
-                            caption += " value:" + ((Property) next).getValue();
+                            caption += " value:"
+                                    + ((Property<?>) next).getValue();
                         }
 
                         item.getItemProperty("caption").setValue(caption);

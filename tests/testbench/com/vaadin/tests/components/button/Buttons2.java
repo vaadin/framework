@@ -38,6 +38,7 @@ public class Buttons2<T extends Button> extends AbstractFieldTest<T> implements
         }
     };
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Class<T> getTestClass() {
         return (Class<T>) Button.class;

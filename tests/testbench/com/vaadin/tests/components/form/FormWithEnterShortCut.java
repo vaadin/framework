@@ -5,7 +5,6 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.TextField;
 
@@ -16,7 +15,7 @@ public class FormWithEnterShortCut extends TestBase {
     protected void setup() {
 
         final Form form = new Form();
-        final Field tf = new TextField("Search");
+        final TextField tf = new TextField("Search");
         form.addField("searchfield", tf);
 
         Button button = new Button("Go");

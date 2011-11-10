@@ -184,7 +184,7 @@ public class Ticket1878 extends Application {
         form.setItemDataSource(item);
         for (Iterator<?> i = item.getItemPropertyIds().iterator(); i.hasNext();) {
             Object property = i.next();
-            Field f = form.getField(property);
+            Field<?> f = form.getField(property);
 
             f.setRequired(r.nextBoolean());
             if (r.nextBoolean()) {

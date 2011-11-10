@@ -111,9 +111,9 @@ public class Ticket677 extends Application {
         form.setFormFieldFactory(new DefaultFieldFactory() {
 
             @Override
-            public Field createField(Item item, Object propertyId,
+            public Field<?> createField(Item item, Object propertyId,
                     Component uiContext) {
-                Field f = super.createField(item, propertyId, uiContext);
+                Field<?> f = super.createField(item, propertyId, uiContext);
                 f.setEnabled(!"disabled".equals(propertyId));
                 return f;
             }
@@ -127,19 +127,19 @@ public class Ticket677 extends Application {
         table.addContainerProperty("Text", String.class, null);
         for (int i = 0; i < 150; i++) {
             Item item = table.addItem("Item" + i);
-            Property p = item.getItemProperty("Text");
+            Property<?> p = item.getItemProperty("Text");
             p.setValue(i % 5 == 0 ? "enabled" : "disabled");
         }
 
         table.setTableFieldFactory(new DefaultFieldFactory() {
 
             @Override
-            public Field createField(Container container, Object itemId,
+            public Field<?> createField(Container container, Object itemId,
                     Object propertyId, Component uiContext) {
-                Field f = super.createField(container, itemId, propertyId,
+                Field<?> f = super.createField(container, itemId, propertyId,
                         uiContext);
                 Item item = container.getItem(itemId);
-                Property p = item.getItemProperty(propertyId);
+                Property<?> p = item.getItemProperty(propertyId);
                 if ("disabled".equals(p.getValue())) {
                     f.setEnabled(false);
                 }

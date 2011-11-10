@@ -145,7 +145,7 @@ public class Ticket2998 extends Application {
         }
 
         @Override
-        public Field createField(Container container, Object itemId,
+        public Field<?> createField(Container container, Object itemId,
                 Object propertyId, Component uiContext) {
 
             /*
@@ -162,7 +162,7 @@ public class Ticket2998 extends Application {
                 return getSecondaryTypesList(itemId);
             }
 
-            final Field f = super.createField(container, itemId, propertyId,
+            final Field<?> f = super.createField(container, itemId, propertyId,
                     uiContext);
             if (f != null) {
                 if (f instanceof TextField) {
@@ -202,7 +202,7 @@ public class Ticket2998 extends Application {
 
         private Map<Object, ListSelect> workoutIdToList = new HashMap<Object, ListSelect>();
 
-        private Field getSecondaryTypesList(Object itemId) {
+        private Field<?> getSecondaryTypesList(Object itemId) {
             ListSelect list = workoutIdToList.get(itemId);
             if (list == null) {
                 list = new ListSelect();
@@ -221,7 +221,7 @@ public class Ticket2998 extends Application {
 
         private Map<Object, ComboBox> workoutIdToCombobox = new HashMap<Object, ComboBox>();
 
-        private Field getTrainingTypeComboboxFor(Object itemId) {
+        private Field<?> getTrainingTypeComboboxFor(Object itemId) {
             ComboBox cb = workoutIdToCombobox.get(itemId);
             if (cb == null) {
                 final ComboBox cb2 = new ComboBox();

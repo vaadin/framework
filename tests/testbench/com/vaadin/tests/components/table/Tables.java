@@ -34,9 +34,10 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     private static final String CATEGORY_FOOTER = "Footer";
     private static final String CATEGORY_COLUMNS = "Columns";
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Class<T> getTestClass() {
-        return (Class) Table.class;
+        return (Class<T>) Table.class;
     }
 
     /* COMMANDS */

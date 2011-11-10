@@ -14,7 +14,7 @@ import com.vaadin.data.util.filter.Compare.GreaterOrEqual;
 import com.vaadin.data.util.filter.Compare.Less;
 import com.vaadin.data.util.filter.Compare.LessOrEqual;
 
-public class CompareFilterTest extends AbstractFilterTest {
+public class CompareFilterTest extends AbstractFilterTest<Compare> {
 
     protected Item itemNull;
     protected Item itemEmpty;

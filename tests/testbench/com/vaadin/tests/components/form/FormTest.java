@@ -148,10 +148,10 @@ public class FormTest extends AbstractFieldTest<Form> {
         options.put("Default", DefaultFieldFactory.get());
         options.put("Custom FieldFactory", new FormFieldFactory() {
 
-            public Field createField(Item item, Object propertyId,
+            public Field<?> createField(Item item, Object propertyId,
                     Component uiContext) {
                 Class<?> type = item.getItemProperty(propertyId).getType();
-                Field c = null;
+                Field<?> c = null;
                 if (Number.class.isAssignableFrom(type)) {
                     TextField tf = new TextField();
                     tf.setCaption(DefaultFieldFactory

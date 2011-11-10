@@ -2,6 +2,8 @@ package com.vaadin.tests.server.component.textfield;
 
 import java.util.Collections;
 
+import junit.framework.TestCase;
+
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -11,8 +13,6 @@ import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.Paintable.RepaintRequestEvent;
 import com.vaadin.ui.TextField;
 
-import junit.framework.TestCase;
-
 public class TextFieldWithPropertyFormatter extends TestCase {
 
     private static final String INPUT_VALUE = "foo";
@@ -20,7 +20,7 @@ public class TextFieldWithPropertyFormatter extends TestCase {
     private static final String FORMATTED_VALUE = "FOOBAR";
     private static final String ORIGINAL_VALUE = "Original";
     private TextField field;
-    private PropertyFormatter formatter;
+    private PropertyFormatter<String> formatter;
     private ObjectProperty<String> property;
     private ValueChangeListener listener;
     private int listenerCalled;
@@ -32,16 +32,16 @@ public class TextFieldWithPropertyFormatter extends TestCase {
 
         field = new TextField();
 
-        formatter = new PropertyFormatter() {
+        formatter = new PropertyFormatter<String>() {
 
             @Override
-            public Object parse(String formattedValue) throws Exception {
+            public String parse(String formattedValue) throws Exception {
                 assertEquals(INPUT_VALUE, formattedValue);
                 return PARSED_VALUE;
             }
 
             @Override
-            public String format(Object value) {
+            public String format(String value) {
                 return FORMATTED_VALUE;
             }
         };
@@ -59,7 +59,7 @@ public class TextFieldWithPropertyFormatter extends TestCase {
                 assertEquals(FORMATTED_VALUE, event.getProperty().getValue());
             }
         };
-        
+
         field.addListener(listener);
         field.addListener(new Paintable.RepaintRequestListener() {
             public void repaintRequested(RepaintRequestEvent event) {

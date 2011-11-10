@@ -6,10 +6,8 @@ import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertysetItem;
-import com.vaadin.data.util.filter.And;
-import com.vaadin.data.util.filter.IsNull;
 
-public class IsNullFilterTest extends AbstractFilterTest {
+public class IsNullFilterTest extends AbstractFilterTest<IsNull> {
 
     public void testIsNull() {
         Item item1 = new PropertysetItem();
