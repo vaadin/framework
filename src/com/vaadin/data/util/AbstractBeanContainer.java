@@ -767,12 +767,46 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @see NestedMethodProperty
      * 
      * @param propertyId
-     * @param propertyType
      * @return true if the property was added
      */
     public boolean addNestedContainerProperty(String propertyId) {
         return addContainerProperty(propertyId, new NestedPropertyDescriptor(
                 propertyId, type));
+    }
+
+    /**
+     * Adds a nested container properties for all sub-properties of a named
+     * property to the container. The named property itself is removed from the
+     * model as its subproperties are added.
+     * 
+     * All intermediate getters must exist and must return non-null values when
+     * the property value is accessed.
+     * 
+     * @see NestedMethodProperty
+     * @see #addNestedContainerProperty(String)
+     * 
+     * @param propertyId
+     */
+    @SuppressWarnings("unchecked")
+    public void addNestedContainerBean(String propertyId) {
+        Class<?> propertyType = getType(propertyId);
+        LinkedHashMap<String, VaadinPropertyDescriptor<Object>> pds = BeanItem
+                .getPropertyDescriptors((Class<Object>) propertyType);
+        for (String subPropertyId : pds.keySet()) {
+            String qualifiedPropertyId = propertyId + "." + subPropertyId;
+            NestedPropertyDescriptor<BEANTYPE> pd = new NestedPropertyDescriptor<BEANTYPE>(
+                    qualifiedPropertyId, (Class<BEANTYPE>) type);
+            model.put(qualifiedPropertyId, pd);
+            model.remove(propertyId);
+            for (BeanItem<BEANTYPE> item : itemIdToItem.values()) {
+                item.addItemProperty(propertyId,
+                        pd.createProperty(item.getBean()));
+                item.removeItemProperty(propertyId);
+            }
+        }
+
+        // Sends a change event
+        fireContainerPropertySetChange();
     }
 
     @Override
