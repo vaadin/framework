@@ -37,5 +37,5 @@ public interface FormFieldFactory extends Serializable {
      *            creating it.
      * @return Field the field suitable for editing the specified data.
      */
-    Field createField(Item item, Object propertyId, Component uiContext);
+    Field<?> createField(Item item, Object propertyId, Component uiContext);
 }

@@ -40,7 +40,7 @@ public class BaseFieldFactory implements FieldFactory {
      * 
      * @see com.vaadin.ui.FieldFactory#createField(Class, Component)
      */
-    public Field createField(Class<?> type, Component uiContext) {
+    public Field<?> createField(Class<?> type, Component uiContext) {
         return DefaultFieldFactory.createFieldByPropertyType(type);
     }
 
@@ -49,7 +49,7 @@ public class BaseFieldFactory implements FieldFactory {
      * 
      * @see com.vaadin.ui.FieldFactory#createField(Property, Component)
      */
-    public Field createField(Property property, Component uiContext) {
+    public Field<?> createField(Property property, Component uiContext) {
         if (property != null) {
             return createField(property.getType(), uiContext);
         } else {
@@ -62,9 +62,10 @@ public class BaseFieldFactory implements FieldFactory {
      * 
      * @see com.vaadin.ui.FieldFactory#createField(Item, Object, Component)
      */
-    public Field createField(Item item, Object propertyId, Component uiContext) {
+    public Field<?> createField(Item item, Object propertyId,
+            Component uiContext) {
         if (item != null && propertyId != null) {
-            final Field f = createField(item.getItemProperty(propertyId),
+            final Field<?> f = createField(item.getItemProperty(propertyId),
                     uiContext);
             if (f instanceof AbstractComponent) {
                 String name = DefaultFieldFactory
@@ -81,7 +82,7 @@ public class BaseFieldFactory implements FieldFactory {
      * @see com.vaadin.ui.FieldFactory#createField(com.vaadin.data.Container,
      *      java.lang.Object, java.lang.Object, com.vaadin.ui.Component)
      */
-    public Field createField(Container container, Object itemId,
+    public Field<?> createField(Container container, Object itemId,
             Object propertyId, Component uiContext) {
         return createField(container.getContainerProperty(itemId, propertyId),
                 uiContext);
