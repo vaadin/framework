@@ -516,7 +516,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @param field
      *            the field which should be added to the form.
      */
-    public void addField(Object propertyId, Field field) {
+    public void addField(Object propertyId, Field<?> field) {
         registerField(propertyId, field);
         attachField(propertyId, field);
         requestRepaint();
@@ -620,7 +620,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @param propertyId
      *            the id of the property.
      */
-    public Field getField(Object propertyId) {
+    public Field<?> getField(Object propertyId) {
         return fields.get(propertyId);
     }
 
