@@ -322,40 +322,6 @@ public class VPanel extends SimplePanel implements Container,
     }
 
     public void runHacks(boolean runGeckoFix) {
-        if (BrowserInfo.get().isIE6() && width != null && !width.equals("")) {
-            /*
-             * IE6 requires overflow-hidden elements to have a width specified
-             * so we calculate the width of the content and caption nodes when
-             * no width has been specified.
-             */
-            /*
-             * Fixes #1923 VPanel: Horizontal scrollbar does not appear in IE6
-             * with wide content
-             */
-
-            /*
-             * Caption must be shrunk for parent measurements to return correct
-             * result in IE6
-             */
-            DOM.setStyleAttribute(captionNode, "width", "1px");
-
-            int parentPadding = Util.measureHorizontalPaddingAndBorder(
-                    getElement(), 0);
-
-            int parentWidthExcludingPadding = getElement().getOffsetWidth()
-                    - parentPadding;
-
-            Util.setWidthExcludingPaddingAndBorder(captionNode,
-                    parentWidthExcludingPadding - getCaptionMarginLeft(), 26,
-                    false);
-
-            int contentMarginLeft = getContentMarginLeft();
-
-            Util.setWidthExcludingPaddingAndBorder(contentNode,
-                    parentWidthExcludingPadding - contentMarginLeft, 2, false);
-
-        }
-
         if ((BrowserInfo.get().isIE() || BrowserInfo.get().isFF2())
                 && (width == null || width.equals(""))) {
             /*

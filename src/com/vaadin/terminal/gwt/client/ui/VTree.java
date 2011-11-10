@@ -279,13 +279,8 @@ public class VTree extends FocusElementPanel implements Paintable,
                 continue;
             }
             childTree = new TreeNode();
-            if (childTree.ie6compatnode != null) {
-                body.add(childTree);
-            }
             childTree.updateFromUIDL(childUidl, client);
-            if (childTree.ie6compatnode == null) {
-                body.add(childTree);
-            }
+            body.add(childTree);
             childTree.addStyleDependentName("root");
             childTree.childNodeContainer.addStyleDependentName("root");
         }
@@ -582,18 +577,11 @@ public class VTree extends FocusElementPanel implements Paintable,
 
         private Icon icon;
 
-        private Element ie6compatnode;
-
         private Event mouseDownEvent;
 
         private int cachedHeight = -1;
 
         private boolean focused = false;
-
-        /**
-         * Track onload events as IE6 sends two
-         */
-        private boolean onloadHandled = false;
 
         public TreeNode() {
             constructDom();
@@ -692,11 +680,11 @@ public class VTree extends FocusElementPanel implements Paintable,
             // always when clicking an item, focus it
             setFocusedNode(this, false);
 
-            if (!isIE6OrOpera()) {
+            if (!BrowserInfo.get().isOpera()) {
                 /*
                  * Ensure that the tree's focus element also gains focus
                  * (TreeNodes focus is faked using FocusElementPanel in browsers
-                 * other than IE6 and Opera).
+                 * other than Opera).
                  */
                 focus();
             }
@@ -764,14 +752,7 @@ public class VTree extends FocusElementPanel implements Paintable,
             final Element target = DOM.eventGetTarget(event);
 
             if (type == Event.ONLOAD && target == icon.getElement()) {
-                if (onloadHandled) {
-                    return;
-                }
-                if (BrowserInfo.get().isIE6()) {
-                    fixWidth();
-                }
                 iconLoaded.trigger();
-                onloadHandled = true;
             }
 
             if (disabled) {
@@ -792,7 +773,7 @@ public class VTree extends FocusElementPanel implements Paintable,
                 fireClick(event);
             }
             if (type == Event.ONCLICK) {
-                if (getElement() == target || ie6compatnode == target) {
+                if (getElement() == target) {
                     // state change
                     toggleState();
                 } else if (!readonly && inCaption) {
@@ -878,7 +859,7 @@ public class VTree extends FocusElementPanel implements Paintable,
              * previously modified field may contain dirty variables.
              */
             if (!treeHasFocus) {
-                if (isIE6OrOpera()) {
+                if (BrowserInfo.get().isOpera()) {
                     if (focusedNode == null) {
                         getNodeByKey(key).setFocused(true);
                     } else {
@@ -939,15 +920,6 @@ public class VTree extends FocusElementPanel implements Paintable,
 
         protected void constructDom() {
             addStyleName(CLASSNAME);
-            // workaround for a very weird IE6 issue #1245
-            if (BrowserInfo.get().isIE6()) {
-                ie6compatnode = DOM.createDiv();
-                setStyleName(ie6compatnode, CLASSNAME + "-ie6compatnode");
-                DOM.setInnerText(ie6compatnode, " ");
-                DOM.appendChild(getElement(), ie6compatnode);
-
-                DOM.sinkEvents(ie6compatnode, Event.ONCLICK);
-            }
 
             nodeCaptionDiv = DOM.createDiv();
             DOM.setElementProperty(nodeCaptionDiv, "className", CLASSNAME
@@ -959,7 +931,7 @@ public class VTree extends FocusElementPanel implements Paintable,
             DOM.appendChild(nodeCaptionDiv, wrapper);
             DOM.appendChild(wrapper, nodeCaptionSpan);
 
-            if (isIE6OrOpera()) {
+            if (BrowserInfo.get().isOpera()) {
                 /*
                  * Focus the caption div of the node to get keyboard navigation
                  * to work without scrolling up or down when focusing a node.
@@ -1023,7 +995,6 @@ public class VTree extends FocusElementPanel implements Paintable,
 
             if (uidl.hasAttribute("icon")) {
                 if (icon == null) {
-                    onloadHandled = false;
                     icon = new Icon(client);
                     DOM.insertBefore(DOM.getFirstChild(nodeCaptionDiv),
                             icon.getElement(), nodeCaptionSpan);
@@ -1035,10 +1006,6 @@ public class VTree extends FocusElementPanel implements Paintable,
                             icon.getElement());
                     icon = null;
                 }
-            }
-
-            if (BrowserInfo.get().isIE6() && isAttached()) {
-                fixWidth();
             }
         }
 
@@ -1103,13 +1070,8 @@ public class VTree extends FocusElementPanel implements Paintable,
                     continue;
                 }
                 final TreeNode childTree = new TreeNode();
-                if (ie6compatnode != null) {
-                    childNodeContainer.add(childTree);
-                }
                 childTree.updateFromUIDL(childUidl, client);
-                if (ie6compatnode == null) {
-                    childNodeContainer.add(childTree);
-                }
+                childNodeContainer.add(childTree);
                 if (!i.hasNext()) {
                     childTree
                             .addStyleDependentName(childTree.isLeaf() ? "leaf-last"
@@ -1220,32 +1182,6 @@ public class VTree extends FocusElementPanel implements Paintable,
         }
 
         /*
-         * We need to fix the width of TreeNodes so that the float in
-         * ie6compatNode does not wrap (see ticket #1245)
-         */
-        private void fixWidth() {
-            nodeCaptionDiv.getStyle().setProperty("styleFloat", "left");
-            nodeCaptionDiv.getStyle().setProperty("display", "inline");
-            nodeCaptionDiv.getStyle().setProperty("marginLeft", "0");
-            final int captionWidth = ie6compatnode.getOffsetWidth()
-                    + nodeCaptionDiv.getOffsetWidth();
-            setWidth(captionWidth + "px");
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see com.google.gwt.user.client.ui.Widget#onAttach()
-         */
-        @Override
-        public void onAttach() {
-            super.onAttach();
-            if (ie6compatnode != null) {
-                fixWidth();
-            }
-        }
-
-        /*
          * (non-Javadoc)
          * 
          * @see com.google.gwt.user.client.ui.Widget#onDetach()
@@ -1275,19 +1211,14 @@ public class VTree extends FocusElementPanel implements Paintable,
         public void setFocused(boolean focused) {
             if (!this.focused && focused) {
                 nodeCaptionDiv.addClassName(CLASSNAME_FOCUSED);
-                if (BrowserInfo.get().isIE6()) {
-                    ie6compatnode.addClassName(CLASSNAME_FOCUSED);
-                }
+
                 this.focused = focused;
-                if (isIE6OrOpera()) {
+                if (BrowserInfo.get().isOpera()) {
                     nodeCaptionDiv.focus();
                 }
                 treeHasFocus = true;
             } else if (this.focused && !focused) {
                 nodeCaptionDiv.removeClassName(CLASSNAME_FOCUSED);
-                if (BrowserInfo.get().isIE6()) {
-                    ie6compatnode.removeClassName(CLASSNAME_FOCUSED);
-                }
                 this.focused = focused;
                 treeHasFocus = false;
             }
@@ -2174,7 +2105,7 @@ public class VTree extends FocusElementPanel implements Paintable,
      */
     public Element getSubPartElement(String subPart) {
         if ("fe".equals(subPart)) {
-            if (isIE6OrOpera() && focusedNode != null) {
+            if (BrowserInfo.get().isOpera() && focusedNode != null) {
                 return focusedNode.getElement();
             }
             return getFocusElement();
@@ -2206,11 +2137,7 @@ public class VTree extends FocusElementPanel implements Paintable,
                 }
 
                 if (expandCollapse) {
-                    if (treeNode.ie6compatnode != null) {
-                        return treeNode.ie6compatnode;
-                    } else {
-                        return treeNode.getElement();
-                    }
+                    return treeNode.getElement();
                 } else {
                     return treeNode.nodeCaptionSpan;
                 }
@@ -2254,8 +2181,7 @@ public class VTree extends FocusElementPanel implements Paintable,
             return null;
         }
 
-        if (subElement == treeNode.getElement()
-                || subElement == treeNode.ie6compatnode) {
+        if (subElement == treeNode.getElement()) {
             // Targets expand/collapse arrow
             isExpandCollapse = true;
         }
@@ -2315,9 +2241,5 @@ public class VTree extends FocusElementPanel implements Paintable,
             event.stopPropagation();
             event.preventDefault();
         }
-    }
-
-    private boolean isIE6OrOpera() {
-        return BrowserInfo.get().isIE6() || BrowserInfo.get().isOpera();
     }
 }

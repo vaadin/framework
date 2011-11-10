@@ -44,9 +44,6 @@
 	height: 16px;
 	background: transparent url(../common/icons/error.png) no-repeat 50%;
 }
-.v-ie6 .v-errorindicator {
-	background-image: url(../common/icons/error-ie6.png);
-}
 .v-tooltip {
 	background-color: #fffcdd;
 	border: 1px solid #b8b295;

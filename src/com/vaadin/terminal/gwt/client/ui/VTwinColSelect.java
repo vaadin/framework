@@ -27,7 +27,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 
@@ -385,16 +384,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     private void setInternalHeights() {
         int captionHeight = 0;
-        int totalHeight;
-        if (BrowserInfo.get().isIE6()) {
-            String o = getElement().getStyle().getOverflow();
-
-            getElement().getStyle().setOverflow(Overflow.HIDDEN);
-            totalHeight = getOffsetHeight();
-            getElement().getStyle().setProperty("overflow", o);
-        } else {
-            totalHeight = getOffsetHeight();
-        }
+        int totalHeight = getOffsetHeight();
 
         if (optionsCaption != null) {
             captionHeight = Util.getRequiredHeight(optionsCaption);
@@ -423,11 +413,6 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         DOM.setStyleAttribute(getElement(), "position", "relative");
         int bordersAndPaddings = Util.measureHorizontalPaddingAndBorder(
                 buttons.getElement(), 0);
-
-        if (BrowserInfo.get().isIE6()) {
-            // IE6 sets a border on selects by default..
-            bordersAndPaddings += 4;
-        }
 
         int buttonWidth = Util.getRequiredWidth(buttons);
         int totalWidth = getOffsetWidth();

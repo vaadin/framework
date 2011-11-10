@@ -30,12 +30,6 @@
 .v-tree-node-children {
 	padding-left: 16px;
 }
-/* IMPORTANT keep the offsetWidth (width + padding) of this element the same as the margin-left of v-tree-node-caption */
-.v-ie6 .v-tree-node-ie6compatnode {
-	width: 14px;
-	height: 10px;
-	padding: 1px;
-}
 .v-tree{
 	outline:none;	
 }
@@ -46,9 +40,6 @@
 }
 .v-tree-node-focused span{
 	border: 1px dotted black;	
-}
-.v-ie6 .v-tree-node-ie6compatnode.v-tree-node-focused{
-	padding-left: 0px;
 }
 /***************************************
  * Drag'n'drop styles

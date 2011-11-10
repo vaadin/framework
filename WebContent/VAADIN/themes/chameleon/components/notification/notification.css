@@ -47,10 +47,6 @@ div.v-Notification-tray {
 	text-shadow: 0 1px 1px rgba(0,0,0,.5);
 	}
 
-.v-ie6 .v-Notification-tray {
-	background-image: none;
-	}
-
 .v-Notification-tray h1 {
 	font-size: 14px;
 	line-height: 18px;

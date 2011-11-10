@@ -63,15 +63,3 @@
 	background: #FFE0E0;
 }
 */
-
-/* IE specific styles */
-.v-ie6 .v-slider,
-.v-ie6 .v-slider-vertical {
-	margin: 0;
-}
-.v-ie6 .v-slider .v-slider-handle {
-	margin: -1px 0;
-}
-.v-ie6 .v-slider-vertical .v-slider-handle {
-	margin: 0 -1px;
-}

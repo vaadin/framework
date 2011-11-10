@@ -22,7 +22,6 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -30,7 +29,6 @@ import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VAbsoluteLayout extends ComplexPanel implements Container {
 
@@ -211,9 +209,6 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
         canvas.getStyle().setProperty("width", width);
 
         if (!rendering) {
-            if (BrowserInfo.get().isIE6()) {
-                relayoutWrappersForIe6();
-            }
             relayoutRelativeChildren();
         }
     }
@@ -236,18 +231,7 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
         canvas.getStyle().setProperty("height", height);
 
         if (!rendering) {
-            if (BrowserInfo.get().isIE6()) {
-                relayoutWrappersForIe6();
-            }
             relayoutRelativeChildren();
-        }
-    }
-
-    private void relayoutWrappersForIe6() {
-        for (Widget wrapper : getChildren()) {
-            if (wrapper instanceof AbsoluteWrapper) {
-                ((AbsoluteWrapper) wrapper).ie6Layout();
-            }
         }
     }
 
@@ -353,9 +337,6 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
                 style.setProperty("right", right);
                 style.setProperty("bottom", bottom);
 
-                if (BrowserInfo.get().isIE6()) {
-                    ie6Layout();
-                }
             }
             updateCaptionPosition();
         }
@@ -368,60 +349,6 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
                 style.setPropertyPx("top", getElement().getOffsetTop()
                         - caption.getHeight());
             }
-        }
-
-        private void ie6Layout() {
-            // special handling for IE6 is needed, it does not support
-            // setting both left/right or top/bottom
-            Style style = getElement().getStyle();
-            if (bottom != null && top != null) {
-                // define height for wrapper to simulate bottom property
-                int bottompixels = measureForIE6(bottom, true);
-                VConsole.log("ALB" + bottompixels);
-                int height = canvas.getOffsetHeight() - bottompixels
-                        - getElement().getOffsetTop();
-                VConsole.log("ALB" + height);
-                if (height < 0) {
-                    height = 0;
-                }
-                style.setPropertyPx("height", height);
-            } else {
-                // reset possibly existing value
-                style.setProperty("height", "");
-            }
-            if (left != null && right != null) {
-                // define width for wrapper to simulate right property
-                int rightPixels = measureForIE6(right, false);
-                VConsole.log("ALR" + rightPixels);
-                int width = canvas.getOffsetWidth() - rightPixels
-                        - getElement().getOffsetLeft();
-                VConsole.log("ALR" + width);
-                if (width < 0) {
-                    width = 0;
-                }
-                style.setPropertyPx("width", width);
-            } else {
-                // reset possibly existing value
-                style.setProperty("width", "");
-            }
-        }
-
-    }
-
-    private Element measureElement;
-
-    private int measureForIE6(String cssLength, boolean vertical) {
-        if (measureElement == null) {
-            measureElement = DOM.createDiv();
-            measureElement.getStyle().setProperty("position", "absolute");
-            canvas.appendChild(measureElement);
-        }
-        if (vertical) {
-            measureElement.getStyle().setProperty("height", cssLength);
-            return measureElement.getOffsetHeight();
-        } else {
-            measureElement.getStyle().setProperty("width", cssLength);
-            return measureElement.getOffsetWidth();
         }
     }
 

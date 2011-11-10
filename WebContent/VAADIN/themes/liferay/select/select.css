@@ -7,10 +7,6 @@ select {
 	background-color: #fff;	
 }
 
-.v-ie6 select { 
-	font-size: 1em;
-}
-
 .v-filterselect-button {
 	width: 24px;
 	height: 24px;

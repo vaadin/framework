@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.Util;
 
 public class VNativeSelect extends VOptionGroupBase implements Field {
 
@@ -57,11 +55,6 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
             select.insertItem("", (String) null, 0);
             select.setItemSelected(0, true);
             firstValueIsTemporaryNullItem = true;
-        }
-        if (BrowserInfo.get().isIE6()) {
-            // lazy size change - IE6 uses naive dropdown that does not have a
-            // proper size yet
-            Util.notifyParentOfSizeChange(this, true);
         }
     }
 

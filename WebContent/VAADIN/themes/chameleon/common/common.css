@@ -98,16 +98,6 @@
 	overflow: hidden;
 	}
 
-.v-ie6 .v-window,
-.v-ie6 .v-popupview-popup,
-.v-ie6 .v-filterselect-suggestpopup,
-.v-ie6 .v-datefield-popup,
-.v-ie6 .v-contextmenu,
-.v-ie6 .v-Notification,
-.v-ie6 .v-menubar-submenu {
-	background-image: none;
-	}
-
 .v-filterselect-suggestpopup,
 .v-contextmenu,
 .v-menubar-submenu {

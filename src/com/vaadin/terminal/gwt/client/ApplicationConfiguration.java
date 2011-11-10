@@ -361,7 +361,7 @@ public class ApplicationConfiguration implements EntryPoint {
                 cmd.execute();
             }
             callbacks.clear();
-        } else if(widgetsLoading == 0 && deferredWidgetLoader != null) {
+        } else if (widgetsLoading == 0 && deferredWidgetLoader != null) {
             deferredWidgetLoader.trigger();
         }
 
@@ -377,17 +377,17 @@ public class ApplicationConfiguration implements EntryPoint {
         int communicationFree = 0;
         int nextWidgetIndex = 0;
         private boolean pending;
-        
+
         public DeferredWidgetLoader() {
             schedule(5000);
         }
 
         public void trigger() {
-            if(!pending) {
+            if (!pending) {
                 schedule(FREE_CHECK_TIMEOUT);
             }
         }
-        
+
         @Override
         public void schedule(int delayMillis) {
             super.schedule(delayMillis);
@@ -438,15 +438,11 @@ public class ApplicationConfiguration implements EntryPoint {
             return communicationFree < FREE_LIMIT;
         }
     }
-    
+
     private static DeferredWidgetLoader deferredWidgetLoader;
-   
+
     public void onModuleLoad() {
 
-        // Enable IE6 Background image caching
-        if (BrowserInfo.get().isIE6()) {
-            enableIE6BackgroundImageCache();
-        }
         // Prepare VConsole for debugging
         if (isDebugMode()) {
             VDebugConsole console = GWT.create(VDebugConsole.class);
@@ -475,19 +471,6 @@ public class ApplicationConfiguration implements EntryPoint {
         initConfigurations();
         startNextApplication();
     }
-
-    // From ImageSrcIE6
-    private static native void enableIE6BackgroundImageCache()
-    /*-{
-       // Fix IE background image refresh bug, present through IE6
-       // see http://www.mister-pixel.com/#Content__state=is_that_simple
-       // this only works with IE6 SP1+
-       try {
-         $doc.execCommand("BackgroundImageCache", false, true);
-       } catch (e) {
-         // ignore error on other browsers
-       }
-    }-*/;
 
     /**
      * Checks if client side is in debug mode. Practically this is invoked by

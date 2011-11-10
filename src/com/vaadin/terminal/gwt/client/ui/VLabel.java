@@ -125,7 +125,7 @@ public class VLabel extends HTML implements Paintable {
     @Override
     public void setText(String text) {
         if (BrowserInfo.get().isIE() && BrowserInfo.get().getIEVersion() < 9) {
-            // #3983 - IE6-IE8 incorrectly replaces \n with <br> so we do the
+            // #3983 - IE7,IE8 incorrectly replaces \n with <br> so we do the
             // escaping manually and set as HTML
             super.setHTML(Util.escapeHTML(text));
         } else {

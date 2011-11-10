@@ -16,7 +16,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
@@ -214,9 +213,6 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
 
         renderInformation.setContentAreaHeight(renderInformation
                 .getRenderedSize().getHeight() - getSpaceConsumedVertically());
-        if (BrowserInfo.get().isIE6()) {
-            getElement().getStyle().setProperty("overflow", "hidden");
-        }
         renderInformation.setContentAreaWidth(renderInformation
                 .getRenderedSize().getWidth() - borderPaddingHorizontal);
     }

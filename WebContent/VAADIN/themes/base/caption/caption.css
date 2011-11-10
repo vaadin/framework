@@ -29,14 +29,6 @@
 	overflow: hidden;
 }
 
-/* Fix IE6 "double-float-margin-bug" */
-.v-ie6 .v-errorindicator,
-.v-ie6 .v-icon,
-.v-ie6 .v-captiontext,
-.v-ie6 .v-required-field-indicator {
-	display: inline;
-}
-
 .v-ie9 .v-gridlayout-margin>div>div>.v-caption,
 .v-ie9 .v-verticallayout>div>div>.v-caption,
 .v-ie9 .v-horizontallayout>div>div>.v-caption {

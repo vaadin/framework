@@ -24,7 +24,6 @@
 	overflow: hidden;
 }
 /* Ensure that resizing gridlayout works in IE */
-.v-ie6 .v-gridlayout,
 .v-ie7 .v-gridlayout {
 	overflow: hidden;
 }

@@ -264,7 +264,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
                     int l = calendarToggle.getAbsoluteLeft();
 
                     // Add a little extra space to the right to avoid
-                    // problems with IE6/IE7 scrollbars and to make it look
+                    // problems with IE7 scrollbars and to make it look
                     // nicer.
                     int extraSpace = 30;
 

@@ -162,9 +162,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     private static int adjustByRelativeTopBodyMargin() {
         if (topFix == -1) {
-            boolean ie6OrIe7 = BrowserInfo.get().isIE()
-                    && BrowserInfo.get().getIEVersion() <= 7;
-            topFix = detectRelativeBodyFixes("top", ie6OrIe7);
+            topFix = detectRelativeBodyFixes("top", BrowserInfo.get().isIE7());
         }
         return topFix;
     }
@@ -178,7 +176,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             if(cstyle && cstyle.position == 'relative') {
                 var offset = b.getBoundingClientRect()[axis];
                 if (removeClientLeftOrTop) {
-                    // IE6 and IE7 include the top left border of the client area into the boundingClientRect
+                    // IE7 include the top left border of the client area into the boundingClientRect
                     var clientTopOrLeft = 0;
                     if (axis == "top")
                         clientTopOrLeft = $wnd.document.documentElement.clientTop;
@@ -195,9 +193,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     private static int adjustByRelativeLeftBodyMargin() {
         if (leftFix == -1) {
-            boolean ie6OrIe7 = BrowserInfo.get().isIE()
-                    && BrowserInfo.get().getIEVersion() <= 7;
-            leftFix = detectRelativeBodyFixes("left", ie6OrIe7);
+            leftFix = detectRelativeBodyFixes("left", BrowserInfo.get().isIE7());
 
         }
         return leftFix;

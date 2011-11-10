@@ -16,7 +16,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
@@ -50,10 +49,6 @@ public class VAccordion extends VTabsheetBase implements
 
     public VAccordion() {
         super(CLASSNAME);
-        // IE6 needs this to calculate offsetHeight correctly
-        if (BrowserInfo.get().isIE6()) {
-            DOM.setStyleAttribute(getElement(), "zoom", "1");
-        }
     }
 
     @Override
@@ -434,10 +429,6 @@ public class VAccordion extends VTabsheetBase implements
             setElement(DOM.createDiv());
             caption = new VCaption(null, client);
             caption.addClickHandler(this);
-            if (BrowserInfo.get().isIE6()) {
-                DOM.setEventListener(captionNode, this);
-                DOM.sinkEvents(captionNode, Event.BUTTON_LEFT);
-            }
             super.add(caption, captionNode);
             DOM.appendChild(captionNode, caption.getElement());
             DOM.appendChild(getElement(), captionNode);
@@ -496,10 +487,6 @@ public class VAccordion extends VTabsheetBase implements
             removeStyleDependentName("open");
             setHeight(-1);
             setWidth("");
-            if (BrowserInfo.get().isIE6()) {
-                // Work around for IE6 layouting problem #3359
-                getElement().getStyle().setProperty("zoom", "1");
-            }
             open = false;
         }
 

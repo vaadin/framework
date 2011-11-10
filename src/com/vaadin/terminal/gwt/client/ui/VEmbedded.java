@@ -87,7 +87,6 @@ public class VEmbedded extends HTML implements Paintable {
                     setHTML("");
                     el = DOM.createImg();
                     created = true;
-                    client.addPngFix(el);
                     DOM.sinkEvents(el, Event.ONLOAD);
                 }
 

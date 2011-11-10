@@ -21,7 +21,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
 
 /**
  * A scrollhandlers similar to {@link ScrollPanel}.
@@ -57,18 +56,9 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
         if (useFakeFocusElement()) {
             if (focusElement.getParentElement() == null) {
                 Style style = focusElement.getStyle();
-                if (BrowserInfo.get().isIE6()) {
-                    style.setOverflow(Overflow.HIDDEN);
-                    style.setHeight(0, Unit.PX);
-                    style.setWidth(0, Unit.PX);
-                    style.setPosition(Position.ABSOLUTE);
-
-                    addScrollHandler(this);
-                } else {
-                    style.setPosition(Position.FIXED);
-                    style.setTop(0, Unit.PX);
-                    style.setLeft(0, Unit.PX);
-                }
+                style.setPosition(Position.FIXED);
+                style.setTop(0, Unit.PX);
+                style.setLeft(0, Unit.PX);
                 getElement().appendChild(focusElement);
                 /* Sink from focusElemet too as focusa and blur don't bubble */
                 DOM.sinkEvents(

@@ -6,9 +6,6 @@
 	height: 16px;
 	background: transparent url(../common/icons/error.png) no-repeat 50%;
 }
-.v-ie6 .v-formlayout-cell .v-errorindicator {
-	background-image: url(../common/icons/error-ie6.png);
-}
 .v-formlayout-captioncell {
 	text-align: right;
 	white-space: nowrap;
@@ -41,10 +38,6 @@
 	margin-bottom: 5px;
 	margin-top: 5px;
 	min-height: 20px;
-}
-.v-ie6 .v-form-errormessage {
-	height: 20px;
-	background-image: url(../common/icons/error-ie6.png);
 }
 .v-form fieldset {
 	border: none;
