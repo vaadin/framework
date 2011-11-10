@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.NestedMethodProperty;
 import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
 import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
@@ -138,19 +137,8 @@ public class FormTest extends AbstractFieldTest<Form> {
                 "02-111 2222", "Ruukinkatu 2-4", 20540, "Turku");
 
         BeanItem<Person> personItem = new BeanItem<Person>(person);
-
-        // explicitly add nested properties
-        // TODO this should be possible to simplify
-        personItem.addItemProperty("streetAddress",
-                new NestedMethodProperty<String>(person,
-                        "address.streetAddress"));
-        personItem
-                .addItemProperty("postalCode",
-                        new NestedMethodProperty<Integer>(person,
-                                "address.postalCode"));
-        personItem.addItemProperty("city", new NestedMethodProperty<String>(
-                person, "address.city"));
-        personItem.removeItemProperty("address");
+        // add nested properties from address
+        personItem.expandProperty("address");
 
         return personItem;
     }
