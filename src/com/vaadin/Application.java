@@ -14,9 +14,12 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.EventListener;
 import java.util.EventObject;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +33,7 @@ import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.server.ChangeVariablesErrorEvent;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbstractComponent;
@@ -159,6 +163,9 @@ public abstract class Application implements Terminal.ErrorListener,
     private Terminal.ErrorListener errorHandler = this;
 
     private LinkedList<RequestHandler> requestHandlers = new LinkedList<RequestHandler>();
+
+    private int nextRootId = 0;
+    private Map<Integer, Root> roots = new HashMap<Integer, Root>();
 
     /**
      * Gets the user of the application.
@@ -1443,7 +1450,34 @@ public abstract class Application implements Terminal.ErrorListener,
 
     }
 
-    public abstract Root getRoot(WrappedRequest request);
+    public Root getRoot(WrappedRequest request) {
+        String rootIdString = request
+                .getParameter(ApplicationConnection.ROOT_ID_PARAMETER);
+        Root root;
+        synchronized (this) {
+            // getRoot might be called from outside the synchronized UIDL
+            // handling
+            if (rootIdString == null) {
+                // TODO What if getRoot is called again for this request?
+
+                // TODO implement support for throwing exception if more
+                // information is required to create a root
+                root = createRoot(request);
+                root.setApplication(this);
+
+                // TODO implement lazy init of root if indicated by annotation
+                root.init(request);
+                roots.put(Integer.valueOf(nextRootId++), root);
+            } else {
+                Integer rootId = new Integer(rootIdString);
+                root = roots.get(rootId);
+            }
+        }
+
+        return root;
+    }
+
+    protected abstract Root createRoot(WrappedRequest request);
 
     public boolean handleRequest(WrappedRequest request,
             WrappedResponse response) throws IOException {
@@ -1481,5 +1515,14 @@ public abstract class Application implements Terminal.ErrorListener,
 
     public static void setCurrentApplication(Application application) {
         currentApplication.set(application);
+    }
+
+    public int getRootId(Root root) {
+        for (Entry<Integer, Root> entry : roots.entrySet()) {
+            if (entry.getValue() == root) {
+                return entry.getKey().intValue();
+            }
+        }
+        return -1;
     }
 }

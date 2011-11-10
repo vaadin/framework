@@ -90,8 +90,6 @@ public class RootTestApplication extends Application {
         }
     }
 
-    private Root root;
-
     @Override
     public void init() {
         addRequestHandler(new RequestHandler() {
@@ -115,16 +113,9 @@ public class RootTestApplication extends Application {
     }
 
     @Override
-    public Root getRoot(WrappedRequest request) {
-        if (root == null) {
-            String rootText = request.getParameter("rootText");
-            root = new Root(new MyRootLayout(rootText));
-
-            // TODO Should be done by Application during init
-            root.setApplication(this);
-            root.init(request);
-        }
-
+    protected Root createRoot(WrappedRequest request) {
+        String rootText = request.getParameter("rootText");
+        Root root = new Root(new MyRootLayout(rootText));
         return root;
     }
 

@@ -40,7 +40,7 @@ public class ApplicationConfiguration implements EntryPoint {
     private String themeUri;
     private String appUri;
     private JavaScriptObject versionInfo;
-    private String windowName;
+    private int rootId;
     private boolean standalone;
     private String communicationErrorCaption;
     private String communicationErrorMessage;
@@ -105,12 +105,8 @@ public class ApplicationConfiguration implements EntryPoint {
         return standalone;
     }
 
-    public void setInitialWindowName(String name) {
-        windowName = name;
-    }
-
-    public String getInitialWindowName() {
-        return windowName;
+    public int getRootId() {
+        return rootId;
     }
 
     public JavaScriptObject getVersionInfoJSObject() {
@@ -157,8 +153,8 @@ public class ApplicationConfiguration implements EntryPoint {
             }
             this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::appUri = uri;
             this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::themeUri = jsobj.themeUri;
-            if(jsobj.windowName) {
-                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::windowName = jsobj.windowName;
+            if(jsobj.rootId) {
+                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::rootId = jsobj.rootId;
             }
             if('useDebugIdInDom' in jsobj && typeof(jsobj.useDebugIdInDom) == "boolean") {
                 this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::useDebugIdInDom = jsobj.useDebugIdInDom;

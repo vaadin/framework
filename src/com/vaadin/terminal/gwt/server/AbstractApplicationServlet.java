@@ -1647,7 +1647,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         appId = appId + "-" + hashCode;
 
         writeAjaxPageHtmlVaadinScripts(themeName, application, page, appUrl,
-                themeUri, appId, request);
+                themeUri, appId, request, application.getRootId(root));
 
         /*- Add classnames;
          *      .v-app
@@ -1768,6 +1768,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @param themeUri
      * @param appId
      * @param request
+     * @param rootId
      * @throws ServletException
      * @throws IOException
      */
@@ -1775,8 +1776,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             // Window window,
             String themeName, Application application,
             final BufferedWriter page, String appUrl, String themeUri,
-            String appId, HttpServletRequest request) throws ServletException,
-            IOException {
+            String appId, HttpServletRequest request, int rootId)
+            throws ServletException, IOException {
 
         // request widgetset takes precedence (e.g portlet include)
         String requestWidgetset = (String) request
@@ -1834,10 +1835,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         page.write("vaadin.vaadinConfigurations[\"" + appId + "\"] = {");
         page.write("appUri:'" + appUrl + "', ");
 
-        // if (window != application.getMainWindow()) {
-        // page.write("windowName: \""
-        // + JsonPaintTarget.escapeJSON(window.getName()) + "\", ");
-        // }
+        page.write(ApplicationConnection.ROOT_ID_PARAMETER + ": " + rootId
+                + ", ");
+
         if (isStandalone()) {
             page.write("standalone: true, ");
         }

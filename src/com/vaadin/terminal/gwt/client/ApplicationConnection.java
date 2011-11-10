@@ -83,6 +83,8 @@ public class ApplicationConnection {
 
     public static final String UIDL_SECURITY_TOKEN_ID = "Vaadin-Security-Key";
 
+    public static final String ROOT_ID_PARAMETER = "rootId";
+
     /**
      * @deprecated use UIDL_SECURITY_TOKEN_ID instead
      */
@@ -163,7 +165,6 @@ public class ApplicationConnection {
 
         this.widgetSet = widgetSet;
         configuration = cnf;
-        windowName = configuration.getInitialWindowName();
 
         ComponentLocator componentLocator = new ComponentLocator(this);
 
@@ -432,9 +433,8 @@ public class ApplicationConnection {
         if (extraParams != null && extraParams.length() > 0) {
             uri = addGetParameters(uri, extraParams);
         }
-        if (windowName != null && windowName.length() > 0) {
-            uri = addGetParameters(uri, "windowName=" + windowName);
-        }
+        uri = addGetParameters(uri,
+                ROOT_ID_PARAMETER + "=" + configuration.getRootId());
 
         doUidlRequest(uri, payload, forceSync);
 
@@ -2362,24 +2362,6 @@ public class ApplicationConnection {
      */
     public void requestLayoutPhase() {
         layoutTimer.schedule(500);
-    }
-
-    private String windowName = null;
-
-    /**
-     * Reset the name of the current browser-window. This should reflect the
-     * window-name used in the server, but might be different from the
-     * window-object target-name on client.
-     * 
-     * @param stringAttribute
-     *            New name for the window.
-     */
-    public void setWindowName(String newName) {
-        windowName = newName;
-    }
-
-    protected String getWindowName() {
-        return windowName;
     }
 
     protected String getUidlSecurityKey() {

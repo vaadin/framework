@@ -213,10 +213,6 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                     + uidl.getStringAttribute("style"));
         }
 
-        if (uidl.hasAttribute("name")) {
-            client.setWindowName(uidl.getStringAttribute("name"));
-        }
-
         clickEventHandler.handleEventHandlerRegistration(client);
 
         if (!isEmbedded()) {
