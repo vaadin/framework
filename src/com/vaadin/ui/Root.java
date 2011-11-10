@@ -15,7 +15,6 @@ import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.ui.Window.CloseListener;
-import com.vaadin.ui.Window.Notification;
 
 @ClientWidget(VView.class)
 public class Root extends AbstractComponentContainer {
