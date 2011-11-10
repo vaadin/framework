@@ -20,7 +20,6 @@ import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
@@ -28,7 +27,6 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -51,10 +49,6 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
     private final LoadHandler iconLoadHandler = new LoadHandler() {
         public void onLoad(LoadEvent event) {
-            if (BrowserInfo.get().isIE6()) {
-                Util.doIE6PngFix((Element) Element.as(event.getNativeEvent()
-                        .getEventTarget()));
-            }
             Util.notifyParentOfSizeChange(VOptionGroup.this, true);
         }
     };

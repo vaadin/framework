@@ -2332,19 +2332,6 @@ public class ApplicationConnection {
 
     }
 
-    /**
-     * Adds PNG-fix conditionally (only for IE6) to the specified IMG -element.
-     * 
-     * @param el
-     *            the IMG element to fix
-     */
-    public void addPngFix(Element el) {
-        BrowserInfo b = BrowserInfo.get();
-        if (b.isIE6()) {
-            Util.addPngFix(el);
-        }
-    }
-
     /*
      * Helper to run layout functions triggered by child components with a
      * decent interval.

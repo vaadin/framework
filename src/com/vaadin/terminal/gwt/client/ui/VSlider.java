@@ -300,9 +300,7 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
             p = 0;
         }
         if (vertical) {
-            // IE6 rounding behaves a little unstable, reduce one pixel so the
-            // containing element (base) won't expand without limits
-            p = range - p - (BrowserInfo.get().isIE6() ? 1 : 0);
+            p = range - p;
         }
         final double pos = p;
 
@@ -356,7 +354,7 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
         } else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
             feedbackPopup.show();
         }
-        if(Util.isTouchEvent(event)) {
+        if (Util.isTouchEvent(event)) {
             event.preventDefault(); // avoid simulated events
             event.stopPropagation();
         }

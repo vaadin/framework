@@ -129,6 +129,7 @@ public class RichTextArea extends AbstractField {
     public void setReadOnly(boolean readOnly) {
         super.setReadOnly(readOnly);
         // IE6 cannot support multi-classname selectors properly
+        // TODO Can be optimized now that support for I6 is dropped
         if (readOnly) {
             addStyleName("v-richtextarea-readonly");
         } else {

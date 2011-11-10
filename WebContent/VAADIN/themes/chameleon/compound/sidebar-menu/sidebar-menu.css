@@ -33,11 +33,6 @@
 	color: #fff;
 	}
 
-.v-ie6 .sidebar-menu .tab-selected,
-.v-ie6 .sidebar-menu .selected {
-	background-image: none;
-	}
-
 .sidebar-menu .tab-selected:focus,
 .sidebar-menu .selected:focus {
 	outline: none;

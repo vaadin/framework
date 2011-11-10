@@ -120,10 +120,6 @@ td.v-datefield-calendarpanel-nextyear {
 .v-ie .v-datefield-calendarpanel-nextmonth button {
 	border: none;
 }
-.v-ie6 .v-datefield-calendarpanel-prevmonth button,
-.v-ie6 .v-datefield-calendarpanel-nextmonth button {
-	width: 24px;
-}
 .v-datefield-calendarpanel-nextmonth button {
 	background-image: url(img/month-next.png); /** sprite-ref: verticals; sprite-alignment: center */
 }
@@ -287,11 +283,6 @@ td.v-datefield-calendarpanel-nextyear {
 }
 .black .v-datefield-popupcalendar .v-datefield-button:active {
 	background-image: url(img/popup-btn-black-pressed.png); /** sprite-ref: black-verticals */
-}
-
-/* Small adjustment for IE6 */
-.v-ie6 .v-datefield-popupcalendar .v-datefield-button {
-	margin-top: 1px;
 }
 
 

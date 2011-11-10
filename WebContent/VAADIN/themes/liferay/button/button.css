@@ -50,11 +50,6 @@
 	line-height: 16px;	
 }
 
-.v-ie6 .v-button .v-button-wrap {
-	display: inline;
-	zoom: 1;
-}
-
 /* Link style button */
 .v-button-link,
 .v-disabled.v-button-link,

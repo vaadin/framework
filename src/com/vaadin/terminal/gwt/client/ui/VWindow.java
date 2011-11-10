@@ -586,19 +586,6 @@ public class VWindow extends VOverlay implements Container,
 
         DOM.setStyleAttribute(getElement(), "width", "");
 
-        String oldHeaderWidth = ""; // Only for IE6
-        if (BrowserInfo.get().isIE6()) {
-            /*
-             * For some reason IE6 has title DIV set to width 100% which
-             * interferes with the header measuring. Also IE6 has width set to
-             * the contentPanel.
-             */
-            oldHeaderWidth = headerText.getStyle().getProperty("width");
-            DOM.setStyleAttribute(contentPanel.getElement(), "width", "auto");
-            DOM.setStyleAttribute(contentPanel.getElement(), "zoom", "1");
-            headerText.getStyle().setProperty("width", "auto");
-        }
-
         // Content
         int contentWidth = contentPanel.getElement().getScrollWidth();
         contentWidth += getContentAreaToRootDifference();
@@ -608,10 +595,6 @@ public class VWindow extends VOverlay implements Container,
 
         int naturalWidth = (contentWidth > windowCaptionWidth ? contentWidth
                 : windowCaptionWidth);
-
-        if (BrowserInfo.get().isIE6()) {
-            headerText.getStyle().setProperty("width", oldHeaderWidth);
-        }
 
         setWidth(naturalWidth + "px");
     }
@@ -1049,10 +1032,6 @@ public class VWindow extends VOverlay implements Container,
 
             // "width" now contains the new width in pixels
 
-            if (BrowserInfo.get().isIE6()) {
-                getElement().getStyle().setProperty("overflow", "hidden");
-            }
-
             // Apply the new pixel width
             getElement().getStyle().setProperty("width", width);
 
@@ -1064,14 +1043,6 @@ public class VWindow extends VOverlay implements Container,
                 int rootWidth = contentAreaInnerWidth
                         + getContentAreaToRootDifference();
                 DOM.setStyleAttribute(getElement(), "width", rootWidth + "px");
-            }
-
-            // IE6 needs the actual inner content width on the content element,
-            // otherwise it won't wrap the content properly (no scrollbars
-            // appear, content flows out of window)
-            if (BrowserInfo.get().isIE6()) {
-                DOM.setStyleAttribute(contentPanel.getElement(), "width",
-                        contentAreaInnerWidth + "px");
             }
 
             renderSpace.setWidth(contentAreaInnerWidth);

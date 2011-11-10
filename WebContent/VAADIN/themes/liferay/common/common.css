@@ -33,7 +33,3 @@ div.v-app {
 	font-weight: bold;
 	margin: 1px 0 4px 0;
 }
-
-.v-ie6 .v-view {
-	border-top: none;
-}

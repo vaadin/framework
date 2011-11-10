@@ -5,10 +5,6 @@
 	border-width: 1px 0;
 	}
 
-.v-ie6 .v-menubar {
-	background-image: none;
-	}
-
 .v-menubar .v-menubar-menuitem {
 	padding: .2em .5em;
 	line-height: normal;
@@ -25,8 +21,4 @@
 .v-menubar-submenu .v-menubar-menuitem-selected {
 	background-image: url(../../img/grad-light-top2.png);
 	background-position: 0 -1px;
-	}
-
-.v-ie6 .v-menubar-submenu .v-menubar-menuitem-selected {
-	background-image: none;
 	}

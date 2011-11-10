@@ -84,13 +84,6 @@ body .v-filterselect-suggestpopup-big td {
 	-ms-user-select: none;
 	}
 
-.v-ie6 .v-filterselect-prevpage-off,
-.v-ie6 .v-filterselect-nextpage-off,
-.v-ie6 .v-filterselect-prevpage,
-.v-ie6 .v-filterselect-nextpage {
-	background-image: none;
-	}
-
 .v-filterselect-prevpage:active,
 .v-filterselect-nextpage:active {
 	background-image: (../../img/grad-dark-bottom2.png);
@@ -126,10 +119,6 @@ body .v-filterselect-suggestpopup-big td {
 	background-position: 0 -1px;
 	}
 
-.v-ie6 .v-filterselect-suggestmenu .gwt-menuItem-selected {
-	background-image: none;
-	}
-
 .v-filterselect-suggestpopup-small .v-filterselect-status {
 	font-size: .8em;
 	}
@@ -156,10 +145,6 @@ body .v-filterselect-suggestpopup-big td {
 	padding: .3em .5em;
 	}
 
-.v-ie6 .v-filterselect-select-button {
-	background-image: none;
-	}
-
 .v-filterselect-select-button .v-filterselect-input {
 	display: block;
 	width: 100% !important;
@@ -175,11 +160,4 @@ body .v-filterselect-suggestpopup-big td {
 	left: 0;
 	height: 100%;
 	background-position: 100% -8px;
-	}
-
-.v-ie6 .v-filterselect-select-button .v-filterselect-button {
-	float: none;
-	position: relative;
-	margin: -1.8em -.5em -.3em -.5em;
-	padding: .3em .5em;
 	}

@@ -33,17 +33,3 @@
 .v-tree-connectors .v-tree-node-drag-top.v-tree-node-leaf {
 	background-position: 2px 50%;
 }
-
-/* IE6 */
-.v-ie6 .v-tree-connectors .v-tree-node {
-	background: transparent url(img/connector-expand-ie6.png) no-repeat 2px -52px;
-}
-.v-ie6 .v-tree-connectors .v-tree-node-expanded {
-	background: transparent url(img/connector-collapse-ie6.png) no-repeat 2px -52px;
-}
-.v-ie6 .v-tree-connectors .v-tree-node-last {
-	background: transparent url(img/connector-expand-last-ie6.png) no-repeat 2px -52px;
-}
-.v-ie6 .v-tree-connectors .v-tree-node-last.v-tree-node-expanded {
-	background: transparent url(img/connector-collapse-last-ie6.png) no-repeat 2px -52px;
-}

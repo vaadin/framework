@@ -5,11 +5,6 @@
 	line-height: normal;
 	}
 
-.v-ie6 .v-table-header-wrap,
-.v-ie6 .v-table-header-drag {
-	background-image: none;
-	}
-
 .v-table-caption-container,
 .v-table-header-drag {
 	padding-top: .2em;
@@ -50,10 +45,6 @@ div.v-table-focus-slot-left {
 .v-table tr.v-selected {
 	background-image: url(/vaadin-demo-site/VAADIN/themes/chameleon/img/grad-light-top2.png);
 	background-position: 0 -1px;
-	}
-
-.v-ie6 .v-table tr.v-selected {
-	background-image: none;
 	}
 
 div.v-table-focus-slot-right {

@@ -71,14 +71,6 @@ textarea.v-textarea-prompt {
 	margin-top: -2px;
 	margin-bottom: -2px;
 }
-.v-ie6 .v-table-cell-wrapper input.v-textfield {
-	margin-top: -2px;
-	margin-bottom: -2px;
-}
-.v-ie6 .v-table-cell-wrapper div input.v-textfield {
-	margin-top: 0;
-	margin-bottom: 0;
-}
 /* Textfield on black background */
 .black .v-textfield,
 .black .v-textarea {

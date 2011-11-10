@@ -19,7 +19,6 @@ public class Icon extends UIObject {
         DOM.setElementProperty(getElement(), "alt", "");
         setStyleName(CLASSNAME);
         this.client = client;
-        client.addPngFix(getElement());
     }
 
     public Icon(ApplicationConnection client, String uidlUri) {

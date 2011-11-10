@@ -56,9 +56,6 @@
 .v-ie7 .v-tabsheet-caption-close {
 	margin-top: -17px;
 }
-.v-ie6 .v-tabsheet-caption-close {
-	float: none;
-}
 .v-tabsheet-caption-close:hover {
 	background-image: url(img/close-btn-hover.png); /** sprite-ref: verticals */
 }
@@ -154,9 +151,6 @@
 .v-ff2 .v-tabsheet-tabs .v-icon,
 .v-ff2 .v-tabsheet-tabs .v-errorindicator {
 	display: -moz-inline-stack;
-}
-.v-ie6 .v-tabsheet-tabs .v-errorindicator {
-	background-image: url(../common/icons/error-ie6.png);
 }
 .v-ie .v-tabsheet-tabs .v-errorindicator {
 	zoom: 1;

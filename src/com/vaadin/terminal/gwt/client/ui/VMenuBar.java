@@ -11,7 +11,6 @@ import java.util.Stack;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
@@ -157,24 +156,9 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         }
 
         this.width = width;
-        if (BrowserInfo.get().isIE6() && width.endsWith("px")) {
-            // IE6 sometimes measures wrong using
-            // Util.setWidthExcludingPaddingAndBorder so this is extracted to a
-            // special case that uses another method. Really should fix the
-            // Util.setWidthExcludingPaddingAndBorder method but that will
-            // probably break additional cases
-            int requestedPixelWidth = Integer.parseInt(width.substring(0,
-                    width.length() - 2));
-            int paddingBorder = Util.measureHorizontalPaddingAndBorder(
-                    getElement(), 0);
-            int w = requestedPixelWidth - paddingBorder;
-            if (w < 0) {
-                w = 0;
-            }
-            getElement().getStyle().setWidth(w, Unit.PX);
-        } else {
-            Util.setWidthExcludingPaddingAndBorder(this, width, 0);
-        }
+
+        Util.setWidthExcludingPaddingAndBorder(this, width, 0);
+
         if (!subMenu) {
             // Only needed for root level menu
             hideChildren();
@@ -478,9 +462,6 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
         // Handle onload events (icon loaded, size changes)
         if (DOM.eventGetType(e) == Event.ONLOAD) {
-            if (BrowserInfo.get().isIE6()) {
-                Util.doIE6PngFix((Element) Element.as(e.getEventTarget()));
-            }
             VMenuBar parent = getParentMenu();
             if (parent != null) {
                 // The onload event for an image in a popup should be sent to
@@ -780,19 +761,10 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 style.setHeight(availableHeight, Unit.PX);
                 style.setOverflowY(Overflow.SCROLL);
 
-                // Make room for the scroll bar
-                if (BrowserInfo.get().isIE6()) {
-                    // IE6 renders the sub menu arrow icons on the scroll bar
-                    // unless we add some padding
-                    style.setPaddingRight(Util.getNativeScrollbarSize(),
-                            Unit.PX);
-                } else {
-                    // For other browsers, adjusting the width of the popup is
-                    // enough
-                    style.setWidth(
-                            contentWidth + Util.getNativeScrollbarSize(),
-                            Unit.PX);
-                }
+                // Make room for the scroll bar by adjusting the width of the
+                // popup
+                style.setWidth(contentWidth + Util.getNativeScrollbarSize(),
+                        Unit.PX);
                 popup.updateShadowSizeAndPosition();
             }
         }
@@ -962,6 +934,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 addStyleDependentName("selected");
                 // needed for IE6 to have a single style name to match for an
                 // element
+                // TODO Can be optimized now that IE6 is not supported any more
                 if (checkable) {
                     if (checked) {
                         removeStyleDependentName("selected-unchecked");
@@ -1170,21 +1143,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 paddingWidth = widthBefore - getElement().getClientWidth();
                 getElement().getStyle().setProperty("padding", "");
             }
-            String overflow = "";
-            if (BrowserInfo.get().isIE6()) {
-                // IE6 cannot measure available width correctly without
-                // overflow:hidden
-                overflow = getElement().getStyle().getProperty("overflow");
-                getElement().getStyle().setProperty("overflow", "hidden");
-            }
 
             int availableWidth = getElement().getClientWidth() - paddingWidth;
-
-            if (BrowserInfo.get().isIE6()) {
-                // IE6 cannot measure available width correctly without
-                // overflow:hidden
-                getElement().getStyle().setProperty("overflow", overflow);
-            }
 
             // Used width includes the "more" item if present
             int usedWidth = getConsumedWidth();
@@ -1229,16 +1189,6 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                         collapsedRootItems.addItem(expand, 0);
                     } else {
                         widthAvailable = diff;
-                    }
-
-                    if (BrowserInfo.get().isIE6()) {
-                        /*
-                         * Handle transparency for IE6 here as we cannot
-                         * implement it in CustomMenuItem.onAttach because
-                         * onAttach is never called for CustomMenuItem due to an
-                         * invalid component hierarchy (#6203)...
-                         */
-                        reloadImages(expand.getElement());
                     }
                 }
             }
@@ -1634,33 +1584,6 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             }
         }
         return null;
-    }
-
-    @Override
-    protected void onLoad() {
-        super.onLoad();
-        if (BrowserInfo.get().isIE6()) {
-            reloadImages(getElement());
-        }
-    }
-
-    /**
-     * Force a new onload event for all images. Used only for IE6 to deal with
-     * PNG transparency.
-     */
-    private void reloadImages(Element root) {
-
-        NodeList<com.google.gwt.dom.client.Element> imgElements = root
-                .getElementsByTagName("img");
-        for (int i = 0; i < imgElements.getLength(); i++) {
-            Element e = (Element) imgElements.getItem(i);
-
-            // IE6 fires onload events for the icons before the listener
-            // is attached (or never). Updating the src force another
-            // onload event
-            String src = e.getAttribute("src");
-            e.setAttribute("src", src);
-        }
     }
 
 }

@@ -116,8 +116,6 @@ span.v-datefield-calendarpanel-month {
 	min-width: 22px;
 }
 
-.v-ie6 .v-datefield-calendarpanel-prevyear button,
-.v-ie6 .v-datefield-calendarpanel-nextyear button,
 .v-ie7 .v-datefield-calendarpanel-prevyear button,
 .v-ie7 .v-datefield-calendarpanel-nextyear button {
 	width: 22px;

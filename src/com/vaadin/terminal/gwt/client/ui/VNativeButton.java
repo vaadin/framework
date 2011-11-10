@@ -99,7 +99,9 @@ public class VNativeButton extends Button implements Paintable, ClickHandler,
             }
             getElement().insertBefore(errorIndicatorElement, captionElement);
 
-            // Fix for IE6, IE7
+            // Fix for IE
+            // TODO This was originally for IE6 & IE7 and might not be needed
+            // any more
             if (BrowserInfo.get().isIE()) {
                 errorIndicatorElement.setInnerText(" ");
             }

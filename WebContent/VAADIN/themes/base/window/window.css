@@ -17,9 +17,6 @@ div.v-window-header {
 	overflow: hidden;
 	padding: 0;
 }
-.v-ie6 .v-window-header {
-	width: 100%;
-}
 .v-window-header .v-icon {
 	vertical-align: middle; /* This has to be 'middle', not 'bottom', to allow larger icons than 16px */
 }
@@ -76,15 +73,6 @@ div.v-window-header {
 	width: 100%;
 	height: 100%;
 	filter: alpha(opacity=50);
-}
-/* IE6 workaround for position:fixed; */
-.v-ie6 .v-window-modalitycurtain { 
-	position: absolute;
-	top: expression(document.documentElement.scrollTop + "px"); 
-}
-/* min-width for IE6 */
-.v-ie6 .v-window {
-	width: 0; /*  */
 }
 /* Shadow for window */
 .v-shadow-window {
@@ -146,14 +134,4 @@ div.v-window-header {
     bottom: -18px;           right: -15px;
     width: 28px;          height: 28px;
     background: transparent url(img/shadow/bottom-right.png);
-}
-/* For IE6 (no transparent png's, we use a blur filter) */
-.v-ie6 .v-shadow-window * {
-	display: none;
-}
-.v-ie6 .v-shadow-window {
-	background: #000;
-	filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=5) alpha(opacity=20);
-	margin-top: 2px;
-	margin-left: 2px;
 }

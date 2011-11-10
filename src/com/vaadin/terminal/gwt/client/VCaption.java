@@ -29,7 +29,6 @@ public class VCaption extends HTML {
     private final ApplicationConnection client;
 
     private boolean placedAfterComponent = false;
-    private boolean iconOnloadHandled = false;
 
     private int maxWidth = -1;
 
@@ -112,7 +111,6 @@ public class VCaption extends HTML {
             // Icon forces the caption to be above the component
             placedAfterComponent = false;
 
-            iconOnloadHandled = false;
             icon.setUri(uidl.getStringAttribute(ATTRIBUTE_ICON));
 
         } else if (icon != null) {
@@ -246,15 +244,9 @@ public class VCaption extends HTML {
         }
 
         if (DOM.eventGetType(event) == Event.ONLOAD
-                && icon.getElement() == target && !iconOnloadHandled) {
+                && icon.getElement() == target) {
             icon.setWidth("");
             icon.setHeight("");
-
-            /*
-             * IE6 pngFix causes two onload events to be fired and we want to
-             * react only to the first one
-             */
-            iconOnloadHandled = true;
 
             // if max width defined, recalculate
             if (maxWidth != -1) {

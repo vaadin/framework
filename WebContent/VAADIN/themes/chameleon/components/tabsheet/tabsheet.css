@@ -36,10 +36,6 @@
 	-moz-border-radius-topright: 2px;
 	}
 
-.v-ie6 .v-tabsheet-tabitem-selected .v-caption {
-	background-image: none;
-	}
-
 .v-tabsheet-content {
 	background: #fff;
 	border-color: #b3b3b3;
@@ -60,10 +56,6 @@
 	vertical-align: middle;
 	padding: 0 0 0 .5em;
 	margin: .2em 0 0 0;
-	}
-
-.v-ie6 .v-tabsheet-caption-close {
-	background-image: url(../../img/close-btn-ie6.png);
 	}
 
 .v-tabsheet-caption-close:hover {
@@ -89,10 +81,6 @@
 	-moz-border-radius: 6px;
 	}
 
-.v-ie6 .v-tabsheet-scroller {
-	background-image: none;
-	}
-
 .v-tabsheet-scrollerPrev,
 .v-tabsheet-scrollerNext,
 .v-tabsheet-scrollerPrev-disabled,
@@ -108,13 +96,6 @@
 	cursor: default;
 	opacity: .5;
 	filter: alpha(opacity=50);
-	}
-
-.v-ie6 .v-tabsheet-scrollerPrev,
-.v-ie6 .v-tabsheet-scrollerNext,
-.v-ie6 .v-tabsheet-scrollerPrev-disabled,
-.v-ie6 .v-tabsheet-scrollerNext-disabled{
-	background-image: url(../../img/tab-arrows-ie6.png);
 	}
 
 .v-tabsheet-scroller button::-moz-focus-inner {

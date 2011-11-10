@@ -2287,7 +2287,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * of the caption container element by the correct amount
          */
         public void resizeCaptionContainer(int rightSpacing) {
-            if (BrowserInfo.get().isIE6() || td.getClassName().contains("-asc")
+            if (td.getClassName().contains("-asc")
                     || td.getClassName().contains("-desc")) {
                 /*
                  * Room for the sort indicator is made by subtracting the styled
@@ -3017,12 +3017,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         public void setHorizontalScrollPosition(int scrollLeft) {
-            if (BrowserInfo.get().isIE6()) {
-                hTableWrapper.getStyle().setPosition(Position.RELATIVE);
-                hTableWrapper.getStyle().setLeft(-scrollLeft, Unit.PX);
-            } else {
-                hTableWrapper.setScrollLeft(scrollLeft);
-            }
+            hTableWrapper.setScrollLeft(scrollLeft);
         }
 
         public void setColumnCollapsingAllowed(boolean cc) {
@@ -3873,12 +3868,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          *            The value of the leftScroll
          */
         public void setHorizontalScrollPosition(int scrollLeft) {
-            if (BrowserInfo.get().isIE6()) {
-                hTableWrapper.getStyle().setProperty("position", "relative");
-                hTableWrapper.getStyle().setPropertyPx("left", -scrollLeft);
-            } else {
-                hTableWrapper.setScrollLeft(scrollLeft);
-            }
+            hTableWrapper.setScrollLeft(scrollLeft);
         }
 
         /**
@@ -5934,7 +5924,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      */
     private int getContentAreaBorderHeight() {
         if (contentAreaBorderHeight < 0) {
-            if (BrowserInfo.get().isIE7() || BrowserInfo.get().isIE6()) {
+            if (BrowserInfo.get().isIE7()) {
                 contentAreaBorderHeight = Util
                         .measureVerticalBorder(scrollBodyPanel.getElement());
             } else {

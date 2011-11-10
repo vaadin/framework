@@ -25,19 +25,6 @@
 	line-height: normal;
 }
 
-.v-ie6 .v-table,
-.v-ie6 .v-table-header-wrap,
-.v-ie6 .v-table-footer-wrap,
-.v-ie6 .v-table-column-selector {
-	/* The header will overflow the Table due to a bug in IE6 after changes in #3003. To fix this (#7314) 
-	 * we need to apply position:relative to the wrappers and selector to make them appear on top of the 
-	 * header. We also need to apply it to the table root div to get rid of a really weird IE6 rendering bug
-	 * caused by all this relativeness (see attachment in #7314).  
-	 */
-	position: relative;
-}
-
-.v-ie6 .v-table.v-disabled,
 .v-ie7 .v-table.v-disabled {
 	/* Fixes ie issue #7324 where disabled shim does not cover table body */ 
 	position: relative;

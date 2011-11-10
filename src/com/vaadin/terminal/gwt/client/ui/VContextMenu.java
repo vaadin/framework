@@ -31,7 +31,6 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.Util;
 
@@ -218,11 +217,6 @@ public class VContextMenu extends VOverlay implements SubPartAware {
 
         public void onLoad(LoadEvent event) {
             // Handle icon onload events to ensure shadow is resized correctly
-            if (BrowserInfo.get().isIE6()) {
-                // Ensure PNG transparency works in IE6
-                Util.doIE6PngFix((Element) Element.as(event.getNativeEvent()
-                        .getEventTarget()));
-            }
             delayedImageLoadExecutioner.trigger();
         }
 

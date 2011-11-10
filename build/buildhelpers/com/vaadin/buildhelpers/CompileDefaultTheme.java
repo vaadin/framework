@@ -224,9 +224,8 @@ public class CompileDefaultTheme {
     private static void createSprites(String themeName)
             throws FileNotFoundException, IOException {
         String[] parameters = new String[] { "--sprite-png-depth", "AUTO",
-                "--sprite-png-ie6", "--css-file-suffix", "-sprite",
-                "--css-file-encoding", "UTF-8", "--root-dir-path",
-                THEME_DIR + themeName, "--log-level", "WARN" };
+                "--css-file-suffix", "-sprite", "--css-file-encoding", "UTF-8",
+                "--root-dir-path", THEME_DIR + themeName, "--log-level", "WARN" };
 
         org.carrot2.labs.smartsprites.SmartSprites.main(parameters);
 

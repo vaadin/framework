@@ -67,37 +67,14 @@
 	overflow: hidden;
 }
 /* IE specific rules */
-.v-ie6 .v-panel {
-	background: transparent;
-}
-.v-ie6 .v-panel-caption {
-	border: 1px solid #babfc0;
-	border-bottom: none;
-	background: #fff;
-	margin: 0;
-	padding-left: 18px
-}
-.v-ie6 .v-panel-nocaption {
-	border: none;
-	background: transparent;
-	margin: 0;
-	height: 0;
-}
-.v-ie6 .v-panel-caption-light {
-	border: none;
-	background: transparent;
-}
-.v-ie6 .v-panel-content,
 .v-ie7 .v-panel-content,
 .v-ie8 .v-panel-content {
 	border-bottom: 1px solid #babfc0;
 }
-.v-ie6 .v-panel-content-light, 
 .v-ie7 .v-panel-content-light, 
 .v-ie8 .v-panel-content-light {
 	border-bottom: none;
 }
-.v-ie6 .v-panel-deco, 
 .v-ie7 .v-panel-deco, 	 	 
 .v-ie8 .v-panel-deco { 
 	height: 0;

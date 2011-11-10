@@ -42,10 +42,6 @@
 	border-width: 0 1px;
 	}
 
-.v-ie6 .v-slider-vertical {
-	width: 6px;
-	}
-
 .v-slider-vertical .v-slider-base {
 	background-image: none;
 	width: 4px;
@@ -57,9 +53,4 @@
 	height: 10px;
 	margin: 0;
 	margin-left: -5px;
-	}
-
-.v-ie6 .v-slider-base,
-.v-ie6 .v-slider-handle {
-	background-image: none;
 	}

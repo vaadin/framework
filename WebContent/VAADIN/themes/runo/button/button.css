@@ -160,13 +160,9 @@
 .v-checkbox .v-errorindicator {
 	padding-left: 10px;
 	}
-.v-ie6 .v-checkbox .v-errorindicator {
-	padding-right: 4px;
-	}
 .v-ie7 .v-checkbox .v-errorindicator {
 	padding-right: 7px;
 	}
-.v-ie6 .v-button .v-errorindicator,
 .v-ie7 .v-button .v-errorindicator {
 	padding-right: 5px;
 	}
