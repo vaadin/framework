@@ -38,6 +38,7 @@ import com.vaadin.terminal.gwt.server.ChangeVariablesErrorEvent;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Root;
+import com.vaadin.ui.RootLayout;
 import com.vaadin.ui.Window;
 
 /**
@@ -1477,7 +1478,28 @@ public abstract class Application implements Terminal.ErrorListener,
         return root;
     }
 
-    protected abstract Root createRoot(WrappedRequest request);
+    protected Root createRoot(WrappedRequest request) {
+        Object rootLayoutClassNameObj = properties.get("rootLayout");
+        if (rootLayoutClassNameObj instanceof String) {
+            String rootLayoutClassName = (String) rootLayoutClassNameObj;
+            try {
+                Class<? extends RootLayout> rootLayoutClass = Class.forName(
+                        rootLayoutClassName).asSubclass(RootLayout.class);
+                try {
+                    RootLayout rootLayout = rootLayoutClass.newInstance();
+                    return new Root(rootLayout);
+                } catch (Exception e) {
+                    throw new RuntimeException(
+                            "Could instantiate rootLayout class "
+                                    + rootLayoutClassName, e);
+                }
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException("Could not load rootLayout class "
+                        + rootLayoutClassName, e);
+            }
+        }
+        throw new RuntimeException("No rootLayout defined in web.xml");
+    }
 
     public boolean handleRequest(WrappedRequest request,
             WrappedResponse response) throws IOException {
