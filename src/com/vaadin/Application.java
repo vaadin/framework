@@ -95,8 +95,7 @@ import com.vaadin.ui.Window;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public abstract class Application implements Terminal.ErrorListener,
-        Serializable {
+public class Application implements Terminal.ErrorListener, Serializable {
 
     private final static Logger logger = Logger.getLogger(Application.class
             .getName());
@@ -314,7 +313,9 @@ public abstract class Application implements Terminal.ErrorListener,
      * creating windows and adding components to them.
      * </p>
      */
-    public abstract void init();
+    public void init() {
+        // Default implementation does nothing
+    }
 
     /**
      * Returns an enumeration of all the names in this application.

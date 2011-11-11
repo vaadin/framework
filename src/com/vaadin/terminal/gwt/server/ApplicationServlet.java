@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import com.vaadin.Application;
+import com.vaadin.ui.RootLayout;
 
 /**
  * This servlet connects a Vaadin Application to Web.
@@ -35,7 +36,6 @@ public class ApplicationServlet extends AbstractApplicationServlet {
      *             if an exception has occurred that interferes with the
      *             servlet's normal operation.
      */
-    @SuppressWarnings("unchecked")
     @Override
     public void init(javax.servlet.ServletConfig servletConfig)
             throws javax.servlet.ServletException {
@@ -48,8 +48,15 @@ public class ApplicationServlet extends AbstractApplicationServlet {
         final String applicationClassName = servletConfig
                 .getInitParameter("application");
         if (applicationClassName == null) {
-            throw new ServletException(
-                    "Application not specified in servlet parameters");
+            String rootLayoutParam = servletConfig
+                    .getInitParameter("rootLayout");
+
+            // Validate the parameter value
+            verifyRootLayoutClass(rootLayoutParam);
+
+            // Application can be used if a valid rootLayout is defined
+            applicationClass = Application.class;
+            return;
         }
 
         try {
@@ -58,6 +65,33 @@ public class ApplicationServlet extends AbstractApplicationServlet {
         } catch (final ClassNotFoundException e) {
             throw new ServletException("Failed to load application class: "
                     + applicationClassName);
+        }
+    }
+
+    private void verifyRootLayoutClass(String className)
+            throws ServletException {
+        if (className == null) {
+            throw new ServletException(
+                    "rootLayout servlet parameter not defined");
+        }
+
+        // Check that the root layout class can be found
+        try {
+            Class<?> rootLayoutClass = getClassLoader().loadClass(className);
+            if (!RootLayout.class.isAssignableFrom(rootLayoutClass)) {
+                throw new ServletException(className
+                        + " does not implement RootLayout");
+            }
+            // Try finding a default constructor, else throw exception
+            rootLayoutClass.getConstructor();
+        } catch (ClassNotFoundException e) {
+            throw new ServletException("rootLayout class could not be loaded",
+                    e);
+        } catch (SecurityException e) {
+            throw new ServletException("Could not access rootLayout class", e);
+        } catch (NoSuchMethodException e) {
+            throw new ServletException(className
+                    + " doesn't have a public no-args constructor");
         }
     }
 
