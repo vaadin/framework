@@ -624,7 +624,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                 if (originalDisplay.length() == 0) {
                     layoutStyle.clearDisplay();
                 } else {
-                    layoutStyle.setDisplay(Display.valueOf(originalDisplay));
+                    layoutStyle.setProperty("display", originalDisplay);
                 }
             }
 
