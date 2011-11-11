@@ -109,7 +109,8 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
     private VLazyExecutor delayedResizeExecutor = new VLazyExecutor(200,
             new ScheduledCommand() {
                 public void execute() {
-                    windowSizeMaybeChanged(getOffsetWidth(), getOffsetHeight());
+                    windowSizeMaybeChanged(Window.getClientWidth(),
+                            Window.getClientHeight());
                 }
 
             });
