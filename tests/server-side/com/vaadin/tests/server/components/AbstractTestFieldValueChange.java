@@ -22,12 +22,12 @@ import com.vaadin.ui.AbstractField;
  * override {@link #setValue(AbstractField)} to set the field value via
  * <code>changeVariables()</code>.
  */
-public abstract class AbstractTestFieldValueChange extends TestCase {
+public abstract class AbstractTestFieldValueChange<T> extends TestCase {
 
-    private AbstractField field;
+    private AbstractField<T> field;
     private ValueChangeListener listener;
 
-    protected void setUp(AbstractField field) throws Exception {
+    protected void setUp(AbstractField<T> field) throws Exception {
         this.field = field;
         listener = EasyMock.createStrictMock(ValueChangeListener.class);
 
@@ -155,14 +155,14 @@ public abstract class AbstractTestFieldValueChange extends TestCase {
         EasyMock.verify(listener);
     }
 
-    protected AbstractField getField() {
+    protected AbstractField<T> getField() {
         return field;
     }
 
     /**
      * Override in subclasses to set value with changeVariables().
      */
-    protected void setValue(AbstractField field) {
+    protected void setValue(AbstractField<T> field) {
         field.setValue("newValue");
     }
 

@@ -104,7 +104,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
                         + " not found");
             }
             try {
-                Property<IDTYPE> property = pd.createProperty(bean);
+                Property<IDTYPE> property = (Property<IDTYPE>) pd
+                        .createProperty(bean);
                 return property.getValue();
             } catch (MethodException e) {
                 throw new IllegalArgumentException(e);
@@ -256,7 +257,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @see com.vaadin.data.Container#getContainerProperty(java.lang.Object,
      * java.lang.Object)
      */
-    public Property getContainerProperty(Object itemId, Object propertyId) {
+    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
         Item item = getItem(itemId);
         if (item == null) {
             return null;
@@ -371,7 +372,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      *            The id of the property
      */
     private void addValueChangeListener(Item item, Object propertyId) {
-        Property property = item.getItemProperty(propertyId);
+        Property<?> property = item.getItemProperty(propertyId);
         if (property instanceof ValueChangeNotifier) {
             // avoid multiple notifications for the same property if
             // multiple filters are in use
@@ -390,7 +391,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      *            The id of the property
      */
     private void removeValueChangeListener(Item item, Object propertyId) {
-        Property property = item.getItemProperty(propertyId);
+        Property<?> property = item.getItemProperty(propertyId);
         if (property instanceof ValueChangeNotifier) {
             ((ValueChangeNotifier) property).removeListener(this);
         }

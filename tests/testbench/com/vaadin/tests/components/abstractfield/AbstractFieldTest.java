@@ -24,7 +24,7 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 
-public abstract class AbstractFieldTest<T extends AbstractField> extends
+public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
         AbstractComponentTest<T> implements ValueChangeListener,
         ReadOnlyStatusChangeListener, FocusListener, BlurListener {
 

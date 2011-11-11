@@ -730,7 +730,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      * @see com.vaadin.data.Container#getContainerProperty(Object, Object)
      */
-    public Property getContainerProperty(Object itemId, Object propertyId) {
+    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
         return items.getContainerProperty(itemId, propertyId);
     }
 

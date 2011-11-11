@@ -12,7 +12,7 @@ import com.vaadin.data.util.filter.Between;
 public class BetweenTest {
 
     private Item itemWithPropertyValue(Object propertyId, Object value) {
-        Property property = EasyMock.createMock(Property.class);
+        Property<?> property = EasyMock.createMock(Property.class);
         property.getValue();
         EasyMock.expectLastCall().andReturn(value).anyTimes();
         EasyMock.replay(property);

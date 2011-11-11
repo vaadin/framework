@@ -48,7 +48,7 @@ public final class RowItem implements Item {
         this.id = id;
     }
 
-    public Property getItemProperty(Object id) {
+    public Property<?> getItemProperty(Object id) {
         if (id instanceof String && id != null) {
             for (ColumnProperty cp : properties) {
                 if (id.equals(cp.getPropertyId())) {

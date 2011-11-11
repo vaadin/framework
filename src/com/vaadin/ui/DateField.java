@@ -544,7 +544,7 @@ public class DateField extends AbstractField<Date> implements
                 Form f = (Form) parenOfDateField;
                 Collection<?> visibleItemProperties = f.getItemPropertyIds();
                 for (Object fieldId : visibleItemProperties) {
-                    Field field = f.getField(fieldId);
+                    Field<?> field = f.getField(fieldId);
                     if (field == this) {
                         /*
                          * this datefield is logically in a form. Do the same

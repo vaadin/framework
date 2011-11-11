@@ -48,8 +48,8 @@ public class PropertyValueChange extends TestBase {
                 Object columnId) {
             final Label l = new Label();
             @SuppressWarnings("unchecked")
-            final Property<Integer> integer = source.getContainerProperty(
-                    itemId, "integer");
+            final Property<Integer> integer = (Property<Integer>) source
+                    .getContainerProperty(itemId, "integer");
             l.setValue(getMultipliedValue(integer));
 
             // we must hook value change listener to ensure updates in all use

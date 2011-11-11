@@ -229,7 +229,7 @@ public class QueryContainer implements Container, Container.Ordered,
      *         otherwise.
      */
 
-    public synchronized Property getContainerProperty(Object itemId,
+    public synchronized Property<?> getContainerProperty(Object itemId,
             Object propertyId) {
         if (!(itemId instanceof Integer && propertyId instanceof String)) {
             return null;
@@ -532,7 +532,7 @@ public class QueryContainer implements Container, Container.Ordered,
          *            identifier of the Property to get
          * @return the Property with the given ID or <code>null</code>
          */
-        public Property getItemProperty(Object propertyId) {
+        public Property<?> getItemProperty(Object propertyId) {
             return getContainerProperty(id, propertyId);
         }
 

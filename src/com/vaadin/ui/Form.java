@@ -599,7 +599,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * 
      * @see com.vaadin.data.Item#getItemProperty(Object)
      */
-    public Property getItemProperty(Object id) {
+    public Property<?> getItemProperty(Object id) {
         final Field<?> field = fields.get(id);
         if (field == null) {
             // field does not exist or it is not (yet) created for this property
@@ -1129,7 +1129,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * 
      * @return the Field.
      */
-    private Field getFirstFocusableField() {
+    private Field<?> getFirstFocusableField() {
         if (getItemPropertyIds() != null) {
             for (Object id : getItemPropertyIds()) {
                 if (id != null) {

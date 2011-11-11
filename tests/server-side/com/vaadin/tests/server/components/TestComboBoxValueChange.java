@@ -12,7 +12,8 @@ import com.vaadin.ui.ComboBox;
  * 
  * See <a href="http://dev.vaadin.com/ticket/4394">Ticket 4394</a>.
  */
-public class TestComboBoxValueChange extends AbstractTestFieldValueChange {
+public class TestComboBoxValueChange extends
+        AbstractTestFieldValueChange<Object> {
     @Override
     protected void setUp() throws Exception {
         ComboBox combo = new ComboBox();
@@ -21,7 +22,7 @@ public class TestComboBoxValueChange extends AbstractTestFieldValueChange {
     }
 
     @Override
-    protected void setValue(AbstractField field) {
+    protected void setValue(AbstractField<Object> field) {
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("selected", new String[] { "myvalue" });
         field.changeVariables(field, variables);

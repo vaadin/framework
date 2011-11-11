@@ -150,7 +150,7 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Container#getContainerProperty(java.lang.Object,
      * java.lang.Object)
      */
-    public Property getContainerProperty(Object itemId, Object propertyId) {
+    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
         if (!containsId(itemId)) {
             return null;
         }
@@ -680,7 +680,7 @@ public class IndexedContainer extends
          * 
          * @see com.vaadin.data.Item#getItemProperty(java.lang.Object)
          */
-        public Property getItemProperty(Object id) {
+        public Property<?> getItemProperty(Object id) {
             return new IndexedContainerProperty(itemId, id);
         }
 

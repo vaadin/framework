@@ -459,7 +459,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      *            the property's ID.
      * @return the requested property's value, or <code>null</code>
      */
-    public Property getContainerProperty(Object itemId, Object propertyId) {
+    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
 
         if (!(itemId instanceof File)) {
             return null;
@@ -609,7 +609,7 @@ public class FilesystemContainer implements Container.Hierarchical {
          * Gets the specified property of this file. Don't add a JavaDoc comment
          * here, we use the default documentation from implemented interface.
          */
-        public Property getItemProperty(Object id) {
+        public Property<?> getItemProperty(Object id) {
             return getContainerProperty(file, id);
         }
 

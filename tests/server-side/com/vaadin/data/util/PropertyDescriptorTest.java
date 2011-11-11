@@ -34,8 +34,8 @@ public class PropertyDescriptorTest extends TestCase {
         VaadinPropertyDescriptor<Person> descriptor2 = (VaadinPropertyDescriptor<Person>) new ObjectInputStream(
                 new ByteArrayInputStream(baos.toByteArray())).readObject();
 
-        Property property = descriptor2
-                .createProperty(new Person("John", null));
+        Property<?> property = descriptor2.createProperty(new Person("John",
+                null));
         Assert.assertEquals("John", property.getValue());
     }
 
@@ -49,7 +49,7 @@ public class PropertyDescriptorTest extends TestCase {
         VaadinPropertyDescriptor<Person> pd2 = (VaadinPropertyDescriptor<Person>) new ObjectInputStream(
                 new ByteArrayInputStream(baos.toByteArray())).readObject();
 
-        Property property = pd2.createProperty(new Person("John", null));
+        Property<?> property = pd2.createProperty(new Person("John", null));
         Assert.assertEquals("John", property.getValue());
     }
 }

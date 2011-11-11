@@ -222,7 +222,7 @@ public class RichTextArea extends AbstractField<String> {
     }
 
     @Override
-    public Class getType() {
+    public Class<String> getType() {
         return String.class;
     }
 

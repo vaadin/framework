@@ -121,7 +121,7 @@ public interface Container extends Serializable {
      *            ID of the Property to retrieve
      * @return Property with the given ID or <code>null</code>
      */
-    public Property getContainerProperty(Object itemId, Object propertyId);
+    public Property<?> getContainerProperty(Object itemId, Object propertyId);
 
     /**
      * Gets the data type of all Properties identified by the given Property ID.

@@ -170,7 +170,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     @SuppressWarnings("unchecked")
     public MethodProperty(Object instance, String beanPropertyName) {
 
-        final Class beanClass = instance.getClass();
+        final Class<?> beanClass = instance.getClass();
 
         // Assure that the first letter is upper cased (it is a common
         // mistake to write firstName, not FirstName).
@@ -474,7 +474,9 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      *            {@link #setValue(Object newValue)} is called.
      */
     @SuppressWarnings("unchecked")
-    public MethodProperty(Class type, Object instance, Method getMethod,
+    // cannot use "Class<? extends T>" because of automatic primitive type
+    // conversions
+    public MethodProperty(Class<?> type, Object instance, Method getMethod,
             Method setMethod, Object[] getArgs, Object[] setArgs,
             int setArgumentIndex) {
 
@@ -495,13 +497,13 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         }
 
         // Gets the return type from get method
-        type = convertPrimitiveType(type);
+        Class<? extends T> convertedType = (Class<? extends T>) convertPrimitiveType(type);
 
         this.getMethod = getMethod;
         this.setMethod = setMethod;
         setArguments(getArgs, setArgs, setArgumentIndex);
         this.instance = instance;
-        this.type = type;
+        this.type = convertedType;
     }
 
     /**
@@ -673,6 +675,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         // convert using a string constructor
         try {
             // Gets the string constructor
+            @SuppressWarnings("rawtypes")
             final Constructor constr = type
                     .getConstructor(new Class[] { String.class });
 

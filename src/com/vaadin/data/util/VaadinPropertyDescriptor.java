@@ -39,5 +39,5 @@ public interface VaadinPropertyDescriptor<BT> extends Serializable {
      * @param bean
      * @return
      */
-    public Property createProperty(BT bean);
+    public Property<?> createProperty(BT bean);
 }
