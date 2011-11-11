@@ -354,7 +354,7 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
         } else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
             feedbackPopup.show();
         }
-        if(Util.isTouchEvent(event)) {
+        if (Util.isTouchEvent(event)) {
             event.preventDefault(); // avoid simulated events
             event.stopPropagation();
         }
