@@ -981,8 +981,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @VERSION@
      * @since 3.0
      */
-    public class ReadOnlyStatusChangeEvent extends Component.Event implements
-            Property.ReadOnlyStatusChangeEvent, Serializable {
+    public static class ReadOnlyStatusChangeEvent extends Component.Event
+            implements Property.ReadOnlyStatusChangeEvent, Serializable {
 
         /**
          * New instance of text change event.

@@ -163,7 +163,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * @VERSION@
      * @since 3.0
      */
-    private class PropertySetChangeEvent extends EventObject implements
+    private static class PropertySetChangeEvent extends EventObject implements
             Item.PropertySetChangeEvent {
 
         private PropertySetChangeEvent(Item source) {

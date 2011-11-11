@@ -418,7 +418,7 @@ public class Label extends AbstractComponent implements Property,
      * @VERSION@
      * @since 3.0
      */
-    public class ValueChangeEvent extends Component.Event implements
+    public static class ValueChangeEvent extends Component.Event implements
             Property.ValueChangeEvent {
 
         /**

@@ -425,7 +425,7 @@ public class IndexedContainer extends
      * @VERSION@
      * @since 3.0
      */
-    public class ItemSetChangeEvent extends BaseItemSetChangeEvent {
+    public static class ItemSetChangeEvent extends BaseItemSetChangeEvent {
 
         private final int addedItemIndex;
 
@@ -455,7 +455,7 @@ public class IndexedContainer extends
      * @VERSION@
      * @since 3.0
      */
-    private class PropertyValueChangeEvent extends EventObject implements
+    private static class PropertyValueChangeEvent extends EventObject implements
             Property.ValueChangeEvent, Serializable {
 
         private PropertyValueChangeEvent(Property source) {
@@ -786,7 +786,7 @@ public class IndexedContainer extends
      * @VERSION@
      * @since 3.0
      */
-    private class IndexedContainerProperty implements Property,
+    private class IndexedContainerProperty implements Property<Object>,
             Property.ValueChangeNotifier {
 
         /**
