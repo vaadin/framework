@@ -309,7 +309,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Set of properties listened - the list is kept to release the listeners
      * later.
      */
-    private HashSet<Property> listenedProperties = null;
+    private HashSet<Property<?>> listenedProperties = null;
 
     /**
      * Set of visible components - the is used for needsRepaint calculation.
@@ -404,7 +404,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private RowGenerator rowGenerator = null;
 
-    private final Map<Field, Property> associatedProperties = new HashMap<Field, Property>();
+    private final Map<Field<?>, Property<?>> associatedProperties = new HashMap<Field<?>, Property<?>>();
 
     private boolean painted = false;
 
@@ -1718,13 +1718,13 @@ public class Table extends AbstractSelect implements Action.Container,
         final Object[] colids = getVisibleColumns();
         final int cols = colids.length;
 
-        HashSet<Property> oldListenedProperties = listenedProperties;
+        HashSet<Property<?>> oldListenedProperties = listenedProperties;
         HashSet<Component> oldVisibleComponents = visibleComponents;
 
         if (replaceListeners) {
             // initialize the listener collections, this should only be done if
             // the entire cache is refreshed (through refreshRenderedCells)
-            listenedProperties = new HashSet<Property>();
+            listenedProperties = new HashSet<Property<?>>();
             visibleComponents = new HashSet<Component>();
         }
 
@@ -1784,7 +1784,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 if (isColumnCollapsed(colids[j])) {
                     continue;
                 }
-                Property p = null;
+                Property<?> p = null;
                 Object value = "";
                 boolean isGeneratedRow = generatedRow != null;
                 boolean isGeneratedColumn = columnGenerators
@@ -1904,8 +1904,8 @@ public class Table extends AbstractSelect implements Action.Container,
         visibleComponents.add(component);
     }
 
-    private void listenProperty(Property p,
-            HashSet<Property> oldListenedProperties) {
+    private void listenProperty(Property<?> p,
+            HashSet<Property<?>> oldListenedProperties) {
         if (p instanceof Property.ValueChangeNotifier) {
             if (oldListenedProperties == null
                     || !oldListenedProperties.contains(p)) {
@@ -1945,7 +1945,7 @@ public class Table extends AbstractSelect implements Action.Container,
                             visibleComponents.remove(cellVal);
                             unregisterComponent((Component) cellVal);
                         } else {
-                            Property p = getContainerProperty(
+                            Property<?> p = getContainerProperty(
                                     pageBuffer[CELL_ITEMID][i + ix], colids[c]);
                             if (p instanceof ValueChangeNotifier
                                     && listenedProperties.contains(p)) {
@@ -1970,7 +1970,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *            set of components that where attached in last render
      */
     private void unregisterPropertiesAndComponents(
-            HashSet<Property> oldListenedProperties,
+            HashSet<Property<?>> oldListenedProperties,
             HashSet<Component> oldVisibleComponents) {
         if (oldVisibleComponents != null) {
             for (final Iterator<Component> i = oldVisibleComponents.iterator(); i
@@ -1983,8 +1983,8 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         if (oldListenedProperties != null) {
-            for (final Iterator<Property> i = oldListenedProperties.iterator(); i
-                    .hasNext();) {
+            for (final Iterator<Property<?>> i = oldListenedProperties
+                    .iterator(); i.hasNext();) {
                 Property.ValueChangeNotifier o = (ValueChangeNotifier) i.next();
                 if (!listenedProperties.contains(o)) {
                     o.removeListener(this);
@@ -2017,8 +2017,8 @@ public class Table extends AbstractSelect implements Action.Container,
          * fields in memory.
          */
         if (component instanceof Field) {
-            Field field = (Field) component;
-            Property associatedProperty = associatedProperties
+            Field<?> field = (Field<?>) component;
+            Property<?> associatedProperty = associatedProperties
                     .remove(component);
             if (associatedProperty != null
                     && field.getPropertyDataSource() == associatedProperty) {
@@ -3399,8 +3399,8 @@ public class Table extends AbstractSelect implements Action.Container,
     protected Object getPropertyValue(Object rowId, Object colId,
             Property property) {
         if (isEditable() && fieldFactory != null) {
-            final Field f = fieldFactory.createField(getContainerDataSource(),
-                    rowId, colId, this);
+            final Field<?> f = fieldFactory.createField(
+                    getContainerDataSource(), rowId, colId, this);
             if (f != null) {
                 // Remember that we have made this association so we can remove
                 // it when the component is removed

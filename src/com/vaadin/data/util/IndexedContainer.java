@@ -76,7 +76,7 @@ public class IndexedContainer extends
     /**
      * Set of properties that are read-only.
      */
-    private HashSet<Property> readOnlyProperties = new HashSet<Property>();
+    private HashSet<Property<?>> readOnlyProperties = new HashSet<Property<?>>();
 
     /**
      * List of all Property value change event listeners listening all the
@@ -1053,7 +1053,7 @@ public class IndexedContainer extends
                 getPropertySetChangeListeners()) : null);
         nc.propertyValueChangeListeners = propertyValueChangeListeners != null ? (LinkedList<Property.ValueChangeListener>) propertyValueChangeListeners
                 .clone() : null;
-        nc.readOnlyProperties = readOnlyProperties != null ? (HashSet<Property>) readOnlyProperties
+        nc.readOnlyProperties = readOnlyProperties != null ? (HashSet<Property<?>>) readOnlyProperties
                 .clone() : null;
         nc.singlePropertyValueChangeListeners = singlePropertyValueChangeListeners != null ? (Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>>) singlePropertyValueChangeListeners
                 .clone() : null;

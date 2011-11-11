@@ -136,7 +136,8 @@ public class QueryContainer implements Container, Container.Ordered,
         for (int i = 1; i <= count; i++) {
             final String columnName = metadata.getColumnName(i);
             list.add(columnName);
-            final Property p = getContainerProperty(new Integer(1), columnName);
+            final Property<?> p = getContainerProperty(new Integer(1),
+                    columnName);
             propertyTypes.put(columnName,
                     p == null ? Object.class : p.getType());
         }

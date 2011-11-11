@@ -1078,7 +1078,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             break;
 
         case ITEM_CAPTION_MODE_PROPERTY:
-            final Property p = getContainerProperty(itemId,
+            final Property<?> p = getContainerProperty(itemId,
                     getItemCaptionPropertyId());
             if (p != null) {
                 Object value = p.getValue();
@@ -1129,7 +1129,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             return null;
         }
 
-        final Property ip = getContainerProperty(itemId,
+        final Property<?> ip = getContainerProperty(itemId,
                 getItemIconPropertyId());
         if (ip == null) {
             return null;
@@ -1708,7 +1708,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                 Collection<?> pids = i.getItemPropertyIds();
                 if (pids != null) {
                     for (Iterator<?> it = pids.iterator(); it.hasNext();) {
-                        Property p = i.getItemProperty(it.next());
+                        Property<?> p = i.getItemProperty(it.next());
                         if (p != null
                                 && p instanceof Property.ValueChangeNotifier) {
                             ((Property.ValueChangeNotifier) p)
@@ -1720,7 +1720,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                 }
                 break;
             case ITEM_CAPTION_MODE_PROPERTY:
-                final Property p = getContainerProperty(itemId,
+                final Property<?> p = getContainerProperty(itemId,
                         getItemCaptionPropertyId());
                 if (p != null && p instanceof Property.ValueChangeNotifier) {
                     ((Property.ValueChangeNotifier) p)

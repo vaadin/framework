@@ -228,7 +228,7 @@ public abstract class Compare implements Filter {
     }
 
     public boolean passesFilter(Object itemId, Item item) {
-        final Property p = item.getItemProperty(getPropertyId());
+        final Property<?> p = item.getItemProperty(getPropertyId());
         if (null == p) {
             return false;
         }

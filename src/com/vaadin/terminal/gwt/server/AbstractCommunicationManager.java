@@ -1520,7 +1520,7 @@ public abstract class AbstractCommunicationManager implements
 
         if (owner instanceof AbstractField) {
             try {
-                handled = ((AbstractField) owner).handleError(errorEvent);
+                handled = ((AbstractField<?>) owner).handleError(errorEvent);
             } catch (Exception handlerException) {
                 /*
                  * If there is an error in the component error handler we pass

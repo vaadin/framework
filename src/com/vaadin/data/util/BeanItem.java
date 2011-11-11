@@ -164,7 +164,7 @@ public class BeanItem<BT> extends PropertysetItem {
                 final Method getMethod = pd.getReadMethod();
                 if ((getMethod != null)
                         && getMethod.getDeclaringClass() != Object.class) {
-                    VaadinPropertyDescriptor<BT> vaadinPropertyDescriptor = new MethodPropertyDescriptor(
+                    VaadinPropertyDescriptor<BT> vaadinPropertyDescriptor = new MethodPropertyDescriptor<BT>(
                             pd.getName(), pd.getPropertyType(),
                             pd.getReadMethod(), pd.getWriteMethod());
                     pdMap.put(pd.getName(), vaadinPropertyDescriptor);

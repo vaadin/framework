@@ -40,7 +40,7 @@ public final class SimpleStringFilter implements Filter {
     }
 
     public boolean passesFilter(Object itemId, Item item) {
-        final Property p = item.getItemProperty(propertyId);
+        final Property<?> p = item.getItemProperty(propertyId);
         if (p == null) {
             return false;
         }

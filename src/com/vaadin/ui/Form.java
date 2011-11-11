@@ -99,12 +99,12 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     /**
      * Mapping from propertyName to corresponding field.
      */
-    private final HashMap<Object, Field> fields = new HashMap<Object, Field>();
+    private final HashMap<Object, Field<?>> fields = new HashMap<Object, Field<?>>();
 
     /**
      * Form may act as an Item, its own properties are stored here.
      */
-    private final HashMap<Object, Property> ownProperties = new HashMap<Object, Property>();
+    private final HashMap<Object, Property<?>> ownProperties = new HashMap<Object, Property<?>>();
 
     /**
      * Field factory for this form.
@@ -242,7 +242,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
                                     field.getCaption());
                         }
                         break;
-                    } else if (f instanceof Field && !((Field) f).isValid()) {
+                    } else if (f instanceof Field && !((Field<?>) f).isValid()) {
                         // Something is wrong with the field, but no proper
                         // error is given. Generate one.
                         validationError = new Validator.InvalidValueException(
@@ -321,7 +321,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         // Try to commit all
         for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
             try {
-                final Field f = (fields.get(i.next()));
+                final Field<?> f = (fields.get(i.next()));
                 // Commit only non-readonly fields.
                 if (!f.isReadOnly()) {
                     f.commit();
@@ -408,7 +408,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     @Override
     public boolean isModified() {
         for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
-            final Field f = fields.get(i.next());
+            final Field<?> f = fields.get(i.next());
             if (f != null && f.isModified()) {
                 return true;
             }
@@ -485,7 +485,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         ownProperties.put(id, property);
 
         // Gets suitable field
-        final Field field = fieldFactory.createField(this, id, this);
+        final Field<?> field = fieldFactory.createField(this, id, this);
         if (field == null) {
             return false;
         }
@@ -536,7 +536,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @param field
      *            the Field that should be registered
      */
-    private void registerField(Object propertyId, Field field) {
+    private void registerField(Object propertyId, Field<?> field) {
         if (propertyId == null || field == null) {
             return;
         }
@@ -600,12 +600,12 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @see com.vaadin.data.Item#getItemProperty(Object)
      */
     public Property getItemProperty(Object id) {
-        final Field field = fields.get(id);
+        final Field<?> field = fields.get(id);
         if (field == null) {
             // field does not exist or it is not (yet) created for this property
             return ownProperties.get(id);
         }
-        final Property property = field.getPropertyDataSource();
+        final Property<?> property = field.getPropertyDataSource();
 
         if (property != null) {
             return property;
@@ -637,7 +637,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     public boolean removeItemProperty(Object id) {
         ownProperties.remove(id);
 
-        final Field field = fields.get(id);
+        final Field<?> field = fields.get(id);
 
         if (field != null) {
             propertyIds.remove(id);
@@ -750,9 +750,9 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         // Adds all the properties to this form
         for (final Iterator<?> i = propertyIds.iterator(); i.hasNext();) {
             final Object id = i.next();
-            final Property property = itemDatasource.getItemProperty(id);
+            final Property<?> property = itemDatasource.getItemProperty(id);
             if (id != null && property != null) {
-                final Field f = fieldFactory.createField(itemDatasource, id,
+                final Field<?> f = fieldFactory.createField(itemDatasource, id,
                         this);
                 if (f != null) {
                     f.setPropertyDataSource(property);
@@ -802,7 +802,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         if (layout != null) {
             final Object[] properties = propertyIds.toArray();
             for (int i = 0; i < properties.length; i++) {
-                Field f = getField(properties[i]);
+                Field<?> f = getField(properties[i]);
                 detachField(f);
                 if (newLayout instanceof CustomLayout) {
                     ((CustomLayout) newLayout).addComponent(f,
@@ -849,7 +849,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         }
 
         // Gets the old field
-        final Field oldField = fields.get(propertyId);
+        final Field<?> oldField = fields.get(propertyId);
         if (oldField == null) {
             throw new IllegalArgumentException("Field with given propertyid '"
                     + propertyId.toString() + "' can not be found.");
@@ -926,7 +926,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         }
 
         // Sets the property data source
-        final Property property = oldField.getPropertyDataSource();
+        final Property<?> property = oldField.getPropertyDataSource();
         oldField.setPropertyDataSource(null);
         newField.setPropertyDataSource(property);
 
@@ -1133,7 +1133,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         if (getItemPropertyIds() != null) {
             for (Object id : getItemPropertyIds()) {
                 if (id != null) {
-                    Field field = getField(id);
+                    Field<?> field = getField(id);
                     if (field.isEnabled() && !field.isReadOnly()) {
                         return field;
                     }
@@ -1222,7 +1222,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      */
     @Override
     public void focus() {
-        final Field f = getFirstFocusableField();
+        final Field<?> f = getFirstFocusableField();
         if (f != null) {
             f.focus();
         }
@@ -1248,8 +1248,8 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     @Override
     public void setImmediate(boolean immediate) {
         super.setImmediate(immediate);
-        for (Iterator<Field> i = fields.values().iterator(); i.hasNext();) {
-            Field f = i.next();
+        for (Iterator<Field<?>> i = fields.values().iterator(); i.hasNext();) {
+            Field<?> f = i.next();
             if (f instanceof AbstractComponent) {
                 ((AbstractComponent) f).setImmediate(immediate);
             }
@@ -1260,10 +1260,10 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     @Override
     protected boolean isEmpty() {
 
-        for (Iterator<Field> i = fields.values().iterator(); i.hasNext();) {
-            Field f = i.next();
+        for (Iterator<Field<?>> i = fields.values().iterator(); i.hasNext();) {
+            Field<?> f = i.next();
             if (f instanceof AbstractField) {
-                if (!((AbstractField) f).isEmpty()) {
+                if (!((AbstractField<?>) f).isEmpty()) {
                     return false;
                 }
             }

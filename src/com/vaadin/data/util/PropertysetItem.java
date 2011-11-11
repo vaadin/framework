@@ -34,7 +34,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
     /**
      * Mapping from property id to property.
      */
-    private HashMap<Object, Property> map = new HashMap<Object, Property>();
+    private HashMap<Object, Property<?>> map = new HashMap<Object, Property<?>>();
 
     /**
      * List of all property ids to maintain the order.
@@ -262,7 +262,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
         npsi.list = list != null ? (LinkedList<Object>) list.clone() : null;
         npsi.propertySetChangeListeners = propertySetChangeListeners != null ? (LinkedList<PropertySetChangeListener>) propertySetChangeListeners
                 .clone() : null;
-        npsi.map = (HashMap<Object, Property>) map.clone();
+        npsi.map = (HashMap<Object, Property<?>>) map.clone();
 
         return npsi;
     }
