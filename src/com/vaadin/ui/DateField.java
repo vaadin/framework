@@ -752,18 +752,13 @@ public class DateField extends AbstractField<Date> implements
     }
 
     /**
-     * Tests the current value against registered validators if the field is not
-     * empty. Note that DateField is considered empty (value == null) and
+     * Validates the current value against registered validators if the field is
+     * not empty. Note that DateField is considered empty (value == null) and
      * invalid if it contains text typed in by the user that couldn't be parsed
      * into a Date value.
      * 
-     * @see com.vaadin.ui.AbstractField#isValid()
+     * @see com.vaadin.ui.AbstractField#validate()
      */
-    @Override
-    public boolean isValid() {
-        return uiHasValidDateString && super.isValid();
-    }
-
     @Override
     public void validate() throws InvalidValueException {
         /*

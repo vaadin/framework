@@ -4,6 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.validator.CompositeValidator;
+import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.TextField;
@@ -21,26 +22,10 @@ public class Ticket20 extends Application {
         mainWin.addComponent(tx);
         tx.setImmediate(true);
         CompositeValidator v = new CompositeValidator();
+        v.addValidator(new IntegerValidator("{0} is not a number"));
         v.addValidator(new Validator() {
 
-            public boolean isValid(Object value) {
-                try {
-                    Integer.parseInt("" + value);
-                    return true;
-                } catch (NumberFormatException e) {
-                    return false;
-                }
-            }
-
-            public void validate(Object value) throws InvalidValueException {
-                if (!isValid(value)) {
-                    throw new InvalidValueException(value + " is not a number");
-                }
-            }
-        });
-        v.addValidator(new Validator() {
-
-            public boolean isValid(Object value) {
+            private boolean isValid(Object value) {
                 try {
                     int i = Integer.parseInt("" + value);
                     if (i < 0) {
@@ -64,12 +49,8 @@ public class Ticket20 extends Application {
         v2.addValidator(v);
         v2.addValidator(new Validator() {
 
-            public boolean isValid(Object value) {
-                return "".equals("" + value);
-            }
-
             public void validate(Object value) throws InvalidValueException {
-                if (!isValid(value)) {
+                if (!"".equals("" + value)) {
                     throw new InvalidValueException("Value is not empty string");
                 }
             }

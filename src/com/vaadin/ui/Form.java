@@ -968,21 +968,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     }
 
     /**
-     * Tests the current value of the object against all registered validators
-     * 
-     * @see com.vaadin.data.Validatable#isValid()
-     */
-    @Override
-    public boolean isValid() {
-        boolean valid = true;
-        for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
-            valid &= (fields.get(i.next())).isValid();
-        }
-        return valid && super.isValid();
-    }
-
-    /**
-     * Checks the validity of the validatable.
+     * Checks the validity of the Form and all of its fields.
      * 
      * @see com.vaadin.data.Validatable#validate()
      */

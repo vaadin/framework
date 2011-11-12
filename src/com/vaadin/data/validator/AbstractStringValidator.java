@@ -51,7 +51,8 @@ public abstract class AbstractStringValidator extends AbstractValidator {
      * @return true if the value (or its toString()) is a valid string, false
      *         otherwise
      */
-    public boolean isValid(Object value) {
+    @Override
+    protected boolean internalIsValid(Object value) {
         if (value == null) {
             return true;
         }

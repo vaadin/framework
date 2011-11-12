@@ -172,23 +172,18 @@ public class Ticket2998 extends Application {
                 if (propertyId.equals("kilometers")) {
                     f.setWidth("4em");
                     f.addValidator(new Validator() {
-                        public boolean isValid(Object value) {
+                        public void validate(Object value)
+                                throws InvalidValueException {
+                            // FIXME this does not follow the standard pattern
+                            // for validators and has side effects!
                             try {
                                 @SuppressWarnings("unused")
                                 float f = Float.parseFloat((String) value);
-                                return true;
                             } catch (Exception e) {
                                 f.getWindow().showNotification(
                                         "Bad number value");
                                 f.setValue(0);
-                                return false;
                             }
-                        }
-
-                        public void validate(Object value)
-                                throws InvalidValueException {
-                            // TODO Auto-generated method stub
-
                         }
                     });
                 }

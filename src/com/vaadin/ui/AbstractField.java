@@ -730,32 +730,21 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * empty. If the field is empty it is considered valid if it is not required
      * and invalid otherwise. Validators are never checked for empty fields.
      * 
+     * In most cases, {@link #validate()} should be used instead of
+     * {@link #isValid()} to also get the error message.
+     * 
      * @return <code>true</code> if all registered validators claim that the
      *         current value is valid or if the field is empty and not required,
      *         <code>false</code> otherwise.
      */
     public boolean isValid() {
 
-        if (isEmpty()) {
-            if (isRequired()) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-
-        if (validators == null) {
+        try {
+            validate();
             return true;
+        } catch (InvalidValueException e) {
+            return false;
         }
-
-        final Object value = getValue();
-        for (final Iterator<Validator> i = validators.iterator(); i.hasNext();) {
-            if (!(i.next()).isValid(value)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     /**

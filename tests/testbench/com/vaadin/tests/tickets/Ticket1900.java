@@ -53,19 +53,15 @@ public class Ticket1900 extends Application {
 
     }
 
-    class ContainsValidator implements Validator {
+    static class ContainsValidator implements Validator {
         private final String c;
 
         public ContainsValidator(String c) {
             this.c = c;
         }
 
-        public boolean isValid(Object value) {
-            return value != null && value.toString().contains(c);
-        }
-
         public void validate(Object value) throws InvalidValueException {
-            if (!isValid(value)) {
+            if (value == null || !value.toString().contains(c)) {
                 throw new InvalidValueException("Value does not contain " + c);
             }
 

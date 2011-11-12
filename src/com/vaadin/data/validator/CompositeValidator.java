@@ -127,38 +127,6 @@ public class CompositeValidator extends AbstractValidator {
     }
 
     /**
-     * Checks the validity of the the given value. The value is valid, if:
-     * <ul>
-     * <li><code>MODE_AND</code>: All of the sub-validators are valid
-     * <li><code>MODE_OR</code>: Any of the sub-validators are valid
-     * </ul>
-     * 
-     * @param value
-     *            the value to check.
-     */
-    public boolean isValid(Object value) {
-        switch (mode) {
-        case MODE_AND:
-            for (Validator v : validators) {
-                if (!v.isValid(value)) {
-                    return false;
-                }
-            }
-            return true;
-
-        case MODE_OR:
-            for (Validator v : validators) {
-                if (v.isValid(value)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        throw new IllegalStateException(
-                "The valitor is in unsupported operation mode");
-    }
-
-    /**
      * Gets the mode of the validator.
      * 
      * @return Operation mode of the validator: <code>MODE_AND</code> or

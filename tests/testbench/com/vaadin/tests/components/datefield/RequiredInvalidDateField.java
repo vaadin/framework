@@ -12,6 +12,7 @@ import com.vaadin.ui.DateField;
 
 public class RequiredInvalidDateField extends TestBase {
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void setup() {
         // StringLengthValidator textValidator = new StringLengthValidator(
@@ -37,7 +38,8 @@ public class RequiredInvalidDateField extends TestBase {
         Validator dateValidator = new AbstractValidator(
                 "Day of month must be an even number") {
 
-            public boolean isValid(Object value) {
+            @Override
+            protected boolean internalIsValid(Object value) {
                 if (!(value instanceof Date)) {
                     return false;
                 }

@@ -29,6 +29,13 @@ import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
  * <p>
  * Validators must not have any side effects.
  * </p>
+ * <p>
+ * Since Vaadin 7, the method isValid(Object) does not exist in the interface -
+ * {@link #validate(Object)} should be used instead, and the exception caught
+ * where applicable. Concrete classes implementing {@link Validator} can still
+ * internally implement and use isValid(Object) for convenience or to ease
+ * migration from earlier Vaadin versions.
+ * </p>
  * 
  * @author IT Mill Ltd.
  * @version
@@ -48,18 +55,6 @@ public interface Validator extends Serializable {
      *             if the value is invalid
      */
     public void validate(Object value) throws Validator.InvalidValueException;
-
-    /**
-     * Tests if the given value is valid. This method must be symmetric with
-     * {@link #validate(Object)} so that {@link #validate(Object)} throws an
-     * error iff this method returns false.
-     * 
-     * @param value
-     *            the value to check
-     * @return <code>true</code> if the value is valid, <code>false</code>
-     *         otherwise.
-     */
-    public boolean isValid(Object value);
 
     /**
      * Exception that is thrown by a {@link Validator} when a value is invalid.

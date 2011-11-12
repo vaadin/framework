@@ -20,9 +20,9 @@ public class TestSerialization extends TestCase {
 
     public void testValidators() throws Exception {
         RegexpValidator validator = new RegexpValidator(".*", "Error");
-        validator.isValid("aaa");
+        validator.validate("aaa");
         RegexpValidator validator2 = (RegexpValidator) serializeAndDeserialize(validator);
-        validator2.isValid("aaa");
+        validator2.validate("aaa");
     }
 
     public void testForm() throws Exception {

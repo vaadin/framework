@@ -1,8 +1,8 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
-import com.vaadin.data.Validator;
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.TextField;
@@ -19,23 +19,7 @@ public class Ticket846 extends Application {
         final TextField tx = new TextField("Integer");
         mainWin.addComponent(tx);
         tx.setImmediate(true);
-        tx.addValidator(new Validator() {
-
-            public boolean isValid(Object value) {
-                try {
-                    Integer.parseInt("" + value);
-                    return true;
-                } catch (NumberFormatException e) {
-                    return false;
-                }
-            }
-
-            public void validate(Object value) throws InvalidValueException {
-                if (!isValid(value)) {
-                    throw new InvalidValueException(value + " is not a number");
-                }
-            }
-        });
+        tx.addValidator(new IntegerValidator("{0} is not a number"));
 
         final String[] visibleProps = { "required", "invalidAllowed",
                 "readOnly", "readThrough", "invalidCommitted",
