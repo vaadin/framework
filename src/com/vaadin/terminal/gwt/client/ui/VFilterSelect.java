@@ -623,8 +623,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 return;
             }
 
-            selecting = filtering;
-            if (!filtering) {
+            selectItemWhenReponseIsReceived = waitingForFilteringReponse;
+            if (!waitingForFilteringReponse) {
                 doPostFilterSelectedItemAction();
             }
         }
@@ -636,7 +636,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             final MenuItem item = getSelectedItem();
             final String enteredItemValue = tb.getText();
 
-            selecting = false;
+            selectItemWhenReponseIsReceived = false;
 
             // check for exact match in menu
             int p = getItems().size();
@@ -827,9 +827,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
     private String selectedOptionKey;
 
-    private boolean filtering = false;
-    private boolean selecting = false;
-    private boolean tabPressed = false;
+    private boolean waitingForFilteringReponse = false;
+    private boolean selectItemWhenReponseIsReceived = false;
+    private boolean tabPressedWhenPopupOpen = false;
     private boolean initDone = false;
 
     private String lastFilter = "";
@@ -968,7 +968,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
         }
 
-        filtering = true;
+        waitingForFilteringReponse = true;
         client.updateVariable(paintableId, "filter", filter, false);
         client.updateVariable(paintableId, "page", page, true);
         lastFilter = filter;
@@ -1039,7 +1039,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         lastNewItemString = null;
 
         currentSuggestions.clear();
-        if (!filtering) {
+        if (!waitingForFilteringReponse) {
             /*
              * Clear the current suggestions as the server response always
              * includes the new ones. Exception is when filtering, then we need
@@ -1070,7 +1070,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                     optionUidl);
             currentSuggestions.add(suggestion);
             if (optionUidl.hasAttribute("selected")) {
-                if (!filtering || popupOpenerClicked) {
+                if (!waitingForFilteringReponse || popupOpenerClicked) {
                     String newSelectedOptionKey = Integer.toString(suggestion
                             .getOptionKey());
                     if (!newSelectedOptionKey.equals(selectedOptionKey)
@@ -1094,10 +1094,11 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             captions += Util.escapeHTML(suggestion.getReplacementString());
         }
 
-        if ((!filtering || popupOpenerClicked) && uidl.hasVariable("selected")
+        if ((!waitingForFilteringReponse || popupOpenerClicked)
+                && uidl.hasVariable("selected")
                 && uidl.getStringArrayVariable("selected").length == 0) {
             // select nulled
-            if (!filtering || !popupOpenerClicked) {
+            if (!waitingForFilteringReponse || !popupOpenerClicked) {
                 if (!focused) {
                     /*
                      * client.updateComponent overwrites all styles so we must
@@ -1115,12 +1116,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             selectedOptionKey = null;
         }
 
-        if (filtering
+        if (waitingForFilteringReponse
                 && lastFilter.toLowerCase().equals(
                         uidl.getStringVariable("filter"))) {
             suggestionPopup.showSuggestions(currentSuggestions, currentPage,
                     totalMatches);
-            filtering = false;
+            waitingForFilteringReponse = false;
             if (!popupOpenerClicked && lastIndex != -1) {
                 // we're paging w/ arrows
                 MenuItem activeMenuItem;
@@ -1149,7 +1150,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
                 lastIndex = -1; // reset
             }
-            if (selecting) {
+            if (selectItemWhenReponseIsReceived) {
                 suggestionPopup.menu.doPostFilterSelectedItemAction();
             }
         }
@@ -1261,7 +1262,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      *            The suggestion that just got selected.
      */
     public void onSuggestionSelected(FilterSelectSuggestion suggestion) {
-        selecting = false;
+        selectItemWhenReponseIsReceived = false;
 
         currentSuggestion = suggestion;
         String newKey;
@@ -1428,7 +1429,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             break;
         case KeyCodes.KEY_TAB:
             if (suggestionPopup.isAttached()) {
-                tabPressed = true;
+                tabPressedWhenPopupOpen = true;
                 filterOptions(currentPage);
             }
             // onBlur() takes care of the rest
@@ -1617,8 +1618,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         focused = false;
         if (!readonly) {
             // much of the TAB handling takes place here
-            if (tabPressed) {
-                tabPressed = false;
+            if (tabPressedWhenPopupOpen) {
+                tabPressedWhenPopupOpen = false;
                 suggestionPopup.menu.doSelectedItemAction();
                 suggestionPopup.hide();
             } else if (!suggestionPopup.isAttached()
