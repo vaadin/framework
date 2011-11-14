@@ -513,7 +513,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      * {@link CloseListener}.
      * </p>
      */
-    protected void close() {
+    public void close() {
         Root root = getRoot();
         // focus is restored to the parent window
         root.focus();
