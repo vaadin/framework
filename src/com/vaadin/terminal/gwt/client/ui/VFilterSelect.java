@@ -56,6 +56,7 @@ import com.vaadin.terminal.gwt.client.VTooltip;
  * 
  * TODO needs major refactoring (to be extensible etc)
  */
+@SuppressWarnings("deprecation")
 public class VFilterSelect extends Composite implements Paintable, Field,
         KeyDownHandler, KeyUpHandler, ClickHandler, FocusHandler, BlurHandler,
         Focusable {
@@ -1359,17 +1360,10 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         case KeyCodes.KEY_UP:
         case KeyCodes.KEY_PAGEDOWN:
         case KeyCodes.KEY_PAGEUP:
-            if (!suggestionPopup.isAttached()) {
-                // open popup as from gadget
-                filterOptions(-1, "");
-                lastFilter = "";
-                tb.selectAll();
-            }
-            break;
-        case KeyCodes.KEY_TAB:
-            if (suggestionPopup.isAttached()) {
-                filterOptions(currentPage, tb.getText());
-            }
+            // open popup as from gadget
+            filterOptions(-1, "");
+            lastFilter = "";
+            tb.selectAll();
             break;
         case KeyCodes.KEY_ENTER:
             /*
