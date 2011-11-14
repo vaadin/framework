@@ -1339,27 +1339,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      */
     public void onKeyDown(KeyDownEvent event) {
         if (enabled && !readonly) {
-            if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-                // Same reaction to enter no matter on whether the popup is open
-                if (suggestionPopup.isAttached()) {
-                    filterOptions(currentPage);
-                } else if (currentSuggestion != null
-                        && tb.getText().equals(
-                                currentSuggestion.getReplacementString())) {
-                    // Retain behavior from #6686 by returning without stopping
-                    // propagation if there's nothing to do
-                    return;
-                }
-                if (currentSuggestions.size() == 1 && !allowNewItem) {
-                    // If there is only one suggestion, select that
-                    suggestionPopup.menu.selectItem(suggestionPopup.menu
-                            .getItems().get(0));
-                }
-                suggestionPopup.menu.doSelectedItemAction();
-
-                event.stopPropagation();
-                return;
-            } else if (suggestionPopup.isAttached()) {
+            if (suggestionPopup.isAttached()) {
                 popupKeyDown(event);
             } else {
                 inputFieldKeyDown(event);
@@ -1390,6 +1370,27 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             if (suggestionPopup.isAttached()) {
                 filterOptions(currentPage, tb.getText());
             }
+            break;
+        case KeyCodes.KEY_ENTER:
+            /*
+             * This only handles the case when new items is allowed, a text is
+             * entered, the popup opener button is clicked to close the popup
+             * and enter is then pressed (see #7560).
+             */
+            if (!allowNewItem) {
+                return;
+            }
+
+            if (currentSuggestion != null
+                    && tb.getText().equals(
+                            currentSuggestion.getReplacementString())) {
+                // Retain behavior from #6686 by returning without stopping
+                // propagation if there's nothing to do
+                return;
+            }
+            suggestionPopup.menu.doSelectedItemAction();
+
+            event.stopPropagation();
             break;
         }
 
@@ -1428,11 +1429,21 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             event.stopPropagation();
             break;
         case KeyCodes.KEY_TAB:
-            if (suggestionPopup.isAttached()) {
-                tabPressedWhenPopupOpen = true;
-                filterOptions(currentPage);
-            }
+            tabPressedWhenPopupOpen = true;
+            filterOptions(currentPage);
             // onBlur() takes care of the rest
+            break;
+        case KeyCodes.KEY_ENTER:
+            filterOptions(currentPage);
+
+            if (currentSuggestions.size() == 1 && !allowNewItem) {
+                // If there is only one suggestion, select that
+                suggestionPopup.menu.selectItem(suggestionPopup.menu.getItems()
+                        .get(0));
+            }
+            suggestionPopup.menu.doSelectedItemAction();
+
+            event.stopPropagation();
             break;
         }
 
