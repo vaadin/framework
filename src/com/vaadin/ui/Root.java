@@ -45,6 +45,8 @@ public class Root extends AbstractComponentContainer {
      */
     private Component scrollIntoView;
 
+    private static final ThreadLocal<Root> currentRoot = new ThreadLocal<Root>();
+
     public Root(RootLayout rootLayout) {
         this.rootLayout = rootLayout;
         addComponent(rootLayout);
@@ -445,5 +447,13 @@ public class Root extends AbstractComponentContainer {
 
     public void init(WrappedRequest request) {
         getRootLayout().init(request);
+    }
+
+    public static void setCurrentRoot(Root root) {
+        currentRoot.set(root);
+    }
+
+    public static Root getCurrentRoot() {
+        return currentRoot.get();
     }
 }

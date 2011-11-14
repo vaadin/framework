@@ -531,6 +531,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                         }
                     } finally {
+                        Root.setCurrentRoot(null);
                         Application.setCurrentApplication(null);
                     }
                 }

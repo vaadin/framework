@@ -577,6 +577,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                                 .onRequestEnd(request, response);
                     }
                 } finally {
+                    Root.setCurrentRoot(null);
                     Application.setCurrentApplication(null);
                 }
 

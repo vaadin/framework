@@ -1476,6 +1476,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
             }
         }
 
+        Root.setCurrentRoot(root);
         return root;
     }
 
