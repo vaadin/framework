@@ -7,8 +7,10 @@ package com.vaadin.terminal.gwt.client.ui;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -49,6 +51,7 @@ import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
@@ -539,6 +542,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     public class SuggestionMenu extends MenuBar implements SubPartAware,
             LoadHandler {
 
+        /**
+         * Tracks the item that is currently selected using the keyboard. This
+         * is need only because mouseover changes the selection and we do not
+         * want to use that selection when pressing enter to select the item.
+         */
+        private MenuItem keyboardSelectedItem;
+
         private VLazyExecutor delayedImageLoadExecutioner = new VLazyExecutor(
                 100, new ScheduledCommand() {
 
@@ -585,6 +595,10 @@ public class VFilterSelect extends Composite implements Paintable, Field,
          */
         public void setSuggestions(
                 Collection<FilterSelectSuggestion> suggestions) {
+            // Reset keyboard selection when contents is updated to avoid
+            // reusing old, invalid data
+            setKeyboardSelectedItem(null);
+
             clearItems();
             final Iterator<FilterSelectSuggestion> it = suggestions.iterator();
             while (it.hasNext()) {
@@ -744,6 +758,14 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             selectItem(firstItem);
         }
 
+        private MenuItem getKeyboardSelectedItem() {
+            return keyboardSelectedItem;
+        }
+
+        private void setKeyboardSelectedItem(MenuItem firstItem) {
+            keyboardSelectedItem = firstItem;
+        }
+
         public void selectLastItem() {
             List<MenuItem> items = getItems();
             MenuItem lastItem = items.get(items.size() - 1);
@@ -759,6 +781,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     private static final String STYLE_NO_INPUT = "no-input";
 
     protected int pageLength = 10;
+
+    private boolean enableDebug = false;
 
     private final FlowPanel panel = new FlowPanel();
 
@@ -1152,6 +1176,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 // variable as well.
                 MenuItem activeMenuItem = suggestionPopup.menu
                         .getSelectedItem();
+                suggestionPopup.menu.setKeyboardSelectedItem(activeMenuItem);
 
                 // Update text field to contain the correct text
                 setTextboxText(activeMenuItem.getText());
@@ -1340,6 +1365,15 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 marginTop + "px");
     }
 
+    private static Set<Integer> navigationKeyCodes = new HashSet<Integer>();
+    static {
+        navigationKeyCodes.add(KeyCodes.KEY_DOWN);
+        navigationKeyCodes.add(KeyCodes.KEY_UP);
+        navigationKeyCodes.add(KeyCodes.KEY_PAGEDOWN);
+        navigationKeyCodes.add(KeyCodes.KEY_PAGEUP);
+        navigationKeyCodes.add(KeyCodes.KEY_ENTER);
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -1349,11 +1383,36 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      */
     public void onKeyDown(KeyDownEvent event) {
         if (enabled && !readonly) {
+            int keyCode = event.getNativeKeyCode();
+
+            debug("key down: " + keyCode);
+            if (waitingForFilteringReponse
+                    && navigationKeyCodes.contains(keyCode)) {
+                /*
+                 * Keyboard navigation events should not be handled while we are
+                 * waiting for a response. This avoids flickering, disappearing
+                 * items, wrongly interpreted responses and more.
+                 */
+                debug("Ignoring " + keyCode
+                        + " because we are waiting for a filtering response");
+                DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
+                event.stopPropagation();
+                return;
+            }
+
             if (suggestionPopup.isAttached()) {
+                debug("Keycode " + keyCode + " target is popup");
                 popupKeyDown(event);
             } else {
+                debug("Keycode " + keyCode + " target is text field");
                 inputFieldKeyDown(event);
             }
+        }
+    }
+
+    private void debug(String string) {
+        if (enableDebug) {
+            VConsole.error(string);
         }
     }
 
@@ -1411,11 +1470,15 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         switch (event.getNativeKeyCode()) {
         case KeyCodes.KEY_DOWN:
             suggestionPopup.selectNextItem();
+            suggestionPopup.menu.setKeyboardSelectedItem(suggestionPopup.menu
+                    .getSelectedItem());
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
             event.stopPropagation();
             break;
         case KeyCodes.KEY_UP:
             suggestionPopup.selectPrevItem();
+            suggestionPopup.menu.setKeyboardSelectedItem(suggestionPopup.menu
+                    .getSelectedItem());
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
             event.stopPropagation();
             break;
@@ -1437,14 +1500,31 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             // onBlur() takes care of the rest
             break;
         case KeyCodes.KEY_ENTER:
-            filterOptions(currentPage);
-
-            if (currentSuggestions.size() == 1 && !allowNewItem) {
-                // If there is only one suggestion, select that
-                suggestionPopup.menu.selectItem(suggestionPopup.menu.getItems()
-                        .get(0));
+            if (suggestionPopup.menu.getKeyboardSelectedItem() == null) {
+                /*
+                 * Nothing selected using up/down. Happens e.g. when entering a
+                 * text (causes popup to open) and then pressing enter.
+                 */
+                if (!allowNewItem) {
+                    /*
+                     * New items are not allowed: If there is only one
+                     * suggestion, select that. Otherwise do nothing.
+                     */
+                    if (currentSuggestions.size() == 1) {
+                        onSuggestionSelected(currentSuggestions.get(0));
+                    }
+                } else {
+                    // Handle addition of new items.
+                    suggestionPopup.menu.doSelectedItemAction();
+                }
+            } else {
+                /*
+                 * Get the suggestion that was navigated to using up/down.
+                 */
+                currentSuggestion = ((FilterSelectSuggestion) suggestionPopup.menu
+                        .getKeyboardSelectedItem().getCommand());
+                onSuggestionSelected(currentSuggestion);
             }
-            suggestionPopup.menu.doSelectedItemAction();
 
             event.stopPropagation();
             break;
