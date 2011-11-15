@@ -352,6 +352,7 @@
 			</fileset>
 		</scp>
 		
+		<!-- trycatch probably not needed any more as it just fails with the original message and doesn't do anything in the finally block -->
 		<trycatch property="error_message">
 			<try>
 				<!-- timeout in one hour (remote end should timeout in 55 minutes) -->
@@ -394,18 +395,17 @@
 						</antcall>
 					</then>
 				</if>
-			</try>
-			<catch>
-				<fail message="${error_message}" />
-			</catch>
-			<finally>
+				
 				<!-- timeout in five minutes -->
 				<sshexec host="${target-host}" outputproperty="stop-output" timeout="300000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml shutdown-and-cleanup" failonerror="false" />
 				<antcall target="echo-prefix">
 					<param name="prefix" value="${target-server}: " />
 					<param name="message" value="${stop-output}" />
 				</antcall>
-			</finally>
+			</try>
+			<catch>
+				<fail message="${error_message}" />
+			</catch>
 		</trycatch>
 	</target>
 	
