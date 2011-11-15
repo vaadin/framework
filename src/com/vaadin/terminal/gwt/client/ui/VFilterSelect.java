@@ -287,7 +287,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                         .getText().length() - lastFilter.length());
 
             } else if (hasNextPage()) {
-                lastIndex = index - 1; // save for paging
+                selectPopupItemWhenResponseIsReceived = Select.FIRST;
                 filterOptions(currentPage + 1, lastFilter);
             }
         }
@@ -306,7 +306,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                         .getText().length() - lastFilter.length());
             } else if (index == -1) {
                 if (currentPage > 0) {
-                    lastIndex = index + 1; // save for paging
+                    selectPopupItemWhenResponseIsReceived = Select.LAST;
                     filterOptions(currentPage - 1, lastFilter);
                 }
             } else {
@@ -624,7 +624,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 return;
             }
 
-            selectItemWhenReponseIsReceived = waitingForFilteringReponse;
+            updateSelectionWhenReponseIsReceived = waitingForFilteringReponse;
             if (!waitingForFilteringReponse) {
                 doPostFilterSelectedItemAction();
             }
@@ -637,7 +637,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             final MenuItem item = getSelectedItem();
             final String enteredItemValue = tb.getText();
 
-            selectItemWhenReponseIsReceived = false;
+            updateSelectionWhenReponseIsReceived = false;
 
             // check for exact match in menu
             int p = getItems().size();
@@ -738,6 +738,17 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             delayedImageLoadExecutioner.trigger();
 
         }
+
+        public void selectFirstItem() {
+            MenuItem firstItem = getItems().get(0);
+            selectItem(firstItem);
+        }
+
+        public void selectLastItem() {
+            List<MenuItem> items = getItems();
+            MenuItem lastItem = items.get(items.size() - 1);
+            selectItem(lastItem);
+        }
     }
 
     public static final int FILTERINGMODE_OFF = 0;
@@ -822,19 +833,24 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      * A collection of available suggestions (options) as received from the
      * server.
      */
-    private final Collection<FilterSelectSuggestion> currentSuggestions = new ArrayList<FilterSelectSuggestion>();
+    private final List<FilterSelectSuggestion> currentSuggestions = new ArrayList<FilterSelectSuggestion>();
 
     private boolean immediate;
 
     private String selectedOptionKey;
 
     private boolean waitingForFilteringReponse = false;
-    private boolean selectItemWhenReponseIsReceived = false;
+    private boolean updateSelectionWhenReponseIsReceived = false;
     private boolean tabPressedWhenPopupOpen = false;
     private boolean initDone = false;
 
     private String lastFilter = "";
-    private int lastIndex = -1; // last selected index when using arrows
+
+    private enum Select {
+        NONE, FIRST, LAST
+    };
+
+    private Select selectPopupItemWhenResponseIsReceived = Select.NONE;
 
     /**
      * The current suggestion selected from the dropdown. This is one of the
@@ -1123,35 +1139,28 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             suggestionPopup.showSuggestions(currentSuggestions, currentPage,
                     totalMatches);
             waitingForFilteringReponse = false;
-            if (!popupOpenerClicked && lastIndex != -1) {
+            if (!popupOpenerClicked
+                    && selectPopupItemWhenResponseIsReceived != Select.NONE) {
                 // we're paging w/ arrows
-                MenuItem activeMenuItem;
-                if (lastIndex == 0) {
-                    // going up, select last item
-                    int lastItem = pageLength - 1;
-                    List<MenuItem> items = suggestionPopup.menu.getItems();
-                    /*
-                     * The first page can contain less than 10 items if the null
-                     * selection item is filtered away
-                     */
-                    if (lastItem >= items.size()) {
-                        lastItem = items.size() - 1;
-                    }
-                    activeMenuItem = items.get(lastItem);
-                    suggestionPopup.menu.selectItem(activeMenuItem);
+                if (selectPopupItemWhenResponseIsReceived == Select.LAST) {
+                    suggestionPopup.menu.selectLastItem();
                 } else {
-                    // going down, select first item
-                    activeMenuItem = suggestionPopup.menu.getItems().get(0);
-                    suggestionPopup.menu.selectItem(activeMenuItem);
+                    suggestionPopup.menu.selectFirstItem();
                 }
 
+                // This is used for paging so we update the keyboard selection
+                // variable as well.
+                MenuItem activeMenuItem = suggestionPopup.menu
+                        .getSelectedItem();
+
+                // Update text field to contain the correct text
                 setTextboxText(activeMenuItem.getText());
                 tb.setSelectionRange(lastFilter.length(), activeMenuItem
                         .getText().length() - lastFilter.length());
 
-                lastIndex = -1; // reset
+                selectPopupItemWhenResponseIsReceived = Select.NONE; // reset
             }
-            if (selectItemWhenReponseIsReceived) {
+            if (updateSelectionWhenReponseIsReceived) {
                 suggestionPopup.menu.doPostFilterSelectedItemAction();
             }
         }
@@ -1263,7 +1272,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      *            The suggestion that just got selected.
      */
     public void onSuggestionSelected(FilterSelectSuggestion suggestion) {
-        selectItemWhenReponseIsReceived = false;
+        updateSelectionWhenReponseIsReceived = false;
 
         currentSuggestion = suggestion;
         String newKey;
