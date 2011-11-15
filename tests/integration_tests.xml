@@ -231,6 +231,7 @@
 		<fileset dir="integration-testscripts" id="html-test-files" includes="GateIn-3/integration-test-GateIn-3.1.0-portlet2.html" />
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 		<antcall target="run-generic-integration-test">
+			<param name="test_browsers" value="winxp-firefox36" />
 			<param name="target-server" value="gatein3" />
 		</antcall>
 	</target>
@@ -239,6 +240,7 @@
 		<fileset dir="integration-testscripts" id="html-test-files" includes="eXo-3/integration-test-eXo-3.0.3-portlet2.html" />
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 		<antcall target="run-generic-integration-test">
+			<param name="test_browsers" value="winxp-firefox36" />
 			<param name="target-server" value="exo3" />
 		</antcall>
 	</target>
