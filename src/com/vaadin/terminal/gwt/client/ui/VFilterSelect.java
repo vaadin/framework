@@ -100,7 +100,15 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 sb.append(Util.escapeAttribute(iconUri));
                 sb.append("\" alt=\"\" class=\"v-icon\" />");
             }
-            sb.append("<span>" + Util.escapeHTML(caption) + "</span>");
+            String content;
+            if ("".equals(caption)) {
+                // Ensure that empty options use the same height as other
+                // options and are not collapsed (#7506)
+                content = "&nbsp;";
+            } else {
+                content = Util.escapeHTML(caption);
+            }
+            sb.append("<span>" + content + "</span>");
             return sb.toString();
         }
 
