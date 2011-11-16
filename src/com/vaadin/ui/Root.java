@@ -76,6 +76,8 @@ public class Root extends AbstractComponentContainer {
      */
     private Component scrollIntoView;
 
+    private int rootId;
+
     private static final ThreadLocal<Root> currentRoot = new ThreadLocal<Root>();
 
     public Root() {
@@ -202,14 +204,19 @@ public class Root extends AbstractComponentContainer {
         this.terminal = terminal;
     }
 
-    public void setApplication(Application application) {
+    public void registerRoot(Application application, int rootId) {
         if (application == null) {
             throw new NullPointerException("application");
         } else if (this.application != null) {
             throw new IllegalStateException("Application has already been set");
         } else {
             this.application = application;
+            this.rootId = rootId;
         }
+    }
+
+    public int getRootId() {
+        return rootId;
     }
 
     /**

@@ -738,11 +738,11 @@ public abstract class AbstractCommunicationManager implements
         JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
                 !repaintAll);
         OpenWindowCache windowCache = currentlyOpenWindowsInClient.get(Integer
-                .valueOf(application.getRootId(root)));
+                .valueOf(root.getRootId()));
         if (windowCache == null) {
             windowCache = new OpenWindowCache();
-            currentlyOpenWindowsInClient.put(
-                    Integer.valueOf(application.getRootId(root)), windowCache);
+            currentlyOpenWindowsInClient.put(Integer.valueOf(root.getRootId()),
+                    windowCache);
         }
 
         // Paints components
@@ -1039,7 +1039,7 @@ public abstract class AbstractCommunicationManager implements
         }
         // clean WindowCache
         OpenWindowCache openWindowCache = currentlyOpenWindowsInClient
-                .get(Integer.valueOf(application.getRootId(root)));
+                .get(Integer.valueOf(root.getRootId()));
         if (openWindowCache != null) {
             openWindowCache.clear();
         }
@@ -1641,97 +1641,21 @@ public abstract class AbstractCommunicationManager implements
      */
     public Root getApplicationRoot(WrappedRequest request, Callback callback,
             Application application, Root assumedRoot) {
-        return application.getRoot(request);
+        String rootIdString = request
+                .getParameter(ApplicationConnection.ROOT_ID_PARAMETER);
+        Root root = null;
+        synchronized (application) {
+            if (rootIdString != null) {
+                int rootId = Integer.parseInt(rootIdString);
+                root = application.getRootById(rootId);
+            }
+            if (root == null) {
+                root = application.getRoot(request);
+            }
+        }
 
-        // Window window = null;
-        //
-        // // If the client knows which window to use, use it if possible
-        // String windowClientRequestedName =
-        // request.getParameter("windowName");
-        //
-        // if (assumedWindow != null
-        // && application.getWindows().contains(assumedWindow)) {
-        // windowClientRequestedName = assumedWindow.getName();
-        // }
-        // if (windowClientRequestedName != null) {
-        // window = application.getWindow(windowClientRequestedName);
-        // if (window != null) {
-        // return window;
-        // }
-        // }
-        //
-        // // If client does not know what window it wants
-        // if (window == null && !request.isRunningInPortlet()) {
-        // // This is only supported if the application is running inside a
-        // // servlet
-        //
-        // // Get the path from URL
-        // String path = callback.getRequestPathInfo(request);
-        //
-        // /*
-        // * If the path is specified, create name from it.
-        // *
-        // * An exception is if UIDL request have come this far. This happens
-        // * if main window is refreshed. In that case we always return main
-        // * window (infamous hacky support for refreshes if only main window
-        // * is used). However we are not returning with main window here (we
-        // * will later if things work right), because the code is so cryptic
-        // * that nobody really knows what it does.
-        // */
-        // boolean pathMayContainWindowName = path != null
-        // && path.length() > 0 && !path.equals("/");
-        // if (pathMayContainWindowName) {
-        // boolean uidlRequest = path.startsWith("/UIDL");
-        // if (!uidlRequest) {
-        // String windowUrlName = null;
-        // if (path.charAt(0) == '/') {
-        // path = path.substring(1);
-        // }
-        // final int index = path.indexOf('/');
-        // if (index < 0) {
-        // windowUrlName = path;
-        // path = "";
-        // } else {
-        // windowUrlName = path.substring(0, index);
-        // path = path.substring(index + 1);
-        // }
-        //
-        // window = application.getWindow(windowUrlName);
-        // }
-        // }
-        //
-        // }
-        //
-        // // By default, use mainwindow
-        // if (window == null) {
-        // window = application.getMainWindow();
-        // // Return null if no main window was found
-        // if (window == null) {
-        // return null;
-        // }
-        // }
-        //
-        // // If the requested window is already open, resolve conflict
-        // if (currentlyOpenWindowsInClient.containsKey(window.getName())) {
-        // String newWindowName = window.getName();
-        //
-        // synchronized (AbstractCommunicationManager.class) {
-        // while (currentlyOpenWindowsInClient.containsKey(newWindowName)) {
-        // newWindowName = window.getName() + "_"
-        // + nextUnusedWindowSuffix++;
-        // }
-        // }
-        //
-        // window = application.getWindow(newWindowName);
-        //
-        // // If everything else fails, use main window even in case of
-        // // conflicts
-        // if (window == null) {
-        // window = application.getMainWindow();
-        // }
-        // }
-        //
-        // return window;
+        Root.setCurrentRoot(root);
+        return root;
     }
 
     /**

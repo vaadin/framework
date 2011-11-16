@@ -24,6 +24,8 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.ApplicationResource;
@@ -34,7 +36,6 @@ import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.server.ChangeVariablesErrorEvent;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbstractComponent;
@@ -100,6 +101,12 @@ public class Application implements Terminal.ErrorListener, Serializable {
     public static final String ROOT_PARAMETER = "root";
 
     public static class LegacyApplication extends Application {
+        /**
+         * Ignore initial / and then get everything up to the next /
+         */
+        private static final Pattern WINDOW_NAME_PATTERN = Pattern
+                .compile("^/?([^/]+).*");
+
         private Root mainWindow;
         private String theme;
 
@@ -111,6 +118,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
                         "mainWindow has already been set");
             }
             this.mainWindow = mainWindow;
+            registerRoot(mainWindow);
+            mainWindow.init(null);
         }
 
         public Root getMainWindow() {
@@ -119,6 +128,19 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
         @Override
         public Root getRoot(WrappedRequest request) {
+            String pathInfo = request.getRequestPathInfo();
+            String name = null;
+            if (pathInfo != null && pathInfo.length() > 0) {
+                Matcher matcher = WINDOW_NAME_PATTERN.matcher(pathInfo);
+                if (matcher.matches()) {
+                    // Skip the initial slash
+                    name = matcher.group(1);
+                }
+            }
+            Root window = getWindow(name);
+            if (window != null) {
+                return window;
+            }
             return mainWindow;
         }
 
@@ -149,13 +171,14 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
         public void addWindow(Root root, String name) {
             legacyRootNames.put(name, root);
+            registerRoot(root);
+            root.init(null);
         }
 
         public void removeWindow(Root root) {
             for (Entry<String, Root> entry : legacyRootNames.entrySet()) {
                 if (entry.getValue() == root) {
                     legacyRootNames.remove(entry.getKey());
-                    return;
                 }
             }
         }
@@ -1544,31 +1567,23 @@ public class Application implements Terminal.ErrorListener, Serializable {
     }
 
     public Root getRoot(WrappedRequest request) {
-        String rootIdString = request
-                .getParameter(ApplicationConnection.ROOT_ID_PARAMETER);
-        Root root;
-        synchronized (this) {
-            // getRoot might be called from outside the synchronized UIDL
-            // handling
-            if (rootIdString == null) {
-                // TODO What if getRoot is called again for this request?
+        // TODO What if getRoot is called again for this request?
 
-                // TODO implement support for throwing exception if more
-                // information is required to create a root
-                root = createRoot(request);
-                root.setApplication(this);
+        // TODO implement support for throwing exception if more
+        // information is required to create a root
+        Root root = createRoot(request);
 
-                // TODO implement lazy init of root if indicated by annotation
-                root.init(request);
-                roots.put(Integer.valueOf(nextRootId++), root);
-            } else {
-                Integer rootId = new Integer(rootIdString);
-                root = roots.get(rootId);
-            }
-        }
+        registerRoot(root);
 
-        Root.setCurrentRoot(root);
+        // TODO implement lazy init of root if indicated by annotation
+        root.init(request);
+
         return root;
+    }
+
+    protected void registerRoot(Root root) {
+        root.registerRoot(this, nextRootId++);
+        roots.put(Integer.valueOf(root.getRootId()), root);
     }
 
     protected Root createRoot(WrappedRequest request) {
@@ -1638,12 +1653,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
         currentApplication.set(application);
     }
 
-    public int getRootId(Root root) {
-        for (Entry<Integer, Root> entry : roots.entrySet()) {
-            if (entry.getValue() == root) {
-                return entry.getKey().intValue();
-            }
-        }
-        return -1;
+    public Root getRootById(int rootId) {
+        return roots.get(Integer.valueOf(rootId));
     }
 }
