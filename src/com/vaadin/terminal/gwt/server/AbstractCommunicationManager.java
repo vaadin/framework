@@ -146,7 +146,7 @@ public abstract class AbstractCommunicationManager implements
 
     public static final char VAR_ESCAPE_CHARACTER = '\u001b';
 
-    private final HashMap<String, OpenWindowCache> currentlyOpenWindowsInClient = new HashMap<String, OpenWindowCache>();
+    private final HashMap<Integer, OpenWindowCache> currentlyOpenWindowsInClient = new HashMap<Integer, OpenWindowCache>();
 
     private static final int MAX_BUFFER_SIZE = 64 * 1024;
 
@@ -165,10 +165,6 @@ public abstract class AbstractCommunicationManager implements
 
     private final Application application;
 
-    // Note that this is only accessed from synchronized block and
-    // thus should be thread-safe.
-    private String closingWindowName = null;
-
     private List<String> locales;
 
     private int pendingLocalesIndex;
@@ -180,8 +176,6 @@ public abstract class AbstractCommunicationManager implements
     private String requestThemeName;
 
     private int maxInactiveInterval;
-
-    private static int nextUnusedWindowSuffix = 1;
 
     /**
      * TODO New constructor - document me!
@@ -611,10 +605,6 @@ public abstract class AbstractCommunicationManager implements
             paintAfterVariableChanges(request, response, callback, repaintAll,
                     outWriter, root, analyzeLayouts);
 
-            if (closingWindowName != null) {
-                currentlyOpenWindowsInClient.remove(closingWindowName);
-                closingWindowName = null;
-            }
         }
 
         outWriter.close();
@@ -728,23 +718,8 @@ public abstract class AbstractCommunicationManager implements
             outWriter.print("\",");
         }
 
-        // If the browser-window has been closed - we do not need to paint it at
-        // all
-        if (root.getName().equals(closingWindowName)) {
-            outWriter.print("\"changes\":[]");
-        } else {
-            // re-get window - may have been changed
-            Root newRoot = getApplicationRoot(request, callback, application,
-                    root);
-            if (newRoot != root) {
-                root = newRoot;
-                repaintAll = true;
-            }
+        writeUidlResponce(callback, repaintAll, outWriter, root, analyzeLayouts);
 
-            writeUidlResponce(callback, repaintAll, outWriter, root,
-                    analyzeLayouts);
-
-        }
         closeJsonMessage(outWriter);
 
         outWriter.close();
@@ -762,11 +737,12 @@ public abstract class AbstractCommunicationManager implements
 
         JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
                 !repaintAll);
-        OpenWindowCache windowCache = currentlyOpenWindowsInClient.get(root
-                .getName());
+        OpenWindowCache windowCache = currentlyOpenWindowsInClient.get(Integer
+                .valueOf(application.getRootId(root)));
         if (windowCache == null) {
             windowCache = new OpenWindowCache();
-            currentlyOpenWindowsInClient.put(root.getName(), windowCache);
+            currentlyOpenWindowsInClient.put(
+                    Integer.valueOf(application.getRootId(root)), windowCache);
         }
 
         // Paints components
@@ -1062,8 +1038,8 @@ public abstract class AbstractCommunicationManager implements
             }
         }
         // clean WindowCache
-        OpenWindowCache openWindowCache = currentlyOpenWindowsInClient.get(root
-                .getName());
+        OpenWindowCache openWindowCache = currentlyOpenWindowsInClient
+                .get(Integer.valueOf(application.getRootId(root)));
         if (openWindowCache != null) {
             openWindowCache.clear();
         }
@@ -1155,7 +1131,7 @@ public abstract class AbstractCommunicationManager implements
          * we don't have the required logic implemented on the server side. E.g.
          * a component is removed in a previous burst.
          */
-        return success || closingWindowName != null;
+        return success;
     }
 
     public boolean handleVariableBurst(Object source, Application app,
@@ -1215,7 +1191,8 @@ public abstract class AbstractCommunicationManager implements
                     if (owner instanceof Root) {
                         final Boolean close = (Boolean) m.get("close");
                         if (close != null && close.booleanValue()) {
-                            closingWindowName = ((Root) owner).getName();
+                            throw new RuntimeException(
+                                    "Ensure currentlyOpenWindowsInClient is cleaned up here!");
                         }
                     }
                 } catch (Exception e) {

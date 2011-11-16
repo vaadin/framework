@@ -190,10 +190,6 @@ public class Root extends AbstractComponentContainer {
         return Collections.singleton((Component) getContent()).iterator();
     }
 
-    public String getName() {
-        return "";
-    }
-
     public Terminal getTerminal() {
         return terminal;
     }
