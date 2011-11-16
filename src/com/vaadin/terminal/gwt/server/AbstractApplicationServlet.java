@@ -520,7 +520,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             } else if (requestType == RequestType.UIDL) {
                 // Handles AJAX UIDL requests
                 Root root = applicationManager.getApplicationRoot(
-                        wrappedRequest, servletWrapper, application, null);
+                        wrappedRequest, application);
                 applicationManager.handleUidlRequest(wrappedRequest,
                         wrappedResponse, servletWrapper, root);
                 return;
@@ -540,8 +540,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             // TODO Should return 404 error here and not do anything more
 
             // Finds the root within the application
-            Root root = getApplicationRoot(wrappedRequest, applicationManager,
-                    servletWrapper, application);
+            Root root = applicationManager.getApplicationRoot(wrappedRequest,
+                    application);
             if (root == null) {
                 throw new ServletException(ERROR_NO_WINDOW_FOUND);
             }
@@ -1648,7 +1648,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         appId = appId + "-" + hashCode;
 
         writeAjaxPageHtmlVaadinScripts(themeName, application, page, appUrl,
-                themeUri, appId, request, application.getRootId(root));
+                themeUri, appId, request, root.getRootId());
 
         /*- Add classnames;
          *      .v-app
@@ -2153,53 +2153,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
 
         response.sendRedirect(response.encodeRedirectURL(logoutUrl));
-    }
-
-    /**
-     * Gets the existing application or create a new one. Get a root within an
-     * application based on the requested URI.
-     * 
-     * @param request
-     *            the HTTP Request.
-     * @param application
-     *            the Application to query for root.
-     * @param servletWrapper
-     * @return Root matching the given URI or null if not found.
-     * @throws ServletException
-     *             if an exception has occurred that interferes with the
-     *             servlet's normal operation.
-     */
-    protected Root getApplicationRoot(WrappedRequest request,
-            CommunicationManager applicationManager, Callback servletWrapper,
-            Application application) throws ServletException {
-        //
-        // // Finds the window where the request is handled
-        Root assumedRoot = null;
-        // String path = getRequestPathInfo(request);
-        //
-        // // Main window as the URI is empty
-        // if (!(path == null || path.length() == 0 || path.equals("/"))) {
-        // if (path.startsWith("/APP/")) {
-        // // Use main window for application resources
-        // return application.getMainWindow();
-        // }
-        // String windowName = null;
-        // if (path.charAt(0) == '/') {
-        // path = path.substring(1);
-        // }
-        // final int index = path.indexOf('/');
-        // if (index < 0) {
-        // windowName = path;
-        // path = "";
-        // } else {
-        // windowName = path.substring(0, index);
-        // }
-        // assumedWindow = application.getWindow(windowName);
-        //
-        // }
-        //
-        return applicationManager.getApplicationRoot(request, servletWrapper,
-                application, assumedRoot);
     }
 
     /**

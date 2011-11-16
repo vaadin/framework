@@ -1633,14 +1633,10 @@ public abstract class AbstractCommunicationManager implements
      *            the HTTP Request.
      * @param application
      *            the Application to query for window.
-     * @param assumedRoot
-     *            if the window has been already resolved once, this parameter
-     *            must contain the window.
-     * @param callback
      * @return Window matching the given URI or null if not found.
      */
-    public Root getApplicationRoot(WrappedRequest request, Callback callback,
-            Application application, Root assumedRoot) {
+    public Root getApplicationRoot(WrappedRequest request,
+            Application application) {
         String rootIdString = request
                 .getParameter(ApplicationConnection.ROOT_ID_PARAMETER);
         Root root = null;

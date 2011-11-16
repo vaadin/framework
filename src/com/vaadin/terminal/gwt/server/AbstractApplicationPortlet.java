@@ -452,8 +452,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                             break;
                         default:
                             root = applicationManager.getApplicationRoot(
-                                    wrappedRequest, portletWrapper,
-                                    application, null);
+                                    wrappedRequest, application);
                         }
                         // if window not found, not a problem - use null
                     }
