@@ -5,15 +5,15 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket2337 extends Application {
+public class Ticket2337 extends Application.LegacyApplication {
 
     GridLayout gl = new GridLayout(3, 1);
 
     @Override
     public void init() {
-        Window w = new Window();
+        Root w = new Root();
         setMainWindow(w);
         Button b = new Button("add", new Button.ClickListener() {
 

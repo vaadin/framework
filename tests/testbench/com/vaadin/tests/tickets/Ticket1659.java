@@ -4,13 +4,13 @@ import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket1659 extends Application {
+public class Ticket1659 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        final Window mainWin = new Window();
+        final Root mainWin = new Root();
         setMainWindow(mainWin);
         mainWin.addComponent(new Button(
                 "Change URI using Application.getURL()",
@@ -25,7 +25,7 @@ public class Ticket1659 extends Application {
                 new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        mainWin.open(new ExternalResource(mainWin.getURL()
+                        mainWin.open(new ExternalResource(getWindowUrl(mainWin)
                                 + "#" + System.currentTimeMillis()));
                     }
                 }));

@@ -11,16 +11,16 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket1975 extends Application {
+public class Ticket1975 extends Application.LegacyApplication {
 
     private CustomLayout cl1;
     private CustomLayout cl2;
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getName());
+        Root w = new Root(getClass().getName());
         setMainWindow(w);
         setTheme("tests-tickets");
         GridLayout layout = new GridLayout(1, 10);

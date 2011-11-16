@@ -23,6 +23,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.FailedListener;
@@ -33,10 +34,9 @@ import com.vaadin.ui.Upload.StartedListener;
 import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Upload.SucceededListener;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class TestForStyledUpload extends Application implements
-        Upload.FinishedListener, FailedListener, SucceededListener,
+public class TestForStyledUpload extends Application.LegacyApplication
+        implements Upload.FinishedListener, FailedListener, SucceededListener,
         StartedListener {
 
     Layout main = new VerticalLayout();
@@ -276,8 +276,8 @@ public class TestForStyledUpload extends Application implements
 
     @Override
     public void init() {
-        Window w = new Window();
-        w.setTheme("runo");
+        Root w = new Root();
+        setTheme("runo");
         w.addComponent(main);
         setMainWindow(w);
 

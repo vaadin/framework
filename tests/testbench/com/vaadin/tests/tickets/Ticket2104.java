@@ -10,11 +10,11 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
-import com.vaadin.ui.Window;
 
-public class Ticket2104 extends Application {
+public class Ticket2104 extends Application.LegacyApplication {
 
     private static final Label info = new Label(
             "Click event should _always_ come trough. Switching features on/off should immediatly affect the tree (verify w/ debug window)",
@@ -25,7 +25,7 @@ public class Ticket2104 extends Application {
 
     @Override
     public void init() {
-        Window main = new Window();
+        Root main = new Root();
         setMainWindow(main);
 
         main.addComponent(info);

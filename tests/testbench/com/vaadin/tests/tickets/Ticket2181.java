@@ -12,17 +12,18 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.OptionGroup;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class Ticket2181 extends Application implements Button.ClickListener {
+public class Ticket2181 extends Application.LegacyApplication implements
+        Button.ClickListener {
 
     // private static final Object PROPERTY_VALUE = new Object();
     // private static final Object PROPERTY_CAPTION = new Object();
 
     private static final String caption = "This is a caption which is very long and nice and perhaps sometimes should be clipped";
-    Window main = new Window("#2181 test");
+    Root main = new Root("#2181 test");
     TextField tf1 = new TextField(caption, "Test field - undefined width");
     TextField tf2 = new TextField(caption, "Test field - 150px wide");
     Button setButton = new Button("Set", this);

@@ -2,21 +2,21 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.ui.Window;
 
 /**
  * With IE7 extra scrollbars appear in content area all though content fits
  * properly. Scrollbars will disappear if "shaking" content a bit, like
  * selecting tests in area.
  */
-public class Ticket2901 extends Application {
+public class Ticket2901 extends Application.LegacyApplication {
 
     @Override
     public void init() {
 
-        final Window mainWin = new Window("Test app to break layout in IE6");
+        final Root mainWin = new Root("Test app to break layout in IE6");
         setMainWindow(mainWin);
 
         VerticalSplitPanel sp = new VerticalSplitPanel();

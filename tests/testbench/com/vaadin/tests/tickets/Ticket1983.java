@@ -8,18 +8,18 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 /**
  * Test class for ticket 1983
  */
-public class Ticket1983 extends Application {
+public class Ticket1983 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Window main = new Window("Test for ticket 1983");
+        Root main = new Root("Test for ticket 1983");
         main.setContent(new TestLayout());
         setMainWindow(main);
     }

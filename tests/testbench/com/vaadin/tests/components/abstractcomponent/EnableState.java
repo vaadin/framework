@@ -5,12 +5,12 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
 public class EnableState extends AbstractTestCase {
     @Override
     public void init() {
-        Window mainWindow = new Window("Helloworld Application");
+        Root mainWindow = new Root("Helloworld Application");
 
         final Panel panel = new Panel("Test");
         final Button button = new Button("ablebutton");

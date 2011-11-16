@@ -7,11 +7,12 @@ import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class Ticket1857 extends Application implements Handler {
+public class Ticket1857 extends Application.LegacyApplication implements
+        Handler {
 
     @Override
     public void init() {
@@ -19,7 +20,7 @@ public class Ticket1857 extends Application implements Handler {
         setTheme("tests-tickets");
 
         VerticalLayout el = new VerticalLayout();
-        Window main = new Window("Testcase for #1857", el);
+        Root main = new Root("Testcase for #1857", el);
         setMainWindow(main);
         el.setMargin(true);
         el.setSpacing(true);

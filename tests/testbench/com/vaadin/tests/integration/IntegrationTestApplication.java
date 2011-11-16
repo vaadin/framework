@@ -7,14 +7,14 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Window;
 
-public class IntegrationTestApplication extends Application {
+public class IntegrationTestApplication extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Window window = new Window("Vaadin Application");
+        Root window = new Root("Vaadin Application");
         setMainWindow(window);
 
         final Table table = new Table();

@@ -9,13 +9,13 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UriFragmentUtility;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class Ticket34 extends Application {
+public class Ticket34 extends Application.LegacyApplication {
 
     private Map<String, Component> views = new HashMap<String, Component>();
     private VerticalLayout mainLayout;
@@ -41,7 +41,7 @@ public class Ticket34 extends Application {
 
         mainLayout = new VerticalLayout();
         mainLayout.setSizeFull();
-        final Window mainWin = new Window(
+        final Root mainWin = new Root(
                 "Test app for URI fragment management/reading", mainLayout);
         setMainWindow(mainWin);
 

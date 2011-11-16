@@ -10,6 +10,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Window;
 
 public class SubWindowOrder extends TestBase {
@@ -19,7 +20,7 @@ public class SubWindowOrder extends TestBase {
 
     @Override
     protected void setup() {
-        Window mainWindow = getMainWindow();
+        Root mainWindow = getMainWindow();
         HorizontalLayout controlpanels = new HorizontalLayout();
         for (int i = 1; i <= 5; i++) {
             Window dialog = new Window("Dialog " + i);

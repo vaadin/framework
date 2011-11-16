@@ -4,16 +4,16 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket2023 extends com.vaadin.Application implements
-        Button.ClickListener {
+public class Ticket2023 extends com.vaadin.Application.LegacyApplication
+        implements Button.ClickListener {
 
     AbstractComponent c = new Button();
 
     @Override
     public void init() {
-        Window main = new Window();
+        Root main = new Root();
         setMainWindow(main);
 
         String[] sizes = { "20", "100", "1", "0", "-1", "", "z" };

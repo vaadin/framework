@@ -1,13 +1,13 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket1925 extends Application {
+public class Ticket1925 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Window mainWindow = new Window("Test åäö");
+        Root mainWindow = new Root("Test åäö");
         setMainWindow(mainWindow);
 
     }

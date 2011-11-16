@@ -4,10 +4,10 @@ import com.vaadin.Application;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 
-public class Ticket1916 extends Application {
+public class Ticket1916 extends Application.LegacyApplication {
 
     @Override
     public void init() {
@@ -21,7 +21,7 @@ public class Ticket1916 extends Application {
         test.addComponent(tf);
         test.setComponentAlignment(tf, Alignment.MIDDLE_CENTER);
 
-        Window w = new Window("Test #1916", test);
+        Root w = new Root("Test #1916", test);
         setMainWindow(w);
     }
 

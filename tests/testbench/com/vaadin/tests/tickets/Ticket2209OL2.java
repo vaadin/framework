@@ -6,10 +6,10 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class Ticket2209OL2 extends Application {
+public class Ticket2209OL2 extends Application.LegacyApplication {
 
     private VerticalLayout gl;
     private ComboBox combo;
@@ -17,7 +17,7 @@ public class Ticket2209OL2 extends Application {
 
     @Override
     public void init() {
-        setMainWindow(new Window());
+        setMainWindow(new Root());
         getMainWindow().getContent().setWidth("250px");
         gl = new VerticalLayout();
         gl.setSizeUndefined();

@@ -14,6 +14,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.OptionGroup;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.VerticalLayout;
@@ -84,7 +85,7 @@ public class TestForWindowing extends CustomComponent {
 
                         w.addComponent(s);
 
-                        getApplication().getMainWindow().addWindow(w);
+                        Root.getCurrentRoot().addWindow(w);
 
                     }
 

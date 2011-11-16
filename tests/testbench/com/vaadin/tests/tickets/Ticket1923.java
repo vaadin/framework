@@ -2,10 +2,10 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class Ticket1923 extends com.vaadin.Application {
+public class Ticket1923 extends com.vaadin.Application.LegacyApplication {
 
     private static final int ROWS = 50;
 
@@ -13,7 +13,7 @@ public class Ticket1923 extends com.vaadin.Application {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(
+        final Root main = new Root(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 

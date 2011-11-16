@@ -5,16 +5,16 @@
 package com.vaadin.tests;
 
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.ui.Window;
 
-public class TestSplitPanel extends com.vaadin.Application {
+public class TestSplitPanel extends com.vaadin.Application.LegacyApplication {
 
     VerticalSplitPanel verticalSplit = new VerticalSplitPanel();
 
     @Override
     public void init() {
-        final Window mainWindow = new Window("Feature Browser");
+        final Root mainWindow = new Root("Feature Browser");
         setMainWindow(mainWindow);
 
         verticalSplit.setFirstComponent(new Label("vertical first"));

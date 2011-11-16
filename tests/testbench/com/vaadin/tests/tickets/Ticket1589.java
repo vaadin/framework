@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
@@ -14,20 +13,22 @@ import javax.imageio.ImageIO;
 import com.vaadin.Application;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.URIHandler;
+import com.vaadin.terminal.RequestHandler;
+import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket1589 extends Application {
+public class Ticket1589 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Root w = new Root(getClass().getSimpleName());
         setMainWindow(w);
 
         MyDynamicResource res = new MyDynamicResource();
 
-        w.addURIHandler(res);
+        addRequestHandler(res);
 
         w.addComponent(new Link(
                 "Test (without Content-Disposition, should suggest generatedFile.png when saving, browser default for actual disposition)",
@@ -39,7 +40,7 @@ public class Ticket1589 extends Application {
     }
 }
 
-class MyDynamicResource implements URIHandler {
+class MyDynamicResource implements RequestHandler {
     String textToDisplay = (new Date()).toString();
 
     /**
@@ -49,11 +50,14 @@ class MyDynamicResource implements URIHandler {
      * Returns null if the URI does not match. Otherwise returns a download
      * stream that contains the response from the server.
      */
-    public DownloadStream handleURI(URL context, String relativeUri) {
+    public boolean handleRequest(Application application,
+            WrappedRequest request, WrappedResponse response)
+            throws IOException {
+        String relativeUri = request.getRequestPathInfo();
         // Catch the given URI that identifies the resource, otherwise let other
         // URI handlers or the Application to handle the response.
         if (!relativeUri.startsWith("myresource")) {
-            return null;
+            return false;
         }
 
         // Create an image and draw some background on it.
@@ -86,9 +90,10 @@ class MyDynamicResource implements URIHandler {
                 downloadStream.setParameter("Content-Disposition",
                         "attachment; filename=\"downloadedPNG.png\"");
             }
-            return downloadStream;
+            downloadStream.writeTo(response);
+            return true;
         } catch (IOException e) {
-            return null;
+            return false;
         }
     }
 }

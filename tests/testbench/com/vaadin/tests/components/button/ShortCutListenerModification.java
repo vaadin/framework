@@ -6,8 +6,8 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.Notification;
 
 @SuppressWarnings("serial")
 public class ShortCutListenerModification extends TestBase implements
@@ -36,6 +36,9 @@ public class ShortCutListenerModification extends TestBase implements
             Button button1 = new Button("b1 (CTRL-C)");
             Button button2 = new Button("b2 (CTRL-V)");
 
+            button1.setData(window);
+            button2.setData(window);
+
             button1.addListener(this);
             button2.addListener(this);
 
@@ -60,8 +63,8 @@ public class ShortCutListenerModification extends TestBase implements
     }
 
     public void buttonClick(ClickEvent event) {
-        Window window2 = event.getButton().getWindow();
-        window2.getParent().removeWindow(window2);
+        Window window2 = (Window) event.getButton().getData();
+        window2.close();
         Button prev = (Button) event.getButton().getData();
         if (prev != null) {
             prev.focus();

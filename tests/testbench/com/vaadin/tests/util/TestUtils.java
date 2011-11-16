@@ -2,7 +2,7 @@ package com.vaadin.tests.util;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
 public class TestUtils {
 
@@ -102,7 +102,7 @@ public class TestUtils {
      * 
      * @param cssString
      */
-    public static void injectCSS(Window w, String cssString) {
+    public static void injectCSS(Root w, String cssString) {
         String script = "if ('\\v'=='v') /* ie only */ {\n"
                 + "        document.createStyleSheet().cssText = '"
                 + cssString

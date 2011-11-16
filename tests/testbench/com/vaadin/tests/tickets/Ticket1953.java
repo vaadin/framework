@@ -4,9 +4,9 @@ import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket1953 extends Application {
+public class Ticket1953 extends Application.LegacyApplication {
     public static final String cellStyle = "test-cell";
     public static final String colHeadStyle = "test-col-head";
     public static final String headingStyle = "test-heading";
@@ -16,11 +16,11 @@ public class Ticket1953 extends Application {
     @Override
     public void init() {
 
-        final Window main = new Window(getClass().getName().substring(
+        final Root main = new Root(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
-        main.setTheme("tests-tickets");
+        setTheme("tests-tickets");
         GridLayout gl = new GridLayout(5, 5);
 
         gl.setStyleName("borders");

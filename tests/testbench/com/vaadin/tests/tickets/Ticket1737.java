@@ -7,10 +7,10 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class Ticket1737 extends Application {
+public class Ticket1737 extends Application.LegacyApplication {
 
     Resource slowRes = new ClassResource(Ticket1737.class, "m-bullet-blue.gif",
             this) {
@@ -28,7 +28,7 @@ public class Ticket1737 extends Application {
     @Override
     public void init() {
 
-        final Window main = new Window(getClass().getName().substring(
+        final Root main = new Root(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 

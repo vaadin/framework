@@ -7,9 +7,9 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 public class TableToggleVisibility extends AbstractTestCase {
 
@@ -112,7 +112,7 @@ public class TableToggleVisibility extends AbstractTestCase {
         mainLayout.addComponent(split);
         mainLayout.setExpandRatio(split, 1.0f);
 
-        Window mainWindow = new Window("Visibilitybug Application", mainLayout);
+        Root mainWindow = new Root("Visibilitybug Application", mainLayout);
         mainWindow.setSizeFull();
 
         setMainWindow(mainWindow);

@@ -8,13 +8,14 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.ResizeEvent;
 import com.vaadin.ui.Window.ResizeListener;
 
 public class LazyWindowResize extends AbstractTestCase {
 
-    private Window mainWindow;
+    private Root mainWindow;
     private Window subWindow;
     private Button lazyMode;
     private Log log = new Log(5);
@@ -23,11 +24,12 @@ public class LazyWindowResize extends AbstractTestCase {
     protected ResizeListener resizeListener = new ResizeListener() {
 
         public void windowResized(ResizeEvent e) {
-            if (e.getWindow() == mainWindow) {
-                log.log("Main window resized");
-            } else {
-                log.log("Sub window resized");
-            }
+            throw new RuntimeException("Out of order...");
+            // if (e.getWindow() == mainWindow) {
+            // log.log("Main window resized");
+            // } else {
+            // log.log("Sub window resized");
+            // }
 
         }
     };
@@ -45,7 +47,7 @@ public class LazyWindowResize extends AbstractTestCase {
 
     @Override
     public void init() {
-        mainWindow = new Window("Resize test");
+        mainWindow = new Root("Resize test");
         setMainWindow(mainWindow);
         subWindow = new Window("Sub window");
         subWindow.setHeight("50%");

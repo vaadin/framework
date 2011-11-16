@@ -5,7 +5,7 @@ import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.gwt.server.AbstractWebApplicationContext;
 import com.vaadin.terminal.gwt.server.WebBrowser;
 
-public abstract class AbstractTestCase extends Application {
+public abstract class AbstractTestCase extends Application.LegacyApplication {
 
     protected abstract String getDescription();
 

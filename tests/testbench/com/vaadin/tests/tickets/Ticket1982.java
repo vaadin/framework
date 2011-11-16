@@ -10,15 +10,15 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket1982 extends Application {
+public class Ticket1982 extends Application.LegacyApplication {
 
     private List<TitleBar> components = new ArrayList<TitleBar>();
 
     @Override
     public void init() {
-        Window main = new Window();
+        Root main = new Root();
         setMainWindow(main);
 
         GridLayout gl = new GridLayout(2, 2);

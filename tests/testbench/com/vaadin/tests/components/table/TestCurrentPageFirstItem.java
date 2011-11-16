@@ -7,12 +7,12 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class TestCurrentPageFirstItem extends Application implements
-        ClickListener {
+public class TestCurrentPageFirstItem extends Application.LegacyApplication
+        implements ClickListener {
 
     private Button buttonIndex;
     private Button buttonItem;
@@ -23,7 +23,7 @@ public class TestCurrentPageFirstItem extends Application implements
     @Override
     public void init() {
         try {
-            Window main = new Window("Table header Test");
+            Root main = new Root("Table header Test");
             setMainWindow(main);
             main.setSizeFull();
             // setTheme("testtheme");

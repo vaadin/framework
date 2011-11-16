@@ -22,8 +22,11 @@ public class TextChangeListenerChangingNonTextProperties extends TestBase {
             @Override
             public void attach() {
                 super.attach();
-                TestUtils.injectCSS(getWindow(), ".red { background:red;} "
-                        + ".green { background:green;} .blue { background:blue;} .cyan { background:cyan;} .magenta { background:magenta;}");
+                TestUtils
+                        .injectCSS(
+                                getRoot(),
+                                ".red { background:red;} "
+                                        + ".green { background:green;} .blue { background:blue;} .cyan { background:cyan;} .magenta { background:magenta;}");
             }
         };
         tf2.setTextChangeEventMode(TextChangeEventMode.EAGER);

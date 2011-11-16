@@ -9,14 +9,14 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class Ticket1966_2 extends Application {
+public class Ticket1966_2 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getName());
+        Root w = new Root(getClass().getName());
         setMainWindow(w);
         w.setContent(new GridLayout(2, 2));
 

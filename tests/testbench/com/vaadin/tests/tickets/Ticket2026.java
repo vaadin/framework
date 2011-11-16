@@ -2,14 +2,14 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 
-public class Ticket2026 extends Application {
+public class Ticket2026 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Root w = new Root(getClass().getSimpleName());
         setMainWindow(w);
 
         GridLayout layout = new GridLayout(2, 2);

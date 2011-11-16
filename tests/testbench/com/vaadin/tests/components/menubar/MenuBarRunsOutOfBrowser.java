@@ -4,15 +4,15 @@ import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 public class MenuBarRunsOutOfBrowser extends AbstractTestCase {
 
     @Override
     public void init() {
         setTheme("runo");
-        Window main = new Window("Test");
+        Root main = new Root("Test");
         main.setSizeFull();
         setMainWindow(main);
         main.getContent().setSizeFull();

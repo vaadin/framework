@@ -21,6 +21,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -35,7 +36,7 @@ import com.vaadin.ui.themes.Reindeer;
  * 
  * Other browsers are much faster.
  */
-public class Ticket2998 extends Application {
+public class Ticket2998 extends Application.LegacyApplication {
     private Table table;
     private VerticalLayout mainLayout;
 
@@ -178,8 +179,8 @@ public class Ticket2998 extends Application {
                                 float f = Float.parseFloat((String) value);
                                 return true;
                             } catch (Exception e) {
-                                f.getWindow().showNotification(
-                                        "Bad number value");
+                                f.getRoot()
+                                        .showNotification("Bad number value");
                                 f.setValue(0);
                                 return false;
                             }
@@ -250,7 +251,7 @@ public class Ticket2998 extends Application {
      */
     private void buildView() {
 
-        final Window w = new Window("Workout Log");
+        final Root w = new Root("Workout Log");
 
         // set theme and some layout stuff
         setMainWindow(w);

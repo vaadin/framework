@@ -2,13 +2,13 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket2426 extends Application {
+public class Ticket2426 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Window w = new Window();
+        Root w = new Root();
         setMainWindow(w);
 
         final String content = "<select/>";

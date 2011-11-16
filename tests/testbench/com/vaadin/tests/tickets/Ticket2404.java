@@ -3,9 +3,9 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket2404 extends Application {
+public class Ticket2404 extends Application.LegacyApplication {
 
     @Override
     public void init() {
@@ -22,7 +22,7 @@ public class Ticket2404 extends Application {
             b.setSizeFull();
         }
 
-        setMainWindow(new Window("GridLayout test", gl));
+        setMainWindow(new Root("GridLayout test", gl));
 
     }
 }

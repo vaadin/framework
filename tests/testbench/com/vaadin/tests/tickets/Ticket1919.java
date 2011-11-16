@@ -4,20 +4,20 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket1919 extends com.vaadin.Application {
+public class Ticket1919 extends com.vaadin.Application.LegacyApplication {
 
     private GridLayout lo;
     private boolean on = true;
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(
+        final Root main = new Root(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
-        main.setTheme("tests-tickets");
+        setTheme("tests-tickets");
 
         lo = new GridLayout(2, 2);
         lo.setSizeFull();

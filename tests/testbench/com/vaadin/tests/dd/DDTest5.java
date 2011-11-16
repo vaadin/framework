@@ -15,7 +15,7 @@ import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
 public class DDTest5 extends TestBase {
 
@@ -47,7 +47,7 @@ public class DDTest5 extends TestBase {
 
     @Override
     protected void setup() {
-        Window w = getLayout().getWindow();
+        Root w = getLayout().getRoot();
 
         HorizontalSortableCssLayoutWithWrappers verticalSortableCssLayoutWithWrappers = new HorizontalSortableCssLayoutWithWrappers();
         w.addWindow(verticalSortableCssLayoutWithWrappers);

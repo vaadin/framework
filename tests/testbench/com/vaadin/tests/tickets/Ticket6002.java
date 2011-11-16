@@ -5,15 +5,15 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 public class Ticket6002 extends TestBase {
 
     @Override
     public void setup() {
-        Window main = new Window("The Main Window");
+        Root main = new Root("The Main Window");
         setMainWindow(main);
 
         final VerticalLayout mainLayout = new VerticalLayout();

@@ -14,9 +14,9 @@ import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 /**
  * Browsable file explorer using Vaadin Tree component. Demonstrates: how to use
@@ -28,8 +28,8 @@ import com.vaadin.ui.Window;
  * @since 4.0.0
  * 
  */
-public class TreeFilesystemContainer extends com.vaadin.Application implements
-        Listener {
+public class TreeFilesystemContainer extends
+        com.vaadin.Application.LegacyApplication implements Listener {
 
     // Filesystem explorer panel and it's components
     private final Panel explorerPanel = new Panel("Filesystem explorer");
@@ -43,7 +43,7 @@ public class TreeFilesystemContainer extends com.vaadin.Application implements
 
     @Override
     public void init() {
-        final Window w = new Window("Tree FilesystemContainer demo");
+        final Root w = new Root("Tree FilesystemContainer demo");
         setMainWindow(w);
         final VerticalLayout main = new VerticalLayout();
         w.setContent(main);
@@ -65,7 +65,7 @@ public class TreeFilesystemContainer extends com.vaadin.Application implements
         propertyPanel.setEnabled(false);
 
         // Get sample directory
-        final File sampleDir = SampleDirectory.getDirectory(this);
+        final File sampleDir = SampleDirectory.getDirectory(this, w);
         // Populate tree with FilesystemContainer
         final FilesystemContainer fsc = new FilesystemContainer(sampleDir, true);
         filesystem.setContainerDataSource(fsc);

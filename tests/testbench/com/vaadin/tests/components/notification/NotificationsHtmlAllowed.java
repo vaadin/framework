@@ -5,18 +5,16 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.Notification;
 
 public class NotificationsHtmlAllowed extends TestBase implements ClickListener {
 
     private TextArea messageField;
     private CheckBox htmlAllowedBox;
     private TextField captionField;
-    private Window subwindow;
-    private CheckBox showInSubwindow;
 
     @Override
     protected void setup() {
@@ -32,16 +30,8 @@ public class NotificationsHtmlAllowed extends TestBase implements ClickListener 
         htmlAllowedBox = new CheckBox("Html content allowed", true);
         addComponent(htmlAllowedBox);
 
-        showInSubwindow = new CheckBox("Show in subwindow", false);
-        addComponent(showInSubwindow);
-
         Button showNotification = new Button("Show notification", this);
         addComponent(showNotification);
-
-        subwindow = new Window("Sub window");
-        subwindow.setPositionX(400);
-        subwindow.setPositionY(0);
-        getMainWindow().addWindow(subwindow);
     }
 
     @Override
@@ -56,13 +46,7 @@ public class NotificationsHtmlAllowed extends TestBase implements ClickListener 
 
     public void buttonClick(ClickEvent event) {
         Notification n = makeNotification();
-        Window window;
-        if (showInSubwindow.booleanValue()) {
-            window = subwindow;
-        } else {
-            window = event.getButton().getWindow();
-        }
-        window.showNotification(n);
+        Root.getCurrentRoot().showNotification(n);
 
     }
 

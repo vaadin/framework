@@ -8,12 +8,12 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
 @SuppressWarnings("serial")
-public class ButtonsTest extends com.vaadin.Application {
+public class ButtonsTest extends com.vaadin.Application.LegacyApplication {
 
-    final Window main = new Window("Button states & themes");
+    final Root main = new Root("Button states & themes");
 
     CheckBox styleToggle;
     CheckBox iconToggle;

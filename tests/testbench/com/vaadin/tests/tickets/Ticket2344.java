@@ -4,16 +4,16 @@ import java.util.Random;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.BaseTheme;
 
-public class Ticket2344 extends Application {
+public class Ticket2344 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Window main = new Window("Quick test");
+        Root main = new Root("Quick test");
 
         setMainWindow(main);
 

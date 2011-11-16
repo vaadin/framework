@@ -3,10 +3,10 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 
-public class Ticket2240 extends Application {
+public class Ticket2240 extends Application.LegacyApplication {
 
     public static final String txt = "<p>There are two main types of windows: application-level windows, and "
             + "\"sub windows\".</p><p>A sub window is rendered as a \"inline\" popup window"
@@ -25,7 +25,7 @@ public class Ticket2240 extends Application {
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Root w = new Root(getClass().getSimpleName());
         setMainWindow(w);
         setTheme("tests-tickets");
         createUI((AbstractOrderedLayout) w.getContent());

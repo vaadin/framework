@@ -13,12 +13,12 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Select;
-import com.vaadin.ui.Window;
 
-public class ListenerOrder extends com.vaadin.Application implements
-        Button.ClickListener, PropertySetChangeListener, ItemSetChangeListener,
-        ValueChangeListener {
+public class ListenerOrder extends com.vaadin.Application.LegacyApplication
+        implements Button.ClickListener, PropertySetChangeListener,
+        ItemSetChangeListener, ValueChangeListener {
 
     Button b1;
 
@@ -32,7 +32,7 @@ public class ListenerOrder extends com.vaadin.Application implements
     }
 
     public void createNewView() {
-        final Window main = new Window("Test window");
+        final Root main = new Root("Test window");
         setMainWindow(main);
 
         main.removeAllComponents();

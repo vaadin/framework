@@ -6,15 +6,15 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket2267 extends Application {
+public class Ticket2267 extends Application.LegacyApplication {
 
     Label l = new Label("0");
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Root w = new Root(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
         GridLayout gl = new GridLayout(4, 2);

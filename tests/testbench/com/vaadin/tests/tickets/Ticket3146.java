@@ -6,18 +6,18 @@ import java.util.HashSet;
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 
-public class Ticket3146 extends Application {
+public class Ticket3146 extends Application.LegacyApplication {
 
     Table table;
     TextField result;
 
     @Override
     public void init() {
-        Window mainWindow = new Window("Test");
+        Root mainWindow = new Root("Test");
 
         table = new Table();
         table.addContainerProperty("Items", String.class, null);

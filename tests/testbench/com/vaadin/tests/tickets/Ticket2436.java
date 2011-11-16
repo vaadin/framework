@@ -4,13 +4,13 @@ import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.PopupView;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket2436 extends Application {
+public class Ticket2436 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        final Window main = new Window();
+        final Root main = new Root();
         setMainWindow(main);
 
         final Button remover = new Button("Remove PopupView");

@@ -2,9 +2,9 @@ package com.vaadin.tests.validation;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Form;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 public class RequiredErrorMessage extends TestBase {
 
@@ -21,7 +21,7 @@ public class RequiredErrorMessage extends TestBase {
     @Override
     public void setup() {
 
-        final Window main = new Window(getClass().getName());
+        final Root main = new Root(getClass().getName());
         setMainWindow(main);
 
         final Form form = new Form(new VerticalLayout());

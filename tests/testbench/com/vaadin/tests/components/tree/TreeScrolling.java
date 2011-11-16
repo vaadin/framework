@@ -2,10 +2,10 @@ package com.vaadin.tests.components.tree;
 
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.RichTextArea;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 public class TreeScrolling extends AbstractTestCase {
 
@@ -13,7 +13,7 @@ public class TreeScrolling extends AbstractTestCase {
     public void init() {
         VerticalLayout layout = new VerticalLayout();
         layout.setSizeUndefined();
-        Window w = new Window("", layout);
+        Root w = new Root("", layout);
         setMainWindow(w);
 
         TextField filler1 = new TextField();

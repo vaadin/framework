@@ -13,9 +13,9 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 public class TestLayoutClickListeners extends AbstractTestCase {
 
@@ -23,7 +23,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
 
     @Override
     public void init() {
-        Window w = new Window("main window");
+        Root w = new Root("main window");
         setMainWindow(w);
         setTheme("tests-tickets");
 

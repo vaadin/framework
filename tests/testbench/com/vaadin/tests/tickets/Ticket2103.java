@@ -5,16 +5,16 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class Ticket2103 extends Application {
-    private Window mainWindow;
+public class Ticket2103 extends Application.LegacyApplication {
+    private Root mainWindow;
 
     @Override
     public void init() {
-        mainWindow = new Window(getClass().getSimpleName());
+        mainWindow = new Root(getClass().getSimpleName());
         mainWindow.setContent(new VerticalLayout());
         mainWindow.setSizeFull();
         mainWindow.getContent().setSizeFull();

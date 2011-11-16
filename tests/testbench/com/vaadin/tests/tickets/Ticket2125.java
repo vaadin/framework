@@ -5,12 +5,12 @@ import com.vaadin.data.util.MethodProperty;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.Table.ColumnGenerator;
-import com.vaadin.ui.Window;
 
-public class Ticket2125 extends Application {
+public class Ticket2125 extends Application.LegacyApplication {
 
     @Override
     public void init() {
@@ -18,7 +18,7 @@ public class Ticket2125 extends Application {
 
     }
 
-    class MainWindow extends Window {
+    class MainWindow extends Root {
         MainWindow(String caption) {
             super(caption);
 

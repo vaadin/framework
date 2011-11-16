@@ -4,15 +4,15 @@ import com.vaadin.Application;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class GridLayoutInsidePanel2 extends Application {
+public class GridLayoutInsidePanel2 extends Application.LegacyApplication {
 
     private Layout layout;
 
     @Override
     public void init() {
-        Window w = new Window("Main");
+        Root w = new Root("Main");
         setMainWindow(w);
         layout = (Layout) w.getContent();
         GridLayout gl = new GridLayout(1, 1);

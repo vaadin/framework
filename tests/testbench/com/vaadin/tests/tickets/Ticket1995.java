@@ -7,17 +7,17 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Window;
 
-public class Ticket1995 extends Application {
+public class Ticket1995 extends Application.LegacyApplication {
 
     private static final Object PROPERTY_1 = "Test";
     private Table table;
 
     @Override
     public void init() {
-        final Window mainWin = new Window(getClass().getName());
+        final Root mainWin = new Root(getClass().getName());
         setMainWindow(mainWin);
 
         table = new Table();

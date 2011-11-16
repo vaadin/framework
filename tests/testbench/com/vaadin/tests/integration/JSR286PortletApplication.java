@@ -23,16 +23,16 @@ import com.vaadin.terminal.gwt.server.PortletApplicationContext2.PortletListener
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.Notification;
 
 /**
  * Adapted from old PortletDemo to support integration testing.
  */
-public class JSR286PortletApplication extends Application {
+public class JSR286PortletApplication extends Application.LegacyApplication {
 
-    Window main = new Window();
+    Root main = new Root();
     TextField tf = new TextField("Some value");
     Label userInfo = new Label();
     Link portletEdit = new Link();
@@ -41,7 +41,6 @@ public class JSR286PortletApplication extends Application {
 
     @Override
     public void init() {
-        main = new Window();
         setMainWindow(main);
 
         Embedded appResourceTest = new Embedded(
@@ -79,12 +78,12 @@ public class JSR286PortletApplication extends Application {
     private class DemoPortletListener implements PortletListener {
 
         public void handleActionRequest(ActionRequest request,
-                ActionResponse response, Window window) {
+                ActionResponse response, Root window) {
             main.addComponent(new Label("Action received"));
         }
 
         public void handleRenderRequest(RenderRequest request,
-                RenderResponse response, Window window) {
+                RenderResponse response, Root window) {
             // Portlet up-and-running, enable stuff
             portletEdit.setEnabled(true);
             portletMax.setEnabled(true);
@@ -157,12 +156,12 @@ public class JSR286PortletApplication extends Application {
         }
 
         public void handleEventRequest(EventRequest request,
-                EventResponse response, Window window) {
+                EventResponse response, Root window) {
             // events not used by this test
         }
 
         public void handleResourceRequest(ResourceRequest request,
-                ResourceResponse response, Window window) {
+                ResourceResponse response, Root window) {
             // nothing special to do here
         }
     }

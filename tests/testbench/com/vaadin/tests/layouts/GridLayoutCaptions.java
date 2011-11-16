@@ -14,9 +14,9 @@ import com.vaadin.ui.Form;
 import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 public class GridLayoutCaptions extends TestBase {
 
@@ -174,7 +174,7 @@ public class GridLayoutCaptions extends TestBase {
 
     @Override
     protected void setup() {
-        Window mainWindow = new Window("Formlayoutcaptionboom Application");
+        Root mainWindow = new Root("Formlayoutcaptionboom Application");
         Label label = new Label("Hello Vaadin user");
         mainWindow.addComponent(label);
         setMainWindow(mainWindow);

@@ -8,11 +8,11 @@ import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket1598 extends Application {
+public class Ticket1598 extends Application.LegacyApplication {
 
-    Window main = new Window("MenuBar test");
+    Root main = new Root("MenuBar test");
 
     final MenuBar menuBar = new MenuBar();
 

@@ -4,18 +4,18 @@ import com.vaadin.Application;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.Table.ColumnGenerator;
-import com.vaadin.ui.Window;
 
-public class Ticket2208 extends Application {
+public class Ticket2208 extends Application.LegacyApplication {
 
     private Table t;
 
     @Override
     public void init() {
-        Window mainWindow = new Window();
+        Root mainWindow = new Root();
         setMainWindow(mainWindow);
 
         t = new Table("A table");

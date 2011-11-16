@@ -4,13 +4,13 @@ import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
 public class ExecuteJavaScript extends AbstractTestCase {
 
     @Override
     public void init() {
-        final Window mainWindow = new Window("Test");
+        final Root mainWindow = new Root("Test");
         setMainWindow(mainWindow);
 
         for (final String script : new String[] { "alert('foo');",

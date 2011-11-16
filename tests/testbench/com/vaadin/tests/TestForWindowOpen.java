@@ -8,6 +8,7 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
 
 public class TestForWindowOpen extends CustomComponent {
@@ -23,7 +24,7 @@ public class TestForWindowOpen extends CustomComponent {
                     public void buttonClick(ClickEvent event) {
                         final ExternalResource r = new ExternalResource(
                                 "http://www.google.com");
-                        getApplication().getMainWindow().open(r);
+                        Root.getCurrentRoot().open(r);
 
                     }
 
@@ -35,7 +36,7 @@ public class TestForWindowOpen extends CustomComponent {
                     public void buttonClick(ClickEvent event) {
                         final ExternalResource r = new ExternalResource(
                                 "http://www.google.com");
-                        getApplication().getMainWindow().open(r, "mytarget");
+                        Root.getCurrentRoot().open(r, "mytarget");
 
                     }
 
@@ -47,8 +48,7 @@ public class TestForWindowOpen extends CustomComponent {
                     public void buttonClick(ClickEvent event) {
                         final ExternalResource r = new ExternalResource(
                                 "http://www.google.com");
-                        getApplication().getMainWindow()
-                                .open(r, "secondtarget");
+                        Root.getCurrentRoot().open(r, "secondtarget");
 
                     }
 

@@ -17,7 +17,7 @@ public class ComboBoxSuggestionOnDetach extends TestBase {
                 "Option 2", "Option 3"));
         comboBox.addListener(new FieldEvents.FocusListener() {
             public void focus(FocusEvent event) {
-                popup.getParent().removeWindow(popup);
+                popup.close();
             }
         });
         popup.addComponent(comboBox);

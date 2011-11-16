@@ -8,15 +8,15 @@ import com.vaadin.ui.Form;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket2244 extends Application {
+public class Ticket2244 extends Application.LegacyApplication {
 
     Form form;
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Root w = new Root(getClass().getSimpleName());
         setMainWindow(w);
 
         GridLayout gl = new GridLayout(3, 3);

@@ -25,11 +25,11 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class TestSizeableIncomponents extends Application {
+public class TestSizeableIncomponents extends Application.LegacyApplication {
 
     private IndexedContainer cont;
     private ComboBox select;
@@ -42,9 +42,9 @@ public class TestSizeableIncomponents extends Application {
 
         initComponentList();
 
-        Window w = new Window();
+        Root w = new Root();
         setMainWindow(w);
-        w.setTheme("tests-components");
+        setTheme("tests-components");
 
         final VerticalLayout main = new VerticalLayout();
         w.setContent(main);

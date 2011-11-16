@@ -5,16 +5,16 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket2282 extends Application {
+public class Ticket2282 extends Application.LegacyApplication {
 
     private FormLayout layout1;
     private FormLayout layout2;
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Root w = new Root(getClass().getSimpleName());
         setMainWindow(w);
         setTheme("tests-tickets");
         w.getContent().setSizeUndefined();

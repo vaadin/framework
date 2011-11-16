@@ -8,7 +8,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
 public class SplitPanelExtraScrollbars extends AbstractTestCase implements
         ClickListener {
@@ -32,7 +32,7 @@ public class SplitPanelExtraScrollbars extends AbstractTestCase implements
         sp.setSecondComponent(hl);
         hl.addComponent(b);
 
-        Window w = new Window("Test", sp);
+        Root w = new Root("Test", sp);
         setMainWindow(w);
     }
 

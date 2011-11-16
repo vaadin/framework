@@ -1,9 +1,9 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.AbstractTestCase;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 public class SortLongTable extends AbstractTestCase {
 
@@ -11,7 +11,7 @@ public class SortLongTable extends AbstractTestCase {
     public void init() {
         final int NUMBER_OF_ROWS = 100; // Works with 10
 
-        Window mainWindow = new Window("Table Sort Test");
+        Root mainWindow = new Root("Table Sort Test");
         mainWindow.setSizeFull();
         setMainWindow(mainWindow);
 

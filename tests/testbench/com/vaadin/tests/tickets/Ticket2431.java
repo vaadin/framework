@@ -7,14 +7,14 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket2431 extends Application {
+public class Ticket2431 extends Application.LegacyApplication {
 
     @Override
     public void init() {
 
-        Window w = new Window();
+        Root w = new Root();
         setMainWindow(w);
         Label help = new Label(
                 "Use CTRL X to fire action, CTRL C to remove it (fails before fix)");

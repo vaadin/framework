@@ -6,13 +6,13 @@ import java.net.URL;
 
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
 public class Ticket2297 extends Ticket2292 {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(
+        final Root main = new Root(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
         URL url = getURL();

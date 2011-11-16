@@ -3,13 +3,13 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket1972 extends Application {
+public class Ticket1972 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getName());
+        Root w = new Root(getClass().getName());
         setMainWindow(w);
         setTheme("tests-ticket");
         GridLayout layout = new GridLayout(3, 3);

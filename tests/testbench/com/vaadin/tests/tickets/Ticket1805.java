@@ -7,14 +7,14 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 
-public class Ticket1805 extends com.vaadin.Application {
+public class Ticket1805 extends com.vaadin.Application.LegacyApplication {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(
+        final Root main = new Root(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
         ((Layout) main.getContent()).setMargin(false);

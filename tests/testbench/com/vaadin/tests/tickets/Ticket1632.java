@@ -4,19 +4,19 @@ import com.vaadin.Application;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Window;
 
 /**
  */
-public class Ticket1632 extends Application {
+public class Ticket1632 extends Application.LegacyApplication {
 
     private Table t;
 
     @Override
     public void init() {
 
-        final Window mainWin = new Window("Test app");
+        final Root mainWin = new Root("Test app");
         setMainWindow(mainWin);
 
         t = new Table();

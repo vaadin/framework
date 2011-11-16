@@ -12,9 +12,9 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
-import com.vaadin.ui.Window;
 
 /**
  * This example demonstrates custom layout. All components created here are
@@ -29,8 +29,8 @@ import com.vaadin.ui.Window;
  * @since 4.0.0
  * 
  */
-public class CustomLayoutDemo extends com.vaadin.Application implements
-        Listener {
+public class CustomLayoutDemo extends com.vaadin.Application.LegacyApplication
+        implements Listener {
 
     private CustomLayout mainLayout = null;
 
@@ -49,7 +49,7 @@ public class CustomLayoutDemo extends com.vaadin.Application implements
      */
     @Override
     public void init() {
-        final Window mainWindow = new Window("CustomLayout demo");
+        final Root mainWindow = new Root("CustomLayout demo");
         setMainWindow(mainWindow);
 
         // set the application to use example -theme

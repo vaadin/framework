@@ -7,17 +7,18 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Window;
 
-public class Ticket1819 extends com.vaadin.Application {
+public class Ticket1819 extends com.vaadin.Application.LegacyApplication {
 
     LinkedList<Select> listOfAllFields = new LinkedList<Select>();
 
     @Override
     public void init() {
 
-        final Window main = new Window("#1819");
+        final Root main = new Root("#1819");
         setMainWindow(main);
 
         com.vaadin.ui.Select s;

@@ -5,8 +5,8 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 
 /**
  * Key codes were converted to lower case on the server (overlapping special key
@@ -14,11 +14,11 @@ import com.vaadin.ui.Window;
  * Therefore, registering e.g. F8 as a key code resulted in "w" being used as
  * the trigger and F8 being ignored.
  */
-public class Ticket5157 extends Application {
+public class Ticket5157 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        final Window mainWindow = new Window("Forumtests Application");
+        final Root mainWindow = new Root("Forumtests Application");
         setMainWindow(mainWindow);
 
         Panel p = new Panel();

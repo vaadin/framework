@@ -2,17 +2,17 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 
-public class Ticket2062 extends Application {
+public class Ticket2062 extends Application.LegacyApplication {
     private static final Object P1 = new Object();
 
     @Override
     public void init() {
-        setMainWindow(new Window("Ticket2062"));
+        setMainWindow(new Root("Ticket2062"));
         getMainWindow().setSizeFull();
 
         HorizontalSplitPanel p = new HorizontalSplitPanel();

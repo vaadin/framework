@@ -11,12 +11,12 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class Ticket2029 extends Application {
+public class Ticket2029 extends Application.LegacyApplication {
 
     int COMPONENTS;
     int DIM1, DIM2;
@@ -28,7 +28,7 @@ public class Ticket2029 extends Application {
         DIM1 = 504;
         DIM2 = 100;
 
-        Window w = new Window(getClass().getSimpleName());
+        Root w = new Root(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
         Panel p = createPanel();

@@ -1,14 +1,14 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket1767 extends com.vaadin.Application {
+public class Ticket1767 extends com.vaadin.Application.LegacyApplication {
 
     @Override
     public void init() {
 
-        final Window main = new Window(getClass().getName().substring(
+        final Root main = new Root(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 

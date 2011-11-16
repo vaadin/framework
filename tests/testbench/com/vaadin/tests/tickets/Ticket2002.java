@@ -3,10 +3,10 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 
-public class Ticket2002 extends Application {
+public class Ticket2002 extends Application.LegacyApplication {
     private Long long1 = new Long(1L);
     private Long long2 = new Long(2L);
 
@@ -28,7 +28,7 @@ public class Ticket2002 extends Application {
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getName());
+        Root w = new Root(getClass().getName());
         setMainWindow(w);
 
         GridLayout layout = new GridLayout(2, 2);

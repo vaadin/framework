@@ -3,17 +3,17 @@ package com.vaadin.tests.tickets;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 
-public class Ticket2040 extends com.vaadin.Application {
+public class Ticket2040 extends com.vaadin.Application.LegacyApplication {
 
     TextField f = new TextField();
 
     @Override
     public void init() {
-        Window main = new Window();
+        Root main = new Root();
         setMainWindow(main);
 
         main.getContent().setSizeFull();

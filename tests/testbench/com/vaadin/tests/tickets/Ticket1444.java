@@ -2,16 +2,15 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class Ticket1444 extends Application {
+public class Ticket1444 extends Application.LegacyApplication {
 
     @Override
     public void init() {
 
-        final Window mainWin = new Window(
-                "Test app to break layout fuction in IE7");
+        final Root mainWin = new Root("Test app to break layout fuction in IE7");
         setMainWindow(mainWin);
 
         VerticalLayout ol = new VerticalLayout();

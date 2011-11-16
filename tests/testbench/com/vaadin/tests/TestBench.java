@@ -23,11 +23,11 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.UriFragmentUtility;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 /**
  * TestBench finds out testable classes within given java packages and adds them
@@ -39,8 +39,8 @@ import com.vaadin.ui.Window;
  * @author IT Mill Ltd.
  * 
  */
-public class TestBench extends com.vaadin.Application implements
-        Property.ValueChangeListener {
+public class TestBench extends com.vaadin.Application.LegacyApplication
+        implements Property.ValueChangeListener {
 
     // Add here packages which are used for finding testable classes
     String[] testablePackages = { "com.vaadin.tests",
@@ -48,7 +48,7 @@ public class TestBench extends com.vaadin.Application implements
 
     HierarchicalContainer testables = new HierarchicalContainer();
 
-    Window mainWindow = new Window("TestBench window");
+    Root mainWindow = new Root("TestBench window");
 
     // Main layout consists of tree menu and body layout
     HorizontalSplitPanel mainLayout = new HorizontalSplitPanel();
@@ -213,7 +213,8 @@ public class TestBench extends com.vaadin.Application implements
 
     private Component createTestable(Class<?> c) {
         try {
-            final Application app = (Application) c.newInstance();
+            final Application.LegacyApplication app = (Application.LegacyApplication) c
+                    .newInstance();
             app.init();
             Layout lo = (Layout) app.getMainWindow().getContent();
             lo.setParent(null);

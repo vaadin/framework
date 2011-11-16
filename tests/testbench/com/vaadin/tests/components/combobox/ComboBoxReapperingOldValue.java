@@ -8,19 +8,19 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
-public class ComboBoxReapperingOldValue extends Application implements
-        ValueChangeListener {
+public class ComboBoxReapperingOldValue extends Application.LegacyApplication
+        implements ValueChangeListener {
 
     ComboBox cbox1 = new ComboBox();
     ComboBox cbox2 = new ComboBox();
 
     @Override
     public void init() {
-        Window mainWindow = new Window("ComboBoxCacheTest");
+        Root mainWindow = new Root("ComboBoxCacheTest");
         setMainWindow(mainWindow);
 
         VerticalLayout layout = new VerticalLayout();

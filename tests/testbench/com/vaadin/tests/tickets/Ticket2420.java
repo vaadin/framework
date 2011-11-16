@@ -2,16 +2,16 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.ProgressIndicator;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket2420 extends Application {
+public class Ticket2420 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        final Window main = new Window("Hello window");
+        final Root main = new Root("Hello window");
         setMainWindow(main);
 
-        main.setTheme("tests-tickets");
+        setTheme("tests-tickets");
 
         ProgressIndicator pi = new ProgressIndicator();
         pi.setCaption("Visible");

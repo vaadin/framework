@@ -26,12 +26,12 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.RichTextArea;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.ui.Window;
 
-public class Ticket2204 extends Application {
+public class Ticket2204 extends Application.LegacyApplication {
 
     private final List<RichTextArea> textAreas = new ArrayList<RichTextArea>();
     private TabSheet ts;
@@ -52,7 +52,7 @@ public class Ticket2204 extends Application {
         classes.add(HorizontalSplitPanel.class);
         classes.add(Form.class);
 
-        Window w = new Window(getClass().getSimpleName());
+        Root w = new Root(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
         createUI((AbstractOrderedLayout) w.getContent());

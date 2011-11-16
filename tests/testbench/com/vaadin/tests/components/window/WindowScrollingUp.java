@@ -3,8 +3,8 @@ package com.vaadin.tests.components.window;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Window;
 
 public class WindowScrollingUp extends AbstractTestCase {
 
@@ -27,11 +27,11 @@ public class WindowScrollingUp extends AbstractTestCase {
         up.addListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                up.getWindow().setScrollTop(0);
+                up.getRoot().setScrollTop(0);
             }
         });
 
-        setMainWindow(new Window(""));
+        setMainWindow(new Root(""));
         getMainWindow().addComponent(table);
         getMainWindow().addComponent(up);
 

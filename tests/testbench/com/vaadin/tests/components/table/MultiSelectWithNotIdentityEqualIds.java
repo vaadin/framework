@@ -20,8 +20,8 @@ public class MultiSelectWithNotIdentityEqualIds extends TestBase {
         t.setImmediate(true);
         t.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                t.getWindow().showNotification(
-                        "Selected: " + event.getProperty());
+                t.getRoot()
+                        .showNotification("Selected: " + event.getProperty());
 
             }
         });

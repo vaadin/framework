@@ -6,13 +6,13 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
 /**
  * @author Risto Yrjänä / IT Mill Ltd.
  * 
  */
-public class Ticket2742 extends Application {
+public class Ticket2742 extends Application.LegacyApplication {
 
     /*
      * (non-Javadoc)
@@ -21,7 +21,7 @@ public class Ticket2742 extends Application {
      */
     @Override
     public void init() {
-        Window mainWindow = new Window();
+        Root mainWindow = new Root();
         setMainWindow(mainWindow);
 
         String shortString = "Short";

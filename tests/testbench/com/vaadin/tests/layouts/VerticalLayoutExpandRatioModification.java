@@ -5,9 +5,9 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 public class VerticalLayoutExpandRatioModification extends TestBase implements
         ClickListener {
@@ -20,7 +20,7 @@ public class VerticalLayoutExpandRatioModification extends TestBase implements
 
     @Override
     public void setup() {
-        Window main = new Window("The Main Window");
+        Root main = new Root("The Main Window");
         mainLayout = new VerticalLayout();
         main.setContent(mainLayout);
         setMainWindow(main);

@@ -1,37 +1,21 @@
 package com.vaadin.tests.components.loginform;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.LoginForm.LoginEvent;
 import com.vaadin.ui.LoginForm.LoginListener;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
 @SuppressWarnings("serial")
 public class LoginFormWithMultipleWindows extends Application {
 
-    /**
-     * =======================================================================
-     * Comment out this to make the LoginForm work as expected
-     * =======================================================================
-     */
     @Override
-    public Window getWindow(String name) {
-        Window w = super.getWindow(name);
-        if (w == null) {
-            w = new LoginFormWindow();
-            w.setName(name);
-            addWindow(w);
-        }
-        return w;
-
+    protected Root createRoot(WrappedRequest request) {
+        return new LoginFormWindow();
     }
 
-    @Override
-    public void init() {
-        setMainWindow(new LoginFormWindow());
-    }
-
-    public class LoginFormWindow extends Window {
+    public class LoginFormWindow extends Root {
         public LoginFormWindow() {
             super();
 

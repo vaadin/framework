@@ -6,10 +6,10 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Select;
-import com.vaadin.ui.Window;
 
-public class Ticket1230 extends Application {
+public class Ticket1230 extends Application.LegacyApplication {
 
     private static final Object PROPERTY_ID = new Object();
     private static final Object NULL_ITEM_ID = new Object();
@@ -18,7 +18,7 @@ public class Ticket1230 extends Application {
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getName());
+        Root w = new Root(getClass().getName());
         setMainWindow(w);
 
         GridLayout layout = new GridLayout(5, 5);

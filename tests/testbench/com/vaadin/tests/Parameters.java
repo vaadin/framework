@@ -4,21 +4,23 @@
 
 package com.vaadin.tests;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.vaadin.terminal.DownloadStream;
+import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.ParameterHandler;
-import com.vaadin.terminal.URIHandler;
+import com.vaadin.terminal.RequestHandler;
+import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 /**
  * This is a demonstration of how URL parameters can be recieved and handled.
@@ -27,8 +29,8 @@ import com.vaadin.ui.Window;
  * 
  * @since 3.1.1
  */
-public class Parameters extends com.vaadin.Application implements URIHandler,
-        ParameterHandler {
+public class Parameters extends com.vaadin.Application.LegacyApplication
+        implements RequestHandler {
 
     private final Label context = new Label();
 
@@ -38,12 +40,11 @@ public class Parameters extends com.vaadin.Application implements URIHandler,
 
     @Override
     public void init() {
-        final Window main = new Window("Parameters demo");
+        final Root main = new Root("Parameters demo");
         setMainWindow(main);
 
         // This class acts both as URI handler and parameter handler
-        main.addURIHandler(this);
-        main.addParameterHandler(this);
+        addRequestHandler(this);
 
         final VerticalLayout layout = new VerticalLayout();
         final Label info = new Label("To test URI and Parameter Handlers, "
@@ -92,24 +93,14 @@ public class Parameters extends com.vaadin.Application implements URIHandler,
         main.setContent(layout);
     }
 
-    /**
-     * Update URI
-     * 
-     * @see com.vaadin.terminal.URIHandler#handleURI(URL, String)
-     */
-    @Override
-    public DownloadStream handleURI(URL context, String relativeUri) {
-        this.context.setValue(context.toString());
-        relative.setValue(relativeUri);
-        return null;
-    }
+    public boolean handleRequest(Application application,
+            WrappedRequest request, WrappedResponse response)
+            throws IOException {
+        context.setValue("Context not available");
+        relative.setValue(request.getRequestPathInfo());
 
-    /**
-     * Handles GET parameters, in this demo GET parameteres are used to
-     * communicate with EmbeddedToolkit.jsp
-     */
-    public void handleParameters(Map<String, String[]> parameters) {
         params.removeAllItems();
+        Map<String, String[]> parameters = request.getParameterMap();
         for (final Iterator<String> i = parameters.keySet().iterator(); i
                 .hasNext();) {
             final String name = i.next();
@@ -123,5 +114,7 @@ public class Parameters extends com.vaadin.Application implements URIHandler,
             }
             params.addItem(new Object[] { name, v }, name);
         }
+
+        return false;
     }
 }

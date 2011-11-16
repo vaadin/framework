@@ -1,15 +1,15 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.terminal.SystemError;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 
-public class Ticket1663 extends com.vaadin.Application {
+public class Ticket1663 extends com.vaadin.Application.LegacyApplication {
 
     @Override
     public void init() {
 
-        Window main = new Window("#1663");
+        Root main = new Root("#1663");
         setMainWindow(main);
 
         TextField tf = new TextField("First name");

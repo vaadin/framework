@@ -7,14 +7,14 @@ import java.io.ObjectOutputStream;
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
 @SuppressWarnings("serial")
-public class Ticket695 extends Application {
+public class Ticket695 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        final Window w = new Window("Serialization test #695");
+        final Root w = new Root("Serialization test #695");
         setMainWindow(w);
         Button b = new Button("Serialize ApplicationContext");
         w.addComponent(b);

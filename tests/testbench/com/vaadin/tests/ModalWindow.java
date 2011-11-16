@@ -8,6 +8,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
@@ -21,8 +22,8 @@ import com.vaadin.ui.Window;
  * @see com.vaadin.ui.Window
  * @see com.vaadin.ui.Label
  */
-public class ModalWindow extends com.vaadin.Application implements
-        ClickListener {
+public class ModalWindow extends com.vaadin.Application.LegacyApplication
+        implements ClickListener {
 
     private Window test;
     private Button reopen;
@@ -31,7 +32,7 @@ public class ModalWindow extends com.vaadin.Application implements
     public void init() {
 
         // Create main window
-        final Window main = new Window("ModalWindow demo");
+        final Root main = new Root("ModalWindow demo");
         setMainWindow(main);
         main.addComponent(new Label("ModalWindow demo"));
 

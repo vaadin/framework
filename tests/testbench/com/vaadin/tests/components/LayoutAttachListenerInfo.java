@@ -11,10 +11,9 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.ComponentContainer.ComponentAttachEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window.Notification;
-
 
 public class LayoutAttachListenerInfo extends TestBase {
 

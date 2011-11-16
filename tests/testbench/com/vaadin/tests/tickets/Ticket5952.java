@@ -2,13 +2,13 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket5952 extends Application {
+public class Ticket5952 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        final Window mainWindow = new Window("Forumtests Application");
+        final Root mainWindow = new Root("Forumtests Application");
         setMainWindow(mainWindow);
         
         String mathml =

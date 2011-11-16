@@ -12,12 +12,12 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.AlignmentHandler;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 // This tests the deprecated setComponentAlignment(Component,String) API
 @SuppressWarnings("deprecation")
-public class Ticket2279 extends Application {
+public class Ticket2279 extends Application.LegacyApplication {
 
     private Label label;
 
@@ -61,7 +61,7 @@ public class Ticket2279 extends Application {
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Root w = new Root(getClass().getSimpleName());
         setMainWindow(w);
         setTheme("tests-tickets");
         AbstractOrderedLayout layout = (AbstractOrderedLayout) w.getContent();

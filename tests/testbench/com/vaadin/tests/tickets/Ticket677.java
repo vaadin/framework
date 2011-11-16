@@ -16,11 +16,11 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 
-public class Ticket677 extends Application {
+public class Ticket677 extends Application.LegacyApplication {
 
     private static final Label info = new Label(
             "<li> keep debug window open to see variable changes"
@@ -40,7 +40,7 @@ public class Ticket677 extends Application {
 
     @Override
     public void init() {
-        Window main = new Window();
+        Root main = new Root();
         setMainWindow(main);
 
         main.addComponent(info);

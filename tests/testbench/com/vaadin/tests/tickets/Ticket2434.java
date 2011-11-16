@@ -2,15 +2,15 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.tests.TestForTablesInitialColumnWidthLogicRendering;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Window;
 
-public class Ticket2434 extends Application {
+public class Ticket2434 extends Application.LegacyApplication {
 
     @Override
     public void init() {
 
-        Window w = new Window();
+        Root w = new Root();
 
         setMainWindow(w);
 

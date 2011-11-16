@@ -31,8 +31,10 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupView;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.Slider.ValueOutOfBoundsException;
 import com.vaadin.ui.TabSheet;
@@ -45,11 +47,10 @@ import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.LiferayTheme;
 
 @SuppressWarnings("serial")
-public class LiferayThemeDemo extends Application {
+public class LiferayThemeDemo extends Application.LegacyApplication {
 
     @SuppressWarnings("deprecation")
     private static final Date DATE = new Date(2009 - 1900, 6 - 1, 2);
@@ -59,7 +60,7 @@ public class LiferayThemeDemo extends Application {
     private static final Resource ICON_OK = new ThemeResource(
             "../runo/icons/16/ok.png");
 
-    private Window main;
+    private Root main;
     private VerticalLayout mainLayout;
     private TabSheet tabs;
 
@@ -79,7 +80,7 @@ public class LiferayThemeDemo extends Application {
 
     @Override
     public void init() {
-        main = new Window("Vaadin Liferay Theme");
+        main = new Root("Vaadin Liferay Theme");
         mainLayout = (VerticalLayout) main.getContent();
         mainLayout.setMargin(false);
         setMainWindow(main);
@@ -588,7 +589,7 @@ public class LiferayThemeDemo extends Application {
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         event.getButton()
-                                .getWindow()
+                                .getRoot()
                                 .showNotification((String) title.getValue(),
                                         (String) message.getValue());
 
@@ -600,7 +601,7 @@ public class LiferayThemeDemo extends Application {
         show = new Button("Warning Notification", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 event.getButton()
-                        .getWindow()
+                        .getRoot()
                         .showNotification((String) title.getValue(),
                                 (String) message.getValue(),
                                 Notification.TYPE_WARNING_MESSAGE);
@@ -613,7 +614,7 @@ public class LiferayThemeDemo extends Application {
         show = new Button("Error Notification", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 event.getButton()
-                        .getWindow()
+                        .getRoot()
                         .showNotification((String) title.getValue(),
                                 (String) message.getValue(),
                                 Notification.TYPE_ERROR_MESSAGE);
@@ -626,7 +627,7 @@ public class LiferayThemeDemo extends Application {
         show = new Button("Tray Notification", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 event.getButton()
-                        .getWindow()
+                        .getRoot()
                         .showNotification((String) title.getValue(),
                                 (String) message.getValue(),
                                 Notification.TYPE_TRAY_NOTIFICATION);

@@ -7,11 +7,11 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class Ticket2289 extends Application {
+public class Ticket2289 extends Application.LegacyApplication {
 
     TabSheet ts = null;
     Accordion acc = null;
@@ -19,7 +19,7 @@ public class Ticket2289 extends Application {
     @Override
     public void init() {
 
-        Window w = new Window();
+        Root w = new Root();
         setMainWindow(w);
         VerticalLayout ol = new VerticalLayout();
         w.setContent(ol);

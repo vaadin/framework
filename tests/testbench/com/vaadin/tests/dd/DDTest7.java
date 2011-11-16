@@ -16,8 +16,8 @@ import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Window;
 
 public class DDTest7 extends TestBase {
 
@@ -29,7 +29,7 @@ public class DDTest7 extends TestBase {
 
     @Override
     protected void setup() {
-        Window w = getLayout().getWindow();
+        Root w = getLayout().getRoot();
 
         TestUtils
                 .injectCSS(

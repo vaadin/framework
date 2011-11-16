@@ -3,17 +3,17 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Window;
 
-public class Ticket2180 extends Application {
+public class Ticket2180 extends Application.LegacyApplication {
 
-    private Window mainWindow;
+    private Root mainWindow;
     private TabSheet tabSheet;
 
     @Override
     public void init() {
-        mainWindow = new Window("Tabsheet should cause scrollbars");
+        mainWindow = new Root("Tabsheet should cause scrollbars");
         setMainWindow(mainWindow);
         // mainWindow.getLayout().setSizeFull();
         tabSheet = new TabSheet();

@@ -6,9 +6,9 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket1572 extends com.vaadin.Application {
+public class Ticket1572 extends com.vaadin.Application.LegacyApplication {
 
     private Label state;
     private GridLayout gl;
@@ -17,7 +17,7 @@ public class Ticket1572 extends com.vaadin.Application {
     @Override
     public void init() {
 
-        final Window main = new Window(getClass().getName().substring(
+        final Root main = new Root(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 

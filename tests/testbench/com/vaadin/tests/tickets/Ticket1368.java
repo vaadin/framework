@@ -3,19 +3,19 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.tests.TestForTablesInitialColumnWidthLogicRendering;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Window;
 
 /**
  */
-public class Ticket1368 extends Application {
+public class Ticket1368 extends Application.LegacyApplication {
 
     private Table t;
 
     @Override
     public void init() {
 
-        final Window mainWin = new Window("Test app to #1368");
+        final Root mainWin = new Root("Test app to #1368");
         setMainWindow(mainWin);
 
         t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(3, 5);

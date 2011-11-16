@@ -3,8 +3,8 @@ package com.vaadin.tests.components.table;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Window;
 
 /**
  * Setting table height and setting column header mode as hidden leaves the body
@@ -17,7 +17,7 @@ public class TableHeightWhenHidingHeaders extends AbstractTestCase {
 
     @Override
     public void init() {
-        Window mainWindow = new Window();
+        Root mainWindow = new Root();
         setMainWindow(mainWindow);
 
         final Table table = new Table("Test table");

@@ -11,11 +11,11 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.Notification;
 
-public class GAESyncTest extends Application {
+public class GAESyncTest extends Application.LegacyApplication {
 
     /**
      * 
@@ -45,7 +45,7 @@ public class GAESyncTest extends Application {
 
     }
 
-    private class IntrWindow extends Window {
+    private class IntrWindow extends Root {
         private int n = 0;
         private static final long serialVersionUID = -6521351715072191625l;
         TextField tf;
@@ -90,8 +90,8 @@ public class GAESyncTest extends Application {
                 Button b = new Button("Add", new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        if (getWindow() == getApplication().getMainWindow()) {
-                            getWindow().showNotification("main");
+                        if (getRoot() == getMainWindow()) {
+                            getRoot().showNotification("main");
                             try {
                                 Thread.sleep((5000));
                             } catch (InterruptedException e) {
@@ -139,8 +139,8 @@ public class GAESyncTest extends Application {
     }
 
     @Override
-    public Window getWindow(String name) {
-        Window w = super.getWindow(name);
+    public Root getWindow(String name) {
+        Root w = super.getWindow(name);
         if (w == null) {
             w = new IntrWindow(this);
             addWindow(w);

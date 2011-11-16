@@ -7,9 +7,9 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ProgressIndicator;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket1581 extends com.vaadin.Application {
+public class Ticket1581 extends com.vaadin.Application.LegacyApplication {
 
     private Label time;
     private ProgressIndicator poller;
@@ -17,7 +17,7 @@ public class Ticket1581 extends com.vaadin.Application {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(
+        final Root main = new Root(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 

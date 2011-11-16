@@ -6,9 +6,9 @@ import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket2106 extends Application {
+public class Ticket2106 extends Application.LegacyApplication {
 
     private static CustomizedSystemMessages msgs = new Application.CustomizedSystemMessages();
     static {
@@ -24,7 +24,7 @@ public class Ticket2106 extends Application {
 
     @Override
     public void init() {
-        setMainWindow(new Window("#2106"));
+        setMainWindow(new Root("#2106"));
         getMainWindow().addComponent(
                 new Button("Do nothing", new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {

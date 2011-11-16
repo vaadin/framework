@@ -8,6 +8,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -29,15 +30,7 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
         Table table = new Table();
         table.setPageLength(50);
 
-        final Button up = new Button("up");
-        up.addListener(new Button.ClickListener() {
-
-            public void buttonClick(ClickEvent event) {
-                up.getWindow().setScrollTop(0);
-            }
-        });
-
-        setMainWindow(new Window(""));
+        setMainWindow(new Root(""));
         getMainWindow().getContent().setSizeUndefined();
 
         Component l2 = null;
@@ -109,13 +102,15 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
         ((VerticalLayout) getMainWindow().getContent()).addComponent(
                 new Button("Scroll win to X9", new ClickListener() {
                     public void buttonClick(ClickEvent event) {
-                        window.scrollIntoView(x29);
+                        throw new RuntimeException("Currently not implemented");
+                        // window.scrollIntoView(x29);
                     }
                 }), 0);
         ((VerticalLayout) getMainWindow().getContent()).addComponent(
                 new Button("Scroll win to Y9", new ClickListener() {
                     public void buttonClick(ClickEvent event) {
-                        window.scrollIntoView(y29);
+                        throw new RuntimeException("Currently not implemented");
+                        // window.scrollIntoView(y29);
                     }
                 }), 0);
 

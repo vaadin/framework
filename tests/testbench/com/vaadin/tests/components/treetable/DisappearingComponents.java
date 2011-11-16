@@ -3,14 +3,14 @@ package com.vaadin.tests.components.treetable;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Link;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TreeTable;
-import com.vaadin.ui.Window;
 
 public class DisappearingComponents extends TestBase {
 
     @Override
     protected void setup() {
-        Window mainWindow = new Window("Application");
+        Root mainWindow = new Root("Application");
         final TreeTable tt = new TreeTable();
         tt.setSizeUndefined();
         tt.setWidth("100%");

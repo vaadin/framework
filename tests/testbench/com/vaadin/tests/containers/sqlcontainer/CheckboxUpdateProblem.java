@@ -20,11 +20,11 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Window;
 
-public class CheckboxUpdateProblem extends Application implements
-        Property.ValueChangeListener {
+public class CheckboxUpdateProblem extends Application.LegacyApplication
+        implements Property.ValueChangeListener {
     private final DatabaseHelper databaseHelper = new DatabaseHelper();
     private Table testList;
     private final HorizontalSplitPanel horizontalSplit = new HorizontalSplitPanel();
@@ -33,7 +33,7 @@ public class CheckboxUpdateProblem extends Application implements
 
     @Override
     public void init() {
-        setMainWindow(new Window("Test window"));
+        setMainWindow(new Root("Test window"));
         horizontalSplit.setSizeFull();
         testList = new Table();
 

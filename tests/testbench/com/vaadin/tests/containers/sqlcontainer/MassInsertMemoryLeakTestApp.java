@@ -12,8 +12,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.ProgressIndicator;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 // author table in testdb (MySQL) is set out as follows
 // +-------------+-------------+------+-----+---------+----------------+
@@ -25,14 +25,14 @@ import com.vaadin.ui.Window;
 // +-------------+-------------+------+-----+---------+----------------+
 
 @SuppressWarnings("serial")
-public class MassInsertMemoryLeakTestApp extends Application {
+public class MassInsertMemoryLeakTestApp extends Application.LegacyApplication {
 
     ProgressIndicator proggress = new ProgressIndicator();
     Button process = new Button("Mass insert");
 
     @Override
     public void init() {
-        setMainWindow(new Window("SQLContainer Test", buildLayout()));
+        setMainWindow(new Root("SQLContainer Test", buildLayout()));
 
         process.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {

@@ -10,9 +10,9 @@ import com.vaadin.data.Item;
 import com.vaadin.tests.util.SampleDirectory;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.ExpandEvent;
-import com.vaadin.ui.Window;
 
 /**
  * Browsable file explorer using Vaadin Tree component. Demonstrates: how to add
@@ -23,8 +23,8 @@ import com.vaadin.ui.Window;
  * @since 4.0.0
  * 
  */
-public class TreeFilesystem extends com.vaadin.Application implements
-        Tree.ExpandListener {
+public class TreeFilesystem extends com.vaadin.Application.LegacyApplication
+        implements Tree.ExpandListener {
 
     // Filesystem explorer panel and it's components
     private final Panel explorerPanel = new Panel("Filesystem explorer");
@@ -33,7 +33,7 @@ public class TreeFilesystem extends com.vaadin.Application implements
 
     @Override
     public void init() {
-        final Window main = new Window("Tree filesystem demo");
+        final Root main = new Root("Tree filesystem demo");
         setMainWindow(main);
 
         // Main window contains heading and panel
@@ -48,7 +48,7 @@ public class TreeFilesystem extends com.vaadin.Application implements
         tree.addListener(this);
 
         // Get sample directory
-        final File sampleDir = SampleDirectory.getDirectory(this);
+        final File sampleDir = SampleDirectory.getDirectory(this, main);
         // populate tree's root node with example directory
         if (sampleDir != null) {
             populateNode(sampleDir.getAbsolutePath(), null);

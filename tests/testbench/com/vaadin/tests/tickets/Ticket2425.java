@@ -3,14 +3,14 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Window;
 
-public class Ticket2425 extends Application {
+public class Ticket2425 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Root w = new Root(getClass().getSimpleName());
         setMainWindow(w);
 
         w.addComponent(new Label("No scrollbars should be visible anywhere"));

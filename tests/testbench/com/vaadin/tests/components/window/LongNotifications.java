@@ -3,7 +3,7 @@ package com.vaadin.tests.components.window;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Window.Notification;
+import com.vaadin.ui.Notification;
 
 public class LongNotifications extends TestBase {
     private final String text = "This is a veeeery large notification in the main window which should definitly not exist at all, in any app. But they finally do in real world applications, no matter what you do. People have small screens and desperatly try to run web apps in their iphones.";

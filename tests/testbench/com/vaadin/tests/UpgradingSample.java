@@ -18,10 +18,10 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 /**
  * <p>
@@ -34,7 +34,7 @@ import com.vaadin.ui.Window;
  * @since 3.1.1
  * @author IT Mill Ltd.
  */
-public class UpgradingSample extends Application implements
+public class UpgradingSample extends Application.LegacyApplication implements
         Property.ValueChangeListener {
 
     /* Menu for navigating inside the application. */
@@ -56,7 +56,7 @@ public class UpgradingSample extends Application implements
     public void init() {
 
         // Create the main window of the application
-        final Window main = new Window("Login example", layout);
+        final Root main = new Root("Login example", layout);
         setMainWindow(main);
 
         // Add menu and loginbox to the application

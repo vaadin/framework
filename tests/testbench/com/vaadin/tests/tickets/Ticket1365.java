@@ -4,10 +4,11 @@ import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 
-public class Ticket1365 extends com.vaadin.Application implements Handler {
+public class Ticket1365 extends com.vaadin.Application.LegacyApplication
+        implements Handler {
 
     TextField f = new TextField();
 
@@ -15,7 +16,7 @@ public class Ticket1365 extends com.vaadin.Application implements Handler {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(
+        final Root main = new Root(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 

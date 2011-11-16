@@ -3,10 +3,10 @@ package com.vaadin.tests.components.table;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window.Notification;
 
 public class TableShouldNotEatValueChanges extends TestBase {
 
@@ -27,7 +27,7 @@ public class TableShouldNotEatValueChanges extends TestBase {
         ItemClickListener l = new ItemClickListener() {
 
             public void itemClick(ItemClickEvent event) {
-                tf.getWindow().showNotification(
+                tf.getRoot().showNotification(
                         "TF Value on the server:" + tf.getValue(),
                         Notification.TYPE_WARNING_MESSAGE);
 

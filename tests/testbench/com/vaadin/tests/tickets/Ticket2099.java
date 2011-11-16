@@ -6,11 +6,12 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class Ticket2099 extends Application {
+public class Ticket2099 extends Application.LegacyApplication {
 
     private Label l1, l2, l3;
     private VerticalLayout ol1, ol2, ol3;
@@ -18,7 +19,7 @@ public class Ticket2099 extends Application {
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Root w = new Root(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
         GridLayout layout = new GridLayout(10, 10);
@@ -36,7 +37,7 @@ public class Ticket2099 extends Application {
 
         });
         popup = createPopup();
-        addWindow(popup);
+        getMainWindow().addWindow(popup);
 
         layout.addComponent(b);
         layout.addComponent(new Button("Hide label '222'", new ClickListener() {

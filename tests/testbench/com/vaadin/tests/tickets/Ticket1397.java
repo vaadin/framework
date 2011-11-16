@@ -10,18 +10,18 @@ import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupView;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 
-public class Ticket1397 extends Application {
+public class Ticket1397 extends Application.LegacyApplication {
 
-    Window main;
+    Root main;
 
     @Override
     public void init() {
         setTheme("runo");
-        main = new Window("PopupView test");
+        main = new Root("PopupView test");
         setMainWindow(main);
         Panel panel = new Panel("PopupTest");
 

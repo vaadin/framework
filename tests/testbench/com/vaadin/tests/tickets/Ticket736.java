@@ -13,19 +13,19 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket736 extends Application {
+public class Ticket736 extends Application.LegacyApplication {
 
     Address address = new Address();
 
     @Override
     public void init() {
 
-        final Window mainWin = new Window("Test app for #736");
+        final Root mainWin = new Root("Test app for #736");
         setMainWindow(mainWin);
 
-        mainWin.setTheme("runo");
+        setTheme("runo");
 
         // Create form for editing address
         final Form f = new Form();

@@ -17,11 +17,11 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 /**
  * This example demonstrates layouts. Layouts are populated with sample Vaadin
@@ -30,7 +30,8 @@ import com.vaadin.ui.Window;
  * @author IT Mill Ltd.
  * 
  */
-public class RandomLayoutStress extends com.vaadin.Application {
+public class RandomLayoutStress extends
+        com.vaadin.Application.LegacyApplication {
 
     private final Random seededRandom = new Random(1);
 
@@ -48,7 +49,7 @@ public class RandomLayoutStress extends com.vaadin.Application {
      */
     @Override
     public void init() {
-        final Window mainWindow = new Window("Layout demo");
+        final Root mainWindow = new Root("Layout demo");
         setMainWindow(mainWindow);
 
         // Create horizontal ordered layout

@@ -6,23 +6,27 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URL;
 
 import javax.imageio.ImageIO;
 
+import com.vaadin.Application;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.RequestHandler;
+import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket2292 extends com.vaadin.Application {
+public class Ticket2292 extends com.vaadin.Application.LegacyApplication
+        implements RequestHandler {
 
     @Override
     public void init() {
-        final Window main = new Window(getClass().getName().substring(
+        final Root main = new Root(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
@@ -40,12 +44,16 @@ public class Ticket2292 extends com.vaadin.Application {
         Link l = new Link("l", icon);
         main.addComponent(l);
 
+        addRequestHandler(this);
     }
 
-    @Override
-    public DownloadStream handleURI(URL context, String relativeUri) {
+    public boolean handleRequest(Application application,
+            WrappedRequest request, WrappedResponse response)
+            throws IOException {
+        String relativeUri = request.getRequestPathInfo();
+
         if (!relativeUri.contains("icon.png")) {
-            return null;
+            return false;
         }
 
         // be slow to show bug
@@ -78,9 +86,10 @@ public class Ticket2292 extends com.vaadin.Application {
             // Return a stream from the buffer.
             ByteArrayInputStream istream = new ByteArrayInputStream(
                     imagebuffer.toByteArray());
-            return new DownloadStream(istream, null, null);
+            new DownloadStream(istream, null, null).writeTo(response);
+            return true;
         } catch (IOException e) {
-            return null;
+            return false;
         }
     }
 

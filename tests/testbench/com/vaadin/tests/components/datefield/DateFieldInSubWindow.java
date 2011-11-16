@@ -13,6 +13,7 @@ import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -106,7 +107,7 @@ public class DateFieldInSubWindow extends AbstractTestCase {
                 Button b = new Button("Close", new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        (getParent()).removeWindow(TestCaseWindow.this);
+                        TestCaseWindow.this.close();
                     }
                 });
                 buttons.addComponent(b);
@@ -118,7 +119,7 @@ public class DateFieldInSubWindow extends AbstractTestCase {
 
     @Override
     public void init() {
-        Window mainWindow = new Window();
+        Root mainWindow = new Root();
         setMainWindow(mainWindow);
         Button open = new Button("Open window", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {

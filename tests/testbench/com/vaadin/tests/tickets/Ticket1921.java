@@ -1,15 +1,19 @@
 package com.vaadin.tests.tickets;
 
+import java.io.IOException;
 import java.util.Map;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.ParameterHandler;
+import com.vaadin.terminal.RequestHandler;
+import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class Ticket1921 extends Application implements ParameterHandler {
+public class Ticket1921 extends Application.LegacyApplication implements
+        RequestHandler {
 
     int state = -1;
     int round = 1;
@@ -20,7 +24,7 @@ public class Ticket1921 extends Application implements ParameterHandler {
     public void init() {
 
         outer = new VerticalLayout();
-        setMainWindow(new Window("#1921", outer));
+        setMainWindow(new Root("#1921", outer));
         setTheme("tests-tickets");
         inner = new VerticalLayout();
         outer.addComponent(inner);
@@ -32,7 +36,7 @@ public class Ticket1921 extends Application implements ParameterHandler {
 
         newState();
 
-        getMainWindow().addParameterHandler(this);
+        addRequestHandler(this);
     }
 
     public void newState() {
@@ -83,14 +87,17 @@ public class Ticket1921 extends Application implements ParameterHandler {
         }
     }
 
-    public void handleParameters(Map<String, String[]> parameters) {
+    public boolean handleRequest(Application application,
+            WrappedRequest request, WrappedResponse response)
+            throws IOException {
+        Map<String, String[]> parameters = request.getParameterMap();
         String[] s = parameters.get("state");
         if (s == null || s.length != 1) {
-            return;
+            return false;
         }
         String v[] = s[0].split("\\.");
         if (v == null || v.length != 2) {
-            return;
+            return false;
         }
         try {
             int rr = Integer.parseInt(v[0]);
@@ -98,12 +105,13 @@ public class Ticket1921 extends Application implements ParameterHandler {
             if (rr < round || (rr == round && rs < state)) {
                 getMainWindow().showNotification(
                         "Already past requested " + s[0]);
-                return;
+                return false;
             }
             while (round < rr || state < rs) {
                 newState();
             }
         } catch (NumberFormatException ignored) {
         }
+        return false;
     }
 }

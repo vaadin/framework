@@ -26,7 +26,7 @@ public class EmbeddedPdf extends TestBase {
         player.setSource(new ClassResource(getClass(), "test.pdf", this));
         addComponent(player);
 
-        player.getWindow().addWindow(new Window("Testwindow"));
+        player.getRoot().addWindow(new Window("Testwindow"));
     }
 
 }

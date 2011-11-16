@@ -7,9 +7,9 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket2209 extends Application {
+public class Ticket2209 extends Application.LegacyApplication {
 
     private GridLayout gl;
     private ComboBox combo;
@@ -17,7 +17,7 @@ public class Ticket2209 extends Application {
 
     @Override
     public void init() {
-        setMainWindow(new Window());
+        setMainWindow(new Root());
 
         gl = new GridLayout(1, 2);
         gl.setStyleName("borders");

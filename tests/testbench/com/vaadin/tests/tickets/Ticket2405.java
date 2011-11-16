@@ -9,11 +9,11 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class Ticket2405 extends Application {
+public class Ticket2405 extends Application.LegacyApplication {
 
     private Label label;
     private HorizontalSplitPanel split;
@@ -21,10 +21,9 @@ public class Ticket2405 extends Application {
     @Override
     public void init() {
 
-        final Window root = new Window("VaadinTunes");
+        final Root root = new Root("VaadinTunes");
         root.setWidth("90%");
         root.setHeight("90%");
-        root.center();
 
         // We'll attach the window to the browser view already here, so we won't
         // forget it later.

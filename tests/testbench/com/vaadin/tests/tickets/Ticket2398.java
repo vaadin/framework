@@ -3,15 +3,15 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Window;
 
-public class Ticket2398 extends Application {
+public class Ticket2398 extends Application.LegacyApplication {
 
     @Override
     public void init() {
 
-        final Window mainWin = new Window();
+        final Root mainWin = new Root();
         setMainWindow(mainWin);
 
         Table t = new Table();

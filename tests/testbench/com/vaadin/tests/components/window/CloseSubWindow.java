@@ -8,13 +8,14 @@ import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 
 public class CloseSubWindow extends TestBase {
 
-    private Window browserWindow;
+    private Root browserWindow;
     private Log log = new Log(5);
 
     @Override
@@ -35,12 +36,12 @@ public class CloseSubWindow extends TestBase {
         openWindowButton.setDebugId("opennative");
         openBrowserWindowButton.addListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
-                browserWindow = new Window("Window");
+                browserWindow = new Root("Window");
                 Button closeButton = new Button("Close this window",
                         new ClickListener() {
 
                             public void buttonClick(ClickEvent event) {
-                                event.getButton().getWindow()
+                                event.getButton().getRoot()
                                         .executeJavaScript("window.close();");
 
                             }
@@ -60,7 +61,7 @@ public class CloseSubWindow extends TestBase {
                 });
 
                 addWindow(browserWindow);
-                URL windowUrl = browserWindow.getURL();
+                URL windowUrl = getWindowUrl(browserWindow);
                 // named for easier access by test tools
                 getMainWindow().open(new ExternalResource(windowUrl),
                         "nativewindow");
@@ -89,7 +90,7 @@ public class CloseSubWindow extends TestBase {
         Button closeButton = new Button("Close");
         closeButton.addListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
-                window.getParent().removeWindow(window);
+                window.close();
             }
         });
         window.addComponent(closeButton);
@@ -97,7 +98,7 @@ public class CloseSubWindow extends TestBase {
         Button removeButton = new Button("Remove from parent");
         removeButton.addListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
-                window.getParent().removeWindow(window);
+                window.close();
             }
         });
         window.addComponent(closeButton);

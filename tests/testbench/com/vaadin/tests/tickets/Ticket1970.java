@@ -6,10 +6,11 @@ import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 
-public class Ticket1970 extends Application {
+public class Ticket1970 extends Application.LegacyApplication {
 
     @Override
     public void init() {
@@ -17,10 +18,10 @@ public class Ticket1970 extends Application {
     }
 
     @Override
-    public Window getWindow(String name) {
+    public Root getWindow(String name) {
 
         // If we already have the requested window, use it
-        Window w = super.getWindow(name);
+        Root w = super.getWindow(name);
         if (w == null) {
 
             // If no window found, create it
@@ -29,10 +30,9 @@ public class Ticket1970 extends Application {
         return w;
     }
 
-    private Window createExtraWindow(String name) {
-        final Window w = new Window("Extra window: " + name);
-        w.setName(name);
-        addWindow(w);
+    private Root createExtraWindow(String name) {
+        final Root w = new Root("Extra window: " + name);
+        addWindow(w, name);
         w.addComponent(new Label(
                 "This window has been created on fly for name: " + name));
         w.addComponent(new Button("Show open windows",
@@ -40,11 +40,11 @@ public class Ticket1970 extends Application {
 
                     public void buttonClick(ClickEvent event) {
                         String openWindows = "";
-                        for (Iterator<Window> i = getWindows().iterator(); i
+                        for (Iterator<Root> i = getWindows().iterator(); i
                                 .hasNext();) {
-                            Window t = i.next();
+                            Root t = i.next();
                             openWindows += (openWindows.length() > 0 ? "," : "")
-                                    + t.getName();
+                                    + getWindowName(t);
                         }
                         w.showNotification(openWindows);
                     }
@@ -58,13 +58,13 @@ public class Ticket1970 extends Application {
         return w;
     }
 
-    private Window createWindow() {
-        final Window w = new Window();
+    private Root createWindow() {
+        final Root w = new Root();
         w.addComponent(new Button("Show the name of the application",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         w.showNotification("Name of this window = "
-                                + w.getName());
+                                + getWindowName(w));
                     }
                 }));
         w.addComponent(new Label("<a href='" + getURL().toExternalForm() + "'>"

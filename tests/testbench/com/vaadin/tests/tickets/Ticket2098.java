@@ -2,23 +2,23 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Window;
 
-public class Ticket2098 extends Application {
+public class Ticket2098 extends Application.LegacyApplication {
 
     private static final String info = "First tab hidden, second should initially be selected";
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Root w = new Root(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
         w.addComponent(new Label(info));
         createUI(w);
     }
 
-    private void createUI(Window w) {
+    private void createUI(Root w) {
         TabSheet ts = new TabSheet();
         Label l1 = new Label("111");
         Label l2 = new Label("222");

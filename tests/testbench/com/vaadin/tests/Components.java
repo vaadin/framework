@@ -24,18 +24,18 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.ItemStyleGenerator;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class Components extends Application {
+public class Components extends Application.LegacyApplication {
 
     private static final Object CAPTION = "c";
     private Map<Class<? extends AbstractComponentTest<?>>, String> tests = new HashMap<Class<? extends AbstractComponentTest<?>>, String>();
     private Tree naviTree;
     private HorizontalSplitPanel sp;
-    private Window mainWindow;
+    private Root mainWindow;
     private final Embedded applicationEmbedder = new Embedded();
     private String baseUrl;
     private List<Class<? extends Component>> componentsWithoutTests = new ArrayList<Class<? extends Component>>();
@@ -86,7 +86,7 @@ public class Components extends Application {
 
     @Override
     public void init() {
-        mainWindow = new Window();
+        mainWindow = new Root();
         setTheme("tests-components");
         mainWindow.getContent().setSizeFull();
         setMainWindow(mainWindow);

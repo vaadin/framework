@@ -4,16 +4,16 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket1775 extends com.vaadin.Application {
+public class Ticket1775 extends com.vaadin.Application.LegacyApplication {
 
     @Override
     public void init() {
 
-        final Window main = new Window("#1775");
+        final Root main = new Root("#1775");
         setMainWindow(main);
-        main.setTheme("tests-tickets");
+        setTheme("tests-tickets");
         String layoutName = "Ticket1775";
         final CustomLayout layout = new CustomLayout(layoutName);
 

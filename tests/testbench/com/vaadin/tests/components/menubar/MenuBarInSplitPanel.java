@@ -4,9 +4,9 @@ import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 public class MenuBarInSplitPanel extends AbstractTestCase {
 
@@ -22,7 +22,7 @@ public class MenuBarInSplitPanel extends AbstractTestCase {
 
     @Override
     public void init() {
-        Window mainWindow = new Window("MenuBar in SplitPanel",
+        Root mainWindow = new Root("MenuBar in SplitPanel",
                 new HorizontalSplitPanel());
         VerticalLayout left = new VerticalLayout();
         mainWindow.addComponent(left);

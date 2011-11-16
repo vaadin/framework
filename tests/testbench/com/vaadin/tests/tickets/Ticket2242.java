@@ -10,10 +10,11 @@ import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Window;
 
-public class Ticket2242 extends Application implements ValueChangeListener {
+public class Ticket2242 extends Application.LegacyApplication implements
+        ValueChangeListener {
 
     private Object tableValue = null;
     private Table t;
@@ -22,7 +23,7 @@ public class Ticket2242 extends Application implements ValueChangeListener {
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Root w = new Root(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
         createUI((AbstractOrderedLayout) w.getContent());

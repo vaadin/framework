@@ -4,13 +4,13 @@ import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Validator;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 
-public class Ticket2179 extends Application {
+public class Ticket2179 extends Application.LegacyApplication {
 
     TextField f = new TextField("Test fiel ( must contain 1 & 2 )");
-    Window main = new Window("Dual validator test");
+    Root main = new Root("Dual validator test");
 
     @Override
     public void init() {

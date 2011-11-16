@@ -4,14 +4,16 @@ import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Window;
 
-public class Ticket1465ModalNotification extends Application {
+public class Ticket1465ModalNotification extends Application.LegacyApplication {
 
     @Override
     public void init() {
 
-        final Window mainWin = new Window("ButtonPanel containing a table test");
+        final Root mainWin = new Root("ButtonPanel containing a table test");
         setMainWindow(mainWin);
 
         final Window modal = new Window("Modal window");
@@ -21,9 +23,9 @@ public class Ticket1465ModalNotification extends Application {
                 new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        modal.showNotification(
+                        Root.getCurrentRoot().showNotification(
                                 "Try clicking the button in main window!",
-                                Window.Notification.TYPE_ERROR_MESSAGE);
+                                Notification.TYPE_ERROR_MESSAGE);
 
                     }
                 });
@@ -33,9 +35,9 @@ public class Ticket1465ModalNotification extends Application {
                 new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        modal.showNotification(
+                        Root.getCurrentRoot().showNotification(
                                 "Try clicking the button in main window!",
-                                Window.Notification.TYPE_WARNING_MESSAGE);
+                                Notification.TYPE_WARNING_MESSAGE);
                     }
                 });
         modal.addComponent(b);
@@ -44,9 +46,9 @@ public class Ticket1465ModalNotification extends Application {
                 new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        modal.showNotification(
+                        Root.getCurrentRoot().showNotification(
                                 "Try clicking the button in main window!",
-                                Window.Notification.TYPE_HUMANIZED_MESSAGE);
+                                Notification.TYPE_HUMANIZED_MESSAGE);
                     }
                 });
         modal.addComponent(b);

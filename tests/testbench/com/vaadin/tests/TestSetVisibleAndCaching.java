@@ -9,9 +9,10 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class TestSetVisibleAndCaching extends com.vaadin.Application {
+public class TestSetVisibleAndCaching extends
+        com.vaadin.Application.LegacyApplication {
 
     Panel panelA = new Panel("Panel A");
     Panel panelB = new Panel("Panel B");
@@ -23,7 +24,7 @@ public class TestSetVisibleAndCaching extends com.vaadin.Application {
 
     @Override
     public void init() {
-        final Window mainWindow = new Window("TestSetVisibleAndCaching");
+        final Root mainWindow = new Root("TestSetVisibleAndCaching");
         setMainWindow(mainWindow);
 
         panelA.addComponent(new Label(

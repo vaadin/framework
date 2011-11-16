@@ -30,7 +30,7 @@ public class RichTextAreaWithKeyboardShortcuts extends TestBase {
             String string = f.getValue().toString();
 
             msg += " Value: " + string;
-            f.getWindow().showNotification(msg);
+            f.getRoot().showNotification(msg);
 
         }
 
@@ -42,7 +42,7 @@ public class RichTextAreaWithKeyboardShortcuts extends TestBase {
     @Override
     protected void setup() {
 
-        getLayout().getWindow().addActionHandler(actionHandler);
+        getLayout().getRoot().addActionHandler(actionHandler);
         getLayout().addComponent(createRichTextArea("InMainLayout"));
 
         Panel panel = new Panel("RTA Panel");
@@ -55,7 +55,7 @@ public class RichTextAreaWithKeyboardShortcuts extends TestBase {
         w.addComponent(createRichTextArea("InSubWindow"));
         w.getContent().setSizeUndefined();
 
-        getLayout().getWindow().addWindow(w);
+        getLayout().getRoot().addWindow(w);
 
     }
 

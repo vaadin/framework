@@ -6,15 +6,15 @@ import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.validator.CompositeValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 
-public class Ticket20 extends Application {
+public class Ticket20 extends Application.LegacyApplication {
 
     @Override
     public void init() {
 
-        final Window mainWin = new Window("Test app for #20");
+        final Root mainWin = new Root("Test app for #20");
         setMainWindow(mainWin);
 
         final TextField tx = new TextField("Integer");

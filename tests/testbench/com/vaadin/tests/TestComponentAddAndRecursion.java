@@ -8,9 +8,10 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 /**
  * @author marc
@@ -91,12 +92,13 @@ public class TestComponentAddAndRecursion extends CustomComponent {
             public void buttonClick(ClickEvent event) {
                 try {
                     p3.addComponent(p2);
-                    getWindow().showNotification("ERROR",
+                    Root.getCurrentRoot().showNotification("ERROR",
                             "This should have failed",
-                            Window.Notification.TYPE_ERROR_MESSAGE);
+                            Notification.TYPE_ERROR_MESSAGE);
                 } catch (Exception e) {
-                    getWindow().showNotification("OK", "threw, as expected",
-                            Window.Notification.TYPE_ERROR_MESSAGE);
+                    Root.getCurrentRoot().showNotification("OK",
+                            "threw, as expected",
+                            Notification.TYPE_ERROR_MESSAGE);
                 }
             }
 
@@ -109,12 +111,13 @@ public class TestComponentAddAndRecursion extends CustomComponent {
                 p.addComponent(p2);
                 try {
                     p3.addComponent(p);
-                    getWindow().showNotification("ERROR",
+                    Root.getCurrentRoot().showNotification("ERROR",
                             "This should have failed",
-                            Window.Notification.TYPE_ERROR_MESSAGE);
+                            Notification.TYPE_ERROR_MESSAGE);
                 } catch (Exception e) {
-                    getWindow().showNotification("OK", "threw, as expected",
-                            Window.Notification.TYPE_ERROR_MESSAGE);
+                    Root.getCurrentRoot().showNotification("OK",
+                            "threw, as expected",
+                            Notification.TYPE_ERROR_MESSAGE);
                 }
             }
 

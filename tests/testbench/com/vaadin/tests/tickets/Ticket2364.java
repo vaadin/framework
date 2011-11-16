@@ -2,16 +2,16 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Form;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class Ticket2364 extends Application {
+public class Ticket2364 extends Application.LegacyApplication {
 
     @Override
     public void init() {
 
-        Window main = new Window("The Main Window!!!");
+        Root main = new Root("The Main Window!!!");
         setMainWindow(main);
         Form form = new Form();
         VerticalLayout formLayout = new VerticalLayout();

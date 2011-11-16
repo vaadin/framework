@@ -11,11 +11,11 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Select;
-import com.vaadin.ui.Window;
 
-public class UsingObjectsInSelect extends com.vaadin.Application implements
-        ValueChangeListener {
+public class UsingObjectsInSelect extends
+        com.vaadin.Application.LegacyApplication implements ValueChangeListener {
 
     private final Select select = new Select();
     private final Label selectedTask = new Label("Selected task",
@@ -27,7 +27,7 @@ public class UsingObjectsInSelect extends com.vaadin.Application implements
 
     @Override
     public void init() {
-        final Window main = new Window("Select demo");
+        final Root main = new Root("Select demo");
         setMainWindow(main);
 
         final Panel panel = new Panel("Select demo");

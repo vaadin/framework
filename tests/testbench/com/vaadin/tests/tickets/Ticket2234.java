@@ -4,13 +4,13 @@ import com.vaadin.Application;
 import com.vaadin.data.Item;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Root;
 
-public class Ticket2234 extends Application {
+public class Ticket2234 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Root w = new Root(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
         createUI((AbstractOrderedLayout) w.getContent());

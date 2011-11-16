@@ -7,42 +7,42 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 /**
  * Test case for Ticket 2119.
  */
-public class Ticket2119 extends Application {
+public class Ticket2119 extends Application.LegacyApplication {
 
     private ObjectProperty<String> globalValue;
 
     @Override
     public void init() {
         globalValue = new ObjectProperty<String>(null, String.class);
-        Window main = createWindow();
+        Root main = createWindow();
         setMainWindow(main);
     }
 
     @Override
-    public Window getWindow(String name) {
+    public Root getWindow(String name) {
         if (!isRunning()) {
             return null;
         }
         // If we already have the requested window, use it
-        Window w = super.getWindow(name);
+        Root w = super.getWindow(name);
         if (w == null) {
             // If no window found, create it
             w = createWindow();
             addWindow(w);
-            w.open(new ExternalResource(w.getURL()));
+            w.open(new ExternalResource(getWindowUrl(w)));
         }
         return w;
     }
 
-    private Window createWindow() {
-        Window main = new Window("Test for ticket XXX");
+    private Root createWindow() {
+        Root main = new Root("Test for ticket XXX");
         main.setContent(testLayout());
         return main;
     }

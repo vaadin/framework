@@ -12,9 +12,9 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 /**
  * This example demonstrates layouts. Layouts are populated with sample Vaadin
@@ -24,14 +24,14 @@ import com.vaadin.ui.Window;
  * @since 4.0.0
  * 
  */
-public class LayoutDemo extends com.vaadin.Application {
+public class LayoutDemo extends com.vaadin.Application.LegacyApplication {
 
     /**
      * Initialize Application. Demo components are added to main window.
      */
     @Override
     public void init() {
-        final Window mainWindow = new Window("Layout demo");
+        final Root mainWindow = new Root("Layout demo");
         setMainWindow(mainWindow);
 
         //

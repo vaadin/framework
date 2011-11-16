@@ -2,9 +2,9 @@ package com.vaadin.tests.components.tree;
 
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 public class TreePerformanceTest extends AbstractTestCase {
 
@@ -20,7 +20,7 @@ public class TreePerformanceTest extends AbstractTestCase {
 
     @Override
     public void init() {
-        Window w = new Window();
+        Root w = new Root();
         setMainWindow(w);
 
         Layout layout = null;

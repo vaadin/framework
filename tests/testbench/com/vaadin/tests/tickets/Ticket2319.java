@@ -6,15 +6,15 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.ui.Window;
 
-public class Ticket2319 extends Application {
+public class Ticket2319 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Window mainw = new Window();
+        Root mainw = new Root();
         setMainWindow(mainw);
 
         mainw.addComponent(new Label(

@@ -10,11 +10,11 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class Ticket2021 extends Application {
+public class Ticket2021 extends Application.LegacyApplication {
 
     private TextArea tf1, tf2, tf3;
 
@@ -26,7 +26,7 @@ public class Ticket2021 extends Application {
 
     @Override
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Root w = new Root(getClass().getSimpleName());
         w.setContent(new GridLayout(2, 2));
         setMainWindow(w);
 

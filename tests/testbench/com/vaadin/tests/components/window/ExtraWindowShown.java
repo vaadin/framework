@@ -20,16 +20,14 @@ public class ExtraWindowShown extends TestBase {
                 w.addComponent(new Button("Close", new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        Window main = w.getParent();
-                        // main = w.getWindow();
-                        main.removeWindow(w);
+                        w.close();
                     }
                 }));
                 Button iconButton = new Button("A button with icon");
                 iconButton
                         .setIcon(new ThemeResource("../runo/icons/16/ok.png"));
                 w.addComponent(iconButton);
-                event.getButton().getWindow().addWindow(w);
+                event.getButton().getRoot().addWindow(w);
             }
 
         });

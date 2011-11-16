@@ -3,18 +3,18 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class Ticket2329 extends Application {
+public class Ticket2329 extends Application.LegacyApplication {
     private Table table;
     private VerticalLayout mainLo;
 
     @Override
     public void init() {
-        Window mainw = new Window();
+        Root mainw = new Root();
         setMainWindow(mainw);
         mainLo = (VerticalLayout) mainw.getContent();
         table = new Table();

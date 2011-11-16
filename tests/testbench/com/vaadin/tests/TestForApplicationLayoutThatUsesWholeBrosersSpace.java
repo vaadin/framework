@@ -7,15 +7,15 @@ package com.vaadin.tests;
 import com.vaadin.Application;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.ui.Window;
 
 public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
-        Application {
+        Application.LegacyApplication {
 
-    Window main = new Window("Windowing test");
+    Root main = new Root("Windowing test");
 
     VerticalLayout rootLayout;
 
