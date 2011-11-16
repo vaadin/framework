@@ -33,7 +33,7 @@ import com.vaadin.data.Property;
  * @since 5.3.0
  */
 @SuppressWarnings("serial")
-public abstract class PropertyFormatter extends AbstractProperty implements
+public abstract class PropertyFormatter extends AbstractProperty implements Property.Viewer,
         Property.ValueChangeListener, Property.ReadOnlyStatusChangeListener {
 
     /** Datasource that stores the actual value. */
