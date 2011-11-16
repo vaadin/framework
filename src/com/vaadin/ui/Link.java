@@ -22,13 +22,13 @@ import com.vaadin.terminal.gwt.client.ui.VLink;
 public class Link extends AbstractComponent {
 
     /* Target window border type constant: No window border */
-    public static final int TARGET_BORDER_NONE = Window.BORDER_NONE;
+    public static final int TARGET_BORDER_NONE = Root.BORDER_NONE;
 
     /* Target window border type constant: Minimal window border */
-    public static final int TARGET_BORDER_MINIMAL = Window.BORDER_MINIMAL;
+    public static final int TARGET_BORDER_MINIMAL = Root.BORDER_MINIMAL;
 
     /* Target window border type constant: Default window border */
-    public static final int TARGET_BORDER_DEFAULT = Window.BORDER_DEFAULT;
+    public static final int TARGET_BORDER_DEFAULT = Root.BORDER_DEFAULT;
 
     private Resource resource = null;
 

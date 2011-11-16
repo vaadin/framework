@@ -1,5 +1,6 @@
 package com.vaadin.ui;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -11,6 +12,7 @@ import java.util.List;
 import com.vaadin.Application;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.client.ui.VView;
@@ -18,6 +20,24 @@ import com.vaadin.ui.Window.CloseListener;
 
 @ClientWidget(VView.class)
 public class Root extends AbstractComponentContainer {
+    /**
+     * <b>Application window only</b>. A border style used for opening resources
+     * in a window without a border.
+     */
+    public static final int BORDER_NONE = 0;
+
+    /**
+     * <b>Application window only</b>. A border style used for opening resources
+     * in a window with a minimal border.
+     */
+    public static final int BORDER_MINIMAL = 1;
+
+    /**
+     * <b>Application window only</b>. A border style that indicates that the
+     * default border style should be used when opening resources.
+     */
+    public static final int BORDER_DEFAULT = 2;
+
     private final RootLayout rootLayout;
     private Terminal terminal;
     private Application application;
@@ -38,6 +58,13 @@ public class Root extends AbstractComponentContainer {
      * List of windows in this root.
      */
     private final LinkedHashSet<Window> windows = new LinkedHashSet<Window>();
+
+    /**
+     * <b>Application window only</b>. Resources to be opened automatically on
+     * next repaint. The list is automatically cleared when it has been sent to
+     * the client.
+     */
+    private final LinkedList<OpenResource> openList = new LinkedList<OpenResource>();
 
     /**
      * The component that should be scrolled into view after the next repaint.
@@ -120,6 +147,17 @@ public class Root extends AbstractComponentContainer {
         if (scrollIntoView != null) {
             target.addAttribute("scrollTo", scrollIntoView);
             scrollIntoView = null;
+        }
+
+        // Open requested resource
+        synchronized (openList) {
+            if (!openList.isEmpty()) {
+                for (final Iterator<OpenResource> i = openList.iterator(); i
+                        .hasNext();) {
+                    (i.next()).paintContent(target);
+                }
+                openList.clear();
+            }
         }
 
         if (pendingFocus != null) {
@@ -456,4 +494,185 @@ public class Root extends AbstractComponentContainer {
     public static Root getCurrentRoot() {
         return currentRoot.get();
     }
+
+    /**
+     * Opens the given resource in this window. The contents of this Window is
+     * replaced by the {@code Resource}.
+     * 
+     * @param resource
+     *            the resource to show in this window
+     */
+    public void open(Resource resource) {
+        synchronized (openList) {
+            if (!openList.contains(resource)) {
+                openList.add(new OpenResource(resource, null, -1, -1,
+                        BORDER_DEFAULT));
+            }
+        }
+        requestRepaint();
+    }
+
+    /* ********************************************************************* */
+
+    /**
+     * Opens the given resource in a window with the given name.
+     * <p>
+     * The supplied {@code windowName} is used as the target name in a
+     * window.open call in the client. This means that special values such as
+     * "_blank", "_self", "_top", "_parent" have special meaning. An empty or
+     * <code>null</code> window name is also a special case.
+     * </p>
+     * <p>
+     * "", null and "_self" as {@code windowName} all causes the resource to be
+     * opened in the current window, replacing any old contents. For
+     * downloadable content you should avoid "_self" as "_self" causes the
+     * client to skip rendering of any other changes as it considers them
+     * irrelevant (the page will be replaced by the resource). This can speed up
+     * the opening of a resource, but it might also put the client side into an
+     * inconsistent state if the window content is not completely replaced e.g.,
+     * if the resource is downloaded instead of displayed in the browser.
+     * </p>
+     * <p>
+     * "_blank" as {@code windowName} causes the resource to always be opened in
+     * a new window or tab (depends on the browser and browser settings).
+     * </p>
+     * <p>
+     * "_top" and "_parent" as {@code windowName} works as specified by the HTML
+     * standard.
+     * </p>
+     * <p>
+     * Any other {@code windowName} will open the resource in a window with that
+     * name, either by opening a new window/tab in the browser or by replacing
+     * the contents of an existing window with that name.
+     * </p>
+     * 
+     * @param resource
+     *            the resource.
+     * @param windowName
+     *            the name of the window.
+     */
+    public void open(Resource resource, String windowName) {
+        synchronized (openList) {
+            if (!openList.contains(resource)) {
+                openList.add(new OpenResource(resource, windowName, -1, -1,
+                        BORDER_DEFAULT));
+            }
+        }
+        requestRepaint();
+    }
+
+    /**
+     * Opens the given resource in a window with the given size, border and
+     * name. For more information on the meaning of {@code windowName}, see
+     * {@link #open(Resource, String)}.
+     * 
+     * @param resource
+     *            the resource.
+     * @param windowName
+     *            the name of the window.
+     * @param width
+     *            the width of the window in pixels
+     * @param height
+     *            the height of the window in pixels
+     * @param border
+     *            the border style of the window. See {@link #BORDER_NONE
+     *            Window.BORDER_* constants}
+     */
+    public void open(Resource resource, String windowName, int width,
+            int height, int border) {
+        synchronized (openList) {
+            if (!openList.contains(resource)) {
+                openList.add(new OpenResource(resource, windowName, width,
+                        height, border));
+            }
+        }
+        requestRepaint();
+    }
+
+    /**
+     * Private class for storing properties related to opening resources.
+     */
+    private class OpenResource implements Serializable {
+
+        /**
+         * The resource to open
+         */
+        private final Resource resource;
+
+        /**
+         * The name of the target window
+         */
+        private final String name;
+
+        /**
+         * The width of the target window
+         */
+        private final int width;
+
+        /**
+         * The height of the target window
+         */
+        private final int height;
+
+        /**
+         * The border style of the target window
+         */
+        private final int border;
+
+        /**
+         * Creates a new open resource.
+         * 
+         * @param resource
+         *            The resource to open
+         * @param name
+         *            The name of the target window
+         * @param width
+         *            The width of the target window
+         * @param height
+         *            The height of the target window
+         * @param border
+         *            The border style of the target window
+         */
+        private OpenResource(Resource resource, String name, int width,
+                int height, int border) {
+            this.resource = resource;
+            this.name = name;
+            this.width = width;
+            this.height = height;
+            this.border = border;
+        }
+
+        /**
+         * Paints the open request. Should be painted inside the window.
+         * 
+         * @param target
+         *            the paint target
+         * @throws PaintException
+         *             if the paint operation fails
+         */
+        private void paintContent(PaintTarget target) throws PaintException {
+            target.startTag("open");
+            target.addAttribute("src", resource);
+            if (name != null && name.length() > 0) {
+                target.addAttribute("name", name);
+            }
+            if (width >= 0) {
+                target.addAttribute("width", width);
+            }
+            if (height >= 0) {
+                target.addAttribute("height", height);
+            }
+            switch (border) {
+            case BORDER_MINIMAL:
+                target.addAttribute("border", "minimal");
+                break;
+            case BORDER_NONE:
+                target.addAttribute("border", "none");
+                break;
+            }
+
+            target.endTag("open");
+        }
+    }
+
 }
