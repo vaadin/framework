@@ -495,6 +495,9 @@ public class Root extends AbstractComponentContainer {
     }
 
     public ComponentContainer getContent() {
+        if (content == null) {
+            setContent(new VerticalLayout());
+        }
         return content;
     }
 
