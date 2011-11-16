@@ -6,6 +6,7 @@ package com.vaadin;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -97,6 +98,95 @@ import com.vaadin.ui.Window;
 public class Application implements Terminal.ErrorListener, Serializable {
 
     public static final String ROOT_PARAMETER = "root";
+
+    public static class LegacyApplication extends Application {
+        private Root mainWindow;
+        private String theme;
+
+        private Map<String, Root> legacyRootNames = new HashMap<String, Root>();
+
+        public void setMainWindow(Root mainWindow) {
+            if (this.mainWindow != null) {
+                throw new IllegalStateException(
+                        "mainWindow has already been set");
+            }
+            this.mainWindow = mainWindow;
+        }
+
+        public Root getMainWindow() {
+            return mainWindow;
+        }
+
+        @Override
+        public Root getRoot(WrappedRequest request) {
+            return mainWindow;
+        }
+
+        public void setTheme(String theme) {
+            this.theme = theme;
+        }
+
+        public String getTheme() {
+            return theme;
+        }
+
+        @Override
+        protected String getThemeForRoot(Root root) {
+            return theme;
+        }
+
+        public Root getWindow(String name) {
+            return legacyRootNames.get(name);
+        }
+
+        private int namelessRootIndex = 0;
+
+        public String addWindow(Root root) {
+            String name = Integer.toString(namelessRootIndex++);
+            addWindow(root, name);
+            return name;
+        }
+
+        public void addWindow(Root root, String name) {
+            legacyRootNames.put(name, root);
+        }
+
+        public void removeWindow(Root root) {
+            for (Entry<String, Root> entry : legacyRootNames.entrySet()) {
+                if (entry.getValue() == root) {
+                    legacyRootNames.remove(entry.getKey());
+                    return;
+                }
+            }
+        }
+
+        public Collection<Root> getWindows() {
+            return Collections.unmodifiableCollection(legacyRootNames.values());
+        }
+
+        public URL getWindowUrl(Root root) {
+            String windowName = getWindowName(root);
+            URL url;
+            try {
+                url = new URL(getURL(), windowName);
+                return url;
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public String getWindowName(Root root) {
+            if (root == mainWindow) {
+                return "";
+            }
+            for (Entry<String, Root> entry : legacyRootNames.entrySet()) {
+                if (entry.getValue() == root) {
+                    return entry.getKey();
+                }
+            }
+            return addWindow(root);
+        }
+    }
 
     private final static Logger logger = Logger.getLogger(Application.class
             .getName());
@@ -1503,6 +1593,11 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
         throw new RuntimeException("No " + ROOT_PARAMETER
                 + " defined in web.xml");
+    }
+
+    protected String getThemeForRoot(Root root) {
+        // TODO Implement and use me
+        return null;
     }
 
     public boolean handleRequest(WrappedRequest request,
