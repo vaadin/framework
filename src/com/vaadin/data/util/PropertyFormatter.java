@@ -146,14 +146,14 @@ public abstract class PropertyFormatter extends AbstractProperty implements
      */
     @Override
     public String toString() {
-        Object value = dataSource == null ? false : dataSource.getValue();
-        if (value == null) {
+        if (dataSource == null || dataSource.getValue() == null) {
             return null;
         }
-        return format(value);
+        return format(dataSource.getValue());
     }
 
     /** Reflects the read-only status of the datasource. */
+    @Override
     public boolean isReadOnly() {
         return dataSource == null ? false : dataSource.isReadOnly();
     }
@@ -190,6 +190,7 @@ public abstract class PropertyFormatter extends AbstractProperty implements
      * @param newStatus
      *            the new read-only status of the Property.
      */
+    @Override
     public void setReadOnly(boolean newStatus) {
         if (dataSource != null) {
             dataSource.setReadOnly(newStatus);
@@ -208,16 +209,14 @@ public abstract class PropertyFormatter extends AbstractProperty implements
             }
         } else {
             try {
-                dataSource.setValue(parse((String) newValue));
+                dataSource.setValue(parse(newValue.toString()));
                 if (!newValue.equals(toString())) {
                     fireValueChange();
                 }
+            } catch (ConversionException e) {
+                throw e;
             } catch (Exception e) {
-                if (e instanceof ConversionException) {
-                    throw (ConversionException) e;
-                } else {
-                    throw new ConversionException(e);
-                }
+                throw new ConversionException(e);
             }
         }
     }
