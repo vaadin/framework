@@ -10,6 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.vaadin.Application;
+import com.vaadin.event.Action;
+import com.vaadin.event.Action.Handler;
+import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
@@ -17,6 +20,7 @@ import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.ui.Window.CloseListener;
+import com.vaadin.ui.Window.ResizeListener;
 
 @ClientWidget(VView.class)
 public class Root extends AbstractComponentContainer {
@@ -718,4 +722,39 @@ public class Root extends AbstractComponentContainer {
         }
     }
 
+    public void setScrollTop(int scrollTop) {
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    public void addAction(Action action) {
+        throw new RuntimeException("Not yet (if ever) implemented");
+    }
+
+    public void addActionHandler(Handler actionHandler) {
+        throw new RuntimeException("Not yet (if ever) implemented");
+    }
+
+    public void setResizeLazy(boolean resizeLazy) {
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    public void addListener(ClickListener clickListener) {
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    public void addListener(ResizeListener resizeListener) {
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    public void removeListener(ResizeListener resizeListener) {
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    public void addListener(CloseListener closeListener) {
+        throw new RuntimeException("Not yet (if ever) implemented");
+    }
+
+    public void removeActionHandler(Handler actionHandler) {
+        throw new RuntimeException("Not yet (if ever) implemented");
+    }
 }
