@@ -38,7 +38,7 @@ public class Root extends AbstractComponentContainer {
      */
     public static final int BORDER_DEFAULT = 2;
 
-    private final RootLayout rootLayout;
+    private ComponentContainer content;
     private Terminal terminal;
     private Application application;
 
@@ -74,9 +74,21 @@ public class Root extends AbstractComponentContainer {
 
     private static final ThreadLocal<Root> currentRoot = new ThreadLocal<Root>();
 
-    public Root(RootLayout rootLayout) {
-        this.rootLayout = rootLayout;
-        addComponent(rootLayout);
+    public Root() {
+        // Nothing to do here?
+    }
+
+    public Root(ComponentContainer content) {
+        this.content = content;
+    }
+
+    public Root(String caption) {
+        setCaption(caption);
+    }
+
+    public Root(String caption, ComponentContainer content) {
+        this(caption);
+        this.content = content;
     }
 
     @Override
@@ -95,7 +107,10 @@ public class Root extends AbstractComponentContainer {
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        getRootLayout().paint(target);
+        ComponentContainer content = getContent();
+        if (content != null) {
+            content.paint(target);
+        }
 
         // Paint subwindows
         for (final Iterator<Window> i = windows.iterator(); i.hasNext();) {
@@ -172,7 +187,7 @@ public class Root extends AbstractComponentContainer {
     }
 
     public Iterator<Component> getComponentIterator() {
-        return Collections.singleton((Component) getRootLayout()).iterator();
+        return Collections.singleton((Component) getContent()).iterator();
     }
 
     public String getName() {
@@ -479,12 +494,44 @@ public class Root extends AbstractComponentContainer {
         requestRepaint();
     }
 
-    public RootLayout getRootLayout() {
-        return rootLayout;
+    public ComponentContainer getContent() {
+        return content;
+    }
+
+    public void setContent(ComponentContainer content) {
+        if (this.content != null) {
+            super.removeComponent(content);
+        }
+        this.content = content;
+        if (content != null) {
+            super.addComponent(content);
+        }
+    }
+
+    @Override
+    public void addComponent(Component c) {
+        // Use the thread local as the instance field might not yet be inited
+        if (Application.getCurrentApplication() instanceof Application.LegacyApplication) {
+            getContent().addComponent(c);
+        } else {
+            throw new UnsupportedOperationException(
+                    "Add components to the Root's content instead");
+        }
+    }
+
+    @Override
+    public void removeComponent(Component c) {
+        // Use the thread local as the instance field might not yet be inited
+        if (Application.getCurrentApplication() instanceof Application.LegacyApplication) {
+            getContent().removeComponent(c);
+        } else {
+            throw new UnsupportedOperationException(
+                    "Remove components from the Root's content instead");
+        }
     }
 
     public void init(WrappedRequest request) {
-        getRootLayout().init(request);
+
     }
 
     public static void setCurrentRoot(Root root) {

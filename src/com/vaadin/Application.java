@@ -38,7 +38,6 @@ import com.vaadin.terminal.gwt.server.ChangeVariablesErrorEvent;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Root;
-import com.vaadin.ui.RootLayout;
 import com.vaadin.ui.Window;
 
 /**
@@ -96,6 +95,8 @@ import com.vaadin.ui.Window;
  */
 @SuppressWarnings("serial")
 public class Application implements Terminal.ErrorListener, Serializable {
+
+    public static final String ROOT_PARAMETER = "root";
 
     private final static Logger logger = Logger.getLogger(Application.class
             .getName());
@@ -1481,26 +1482,27 @@ public class Application implements Terminal.ErrorListener, Serializable {
     }
 
     protected Root createRoot(WrappedRequest request) {
-        Object rootLayoutClassNameObj = properties.get("rootLayout");
-        if (rootLayoutClassNameObj instanceof String) {
-            String rootLayoutClassName = (String) rootLayoutClassNameObj;
+        Object rootClassNameObj = properties.get(ROOT_PARAMETER);
+        if (rootClassNameObj instanceof String) {
+            String rootClassName = (String) rootClassNameObj;
             try {
-                Class<? extends RootLayout> rootLayoutClass = Class.forName(
-                        rootLayoutClassName).asSubclass(RootLayout.class);
+                Class<? extends Root> rootClass = Class.forName(rootClassName)
+                        .asSubclass(Root.class);
                 try {
-                    RootLayout rootLayout = rootLayoutClass.newInstance();
-                    return new Root(rootLayout);
+                    Root root = rootClass.newInstance();
+                    return root;
                 } catch (Exception e) {
                     throw new RuntimeException(
-                            "Could instantiate rootLayout class "
-                                    + rootLayoutClassName, e);
+                            "Could not instantiate root class " + rootClassName,
+                            e);
                 }
             } catch (ClassNotFoundException e) {
-                throw new RuntimeException("Could not load rootLayout class "
-                        + rootLayoutClassName, e);
+                throw new RuntimeException("Could not load root class "
+                        + rootClassName, e);
             }
         }
-        throw new RuntimeException("No rootLayout defined in web.xml");
+        throw new RuntimeException("No " + ROOT_PARAMETER
+                + " defined in web.xml");
     }
 
     public boolean handleRequest(WrappedRequest request,
