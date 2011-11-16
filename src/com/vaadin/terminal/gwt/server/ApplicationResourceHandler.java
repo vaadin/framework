@@ -20,6 +20,9 @@ public class ApplicationResourceHandler implements RequestHandler {
             throws IOException {
         // Check for application resources
         String requestPath = request.getRequestPathInfo();
+        if (requestPath == null) {
+            return false;
+        }
         Matcher resourceMatcher = APP_RESOURCE_PATTERN.matcher(requestPath);
 
         if (resourceMatcher.matches()) {
