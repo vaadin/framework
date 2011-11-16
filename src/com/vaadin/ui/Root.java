@@ -111,6 +111,17 @@ public class Root extends AbstractComponentContainer {
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
+        // Open requested resource
+        synchronized (openList) {
+            if (!openList.isEmpty()) {
+                for (final Iterator<OpenResource> i = openList.iterator(); i
+                        .hasNext();) {
+                    (i.next()).paintContent(target);
+                }
+                openList.clear();
+            }
+        }
+
         ComponentContainer content = getContent();
         if (content != null) {
             content.paint(target);
@@ -166,17 +177,6 @@ public class Root extends AbstractComponentContainer {
         if (scrollIntoView != null) {
             target.addAttribute("scrollTo", scrollIntoView);
             scrollIntoView = null;
-        }
-
-        // Open requested resource
-        synchronized (openList) {
-            if (!openList.isEmpty()) {
-                for (final Iterator<OpenResource> i = openList.iterator(); i
-                        .hasNext();) {
-                    (i.next()).paintContent(target);
-                }
-                openList.clear();
-            }
         }
 
         if (pendingFocus != null) {
