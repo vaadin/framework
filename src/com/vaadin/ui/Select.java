@@ -148,7 +148,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
         }
 
         // Adds the required attribute
-        if (isRequired()) {
+        if (!isReadOnly() && isRequired()) {
             target.addAttribute("required", true);
         }
 
