@@ -1509,6 +1509,10 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             filterOptions(currentPage);
             // onBlur() takes care of the rest
             break;
+        case KeyCodes.KEY_ESCAPE:
+            reset();
+            event.stopPropagation();
+            break;
         case KeyCodes.KEY_ENTER:
             if (suggestionPopup.menu.getKeyboardSelectedItem() == null) {
                 /*
@@ -1560,10 +1564,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             case KeyCodes.KEY_UP:
             case KeyCodes.KEY_PAGEDOWN:
             case KeyCodes.KEY_PAGEUP:
-                ; // NOP
-                break;
             case KeyCodes.KEY_ESCAPE:
-                reset();
+                ; // NOP
                 break;
             default:
                 if (textInputEnabled) {
