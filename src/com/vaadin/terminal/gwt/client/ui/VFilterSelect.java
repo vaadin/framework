@@ -646,8 +646,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 return;
             }
 
-            updateSelectionWhenReponseIsReceived = waitingForFilteringReponse;
-            if (!waitingForFilteringReponse) {
+            updateSelectionWhenReponseIsReceived = waitingForFilteringResponse;
+            if (!waitingForFilteringResponse) {
                 doPostFilterSelectedItemAction();
             }
         }
@@ -871,7 +871,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
     private String selectedOptionKey;
 
-    private boolean waitingForFilteringReponse = false;
+    private boolean waitingForFilteringResponse = false;
     private boolean updateSelectionWhenReponseIsReceived = false;
     private boolean tabPressedWhenPopupOpen = false;
     private boolean initDone = false;
@@ -1017,7 +1017,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
         }
 
-        waitingForFilteringReponse = true;
+        waitingForFilteringResponse = true;
         client.updateVariable(paintableId, "filter", filter, false);
         client.updateVariable(paintableId, "page", page, true);
         lastFilter = filter;
@@ -1088,7 +1088,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         lastNewItemString = null;
 
         currentSuggestions.clear();
-        if (!waitingForFilteringReponse) {
+        if (!waitingForFilteringResponse) {
             /*
              * Clear the current suggestions as the server response always
              * includes the new ones. Exception is when filtering, then we need
@@ -1119,7 +1119,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                     optionUidl);
             currentSuggestions.add(suggestion);
             if (optionUidl.hasAttribute("selected")) {
-                if (!waitingForFilteringReponse || popupOpenerClicked) {
+                if (!waitingForFilteringResponse || popupOpenerClicked) {
                     String newSelectedOptionKey = Integer.toString(suggestion
                             .getOptionKey());
                     if (!newSelectedOptionKey.equals(selectedOptionKey)
@@ -1143,11 +1143,11 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             captions += Util.escapeHTML(suggestion.getReplacementString());
         }
 
-        if ((!waitingForFilteringReponse || popupOpenerClicked)
+        if ((!waitingForFilteringResponse || popupOpenerClicked)
                 && uidl.hasVariable("selected")
                 && uidl.getStringArrayVariable("selected").length == 0) {
             // select nulled
-            if (!waitingForFilteringReponse || !popupOpenerClicked) {
+            if (!waitingForFilteringResponse || !popupOpenerClicked) {
                 if (!focused) {
                     /*
                      * client.updateComponent overwrites all styles so we must
@@ -1165,12 +1165,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             selectedOptionKey = null;
         }
 
-        if (waitingForFilteringReponse
+        if (waitingForFilteringResponse
                 && lastFilter.toLowerCase().equals(
                         uidl.getStringVariable("filter"))) {
             suggestionPopup.showSuggestions(currentSuggestions, currentPage,
                     totalMatches);
-            waitingForFilteringReponse = false;
+            waitingForFilteringResponse = false;
             if (!popupOpenerClicked
                     && selectPopupItemWhenResponseIsReceived != Select.NONE) {
                 // we're paging w/ arrows
@@ -1394,7 +1394,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             int keyCode = event.getNativeKeyCode();
 
             debug("key down: " + keyCode);
-            if (waitingForFilteringReponse
+            if (waitingForFilteringResponse
                     && navigationKeyCodes.contains(keyCode)) {
                 /*
                  * Keyboard navigation events should not be handled while we are
