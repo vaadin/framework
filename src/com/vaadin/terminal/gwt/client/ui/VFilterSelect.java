@@ -342,7 +342,20 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             @Override
             public void run() {
                 if (pagesToScroll != 0) {
-                    filterOptions(currentPage + pagesToScroll, lastFilter);
+                    if (!waitingForFilteringResponse) {
+                        /*
+                         * Avoid scrolling while we are waiting for a response
+                         * because otherwise the waiting flag will be reset in
+                         * the first response and the second response will be
+                         * ignored, causing an empty popup...
+                         * 
+                         * As long as the scrolling delay is suitable
+                         * double/triple clicks will work by scrolling two or
+                         * three pages at a time and this should not be a
+                         * problem.
+                         */
+                        filterOptions(currentPage + pagesToScroll, lastFilter);
+                    }
                     pagesToScroll = 0;
                 }
             }
@@ -351,7 +364,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 if (currentPage + pagesToScroll > 0) {
                     pagesToScroll--;
                     cancel();
-                    schedule(100);
+                    schedule(200);
                 }
             }
 
@@ -360,7 +373,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                         * pageLength) {
                     pagesToScroll++;
                     cancel();
-                    schedule(100);
+                    schedule(200);
                 }
             }
         }
