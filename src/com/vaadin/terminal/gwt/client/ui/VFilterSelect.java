@@ -1081,7 +1081,6 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             inputPrompt = "";
         }
 
-        suggestionPopup.setPagingEnabled(true);
         suggestionPopup.updateStyleNames(uidl);
 
         allowNewItem = uidl.hasAttribute("allownewitem");
