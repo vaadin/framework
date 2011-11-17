@@ -1108,6 +1108,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         final UIDL options = uidl.getChildUIDL(0);
         if (uidl.hasAttribute("totalMatches")) {
             totalMatches = uidl.getIntAttribute("totalMatches");
+        } else {
+            totalMatches = 0;
         }
 
         // used only to calculate minimum popup width
