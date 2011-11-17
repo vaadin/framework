@@ -7,8 +7,10 @@ package com.vaadin.terminal.gwt.client.ui;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -49,6 +51,7 @@ import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
@@ -56,6 +59,7 @@ import com.vaadin.terminal.gwt.client.VTooltip;
  * 
  * TODO needs major refactoring (to be extensible etc)
  */
+@SuppressWarnings("deprecation")
 public class VFilterSelect extends Composite implements Paintable, Field,
         KeyDownHandler, KeyUpHandler, ClickHandler, FocusHandler, BlurHandler,
         Focusable {
@@ -96,7 +100,15 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 sb.append(Util.escapeAttribute(iconUri));
                 sb.append("\" alt=\"\" class=\"v-icon\" />");
             }
-            sb.append("<span>" + Util.escapeHTML(caption) + "</span>");
+            String content;
+            if ("".equals(caption)) {
+                // Ensure that empty options use the same height as other
+                // options and are not collapsed (#7506)
+                content = "&nbsp;";
+            } else {
+                content = Util.escapeHTML(caption);
+            }
+            sb.append("<span>" + content + "</span>");
             return sb.toString();
         }
 
@@ -286,7 +298,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                         .getText().length() - lastFilter.length());
 
             } else if (hasNextPage()) {
-                lastIndex = index - 1; // save for paging
+                selectPopupItemWhenResponseIsReceived = Select.FIRST;
                 filterOptions(currentPage + 1, lastFilter);
             }
         }
@@ -305,7 +317,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                         .getText().length() - lastFilter.length());
             } else if (index == -1) {
                 if (currentPage > 0) {
-                    lastIndex = index + 1; // save for paging
+                    selectPopupItemWhenResponseIsReceived = Select.LAST;
                     filterOptions(currentPage - 1, lastFilter);
                 }
             } else {
@@ -330,7 +342,20 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             @Override
             public void run() {
                 if (pagesToScroll != 0) {
-                    filterOptions(currentPage + pagesToScroll, lastFilter);
+                    if (!waitingForFilteringResponse) {
+                        /*
+                         * Avoid scrolling while we are waiting for a response
+                         * because otherwise the waiting flag will be reset in
+                         * the first response and the second response will be
+                         * ignored, causing an empty popup...
+                         * 
+                         * As long as the scrolling delay is suitable
+                         * double/triple clicks will work by scrolling two or
+                         * three pages at a time and this should not be a
+                         * problem.
+                         */
+                        filterOptions(currentPage + pagesToScroll, lastFilter);
+                    }
                     pagesToScroll = 0;
                 }
             }
@@ -339,7 +364,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 if (currentPage + pagesToScroll > 0) {
                     pagesToScroll--;
                     cancel();
-                    schedule(100);
+                    schedule(200);
                 }
             }
 
@@ -348,7 +373,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                         * pageLength) {
                     pagesToScroll++;
                     cancel();
-                    schedule(100);
+                    schedule(200);
                 }
             }
         }
@@ -538,6 +563,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     public class SuggestionMenu extends MenuBar implements SubPartAware,
             LoadHandler {
 
+        /**
+         * Tracks the item that is currently selected using the keyboard. This
+         * is need only because mouseover changes the selection and we do not
+         * want to use that selection when pressing enter to select the item.
+         */
+        private MenuItem keyboardSelectedItem;
+
         private VLazyExecutor delayedImageLoadExecutioner = new VLazyExecutor(
                 100, new ScheduledCommand() {
 
@@ -584,6 +616,10 @@ public class VFilterSelect extends Composite implements Paintable, Field,
          */
         public void setSuggestions(
                 Collection<FilterSelectSuggestion> suggestions) {
+            // Reset keyboard selection when contents is updated to avoid
+            // reusing old, invalid data
+            setKeyboardSelectedItem(null);
+
             clearItems();
             final Iterator<FilterSelectSuggestion> it = suggestions.iterator();
             while (it.hasNext()) {
@@ -623,8 +659,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 return;
             }
 
-            selecting = filtering;
-            if (!filtering) {
+            updateSelectionWhenReponseIsReceived = waitingForFilteringResponse;
+            if (!waitingForFilteringResponse) {
                 doPostFilterSelectedItemAction();
             }
         }
@@ -636,7 +672,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             final MenuItem item = getSelectedItem();
             final String enteredItemValue = tb.getText();
 
-            selecting = false;
+            updateSelectionWhenReponseIsReceived = false;
 
             // check for exact match in menu
             int p = getItems().size();
@@ -737,6 +773,25 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             delayedImageLoadExecutioner.trigger();
 
         }
+
+        public void selectFirstItem() {
+            MenuItem firstItem = getItems().get(0);
+            selectItem(firstItem);
+        }
+
+        private MenuItem getKeyboardSelectedItem() {
+            return keyboardSelectedItem;
+        }
+
+        private void setKeyboardSelectedItem(MenuItem firstItem) {
+            keyboardSelectedItem = firstItem;
+        }
+
+        public void selectLastItem() {
+            List<MenuItem> items = getItems();
+            MenuItem lastItem = items.get(items.size() - 1);
+            selectItem(lastItem);
+        }
     }
 
     public static final int FILTERINGMODE_OFF = 0;
@@ -747,6 +802,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     private static final String STYLE_NO_INPUT = "no-input";
 
     protected int pageLength = 10;
+
+    private boolean enableDebug = false;
 
     private final FlowPanel panel = new FlowPanel();
 
@@ -821,19 +878,24 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      * A collection of available suggestions (options) as received from the
      * server.
      */
-    private final Collection<FilterSelectSuggestion> currentSuggestions = new ArrayList<FilterSelectSuggestion>();
+    private final List<FilterSelectSuggestion> currentSuggestions = new ArrayList<FilterSelectSuggestion>();
 
     private boolean immediate;
 
     private String selectedOptionKey;
 
-    private boolean filtering = false;
-    private boolean selecting = false;
-    private boolean tabPressed = false;
+    private boolean waitingForFilteringResponse = false;
+    private boolean updateSelectionWhenReponseIsReceived = false;
+    private boolean tabPressedWhenPopupOpen = false;
     private boolean initDone = false;
 
     private String lastFilter = "";
-    private int lastIndex = -1; // last selected index when using arrows
+
+    private enum Select {
+        NONE, FIRST, LAST
+    };
+
+    private Select selectPopupItemWhenResponseIsReceived = Select.NONE;
 
     /**
      * The current suggestion selected from the dropdown. This is one of the
@@ -968,7 +1030,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
         }
 
-        filtering = true;
+        waitingForFilteringResponse = true;
         client.updateVariable(paintableId, "filter", filter, false);
         client.updateVariable(paintableId, "page", page, true);
         lastFilter = filter;
@@ -1032,14 +1094,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             inputPrompt = "";
         }
 
-        suggestionPopup.setPagingEnabled(true);
         suggestionPopup.updateStyleNames(uidl);
 
         allowNewItem = uidl.hasAttribute("allownewitem");
         lastNewItemString = null;
 
         currentSuggestions.clear();
-        if (!filtering) {
+        if (!waitingForFilteringResponse) {
             /*
              * Clear the current suggestions as the server response always
              * includes the new ones. Exception is when filtering, then we need
@@ -1059,6 +1120,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         final UIDL options = uidl.getChildUIDL(0);
         if (uidl.hasAttribute("totalMatches")) {
             totalMatches = uidl.getIntAttribute("totalMatches");
+        } else {
+            totalMatches = 0;
         }
 
         // used only to calculate minimum popup width
@@ -1070,7 +1133,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                     optionUidl);
             currentSuggestions.add(suggestion);
             if (optionUidl.hasAttribute("selected")) {
-                if (!filtering || popupOpenerClicked) {
+                if (!waitingForFilteringResponse || popupOpenerClicked) {
                     String newSelectedOptionKey = Integer.toString(suggestion
                             .getOptionKey());
                     if (!newSelectedOptionKey.equals(selectedOptionKey)
@@ -1094,10 +1157,11 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             captions += Util.escapeHTML(suggestion.getReplacementString());
         }
 
-        if ((!filtering || popupOpenerClicked) && uidl.hasVariable("selected")
+        if ((!waitingForFilteringResponse || popupOpenerClicked)
+                && uidl.hasVariable("selected")
                 && uidl.getStringArrayVariable("selected").length == 0) {
             // select nulled
-            if (!filtering || !popupOpenerClicked) {
+            if (!waitingForFilteringResponse || !popupOpenerClicked) {
                 if (!focused) {
                     /*
                      * client.updateComponent overwrites all styles so we must
@@ -1115,41 +1179,35 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             selectedOptionKey = null;
         }
 
-        if (filtering
+        if (waitingForFilteringResponse
                 && lastFilter.toLowerCase().equals(
                         uidl.getStringVariable("filter"))) {
             suggestionPopup.showSuggestions(currentSuggestions, currentPage,
                     totalMatches);
-            filtering = false;
-            if (!popupOpenerClicked && lastIndex != -1) {
+            waitingForFilteringResponse = false;
+            if (!popupOpenerClicked
+                    && selectPopupItemWhenResponseIsReceived != Select.NONE) {
                 // we're paging w/ arrows
-                MenuItem activeMenuItem;
-                if (lastIndex == 0) {
-                    // going up, select last item
-                    int lastItem = pageLength - 1;
-                    List<MenuItem> items = suggestionPopup.menu.getItems();
-                    /*
-                     * The first page can contain less than 10 items if the null
-                     * selection item is filtered away
-                     */
-                    if (lastItem >= items.size()) {
-                        lastItem = items.size() - 1;
-                    }
-                    activeMenuItem = items.get(lastItem);
-                    suggestionPopup.menu.selectItem(activeMenuItem);
+                if (selectPopupItemWhenResponseIsReceived == Select.LAST) {
+                    suggestionPopup.menu.selectLastItem();
                 } else {
-                    // going down, select first item
-                    activeMenuItem = suggestionPopup.menu.getItems().get(0);
-                    suggestionPopup.menu.selectItem(activeMenuItem);
+                    suggestionPopup.menu.selectFirstItem();
                 }
 
+                // This is used for paging so we update the keyboard selection
+                // variable as well.
+                MenuItem activeMenuItem = suggestionPopup.menu
+                        .getSelectedItem();
+                suggestionPopup.menu.setKeyboardSelectedItem(activeMenuItem);
+
+                // Update text field to contain the correct text
                 setTextboxText(activeMenuItem.getText());
                 tb.setSelectionRange(lastFilter.length(), activeMenuItem
                         .getText().length() - lastFilter.length());
 
-                lastIndex = -1; // reset
+                selectPopupItemWhenResponseIsReceived = Select.NONE; // reset
             }
-            if (selecting) {
+            if (updateSelectionWhenReponseIsReceived) {
                 suggestionPopup.menu.doPostFilterSelectedItemAction();
             }
         }
@@ -1261,7 +1319,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      *            The suggestion that just got selected.
      */
     public void onSuggestionSelected(FilterSelectSuggestion suggestion) {
-        selecting = false;
+        updateSelectionWhenReponseIsReceived = false;
 
         currentSuggestion = suggestion;
         String newKey;
@@ -1329,6 +1387,15 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 marginTop + "px");
     }
 
+    private static Set<Integer> navigationKeyCodes = new HashSet<Integer>();
+    static {
+        navigationKeyCodes.add(KeyCodes.KEY_DOWN);
+        navigationKeyCodes.add(KeyCodes.KEY_UP);
+        navigationKeyCodes.add(KeyCodes.KEY_PAGEDOWN);
+        navigationKeyCodes.add(KeyCodes.KEY_PAGEUP);
+        navigationKeyCodes.add(KeyCodes.KEY_ENTER);
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -1338,31 +1405,36 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      */
     public void onKeyDown(KeyDownEvent event) {
         if (enabled && !readonly) {
-            if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-                // Same reaction to enter no matter on whether the popup is open
-                if (suggestionPopup.isAttached()) {
-                    filterOptions(currentPage);
-                } else if (currentSuggestion != null
-                        && tb.getText().equals(
-                                currentSuggestion.getReplacementString())) {
-                    // Retain behavior from #6686 by returning without stopping
-                    // propagation if there's nothing to do
-                    return;
-                }
-                if (currentSuggestions.size() == 1 && !allowNewItem) {
-                    // If there is only one suggestion, select that
-                    suggestionPopup.menu.selectItem(suggestionPopup.menu
-                            .getItems().get(0));
-                }
-                suggestionPopup.menu.doSelectedItemAction();
+            int keyCode = event.getNativeKeyCode();
 
+            debug("key down: " + keyCode);
+            if (waitingForFilteringResponse
+                    && navigationKeyCodes.contains(keyCode)) {
+                /*
+                 * Keyboard navigation events should not be handled while we are
+                 * waiting for a response. This avoids flickering, disappearing
+                 * items, wrongly interpreted responses and more.
+                 */
+                debug("Ignoring " + keyCode
+                        + " because we are waiting for a filtering response");
+                DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
                 event.stopPropagation();
                 return;
-            } else if (suggestionPopup.isAttached()) {
+            }
+
+            if (suggestionPopup.isAttached()) {
+                debug("Keycode " + keyCode + " target is popup");
                 popupKeyDown(event);
             } else {
+                debug("Keycode " + keyCode + " target is text field");
                 inputFieldKeyDown(event);
             }
+        }
+    }
+
+    private void debug(String string) {
+        if (enableDebug) {
+            VConsole.error(string);
         }
     }
 
@@ -1378,17 +1450,31 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         case KeyCodes.KEY_UP:
         case KeyCodes.KEY_PAGEDOWN:
         case KeyCodes.KEY_PAGEUP:
-            if (!suggestionPopup.isAttached()) {
-                // open popup as from gadget
-                filterOptions(-1, "");
-                lastFilter = "";
-                tb.selectAll();
-            }
+            // open popup as from gadget
+            filterOptions(-1, "");
+            lastFilter = "";
+            tb.selectAll();
             break;
-        case KeyCodes.KEY_TAB:
-            if (suggestionPopup.isAttached()) {
-                filterOptions(currentPage, tb.getText());
+        case KeyCodes.KEY_ENTER:
+            /*
+             * This only handles the case when new items is allowed, a text is
+             * entered, the popup opener button is clicked to close the popup
+             * and enter is then pressed (see #7560).
+             */
+            if (!allowNewItem) {
+                return;
             }
+
+            if (currentSuggestion != null
+                    && tb.getText().equals(
+                            currentSuggestion.getReplacementString())) {
+                // Retain behavior from #6686 by returning without stopping
+                // propagation if there's nothing to do
+                return;
+            }
+            suggestionPopup.menu.doSelectedItemAction();
+
+            event.stopPropagation();
             break;
         }
 
@@ -1406,11 +1492,15 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         switch (event.getNativeKeyCode()) {
         case KeyCodes.KEY_DOWN:
             suggestionPopup.selectNextItem();
+            suggestionPopup.menu.setKeyboardSelectedItem(suggestionPopup.menu
+                    .getSelectedItem());
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
             event.stopPropagation();
             break;
         case KeyCodes.KEY_UP:
             suggestionPopup.selectPrevItem();
+            suggestionPopup.menu.setKeyboardSelectedItem(suggestionPopup.menu
+                    .getSelectedItem());
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
             event.stopPropagation();
             break;
@@ -1427,11 +1517,42 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             event.stopPropagation();
             break;
         case KeyCodes.KEY_TAB:
-            if (suggestionPopup.isAttached()) {
-                tabPressed = true;
-                filterOptions(currentPage);
-            }
+            tabPressedWhenPopupOpen = true;
+            filterOptions(currentPage);
             // onBlur() takes care of the rest
+            break;
+        case KeyCodes.KEY_ESCAPE:
+            reset();
+            event.stopPropagation();
+            break;
+        case KeyCodes.KEY_ENTER:
+            if (suggestionPopup.menu.getKeyboardSelectedItem() == null) {
+                /*
+                 * Nothing selected using up/down. Happens e.g. when entering a
+                 * text (causes popup to open) and then pressing enter.
+                 */
+                if (!allowNewItem) {
+                    /*
+                     * New items are not allowed: If there is only one
+                     * suggestion, select that. Otherwise do nothing.
+                     */
+                    if (currentSuggestions.size() == 1) {
+                        onSuggestionSelected(currentSuggestions.get(0));
+                    }
+                } else {
+                    // Handle addition of new items.
+                    suggestionPopup.menu.doSelectedItemAction();
+                }
+            } else {
+                /*
+                 * Get the suggestion that was navigated to using up/down.
+                 */
+                currentSuggestion = ((FilterSelectSuggestion) suggestionPopup.menu
+                        .getKeyboardSelectedItem().getCommand());
+                onSuggestionSelected(currentSuggestion);
+            }
+
+            event.stopPropagation();
             break;
         }
 
@@ -1455,10 +1576,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             case KeyCodes.KEY_UP:
             case KeyCodes.KEY_PAGEDOWN:
             case KeyCodes.KEY_PAGEUP:
-                ; // NOP
-                break;
             case KeyCodes.KEY_ESCAPE:
-                reset();
+                ; // NOP
                 break;
             default:
                 if (textInputEnabled) {
@@ -1617,8 +1736,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         focused = false;
         if (!readonly) {
             // much of the TAB handling takes place here
-            if (tabPressed) {
-                tabPressed = false;
+            if (tabPressedWhenPopupOpen) {
+                tabPressedWhenPopupOpen = false;
                 suggestionPopup.menu.doSelectedItemAction();
                 suggestionPopup.hide();
             } else if (!suggestionPopup.isAttached()
