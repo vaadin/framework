@@ -153,7 +153,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
 
         @Override
-        protected String getThemeForRoot(Root root) {
+        public String getThemeForRoot(Root root) {
             return theme;
         }
 
@@ -1610,8 +1610,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
                 + " defined in web.xml");
     }
 
-    protected String getThemeForRoot(Root root) {
-        // TODO Implement and use me
+    public String getThemeForRoot(Root root) {
+        // TODO Get theme from root annotation
         return null;
     }
 

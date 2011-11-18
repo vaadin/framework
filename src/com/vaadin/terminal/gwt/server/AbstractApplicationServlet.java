@@ -945,8 +945,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         if (request.getParameter(URL_PARAMETER_THEME) != null) {
             themeName = request.getParameter(URL_PARAMETER_THEME);
         } else {
-            // TODO Should read annotation
-            themeName = null;
+            themeName = root.getApplication().getThemeForRoot(root);
         }
 
         if (themeName == null) {
