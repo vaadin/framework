@@ -9,43 +9,41 @@ import java.io.Serializable;
 import com.vaadin.terminal.Resource;
 
 /**
- * A notification message, used to display temporary messages to the user -
- * for example "Document saved", or "Save failed".
+ * A notification message, used to display temporary messages to the user - for
+ * example "Document saved", or "Save failed".
  * <p>
- * The notification message can consist of several parts: caption,
- * description and icon. It is usually used with only caption - one should
- * be wary of filling the notification with too much information.
+ * The notification message can consist of several parts: caption, description
+ * and icon. It is usually used with only caption - one should be wary of
+ * filling the notification with too much information.
  * </p>
  * <p>
- * The notification message tries to be as unobtrusive as possible, while
- * still drawing needed attention. There are several basic types of messages
- * that can be used in different situations:
+ * The notification message tries to be as unobtrusive as possible, while still
+ * drawing needed attention. There are several basic types of messages that can
+ * be used in different situations:
  * <ul>
- * <li>TYPE_HUMANIZED_MESSAGE fades away quickly as soon as the user uses
- * the mouse or types something. It can be used to show fairly unimportant
- * messages, such as feedback that an operation succeeded ("Document Saved")
- * - the kind of messages the user ignores once the application is familiar.
- * </li>
- * <li>TYPE_WARNING_MESSAGE is shown for a short while after the user uses
- * the mouse or types something. It's default style is also more noticeable
- * than the humanized message. It can be used for messages that do not
- * contain a lot of important information, but should be noticed by the
- * user. Despite the name, it does not have to be a warning, but can be used
- * instead of the humanized message whenever you want to make the message a
- * little more noticeable.</li>
- * <li>TYPE_ERROR_MESSAGE requires to user to click it before disappearing,
- * and can be used for critical messages.</li>
- * <li>TYPE_TRAY_NOTIFICATION is shown for a while in the lower left corner
- * of the window, and can be used for "convenience notifications" that do
- * not have to be noticed immediately, and should not interfere with the
- * current task - for instance to show "You have a new message in your
- * inbox" while the user is working in some other area of the application.</li>
+ * <li>TYPE_HUMANIZED_MESSAGE fades away quickly as soon as the user uses the
+ * mouse or types something. It can be used to show fairly unimportant messages,
+ * such as feedback that an operation succeeded ("Document Saved") - the kind of
+ * messages the user ignores once the application is familiar.</li>
+ * <li>TYPE_WARNING_MESSAGE is shown for a short while after the user uses the
+ * mouse or types something. It's default style is also more noticeable than the
+ * humanized message. It can be used for messages that do not contain a lot of
+ * important information, but should be noticed by the user. Despite the name,
+ * it does not have to be a warning, but can be used instead of the humanized
+ * message whenever you want to make the message a little more noticeable.</li>
+ * <li>TYPE_ERROR_MESSAGE requires to user to click it before disappearing, and
+ * can be used for critical messages.</li>
+ * <li>TYPE_TRAY_NOTIFICATION is shown for a while in the lower left corner of
+ * the window, and can be used for "convenience notifications" that do not have
+ * to be noticed immediately, and should not interfere with the current task -
+ * for instance to show "You have a new message in your inbox" while the user is
+ * working in some other area of the application.</li>
  * </ul>
  * </p>
  * <p>
  * In addition to the basic pre-configured types, a Notification can also be
- * configured to show up in a custom position, for a specified time (or
- * until clicked), and with a custom stylename. An icon can also be added.
+ * configured to show up in a custom position, for a specified time (or until
+ * clicked), and with a custom stylename. An icon can also be added.
  * </p>
  * 
  */
@@ -77,8 +75,8 @@ public class Notification implements Serializable {
     /**
      * Creates a "humanized" notification message.
      * 
-     * Care should be taken to to avoid XSS vulnerabilities as the caption
-     * is by default rendered as html.
+     * Care should be taken to to avoid XSS vulnerabilities as the caption is by
+     * default rendered as html.
      * 
      * @param caption
      *            The message to show
@@ -90,8 +88,8 @@ public class Notification implements Serializable {
     /**
      * Creates a notification message of the specified type.
      * 
-     * Care should be taken to to avoid XSS vulnerabilities as the caption
-     * is by default rendered as html.
+     * Care should be taken to to avoid XSS vulnerabilities as the caption is by
+     * default rendered as html.
      * 
      * @param caption
      *            The message to show
@@ -106,8 +104,8 @@ public class Notification implements Serializable {
      * Creates a "humanized" notification message with a bigger caption and
      * smaller description.
      * 
-     * Care should be taken to to avoid XSS vulnerabilities as the caption
-     * and description are by default rendered as html.
+     * Care should be taken to to avoid XSS vulnerabilities as the caption and
+     * description are by default rendered as html.
      * 
      * @param caption
      *            The message caption
@@ -122,8 +120,8 @@ public class Notification implements Serializable {
      * Creates a notification message of the specified type, with a bigger
      * caption and smaller description.
      * 
-     * Care should be taken to to avoid XSS vulnerabilities as the caption
-     * and description are by default rendered as html.
+     * Care should be taken to to avoid XSS vulnerabilities as the caption and
+     * description are by default rendered as html.
      * 
      * @param caption
      *            The message caption
@@ -140,8 +138,7 @@ public class Notification implements Serializable {
      * Creates a notification message of the specified type, with a bigger
      * caption and smaller description.
      * 
-     * Care should be taken to to avoid XSS vulnerabilities if html is
-     * allowed.
+     * Care should be taken to to avoid XSS vulnerabilities if html is allowed.
      * 
      * @param caption
      *            The message caption
@@ -261,8 +258,7 @@ public class Notification implements Serializable {
     /**
      * Gets the delay before the notification disappears.
      * 
-     * @return the delay in msec, -1 indicates the message has to be
-     *         clicked.
+     * @return the delay in msec, -1 indicates the message has to be clicked.
      */
     public int getDelayMsec() {
         return delayMsec;
@@ -272,8 +268,8 @@ public class Notification implements Serializable {
      * Sets the delay before the notification disappears.
      * 
      * @param delayMsec
-     *            the desired delay in msec, -1 to require the user to click
-     *            the message
+     *            the desired delay in msec, -1 to require the user to click the
+     *            message
      */
     public void setDelayMsec(int delayMsec) {
         this.delayMsec = delayMsec;
@@ -299,10 +295,10 @@ public class Notification implements Serializable {
     }
 
     /**
-     * Sets whether html is allowed in the caption and description. If set
-     * to true, the texts are passed to the browser as html and the
-     * developer is responsible for ensuring no harmful html is used. If set
-     * to false, the texts are passed to the browser as plain text.
+     * Sets whether html is allowed in the caption and description. If set to
+     * true, the texts are passed to the browser as html and the developer is
+     * responsible for ensuring no harmful html is used. If set to false, the
+     * texts are passed to the browser as plain text.
      * 
      * @param htmlContentAllowed
      *            true if the texts are used as html, false if used as plain
@@ -313,11 +309,10 @@ public class Notification implements Serializable {
     }
 
     /**
-     * Checks whether caption and description are interpreted as html or
-     * plain text.
+     * Checks whether caption and description are interpreted as html or plain
+     * text.
      * 
-     * @return true if the texts are used as html, false if used as plain
-     *         text
+     * @return true if the texts are used as html, false if used as plain text
      * @see #setHtmlContentAllowed(boolean)
      */
     public boolean isHtmlContentAllowed() {
