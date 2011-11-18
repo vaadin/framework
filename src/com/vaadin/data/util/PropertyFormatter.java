@@ -33,8 +33,9 @@ import com.vaadin.data.Property;
  * @since 5.3.0
  */
 @SuppressWarnings("serial")
-public abstract class PropertyFormatter extends AbstractProperty implements Property.Viewer,
-        Property.ValueChangeListener, Property.ReadOnlyStatusChangeListener {
+public abstract class PropertyFormatter extends AbstractProperty implements
+        Property.Viewer, Property.ValueChangeListener,
+        Property.ReadOnlyStatusChangeListener {
 
     /** Datasource that stores the actual value. */
     Property dataSource;
@@ -146,10 +147,14 @@ public abstract class PropertyFormatter extends AbstractProperty implements Prop
      */
     @Override
     public String toString() {
-        if (dataSource == null || dataSource.getValue() == null) {
+        if (dataSource == null) {
             return null;
         }
-        return format(dataSource.getValue());
+        Object value = dataSource.getValue();
+        if (value == null) {
+            return null;
+        }
+        return format(value);
     }
 
     /** Reflects the read-only status of the datasource. */
