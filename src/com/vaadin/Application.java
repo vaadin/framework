@@ -1587,27 +1587,31 @@ public class Application implements Terminal.ErrorListener, Serializable {
     }
 
     protected Root createRoot(WrappedRequest request) {
-        Object rootClassNameObj = properties.get(ROOT_PARAMETER);
-        if (rootClassNameObj instanceof String) {
-            String rootClassName = (String) rootClassNameObj;
+        String rootClassName = getRootClassName(request);
+        try {
+            Class<? extends Root> rootClass = Class.forName(rootClassName)
+                    .asSubclass(Root.class);
             try {
-                Class<? extends Root> rootClass = Class.forName(rootClassName)
-                        .asSubclass(Root.class);
-                try {
-                    Root root = rootClass.newInstance();
-                    return root;
-                } catch (Exception e) {
-                    throw new RuntimeException(
-                            "Could not instantiate root class " + rootClassName,
-                            e);
-                }
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException("Could not load root class "
+                Root root = rootClass.newInstance();
+                return root;
+            } catch (Exception e) {
+                throw new RuntimeException("Could not instantiate root class "
                         + rootClassName, e);
             }
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Could not load root class "
+                    + rootClassName, e);
         }
-        throw new RuntimeException("No " + ROOT_PARAMETER
-                + " defined in web.xml");
+    }
+
+    protected String getRootClassName(WrappedRequest request) {
+        Object rootClassNameObj = properties.get(ROOT_PARAMETER);
+        if (rootClassNameObj instanceof String) {
+            return (String) rootClassNameObj;
+        } else {
+            throw new RuntimeException("No " + ROOT_PARAMETER
+                    + " defined in web.xml");
+        }
     }
 
     public String getThemeForRoot(Root root) {
