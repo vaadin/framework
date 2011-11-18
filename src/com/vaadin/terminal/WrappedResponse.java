@@ -7,8 +7,9 @@ package com.vaadin.terminal;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 
-public interface WrappedResponse {
+public interface WrappedResponse extends Serializable {
 
     public void setStatus(int statusCode);
 

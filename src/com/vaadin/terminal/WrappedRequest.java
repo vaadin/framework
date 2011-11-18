@@ -6,9 +6,10 @@ package com.vaadin.terminal;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Map;
 
-public interface WrappedRequest {
+public interface WrappedRequest extends Serializable {
     /**
      * Get the named HTTP or portlet request parameter.
      * 
