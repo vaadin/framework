@@ -96,7 +96,7 @@ public abstract class AbstractCommunicationManager implements
      * 
      * @author peholmst
      */
-    public interface Callback {
+    public interface Callback extends Serializable {
 
         public void criticalNotification(WrappedRequest request,
                 WrappedResponse response, String cap, String msg,
