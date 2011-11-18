@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.ui.Root;
 
 @SuppressWarnings("serial")
 public class ApplicationRunnerServlet extends AbstractApplicationServlet {
@@ -65,7 +67,18 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
 
         // Creates a new application instance
         try {
-            final Application application = getApplicationClass().newInstance();
+            final Class<? extends Application> applicationClass = getApplicationClass();
+            if (Root.class.isAssignableFrom(applicationClass)) {
+                // default getApplicationClass never checks if it's a subclass
+                // of Application
+                return new Application() {
+                    @Override
+                    protected String getRootClassName(WrappedRequest request) {
+                        return applicationClass.getCanonicalName();
+                    }
+                };
+            }
+            final Application application = applicationClass.newInstance();
             return application;
         } catch (final IllegalAccessException e) {
             throw new ServletException(e);
@@ -150,7 +163,6 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
         return uris;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected Class<? extends Application> getApplicationClass()
             throws ClassNotFoundException {
