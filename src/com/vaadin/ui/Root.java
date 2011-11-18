@@ -503,9 +503,15 @@ public class Root extends AbstractComponentContainer {
 
     public ComponentContainer getContent() {
         if (content == null) {
-            setContent(new VerticalLayout());
+            setContent(createDefaultLayout());
         }
         return content;
+    }
+
+    private VerticalLayout createDefaultLayout() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        return layout;
     }
 
     public void setContent(ComponentContainer content) {
