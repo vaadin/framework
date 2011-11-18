@@ -11,7 +11,7 @@ import com.vaadin.Application;
 
 public interface RequestHandler extends Serializable {
 
-    boolean handleRequest(Application application, WrappedRequest request, WrappedResponse response)
-            throws IOException;
+    boolean handleRequest(Application application, WrappedRequest request,
+            WrappedResponse response) throws IOException;
 
 }
