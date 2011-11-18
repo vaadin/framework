@@ -1,3 +1,7 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.terminal;
 
 import java.io.IOException;

@@ -1,3 +1,7 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin;
 
 import com.vaadin.terminal.WrappedRequest;
