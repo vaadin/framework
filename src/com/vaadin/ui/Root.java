@@ -12,10 +12,12 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.vaadin.Application;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
+import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
@@ -27,7 +29,8 @@ import com.vaadin.ui.Window.CloseListener;
 import com.vaadin.ui.Window.ResizeListener;
 
 @ClientWidget(VView.class)
-public class Root extends AbstractComponentContainer {
+public class Root extends AbstractComponentContainer implements
+        com.vaadin.event.Action.Container {
     /**
      * <b>Application window only</b>. A border style used for opening resources
      * in a window without a border.
@@ -81,6 +84,12 @@ public class Root extends AbstractComponentContainer {
     private Component scrollIntoView;
 
     private int rootId;
+
+    /**
+     * Keeps track of the Actions added to this component, and manages the
+     * painting and handling as well.
+     */
+    protected ActionManager actionManager;
 
     private static final ThreadLocal<Root> currentRoot = new ThreadLocal<Root>();
 
@@ -193,6 +202,20 @@ public class Root extends AbstractComponentContainer {
                 target.addAttribute("focused", pendingFocus);
             }
             pendingFocus = null;
+        }
+
+        if (actionManager != null) {
+            actionManager.paintActions(null, target);
+        }
+    }
+
+    @Override
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        super.changeVariables(source, variables);
+
+        // Actions
+        if (actionManager != null) {
+            actionManager.handleActions(variables, this);
         }
     }
 
@@ -757,12 +780,33 @@ public class Root extends AbstractComponentContainer {
         throw new RuntimeException("Not yet implemented");
     }
 
-    public void addAction(Action action) {
-        throw new RuntimeException("Not yet (if ever) implemented");
+    protected ActionManager getActionManager() {
+        if (actionManager == null) {
+            actionManager = new ActionManager(this);
+        }
+        return actionManager;
+    }
+
+    public <T extends Action & com.vaadin.event.Action.Listener> void addAction(
+            T action) {
+        getActionManager().addAction(action);
+    }
+
+    public <T extends Action & com.vaadin.event.Action.Listener> void removeAction(
+            T action) {
+        if (actionManager != null) {
+            actionManager.removeAction(action);
+        }
     }
 
     public void addActionHandler(Handler actionHandler) {
-        throw new RuntimeException("Not yet (if ever) implemented");
+        getActionManager().addActionHandler(actionHandler);
+    }
+
+    public void removeActionHandler(Handler actionHandler) {
+        if (actionManager != null) {
+            actionManager.removeActionHandler(actionHandler);
+        }
     }
 
     public void setResizeLazy(boolean resizeLazy) {
@@ -782,10 +826,6 @@ public class Root extends AbstractComponentContainer {
     }
 
     public void addListener(CloseListener closeListener) {
-        throw new RuntimeException("Not yet (if ever) implemented");
-    }
-
-    public void removeActionHandler(Handler actionHandler) {
         throw new RuntimeException("Not yet (if ever) implemented");
     }
 }
