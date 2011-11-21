@@ -81,6 +81,7 @@ public class VTreeTable extends VScrollTable {
         colIndexOfHierarchy = uidl
                 .hasAttribute(ATTRIBUTE_HIERARCHY_COLUMN_INDEX) ? uidl
                 .getIntAttribute(ATTRIBUTE_HIERARCHY_COLUMN_INDEX) : 0;
+        int oldTotalRows = getTotalRows();
         super.updateFromUIDL(uidl, client);
         if (collapseRequest) {
             if (collapsedRowKey != null && scrollBody != null) {
@@ -95,10 +96,12 @@ public class VTreeTable extends VScrollTable {
             if (scrollPosition != scrollPosition2) {
                 widget.setScrollPosition(scrollPosition);
             }
-
+        }
+        if (collapseRequest
+                || (!uidl.hasAttribute("pagelength") && getTotalRows() != oldTotalRows)) {
             /*
              * Triggers row calculations, removes cached rows etc. Basically
-             * cleans up state. Be careful if touching this, you will brake
+             * cleans up state. Be careful if touching this, you will break
              * pageLength=0 if you remove this.
              */
             onScroll(null);
