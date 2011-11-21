@@ -1070,22 +1070,6 @@ public class ApplicationConnection {
         ApplicationConfiguration.runWhenWidgetsLoaded(c);
     }
 
-    /**
-     * This method assures that all pending variable changes are sent to server.
-     * Method uses synchronized xmlhttprequest and does not return before the
-     * changes are sent. No UIDL updates are processed and thus UI is left in
-     * inconsistent state. This method should be called only when closing
-     * windows - normally sendPendingVariableChanges() should be used.
-     */
-    public void sendPendingVariableChangesSync() {
-        if (applicationRunning) {
-            pendingVariableBursts.add(pendingVariables);
-            ArrayList<String> nextBurst = pendingVariableBursts.get(0);
-            pendingVariableBursts.remove(0);
-            buildAndSendVariableBurst(nextBurst, true);
-        }
-    }
-
     // Redirect browser, null reloads current page
     private static native void redirect(String url)
     /*-{
