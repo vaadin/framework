@@ -21,6 +21,23 @@ import com.vaadin.ui.Root;
 @SuppressWarnings("serial")
 public class ApplicationRunnerServlet extends AbstractApplicationServlet {
 
+    /**
+     * Internal implementation of an application with a dynamically selected
+     * Root implementation;
+     */
+    private static class RootRunnerApplication extends Application {
+        private final Class<?> runnableClass;
+
+        private RootRunnerApplication(Class<?> runnableClass) {
+            this.runnableClass = runnableClass;
+        }
+
+        @Override
+        protected String getRootClassName(WrappedRequest request) {
+            return runnableClass.getCanonicalName();
+        }
+    }
+
     private static final Logger logger = Logger
             .getLogger(ApplicationRunnerServlet.class.getName());
 
@@ -67,19 +84,15 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
 
         // Creates a new application instance
         try {
-            final Class<? extends Application> applicationClass = getApplicationClass();
-            if (Root.class.isAssignableFrom(applicationClass)) {
-                // default getApplicationClass never checks if it's a subclass
-                // of Application
-                return new Application() {
-                    @Override
-                    protected String getRootClassName(WrappedRequest request) {
-                        return applicationClass.getCanonicalName();
-                    }
-                };
+            final Class<?> classToRun = getClassToRun();
+            if (Root.class.isAssignableFrom(classToRun)) {
+                return new RootRunnerApplication(classToRun);
+            } else if (Application.class.isAssignableFrom(classToRun)) {
+                return (Application) classToRun.newInstance();
+            } else {
+                throw new ServletException(classToRun.getCanonicalName()
+                        + " is neither an Application nor a Root");
             }
-            final Application application = applicationClass.newInstance();
-            return application;
         } catch (final IllegalAccessException e) {
             throw new ServletException(e);
         } catch (final InstantiationException e) {
@@ -166,24 +179,34 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
     @Override
     protected Class<? extends Application> getApplicationClass()
             throws ClassNotFoundException {
+        Class<?> classToRun = getClassToRun();
+        if (Root.class.isAssignableFrom(classToRun)) {
+            return RootRunnerApplication.class;
+        } else if (Application.class.isAssignableFrom(classToRun)) {
+            return classToRun.asSubclass(Application.class);
+        } else {
+            throw new ClassCastException(classToRun.getCanonicalName()
+                    + " is not an Application nor a Root");
+        }
+    }
+
+    private Class<?> getClassToRun() throws ClassNotFoundException {
         // TODO use getClassLoader() ?
 
-        Class<? extends Application> appClass = null;
+        Class<?> appClass = null;
 
         String baseName = getApplicationRunnerApplicationClassName(request
                 .get());
         try {
-            appClass = (Class<? extends Application>) getClass()
-                    .getClassLoader().loadClass(baseName);
+            appClass = getClass().getClassLoader().loadClass(baseName);
             return appClass;
         } catch (Exception e) {
             //
             if (defaultPackages != null) {
                 for (int i = 0; i < defaultPackages.length; i++) {
                     try {
-                        appClass = (Class<? extends Application>) getClass()
-                                .getClassLoader().loadClass(
-                                        defaultPackages[i] + "." + baseName);
+                        appClass = getClass().getClassLoader().loadClass(
+                                defaultPackages[i] + "." + baseName);
                     } catch (ClassNotFoundException ee) {
                         // Ignore as this is expected for many packages
                     } catch (Exception e2) {
