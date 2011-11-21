@@ -550,6 +550,17 @@ public class Root extends AbstractComponentContainer {
         }
     }
 
+    @Override
+    public void removeAllComponents() {
+        // Use the thread local as the instance field might not yet be inited
+        if (Application.getCurrentApplication() instanceof Application.LegacyApplication) {
+            getContent().removeAllComponents();
+        } else {
+            throw new UnsupportedOperationException(
+                    "Remove components from the Root's content instead");
+        }
+    }
+
     public void init(WrappedRequest request) {
 
     }
