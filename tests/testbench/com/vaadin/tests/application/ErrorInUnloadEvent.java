@@ -29,6 +29,7 @@ public class ErrorInUnloadEvent extends AbstractTestCase {
     private void showLoginWindow() {
         if (mainWindow == null) {
             mainWindow = new Root();
+            setMainWindow(mainWindow);
         } else {
             mainWindow.removeAllComponents();
         }
@@ -57,13 +58,12 @@ public class ErrorInUnloadEvent extends AbstractTestCase {
                 showMainWindow();
             }
         });
-
-        setMainWindow(mainWindow);
     }
 
     private void showMainWindow() {
         if (mainWindow == null) {
             mainWindow = new Root();
+            setMainWindow(mainWindow);
         } else {
             mainWindow.removeAllComponents();
         }
