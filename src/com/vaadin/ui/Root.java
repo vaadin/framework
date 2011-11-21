@@ -89,7 +89,7 @@ public class Root extends AbstractComponentContainer {
     }
 
     public Root(ComponentContainer content) {
-        this.content = content;
+        setContent(content);
     }
 
     public Root(String caption) {
@@ -97,8 +97,8 @@ public class Root extends AbstractComponentContainer {
     }
 
     public Root(String caption, ComponentContainer content) {
-        this(caption);
-        this.content = content;
+        this(content);
+        setCaption(caption);
     }
 
     @Override
