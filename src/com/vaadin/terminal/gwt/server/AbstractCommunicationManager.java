@@ -1185,16 +1185,6 @@ public abstract class AbstractCommunicationManager implements
                 }
                 try {
                     changeVariables(source, owner, m);
-
-                    // Special-case of closing browser-level windows:
-                    // track browser-windows currently open in client
-                    if (owner instanceof Root) {
-                        final Boolean close = (Boolean) m.get("close");
-                        if (close != null && close.booleanValue()) {
-                            throw new RuntimeException(
-                                    "Ensure currentlyOpenWindowsInClient is cleaned up here!");
-                        }
-                    }
                 } catch (Exception e) {
                     if (owner instanceof Component) {
                         handleChangeVariablesError(app, (Component) owner, e, m);
