@@ -520,7 +520,7 @@ public class Root extends AbstractComponentContainer {
 
     public void setContent(ComponentContainer content) {
         if (this.content != null) {
-            super.removeComponent(content);
+            super.removeComponent(this.content);
         }
         this.content = content;
         if (content != null) {
