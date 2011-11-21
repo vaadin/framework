@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
@@ -20,6 +21,7 @@ public class TestWindow extends TestCase {
     @Override
     protected void setUp() throws Exception {
         window = new Window();
+        new Root().addWindow(window);
     }
 
     public void testCloseListener() {
