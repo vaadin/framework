@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+	if (window.addEventListener) {
+		window.addEventListener('load', init, false); //W3C
+	} else {
+		window.attachEvent('onload', init); //IE
+	}
+
+	function init(event) {
+		var el = document.getElementById("drop");
+		if (el.addEventListener) {
+			el.addEventListener("dragover", dragover, false);
+			el.addEventListener("dragenter", dragenter, false);
+			el.addEventListener("drop", drop, false);
+		} else if (el.attachEvent) {
+			el.attachEvent('ondragover', dragover);
+			el.attachEvent('ondragenter', dragenter);
+			el.attachEvent('ondrop', drop);
+		}
+	}
+
+	function dragover(event) {
+		event.dataTransfer.dropEffect = 'copy';
+        return cancel(event);
+	}
+
+	function drop(event) {
+		document.getElementById("drop").innerHTML = event.dataTransfer.getData('Text');
+        return cancel(event);
+	}
+
+	function dragenter(event) {
+		return cancel(event);
+	}
+
+	function cancel(event) {
+		if (event.preventDefault) {
+			event.preventDefault();
+		}
+		return false;
+	}
+</script>
+</head>
+<body>
+	<div id="drop">or over here</div>
+</body>
+</html>
