@@ -42,7 +42,7 @@ public class StartHtml5Drag extends TestBase {
         });
         addComponent(dropTarget);
 
-        Embedded iframe = new Embedded("", new ClassResource("html5drop.html",
+        Embedded iframe = new Embedded("", new ClassResource("html5drop.htm",
                 this));
         iframe.setType(Embedded.TYPE_BROWSER);
         iframe.setWidth(400, Sizeable.UNITS_PIXELS);
