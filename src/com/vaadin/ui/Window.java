@@ -296,10 +296,14 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      */
     public void close() {
         Root root = getRoot();
-        // focus is restored to the parent window
-        root.focus();
-        // subwindow is removed from the root
-        root.removeWindow(this);
+
+        // Don't do anything if not attached to a root
+        if (root != null) {
+            // focus is restored to the parent window
+            root.focus();
+            // subwindow is removed from the root
+            root.removeWindow(this);
+        }
     }
 
     /**
