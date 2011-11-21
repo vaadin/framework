@@ -504,10 +504,6 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         // also related BeforeShortcutActionListener interface. Same interface
         // might be usable here.
         VTextField.flushChangesFromFocusedTextField();
-
-        // Send the closing state to server
-        connection.updateVariable(id, "close", true, false);
-        connection.sendPendingVariableChangesSync();
     }
 
     private final RenderSpace myRenderSpace = new RenderSpace() {
