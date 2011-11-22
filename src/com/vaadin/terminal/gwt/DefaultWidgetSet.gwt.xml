@@ -51,7 +51,6 @@
         <when-type-is
             class="com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper" />
         <any>
-            <when-property-is name="user.agent" value="ie6" />
             <when-property-is name="user.agent" value="ie8" />
         </any>
     </replace-with>
