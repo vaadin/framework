@@ -9,8 +9,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.CloseEvent;
 
 public class Ticket2053 extends Application.LegacyApplication {
 
@@ -30,11 +28,7 @@ public class Ticket2053 extends Application.LegacyApplication {
             public void buttonClick(ClickEvent event) {
                 final String name = "Child " + (++childs);
                 Root c = new Root(name);
-                c.addListener(new Window.CloseListener() {
-                    public void windowClose(CloseEvent e) {
-                        main.addComponent(new Label(name + " closed"));
-                    }
-                });
+
                 addWindow(c);
                 main.open(new ExternalResource(getWindowUrl(c)), "_new");
                 main.addComponent(new Label(name + " opened"));

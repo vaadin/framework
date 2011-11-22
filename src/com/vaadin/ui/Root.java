@@ -824,8 +824,4 @@ public class Root extends AbstractComponentContainer implements
     public void removeListener(ResizeListener resizeListener) {
         throw new RuntimeException("Not yet implemented");
     }
-
-    public void addListener(CloseListener closeListener) {
-        throw new RuntimeException("Not yet (if ever) implemented");
-    }
 }

@@ -7,8 +7,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Root;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.CloseEvent;
 
 public class Ticket1970 extends Application.LegacyApplication {
 
@@ -49,11 +47,6 @@ public class Ticket1970 extends Application.LegacyApplication {
                         w.showNotification(openWindows);
                     }
                 }));
-        w.addListener(new Window.CloseListener() {
-            public void windowClose(CloseEvent e) {
-                removeWindow(w);
-            }
-        });
 
         return w;
     }
