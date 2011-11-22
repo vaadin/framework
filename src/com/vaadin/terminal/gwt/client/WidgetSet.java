@@ -6,8 +6,6 @@ package com.vaadin.terminal.gwt.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ui.VButton;
-import com.vaadin.terminal.gwt.client.ui.VCheckBox;
 import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
 import com.vaadin.terminal.gwt.client.ui.VListSelect;
 import com.vaadin.terminal.gwt.client.ui.VPasswordField;
@@ -79,9 +77,7 @@ public class WidgetSet {
 
         // add our historical quirks
 
-        if (widgetClass == VButton.class && uidl.hasAttribute("type")) {
-            return VCheckBox.class;
-        } else if (widgetClass == VView.class && uidl.hasAttribute("sub")) {
+        if (widgetClass == VView.class && uidl.hasAttribute("sub")) {
             return VWindow.class;
         } else if (widgetClass == VFilterSelect.class) {
             if (uidl.hasAttribute("type")) {
@@ -143,9 +139,7 @@ public class WidgetSet {
          * is in multiselect mode, causing the clientside implementation to
          * *actually* be VListSelect, when the annotation says VFilterSelect
          */
-        if (fullyqualifiedName.equals("com.vaadin.ui.Button")) {
-            loadImplementation(VCheckBox.class);
-        } else if (fullyqualifiedName.equals("com.vaadin.ui.Select")) {
+        if (fullyqualifiedName.equals("com.vaadin.ui.Select")) {
             loadImplementation(VListSelect.class);
         } else if (fullyqualifiedName.equals("com.vaadin.ui.TextField")) {
             loadImplementation(VTextArea.class);

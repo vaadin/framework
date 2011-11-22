@@ -55,7 +55,6 @@ public class Ticket2151 extends Application {
             ok = true;
         } catch (Exception e1) {
             e1.printStackTrace();
-            return;
         }
 
         if (ok) {

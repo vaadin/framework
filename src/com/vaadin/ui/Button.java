@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import com.vaadin.event.Action;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -37,7 +38,8 @@ import com.vaadin.ui.Component.Focusable;
 @SuppressWarnings("serial")
 @ClientWidget(value = VButton.class, loadStyle = LoadStyle.EAGER)
 public class Button extends AbstractComponent implements
-        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, Focusable {
+        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, Focusable,
+        Action.ShortcutNotifier {
 
     /* Private members */
 
