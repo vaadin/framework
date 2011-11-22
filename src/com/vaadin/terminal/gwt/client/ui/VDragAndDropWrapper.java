@@ -25,14 +25,15 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xhr.client.ReadyStateChangeHandler;
 import com.google.gwt.xhr.client.XMLHttpRequest;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
+import com.vaadin.terminal.gwt.client.ValueMap;
 import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
@@ -55,8 +56,11 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
  */
 public class VDragAndDropWrapper extends VCustomComponent implements
         VHasDropHandler {
+    public static final String DRAG_START_MODE = "dragStartMode";
+    public static final String HTML5_DATA_FLAVORS = "html5-data-flavors";
 
     private static final String CLASSNAME = "v-ddwrapper";
+    protected static final String DRAGGABLE = "draggable";
 
     public VDragAndDropWrapper() {
         super();
@@ -82,6 +86,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                 }
             }
         }, TouchStartEvent.getType());
+
         sinkEvents(Event.TOUCHEVENTS);
     }
 
@@ -102,7 +107,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
      * @return true if the event was handled as a drag start event
      */
     private boolean startDrag(NativeEvent event) {
-        if (dragStarMode > 0) {
+        if (dragStartMode == WRAPPER || dragStartMode == COMPONENT) {
             VTransferable transferable = new VTransferable();
             transferable.setDragSource(VDragAndDropWrapper.this);
 
@@ -121,7 +126,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             transferable.setData("mouseDown",
                     new MouseEventDetails(event).serialize());
 
-            if (dragStarMode == WRAPPER) {
+            if (dragStartMode == WRAPPER) {
                 dragEvent.createDragImage(getElement(), true);
             } else {
                 dragEvent.createDragImage(((Widget) paintable).getElement(),
@@ -132,16 +137,21 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         return false;
     }
 
+    protected final static int NONE = 0;
+    protected final static int COMPONENT = 1;
+    protected final static int WRAPPER = 2;
+    protected final static int HTML5 = 3;
+
+    protected int dragStartMode;
+
     private ApplicationConnection client;
     private VAbstractDropHandler dropHandler;
     private VDragEvent vaadinDragEvent;
 
-    private final static int NONE = 0;
-    private final static int COMPONENT = 1;
-    private final static int WRAPPER = 2;
-    private int dragStarMode;
     private int filecounter = 0;
     private Map<String, String> fileIdToReceiver;
+    private ValueMap html5DataFlavors;
+    private Element dragStartElement;
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -180,8 +190,33 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             }
             startNextUpload();
 
-            dragStarMode = uidl.getIntAttribute("dragStartMode");
+            dragStartMode = uidl.getIntAttribute(DRAG_START_MODE);
+            initDragStartMode();
+            html5DataFlavors = uidl.getMapAttribute(HTML5_DATA_FLAVORS);
         }
+    }
+
+    protected void initDragStartMode() {
+        Element div = getElement();
+        if (dragStartMode == HTML5) {
+            if (dragStartElement == null) {
+                dragStartElement = getDragStartElement();
+                dragStartElement.setPropertyBoolean(DRAGGABLE, true);
+                VConsole.log("draggable = "
+                        + dragStartElement.getPropertyBoolean(DRAGGABLE));
+                hookHtml5DragStart(dragStartElement);
+                VConsole.log("drag start listeners hooked.");
+            }
+        } else {
+            dragStartElement = null;
+            if (div.hasAttribute(DRAGGABLE)) {
+                div.removeAttribute(DRAGGABLE);
+            }
+        }
+    }
+
+    protected Element getDragStartElement() {
+        return getElement();
     }
 
     private boolean uploading;
@@ -227,6 +262,23 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
     }
 
+    public boolean html5DragStart(VHtml5DragEvent event) {
+        if (dragStartMode == HTML5) {
+            /*
+             * Populate html5 payload with dataflavors from the serverside
+             */
+            JsArrayString flavors = html5DataFlavors.getKeyArray();
+            for (int i = 0; i < flavors.length(); i++) {
+                String flavor = flavors.get(i);
+                event.setHtml5DataFlavor(flavor,
+                        html5DataFlavors.getString(flavor));
+            }
+            event.setEffectAllowed("copy");
+            return true;
+        }
+        return false;
+    }
+
     public boolean html5DragEnter(VHtml5DragEvent event) {
         if (dropHandler == null) {
             return true;
@@ -246,8 +298,12 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                 VDragAndDropManager.get().setCurrentDropHandler(
                         getDropHandler());
             }
-            event.preventDefault();
-            event.stopPropagation();
+            try {
+                event.preventDefault();
+                event.stopPropagation();
+            } catch (Exception e) {
+                // VConsole.log("IE9 fails");
+            }
             return false;
         } catch (Exception e) {
             GWT.getUncaughtExceptionHandler().onUncaughtException(e);
@@ -277,8 +333,12 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                 }
             };
             dragleavetimer.schedule(350);
-            event.preventDefault();
-            event.stopPropagation();
+            try {
+                event.preventDefault();
+                event.stopPropagation();
+            } catch (Exception e) {
+                // VConsole.log("IE9 fails");
+            }
             return false;
         } catch (Exception e) {
             GWT.getUncaughtExceptionHandler().onUncaughtException(e);
@@ -299,17 +359,20 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         vaadinDragEvent.setCurrentGwtEvent(event);
         getDropHandler().dragOver(vaadinDragEvent);
-        // needed to be set for Safari, otherwise drop will not happen
-        if (BrowserInfo.get().isWebkit()) {
-            String s = event.getEffectAllowed();
-            if ("all".equals(s) || s.contains("opy")) {
-                event.setDragEffect("copy");
-            } else {
-                event.setDragEffect(s);
-            }
+
+        String s = event.getEffectAllowed();
+        if ("all".equals(s) || s.contains("opy")) {
+            event.setDropEffect("copy");
+        } else {
+            event.setDropEffect(s);
         }
-        event.preventDefault();
-        event.stopPropagation();
+
+        try {
+            event.preventDefault();
+            event.stopPropagation();
+        } catch (Exception e) {
+            // VConsole.log("IE9 fails");
+        }
         return false;
     }
 
@@ -349,9 +412,12 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
             VDragAndDropManager.get().endDrag();
             vaadinDragEvent = null;
-            event.preventDefault();
-            event.stopPropagation();
-
+            try {
+                event.preventDefault();
+                event.stopPropagation();
+            } catch (Exception e) {
+                // VConsole.log("IE9 fails");
+            }
             return false;
         } catch (Exception e) {
             GWT.getUncaughtExceptionHandler().onUncaughtException(e);
@@ -491,51 +557,38 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
     }
 
+    protected native void hookHtml5DragStart(Element el)
+    /*-{
+        var me = this;
+        el.addEventListener("dragstart",  function(ev) {
+            return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragStart(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+        }, false);
+    }-*/;
+
     /**
      * Prototype code, memory leak risk.
      * 
      * @param el
      */
-    private native void hookHtml5Events(Element el)
+    protected native void hookHtml5Events(Element el)
     /*-{
-
             var me = this;
-            
-            if(el.addEventListener) {
-                el.addEventListener("dragenter",  function(ev) {
-                    return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
-                }, false);
-                
-                el.addEventListener("dragleave",  function(ev) {
-                    return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
-                }, false);
-        
-                el.addEventListener("dragover",  function(ev) {
-                    return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragOver(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
-                }, false);
-        
-                el.addEventListener("drop",  function(ev) {
-                    return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
-                }, false);
-            
-            } else {
-                el.attachEvent("ondragenter",  function(ev) {
-                    return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
-                });
-                
-                el.attachEvent("ondragleave",  function(ev) {
-                    return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
-                });
-        
-                el.attachEvent("ondragover",  function(ev) {
-                    return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragOver(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
-                });
-        
-                el.attachEvent("ondrop",  function(ev) {
-                    return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
-                });
-            }
-        
+
+            el.addEventListener("dragenter",  function(ev) {
+                return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+            }, false);
+
+            el.addEventListener("dragleave",  function(ev) {
+                return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+            }, false);
+
+            el.addEventListener("dragover",  function(ev) {
+                return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragOver(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+            }, false);
+
+            el.addEventListener("drop",  function(ev) {
+                return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+            }, false);
     }-*/;
 
     public boolean updateDropDetails(VDragEvent drag) {

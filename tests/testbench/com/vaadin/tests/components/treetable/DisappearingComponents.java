@@ -1,15 +1,15 @@
 package com.vaadin.tests.components.treetable;
 
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.Window;
 
-public class DisappearingComponents extends TestBase {
+public class DisappearingComponents extends AbstractTestCase {
 
     @Override
-    protected void setup() {
+    public void init() {
         Window mainWindow = new Window("Application");
         final TreeTable tt = new TreeTable();
         tt.setSizeUndefined();
