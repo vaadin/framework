@@ -8,6 +8,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.BlurNotifier;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.util.Log;
@@ -17,7 +23,8 @@ import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 
 public abstract class AbstractComponentTest<T extends AbstractComponent>
-        extends AbstractComponentTestCase<T> {
+        extends AbstractComponentTestCase<T> implements FocusListener,
+        BlurListener {
 
     protected static final String TEXT_SHORT = "Short";
     protected static final String TEXT_MEDIUM = "This is a semi-long text that might wrap.";
@@ -218,6 +225,39 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
         createWidthAndHeightActions(CATEGORY_SIZE);
 
         createStyleNameSelect(CATEGORY_DECORATIONS);
+
+    }
+
+    protected Command<T, Boolean> focusListenerCommand = new Command<T, Boolean>() {
+
+        public void execute(T c, Boolean value, Object data) {
+            if (value) {
+                ((FocusNotifier) c).addListener(AbstractComponentTest.this);
+            } else {
+                ((FocusNotifier) c).removeListener(AbstractComponentTest.this);
+            }
+        }
+    };
+    protected Command<T, Boolean> blurListenerCommand = new Command<T, Boolean>() {
+
+        public void execute(T c, Boolean value, Object data) {
+            if (value) {
+                ((BlurNotifier) c).addListener(AbstractComponentTest.this);
+            } else {
+                ((BlurNotifier) c).removeListener(AbstractComponentTest.this);
+            }
+        }
+    };
+
+    protected void createFocusListener(String category) {
+        createBooleanAction("Focus listener", category, false,
+                focusListenerCommand);
+
+    }
+
+    protected void createBlurListener(String category) {
+        createBooleanAction("Blur listener", category, false,
+                blurListenerCommand);
 
     }
 
@@ -668,4 +708,13 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
         }
 
     }
+
+    public void focus(FocusEvent event) {
+        log(event.getClass().getSimpleName());
+    }
+
+    public void blur(BlurEvent event) {
+        log(event.getClass().getSimpleName());
+    }
+
 }

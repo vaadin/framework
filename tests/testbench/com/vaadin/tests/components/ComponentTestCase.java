@@ -135,10 +135,13 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
             final Command<T, Boolean> command) {
 
         Button button = new Button(caption);
+        button.setData(Boolean.FALSE);
         button.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                boolean enabled = (Boolean) event.getButton().getValue();
-                doCommand(command, enabled);
+                Button b = event.getButton();
+                boolean state = (Boolean) b.getData();
+                b.setData(!state);
+                doCommand(command, state);
             }
         });
 

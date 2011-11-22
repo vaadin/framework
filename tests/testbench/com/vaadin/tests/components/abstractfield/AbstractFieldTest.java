@@ -13,11 +13,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ReadOnlyStatusChangeEvent;
 import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.event.FieldEvents.BlurEvent;
-import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.BlurNotifier;
-import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.AbstractField;
@@ -26,13 +22,20 @@ import com.vaadin.ui.MenuBar.MenuItem;
 
 public abstract class AbstractFieldTest<T extends AbstractField> extends
         AbstractComponentTest<T> implements ValueChangeListener,
-        ReadOnlyStatusChangeListener, FocusListener, BlurListener {
+        ReadOnlyStatusChangeListener {
 
     @Override
     protected void createActions() {
         super.createActions();
         createBooleanAction("Required", CATEGORY_STATE, false, requiredCommand);
         createRequiredErrorSelect(CATEGORY_DECORATIONS);
+        if (FocusNotifier.class.isAssignableFrom(getTestClass())) {
+            createFocusListener(CATEGORY_LISTENERS);
+        }
+
+        if (BlurNotifier.class.isAssignableFrom(getTestClass())) {
+            createBlurListener(CATEGORY_LISTENERS);
+        }
 
         createValueChangeListener(CATEGORY_LISTENERS);
         createReadOnlyStatusChangeListener(CATEGORY_LISTENERS);
@@ -82,14 +85,6 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
         createSelectAction("Required error message", category, options, "-",
                 requiredErrorMessageCommand);
 
-        if (FocusNotifier.class.isAssignableFrom(getTestClass())) {
-            createFocusListener(CATEGORY_LISTENERS);
-        }
-
-        if (BlurNotifier.class.isAssignableFrom(getTestClass())) {
-            createBlurListener(CATEGORY_LISTENERS);
-        }
-
     }
 
     private void createValueChangeListener(String category) {
@@ -102,18 +97,6 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
 
         createBooleanAction("Read only status change listener", category,
                 false, readonlyStatusChangeListenerCommand);
-    }
-
-    private void createFocusListener(String category) {
-        createBooleanAction("Focus listener", category, false,
-                focusListenerCommand);
-
-    }
-
-    private void createBlurListener(String category) {
-        createBooleanAction("Blur listener", category, false,
-                blurListenerCommand);
-
     }
 
     protected Command<T, Boolean> valueChangeListenerCommand = new Command<T, Boolean>() {
@@ -136,26 +119,7 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
             }
         }
     };
-    protected Command<T, Boolean> focusListenerCommand = new Command<T, Boolean>() {
 
-        public void execute(T c, Boolean value, Object data) {
-            if (value) {
-                ((FocusNotifier) c).addListener(AbstractFieldTest.this);
-            } else {
-                ((FocusNotifier) c).removeListener(AbstractFieldTest.this);
-            }
-        }
-    };
-    protected Command<T, Boolean> blurListenerCommand = new Command<T, Boolean>() {
-
-        public void execute(T c, Boolean value, Object data) {
-            if (value) {
-                ((BlurNotifier) c).addListener(AbstractFieldTest.this);
-            } else {
-                ((BlurNotifier) c).removeListener(AbstractFieldTest.this);
-            }
-        }
-    };
     protected Command<T, Object> setValueCommand = new Command<T, Object>() {
 
         public void execute(T c, Object value, Object data) {
@@ -205,14 +169,6 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
     }
 
     public void readOnlyStatusChange(ReadOnlyStatusChangeEvent event) {
-        log(event.getClass().getSimpleName());
-    }
-
-    public void focus(FocusEvent event) {
-        log(event.getClass().getSimpleName());
-    }
-
-    public void blur(BlurEvent event) {
         log(event.getClass().getSimpleName());
     }
 

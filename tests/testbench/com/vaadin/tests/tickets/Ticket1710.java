@@ -139,9 +139,6 @@ public class Ticket1710 extends com.vaadin.Application {
     private Form getFormPanelExample() {
         Form f = new Form();
         f.setCaption("Test form");
-        Button fb1 = new Button("Test button");
-        fb1.setComponentError(new SystemError("Test error"));
-        f.addField("fb1", fb1);
         CheckBox fb2 = new CheckBox("Test button", true);
         fb2.setComponentError(new SystemError("Test error"));
         f.addField("fb2", fb2);

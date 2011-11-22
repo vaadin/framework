@@ -49,12 +49,12 @@ public class ListenerOrder extends com.vaadin.Application implements
         addListeners(b1, 1);
         b1.addListener(mutualListener);
         b1.addListener(mutualListener);
-        b1.addListener((Button.ClickListener) this);
+        b1.addListener(this);
         b1.addListener(mutualListener);
         Button.ClickListener b1Listener = addListeners(b1, 3);
         b1.addListener(mutualListener);
-        b1.addListener((Button.ClickListener) this);
-        b1.addListener((ValueChangeListener) this);
+        b1.addListener(this);
+        // b1.addListener((ValueChangeListener) this);
         b1.addListener(mutualListener);
         b1.removeListener(b1Listener);
         // remove non-existing listener
