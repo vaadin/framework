@@ -333,6 +333,12 @@ public class TreeTable extends Table implements Hierarchical {
     private boolean animationsEnabled;
     private boolean clearFocusedRowPending;
 
+    /**
+     * If the container does not send item set change events, always do a full
+     * repaint instead of a partial update when expanding/collapsing nodes.
+     */
+    private boolean containerSupportsPartialUpdates;
+
     private ContainerStrategy getContainerStrategy() {
         if (cStrategy == null) {
             if (getContainerDataSource() instanceof Collapsible) {
@@ -464,7 +470,7 @@ public class TreeTable extends Table implements Hierarchical {
 
     @Override
     protected boolean isPartialRowUpdate() {
-        return toggledItemId != null;
+        return toggledItemId != null && containerSupportsPartialUpdates;
     }
 
     @Override
@@ -515,12 +521,19 @@ public class TreeTable extends Table implements Hierarchical {
         // ensure that page still has first item in page, DON'T clear the
         // caches.
         setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex(), false);
-        requestRepaint();
 
         if (isCollapsed(itemId)) {
             fireCollapseEvent(itemId);
         } else {
             fireExpandEvent(itemId);
+        }
+
+        if (containerSupportsPartialUpdates) {
+            requestRepaint();
+        } else {
+            // For containers that do not send item set change events, always do
+            // full repaint instead of partial row update.
+            refreshRowCache();
         }
     }
 
@@ -537,6 +550,9 @@ public class TreeTable extends Table implements Hierarchical {
     @Override
     public void setContainerDataSource(Container newDataSource) {
         cStrategy = null;
+
+        containerSupportsPartialUpdates = (newDataSource instanceof ItemSetChangeNotifier);
+
         if (!(newDataSource instanceof Hierarchical)) {
             newDataSource = new ContainerHierarchicalWrapper(newDataSource);
         }

@@ -45,12 +45,12 @@ public class VTransferable {
         this.component = component;
     }
 
-    public Object getData(String dataFlawor) {
-        return variables.get(dataFlawor);
+    public Object getData(String dataFlavor) {
+        return variables.get(dataFlavor);
     }
 
-    public void setData(String dataFlawor, Object value) {
-        variables.put(dataFlawor, value);
+    public void setData(String dataFlavor, Object value) {
+        variables.put(dataFlavor, value);
     }
 
     public Collection<String> getDataFlavors() {

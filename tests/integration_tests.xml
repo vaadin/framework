@@ -9,7 +9,7 @@
 	<fail unless="test.integration.antfile" message="test.integration.antfile must be set for integration tests to run"/>
 
 	<!-- Test with these browsers -->
-	<property name="test_browsers" value="winxp-safari5" />
+	<property name="test_browsers" value="winxp-firefox-latest" />
 
 	<!-- Path to key file. Default value -->
 	<property name="sshkey.file" value="id_dsa" />
@@ -217,6 +217,7 @@
 		<fileset dir="integration-testscripts" id="html-test-files" includes="GateIn-3/integration-test-GateIn-3.1.0-portlet2.html" />
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 		<antcall target="run-generic-integration-test">
+			<param name="test_browsers" value="winxp-firefox36" />
 			<param name="target-server" value="gatein3" />
 		</antcall>
 	</target>
@@ -225,6 +226,7 @@
 		<fileset dir="integration-testscripts" id="html-test-files" includes="eXo-3/integration-test-eXo-3.0.3-portlet2.html" />
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 		<antcall target="run-generic-integration-test">
+			<param name="test_browsers" value="winxp-firefox36" />
 			<param name="target-server" value="exo3" />
 		</antcall>
 	</target>
@@ -336,6 +338,7 @@
 			</fileset>
 		</scp>
 		
+		<!-- trycatch probably not needed any more as it just fails with the original message and doesn't do anything in the finally block -->
 		<trycatch property="error_message">
 			<try>
 				<!-- timeout in one hour (remote end should timeout in 55 minutes) -->
@@ -378,18 +381,17 @@
 						</antcall>
 					</then>
 				</if>
-			</try>
-			<catch>
-				<fail message="${error_message}" />
-			</catch>
-			<finally>
+				
 				<!-- timeout in five minutes -->
 				<sshexec host="${target-host}" outputproperty="stop-output" timeout="300000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml shutdown-and-cleanup" failonerror="false" />
 				<antcall target="echo-prefix">
 					<param name="prefix" value="${target-server}: " />
 					<param name="message" value="${stop-output}" />
 				</antcall>
-			</finally>
+			</try>
+			<catch>
+				<fail message="${error_message}" />
+			</catch>
 		</trycatch>
 	</target>
 	
