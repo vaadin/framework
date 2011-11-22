@@ -1,21 +1,16 @@
 package com.vaadin.tests.components.window;
 
-import java.net.URL;
-
-import com.vaadin.terminal.ExternalResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Root;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 
 public class CloseSubWindow extends TestBase {
 
-    private Root browserWindow;
     private Log log = new Log(5);
 
     @Override
@@ -31,54 +26,6 @@ public class CloseSubWindow extends TestBase {
 
         addComponent(log);
         addComponent(openWindowButton);
-
-        Button openBrowserWindowButton = new Button("Open browser window");
-        openWindowButton.setDebugId("opennative");
-        openBrowserWindowButton.addListener(new ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                browserWindow = new Root("Window");
-                Button closeButton = new Button("Close this window",
-                        new ClickListener() {
-
-                            public void buttonClick(ClickEvent event) {
-                                event.getButton().getRoot()
-                                        .executeJavaScript("window.close();");
-
-                            }
-                        });
-                browserWindow.addComponent(closeButton);
-
-                browserWindow.addListener(new CloseListener() {
-                    public void windowClose(CloseEvent e) {
-                        logBrowserWindowClosed();
-                        // there is no push, so the user needs to click a button
-                        // to see the notification
-
-                        // Opera does not send a notification about the window
-                        // having been closed
-                    }
-
-                });
-
-                addWindow(browserWindow);
-                URL windowUrl = getWindowUrl(browserWindow);
-                // named for easier access by test tools
-                getMainWindow().open(new ExternalResource(windowUrl),
-                        "nativewindow");
-                if (getBrowser().isOpera()) {
-                    // Immediately log a close event in Opera so this test can
-                    // be run for all browsers. Vaadin ticket #5687.
-                    logBrowserWindowClosed();
-                }
-            }
-        });
-
-        addComponent(openBrowserWindowButton);
-
-        Button pollButton = new Button("Poll server");
-        pollButton.setDebugId("poll");
-        addComponent(pollButton);
-
     }
 
     private Window createClosableSubWindow(final String title) {
@@ -121,10 +68,4 @@ public class CloseSubWindow extends TestBase {
     protected Integer getTicketNumber() {
         return 3865;
     }
-
-    private void logBrowserWindowClosed() {
-        log.log("Browser window closed");
-
-    }
-
 }

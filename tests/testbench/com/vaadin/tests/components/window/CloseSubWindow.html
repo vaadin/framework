@@ -23,9 +23,10 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>vaadin=runcomvaadintestscomponentswindowCloseSubWindow::PID_Sopennative</td>
+	<td>vaadin=runcomvaadintestscomponentswindowCloseSubWindow::PID_Sopensub/domChild[0]/domChild[0]</td>
 	<td></td>
 </tr>
+<!--Close from click handler-->
 <tr>
 	<td>click</td>
 	<td>vaadin=runcomvaadintestscomponentswindowCloseSubWindow::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[0]/VButton[0]/domChild[0]/domChild[0]</td>
@@ -38,53 +39,23 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>vaadin=runcomvaadintestscomponentswindowCloseSubWindow::PID_Sopennative</td>
+	<td>vaadin=runcomvaadintestscomponentswindowCloseSubWindow::PID_Sopensub/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>Click close in title bar</td>
+	<td></td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>vaadin=runcomvaadintestscomponentswindowCloseSubWindow::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[0]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td>vaadin=runcomvaadintestscomponentswindowCloseSubWindow::/VWindow[0]/domChild[0]/domChild[0]/domChild[0]/domChild[0]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentswindowCloseSubWindow::PID_SLog/ChildComponentContainer[0]/VLabel[0]</td>
 	<td>2. Window 'Sub-window' closed</td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>vaadin=runcomvaadintestscomponentswindowCloseSubWindow::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[2]/VButton[0]/domChild[0]/domChild[0]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForPopUp</td>
-	<td>nativewindow</td>
-	<td>30000</td>
-</tr>
-<tr>
-	<td>selectWindow</td>
-	<td>name=nativewindow</td>
-	<td></td>
-</tr>
-<tr>
-	<td>close</td>
-	<td></td>
-	<td></td>
-</tr>
-<tr>
-	<td>selectWindow</td>
-	<td>title=com.vaadin.tests.components.window.CloseSubWindow</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>vaadin=runcomvaadintestscomponentswindowCloseSubWindow::PID_Spoll/domChild[0]/domChild[0]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>vaadin=runcomvaadintestscomponentswindowCloseSubWindow::PID_SLog/ChildComponentContainer[0]/VLabel[0]</td>
-	<td>3. Browser window closed</td>
 </tr>
 </tbody></table>
 </body>
