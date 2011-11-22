@@ -4,10 +4,6 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
-import com.google.gwt.dom.client.InputElement;
-import com.google.gwt.dom.client.LabelElement;
-import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -19,7 +15,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
@@ -126,36 +121,6 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
         setText(uidl.getStringAttribute("caption"));
         setValue(uidl.getBooleanVariable("state"));
         immediate = uidl.getBooleanAttribute("immediate");
-    }
-
-    @Override
-    public void setText(String text) {
-        super.setText(text);
-        if (BrowserInfo.get().isIE() && BrowserInfo.get().getIEVersion() < 8) {
-
-            boolean breakLink = text == null || "".equals(text);
-
-            // break or create link between label element and checkbox, to
-            // enable native focus outline around checkbox element itself, if
-            // caption is not present
-            NodeList<Node> childNodes = getElement().getChildNodes();
-            String id = null;
-            for (int i = 0; i < childNodes.getLength(); i++) {
-                Node item = childNodes.getItem(i);
-                if (item.getNodeName().toLowerCase().equals("input")) {
-                    InputElement input = (InputElement) item;
-                    id = input.getId();
-                }
-                if (item.getNodeName().toLowerCase().equals("label")) {
-                    LabelElement label = (LabelElement) item;
-                    if (breakLink) {
-                        label.setHtmlFor("");
-                    } else {
-                        label.setHtmlFor(id);
-                    }
-                }
-            }
-        }
     }
 
     @Override
