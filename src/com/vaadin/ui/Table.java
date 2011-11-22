@@ -3802,8 +3802,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * <p>
      * Note, that some due to historical reasons the name of the method is bit
      * misleading. Some items may be partly or totally out of the viewport of
-     * the table's scrollable area. Actully detecting rows which can be actually
-     * seen by the end user may be problematic due to the client server
+     * the table's scrollable area. Actually detecting rows which can be
+     * actually seen by the end user may be problematic due to the client server
      * architecture. Using {@link #getCurrentPageFirstItemId()} combined with
      * {@link #getPageLength()} may produce good enough estimates in some
      * situations.
@@ -4534,19 +4534,14 @@ public class Table extends AbstractSelect implements Action.Container,
          * com.vaadin.event.dd.acceptcriteria.AcceptCriterion#accepts(com.vaadin
          * .event.dd.DragAndDropEvent)
          */
+        @SuppressWarnings("unchecked")
         public boolean accept(DragAndDropEvent dragEvent) {
             AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dragEvent
                     .getTargetDetails();
             table = (Table) dragEvent.getTargetDetails().getTarget();
-            ArrayList<Object> visibleItemIds = new ArrayList<Object>(
-                    table.getPageLength());
-            visibleItemIds.size();
-            Object id = table.getCurrentPageFirstItemId();
-            for (int i = 0; i < table.getPageLength() && id != null; i++) {
-                visibleItemIds.add(id);
-                id = table.nextItemId(id);
-            }
-            allowedItemIds = getAllowedItemIds(dragEvent, table, visibleItemIds);
+            Collection<?> visibleItemIds = table.getVisibleItemIds();
+            allowedItemIds = getAllowedItemIds(dragEvent, table,
+                    (Collection<Object>) visibleItemIds);
 
             return allowedItemIds.contains(dropTargetData.getItemIdOver());
         }
