@@ -15,7 +15,6 @@ import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.TextBox;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
@@ -367,10 +366,6 @@ public class VTextualDate extends VDateField implements Paintable, Field,
         if (fieldExtraWidth < 0) {
             text.setWidth("0");
             fieldExtraWidth = text.getOffsetWidth();
-            if (BrowserInfo.get().isFF3()) {
-                // Firefox somehow always leaves the INPUT element 2px wide
-                fieldExtraWidth -= 2;
-            }
         }
         return fieldExtraWidth;
     }

@@ -212,17 +212,6 @@ public class BrowserInfo {
         return browserDetails.isWebKit();
     }
 
-    public boolean isFF3() {
-        // FIXME: Should use browserVersion
-        return browserDetails.isFirefox()
-                && browserDetails.getBrowserEngineVersion() == 1.9;
-    }
-
-    public boolean isFF4() {
-        return browserDetails.isFirefox()
-                && browserDetails.getBrowserMajorVersion() == 4;
-    }
-
     /**
      * Returns the Gecko version if the browser is Gecko based. The Gecko
      * version for Firefox 2 is 1.8 and 1.9 for Firefox 3.

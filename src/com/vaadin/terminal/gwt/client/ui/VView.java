@@ -476,8 +476,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
          * browser window. Constantly recalculating the layout causes the resize
          * operation to be really slow with complex layouts.
          */
-        boolean lazy = resizeLazy || BrowserInfo.get().isIE8()
-                || BrowserInfo.get().isFF3();
+        boolean lazy = resizeLazy || BrowserInfo.get().isIE8();
 
         if (lazy) {
             delayedResizeExecutor.trigger();

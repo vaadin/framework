@@ -104,8 +104,7 @@
 .v-tabsheet-tabsheetpanel {
 	background: #fff;
 }
-.v-sa .v-tabsheet-content,
-.v-ff3 .v-tabsheet-content {
+.v-sa .v-tabsheet-content {
 	border-color: rgba(0,0,0,.1);
 }
 .blue .v-tabsheet-deco {
@@ -119,8 +118,7 @@
 	background: #e2e2e2;
 	overflow: hidden;
 }
-.v-sa .v-tabsheet-deco,
-.v-ff3 .v-tabsheet-deco {
+.v-sa .v-tabsheet-deco {
 	border-top-color: rgba(0,0,0,.1);
 	background: rgba(0,0,0,.08);
 }

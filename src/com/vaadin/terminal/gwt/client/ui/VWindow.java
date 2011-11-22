@@ -667,19 +667,6 @@ public class VWindow extends VOverlay implements Container,
             showModalityCurtain();
         }
         super.show();
-
-        fixFF3OverflowBug();
-    }
-
-    /** Disable overflow auto with FF3 to fix #1837. */
-    private void fixFF3OverflowBug() {
-        if (BrowserInfo.get().isFF3()) {
-            Scheduler.get().scheduleDeferred(new Command() {
-                public void execute() {
-                    DOM.setStyleAttribute(getElement(), "overflow", "");
-                }
-            });
-        }
     }
 
     @Override

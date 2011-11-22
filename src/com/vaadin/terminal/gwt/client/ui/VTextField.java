@@ -287,44 +287,15 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         setPrompting(inputPrompt != null && focusedTextField != this
                 && (text.equals("")));
 
-        if (BrowserInfo.get().isFF3()) {
-            /*
-             * Firefox 3 is really sluggish when updating input attached to dom.
-             * Some optimizations seems to work much better in Firefox3 if we
-             * update the actual content lazily when the rest of the DOM has
-             * stabilized. In tests, about ten times better performance is
-             * achieved with this optimization. See for eg. #2898
-             */
-            Scheduler.get().scheduleDeferred(new Command() {
-                public void execute() {
-                    String fieldValue;
-                    if (prompting) {
-                        fieldValue = isReadOnly() ? "" : inputPrompt;
-                        addStyleDependentName(CLASSNAME_PROMPT);
-                    } else {
-                        fieldValue = text;
-                        removeStyleDependentName(CLASSNAME_PROMPT);
-                    }
-                    /*
-                     * Avoid resetting the old value. Prevents cursor flickering
-                     * which then again happens due to this Gecko hack.
-                     */
-                    if (!getText().equals(fieldValue)) {
-                        setText(fieldValue);
-                    }
-                }
-            });
+        String fieldValue;
+        if (prompting) {
+            fieldValue = isReadOnly() ? "" : inputPrompt;
+            addStyleDependentName(CLASSNAME_PROMPT);
         } else {
-            String fieldValue;
-            if (prompting) {
-                fieldValue = isReadOnly() ? "" : inputPrompt;
-                addStyleDependentName(CLASSNAME_PROMPT);
-            } else {
-                fieldValue = text;
-                removeStyleDependentName(CLASSNAME_PROMPT);
-            }
-            setText(fieldValue);
+            fieldValue = text;
+            removeStyleDependentName(CLASSNAME_PROMPT);
         }
+        setText(fieldValue);
 
         lastTextChangeString = valueBeforeEdit = text;
     }
