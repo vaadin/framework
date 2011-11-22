@@ -4,7 +4,6 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -13,7 +12,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
@@ -99,13 +97,6 @@ public class VNativeButton extends Button implements Paintable, ClickHandler,
             }
             getElement().insertBefore(errorIndicatorElement, captionElement);
 
-            // Fix for IE
-            // TODO This was originally for IE6 & IE7 and might not be needed
-            // any more
-            if (BrowserInfo.get().isIE()) {
-                errorIndicatorElement.setInnerText(" ");
-            }
-
         } else if (errorIndicatorElement != null) {
             getElement().removeChild(errorIndicatorElement);
             errorIndicatorElement = null;
@@ -124,21 +115,6 @@ public class VNativeButton extends Button implements Paintable, ClickHandler,
             }
         }
 
-        if (BrowserInfo.get().isIE7()) {
-            /*
-             * Workaround for IE7 size calculation issues. Deferred because of
-             * issues with a button with an icon using the reindeer theme
-             */
-            if (width.equals("")) {
-                Scheduler.get().scheduleDeferred(new Command() {
-
-                    public void execute() {
-                        setWidth("");
-                        setWidth(getOffsetWidth() + "px");
-                    }
-                });
-            }
-        }
     }
 
     @Override
@@ -172,24 +148,8 @@ public class VNativeButton extends Button implements Paintable, ClickHandler,
 
     @Override
     public void setWidth(String width) {
-        /* Workaround for IE7 button size part 1 (#2014) */
-        if (BrowserInfo.get().isIE7() && this.width != null) {
-            if (this.width.equals(width)) {
-                return;
-            }
-
-            if (width == null) {
-                width = "";
-            }
-        }
-
         this.width = width;
         super.setWidth(width);
-
-        /* Workaround for IE7 button size part 2 (#2014) */
-        if (BrowserInfo.get().isIE7()) {
-            super.setWidth(width);
-        }
     }
 
     /*

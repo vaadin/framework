@@ -13,7 +13,6 @@ import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
@@ -195,36 +194,6 @@ public class Util {
         return null;
     }
 
-    /**
-     * Detects if current browser is IE.
-     * 
-     * @deprecated use BrowserInfo class instead
-     * 
-     * @return true if IE
-     */
-    @Deprecated
-    public static boolean isIE() {
-        return BrowserInfo.get().isIE();
-    }
-
-    /**
-     * @deprecated use BrowserInfo class instead
-     * @return
-     */
-    @Deprecated
-    public static boolean isIE7() {
-        return BrowserInfo.get().isIE7();
-    }
-
-    /**
-     * @deprecated use BrowserInfo class instead
-     * @return
-     */
-    @Deprecated
-    public static boolean isFF2() {
-        return BrowserInfo.get().isFF2();
-    }
-
     private static final Element escapeHtmlHelper = DOM.createDiv();
 
     /**
@@ -236,8 +205,8 @@ public class Util {
     public static String escapeHTML(String html) {
         DOM.setInnerText(escapeHtmlHelper, html);
         String escapedText = DOM.getInnerHTML(escapeHtmlHelper);
-        if (BrowserInfo.get().isIE() && BrowserInfo.get().getIEVersion() < 9) {
-            // #7478 IE7-IE8 "incorrectly" returns "<br>" for newlines set using
+        if (BrowserInfo.get().isIE8()) {
+            // #7478 IE8 "incorrectly" returns "<br>" for newlines set using
             // setInnerText. The same for " " which is converted to "&nbsp;"
             escapedText = escapedText.replaceAll("<(BR|br)>", "\n");
             escapedText = escapedText.replaceAll("&nbsp;", " ");
@@ -317,23 +286,19 @@ public class Util {
 
             int offsetWidth = element.getOffsetWidth();
             int offsetHeight = element.getOffsetHeight();
-            if (!BrowserInfo.get().isIE7()) {
-                if (offsetHeight < 1) {
-                    offsetHeight = 1;
-                }
-                if (offsetWidth < 1) {
-                    offsetWidth = 10;
-                }
-                element.getStyle().setPropertyPx("height", offsetHeight);
+            if (offsetHeight < 1) {
+                offsetHeight = 1;
             }
+            if (offsetWidth < 1) {
+                offsetWidth = 10;
+            }
+            element.getStyle().setPropertyPx("height", offsetHeight);
             element.getStyle().setPropertyPx("width", offsetWidth);
 
             borders = element.getOffsetWidth() - element.getClientWidth();
 
             element.getStyle().setProperty("width", width);
-            if (!BrowserInfo.get().isIE7()) {
-                element.getStyle().setProperty("height", height);
-            }
+            element.getStyle().setProperty("height", height);
         } else {
             borders = element.getOffsetWidth()
                     - element.getPropertyInt("clientWidth");
@@ -756,33 +721,6 @@ public class Util {
         }
 
      }-*/;
-
-    /**
-     * IE7 sometimes "forgets" to render content. This function runs a hack to
-     * workaround the bug if needed. This happens easily in framset. See #3295.
-     */
-    public static void runIE7ZeroSizedBodyFix() {
-        if (BrowserInfo.get().isIE7()) {
-            int offsetWidth = RootPanel.getBodyElement().getOffsetWidth();
-            if (offsetWidth == 0) {
-                shakeBodyElement();
-            }
-        }
-    }
-
-    /**
-     * Does some very small adjustments to body element. We need this just to
-     * overcome some IE bugs.
-     */
-    public static void shakeBodyElement() {
-        final DivElement shaker = Document.get().createDivElement();
-        RootPanel.getBodyElement().insertBefore(shaker,
-                RootPanel.getBodyElement().getFirstChildElement());
-        shaker.getStyle().setPropertyPx("height", 0);
-        shaker.setInnerHTML("&nbsp;");
-        RootPanel.getBodyElement().removeChild(shaker);
-
-    }
 
     /**
      * Locates the child component of <literal>parent</literal> which contains

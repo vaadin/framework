@@ -164,7 +164,7 @@ public class VTreeTable extends VScrollTable {
 
     private boolean browserSupportsAnimation() {
         BrowserInfo bi = BrowserInfo.get();
-        return !(bi.isIE7() || bi.isSafari4());
+        return !(bi.isSafari4());
     }
 
     class VTreeTableScrollBody extends VScrollTable.VScrollTableBody {

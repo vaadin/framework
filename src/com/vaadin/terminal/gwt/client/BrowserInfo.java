@@ -192,10 +192,6 @@ public class BrowserInfo {
         return isSafari() && browserDetails.getBrowserMajorVersion() == 4;
     }
 
-    public boolean isIE7() {
-        return isIE() && browserDetails.getBrowserMajorVersion() == 7;
-    }
-
     public boolean isIE8() {
         return isIE() && browserDetails.getBrowserMajorVersion() == 8;
     }

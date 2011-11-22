@@ -337,11 +337,6 @@ public class VPanel extends SimplePanel implements Container,
                 width = captionWidth;
             }
 
-            if (BrowserInfo.get().isIE7()) {
-                Util.setWidthExcludingPaddingAndBorder(captionNode, width
-                        - getCaptionMarginLeft(), 26, false);
-            }
-
             super.setWidth(width + "px");
         }
 
