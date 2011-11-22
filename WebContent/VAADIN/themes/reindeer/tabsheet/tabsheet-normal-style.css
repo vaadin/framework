@@ -147,10 +147,6 @@
 	height: 16px;
 	background: transparent url(../common/icons/error.png) no-repeat 50%;
 }
-.v-ff2 .v-tabsheet-tabs .v-icon,
-.v-ff2 .v-tabsheet-tabs .v-errorindicator {
-	display: -moz-inline-stack;
-}
 .v-ie .v-tabsheet-tabs .v-errorindicator {
 	zoom: 1;
 	display: inline;

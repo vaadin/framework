@@ -9,7 +9,6 @@ import java.util.NoSuchElementException;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -78,29 +77,12 @@ public class ChildComponentContainer extends Panel {
         containerDIV = Document.get().createDivElement();
 
         widgetDIV = Document.get().createDivElement();
-        if (BrowserInfo.get().isFF2()) {
-            // Style style = widgetDIV.getStyle();
-            // FF2 chokes on some floats very easily. Measuring size escpecially
-            // becomes terribly slow
-            TableElement tableEl = Document.get().createTableElement();
-            tableEl.setInnerHTML("<tbody><tr><td><div></div></td></tr></tbody>");
-            DivElement div = (DivElement) tableEl.getFirstChildElement()
-                    .getFirstChildElement().getFirstChildElement()
-                    .getFirstChildElement();
-            tableEl.setCellPadding(0);
-            tableEl.setCellSpacing(0);
-            tableEl.setBorder(0);
-            div.getStyle().setProperty("padding", "0");
 
-            setElement(tableEl);
-            containerDIV = div;
-        } else {
-            setFloat(widgetDIV, "left");
-            setElement(containerDIV);
-            containerDIV.getStyle().setProperty("height", "0");
-            containerDIV.getStyle().setProperty("width", "0px");
-            containerDIV.getStyle().setProperty("overflow", "hidden");
-        }
+        setFloat(widgetDIV, "left");
+        setElement(containerDIV);
+        containerDIV.getStyle().setProperty("height", "0");
+        containerDIV.getStyle().setProperty("width", "0px");
+        containerDIV.getStyle().setProperty("overflow", "hidden");
 
         if (BrowserInfo.get().isIE()) {
             /*

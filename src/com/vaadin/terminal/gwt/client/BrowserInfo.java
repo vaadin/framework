@@ -212,12 +212,6 @@ public class BrowserInfo {
         return browserDetails.isWebKit();
     }
 
-    public boolean isFF2() {
-        // FIXME: Should use browserVersion
-        return browserDetails.isFirefox()
-                && browserDetails.getBrowserEngineVersion() == 1.8;
-    }
-
     public boolean isFF3() {
         // FIXME: Should use browserVersion
         return browserDetails.isFirefox()

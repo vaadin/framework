@@ -7,5 +7,4 @@
 @import "button-link-style.css";
 
 /* Browser-specific corrections to the standard implementation */
-@import "button-firefox.css";
 @import "button-ie.css";

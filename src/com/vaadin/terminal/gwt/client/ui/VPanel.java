@@ -322,11 +322,10 @@ public class VPanel extends SimplePanel implements Container,
     }
 
     public void runHacks(boolean runGeckoFix) {
-        if ((BrowserInfo.get().isIE() || BrowserInfo.get().isFF2())
-                && (width == null || width.equals(""))) {
+        if ((BrowserInfo.get().isIE()) && (width == null || width.equals(""))) {
             /*
-             * IE and FF2 needs width to be specified for the root DIV so we
-             * calculate that from the sizes of the caption and layout
+             * IE (what version??) needs width to be specified for the root DIV
+             * so we calculate that from the sizes of the caption and layout
              */
             int captionWidth = captionText.getOffsetWidth()
                     + getCaptionMarginLeft() + getCaptionPaddingHorizontal();

@@ -9,22 +9,6 @@
 .v-op .v-window-wrap {
 	border-color: rgba(0,0,0,.2);
 }
-.v-ff2 .v-window-wrap {
-	border: none;
-}
-.v-ff2 .v-window-outerheader {
-	border: 1px solid #808386;
-	border-bottom: none;
-}
-.v-ff2 .v-window-contents {
-	border: 1px solid #808386;
-	border-top: none;
-	border-bottom: none;
-}
-.v-ff2 .v-window-footer {
-	border: 1px solid #808386;
-	border-top: none;
-}
 .v-window-outerheader {
 	padding: 12px 32px 0 14px;
 	height: 25px;
