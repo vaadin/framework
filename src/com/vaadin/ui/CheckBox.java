@@ -68,7 +68,7 @@ public class CheckBox extends AbstractField {
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
-        target.addVariable(this, VCheckBox.VARIABLE_STATE, (Boolean) getValue());
+        target.addVariable(this, VCheckBox.VARIABLE_STATE, booleanValue());
     }
 
     @Override
@@ -113,4 +113,17 @@ public class CheckBox extends AbstractField {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
 
     }
+
+    /**
+     * Get the boolean value of the checkbox state.
+     * 
+     * @return True iff the checkbox is checked.
+     * @deprecated in Vaadin 7.0.0. Retained to ease migration from Vaadin 6
+     */
+    @Deprecated
+    public boolean booleanValue() {
+        Boolean value = (Boolean) getValue();
+        return (null == value) ? false : value.booleanValue();
+    }
+
 }
