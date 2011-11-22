@@ -28,10 +28,6 @@
 	text-shadow: #ffffff 0 1px 0;
 	margin-left: 4px;
 }
-.v-ie7 .v-table-caption-container-align-right {
-	margin-left: 0px;
-	padding-left: 0px;
-}
 .v-table-sort-indicator {
 	width: 0;
 	height: 36px;

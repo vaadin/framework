@@ -26,9 +26,6 @@
 	overflow: hidden;
 	text-align: left; /* Force default alignment */
 }
-.v-ie7 .v-table {
-	overflow: visible;
-}
 .v-table-header-wrap {
 	overflow: hidden;
 	border: 1px solid #aaa;
@@ -92,10 +89,6 @@
 	overflow: hidden;
 	white-space: nowrap;
 	margin-left: 6px;
-}
-.v-ie7 .v-table-caption-container-align-right {
-	margin-left: 0px;
-	padding-left: 6px;
 }
 .v-table-caption-container-align-right {
 	float: right;
@@ -180,9 +173,6 @@
 	width: 14px;
 	position: relative; /* hide this from IE, it works without it */
 	cursor: pointer;
-}
-.v-ie7 .v-table-column-selector {
-	position: static;
 }
 .v-table-focus-slot-left {
 	border-left: 2px solid #999;

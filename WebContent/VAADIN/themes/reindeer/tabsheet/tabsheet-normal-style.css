@@ -52,8 +52,7 @@
 	font-size: 14px;
 	font-weight: normal;
 }
-.v-ff .v-tabsheet-caption-close,
-.v-ie7 .v-tabsheet-caption-close {
+.v-ff .v-tabsheet-caption-close {
 	margin-top: -17px;
 }
 .v-tabsheet-caption-close:hover {

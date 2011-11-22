@@ -50,8 +50,7 @@
 .v-tabsheet-tabs-bar .v-tabsheet-caption-close {
 	margin-top: 1px;
 }
-.v-ff .v-tabsheet-tabs-bar .v-tabsheet-caption-close,
-.v-ie7 .v-tabsheet-tabs-bar .v-tabsheet-caption-close {
+.v-ff .v-tabsheet-tabs-bar .v-tabsheet-caption-close {
 	margin-top: -14px;
 }
 .v-tabsheet-tabs-bar .v-tabsheet-caption-close:hover {

@@ -56,12 +56,6 @@
 	text-overflow: ellipsis;
 	}
 
-.v-ie7 .v-button .v-button-wrap {
-	overflow: visible;
-}
-
-
-
 /* Small style */
 .v-button-small .v-button-wrap,
 .v-disabled.v-button-small .v-button-wrap {
@@ -159,10 +153,4 @@
 /* Checkbox styles */
 .v-checkbox .v-errorindicator {
 	padding-left: 10px;
-	}
-.v-ie7 .v-checkbox .v-errorindicator {
-	padding-right: 7px;
-	}
-.v-ie7 .v-button .v-errorindicator {
-	padding-right: 5px;
 	}
