@@ -18,12 +18,14 @@ import com.vaadin.Application;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
+import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.gwt.client.ui.VPanel;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.ui.Window.CloseListener;
 import com.vaadin.ui.Window.ResizeListener;
@@ -813,8 +815,32 @@ public class Root extends AbstractComponentContainer implements
         throw new RuntimeException("Not yet implemented");
     }
 
-    public void addListener(ClickListener clickListener) {
-        throw new RuntimeException("Not yet implemented");
+    /**
+     * Add a click listener to the Root. The listener is called whenever the
+     * user clicks inside the Root. Also when the click targets a component
+     * inside the Root, provided the targeted component does not prevent the
+     * click event from propagating.
+     * 
+     * Use {@link #removeListener(ClickListener)} to remove the listener.
+     * 
+     * @param listener
+     *            The listener to add
+     */
+    public void addListener(ClickListener listener) {
+        addListener(VPanel.CLICK_EVENT_IDENTIFIER, ClickEvent.class, listener,
+                ClickListener.clickMethod);
+    }
+
+    /**
+     * Remove a click listener from the Root. The listener should earlier have
+     * been added using {@link #addListener(ClickListener)}.
+     * 
+     * @param listener
+     *            The listener to remove
+     */
+    public void removeListener(ClickListener listener) {
+        removeListener(VPanel.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
+                listener);
     }
 
     public void addListener(ResizeListener resizeListener) {
