@@ -34,10 +34,7 @@
 /WebContent/VAADIN/themes/runo/common/img/ajax-loader-yellow.gif
 
 # /WebContent/VAADIN/widgetsets/
-/WebContent/VAADIN/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet
-/WebContent/VAADIN/widgetsets/.gwt-tmp
-/WebContent/VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet
-/WebContent/VAADIN/widgetsets/com.vaadin.portal.gwt.PortalDefaultWidgetSet
+/WebContent/VAADIN/widgetsets
 /WebContent/VAADIN/gwt-unitCache*
 
 # /WebContent/WEB-INF/
