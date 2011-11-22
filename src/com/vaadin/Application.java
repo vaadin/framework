@@ -1623,6 +1623,11 @@ public class Application implements Terminal.ErrorListener, Serializable {
         return null;
     }
 
+    public String getWidgetsetForRoot(Root root) {
+        // TODO Get widgetset from root annotation
+        return null;
+    }
+
     public boolean handleRequest(WrappedRequest request,
             WrappedResponse response) throws IOException {
         for (RequestHandler handler : new ArrayList<RequestHandler>(

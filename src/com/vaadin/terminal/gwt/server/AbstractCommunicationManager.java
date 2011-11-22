@@ -41,8 +41,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.servlet.ServletException;
-
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
 import com.vaadin.terminal.PaintException;
@@ -95,21 +93,12 @@ public abstract class AbstractCommunicationManager implements
     private static final RequestHandler AJAX_PAGE_HANDLER = new AjaxPageHandler() {
 
         @Override
-        protected void writeAjaxPage(WrappedRequest request,
-                WrappedResponse response, Root root) throws IOException {
-            {
-                WrappedHttpServletRequest wrappedServletRequest = (WrappedHttpServletRequest) request;
-                try {
-                    wrappedServletRequest.getServlet().writeAjaxPage(
-                            wrappedServletRequest.getHttpServletRequest(),
-                            ((WrappedHttpServletResponse) response)
-                                    .getHttpServletResponse(), root,
-                            root.getApplication());
-                } catch (ServletException e) {
-                    logger.log(Level.WARNING, e.getLocalizedMessage(), e);
-                    writeError(response, e);
-                }
-            }
+        protected String getApplicationOrSystemProperty(
+                WrappedRequest request, String parameter,
+                String defaultValue) {
+            WrappedHttpServletRequest r = (WrappedHttpServletRequest) request;
+            return r.getServlet().getApplicationOrSystemProperty(
+                    parameter, defaultValue);
         }
 
     };

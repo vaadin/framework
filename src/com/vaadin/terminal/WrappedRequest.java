@@ -63,4 +63,6 @@ public interface WrappedRequest extends Serializable {
 
     public String getContentType();
 
+    public String getStaticFileLocation();
+
 }

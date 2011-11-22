@@ -18,7 +18,6 @@ import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -302,7 +301,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      *            the Default to be used.
      * @return String value or default if not found
      */
-    private String getApplicationOrSystemProperty(String parameterName,
+    String getApplicationOrSystemProperty(String parameterName,
             String defaultValue) {
 
         String val = null;
@@ -854,36 +853,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     /**
-     * Returns the theme for given request/root
-     * 
-     * @param request
-     * @param root
-     * @return
-     */
-    private String getThemeForRoot(HttpServletRequest request, Root root) {
-        // Finds theme name
-        String themeName;
-
-        if (request.getParameter(URL_PARAMETER_THEME) != null) {
-            themeName = request.getParameter(URL_PARAMETER_THEME);
-        } else {
-            themeName = root.getApplication().getThemeForRoot(root);
-        }
-
-        if (themeName == null) {
-            // no explicit theme for root defined
-            // using the default theme defined by Vaadin
-            themeName = getDefaultTheme();
-        }
-
-        // XSS preventation, theme names shouldn't contain special chars anyway.
-        // The servlet denies them via url parameter.
-        themeName = stripSpecialChars(themeName);
-
-        return themeName;
-    }
-
-    /**
      * A helper method to strip away characters that might somehow be used for
      * XSS attacs. Leaves at least alphanumeric characters intact. Also removes
      * eg. ( and ), so values should be safe in javascript too.
@@ -1344,13 +1313,25 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @return
      */
     protected SystemMessages getSystemMessages() {
+        Class<? extends Application> appCls = null;
         try {
-            Class<? extends Application> appCls = getApplicationClass();
-            Method m = appCls.getMethod("getSystemMessages", (Class[]) null);
-            return (Application.SystemMessages) m.invoke(null, (Object[]) null);
+            appCls = getApplicationClass();
         } catch (ClassNotFoundException e) {
-            // This should never happen
+            // Previous comment claimed that this should never happen
             throw new SystemMessageException(e);
+        }
+        return getSystemMessages(appCls);
+    }
+
+    public static SystemMessages getSystemMessages(
+            Class<? extends Application> appCls) {
+        try {
+            if (appCls != null) {
+                Method m = appCls
+                        .getMethod("getSystemMessages", (Class[]) null);
+                return (Application.SystemMessages) m.invoke(null,
+                        (Object[]) null);
+            }
         } catch (SecurityException e) {
             throw new SystemMessageException(
                     "Application.getSystemMessage() should be static public", e);
@@ -1465,421 +1446,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             HttpServletResponse response) throws IOException {
         String applicationUrl = getApplicationUrl(request).toExternalForm();
         response.sendRedirect(response.encodeRedirectURL(applicationUrl));
-    }
-
-    /**
-     * This method writes the html host page (aka kickstart page) that starts
-     * the actual Vaadin application.
-     * <p>
-     * If one needs to override parts of the host page, it is suggested that one
-     * overrides on of several submethods which are called by this method:
-     * <ul>
-     * <li> {@link #setAjaxPageHeaders(HttpServletResponse)}
-     * <li>
-     * {@link #writeAjaxPageHtmlHeadStart(BufferedWriter, HttpServletRequest)}
-     * <li>
-     * {@link #writeAjaxPageHtmlHeader(BufferedWriter, String, String, HttpServletRequest)}
-     * <li>
-     * {@link #writeAjaxPageHtmlBodyStart(BufferedWriter, HttpServletRequest)}
-     * <li>
-     * {@link #writeAjaxPageHtmlVaadinScripts(Root, String, Application, BufferedWriter, String, String, String, HttpServletRequest)}
-     * <li>
-     * {@link #writeAjaxPageHtmlMainDiv(BufferedWriter, String, String, HttpServletRequest)}
-     * <li> {@link #writeAjaxPageHtmlBodyEnd(BufferedWriter)}
-     * </ul>
-     * 
-     * @param request
-     *            the HTTP request.
-     * @param response
-     *            the HTTP response to write to.
-     * @param out
-     * @param unhandledParameters
-     * @param root
-     * @param terminalType
-     * @param theme
-     * @throws IOException
-     *             if the writing failed due to input/output error.
-     * @throws MalformedURLException
-     *             if the application is denied access the persistent data store
-     *             represented by the given URL.
-     */
-    protected void writeAjaxPage(HttpServletRequest request,
-            HttpServletResponse response, Root root, Application application)
-            throws IOException, MalformedURLException, ServletException {
-
-        final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
-                response.getOutputStream(), "UTF-8"));
-
-        String title = ((root.getCaption() == null) ? "Vaadin 6" : root
-                .getCaption());
-
-        /* Fetch relative url to application */
-        // don't use server and port in uri. It may cause problems with some
-        // virtual server configurations which lose the server name
-        String appUrl = getApplicationUrl(request).getPath();
-        if (appUrl.endsWith("/")) {
-            appUrl = appUrl.substring(0, appUrl.length() - 1);
-        }
-
-        String themeName = getThemeForRoot(request, root);
-
-        String themeUri = getThemeUri(themeName, request);
-
-        setAjaxPageHeaders(response);
-        writeAjaxPageHtmlHeadStart(page, request);
-        writeAjaxPageHtmlHeader(page, title, themeUri, request);
-        writeAjaxPageHtmlBodyStart(page, request);
-
-        String appId = appUrl;
-        if ("".equals(appUrl)) {
-            appId = "ROOT";
-        }
-        appId = appId.replaceAll("[^a-zA-Z0-9]", "");
-        // Add hashCode to the end, so that it is still (sort of) predictable,
-        // but indicates that it should not be used in CSS and such:
-        int hashCode = appId.hashCode();
-        if (hashCode < 0) {
-            hashCode = -hashCode;
-        }
-        appId = appId + "-" + hashCode;
-
-        writeAjaxPageHtmlVaadinScripts(themeName, application, page, appUrl,
-                themeUri, appId, request, root.getRootId());
-
-        /*- Add classnames;
-         *      .v-app
-         *      .v-app-loading
-         *      .v-app-<simpleName for app class>
-         *      .v-theme-<themeName, remove non-alphanum>
-         */
-
-        String appClass = "v-app-" + getApplicationCSSClassName();
-
-        String themeClass = "";
-        if (themeName != null) {
-            themeClass = "v-theme-" + themeName.replaceAll("[^a-zA-Z0-9]", "");
-        } else {
-            themeClass = "v-theme-"
-                    + getDefaultTheme().replaceAll("[^a-zA-Z0-9]", "");
-        }
-
-        String classNames = "v-app " + themeClass + " " + appClass;
-
-        writeAjaxPageHtmlMainDiv(page, appId, classNames, request);
-
-        page.write("</body>\n</html>\n");
-
-        page.close();
-
-    }
-
-    /**
-     * Returns the application class identifier for use in the application CSS
-     * class name in the root DIV. The application CSS class name is of form
-     * "v-app-"+getApplicationCSSClassName().
-     * 
-     * This method should normally not be overridden.
-     * 
-     * @return The CSS class name to use in combination with "v-app-".
-     */
-    protected String getApplicationCSSClassName() {
-        try {
-            return getApplicationClass().getSimpleName();
-        } catch (ClassNotFoundException e) {
-            logger.log(Level.WARNING, "getApplicationCSSClassName failed", e);
-            return "unknown";
-        }
-    }
-
-    /**
-     * Get the URI for the application theme.
-     * 
-     * A portal-wide default theme is fetched from the portal shared resource
-     * directory (if any), other themes from the portlet.
-     * 
-     * @param themeName
-     * @param request
-     * @return
-     */
-    private String getThemeUri(String themeName, HttpServletRequest request) {
-        final String staticFilePath = getWebApplicationsStaticFileLocation(request);
-        return staticFilePath + "/" + THEME_DIRECTORY_PATH + themeName;
-    }
-
-    /**
-     * Method to write the div element into which that actual Vaadin application
-     * is rendered.
-     * <p>
-     * Override this method if you want to add some custom html around around
-     * the div element into which the actual Vaadin application will be
-     * rendered.
-     * 
-     * @param page
-     * @param appId
-     * @param classNames
-     * @param request
-     * @throws IOException
-     */
-    protected void writeAjaxPageHtmlMainDiv(final BufferedWriter page,
-            String appId, String classNames, HttpServletRequest request)
-            throws IOException {
-        page.write("<div id=\"" + appId + "\" class=\"" + classNames + "\">");
-        page.write("<div class=\"v-app-loading\"></div>");
-        page.write("</div>\n");
-        page.write("<noscript>" + getNoScriptMessage() + "</noscript>");
-    }
-
-    /**
-     * Method to write the script part of the page which loads needed Vaadin
-     * scripts and themes.
-     * <p>
-     * Override this method if you want to add some custom html around scripts.
-     * 
-     * @param themeName
-     * @param application
-     * @param page
-     * @param appUrl
-     * @param themeUri
-     * @param appId
-     * @param request
-     * @param rootId
-     * @throws ServletException
-     * @throws IOException
-     */
-    protected void writeAjaxPageHtmlVaadinScripts(
-            // Window window,
-            String themeName, Application application,
-            final BufferedWriter page, String appUrl, String themeUri,
-            String appId, HttpServletRequest request, int rootId)
-            throws ServletException, IOException {
-
-        String widgetset = getApplicationOrSystemProperty(PARAMETER_WIDGETSET,
-                DEFAULT_WIDGETSET);
-        String widgetsetBasePath = getWebApplicationsStaticFileLocation(request);
-
-        widgetset = stripSpecialChars(widgetset);
-
-        final String widgetsetFilePath = widgetsetBasePath + "/"
-                + WIDGETSET_DIRECTORY_PATH + widgetset + "/" + widgetset
-                + ".nocache.js?" + new Date().getTime();
-
-        // Get system messages
-        Application.SystemMessages systemMessages = null;
-        try {
-            systemMessages = getSystemMessages();
-        } catch (SystemMessageException e) {
-            // failing to get the system messages is always a problem
-            throw new ServletException("CommunicationError!", e);
-        }
-
-        page.write("<script type=\"text/javascript\">\n");
-        page.write("//<![CDATA[\n");
-        page.write("if(!vaadin || !vaadin.vaadinConfigurations) {\n "
-                + "if(!vaadin) { var vaadin = {}} \n"
-                + "vaadin.vaadinConfigurations = {};\n"
-                + "if (!vaadin.themesLoaded) { vaadin.themesLoaded = {}; }\n");
-        if (!isProductionMode()) {
-            page.write("vaadin.debug = true;\n");
-        }
-        page.write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
-                + "style=\"position:absolute;width:0;height:0;border:0;overflow:"
-                + "hidden;\" src=\"javascript:false\"></iframe>');\n");
-        page.write("document.write(\"<script language='javascript' src='"
-                + widgetsetFilePath + "'><\\/script>\");\n}\n");
-
-        page.write("vaadin.vaadinConfigurations[\"" + appId + "\"] = {");
-        page.write("appUri:'" + appUrl + "', ");
-
-        page.write(ApplicationConnection.ROOT_ID_PARAMETER + ": " + rootId
-                + ", ");
-
-        if (isStandalone()) {
-            page.write("standalone: true, ");
-        }
-        page.write("themeUri:");
-        page.write(themeUri != null ? "\"" + themeUri + "\"" : "null");
-        page.write(", versionInfo : {vaadinVersion:\"");
-        page.write(VERSION);
-        page.write("\",applicationVersion:\"");
-        page.write(JsonPaintTarget.escapeJSON(application.getVersion()));
-        page.write("\"}");
-        if (systemMessages != null) {
-            // Write the CommunicationError -message to client
-            String caption = systemMessages.getCommunicationErrorCaption();
-            if (caption != null) {
-                caption = "\"" + JsonPaintTarget.escapeJSON(caption) + "\"";
-            }
-            String message = systemMessages.getCommunicationErrorMessage();
-            if (message != null) {
-                message = "\"" + JsonPaintTarget.escapeJSON(message) + "\"";
-            }
-            String url = systemMessages.getCommunicationErrorURL();
-            if (url != null) {
-                url = "\"" + JsonPaintTarget.escapeJSON(url) + "\"";
-            }
-
-            page.write(",\"comErrMsg\": {" + "\"caption\":" + caption + ","
-                    + "\"message\" : " + message + "," + "\"url\" : " + url
-                    + "}");
-
-            // Write the AuthenticationError -message to client
-            caption = systemMessages.getAuthenticationErrorCaption();
-            if (caption != null) {
-                caption = "\"" + JsonPaintTarget.escapeJSON(caption) + "\"";
-            }
-            message = systemMessages.getAuthenticationErrorMessage();
-            if (message != null) {
-                message = "\"" + JsonPaintTarget.escapeJSON(message) + "\"";
-            }
-            url = systemMessages.getAuthenticationErrorURL();
-            if (url != null) {
-                url = "\"" + JsonPaintTarget.escapeJSON(url) + "\"";
-            }
-
-            page.write(",\"authErrMsg\": {" + "\"caption\":" + caption + ","
-                    + "\"message\" : " + message + "," + "\"url\" : " + url
-                    + "}");
-        }
-        page.write("};\n//]]>\n</script>\n");
-
-        if (themeName != null) {
-            // Custom theme's stylesheet, load only once, in different
-            // script
-            // tag to be dominate styles injected by widget
-            // set
-            page.write("<script type=\"text/javascript\">\n");
-            page.write("//<![CDATA[\n");
-            page.write("if(!vaadin.themesLoaded['" + themeName + "']) {\n");
-            page.write("var stylesheet = document.createElement('link');\n");
-            page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
-            page.write("stylesheet.setAttribute('type', 'text/css');\n");
-            page.write("stylesheet.setAttribute('href', '" + themeUri
-                    + "/styles.css');\n");
-            page.write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
-            page.write("vaadin.themesLoaded['" + themeName + "'] = true;\n}\n");
-            page.write("//]]>\n</script>\n");
-        }
-
-        // Warn if the widgetset has not been loaded after 15 seconds on
-        // inactivity
-        page.write("<script type=\"text/javascript\">\n");
-        page.write("//<![CDATA[\n");
-        page.write("setTimeout('if (typeof " + widgetset.replace('.', '_')
-                + " == \"undefined\") {alert(\"Failed to load the widgetset: "
-                + widgetsetFilePath + "\")};',15000);\n" + "//]]>\n</script>\n");
-    }
-
-    /**
-     * @return true if the served application is considered to be the only or
-     *         main content of the host page. E.g. various embedding solutions
-     *         should override this to false.
-     */
-    protected boolean isStandalone() {
-        return true;
-    }
-
-    /**
-     * 
-     * Method to open the body tag of the html kickstart page.
-     * <p>
-     * This method is responsible for closing the head tag and opening the body
-     * tag.
-     * <p>
-     * Override this method if you want to add some custom html to the page.
-     * 
-     * @param page
-     * @param request
-     * @throws IOException
-     */
-    protected void writeAjaxPageHtmlBodyStart(final BufferedWriter page,
-            final HttpServletRequest request) throws IOException {
-        page.write("\n</head>\n<body scroll=\"auto\" class=\""
-                + ApplicationConnection.GENERATED_BODY_CLASSNAME + "\">\n");
-    }
-
-    /**
-     * Method to write the contents of head element in html kickstart page.
-     * <p>
-     * Override this method if you want to add some custom html to the header of
-     * the page.
-     * 
-     * @param page
-     * @param title
-     * @param themeUri
-     * @param request
-     * @throws IOException
-     */
-    protected void writeAjaxPageHtmlHeader(final BufferedWriter page,
-            String title, String themeUri, final HttpServletRequest request)
-            throws IOException {
-        page.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
-
-        WebBrowser browser = getApplicationContext(request.getSession())
-                .getBrowser();
-        if (browser.isIE()) {
-            // Chrome frame in all versions of IE (only if Chrome frame is
-            // installed)
-            page.write("<meta http-equiv=\"X-UA-Compatible\" content=\"chrome=1\"/>\n");
-        }
-
-        page.write("<style type=\"text/css\">"
-                + "html, body {height:100%;margin:0;}</style>");
-
-        // Add favicon links
-        page.write("<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\""
-                + themeUri + "/favicon.ico\" />");
-        page.write("<link rel=\"icon\" type=\"image/vnd.microsoft.icon\" href=\""
-                + themeUri + "/favicon.ico\" />");
-
-        page.write("<title>" + safeEscapeForHtml(title) + "</title>");
-    }
-
-    /**
-     * Method to write the beginning of the html page.
-     * <p>
-     * This method is responsible for writing appropriate doc type declarations
-     * and to open html and head tags.
-     * <p>
-     * Override this method if you want to add some custom html to the very
-     * beginning of the page.
-     * 
-     * @param page
-     * @param request
-     * @throws IOException
-     */
-    protected void writeAjaxPageHtmlHeadStart(final BufferedWriter page,
-            final HttpServletRequest request) throws IOException {
-        // write html header
-        page.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD "
-                + "XHTML 1.0 Transitional//EN\" "
-                + "\"http://www.w3.org/TR/xhtml1/"
-                + "DTD/xhtml1-transitional.dtd\">\n");
-
-        page.write("<html xmlns=\"http://www.w3.org/1999/xhtml\""
-                + ">\n<head>\n");
-    }
-
-    /**
-     * Method to set http request headers for the Vaadin kickstart page.
-     * <p>
-     * Override this method if you need to customize http headers of the page.
-     * 
-     * @param response
-     */
-    protected void setAjaxPageHeaders(HttpServletResponse response) {
-        // Window renders are not cacheable
-        response.setHeader("Cache-Control", "no-cache");
-        response.setHeader("Pragma", "no-cache");
-        response.setDateHeader("Expires", 0);
-        response.setContentType("text/html; charset=UTF-8");
-    }
-
-    /**
-     * Returns a message printed for browsers without scripting support or if
-     * browsers scripting support is disabled.
-     */
-    protected String getNoScriptMessage() {
-        return "You have to enable javascript in your browser to use an application built with Vaadin.";
     }
 
     /**

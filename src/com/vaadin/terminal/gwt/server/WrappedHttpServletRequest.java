@@ -91,4 +91,8 @@ public class WrappedHttpServletRequest implements WrappedRequest {
     public AbstractApplicationServlet getServlet() {
         return servlet;
     }
+
+    public String getStaticFileLocation() {
+        return servlet.getStaticFilesLocation(request);
+    }
 }

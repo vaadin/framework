@@ -104,4 +104,8 @@ public class WrappedPortletRequest implements WrappedRequest {
         return ((ResourceRequest) request).getContentType();
     }
 
+    public String getStaticFileLocation() {
+        throw new UnsupportedOperationException("Please implement me!");
+    }
+
 }
