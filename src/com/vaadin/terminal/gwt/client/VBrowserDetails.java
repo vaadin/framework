@@ -302,4 +302,28 @@ public class VBrowserDetails implements Serializable {
         return isLinux;
     }
 
+    /**
+     * Checks if the browser is so old that it simply won't work with a Vaadin
+     * application.
+     * 
+     * @return true if the browser won't work, false if not the browser is
+     *         supported or might work
+     */
+    public boolean isTooOldToFunctionProperly() {
+        if (isIE() && getBrowserMajorVersion() < 8) {
+            return true;
+        }
+        if (isSafari() && getBrowserMajorVersion() < 5) {
+            return true;
+        }
+        if (isFirefox() && getBrowserMajorVersion() < 4) {
+            return true;
+        }
+        if (isOpera() && getBrowserMajorVersion() < 11) {
+            return true;
+        }
+
+        return false;
+    }
+
 }
