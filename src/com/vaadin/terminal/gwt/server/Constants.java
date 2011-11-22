@@ -43,7 +43,6 @@ public interface Constants {
     static final String URL_PARAMETER_REPAINT_ALL = "repaintAll";
     static final String URL_PARAMETER_THEME = "theme";
 
-    static final String SERVLET_PARAMETER_DEBUG = "Debug";
     static final String SERVLET_PARAMETER_PRODUCTION_MODE = "productionMode";
     static final String SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION = "disable-xsrf-protection";
     static final String SERVLET_PARAMETER_RESOURCE_CACHE_TIME = "resourceCacheTime";

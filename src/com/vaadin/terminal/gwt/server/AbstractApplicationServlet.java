@@ -217,14 +217,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
     private void checkProductionMode() {
         // Check if the application is in production mode.
-        // We are in production mode if Debug=false or productionMode=true
-        if (getApplicationOrSystemProperty(SERVLET_PARAMETER_DEBUG, "true")
-                .equals("false")) {
-            // "Debug=true" is the old way and should no longer be used
-            productionMode = true;
-        } else if (getApplicationOrSystemProperty(
-                SERVLET_PARAMETER_PRODUCTION_MODE, "false").equals("true")) {
-            // "productionMode=true" is the real way to do it
+        // We are in production mode if productionMode=true
+        if (getApplicationOrSystemProperty(SERVLET_PARAMETER_PRODUCTION_MODE,
+                "false").equals("true")) {
             productionMode = true;
         }
 
@@ -1029,7 +1024,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             Locale locale = request.getLocale();
             application.setLocale(locale);
             application.start(applicationUrl, applicationProperties,
-                    webApplicationContext);
+                    webApplicationContext, isProductionMode());
         }
     }
 

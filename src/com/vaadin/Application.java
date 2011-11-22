@@ -281,6 +281,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
     private int nextRootId = 0;
     private Map<Integer, Root> roots = new HashMap<Integer, Root>();
 
+    private boolean productionMode = true;
+
     /**
      * Gets the user of the application.
      * 
@@ -392,11 +394,13 @@ public class Application implements Terminal.ErrorListener, Serializable {
      *            configuration.
      * @param context
      *            the context application will be running in.
+     * @param productionMode
      * 
      */
     public void start(URL applicationUrl, Properties applicationProperties,
-            ApplicationContext context) {
+            ApplicationContext context, boolean productionMode) {
         this.applicationUrl = applicationUrl;
+        this.productionMode = productionMode;
         properties = applicationProperties;
         this.context = context;
         init();
@@ -1659,5 +1663,9 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
     public Root getRootById(int rootId) {
         return roots.get(Integer.valueOf(rootId));
+    }
+
+    public boolean isProductionMode() {
+        return productionMode;
     }
 }

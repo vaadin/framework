@@ -175,15 +175,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     private void checkProductionMode() {
+        // TODO Identical code in AbstractApplicationServlet -> refactor
         // Check if the application is in production mode.
-        // We are in production mode if Debug=false or productionMode=true
-        if (getApplicationOrSystemProperty(SERVLET_PARAMETER_DEBUG, "true")
-                .equals("false")) {
-            // "Debug=true" is the old way and should no longer be used
-            productionMode = true;
-        } else if (getApplicationOrSystemProperty(
-                SERVLET_PARAMETER_PRODUCTION_MODE, "false").equals("true")) {
-            // "productionMode=true" is the real way to do it
+        // We are in production mode if productionMode=true
+        if (getApplicationOrSystemProperty(SERVLET_PARAMETER_PRODUCTION_MODE,
+                "false").equals("true")) {
             productionMode = true;
         }
 
@@ -703,7 +699,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             Locale locale = request.getLocale();
             application.setLocale(locale);
             // No application URL when running inside a portlet
-            application.start(null, applicationProperties, context);
+            application.start(null, applicationProperties, context,
+                    isProductionMode());
         }
     }
 

@@ -71,7 +71,7 @@ public class TransactionListenersConcurrency extends TestCase {
                     try {
 
                         app.start(new URL("http://localhost/"),
-                                new Properties(), context);
+                                new Properties(), context, true);
                     } catch (MalformedURLException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
