@@ -142,67 +142,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
     }
 
-    /**
-     * If the attribute is present in the request, a html fragment will be
-     * written instead of a whole page.
-     * 
-     * It is set to "true" by the {@link ApplicationPortlet} (Portlet 1.0) and
-     * read by {@link AbstractApplicationServlet}.
-     */
-    public static final String REQUEST_FRAGMENT = ApplicationServlet.class
-            .getName() + ".fragment";
-    /**
-     * This request attribute forces widgetsets to be loaded from under the
-     * specified base path; e.g shared widgetset for all portlets in a portal.
-     * 
-     * It is set by the {@link ApplicationPortlet} (Portlet 1.0) based on
-     * {@link Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH} and read by
-     * {@link AbstractApplicationServlet}.
-     */
-    public static final String REQUEST_VAADIN_STATIC_FILE_PATH = ApplicationServlet.class
-            .getName() + ".widgetsetPath";
-    /**
-     * This request attribute forces widgetset used; e.g for portlets that can
-     * not have different widgetsets.
-     * 
-     * It is set by the {@link ApplicationPortlet} (Portlet 1.0) based on
-     * {@link ApplicationPortlet.PORTLET_PARAMETER_WIDGETSET} and read by
-     * {@link AbstractApplicationServlet}.
-     */
-    public static final String REQUEST_WIDGETSET = ApplicationServlet.class
-            .getName() + ".widgetset";
-    /**
-     * This request attribute indicates the shared widgetset (e.g. portal-wide
-     * default widgetset).
-     * 
-     * It is set by the {@link ApplicationPortlet} (Portlet 1.0) based on
-     * {@link Constants.PORTAL_PARAMETER_VAADIN_WIDGETSET} and read by
-     * {@link AbstractApplicationServlet}.
-     */
-    public static final String REQUEST_SHARED_WIDGETSET = ApplicationServlet.class
-            .getName() + ".sharedWidgetset";
-    /**
-     * If set, do not load the default theme but assume that loading it is
-     * handled e.g. by ApplicationPortlet.
-     * 
-     * It is set by the {@link ApplicationPortlet} (Portlet 1.0) based on
-     * {@link Constants.PORTAL_PARAMETER_VAADIN_THEME} and read by
-     * {@link AbstractApplicationServlet}.
-     */
-    public static final String REQUEST_DEFAULT_THEME = ApplicationServlet.class
-            .getName() + ".defaultThemeUri";
-    /**
-     * This request attribute is used to add styles to the main element. E.g
-     * "height:500px" generates a style="height:500px" to the main element,
-     * useful from some embedding situations (e.g portlet include.)
-     * 
-     * It is typically set by the {@link ApplicationPortlet} (Portlet 1.0) based
-     * on {@link ApplicationPortlet.PORTLET_PARAMETER_STYLE} and read by
-     * {@link AbstractApplicationServlet}.
-     */
-    public static final String REQUEST_APPSTYLE = ApplicationServlet.class
-            .getName() + ".style";
-
     private Properties applicationProperties;
 
     private boolean productionMode = false;
@@ -938,14 +877,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
         if (themeName == null) {
             // no explicit theme for root defined
-            if (request.getAttribute(REQUEST_DEFAULT_THEME) != null) {
-                // the default theme is defined in request (by portal)
-                themeName = (String) request
-                        .getAttribute(REQUEST_DEFAULT_THEME);
-            } else {
-                // using the default theme defined by Vaadin
-                themeName = getDefaultTheme();
-            }
+            // using the default theme defined by Vaadin
+            themeName = getDefaultTheme();
         }
 
         // XSS preventation, theme names shouldn't contain special chars anyway.
@@ -1458,15 +1391,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      */
     protected String getStaticFilesLocation(HttpServletRequest request) {
 
-        // request may have an attribute explicitly telling location (portal
-        // case)
-        String staticFileLocation = (String) request
-                .getAttribute(REQUEST_VAADIN_STATIC_FILE_PATH);
-        if (staticFileLocation != null) {
-            // TODO remove trailing slash if any?
-            return staticFileLocation;
-        }
-
         return getWebApplicationsStaticFileLocation(request);
     }
 
@@ -1565,7 +1489,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * <li>
      * {@link #writeAjaxPageHtmlVaadinScripts(Root, String, Application, BufferedWriter, String, String, String, HttpServletRequest)}
      * <li>
-     * {@link #writeAjaxPageHtmlMainDiv(BufferedWriter, String, String, String, HttpServletRequest)}
+     * {@link #writeAjaxPageHtmlMainDiv(BufferedWriter, String, String, HttpServletRequest)}
      * <li> {@link #writeAjaxPageHtmlBodyEnd(BufferedWriter)}
      * </ul>
      * 
@@ -1588,14 +1512,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             HttpServletResponse response, Root root, Application application)
             throws IOException, MalformedURLException, ServletException {
 
-        // e.g portlets only want a html fragment
-        boolean fragment = (request.getAttribute(REQUEST_FRAGMENT) != null);
-        if (fragment) {
-            // if this is a fragment request, the actual application is put to
-            // request so ApplicationPortlet can save it for a later use
-            request.setAttribute(Application.class.getName(), application);
-        }
-
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getOutputStream(), "UTF-8"));
 
@@ -1614,12 +1530,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
         String themeUri = getThemeUri(themeName, request);
 
-        if (!fragment) {
-            setAjaxPageHeaders(response);
-            writeAjaxPageHtmlHeadStart(page, request);
-            writeAjaxPageHtmlHeader(page, title, themeUri, request);
-            writeAjaxPageHtmlBodyStart(page, request);
-        }
+        setAjaxPageHeaders(response);
+        writeAjaxPageHtmlHeadStart(page, request);
+        writeAjaxPageHtmlHeader(page, title, themeUri, request);
+        writeAjaxPageHtmlBodyStart(page, request);
 
         String appId = appUrl;
         if ("".equals(appUrl)) {
@@ -1656,17 +1570,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
         String classNames = "v-app " + themeClass + " " + appClass;
 
-        String divStyle = null;
-        if (request.getAttribute(REQUEST_APPSTYLE) != null) {
-            divStyle = "style=\"" + request.getAttribute(REQUEST_APPSTYLE)
-                    + "\"";
-        }
+        writeAjaxPageHtmlMainDiv(page, appId, classNames, request);
 
-        writeAjaxPageHtmlMainDiv(page, appId, classNames, divStyle, request);
-
-        if (!fragment) {
-            page.write("</body>\n</html>\n");
-        }
+        page.write("</body>\n</html>\n");
 
         page.close();
 
@@ -1701,20 +1607,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @return
      */
     private String getThemeUri(String themeName, HttpServletRequest request) {
-        final String staticFilePath;
-        if (themeName.equals(request.getAttribute(REQUEST_DEFAULT_THEME))) {
-            // our window theme is the portal wide default theme, make it load
-            // from portals directory is defined
-            staticFilePath = getStaticFilesLocation(request);
-        } else {
-            /*
-             * theme is a custom theme, which is not necessarily located in
-             * portals VAADIN directory. Let the default servlet conf decide
-             * (omitting request parameter) the location. Note that theme can
-             * still be placed to portal directory with servlet parameter.
-             */
-            staticFilePath = getWebApplicationsStaticFileLocation(request);
-        }
+        final String staticFilePath = getWebApplicationsStaticFileLocation(request);
         return staticFilePath + "/" + THEME_DIRECTORY_PATH + themeName;
     }
 
@@ -1729,15 +1622,13 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @param page
      * @param appId
      * @param classNames
-     * @param divStyle
      * @param request
      * @throws IOException
      */
     protected void writeAjaxPageHtmlMainDiv(final BufferedWriter page,
-            String appId, String classNames, String divStyle,
-            HttpServletRequest request) throws IOException {
-        page.write("<div id=\"" + appId + "\" class=\"" + classNames + "\" "
-                + (divStyle != null ? divStyle : "") + ">");
+            String appId, String classNames, HttpServletRequest request)
+            throws IOException {
+        page.write("<div id=\"" + appId + "\" class=\"" + classNames + "\">");
         page.write("<div class=\"v-app-loading\"></div>");
         page.write("</div>\n");
         page.write("<noscript>" + getNoScriptMessage() + "</noscript>");
@@ -1767,28 +1658,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             String appId, HttpServletRequest request, int rootId)
             throws ServletException, IOException {
 
-        // request widgetset takes precedence (e.g portlet include)
-        String requestWidgetset = (String) request
-                .getAttribute(REQUEST_WIDGETSET);
-        String sharedWidgetset = (String) request
-                .getAttribute(REQUEST_SHARED_WIDGETSET);
-        if (requestWidgetset == null && sharedWidgetset == null) {
-            // Use the value from configuration or DEFAULT_WIDGETSET.
-            // If no shared widgetset is specified, the default widgetset is
-            // assumed to be in the servlet/portlet itself.
-            requestWidgetset = getApplicationOrSystemProperty(
-                    PARAMETER_WIDGETSET, DEFAULT_WIDGETSET);
-        }
-
-        String widgetset;
-        String widgetsetBasePath;
-        if (requestWidgetset != null) {
-            widgetset = requestWidgetset;
-            widgetsetBasePath = getWebApplicationsStaticFileLocation(request);
-        } else {
-            widgetset = sharedWidgetset;
-            widgetsetBasePath = getStaticFilesLocation(request);
-        }
+        String widgetset = getApplicationOrSystemProperty(PARAMETER_WIDGETSET,
+                DEFAULT_WIDGETSET);
+        String widgetsetBasePath = getWebApplicationsStaticFileLocation(request);
 
         widgetset = stripSpecialChars(widgetset);
 

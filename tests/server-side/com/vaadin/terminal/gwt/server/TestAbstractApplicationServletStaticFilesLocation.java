@@ -17,9 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import junit.framework.TestCase;
 
-import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
-import com.vaadin.terminal.gwt.server.ApplicationServlet;
-
 public class TestAbstractApplicationServletStaticFilesLocation extends TestCase {
 
     ApplicationServlet servlet;
@@ -147,9 +144,6 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
                 .andReturn(realContextPath).anyTimes();
         expect(request.getAttribute("javax.servlet.include.servlet_path"))
                 .andReturn(realServletPath).anyTimes();
-        expect(
-                request.getAttribute(AbstractApplicationServlet.REQUEST_VAADIN_STATIC_FILE_PATH))
-                .andReturn(null).anyTimes();
 
         return request;
     }
@@ -162,9 +156,6 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
         expect(request.getAttribute("javax.servlet.include.context_path"))
                 .andReturn(null).anyTimes();
         expect(request.getAttribute("javax.servlet.include.servlet_path"))
-                .andReturn(null).anyTimes();
-        expect(
-                request.getAttribute(ApplicationServlet.REQUEST_VAADIN_STATIC_FILE_PATH))
                 .andReturn(null).anyTimes();
 
         return request;
