@@ -1099,9 +1099,9 @@ public class VWindow extends VOverlay implements Container,
      *               the browser to compute it based on the window contents. 
      */
     public void setHeight(String height) {
-        if (!isAttached() || 
-                (height == null && this.height == null) ||
-                height.equals(this.height)) {
+        if (!isAttached() || (height == null 
+                ? this.height == null 
+                : height.equals(this.height))) {
             return;
         }
         if (height == null || "".equals(height)) {
