@@ -34,20 +34,10 @@
 /WebContent/VAADIN/themes/runo/common/img/ajax-loader-yellow.gif
 
 # /WebContent/VAADIN/widgetsets/
-/WebContent/VAADIN/widgetsets/com.itmill.toolkit.demo.reservation.gwt.WidgetSet
 /WebContent/VAADIN/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet
-/WebContent/VAADIN/widgetsets/com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet
-/WebContent/VAADIN/widgetsets/com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet
-/WebContent/VAADIN/widgetsets/com.itmill.toolkit.demo.sampler.gwt.SamplerWidgetSet
 /WebContent/VAADIN/widgetsets/.gwt-tmp
-/WebContent/VAADIN/widgetsets/com.itmill.toolkit.demo.coverflow.gwt.CoverflowWidgetSet
-/WebContent/VAADIN/widgetsets/com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet
-/WebContent/VAADIN/widgetsets/com.vaadin.demo.reservation.gwt.ReservationWidgetSet
 /WebContent/VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet
-/WebContent/VAADIN/widgetsets/com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet
-/WebContent/VAADIN/widgetsets/com.vaadin.demo.sampler.gwt.SamplerWidgetSet
 /WebContent/VAADIN/widgetsets/com.vaadin.portal.gwt.PortalDefaultWidgetSet
-/WebContent/VAADIN/widgetsets/com.vaadin.demo.gwt.OptimizedWidgetSet
 /WebContent/VAADIN/gwt-unitCache*
 
 # /WebContent/WEB-INF/
