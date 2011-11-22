@@ -225,14 +225,6 @@ public class Root extends AbstractComponentContainer implements
         return Collections.singleton((Component) getContent()).iterator();
     }
 
-    public Terminal getTerminal() {
-        return terminal;
-    }
-
-    public void setTerminal(Terminal terminal) {
-        this.terminal = terminal;
-    }
-
     public void registerRoot(Application application, int rootId) {
         if (application == null) {
             throw new NullPointerException("application");

@@ -546,11 +546,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 throw new ServletException(ERROR_NO_WINDOW_FOUND);
             }
 
-            // Sets terminal type for the root, if not already set
-            if (root.getTerminal() == null) {
-                root.setTerminal(webApplicationContext.getBrowser());
-            }
-
             // Send initial AJAX page that kickstarts a Vaadin application
             writeAjaxPage(request, response, root, application);
 

@@ -570,21 +570,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             throw new PortletException(ERROR_NO_WINDOW_FOUND);
         }
 
-        /*
-         * Sets terminal type for the window, if not already set
-         */
-        if (root.getTerminal() == null) {
-            root.setTerminal(applicationContext.getBrowser());
-        }
-
-        /*
-         * Handle parameters
-         */
-        // final Map<String, String[]> parameters = request.getParameterMap();
-        // if (root != null && parameters != null) {
-        // root.handleParameters(parameters);
-        // }
-
         if (requestType == RequestType.APPLICATION_RESOURCE) {
             if (!applicationManager.handleApplicationRequest(request, response)) {
                 response.setStatus(404);
