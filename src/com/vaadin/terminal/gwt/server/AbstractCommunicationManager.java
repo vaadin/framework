@@ -41,6 +41,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.servlet.ServletException;
+
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
 import com.vaadin.terminal.PaintException;
@@ -90,6 +92,27 @@ public abstract class AbstractCommunicationManager implements
             .getLogger(AbstractCommunicationManager.class.getName());
 
     private static final RequestHandler APP_RESOURCE_HANDLER = new ApplicationResourceHandler();
+    private static final RequestHandler AJAX_PAGE_HANDLER = new AjaxPageHandler() {
+
+        @Override
+        protected void writeAjaxPage(WrappedRequest request,
+                WrappedResponse response, Root root) throws IOException {
+            {
+                WrappedHttpServletRequest wrappedServletRequest = (WrappedHttpServletRequest) request;
+                try {
+                    wrappedServletRequest.getServlet().writeAjaxPage(
+                            wrappedServletRequest.getHttpServletRequest(),
+                            ((WrappedHttpServletResponse) response)
+                                    .getHttpServletResponse(), root,
+                            root.getApplication());
+                } catch (ServletException e) {
+                    logger.log(Level.WARNING, e.getLocalizedMessage(), e);
+                    writeError(response, e);
+                }
+            }
+        }
+
+    };
 
     /**
      * TODO Document me!
@@ -184,6 +207,7 @@ public abstract class AbstractCommunicationManager implements
      */
     public AbstractCommunicationManager(Application application) {
         this.application = application;
+        application.addRequestHandler(AJAX_PAGE_HANDLER);
         application.addRequestHandler(APP_RESOURCE_HANDLER);
         requireLocale(application.getLocale().toString());
     }
@@ -1634,9 +1658,6 @@ public abstract class AbstractCommunicationManager implements
             if (rootIdString != null) {
                 int rootId = Integer.parseInt(rootIdString);
                 root = application.getRootById(rootId);
-            }
-            if (root == null) {
-                root = application.getRoot(request);
             }
         }
 

@@ -87,4 +87,8 @@ public class WrappedHttpServletRequest implements WrappedRequest {
     public String getContentType() {
         return request.getContentType();
     }
+
+    public AbstractApplicationServlet getServlet() {
+        return servlet;
+    }
 }

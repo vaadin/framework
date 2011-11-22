@@ -521,6 +521,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 // Handles AJAX UIDL requests
                 Root root = applicationManager.getApplicationRoot(
                         wrappedRequest, application);
+                if (root == null) {
+                    throw new ServletException(ERROR_NO_WINDOW_FOUND);
+                }
                 applicationManager.handleUidlRequest(wrappedRequest,
                         wrappedResponse, servletWrapper, root);
                 return;
@@ -538,16 +541,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 return;
             }
             // TODO Should return 404 error here and not do anything more
-
-            // Finds the root within the application
-            Root root = applicationManager.getApplicationRoot(wrappedRequest,
-                    application);
-            if (root == null) {
-                throw new ServletException(ERROR_NO_WINDOW_FOUND);
-            }
-
-            // Send initial AJAX page that kickstarts a Vaadin application
-            writeAjaxPage(request, response, root, application);
 
         } catch (final SessionExpiredException e) {
             // Session has expired, notify user
