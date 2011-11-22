@@ -122,6 +122,9 @@ public class CheckBox extends AbstractField {
      */
     @Deprecated
     public boolean booleanValue() {
+        // FIXME: How should null really be handled? A default converter that
+        // converts it to false? The only UI values supported are true and
+        // false.
         Boolean value = (Boolean) getValue();
         return (null == value) ? false : value.booleanValue();
     }
