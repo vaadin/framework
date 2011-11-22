@@ -57,7 +57,7 @@ public class NotificationsHtmlAllowed extends TestBase implements ClickListener 
     public void buttonClick(ClickEvent event) {
         Notification n = makeNotification();
         Window window;
-        if (showInSubwindow.booleanValue()) {
+        if ((Boolean) showInSubwindow.getValue()) {
             window = subwindow;
         } else {
             window = event.getButton().getWindow();
@@ -70,7 +70,7 @@ public class NotificationsHtmlAllowed extends TestBase implements ClickListener 
         Notification n = new Notification((String) captionField.getValue(),
                 (String) messageField.getValue(),
                 Notification.TYPE_HUMANIZED_MESSAGE,
-                htmlAllowedBox.booleanValue());
+                (Boolean) htmlAllowedBox.getValue());
         return n;
     }
 }

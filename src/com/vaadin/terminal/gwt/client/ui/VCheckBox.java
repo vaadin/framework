@@ -26,6 +26,8 @@ import com.vaadin.terminal.gwt.client.VTooltip;
 public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
         Paintable, Field, FocusHandler, BlurHandler {
 
+    public static final String VARIABLE_STATE = "state";
+
     public static final String CLASSNAME = "v-checkbox";
 
     String id;
@@ -55,7 +57,7 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
                         event.getNativeEvent(), getElement());
                 client.updateVariable(id, "mousedetails", details.serialize(),
                         false);
-                client.updateVariable(id, "state", getValue(), immediate);
+                client.updateVariable(id, VARIABLE_STATE, getValue(), immediate);
             }
 
         });
@@ -119,7 +121,7 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
         // Set text
         setText(uidl.getStringAttribute("caption"));
-        setValue(uidl.getBooleanVariable("state"));
+        setValue(uidl.getBooleanVariable(VARIABLE_STATE));
         immediate = uidl.getBooleanAttribute("immediate");
     }
 

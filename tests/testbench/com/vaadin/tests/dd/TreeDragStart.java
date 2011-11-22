@@ -48,7 +48,7 @@ public class TreeDragStart extends TestBase {
         checkBox.setValue(true);
         checkBox.addListener(new ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                if (((CheckBox) event.getProperty()).booleanValue()) {
+                if ((Boolean) ((CheckBox) event.getProperty()).getValue()) {
                     tree.setDragMode(TreeDragMode.NODE);
                 } else {
                     tree.setDragMode(TreeDragMode.NONE);

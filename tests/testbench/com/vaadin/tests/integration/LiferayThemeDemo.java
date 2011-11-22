@@ -5,15 +5,17 @@ import java.util.Iterator;
 import java.util.Locale;
 
 import com.vaadin.Application;
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.Action;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
@@ -139,7 +141,7 @@ public class LiferayThemeDemo extends Application {
         l.setMargin(true);
         l.setSpacing(true);
 
-        Button b = new Button("Normal Button");
+        AbstractComponent b = new Button("Normal Button");
         b.setDescription("This is a tooltip!");
         l.addComponent(b);
 
@@ -310,12 +312,15 @@ public class LiferayThemeDemo extends Application {
             }
         }
 
-        closable.addListener(new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
+        closable.addListener(new Property.ValueChangeListener() {
+
+            @Override
+            public void valueChange(ValueChangeEvent event) {
                 Iterator<Component> it = ts.getComponentIterator();
                 for (; it.hasNext();) {
                     Component c = it.next();
-                    ts.getTab(c).setClosable(event.getButton().booleanValue());
+                    ts.getTab(c).setClosable(
+                            (Boolean) event.getProperty().getValue());
                 }
             }
         });
@@ -462,12 +467,14 @@ public class LiferayThemeDemo extends Application {
         sp3.setSecondComponent(sp4);
         l.addComponent(sp3);
 
-        lockCheckBox.addListener(new ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                sp.setLocked(event.getButton().booleanValue());
-                sp2.setLocked(event.getButton().booleanValue());
-                sp3.setLocked(event.getButton().booleanValue());
-                sp4.setLocked(event.getButton().booleanValue());
+        lockCheckBox.addListener(new Property.ValueChangeListener() {
+
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                sp.setLocked((Boolean) event.getProperty().getValue());
+                sp2.setLocked((Boolean) event.getProperty().getValue());
+                sp3.setLocked((Boolean) event.getProperty().getValue());
+                sp4.setLocked((Boolean) event.getProperty().getValue());
             }
         });
 

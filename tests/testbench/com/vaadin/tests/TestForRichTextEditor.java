@@ -4,10 +4,10 @@
 
 package com.vaadin.tests;
 
+import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
@@ -50,8 +50,10 @@ public class TestForRichTextEditor extends CustomComponent implements
 
         CheckBox b = new CheckBox("enabled");
         b.setImmediate(true);
-        b.addListener(new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
+        b.addListener(new Property.ValueChangeListener() {
+
+            @Override
+            public void valueChange(ValueChangeEvent event) {
                 rte.setEnabled(!rte.isEnabled());
             }
         });

@@ -51,7 +51,7 @@ public class Ticket2107 extends Application {
         b.setImmediate(true);
         b.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                tf.setRequiredError(b.booleanValue() ? "Field must not be empty"
+                tf.setRequiredError((Boolean) b.getValue() ? "Field must not be empty"
                         : null);
             }
         });

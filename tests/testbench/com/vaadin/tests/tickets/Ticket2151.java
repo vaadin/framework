@@ -2,6 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -45,9 +46,9 @@ public class Ticket2151 extends Application {
 
     }
 
-    private void check(Class<? extends Button> class1) {
+    private void check(Class<? extends AbstractField> class1) {
         boolean ok = false;
-        Button b;
+        AbstractField b;
         try {
             b = class1.newInstance();
             b.setCaption("Button of type " + class1.getSimpleName());
@@ -74,9 +75,9 @@ public class Ticket2151 extends Application {
 
     }
 
-    private void checkDataBinding(Class<? extends Button> class1) {
+    private void checkDataBinding(Class<? extends AbstractField> class1) {
         boolean ok = false;
-        Button b;
+        AbstractField b;
         try {
             b = class1.newInstance();
             b.setCaption("Button of type " + class1.getSimpleName());

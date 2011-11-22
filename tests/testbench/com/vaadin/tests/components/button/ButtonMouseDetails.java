@@ -3,7 +3,6 @@ package com.vaadin.tests.components.button;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 
 public class ButtonMouseDetails extends TestBase {
@@ -45,10 +44,6 @@ public class ButtonMouseDetails extends TestBase {
         Button button = new Button("CLICK ME!", clickListener);
         button.setImmediate(true);
         addComponent(button);
-
-        CheckBox cb = new CheckBox("CHECK ME!", clickListener);
-        cb.setImmediate(true);
-        addComponent(cb);
 
         addComponent(out);
     }
