@@ -32,4 +32,6 @@ public interface WrappedResponse extends Serializable {
      */
     public void setCacheTime(long milliseconds);
 
+    public void sendError(int errorCode, String message) throws IOException;
+
 }

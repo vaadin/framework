@@ -64,4 +64,9 @@ public class WrappedPortletResponse implements WrappedResponse {
     public void setCacheTime(long milliseconds) {
         WrappedHttpServletResponse.doSetCacheTime(this, milliseconds);
     }
+
+    public void sendError(int errorCode, String message) throws IOException {
+        setStatus(errorCode);
+        getWriter().write(message);
+    }
 }

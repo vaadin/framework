@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletResponse;
+
 import com.vaadin.Application;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.DownloadStream;
@@ -40,6 +42,11 @@ public class ApplicationResourceHandler implements RequestHandler {
                     return true;
                 }
             }
+            // We get here if the url looks like an application resource but no
+            // resource can be served
+            response.sendError(HttpServletResponse.SC_NOT_FOUND,
+                    request.getRequestPathInfo() + " can not be found");
+            return true;
         }
 
         return false;

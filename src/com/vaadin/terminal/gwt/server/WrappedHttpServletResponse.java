@@ -72,4 +72,8 @@ public class WrappedHttpServletResponse implements WrappedResponse {
     public void setDateHeader(String name, long timestamp) {
         response.setDateHeader(name, timestamp);
     }
+
+    public void sendError(int errorCode, String message) throws IOException {
+        response.sendError(errorCode, message);
+    }
 }
