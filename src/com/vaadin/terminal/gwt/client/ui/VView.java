@@ -216,7 +216,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
         clickEventHandler.handleEventHandlerRegistration(client);
 
-        if (!isEmbedded()) {
+        if (!isEmbedded() && uidl.hasAttribute("caption")) {
             // only change window title if we're in charge of the whole page
             com.google.gwt.user.client.Window.setTitle(uidl
                     .getStringAttribute("caption"));
