@@ -38,8 +38,8 @@ public abstract class AjaxPageHandler implements RequestHandler {
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getOutputStream(), "UTF-8"));
 
-        String title = ((root.getCaption() == null) ? "Vaadin 6" : root
-                .getCaption());
+        String title = ((root.getCaption() == null) ? "Vaadin "
+                + AbstractApplicationServlet.VERSION_MAJOR : root.getCaption());
 
         /* Fetch relative url to application */
         // don't use server and port in uri. It may cause problems with some
