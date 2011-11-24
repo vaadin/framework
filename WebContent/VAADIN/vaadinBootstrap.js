@@ -90,6 +90,11 @@
 				}
 			}
 			
+			if (getConfig("debug")) {
+				// TODO debug state is now global for the entire page, but should somehow only be set for the current application  
+				window.vaadin.debug = true;
+			}
+			
 			//Export public data
 			var app = {
 				'getConfig': getConfig
