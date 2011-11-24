@@ -81,6 +81,7 @@ public class VTreeTable extends VScrollTable {
         colIndexOfHierarchy = uidl
                 .hasAttribute(ATTRIBUTE_HIERARCHY_COLUMN_INDEX) ? uidl
                 .getIntAttribute(ATTRIBUTE_HIERARCHY_COLUMN_INDEX) : 0;
+        int oldTotalRows = getTotalRows();
         super.updateFromUIDL(uidl, client);
         if (collapseRequest) {
             if (collapsedRowKey != null && scrollBody != null) {
@@ -96,15 +97,19 @@ public class VTreeTable extends VScrollTable {
                 widget.setScrollPosition(scrollPosition);
             }
 
-            /*
-             * Triggers row calculations, removes cached rows etc. Basically
-             * cleans up state. Be careful if touching this, you will brake
-             * pageLength=0 if you remove this.
-             */
+            // check which rows are needed from the server and initiate a
+            // deferred fetch
             onScroll(null);
-
+        }
+        // Recalculate table size if collapse request, or if page length is zero
+        // (not sent by server) and row count changes (#7908).
+        if (collapseRequest
+                || (!uidl.hasAttribute("pagelength") && getTotalRows() != oldTotalRows)) {
             /*
              * Ensure that possibly removed/added scrollbars are considered.
+             * Triggers row calculations, removes cached rows etc. Basically
+             * cleans up state. Be careful if touching this, you will break
+             * pageLength=0 if you remove this.
              */
             triggerLazyColumnAdjustment(true);
 
