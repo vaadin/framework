@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivysettings>
+    <settings defaultResolver="public" />
+    <resolvers>
+		  <ibiblio name="public" m2compatible="true"/>        
+        <url name="gwt-redist">            
+            <artifact pattern="http://google-web-toolkit.googlecode.com/svn/tools/redist/[organisation]/[artifact](-[revision]).[ext]" />
+        </url>       
+    </resolvers>     
+    <modules>
+        <!-- GWT patched Emma -->
+        <module organisation="emma" name="emma" resolver="gwt-redist"/>
+    </modules>    
+</ivysettings>

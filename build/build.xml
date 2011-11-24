@@ -2,6 +2,7 @@
 
 <project xmlns:antcontrib="antlib:net.sf.antcontrib"
          xmlns:artifact="antlib:org.apache.maven.artifact.ant"
+         xmlns:ivy="antlib:org.apache.ivy.ant"
          name="Vaadin"
          basedir="../" default="package-all">
 
@@ -17,32 +18,57 @@
 
     <target name="package-liferay-zip" depends="clean-result, init, build, internal-package-liferay">
     </target>
-
-    <!-- Locations of Ant task JARs - build properties not yet read at this point -->
-    <property name="ant.task.jar.antcontrib" value="build/lib/ant-contrib-1.0b3.jar" />
-    <property name="ant.task.jar.maven" value="build/lib/maven-ant-tasks-2.0.10.jar" />
 	
-	<path id="emma.lib" >
-		<pathelement location="build/lib/emma_ant.jar" />
-		<pathelement location="build/lib/emma-2.0.5312-patched.jar" />
-	</path>
+    <property name="ivy.install.version" value="2.2.0"/>
+    <property name="ivy.jar.name" value="ivy-${ivy.install.version}.jar"/>
+    <property name="ivy.jar.dir" value="${user.home}/.ant/lib" />
+    <property name="ivy.jar.file" value="${ivy.jar.dir}/${ivy.jar.name}" />
+    
+    <target name="check-ivy-installed">
+   	    <available property="ivy.installed" file="${ivy.jar.file}"/>
+   	    <available property="ivy.installed" classname="org.apache.ivy.ant.IvyConfigure"  /> 
+   	    <antcall target="ivy-download" />
+   	</target>
+
+    <target name="ivy-download" unless="ivy.installed">
+        <mkdir dir="${ivy.jar.dir}"/>
+        <get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true"/>
+    </target>
+
+    <target name="ivy-configure" depends="check-ivy-installed">
+    	 <!-- Ivy task definitions -->
+    	<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ivy.jar.file}" />
+	    <!--  Ivy module descriptors -->
+	    <property name="ivy.dep.file" value="build/ivy/ivy.xml" />
+	    <!-- Ivy settings -->
+	    <property name="ivy.settings.file" value="build/ivy/ivysettings.xml" />
+    	<ivy:configure />
+	</target>
 	
-	<taskdef resource="emma_ant.properties" classpathref="emma.lib" />	
-
-    <!-- ant contrib required for flow control (for loop, if, property override)   -->
-    <!-- Note that we have to use a namespace to avoid clash when running sub-ant. -->
-    <taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml">
-        <classpath>
-            <pathelement location="${ant.task.jar.antcontrib}" />
-        </classpath>
-    </taskdef>
-
-    <!-- ant contrib for Maven integration -->
-    <path id="maven-ant-tasks.classpath" path="${ant.task.jar.maven}" />
-    <typedef resource="org/apache/maven/artifact/ant/antlib.xml"
-             uri="antlib:org.apache.maven.artifact.ant"
-             classpathref="maven-ant-tasks.classpath" />
-
+    <target name="ivy-resolve" depends="ivy-configure">
+    	<ivy:resolve />
+      	<ivy:cachepath pathid="compile.classpath" conf="compile"/>	   
+      	<ivy:cachepath pathid="client-side.compile.classpath" conf="client-side.compile"/>	   
+      	<ivy:cachepath pathid="test.runtime.classpath" conf="test.runtime"/>	   
+      	<ivy:cachepath pathid="taskdefs.classpath" conf="ant-tasks"/>	   	   
+    </target>
+	
+	<target name="init-taskdefs" depends="ivy-resolve">
+		<echo>Loading Ant tasks</echo>
+		
+		<taskdef resource="emma_ant.properties" classpathref="taskdefs.classpath" />	
+		
+	    <!-- ant contrib required for flow control (for loop, if, property override)   -->
+	    <!-- Note that we have to use a namespace to avoid clash when running sub-ant. -->
+		<taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml"
+			classpathref="taskdefs.classpath" />
+		
+		<!-- ant contrib for Maven integration -->	  
+	    <taskdef resource="org/apache/maven/artifact/ant/antlib.xml"
+	             uri="antlib:org.apache.maven.artifact.ant" classpathref="taskdefs.classpath" />        
+	</target>
+  
+   
     <!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <target name="clean-result" depends="">
         <property file="build/build.properties" />
@@ -74,7 +100,7 @@
     <!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- ================================================================== -->
 
-    <target name="init">
+     <target name="init" depends="init-taskdefs">
         <!-- Current timestamp in different formats. -->
         <tstamp>
             <format property="build.date" pattern="yyyy-MM-dd"/>
@@ -141,29 +167,6 @@
         <mkdir dir="${output-dir}/WebContent/WEB-INF" />
         <mkdir dir="${output-dir}/WebContent/WEB-INF/lib" />
         <mkdir dir="${output-dir}/WebContent/WEB-INF/classes" />
-
-        <!-- Construct classpath used by java and javadoc compilation -->
-        <path id="compile.classpath">
-            <pathelement path="build/lib/servlet.jar" />
-            <fileset dir="lib/core">
-                <include name="**/*.jar"/>
-                
-                <!-- Exclude these as they contain Servlet API 2.4. -->
-                <!-- The gwt-*-noservlet.jar are then used instead. -->
-                <exclude name="**/servlet-api*.jar"/>
-            </fileset>
-            <fileset dir="lib/tests">
-                    <include name="**/*.jar"/>
-            </fileset>
-        </path>
-        <path id="compile.classpath.server-side">
-            <path refid="compile.classpath"/>
-        </path>
-        <path id="compile.classpath.client-side">
-            <path refid="compile.classpath"/>
-            <pathelement path="${lib-gwt-user}" />
-            <pathelement path="${lib-gwt-dev}" />
-        </path>
     </target>
 
     <target name="internal-package-war">
@@ -357,14 +360,9 @@
     <target name="webcontent" depends="preprocess-src,defaulttheme">
 
         <!-- copy 3rd part libraries used by tests -->
-        <copy todir="${output-dir}/WebContent/tests/lib">
-            <fileset dir="lib/core">
-                <include name="jetty/**/*" />
-            </fileset>
-        	<fileset dir="build/lib">
-        		<include name="emma-2.0.5312-patched.jar" />
-        	</fileset>
-        </copy>
+    	<ivy:retrieve pattern="${output-dir}/WebContent/tests/lib/[artifact]-[revision].[ext]" conf="jetty"/>
+    	<ivy:retrieve pattern="${output-dir}/WebContent/tests/lib/[artifact]-[revision].[ext]" 
+    		organisation="emma"  module="emma" revision="2.0.5312-patched" inline="true" />
 
         <!-- Add WebContent -->
         <echo>Adding VAADIN/themes, demo and hsqldb.jar files.</echo>
@@ -420,7 +418,11 @@
         
         <!-- Compile all sources at the same time as they depend on each other -->
         <mkdir dir="${result-path}/classes" />
-        <javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-path}/classes" debug="true" encoding="UTF-8">
+        <javac source="1.5" target="1.5" includeantruntime="false" destdir="${result-path}/classes" debug="true" encoding="UTF-8">
+         	<classpath>
+        		<path refid="compile.classpath" />
+        		<path refid="test.runtime.classpath" />
+			</classpath>        	               
              <src path="${result-path}/src/core"/>
              <src path="${result-path}/src/tests"/>
              <src path="${result-path}/src/junit"/>
@@ -428,7 +430,7 @@
     </target>
 
     <target name="compile-helpers" depends="init">
-        <javac source="1.5" target="1.5" srcdir="build/buildhelpers" classpath="build/smartsprites/lib/smartsprites-0.2.3-itmill.jar"/>
+        <javac source="1.5" target="1.5" includeantruntime="false" srcdir="build/buildhelpers" classpath="build/smartsprites/lib/smartsprites-0.2.3-itmill.jar"/>
     </target>
     
     <target name="defaulttheme" depends="init, compile-helpers">
@@ -473,23 +475,16 @@
 
     <!-- The widgetset generator is currently compiled along with rest of server-side Java. -->    
     <target name="compile-widgetset-generator" depends="init, preprocess-src, compile-java"/>
-
-
-    <path id="widgetset-compile-classpath">
-        <pathelement location="${lib-gwt-user}" />
-        <pathelement location="${lib-gwt-dev}" />
-        <pathelement location="${lib-gwt-validation}" />
-        <pathelement location="${lib-gwt-validation-src}" />
-        <pathelement location="${result-path}/classes" />
-        <pathelement location="${result-path}/src/core" />
-    </path>
     
-    <target name="compile-widgetset" description="Compiles the widgetset given as the first parameter">
+    <target name="compile-widgetset" description="Compiles the widgetset given as the first parameter" depends="ivy-resolve">
         <fail unless="widgetset" message="No widgetset parameter set"/>
         <echo>Compiling widgetset ${widgetset}. Output directory: ${widgetsets-output-dir}</echo>
         <java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
-            <classpath refid="widgetset-compile-classpath"/>
-            
+        	<classpath>
+        		   <path refid="client-side.compile.classpath" />
+        		   <pathelement location="${result-path}/classes" />
+        	       <pathelement location="${result-path}/src/core" />
+            </classpath>            
             <arg value="-war" />
             <arg value="${widgetsets-output-dir}" />
             <arg value="-style" />
@@ -672,7 +667,7 @@
     <target name="javadoc" depends="init, preprocess-src">
         <property name="javadoc.destdir" value="${output-dir}/WebContent/docs/api"/>
         
-        <javadoc destdir="${javadoc.destdir}" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath.client-side">
+        <javadoc destdir="${javadoc.destdir}" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath">
             <packageset dir="${result-path}/src/core">
                 <include name="${toolkit-package}/**" />
             </packageset>
@@ -938,7 +933,7 @@
     </target>
     
     <!-- Assumes java classes have been compiled but depends does not work out well as this is run from a <parallel> task-->
-    <target name="server-side-tests" unless="tests.serverside.skip">
+    <target name="server-side-tests" depends="init-taskdefs" unless="tests.serverside.skip">    	
 		<emma enabled="${emma.enabled}" >
 			<instr instrpath="${result-path}/classes"
 				mode="copy"
@@ -957,9 +952,8 @@
         <junit printsummary="yes"> 
             <classpath> 
                 <pathelement path="${result-path}/junit_emma_classes" />
-                <pathelement path="${result-path}/classes" />
-            	<path refid="emma.lib" />
-                <path refid="compile.classpath"/>
+                <pathelement path="${result-path}/classes" />            	
+            	<path refid="test.runtime.classpath"></path>
             </classpath>
         	<jvmarg value="-Demma.coverage.out.file=../${result-path}/unittests.ec" />
 
@@ -982,7 +976,7 @@
     </target>
 
     <!-- Assumes java classes have been compiled but depends does not work out well as this is run from a <parallel> task-->
-    <target name="testbench-tests" unless="tests.testbench.skip">
+    <target name="testbench-tests" depends="init-taskdefs" unless="tests.testbench.skip">
         <fail unless="product-file" message="The 'product-file' property must be defined."/>
         <fail unless="version" message="The 'version' property must be defined."/>
 
@@ -1034,7 +1028,7 @@
     </target>
 
     <!-- Assumes java classes have been compiled but depends does not work out well as this is run from a <parallel> task-->
-    <target name="integration-tests" unless="tests.integration.skip">
+    <target name="integration-tests" depends="init-taskdefs" unless="tests.integration.skip">
         <!-- Parameters for the test.xml script. -->
         <fail unless="com.vaadin.testbench.tester.host" message="The 'com.vaadin.testbench.tester.host' property must be defined."/>
         <fail unless="com.vaadin.testbench.lib.dir" message="The 'com.vaadin.testbench.lib.dir' property must be defined."/>
