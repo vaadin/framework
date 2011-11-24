@@ -53,9 +53,16 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     @Override
     public void addComponent(Component c) {
-        super.addComponent(c);
+        // Add to components before calling super.addComponent
+        // so that it is available to AttachListeners 
         components.add(c);
-        requestRepaint();
+        try {
+            super.addComponent(c);
+            requestRepaint();
+        } catch (IllegalArgumentException e) {
+            components.remove(c);
+            throw e;
+        }
     }
 
     /**
@@ -66,9 +73,19 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      *            the component to be added.
      */
     public void addComponentAsFirst(Component c) {
-        super.addComponent(c);
+        // If c is already in this, we must remove it before proceeding
+        // see ticket #7668
+        if(c.getParent() == this) {
+            removeComponent(c);
+        }
         components.addFirst(c);
-        requestRepaint();
+        try {
+            super.addComponent(c);
+            requestRepaint();
+        } catch (IllegalArgumentException e) {
+            components.remove(c);
+            throw e;
+        }
     }
 
     /**
@@ -77,18 +94,27 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * @param c
      *            the component to be added.
      * @param index
-     *            the Index of the component position. The components currently
+     *            the index of the component position. The components currently
      *            in and after the position are shifted forwards.
      */
     public void addComponent(Component c, int index) {
-        // if this already contains c, super.addComponent() will remove it
-        // so everything after c's original position shifts one place down
-        if(this == c.getParent() && index > getComponentIndex(c)) {
-            index--;
+        // If c is already in this, we must remove it before proceeding
+        // see ticket #7668
+        if(c.getParent() == this) {
+            // When c is removed, all components after it are shifted down
+            if(index > getComponentIndex(c)) {
+                index--;
+            }
+            removeComponent(c);
         }
-        super.addComponent(c);
         components.add(index, c);
-        requestRepaint();
+        try {
+            super.addComponent(c);
+            requestRepaint();
+        } catch (IllegalArgumentException e) {
+            components.remove(c);
+            throw e;
+        }
     }
 
     /**
