@@ -2712,7 +2712,7 @@ public class Table extends AbstractSelect implements Action.Container,
         rowCacheInvalidated = invalidated;
     }
 
-    private boolean isRowCacheInvalidated() {
+    protected boolean isRowCacheInvalidated() {
         return rowCacheInvalidated;
     }
 
