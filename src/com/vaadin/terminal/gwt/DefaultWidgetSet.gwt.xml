@@ -69,6 +69,9 @@
 	</replace-with>
 
 	<entry-point class="com.vaadin.terminal.gwt.client.ApplicationConfiguration" />
+	
+	<!-- Use the new cross site linker to get a nocache.js without document.write -->
+	<add-linker name="xsiframe" />	
 
 
 </module>

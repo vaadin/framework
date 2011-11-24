@@ -4,9 +4,11 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
+import com.vaadin.external.json.JSONException;
+import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.RequestHandler;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
@@ -23,17 +25,22 @@ public abstract class AjaxPageHandler implements RequestHandler {
         Root root = application.getRoot(request);
 
         if (root == null) {
-            writeError(response, null);
+            writeError(response, new Throwable("No Root found"));
             return true;
         }
 
-        writeAjaxPage(request, response, root);
+        try {
+            writeAjaxPage(request, response, root);
+        } catch (JSONException e) {
+            writeError(response, e);
+        }
 
         return true;
     }
 
     protected final void writeAjaxPage(WrappedRequest request,
-            WrappedResponse response, Root root) throws IOException {
+            WrappedResponse response, Root root) throws IOException,
+            JSONException {
         Application application = root.getApplication();
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getOutputStream(), "UTF-8"));
@@ -71,6 +78,7 @@ public abstract class AjaxPageHandler implements RequestHandler {
         }
         appId = appId + "-" + hashCode;
 
+        // TODO include initial UIDL in the scripts?
         writeAjaxPageHtmlVaadinScripts(themeName, page, appUrl, themeUri,
                 appId, request, root);
 
@@ -177,129 +185,109 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * @param appId
      * @param request
      * @param rootId
-     * @throws ServletException
      * @throws IOException
+     * @throws JSONException
      */
     protected void writeAjaxPageHtmlVaadinScripts(String themeName,
             final BufferedWriter page, String appUrl, String themeUri,
-            String appId, WrappedRequest request, Root root) throws IOException {
+            String appId, WrappedRequest request, Root root)
+            throws IOException, JSONException {
 
         Application application = root.getApplication();
 
-        String widgetset = application.getWidgetsetForRoot(root);
-        if (widgetset == null) {
-            widgetset = getApplicationOrSystemProperty(request,
-                    AbstractApplicationServlet.PARAMETER_WIDGETSET,
-                    AbstractApplicationServlet.DEFAULT_WIDGETSET);
-        }
-        String widgetsetBasePath = request.getStaticFileLocation();
+        String staticFileLocation = request.getStaticFileLocation();
 
-        widgetset = AbstractApplicationServlet.stripSpecialChars(widgetset);
-
-        final String widgetsetFilePath = widgetsetBasePath + "/"
-                + AbstractApplicationServlet.WIDGETSET_DIRECTORY_PATH
-                + widgetset + "/" + widgetset + ".nocache.js?"
-                + System.currentTimeMillis();
+        String widgetsetBase = staticFileLocation + "/"
+                + AbstractApplicationServlet.WIDGETSET_DIRECTORY_PATH;
 
         // Get system messages
         Application.SystemMessages systemMessages = AbstractApplicationServlet
                 .getSystemMessages(application.getClass());
 
+        page.write("<script type=\"text/javascript\" src=\"");
+        page.write(staticFileLocation);
+        page.write("/VAADIN/vaadinBootstrap.js\"></script>\n");
+
         page.write("<script type=\"text/javascript\">\n");
         page.write("//<![CDATA[\n");
-        page.write("if(!vaadin || !vaadin.vaadinConfigurations) {\n "
-                + "if(!vaadin) { var vaadin = {}} \n"
-                + "vaadin.vaadinConfigurations = {};\n"
-                + "if (!vaadin.themesLoaded) { vaadin.themesLoaded = {}; }\n");
-        if (!application.isProductionMode()) {
-            page.write("vaadin.debug = true;\n");
+
+        JSONObject defaults = new JSONObject();
+        JSONObject appConfig = new JSONObject();
+
+        boolean isDebug = !application.isProductionMode();
+        if (isDebug) {
+            defaults.put("debug", true);
         }
+
         page.write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
                 + "style=\"position:absolute;width:0;height:0;border:0;overflow:"
                 + "hidden;\" src=\"javascript:false\"></iframe>');\n");
-        page.write("document.write(\"<script language='javascript' src='"
-                + widgetsetFilePath + "'><\\/script>\");\n}\n");
 
-        page.write("vaadin.vaadinConfigurations[\"" + appId + "\"] = {");
-        page.write("appUri:'" + appUrl + "', ");
+        defaults.put("appUri", appUrl);
 
-        page.write(ApplicationConnection.ROOT_ID_PARAMETER + ": "
-                + root.getRootId() + ", ");
+        appConfig
+                .put(ApplicationConnection.ROOT_ID_PARAMETER, root.getRootId());
 
         if (isStandalone()) {
-            page.write("standalone: true, ");
+            defaults.put("standalone", true);
         }
-        page.write("themeUri:");
-        page.write(themeUri != null ? "\"" + themeUri + "\"" : "null");
-        page.write(", versionInfo : {vaadinVersion:\"");
-        page.write(AbstractApplicationServlet.VERSION);
-        page.write("\",applicationVersion:\"");
-        page.write(JsonPaintTarget.escapeJSON(application.getVersion()));
-        page.write("\"}");
+
+        appConfig.put("themeUri", themeUri);
+
+        JSONObject versionInfo = new JSONObject();
+        versionInfo.put("vaadinVersion", AbstractApplicationServlet.VERSION);
+        versionInfo.put("applicationVersion", application.getVersion());
+        appConfig.put("versionInfo", versionInfo);
+
         if (systemMessages != null) {
             // Write the CommunicationError -message to client
-            String caption = systemMessages.getCommunicationErrorCaption();
-            if (caption != null) {
-                caption = "\"" + JsonPaintTarget.escapeJSON(caption) + "\"";
-            }
-            String message = systemMessages.getCommunicationErrorMessage();
-            if (message != null) {
-                message = "\"" + JsonPaintTarget.escapeJSON(message) + "\"";
-            }
-            String url = systemMessages.getCommunicationErrorURL();
-            if (url != null) {
-                url = "\"" + JsonPaintTarget.escapeJSON(url) + "\"";
-            }
+            JSONObject comErrMsg = new JSONObject();
+            comErrMsg.put("caption",
+                    systemMessages.getCommunicationErrorCaption());
+            comErrMsg.put("message",
+                    systemMessages.getCommunicationErrorMessage());
+            comErrMsg.put("url", systemMessages.getCommunicationErrorURL());
 
-            page.write(",\"comErrMsg\": {" + "\"caption\":" + caption + ","
-                    + "\"message\" : " + message + "," + "\"url\" : " + url
-                    + "}");
+            defaults.put("comErrMsg", comErrMsg);
 
-            // Write the AuthenticationError -message to client
-            caption = systemMessages.getAuthenticationErrorCaption();
-            if (caption != null) {
-                caption = "\"" + JsonPaintTarget.escapeJSON(caption) + "\"";
-            }
-            message = systemMessages.getAuthenticationErrorMessage();
-            if (message != null) {
-                message = "\"" + JsonPaintTarget.escapeJSON(message) + "\"";
-            }
-            url = systemMessages.getAuthenticationErrorURL();
-            if (url != null) {
-                url = "\"" + JsonPaintTarget.escapeJSON(url) + "\"";
-            }
+            JSONObject authErrMsg = new JSONObject();
+            authErrMsg.put("caption",
+                    systemMessages.getAuthenticationErrorCaption());
+            authErrMsg.put("message",
+                    systemMessages.getAuthenticationErrorMessage());
+            authErrMsg.put("url", systemMessages.getAuthenticationErrorURL());
 
-            page.write(",\"authErrMsg\": {" + "\"caption\":" + caption + ","
-                    + "\"message\" : " + message + "," + "\"url\" : " + url
-                    + "}");
-        }
-        page.write("};\n//]]>\n</script>\n");
-
-        if (themeName != null) {
-            // Custom theme's stylesheet, load only once, in different
-            // script
-            // tag to be dominate styles injected by widget
-            // set
-            page.write("<script type=\"text/javascript\">\n");
-            page.write("//<![CDATA[\n");
-            page.write("if(!vaadin.themesLoaded['" + themeName + "']) {\n");
-            page.write("var stylesheet = document.createElement('link');\n");
-            page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
-            page.write("stylesheet.setAttribute('type', 'text/css');\n");
-            page.write("stylesheet.setAttribute('href', '" + themeUri
-                    + "/styles.css');\n");
-            page.write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
-            page.write("vaadin.themesLoaded['" + themeName + "'] = true;\n}\n");
-            page.write("//]]>\n</script>\n");
+            defaults.put("authErrMsg", authErrMsg);
         }
 
-        // Warn if the widgetset has not been loaded after 15 seconds on
-        // inactivity
-        page.write("<script type=\"text/javascript\">\n");
-        page.write("//<![CDATA[\n");
-        page.write("setTimeout('if (typeof " + widgetset.replace('.', '_')
-                + " == \"undefined\") {alert(\"Failed to load the widgetset: "
-                + widgetsetFilePath + "\")};',15000);\n" + "//]]>\n</script>\n");
+        defaults.put("widgetsetBase", widgetsetBase);
+
+        String widgetset = application.getWidgetsetForRoot(root);
+        widgetset = getApplicationOrSystemProperty(request,
+                AbstractApplicationServlet.PARAMETER_WIDGETSET,
+                AbstractApplicationServlet.DEFAULT_WIDGETSET);
+
+        widgetset = AbstractApplicationServlet.stripSpecialChars(widgetset);
+        appConfig.put("widgetset", widgetset);
+
+        page.write("vaadin.setDefaults(");
+        if (isDebug) {
+            page.write(defaults.toString(4));
+        } else {
+            page.write(defaults.toString());
+        }
+        page.write(");\n");
+
+        page.write("vaadin.initApplication(\"");
+        page.write(appId);
+        page.write("\",");
+        if (isDebug) {
+            page.write(appConfig.toString(4));
+        } else {
+            page.write(appConfig.toString());
+        }
+        page.write(");\n");
+        page.write("//]]>\n</script>\n");
     }
 
     protected abstract String getApplicationOrSystemProperty(
@@ -439,8 +427,8 @@ public abstract class AjaxPageHandler implements RequestHandler {
 
     protected void writeError(WrappedResponse response, Throwable e)
             throws IOException {
-        response.setStatus(500);
-        response.getWriter().println("Error");
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                e.getLocalizedMessage());
     }
 
 }

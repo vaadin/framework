@@ -5,7 +5,6 @@ package com.vaadin.terminal.gwt.client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,6 +18,84 @@ import com.google.gwt.user.client.Timer;
 import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
 
 public class ApplicationConfiguration implements EntryPoint {
+
+    private static class JsoConfiguration extends JavaScriptObject {
+        protected JsoConfiguration() {
+            // JSO Constructor
+        }
+
+        private native String getConfigString(String name)
+        /*-{
+            var value = this.getConfig(name);
+            if (!value) {
+                return null;
+            } else {
+                return value +"";
+            } 
+        }-*/;
+
+        private native Boolean getConfigBoolean(String name)
+        /*-{
+            var value = this.getConfig(name);
+            if (value === null || value === undefined) {
+                return null;
+            } else {
+                return @java.lang.Boolean::valueOf(Z)(value);
+            } 
+        }-*/;
+
+        private native Integer getConfigInteger(String name)
+        /*-{
+            var value = this.getConfig(name);
+            if (value === null || value === undefined) {
+                return null;
+            } else {
+                return @java.lang.Integer::valueOf(I)(value);
+            } 
+        }-*/;
+
+        private native ErrorMessage getConfigError(String name)
+        /*-{
+            return this.getConfig(name);
+        }-*/;
+
+        private native JavaScriptObject getVersionInfoJSObject()
+        /*-{
+            return this.getConfig("versionInfo");
+        }-*/;
+
+        private native String getVaadinVersion()
+        /*-{
+            return this.getConfig("versionInfo").vaadinVersion;
+        }-*/;
+
+        private native String getApplicationVersion()
+        /*-{
+            return this.getConfig("versionInfo").applicationVersion;
+        }-*/;
+    }
+
+    public static final class ErrorMessage extends JavaScriptObject {
+
+        protected ErrorMessage() {
+            // JSO constructor
+        }
+
+        public final native String getCaption()
+        /*-{
+            return this.caption;
+        }-*/;
+
+        public final native String getMessage()
+        /*-{
+            return this.message;
+        }-*/;
+
+        public final native String getUrl()
+        /*-{
+            return this.url;
+        }-*/;
+    }
 
     /**
      * Builds number. For example 0-custom_tag in 5.0.0-custom_tag.
@@ -39,16 +116,10 @@ public class ApplicationConfiguration implements EntryPoint {
     private String id;
     private String themeUri;
     private String appUri;
-    private JavaScriptObject versionInfo;
     private int rootId;
     private boolean standalone;
-    private String communicationErrorCaption;
-    private String communicationErrorMessage;
-    private String communicationErrorUrl;
-    private String authorizationErrorCaption;
-    private String authorizationErrorMessage;
-    private String authorizationErrorUrl;
-    private String requiredWidgetset;
+    private ErrorMessage communicationError;
+    private ErrorMessage authorizationError;
     private boolean useDebugIdInDom = true;
     private boolean usePortletURLs = false;
     private String portletUidlURLBase;
@@ -64,7 +135,6 @@ public class ApplicationConfiguration implements EntryPoint {
 
     private static int widgetsLoading;
 
-    private static ArrayList<ApplicationConnection> unstartedApplications = new ArrayList<ApplicationConnection>();
     private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<ApplicationConnection>();
 
     public boolean usePortletURLs() {
@@ -110,131 +180,41 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     public JavaScriptObject getVersionInfoJSObject() {
-        return versionInfo;
+        return getJsoConfiguration(id).getVersionInfoJSObject();
     }
 
-    public String getCommunicationErrorCaption() {
-        return communicationErrorCaption;
+    public ErrorMessage getCommunicationError() {
+        return communicationError;
     }
 
-    public String getCommunicationErrorMessage() {
-        return communicationErrorMessage;
+    public ErrorMessage getAuthorizationError() {
+        return authorizationError;
     }
 
-    public String getCommunicationErrorUrl() {
-        return communicationErrorUrl;
-    }
-
-    public String getAuthorizationErrorCaption() {
-        return authorizationErrorCaption;
-    }
-
-    public String getAuthorizationErrorMessage() {
-        return authorizationErrorMessage;
-    }
-
-    public String getAuthorizationErrorUrl() {
-        return authorizationErrorUrl;
-    }
-
-    public String getRequiredWidgetset() {
-        return requiredWidgetset;
-    }
-
-    private native void loadFromDOM()
-    /*-{
-
-        var id = this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::id;
-        if($wnd.vaadin.vaadinConfigurations && $wnd.vaadin.vaadinConfigurations[id]) {
-            var jsobj = $wnd.vaadin.vaadinConfigurations[id];
-            var uri = jsobj.appUri;
-            if(uri != null && uri[uri.length -1] != "/") {
-                uri = uri + "/";
-            }
-            this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::appUri = uri;
-            this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::themeUri = jsobj.themeUri;
-            if(jsobj.rootId) {
-                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::rootId = jsobj.rootId;
-            }
-            if('useDebugIdInDom' in jsobj && typeof(jsobj.useDebugIdInDom) == "boolean") {
-                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::useDebugIdInDom = jsobj.useDebugIdInDom;
-            }
-            if(jsobj.versionInfo) {
-                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::versionInfo = jsobj.versionInfo;
-            }
-            if(jsobj.comErrMsg) {
-                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::communicationErrorCaption = jsobj.comErrMsg.caption;
-                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::communicationErrorMessage = jsobj.comErrMsg.message;
-                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::communicationErrorUrl = jsobj.comErrMsg.url;
-            }
-            if(jsobj.authErrMsg) {
-                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::authorizationErrorCaption = jsobj.authErrMsg.caption;
-                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::authorizationErrorMessage = jsobj.authErrMsg.message;
-                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::authorizationErrorUrl = jsobj.authErrMsg.url;
-            }
-            if (jsobj.usePortletURLs) {
-                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::usePortletURLs = jsobj.usePortletURLs;
-            }
-            if (jsobj.portletUidlURLBase) {
-                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::portletUidlURLBase = jsobj.portletUidlURLBase;
-            }
-            if (jsobj.standalone) {
-                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::standalone = true;
-            }
-            if (jsobj.widgetset) {
-                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::requiredWidgetset = jsobj.widgetset;
-            }
-        } else {
-            $wnd.alert("Vaadin app failed to initialize: " + this.id);
+    private void loadFromDOM() {
+        JsoConfiguration jsoConfiguration = getJsoConfiguration(id);
+        appUri = jsoConfiguration.getConfigString("appUri");
+        if (appUri != null && !appUri.endsWith("/")) {
+            appUri += '/';
         }
+        themeUri = jsoConfiguration.getConfigString("themeUri");
+        rootId = jsoConfiguration.getConfigInteger("rootId").intValue();
 
-     }-*/;
+        // null -> true
+        useDebugIdInDom = jsoConfiguration.getConfigBoolean("useDebugIdInDom") != Boolean.FALSE;
 
-    /**
-     * Inits the ApplicationConfiguration by reading the DOM and instantiating
-     * ApplicationConnections accordingly. Call {@link #startNextApplication()}
-     * to actually start the applications.
-     * 
-     * @param widgetset
-     *            the widgetset that is running the apps
-     */
-    public static void initConfigurations() {
+        // null -> false
+        usePortletURLs = jsoConfiguration.getConfigBoolean("usePortletURLs") == Boolean.TRUE;
 
-        ArrayList<String> appIds = new ArrayList<String>();
-        loadAppIdListFromDOM(appIds);
+        portletUidlURLBase = jsoConfiguration
+                .getConfigString("portletUidlURLBase");
 
-        for (Iterator<String> it = appIds.iterator(); it.hasNext();) {
-            String appId = it.next();
-            ApplicationConfiguration appConf = getConfigFromDOM(appId);
-            if (canStartApplication(appConf)) {
-                ApplicationConnection a = GWT
-                        .create(ApplicationConnection.class);
-                a.init(widgetSet, appConf);
-                unstartedApplications.add(a);
-                consumeApplication(appId);
-            } else {
-                VConsole.log("Application "
-                        + appId
-                        + " was not started. Provided widgetset did not match with this module.");
-            }
-        }
+        // null -> false
+        standalone = jsoConfiguration.getConfigBoolean("standalone") == Boolean.TRUE;
 
-    }
+        communicationError = jsoConfiguration.getConfigError("comErrMsg");
+        authorizationError = jsoConfiguration.getConfigError("authErrMsg");
 
-    /**
-     * Marks an applicatin with given id to be initialized. Suggesting other
-     * modules should not try to start this application anymore.
-     * 
-     * @param appId
-     */
-    private native static void consumeApplication(String appId)
-    /*-{
-         $wnd.vaadin.vaadinConfigurations[appId].initialized = true;
-    }-*/;
-
-    private static boolean canStartApplication(ApplicationConfiguration appConf) {
-        return appConf.getRequiredWidgetset() == null
-                || appConf.getRequiredWidgetset().equals(GWT.getModuleName());
     }
 
     /**
@@ -246,8 +226,12 @@ public class ApplicationConfiguration implements EntryPoint {
      * @return true if an unstarted application was found
      */
     public static boolean startNextApplication() {
-        if (unstartedApplications.size() > 0) {
-            ApplicationConnection a = unstartedApplications.remove(0);
+        String applicationId = getNextUnstartedApplicationId(GWT
+                .getModuleName());
+        if (applicationId != null) {
+            ApplicationConfiguration appConf = getConfigFromDOM(applicationId);
+            ApplicationConnection a = GWT.create(ApplicationConnection.class);
+            a.init(widgetSet, appConf);
             a.start();
             runningApplications.add(a);
             return true;
@@ -261,14 +245,15 @@ public class ApplicationConfiguration implements EntryPoint {
         return runningApplications;
     }
 
-    private native static void loadAppIdListFromDOM(ArrayList<String> list)
+    private native static String getNextUnstartedApplicationId(
+            String widgetsetName)
     /*-{
-         var j;
-         for(j in $wnd.vaadin.vaadinConfigurations) {
-             if(!$wnd.vaadin.vaadinConfigurations[j].initialized) {
-                 list.@java.util.Collection::add(Ljava/lang/Object;)(j);
-             }
-         }
+        return $wnd.vaadin.popWidgetsetApp(widgetsetName);
+     }-*/;
+
+    private native static JsoConfiguration getJsoConfiguration(String appId)
+    /*-{
+        return $wnd.vaadin.getApp(appId);
      }-*/;
 
     public static ApplicationConfiguration getConfigFromDOM(String appId) {
@@ -278,15 +263,13 @@ public class ApplicationConfiguration implements EntryPoint {
         return conf;
     }
 
-    public native String getServletVersion()
-    /*-{
-        return this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::versionInfo.vaadinVersion;
-    }-*/;
+    public String getServletVersion() {
+        return getJsoConfiguration(id).getVaadinVersion();
+    }
 
-    public native String getApplicationVersion()
-    /*-{
-        return this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::versionInfo.applicationVersion;
-    }-*/;
+    public String getApplicationVersion() {
+        return getJsoConfiguration(id).getApplicationVersion();
+    }
 
     public boolean useDebugIdInDOM() {
         return useDebugIdInDom;
@@ -464,7 +447,6 @@ public class ApplicationConfiguration implements EntryPoint {
             }
         });
 
-        initConfigurations();
         startNextApplication();
     }
 

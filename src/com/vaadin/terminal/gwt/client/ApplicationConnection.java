@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.ui.Field;
@@ -617,9 +618,9 @@ public class ApplicationConnection {
      */
     protected void showCommunicationError(String details) {
         VConsole.error("Communication error: " + details);
-        showError(details, configuration.getCommunicationErrorCaption(),
-                configuration.getCommunicationErrorMessage(),
-                configuration.getCommunicationErrorUrl());
+        ErrorMessage communicationError = configuration.getCommunicationError();
+        showError(details, communicationError.getCaption(),
+                communicationError.getMessage(), communicationError.getUrl());
     }
 
     /**
@@ -630,9 +631,9 @@ public class ApplicationConnection {
      */
     protected void showAuthenticationError(String details) {
         VConsole.error("Authentication error: " + details);
-        showError(details, configuration.getAuthorizationErrorCaption(),
-                configuration.getAuthorizationErrorMessage(),
-                configuration.getAuthorizationErrorUrl());
+        ErrorMessage authorizationError = configuration.getAuthorizationError();
+        showError(details, authorizationError.getCaption(),
+                authorizationError.getMessage(), authorizationError.getUrl());
     }
 
     /**
