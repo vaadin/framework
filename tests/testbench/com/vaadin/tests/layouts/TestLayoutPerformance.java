@@ -69,7 +69,7 @@ public class TestLayoutPerformance extends TestBase {
                 Layout layout = getCurrentLayout();
                 for (int i = 0; i < components; i++) {
                     Component component = newTestComponent();
-                    if (cb.booleanValue()) {
+                    if ((Boolean) cb.getValue()) {
                         component.setCaption("caption " + i);
                     }
                     layout.addComponent(component);

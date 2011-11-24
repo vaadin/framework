@@ -61,14 +61,6 @@
 	outline: 1px dotted black;
 }
 
-.v-ie7 .v-datefield-calendarpanel-day {
-	margin: 1px;
-}
-.v-ie7 .v-datefield-calendarpanel-day-focused {
-	border: 1px dotted black;
-	margin: 0px;
-}
-
 .v-datefield-time {
 	white-space: nowrap;
 }
@@ -92,8 +84,3 @@
 	background-color: #ffe0e0;
 }
 */
-/* IE somehow loses generic v-disabled alpha. See #1960 */
-.v-ie7 .v-disabled .v-datefield-button,
-.v-ie7 .v-disabled .v-datefield-textfield {
-	filter: alpha(opacity=30);
-}

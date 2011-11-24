@@ -14,6 +14,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.DomEvent.Type;
@@ -23,7 +24,6 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -109,7 +109,8 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
     private VLazyExecutor delayedResizeExecutor = new VLazyExecutor(200,
             new ScheduledCommand() {
                 public void execute() {
-                    windowSizeMaybeChanged(getOffsetWidth(), getOffsetHeight());
+                    windowSizeMaybeChanged(Window.getClientWidth(),
+                            Window.getClientHeight());
                 }
 
             });
@@ -475,9 +476,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
          * browser window. Constantly recalculating the layout causes the resize
          * operation to be really slow with complex layouts.
          */
-        boolean lazy = resizeLazy
-                || (BrowserInfo.get().isIE() && BrowserInfo.get()
-                        .getIEVersion() <= 8) || BrowserInfo.get().isFF3();
+        boolean lazy = resizeLazy || BrowserInfo.get().isIE8();
 
         if (lazy) {
             delayedResizeExecutor.trigger();
@@ -562,39 +561,62 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
         @Override
         public int getWidth() {
-            int w = getRealWidth();
-            if (w < 10 && BrowserInfo.get().isIE7()) {
-                // Overcome an IE7 bug #3295
-                Util.shakeBodyElement();
-                w = getRealWidth();
-            }
-            return w;
-        }
-
-        private int getRealWidth() {
             if (connection.getConfiguration().isStandalone()) {
                 return getElement().getOffsetWidth() - getExcessWidth();
             }
 
-            // If not running standalone, we might be inside elements that don't
-            // shrink with the browser window if our own components have
+            // If not running standalone, there might be multiple Vaadin apps
+            // that won't shrink with the browser window as the components have
             // calculated widths (#3125)
-            Element layoutElement = ((Widget) layout).getElement();
-            Style layoutStyle = layoutElement.getStyle();
 
-            // Set display:none to the entire application to get a width not
-            // influenced by the contents
-            String originalDisplay = layoutStyle.getDisplay();
-            layoutStyle.setDisplay(Display.NONE);
+            // Find all Vaadin applications on the page
+            ArrayList<String> vaadinApps = new ArrayList<String>();
+            loadAppIdListFromDOM(vaadinApps);
+
+            // Store original styles here so they can be restored
+            ArrayList<String> originalDisplays = new ArrayList<String>(
+                    vaadinApps.size());
+
+            String ownAppId = connection.getConfiguration().getRootPanelId();
+
+            // Set display: none for all Vaadin apps
+            for (int i = 0; i < vaadinApps.size(); i++) {
+                String appId = vaadinApps.get(i);
+                Element targetElement;
+                if (appId.equals(ownAppId)) {
+                    // Only hide the contents of current application
+                    targetElement = ((Widget) layout).getElement();
+                } else {
+                    // Hide everything for other applications
+                    targetElement = Document.get().getElementById(appId);
+                }
+                Style layoutStyle = targetElement.getStyle();
+
+                originalDisplays.add(i, layoutStyle.getDisplay());
+                layoutStyle.setDisplay(Display.NONE);
+            }
 
             int w = getElement().getOffsetWidth() - getExcessWidth();
 
             // Then restore the old display style before returning
-            if (originalDisplay.length() == 0) {
-                layoutStyle.clearDisplay();
-            } else {
-                layoutStyle.setDisplay(Display.valueOf(originalDisplay));
+            for (int i = 0; i < vaadinApps.size(); i++) {
+                String appId = vaadinApps.get(i);
+                Element targetElement;
+                if (appId.equals(ownAppId)) {
+                    targetElement = ((Widget) layout).getElement();
+                } else {
+                    targetElement = Document.get().getElementById(appId);
+                }
+                Style layoutStyle = targetElement.getStyle();
+                String originalDisplay = originalDisplays.get(i);
+
+                if (originalDisplay.length() == 0) {
+                    layoutStyle.clearDisplay();
+                } else {
+                    layoutStyle.setProperty("display", originalDisplay);
+                }
             }
+
             return w;
         }
 
@@ -610,6 +632,14 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             return Util.getNativeScrollbarSize();
         }
     };
+
+    private native static void loadAppIdListFromDOM(ArrayList<String> list)
+    /*-{
+         var j;
+         for(j in $wnd.vaadin.vaadinConfigurations) {
+            list.@java.util.Collection::add(Ljava/lang/Object;)(j);
+         }
+     }-*/;
 
     public RenderSpace getAllocatedSpace(Widget child) {
         return myRenderSpace;

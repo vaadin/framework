@@ -10,10 +10,6 @@
 	background: #fff url(top-left.png) no-repeat;
 }
 
-.v-ie7 .v-window-wrap {
-	background-position: 1px 1px;
-}
-
 .v-window-outerheader {
 	height: 16px;
 	margin-left: 9px;

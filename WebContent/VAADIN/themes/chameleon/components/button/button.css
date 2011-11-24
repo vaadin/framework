@@ -1,5 +1,4 @@
 .v-button:active,
-.v-ie7 .v-pressed.v-button,
 .v-ie8 .v-pressed.v-button,
 div.v-button-down {
 	background-image: url(../../img/grad-dark-bottom2.png);
@@ -7,7 +6,6 @@ div.v-button-down {
 	}
 
 .v-button:active .v-button-wrap,
-.v-ie7 .v-pressed.v-button .v-button-wrap,
 .v-ie8 .v-pressed.v-button .v-button-wrap,
 .v-button-down .v-button-wrap {
 	background-image: url(../../img/grad-dark-top2.png);
@@ -96,7 +94,6 @@ div.v-button-down .v-button-wrap {
 	}
 
 .v-button-small:active .v-button-wrap,
-.v-ie7 .v-button-small.v-pressed .v-button-wrap,
 .v-ie8 .v-button-small.v-pressed .v-button-wrap,
 .v-button-down.small .v-button-wrap {
 	padding: 2px 10px;
@@ -117,7 +114,6 @@ div.v-button-down .v-button-wrap {
 	}
 
 .v-button-wide:active .v-button-wrap,
-.v-ie7 .v-button-wide.v-pressed .v-button-wrap,
 .v-ie8 .v-button-wide.v-pressed .v-button-wrap {
 	padding-left: 25px;
 	padding-right: 25px;
@@ -133,7 +129,6 @@ div.v-button-down .v-button-wrap {
 	}
 
 .v-button-tall:active .v-button-wrap,
-.v-ie7 .v-button-tall.v-pressed .v-button-wrap,
 .v-ie8 .v-button-tall.v-pressed .v-button-wrap {
 	padding-top: 12px;
 	padding-bottom: 12px;
@@ -249,19 +244,6 @@ body.v-ie .v-pressed.v-button-borderless .v-button-wrap {
 	margin-right: -0.5em;
 	}
 	
-.v-ie7 .v-button-icon-on-right {
-	position: relative;
-	}
-
-.v-ie7 .v-button-icon-on-right .v-button-caption {
-	padding-right: 14px;
-	}
-
-.v-ie7 .v-button-icon-on-right .v-icon {
-	position: absolute;
-	right: 0;
-	margin: 0;
-	}
 
 /*******************************************************************************
  * Icon-only

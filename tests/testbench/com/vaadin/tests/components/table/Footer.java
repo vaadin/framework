@@ -51,7 +51,7 @@ public class Footer extends TestBase {
         visible.setImmediate(true);
         visible.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                table.setFooterVisible(visible.booleanValue());
+                table.setFooterVisible((Boolean) visible.getValue());
 
             }
         });

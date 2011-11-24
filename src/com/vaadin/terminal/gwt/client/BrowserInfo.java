@@ -192,10 +192,6 @@ public class BrowserInfo {
         return isSafari() && browserDetails.getBrowserMajorVersion() == 4;
     }
 
-    public boolean isIE7() {
-        return isIE() && browserDetails.getBrowserMajorVersion() == 7;
-    }
-
     public boolean isIE8() {
         return isIE() && browserDetails.getBrowserMajorVersion() == 8;
     }
@@ -214,23 +210,6 @@ public class BrowserInfo {
 
     public boolean isWebkit() {
         return browserDetails.isWebKit();
-    }
-
-    public boolean isFF2() {
-        // FIXME: Should use browserVersion
-        return browserDetails.isFirefox()
-                && browserDetails.getBrowserEngineVersion() == 1.8;
-    }
-
-    public boolean isFF3() {
-        // FIXME: Should use browserVersion
-        return browserDetails.isFirefox()
-                && browserDetails.getBrowserEngineVersion() == 1.9;
-    }
-
-    public boolean isFF4() {
-        return browserDetails.isFirefox()
-                && browserDetails.getBrowserMajorVersion() == 4;
     }
 
     /**

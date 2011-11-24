@@ -6,6 +6,7 @@ package com.vaadin.ui;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -54,7 +55,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
         /**
          * The component in wrapper that is being dragged or null if the
-         * transferrable is not a component (most likely an html5 drag).
+         * transferable is not a component (most likely an html5 drag).
          * 
          * @return
          */
@@ -135,7 +136,8 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         }
 
         /**
-         * @return a detail about the drags horizontal position over the wrapper.
+         * @return a detail about the drags horizontal position over the
+         *         wrapper.
          */
         public HorizontalDropLocation getHorizontalDropLocation() {
             return HorizontalDropLocation
@@ -172,9 +174,18 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         /**
          * The whole wrapper is used as a drag image when dragging.
          */
-        WRAPPER
+        WRAPPER,
+        /**
+         * The whole wrapper is used to start an HTML5 drag.
+         * 
+         * NOTE: In Internet Explorer 6 to 8, this prevents user interactions
+         * with the wrapper's contents. For example, clicking a button inside
+         * the wrapper will no longer work.
+         */
+        HTML5,
     }
 
+    private final Map<String, Object> html5DataFlavors = new LinkedHashMap<String, Object>();
     private DragStartMode dragStartMode = DragStartMode.NONE;
 
     /**
@@ -187,10 +198,27 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         super(root);
     }
 
+    /**
+     * Sets data flavors available in the DragAndDropWrapper is used to start an
+     * HTML5 style drags. Most commonly the "Text" flavor should be set.
+     * Multiple data types can be set.
+     * 
+     * @param type
+     *            the string identifier of the drag "payload". E.g. "Text" or
+     *            "text/html"
+     * @param value
+     *            the value
+     */
+    public void setHTML5DataFlavor(String type, Object value) {
+        html5DataFlavors.put(type, value);
+        requestRepaint();
+    }
+
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
-        target.addAttribute("dragStartMode", dragStartMode.ordinal());
+        target.addAttribute(VDragAndDropWrapper.DRAG_START_MODE,
+                dragStartMode.ordinal());
         if (getDropHandler() != null) {
             getDropHandler().getAcceptCriterion().paint(target);
         }
@@ -213,6 +241,8 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                 }
             }
         }
+        target.addAttribute(VDragAndDropWrapper.HTML5_DATA_FLAVORS,
+                html5DataFlavors);
     }
 
     private DropHandler dropHandler;

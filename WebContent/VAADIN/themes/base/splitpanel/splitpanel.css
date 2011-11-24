@@ -33,8 +33,3 @@
 .v-disabled .v-splitpanel-vsplitter div {
 	cursor: default;
 }
-/* IE specific styles */
-.v-ie7 .v-splitpanel-first-container,
-.v-ie7 .v-splitpanel-second-container {
-	position: relative;
-}

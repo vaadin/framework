@@ -143,9 +143,3 @@ td.v-datefield-calendarpanel-month {
 	color: #999;
 	font-style: normal;
 }
-/* IE specific styles */
-.v-ie7 .v-datefield-button {
-	background-position: right 1px;
-	height: 25px;
-	margin: 0;
-}

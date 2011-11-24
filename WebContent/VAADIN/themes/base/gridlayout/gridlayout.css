@@ -23,7 +23,3 @@
 .v-gridlayout-spacing-off {
 	overflow: hidden;
 }
-/* Ensure that resizing gridlayout works in IE */
-.v-ie7 .v-gridlayout {
-	overflow: hidden;
-}

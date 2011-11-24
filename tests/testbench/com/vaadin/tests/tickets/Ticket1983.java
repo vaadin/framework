@@ -1,10 +1,11 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Layout;
@@ -114,11 +115,12 @@ public class Ticket1983 extends Application {
             ol.addComponent(button);
             leftSide.setFirstComponent(ol);
 
-            button = new CheckBox("Two col");
-            button.addListener(new Button.ClickListener() {
-                public void buttonClick(ClickEvent event) {
-                    Button b = event.getButton();
-                    if (((Boolean) b.getValue()).booleanValue()) {
+            CheckBox checkBox = new CheckBox("Two col");
+            checkBox.addListener(new ValueChangeListener() {
+
+                @Override
+                public void valueChange(ValueChangeEvent event) {
+                    if ((Boolean) event.getProperty().getValue()) {
                         table.setVisibleColumns(new Object[] { propId, propId2 });
                     } else {
                         table.setVisibleColumns(new Object[] { propId });
@@ -127,7 +129,7 @@ public class Ticket1983 extends Application {
                 }
 
             });
-            ol.addComponent(button);
+            ol.addComponent(checkBox);
 
             return leftSide;
         }

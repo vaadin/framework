@@ -105,8 +105,7 @@
 .v-tabsheet-tabs-minimal .v-tabsheet-caption-close {
 	margin-top: 1px;
 }
-.v-ff .v-tabsheet-tabs-minimal .v-tabsheet-caption-close,
-.v-ie7 .v-tabsheet-tabs-minimal .v-tabsheet-caption-close {
+.v-ff .v-tabsheet-tabs-minimal .v-tabsheet-caption-close {
 	margin-top: -15px;
 }
 .v-tabsheet-tabs-minimal .v-tabsheet-caption-close:hover,

@@ -400,4 +400,25 @@ public class WebBrowser implements Terminal {
 
     }
 
+    /**
+     * Checks if the browser is so old that it simply won't work with a Vaadin
+     * application. Can be used to redirect to an alternative page, show
+     * alternative content or similar.
+     * 
+     * When this method returns true chances are very high that the browser
+     * won't work and it does not make sense to direct the user to the Vaadin
+     * application.
+     * 
+     * @return true if the browser won't work, false if not the browser is
+     *         supported or might work
+     */
+    public boolean isTooOldToFunctionProperly() {
+        if (browserDetails == null) {
+            // Don't know, so assume it will work
+            return false;
+        }
+
+        return browserDetails.isTooOldToFunctionProperly();
+    }
+
 }

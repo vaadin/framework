@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import com.vaadin.data.Property;
+import com.vaadin.event.Action;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -23,8 +23,9 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VButton;
+import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.ClientWidget.LoadStyle;
-import com.vaadin.ui.themes.BaseTheme;
+import com.vaadin.ui.Component.Focusable;
 
 /**
  * A generic button component.
@@ -36,29 +37,22 @@ import com.vaadin.ui.themes.BaseTheme;
  */
 @SuppressWarnings("serial")
 @ClientWidget(value = VButton.class, loadStyle = LoadStyle.EAGER)
-// FIXME Button should not be a Field, but CheckBox should
-public class Button extends AbstractField<Boolean> implements
-        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
+public class Button extends AbstractComponent implements
+        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, Focusable,
+        Action.ShortcutNotifier {
 
     /* Private members */
-
-    boolean switchMode = false;
 
     boolean disableOnClick = false;
 
     /**
-     * Creates a new push button. The value of the push button is false and it
-     * is immediate by default.
-     * 
+     * Creates a new push button.
      */
     public Button() {
-        setValue(Boolean.FALSE);
     }
 
     /**
-     * Creates a new push button.
-     * 
-     * The value of the push button is false and it is immediate by default.
+     * Creates a new push button with the given caption.
      * 
      * @param caption
      *            the Button caption.
@@ -69,7 +63,7 @@ public class Button extends AbstractField<Boolean> implements
     }
 
     /**
-     * Creates a new push button with click listener.
+     * Creates a new push button with a click listener.
      * 
      * @param caption
      *            the Button caption.
@@ -103,36 +97,6 @@ public class Button extends AbstractField<Boolean> implements
     }
 
     /**
-     * Creates a new switch button with initial value.
-     * 
-     * @param state
-     *            the Initial state of the switch-button.
-     * @param initialState
-     * @deprecated use {@link CheckBox} instead of Button in "switchmode"
-     */
-    @Deprecated
-    public Button(String caption, boolean initialState) {
-        setCaption(caption);
-        setValue(Boolean.valueOf(initialState));
-        setSwitchMode(true);
-    }
-
-    /**
-     * Creates a new switch button that is connected to a boolean property.
-     * 
-     * @param state
-     *            the Initial state of the switch-button.
-     * @param dataSource
-     * @deprecated use {@link CheckBox} instead of Button in "switchmode"
-     */
-    @Deprecated
-    public Button(String caption, Property<Boolean> dataSource) {
-        setCaption(caption);
-        setSwitchMode(true);
-        setPropertyDataSource(dataSource);
-    }
-
-    /**
      * Paints the content of this component.
      * 
      * @param event
@@ -145,11 +109,6 @@ public class Button extends AbstractField<Boolean> implements
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
-
-        if (isSwitchMode()) {
-            target.addAttribute("type", "switch");
-        }
-        target.addVariable(this, "state", booleanValue());
 
         if (isDisableOnClick()) {
             target.addAttribute(VButton.ATTR_DISABLE_ON_CLICK, true);
@@ -177,46 +136,14 @@ public class Button extends AbstractField<Boolean> implements
         }
 
         if (!isReadOnly() && variables.containsKey("state")) {
-            // Gets the new and old button states
-            final Boolean newValue = (Boolean) variables.get("state");
-            final Boolean oldValue = getValue();
-
-            if (isSwitchMode()) {
-
-                // For switch button, the event is only sent if the
-                // switch state is changed
-                if (newValue != null && !newValue.equals(oldValue)
-                        && !isReadOnly()) {
-                    setValue(newValue);
-                    if (variables.containsKey("mousedetails")) {
-                        fireClick(MouseEventDetails
-                                .deSerialize((String) variables
-                                        .get("mousedetails")));
-                    } else {
-                        // for compatibility with custom implementations which
-                        // don't send mouse details
-                        fireClick();
-                    }
-                }
+            // Send click events when the button is pushed
+            if (variables.containsKey("mousedetails")) {
+                fireClick(MouseEventDetails.deSerialize((String) variables
+                        .get("mousedetails")));
             } else {
-
-                // Only send click event if the button is pushed
-                if (newValue.booleanValue()) {
-                    if (variables.containsKey("mousedetails")) {
-                        fireClick(MouseEventDetails
-                                .deSerialize((String) variables
-                                        .get("mousedetails")));
-                    } else {
-                        // for compatibility with custom implementations which
-                        // don't send mouse details
-                        fireClick();
-                    }
-                }
-
-                // If the button is true for some reason, release it
-                if (null == oldValue || oldValue.booleanValue()) {
-                    setValue(Boolean.FALSE);
-                }
+                // for compatibility with custom implementations which
+                // don't send mouse details
+                fireClick();
             }
         }
 
@@ -225,92 +152,6 @@ public class Button extends AbstractField<Boolean> implements
         }
         if (variables.containsKey(BlurEvent.EVENT_ID)) {
             fireEvent(new BlurEvent(this));
-        }
-    }
-
-    /**
-     * Checks if it is switchMode.
-     * 
-     * @return <code>true</code> if it is in Switch Mode, otherwise
-     *         <code>false</code>.
-     * @deprecated the {@link CheckBox} component should be used instead of
-     *             Button in switch mode
-     */
-    @Deprecated
-    public boolean isSwitchMode() {
-        return switchMode;
-    }
-
-    /**
-     * Sets the switchMode.
-     * 
-     * @param switchMode
-     *            The switchMode to set.
-     * @deprecated the {@link CheckBox} component should be used instead of
-     *             Button in switch mode
-     */
-    @Deprecated
-    public void setSwitchMode(boolean switchMode) {
-        this.switchMode = switchMode;
-        if (!switchMode) {
-            setImmediate(true);
-            if (booleanValue()) {
-                setValue(Boolean.FALSE);
-            }
-        }
-    }
-
-    /**
-     * Get the boolean value of the button state.
-     * 
-     * @return True iff the button is pressed down or checked.
-     */
-    public boolean booleanValue() {
-        Boolean value = getValue();
-        return (null == value) ? false : value.booleanValue();
-    }
-
-    /**
-     * Sets immediate mode. Push buttons can not be set in non-immediate mode.
-     * 
-     * @see com.vaadin.ui.AbstractComponent#setImmediate(boolean)
-     */
-    @Override
-    public void setImmediate(boolean immediate) {
-        // Push buttons are always immediate
-        super.setImmediate(!isSwitchMode() || immediate);
-    }
-
-    /**
-     * The type of the button as a property.
-     * 
-     * @see com.vaadin.data.Property#getType()
-     */
-    @Override
-    public Class<Boolean> getType() {
-        return Boolean.class;
-    }
-
-    /* Click event */
-
-    private static final Method BUTTON_CLICK_METHOD;
-
-    /**
-     * Button style with no decorations. Looks like a link, acts like a button
-     * 
-     * @deprecated use {@link BaseTheme#BUTTON_LINK} instead.
-     */
-    @Deprecated
-    public static final String STYLE_LINK = "link";
-
-    static {
-        try {
-            BUTTON_CLICK_METHOD = ClickListener.class.getDeclaredMethod(
-                    "buttonClick", new Class[] { ClickEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
-            // This should never happen
-            throw new java.lang.RuntimeException(
-                    "Internal error finding methods in Button");
         }
     }
 
@@ -485,6 +326,10 @@ public class Button extends AbstractField<Boolean> implements
      */
     public interface ClickListener extends Serializable {
 
+        public static final Method BUTTON_CLICK_METHOD = ReflectTools
+                .findMethod(ClickListener.class, "buttonClick",
+                        ClickEvent.class);
+
         /**
          * Called when a {@link Button} has been clicked. A reference to the
          * button is given by {@link ClickEvent#getButton()}.
@@ -503,7 +348,8 @@ public class Button extends AbstractField<Boolean> implements
      *            the Listener to be added.
      */
     public void addListener(ClickListener listener) {
-        addListener(ClickEvent.class, listener, BUTTON_CLICK_METHOD);
+        addListener(ClickEvent.class, listener,
+                ClickListener.BUTTON_CLICK_METHOD);
     }
 
     /**
@@ -513,7 +359,8 @@ public class Button extends AbstractField<Boolean> implements
      *            the Listener to be removed.
      */
     public void removeListener(ClickListener listener) {
-        removeListener(ClickEvent.class, listener, BUTTON_CLICK_METHOD);
+        removeListener(ClickEvent.class, listener,
+                ClickListener.BUTTON_CLICK_METHOD);
     }
 
     /**
@@ -537,16 +384,6 @@ public class Button extends AbstractField<Boolean> implements
      */
     protected void fireClick(MouseEventDetails details) {
         fireEvent(new Button.ClickEvent(this, details));
-    }
-
-    @Override
-    protected void setInternalValue(Object newValue) {
-        // Make sure only booleans get through
-        if (null != newValue && !(newValue instanceof Boolean)) {
-            throw new IllegalArgumentException(getClass().getSimpleName()
-                    + " only accepts Boolean values");
-        }
-        super.setInternalValue(newValue);
     }
 
     public void addListener(BlurListener listener) {
@@ -573,6 +410,8 @@ public class Button extends AbstractField<Boolean> implements
      */
 
     protected ClickShortcut clickShortcut;
+
+    private int tabIndex = 0;
 
     /**
      * Makes it possible to invoke a click on this button by pressing the given
@@ -686,4 +525,20 @@ public class Button extends AbstractField<Boolean> implements
         requestRepaint();
     }
 
+    @Override
+    public int getTabIndex() {
+        return tabIndex;
+    }
+
+    @Override
+    public void setTabIndex(int tabIndex) {
+        this.tabIndex = tabIndex;
+
+    }
+
+    @Override
+    public void focus() {
+        // Overridden only to make public
+        super.focus();
+    }
 }

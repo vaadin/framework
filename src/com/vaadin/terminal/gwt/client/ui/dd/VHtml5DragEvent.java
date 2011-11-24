@@ -41,7 +41,15 @@ public class VHtml5DragEvent extends NativeEvent {
         return null;
     }-*/;
 
-    public final native void setDragEffect(String effect)
+    /**
+     * @deprecated As of Vaadin 6.8, replaced by {@link #setDropEffect(String)}.
+     */
+    @Deprecated
+    public final void setDragEffect(String effect) {
+        setDropEffect(effect);
+    }
+
+    public final native void setDropEffect(String effect)
     /*-{
         try {
             this.dataTransfer.dropEffect = effect;
@@ -53,6 +61,11 @@ public class VHtml5DragEvent extends NativeEvent {
             return this.dataTransfer.effectAllowed;
      }-*/;
 
+    public final native void setEffectAllowed(String effect)
+    /*-{
+            this.dataTransfer.effectAllowed = effect;
+     }-*/;
+
     public final native int getFileCount()
     /*-{
             return this.dataTransfer.files ? this.dataTransfer.files.length : 0;
@@ -62,5 +75,10 @@ public class VHtml5DragEvent extends NativeEvent {
     /*-{
             return this.dataTransfer.files[fileIndex];
      }-*/;
+
+    public final native void setHtml5DataFlavor(String flavor, String data)
+    /*-{
+        this.dataTransfer.setData(flavor, data);
+    }-*/;
 
 }

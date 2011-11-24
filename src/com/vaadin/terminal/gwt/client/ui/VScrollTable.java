@@ -2749,8 +2749,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                     int hw = captionContainer.getOffsetWidth()
                             + scrollBody.getCellExtraWidth();
-                    if (BrowserInfo.get().isGecko()
-                            || BrowserInfo.get().isIE7()) {
+                    if (BrowserInfo.get().isGecko()) {
                         hw += sortIndicator.getOffsetWidth();
                     }
                     if (columnIndex < 0) {
@@ -5924,19 +5923,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      */
     private int getContentAreaBorderHeight() {
         if (contentAreaBorderHeight < 0) {
-            if (BrowserInfo.get().isIE7()) {
-                contentAreaBorderHeight = Util
-                        .measureVerticalBorder(scrollBodyPanel.getElement());
-            } else {
-                DOM.setStyleAttribute(scrollBodyPanel.getElement(), "overflow",
-                        "hidden");
-                int oh = scrollBodyPanel.getOffsetHeight();
-                int ch = scrollBodyPanel.getElement().getPropertyInt(
-                        "clientHeight");
-                contentAreaBorderHeight = oh - ch;
-                DOM.setStyleAttribute(scrollBodyPanel.getElement(), "overflow",
-                        "auto");
-            }
+
+            DOM.setStyleAttribute(scrollBodyPanel.getElement(), "overflow",
+                    "hidden");
+            int oh = scrollBodyPanel.getOffsetHeight();
+            int ch = scrollBodyPanel.getElement()
+                    .getPropertyInt("clientHeight");
+            contentAreaBorderHeight = oh - ch;
+            DOM.setStyleAttribute(scrollBodyPanel.getElement(), "overflow",
+                    "auto");
         }
         return contentAreaBorderHeight;
     }

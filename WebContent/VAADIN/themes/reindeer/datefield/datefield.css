@@ -43,13 +43,7 @@ span.v-datefield-calendarpanel-month {
 .v-datefield-full {
 	min-width: 240px;
 }
-.v-ff2 .v-datefield-month,
-.v-ff2 .v-datefield-day,
-.v-ff2 .v-datefield-full {
-	min-width: 254px;
-}
-.v-datefield-popupcalendar,
-.v-ff2 .v-datefield-popupcalendar {
+.v-datefield-popupcalendar {
 	min-width: 0;
 }
 .v-datefield-year .v-datefield-calendarpanel {
@@ -227,7 +221,6 @@ td.v-datefield-calendarpanel-nextyear {
 	-moz-border-radius: 3px;
 }
 .v-sa .v-datefield-popup,
-.v-ff3 .v-datefield-popup,
 .v-op .v-datefield-popup {
 	background: rgba(255,255,255,.95);
 }

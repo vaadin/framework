@@ -7,6 +7,7 @@ import java.util.List;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -111,9 +112,11 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
             boolean initialState, final Command<T, Boolean> command) {
 
         CheckBox checkBox = new CheckBox(caption);
-        checkBox.addListener(new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                boolean enabled = (Boolean) event.getButton().getValue();
+        checkBox.addListener(new ValueChangeListener() {
+
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                boolean enabled = (Boolean) event.getProperty().getValue();
                 doCommand(command, enabled);
             }
         });
@@ -132,10 +135,13 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
             final Command<T, Boolean> command) {
 
         Button button = new Button(caption);
+        button.setData(Boolean.FALSE);
         button.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                boolean enabled = (Boolean) event.getButton().getValue();
-                doCommand(command, enabled);
+                Button b = event.getButton();
+                boolean state = (Boolean) b.getData();
+                b.setData(!state);
+                doCommand(command, state);
             }
         });
 

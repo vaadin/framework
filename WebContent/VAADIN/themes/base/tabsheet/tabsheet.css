@@ -36,9 +36,6 @@
 	text-align: right;
 	margin-top: -1em;
 }
-.v-ff2 .v-tabsheet-scroller {
-	position: relative;
-}
 .v-disabled .v-tabsheet-scroller {
 	display: none;
 }
@@ -106,9 +103,6 @@
 	border-top: none;
 	border-bottom: none;
 	position: relative;
-}
-.v-ie7 .v-tabsheet-content {
-	zoom: 1;
 }
 .v-tabsheet-deco {
 	height: 1px;

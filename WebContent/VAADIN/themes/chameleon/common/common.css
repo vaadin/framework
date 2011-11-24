@@ -28,8 +28,7 @@
 	-moz-border-radius: 4px;
 	}
 
-.v-sa .v-tooltip,
-.v-ff3 .v-tooltip {
+.v-sa .v-tooltip {
 	outline: 1px solid rgba(0,0,0,.2);
 	-webkit-border-radius: 0;
 	-moz-border-radius: 0;

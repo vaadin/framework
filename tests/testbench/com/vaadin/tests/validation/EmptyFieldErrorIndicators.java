@@ -94,7 +94,8 @@ public class EmptyFieldErrorIndicators extends TestBase {
         // same as basic DateField
         // form.addField("Popup Date", new PopupDateField("Date"));
         Button setDateButton = new Button("Set date");
-        form.addField("Set Date", setDateButton);
+        form.getLayout().addComponent(setDateButton);
+        // form.addField("Set Date", setDateButton);
         setDateButton.addListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
                 form.getField("Date").setValue(new Date(0));

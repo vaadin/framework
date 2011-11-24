@@ -143,11 +143,6 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
             }
             wrapper.insertBefore(errorIndicatorElement, captionElement);
 
-            // Fix for IE7
-            if (BrowserInfo.get().isIE7()) {
-                errorIndicatorElement.setInnerText(" ");
-            }
-
         } else if (errorIndicatorElement != null) {
             wrapper.removeChild(errorIndicatorElement);
             errorIndicatorElement = null;
@@ -449,25 +444,6 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
             isCapturing = false;
             isFocusing = false;
         }
-    }
-
-    @Override
-    public void setWidth(String width) {
-        if (BrowserInfo.get().isIE7()) {
-            if (width != null && width.length() > 2) {
-                // Assume pixel values are always sent from
-                // ApplicationConnection
-                int w = Integer
-                        .parseInt(width.substring(0, width.length() - 2));
-                w -= getHorizontalBorderAndPaddingWidth(getElement());
-                if (w < 0) {
-                    // validity check for IE
-                    w = 0;
-                }
-                width = w + "px";
-            }
-        }
-        super.setWidth(width);
     }
 
     private static native int getHorizontalBorderAndPaddingWidth(Element elem)

@@ -18,7 +18,6 @@ import com.vaadin.data.Validatable;
 import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.event.Action;
-import com.vaadin.event.ActionManager;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.CompositeErrorMessage;
@@ -130,12 +129,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * Is automatic validation enabled.
      */
     private boolean validationVisible = true;
-
-    /**
-     * Keeps track of the Actions added to this component; the actual
-     * handling/notifying is delegated, usually to the containing window.
-     */
-    private ActionManager actionManager;
 
     private boolean valueWasModifiedByDataSourceDuringCommit;
 
@@ -1133,27 +1126,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     /**
-     * Notifies the component that it is connected to an application.
-     * 
-     * @see com.vaadin.ui.Component#attach()
-     */
-    @Override
-    public void attach() {
-        super.attach();
-        if (actionManager != null) {
-            actionManager.setViewer(getWindow());
-        }
-    }
-
-    @Override
-    public void detach() {
-        super.detach();
-        if (actionManager != null) {
-            actionManager.setViewer((Window) null);
-        }
-    }
-
-    /**
      * Is this field required. Required fields must filled by the user.
      * 
      * If the field is required, it is visually indicated in the user interface.
@@ -1264,36 +1236,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             Buffered.SourceException currentBufferedSourceException) {
         this.currentBufferedSourceException = currentBufferedSourceException;
         requestRepaint();
-    }
-
-    /*
-     * Actions
-     */
-
-    /**
-     * Gets the {@link ActionManager} used to manage the
-     * {@link ShortcutListener}s added to this {@link Field}.
-     * 
-     * @return the ActionManager in use
-     */
-    protected ActionManager getActionManager() {
-        if (actionManager == null) {
-            actionManager = new ActionManager();
-            if (getWindow() != null) {
-                actionManager.setViewer(getWindow());
-            }
-        }
-        return actionManager;
-    }
-
-    public void addShortcutListener(ShortcutListener shortcut) {
-        getActionManager().addAction(shortcut);
-    }
-
-    public void removeShortcutListener(ShortcutListener shortcut) {
-        if (actionManager != null) {
-            actionManager.removeAction(shortcut);
-        }
     }
 
     /**

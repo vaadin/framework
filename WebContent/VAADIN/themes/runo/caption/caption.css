@@ -6,6 +6,3 @@
 	height: 16px;
 	background: transparent url(../icons/16/error.png) no-repeat top right;
 }
-.v-ie7 .v-errorindicator {
-	margin-left: -3px;
-}

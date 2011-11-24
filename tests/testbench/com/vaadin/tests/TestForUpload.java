@@ -413,7 +413,7 @@ public class TestForUpload extends CustomComponent implements
     }
 
     private void beSluggish() {
-        if (beSluggish.booleanValue()) {
+        if ((Boolean) beSluggish.getValue()) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -424,7 +424,7 @@ public class TestForUpload extends CustomComponent implements
     }
 
     private void throwExecption() {
-        if (throwExecption.booleanValue()) {
+        if ((Boolean) throwExecption.getValue()) {
             throwExecption.setValue(false);
             throw new RuntimeException("Test execption in receiver.");
         }

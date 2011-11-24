@@ -4,110 +4,129 @@
 
 package com.vaadin.ui;
 
-import java.lang.reflect.Method;
+import java.util.Map;
 
 import com.vaadin.data.Property;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.terminal.PaintException;
+import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.VCheckBox;
 
 @ClientWidget(com.vaadin.terminal.gwt.client.ui.VCheckBox.class)
-public class CheckBox extends Button {
+public class CheckBox extends AbstractField<Boolean> {
     /**
-     * Creates a new switch button.
+     * Creates a new checkbox.
      */
     public CheckBox() {
-        setSwitchMode(true);
     }
 
     /**
-     * Creates a new switch button with a caption and a set initial state.
+     * Creates a new checkbox with a set caption.
      * 
      * @param caption
-     *            the caption of the switch button
+     *            the Checkbox caption.
+     */
+    public CheckBox(String caption) {
+        this();
+        setCaption(caption);
+    }
+
+    /**
+     * Creates a new checkbox with a caption and a set initial state.
+     * 
+     * @param caption
+     *            the caption of the checkbox
      * @param initialState
-     *            the initial state of the switch button
+     *            the initial state of the checkbox
      */
-    @SuppressWarnings("deprecation")
     public CheckBox(String caption, boolean initialState) {
-        super(caption, initialState);
+        this(caption);
+        setValue(initialState);
     }
 
     /**
-     * Creates a new switch button with a caption and a click listener.
-     * 
-     * @param caption
-     *            the caption of the switch button
-     * @param listener
-     *            the click listener
-     */
-    public CheckBox(String caption, ClickListener listener) {
-        super(caption, listener);
-        setSwitchMode(true);
-    }
-
-    /**
-     * Convenience method for creating a new switch button with a method
-     * listening button clicks. Using this method is discouraged because it
-     * cannot be checked during compilation. Use
-     * {@link #addListener(Class, Object, Method)} or
-     * {@link #addListener(com.vaadin.ui.Component.Listener)} instead. The
-     * method must have either no parameters, or only one parameter of
-     * Button.ClickEvent type.
-     * 
-     * @param caption
-     *            the Button caption.
-     * @param target
-     *            the Object having the method for listening button clicks.
-     * @param methodName
-     *            the name of the method in target object, that receives button
-     *            click events.
-     */
-    public CheckBox(String caption, Object target, String methodName) {
-        super(caption, target, methodName);
-        setSwitchMode(true);
-    }
-
-    /**
-     * Creates a new switch button that is connected to a boolean property.
+     * Creates a new checkbox that is connected to a boolean property.
      * 
      * @param state
      *            the Initial state of the switch-button.
      * @param dataSource
      */
-    @SuppressWarnings("deprecation")
-    public CheckBox(String caption, Property dataSource) {
-        super(caption, dataSource);
-        setSwitchMode(true);
+    public CheckBox(String caption, Property<?> dataSource) {
+        this(caption);
+        setPropertyDataSource(dataSource);
+    }
+
+    @Override
+    public Class<Boolean> getType() {
+        return Boolean.class;
+    }
+
+    @Override
+    public void paintContent(PaintTarget target) throws PaintException {
+        super.paintContent(target);
+
+        target.addVariable(this, VCheckBox.VARIABLE_STATE, booleanValue());
+    }
+
+    @Override
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        super.changeVariables(source, variables);
+
+        if (!isReadOnly() && variables.containsKey(VCheckBox.VARIABLE_STATE)) {
+            // Gets the new and old states
+            final Boolean newValue = (Boolean) variables
+                    .get(VCheckBox.VARIABLE_STATE);
+            final Boolean oldValue = getValue();
+
+            // The event is only sent if the switch state is changed
+            if (newValue != null && !newValue.equals(oldValue)) {
+                setValue(newValue);
+            }
+        }
+
+        if (variables.containsKey(FocusEvent.EVENT_ID)) {
+            fireEvent(new FocusEvent(this));
+        }
+        if (variables.containsKey(BlurEvent.EVENT_ID)) {
+            fireEvent(new BlurEvent(this));
+        }
+    }
+
+    public void addListener(BlurListener listener) {
+        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
+                BlurListener.blurMethod);
+    }
+
+    public void removeListener(BlurListener listener) {
+        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+    }
+
+    public void addListener(FocusListener listener) {
+        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
+                FocusListener.focusMethod);
+    }
+
+    public void removeListener(FocusListener listener) {
+        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+
     }
 
     /**
-     * Creates a new push button with a set caption.
+     * Get the boolean value of the checkbox state.
      * 
-     * The value of the push button is always false and they are immediate by
-     * default.
-     * 
-     * @param caption
-     *            the Button caption.
+     * @return True iff the checkbox is checked.
+     * @deprecated in Vaadin 7.0.0. Retained to ease migration from Vaadin 6
      */
-
-    @SuppressWarnings("deprecation")
-    public CheckBox(String caption) {
-        super(caption, false);
-    }
-
     @Deprecated
-    @Override
-    public void setSwitchMode(boolean switchMode)
-            throws UnsupportedOperationException {
-        if (this.switchMode && !switchMode) {
-            throw new UnsupportedOperationException(
-                    "CheckBox is always in switch mode (consider using a Button)");
-        }
-        super.setSwitchMode(true);
-    }
-
-    @Override
-    public void setDisableOnClick(boolean disableOnClick) {
-        throw new UnsupportedOperationException(
-                "CheckBox does not support disable on click");
+    public boolean booleanValue() {
+        // FIXME: How should null really be handled? A default converter that
+        // converts it to false? The only UI values supported are true and
+        // false.
+        Boolean value = getValue();
+        return (null == value) ? false : value.booleanValue();
     }
 
 }

@@ -141,7 +141,6 @@
 	overflow: hidden;
 	margin: 0;
 }
-.v-ie7 .v-tabsheet-deco,
 .v-ie8 .v-tabsheet-deco,
 .v-ie9 .v-tabsheet-deco {
 	width: 100%;
@@ -249,20 +248,6 @@
 	margin-left: -3px;
 	padding-left: 3px;
 }*/
-/* IE specific styles */
-.v-ie7 .v-tabsheet-tabs-light {
-	height: 32px;
-}
-.v-ie7 .v-tabsheet-tabs-light .v-tabsheet-tabitem-selected {
-	border: none;
-	background: #fff url(img/inline-tab-right.png) no-repeat right top;
-	padding: 0;
-	height: 32px;
-}
-.v-ie7 .v-tabsheet-tabs-light .v-tabsheet-tabitem-selected .v-caption {
-	background: transparent url(img/inline-tab-left.png) no-repeat -7px 0;
-	padding: 9px 11px 0 11px;
-}
 .v-ie .v-tabsheet-deco-light {
 	height: 0;
 }

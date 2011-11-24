@@ -5,9 +5,6 @@
     /* defines the amount of indent per level */
     width: 18px;
 }
-.v-ie7 .v-treetable-treespacer{
-	height: 100%; /* #7388 */
-}
 
 .v-treetable-node-closed {
     background: url(../treetable/img/arrow-right.png) right center no-repeat;

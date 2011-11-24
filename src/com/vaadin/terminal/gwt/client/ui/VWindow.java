@@ -667,42 +667,6 @@ public class VWindow extends VOverlay implements Container,
             showModalityCurtain();
         }
         super.show();
-
-        setFF2CaretFixEnabled(true);
-        fixFF3OverflowBug();
-    }
-
-    /** Disable overflow auto with FF3 to fix #1837. */
-    private void fixFF3OverflowBug() {
-        if (BrowserInfo.get().isFF3()) {
-            Scheduler.get().scheduleDeferred(new Command() {
-                public void execute() {
-                    DOM.setStyleAttribute(getElement(), "overflow", "");
-                }
-            });
-        }
-    }
-
-    /**
-     * Fix "missing cursor" browser bug workaround for FF2 in Windows and Linux.
-     * 
-     * Calling this method has no effect on other browsers than the ones based
-     * on Gecko 1.8
-     * 
-     * @param enable
-     */
-    private void setFF2CaretFixEnabled(boolean enable) {
-        if (BrowserInfo.get().isFF2()) {
-            if (enable) {
-                Scheduler.get().scheduleDeferred(new Command() {
-                    public void execute() {
-                        DOM.setStyleAttribute(getElement(), "overflow", "auto");
-                    }
-                });
-            } else {
-                DOM.setStyleAttribute(getElement(), "overflow", "");
-            }
-        }
     }
 
     @Override
@@ -731,14 +695,6 @@ public class VWindow extends VOverlay implements Container,
     }
 
     private void showModalityCurtain() {
-        if (BrowserInfo.get().isFF2()) {
-            DOM.setStyleAttribute(
-                    getModalityCurtain(),
-                    "height",
-                    DOM.getElementPropertyInt(RootPanel.getBodyElement(),
-                            "offsetHeight") + "px");
-            DOM.setStyleAttribute(getModalityCurtain(), "position", "absolute");
-        }
         DOM.setStyleAttribute(getModalityCurtain(), "zIndex",
                 "" + (windowOrder.indexOf(this) + Z_INDEX));
         if (isShowing()) {
@@ -760,8 +716,6 @@ public class VWindow extends VOverlay implements Container,
     private void showDraggingCurtain(boolean show) {
         if (show && draggingCurtain == null) {
 
-            setFF2CaretFixEnabled(false); // makes FF2 slow
-
             draggingCurtain = DOM.createDiv();
             DOM.setStyleAttribute(draggingCurtain, "position", "absolute");
             DOM.setStyleAttribute(draggingCurtain, "top", "0px");
@@ -773,8 +727,6 @@ public class VWindow extends VOverlay implements Container,
 
             DOM.appendChild(RootPanel.getBodyElement(), draggingCurtain);
         } else if (!show && draggingCurtain != null) {
-
-            setFF2CaretFixEnabled(true); // makes FF2 slow
 
             DOM.removeChild(RootPanel.getBodyElement(), draggingCurtain);
             draggingCurtain = null;
