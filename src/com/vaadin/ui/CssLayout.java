@@ -76,14 +76,9 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
      */
     @Override
     public void addComponent(Component c) {
+        super.addComponent(c);
         components.add(c);
-        try {
-            super.addComponent(c);
-            requestRepaint();
-        } catch (IllegalArgumentException e) {
-            components.remove(c);
-            throw e;
-        }
+        requestRepaint();
     }
 
     /**
@@ -94,14 +89,9 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
      *            the component to be added.
      */
     public void addComponentAsFirst(Component c) {
+        super.addComponent(c);
         components.addFirst(c);
-        try {
-            super.addComponent(c);
-            requestRepaint();
-        } catch (IllegalArgumentException e) {
-            components.remove(c);
-            throw e;
-        }
+        requestRepaint();
     }
 
     /**
@@ -114,14 +104,14 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
      *            in and after the position are shifted forwards.
      */
     public void addComponent(Component c, int index) {
-        components.add(index, c);
-        try {
-            super.addComponent(c);
-            requestRepaint();
-        } catch (IllegalArgumentException e) {
-            components.remove(c);
-            throw e;
+        // if this already contains c, super.addComponent() will remove it
+        // so everything after c's original position shifts one place down
+        if(this == c.getParent() && index > components.indexOf(c)) {
+            index--;
         }
+        super.addComponent(c);
+        components.add(index, c);
+        requestRepaint();
     }
 
     /**

@@ -53,14 +53,9 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     @Override
     public void addComponent(Component c) {
+        super.addComponent(c);
         components.add(c);
-        try {
-            super.addComponent(c);
-            requestRepaint();
-        } catch (IllegalArgumentException e) {
-            components.remove(c);
-            throw e;
-        }
+        requestRepaint();
     }
 
     /**
@@ -71,14 +66,9 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      *            the component to be added.
      */
     public void addComponentAsFirst(Component c) {
+        super.addComponent(c);
         components.addFirst(c);
-        try {
-            super.addComponent(c);
-            requestRepaint();
-        } catch (IllegalArgumentException e) {
-            components.remove(c);
-            throw e;
-        }
+        requestRepaint();
     }
 
     /**
@@ -91,14 +81,14 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      *            in and after the position are shifted forwards.
      */
     public void addComponent(Component c, int index) {
-        components.add(index, c);
-        try {
-            super.addComponent(c);
-            requestRepaint();
-        } catch (IllegalArgumentException e) {
-            components.remove(c);
-            throw e;
+        // if this already contains c, super.addComponent() will remove it
+        // so everything after c's original position shifts one place down
+        if(this == c.getParent() && index > getComponentIndex(c)) {
+            index--;
         }
+        super.addComponent(c);
+        components.add(index, c);
+        requestRepaint();
     }
 
     /**

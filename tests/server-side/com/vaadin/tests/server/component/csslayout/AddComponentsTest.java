@@ -39,6 +39,14 @@ public class AddComponentsTest {
         layout1.addComponent(children[3], 0);
         assertOrder(layout1, new int[] { 3, 0 });
         assertOrder(layout2, new int[] { 2, 1 });
+        
+        layout2.addComponent(children[0]);
+        assertOrder(layout1, new int[] { 3 });
+        assertOrder(layout2, new int[] { 2, 1, 0 });
+        
+        layout1.addComponentAsFirst(children[1]);
+        assertOrder(layout1, new int[] { 1, 3 });
+        assertOrder(layout2, new int[] { 2, 0 });
     }
     
     @Test
@@ -67,6 +75,22 @@ public class AddComponentsTest {
         // Move D from #2 to #0
         layout.addComponent(children[3], 0);
         assertOrder(layout, new int[] { 3, 0, 1, 2 });
+        
+        // Move A from #1 to end (#4 which becomes #3)
+        layout.addComponent(children[0]);
+        assertOrder(layout, new int[] { 3, 1, 2, 0 });
+
+        // Keep everything in place
+        layout.addComponent(children[0]);
+        assertOrder(layout, new int[] { 3, 1, 2, 0 });
+        
+        // Move C from #2 to #0
+        layout.addComponentAsFirst(children[2]);
+        assertOrder(layout, new int[] { 2, 3, 1, 0 });
+
+        // Keep everything in place
+        layout.addComponentAsFirst(children[2]);
+        assertOrder(layout, new int[] { 2, 3, 1, 0 });
     }
 
     /**
