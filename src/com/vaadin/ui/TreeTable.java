@@ -657,7 +657,8 @@ public class TreeTable extends Table implements Hierarchical {
      */
     public void setCollapsed(Object itemId, boolean collapsed) {
         if (isCollapsed(itemId) != collapsed) {
-            if (null == toggledItemId && !isRowCacheInvalidated()) {
+            if (null == toggledItemId && getVisibleItemIds().contains(itemId)
+                    && !isRowCacheInvalidated()) {
                 // optimization: partial refresh if only one item is
                 // collapsed/expanded
                 toggledItemId = itemId;

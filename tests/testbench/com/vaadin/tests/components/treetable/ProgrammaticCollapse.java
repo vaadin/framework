@@ -4,20 +4,28 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TreeTable;
+import com.vaadin.ui.VerticalLayout;
 
 public class ProgrammaticCollapse extends TestBase {
 
     @Override
     protected void setup() {
-        HorizontalLayout layout = new HorizontalLayout();
+        VerticalLayout layout = new VerticalLayout();
         final TreeTable table = new TreeTable();
+        table.setPageLength(10);
         table.addContainerProperty("A", String.class, null);
         table.addContainerProperty("B", String.class, null);
-        table.addItem(new Object[] { "A1", "B1" }, 1);
-        table.addItem(new Object[] { "A2", "B2" }, 2);
-        table.setParent(2, 1);
+        for (int i = 1; i <= 100; ++i) {
+            int parentid = i;
+            table.addItem(new Object[] { "A" + i, "B" + i }, parentid);
+            for (int j = 1; j < 5; ++j) {
+                int id = 1000 * i + j;
+                table.addItem(new Object[] { "A" + i + "." + j,
+                        "B" + i + "." + j }, id);
+                table.setParent(id, parentid);
+            }
+        }
         layout.addComponent(table);
         layout.addComponent(new Button("Expand / Collapse",
                 new ClickListener() {
@@ -26,6 +34,28 @@ public class ProgrammaticCollapse extends TestBase {
                         table.getWindow().showNotification(
                                 "set collapsed: " + collapsed);
                         table.setCollapsed(1, collapsed);
+                    }
+                }));
+        layout.addComponent(new Button("Expand / Collapse last",
+                new ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        boolean collapsed = !table.isCollapsed(100);
+                        table.getWindow().showNotification(
+                                "set collapsed: " + collapsed);
+                        table.setCollapsed(100, collapsed);
+                    }
+                }));
+        layout.addComponent(new Button("Expand / Collapse multiple",
+                new ClickListener() {
+                    private boolean collapsed = true;
+
+                    public void buttonClick(ClickEvent event) {
+                        collapsed = !collapsed;
+                        table.getWindow().showNotification(
+                                "set collapsed: " + collapsed);
+                        for (int i = 0; i < 50; ++i) {
+                            table.setCollapsed(i * 2, collapsed);
+                        }
                     }
                 }));
         addComponent(layout);
