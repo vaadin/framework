@@ -36,6 +36,9 @@ public class LicenseInJavaFiles extends TestCase {
 
         for (File f : srcDir.listFiles()) {
             if (f.isDirectory()) {
+                if (f.getPath().endsWith("com/vaadin/external")) {
+                    continue;
+                }
                 checkForLicense(f, missing);
             } else if (f.getName().endsWith(".java")) {
                 checkForLicenseInFile(f, missing);
