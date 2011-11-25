@@ -45,12 +45,13 @@
     	<ivy:configure />
 	</target>
 	
-    <target name="ivy-resolve" depends="ivy-configure">
-    	<ivy:resolve />
-      	<ivy:cachepath pathid="compile.classpath" conf="compile"/>	   
-      	<ivy:cachepath pathid="client-side.compile.classpath" conf="client-side.compile"/>	   
-      	<ivy:cachepath pathid="test.runtime.classpath" conf="test.runtime"/>	   
-      	<ivy:cachepath pathid="taskdefs.classpath" conf="ant-tasks"/>	   	   
+    <target name="ivy-resolve" depends="ivy-configure" unless="ivy.resolved">
+        <property name="ivy.resolved" value="1" />
+        <ivy:resolve />
+        <ivy:cachepath pathid="compile.classpath" conf="compile"/>
+        <ivy:cachepath pathid="client-side.compile.classpath" conf="client-side.compile"/>
+        <ivy:cachepath pathid="test.runtime.classpath" conf="test.runtime"/>
+        <ivy:cachepath pathid="taskdefs.classpath" conf="ant-tasks"/>
     </target>
 	
 	<target name="init-taskdefs" depends="ivy-resolve">
@@ -505,12 +506,14 @@
     
     <target name="compile-widgetset-default">
         <antcall target="compile-widgetset">
+            <reference refid="client-side.compile.classpath" />
             <param name="widgetset" value="com.vaadin.terminal.gwt.DefaultWidgetSet"/>
         </antcall>
     </target>
     
     <target name="compile-widgetset-portal-default" unless="compile.only.default-widgetset">
         <antcall target="compile-widgetset">
+            <reference refid="client-side.compile.classpath" />
             <param name="widgetset" value="com.vaadin.portal.gwt.PortalDefaultWidgetSet"/>
         </antcall>
     </target>
@@ -521,8 +524,8 @@
     <target name="compile-client-side" depends="compile-server-side">
         <echo>Compiling widget sets in parallel.</echo>
         <parallel threadsperprocessor="1">
-            <antcall target="compile-widgetset-default"/>
-            <antcall target="compile-widgetset-portal-default"/>
+            <antcall inheritrefs="true" target="compile-widgetset-default"/>
+            <antcall inheritrefs="true" target="compile-widgetset-portal-default"/>
         </parallel>
     </target>
 
