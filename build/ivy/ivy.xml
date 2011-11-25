@@ -10,7 +10,7 @@
    		<conf name="ant-tasks" description="Ant task definitions" visibility="private" />
    		<conf name="jetty" description="Embedded Jetty" visibility="private" />
 	</configurations>
-	
+    <publications />        
 	<dependencies defaultconf="compile" defaultconfmapping="compile->master">
 	
         <!-- Servlet 2.3 API-->
@@ -26,6 +26,7 @@
      
         <!-- GWT user with dependencies (validation-api) -->
         <dependency org="com.google.gwt" name="gwt-user" rev="2.4.0" conf="client-side.compile->master" />
+        <dependency org="javax.validation" name="validation-api" rev="1.0.0.GA" conf="client-side.compile->master,sources" />
         <!-- GWT dev (incl. servlet-api 2.4 classes) -->         
         <dependency org="com.google.gwt" name="gwt-dev" rev="2.4.0" conf="client-side.compile->master" />
          
