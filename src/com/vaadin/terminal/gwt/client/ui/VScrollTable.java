@@ -5704,6 +5704,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (this.width.equals(width)) {
             return;
         }
+        if (!isVisible()) {
+            /*
+             * Do not update size when the table is hidden as all column widths
+             * will be set to zero and they won't be recalculated when the table
+             * is set visible again (until the size changes again)
+             */
+            return;
+        }
 
         this.width = width;
         if (width != null && !"".equals(width)) {
