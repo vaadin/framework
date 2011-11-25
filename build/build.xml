@@ -958,6 +958,7 @@
                 <pathelement path="${result-path}/junit_emma_classes" />
                 <pathelement path="${result-path}/classes" />            	
             	<path refid="test.runtime.classpath"></path>
+                <path refid="compile.classpath"></path>
             </classpath>
         	<jvmarg value="-Demma.coverage.out.file=../${result-path}/unittests.ec" />
 
