@@ -85,7 +85,7 @@ public class Root extends AbstractComponentContainer implements
      */
     private Component scrollIntoView;
 
-    private int rootId;
+    private int rootId = -1;
 
     /**
      * Keeps track of the Actions added to this component, and manages the
@@ -225,15 +225,21 @@ public class Root extends AbstractComponentContainer implements
         return Collections.singleton((Component) getContent()).iterator();
     }
 
-    public void registerRoot(Application application, int rootId) {
+    public void setApplication(Application application) {
         if (application == null) {
             throw new NullPointerException("application");
         } else if (this.application != null) {
             throw new IllegalStateException("Application has already been set");
         } else {
             this.application = application;
-            this.rootId = rootId;
         }
+    }
+
+    public void setRootId(int rootId) {
+        if (this.rootId != -1) {
+            throw new IllegalStateException("Root id has already been defined");
+        }
+        this.rootId = rootId;
     }
 
     public int getRootId() {

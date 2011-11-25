@@ -10,6 +10,10 @@ import java.io.Serializable;
 import java.util.Map;
 
 public interface WrappedRequest extends Serializable {
+    public interface BrowserDetails {
+        public String getUriFragmet();
+    }
+    
     /**
      * Get the named HTTP or portlet request parameter.
      * 
@@ -64,5 +68,7 @@ public interface WrappedRequest extends Serializable {
     public String getContentType();
 
     public String getStaticFileLocation();
+
+    public BrowserDetails getBrowserDetails();
 
 }

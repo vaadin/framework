@@ -452,13 +452,16 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 return;
             } else if (requestType == RequestType.UIDL) {
                 // Handles AJAX UIDL requests
-                Root root = applicationManager.getApplicationRoot(
-                        wrappedRequest, application);
+                Root root = application.getRootForRequest(wrappedRequest);
                 if (root == null) {
                     throw new ServletException(ERROR_NO_WINDOW_FOUND);
                 }
                 applicationManager.handleUidlRequest(wrappedRequest,
                         wrappedResponse, servletWrapper, root);
+                return;
+            } else if (requestType == RequestType.BROWSER_DETAILS) {
+                applicationManager.handleBrowserDetailsRequest(wrappedRequest,
+                        wrappedResponse, application);
                 return;
             }
 
@@ -1228,12 +1231,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     protected enum RequestType {
-        FILE_UPLOAD, UIDL, OTHER, STATIC_FILE, APPLICATION_RESOURCE;
+        FILE_UPLOAD, BROWSER_DETAILS, UIDL, OTHER, STATIC_FILE, APPLICATION_RESOURCE;
     }
 
     protected RequestType getRequestType(HttpServletRequest request) {
         if (isFileUploadRequest(request)) {
             return RequestType.FILE_UPLOAD;
+        } else if (isBrowserDetailsRequest(request)) {
+            return RequestType.BROWSER_DETAILS;
         } else if (isUIDLRequest(request)) {
             return RequestType.UIDL;
         } else if (isStaticResourceRequest(request)) {
@@ -1245,6 +1250,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
         return RequestType.OTHER;
 
+    }
+
+    private static boolean isBrowserDetailsRequest(HttpServletRequest request) {
+        return "POST".equals(request.getMethod())
+                && request.getParameter("browserDetails") != null;
     }
 
     private boolean isApplicationRequest(HttpServletRequest request) {

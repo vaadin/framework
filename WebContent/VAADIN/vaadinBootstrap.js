@@ -43,8 +43,6 @@
 		
 		var url = basePath + widgetset + "/" + widgetset + ".nocache.js?" + new Date().getTime();
 		
-		//document.write("<script type='text/javascript' src='"+url+"'></script>");
-		
 		var scriptTag = document.createElement('script');
 		scriptTag.setAttribute('type', 'text/javascript');
 		scriptTag.setAttribute('src', url);
@@ -58,7 +56,7 @@
 			if (defaults) {
 				throw "Defaults already defined";
 			}
-			log("Got defaults", defaults)
+			log("Got defaults", d)
 			defaults = d;
 		},
 		initApplication: function(appId, config) {
@@ -73,33 +71,79 @@
 				}
 				return value;
 			}
-
-			var themeUri = getConfig('themeUri');
-			if (themeUri) {
-				loadTheme(themeUri);
-			}
 			
-			var widgetsetBase = getConfig('widgetsetBase');
-			var widgetset = getConfig('widgetset');
-			if (widgetset && widgetsetBase) {
-				loadWidgetset(widgetsetBase, widgetset);
-				if (widgetsetApps[widgetset]) {
-					widgetsetApps[widgetset].push(appId);
-				}  else {
-					widgetsetApps[widgetset] = [appId];
-				}
-			}
-			
-			if (getConfig("debug")) {
-				// TODO debug state is now global for the entire page, but should somehow only be set for the current application  
-				window.vaadin.debug = true;
-			}
+			var fetchRootConfig = function() {
+				log('Fetching root config');
+				var url = getConfig('appUri');
+				// Root id
+				url += ((/\?/).test(url) ? "&" : "?") + "browserDetails";
+				url += '&rootId=' + getConfig('rootId');
+				// Uri fragment
+				url += '&f=' + encodeURIComponent(location.hash);
+				// Timestamp to avoid caching
+				url += '&' + (new Date()).getTime();
+				
+				var r = new XMLHttpRequest();
+				r.open('POST', url, true);
+				r.onreadystatechange = function (aEvt) {  
+					if (r.readyState == 4) {  
+						if (r.status == 200){
+							log(r.responseText);
+							// TODO Does this work in all supported browsers?
+							var updatedConfig = JSON.parse(r.responseText);
+							
+							// Copy new properties to the config object
+							for (var property in updatedConfig) {
+								if (updatedConfig.hasOwnProperty(property)) {
+									config[property] = updatedConfig[property];
+								}
+							}
+							
+							// Try bootstrapping again, this time without fetching missing info
+							bootstrapApp(false);
+						} else {
+							log('Error', r.statusText);  
+						}
+					}  
+				};
+				r.send(null);
+				
+				log('sending request to ', url);
+			};			
 			
 			//Export public data
 			var app = {
 				'getConfig': getConfig
 			};
 			apps[appId] = app;
+			
+			var bootstrapApp = function(mayDefer) {
+				var themeUri = getConfig('themeUri');
+				if (themeUri) {
+					loadTheme(themeUri);
+				}
+				
+				var widgetsetBase = getConfig('widgetsetBase');
+				var widgetset = getConfig('widgetset');
+				if (widgetset && widgetsetBase) {
+					loadWidgetset(widgetsetBase, widgetset);
+					if (widgetsetApps[widgetset]) {
+						widgetsetApps[widgetset].push(appId);
+					}  else {
+						widgetsetApps[widgetset] = [appId];
+					}
+				} else if (mayDefer) {
+					fetchRootConfig();
+				} else {
+					throw "Widgetset not defined";
+				}
+			}
+			bootstrapApp(true);
+
+			if (getConfig("debug")) {
+				// TODO debug state is now global for the entire page, but should somehow only be set for the current application  
+				window.vaadin.debug = true;
+			}
 			
 			return app;
 		},

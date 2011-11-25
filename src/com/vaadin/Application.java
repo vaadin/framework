@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.ApplicationResource;
+import com.vaadin.terminal.CombinedRequest;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.RequestHandler;
 import com.vaadin.terminal.SystemError;
@@ -36,6 +37,7 @@ import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.server.ChangeVariablesErrorEvent;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbstractComponent;
@@ -118,8 +120,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
                         "mainWindow has already been set");
             }
             this.mainWindow = mainWindow;
-            registerRoot(mainWindow);
-            mainWindow.init(null);
         }
 
         public Root getMainWindow() {
@@ -171,8 +171,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
         public void addWindow(Root root, String name) {
             legacyRootNames.put(name, root);
-            registerRoot(root);
-            root.init(null);
         }
 
         public void removeWindow(Root root) {
@@ -208,6 +206,24 @@ public class Application implements Terminal.ErrorListener, Serializable {
                 }
             }
             return addWindow(root);
+        }
+    }
+
+    private static class PendingRootRequest {
+
+        private final Map<String, String[]> parameterMap;
+        private final String pathInfo;
+
+        public PendingRootRequest(WrappedRequest request) {
+            parameterMap = new HashMap<String, String[]>(
+                    request.getParameterMap());
+            pathInfo = request.getRequestPathInfo();
+        }
+
+        public CombinedRequest getCombinedRequest(
+                final WrappedRequest secondRequest) {
+            return new CombinedRequest(secondRequest,
+                    Collections.unmodifiableMap(parameterMap), pathInfo);
         }
     }
 
@@ -282,6 +298,12 @@ public class Application implements Terminal.ErrorListener, Serializable {
     private Map<Integer, Root> roots = new HashMap<Integer, Root>();
 
     private boolean productionMode = true;
+
+    /**
+     * Keeps track of requests for which a root should be created once more
+     * information is available.
+     */
+    private Map<Integer, PendingRootRequest> pendingRoots = new HashMap<Integer, PendingRootRequest>();
 
     /**
      * Gets the user of the application.
@@ -1570,27 +1592,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
     }
 
-    public Root getRoot(WrappedRequest request) {
-        // TODO What if getRoot is called again for this request?
-
-        // TODO implement support for throwing exception if more
-        // information is required to create a root
-        Root root = createRoot(request);
-
-        registerRoot(root);
-
-        // TODO implement lazy init of root if indicated by annotation
-        root.init(request);
-
-        return root;
-    }
-
-    protected void registerRoot(Root root) {
-        root.registerRoot(this, nextRootId++);
-        roots.put(Integer.valueOf(root.getRootId()), root);
-    }
-
-    protected Root createRoot(WrappedRequest request) {
+    protected Root getRoot(WrappedRequest request)
+            throws RootRequiresMoreInformation {
         String rootClassName = getRootClassName(request);
         try {
             Class<? extends Root> rootClass = Class.forName(rootClassName)
@@ -1666,11 +1669,70 @@ public class Application implements Terminal.ErrorListener, Serializable {
         currentApplication.set(application);
     }
 
-    public Root getRootById(int rootId) {
-        return roots.get(Integer.valueOf(rootId));
-    }
-
     public boolean isProductionMode() {
         return productionMode;
+    }
+
+    public int registerPendingRoot(WrappedRequest request) {
+        int rootId = nextRootId++;
+        pendingRoots.put(Integer.valueOf(rootId), new PendingRootRequest(
+                request));
+        return rootId;
+    }
+
+    public CombinedRequest getCombinedRequest(WrappedRequest request) {
+        PendingRootRequest pendingRootRequest = pendingRoots
+                .get(getRootId(request));
+        if (pendingRootRequest == null) {
+            return null;
+        } else {
+            return pendingRootRequest.getCombinedRequest(request);
+        }
+    }
+
+    public Root getRootForRequest(WrappedRequest request)
+            throws RootRequiresMoreInformation {
+        Root root = Root.getCurrentRoot();
+        if (root != null) {
+            return root;
+        }
+        Integer rootId = getRootId(request);
+
+        synchronized (this) {
+            PendingRootRequest pendingRootRequest = pendingRoots.remove(rootId);
+            if (pendingRootRequest == null && rootId != null) {
+                root = roots.get(rootId);
+            } else {
+                root = getRoot(request);
+                if (root.getApplication() == null) {
+                    root.setApplication(this);
+                }
+                if (root.getRootId() < 0) {
+                    int id = (rootId != null ? rootId.intValue() : nextRootId++);
+                    root.setRootId(id);
+                    roots.put(Integer.valueOf(root.getRootId()), root);
+
+                    // TODO implement lazy init of root if indicated by
+                    // annotation
+                    root.init(request);
+                }
+            }
+        }
+
+        Root.setCurrentRoot(root);
+        return root;
+    }
+
+    private Integer getRootId(WrappedRequest request) {
+        if (request instanceof CombinedRequest) {
+            // Combined requests has the rootid parameter in the second request
+            CombinedRequest combinedRequest = (CombinedRequest) request;
+            request = combinedRequest.getSecondRequest();
+        }
+        String rootIdString = request
+                .getParameter(ApplicationConnection.ROOT_ID_PARAMETER);
+        Integer rootId = rootIdString == null ? null
+                : new Integer(rootIdString);
+        return rootId;
     }
 }

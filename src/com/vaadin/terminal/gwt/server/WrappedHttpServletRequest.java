@@ -95,4 +95,9 @@ public class WrappedHttpServletRequest implements WrappedRequest {
     public String getStaticFileLocation() {
         return servlet.getStaticFilesLocation(request);
     }
+
+    public BrowserDetails getBrowserDetails() {
+        // No browserDetails available for normal requests
+        return null;
+    }
 }

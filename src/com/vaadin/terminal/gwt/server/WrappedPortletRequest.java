@@ -108,4 +108,9 @@ public class WrappedPortletRequest implements WrappedRequest {
         throw new UnsupportedOperationException("Please implement me!");
     }
 
+    public BrowserDetails getBrowserDetails() {
+        // No browserDetails available for normal requests
+        return null;
+    }
+
 }

@@ -43,6 +43,10 @@ import java.util.logging.Logger;
 
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
+import com.vaadin.RootRequiresMoreInformation;
+import com.vaadin.external.json.JSONException;
+import com.vaadin.external.json.JSONObject;
+import com.vaadin.terminal.CombinedRequest;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Paintable;
@@ -90,15 +94,18 @@ public abstract class AbstractCommunicationManager implements
             .getLogger(AbstractCommunicationManager.class.getName());
 
     private static final RequestHandler APP_RESOURCE_HANDLER = new ApplicationResourceHandler();
-    private static final RequestHandler AJAX_PAGE_HANDLER = new AjaxPageHandler() {
+    private static final AjaxPageHandler AJAX_PAGE_HANDLER = new AjaxPageHandler() {
 
         @Override
-        protected String getApplicationOrSystemProperty(
-                WrappedRequest request, String parameter,
-                String defaultValue) {
+        protected String getApplicationOrSystemProperty(WrappedRequest request,
+                String parameter, String defaultValue) {
+            if (request instanceof CombinedRequest) {
+                CombinedRequest combinedRequest = (CombinedRequest) request;
+                request = combinedRequest.getSecondRequest();
+            }
             WrappedHttpServletRequest r = (WrappedHttpServletRequest) request;
-            return r.getServlet().getApplicationOrSystemProperty(
-                    parameter, defaultValue);
+            return r.getServlet().getApplicationOrSystemProperty(parameter,
+                    defaultValue);
         }
 
     };
@@ -1629,32 +1636,6 @@ public abstract class AbstractCommunicationManager implements
     }
 
     /**
-     * Gets the existing application or creates a new one. Get a window within
-     * an application based on the requested URI.
-     * 
-     * @param request
-     *            the HTTP Request.
-     * @param application
-     *            the Application to query for window.
-     * @return Window matching the given URI or null if not found.
-     */
-    public Root getApplicationRoot(WrappedRequest request,
-            Application application) {
-        String rootIdString = request
-                .getParameter(ApplicationConnection.ROOT_ID_PARAMETER);
-        Root root = null;
-        synchronized (application) {
-            if (rootIdString != null) {
-                int rootId = Integer.parseInt(rootIdString);
-                root = application.getRootById(rootId);
-            }
-        }
-
-        Root.setCurrentRoot(root);
-        return root;
-    }
-
-    /**
      * Ends the Application.
      * 
      * The browser is redirected to the Application logout URL set with
@@ -1949,6 +1930,39 @@ public abstract class AbstractCommunicationManager implements
     protected boolean handleApplicationRequest(WrappedRequest request,
             WrappedResponse response) throws IOException {
         return application.handleRequest(request, response);
+    }
+
+    public void handleBrowserDetailsRequest(WrappedRequest request,
+            WrappedResponse response, Application application)
+            throws IOException {
+
+        // TODO Handle npe if id has not been registered
+        CombinedRequest combinedRequest = application
+                .getCombinedRequest(request);
+
+        try {
+            Root root = application.getRootForRequest(combinedRequest);
+
+            // Use the same logic as for determined roots
+            String widgetset = AJAX_PAGE_HANDLER.getWidgetsetForRoot(
+                    combinedRequest, root);
+            String theme = AJAX_PAGE_HANDLER.getThemeForRoot(combinedRequest,
+                    root);
+            String themeUri = AJAX_PAGE_HANDLER.getThemeUri(theme,
+                    combinedRequest);
+
+            JSONObject params = new JSONObject();
+            params.put("widgetset", widgetset);
+            params.put("themeUri", themeUri);
+            response.getWriter().write(params.toString());
+        } catch (RootRequiresMoreInformation e) {
+            // Requiring more information at this point is not allowed
+            // TODO handle in a better way
+            throw new RuntimeException(e);
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     /**

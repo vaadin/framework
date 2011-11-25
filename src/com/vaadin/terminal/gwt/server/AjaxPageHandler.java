@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
+import com.vaadin.RootRequiresMoreInformation;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.RequestHandler;
@@ -22,15 +23,21 @@ public abstract class AjaxPageHandler implements RequestHandler {
             throws IOException {
 
         // TODO Should all urls be handled here?
-        Root root = application.getRoot(request);
+        int rootId;
+        try {
+            Root root = application.getRootForRequest(request);
+            if (root == null) {
+                writeError(response, new Throwable("No Root found"));
+                return true;
+            }
 
-        if (root == null) {
-            writeError(response, new Throwable("No Root found"));
-            return true;
+            rootId = root.getRootId();
+        } catch (RootRequiresMoreInformation e) {
+            rootId = application.registerPendingRoot(request);
         }
 
         try {
-            writeAjaxPage(request, response, root);
+            writeAjaxPage(request, response, application, rootId);
         } catch (JSONException e) {
             writeError(response, e);
         }
@@ -39,13 +46,14 @@ public abstract class AjaxPageHandler implements RequestHandler {
     }
 
     protected final void writeAjaxPage(WrappedRequest request,
-            WrappedResponse response, Root root) throws IOException,
-            JSONException {
-        Application application = root.getApplication();
+            WrappedResponse response, Application application, int rootId)
+            throws IOException, JSONException {
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getOutputStream(), "UTF-8"));
 
-        String title = ((root.getCaption() == null) ? "Vaadin "
+        Root root = Root.getCurrentRoot();
+
+        String title = ((root == null || root.getCaption() == null) ? "Vaadin "
                 + AbstractApplicationServlet.VERSION_MAJOR : root.getCaption());
 
         /* Fetch relative url to application */
@@ -78,9 +86,11 @@ public abstract class AjaxPageHandler implements RequestHandler {
         }
         appId = appId + "-" + hashCode;
 
+        String widgetset = getWidgetsetForRoot(request, root);
+
         // TODO include initial UIDL in the scripts?
-        writeAjaxPageHtmlVaadinScripts(themeName, page, appUrl, themeUri,
-                appId, request, root);
+        writeAjaxPageHtmlVaadinScripts(page, appUrl, themeUri, appId, request,
+                application, rootId, widgetset);
 
         /*- Add classnames;
          *      .v-app
@@ -107,6 +117,23 @@ public abstract class AjaxPageHandler implements RequestHandler {
         page.write("</body>\n</html>\n");
 
         page.close();
+    }
+
+    public String getWidgetsetForRoot(WrappedRequest request, Root root) {
+        if (root == null) {
+            // Defer widgetset selection
+            return null;
+        }
+
+        String widgetset = root.getApplication().getWidgetsetForRoot(root);
+        if (widgetset == null) {
+            widgetset = getApplicationOrSystemProperty(request,
+                    AbstractApplicationServlet.PARAMETER_WIDGETSET,
+                    AbstractApplicationServlet.DEFAULT_WIDGETSET);
+        }
+
+        widgetset = AbstractApplicationServlet.stripSpecialChars(widgetset);
+        return widgetset;
     }
 
     /**
@@ -178,22 +205,20 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * <p>
      * Override this method if you want to add some custom html around scripts.
      * 
-     * @param themeName
      * @param page
      * @param appUrl
      * @param themeUri
      * @param appId
      * @param request
+     * @param application
      * @param rootId
      * @throws IOException
      * @throws JSONException
      */
-    protected void writeAjaxPageHtmlVaadinScripts(String themeName,
-            final BufferedWriter page, String appUrl, String themeUri,
-            String appId, WrappedRequest request, Root root)
-            throws IOException, JSONException {
-
-        Application application = root.getApplication();
+    protected void writeAjaxPageHtmlVaadinScripts(final BufferedWriter page,
+            String appUrl, String themeUri, String appId,
+            WrappedRequest request, Application application, int rootId,
+            String widgetset) throws IOException, JSONException {
 
         String staticFileLocation = request.getStaticFileLocation();
 
@@ -225,8 +250,7 @@ public abstract class AjaxPageHandler implements RequestHandler {
 
         defaults.put("appUri", appUrl);
 
-        appConfig
-                .put(ApplicationConnection.ROOT_ID_PARAMETER, root.getRootId());
+        appConfig.put(ApplicationConnection.ROOT_ID_PARAMETER, rootId);
 
         if (isStandalone()) {
             defaults.put("standalone", true);
@@ -262,12 +286,6 @@ public abstract class AjaxPageHandler implements RequestHandler {
 
         defaults.put("widgetsetBase", widgetsetBase);
 
-        String widgetset = application.getWidgetsetForRoot(root);
-        widgetset = getApplicationOrSystemProperty(request,
-                AbstractApplicationServlet.PARAMETER_WIDGETSET,
-                AbstractApplicationServlet.DEFAULT_WIDGETSET);
-
-        widgetset = AbstractApplicationServlet.stripSpecialChars(widgetset);
         appConfig.put("widgetset", widgetset);
 
         page.write("vaadin.setDefaults(");
@@ -327,10 +345,12 @@ public abstract class AjaxPageHandler implements RequestHandler {
                 + "html, body {height:100%;margin:0;}</style>");
 
         // Add favicon links
-        page.write("<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\""
-                + themeUri + "/favicon.ico\" />");
-        page.write("<link rel=\"icon\" type=\"image/vnd.microsoft.icon\" href=\""
-                + themeUri + "/favicon.ico\" />");
+        if (themeUri != null) {
+            page.write("<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\""
+                    + themeUri + "/favicon.ico\" />");
+            page.write("<link rel=\"icon\" type=\"image/vnd.microsoft.icon\" href=\""
+                    + themeUri + "/favicon.ico\" />");
+        }
 
         page.write("<title>"
                 + AbstractApplicationServlet.safeEscapeForHtml(title)
@@ -387,7 +407,10 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * @param request
      * @return
      */
-    private String getThemeUri(String themeName, WrappedRequest request) {
+    public String getThemeUri(String themeName, WrappedRequest request) {
+        if (themeName == null) {
+            return null;
+        }
         final String staticFilePath = request.getStaticFileLocation();
         return staticFilePath + "/"
                 + AbstractApplicationServlet.THEME_DIRECTORY_PATH + themeName;
@@ -400,7 +423,10 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * @param root
      * @return
      */
-    private String getThemeForRoot(WrappedRequest request, Root root) {
+    public String getThemeForRoot(WrappedRequest request, Root root) {
+        if (root == null) {
+            return null;
+        }
         // Finds theme name
         String themeName;
 

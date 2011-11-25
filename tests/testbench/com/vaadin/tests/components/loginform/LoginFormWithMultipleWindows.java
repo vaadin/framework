@@ -11,7 +11,7 @@ import com.vaadin.ui.Root;
 public class LoginFormWithMultipleWindows extends Application {
 
     @Override
-    protected Root createRoot(WrappedRequest request) {
+    protected Root getRoot(WrappedRequest request) {
         return new LoginFormWindow();
     }
 
