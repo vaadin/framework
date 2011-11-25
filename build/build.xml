@@ -479,6 +479,7 @@
     <target name="compile-widgetset" description="Compiles the widgetset given as the first parameter" depends="ivy-resolve">
         <fail unless="widgetset" message="No widgetset parameter set"/>
         <echo>Compiling widgetset ${widgetset}. Output directory: ${widgetsets-output-dir}</echo>
+    	<mkdir dir="${widgetsets-output-dir}"/>
         <java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
         	<classpath>
         		   <path refid="client-side.compile.classpath" />
