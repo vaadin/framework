@@ -3816,8 +3816,12 @@ public class Table extends AbstractSelect implements Action.Container,
         final LinkedList<Object> visible = new LinkedList<Object>();
 
         final Object[][] cells = getVisibleCells();
-        for (int i = 0; i < cells[CELL_ITEMID].length; i++) {
-            visible.add(cells[CELL_ITEMID][i]);
+        // may be null if the table has not been rendered yet (e.g. not attached
+        // to a layout)
+        if (null != cells) {
+            for (int i = 0; i < cells[CELL_ITEMID].length; i++) {
+                visible.add(cells[CELL_ITEMID][i]);
+            }
         }
 
         return visible;
