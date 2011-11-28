@@ -197,9 +197,12 @@
                 <exclude name="**/*.html" />
                 <exclude name="**/*.css" />
                 <exclude name="**/*.xml" />
-               	<!-- Include files required by the DemoLauncher/DevelopmentServerLauncher -->
-        		<include name="{$toolkit-package}/launcher/**/jetty-webdefault.xml" />
-        		<include name="{$toolkit-package}/launcher/**/keystore" />
+            </fileset>
+
+        	<!-- Include files required by the DemoLauncher/DevelopmentServerLauncher -->
+            <fileset dir="tests/testbench">
+        		<include name="${toolkit-package}/launcher/jetty-webdefault.xml" />
+        		<include name="${toolkit-package}/launcher/keystore" />
             </fileset>
         </copy>
 
