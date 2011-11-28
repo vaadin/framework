@@ -525,12 +525,10 @@ public class Button extends AbstractComponent implements
         requestRepaint();
     }
 
-    @Override
     public int getTabIndex() {
         return tabIndex;
     }
 
-    @Override
     public void setTabIndex(int tabIndex) {
         this.tabIndex = tabIndex;
 

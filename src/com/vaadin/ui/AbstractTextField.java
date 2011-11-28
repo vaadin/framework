@@ -456,7 +456,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     }
 
     @Override
-    protected void setInternalValue(Object newValue) {
+    protected void setInternalValue(String newValue) {
         if (changingVariables && !textChangeEventPending) {
 
             /*

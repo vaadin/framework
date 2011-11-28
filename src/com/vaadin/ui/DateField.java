@@ -479,7 +479,7 @@ public class DateField extends AbstractField<Date> implements
      * @see com.vaadin.ui.AbstractField#setValue(java.lang.Object, boolean)
      */
     @Override
-    protected void setValue(Object newValue, boolean repaintIsNotNeeded)
+    protected void setValue(Date newValue, boolean repaintIsNotNeeded)
             throws Property.ReadOnlyException, Property.ConversionException {
 
         /*
@@ -564,24 +564,8 @@ public class DateField extends AbstractField<Date> implements
         }
     }
 
-    /**
-     * Sets the DateField datasource. Datasource type must assignable to Date.
-     * 
-     * @see com.vaadin.data.Property.Viewer#setPropertyDataSource(Property)
-     */
     @Override
-    public void setPropertyDataSource(Property newDataSource) {
-        if (newDataSource == null
-                || Date.class.isAssignableFrom(newDataSource.getType())) {
-            super.setPropertyDataSource(newDataSource);
-        } else {
-            throw new IllegalArgumentException(
-                    "DateField only supports Date properties");
-        }
-    }
-
-    @Override
-    protected void setInternalValue(Object newValue) {
+    protected void setInternalValue(Date newValue) {
         // Also set the internal dateString
         if (newValue != null) {
             dateString = newValue.toString();

@@ -12,11 +12,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.vaadin.Application;
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validatable;
 import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
@@ -63,6 +66,11 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     private T value;
 
+    /**
+     * A converter used to convert from the data model type to the field type
+     * and vice versa.
+     */
+    private Converter<Object, T> valueConverter = null;
     /**
      * Connected data-source.
      */
@@ -178,9 +186,14 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                 && getErrorMessage() != null;
     }
 
-    /*
-     * Gets the field type Don't add a JavaDoc comment here, we use the default
-     * documentation from the implemented interface.
+    /**
+     * Returns the type of the Field. The methods <code>getValue</code> and
+     * <code>setValue</code> must be compatible with this type: one must be able
+     * to safely cast the value returned from <code>getValue</code> to the given
+     * type and pass any variable assignable to this type as an argument to
+     * <code>setValue</code>.
+     * 
+     * @return the type of the Field
      */
     public abstract Class<? extends T> getType();
 
@@ -230,14 +243,14 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     public void commit() throws Buffered.SourceException, InvalidValueException {
         if (dataSource != null && !dataSource.isReadOnly()) {
             if ((isInvalidCommitted() || isValid())) {
-                final T newValue = getValue();
+                final T fieldValue = getFieldValue();
                 try {
 
                     // Commits the value to datasource.
                     valueWasModifiedByDataSourceDuringCommit = false;
                     committingValueToDataSource = true;
-                    // TODO cast required until conversions applied
-                    ((Property) dataSource).setValue(newValue);
+                    getPropertyDataSource().setValue(
+                            convertToDataSource(fieldValue));
 
                 } catch (final Throwable e) {
 
@@ -260,8 +273,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         boolean repaintNeeded = false;
 
         // The abstract field is not modified anymore
-        if (modified) {
-            modified = false;
+        if (isModified()) {
+            setModified(false);
             repaintNeeded = true;
         }
 
@@ -288,14 +301,11 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         if (dataSource != null) {
 
             // Gets the correct value from datasource
-            Object newValue;
+            T newFieldValue;
             try {
 
                 // Discards buffer by overwriting from datasource
-                newValue = dataSource.getValue();
-                if (String.class == getType() && newValue != null) {
-                    newValue = newValue.toString();
-                }
+                newFieldValue = convertFromDataSource(getDataSourceValue());
 
                 // If successful, remove set the buffering state to be ok
                 if (currentBufferedSourceException != null) {
@@ -303,6 +313,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                     requestRepaint();
                 }
             } catch (final Throwable e) {
+                // FIXME: What should really be done here if conversion fails?
 
                 // Sets the buffering state
                 currentBufferedSourceException = new Buffered.SourceException(
@@ -314,21 +325,41 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             }
 
             final boolean wasModified = isModified();
-            modified = false;
+            setModified(false);
 
             // If the new value differs from the previous one
-            if ((newValue == null && value != null)
-                    || (newValue != null && !newValue.equals(value))) {
-                // TODO use converter
-                setInternalValue(newValue);
+            if (!equals(newFieldValue, value)) {
+                setInternalValue(newFieldValue);
                 fireValueChange(false);
-            }
-
-            // If the value did not change, but the modification status did
-            else if (wasModified) {
+            } else if (wasModified) {
+                // If the value did not change, but the modification status did
                 requestRepaint();
             }
         }
+    }
+
+    private Object getDataSourceValue() {
+        return dataSource.getValue();
+    }
+
+    /**
+     * Returns the value that is or should be displayed in the field. This is
+     * always of type T.
+     * 
+     * This method should return the same as
+     * convertFromDataSource(getDataSourceValue()) if there are no buffered
+     * changes in the field.
+     * 
+     * @return The value of the field
+     */
+    private T getFieldValue() {
+        // Give the value from abstract buffers if the field if possible
+        if (dataSource == null || !isReadThrough() || isModified()) {
+            return value;
+        }
+
+        // There is no buffered value so use whatever the data model provides
+        return convertFromDataSource(getDataSourceValue());
     }
 
     /*
@@ -338,6 +369,10 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     public boolean isModified() {
         return modified;
+    }
+
+    private void setModified(boolean modified) {
+        this.modified = modified;
     }
 
     /*
@@ -383,13 +418,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             return;
         }
         readThroughMode = readThrough;
-        if (!isModified() && readThroughMode && dataSource != null) {
-            Object newValue = dataSource.getValue();
-            if (String.class == getType() && newValue != null) {
-                newValue = newValue.toString();
-            }
-            // TODO use converter
-            setInternalValue(newValue);
+        if (!isModified() && readThroughMode && getPropertyDataSource() != null) {
+            setInternalValue(convertFromDataSource(getDataSourceValue()));
             fireValueChange(false);
         }
     }
@@ -423,7 +453,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @since 7.0
      */
     public String getStringValue() {
-        final Object value = getValue();
+        final Object value = getFieldValue();
         if (value == null) {
             return null;
         }
@@ -441,61 +471,57 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * <p>
      * Note that the object returned is compatible with getType(). For example,
      * if the type is String, this returns Strings even when the underlying
-     * datasource is of some other type. In order to access the native type of
-     * the datasource, use getPropertyDatasource().getValue() instead.
+     * datasource is of some other type. In order to access the native value of
+     * the datasource, use getDataSourceValue() instead.
      * </p>
      * 
      * <p>
      * Since Vaadin 7.0, no implicit conversions between other data types and
-     * String are performed, but the converter is used if set.
+     * String are performed, but a value converter is used if set.
      * </p>
      * 
      * @return the current value of the field.
      * @throws Property.ConversionException
      */
     public T getValue() {
-
-        // Give the value from abstract buffers if the field if possible
-        if (dataSource == null || !isReadThrough() || isModified()) {
-            return value;
-        }
-
-        Object result = dataSource.getValue();
-        // TODO perform correct conversion, no cast or toString()
-        if (String.class == getType() && result != null) {
-            result = result.toString();
-        }
-        return (T) result;
+        return getFieldValue();
     }
 
     /**
      * Sets the value of the field.
      * 
-     * @param newValue
+     * @param newFieldValue
      *            the New value of the field.
      * @throws Property.ReadOnlyException
      * @throws Property.ConversionException
      */
-    public void setValue(Object newValue) throws Property.ReadOnlyException,
-            Property.ConversionException {
-        setValue(newValue, false);
+    public void setValue(Object newFieldValue)
+            throws Property.ReadOnlyException, Property.ConversionException {
+        // This check is needed as long as setValue accepts Object instead of T
+        if (newFieldValue != null) {
+            if (!getType().isAssignableFrom(newFieldValue.getClass())) {
+                throw new ConversionException("Value of type "
+                        + newFieldValue.getClass() + " cannot be assigned to "
+                        + getClass().getName());
+            }
+        }
+        setValue((T) newFieldValue, false);
     }
 
     /**
      * Sets the value of the field.
      * 
-     * @param newValue
+     * @param newFieldValue
      *            the New value of the field.
      * @param repaintIsNotNeeded
      *            True iff caller is sure that repaint is not needed.
      * @throws Property.ReadOnlyException
      * @throws Property.ConversionException
      */
-    protected void setValue(Object newValue, boolean repaintIsNotNeeded)
+    protected void setValue(T newFieldValue, boolean repaintIsNotNeeded)
             throws Property.ReadOnlyException, Property.ConversionException {
 
-        if ((newValue == null && value != null)
-                || (newValue != null && !newValue.equals(value))) {
+        if (!equals(newFieldValue, value)) {
 
             // Read only fields can not be changed
             if (isReadOnly()) {
@@ -514,14 +540,14 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                 if (v != null) {
                     for (final Iterator<Validator> i = v.iterator(); i
                             .hasNext();) {
-                        (i.next()).validate(newValue);
+                        (i.next()).validate(newFieldValue);
                     }
                 }
             }
 
             // Changes the value
-            setInternalValue(newValue);
-            modified = dataSource != null;
+            setInternalValue(newFieldValue);
+            setModified(dataSource != null);
 
             valueWasModifiedByDataSourceDuringCommit = false;
             // In write through mode , try to commit
@@ -531,10 +557,11 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
                     // Commits the value to datasource
                     committingValueToDataSource = true;
-                    ((Property) dataSource).setValue(newValue);
+                    getPropertyDataSource().setValue(
+                            convertToDataSource(newFieldValue));
 
                     // The buffer is now unmodified
-                    modified = false;
+                    setModified(false);
 
                 } catch (final Throwable e) {
 
@@ -568,6 +595,13 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             fireValueChange(repaintIsNotNeeded);
 
         }
+    }
+
+    private static boolean equals(Object value1, Object value2) {
+        if (value1 == null) {
+            return value2 == null;
+        }
+        return value1.equals(value2);
     }
 
     /* External data source */
@@ -630,21 +664,23 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         // Sets the new data source
         dataSource = newDataSource;
 
+        // Check if the current converter is compatible. If not, get a new one
+        if (newDataSource == null) {
+            setValueConverter(null);
+        } else if (!isValueConverterType(newDataSource.getType())) {
+            setValueConverterFromFactory(newDataSource.getType());
+        }
         // Gets the value from source
         try {
             if (dataSource != null) {
-                Object newValue = dataSource.getValue();
-                if (String.class == getType() && newValue != null) {
-                    newValue = newValue.toString();
-                }
-                // TODO use converter
-                setInternalValue(newValue);
+                T fieldValue = convertFromDataSource(getDataSourceValue());
+                setInternalValue(fieldValue);
             }
-            modified = false;
+            setModified(false);
         } catch (final Throwable e) {
             currentBufferedSourceException = new Buffered.SourceException(this,
                     e);
-            modified = true;
+            setModified(true);
         }
 
         // Listens the new data source if possible
@@ -673,6 +709,87 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                 && ((value != null && !value.equals(oldValue)) || value == null)) {
             fireValueChange(false);
         }
+    }
+
+    private void setValueConverterFromFactory(Class<?> datamodelType) {
+        // FIXME Use thread local to get application
+        ConverterFactory factory = Application.getConverterFactory();
+
+        Converter<?, T> converter = (Converter<?, T>) factory.createConverter(
+                datamodelType, getType());
+
+        setValueConverter(converter);
+    }
+
+    private boolean isValueConverterType(Class<?> type) {
+        if (getValueConverter() == null) {
+            return false;
+        }
+        return getValueConverter().getSourceType().isAssignableFrom(type);
+    }
+
+    @SuppressWarnings("unchecked")
+    private T convertFromDataSource(Object newValue) {
+        if (valueConverter != null) {
+            return valueConverter.convertFromSourceToTarget(newValue,
+                    getLocale());
+        }
+        if (newValue == null) {
+            return null;
+        }
+
+        if (getType().isAssignableFrom(newValue.getClass())) {
+            return (T) newValue;
+        } else {
+            throw new ConversionException(
+                    "Unable to convert value of type "
+                            + newValue.getClass().getName()
+                            + " to "
+                            + getType()
+                            + ". No value converter is set and the types are not compatible.");
+        }
+    }
+
+    private Object convertToDataSource(T fieldValue)
+            throws Converter.ConversionException {
+        if (valueConverter != null) {
+            /*
+             * If there is a value converter, always use it. It must convert or
+             * throw an exception.
+             */
+            return valueConverter.convertFromTargetToSource(fieldValue,
+                    getLocale());
+        }
+
+        if (fieldValue == null) {
+            // Null should always be passed through the converter but if there
+            // is no converter we can safely return null
+            return null;
+        }
+        if (getPropertyDataSource() != null) {
+            /*
+             * Data source is set
+             */
+            if (getPropertyDataSource().getType().isAssignableFrom(
+                    fieldValue.getClass())) {
+                return fieldValue;
+            } else {
+                throw new Converter.ConversionException(
+                        "Unable to convert value of type "
+                                + fieldValue.getClass().getName()
+                                + " to "
+                                + getPropertyDataSource().getType()
+                                + ". No value converter is set and the types are not compatible.");
+
+            }
+        }
+
+        throw new Converter.ConversionException(
+                "Unable to convert value of type "
+                        + fieldValue.getClass().getName()
+                        + " to "
+                        + getType()
+                        + ". No value converter is set and the types are not compatible.");
     }
 
     /* Validation */
@@ -769,12 +886,12 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         // Initialize temps
         Validator.InvalidValueException firstError = null;
         LinkedList<InvalidValueException> errors = null;
-        final Object value = getValue();
+        final Object fieldValue = getFieldValue();
 
         // Gets all the validation errors
         for (final Iterator<Validator> i = validators.iterator(); i.hasNext();) {
             try {
-                (i.next()).validate(value);
+                (i.next()).validate(fieldValue);
             } catch (final Validator.InvalidValueException e) {
                 if (firstError == null) {
                     firstError = e;
@@ -1028,10 +1145,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     public void valueChange(Property.ValueChangeEvent event) {
         if (isReadThrough()) {
             if (committingValueToDataSource) {
-                boolean propertyNotifiesOfTheBufferedValue = event
-                        .getProperty().getValue() == value
-                        || (value != null && value.equals(event.getProperty()
-                                .getValue()));
+                boolean propertyNotifiesOfTheBufferedValue = equals(event
+                        .getProperty().getValue(), value);
                 if (!propertyNotifiesOfTheBufferedValue) {
                     /*
                      * Property (or chained property like PropertyFormatter) now
@@ -1054,8 +1169,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     private void readValueFromProperty(Property.ValueChangeEvent event) {
-        // TODO use converter or check type otherwise
-        setInternalValue(event.getProperty().getValue());
+        setInternalValue(convertFromDataSource(event.getProperty().getValue()));
     }
 
     @Override
@@ -1069,25 +1183,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     @Override
     public void focus() {
         super.focus();
-    }
-
-    /**
-     * Creates abstract field by the type of the property.
-     * 
-     * <p>
-     * This returns most suitable field type for editing property of given type.
-     * </p>
-     * 
-     * @param propertyType
-     *            the Type of the property, that needs to be edited.
-     * @deprecated use e.g.
-     *             {@link DefaultFieldFactory#createFieldByPropertyType(Class)}
-     *             instead
-     */
-    @Deprecated
-    public static AbstractField constructField(Class<?> propertyType) {
-        return (AbstractField) DefaultFieldFactory
-                .createFieldByPropertyType(propertyType);
     }
 
     /*
@@ -1118,8 +1213,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @param newValue
      *            the new value to be set.
      */
-    protected void setInternalValue(Object newValue) {
-        value = (T) newValue;
+    protected void setInternalValue(T newValue) {
+        value = newValue;
         if (validators != null && !validators.isEmpty()) {
             requestRepaint();
         }
@@ -1190,7 +1285,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * also treats empty string as "empty".
      */
     protected boolean isEmpty() {
-        return (getValue() == null);
+        return (getFieldValue() == null);
     }
 
     /**
@@ -1293,4 +1388,32 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             focusable.focus();
         }
     }
+
+    /**
+     * Gets the converter used to convert the property data source value to the
+     * field value.
+     * 
+     * @return The converter or null if none is set.
+     */
+    public Converter<Object, T> getValueConverter() {
+        return valueConverter;
+    }
+
+    /**
+     * Sets the converter used to convert the property data source value to the
+     * field value. The converter must have a target type that matches the field
+     * type.
+     * 
+     * The source for the converter is the data model and the target is the
+     * field.
+     * 
+     * @param valueConverter
+     *            The new value converter to use.
+     */
+    public void setValueConverter(Converter<?, T> valueConverter) {
+        //
+        this.valueConverter = (Converter<Object, T>) valueConverter;
+        requestRepaint();
+    }
+
 }
