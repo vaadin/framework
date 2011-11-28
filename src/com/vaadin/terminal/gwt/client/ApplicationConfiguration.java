@@ -13,6 +13,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
@@ -217,39 +219,22 @@ public class ApplicationConfiguration implements EntryPoint {
 
     }
 
-    /**
-     * Starts the next unstarted application. The WidgetSet should call this
-     * once to start the first application; after that, each application should
-     * call this once it has started. This ensures that the applications are
-     * started synchronously, which is neccessary to avoid session-id problems.
-     * 
-     * @return true if an unstarted application was found
-     */
-    public static boolean startNextApplication() {
-        String applicationId = getNextUnstartedApplicationId(GWT
-                .getModuleName());
-        if (applicationId != null) {
-            ApplicationConfiguration appConf = getConfigFromDOM(applicationId);
-            ApplicationConnection a = GWT.create(ApplicationConnection.class);
-            a.init(widgetSet, appConf);
-            a.start();
-            runningApplications.add(a);
-            return true;
-        } else {
-            deferredWidgetLoader = new DeferredWidgetLoader();
-            return false;
-        }
+    public static void startApplication(final String applicationId) {
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            public void execute() {
+                ApplicationConfiguration appConf = getConfigFromDOM(applicationId);
+                ApplicationConnection a = GWT
+                        .create(ApplicationConnection.class);
+                a.init(widgetSet, appConf);
+                a.start();
+                runningApplications.add(a);
+            }
+        });
     }
 
     public static List<ApplicationConnection> getRunningApplications() {
         return runningApplications;
     }
-
-    private native static String getNextUnstartedApplicationId(
-            String widgetsetName)
-    /*-{
-        return $wnd.vaadin.popWidgetsetApp(widgetsetName);
-     }-*/;
 
     private native static JsoConfiguration getJsoConfiguration(String appId)
     /*-{
@@ -447,8 +432,15 @@ public class ApplicationConfiguration implements EntryPoint {
             }
         });
 
-        startNextApplication();
+        registerCallback(GWT.getModuleName());
+        deferredWidgetLoader = new DeferredWidgetLoader();
     }
+
+    public native static void registerCallback(String widgetsetName)
+    /*-{
+        var callbackHandler = @com.vaadin.terminal.gwt.client.ApplicationConfiguration::startApplication(Ljava/lang/String;);
+        $wnd.vaadin.registerWidgetset(widgetsetName, callbackHandler);
+    }-*/;
 
     /**
      * Checks if client side is in debug mode. Practically this is invoked by

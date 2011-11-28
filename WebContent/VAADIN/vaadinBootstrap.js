@@ -2,8 +2,7 @@
 	var defaults;
 	var apps = {};
 	var themesLoaded = {};
-	var widgetsetsRequested = {}
-	var widgetsetApps = {};
+	var widgetsets = {};
 	
 	
 	var log = function() {
@@ -30,8 +29,7 @@
 	}
 	
 	var loadWidgetset = function(basePath, widgetset) {
-		if (widgetsetsRequested[widgetset]) {
-			//TODO Tell the widgetset to load another application
+		if (widgetsets[widgetset]) {
 			return;
 		}
 		log("load widgetset", basePath, widgetset)
@@ -48,7 +46,9 @@
 		scriptTag.setAttribute('src', url);
 		document.getElementsByTagName('head')[0].appendChild(scriptTag);
 		
-		widgetsetsRequested[widgetset] = true;
+		widgetsets[widgetset] = {
+			pendingApps: []
+		};
 	}
 	
 	window.vaadin = window.vaadin || {
@@ -127,15 +127,17 @@
 				var widgetset = getConfig('widgetset');
 				if (widgetset && widgetsetBase) {
 					loadWidgetset(widgetsetBase, widgetset);
-					if (widgetsetApps[widgetset]) {
-						widgetsetApps[widgetset].push(appId);
+					if (widgetsets[widgetset].callback) {
+						log("Starting from bootstrap", appId);
+						widgetsets[widgetset].callback(appId);
 					}  else {
-						widgetsetApps[widgetset] = [appId];
+						log("Setting pending startup of ", appId);
+						widgetsets[widgetset].pendingApps.push(appId);
 					}
 				} else if (mayDefer) {
 					fetchRootConfig();
 				} else {
-					throw "Widgetset not defined";
+					throw "Widgetset not defined: " + widgetsetBase + " -> " + widgetset;
 				}
 			}
 			bootstrapApp(true);
@@ -151,12 +153,15 @@
 			var app = apps[appId]; 
 			return app;
 		},
-		popWidgetsetApp: function(widgetset) {
-			if (widgetsetApps[widgetset]) {
-				return widgetsetApps[widgetset].pop();
-			} else {
-				return null;
+		registerWidgetset: function(widgetset, callback) {
+			log("Widgetset registered", widgetset)
+			widgetsets[widgetset].callback = callback;
+			for(var i = 0; i < widgetsets[widgetset].pendingApps.length; i++) {
+				var appId = widgetsets[widgetset].pendingApps[i];
+				log("Starting from register widgetset", appId);
+				callback(appId);
 			}
+			widgetsets[widgetset].pendingApps = null;
 		}
 	};
 	

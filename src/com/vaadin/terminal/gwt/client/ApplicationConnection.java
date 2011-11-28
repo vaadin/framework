@@ -459,10 +459,6 @@ public class ApplicationConnection {
                 public void onError(Request request, Throwable exception) {
                     showCommunicationError(exception.getMessage());
                     endRequest();
-                    if (!applicationRunning) {
-                        // start failed, let's try to start the next app
-                        ApplicationConfiguration.startNextApplication();
-                    }
                 }
 
                 public void onResponseReceived(Request request,
@@ -535,7 +531,6 @@ public class ApplicationConnection {
                     } else {
                         applicationRunning = true;
                         handleWhenCSSLoaded(jsonText, json);
-                        ApplicationConfiguration.startNextApplication();
                     }
                 }
 
