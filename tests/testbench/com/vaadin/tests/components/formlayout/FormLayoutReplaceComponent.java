@@ -38,10 +38,9 @@ public class FormLayoutReplaceComponent extends TestBase {
             addComponent(messages);
         }
 
-        @Override
         public void valueChange(ValueChangeEvent event) {
             if (event.getProperty() == control) {
-                messages.setVisible((Boolean) control.getValue());
+                messages.setVisible(control.getValue());
             }
 
         }
