@@ -20,11 +20,13 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.vaadin.Application;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ContainerOrderedWrapper;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.DataBoundTransferable;
@@ -70,7 +72,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
  * @VERSION@
  * @since 3.0
  */
-@SuppressWarnings({ "serial", "deprecation" })
+@SuppressWarnings({ "deprecation" })
 @ClientWidget(VScrollTable.class)
 public class Table extends AbstractSelect implements Action.Container,
         Container.Ordered, Container.Sortable, ItemClickSource,
@@ -407,6 +409,8 @@ public class Table extends AbstractSelect implements Action.Container,
     private final Map<Field<?>, Property<?>> associatedProperties = new HashMap<Field<?>, Property<?>>();
 
     private boolean painted = false;
+
+    private HashMap<Object, Converter> propertyValueConverters = new HashMap<Object, Converter>();
 
     /* Table constructors */
 
@@ -3427,11 +3431,24 @@ public class Table extends AbstractSelect implements Action.Container,
      * @since 3.1
      */
     protected String formatPropertyValue(Object rowId, Object colId,
-            Property property) {
+            Property<?> property) {
         if (property == null) {
             return "";
         }
+        Converter<Object, String> converter = null;
+
+        if (hasConverter(colId)) {
+            converter = getConverter(colId);
+        } else {
+            // FIXME: Use thread local
+            converter = (Converter<Object, String>) Application
+                    .getConverterFactory().createConverter(property.getType(),
+                            String.class);
+        }
         Object value = property.getValue();
+        if (converter != null) {
+            return converter.convertFromSourceToTarget(value, getLocale());
+        }
         return (null != value) ? value.toString() : "";
     }
 
@@ -5120,4 +5137,35 @@ public class Table extends AbstractSelect implements Action.Container,
     public RowGenerator getRowGenerator() {
         return rowGenerator;
     }
+
+    // FIXME: Javadoc
+    public void setConverter(Object propertyId, Converter<?, String> converter) {
+        if (!getContainerPropertyIds().contains(propertyId)) {
+            throw new IllegalArgumentException("PropertyId " + propertyId
+                    + " must be in the container");
+        }
+        // FIXME: This check should be here but primitive types like Boolean
+        // formatter for boolean property must be handled
+
+        // if (!converter.getSourceType().isAssignableFrom(getType(propertyId)))
+        // {
+        // throw new IllegalArgumentException("Property type ("
+        // + getType(propertyId)
+        // + ") must match converter source type ("
+        // + converter.getSourceType() + ")");
+        // }
+        propertyValueConverters.put(propertyId, converter);
+        refreshRowCache();
+    }
+
+    // FIXME: Javadoc
+    protected boolean hasConverter(Object propertyId) {
+        return propertyValueConverters.containsKey(propertyId);
+    }
+
+    // FIXME: Javadoc
+    public Converter<Object, String> getConverter(Object propertyId) {
+        return propertyValueConverters.get(propertyId);
+    }
+
 }
