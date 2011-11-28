@@ -20,7 +20,6 @@ public class EnableState extends AbstractTestCase {
         CheckBox enable = new CheckBox("Toggle button enabled", true);
         enable.addListener(new Property.ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean enabled = (Boolean) event.getProperty().getValue();
                 button.setEnabled(enabled);
@@ -32,7 +31,6 @@ public class EnableState extends AbstractTestCase {
         CheckBox caption = new CheckBox("Toggle button caption", true);
         caption.addListener(new Property.ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 button.setCaption(button.getCaption() + "+");
             }
@@ -42,7 +40,6 @@ public class EnableState extends AbstractTestCase {
         CheckBox visible = new CheckBox("Toggle panel visibility", true);
         visible.addListener(new Property.ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean visible = (Boolean) event.getProperty().getValue();
 
@@ -54,7 +51,6 @@ public class EnableState extends AbstractTestCase {
         CheckBox panelEnable = new CheckBox("Toggle panel enabled", true);
         panelEnable.addListener(new Property.ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean enabled = (Boolean) event.getProperty().getValue();
                 panel.setEnabled(enabled);

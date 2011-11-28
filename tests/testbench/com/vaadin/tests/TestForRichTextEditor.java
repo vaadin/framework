@@ -52,7 +52,6 @@ public class TestForRichTextEditor extends CustomComponent implements
         b.setImmediate(true);
         b.addListener(new Property.ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 rte.setEnabled(!rte.isEnabled());
             }

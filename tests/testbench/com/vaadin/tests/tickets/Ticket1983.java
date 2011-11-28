@@ -118,7 +118,6 @@ public class Ticket1983 extends Application {
             CheckBox checkBox = new CheckBox("Two col");
             checkBox.addListener(new ValueChangeListener() {
 
-                @Override
                 public void valueChange(ValueChangeEvent event) {
                     if ((Boolean) event.getProperty().getValue()) {
                         table.setVisibleColumns(new Object[] { propId, propId2 });

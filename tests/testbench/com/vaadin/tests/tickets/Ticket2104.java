@@ -51,7 +51,6 @@ public class Ticket2104 extends Application {
         cb = new CheckBox("icon");
         cb.addListener(new ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (tree.getItemIconPropertyId() == null) {
                     tree.setItemIconPropertyId("icon");

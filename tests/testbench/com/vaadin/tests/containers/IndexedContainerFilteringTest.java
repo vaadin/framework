@@ -56,10 +56,9 @@ public class IndexedContainerFilteringTest extends TestBase {
         final CheckBox cb = new CheckBox("Filter");
         cb.addListener(new ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 container.removeAllContainerFilters();
-                if ((Boolean) ((CheckBox) event.getProperty()).getValue()) {
+                if (((CheckBox) event.getProperty()).getValue()) {
                     container.addContainerFilter("column1", filterString
                             .getValue().toString(), false, false);
                 }
