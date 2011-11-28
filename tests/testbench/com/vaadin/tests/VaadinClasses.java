@@ -23,6 +23,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DragAndDropWrapper;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.PopupView;
@@ -56,6 +57,15 @@ public class VaadinClasses {
     public static List<Class<? extends Component>> getComponents() {
         try {
             return findClasses(Component.class, "com.vaadin.ui");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<Class<? extends Field>> getFields() {
+        try {
+            return findClasses(Field.class, "com.vaadin.ui");
         } catch (IOException e) {
             e.printStackTrace();
             return null;
