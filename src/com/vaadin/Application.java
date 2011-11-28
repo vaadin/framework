@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.vaadin.annotations.RootInitRequiresBrowserDetals;
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.CombinedRequest;
@@ -1700,9 +1701,10 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
         synchronized (this) {
             PendingRootRequest pendingRootRequest = pendingRoots.remove(rootId);
-            if (pendingRootRequest == null && rootId != null) {
-                root = roots.get(rootId);
-            } else {
+            root = roots.get(rootId);
+            if (root == null) {
+                // We don't have no root yet
+                // Throws exception if root can not yet be created
                 root = getRoot(request);
                 if (root.getApplication() == null) {
                     root.setApplication(this);
@@ -1712,10 +1714,18 @@ public class Application implements Terminal.ErrorListener, Serializable {
                     root.setRootId(id);
                     roots.put(Integer.valueOf(root.getRootId()), root);
 
-                    // TODO implement lazy init of root if indicated by
-                    // annotation
-                    root.init(request);
+                    if (pendingRootRequest == null
+                            && root.getClass().isAnnotationPresent(
+                                    RootInitRequiresBrowserDetals.class)) {
+                        pendingRoots.put(Integer.valueOf(id),
+                                new PendingRootRequest(request));
+                    } else {
+                        root.init(request);
+                    }
                 }
+            } else if (pendingRootRequest != null) {
+                // We have a root, but the init has been pending
+                root.init(request);
             }
         }
 
@@ -1734,5 +1744,9 @@ public class Application implements Terminal.ErrorListener, Serializable {
         Integer rootId = rootIdString == null ? null
                 : new Integer(rootIdString);
         return rootId;
+    }
+
+    public boolean isRootInitPending(int rootId) {
+        return pendingRoots.containsKey(Integer.valueOf(rootId));
     }
 }

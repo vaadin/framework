@@ -1951,6 +1951,8 @@ public abstract class AbstractCommunicationManager implements
             String themeUri = AJAX_PAGE_HANDLER.getThemeUri(theme,
                     combinedRequest);
 
+            // TODO These are not required if it was only the init of the root
+            // that was delayed
             JSONObject params = new JSONObject();
             params.put("widgetset", widgetset);
             params.put("themeUri", themeUri);

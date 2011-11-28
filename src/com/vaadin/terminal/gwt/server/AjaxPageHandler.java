@@ -288,6 +288,10 @@ public abstract class AjaxPageHandler implements RequestHandler {
 
         appConfig.put("widgetset", widgetset);
 
+        if (application.isRootInitPending(rootId)) {
+            appConfig.put("initPending", true);
+        }
+
         page.write("vaadin.setDefaults(");
         if (isDebug) {
             page.write(defaults.toString(4));

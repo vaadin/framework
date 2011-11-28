@@ -12,8 +12,8 @@
 	}
 	
 	var loadTheme = function(url) {
-		log("loadTheme", url);
 		if(!themesLoaded[url]) {
+			log("loadTheme", url);
 			var stylesheet = document.createElement('link');
 			stylesheet.setAttribute('rel', 'stylesheet');
 			stylesheet.setAttribute('type', 'text/css');
@@ -86,9 +86,9 @@
 				var r = new XMLHttpRequest();
 				r.open('POST', url, true);
 				r.onreadystatechange = function (aEvt) {  
-					if (r.readyState == 4) {  
+					if (r.readyState == 4) {
 						if (r.status == 200){
-							log(r.responseText);
+							log("Got root config response", r.responseText);
 							// TODO Does this work in all supported browsers?
 							var updatedConfig = JSON.parse(r.responseText);
 							
@@ -98,6 +98,7 @@
 									config[property] = updatedConfig[property];
 								}
 							}
+							config.initPending = false;
 							
 							// Try bootstrapping again, this time without fetching missing info
 							bootstrapApp(false);
@@ -125,19 +126,25 @@
 				
 				var widgetsetBase = getConfig('widgetsetBase');
 				var widgetset = getConfig('widgetset');
+				var initPending = getConfig('initPending');
 				if (widgetset && widgetsetBase) {
 					loadWidgetset(widgetsetBase, widgetset);
+				}
+				
+				if (initPending) {
+					if (mayDefer) {
+						fetchRootConfig();
+					} else {
+						throw "May not defer bootstrap any more";
+					}
+				} else {
 					if (widgetsets[widgetset].callback) {
 						log("Starting from bootstrap", appId);
 						widgetsets[widgetset].callback(appId);
 					}  else {
-						log("Setting pending startup of ", appId);
+						log("Setting pending startup", appId);
 						widgetsets[widgetset].pendingApps.push(appId);
 					}
-				} else if (mayDefer) {
-					fetchRootConfig();
-				} else {
-					throw "Widgetset not defined: " + widgetsetBase + " -> " + widgetset;
 				}
 			}
 			bootstrapApp(true);
