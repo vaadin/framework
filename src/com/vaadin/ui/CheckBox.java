@@ -21,6 +21,7 @@ public class CheckBox extends AbstractField<Boolean> {
      * Creates a new checkbox.
      */
     public CheckBox() {
+        setValue(Boolean.FALSE);
     }
 
     /**
@@ -68,7 +69,7 @@ public class CheckBox extends AbstractField<Boolean> {
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
-        target.addVariable(this, VCheckBox.VARIABLE_STATE, booleanValue());
+        target.addVariable(this, VCheckBox.VARIABLE_STATE, getValue());
     }
 
     @Override
@@ -112,21 +113,6 @@ public class CheckBox extends AbstractField<Boolean> {
     public void removeListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
 
-    }
-
-    /**
-     * Get the boolean value of the checkbox state.
-     * 
-     * @return True iff the checkbox is checked.
-     * @deprecated in Vaadin 7.0.0. Retained to ease migration from Vaadin 6
-     */
-    @Deprecated
-    public boolean booleanValue() {
-        // FIXME: How should null really be handled? A default converter that
-        // converts it to false? The only UI values supported are true and
-        // false.
-        Boolean value = getValue();
-        return (null == value) ? false : value.booleanValue();
     }
 
 }
