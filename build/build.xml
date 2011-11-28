@@ -189,10 +189,6 @@
                 <include name="${toolkit-package}/tests/**/*" />
                 <include name="${toolkit-package}/launcher/**" />
             </fileset>
-            <fileset dir="${result-path}/src/core">
-                <include name="${toolkit-package}/launcher/**" />
-                <exclude name="${toolkit-package}/launcher/**/*.java" />
-            </fileset>
             <!-- test resources -->
             <fileset dir="tests/testbench">
                 <include name="${toolkit-package}/tests/**/*" />
@@ -661,7 +657,6 @@
         <jar file="${result-path}/${lib-sources-jar-name}" compress="true">
             <fileset dir="${result-path}/src/core">
                 <patternset>
-                    <exclude name="${toolkit-package}/launcher/**" />
                     <include name="**/*.java" />
                 </patternset>
             </fileset>
