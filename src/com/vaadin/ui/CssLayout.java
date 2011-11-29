@@ -77,7 +77,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     @Override
     public void addComponent(Component c) {
         // Add to components before calling super.addComponent
-        // so that it is available to AttachListeners 
+        // so that it is available to AttachListeners
         components.add(c);
         try {
             super.addComponent(c);
@@ -98,7 +98,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     public void addComponentAsFirst(Component c) {
         // If c is already in this, we must remove it before proceeding
         // see ticket #7668
-        if(c.getParent() == this) {
+        if (c.getParent() == this) {
             removeComponent(c);
         }
         components.addFirst(c);
@@ -123,9 +123,9 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     public void addComponent(Component c, int index) {
         // If c is already in this, we must remove it before proceeding
         // see ticket #7668
-        if(c.getParent() == this) {
+        if (c.getParent() == this) {
             // When c is removed, all components after it are shifted down
-            if(index > components.indexOf(c)) {
+            if (index > components.indexOf(c)) {
                 index--;
             }
             removeComponent(c);
