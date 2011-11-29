@@ -100,7 +100,7 @@ public class JSONObject implements Serializable {
      * whilst Java's null is equivalent to the value that JavaScript calls
      * undefined.
      */
-    private static final class Null {
+    private static final class Null implements Serializable {
 
         /**
          * There is only intended to be a single instance of the NULL object, so

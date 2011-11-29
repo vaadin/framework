@@ -210,7 +210,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
     }
 
-    private static class PendingRootRequest {
+    private static class PendingRootRequest implements Serializable {
 
         private final Map<String, String[]> parameterMap;
         private final String pathInfo;
