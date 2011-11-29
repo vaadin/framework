@@ -375,6 +375,7 @@
                 <include name="demo/**/*" />
                 <include name="WEB-INF/lib/hsqldb.jar" />
                 <include name="VAADIN/themes/**/*" />
+            	<include name="VAADIN/vaadinBootstrap.js" />
                 <include name="META-INF/**/*" />
             </fileset>
         </copy>
@@ -623,6 +624,7 @@
                     <include name="VAADIN/themes/liferay/**/*" />
                     <include name="VAADIN/themes/runo/**/*" />
                     <include name="VAADIN/themes/reindeer/**/*" />
+                    <include name="VAADIN/vaadinBootstrap.js" />
                     
                     <include name="release-notes.html" />
                     <include name="license.html" />
