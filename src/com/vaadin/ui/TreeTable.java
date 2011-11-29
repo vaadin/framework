@@ -385,7 +385,7 @@ public class TreeTable extends Table implements Hierarchical {
             String object = (String) variables.get("toggleCollapsed");
             Object itemId = itemIdMapper.get(object);
             toggledItemId = itemId;
-            toggleChildVisibility(itemId);
+            toggleChildVisibility(itemId, false);
             if (variables.containsKey("selectCollapsed")) {
                 // ensure collapsed is selected unless opened with selection
                 // head
@@ -470,7 +470,8 @@ public class TreeTable extends Table implements Hierarchical {
 
     @Override
     protected boolean isPartialRowUpdate() {
-        return toggledItemId != null && containerSupportsPartialUpdates;
+        return toggledItemId != null && containerSupportsPartialUpdates
+                && !isRowCacheInvalidated();
     }
 
     @Override
@@ -516,7 +517,7 @@ public class TreeTable extends Table implements Hierarchical {
         return !getContainerStrategy().isNodeOpen(toggledItemId);
     }
 
-    private void toggleChildVisibility(Object itemId) {
+    private void toggleChildVisibility(Object itemId, boolean forceFullRefresh) {
         getContainerStrategy().toggleChildVisibility(itemId);
         // ensure that page still has first item in page, DON'T clear the
         // caches.
@@ -528,7 +529,7 @@ public class TreeTable extends Table implements Hierarchical {
             fireExpandEvent(itemId);
         }
 
-        if (containerSupportsPartialUpdates) {
+        if (containerSupportsPartialUpdates && !forceFullRefresh) {
             requestRepaint();
         } else {
             // For containers that do not send item set change events, always do
@@ -646,8 +647,8 @@ public class TreeTable extends Table implements Hierarchical {
     }
 
     /**
-     * Sets the Item specified by given identifier collapsed or expanded. If the
-     * Item is collapsed, its children is not displayed in for the user.
+     * Sets the Item specified by given identifier as collapsed or expanded. If
+     * the Item is collapsed, its children are not displayed to the user.
      * 
      * @param itemId
      *            the identifier of the Item
@@ -656,7 +657,18 @@ public class TreeTable extends Table implements Hierarchical {
      */
     public void setCollapsed(Object itemId, boolean collapsed) {
         if (isCollapsed(itemId) != collapsed) {
-            toggleChildVisibility(itemId);
+            if (null == toggledItemId && !isRowCacheInvalidated()
+                    && getVisibleItemIds().contains(itemId)) {
+                // optimization: partial refresh if only one item is
+                // collapsed/expanded
+                toggledItemId = itemId;
+                toggleChildVisibility(itemId, false);
+            } else {
+                // make sure a full refresh takes place - otherwise neither
+                // partial nor full repaint of table content is performed
+                toggledItemId = null;
+                toggleChildVisibility(itemId, true);
+            }
         }
     }
 
