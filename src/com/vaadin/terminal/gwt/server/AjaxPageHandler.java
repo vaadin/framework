@@ -1,3 +1,7 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.terminal.gwt.server;
 
 import java.io.BufferedWriter;
