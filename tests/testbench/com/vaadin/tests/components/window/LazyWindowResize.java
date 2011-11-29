@@ -1,11 +1,10 @@
 package com.vaadin.tests.components.window;
 
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.LoremIpsum;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Root;
@@ -17,7 +16,7 @@ public class LazyWindowResize extends AbstractTestCase {
 
     private Root mainWindow;
     private Window subWindow;
-    private Button lazyMode;
+    private CheckBox lazyMode;
     private Log log = new Log(5);
     private CheckBox resizeListenerCheckBox;
 
@@ -58,19 +57,19 @@ public class LazyWindowResize extends AbstractTestCase {
 
         lazyMode = new CheckBox("Lazy resize");
         lazyMode.setImmediate(true);
-        lazyMode.addListener(new ClickListener() {
+        lazyMode.addListener(new ValueChangeListener() {
 
-            public void buttonClick(ClickEvent event) {
-                setLazy(lazyMode.booleanValue());
+            public void valueChange(ValueChangeEvent event) {
+                setLazy((Boolean) lazyMode.getValue());
             }
         });
 
         resizeListenerCheckBox = new CheckBox("Resize listener");
         resizeListenerCheckBox.setImmediate(true);
-        resizeListenerCheckBox.addListener(new ClickListener() {
+        resizeListenerCheckBox.addListener(new ValueChangeListener() {
 
-            public void buttonClick(ClickEvent event) {
-                if (resizeListenerCheckBox.booleanValue()) {
+            public void valueChange(ValueChangeEvent event) {
+                if ((Boolean) resizeListenerCheckBox.getValue()) {
                     subWindow.addListener(resizeListener);
                     mainWindow.addListener(resizeListener);
                 } else {
@@ -83,11 +82,11 @@ public class LazyWindowResize extends AbstractTestCase {
         });
         immediateCheckBox = new CheckBox("Windows immediate");
         immediateCheckBox.setImmediate(true);
-        immediateCheckBox.addListener(new ClickListener() {
+        immediateCheckBox.addListener(new ValueChangeListener() {
 
-            public void buttonClick(ClickEvent event) {
-                mainWindow.setImmediate(immediateCheckBox.booleanValue());
-                subWindow.setImmediate(immediateCheckBox.booleanValue());
+            public void valueChange(ValueChangeEvent event) {
+                mainWindow.setImmediate((Boolean) immediateCheckBox.getValue());
+                subWindow.setImmediate((Boolean) immediateCheckBox.getValue());
 
             }
 

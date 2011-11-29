@@ -45,6 +45,7 @@ public class DragAndDropWrapperTooltips extends TestBase {
 
         for (int i = 1; i <= 4; i++) {
             WrappedLabel wl = new WrappedLabel("Block");
+            wl.setDebugId("wrapper" + i);
             wl.addStyleName("b" + i);
             cssLayout.addComponent(wl);
         }

@@ -31,8 +31,25 @@ public class ChangeDataSourcePageLengthZero extends TestBase {
                 setupContainer(tt, 10);
             }
         });
+        Button addButton = new Button("Add item");
+        addButton.addListener(new Button.ClickListener() {
+            private int i = 1;
+
+            public void buttonClick(ClickEvent event) {
+                HierarchicalContainer container = (HierarchicalContainer) tt
+                        .getContainerDataSource();
+                Object itemId = container.addItem();
+                container.getContainerProperty(itemId, "i").setValue(i++);
+                container.getContainerProperty(itemId, "link").setValue(
+                        new Link(String.valueOf(i + 1), new ExternalResource(
+                                "http://www.google.fi")));
+                container.setChildrenAllowed(itemId, false);
+                container.setParent(itemId, null);
+            }
+        });
         addComponent(page1);
         addComponent(page2);
+        addComponent(addButton);
     }
 
     private static void setupContainer(TreeTable tt, int num) {

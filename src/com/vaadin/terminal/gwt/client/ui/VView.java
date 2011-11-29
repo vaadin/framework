@@ -472,9 +472,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
          * browser window. Constantly recalculating the layout causes the resize
          * operation to be really slow with complex layouts.
          */
-        boolean lazy = resizeLazy
-                || (BrowserInfo.get().isIE() && BrowserInfo.get()
-                        .getIEVersion() <= 8) || BrowserInfo.get().isFF3();
+        boolean lazy = resizeLazy || BrowserInfo.get().isIE8();
 
         if (lazy) {
             delayedResizeExecutor.trigger();
@@ -555,16 +553,6 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
         @Override
         public int getWidth() {
-            int w = getRealWidth();
-            if (w < 10 && BrowserInfo.get().isIE7()) {
-                // Overcome an IE7 bug #3295
-                Util.shakeBodyElement();
-                w = getRealWidth();
-            }
-            return w;
-        }
-
-        private int getRealWidth() {
             if (connection.getConfiguration().isStandalone()) {
                 return getElement().getOffsetWidth() - getExcessWidth();
             }

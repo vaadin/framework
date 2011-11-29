@@ -6,7 +6,6 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Set;
 
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.DomEvent.Type;
@@ -20,7 +19,6 @@ import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -305,15 +303,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
         newSecondChild.updateFromUIDL(uidl.getChildUIDL(1), client);
 
         renderInformation.updateSize(getElement());
-
-        if (BrowserInfo.get().isIE7()) {
-            // Part III of IE7 hack
-            Scheduler.get().scheduleDeferred(new Command() {
-                public void execute() {
-                    iLayout();
-                }
-            });
-        }
 
         // This is needed at least for cases like #3458 to take
         // appearing/disappearing scrollbars into account.

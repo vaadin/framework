@@ -2,6 +2,8 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -38,16 +40,36 @@ public class Ticket2151 extends Application.LegacyApplication {
         layout.addComponent(new Label("b"));
         layout.addComponent(new Label("c"));
 
-        check(Button.class);
-        check(CheckBox.class);
-        checkDataBinding(Button.class);
+        checkButton(Button.class);
+        checkCheckBox(CheckBox.class);
         checkDataBinding(CheckBox.class);
 
     }
 
-    private void check(Class<? extends Button> class1) {
+    private void checkButton(Class<? extends Button> class1) {
         boolean ok = false;
-        Button b;
+        AbstractComponent b;
+        try {
+            b = class1.newInstance();
+            b.setCaption("Button of type " + class1.getSimpleName());
+            ok = true;
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+
+        if (ok) {
+            status.setValue(status.getValue() + " "
+                    + class1.getClass().getSimpleName() + ": OK");
+        } else {
+            status.setValue(status.getValue() + " "
+                    + class1.getClass().getSimpleName() + ": FAILED");
+        }
+
+    }
+
+    private void checkCheckBox(Class<? extends CheckBox> class1) {
+        boolean ok = false;
+        CheckBox b;
         try {
             b = class1.newInstance();
             b.setCaption("Button of type " + class1.getSimpleName());
@@ -74,9 +96,9 @@ public class Ticket2151 extends Application.LegacyApplication {
 
     }
 
-    private void checkDataBinding(Class<? extends Button> class1) {
+    private void checkDataBinding(Class<? extends AbstractField> class1) {
         boolean ok = false;
-        Button b;
+        AbstractField b;
         try {
             b = class1.newInstance();
             b.setCaption("Button of type " + class1.getSimpleName());

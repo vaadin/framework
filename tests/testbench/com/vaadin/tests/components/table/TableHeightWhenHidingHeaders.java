@@ -1,7 +1,8 @@
 package com.vaadin.tests.components.table;
 
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.AbstractTestCase;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
@@ -30,24 +31,25 @@ public class TableHeightWhenHidingHeaders extends AbstractTestCase {
         table.addItem("1").getItemProperty("Name").setValue("Item 1");
         table.addItem("2").getItemProperty("Name").setValue("Item 2");
 
-        CheckBox showHeaders = new CheckBox("Show headers",
-                new CheckBox.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        if (event.getButton().booleanValue()) {
-                            // table body height is now 77px, which together
-                            // with header makes 100px
-                            table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
-                        } else {
-                            table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
-                            // header disappears, but table body height stays at
-                            // 77px
-                            // and below the body is an empty area (same height
-                            // as header would
-                            // have)
+        CheckBox showHeaders = new CheckBox("Show headers");
+        showHeaders.addListener(new ValueChangeListener() {
 
-                        }
-                    }
-                });
+            public void valueChange(ValueChangeEvent event) {
+                if ((Boolean) event.getProperty().getValue()) {
+                    // table body height is now 77px, which together
+                    // with header makes 100px
+                    table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
+                } else {
+                    table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
+                    // header disappears, but table body height stays at
+                    // 77px
+                    // and below the body is an empty area (same height
+                    // as header would
+                    // have)
+
+                }
+            }
+        });
         showHeaders.setValue(true);
         showHeaders.setImmediate(true);
 

@@ -48,8 +48,8 @@ public class TreeFiltering extends TestBase {
         filterType.addListener(new ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
-                cont.setIncludeParentsWhenFiltering(((CheckBox) event
-                        .getProperty()).booleanValue());
+                cont.setIncludeParentsWhenFiltering((Boolean) ((CheckBox) event
+                        .getProperty()).getValue());
                 ccTree.requestRepaint();
             }
         });

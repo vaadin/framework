@@ -4,8 +4,6 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Select;
@@ -37,14 +35,14 @@ public class ColumnHeaderAlignments extends TestBase {
             }
         });
         addComponent(theme);
-        CheckBox footers = new CheckBox("Show footers", new ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                fooTable.setFooterVisible((Boolean) event.getButton()
-                        .getValue());
-                barTable.setFooterVisible((Boolean) event.getButton()
-                        .getValue());
-                bazTable.setFooterVisible((Boolean) event.getButton()
-                        .getValue());
+        CheckBox footers = new CheckBox("Show footers");
+        footers.addListener(new ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                boolean visible = (Boolean) event.getProperty().getValue();
+                fooTable.setFooterVisible(visible);
+                barTable.setFooterVisible(visible);
+                bazTable.setFooterVisible(visible);
             }
         });
         footers.setImmediate(true);

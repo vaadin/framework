@@ -5,22 +5,20 @@ import java.util.Arrays;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Table;
 
 public class TableUndefinedSize extends TestBase {
 
-    private ObjectProperty<String> output = new ObjectProperty<String>("");
-
-    private int counter = 1;
+    private Log log;
 
     @Override
     protected void setup() {
@@ -37,17 +35,14 @@ public class TableUndefinedSize extends TestBase {
         tbl.setImmediate(true);
         tbl.setColumnCollapsingAllowed(true);
 
-        Label output = new Label(this.output);
-        output.setWidth("400px");
-        output.setHeight("100px");
-        output.setContentMode(Label.CONTENT_XHTML);
+        log = new Log(5);
 
         controls.addComponent(new Button("Fixed size (200x200)",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         tbl.setWidth("200px");
                         tbl.setHeight("200px");
-                        print("Size 200x200 pixels");
+                        log.log("Size 200x200 pixels");
                     }
                 }));
 
@@ -56,7 +51,7 @@ public class TableUndefinedSize extends TestBase {
                     public void buttonClick(ClickEvent event) {
                         tbl.setWidth("600px");
                         tbl.setHeight("200px");
-                        print("Size 600x200 pixels");
+                        log.log("Size 600x200 pixels");
                     }
                 }));
 
@@ -64,7 +59,7 @@ public class TableUndefinedSize extends TestBase {
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         tbl.setSizeUndefined();
-                        print("Size undefined");
+                        log.log("Size undefined");
                     }
                 }));
 
@@ -77,35 +72,21 @@ public class TableUndefinedSize extends TestBase {
                 int pageLength = Integer.valueOf(event.getProperty().getValue()
                         .toString());
                 tbl.setPageLength(pageLength);
-                print("Page length: " + pageLength);
+                log.log("Page length: " + pageLength);
             }
         });
         controls.addComponent(pageLength);
 
-        CheckBox cb = new CheckBox("Column 1", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                tbl.setColumnCollapsed("Column 1", !event.getButton()
-                                .booleanValue());
-                if (event.getButton().booleanValue()) {
-                    print("Column 1 visible");
-                } else {
-                    print("Column 1 hidden");
-                }
-                    }
-        });
-        cb.setImmediate(true);
-        cb.setValue(true);
-        visibilities.addComponent(cb);
+        CheckBox cb = new CheckBox("Column 1");
+        cb.addListener(new ValueChangeListener() {
 
-        cb = new CheckBox("Column 2", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                tbl.setColumnCollapsed("Column 2", !event.getButton()
-                        .booleanValue());
-
-                if (event.getButton().booleanValue()) {
-                    print("Column 2 visible");
+            public void valueChange(ValueChangeEvent event) {
+                Boolean value = (Boolean) event.getProperty().getValue();
+                tbl.setColumnCollapsed("Column 1", !value);
+                if (value) {
+                    log.log("Column 1 visible");
                 } else {
-                    print("Column 2 hidden");
+                    log.log("Column 1 hidden");
                 }
             }
         });
@@ -113,15 +94,17 @@ public class TableUndefinedSize extends TestBase {
         cb.setValue(true);
         visibilities.addComponent(cb);
 
-        cb = new CheckBox("Column 3", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                tbl.setColumnCollapsed("Column 3", !event.getButton()
-                        .booleanValue());
+        cb = new CheckBox("Column 2");
+        cb.addListener(new ValueChangeListener() {
 
-                if (event.getButton().booleanValue()) {
-                    print("Column 3 visible");
+            public void valueChange(ValueChangeEvent event) {
+                Boolean value = (Boolean) event.getProperty().getValue();
+                tbl.setColumnCollapsed("Column 2", !value);
+
+                if (value) {
+                    log.log("Column 2 visible");
                 } else {
-                    print("Column 3 hidden");
+                    log.log("Column 2 hidden");
                 }
             }
         });
@@ -129,14 +112,29 @@ public class TableUndefinedSize extends TestBase {
         cb.setValue(true);
         visibilities.addComponent(cb);
 
-        addComponent(output);
+        cb = new CheckBox("Column 3");
+
+        cb.addListener(new ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                Boolean value = (Boolean) event.getProperty().getValue();
+
+                tbl.setColumnCollapsed("Column 3", !value);
+
+                if (value) {
+                    log.log("Column 3 visible");
+                } else {
+                    log.log("Column 3 hidden");
+                }
+            }
+        });
+        cb.setImmediate(true);
+        cb.setValue(true);
+        visibilities.addComponent(cb);
+
+        addComponent(log);
         addComponent(tbl);
 
-    }
-
-    protected void print(String message) {
-        output.setValue(counter + ": " + message + "<br/>" + output.getValue());
-        counter++;
     }
 
     protected Container createDataSource() {

@@ -52,8 +52,7 @@
 	font-size: 14px;
 	font-weight: normal;
 }
-.v-ff .v-tabsheet-caption-close,
-.v-ie7 .v-tabsheet-caption-close {
+.v-ff .v-tabsheet-caption-close {
 	margin-top: -17px;
 }
 .v-tabsheet-caption-close:hover {
@@ -105,8 +104,7 @@
 .v-tabsheet-tabsheetpanel {
 	background: #fff;
 }
-.v-sa .v-tabsheet-content,
-.v-ff3 .v-tabsheet-content {
+.v-sa .v-tabsheet-content {
 	border-color: rgba(0,0,0,.1);
 }
 .blue .v-tabsheet-deco {
@@ -120,8 +118,7 @@
 	background: #e2e2e2;
 	overflow: hidden;
 }
-.v-sa .v-tabsheet-deco,
-.v-ff3 .v-tabsheet-deco {
+.v-sa .v-tabsheet-deco {
 	border-top-color: rgba(0,0,0,.1);
 	background: rgba(0,0,0,.08);
 }
@@ -147,10 +144,6 @@
 	width: 13px;
 	height: 16px;
 	background: transparent url(../common/icons/error.png) no-repeat 50%;
-}
-.v-ff2 .v-tabsheet-tabs .v-icon,
-.v-ff2 .v-tabsheet-tabs .v-errorindicator {
-	display: -moz-inline-stack;
 }
 .v-ie .v-tabsheet-tabs .v-errorindicator {
 	zoom: 1;

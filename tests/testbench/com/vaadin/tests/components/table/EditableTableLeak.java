@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 import com.vaadin.data.Container;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.Button;
@@ -83,9 +85,9 @@ public class EditableTableLeak extends TestBase {
     protected void setup() {
         addComponent(useFieldFactory);
         useFieldFactory.setImmediate(true);
-        useFieldFactory.addListener(new Button.ClickListener() {
+        useFieldFactory.addListener(new ValueChangeListener() {
 
-            public void buttonClick(ClickEvent event) {
+            public void valueChange(ValueChangeEvent event) {
                 if ((Boolean) useFieldFactory.getValue()) {
                     table.setTableFieldFactory(new CachingFieldFactory());
                 } else {

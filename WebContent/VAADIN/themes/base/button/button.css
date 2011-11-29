@@ -29,10 +29,6 @@
 	cursor: default;
 }
 
-.v-ie7 .v-button {
-   display: inline;
-}
-
 .v-button-wrap,
 .v-button-caption {
 	vertical-align: middle;
@@ -138,11 +134,6 @@
 .v-checkbox .v-icon {
 	vertical-align: middle;
 	white-space: nowrap;
-}
-
-/* Fix for IE7 issue where checkbox moves 1 pixel down after selection (#4636) */
-.v-ie7 .v-checkbox {
-	vertical-align: baseline;
 }
 
 .v-checkbox .v-icon {

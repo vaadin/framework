@@ -2,11 +2,11 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.FooterClickEvent;
@@ -51,10 +51,10 @@ public class FooterClick extends TestBase {
         CheckBox immediateCheckbox = new CheckBox("Immediate");
         immediateCheckbox.setImmediate(true);
         immediateCheckbox.setValue(table.isImmediate());
-        immediateCheckbox.addListener(new ClickListener() {
+        immediateCheckbox.addListener(new Property.ValueChangeListener() {
 
-            public void buttonClick(ClickEvent event) {
-                table.setImmediate(event.getButton().booleanValue());
+            public void valueChange(ValueChangeEvent event) {
+                table.setImmediate((Boolean) event.getProperty().getValue());
             }
         });
 
@@ -62,13 +62,14 @@ public class FooterClick extends TestBase {
                 "Column reordering allowed");
         columnReorderingCheckbox.setImmediate(true);
         columnReorderingCheckbox.setValue(table.isColumnReorderingAllowed());
-        columnReorderingCheckbox.addListener(new ClickListener() {
+        columnReorderingCheckbox
+                .addListener(new Property.ValueChangeListener() {
 
-            public void buttonClick(ClickEvent event) {
-                table.setColumnReorderingAllowed(event.getButton()
-                        .booleanValue());
-            }
-        });
+                    public void valueChange(ValueChangeEvent event) {
+                        table.setColumnReorderingAllowed((Boolean) event
+                                .getProperty().getValue());
+                    }
+                });
 
         addComponent(immediateCheckbox);
         addComponent(columnReorderingCheckbox);

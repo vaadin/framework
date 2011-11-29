@@ -1,7 +1,8 @@
 package com.vaadin.tests.components.formlayout;
+
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
@@ -14,7 +15,7 @@ public class FormLayoutReplaceComponent extends TestBase {
 
     }
 
-    public class FL extends FormLayout implements ClickListener {
+    public class FL extends FormLayout implements ValueChangeListener {
 
         private TextField messages;
         private CheckBox control;
@@ -37,10 +38,11 @@ public class FormLayoutReplaceComponent extends TestBase {
             addComponent(messages);
         }
 
-        public final void buttonClick(Button.ClickEvent e) {
-            if (e.getButton() == control) {
-                messages.setVisible(control.booleanValue());
+        public void valueChange(ValueChangeEvent event) {
+            if (event.getProperty() == control) {
+                messages.setVisible((Boolean) control.getValue());
             }
+
         }
     }
 

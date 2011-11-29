@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -1244,22 +1243,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     }
 
     /**
-     * Sets the text in the text box using a deferred command if on Gecko. This
-     * is required for performance reasons (see #3663).
+     * Sets the text in the text box.
      * 
      * @param text
      *            the text to set in the text box
      */
     private void setTextboxText(final String text) {
-        if (BrowserInfo.get().isFF3()) {
-            Scheduler.get().scheduleDeferred(new Command() {
-                public void execute() {
-                    tb.setText(text);
-                }
-            });
-        } else {
-            tb.setText(text);
-        }
+        tb.setText(text);
     }
 
     /*

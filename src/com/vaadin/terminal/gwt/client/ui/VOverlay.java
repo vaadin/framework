@@ -15,7 +15,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.Util;
 
 /**
  * In Vaadin UI this Overlay should always be used for all elements that
@@ -162,30 +161,18 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     private static int adjustByRelativeTopBodyMargin() {
         if (topFix == -1) {
-            topFix = detectRelativeBodyFixes("top", BrowserInfo.get().isIE7());
+            topFix = detectRelativeBodyFixes("top");
         }
         return topFix;
     }
 
-    private native static int detectRelativeBodyFixes(String axis,
-            boolean removeClientLeftOrTop)
+    private native static int detectRelativeBodyFixes(String axis)
     /*-{
         try {
             var b = $wnd.document.body;
             var cstyle = b.currentStyle ? b.currentStyle : getComputedStyle(b);
             if(cstyle && cstyle.position == 'relative') {
-                var offset = b.getBoundingClientRect()[axis];
-                if (removeClientLeftOrTop) {
-                    // IE7 include the top left border of the client area into the boundingClientRect
-                    var clientTopOrLeft = 0;
-                    if (axis == "top")
-                        clientTopOrLeft = $wnd.document.documentElement.clientTop;
-                    else
-                        clientTopOrLeft = $wnd.document.documentElement.clientLeft;
-
-                    offset -= clientTopOrLeft;
-                }
-                return offset;
+                return b.getBoundingClientRect()[axis];
             }
         } catch(e){}
         return 0;
@@ -193,7 +180,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     private static int adjustByRelativeLeftBodyMargin() {
         if (leftFix == -1) {
-            leftFix = detectRelativeBodyFixes("left", BrowserInfo.get().isIE7());
+            leftFix = detectRelativeBodyFixes("left");
 
         }
         return leftFix;
@@ -210,13 +197,6 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
                 updateShadowSizeAndPosition(1.0);
             }
         }
-        Util.runIE7ZeroSizedBodyFix();
-    }
-
-    @Override
-    public void hide(boolean autoClosed) {
-        super.hide(autoClosed);
-        Util.runIE7ZeroSizedBodyFix();
     }
 
     @Override

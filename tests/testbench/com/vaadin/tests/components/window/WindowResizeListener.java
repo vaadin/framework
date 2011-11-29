@@ -1,9 +1,10 @@
 package com.vaadin.tests.components.window;
 
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -43,9 +44,10 @@ public class WindowResizeListener extends TestBase {
 
         CheckBox subwindow = new CheckBox("show subwindow");
         subwindow.setImmediate(true);
-        subwindow.addListener(new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                if (event.getButton().booleanValue()) {
+        subwindow.addListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                if ((Boolean) event.getProperty().getValue()) {
                     getMainWindow().addWindow(subwin);
                 } else {
                     getMainWindow().removeWindow(subwin);
@@ -55,9 +57,10 @@ public class WindowResizeListener extends TestBase {
         getLayout().addComponent(subwindow);
 
         CheckBox immediate = new CheckBox("immediate");
-        immediate.addListener(new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                boolean booleanValue = event.getButton().booleanValue();
+        immediate.addListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                boolean booleanValue = (Boolean) event.getProperty().getValue();
                 getMainWindow().setImmediate(booleanValue);
                 subwin.setImmediate(booleanValue);
             }

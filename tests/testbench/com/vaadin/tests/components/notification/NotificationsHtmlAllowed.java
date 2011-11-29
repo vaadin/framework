@@ -54,7 +54,7 @@ public class NotificationsHtmlAllowed extends TestBase implements ClickListener 
         Notification n = new Notification((String) captionField.getValue(),
                 (String) messageField.getValue(),
                 Notification.TYPE_HUMANIZED_MESSAGE,
-                htmlAllowedBox.booleanValue());
+                (Boolean) htmlAllowedBox.getValue());
         return n;
     }
 }

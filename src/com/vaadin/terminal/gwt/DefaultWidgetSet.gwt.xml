@@ -18,12 +18,6 @@
 		<when-type-is class="com.google.gwt.core.client.impl.SchedulerImpl" />
 	</replace-with>
 
-	<!-- Use our own history impl for IE7 to workaround #2931. -->
-	<replace-with class="com.vaadin.terminal.gwt.client.HistoryImplIEVaadin">
-		<when-type-is class="com.google.gwt.user.client.impl.HistoryImpl" />
-		<when-property-is name="user.agent" value="ie6" />
-	</replace-with>
-
 	<generate-with
 		class="com.vaadin.terminal.gwt.widgetsetutils.EagerWidgetMapGenerator">
 		<when-type-is class="com.vaadin.terminal.gwt.client.WidgetMap" />
@@ -57,7 +51,6 @@
         <when-type-is
             class="com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper" />
         <any>
-            <when-property-is name="user.agent" value="ie6" />
             <when-property-is name="user.agent" value="ie8" />
         </any>
     </replace-with>

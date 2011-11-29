@@ -34,12 +34,7 @@
 	background: transparent url(img/bottom-right.png) no-repeat right bottom;
 	overflow: visible;
 }
-.v-ie7 .v-window-footer {
-	position: relative;
-	overflow: visible;
-}
-.v-window-resizebox,
-.v-ie7 .v-window-resizebox {
+.v-window-resizebox {
 	position: absolute; /* Needed to position the element over ScrollPanel, which is relatively positioned */
 	right: 5px;
 	width: 10px;

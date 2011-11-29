@@ -1,5 +1,7 @@
 package com.vaadin.tests.themes;
 
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Button;
@@ -29,8 +31,10 @@ public class ButtonsTest extends com.vaadin.Application.LegacyApplication {
         setMainWindow(main);
         setTheme("reindeer");
 
-        themeToggle = new CheckBox("Runo theme", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
+        themeToggle = new CheckBox("Runo theme");
+        themeToggle.addListener(new ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
                 if (getTheme() == "reindeer") {
                     setTheme("runo");
                 } else {
@@ -41,8 +45,10 @@ public class ButtonsTest extends com.vaadin.Application.LegacyApplication {
         themeToggle.setStyleName("small");
         themeToggle.setImmediate(true);
 
-        styleToggle = new CheckBox("Black style", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
+        styleToggle = new CheckBox("Black style");
+        styleToggle.addListener(new ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
                 if (!main.getContent().getStyleName().contains("black")) {
                     main.getContent().setStyleName("black");
                 } else {
@@ -53,8 +59,10 @@ public class ButtonsTest extends com.vaadin.Application.LegacyApplication {
         styleToggle.setImmediate(true);
         styleToggle.setStyleName("small");
 
-        iconToggle = new CheckBox("64x icons", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
+        iconToggle = new CheckBox("64x icons");
+        iconToggle.addListener(new ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
                 largeIcons = !largeIcons;
                 recreateAll();
             }
@@ -62,13 +70,14 @@ public class ButtonsTest extends com.vaadin.Application.LegacyApplication {
         iconToggle.setImmediate(true);
         iconToggle.setStyleName("small");
 
-        nativeToggle = new CheckBox("Native buttons",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        nativeButtons = !nativeButtons;
-                        recreateAll();
-                    }
-                });
+        nativeToggle = new CheckBox("Native buttons");
+        nativeToggle.addListener(new ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                nativeButtons = !nativeButtons;
+                recreateAll();
+            }
+        });
         nativeToggle.setImmediate(true);
         nativeToggle.setStyleName("small");
 

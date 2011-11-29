@@ -1,8 +1,9 @@
 package com.vaadin.tests.components.abstractcomponent;
 
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root;
@@ -17,9 +18,10 @@ public class EnableState extends AbstractTestCase {
         panel.addComponent(button);
 
         CheckBox enable = new CheckBox("Toggle button enabled", true);
-        enable.addListener(new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                boolean enabled = (Boolean) event.getButton().getValue();
+        enable.addListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                boolean enabled = (Boolean) event.getProperty().getValue();
                 button.setEnabled(enabled);
                 // button.requestRepaint();
             }
@@ -27,17 +29,19 @@ public class EnableState extends AbstractTestCase {
         enable.setImmediate(true);
 
         CheckBox caption = new CheckBox("Toggle button caption", true);
-        caption.addListener(new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
+        caption.addListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
                 button.setCaption(button.getCaption() + "+");
             }
         });
         caption.setImmediate(true);
 
         CheckBox visible = new CheckBox("Toggle panel visibility", true);
-        visible.addListener(new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                boolean visible = (Boolean) event.getButton().getValue();
+        visible.addListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                boolean visible = (Boolean) event.getProperty().getValue();
 
                 panel.setVisible(visible);
             }
@@ -45,9 +49,10 @@ public class EnableState extends AbstractTestCase {
         visible.setImmediate(true);
 
         CheckBox panelEnable = new CheckBox("Toggle panel enabled", true);
-        panelEnable.addListener(new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                boolean enabled = (Boolean) event.getButton().getValue();
+        panelEnable.addListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                boolean enabled = (Boolean) event.getProperty().getValue();
                 panel.setEnabled(enabled);
             }
         });

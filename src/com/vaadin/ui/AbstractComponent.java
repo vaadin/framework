@@ -19,8 +19,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.vaadin.Application;
+import com.vaadin.event.ActionManager;
 import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
@@ -144,6 +146,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             .compile("^(-?\\d+(\\.\\d+)?)(%|px|em|ex|in|cm|mm|pt|pc)?$");
 
     private ComponentErrorHandler errorHandler = null;
+
+    /**
+     * Keeps track of the Actions added to this component; the actual
+     * handling/notifying is delegated, usually to the containing window.
+     */
+    private ActionManager actionManager;
 
     /* Constructor */
 
@@ -635,6 +643,9 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         if (delayedFocus) {
             focus();
         }
+        if (actionManager != null) {
+            actionManager.setViewer(getRoot());
+        }
     }
 
     /*
@@ -642,6 +653,9 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * we use the default documentation from implemented interface.
      */
     public void detach() {
+        if (actionManager != null) {
+            actionManager.setViewer((Root) null);
+        }
     }
 
     /**
@@ -1515,6 +1529,36 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         }
         return false;
 
+    }
+
+    /*
+     * Actions
+     */
+
+    /**
+     * Gets the {@link ActionManager} used to manage the
+     * {@link ShortcutListener}s added to this {@link Field}.
+     * 
+     * @return the ActionManager in use
+     */
+    protected ActionManager getActionManager() {
+        if (actionManager == null) {
+            actionManager = new ActionManager();
+            if (getRoot() != null) {
+                actionManager.setViewer(getRoot());
+            }
+        }
+        return actionManager;
+    }
+
+    public void addShortcutListener(ShortcutListener shortcut) {
+        getActionManager().addAction(shortcut);
+    }
+
+    public void removeShortcutListener(ShortcutListener shortcut) {
+        if (actionManager != null) {
+            actionManager.removeAction(shortcut);
+        }
     }
 
 }

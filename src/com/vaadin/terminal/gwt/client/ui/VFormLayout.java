@@ -404,6 +404,7 @@ public class VFormLayout extends SimplePanel implements Container {
             // Workaround for IE weirdness, sometimes returns bad height in some
             // circumstances when Caption is empty. See #1444
             // IE7 bugs more often. I wonder what happens when IE8 arrives...
+            // FIXME: This could be unnecessary for IE8+
             if (BrowserInfo.get().isIE()) {
                 if (isEmpty) {
                     setHeight("0px");

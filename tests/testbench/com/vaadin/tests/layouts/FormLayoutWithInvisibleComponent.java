@@ -1,8 +1,8 @@
 package com.vaadin.tests.layouts;
 
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
@@ -24,15 +24,16 @@ public class FormLayoutWithInvisibleComponent extends TestBase {
     @Override
     protected void setup() {
         FormLayout formLayout = new FormLayout();
-        CheckBox control = new CheckBox("Messages On/Off",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        messages.setVisible(event.getButton().booleanValue());
-                        messages.setRequired(true);
-                        messages.setCaption("Messages visible");
-                    }
+        CheckBox control = new CheckBox("Messages On/Off");
+        control.addListener(new ValueChangeListener() {
 
-                });
+            public void valueChange(ValueChangeEvent event) {
+                messages.setVisible((Boolean) event.getProperty().getValue());
+                messages.setRequired(true);
+                messages.setCaption("Messages visible");
+            }
+
+        });
         control.setImmediate(true);
         formLayout.addComponent(control);
 
