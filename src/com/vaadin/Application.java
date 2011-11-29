@@ -120,6 +120,12 @@ public class Application implements Terminal.ErrorListener, Serializable {
                 throw new IllegalStateException(
                         "mainWindow has already been set");
             }
+            if (mainWindow.getApplication() == null) {
+                mainWindow.setApplication(this);
+            } else if (mainWindow.getApplication() != this) {
+                throw new IllegalStateException(
+                        "mainWindow is attached to another application");
+            }
             this.mainWindow = mainWindow;
         }
 
@@ -172,6 +178,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
         public void addWindow(Root root, String name) {
             legacyRootNames.put(name, root);
+            root.setApplication(this);
         }
 
         public void removeWindow(Root root) {
