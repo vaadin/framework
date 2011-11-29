@@ -80,7 +80,6 @@ public class TableUndefinedSize extends TestBase {
         CheckBox cb = new CheckBox("Column 1");
         cb.addListener(new ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 Boolean value = (Boolean) event.getProperty().getValue();
                 tbl.setColumnCollapsed("Column 1", !value);
@@ -98,7 +97,6 @@ public class TableUndefinedSize extends TestBase {
         cb = new CheckBox("Column 2");
         cb.addListener(new ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 Boolean value = (Boolean) event.getProperty().getValue();
                 tbl.setColumnCollapsed("Column 2", !value);
@@ -118,7 +116,6 @@ public class TableUndefinedSize extends TestBase {
 
         cb.addListener(new ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 Boolean value = (Boolean) event.getProperty().getValue();
 

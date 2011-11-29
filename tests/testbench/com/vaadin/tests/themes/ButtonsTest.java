@@ -34,7 +34,6 @@ public class ButtonsTest extends com.vaadin.Application {
         themeToggle = new CheckBox("Runo theme");
         themeToggle.addListener(new ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (getTheme() == "reindeer") {
                     setTheme("runo");
@@ -49,7 +48,6 @@ public class ButtonsTest extends com.vaadin.Application {
         styleToggle = new CheckBox("Black style");
         styleToggle.addListener(new ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (!main.getContent().getStyleName().contains("black")) {
                     main.getContent().setStyleName("black");
@@ -64,7 +62,6 @@ public class ButtonsTest extends com.vaadin.Application {
         iconToggle = new CheckBox("64x icons");
         iconToggle.addListener(new ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 largeIcons = !largeIcons;
                 recreateAll();
@@ -76,7 +73,6 @@ public class ButtonsTest extends com.vaadin.Application {
         nativeToggle = new CheckBox("Native buttons");
         nativeToggle.addListener(new ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 nativeButtons = !nativeButtons;
                 recreateAll();

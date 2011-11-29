@@ -38,7 +38,6 @@ public class ColumnHeaderAlignments extends TestBase {
         CheckBox footers = new CheckBox("Show footers");
         footers.addListener(new ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean visible = (Boolean) event.getProperty().getValue();
                 fooTable.setFooterVisible(visible);

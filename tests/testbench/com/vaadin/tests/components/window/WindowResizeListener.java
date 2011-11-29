@@ -46,7 +46,6 @@ public class WindowResizeListener extends TestBase {
         subwindow.setImmediate(true);
         subwindow.addListener(new Property.ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 if ((Boolean) event.getProperty().getValue()) {
                     getMainWindow().addWindow(subwin);
@@ -60,7 +59,6 @@ public class WindowResizeListener extends TestBase {
         CheckBox immediate = new CheckBox("immediate");
         immediate.addListener(new Property.ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean booleanValue = (Boolean) event.getProperty().getValue();
                 getMainWindow().setImmediate(booleanValue);

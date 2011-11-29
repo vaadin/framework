@@ -114,7 +114,6 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
         CheckBox checkBox = new CheckBox(caption);
         checkBox.addListener(new ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean enabled = (Boolean) event.getProperty().getValue();
                 doCommand(command, enabled);

@@ -314,7 +314,6 @@ public class LiferayThemeDemo extends Application {
 
         closable.addListener(new Property.ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 Iterator<Component> it = ts.getComponentIterator();
                 for (; it.hasNext();) {
@@ -469,7 +468,6 @@ public class LiferayThemeDemo extends Application {
 
         lockCheckBox.addListener(new Property.ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 sp.setLocked((Boolean) event.getProperty().getValue());
                 sp2.setLocked((Boolean) event.getProperty().getValue());
