@@ -5,11 +5,19 @@
 	var widgetsets = {};
 	
 	
-	var log = function() {
-		if (console && console.log) {
-			console.log(arguments);
-		}
-	}
+    var log;
+    if (typeof console === "undefined") {
+    	//If no console.log present, just use a no-op
+    	log = function() {};
+    } else if (typeof console.log === "function") {
+    	//If it's a function, use it with apply
+		log = function() {
+			console.log.apply(console, arguments);
+		};
+    } else {
+    	//In IE, its a native function for which apply is not defined, but it works without a proper 'this' reference
+    	log = console.log;
+    }
 	
 	var loadTheme = function(url) {
 		if(!themesLoaded[url]) {
