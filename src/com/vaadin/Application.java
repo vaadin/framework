@@ -37,8 +37,10 @@ import com.vaadin.terminal.SystemError;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 import com.vaadin.terminal.gwt.server.ChangeVariablesErrorEvent;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbstractComponent;
@@ -101,8 +103,24 @@ import com.vaadin.ui.Window;
 @SuppressWarnings("serial")
 public class Application implements Terminal.ErrorListener, Serializable {
 
+    /**
+     * The name of the parameter that is by default used in e.g. web.xml to
+     * define the name of the default {@link Root} class.
+     */
     public static final String ROOT_PARAMETER = "root";
 
+    /**
+     * A special application designed to help migrating applications from Vaadin
+     * 6 to Vaadin 7. The legacy application supports setting a main window,
+     * adding additional browser level windows and defining the theme for the
+     * entire application.
+     * 
+     * @deprecated This class is only intended to ease migration and should not
+     *             be used for new projects.
+     * 
+     * @since 7.0
+     */
+    @Deprecated
     public static class LegacyApplication extends Application {
         /**
          * Ignore initial / and then get everything up to the next /
@@ -115,6 +133,13 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
         private Map<String, Root> legacyRootNames = new HashMap<String, Root>();
 
+        /**
+         * Sets the main window of this application. Setting window as a main
+         * window of this application also adds the window to this application.
+         * 
+         * @param mainWindow
+         *            the root to set as the default window
+         */
         public void setMainWindow(Root mainWindow) {
             if (this.mainWindow != null) {
                 throw new IllegalStateException(
@@ -129,10 +154,33 @@ public class Application implements Terminal.ErrorListener, Serializable {
             this.mainWindow = mainWindow;
         }
 
+        /**
+         * Gets the mainWindow of the application.
+         * 
+         * <p>
+         * The main window is the window attached to the application URL (
+         * {@link #getURL()}) and thus which is show by default to the user.
+         * </p>
+         * <p>
+         * Note that each application must have at least one main window.
+         * </p>
+         * 
+         * @return the root used as the default window
+         */
         public Root getMainWindow() {
             return mainWindow;
         }
 
+        /**
+         * This implementation simulates the way of finding a window for a
+         * request by extracting a window name from the requested path and
+         * passes that name to {@link #getWindow(String)}.
+         * 
+         * {@inheritDoc}
+         * 
+         * @see #getWindow(String)
+         * @see Application#getRoot(WrappedRequest)
+         */
         @Override
         public Root getRoot(WrappedRequest request) {
             String pathInfo = request.getRequestPathInfo();
@@ -151,36 +199,114 @@ public class Application implements Terminal.ErrorListener, Serializable {
             return mainWindow;
         }
 
+        /**
+         * Sets the application's theme.
+         * <p>
+         * Note that this theme can be overridden for a specific root with
+         * {@link Application#getThemeForRoot(Root)}. Setting theme to be
+         * <code>null</code> selects the default theme. For the available theme
+         * names, see the contents of the VAADIN/themes directory.
+         * </p>
+         * 
+         * @param theme
+         *            the new theme for this application.
+         */
         public void setTheme(String theme) {
             this.theme = theme;
         }
 
+        /**
+         * Gets the application's theme. The application's theme is the default
+         * theme used by all the roots for which a theme is not explicitly
+         * defined. If the application theme is not explicitly set,
+         * <code>null</code> is returned.
+         * 
+         * @return the name of the application's theme.
+         */
         public String getTheme() {
             return theme;
         }
 
+        /**
+         * This implementation returns the theme that has been set using
+         * {@link #setTheme(String)}
+         * <p>
+         * {@inheritDoc}
+         */
         @Override
         public String getThemeForRoot(Root root) {
             return theme;
         }
 
+        /**
+         * <p>
+         * Gets a root by name. Returns <code>null</code> if the application is
+         * not running or it does not contain a window corresponding to the
+         * name.
+         * </p>
+         * 
+         * @param name
+         *            the name of the requested window
+         * @return a root corresponding to the name, or <code>null</code> to use
+         *         the default window
+         */
         public Root getWindow(String name) {
             return legacyRootNames.get(name);
         }
 
+        /**
+         * Counter to get unique names for windows with no explicit name
+         */
         private int namelessRootIndex = 0;
 
+        /**
+         * Adds a new browser level window to this application. Please note that
+         * Root doesn't have a name that is used in the URL - to add a named
+         * window you should instead use {@link #addWindow(Root, String)}
+         * 
+         * @param root
+         *            the root window to add to the application
+         * @return returns the name that has been assigned to the window
+         * 
+         * @see #addWindow(Root, String)
+         */
         public String addWindow(Root root) {
             String name = Integer.toString(namelessRootIndex++);
             addWindow(root, name);
             return name;
         }
 
+        /**
+         * Adds a named browser level window to this application. This method is
+         * intended to be used instead of the old pattern of assigning a name to
+         * the window and then adding it to the application - {@link Root} has
+         * no methods for setting and getting names.
+         * 
+         * @param root
+         *            the root window to add
+         * @param name
+         *            the name to assign to the root
+         * 
+         * @see #addWindow(Root)
+         */
         public void addWindow(Root root, String name) {
             legacyRootNames.put(name, root);
             root.setApplication(this);
         }
 
+        /**
+         * Removes the specified window from the application. This also removes
+         * all name mappings for the window (see
+         * {@link #addWindow(Root, String) and #getWindowName(Root)}.
+         * 
+         * <p>
+         * Note that removing window from the application does not close the
+         * browser window - the window is only removed from the server-side.
+         * </p>
+         * 
+         * @param root
+         *            the root to remove
+         */
         public void removeWindow(Root root) {
             for (Entry<String, Root> entry : legacyRootNames.entrySet()) {
                 if (entry.getValue() == root) {
@@ -189,11 +315,36 @@ public class Application implements Terminal.ErrorListener, Serializable {
             }
         }
 
+        /**
+         * Gets the set of windows contained by the application.
+         * 
+         * <p>
+         * Note that the returned set of windows can not be modified.
+         * </p>
+         * 
+         * @return the unmodifiable collection of windows.
+         */
         public Collection<Root> getWindows() {
             return Collections.unmodifiableCollection(legacyRootNames.values());
         }
 
+        /**
+         * Gets the full URL of a window. The returned URL is window specific
+         * and can be used to directly refer to the window.
+         * <p>
+         * Note! This method can not be used for portlets.
+         * </p>
+         * 
+         * @param root
+         *            the root to get the URL for
+         * 
+         * @return the URL of the window or <code>null</code> if the window is
+         *         not attached to an application
+         */
         public URL getWindowUrl(Root root) {
+            if (root.getApplication() != this) {
+                return null;
+            }
             String windowName = getWindowName(root);
             URL url;
             try {
@@ -204,9 +355,33 @@ public class Application implements Terminal.ErrorListener, Serializable {
             }
         }
 
+        /**
+         * Gets the unique name of a window. The name of the window is used to
+         * uniquely identify it. As Root doesn't have any methods for setting or
+         * getting its name, <code>LegacyApplication</code> will instead take
+         * care of maintaining the names assigned to windows.
+         * <p>
+         * The name also determines the URL that can be used for direct access
+         * to a window. All windows can be accessed through
+         * {@code http://host:port/app/win} where {@code http://host:port/app}
+         * is the application URL (as returned by {@link Application#getURL()}
+         * and {@code win} is the window name.
+         * </p>
+         * <p>
+         * Note! Portlets do not support direct window access through URLs.
+         * </p>
+         * 
+         * @param root
+         *            the root to get a name for
+         * 
+         * @return the name of the root, or <code>null</code> if the root has
+         *         not been added to this application
+         */
         public String getWindowName(Root root) {
             if (root == mainWindow) {
                 return "";
+            } else if (root.getApplication() != this) {
+                return null;
             }
             for (Entry<String, Root> entry : legacyRootNames.entrySet()) {
                 if (entry.getValue() == root) {
@@ -217,17 +392,48 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
     }
 
+    /**
+     * Helper class to keep track of the information from an initial request if
+     * another request is required before the <code>Root</code> can be
+     * initialized.
+     * 
+     * The saved information is then used together with information from the
+     * second request to create a {@link CombinedRequest} containing relevant
+     * parts from each request.
+     */
     private static class PendingRootRequest implements Serializable {
 
         private final Map<String, String[]> parameterMap;
         private final String pathInfo;
 
+        /**
+         * Creates a new pending request from an initial request. This is done
+         * by saving the parameterMap and the pathInfo from the provided wrapped
+         * request.
+         * 
+         * @param request
+         *            the initial request from which the required data is
+         *            extracted
+         */
         public PendingRootRequest(WrappedRequest request) {
+            // Create a defensive copy in case the Map instance is reused
             parameterMap = new HashMap<String, String[]>(
                     request.getParameterMap());
             pathInfo = request.getRequestPathInfo();
         }
 
+        /**
+         * Creates a new request by combining information from the initial
+         * request with information from the provided second request.
+         * 
+         * @param secondRequest
+         *            the second request, should contain the information
+         *            required for providing {@link BrowserDetails}
+         * @return a request providing a combined view of the information from
+         *         the two original requests
+         * 
+         * @see CombinedRequest#CombinedRequest(WrappedRequest, Map, String)
+         */
         public CombinedRequest getCombinedRequest(
                 final WrappedRequest secondRequest) {
             return new CombinedRequest(secondRequest,
@@ -457,8 +663,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * <p>
      * Main initializer of the application. The <code>init</code> method is
      * called by the framework when the application is started, and it should
-     * perform whatever initialization operations the application needs, such as
-     * creating windows and adding components to them.
+     * perform whatever initialization operations the application needs.
      * </p>
      */
     public void init() {
@@ -1600,6 +1805,49 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
     }
 
+    /**
+     * Gets a root for a request for which no root is already known. This method
+     * is called when the framework processes a request that does not originate
+     * from an existing root instance. This typically happens when a host page
+     * is requested.
+     * 
+     * <p>
+     * Subclasses of Application may override this method to provide custom
+     * logic for choosing how to create a suitable root or for picking an
+     * already created root. If an existing root is picked, care should be taken
+     * to avoid keeping the same root open in multiple browser windows, as that
+     * will cause the states to go out of sync.
+     * </p>
+     * 
+     * <p>
+     * If {@link BrowserDetails} are required to create a Root, the
+     * implementation can throw a {@link RootRequiresMoreInformation} exception.
+     * In this case, the framework will instruct the browser to send the
+     * additional details, whereupon this method is invoked again with the
+     * browser details present in the wrapped request. Throwing the exception if
+     * the browser details are already available is not supported.
+     * </p>
+     * 
+     * <p>
+     * The default implementation in {@link Application} creates a new instance
+     * of the Root class returned by {@link #getRootClassName(WrappedRequest},
+     * which in turn uses the {@value #ROOT_PARAMETER} parameter from web.xml.
+     * </p>
+     * 
+     * @param request
+     *            the wrapped request for which a root is needed
+     * @return a root instance to use for the request
+     * @throws RootRequiresMoreInformation
+     *             may be thrown by an implementation to indicate that
+     *             {@link BrowserDetails} are required to create a root
+     * 
+     * @see #getRootClassName(WrappedRequest)
+     * @see Root
+     * @see RootRequiresMoreInformation
+     * @see WrappedRequest#getBrowserDetails()
+     * 
+     * @since 7.0
+     */
     protected Root getRoot(WrappedRequest request)
             throws RootRequiresMoreInformation {
         String rootClassName = getRootClassName(request);
@@ -1619,6 +1867,25 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
     }
 
+    /**
+     * Provides the name of the <code>Root</code> class that should be used for
+     * a request. The class must have an accessible no-args constructor.
+     * <p>
+     * The default implementation uses the {@value #ROOT_PARAMETER} parameter
+     * from web.xml.
+     * </p>
+     * <p>
+     * This method is mainly used by the default implementation of
+     * {@link #getRoot(WrappedRequest)}. If you override that method with your
+     * own functionality, the results of this method might not be used.
+     * </p>
+     * 
+     * @param request
+     *            the request for which a new root is required
+     * @return the name of the root class to use
+     * 
+     * @since 7.0
+     */
     protected String getRootClassName(WrappedRequest request) {
         Object rootClassNameObj = properties.get(ROOT_PARAMETER);
         if (rootClassNameObj instanceof String) {
@@ -1629,18 +1896,72 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
     }
 
+    /**
+     * Finds the theme to use for a specific root. If no specific theme is
+     * required, <code>null</code> is returned.
+     * 
+     * TODO Tell what the default implementation does once it does something.
+     * 
+     * @param root
+     *            the root to get a theme for
+     * @return the name of the theme, or <code>null</code> if the default theme
+     *         should be used
+     * 
+     * @since 7.0
+     */
     public String getThemeForRoot(Root root) {
         // TODO Get theme from root annotation
         return null;
     }
 
+    /**
+     * Finds the widgetset to use for a specific root. If no specific widgetset
+     * is required, <code>null</code> is returned.
+     * 
+     * TODO Tell what the default implementation does once it does something.
+     * 
+     * @param root
+     *            the root to get a widgetset for
+     * @return the name of the widgetset, or <code>null</code> if the default
+     *         widgetset should be used
+     * 
+     * @since 7.0
+     */
     public String getWidgetsetForRoot(Root root) {
         // TODO Get widgetset from root annotation
         return null;
     }
 
+    /**
+     * Handles a request by passing it to each registered {@link RequestHandler}
+     * in turn until one produces a response. This method is used for requests
+     * that have not been handled by any specific functionality in the terminal
+     * implementation (e.g. {@link AbstractApplicationServlet}).
+     * <p>
+     * The request handlers are invoked in the revere order in which they were
+     * added to the application until a response has been produced. This means
+     * that the most recently added handler is used first and the first request
+     * handler that was added to the application is invoked towards the end
+     * unless any previous handler has already produced a response.
+     * </p>
+     * 
+     * @param request
+     *            the wrapped request to get information from
+     * @param response
+     *            the response to which data can be written
+     * @return returns <code>true</code> if a {@link RequestHandler} has
+     *         produced a response and <code>false</code> if no response has
+     *         been written.
+     * @throws IOException
+     * 
+     * @see #addRequestHandler(RequestHandler)
+     * @see RequestHandler
+     * 
+     * @since 7.0
+     */
     public boolean handleRequest(WrappedRequest request,
             WrappedResponse response) throws IOException {
+        // Use a copy to avoid ConcurrentModificationException
         for (RequestHandler handler : new ArrayList<RequestHandler>(
                 requestHandlers)) {
             if (handler.handleRequest(this, request, response)) {
@@ -1651,36 +1972,148 @@ public class Application implements Terminal.ErrorListener, Serializable {
         return false;
     }
 
+    /**
+     * Adds a request handler to this application. Request handlers can be added
+     * to provide responses to requests that are not handled by the default
+     * functionality of the framework.
+     * <p>
+     * Handlers are called in reverse order of addition, so the most recently
+     * added handler will be called first.
+     * </p>
+     * 
+     * @param handler
+     *            the request handler to add
+     * 
+     * @see #handleRequest(WrappedRequest, WrappedResponse)
+     * @see #removeRequestHandler(RequestHandler)
+     * 
+     * @since 7.0
+     */
     public void addRequestHandler(RequestHandler handler) {
         requestHandlers.addFirst(handler);
     }
 
+    /**
+     * Removes a request handler from the application.
+     * 
+     * @param handler
+     *            the request handler to remove
+     * 
+     * @since 7.0
+     */
     public void removeRequestHandler(RequestHandler handler) {
         requestHandlers.remove(handler);
     }
 
+    /**
+     * Gets the request handlers that are registered to the application. The
+     * iteration order of the returned collection is the same as the order in
+     * which the request handlers will be invoked when a request is handled.
+     * 
+     * @return a collection of request handlers, with the iteration order
+     *         according to the order they would be invoked
+     * 
+     * @see #handleRequest(WrappedRequest, WrappedResponse)
+     * @see #addRequestHandler(RequestHandler)
+     * @see #removeRequestHandler(RequestHandler)
+     * 
+     * @since 7.0
+     */
     public Collection<RequestHandler> getRequestHandlers() {
         return Collections.unmodifiableCollection(requestHandlers);
     }
 
+    /**
+     * Find an application resource with a given key.
+     * 
+     * @param key
+     *            The key of the resource
+     * @return The application resource corresponding to the provided key, or
+     *         <code>null</code> if no resource is registered for the key
+     * 
+     * @since 7.0
+     */
     public ApplicationResource getResource(String key) {
         return keyResourceMap.get(key);
     }
 
+    /**
+     * Thread local for keeping track of currently used application instance
+     * 
+     * @since 7.0
+     */
     private static final ThreadLocal<Application> currentApplication = new ThreadLocal<Application>();
 
+    /**
+     * Gets the currently used application. The current application is
+     * automatically defined when processing requests to the server. In other
+     * cases, (e.g. from background threads), the current application is not
+     * automatically defined.
+     * 
+     * @return the current application instance if available, otherwise
+     *         <code>null</code>
+     * 
+     * @see #setCurrentApplication(Application)
+     * 
+     * @since 7.0
+     */
     public static Application getCurrentApplication() {
         return currentApplication.get();
     }
 
+    /**
+     * Sets the thread local for the current application. This method is used by
+     * the framework to set the current application whenever a new request is
+     * processed and it is cleared when the request has been processed.
+     * <p>
+     * The application developer can also use this method to define the current
+     * application outside the normal request handling, e.g. when initiating
+     * custom background threads.
+     * </p>
+     * 
+     * @param application
+     * 
+     * @see #getCurrentApplication()
+     * @see ThreadLocal
+     * 
+     * @since 7.0
+     */
     public static void setCurrentApplication(Application application) {
         currentApplication.set(application);
     }
 
+    /**
+     * Check whether this application is in production mode. If an application
+     * is in production mode, certain debugging facilities are not available.
+     * 
+     * @return the status of the production mode flag
+     * 
+     * @since 7.0
+     */
     public boolean isProductionMode() {
         return productionMode;
     }
 
+    /**
+     * Registers a request that will lead to a root being created in a
+     * subsequent request. When the initial request does not contain all the
+     * information required to initialize a {@link Root}, some information from
+     * the initial request is still needed when processing a subsequent request
+     * containing the rest of the required information. By registering the
+     * initial request, it can be combined with the subsequent request using the
+     * root id returned by this method.
+     * 
+     * @param request
+     *            the initial request from which information is required when
+     *            the subsequent request is processed
+     * @return the root id that should be used to associate the passed request
+     *         with future requests related to the same Root
+     * 
+     * @see #getCombinedRequest(WrappedRequest)
+     * @see #getRoot(WrappedRequest)
+     * 
+     * @since 7.0
+     */
     public int registerPendingRoot(WrappedRequest request) {
         int rootId = nextRootId++;
         pendingRoots.put(Integer.valueOf(rootId), new PendingRootRequest(
@@ -1688,6 +2121,22 @@ public class Application implements Terminal.ErrorListener, Serializable {
         return rootId;
     }
 
+    /**
+     * Gets a request containing some aspects from the original request and some
+     * aspects from the current request. This is used during the two phase
+     * initialization of Roots with the first request registered using
+     * {@link #registerPendingRoot(WrappedRequest)}
+     * 
+     * @param request
+     *            the second request, should be sent from the bootstrap
+     *            javascript
+     * @return a request containing some aspects of the initial request and some
+     *         aspects from the current request
+     * 
+     * @see #registerPendingRoot(WrappedRequest)
+     * 
+     * @since 7.0
+     */
     public CombinedRequest getCombinedRequest(WrappedRequest request) {
         PendingRootRequest pendingRootRequest = pendingRoots
                 .get(getRootId(request));
@@ -1698,6 +2147,32 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
     }
 
+    /**
+     * Finds the {@link Root} to which a particular request belongs. If the
+     * request originates from an existing Root, that root is returned. In other
+     * cases, the method attempts to create and initialize a new root and might
+     * throw a {@link RootRequiresMoreInformation} if all required information
+     * is not available.
+     * <p>
+     * Please note that this method can also return a newly created
+     * <code>Root</code> which has not yet been initialized. You can use
+     * {@link #isRootInitPending(int)} with the root's id (
+     * {@link Root#getRootId()} to check whether the initialization is still
+     * pending.
+     * </p>
+     * 
+     * @param request
+     *            the request for which a root is desired
+     * @return a root belonging to the request
+     * @throws RootRequiresMoreInformation
+     *             if no existing root could be found and creating a new root
+     *             requires additional information from the browser
+     * 
+     * @see #getRoot(WrappedRequest)
+     * @see RootRequiresMoreInformation
+     * 
+     * @since 7.0
+     */
     public Root getRootForRequest(WrappedRequest request)
             throws RootRequiresMoreInformation {
         Root root = Root.getCurrentRoot();
@@ -1740,7 +2215,16 @@ public class Application implements Terminal.ErrorListener, Serializable {
         return root;
     }
 
-    private Integer getRootId(WrappedRequest request) {
+    /**
+     * Internal helper to finds the root id for a request.
+     * 
+     * @param request
+     *            the request to get the root id for
+     * @return a root id, or <code>null</code> if no root id is defined
+     * 
+     * @since 7.0
+     */
+    private static Integer getRootId(WrappedRequest request) {
         if (request instanceof CombinedRequest) {
             // Combined requests has the rootid parameter in the second request
             CombinedRequest combinedRequest = (CombinedRequest) request;
@@ -1753,6 +2237,18 @@ public class Application implements Terminal.ErrorListener, Serializable {
         return rootId;
     }
 
+    /**
+     * Checks whether there's a pending initialization for the root with the
+     * given id.
+     * 
+     * @param rootId
+     *            root id to check for
+     * @return <code>true</code> of the initialization is pending,
+     *         <code>false</code> if the root id is not registered or if the
+     *         root has already been initialized
+     * 
+     * @see #getRootForRequest(WrappedRequest)
+     */
     public boolean isRootInitPending(int rootId) {
         return pendingRoots.containsKey(Integer.valueOf(rootId));
     }

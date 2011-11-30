@@ -9,6 +9,15 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
 
+/**
+ * A {@link WrappedRequest} with path and parameters from one request and
+ * {@link BrowserDetails} extracted from another request.
+ * 
+ * This class is intended to be used for a two request initialization where the
+ * first request fetches the actual application page and the second request
+ * contains information extracted from the browser using javascript.
+ * 
+ */
 public class CombinedRequest implements WrappedRequest {
 
     private final WrappedRequest secondRequest;

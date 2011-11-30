@@ -204,11 +204,29 @@ public class DownloadStream implements Serializable {
      * 
      * @param bufferSize
      *            the size of the buffer in bytes.
+     * 
+     * @since 7.0
      */
     public void setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
     }
 
+    /**
+     * Writes this download stream to a wrapped response. This takes care of
+     * setting response headers according to what is defined in this download
+     * stream ({@link #getContentType()}, {@link #getCacheTime()},
+     * {@link #getFileName()}) and transferring the data from the stream (
+     * {@link #getStream()}) to the response. Defined parameters (
+     * {@link #getParameterNames()}) are also included as headers in the
+     * response. If there's is a parameter named <code>Location</code>, a
+     * redirect (302 Moved temporarily) is sent instead of the contents of this
+     * stream.
+     * 
+     * @param response
+     *            the wrapped response to write this download stream to
+     * @throws IOException
+     *             passed through from the wrapped response
+     */
     public void writeTo(WrappedResponse response) throws IOException {
         if (getParameter("Location") != null) {
             response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
@@ -275,6 +293,14 @@ public class DownloadStream implements Serializable {
         }
     }
 
+    /**
+     * Helper method that tries to close an output stream and ignores any
+     * exceptions.
+     * 
+     * @param out
+     *            the output stream to close, <code>null</code> is also
+     *            supported
+     */
     static void tryToCloseStream(OutputStream out) {
         try {
             // try to close output stream (e.g. file handle)
@@ -286,6 +312,13 @@ public class DownloadStream implements Serializable {
         }
     }
 
+    /**
+     * Helper method that tries to close an input stream and ignores any
+     * exceptions.
+     * 
+     * @param in
+     *            the input stream to close, <code>null</code> is also supported
+     */
     static void tryToCloseStream(InputStream in) {
         try {
             // try to close output stream (e.g. file handle)
