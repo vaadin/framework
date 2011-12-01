@@ -8,6 +8,7 @@ import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.data.validator.CompositeValidator.CombinationMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -97,7 +98,7 @@ public class TestValidators extends TestBase {
         tf = new TextField(
                 "A field, must be a floating point number with 4-5 chars");
         CompositeValidator cv = new CompositeValidator(
-                CompositeValidator.MODE_AND,
+                CombinationMode.AND,
                 "The field must contain a floating point number with 4-5 characters");
         cv.addValidator(new StringLengthValidator(
                 "String length of '{0}' should be 4-5 characters", 4, 5, false));
@@ -109,7 +110,7 @@ public class TestValidators extends TestBase {
 
         tf = new TextField(
                 "A field, must be a floating point number or 4-5 chars");
-        cv = new CompositeValidator(CompositeValidator.MODE_OR,
+        cv = new CompositeValidator(CombinationMode.OR,
                 "The field must contain a floating point  or with 4-5 characters");
         cv.addValidator(new StringLengthValidator(
                 "String length of '{0}' should be 4-5 characters", 4, 5, false));
