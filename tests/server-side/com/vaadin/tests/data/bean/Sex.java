@@ -1,7 +1,7 @@
 package com.vaadin.tests.data.bean;
 
 public enum Sex {
-    MALE("Male"), FEMALE("Female"), UNKNOWN("WTF?");
+    MALE("Male"), FEMALE("Female"), UNKNOWN("Unknown");
 
     private String stringRepresentation;
 

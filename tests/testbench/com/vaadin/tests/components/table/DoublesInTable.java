@@ -147,7 +147,8 @@ public class DoublesInTable extends TestBase {
 
             public Sex convertFromTargetToSource(String value, Locale locale)
                     throws com.vaadin.data.util.converter.Converter.ConversionException {
-                // TODO
+                // not used in this test - Table only converts from source to
+                // target
                 return null;
             }
 
@@ -170,11 +171,9 @@ public class DoublesInTable extends TestBase {
         t.setConverter("deceased", new Converter<Boolean, String>() {
 
             public Boolean convertFromTargetToSource(String value, Locale locale) {
-                if ("-".equals(value)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                // not used in this test - Table only converts from source to
+                // target
+                return null;
             }
 
             public String convertFromSourceToTarget(Boolean value, Locale locale) {
@@ -197,7 +196,8 @@ public class DoublesInTable extends TestBase {
 
             public Integer convertFromTargetToSource(String value, Locale locale)
                     throws com.vaadin.data.util.converter.Converter.ConversionException {
-                // TODO Auto-generated method stub
+                // not used in this test - Table only converts from source to
+                // target
                 return null;
             }
 
@@ -229,7 +229,8 @@ public class DoublesInTable extends TestBase {
 
             public Address convertFromTargetToSource(String value, Locale locale)
                     throws ConversionException {
-                // TODO Auto-generated method stub
+                // not used in this test - Table only converts from source to
+                // target
                 return null;
             }
 
