@@ -31,11 +31,9 @@
         <dependency org="com.google.gwt" name="gwt-dev" rev="2.4.0" conf="client-side.compile->master" />
          
    		<!-- Test frameworks & related -->
-   		<dependency org="junit" name="junit" rev="4.5" conf="test.runtime ->master"/>
-   		<dependency org="org.easymock" name="easymock" rev="3.0" conf="test.runtime ->master"/>  
-   		<dependency org="asm" name="asm-all" rev="3.3" conf="test.runtime ->master"/>  
-   		<dependency org="cglib" name="cglib" rev="2.2" conf="test.runtime ->master"/>  
-   		<dependency org="org.hsqldb" name="hsqldb" rev="2.2.6" conf="test.runtime ->master"/>  
+   		<dependency org="junit" name="junit" rev="4.5" conf="test.runtime -> master"/>
+   		<dependency org="org.easymock" name="easymock" rev="3.0" conf="test.runtime -> master, runtime(*)"/>  
+   		<dependency org="org.hsqldb" name="hsqldb" rev="2.2.6" conf="test.runtime -> master, runtime(*)"/>  
    		   		
    		<!-- Ant tasks -->   	
    		<dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" conf="ant-tasks ->master"/>
