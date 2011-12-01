@@ -251,7 +251,7 @@ public interface Buffered extends Serializable {
                 if (level == null) {
                     level = causeLevel;
                 } else {
-                    if (causeLevel.ordinal() > level.ordinal()) {
+                    if (causeLevel.intValue() > level.intValue()) {
                         level = causeLevel;
                     }
                 }

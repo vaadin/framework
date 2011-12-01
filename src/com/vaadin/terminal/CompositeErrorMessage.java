@@ -95,7 +95,7 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
     private void addErrorMessage(ErrorMessage error) {
         if (error != null && !errors.contains(error)) {
             errors.add(error);
-            if (error.getErrorLevel().ordinal() > level.ordinal()) {
+            if (error.getErrorLevel().intValue() > level.intValue()) {
                 level = error.getErrorLevel();
             }
         }
