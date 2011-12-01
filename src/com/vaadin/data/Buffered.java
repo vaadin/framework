@@ -243,17 +243,21 @@ public interface Buffered extends Serializable {
          */
         public ErrorLevel getErrorLevel() {
 
-            ErrorLevel level = ErrorLevel.INFORMATION;
+            ErrorLevel level = null;
 
             for (int i = 0; i < causes.length; i++) {
                 final ErrorLevel causeLevel = (causes[i] instanceof ErrorMessage) ? ((ErrorMessage) causes[i])
                         .getErrorLevel() : ErrorLevel.ERROR;
-                if (causeLevel.ordinal() > level.ordinal()) {
+                if (level == null) {
                     level = causeLevel;
+                } else {
+                    if (causeLevel.ordinal() > level.ordinal()) {
+                        level = causeLevel;
+                    }
                 }
             }
 
-            return level == ErrorLevel.INFORMATION ? ErrorLevel.ERROR : level;
+            return level == null ? ErrorLevel.ERROR : level;
         }
 
         /* Documented in super interface */
