@@ -18,31 +18,39 @@ import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 @SuppressWarnings("serial")
 public class UserError implements ErrorMessage {
 
-    /**
-     * Content mode, where the error contains only plain text.
-     */
-    public static final int CONTENT_TEXT = 0;
+    public enum ContentMode {
+        /**
+         * Content mode, where the error contains only plain text.
+         */
+        TEXT,
+        /**
+         * Content mode, where the error contains preformatted text.
+         */
+        PREFORMATTED,
+        /**
+         * Formatted content mode, where the contents is XML restricted to the
+         * UIDL 1.0 formatting markups.
+         */
+        UIDL,
+        /**
+         * Content mode, where the error contains XHTML.
+         */
+        XHTML;
+    }
 
-    /**
-     * Content mode, where the error contains preformatted text.
-     */
-    public static final int CONTENT_PREFORMATTED = 1;
-
-    /**
-     * Formatted content mode, where the contents is XML restricted to the UIDL
-     * 1.0 formatting markups.
-     */
-    public static final int CONTENT_UIDL = 2;
-
-    /**
-     * Content mode, where the error contains XHTML.
-     */
-    public static final int CONTENT_XHTML = 3;
+    @Deprecated
+    public static final ContentMode CONTENT_TEXT = ContentMode.TEXT;
+    @Deprecated
+    public static final ContentMode CONTENT_PREFORMATTED = ContentMode.PREFORMATTED;
+    @Deprecated
+    public static final ContentMode CONTENT_UIDL = ContentMode.UIDL;
+    @Deprecated
+    public static final ContentMode CONTENT_XHTML = ContentMode.XHTML;
 
     /**
      * Content mode.
      */
-    private int mode = CONTENT_TEXT;
+    private ContentMode mode = ContentMode.TEXT;
 
     /**
      * Message in content mode.
@@ -73,21 +81,24 @@ public class UserError implements ErrorMessage {
      *            the content Mode.
      * @param errorLevel
      *            the level of error.
-     * @deprecated use {link
-     *             {@link #UserError(String, int, com.vaadin.terminal.ErrorMessage.ErrorLevel)}
+     * @deprecated use {link {@link #UserError(String, ContentMode, ErrorLevel)}
      *             instead.
      */
     @Deprecated
     public UserError(String message, int contentMode, int errorLevel) {
-
         // Check the parameters
-        if (contentMode < 0 || contentMode > 2) {
+        // TODO should XHTML be also a supported mode?
+        if (contentMode == 0) {
+            mode = ContentMode.TEXT;
+        } else if (contentMode == 1) {
+            mode = ContentMode.PREFORMATTED;
+        } else if (contentMode == 2) {
+            mode = ContentMode.UIDL;
+        } else {
             throw new java.lang.IllegalArgumentException(
                     "Unsupported content mode: " + contentMode);
         }
-
         msg = message;
-        mode = contentMode;
         if (errorLevel == ErrorLevel.INFORMATION.ordinal()) {
             level = ErrorLevel.INFORMATION;
         } else if (errorLevel == ErrorLevel.WARNING.ordinal()) {
@@ -101,14 +112,8 @@ public class UserError implements ErrorMessage {
         }
     }
 
-    public UserError(String message, int contentMode, ErrorLevel errorLevel) {
-
-        // Check the parameters
-        if (contentMode < 0 || contentMode > 2) {
-            throw new java.lang.IllegalArgumentException(
-                    "Unsupported content mode: " + contentMode);
-        }
-
+    public UserError(String message, ContentMode contentMode,
+            ErrorLevel errorLevel) {
         msg = message;
         mode = contentMode;
         level = errorLevel;
@@ -139,22 +144,21 @@ public class UserError implements ErrorMessage {
 
         // Paint the message
         switch (mode) {
-        case CONTENT_TEXT:
+        case TEXT:
             target.addText(AbstractApplicationServlet.safeEscapeForHtml(msg));
             break;
-        case CONTENT_UIDL:
+        case UIDL:
             target.addUIDL(msg);
             break;
-        case CONTENT_PREFORMATTED:
+        case PREFORMATTED:
             target.addText("<pre>"
                     + AbstractApplicationServlet.safeEscapeForHtml(msg)
                     + "</pre>");
             break;
-        case CONTENT_XHTML:
+        case XHTML:
             target.addText(msg);
             break;
         }
-
         target.endTag("error");
     }
 
