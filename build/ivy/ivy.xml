@@ -8,7 +8,7 @@
    		<conf name="client-side.compile" description="Client side compilation dependencies" visibility="private"/>
    		<conf name="test.runtime" description="Test runtime dependencies" visibility="private"/>
    		<conf name="ant-tasks" description="Ant task definitions" visibility="private" />
-   		<conf name="jetty" description="Embedded Jetty" visibility="private" />
+   		<conf name="emma" description="Emma code coverage" visibility="private" />
 	</configurations>
     <publications />        
 	<dependencies defaultconf="compile" defaultconfmapping="compile->master">
@@ -30,20 +30,12 @@
         <!-- GWT dev (incl. servlet-api 2.4 classes) -->         
         <dependency org="com.google.gwt" name="gwt-dev" rev="2.4.0" conf="client-side.compile->master" />
          
-
    		<!-- Test frameworks & related -->
    		<dependency org="junit" name="junit" rev="4.5" conf="test.runtime ->master"/>
    		<dependency org="org.easymock" name="easymock" rev="3.0" conf="test.runtime ->master"/>  
    		<dependency org="asm" name="asm-all" rev="3.3" conf="test.runtime ->master"/>  
    		<dependency org="cglib" name="cglib" rev="2.2" conf="test.runtime ->master"/>  
    		<dependency org="org.hsqldb" name="hsqldb" rev="2.2.6" conf="test.runtime ->master"/>  
-   		<dependency org="mysql" name="mysql-connector-java" rev="5.1.10" conf="test.runtime ->master"/>  
-   		<dependency org="org.objenesis" name="objenesis" rev="1.2" conf="test.runtime ->master"/>     		
-   		<dependency org="postgresql" name="postgresql" rev="8.4-701.jdbc3" conf="test.runtime ->master"/>
-        <!--  
-        <dependency org="com.oracle" name="ojdbc14" rev="10.2.0.4.0" conf="test.runtime ->master"/>   
-   		<dependency org="com.microsoft.sqlserver.jdbc" name="sqljdbc4" rev="2.0" conf="test.runtime ->master"/>  
-         		-->
    		   		
    		<!-- Ant tasks -->   	
    		<dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" conf="ant-tasks ->master"/>
@@ -51,15 +43,7 @@
    	   	   		
    		<!-- Emma -->
    		<dependency org="emma" name="emma_ant" rev="2.0.5312" conf="test.runtime,ant-tasks ->master"/>
-   		<dependency org="emma" name="emma" rev="2.0.5312-patched" conf="test.runtime,ant-tasks ->*"/>
-   		
-   		<!-- Jetty -->
-        <!-- 
-   		<dependency org="org.mortbay.jetty" name="jetty" rev="6.1.7" conf="jetty->default" />
-   		<dependency org="org.mortbay.jetty" name="jetty-util" rev="6.1.7" conf="jetty->default" />
-   		<dependency org="org.mortbay.jetty" name="servlet-api-2.5" rev="6.1.7" conf="jetty->default" />
-         -->  
-        
+   		<dependency org="emma" name="emma" rev="2.0.5312-patched" conf="test.runtime,ant-tasks,emma ->*"/>
 
 	</dependencies>
 

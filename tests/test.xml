@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
-
-<project name="Run Vaadin Testbench Tests" basedir="." default="run-and-clean-up">
+<project xmlns:antcontrib="antlib:net.sf.antcontrib"
+	xmlns:ivy="antlib:org.apache.ivy.ant"
+    name="Run Vaadin Testbench Tests" basedir="." default="run-and-clean-up">
 	<!-- ================================================================== -->
 	<!-- Configuration                                                      -->
 	<!-- ================================================================== -->
@@ -30,14 +31,13 @@
 	<!-- <property name="test-output-dir" value="../build/test-output" /> -->
 	<fail unless="test-output-dir" message="The 'test-output-dir' property must be defined." />
 
+	<!-- Include targets for server management  -->
+	<include file="vaadin-server.xml" as="server"/>
+	
 	<property name="class-dir" value="${test-output-dir}/classes" />
-	<taskdef resource="net/sf/antcontrib/antlib.xml">
-		<classpath>
-			<pathelement location="../build/lib/ant-contrib-1.0b3.jar" />
-		</classpath>
-	</taskdef>
 
 	<!-- classpath must include test bench jar and its dependencies -->
+	<!-- TODO emma-->
 	<path id="classpath">
 		<fileset dir="${com.vaadin.testbench.lib.dir}" includes="**/*.jar" />
 		<fileset dir="../build/lib" includes="emma*.jar" />
@@ -51,7 +51,7 @@
 	</fileset>
 
 	<!-- This target converts HTML tests files to java junit tests. One test file for each browser is created. -->
-	<target name="create-tests" depends="remove-temp-testclasses" if="server.start.succeeded">
+	<target name="create-tests" depends="remove-temp-testclasses">
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 
 		<java classname="com.vaadin.testbench.util.TestConverter" classpathref="classpath" fork="true">
@@ -68,49 +68,11 @@
 	<!-- This target complies the generated java junit tests. -->
 	<target name="compile-tests" depends="create-tests">
 		<mkdir dir="${class-dir}" />
-		<javac srcdir="${test-output-dir}" destdir="${class-dir}" debug="on" fork="yes" failonerror="false" encoding="UTF8">
+		<javac includeantruntime="false" srcdir="${test-output-dir}" destdir="${class-dir}" debug="on" fork="yes" failonerror="false" encoding="UTF8">
 			<classpath>
 				<path refid="classpath" />
 			</classpath>
 		</javac>
-	</target>
-
-
-	<!-- ================================================================== -->
-	<!-- Vaadin Server Management                                           -->
-	<!-- ================================================================== -->
-
-	<target name="server-start">
-		<fail unless="output-dir" message="The 'output-dir' (usually build/result/vaadin-xxx) should be given to test script." />
-		<fail unless="package.name" message="The 'package.name' property must be defined." />
-		<fail unless="package.filename" message="The 'package.filename' property must be defined." />
-		<fail unless="testing.testarea" message="The 'testing.testarea' property must be defined." />
-
-		<echo>Package name: ${package.name}</echo>
-		<echo>Package filename: ${package.filename}</echo>
-		<echo>Testing area: ${testing.testarea}</echo>
-
-		<exec executable="python" searchpath="true" dir=".." resultproperty="server.start.result">
-			<arg value="build/testing/vaadin-server.py" />
-			<arg value="start" />
-			<arg value="${package.name}" />
-			<arg value="${package.filename}" />
-			<arg value="${output-dir}" />
-			<arg value="${testing.testarea}" />
-		</exec>
-
-		<condition property="server.start.succeeded">
-			<equals arg1="${server.start.result}" arg2="0" />
-		</condition>
-	</target>
-
-	<target name="server-stop">
-		<sleep seconds="5" />
-		<exec executable="python" dir=".." searchpath="true" resultproperty="server.stop.result">
-			<arg value="build/testing/vaadin-server.py" />
-			<arg value="stop" />
-		</exec>
-		<move file="${testing.testarea}/${package.name}/war.ec" todir="../build/result" failonerror="false" />
 	</target>
 
 	<!-- ================================================================== -->
@@ -123,13 +85,12 @@
 		<fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined." />
 	</target>
 
-	<target name="run-tests" depends="compile-tests" if="server.start.succeeded">
+	<target name="run-tests" depends="compile-tests">
 		<fileset dir="${test-output-dir}" id="tests-fileset">
 			<include name="**/**.java" />
 		</fileset>
-
-
-		<for threadCount="40" parallel="true" keepgoing="true" param="target">
+		
+		<antcontrib:for threadCount="40" parallel="true" keepgoing="true" param="target">
 			<path>
 				<fileset refid="tests-fileset" />
 			</path>
@@ -138,7 +99,7 @@
 					<param name="target" value="@{target}" />
 				</antcall>
 			</sequential>
-		</for>
+		</antcontrib:for>
 	</target>
 
 	<!-- This target runs the generated and compiled junit tests -->
@@ -198,11 +159,20 @@
 	<!-- ================================================================== -->
 
 	<!-- The default target. -->
-	<target name="run-and-clean-up" depends="check-parameters,remove-error-screens,run-tests" if="server.start.succeeded">
+	<target name="run-and-clean-up" depends="check-parameters,remove-error-screens,run-tests">
 	</target>
 
 	<!-- Also starts the server. -->
-	<target name="test-package" depends="server-start, run-and-clean-up, server-stop">
-	</target>
-
+    <target name="test-package">
+    	<parallel>
+    		<daemons>
+    			<antcall inheritall="true" inheritrefs="true" target="server.deploy-and-start" />
+    		</daemons>
+    		<sequential>    			
+    			<antcall target="server.wait-for-startup" />
+    		    <antcall inheritall="true" inheritrefs="true" target="run-and-clean-up" />
+    			<move file="${testing.testarea}/${package.name}/war.ec" todir="../build/result" failonerror="false" />
+            </sequential>
+    	</parallel>
+    </target>
 </project>
