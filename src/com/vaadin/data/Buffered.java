@@ -241,36 +241,29 @@ public interface Buffered extends Serializable {
          * 
          * @see com.vaadin.terminal.ErrorMessage#getErrorLevel()
          */
-        public int getErrorLevel() {
+        public ErrorLevel getErrorLevel() {
 
-            int level = Integer.MIN_VALUE;
+            ErrorLevel level = null;
 
             for (int i = 0; i < causes.length; i++) {
-                final int causeLevel = (causes[i] instanceof ErrorMessage) ? ((ErrorMessage) causes[i])
-                        .getErrorLevel() : ErrorMessage.ERROR;
-                if (causeLevel > level) {
+                final ErrorLevel causeLevel = (causes[i] instanceof ErrorMessage) ? ((ErrorMessage) causes[i])
+                        .getErrorLevel() : ErrorLevel.ERROR;
+                if (level == null) {
                     level = causeLevel;
+                } else {
+                    if (causeLevel.intValue() > level.intValue()) {
+                        level = causeLevel;
+                    }
                 }
             }
 
-            return level == Integer.MIN_VALUE ? ErrorMessage.ERROR : level;
+            return level == null ? ErrorLevel.ERROR : level;
         }
 
         /* Documented in super interface */
         public void paint(PaintTarget target) throws PaintException {
             target.startTag("error");
-            final int level = getErrorLevel();
-            if (level > 0 && level <= ErrorMessage.INFORMATION) {
-                target.addAttribute("level", "info");
-            } else if (level <= ErrorMessage.WARNING) {
-                target.addAttribute("level", "warning");
-            } else if (level <= ErrorMessage.ERROR) {
-                target.addAttribute("level", "error");
-            } else if (level <= ErrorMessage.CRITICAL) {
-                target.addAttribute("level", "critical");
-            } else {
-                target.addAttribute("level", "system");
-            }
+            target.addAttribute("level", getErrorLevel().getText());
 
             // Paint all the exceptions
             for (int i = 0; i < causes.length; i++) {

@@ -26,30 +26,36 @@ import com.vaadin.data.Validator;
 @SuppressWarnings("serial")
 public class CompositeValidator extends AbstractValidator {
 
-    /**
-     * The validators are combined with <code>AND</code> clause: validity of the
-     * composite implies validity of the all validators it is composed of must
-     * be valid.
-     */
-    public static final int MODE_AND = 0;
+    public enum CombinationMode {
+        /**
+         * The validators are combined with <code>AND</code> clause: validity of
+         * the composite implies validity of the all validators it is composed
+         * of must be valid.
+         */
+        AND,
+        /**
+         * The validators are combined with <code>OR</code> clause: validity of
+         * the composite implies that some of validators it is composed of must
+         * be valid.
+         */
+        OR;
+    }
 
     /**
-     * The validators are combined with <code>OR</code> clause: validity of the
-     * composite implies that some of validators it is composed of must be
-     * valid.
+     * @deprecated from 7.0, use {@link CombinationMode#AND} instead    
      */
-    public static final int MODE_OR = 1;
-
+    @Deprecated
+    public static final CombinationMode MODE_AND = CombinationMode.AND;
     /**
-     * The validators are combined with and clause: validity of the composite
-     * implies validity of the all validators it is composed of
+     * @deprecated from 7.0, use {@link CombinationMode#OR} instead    
      */
-    public static final int MODE_DEFAULT = MODE_AND;
+    @Deprecated
+    public static final CombinationMode MODE_OR = CombinationMode.OR;
 
     /**
      * Operation mode.
      */
-    private int mode = MODE_DEFAULT;
+    private CombinationMode mode = CombinationMode.AND;
 
     /**
      * List of contained validators.
@@ -67,7 +73,7 @@ public class CompositeValidator extends AbstractValidator {
     /**
      * Constructs a composite validator in given mode.
      */
-    public CompositeValidator(int mode, String errorMessage) {
+    public CompositeValidator(CombinationMode mode, String errorMessage) {
         super(errorMessage);
         setMode(mode);
     }
@@ -94,13 +100,13 @@ public class CompositeValidator extends AbstractValidator {
     @Override
     public void validate(Object value) throws Validator.InvalidValueException {
         switch (mode) {
-        case MODE_AND:
+        case AND:
             for (Validator validator : validators) {
                 validator.validate(value);
             }
             return;
 
-        case MODE_OR:
+        case OR:
             Validator.InvalidValueException first = null;
             for (Validator v : validators) {
                 try {
@@ -122,15 +128,13 @@ public class CompositeValidator extends AbstractValidator {
                 throw first;
             }
         }
-        throw new IllegalStateException(
-                "The validator is in unsupported operation mode");
     }
 
     /**
      * Checks the validity of the the given value. The value is valid, if:
      * <ul>
-     * <li><code>MODE_AND</code>: All of the sub-validators are valid
-     * <li><code>MODE_OR</code>: Any of the sub-validators are valid
+     * <li>{@link CombinationMode.AND}: All of the sub-validators are valid
+     * <li>{@link CombinationMode.OR}: Any of the sub-validators are valid
      * </ul>
      * 
      * @param value
@@ -138,7 +142,7 @@ public class CompositeValidator extends AbstractValidator {
      */
     public boolean isValid(Object value) {
         switch (mode) {
-        case MODE_AND:
+        case AND:
             for (Validator v : validators) {
                 if (!v.isValid(value)) {
                     return false;
@@ -146,7 +150,7 @@ public class CompositeValidator extends AbstractValidator {
             }
             return true;
 
-        case MODE_OR:
+        case OR:
             for (Validator v : validators) {
                 if (v.isValid(value)) {
                     return true;
@@ -155,32 +159,33 @@ public class CompositeValidator extends AbstractValidator {
             return false;
         }
         throw new IllegalStateException(
-                "The valitor is in unsupported operation mode");
+                "The validator is in unsupported operation mode");
     }
 
     /**
      * Gets the mode of the validator.
      * 
-     * @return Operation mode of the validator: <code>MODE_AND</code> or
-     *         <code>MODE_OR</code>.
+     * @return Operation mode of the validator: {@link CombinationMode.AND} or
+     *         {@link CombinationMode.OR}.
      */
-    public final int getMode() {
+    public final CombinationMode getMode() {
         return mode;
     }
 
     /**
      * Sets the mode of the validator. The valid modes are:
      * <ul>
-     * <li><code>MODE_AND</code> (default)
-     * <li><code>MODE_OR</code>
+     * <li>{@link CombinationMode.AND} (default)
+     * <li>{@link CombinationMode.OR}
      * </ul>
      * 
      * @param mode
      *            the mode to set.
      */
-    public void setMode(int mode) {
-        if (mode != MODE_AND && mode != MODE_OR) {
-            throw new IllegalArgumentException("Mode " + mode + " unsupported");
+    public void setMode(CombinationMode mode) {
+        if (mode == null) {
+            throw new IllegalStateException(
+                    "The validator can't be set to null");
         }
         this.mode = mode;
     }
