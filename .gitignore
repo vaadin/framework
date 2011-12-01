@@ -48,6 +48,5 @@
 /build/test-output
 /build/integration-test-output
 
-# /build/buildhelpers/com/vaadin/buildhelpers/
-/build/buildhelpers/com/vaadin/buildhelpers/*.class
+# /bin/
 /bin

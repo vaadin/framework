@@ -47,7 +47,7 @@
 	
     <target name="ivy-resolve" depends="ivy-configure" unless="ivy.resolved">
         <property name="ivy.resolved" value="1" />
-        <ivy:resolve />
+        <ivy:resolve resolveid="main"/>
         <ivy:cachepath pathid="compile.classpath" conf="compile"/>
         <ivy:cachepath pathid="client-side.compile.classpath" conf="client-side.compile"/>
         <ivy:cachepath pathid="test.runtime.classpath" conf="test.runtime"/>
@@ -158,6 +158,9 @@
         <!-- init-nonpackage target before calling this main init target. -->
         <property name="widgetsets-output-dir" value="${output-dir}/WebContent/VAADIN/widgetsets" />
         
+     	<!-- Build helpers -->
+     	<property name="buildhelpers-src" value="build/buildhelpers" />
+     	<property name="buildhelpers-classes" value="${result-path}/buildhelpers/classes" />
 
         <!-- Create Output Directory Hierarchy -->
         <mkdir dir="${output-dir}/WebContent" />
@@ -361,9 +364,9 @@
     <target name="webcontent" depends="preprocess-src,defaulttheme">
 
         <!-- copy 3rd part libraries used by tests -->
-    	<ivy:retrieve pattern="${output-dir}/WebContent/tests/lib/[artifact]-[revision].[ext]" conf="jetty"/>
+    	<ivy:retrieve pattern="${output-dir}/WebContent/tests/lib/[artifact]-[revision].[ext]" conf="jetty" resolveid="main"/>
     	<ivy:retrieve pattern="${output-dir}/WebContent/tests/lib/[artifact]-[revision].[ext]" 
-    		organisation="emma"  module="emma" revision="2.0.5312-patched" inline="true" />
+    		organisation="emma"  module="emma" revision="2.0.5312-patched" inline="true" resolveid="main" />
 
         <!-- Add WebContent -->
         <echo>Adding VAADIN/themes, demo and hsqldb.jar files.</echo>
@@ -431,7 +434,10 @@
     </target>
 
     <target name="compile-helpers" depends="init">
-        <javac source="1.5" target="1.5" includeantruntime="false" srcdir="build/buildhelpers" classpath="build/smartsprites/lib/smartsprites-0.2.3-itmill.jar"/>
+    	<mkdir dir="${buildhelpers-classes}" />
+        <ivy:cachepath pathid="buildhelpers.dependencies" resolveId="buildhelpers" conf="compile" file="build/ivy/buildhelpers-ivy.xml"/>        
+        <javac source="1.5" target="1.5" includeantruntime="false" srcdir="${buildhelpers-src}" 
+        	classpathref="buildhelpers.dependencies" destdir="${buildhelpers-classes}" debug="true" encoding="UTF-8" />
     </target>
     
     <target name="defaulttheme" depends="init, compile-helpers">
@@ -440,10 +446,8 @@
             <arg value="-version" />
             <arg value="${version.full}"/>
             <classpath>
-                <pathelement location="build/buildhelpers" />
-                <fileset dir="build/smartsprites/lib">
-                    <include name="*.jar"/>
-                </fileset>
+                <path location="${buildhelpers-classes}" />
+                <path refid="buildhelpers.dependencies" />
             </classpath>
             <jvmarg value="-Djava.awt.headless=true"/>
         </java>
@@ -635,7 +639,7 @@
         <java classname="com.vaadin.buildhelpers.GeneratePackageExports" failonerror="true" fork="yes">
             <arg value="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}"/>
             <classpath>
-                <pathelement location="build/buildhelpers" />
+                <pathelement location="${buildhelpers-classes}" />
             </classpath>
         </java>
         

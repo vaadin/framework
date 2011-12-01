@@ -1,0 +1,13 @@
+<ivy-module version="2.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation= "http://ant.apache.org/ivy/schemas/ivy.xsd">
+    
+    <info organisation="com.vaadin" module="buildhelpers"/>
+    <configurations>
+        <conf name="compile" visibility="private"/>       
+    </configurations>
+    <publications />        
+    <dependencies>
+         <dependency org="com.carrotsearch" name="smartsprites" rev="0.2.3-itmill" conf="compile->compile(*),master(*)"/>
+    </dependencies>
+</ivy-module>
