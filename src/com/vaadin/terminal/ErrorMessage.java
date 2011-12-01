@@ -17,37 +17,46 @@ import java.io.Serializable;
  */
 public interface ErrorMessage extends Paintable, Serializable {
 
-    /**
-     * Error code for system errors and bugs.
-     */
-    public static final int SYSTEMERROR = 5000;
+    public enum ErrorLevel {
+        /**
+         * Error code for informational messages.
+         */
+        INFORMATION,
+        /**
+         * Error code for warning messages.
+         */
+        WARNING,
+        /**
+         * Error code for regular error messages.
+         */
+        ERROR,
+        /**
+         * Error code for critical error messages.
+         */
+        CRITICAL,
+        /**
+         * Error code for system errors and bugs.
+         */
+        SYSTEMERROR;
+    }
 
-    /**
-     * Error code for critical error messages.
-     */
-    public static final int CRITICAL = 4000;
-
-    /**
-     * Error code for regular error messages.
-     */
-    public static final int ERROR = 3000;
-
-    /**
-     * Error code for warning messages.
-     */
-    public static final int WARNING = 2000;
-
-    /**
-     * Error code for informational messages.
-     */
-    public static final int INFORMATION = 1000;
+    @Deprecated
+    public static final ErrorLevel SYSTEMERROR = ErrorLevel.SYSTEMERROR;
+    @Deprecated
+    public static final ErrorLevel CRITICAL = ErrorLevel.CRITICAL;
+    @Deprecated
+    public static final ErrorLevel ERROR = ErrorLevel.ERROR;
+    @Deprecated
+    public static final ErrorLevel WARNING = ErrorLevel.WARNING;
+    @Deprecated
+    public static final ErrorLevel INFORMATION = ErrorLevel.INFORMATION;
 
     /**
      * Gets the errors level.
      * 
      * @return the level of error as an integer.
      */
-    public int getErrorLevel();
+    public ErrorLevel getErrorLevel();
 
     /**
      * Error messages are inmodifiable and thus listeners are not needed. This

@@ -69,8 +69,8 @@ public class SystemError extends RuntimeException implements ErrorMessage {
     /**
      * @see com.vaadin.terminal.ErrorMessage#getErrorLevel()
      */
-    public final int getErrorLevel() {
-        return ErrorMessage.SYSTEMERROR;
+    public final ErrorLevel getErrorLevel() {
+        return ErrorLevel.SYSTEMERROR;
     }
 
     /**

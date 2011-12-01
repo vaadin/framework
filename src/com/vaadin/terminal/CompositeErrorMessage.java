@@ -29,7 +29,7 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
     /**
      * Level of the error.
      */
-    private int level;
+    private ErrorLevel level;
 
     /**
      * Constructor for CompositeErrorMessage.
@@ -40,7 +40,7 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
      */
     public CompositeErrorMessage(ErrorMessage[] errorMessages) {
         errors = new ArrayList<ErrorMessage>(errorMessages.length);
-        level = Integer.MIN_VALUE;
+        level = ErrorLevel.INFORMATION;
 
         for (int i = 0; i < errorMessages.length; i++) {
             addErrorMessage(errorMessages[i]);
@@ -63,7 +63,7 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
     public CompositeErrorMessage(
             Collection<? extends ErrorMessage> errorMessages) {
         errors = new ArrayList<ErrorMessage>(errorMessages.size());
-        level = Integer.MIN_VALUE;
+        level = ErrorLevel.INFORMATION;
 
         for (final Iterator<? extends ErrorMessage> i = errorMessages
                 .iterator(); i.hasNext();) {
@@ -81,7 +81,7 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
      * 
      * @see com.vaadin.terminal.ErrorMessage#getErrorLevel()
      */
-    public final int getErrorLevel() {
+    public final ErrorLevel getErrorLevel() {
         return level;
     }
 
@@ -95,9 +95,8 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
     private void addErrorMessage(ErrorMessage error) {
         if (error != null && !errors.contains(error)) {
             errors.add(error);
-            final int l = error.getErrorLevel();
-            if (l > level) {
-                level = l;
+            if (error.getErrorLevel().ordinal() > level.ordinal()) {
+                level = error.getErrorLevel();
             }
         }
     }
@@ -121,13 +120,13 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
         } else {
             target.startTag("error");
 
-            if (level > 0 && level <= ErrorMessage.INFORMATION) {
+            if (level == ErrorLevel.INFORMATION) {
                 target.addAttribute("level", "info");
-            } else if (level <= ErrorMessage.WARNING) {
+            } else if (level == ErrorLevel.WARNING) {
                 target.addAttribute("level", "warning");
-            } else if (level <= ErrorMessage.ERROR) {
+            } else if (level == ErrorLevel.ERROR) {
                 target.addAttribute("level", "error");
-            } else if (level <= ErrorMessage.CRITICAL) {
+            } else if (level == ErrorLevel.CRITICAL) {
                 target.addAttribute("level", "critical");
             } else {
                 target.addAttribute("level", "system");

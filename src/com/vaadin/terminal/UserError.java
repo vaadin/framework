@@ -52,7 +52,7 @@ public class UserError implements ErrorMessage {
     /**
      * Error level.
      */
-    private int level = ErrorMessage.ERROR;
+    private ErrorLevel level = ErrorLevel.ERROR;
 
     /**
      * Creates a textual error message of level ERROR.
@@ -73,8 +73,35 @@ public class UserError implements ErrorMessage {
      *            the content Mode.
      * @param errorLevel
      *            the level of error.
+     * @deprecated use {link
+     *             {@link #UserError(String, int, com.vaadin.terminal.ErrorMessage.ErrorLevel)}
+     *             instead.
      */
+    @Deprecated
     public UserError(String message, int contentMode, int errorLevel) {
+
+        // Check the parameters
+        if (contentMode < 0 || contentMode > 2) {
+            throw new java.lang.IllegalArgumentException(
+                    "Unsupported content mode: " + contentMode);
+        }
+
+        msg = message;
+        mode = contentMode;
+        if (errorLevel == ErrorLevel.INFORMATION.ordinal()) {
+            level = ErrorLevel.INFORMATION;
+        } else if (errorLevel == ErrorLevel.WARNING.ordinal()) {
+            level = ErrorLevel.WARNING;
+        } else if (errorLevel == ErrorLevel.ERROR.ordinal()) {
+            level = ErrorLevel.ERROR;
+        } else if (errorLevel == ErrorLevel.CRITICAL.ordinal()) {
+            level = ErrorLevel.CRITICAL;
+        } else {
+            level = ErrorLevel.SYSTEMERROR;
+        }
+    }
+
+    public UserError(String message, int contentMode, ErrorLevel errorLevel) {
 
         // Check the parameters
         if (contentMode < 0 || contentMode > 2) {
@@ -88,7 +115,7 @@ public class UserError implements ErrorMessage {
     }
 
     /* Documented in interface */
-    public int getErrorLevel() {
+    public ErrorLevel getErrorLevel() {
         return level;
     }
 
@@ -110,16 +137,16 @@ public class UserError implements ErrorMessage {
         target.startTag("error");
 
         // Error level
-        if (level >= ErrorMessage.SYSTEMERROR) {
-            target.addAttribute("level", "system");
-        } else if (level >= ErrorMessage.CRITICAL) {
-            target.addAttribute("level", "critical");
-        } else if (level >= ErrorMessage.ERROR) {
-            target.addAttribute("level", "error");
-        } else if (level >= ErrorMessage.WARNING) {
-            target.addAttribute("level", "warning");
-        } else {
+        if (level == ErrorLevel.INFORMATION) {
             target.addAttribute("level", "info");
+        } else if (level == ErrorLevel.WARNING) {
+            target.addAttribute("level", "warning");
+        } else if (level == ErrorLevel.ERROR) {
+            target.addAttribute("level", "error");
+        } else if (level == ErrorLevel.CRITICAL) {
+            target.addAttribute("level", "critical");
+        } else {
+            target.addAttribute("level", "system");
         }
 
         // Paint the message

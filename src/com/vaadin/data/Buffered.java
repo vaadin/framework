@@ -241,32 +241,32 @@ public interface Buffered extends Serializable {
          * 
          * @see com.vaadin.terminal.ErrorMessage#getErrorLevel()
          */
-        public int getErrorLevel() {
+        public ErrorLevel getErrorLevel() {
 
-            int level = Integer.MIN_VALUE;
+            ErrorLevel level = ErrorLevel.INFORMATION;
 
             for (int i = 0; i < causes.length; i++) {
-                final int causeLevel = (causes[i] instanceof ErrorMessage) ? ((ErrorMessage) causes[i])
-                        .getErrorLevel() : ErrorMessage.ERROR;
-                if (causeLevel > level) {
+                final ErrorLevel causeLevel = (causes[i] instanceof ErrorMessage) ? ((ErrorMessage) causes[i])
+                        .getErrorLevel() : ErrorLevel.ERROR;
+                if (causeLevel.ordinal() > level.ordinal()) {
                     level = causeLevel;
                 }
             }
 
-            return level == Integer.MIN_VALUE ? ErrorMessage.ERROR : level;
+            return level == ErrorLevel.INFORMATION ? ErrorLevel.ERROR : level;
         }
 
         /* Documented in super interface */
         public void paint(PaintTarget target) throws PaintException {
             target.startTag("error");
-            final int level = getErrorLevel();
-            if (level > 0 && level <= ErrorMessage.INFORMATION) {
+            final ErrorLevel level = getErrorLevel();
+            if (level == ErrorLevel.INFORMATION) {
                 target.addAttribute("level", "info");
-            } else if (level <= ErrorMessage.WARNING) {
+            } else if (level == ErrorLevel.WARNING) {
                 target.addAttribute("level", "warning");
-            } else if (level <= ErrorMessage.ERROR) {
+            } else if (level == ErrorLevel.ERROR) {
                 target.addAttribute("level", "error");
-            } else if (level <= ErrorMessage.CRITICAL) {
+            } else if (level == ErrorLevel.CRITICAL) {
                 target.addAttribute("level", "critical");
             } else {
                 target.addAttribute("level", "system");
