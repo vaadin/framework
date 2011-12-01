@@ -766,30 +766,27 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             // is no converter we can safely return null
             return null;
         }
-        if (getPropertyDataSource() != null) {
-            /*
-             * Data source is set
-             */
-            if (getPropertyDataSource().getType().isAssignableFrom(
-                    fieldValue.getClass())) {
-                return fieldValue;
-            } else {
-                throw new Converter.ConversionException(
-                        "Unable to convert value of type "
-                                + fieldValue.getClass().getName()
-                                + " to "
-                                + getPropertyDataSource().getType()
-                                + ". No value converter is set and the types are not compatible.");
 
-            }
+        // check that the value class is compatible with the data source type
+        // (if data source set) or field type
+        Class<?> type;
+        if (getPropertyDataSource() != null) {
+            type = getPropertyDataSource().getType();
+        } else {
+            type = getType();
         }
 
-        throw new Converter.ConversionException(
-                "Unable to convert value of type "
-                        + fieldValue.getClass().getName()
-                        + " to "
-                        + getType()
-                        + ". No value converter is set and the types are not compatible.");
+        if (type.isAssignableFrom(fieldValue.getClass())) {
+            return fieldValue;
+        } else {
+            throw new Converter.ConversionException(
+                    "Unable to convert value of type "
+                            + fieldValue.getClass().getName()
+                            + " to "
+                            + type.getName()
+                            + ". No value converter is set and the types are not compatible.");
+
+        }
     }
 
     /* Validation */
