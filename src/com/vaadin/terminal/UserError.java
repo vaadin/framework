@@ -87,46 +87,6 @@ public class UserError implements ErrorMessage {
         msg = textErrorMessage;
     }
 
-    /**
-     * Creates a error message with level and content mode.
-     * 
-     * @param message
-     *            the error message.
-     * @param contentMode
-     *            the content Mode.
-     * @param errorLevel
-     *            the level of error.
-     * @deprecated use {link {@link #UserError(String, ContentMode, ErrorLevel)}
-     *             instead.
-     */
-    @Deprecated
-    public UserError(String message, int contentMode, int errorLevel) {
-        // Check the parameters
-        // TODO should XHTML be also a supported mode?
-        if (contentMode == 0) {
-            mode = ContentMode.TEXT;
-        } else if (contentMode == 1) {
-            mode = ContentMode.PREFORMATTED;
-        } else if (contentMode == 2) {
-            mode = ContentMode.UIDL;
-        } else {
-            throw new java.lang.IllegalArgumentException(
-                    "Unsupported content mode: " + contentMode);
-        }
-        msg = message;
-        if (errorLevel == ErrorLevel.INFORMATION.ordinal()) {
-            level = ErrorLevel.INFORMATION;
-        } else if (errorLevel == ErrorLevel.WARNING.ordinal()) {
-            level = ErrorLevel.WARNING;
-        } else if (errorLevel == ErrorLevel.ERROR.ordinal()) {
-            level = ErrorLevel.ERROR;
-        } else if (errorLevel == ErrorLevel.CRITICAL.ordinal()) {
-            level = ErrorLevel.CRITICAL;
-        } else {
-            level = ErrorLevel.SYSTEMERROR;
-        }
-    }
-
     public UserError(String message, ContentMode contentMode,
             ErrorLevel errorLevel) {
         msg = message;
