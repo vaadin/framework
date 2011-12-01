@@ -10,7 +10,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.vaadin.data.Validator;
-import com.vaadin.data.validator.CompositeValidator.CombinationMode;
 
 /**
  * The <code>CompositeValidator</code> allows you to chain (compose) many
@@ -42,8 +41,14 @@ public class CompositeValidator extends AbstractValidator {
         OR;
     }
 
+    /**
+     * @deprecated from 7.0, use {@link CombinationMode#AND} instead    
+     */
     @Deprecated
     public static final CombinationMode MODE_AND = CombinationMode.AND;
+    /**
+     * @deprecated from 7.0, use {@link CombinationMode#OR} instead    
+     */
     @Deprecated
     public static final CombinationMode MODE_OR = CombinationMode.OR;
 
@@ -63,24 +68,6 @@ public class CompositeValidator extends AbstractValidator {
      */
     public CompositeValidator() {
         super("");
-    }
-
-    /**
-     * Constructs a composite validator in given mode.
-     * 
-     * @deprecated use {@link #CompositeValidator(CombinationMode, String)}
-     *             instead
-     */
-    @Deprecated
-    public CompositeValidator(int mode, String errorMessage) {
-        super(errorMessage);
-        if (mode == 0) {
-            setMode(CombinationMode.AND);
-        } else if (mode == 1) {
-            setMode(CombinationMode.OR);
-        } else {
-            throw new IllegalArgumentException("Mode " + mode + " unsupported");
-        }
     }
 
     /**
