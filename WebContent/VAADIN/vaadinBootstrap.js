@@ -88,6 +88,9 @@
 				url += '&rootId=' + getConfig('rootId');
 				// Uri fragment
 				url += '&f=' + encodeURIComponent(location.hash);
+				if (window.name) {
+					url += '&wn=' + encodeURIComponent(window.name);
+				}
 				// Timestamp to avoid caching
 				url += '&' + (new Date()).getTime();
 				
@@ -125,6 +128,11 @@
 				'getConfig': getConfig
 			};
 			apps[appId] = app;
+			
+			if (!window.name) {
+				var rootId = getConfig('rootId');
+				window.name =  appId + '-' + rootId;
+			}
 			
 			var bootstrapApp = function(mayDefer) {
 				var themeUri = getConfig('themeUri');

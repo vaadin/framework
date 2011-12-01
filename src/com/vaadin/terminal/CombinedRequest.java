@@ -89,6 +89,10 @@ public class CombinedRequest implements WrappedRequest {
             public String getUriFragmet() {
                 return secondRequest.getParameter("f");
             }
+
+            public String getWindowName() {
+                return secondRequest.getParameter("wn");
+            }
         };
     }
 
