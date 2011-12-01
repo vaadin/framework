@@ -158,7 +158,7 @@ public interface Validator extends Serializable {
          */
         public void paint(PaintTarget target) throws PaintException {
             target.startTag("error");
-            target.addAttribute("level", "error");
+            target.addAttribute("level", ErrorLevel.ERROR.getText());
 
             // Error message
             final String message = getHtmlMessage();

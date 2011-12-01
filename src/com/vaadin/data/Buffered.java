@@ -259,18 +259,7 @@ public interface Buffered extends Serializable {
         /* Documented in super interface */
         public void paint(PaintTarget target) throws PaintException {
             target.startTag("error");
-            final ErrorLevel level = getErrorLevel();
-            if (level == ErrorLevel.INFORMATION) {
-                target.addAttribute("level", "info");
-            } else if (level == ErrorLevel.WARNING) {
-                target.addAttribute("level", "warning");
-            } else if (level == ErrorLevel.ERROR) {
-                target.addAttribute("level", "error");
-            } else if (level == ErrorLevel.CRITICAL) {
-                target.addAttribute("level", "critical");
-            } else {
-                target.addAttribute("level", "system");
-            }
+            target.addAttribute("level", getErrorLevel().getText());
 
             // Paint all the exceptions
             for (int i = 0; i < causes.length; i++) {

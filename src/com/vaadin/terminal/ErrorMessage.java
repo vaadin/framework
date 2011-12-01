@@ -21,23 +21,39 @@ public interface ErrorMessage extends Paintable, Serializable {
         /**
          * Error code for informational messages.
          */
-        INFORMATION,
+        INFORMATION("info"),
         /**
          * Error code for warning messages.
          */
-        WARNING,
+        WARNING("warning"),
         /**
          * Error code for regular error messages.
          */
-        ERROR,
+        ERROR("error"),
         /**
          * Error code for critical error messages.
          */
-        CRITICAL,
+        CRITICAL("critical"),
         /**
          * Error code for system errors and bugs.
          */
-        SYSTEMERROR;
+        SYSTEMERROR("system");
+
+        String text;
+
+        private ErrorLevel(String text) {
+            this.text = text;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        @Override
+        public String toString() {
+            return text;
+        }
+
     }
 
     @Deprecated

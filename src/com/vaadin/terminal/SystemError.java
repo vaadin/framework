@@ -79,7 +79,7 @@ public class SystemError extends RuntimeException implements ErrorMessage {
     public void paint(PaintTarget target) throws PaintException {
 
         target.startTag("error");
-        target.addAttribute("level", "system");
+        target.addAttribute("level", ErrorLevel.SYSTEMERROR.getText());
 
         String message = getHtmlMessage();
 

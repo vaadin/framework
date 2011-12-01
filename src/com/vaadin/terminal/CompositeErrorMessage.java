@@ -119,18 +119,7 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
             (errors.iterator().next()).paint(target);
         } else {
             target.startTag("error");
-
-            if (level == ErrorLevel.INFORMATION) {
-                target.addAttribute("level", "info");
-            } else if (level == ErrorLevel.WARNING) {
-                target.addAttribute("level", "warning");
-            } else if (level == ErrorLevel.ERROR) {
-                target.addAttribute("level", "error");
-            } else if (level == ErrorLevel.CRITICAL) {
-                target.addAttribute("level", "critical");
-            } else {
-                target.addAttribute("level", "system");
-            }
+            target.addAttribute("level", level.getText());
 
             // Paint all the exceptions
             for (final Iterator<ErrorMessage> i = errors.iterator(); i

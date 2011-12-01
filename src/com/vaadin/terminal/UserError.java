@@ -135,19 +135,7 @@ public class UserError implements ErrorMessage {
     public void paint(PaintTarget target) throws PaintException {
 
         target.startTag("error");
-
-        // Error level
-        if (level == ErrorLevel.INFORMATION) {
-            target.addAttribute("level", "info");
-        } else if (level == ErrorLevel.WARNING) {
-            target.addAttribute("level", "warning");
-        } else if (level == ErrorLevel.ERROR) {
-            target.addAttribute("level", "error");
-        } else if (level == ErrorLevel.CRITICAL) {
-            target.addAttribute("level", "critical");
-        } else {
-            target.addAttribute("level", "system");
-        }
+        target.addAttribute("level", level.getText());
 
         // Paint the message
         switch (mode) {
