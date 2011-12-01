@@ -4,11 +4,9 @@
 }
 .v-splitpanel-hsplitter {
 	width: 6px;
-	font-size: 1px; /* for IE6 */
 }
 .v-splitpanel-hsplitter div {
 	width: 6px;
-	font-size: 1px; /* for IE6 */
 	position: absolute;
 	top: 0;
 	bottom: 0;
@@ -21,11 +19,9 @@
 }
 .v-splitpanel-vsplitter {
 	height: 6px;
-	font-size: 1px; /* for IE6 */
 }
 .v-splitpanel-vsplitter div {
 	height: 6px;
-	font-size: 1px; /* for IE6 */
 	background: #ddd;
 	cursor: s-resize;
 	cursor: row-resize;

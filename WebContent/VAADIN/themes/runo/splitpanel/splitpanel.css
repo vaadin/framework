@@ -6,13 +6,11 @@
 .v-splitpanel-hsplitter,
 .v-splitpanel-hsplitter-locked {
 	width: 6px;
-	font-size: 1px; /* for IE6 */
 }
 
 .v-splitpanel-hsplitter div,
 .v-splitpanel-hsplitter-locked div {
 	width: 6px;
-	font-size: 1px; /* for IE6 */
 	position: absolute;
 	top: 0;
 	bottom: 0;
@@ -24,13 +22,11 @@
 .v-splitpanel-vsplitter,
 .v-splitpanel-vsplitter-locked {
 	height: 6px;
-	font-size: 1px; /* for IE6 */
 }
 
 .v-splitpanel-vsplitter div,
 .v-splitpanel-vsplitter-locked div {
 	height: 6px;
-	font-size: 1px; /* for IE6 */
 	background: #ccd2d0 url(img/bg_ver.png);
 	border: 1px solid #b6bbbc;
 	margin: -1px 0;
