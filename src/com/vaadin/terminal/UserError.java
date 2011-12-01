@@ -38,12 +38,27 @@ public class UserError implements ErrorMessage {
         XHTML;
     }
 
+    /**
+     * @deprecated from 7.0, use {@link ContentMode#TEXT} instead    
+     */
     @Deprecated
     public static final ContentMode CONTENT_TEXT = ContentMode.TEXT;
+
+    /**
+     * @deprecated from 7.0, use {@link ContentMode#PREFORMATTED} instead    
+     */
     @Deprecated
     public static final ContentMode CONTENT_PREFORMATTED = ContentMode.PREFORMATTED;
+
+    /**
+     * @deprecated from 7.0, use {@link ContentMode#UIDL} instead    
+     */
     @Deprecated
     public static final ContentMode CONTENT_UIDL = ContentMode.UIDL;
+
+    /**
+     * @deprecated from 7.0, use {@link ContentMode#XHTML} instead    
+     */
     @Deprecated
     public static final ContentMode CONTENT_XHTML = ContentMode.XHTML;
 
