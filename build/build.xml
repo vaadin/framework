@@ -6,6 +6,9 @@
          name="Vaadin"
          basedir="../" default="package-all">
 
+    <!-- Import common targets  -->
+    <import file="./common.xml" />
+
     <!--Call one of package-* targets unless you understand what you are doing. -->
     <target name="package-all" depends="clean-all, init, build, javadoc, internal-package-war, internal-package-liferay, differences" description="Build public packages.">
     </target>
@@ -19,55 +22,14 @@
     <target name="package-liferay-zip" depends="clean-result, init, build, internal-package-liferay">
     </target>
 	
-    <property name="ivy.install.version" value="2.2.0"/>
-    <property name="ivy.jar.name" value="ivy-${ivy.install.version}.jar"/>
-    <property name="ivy.jar.dir" value="${user.home}/.ant/lib" />
-    <property name="ivy.jar.file" value="${ivy.jar.dir}/${ivy.jar.name}" />
-    
-    <target name="check-ivy-installed">
-   	    <available property="ivy.installed" file="${ivy.jar.file}"/>
-   	    <available property="ivy.installed" classname="org.apache.ivy.ant.IvyConfigure"  /> 
-   	    <antcall target="ivy-download" />
-   	</target>
-
-    <target name="ivy-download" unless="ivy.installed">
-        <mkdir dir="${ivy.jar.dir}"/>
-        <get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true"/>
-    </target>
-
-    <target name="ivy-configure" depends="check-ivy-installed" unless="ivy.resolved">
-    	 <!-- Ivy task definitions -->
-    	<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ivy.jar.file}" />
-	    <!-- Ivy settings -->
-	    <property name="ivy.settings.file" value="build/ivy/ivysettings.xml" />
-    	<ivy:configure />
-	</target>
-	
-    <target name="ivy-resolve" depends="ivy-configure" unless="ivy.resolved">
+    <target name="init-deps" depends="common.init-deps" >
         <property name="ivy.resolved" value="1" />
-        <ivy:resolve file="build/ivy/ivy.xml" resolveid="common"/>
-        <ivy:cachepath pathid="compile.classpath" conf="compile"/>
-        <ivy:cachepath pathid="client-side.compile.classpath" conf="client-side.compile"/>
-        <ivy:cachepath pathid="test.runtime.classpath" conf="test.runtime"/>
-        <ivy:cachepath pathid="taskdefs.classpath" conf="ant-tasks"/>
+        <ivy:resolve file="build/ivy/ivy.xml" resolveid="common" conf="ss.compile, cs.compile, ss.test.runtime"/>
+        <ivy:cachepath pathid="compile.classpath" conf="ss.compile"/>
+        <ivy:cachepath pathid="client-side.compile.classpath" conf="cs.compile"/>
+        <ivy:cachepath pathid="test.runtime.classpath" conf="ss.test.runtime"/>
     </target>
-	
-	<target name="init-taskdefs" depends="ivy-resolve">
-		<echo>Loading Ant tasks</echo>
-		
-		<taskdef resource="emma_ant.properties" classpathref="taskdefs.classpath" />	
-		
-	    <!-- ant contrib required for flow control (for loop, if, property override)   -->
-	    <!-- Note that we have to use a namespace to avoid clash when running sub-ant. -->
-		<taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml"
-			classpathref="taskdefs.classpath" />
-		
-		<!-- ant contrib for Maven integration -->	  
-	    <taskdef resource="org/apache/maven/artifact/ant/antlib.xml"
-	             uri="antlib:org.apache.maven.artifact.ant" classpathref="taskdefs.classpath" />        
-	</target>
-  
-   
+
     <!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <target name="clean-result" depends="">
         <property file="build/build.properties" />
@@ -99,7 +61,7 @@
     <!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- ================================================================== -->
 
-     <target name="init" depends="init-taskdefs">
+     <target name="init" depends="init-deps">
         <!-- Current timestamp in different formats. -->
         <tstamp>
             <format property="build.date" pattern="yyyy-MM-dd"/>
@@ -473,7 +435,7 @@
     <!-- The widgetset generator is currently compiled along with rest of server-side Java. -->    
     <target name="compile-widgetset-generator" depends="init, preprocess-src, compile-java"/>
     
-    <target name="compile-widgetset" description="Compiles the widgetset given as the first parameter" depends="ivy-resolve">
+    <target name="compile-widgetset" depends="init-deps" description="Compiles the widgetset given as the first parameter">
         <fail unless="widgetset" message="No widgetset parameter set"/>
         <echo>Compiling widgetset ${widgetset}. Output directory: ${widgetsets-output-dir}</echo>
     	<mkdir dir="${widgetsets-output-dir}"/>
@@ -933,7 +895,7 @@
     </target>
     
     <!-- Assumes java classes have been compiled but depends does not work out well as this is run from a <parallel> task-->
-    <target name="server-side-tests" depends="init-taskdefs" unless="tests.serverside.skip">    	
+    <target name="server-side-tests" depends="init-deps" unless="tests.serverside.skip">    	
 		<emma enabled="${emma.enabled}" >
 			<instr instrpath="${result-path}/classes"
 				mode="copy"
@@ -977,7 +939,7 @@
     </target>
 
     <!-- Assumes java classes have been compiled but depends does not work out well as this is run from a <parallel> task-->
-    <target name="testbench-tests" depends="init" unless="tests.testbench.skip">
+    <target name="testbench-tests" unless="tests.testbench.skip">
         <fail unless="product-file" message="The 'product-file' property must be defined."/>
         <fail unless="version" message="The 'version' property must be defined."/>
 
@@ -1030,7 +992,7 @@
     </target>
 
     <!-- Assumes java classes have been compiled but depends does not work out well as this is run from a <parallel> task-->
-    <target name="integration-tests" depends="init-taskdefs" unless="tests.integration.skip">
+    <target name="integration-tests" depends="init-deps" unless="tests.integration.skip">
         <!-- Parameters for the test.xml script. -->
         <fail unless="com.vaadin.testbench.tester.host" message="The 'com.vaadin.testbench.tester.host' property must be defined."/>
         <fail unless="com.vaadin.testbench.lib.dir" message="The 'com.vaadin.testbench.lib.dir' property must be defined."/>

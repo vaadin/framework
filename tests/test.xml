@@ -2,6 +2,12 @@
 <project xmlns:antcontrib="antlib:net.sf.antcontrib"
 	xmlns:ivy="antlib:org.apache.ivy.ant"
     name="Run Vaadin Testbench Tests" basedir="." default="run-and-clean-up">
+	
+	<!-- Import common targets  -->
+	<import file="../build/common.xml" />
+	<!-- Import targets for server management  -->
+	<import file="vaadin-server.xml" as="server"/>
+	
 	<!-- ================================================================== -->
 	<!-- Configuration                                                      -->
 	<!-- ================================================================== -->
@@ -28,20 +34,19 @@
 	<property name="com.vaadin.testbench.debug" value="false"/>
 	
 	<!-- Temporary output directory, created and removed by this script -->
-	<!-- <property name="test-output-dir" value="../build/test-output" /> -->
-	<fail unless="test-output-dir" message="The 'test-output-dir' property must be defined." />
-
-	<!-- Include targets for server management  -->
-	<include file="vaadin-server.xml" as="server"/>
+	<fail unless="test-output-dir" message="The 'test-output-dir' property must be defined." />	
 	
 	<property name="class-dir" value="${test-output-dir}/classes" />
 
-	<!-- classpath must include test bench jar and its dependencies -->
-	<!-- TODO emma-->
-	<path id="classpath">
-		<fileset dir="${com.vaadin.testbench.lib.dir}" includes="**/*.jar" />
-		<fileset dir="../build/lib" includes="emma*.jar" />
-	</path>
+    <target name="initialize" depends="common.init-deps">
+        <ivy:resolve conf="emma"/>
+        <ivy:cachepath pathid="emma.lib" conf="emma" />
+    	<!-- classpath must include test bench jar and its dependencies -->
+    	<path id="classpath">
+    	        <fileset dir="${com.vaadin.testbench.lib.dir}" includes="**/*.jar" />
+    	        <path refid="emma.lib" />
+    	</path>
+    </target>
 
 	<!-- fileset containing all TestBench tests to run -->
 	<fileset dir=".." id="html-test-files">
@@ -97,6 +102,7 @@
 			<sequential>
 				<antcall target="execute-tests">
 					<param name="target" value="@{target}" />
+					<reference refid="classpath" />
 				</antcall>
 			</sequential>
 		</antcontrib:for>
@@ -159,14 +165,13 @@
 	<!-- ================================================================== -->
 
 	<!-- The default target. -->
-	<target name="run-and-clean-up" depends="check-parameters,remove-error-screens,run-tests">
-	</target>
+	<target name="run-and-clean-up" depends="check-parameters,remove-error-screens,run-tests" />
 
 	<!-- Also starts the server. -->
     <target name="test-package">
     	<parallel>
     		<daemons>
-    			<antcall inheritall="true" inheritrefs="true" target="server.deploy-and-start" />
+    			<ant antfile="vaadin-server.xml" inheritall="true" inheritrefs="true" target="deploy-and-start" />
     		</daemons>
     		<sequential>    			
     			<antcall target="server.wait-for-startup" />

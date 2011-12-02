@@ -4,19 +4,14 @@
     
     <info organisation="com.vaadin" module="vaadin"/>
     <configurations >
-   		<conf name="compile" extends="client-side.compile" description="Server side compilation dependencies" visibility="private"/>
-   		<conf name="client-side.compile" description="Client side compilation dependencies" visibility="private"/>
-   		<conf name="test.runtime" description="Test runtime dependencies" visibility="private"/>
-   		<conf name="ant-tasks" description="Ant task definitions" visibility="private" />
-   		<conf name="emma" description="Emma code coverage" visibility="private" />
+   		<conf name="ss.compile" extends="cs.compile" description="Server side compilation dependencies" visibility="private"/>
+   		<conf name="cs.compile" description="Client side compilation dependencies" visibility="private"/>
+   		<conf name="ss.test.runtime" description="Test runtime dependencies" visibility="private"/>
+   		<conf name="taskdefs" description="Ant task definitions" visibility="private" />
 	</configurations>
     <publications />        
-	<dependencies defaultconf="compile" defaultconfmapping="compile->master">
-	
-        <!-- Servlet 2.3 API-->
-        <!--  
-        <dependency org="javax.servlet" name="servlet-api" rev="2.3" />
-        -->		
+	<dependencies defaultconf="ss.compile" defaultconfmapping="ss.compile->master">
+
    		<!-- Liferay Portal Service -->
 		<dependency org="com.liferay.portal" name="portal-service" rev="6.0.2" />
 		<!--Portlet API version 2.0 (JSR-286) -->
@@ -25,23 +20,23 @@
    		<dependency org="com.google.appengine" name="appengine-api-1.0-sdk" rev="1.2.1" />  
      
         <!-- GWT user with dependencies (validation-api) -->
-        <dependency org="com.google.gwt" name="gwt-user" rev="2.4.0" conf="client-side.compile->master" />
-        <dependency org="javax.validation" name="validation-api" rev="1.0.0.GA" conf="client-side.compile->master,sources" />
+        <dependency org="com.google.gwt" name="gwt-user" rev="2.4.0" conf="cs.compile->master" />
+        <dependency org="javax.validation" name="validation-api" rev="1.0.0.GA" conf="cs.compile->master,sources" />
         <!-- GWT dev (incl. servlet-api 2.4 classes) -->         
-        <dependency org="com.google.gwt" name="gwt-dev" rev="2.4.0" conf="client-side.compile->master" />
+        <dependency org="com.google.gwt" name="gwt-dev" rev="2.4.0" conf="cs.compile->master" />
          
    		<!-- Test frameworks & related -->
-   		<dependency org="junit" name="junit" rev="4.5" conf="test.runtime -> master"/>
-   		<dependency org="org.easymock" name="easymock" rev="3.0" conf="test.runtime -> master, runtime(*)"/>  
-   		<dependency org="org.hsqldb" name="hsqldb" rev="2.2.6" conf="test.runtime -> master, runtime(*)"/>  
+   		<dependency org="junit" name="junit" rev="4.5" conf="ss.test.runtime -> master"/>
+   		<dependency org="org.easymock" name="easymock" rev="3.0" conf="ss.test.runtime -> master, runtime(*)"/>  
+   		<dependency org="org.hsqldb" name="hsqldb" rev="2.2.6" conf="ss.test.runtime -> master, runtime(*)"/>  
    		   		
    		<!-- Ant tasks -->   	
-   		<dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" conf="ant-tasks ->master"/>
-   		<dependency org="org.apache.maven" name="maven-ant-tasks" rev="2.0.10" conf="ant-tasks ->master"/>
+   		<dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" conf="taskdefs ->master"/>
+   		<dependency org="org.apache.maven" name="maven-ant-tasks" rev="2.0.10" conf="taskdefs ->master"/>
    	   	   		
    		<!-- Emma -->
-   		<dependency org="emma" name="emma_ant" rev="2.0.5312" conf="test.runtime,ant-tasks ->master"/>
-   		<dependency org="emma" name="emma" rev="2.0.5312-patched" conf="test.runtime,ant-tasks,emma ->*"/>
+   		<dependency org="emma" name="emma_ant" rev="2.0.5312" conf="ss.test.runtime,taskdefs ->master"/>
+   		<dependency org="emma" name="emma" rev="2.0.5312-patched" conf="ss.test.runtime,taskdefs ->*"/>
 
 	</dependencies>
 

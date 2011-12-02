@@ -2,7 +2,10 @@
 <project xmlns:antcontrib="antlib:net.sf.antcontrib"
     xmlns:ivy="antlib:org.apache.ivy.ant"
     name="vaadin-server" 
-	default="deploy-and-start">
+	default="deploy-and-start" basedir=".">
+    
+	 <!-- Import common targets  -->
+	<import file="../build/common.xml" />
 
 	<target name="check-params">
 		<fail unless="output-dir" message="The 'output-dir' (usually build/result/vaadin-xxx) should be given to test script." />
@@ -11,13 +14,6 @@
 		<fail unless="testing.testarea" message="The 'testing.testarea' property must be defined." />
 		<property name="webroot" value="${testing.testarea}/${package.name}/WebContent" />		
 	</target>
-
-    <target name="ivy-resolve">
-        <ivy:resolve file="ivy.xml" resolveid="tests"/>
-        <ivy:cachepath pathid="jetty.lib" conf="jetty" resolveid="tests" />
-    	<!-- Emma libs from "common" resolve -->
-        <ivy:cachepath pathid="emma.lib" conf="emma" resolveid="common"/>
-    </target>
 	
     <target name="prepare-testing-area" depends="check-params">
         <echo> Package name: ${package.name}</echo>
@@ -31,15 +27,17 @@
         <unzip src="${package.filename}" dest="${testing.testarea}/${package.name}/WebContent" />   
     </target>
 
-    <target name="deploy-and-start" depends="ivy-resolve, prepare-testing-area">
+    <target name="deploy-and-start" depends="init-deps, prepare-testing-area">
     	<property name="webroot" value="${testing.testarea}/${package.name}/WebContent"></property>
+    	
+    	<ivy:resolve file="ivy.xml"/>
+    	<ivy:cachepath pathid="server" conf="server" />
         <java classname="com.vaadin.launcher.DemoLauncher" fork="yes" dir="${testing.testarea}/${package.name}" resultproperty="server.start.result">
             <arg value="--nogui=1" />
             <classpath>
             	<path location="${webroot}/WEB-INF/classes" />
             	<fileset dir="${webroot}/WEB-INF/lib/" includes="*.jar" />                            
-                <path refid="jetty.lib" />
-                <path refid="emma.lib" />
+                <path refid="server" />
             </classpath>
             <jvmarg value="-Demma.coverage.out.file=${testing.testarea}/${package.name}/war.ec"/>
             <jvmarg value="-Djava.awt.headless=true"/>
@@ -48,7 +46,7 @@
     
     <target name="wait-for-startup">
         <echo>Waiting for Servlet Container to start up.</echo>
-        <waitfor maxwait="30" maxwaitunit="second" checkevery="1" checkeveryunit="second" timeoutproperty="server.start.failed">
+        <waitfor maxwait="30" maxwaitunit="second" checkevery="3" checkeveryunit="second" timeoutproperty="server.start.failed">
             <http url="http://localhost:8888"/>
         </waitfor>
         <fail if="server.start.failed" message="Server startup failed" />
