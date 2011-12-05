@@ -46,7 +46,7 @@
     
     <target name="wait-for-startup">
         <echo>Waiting for Servlet Container to start up.</echo>
-        <waitfor maxwait="30" maxwaitunit="second" checkevery="3" checkeveryunit="second" timeoutproperty="server.start.failed">
+        <waitfor maxwait="60" maxwaitunit="second" checkevery="5" checkeveryunit="second" timeoutproperty="server.start.failed">
             <http url="http://localhost:8888"/>
         </waitfor>
         <fail if="server.start.failed" message="Server startup failed" />

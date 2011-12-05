@@ -5,8 +5,6 @@
 	
 	<!-- Import common targets  -->
 	<import file="../build/common.xml" />
-	<!-- Import targets for server management  -->
-	<import file="vaadin-server.xml" as="server"/>
 	
 	<!-- ================================================================== -->
 	<!-- Configuration                                                      -->
@@ -56,7 +54,7 @@
 	</fileset>
 
 	<!-- This target converts HTML tests files to java junit tests. One test file for each browser is created. -->
-	<target name="create-tests" depends="remove-temp-testclasses">
+	<target name="create-tests" depends="initialize, remove-temp-testclasses">
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 
 		<java classname="com.vaadin.testbench.util.TestConverter" classpathref="classpath" fork="true">
@@ -174,7 +172,7 @@
     			<ant antfile="vaadin-server.xml" inheritall="true" inheritrefs="true" target="deploy-and-start" />
     		</daemons>
     		<sequential>    			
-    			<antcall target="server.wait-for-startup" />
+    			<ant antfile="vaadin-server.xml" target="wait-for-startup" />
     		    <antcall inheritall="true" inheritrefs="true" target="run-and-clean-up" />
     			<move file="${testing.testarea}/${package.name}/war.ec" todir="../build/result" failonerror="false" />
             </sequential>
