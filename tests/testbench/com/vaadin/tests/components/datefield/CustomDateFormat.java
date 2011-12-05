@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.datefield;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -22,13 +20,8 @@ public class CustomDateFormat extends TestBase {
         df.setLocale(locale);
         df.setWidth("300px");
 
-        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,
-                DateFormat.LONG, locale);
-
-        if (dateFormat instanceof SimpleDateFormat) {
-            String pattern = ((SimpleDateFormat) dateFormat).toPattern();
-            df.setDateFormat(pattern);
-        }
+        String pattern = "d. MMMM'ta 'yyyy 'klo 'H.mm.ss";
+        df.setDateFormat(pattern);
 
         df.setValue(cal.getTime());
 
