@@ -314,7 +314,6 @@ public class LiferayThemeDemo extends Application {
 
         closable.addListener(new Property.ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 Iterator<Component> it = ts.getComponentIterator();
                 for (; it.hasNext();) {
@@ -469,7 +468,6 @@ public class LiferayThemeDemo extends Application {
 
         lockCheckBox.addListener(new Property.ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 sp.setLocked((Boolean) event.getProperty().getValue());
                 sp2.setLocked((Boolean) event.getProperty().getValue());
@@ -596,8 +594,8 @@ public class LiferayThemeDemo extends Application {
                     public void buttonClick(ClickEvent event) {
                         event.getButton()
                                 .getWindow()
-                                .showNotification((String) title.getValue(),
-                                        (String) message.getValue());
+                                .showNotification(title.getValue(),
+                                        message.getValue());
 
                     }
                 });
@@ -608,8 +606,7 @@ public class LiferayThemeDemo extends Application {
             public void buttonClick(ClickEvent event) {
                 event.getButton()
                         .getWindow()
-                        .showNotification((String) title.getValue(),
-                                (String) message.getValue(),
+                        .showNotification(title.getValue(), message.getValue(),
                                 Notification.TYPE_WARNING_MESSAGE);
 
             }
@@ -621,8 +618,7 @@ public class LiferayThemeDemo extends Application {
             public void buttonClick(ClickEvent event) {
                 event.getButton()
                         .getWindow()
-                        .showNotification((String) title.getValue(),
-                                (String) message.getValue(),
+                        .showNotification(title.getValue(), message.getValue(),
                                 Notification.TYPE_ERROR_MESSAGE);
 
             }
@@ -634,8 +630,7 @@ public class LiferayThemeDemo extends Application {
             public void buttonClick(ClickEvent event) {
                 event.getButton()
                         .getWindow()
-                        .showNotification((String) title.getValue(),
-                                (String) message.getValue(),
+                        .showNotification(title.getValue(), message.getValue(),
                                 Notification.TYPE_TRAY_NOTIFICATION);
 
             }
