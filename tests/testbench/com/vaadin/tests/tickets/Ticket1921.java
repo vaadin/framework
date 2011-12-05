@@ -5,6 +5,7 @@ import java.util.Map;
 import com.vaadin.Application;
 import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -24,7 +25,11 @@ public class Ticket1921 extends Application implements ParameterHandler {
         setTheme("tests-tickets");
         inner = new VerticalLayout();
         outer.addComponent(inner);
-        button = new Button("foo", this, "newState");
+        button = new Button("foo", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                newState();
+            }
+        });
         inner.addComponent(button);
 
         outer.setStyleName("red");

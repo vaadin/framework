@@ -7,6 +7,7 @@ package com.vaadin.tests;
 import java.util.Date;
 
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
@@ -36,10 +37,18 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
         setCompositionRoot(main);
         addInfo();
 
-        Button b = new Button("start test", this, "startTest");
+        Button b = new Button("start test", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                startTest();
+            }
+        });
         b.setDescription("Push this button to start test. A test label will be rendered above existing components.");
         main.addComponent(b);
-        b = new Button("end test", this, "endTest");
+        b = new Button("end test", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                endTest();
+            }
+        });
         b.setDescription("Push this button as soon as test componenet is rendered.");
         main.addComponent(b);
 

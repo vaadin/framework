@@ -9,6 +9,7 @@ import java.util.Iterator;
 
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
@@ -52,14 +53,26 @@ public class TestForGridLayoutChildComponentRendering extends CustomComponent {
 
         main.addComponent(se, 0, 1, 1, 1);
 
-        Button b = new Button("refresh view", this, "createNewView");
+        Button b = new Button("refresh view", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                createNewView();
+            }
+        });
         main.addComponent(b);
 
-        b = new Button("reorder view", this, "randomReorder");
+        b = new Button("reorder view", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                randomReorder();
+            }
+        });
         main.addComponent(b);
 
-        b = new Button("remove randomly one component", this,
-                "removeRandomComponent");
+        b = new Button("remove randomly one component",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        removeRandomComponent();
+                    }
+                });
         main.addComponent(b);
 
     }

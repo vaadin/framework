@@ -10,6 +10,7 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
@@ -40,8 +41,19 @@ public class Ticket736 extends Application {
         // Select to use buffered mode for editing to enable commit and discard
         f.setWriteThrough(false);
         f.setReadThrough(false);
-        Button commit = new Button("Commit", f, "commit");
-        Button discard = new Button("Discard", f, "discard");
+        Button commit = new Button("Commit", new ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                f.commit();
+            }
+        });
+        Button discard = new Button("Discard", new ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                f.discard();
+            }
+
+        });
         HorizontalLayout ol = new HorizontalLayout();
         ol.setHeight("3em");
         ol.addComponent(commit);

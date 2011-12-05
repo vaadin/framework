@@ -1,6 +1,7 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Panel;
@@ -46,7 +47,11 @@ public class Ticket1919 extends com.vaadin.Application {
         Panel p = new Panel();
         p.setSizeFull();
 
-        Button b = new Button("toggle Values", this, "toggleStyleName");
+        Button b = new Button("toggle Values", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                toggleStyleName();
+            }
+        });
         p.addComponent(b);
         return p;
     }

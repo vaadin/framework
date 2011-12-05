@@ -2,6 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Window;
 
 public class Ticket1673 extends com.vaadin.Application {
@@ -12,7 +13,11 @@ public class Ticket1673 extends com.vaadin.Application {
         final Window main = new Window("#1673");
         setMainWindow(main);
 
-        main.addComponent(new Button("close", this, "close"));
+        main.addComponent(new Button("close", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                close();
+            }
+        }));
 
     }
 

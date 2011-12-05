@@ -102,7 +102,11 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         t.setWidth("200px");
         main.addComponent(t);
 
-        final Button b = new Button("refresh view", this, "createNewView");
+        final Button b = new Button("refresh view", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                createNewView();
+            }
+        });
         main.addComponent(b);
 
     }

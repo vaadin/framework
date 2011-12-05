@@ -86,7 +86,11 @@ public class TestForTrees extends CustomComponent implements Handler {
         main.addComponent(ol);
         contextTree = t;
 
-        final Button b = new Button("refresh view", this, "createNewView");
+        final Button b = new Button("refresh view", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                createNewView();
+            }
+        });
         main.addComponent(b);
 
     }

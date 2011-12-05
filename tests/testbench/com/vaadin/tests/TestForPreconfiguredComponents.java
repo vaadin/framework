@@ -90,7 +90,11 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
         test.setCaption("OptionGroup + multiselect manually (configured from select)");
         main.addComponent(test);
 
-        final Button b = new Button("refresh view", this, "createNewView");
+        final Button b = new Button("refresh view", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                createNewView();
+            }
+        });
         main.addComponent(b);
 
     }
