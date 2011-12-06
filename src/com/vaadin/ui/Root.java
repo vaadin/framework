@@ -34,20 +34,19 @@ import com.vaadin.ui.Window.ResizeListener;
 public class Root extends AbstractComponentContainer implements
         com.vaadin.event.Action.Container {
     /**
-     * <b>Application window only</b>. A border style used for opening resources
-     * in a window without a border.
+     * A border style used for opening resources in a window without a border.
      */
     public static final int BORDER_NONE = 0;
 
     /**
-     * <b>Application window only</b>. A border style used for opening resources
-     * in a window with a minimal border.
+     * A border style used for opening resources in a window with a minimal
+     * border.
      */
     public static final int BORDER_MINIMAL = 1;
 
     /**
-     * <b>Application window only</b>. A border style that indicates that the
-     * default border style should be used when opening resources.
+     * A border style that indicates that the default border style should be
+     * used when opening resources.
      */
     public static final int BORDER_DEFAULT = 2;
 
@@ -73,9 +72,8 @@ public class Root extends AbstractComponentContainer implements
     private final LinkedHashSet<Window> windows = new LinkedHashSet<Window>();
 
     /**
-     * <b>Application window only</b>. Resources to be opened automatically on
-     * next repaint. The list is automatically cleared when it has been sent to
-     * the client.
+     * Resources to be opened automatically on next repaint. The list is
+     * automatically cleared when it has been sent to the client.
      */
     private final LinkedList<OpenResource> openList = new LinkedList<OpenResource>();
 
@@ -780,6 +778,7 @@ public class Root extends AbstractComponentContainer implements
         throw new RuntimeException("Not yet implemented");
     }
 
+    @Override
     protected ActionManager getActionManager() {
         if (actionManager == null) {
             actionManager = new ActionManager(this);
