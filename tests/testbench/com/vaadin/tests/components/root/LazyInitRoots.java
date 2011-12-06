@@ -1,17 +1,17 @@
 package com.vaadin.tests.components.root;
 
-import com.vaadin.Application;
 import com.vaadin.RootRequiresMoreInformation;
 import com.vaadin.annotations.RootInitRequiresBrowserDetals;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
+import com.vaadin.tests.components.AbstractTestApplication;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
 
-public class LazyInitRoots extends Application {
+public class LazyInitRoots extends AbstractTestApplication {
 
     @RootInitRequiresBrowserDetals
     private static class LazyInitRoot extends Root {
@@ -56,14 +56,14 @@ public class LazyInitRoots extends Application {
         }
     }
 
-    protected String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+    @Override
+    protected String getTestDescription() {
+        return "BrowserDetails should be available in Application.getRoot if RootRequiresMoreInformation has been thrown and in Root.init if the root has the @RootInitRequiresBrowserDetals annotation";
     }
 
+    @Override
     protected Integer getTicketNumber() {
-        // TODO Auto-generated method stub
-        return null;
+        return Integer.valueOf(7883);
     }
 
 }

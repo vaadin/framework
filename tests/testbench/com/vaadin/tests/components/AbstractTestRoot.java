@@ -16,7 +16,7 @@ public abstract class AbstractTestRoot extends Root {
     public void init(WrappedRequest request) {
         setCaption(getClass().getName());
 
-        Label label = new Label(getDescription(), Label.CONTENT_XHTML);
+        Label label = new Label(getTestDescription(), Label.CONTENT_XHTML);
         label.setWidth("100%");
 
         layout = new VerticalLayout();
@@ -25,7 +25,7 @@ public abstract class AbstractTestRoot extends Root {
         getContent().addComponent(layout);
         ((VerticalLayout) getContent()).setExpandRatio(label, 1);
 
-        setup();
+        setup(request);
     }
 
     private VerticalLayout layout;
@@ -34,7 +34,7 @@ public abstract class AbstractTestRoot extends Root {
         return layout;
     }
 
-    protected abstract void setup();
+    protected abstract void setup(WrappedRequest request);
 
     @Override
     public void addComponent(Component c) {
