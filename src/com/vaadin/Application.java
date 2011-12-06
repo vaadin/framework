@@ -6,6 +6,7 @@ package com.vaadin;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
@@ -28,6 +29,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.vaadin.annotations.RootInitRequiresBrowserDetals;
+import com.vaadin.annotations.RootTheme;
+import com.vaadin.annotations.RootWidgetset;
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.CombinedRequest;
@@ -1910,8 +1913,12 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @since 7.0
      */
     public String getThemeForRoot(Root root) {
-        // TODO Get theme from root annotation
-        return null;
+        RootTheme rootTheme = getAnnotationFor(root.getClass(), RootTheme.class);
+        if (rootTheme != null) {
+            return rootTheme.value();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -1928,7 +1935,48 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @since 7.0
      */
     public String getWidgetsetForRoot(Root root) {
-        // TODO Get widgetset from root annotation
+        RootWidgetset rootWidgetset = getAnnotationFor(root.getClass(),
+                RootWidgetset.class);
+        if (rootWidgetset != null) {
+            return rootWidgetset.value();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Helper to get an annotation for a class. If the annotation is not present
+     * on the target class, it's superclasses and implemented interfaces are
+     * also searched for the annotation.
+     * 
+     * @param type
+     *            the target class from which the annotation should be found
+     * @param annotationType
+     *            the annotation type to look for
+     * @return an annotation of the given type, or <code>null</code> if the
+     *         annotation is not present on the class
+     */
+    private static <T extends Annotation> T getAnnotationFor(Class<?> type,
+            Class<T> annotationType) {
+        // Find from the class hierarchy
+        Class<?> currentType = type;
+        while (currentType != Object.class) {
+            T annotation = currentType.getAnnotation(annotationType);
+            if (annotation != null) {
+                return annotation;
+            } else {
+                currentType = currentType.getSuperclass();
+            }
+        }
+
+        // Find from an implemented interface
+        for (Class<?> iface : type.getInterfaces()) {
+            T annotation = iface.getAnnotation(annotationType);
+            if (annotation != null) {
+                return annotation;
+            }
+        }
+
         return null;
     }
 
