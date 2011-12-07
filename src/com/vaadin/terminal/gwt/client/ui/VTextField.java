@@ -249,15 +249,15 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         final String text = uidl.getStringVariable("text");
 
         /*
-         * We skip the text content update if field has been repainted, but text has
-         * not been changed. Additional sanity check verifies there is no change
-         * in the que (in which case we count more on the server side value).
+         * We skip the text content update if field has been repainted, but text
+         * has not been changed. Additional sanity check verifies there is no
+         * change in the que (in which case we count more on the server side
+         * value).
          */
-        if (!(uidl.getBooleanAttribute(ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS) && valueBeforeEdit != null && text
-                .equals(valueBeforeEdit))) {
+        if (!(uidl.getBooleanAttribute(ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
+                && valueBeforeEdit != null && text.equals(valueBeforeEdit))) {
             updateFieldContent(text);
         }
-        
 
         if (uidl.hasAttribute("selpos")) {
             final int pos = uidl.getIntAttribute("selpos");
