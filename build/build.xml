@@ -189,10 +189,6 @@
                 <include name="${toolkit-package}/tests/**/*" />
                 <include name="${toolkit-package}/launcher/**" />
             </fileset>
-            <fileset dir="${result-path}/src/core">
-                <include name="${toolkit-package}/launcher/**" />
-                <exclude name="${toolkit-package}/launcher/**/*.java" />
-            </fileset>
             <!-- test resources -->
             <fileset dir="tests/testbench">
                 <include name="${toolkit-package}/tests/**/*" />
@@ -201,6 +197,12 @@
                 <exclude name="**/*.html" />
                 <exclude name="**/*.css" />
                 <exclude name="**/*.xml" />
+            </fileset>
+
+        	<!-- Include files required by the DemoLauncher/DevelopmentServerLauncher -->
+            <fileset dir="tests/testbench">
+        		<include name="${toolkit-package}/launcher/jetty-webdefault.xml" />
+        		<include name="${toolkit-package}/launcher/keystore" />
             </fileset>
         </copy>
 
@@ -661,7 +663,6 @@
         <jar file="${result-path}/${lib-sources-jar-name}" compress="true">
             <fileset dir="${result-path}/src/core">
                 <patternset>
-                    <exclude name="${toolkit-package}/launcher/**" />
                     <include name="**/*.java" />
                 </patternset>
             </fileset>
