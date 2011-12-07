@@ -1,13 +1,13 @@
 package com.vaadin.tests.server.component.urifragmentutility;
 
 import com.vaadin.tests.server.component.AbstractListenerMethodsTest;
-import com.vaadin.ui.UriFragmentUtility;
-import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
-import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
+import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.FragmentChangedEvent;
+import com.vaadin.ui.Root.FragmentChangedListener;
 
 public class UriFragmentUtilityListeners extends AbstractListenerMethodsTest {
     public void testFragmentChangedListenerAddGetRemove() throws Exception {
-        testListenerAddGetRemove(UriFragmentUtility.class,
-                FragmentChangedEvent.class, FragmentChangedListener.class);
+        testListenerAddGetRemove(Root.class, FragmentChangedEvent.class,
+                FragmentChangedListener.class);
     }
 }

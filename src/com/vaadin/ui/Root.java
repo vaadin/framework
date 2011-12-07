@@ -5,6 +5,7 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -71,6 +72,67 @@ import com.vaadin.ui.Window.ResizeListener;
 @ClientWidget(VView.class)
 public class Root extends AbstractComponentContainer implements
         Action.Container, Action.Notifier {
+
+    /**
+     * Listener that listens changes in URI fragment.
+     */
+    public interface FragmentChangedListener extends Serializable {
+        public void fragmentChanged(FragmentChangedEvent event);
+    }
+
+    /**
+     * Event fired when uri fragment changes.
+     */
+    public class FragmentChangedEvent extends Component.Event {
+
+        /**
+         * The new uri fragment
+         */
+        private final String fragment;
+
+        /**
+         * Creates a new instance of UriFragmentReader change event.
+         * 
+         * @param source
+         *            the Source of the event.
+         */
+        public FragmentChangedEvent(Root source, String fragment) {
+            super(source);
+            this.fragment = fragment;
+        }
+
+        /**
+         * Gets the root in which the fragment has changed.
+         * 
+         * @return the root in which the fragment has changed
+         */
+        public Root getRoot() {
+            return (Root) getComponent();
+        }
+
+        /**
+         * Get the new fragment
+         * 
+         * @return the new fragment
+         */
+        public String getFragment() {
+            return fragment;
+        }
+    }
+
+    private static final Method FRAGMENT_CHANGED_METHOD;
+
+    static {
+        try {
+            FRAGMENT_CHANGED_METHOD = FragmentChangedListener.class
+                    .getDeclaredMethod("fragmentChanged",
+                            new Class[] { FragmentChangedEvent.class });
+        } catch (final java.lang.NoSuchMethodException e) {
+            // This should never happen
+            throw new java.lang.RuntimeException(
+                    "Internal error finding methods in FragmentChangedListener");
+        }
+    }
 
     /**
      * A border style used for opening resources in a window without a border.
@@ -303,6 +365,10 @@ public class Root extends AbstractComponentContainer implements
         if (actionManager != null) {
             actionManager.paintActions(null, target);
         }
+
+        if (fragment != null) {
+            target.addAttribute(VView.FRAGMENT_VARIABLE, fragment);
+        }
     }
 
     @Override
@@ -312,6 +378,11 @@ public class Root extends AbstractComponentContainer implements
         // Actions
         if (actionManager != null) {
             actionManager.handleActions(variables, this);
+        }
+
+        if (variables.containsKey(VView.FRAGMENT_VARIABLE)) {
+            String fragment = (String) variables.get(VView.FRAGMENT_VARIABLE);
+            setFragment(fragment, true);
         }
     }
 
@@ -464,6 +535,11 @@ public class Root extends AbstractComponentContainer implements
      * change should take place.
      */
     private Focusable pendingFocus;
+
+    /**
+     * The current URI fragment.
+     */
+    private String fragment;
 
     /**
      * This method is used by Component.Focusable objects to request focus to
@@ -792,6 +868,24 @@ public class Root extends AbstractComponentContainer implements
     }
 
     /**
+     * Internal initialization method, should not be overridden. This method is
+     * not declared as final because that would break compatibility with e.g.
+     * CDI.
+     * 
+     * @param request
+     *            the initialization request
+     */
+    public void doInit(WrappedRequest request) {
+        BrowserDetails browserDetails = request.getBrowserDetails();
+        if (browserDetails != null) {
+            fragment = browserDetails.getUriFragmet();
+        }
+
+        // Call the init overridden by the application developer
+        init(request);
+    }
+
+    /**
      * Initializes this root. This method is intended to be overridden by
      * subclasses to build the view and configure non-component functionality.
      * Performing the initialization in a constructor is not suggested as the
@@ -807,7 +901,7 @@ public class Root extends AbstractComponentContainer implements
      * @param request
      *            the wrapped request that caused this root to be created
      */
-    public void init(WrappedRequest request) {
+    protected void init(WrappedRequest request) {
         // Default implementation doesn't do anything
     }
 
@@ -1098,6 +1192,62 @@ public class Root extends AbstractComponentContainer implements
     public void removeListener(ClickListener listener) {
         removeListener(VPanel.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
                 listener);
+    }
+
+    public void addListener(FragmentChangedListener listener) {
+        addListener(FragmentChangedEvent.class, listener,
+                FRAGMENT_CHANGED_METHOD);
+    }
+
+    public void removeListener(FragmentChangedListener listener) {
+        removeListener(FragmentChangedEvent.class, listener,
+                FRAGMENT_CHANGED_METHOD);
+    }
+
+    /**
+     * Sets URI fragment. Optionally fires a {@link FragmentChangedEvent}
+     * 
+     * @param newFragment
+     *            id of the new fragment
+     * @param fireEvent
+     *            true to fire event
+     * @see FragmentChangedEvent
+     * @see FragmentChangedListener
+     */
+    public void setFragment(String newFragment, boolean fireEvents) {
+        if (newFragment == null) {
+            throw new NullPointerException("The fragment may not be null");
+        }
+        if (!newFragment.equals(fragment)) {
+            fragment = newFragment;
+            if (fireEvents) {
+                fireEvent(new FragmentChangedEvent(this, newFragment));
+            }
+            requestRepaint();
+        }
+    }
+
+    /**
+     * Sets URI fragment. This method fires a {@link FragmentChangedEvent}
+     * 
+     * @param newFragment
+     *            id of the new fragment
+     * @see FragmentChangedEvent
+     * @see FragmentChangedListener
+     */
+    public void setFragment(String newFragment) {
+        setFragment(newFragment, true);
+    }
+
+    /**
+     * Gets currently set URI fragment.
+     * <p>
+     * To listen changes in fragment, hook a {@link FragmentChangedListener}.
+     * 
+     * @return the current fragment in browser uri or null if not known
+     */
+    public String getFragment() {
+        return fragment;
     }
 
     public void addListener(ResizeListener resizeListener) {

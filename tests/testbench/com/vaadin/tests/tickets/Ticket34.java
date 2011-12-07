@@ -10,9 +10,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.FragmentChangedEvent;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UriFragmentUtility;
-import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket34 extends Application.LegacyApplication {
@@ -20,24 +19,11 @@ public class Ticket34 extends Application.LegacyApplication {
     private Map<String, Component> views = new HashMap<String, Component>();
     private VerticalLayout mainLayout;
     private Component currentView;
-    private UriFragmentUtility reader;
 
     @Override
     public void init() {
 
         buildViews(new String[] { "main", "view2", "view3" });
-
-        reader = new UriFragmentUtility();
-        reader.addListener(new UriFragmentUtility.FragmentChangedListener() {
-
-            public void fragmentChanged(FragmentChangedEvent event) {
-                getMainWindow().showNotification(
-                        "Fragment now: "
-                                + event.getUriFragmentUtility().getFragment());
-                // try to change to view mapped by fragment string
-                setView(event.getUriFragmentUtility().getFragment());
-            }
-        });
 
         mainLayout = new VerticalLayout();
         mainLayout.setSizeFull();
@@ -45,9 +31,15 @@ public class Ticket34 extends Application.LegacyApplication {
                 "Test app for URI fragment management/reading", mainLayout);
         setMainWindow(mainWin);
 
-        // UriFragmentReader is 0px size by default, so it will not render
-        // anything on screen
-        mainLayout.addComponent(reader);
+        mainWin.addListener(new Root.FragmentChangedListener() {
+
+            public void fragmentChanged(FragmentChangedEvent event) {
+                getMainWindow().showNotification(
+                        "Fragment now: " + event.getFragment());
+                // try to change to view mapped by fragment string
+                setView(event.getFragment());
+            }
+        });
 
         setView("main");
 
@@ -100,7 +92,7 @@ public class Ticket34 extends Application.LegacyApplication {
                 public void buttonClick(ClickEvent event) {
                     String viewName = tf.getValue().toString();
                     // fragmentChangedListener will change the view if possible
-                    reader.setFragment(viewName);
+                    event.getButton().getRoot().setFragment(viewName);
                 }
             });
 

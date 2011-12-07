@@ -24,9 +24,8 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.FragmentChangedEvent;
 import com.vaadin.ui.Tree;
-import com.vaadin.ui.UriFragmentUtility;
-import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -119,12 +118,9 @@ public class TestBench extends com.vaadin.Application.LegacyApplication
         VerticalLayout lo = new VerticalLayout();
         lo.addComponent(menu);
 
-        UriFragmentUtility uri = new UriFragmentUtility();
-        lo.addComponent(uri);
-
-        uri.addListener(new UriFragmentUtility.FragmentChangedListener() {
+        mainWindow.addListener(new Root.FragmentChangedListener() {
             public void fragmentChanged(FragmentChangedEvent source) {
-                String fragment = source.getUriFragmentUtility().getFragment();
+                String fragment = source.getFragment();
                 if (fragment != null && !"".equals(fragment)) {
                     // try to find a proper test class
 

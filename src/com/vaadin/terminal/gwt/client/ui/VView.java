@@ -20,11 +20,14 @@ import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -46,6 +49,8 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHan
  */
 public class VView extends SimplePanel implements Container, ResizeHandler,
         Window.ClosingHandler, ShortcutActionHandlerOwner, Focusable {
+
+    public static final String FRAGMENT_VARIABLE = "fragment";
 
     private static final String CLASSNAME = "v-view";
 
@@ -96,6 +101,31 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      */
     private Element parentFrame;
 
+    private HandlerRegistration historyHandlerRegistration;
+
+    /**
+     * The current URI fragment, used to avoid sending updates if nothing has
+     * changed.
+     */
+    private String currentFragment;
+
+    /**
+     * Listener for URI fragment changes. Notifies the server of the new value
+     * whenever the value changes.
+     */
+    private final ValueChangeHandler<String> historyChangeHandler = new ValueChangeHandler<String>() {
+        public void onValueChange(ValueChangeEvent<String> event) {
+            String newFragment = event.getValue();
+
+            // Send the new fragment to the server if it has changed
+            if (!newFragment.equals(currentFragment) && connection != null) {
+                currentFragment = newFragment;
+                connection.updateVariable(id, FRAGMENT_VARIABLE, newFragment,
+                        true);
+            }
+        }
+    };
+
     private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
             VPanel.CLICK_EVENT_IDENTIFIER) {
 
@@ -122,6 +152,21 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         // Allow focusing the view by using the focus() method, the view
         // should not be in the document focus flow
         getElement().setTabIndex(-1);
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        historyHandlerRegistration = History
+                .addValueChangeHandler(historyChangeHandler);
+        currentFragment = History.getToken();
+    }
+
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        historyHandlerRegistration.removeHandler();
+        historyHandlerRegistration = null;
     }
 
     /**
@@ -395,6 +440,20 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         }
 
         scrollIntoView(uidl);
+
+        if (uidl.hasAttribute(FRAGMENT_VARIABLE)) {
+            currentFragment = uidl.getStringAttribute(FRAGMENT_VARIABLE);
+            if (!currentFragment.equals(History.getToken())) {
+                History.newItem(currentFragment, true);
+            }
+        } else {
+            // Initial request for which the server doesn't yet have a fragment
+            // (and haven't shown any interest in getting one)
+            currentFragment = History.getToken();
+
+            // Include current fragment in the next request
+            client.updateVariable(id, FRAGMENT_VARIABLE, currentFragment, false);
+        }
 
         rendering = false;
     }

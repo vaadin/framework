@@ -2250,12 +2250,12 @@ public class Application implements Terminal.ErrorListener, Serializable {
                         pendingRoots.put(Integer.valueOf(id),
                                 new PendingRootRequest(request));
                     } else {
-                        root.init(request);
+                        root.doInit(request);
                     }
                 }
             } else if (pendingRootRequest != null) {
                 // We have a root, but the init has been pending
-                root.init(request);
+                root.doInit(request);
             }
         }
 
