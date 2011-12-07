@@ -4961,7 +4961,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     switch (type) {
                     case Event.ONDBLCLICK:
                         if (targetCellOrRowFound) {
-                            handleClickEvent(event, targetTdOrTr, immediate);
+                            handleClickEvent(event, targetTdOrTr, true);
                         }
                         break;
                     case Event.ONMOUSEUP:
