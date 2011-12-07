@@ -1956,6 +1956,9 @@ public abstract class AbstractCommunicationManager implements
             JSONObject params = new JSONObject();
             params.put("widgetset", widgetset);
             params.put("themeUri", themeUri);
+            // Root id might have changed based on e.g. window.name
+            params.put(ApplicationConnection.ROOT_ID_PARAMETER,
+                    root.getRootId());
             response.getWriter().write(params.toString());
         } catch (RootRequiresMoreInformation e) {
             // Requiring more information at this point is not allowed

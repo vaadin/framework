@@ -17,12 +17,15 @@ import java.util.Enumeration;
 import java.util.EventListener;
 import java.util.EventObject;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -521,6 +524,21 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * information is available.
      */
     private Map<Integer, PendingRootRequest> pendingRoots = new HashMap<Integer, PendingRootRequest>();
+
+    /**
+     * Keeps track of the roots that should be remembered when the browser is
+     * refreshed.
+     */
+    private Map<String, Integer> retainOnRefreshRoots = new WeakHashMap<String, Integer>();
+
+    /**
+     * Keeps track of which roots have been inited.
+     * <p>
+     * TODO Investigate whether this might be derived from the different states
+     * in getRootForRrequest.
+     * </p>
+     */
+    private Set<Integer> initedRoots = new HashSet<Integer>();
 
     /**
      * Gets the user of the application.
@@ -2230,37 +2248,78 @@ public class Application implements Terminal.ErrorListener, Serializable {
         Integer rootId = getRootId(request);
 
         synchronized (this) {
-            PendingRootRequest pendingRootRequest = pendingRoots.remove(rootId);
+            boolean preserveRootState = preserverRootStateOnRefresh();
+
+            BrowserDetails browserDetails = request.getBrowserDetails();
+
+            if (browserDetails != null) {
+                // Don't wait for a second request any more
+                pendingRoots.remove(rootId);
+
+                if (preserveRootState) {
+                    // Check for a known window.name
+                    Integer retainedRootId = retainOnRefreshRoots
+                            .get(browserDetails.getWindowName());
+                    if (retainedRootId != null) {
+                        rootId = retainedRootId;
+                    }
+                }
+            }
+
             root = roots.get(rootId);
+
             if (root == null) {
-                // We don't have no root yet
+                if (preserveRootState && browserDetails == null
+                        && !retainOnRefreshRoots.isEmpty()) {
+                    // If there might already be an existing root, request
+                    // information to potentially find it
+                    throw new RootRequiresMoreInformation();
+                }
+
                 // Throws exception if root can not yet be created
                 root = getRoot(request);
+
+                // Initialize some fields for a newly created root
                 if (root.getApplication() == null) {
                     root.setApplication(this);
                 }
                 if (root.getRootId() < 0) {
-                    int id = (rootId != null ? rootId.intValue() : nextRootId++);
-                    root.setRootId(id);
-                    roots.put(Integer.valueOf(root.getRootId()), root);
 
-                    if (pendingRootRequest == null
-                            && root.getClass().isAnnotationPresent(
-                                    RootInitRequiresBrowserDetals.class)) {
-                        pendingRoots.put(Integer.valueOf(id),
-                                new PendingRootRequest(request));
-                    } else {
-                        root.doInit(request);
+                    if (rootId == null) {
+                        // Get the next id if none defined
+                        rootId = Integer.valueOf(nextRootId++);
                     }
+                    root.setRootId(rootId.intValue());
+                    roots.put(rootId, root);
                 }
-            } else if (pendingRootRequest != null) {
-                // We have a root, but the init has been pending
-                root.doInit(request);
             }
-        }
+
+            if (!initedRoots.contains(rootId)) {
+                boolean initRequiresBrowserDetails = preserveRootState
+                        || root.getClass().isAnnotationPresent(
+                                RootInitRequiresBrowserDetals.class);
+                if (initRequiresBrowserDetails && browserDetails == null) {
+                    pendingRoots.put(rootId, new PendingRootRequest(request));
+                } else {
+                    if (preserveRootState) {
+                        // Remember the window name of this root
+                        retainOnRefreshRoots.put(
+                                browserDetails.getWindowName(), rootId);
+                    }
+                    root.doInit(request);
+
+                    // Remember that this root has been initialized
+                    initedRoots.add(rootId);
+                }
+            }
+        } // end synchronized block
 
         Root.setCurrentRoot(root);
         return root;
+    }
+
+    protected boolean preserverRootStateOnRefresh() {
+        return false;
     }
 
     /**
@@ -2298,6 +2357,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @see #getRootForRequest(WrappedRequest)
      */
     public boolean isRootInitPending(int rootId) {
-        return pendingRoots.containsKey(Integer.valueOf(rootId));
+        return !initedRoots.contains(Integer.valueOf(rootId));
     }
 }
