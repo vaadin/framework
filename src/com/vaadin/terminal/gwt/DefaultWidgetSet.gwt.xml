@@ -19,7 +19,7 @@
 	</replace-with>
 
 	<generate-with
-		class="com.vaadin.terminal.gwt.widgetsetutils.EagerWidgetMapGenerator">
+		class="com.vaadin.terminal.gwt.widgetsetutils.WidgetMapGenerator">
 		<when-type-is class="com.vaadin.terminal.gwt.client.WidgetMap" />
 	</generate-with>
 
