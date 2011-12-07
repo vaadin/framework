@@ -637,6 +637,11 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
                 continue;
             }
             IDTYPE itemId = resolveBeanId(bean);
+            if (itemId == null) {
+                throw new IllegalArgumentException(
+                        "Resolved identifier for a bean must not be null");
+            }
+
             if (internalAddItemAtEnd(itemId, createBeanItem(bean), false) != null) {
                 modified = true;
             }
