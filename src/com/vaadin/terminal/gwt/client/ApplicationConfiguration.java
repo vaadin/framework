@@ -21,11 +21,27 @@ import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
 
 public class ApplicationConfiguration implements EntryPoint {
 
+    /**
+     * Helper class for reading configuration options from the bootstap
+     * javascript
+     * 
+     * @since 7.0
+     */
     private static class JsoConfiguration extends JavaScriptObject {
         protected JsoConfiguration() {
             // JSO Constructor
         }
 
+        /**
+         * Reads a configuration parameter as a string. Please note that the
+         * javascript value of the parameter should also be a string, or else an
+         * undefined exception may be thrown.
+         * 
+         * @param name
+         *            name of the configuration parameter
+         * @return value of the configuration parameter, or <code>null</code> if
+         *         not defined
+         */
         private native String getConfigString(String name)
         /*-{
             var value = this.getConfig(name);
@@ -36,6 +52,16 @@ public class ApplicationConfiguration implements EntryPoint {
             } 
         }-*/;
 
+        /**
+         * Reads a configuration parameter as a boolean object. Please note that
+         * the javascript value of the parameter should also be a boolean, or
+         * else an undefined exception may be thrown.
+         * 
+         * @param name
+         *            name of the configuration parameter
+         * @return boolean value of the configuration paramter, or
+         *         <code>null</code> if no value is defined
+         */
         private native Boolean getConfigBoolean(String name)
         /*-{
             var value = this.getConfig(name);
@@ -46,6 +72,16 @@ public class ApplicationConfiguration implements EntryPoint {
             } 
         }-*/;
 
+        /**
+         * Reads a configuration parameter as an integer object. Please note
+         * that the javascript value of the parameter should also be an integer,
+         * or else an undefined exception may be thrown.
+         * 
+         * @param name
+         *            name of the configuration parameter
+         * @return integer value of the configuration paramter, or
+         *         <code>null</code> if no value is defined
+         */
         private native Integer getConfigInteger(String name)
         /*-{
             var value = this.getConfig(name);
@@ -56,27 +92,64 @@ public class ApplicationConfiguration implements EntryPoint {
             } 
         }-*/;
 
+        /**
+         * Reads a configuration parameter as an {@link ErrorMessage} object.
+         * Please note that the javascript value of the parameter should also be
+         * an object with appropriate fields, or else an undefined exception may
+         * be thrown when calling this method or when calling methods on the
+         * returned object.
+         * 
+         * @param name
+         *            name of the configuration parameter
+         * @return error message with the given name, or <code>null</code> if no
+         *         value is defined
+         */
         private native ErrorMessage getConfigError(String name)
         /*-{
             return this.getConfig(name);
         }-*/;
 
+        /**
+         * Returns a native javascript object containing version information
+         * from the server.
+         * 
+         * @return a javascript object with the version information
+         */
         private native JavaScriptObject getVersionInfoJSObject()
         /*-{
             return this.getConfig("versionInfo");
         }-*/;
 
+        /**
+         * Gets the version of the Vaadin framework used on the server.
+         * 
+         * @return a string with the version
+         * 
+         * @see com.vaadin.terminal.gwt.server.AbstractApplicationServlet#VERSION
+         */
         private native String getVaadinVersion()
         /*-{
             return this.getConfig("versionInfo").vaadinVersion;
         }-*/;
 
+        /**
+         * Gets the version of the application running on the server.
+         * 
+         * @return a string with the application version
+         * 
+         * @see com.vaadin.Application#getVersion()
+         */
         private native String getApplicationVersion()
         /*-{
             return this.getConfig("versionInfo").applicationVersion;
         }-*/;
     }
 
+    /**
+     * Wraps a native javascript object containing fields for an error message
+     * 
+     * @since 7.0
+     */
     public static final class ErrorMessage extends JavaScriptObject {
 
         protected ErrorMessage() {
@@ -177,6 +250,13 @@ public class ApplicationConfiguration implements EntryPoint {
         return standalone;
     }
 
+    /**
+     * Gets the root if of this application instance. The root id should be
+     * included in every request originating from this instance in order to
+     * associate it with the right Root instance on the server.
+     * 
+     * @return the root id
+     */
     public int getRootId() {
         return rootId;
     }
@@ -193,6 +273,9 @@ public class ApplicationConfiguration implements EntryPoint {
         return authorizationError;
     }
 
+    /**
+     * Reads the configuration values defined by the bootstrap javascript.
+     */
     private void loadFromDOM() {
         JsoConfiguration jsoConfiguration = getJsoConfiguration(id);
         appUri = jsoConfiguration.getConfigString("appUri");
@@ -219,6 +302,14 @@ public class ApplicationConfiguration implements EntryPoint {
 
     }
 
+    /**
+     * Starts the application with a given id by reading the configuration
+     * options stored by the bootstrap javascript.
+     * 
+     * @param applicationId
+     *            id of the application to load, this is also the id of the html
+     *            element into which the application should be rendered.
+     */
     public static void startApplication(final String applicationId) {
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             public void execute() {
@@ -236,6 +327,14 @@ public class ApplicationConfiguration implements EntryPoint {
         return runningApplications;
     }
 
+    /**
+     * Gets the configuration object for a specific application from the
+     * bootstrap javascript.
+     * 
+     * @param appId
+     *            the id of the application to get configuration data for
+     * @return a native javascript object containing the configuration data
+     */
     private native static JsoConfiguration getJsoConfiguration(String appId)
     /*-{
         return $wnd.vaadin.getApp(appId);
@@ -436,6 +535,14 @@ public class ApplicationConfiguration implements EntryPoint {
         deferredWidgetLoader = new DeferredWidgetLoader();
     }
 
+    /**
+     * Registers that callback that the bootstrap javascript uses to start
+     * applications once the widgetset is loaded and all required information is
+     * available
+     * 
+     * @param widgetsetName
+     *            the name of this widgetset
+     */
     public native static void registerCallback(String widgetsetName)
     /*-{
         var callbackHandler = @com.vaadin.terminal.gwt.client.ApplicationConfiguration::startApplication(Ljava/lang/String;);

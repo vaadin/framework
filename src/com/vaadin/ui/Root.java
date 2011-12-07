@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.vaadin.Application;
+import com.vaadin.Application.LegacyApplication;
+import com.vaadin.annotations.RootInitRequiresBrowserDetals;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
@@ -23,16 +25,53 @@ import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.terminal.gwt.client.ui.VPanel;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.ui.Window.CloseListener;
 import com.vaadin.ui.Window.ResizeListener;
 
+/**
+ * The topmost component in any component hierarchy. There is one root for every
+ * Vaadin instance in a browser window. A root may either represent an entire
+ * browser window (or tab) or some part of a html page where a Vaadin
+ * application is embedded.
+ * <p>
+ * The root is the server side entry point for various client side features that
+ * are not represented as components added to a layout, e.g notifications, sub
+ * windows, and executing javascript in the browser.
+ * </p>
+ * <p>
+ * When a new application instance is needed, typically because the user opens
+ * the application in a browser window,
+ * {@link Application#gerRoot(WrappedRequest)} is invoked to get a root. That
+ * method does by default create a root according to the
+ * {@value Application#ROOT_PARAMETER} parameter from web.xml.
+ * </p>
+ * <p>
+ * After a root has been created by the application, it is initialized using
+ * {@link #init(WrappedRequest)}. This method is intended to be overridden by
+ * the developer to add components to the user interface and initialize
+ * non-component functionality. The component hierarchy is initialized by
+ * passing a {@link ComponentContainer} with the main layout of the view to
+ * {@link #setContent(ComponentContainer)}.
+ * </p>
+ * <p>
+ * If a {@link RootInitRequiresBrowserDetals} annotation is present on a class
+ * extending <code>Root</code>, the framework will ensure {@link BrowserDetails}
+ * are present in the {@link WrappedRequest} passed to the init method.
+ * </p>
+ * 
+ * @see #init(WrappedRequest)
+ * @see Application#getRoot(WrappedRequest)
+ * 
+ * @since 7.0
+ */
 @ClientWidget(VView.class)
 public class Root extends AbstractComponentContainer implements
-        com.vaadin.event.Action.Container {
+        Action.Container, Action.Notifier {
+
     /**
      * A border style used for opening resources in a window without a border.
      */
@@ -50,8 +89,14 @@ public class Root extends AbstractComponentContainer implements
      */
     public static final int BORDER_DEFAULT = 2;
 
+    /**
+     * The container in which the component hierarchy of the root starts.
+     */
     private ComponentContainer content;
-    private Terminal terminal;
+
+    /**
+     * The application to which this root belongs
+     */
     private Application application;
 
     /**
@@ -83,6 +128,13 @@ public class Root extends AbstractComponentContainer implements
      */
     private Component scrollIntoView;
 
+    /**
+     * The id of this root, used to find the server side instance of the root
+     * form which a request originates. A negative value indicates that the root
+     * id has not yet been assigned by the Application.
+     * 
+     * @see Application#nextRootId
+     */
     private int rootId = -1;
 
     /**
@@ -91,25 +143,69 @@ public class Root extends AbstractComponentContainer implements
      */
     protected ActionManager actionManager;
 
+    /**
+     * Thread local for keeping track of the current root.
+     */
     private static final ThreadLocal<Root> currentRoot = new ThreadLocal<Root>();
 
+    /**
+     * Creates a new empty root without a caption. This root will have a
+     * {@link VerticalLayout} with margins enabled as its content.
+     */
     public Root() {
         // Nothing to do here?
     }
 
+    /**
+     * Creates a new root with the given component container as its content.
+     * 
+     * @param content
+     *            the content container to use as this roots content.
+     * 
+     * @see #setContent(ComponentContainer)
+     */
     public Root(ComponentContainer content) {
         setContent(content);
     }
 
+    /**
+     * Creates a new empty root with the given caption. This root will have a
+     * {@link VerticalLayout} with margins enabled as its content.
+     * 
+     * @param caption
+     *            the caption of the root, used as the page title if there's
+     *            nothing but the application on the web page
+     * 
+     * @see #setCaption(String)
+     */
     public Root(String caption) {
         setCaption(caption);
     }
 
+    /**
+     * Creates a new root with the given caption and content.
+     * 
+     * @param caption
+     *            the caption of the root, used as the page title if there's
+     *            nothing but the application on the web page
+     * @param content
+     *            the content container to use as this roots content.
+     * 
+     * @see #setContent(ComponentContainer)
+     * @see #setCaption(String)
+     */
     public Root(String caption, ComponentContainer content) {
         this(content);
         setCaption(caption);
     }
 
+    /**
+     * Overridden to return a value instead of referring to the parent.
+     * 
+     * @return this root
+     * 
+     * @see com.vaadin.ui.AbstractComponent#getRoot()
+     */
     @Override
     public Root getRoot() {
         return this;
@@ -223,6 +319,22 @@ public class Root extends AbstractComponentContainer implements
         return Collections.singleton((Component) getContent()).iterator();
     }
 
+    /**
+     * Sets the application to which this root is assigned. It is not legal to
+     * change the application once it has been set nor to set a
+     * <code>null</code> application.
+     * <p>
+     * This method is mainly intended for internal use by the framework.
+     * </p>
+     * 
+     * @param application
+     *            the application to set
+     * 
+     * @throws IllegalStateException
+     *             if the application has already been set
+     * 
+     * @see #getApplication()
+     */
     public void setApplication(Application application) {
         if (application == null) {
             throw new NullPointerException("application");
@@ -233,6 +345,21 @@ public class Root extends AbstractComponentContainer implements
         }
     }
 
+    /**
+     * Sets the id of this root within its application. The root id is used to
+     * route requests to the right root.
+     * <p>
+     * This method is mainly intended for internal use by the framework.
+     * </p>
+     * 
+     * @param rootId
+     *            the id of this root
+     * 
+     * @throws IllegalStateException
+     *             if the root id has already been set
+     * 
+     * @see #getRootId()
+     */
     public void setRootId(int rootId) {
         if (this.rootId != -1) {
             throw new IllegalStateException("Root id has already been defined");
@@ -240,27 +367,29 @@ public class Root extends AbstractComponentContainer implements
         this.rootId = rootId;
     }
 
+    /**
+     * Gets the id of the root, used to identify this root within its
+     * application when processing requests. The root id should be present in
+     * every request to the server that originates from this root.
+     * {@link Application#getRootForRequest(WrappedRequest)} uses this id to
+     * find the route to which the request belongs.
+     * 
+     * @return
+     */
     public int getRootId() {
         return rootId;
     }
 
     /**
-     * Adds a window inside this root.
-     * 
-     * <p>
-     * Adding windows inside another window creates "subwindows". These windows
-     * should not be added to application directly and are not accessible
-     * directly with any url. Addding windows implicitly sets their parents.
-     * </p>
-     * 
-     * <p>
-     * Only one level of subwindows are supported. Thus you can add windows
-     * inside such windows whose parent is <code>null</code>.
-     * </p>
+     * Adds a window as a subwindow inside this root. To open a new browser
+     * window or tab, you should instead use {@link open(Resource)} with an url
+     * pointing to this application and ensure
+     * {@link Application#getRoot(WrappedRequest)} returns an appropriate root
+     * for the request.
      * 
      * @param window
      * @throws IllegalArgumentException
-     *             if a window is added inside non-application level window.
+     *             if the window is already added to an application
      * @throws NullPointerException
      *             if the given <code>Window</code> is <code>null</code>.
      */
@@ -279,6 +408,12 @@ public class Root extends AbstractComponentContainer implements
         attachWindow(window);
     }
 
+    /**
+     * Helper method to attach a window.
+     * 
+     * @param w
+     *            the window to add
+     */
     private void attachWindow(Window w) {
         windows.add(w);
         w.setParent(this);
@@ -310,6 +445,11 @@ public class Root extends AbstractComponentContainer implements
         return true;
     }
 
+    /**
+     * Gets all the windows added to this root.
+     * 
+     * @return an unmodifiable collection of windows
+     */
     public Collection<Window> getWindows() {
         return Collections.unmodifiableCollection(windows);
     }
@@ -344,13 +484,13 @@ public class Root extends AbstractComponentContainer implements
     }
 
     /**
-     * Shows a notification message on the middle of the window. The message
+     * Shows a notification message on the middle of the root. The message
      * automatically disappears ("humanized message").
      * 
      * Care should be taken to to avoid XSS vulnerabilities as the caption is
      * rendered as html.
      * 
-     * @see #showNotification(com.vaadin.ui.Window.Notification)
+     * @see #showNotification(Notification)
      * @see Notification
      * 
      * @param caption
@@ -361,14 +501,14 @@ public class Root extends AbstractComponentContainer implements
     }
 
     /**
-     * Shows a notification message the window. The position and behavior of the
+     * Shows a notification message the root. The position and behavior of the
      * message depends on the type, which is one of the basic types defined in
      * {@link Notification}, for instance Notification.TYPE_WARNING_MESSAGE.
      * 
      * Care should be taken to to avoid XSS vulnerabilities as the caption is
      * rendered as html.
      * 
-     * @see #showNotification(com.vaadin.ui.Window.Notification)
+     * @see #showNotification(Notification)
      * @see Notification
      * 
      * @param caption
@@ -382,13 +522,13 @@ public class Root extends AbstractComponentContainer implements
 
     /**
      * Shows a notification consisting of a bigger caption and a smaller
-     * description on the middle of the window. The message automatically
+     * description on the middle of the root. The message automatically
      * disappears ("humanized message").
      * 
      * Care should be taken to to avoid XSS vulnerabilities as the caption and
      * description are rendered as html.
      * 
-     * @see #showNotification(com.vaadin.ui.Window.Notification)
+     * @see #showNotification(Notification)
      * @see Notification
      * 
      * @param caption
@@ -410,7 +550,7 @@ public class Root extends AbstractComponentContainer implements
      * Care should be taken to to avoid XSS vulnerabilities as the caption and
      * description are rendered as html.
      * 
-     * @see #showNotification(com.vaadin.ui.Window.Notification)
+     * @see #showNotification(Notification)
      * @see Notification
      * 
      * @param caption
@@ -433,7 +573,7 @@ public class Root extends AbstractComponentContainer implements
      * Care should be taken to avoid XSS vulnerabilities if html content is
      * allowed.
      * 
-     * @see #showNotification(com.vaadin.ui.Window.Notification)
+     * @see #showNotification(Notification)
      * @see Notification
      * 
      * @param caption
@@ -468,6 +608,12 @@ public class Root extends AbstractComponentContainer implements
         addNotification(notification);
     }
 
+    /**
+     * Internal helper method to actually add a notification.
+     * 
+     * @param notification
+     *            the notification to add
+     */
     private void addNotification(Notification notification) {
         if (notifications == null) {
             notifications = new LinkedList<Notification>();
@@ -526,6 +672,15 @@ public class Root extends AbstractComponentContainer implements
         requestRepaint();
     }
 
+    /**
+     * Gets the content of this root. The content is a component container that
+     * serves as the outermost item of the visual contents of this root.
+     * 
+     * @return a component container to use as content
+     * 
+     * @see #setContent(ComponentContainer)
+     * @see #createDefaultLayout()
+     */
     public ComponentContainer getContent() {
         if (content == null) {
             setContent(createDefaultLayout());
@@ -533,12 +688,30 @@ public class Root extends AbstractComponentContainer implements
         return content;
     }
 
-    private VerticalLayout createDefaultLayout() {
+    /**
+     * Helper method to create the default content layout that is used if no
+     * content has not been explicitly defined.
+     * 
+     * @return a newly created layout
+     */
+    private static VerticalLayout createDefaultLayout() {
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         return layout;
     }
 
+    /**
+     * Sets the content of this root. The content is a component container that
+     * serves as the outermost item of the visual contents of this root. If no
+     * content has been set, a {@link VerticalLayout} with margins enabled will
+     * be used by default - see {@link #createDefaultLayout()}. The content can
+     * also be set in a constructor.
+     * 
+     * @return a component container to use as content
+     * 
+     * @see #Root(ComponentContainer)
+     * @see #createDefaultLayout()
+     */
     public void setContent(ComponentContainer content) {
         if (this.content != null) {
             super.removeComponent(this.content);
@@ -549,7 +722,19 @@ public class Root extends AbstractComponentContainer implements
         }
     }
 
+    /**
+     * <b>Adding a component directly to a root is generally not supported.</b>
+     * To maintain backwards compatibility, adding components is still supported
+     * for roots in a {@link LegacyApplication}, where the component will be
+     * added to the content container.
+     * 
+     * @see Window#addComponent(Component)
+     * 
+     * @deprecated Add components to the content container (
+     *             {@link #getContent()}) instead.
+     */
     @Override
+    @Deprecated
     public void addComponent(Component c) {
         // Use the thread local as the instance field might not yet be inited
         if (Application.getCurrentApplication() instanceof Application.LegacyApplication) {
@@ -560,7 +745,19 @@ public class Root extends AbstractComponentContainer implements
         }
     }
 
+    /**
+     * <b>Removing a component from a root is generally not supported.</b> To
+     * maintain backwards compatibility, removing components is still supported
+     * for roots in a {@link LegacyApplication}, where the component will be
+     * removed from the content container.
+     * 
+     * @see Window#removeComponent(Component)
+     * 
+     * @deprecated Remove components from the content container (
+     *             {@link #getContent()}) instead.
+     */
     @Override
+    @Deprecated
     public void removeComponent(Component c) {
         // Use the thread local as the instance field might not yet be inited
         if (Application.getCurrentApplication() instanceof Application.LegacyApplication) {
@@ -571,7 +768,19 @@ public class Root extends AbstractComponentContainer implements
         }
     }
 
+    /**
+     * <b>Removing components from a root is generally not supported.</b> To
+     * maintain backwards compatibility, removing components is still supported
+     * for roots in a {@link LegacyApplication}, where the components will be
+     * removed from the content container.
+     * 
+     * @see Window#removeAllComponents()
+     * 
+     * @deprecated Remove components from the content container (
+     *             {@link #getContent()}) instead.
+     */
     @Override
+    @Deprecated
     public void removeAllComponents() {
         // Use the thread local as the instance field might not yet be inited
         if (Application.getCurrentApplication() instanceof Application.LegacyApplication) {
@@ -582,24 +791,66 @@ public class Root extends AbstractComponentContainer implements
         }
     }
 
+    /**
+     * Initializes this root. This method is intended to be overridden by
+     * subclasses to build the view and configure non-component functionality.
+     * Performing the initialization in a constructor is not suggested as the
+     * state of the root is not properly set up when the constructor is invoked.
+     * <p>
+     * The {@link WrappedRequest} can be used to get information about the
+     * request that caused this root to be created. By default, the
+     * {@link BrowserDetails} are note guaranteed to be available in the
+     * request. Availability of the browser details can be requested by adding
+     * the {@link RootInitRequiresBrowserDetals} annotation to the class.
+     * </p>
+     * 
+     * @param request
+     *            the wrapped request that caused this root to be created
+     */
     public void init(WrappedRequest request) {
-
+        // Default implementation doesn't do anything
     }
 
+    /**
+     * Sets the thread local for the current root. This method is used by the
+     * framework to set the current application whenever a new request is
+     * processed and it is cleared when the request has been processed.
+     * <p>
+     * The application developer can also use this method to define the current
+     * root outside the normal request handling, e.g. when initiating custom
+     * background threads.
+     * </p>
+     * 
+     * @param root
+     *            the root to register as the current root
+     * 
+     * @see #getCurrentRoot()
+     * @see ThreadLocal
+     */
     public static void setCurrentRoot(Root root) {
         currentRoot.set(root);
     }
 
+    /**
+     * Gets the currently used root. The current root is automatically defined
+     * when processing requests to the server. In other cases, (e.g. from
+     * background threads), the current root is not automatically defined.
+     * 
+     * @return the current root instance if available, otherwise
+     *         <code>null</code>
+     * 
+     * @see #setCurrentRoot(Root)
+     */
     public static Root getCurrentRoot() {
         return currentRoot.get();
     }
 
     /**
-     * Opens the given resource in this window. The contents of this Window is
+     * Opens the given resource in this root. The contents of this Root is
      * replaced by the {@code Resource}.
      * 
      * @param resource
-     *            the resource to show in this window
+     *            the resource to show in this root
      */
     public void open(Resource resource) {
         synchronized (openList) {
@@ -808,6 +1059,15 @@ public class Root extends AbstractComponentContainer implements
         }
     }
 
+    /**
+     * Should resize operations be lazy, i.e. should there be a delay before
+     * layout sizes are recalculated. Speeds up resize operations in slow UIs
+     * with the penalty of slightly decreased usability.
+     * 
+     * @param resizeLazy
+     *            true to use a delay before recalculating sizes, false to
+     *            calculate immediately.
+     */
     public void setResizeLazy(boolean resizeLazy) {
         throw new RuntimeException("Not yet implemented");
     }

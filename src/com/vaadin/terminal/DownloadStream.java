@@ -226,6 +226,8 @@ public class DownloadStream implements Serializable {
      *            the wrapped response to write this download stream to
      * @throws IOException
      *             passed through from the wrapped response
+     * 
+     * @since 7.0
      */
     public void writeTo(WrappedResponse response) throws IOException {
         if (getParameter("Location") != null) {
