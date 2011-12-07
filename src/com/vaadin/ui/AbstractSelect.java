@@ -1624,7 +1624,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * 
      * <p>
      * Data interface does not support nulls as item ids. Selecting the item
-     * idetified by this id is the same as selecting no items at all. This
+     * identified by this id is the same as selecting no items at all. This
      * setting only affects the single select mode.
      * </p>
      * 
