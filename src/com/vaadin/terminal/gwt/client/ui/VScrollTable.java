@@ -4132,6 +4132,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 VScrollTableRow r = (VScrollTableRow) renderedRows.get(ix);
                 r.setIndex(r.getIndex() + rows);
             }
+            setContainerHeight();
             fixSpacers();
             return inserted;
         }
@@ -4140,6 +4141,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 int rows) {
             unlinkAllRowsStartingAt(firstIndex);
             insertRows(rowData, firstIndex, rows);
+            setContainerHeight();
         }
 
         /**
@@ -4258,6 +4260,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 VScrollTableRow r = (VScrollTableRow) renderedRows.get(ix);
                 r.setIndex(r.getIndex() - count);
             }
+            setContainerHeight();
             fixSpacers();
         }
 
