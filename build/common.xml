@@ -32,13 +32,13 @@
     	<!-- Ivy task definitions -->
     	<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ivy.jar.file}" />
     	<!-- Ivy settings -->
-	    <property name="ivy.settings.file" value="build/ivy/ivysettings.xml" />
+	    <property name="ivy.settings.file" value="${project.root}/build/ivy/ivysettings.xml" />
 	    <ivy:configure/>
 	</target>
 	    	
     <target name="init-taskdefs" depends="ivy-configure" unless="deps.initialized">
         <echo>Loading Ant tasks</echo>
-        <ivy:resolve file="build/ivy/ivy.xml" conf="taskdefs" />
+        <ivy:resolve file="${project.root}/build/ivy/ivy.xml" conf="taskdefs" />
         <ivy:cachepath pathid="taskdefs.classpath" conf="taskdefs" />
         <taskdef resource="emma_ant.properties" classpathref="taskdefs.classpath" />    
         

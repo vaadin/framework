@@ -3,6 +3,7 @@
 	xmlns:ivy="antlib:org.apache.ivy.ant"
     name="Run Vaadin Testbench Tests" basedir="." default="run-and-clean-up">
 	
+	<property name="project.root" value=".."/>
 	<!-- Import common targets  -->
 	<import file="../build/common.xml" />
 	
