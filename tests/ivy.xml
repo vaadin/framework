@@ -1,0 +1,16 @@
+<ivy-module version="2.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation= "http://ant.apache.org/ivy/schemas/ivy.xsd">
+    
+    <info organisation="com.vaadin" module="tests"/>
+    <configurations>
+   		<conf name="jetty" visibility="private" />
+   		<conf name="emma" visibility="private" />
+   		<conf name="server" visibility="private" />
+	</configurations>
+    <publications />        
+	<dependencies>
+   		<dependency org="org.mortbay.jetty" name="jetty" rev="6.1.7" conf="server,jetty->default(*)" />
+        <dependency org="emma" name="emma" rev="2.0.5312-patched" conf="server,emma -> default(*)"/>		
+	</dependencies>
+</ivy-module>

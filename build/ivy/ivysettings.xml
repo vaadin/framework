@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivysettings>
+    <settings defaultResolver="public" />
+    <resolvers>
+        <ibiblio name="public" m2compatible="true"/>        
+        <url name="gwt-redist">            
+            <artifact pattern="http://google-web-toolkit.googlecode.com/svn/tools/redist/[organisation]/[artifact](-[revision]).[ext]" />
+        </url>
+        <dual name="custom-smartsprites">
+            <filesystem name="smartsprites-ivy">
+                 <ivy pattern="${basedir}/build/ivy/module/[module]-ivy-[revision].xml" />
+            </filesystem>
+            <url name="smartsprites-artifact">
+                <artifact pattern="http://dev.vaadin.com/svn/versions/6.8/build/smartsprites/lib/[artifact](-[revision]).[ext]" />
+            </url>
+        </dual>
+    </resolvers>     
+    <modules>
+        <!-- GWT patched Emma -->
+        <module organisation="emma" name="emma" resolver="gwt-redist"/>
+         <!-- IT Mill patched SmartSprites -->
+        <module organisation="com.carrotsearch" name="smartsprites" revision="0.2.3-itmill" resolver="custom-smartsprites"/>   
+    </modules>
+</ivysettings>
