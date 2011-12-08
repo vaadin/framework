@@ -11,8 +11,8 @@ import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 
 public class DefaultConverterFactory extends TestCase {
 
@@ -27,14 +27,14 @@ public class DefaultConverterFactory extends TestCase {
     }
 
     public void testDefaultNumberConversion() {
-        Application app = new Application() {
+        Application.LegacyApplication app = new Application.LegacyApplication() {
 
             @Override
             public void init() {
             }
 
         };
-        app.setMainWindow(new Window());
+        app.setMainWindow(new Root());
 
         TextField tf = new TextField();
         app.getMainWindow().addComponent(tf);

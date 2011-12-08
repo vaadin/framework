@@ -813,12 +813,17 @@ public class Root extends AbstractComponentContainer implements
     @Deprecated
     public void addComponent(Component c) {
         // Use the thread local as the instance field might not yet be inited
-        if (Application.getCurrentApplication() instanceof Application.LegacyApplication) {
+        if (isLegacyApplication()) {
             getContent().addComponent(c);
         } else {
             throw new UnsupportedOperationException(
                     "Add components to the Root's content instead");
         }
+    }
+
+    private boolean isLegacyApplication() {
+        return Application.getCurrentApplication() instanceof Application.LegacyApplication
+                || getApplication() instanceof Application.LegacyApplication;
     }
 
     /**
@@ -836,7 +841,7 @@ public class Root extends AbstractComponentContainer implements
     @Deprecated
     public void removeComponent(Component c) {
         // Use the thread local as the instance field might not yet be inited
-        if (Application.getCurrentApplication() instanceof Application.LegacyApplication) {
+        if (isLegacyApplication()) {
             getContent().removeComponent(c);
         } else {
             throw new UnsupportedOperationException(
@@ -859,7 +864,7 @@ public class Root extends AbstractComponentContainer implements
     @Deprecated
     public void removeAllComponents() {
         // Use the thread local as the instance field might not yet be inited
-        if (Application.getCurrentApplication() instanceof Application.LegacyApplication) {
+        if (isLegacyApplication()) {
             getContent().removeAllComponents();
         } else {
             throw new UnsupportedOperationException(

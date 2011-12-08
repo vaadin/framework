@@ -23,7 +23,7 @@ public class AddressFormExample extends TestBase {
             public void buttonClick(ClickEvent event) {
                 field.commit();
                 Address address = field.getValue();
-                field.getWindow().showNotification(
+                field.getRoot().showNotification(
                         "Address saved: " + address.getStreetAddress() + ", "
                                 + address.getPostalCode() + ", "
                                 + address.getCity());

@@ -62,7 +62,7 @@ public class BooleanFieldExample extends TestBase {
         Button submit = new Button("Submit", new ClickListener() {
             public void buttonClick(ClickEvent event) {
                 form.commit();
-                layout.getWindow()
+                layout.getRoot()
                         .showNotification(
                                 "The custom boolean field value is "
                                         + data.isCustom()
