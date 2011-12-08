@@ -1,15 +1,19 @@
 package com.vaadin.data.util.converter;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 public class DefaultConverterFactory implements ConverterFactory {
+
+    private final static Logger log = Logger
+            .getLogger(DefaultConverterFactory.class.getName());
 
     public <SOURCE, TARGET> Converter<SOURCE, TARGET> createConverter(
             Class<SOURCE> sourceType, Class<TARGET> targetType) {
         Converter<SOURCE, TARGET> converter = findConverter(sourceType,
                 targetType);
         if (converter != null) {
-            System.out.println(getClass().getName() + " created a "
+            log.finest(getClass().getName() + " created a "
                     + converter.getClass());
             return converter;
         }
@@ -18,14 +22,14 @@ public class DefaultConverterFactory implements ConverterFactory {
         Converter<TARGET, SOURCE> reverseConverter = findConverter(targetType,
                 sourceType);
         if (reverseConverter != null) {
-            System.out.println(getClass().getName() + " created a reverse "
+            log.finest(getClass().getName() + " created a reverse "
                     + reverseConverter.getClass());
             return new ReverseConverter<SOURCE, TARGET>(reverseConverter);
         }
 
-        System.out.println(getClass().getName()
-                + " could not find a converter for " + sourceType.getName()
-                + " to " + targetType.getName() + " conversion");
+        log.finest(getClass().getName() + " could not find a converter for "
+                + sourceType.getName() + " to " + targetType.getName()
+                + " conversion");
         return null;
 
     }
