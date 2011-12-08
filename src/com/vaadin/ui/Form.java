@@ -491,7 +491,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         }
 
         // Configures the field
-        field.setPropertyDataSource(property);
+        bindPropertyToField(id, property, field);
 
         // Register and attach the created field
         addField(id, field);
@@ -755,10 +755,36 @@ public class Form extends AbstractField<Object> implements Item.Editor,
                 final Field<?> f = fieldFactory.createField(itemDatasource, id,
                         this);
                 if (f != null) {
-                    f.setPropertyDataSource(property);
+                    bindPropertyToField(id, property, f);
                     addField(id, f);
                 }
             }
+        }
+    }
+
+    /**
+     * Binds an item property to a field. The default behavior is to bind
+     * property straight to Field. If Property.Viewer type property (e.g.
+     * PropertyFormatter) is already set for field, the property is bound to
+     * that Property.Viewer.
+     * 
+     * @param propertyId
+     * @param property
+     * @param field
+     * @since 6.7.3
+     */
+    protected void bindPropertyToField(final Object propertyId,
+            final Property property, final Field field) {
+        // check if field has a property that is Viewer set. In that case we
+        // expect developer has e.g. PropertyFormatter that he wishes to use and
+        // assign the property to the Viewer instead.
+        boolean hasFilterProperty = field.getPropertyDataSource() != null
+                && (field.getPropertyDataSource() instanceof Property.Viewer);
+        if (hasFilterProperty) {
+            ((Property.Viewer) field.getPropertyDataSource())
+                    .setPropertyDataSource(property);
+        } else {
+            field.setPropertyDataSource(property);
         }
     }
 

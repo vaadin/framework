@@ -38,7 +38,7 @@ import com.vaadin.data.Property;
  */
 @SuppressWarnings("serial")
 public abstract class PropertyFormatter<T> extends AbstractProperty<String>
-        implements Property.ValueChangeListener,
+        implements Property.Viewer, Property.ValueChangeListener,
         Property.ReadOnlyStatusChangeListener {
 
     /** Datasource that stores the actual value. */
@@ -88,7 +88,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
      * @param newDataSource
      *            the new data source Property.
      */
-    public void setPropertyDataSource(Property<T> newDataSource) {
+    public void setPropertyDataSource(Property newDataSource) {
 
         boolean readOnly = false;
         String prevValue = null;
@@ -220,12 +220,10 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
                 if (!newValue.equals(getStringValue())) {
                     fireValueChange();
                 }
+            } catch (ConversionException e) {
+                throw e;
             } catch (Exception e) {
-                if (e instanceof ConversionException) {
-                    throw (ConversionException) e;
-                } else {
-                    throw new ConversionException(e);
-                }
+                throw new ConversionException(e);
             }
         }
     }

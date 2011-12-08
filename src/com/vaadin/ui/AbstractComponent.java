@@ -1324,26 +1324,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Sizeable#setHeight(float)
-     */
-    @Deprecated
-    public void setHeight(float height) {
-        setHeight(height, getHeightUnits());
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.Sizeable#setHeightUnits(int)
-     */
-    @Deprecated
-    public void setHeightUnits(int unit) {
-        setHeight(getHeight(), unit);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see com.vaadin.terminal.Sizeable#setHeight(float, int)
      */
     public void setHeight(float height, int unit) {
@@ -1371,26 +1351,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     public void setSizeUndefined() {
         setWidth(-1, UNITS_PIXELS);
         setHeight(-1, UNITS_PIXELS);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.Sizeable#setWidth(float)
-     */
-    @Deprecated
-    public void setWidth(float width) {
-        setWidth(width, getWidthUnits());
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.Sizeable#setWidthUnits(int)
-     */
-    @Deprecated
-    public void setWidthUnits(int unit) {
-        setWidth(getWidth(), unit);
     }
 
     /*

@@ -93,42 +93,12 @@ public interface Sizeable extends Serializable {
     public float getWidth();
 
     /**
-     * Sets the width of the object. Negative number implies unspecified size
-     * (terminal is free to set the size).
-     * 
-     * @param width
-     *            the width of the object in units specified by widthUnits
-     *            property.
-     * @deprecated Consider using {@link #setWidth(String)} instead. This method
-     *             works, but is error-prone since the unit must be set
-     *             separately (and components might have different default
-     *             unit).
-     */
-    @Deprecated
-    public void setWidth(float width);
-
-    /**
      * Gets the height of the object. Negative number implies unspecified size
      * (terminal is free to set the size).
      * 
      * @return height of the object in units specified by heightUnits property.
      */
     public float getHeight();
-
-    /**
-     * Sets the height of the object. Negative number implies unspecified size
-     * (terminal is free to set the size).
-     * 
-     * @param height
-     *            the height of the object in units specified by heightUnits
-     *            property.
-     * @deprecated Consider using {@link #setHeight(String)} or
-     *             {@link #setHeight(float, int)} instead. This method works,
-     *             but is error-prone since the unit must be set separately (and
-     *             components might have different default unit).
-     */
-    @Deprecated
-    public void setHeight(float height);
 
     /**
      * Gets the width property units.
@@ -138,35 +108,11 @@ public interface Sizeable extends Serializable {
     public int getWidthUnits();
 
     /**
-     * Sets the width property units.
-     * 
-     * @param units
-     *            the units used in width property.
-     * @deprecated Consider setting width and unit simultaneously using
-     *             {@link #setWidth(String)} or {@link #setWidth(float, int)},
-     *             which is less error-prone.
-     */
-    @Deprecated
-    public void setWidthUnits(int units);
-
-    /**
      * Gets the height property units.
      * 
      * @return units used in height property.
      */
     public int getHeightUnits();
-
-    /**
-     * Sets the height property units.
-     * 
-     * @param units
-     *            the units used in height property.
-     * @deprecated Consider setting height and unit simultaneously using
-     *             {@link #setHeight(String)} or {@link #setHeight(float, int)},
-     *             which is less error-prone.
-     */
-    @Deprecated
-    public void setHeightUnits(int units);
 
     /**
      * Sets the height of the component using String presentation.

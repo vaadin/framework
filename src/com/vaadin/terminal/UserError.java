@@ -18,31 +18,54 @@ import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 @SuppressWarnings("serial")
 public class UserError implements ErrorMessage {
 
-    /**
-     * Content mode, where the error contains only plain text.
-     */
-    public static final int CONTENT_TEXT = 0;
+    public enum ContentMode {
+        /**
+         * Content mode, where the error contains only plain text.
+         */
+        TEXT,
+        /**
+         * Content mode, where the error contains preformatted text.
+         */
+        PREFORMATTED,
+        /**
+         * Formatted content mode, where the contents is XML restricted to the
+         * UIDL 1.0 formatting markups.
+         */
+        UIDL,
+        /**
+         * Content mode, where the error contains XHTML.
+         */
+        XHTML;
+    }
 
     /**
-     * Content mode, where the error contains preformatted text.
+     * @deprecated from 7.0, use {@link ContentMode#TEXT} instead    
      */
-    public static final int CONTENT_PREFORMATTED = 1;
+    @Deprecated
+    public static final ContentMode CONTENT_TEXT = ContentMode.TEXT;
 
     /**
-     * Formatted content mode, where the contents is XML restricted to the UIDL
-     * 1.0 formatting markups.
+     * @deprecated from 7.0, use {@link ContentMode#PREFORMATTED} instead    
      */
-    public static final int CONTENT_UIDL = 2;
+    @Deprecated
+    public static final ContentMode CONTENT_PREFORMATTED = ContentMode.PREFORMATTED;
 
     /**
-     * Content mode, where the error contains XHTML.
+     * @deprecated from 7.0, use {@link ContentMode#UIDL} instead    
      */
-    public static final int CONTENT_XHTML = 3;
+    @Deprecated
+    public static final ContentMode CONTENT_UIDL = ContentMode.UIDL;
+
+    /**
+     * @deprecated from 7.0, use {@link ContentMode#XHTML} instead    
+     */
+    @Deprecated
+    public static final ContentMode CONTENT_XHTML = ContentMode.XHTML;
 
     /**
      * Content mode.
      */
-    private int mode = CONTENT_TEXT;
+    private ContentMode mode = ContentMode.TEXT;
 
     /**
      * Message in content mode.
@@ -52,7 +75,7 @@ public class UserError implements ErrorMessage {
     /**
      * Error level.
      */
-    private int level = ErrorMessage.ERROR;
+    private ErrorLevel level = ErrorLevel.ERROR;
 
     /**
      * Creates a textual error message of level ERROR.
@@ -64,31 +87,15 @@ public class UserError implements ErrorMessage {
         msg = textErrorMessage;
     }
 
-    /**
-     * Creates a error message with level and content mode.
-     * 
-     * @param message
-     *            the error message.
-     * @param contentMode
-     *            the content Mode.
-     * @param errorLevel
-     *            the level of error.
-     */
-    public UserError(String message, int contentMode, int errorLevel) {
-
-        // Check the parameters
-        if (contentMode < 0 || contentMode > 2) {
-            throw new java.lang.IllegalArgumentException(
-                    "Unsupported content mode: " + contentMode);
-        }
-
+    public UserError(String message, ContentMode contentMode,
+            ErrorLevel errorLevel) {
         msg = message;
         mode = contentMode;
         level = errorLevel;
     }
 
     /* Documented in interface */
-    public int getErrorLevel() {
+    public ErrorLevel getErrorLevel() {
         return level;
     }
 
@@ -108,38 +115,25 @@ public class UserError implements ErrorMessage {
     public void paint(PaintTarget target) throws PaintException {
 
         target.startTag("error");
-
-        // Error level
-        if (level >= ErrorMessage.SYSTEMERROR) {
-            target.addAttribute("level", "system");
-        } else if (level >= ErrorMessage.CRITICAL) {
-            target.addAttribute("level", "critical");
-        } else if (level >= ErrorMessage.ERROR) {
-            target.addAttribute("level", "error");
-        } else if (level >= ErrorMessage.WARNING) {
-            target.addAttribute("level", "warning");
-        } else {
-            target.addAttribute("level", "info");
-        }
+        target.addAttribute("level", level.getText());
 
         // Paint the message
         switch (mode) {
-        case CONTENT_TEXT:
+        case TEXT:
             target.addText(AbstractApplicationServlet.safeEscapeForHtml(msg));
             break;
-        case CONTENT_UIDL:
+        case UIDL:
             target.addUIDL(msg);
             break;
-        case CONTENT_PREFORMATTED:
+        case PREFORMATTED:
             target.addText("<pre>"
                     + AbstractApplicationServlet.safeEscapeForHtml(msg)
                     + "</pre>");
             break;
-        case CONTENT_XHTML:
+        case XHTML:
             target.addText(msg);
             break;
         }
-
         target.endTag("error");
     }
 

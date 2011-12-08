@@ -141,8 +141,8 @@ public interface Validator extends Serializable {
          * 
          * @see com.vaadin.terminal.ErrorMessage#getErrorLevel()
          */
-        public final int getErrorLevel() {
-            return ErrorMessage.ERROR;
+        public final ErrorLevel getErrorLevel() {
+            return ErrorLevel.ERROR;
         }
 
         /*
@@ -153,7 +153,7 @@ public interface Validator extends Serializable {
          */
         public void paint(PaintTarget target) throws PaintException {
             target.startTag("error");
-            target.addAttribute("level", "error");
+            target.addAttribute("level", ErrorLevel.ERROR.getText());
 
             // Error message
             final String message = getHtmlMessage();

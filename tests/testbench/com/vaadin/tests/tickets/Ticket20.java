@@ -4,6 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.validator.CompositeValidator;
+import com.vaadin.data.validator.CompositeValidator.CombinationMode;
 import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -44,8 +45,7 @@ public class Ticket20 extends Application {
                 }
             }
         });
-        CompositeValidator v2 = new CompositeValidator(
-                CompositeValidator.MODE_OR, null);
+        CompositeValidator v2 = new CompositeValidator(CombinationMode.OR, null);
         v2.addValidator(v);
         v2.addValidator(new Validator() {
 
