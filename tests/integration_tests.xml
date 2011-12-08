@@ -2,6 +2,9 @@
 
 <project name="Vaadin Integration Tests" basedir="." default="integration-test-all">
 
+    <!-- Import common targets  -->
+    <import file="../build/common.xml" />
+
 	<!-- Target deploying demo.war -->
 	<fail unless="test.integration.server" message="test.integration.server must be set for integration tests to run"/>
 	
@@ -27,14 +30,7 @@
 	<property name="ant.hub" value="${test.integration.antfile}" />
 	<property name="user" value="${test.integration.user}" />
 	<property name="passphrase" value="" />
-	
-	<!-- add ant contrib -->
-	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
-		<classpath>
-			<pathelement location="../build/lib/ant-contrib-1.0b3.jar"/>
-		</classpath>
-	</taskdef>
-	
+
 	<!-- Upload war to deploy to ssh host -->
 	<target name="integration-test-upload-demo">
 		<scp file="${demo.war}" todir="${user}@${test.integration.server}:integration-tests/servers/demo.war" keyfile="${sshkey.file}" passphrase="${passphrase}" />
@@ -261,7 +257,7 @@
 	</target>
 			
 	<!-- Upload demo, clean error screenshots and test deployment on all servers -->
-	<target name="integration-test-all">
+	<target name="integration-test-all" depends="common.init-deps">
 		
 		<parallel>
 			<trycatch property="tried">

@@ -955,7 +955,7 @@ public class VWindow extends VOverlay implements Container,
     }
 
     @Override
-    /*
+    /**
      * Width is set to the out-most element (v-window).
      * 
      * This function should never be called with percentage values (it will
@@ -1004,33 +1004,45 @@ public class VWindow extends VOverlay implements Container,
     }
 
     @Override
-    /*
+    /**
      * Height is set to the out-most element (v-window).
      * 
      * This function should never be called with percentage values (it will
      * throw an exception)
+     * 
+     * @param height A CSS string specifying the new height of the window.
+     *               An empty string or null clears the height and lets
+     *               the browser to compute it based on the window contents. 
      */
     public void setHeight(String height) {
-        this.height = height;
-        if (!isAttached()) {
+        if (!isAttached() || (height == null 
+                ? this.height == null 
+                : height.equals(this.height))) {
             return;
         }
-        if (height != null && !"".equals(height)) {
-            DOM.setStyleAttribute(getElement(), "height", height);
-            int pixels = getElement().getOffsetHeight() - getExtraHeight();
-            if (pixels < MIN_CONTENT_AREA_HEIGHT) {
-                pixels = MIN_CONTENT_AREA_HEIGHT;
-                int rootHeight = pixels + getExtraHeight();
-                DOM.setStyleAttribute(getElement(), "height", (rootHeight)
-                        + "px");
-
+        if (height == null || "".equals(height)) {
+            getElement().getStyle().clearHeight();
+            contentPanel.getElement().getStyle().clearHeight();
+            // Reset to default, the exact value does not actually
+            // matter as an undefined-height parent should not have
+            // a relative-height child anyway.
+            renderSpace.setHeight(MIN_CONTENT_AREA_HEIGHT);
+        } else {
+            getElement().getStyle().setProperty("height", height);
+            int contentHeight =
+                    getElement().getOffsetHeight() - getExtraHeight();
+            if (contentHeight < MIN_CONTENT_AREA_HEIGHT) {
+                contentHeight = MIN_CONTENT_AREA_HEIGHT;
+                int rootHeight = contentHeight + getExtraHeight();
+                getElement().getStyle().setProperty(
+                        "height", rootHeight + "px");
             }
-            renderSpace.setHeight(pixels);
-            height = pixels + "px";
-            contentPanel.getElement().getStyle().setProperty("height", height);
-            updateShadowSizeAndPosition();
-
+            renderSpace.setHeight(contentHeight);
+            contentPanel.getElement().getStyle().setProperty(
+                    "height", contentHeight + "px");
         }
+        this.height = height;
+        updateShadowSizeAndPosition();
     }
 
     private int extraH = 0;

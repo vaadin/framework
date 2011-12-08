@@ -1,21 +1,17 @@
 .v-progressindicator {
-	overflow: hidden; /* for IE6 */
 	width: 150px;
 }
 .v-progressindicator-wrapper {
-	overflow: hidden; /* for IE6 */
 	height: 7px;
 	border: 1px solid #ddd;
 }
 .v-progressindicator-indicator {
 	height: 7px;
-	overflow: hidden; /* for IE6 */
 	background: #ddd;
 }
 div.v-progressindicator-indeterminate {
 	height: 20px;
 	width: 20px;
-	overflow: hidden; /* for IE6 */
 	background: #fff url(../common/img/ajax-loader-medium.gif) no-repeat 50%;
 	border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -31,6 +27,5 @@ div.v-progressindicator-indeterminate {
 div.v-progressindicator-indeterminate-disabled {
 	height: 20px;
 	width: 20px;
-	overflow: hidden; /* for IE6 */
 	background: transparent;
 }

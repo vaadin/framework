@@ -56,7 +56,7 @@ def listJarFiles(jarfile):
 # JAPI - Java API Differences
 ################################################################################
 def japize(version, jarfile):
-    cmd = "%s as %s apis %s +com.vaadin, $JAVA_HOME/jre/lib/rt.jar lib/core/**/*.jar 2>/dev/null" % (JAPIZE, version, jarfile)
+    cmd = "%s as %s apis %s +com.vaadin, $JAVA_HOME/jre/lib/rt.jar 2>/dev/null" % (JAPIZE, version, jarfile)
     command (cmd)
 
     return "%s.japi.gz" % (version)

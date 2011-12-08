@@ -17,37 +17,98 @@ import java.io.Serializable;
  */
 public interface ErrorMessage extends Paintable, Serializable {
 
-    /**
-     * Error code for system errors and bugs.
-     */
-    public static final int SYSTEMERROR = 5000;
+    public enum ErrorLevel {
+        /**
+         * Error code for informational messages.
+         */
+        INFORMATION("info", 0),
+        /**
+         * Error code for warning messages.
+         */
+        WARNING("warning", 1),
+        /**
+         * Error code for regular error messages.
+         */
+        ERROR("error", 2),
+        /**
+         * Error code for critical error messages.
+         */
+        CRITICAL("critical", 3),
+        /**
+         * Error code for system errors and bugs.
+         */
+        SYSTEMERROR("system", 4);
+
+        String text;
+        int errorLevel;
+
+        private ErrorLevel(String text, int errorLevel) {
+            this.text = text;
+            this.errorLevel = errorLevel;
+        }
+
+        /**
+         * Textual representation for server-client communication of level
+         * 
+         * @return String for error severity
+         */
+        public String getText() {
+            return text;
+        }
+
+        /**
+         * Integer representation of error severity for comparison
+         * 
+         * @return integer for error severity
+         */
+        public int intValue() {
+            return errorLevel;
+        }
+
+        @Override
+        public String toString() {
+            return text;
+        }
+
+    }
 
     /**
-     * Error code for critical error messages.
+     * @deprecated from 7.0, use {@link ErrorLevel#SYSTEMERROR} instead    
      */
-    public static final int CRITICAL = 4000;
+    @Deprecated
+    public static final ErrorLevel SYSTEMERROR = ErrorLevel.SYSTEMERROR;
 
     /**
-     * Error code for regular error messages.
+     * @deprecated from 7.0, use {@link ErrorLevel#CRITICAL} instead    
      */
-    public static final int ERROR = 3000;
+    @Deprecated
+    public static final ErrorLevel CRITICAL = ErrorLevel.CRITICAL;
 
     /**
-     * Error code for warning messages.
+     * @deprecated from 7.0, use {@link ErrorLevel#ERROR} instead    
      */
-    public static final int WARNING = 2000;
+
+    @Deprecated
+    public static final ErrorLevel ERROR = ErrorLevel.ERROR;
 
     /**
-     * Error code for informational messages.
+     * @deprecated from 7.0, use {@link ErrorLevel#WARNING} instead    
      */
-    public static final int INFORMATION = 1000;
+    @Deprecated
+    public static final ErrorLevel WARNING = ErrorLevel.WARNING;
+
+    /**
+     * @deprecated from 7.0, use {@link ErrorLevel#INFORMATION} instead    
+     */
+    @Deprecated
+    public static final ErrorLevel INFORMATION = ErrorLevel.INFORMATION;
 
     /**
      * Gets the errors level.
      * 
      * @return the level of error as an integer.
      */
-    public int getErrorLevel();
+    public ErrorLevel getErrorLevel();
 
     /**
      * Error messages are inmodifiable and thus listeners are not needed. This
