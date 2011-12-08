@@ -6,10 +6,12 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.vaadin.Application;
@@ -856,24 +858,22 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     /**
-     * Checks the validity of the Validatable by validating the field with all
-     * attached validators except when the field is empty. An empty field is
-     * invalid if it is required and valid otherwise.
+     * Checks the validity of the Field.
+     * 
+     * A field is invalid if it is set as required (using
+     * {@link #setRequired(boolean)} and is empty or if one or several of the
+     * validators added to the field indicate it is invalid.
      * 
      * The "required" validation is a built-in validation feature. If the field
-     * is required, but empty, validation will throw an EmptyValueException with
-     * the error message set with setRequiredError().
+     * is required and empty this method throws an EmptyValueException with the
+     * error message set using {@link #setRequiredError(String)}.
      * 
      * @see com.vaadin.data.Validatable#validate()
      */
     public void validate() throws Validator.InvalidValueException {
 
-        if (isEmpty()) {
-            if (isRequired()) {
-                throw new Validator.EmptyValueException(requiredError);
-            } else {
-                return;
-            }
+        if (isRequired() && isEmpty()) {
+            throw new Validator.EmptyValueException(requiredError);
         }
 
         // If there is no validator, there can not be any errors
@@ -881,48 +881,37 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             return;
         }
 
-        // Initialize temps
-        Validator.InvalidValueException firstError = null;
-        LinkedList<InvalidValueException> errors = null;
         final Object fieldValue = getFieldValue();
 
+        List<InvalidValueException> validationExceptions = null;
+
         // Gets all the validation errors
-        for (final Iterator<Validator> i = validators.iterator(); i.hasNext();) {
+        for (Validator v : validators) {
             try {
-                (i.next()).validate(fieldValue);
+                v.validate(fieldValue);
             } catch (final Validator.InvalidValueException e) {
-                if (firstError == null) {
-                    firstError = e;
-                } else {
-                    if (errors == null) {
-                        errors = new LinkedList<InvalidValueException>();
-                        errors.add(firstError);
-                    }
-                    errors.add(e);
+                if (validationExceptions == null) {
+                    validationExceptions = new ArrayList<InvalidValueException>();
                 }
+                validationExceptions.add(e);
             }
         }
 
         // If there were no error
-        if (firstError == null) {
+        if (validationExceptions == null) {
             return;
         }
 
         // If only one error occurred, throw it forwards
-        if (errors == null) {
-            throw firstError;
+        if (validationExceptions.size() == 1) {
+            throw validationExceptions.get(0);
         }
 
-        // Creates composite validator
-        final Validator.InvalidValueException[] exceptions = new Validator.InvalidValueException[errors
-                .size()];
-        int index = 0;
-        for (final Iterator<InvalidValueException> i = errors.iterator(); i
-                .hasNext();) {
-            exceptions[index++] = i.next();
-        }
+        InvalidValueException[] exceptionArray = validationExceptions
+                .toArray(new InvalidValueException[validationExceptions.size()]);
 
-        throw new Validator.InvalidValueException(null, exceptions);
+        // Create a composite validator and include all exceptions
+        throw new Validator.InvalidValueException(null, exceptionArray);
     }
 
     /**
