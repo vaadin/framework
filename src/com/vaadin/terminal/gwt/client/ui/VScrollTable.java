@@ -56,7 +56,6 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
@@ -1095,6 +1094,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     }
                     if (selected != row.isSelected()) {
                         row.toggleSelection();
+                        if (!isSingleSelectMode() && !selected) {
+                            // Update selection range in case a row is
+                            // unselected from the middle of a range - #8076
+                            removeRowFromUnsentSelectionRanges(row);
+                        }
                     }
                 }
             }
