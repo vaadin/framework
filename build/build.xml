@@ -502,6 +502,9 @@
     
     <target name="compile-widgetset" description="Compiles the widgetset given as the first parameter">
         <fail unless="widgetset" message="No widgetset parameter set"/>
+        <property name="widgetset-style" value="OBF" />
+    	<property name="widgetset-localWorkers" value="4" />
+    	<property name="widgetset-extraParams" value="" />
         <echo>Compiling widgetset ${widgetset}. Output directory: ${widgetsets-output-dir}</echo>
         <java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
             <classpath refid="widgetset-compile-classpath"/>
@@ -509,9 +512,10 @@
             <arg value="-war" />
             <arg value="${widgetsets-output-dir}" />
             <arg value="-style" />
-            <arg value="OBF" />
+            <arg value="${widgetset-style}" />
             <arg value="-localWorkers" />
-            <arg value="4" />
+            <arg value="${widgetset-localWorkers}" />
+        	<arg line="${widgetset-extraParams}" />
             <arg value="${widgetset}" />
 
             <jvmarg value="-Xss8M"/>

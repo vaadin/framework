@@ -1281,8 +1281,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
      * user closes the window.
      * 
      * <p>
-     * Since Vaadin 6.5, removing windows using {@link #removeWindow(Window)}
-     * does fire the CloseListener.
+     * Since Vaadin 6.5, removing a window using {@link #removeWindow(Window)}
+     * fires the CloseListener.
      * </p>
      */
     public interface CloseListener extends Serializable {

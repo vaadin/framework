@@ -209,11 +209,11 @@ public abstract class Application implements URIHandler,
      * 
      * <p>
      * If for some reason user opens another window with same url that is
-     * already open, name is modified by adding "_12345678" postfix to the name,
-     * where 12345678 is a random number. One can decide to create another
-     * window-object for those windows (recommended) or to discard the postfix.
-     * If the user has two browser windows pointing to the same window-object on
-     * server, synchronization errors are likely to occur.
+     * already open, the name is modified by adding a "_N" postfix to the name,
+     * where N is a running number starting from 1. One can decide to create
+     * another window-object for those windows (recommended) or to discard the
+     * postfix. If the user has two browser windows pointing to the same
+     * window-object on server, synchronization errors are likely to occur.
      * </p>
      * 
      * <p>
@@ -1384,7 +1384,7 @@ public abstract class Application implements URIHandler,
         }
 
         /**
-         * @return
+         * @return 
          *         "Take note of any unsaved data, and <u>click here</u> to continue."
          */
         public String getSessionExpiredMessage() {
@@ -1416,7 +1416,7 @@ public abstract class Application implements URIHandler,
         }
 
         /**
-         * @return
+         * @return 
          *         "Take note of any unsaved data, and <u>click here</u> to continue."
          */
         public String getCommunicationErrorMessage() {
@@ -1448,7 +1448,7 @@ public abstract class Application implements URIHandler,
         }
 
         /**
-         * @return
+         * @return 
          *         "Take note of any unsaved data, and <u>click here</u> to continue."
          */
         public String getAuthenticationErrorMessage() {

@@ -249,15 +249,15 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         final String text = uidl.getStringVariable("text");
 
         /*
-         * We skip the text content update if field has been repainted, but text has
-         * not been changed. Additional sanity check verifies there is no change
-         * in the que (in which case we count more on the server side value).
+         * We skip the text content update if field has been repainted, but text
+         * has not been changed. Additional sanity check verifies there is no
+         * change in the que (in which case we count more on the server side
+         * value).
          */
-        if (!(uidl.getBooleanAttribute(ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS) && valueBeforeEdit != null && text
-                .equals(valueBeforeEdit))) {
+        if (!(uidl.getBooleanAttribute(ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
+                && valueBeforeEdit != null && text.equals(valueBeforeEdit))) {
             updateFieldContent(text);
         }
-        
 
         if (uidl.hasAttribute("selpos")) {
             final int pos = uidl.getIntAttribute("selpos");
@@ -587,7 +587,20 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     }
 
     public void onBeforeShortcutAction(Event e) {
+        // Remember current value to detect changes
+        String oldValue = valueBeforeEdit;
+
         valueChange(false);
+
+        /*
+         * The valueChange method updates valueBeforeEdit when a "text" variable
+         * is sent. This will cause a text change event to be simulated on the
+         * server. In that case, we should avoid sending the same text as a
+         * normal text change event. (#8035)
+         */
+        if (oldValue != valueBeforeEdit) {
+            lastTextChangeString = valueBeforeEdit;
+        }
     }
 
     // Here for backward compatibility; to be moved to TextArea

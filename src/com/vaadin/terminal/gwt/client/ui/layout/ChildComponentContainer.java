@@ -9,6 +9,8 @@ import java.util.NoSuchElementException;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
@@ -222,6 +224,36 @@ public class ChildComponentContainer extends Panel {
          * does not include
          */
         int w = Util.getRequiredWidth(widgetDIV);
+
+        // IE7 ignores the width of the content if there's a border (#3915)
+        if (BrowserInfo.get().isIE7()) {
+            // Also read the inner width of the target element
+            int clientWidth = widget.getElement().getClientWidth();
+
+            // If the widths are different, there might be a border involved and
+            // then the width should be calculated without borders
+            if (w != clientWidth) {
+                // Remember old border style and remove current border
+                Style style = widget.getElement().getStyle();
+                String oldBorderStyle = style.getBorderStyle();
+                style.setBorderStyle(BorderStyle.NONE);
+
+                // Calculate width without borders
+                int newWidth = Util.getRequiredWidth(widgetDIV);
+
+                // Restore old border style
+                style.setProperty("borderStyle", oldBorderStyle);
+
+                // Borders triggered the bug if the element is wider without
+                // borders
+                if (newWidth > w) {
+                    // Use new measured width + the border width calculated as
+                    // the difference between previous inner and outer widths
+                    w = newWidth + (w - clientWidth);
+                }
+            }
+        }
+
         int h = Util.getRequiredHeight(widgetDIV);
 
         widgetSize.setWidth(w);

@@ -4013,6 +4013,9 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public void setTableFieldFactory(TableFieldFactory fieldFactory) {
         this.fieldFactory = fieldFactory;
+
+        // Assure visual refresh
+        refreshRowCache();
     }
 
     /**
