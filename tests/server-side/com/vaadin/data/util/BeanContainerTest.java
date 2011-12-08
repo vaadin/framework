@@ -1,7 +1,9 @@
 package com.vaadin.data.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -10,7 +12,6 @@ import junit.framework.Assert;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.AbstractBeanContainer.BeanIdResolver;
-import com.vaadin.data.util.BeanContainer;
 
 public class BeanContainerTest extends AbstractBeanContainerTest {
 
@@ -322,6 +323,37 @@ public class BeanContainerTest extends AbstractBeanContainerTest {
         }
 
         assertEquals(0, container.size());
+    }
+
+    public void testAddAllWithNullItemId() {
+        BeanContainer<String, Person> container = new BeanContainer<String, Person>(
+                Person.class);
+        // resolver that returns null as item id
+        container
+                .setBeanIdResolver(new BeanIdResolver<String, AbstractBeanContainerTest.Person>() {
+
+                    public String getIdForBean(Person bean) {
+                        return bean.getName();
+                    }
+                });
+
+        List<Person> persons = new ArrayList<Person>();
+        persons.add(new Person("John"));
+        persons.add(new Person("Marc"));
+        persons.add(new Person(null));
+        persons.add(new Person("foo"));
+
+        try {
+            container.addAll(persons);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // should get exception
+        }
+
+        container.removeAllItems();
+        persons.remove(2);
+        container.addAll(persons);
+        assertEquals(3, container.size());
     }
 
     public void testAddBeanWithNullResolver() {

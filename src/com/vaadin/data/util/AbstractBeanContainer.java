@@ -626,9 +626,12 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      *            The collection of beans to add. Must not be null.
      * @throws IllegalStateException
      *             if no bean identifier resolver has been set
+     * @throws IllegalArgumentException
+     *             if the resolver returns a null itemId for one of the beans in
+     *             the collection
      */
     protected void addAll(Collection<? extends BEANTYPE> collection)
-            throws IllegalStateException {
+            throws IllegalStateException, IllegalArgumentException {
         boolean modified = false;
         for (BEANTYPE bean : collection) {
             // TODO skipping invalid beans - should not allow them in javadoc?
