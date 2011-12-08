@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.tests.util;
@@ -16,7 +16,7 @@ import com.vaadin.ui.Panel;
  * sampleDirectory property is read. If no sample directory is resolved, then a
  * panel displaying error message is added to main window.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * 
  */
 public class SampleDirectory {

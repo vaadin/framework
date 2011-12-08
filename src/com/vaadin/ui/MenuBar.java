@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.ui;
 
@@ -511,7 +511,7 @@ public class MenuBar extends AbstractComponent {
          * items in a menu, to make it easier for users to find what they are
          * looking for in the menu.
          * 
-         * @author Jouni Koivuviita / IT Mill Ltd.
+         * @author Jouni Koivuviita / Vaadin Ltd.
          * @since 6.2.0
          */
         public MenuBar.MenuItem addSeparator() {

@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.client.ui;
@@ -48,7 +48,7 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHan
 /**
  * "Sub window" component.
  * 
- * @author IT Mill Ltd
+ * @author Vaadin Ltd
  */
 public class VWindow extends VOverlay implements Container,
         ShortcutActionHandlerOwner, ScrollHandler, KeyDownHandler,

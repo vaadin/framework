@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.data;
@@ -30,7 +30,7 @@ import java.io.Serializable;
  * needs to be changed through the implementing class.
  * </p>
  * 
- * @author IT Mill Ltd
+ * @author Vaadin Ltd
  * @version
  * @VERSION@
  * @since 3.0
@@ -121,7 +121,7 @@ public interface Property extends Serializable {
      * <code>Exception</code> object that signals that a requested Property
      * modification failed because it's in read-only mode.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -153,7 +153,7 @@ public interface Property extends Serializable {
      * <code>setValue</code> method couldn't be converted to the native type of
      * the Property.
      * 
-     * @author IT Mill Ltd
+     * @author Vaadin Ltd
      * @version
      * @VERSION@
      * @since 3.0
@@ -208,7 +208,7 @@ public interface Property extends Serializable {
      * Interface implemented by the viewer classes capable of using a Property
      * as a data source.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -242,7 +242,7 @@ public interface Property extends Serializable {
      * <code>ReadOnlyException</code> being thrown.
      * </p>
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -257,7 +257,7 @@ public interface Property extends Serializable {
      * An <code>Event</code> object specifying the Property whose value has been
      * changed.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -276,7 +276,7 @@ public interface Property extends Serializable {
      * The <code>listener</code> interface for receiving
      * <code>ValueChangeEvent</code> objects.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -306,7 +306,7 @@ public interface Property extends Serializable {
      * be able to implement an interface.
      * </p>
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -336,7 +336,7 @@ public interface Property extends Serializable {
      * An <code>Event</code> object specifying the Property whose read-only
      * status has been changed.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -355,7 +355,7 @@ public interface Property extends Serializable {
      * The listener interface for receiving
      * <code>ReadOnlyStatusChangeEvent</code> objects.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -387,7 +387,7 @@ public interface Property extends Serializable {
      * be able to implement an interface.
      * </p>
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0

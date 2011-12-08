@@ -46,7 +46,7 @@ public class LicenseInJavaFiles extends TestCase {
     private void checkForLicenseInFile(File f, HashSet<String> missing)
             throws IOException {
         String contents = IOUtils.toString(new FileInputStream(f));
-        if (!contents.contains("@" + "ITMillApache2LicenseForJavaFiles" + "@")) {
+        if (!contents.contains("@" + "VaadinApache2LicenseForJavaFiles" + "@")) {
             missing.add(f.getPath());
         }
 

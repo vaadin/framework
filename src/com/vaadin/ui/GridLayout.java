@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -35,7 +35,7 @@ import com.vaadin.terminal.gwt.client.ui.VGridLayout;
  * with cursor automatically extends the grid by increasing the grid height.
  * </p>
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -666,7 +666,7 @@ public class GridLayout extends AbstractLayout implements
      * its upper left corner (column1,row1) and lower right corner
      * (column2,row2).
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -852,7 +852,7 @@ public class GridLayout extends AbstractLayout implements
      * <code>OverlapsException</code> is thrown when a component already exists
      * (even partly) at the same space on a grid with the new component.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -910,7 +910,7 @@ public class GridLayout extends AbstractLayout implements
      * An <code>Exception</code> object which is thrown when an area exceeds the
      * bounds of the grid.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0

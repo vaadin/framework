@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal;
@@ -16,7 +16,7 @@ import com.vaadin.service.FileTypeResolver;
  * in the context of the application or window. The resource is automatically
  * registered to window in creation.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -162,7 +162,7 @@ public class StreamResource implements ApplicationResource {
     /**
      * Interface implemented by the source of a StreamResource.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0

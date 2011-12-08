@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.client.ui;
@@ -29,7 +29,7 @@ import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
  * actions and fires actions to server. User class needs to delegate keyboard
  * events to handleKeyboardEvents function.
  * 
- * @author IT Mill ltd
+ * @author Vaadin Ltd
  */
 public class ShortcutActionHandler {
 

@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal;
@@ -19,7 +19,7 @@ import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
  * messages are required, use {@link UserError} or a custom implementation of
  * {@link ErrorMessage}.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0

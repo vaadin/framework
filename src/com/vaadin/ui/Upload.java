@@ -1,5 +1,5 @@
 /*
- * @ITMillApache2LicenseForJavaFiles@
+ * @VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -55,7 +55,7 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * element, setting size for Upload component is not supported. For some
  * browsers setting size may work to some extend.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -182,7 +182,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * Interface that must be implemented by the upload receivers to provide the
      * Upload component an output stream to write the uploaded data.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -237,7 +237,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * distinguish between the two cases, use either SucceededEvent or
      * FailedEvent, which are both subclasses of the FinishedEvent.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -320,7 +320,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * Upload.FailedEvent event is sent when the upload is received, but the
      * reception is interrupted for some reason.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -408,7 +408,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * Upload.SucceededEvent event is sent when the upload is received
      * successfully.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -432,7 +432,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     /**
      * Upload.StartedEvent event is sent when the upload is started to received.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 5.0
@@ -500,7 +500,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     /**
      * Receives the events when the upload starts.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 5.0
@@ -519,7 +519,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     /**
      * Receives the events when the uploads are ready.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -538,7 +538,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     /**
      * Receives events when the uploads are finished, but unsuccessful.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -557,7 +557,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     /**
      * Receives events when the uploads are successfully finished.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0

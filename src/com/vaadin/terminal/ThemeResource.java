@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal;
@@ -12,7 +12,7 @@ import com.vaadin.service.FileTypeResolver;
  * comply with the used theme by the terminal adapter. This is commonly used to
  * provide static images, flash, java-applets, etc for the terminals.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0

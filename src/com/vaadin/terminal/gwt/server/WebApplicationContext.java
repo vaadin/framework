@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.server;
@@ -21,7 +21,7 @@ import com.vaadin.Application;
  * This is automatically added as a {@link HttpSessionBindingListener} when
  * added to a {@link HttpSession}.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.1

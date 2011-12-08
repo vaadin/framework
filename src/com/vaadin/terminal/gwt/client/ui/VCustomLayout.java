@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.client.ui;
@@ -31,7 +31,7 @@ import com.vaadin.terminal.gwt.client.VCaptionWrapper;
 /**
  * Custom Layout implements complex layout defined with HTML template.
  * 
- * @author IT Mill
+ * @author Vaadin Ltd
  * 
  */
 public class VCustomLayout extends ComplexPanel implements Paintable,

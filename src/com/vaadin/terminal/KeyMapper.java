@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal;
@@ -11,7 +11,7 @@ import java.util.Hashtable;
  * <code>KeyMapper</code> is the simple two-way map for generating textual keys
  * for objects and retrieving the objects later with the key.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0

@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -47,7 +47,7 @@ import com.vaadin.terminal.PaintTarget;
  * sure the value contained in the field is valid.
  * </p>
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -944,7 +944,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * An <code>Event</code> object specifying the Property whose read-only
      * status has changed.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0

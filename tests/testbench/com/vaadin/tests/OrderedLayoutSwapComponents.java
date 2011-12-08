@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.tests;
@@ -19,7 +19,7 @@ import com.vaadin.ui.VerticalLayout;
  * This Component contains some simple test to see that component updates its
  * contents propertly.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  */
 public class OrderedLayoutSwapComponents extends CustomComponent {
 

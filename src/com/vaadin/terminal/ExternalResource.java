@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal;
@@ -14,7 +14,7 @@ import com.vaadin.service.FileTypeResolver;
  * location specified by URL:s. The resources are fetched directly by the client
  * terminal and are not fetched trough the terminal adapter.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0

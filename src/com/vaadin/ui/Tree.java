@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -54,7 +54,7 @@ import com.vaadin.tools.ReflectTools;
  * Tree component. A Tree can be used to select an item (or multiple items) from
  * a hierarchical set of items.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -834,7 +834,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * is to be expanded. it can me used to dynamically fill the sub-nodes of
      * the node.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -868,7 +868,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Expand event listener.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -923,7 +923,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Collapse event
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -957,7 +957,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Collapse event listener.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0

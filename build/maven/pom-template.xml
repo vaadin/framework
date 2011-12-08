@@ -5,7 +5,7 @@
   <version>@MAVEN-VERSION@</version>
   <name>Vaadin</name>
   <organization>
-    <name>Oy IT Mill Ltd</name>
+    <name>Vaadin Ltd</name>
     <url>http://vaadin.com</url>
   </organization>
   <url>http://vaadin.com</url>

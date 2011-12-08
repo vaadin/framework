@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal;
@@ -13,7 +13,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 /**
  * This interface defines the methods for painting XML to the UIDL stream.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0

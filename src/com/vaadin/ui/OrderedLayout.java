@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.ui;
 
@@ -14,7 +14,7 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * <code>OrderedLayout</code> is a component container, which shows the
  * subcomponents in the order of their addition in specified orientation.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0

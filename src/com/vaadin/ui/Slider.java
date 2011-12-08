@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -44,7 +44,7 @@ import com.vaadin.terminal.gwt.client.ui.VSlider;
  * 
  * </code>
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  */
 @ClientWidget(VSlider.class)
 public class Slider extends AbstractField {
@@ -488,7 +488,7 @@ public class Slider extends AbstractField {
      * Thrown when the value of the slider is about to be set to a value that is
      * outside the valid range of the slider.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * 
      */
     public class ValueOutOfBoundsException extends Exception {

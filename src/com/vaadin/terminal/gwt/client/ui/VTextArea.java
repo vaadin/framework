@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.client.ui;
@@ -18,7 +18,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
  * TODO consider replacing this with a RichTextArea based implementation. IE
  * does not support CSS height for textareas in Strict mode :-(
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * 
  */
 public class VTextArea extends VTextField {

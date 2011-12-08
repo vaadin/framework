@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.client;
@@ -14,7 +14,7 @@ import com.vaadin.terminal.gwt.client.ui.VDateField;
  * This class provides date/time parsing services to all components on the
  * client side.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * 
  */
 @SuppressWarnings("deprecation")

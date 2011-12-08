@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.data.util;
@@ -41,7 +41,7 @@ import com.vaadin.data.Property;
  * 
  * @see com.vaadin.data.Container
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @since 4.0
  * 
@@ -494,7 +494,7 @@ public class QueryContainer implements Container, Container.Ordered,
     /**
      * The <code>Row</code> class implements methods of Item.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @since 4.0
      */

@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.data.validator;
@@ -10,7 +10,7 @@ import com.vaadin.data.Validator;
  * This validator is used for validating properties that do or do not allow null
  * values. By default, nulls are not allowed.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0

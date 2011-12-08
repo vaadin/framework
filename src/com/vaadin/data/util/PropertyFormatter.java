@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.data.util;
 
@@ -29,7 +29,7 @@ import com.vaadin.data.Property;
  * standard "1.0" notation with more zeroes.
  * </p>
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @since 5.3.0
  */
 @SuppressWarnings("serial")

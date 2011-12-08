@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.server;
@@ -15,7 +15,7 @@ import com.vaadin.terminal.gwt.client.VBrowserDetails;
  * Provides information such as browser name and version, screen resolution and
  * IP address.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version @VERSION@
  */
 public class WebBrowser implements Terminal {
