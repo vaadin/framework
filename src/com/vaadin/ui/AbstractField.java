@@ -328,7 +328,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             setModified(false);
 
             // If the new value differs from the previous one
-            if (!equals(newFieldValue, value)) {
+            if (!equals(newFieldValue, getInternalValue())) {
                 setInternalValue(newFieldValue);
                 fireValueChange(false);
             } else if (wasModified) {
@@ -355,7 +355,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     private T getFieldValue() {
         // Give the value from abstract buffers if the field if possible
         if (dataSource == null || !isReadThrough() || isModified()) {
-            return value;
+            return getInternalValue();
         }
 
         // There is no buffered value so use whatever the data model provides
@@ -521,7 +521,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     protected void setValue(T newFieldValue, boolean repaintIsNotNeeded)
             throws Property.ReadOnlyException, Property.ConversionException {
 
-        if (!equals(newFieldValue, value)) {
+        if (!equals(newFieldValue, getInternalValue())) {
 
             // Read only fields can not be changed
             if (isReadOnly()) {
@@ -646,7 +646,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     public void setPropertyDataSource(Property newDataSource) {
 
         // Saves the old value
-        final Object oldValue = value;
+        final Object oldValue = getInternalValue();
 
         // Stops listening the old data source changes
         if (dataSource != null
@@ -705,6 +705,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         }
 
         // Fires value change if the value has changed
+        T value = getInternalValue();
         if ((value != oldValue)
                 && ((value != null && !value.equals(oldValue)) || value == null)) {
             fireValueChange(false);
@@ -1143,7 +1144,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         if (isReadThrough()) {
             if (committingValueToDataSource) {
                 boolean propertyNotifiesOfTheBufferedValue = equals(event
-                        .getProperty().getValue(), value);
+                        .getProperty().getValue(), getInternalValue());
                 if (!propertyNotifiesOfTheBufferedValue) {
                     /*
                      * Property (or chained property like PropertyFormatter) now
@@ -1199,6 +1200,14 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     public void setTabIndex(int tabIndex) {
         this.tabIndex = tabIndex;
         requestRepaint();
+    }
+
+    /**
+     * 
+     * @return
+     */
+    protected T getInternalValue() {
+        return value;
     }
 
     /**
