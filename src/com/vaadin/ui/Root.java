@@ -883,7 +883,7 @@ public class Root extends AbstractComponentContainer implements
     public void doInit(WrappedRequest request) {
         BrowserDetails browserDetails = request.getBrowserDetails();
         if (browserDetails != null) {
-            fragment = browserDetails.getUriFragmet();
+            fragment = browserDetails.getUriFragment();
         }
 
         // Call the init overridden by the application developer

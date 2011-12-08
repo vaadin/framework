@@ -86,7 +86,7 @@ public class CombinedRequest implements WrappedRequest {
 
     public BrowserDetails getBrowserDetails() {
         return new BrowserDetails() {
-            public String getUriFragmet() {
+            public String getUriFragment() {
                 String fragment = secondRequest.getParameter("f");
                 if (fragment == null || fragment.length() == 0) {
                     return "";

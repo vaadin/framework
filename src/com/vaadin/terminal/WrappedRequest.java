@@ -34,7 +34,7 @@ public interface WrappedRequest extends Serializable {
          * 
          * @return the URI hash fragment
          */
-        public String getUriFragmet();
+        public String getUriFragment();
 
         /**
          * Gets the value of window.name from the browser. This can be used to

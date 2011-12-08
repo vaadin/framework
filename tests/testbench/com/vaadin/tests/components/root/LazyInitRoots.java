@@ -20,7 +20,7 @@ public class LazyInitRoots extends AbstractTestApplication {
             BrowserDetails browserDetails = request.getBrowserDetails();
             getContent().addComponent(
                     new Label("Lazy init root: "
-                            + browserDetails.getUriFragmet()));
+                            + browserDetails.getUriFragment()));
         }
     }
 
@@ -35,7 +35,7 @@ public class LazyInitRoots extends AbstractTestApplication {
                 Root root = new Root();
                 root.getContent().addComponent(
                         new Label("Lazy create root: "
-                                + browserDetails.getUriFragmet()));
+                                + browserDetails.getUriFragment()));
                 return root;
             }
         } else if (request.getParameter("lazyInit") != null) {
