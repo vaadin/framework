@@ -15,8 +15,8 @@ import java.lang.reflect.Method;
 public class ReflectTools {
     /**
      * Locates the method in the given class. Returns null if the method is not
-     * found. This method never throws exceptions. Errors in locating methods
-     * are considered serious problems and are output to standard error.
+     * found. Throws an ExceptionInInitializerError if there is a problem
+     * locating the method as this is mainly called from static blocks.
      * 
      * @param cls
      *            Class that contains the method
