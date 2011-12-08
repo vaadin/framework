@@ -6,7 +6,7 @@
          name="Vaadin"
          basedir="../" default="package-all">
 
-	<property name="project.root" value=".."/>
+	<property name="project.root" value="."/>
     <!-- Import common targets  -->
     <import file="./common.xml" />
 
