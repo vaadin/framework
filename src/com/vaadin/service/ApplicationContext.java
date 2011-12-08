@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.service;
@@ -19,7 +19,7 @@ import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
  * are open for one user. In a web-environment this corresponds to a
  * HttpSession.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.1

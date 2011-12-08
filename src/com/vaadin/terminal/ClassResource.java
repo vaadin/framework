@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal;
@@ -17,7 +17,7 @@ import com.vaadin.service.FileTypeResolver;
  * 
  * @see java.lang.Class#getResource(java.lang.String)
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0

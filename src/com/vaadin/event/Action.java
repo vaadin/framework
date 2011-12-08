@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.event;
@@ -13,7 +13,7 @@ import com.vaadin.terminal.Resource;
  * handling and listing, and for action handler registrations and
  * unregistration.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -104,7 +104,7 @@ public class Action implements Serializable {
     /**
      * Interface implemented by classes who wish to handle actions.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -147,7 +147,7 @@ public class Action implements Serializable {
      * should loop all action handlers registered to it and let them handle the
      * action.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0

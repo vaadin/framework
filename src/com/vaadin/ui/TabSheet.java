@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -48,7 +48,7 @@ import com.vaadin.ui.themes.Runo;
  * The current implementation does not load the tabs to the UI before the first
  * time they are shown, but this may change in future releases.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -774,7 +774,7 @@ public class TabSheet extends AbstractComponentContainer {
      * Selected tab change event. This event is sent when the selected (shown)
      * tab in the tab sheet is changed.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -806,7 +806,7 @@ public class TabSheet extends AbstractComponentContainer {
      * another tab is selected, including when adding the first tab to a
      * tabsheet.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * 
      * @version
      * @VERSION@
@@ -1165,7 +1165,7 @@ public class TabSheet extends AbstractComponentContainer {
      * CloseHandler is used to process tab closing events. Default behavior is
      * to remove the tab from the TabSheet.
      * 
-     * @author Jouni Koivuviita / IT Mill Ltd.
+     * @author Jouni Koivuviita / Vaadin Ltd.
      * @since 6.2.0
      * 
      */

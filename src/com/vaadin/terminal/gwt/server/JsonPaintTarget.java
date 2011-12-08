@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.server;
@@ -44,7 +44,7 @@ import com.vaadin.ui.CustomLayout;
  * TODO document better: role of this class, UIDL format, attributes, variables,
  * etc.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 5.0

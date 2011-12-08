@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -18,7 +18,7 @@ import com.vaadin.ui.Layout.MarginHandler;
  * An abstract class that defines default implementation for the {@link Layout}
  * interface.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 5.0

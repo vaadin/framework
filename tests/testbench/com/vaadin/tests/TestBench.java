@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.tests;
@@ -36,7 +36,7 @@ import com.vaadin.ui.Window;
  * 
  * Note: edit TestBench.testablePackages array
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * 
  */
 public class TestBench extends com.vaadin.Application implements

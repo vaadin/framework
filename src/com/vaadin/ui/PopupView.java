@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.ui;
 
@@ -19,7 +19,7 @@ import com.vaadin.terminal.gwt.client.ui.VPopupView;
  * view is displayed on a popup. The inner class {@link PopupView.Content} is
  * used to deliver contents to this component.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  */
 @SuppressWarnings("serial")
 @ClientWidget(VPopupView.class)

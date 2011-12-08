@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.data.util.sqlcontainer.query.generator;
 
@@ -15,7 +15,7 @@ import com.vaadin.data.util.sqlcontainer.query.OrderBy;
  * syntax that is to be supported. By default there are implementations for
  * HSQLDB, MySQL, PostgreSQL, MSSQL and Oracle syntaxes.
  * 
- * @author Jonatan Kronqvist / IT Mill Ltd
+ * @author Jonatan Kronqvist / Vaadin Ltd
  */
 public interface SQLGenerator extends Serializable {
     /**

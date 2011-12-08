@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -9,7 +9,7 @@ import com.vaadin.data.Property;
 import com.vaadin.ui.Component.Focusable;
 
 /**
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * 
  */
 public interface Field extends Component, BufferedValidatable, Property,
@@ -74,7 +74,7 @@ public interface Field extends Component, BufferedValidatable, Property,
      * An <code>Event</code> object specifying the Field whose value has been
      * changed.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0

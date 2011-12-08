@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal;
@@ -18,7 +18,7 @@ import com.vaadin.terminal.Terminal.ErrorEvent;
  * thus must be registered to an URI context before they can be used. The
  * resource is automatically registered to the application when it is created.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0

@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.data.util;
@@ -41,7 +41,7 @@ import com.vaadin.util.SerializerHelper;
  * called, without verifying what the getter returns.
  * </p>
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -720,7 +720,7 @@ public class MethodProperty<T> extends AbstractProperty {
      * calling or finding the specified getter or setter methods of the
      * property.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0

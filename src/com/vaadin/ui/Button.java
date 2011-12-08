@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -29,7 +29,7 @@ import com.vaadin.ui.themes.BaseTheme;
 /**
  * A generic button component.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -316,7 +316,7 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
     /**
      * Click event. This event is thrown, when the button is clicked.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -477,7 +477,7 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      * Interface for listening for a {@link ClickEvent} fired by a
      * {@link Component}.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0

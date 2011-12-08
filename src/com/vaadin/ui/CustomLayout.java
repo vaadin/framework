@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -36,7 +36,7 @@ import com.vaadin.terminal.gwt.client.ui.VCustomLayout;
  * subcomponents just as in OrderedLayout.
  * </p>
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @author Duy B. Vo (<a
  *         href="mailto:devduy@gmail.com?subject=Vaadin">devduy@gmail.com</a>)
  * @version

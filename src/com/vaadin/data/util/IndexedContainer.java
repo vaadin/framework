@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.data.util;
@@ -40,7 +40,7 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
  * 
  * @see com.vaadin.data.Container
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -420,7 +420,7 @@ public class IndexedContainer extends
      * An <code>event</code> object specifying the list whose Item set has
      * changed.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -450,7 +450,7 @@ public class IndexedContainer extends
      * An <code>event</code> object specifying the Property in a list whose
      * value has changed.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -646,7 +646,7 @@ public class IndexedContainer extends
      * A class implementing the com.vaadin.data.Item interface to be contained
      * in the list.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * 
      * @version @VERSION@
      * 
@@ -780,7 +780,7 @@ public class IndexedContainer extends
      * the {@link IndexedContainerItem} contained in the
      * {@link IndexedContainer}.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * 
      * @version
      * @VERSION@

@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.annotations;
 
@@ -8,7 +8,7 @@ package com.vaadin.annotations;
  * 
  * These elements may be modified or removed by code generation.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 6.0

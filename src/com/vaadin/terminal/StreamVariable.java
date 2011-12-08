@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.terminal;
 
@@ -23,7 +23,7 @@ import com.vaadin.terminal.StreamVariable.StreamingStartEvent;
  * output stream, developer must handle synchronization manually.
  * <p>
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 6.5

@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.client;
@@ -14,7 +14,7 @@ import com.google.gwt.core.client.JsArray;
  * Date / time etc. localisation service for all widgets. Caches all loaded
  * locales as JSONObjects.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * 
  */
 public class LocaleService {

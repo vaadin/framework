@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.tests;
@@ -21,7 +21,7 @@ import com.vaadin.ui.VerticalLayout;
  * order to see actual visible results on the browser. Currently changes are
  * visible only by inspecting DOM.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  */
 public class TestForMultipleStyleNames extends CustomComponent implements
         ValueChangeListener {

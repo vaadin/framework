@@ -284,7 +284,7 @@
         Other files are just copied.
         -->
         
-        <loadfile property="ITMillApache2LicenseForJavaFiles" srcFile="build/ITMillApache2LicenseForJavaFiles.txt" />
+        <loadfile property="VaadinApache2LicenseForJavaFiles" srcFile="build/VaadinApache2LicenseForJavaFiles.txt" />
         <mkdir dir="${result-path}/src" />
         
         <mkdir dir="${result-path}/src/core" />
@@ -305,7 +305,7 @@
             <exclude name="**/*.xml" />
         </patternset>
         <filterset id="version-and-license">
-            <filter token="ITMillApache2LicenseForJavaFiles" value="${ITMillApache2LicenseForJavaFiles}" />
+            <filter token="VaadinApache2LicenseForJavaFiles" value="${VaadinApache2LicenseForJavaFiles}" />
             <filter token="VERSION" value="${version.full}" />
         </filterset>
         

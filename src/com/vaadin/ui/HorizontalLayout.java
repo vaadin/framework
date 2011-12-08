@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.ui;
 
@@ -12,7 +12,7 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * <code>HorizontalLayout</code> is a component container, which shows the
  * subcomponents in the order of their addition (horizontally).
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 5.3

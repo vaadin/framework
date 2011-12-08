@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal;
@@ -12,7 +12,7 @@ import java.util.EventObject;
  * implementing this interface know how to output themselves to a UIDL stream
  * and that way describing to the terminal how it should be displayed in the UI.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0

@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.tests;
@@ -21,7 +21,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Some test cases for trees. Events panel logs events that happen server side.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  */
 public class TestForTrees extends CustomComponent implements Handler {
 

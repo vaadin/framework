@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
@@ -1139,7 +1139,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
     }
 
     /**
-     * @author Jouni Koivuviita / IT Mill Ltd.
+     * @author Jouni Koivuviita / Vaadin Ltd.
      */
     private int paddingWidth = -1;
 

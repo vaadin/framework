@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -19,7 +19,7 @@ import com.vaadin.terminal.gwt.client.ui.VProgressIndicator;
  * 
  * May view an other property that indicates progress 0...1
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 4
