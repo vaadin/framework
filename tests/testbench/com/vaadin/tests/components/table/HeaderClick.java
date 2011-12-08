@@ -29,7 +29,7 @@ public class HeaderClick extends TestBase {
         // Add a header click listener
         table.addListener(new Table.HeaderClickListener() {
             public void headerClick(HeaderClickEvent event) {
-                columnField.setValue(event.getPropertyId());
+                columnField.setValue(String.valueOf(event.getPropertyId()));
             }
         });
 

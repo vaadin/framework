@@ -30,6 +30,7 @@ public class Buttons2<T extends Button> extends AbstractComponentTest<T>
         }
     };
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Class<T> getTestClass() {
         return (Class<T>) Button.class;

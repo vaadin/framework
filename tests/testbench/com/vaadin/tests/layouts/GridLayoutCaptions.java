@@ -27,31 +27,31 @@ public class GridLayoutCaptions extends TestBase {
         private CssLayout wrapper2 = new CssLayout();
 
         private FormFieldFactory fff = new FormFieldFactory() {
-            public Field createField(Item item, Object propertyId,
+            public Field<?> createField(Item item, Object propertyId,
                     Component uiContext) {
 
                 if (propertyId.equals(DataPOJO.Fields.name.name())) {
-                    Field f = DefaultFieldFactory.get().createField(item,
+                    Field<?> f = DefaultFieldFactory.get().createField(item,
                             propertyId, uiContext);
                     f.setCaption("This is a long caption for the name field");
                     return f;
 
                 } else if (propertyId.equals(DataPOJO.Fields.hp.name())) {
-                    Field f = DefaultFieldFactory.get().createField(item,
+                    Field<?> f = DefaultFieldFactory.get().createField(item,
                             propertyId, uiContext);
                     f.setCaption("This is a long caption for the HP field, but it has a VL as a wrapper");
 
                     return f;
 
                 } else if (propertyId.equals(DataPOJO.Fields.place.name())) {
-                    Field f = DefaultFieldFactory.get().createField(item,
+                    Field<?> f = DefaultFieldFactory.get().createField(item,
                             propertyId, uiContext);
                     f.setCaption("This is a long caption for the Place field, but it has a CSSLo as a wrapper");
 
                     return f;
 
                 } else if (propertyId.equals(DataPOJO.Fields.price.name())) {
-                    Field f = DefaultFieldFactory.get().createField(item,
+                    Field<?> f = DefaultFieldFactory.get().createField(item,
                             propertyId, uiContext);
                     f.setCaption("With size undefined the caption behaves like this...");
                     f.setSizeFull();

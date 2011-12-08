@@ -122,8 +122,8 @@ public class DefaultItemSorter implements ItemSorter {
             Item item1, Item item2) {
 
         // Get the properties to compare
-        final Property property1 = item1.getItemProperty(propertyId);
-        final Property property2 = item2.getItemProperty(propertyId);
+        final Property<?> property1 = item1.getItemProperty(propertyId);
+        final Property<?> property2 = item2.getItemProperty(propertyId);
 
         // Get the values to compare
         final Object value1 = (property1 == null) ? null : property1.getValue();

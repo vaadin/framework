@@ -12,6 +12,7 @@ import com.vaadin.ui.DateField;
 
 public class DateFieldTest<T extends DateField> extends AbstractFieldTest<T> {
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Class<T> getTestClass() {
         return (Class<T>) DateField.class;

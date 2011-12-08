@@ -17,7 +17,7 @@ import com.vaadin.data.Property;
  * 
  * @since 6.6
  */
-public abstract class AbstractProperty implements Property,
+public abstract class AbstractProperty<T> implements Property<T>,
         Property.ValueChangeNotifier, Property.ReadOnlyStatusChangeNotifier {
 
     /**
@@ -56,13 +56,28 @@ public abstract class AbstractProperty implements Property,
 
     /**
      * Returns the value of the <code>Property</code> in human readable textual
-     * format. The return value should be assignable to the
-     * <code>setValue</code> method if the Property is not in read-only mode.
+     * format.
      * 
      * @return String representation of the value stored in the Property
+     * @deprecated use the property value directly, or {@link #getStringValue()}
+     *             during migration period
      */
+    @Deprecated
     @Override
     public String toString() {
+        throw new UnsupportedOperationException(
+                "Use Property.getValue() instead of " + getClass()
+                        + ".toString()");
+    }
+
+    /**
+     * Returns the value of the <code>Property</code> in human readable textual
+     * format.
+     * 
+     * @return String representation of the value stored in the Property
+     * @since 7.0
+     */
+    public String getStringValue() {
         final Object value = getValue();
         if (value == null) {
             return null;
@@ -76,8 +91,8 @@ public abstract class AbstractProperty implements Property,
      * An <code>Event</code> object specifying the Property whose read-only
      * status has been changed.
      */
-    protected class ReadOnlyStatusChangeEvent extends java.util.EventObject
-            implements Property.ReadOnlyStatusChangeEvent {
+    protected static class ReadOnlyStatusChangeEvent extends
+            java.util.EventObject implements Property.ReadOnlyStatusChangeEvent {
 
         /**
          * Constructs a new read-only status change event for this object.
@@ -144,8 +159,8 @@ public abstract class AbstractProperty implements Property,
      * An <code>Event</code> object specifying the Property whose value has been
      * changed.
      */
-    private class ValueChangeEvent extends java.util.EventObject implements
-            Property.ValueChangeEvent {
+    private static class ValueChangeEvent extends java.util.EventObject
+            implements Property.ValueChangeEvent {
 
         /**
          * Constructs a new value change event for this object.

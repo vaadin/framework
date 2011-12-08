@@ -14,6 +14,7 @@ package com.vaadin.tests;
 import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -113,14 +114,23 @@ public class UpgradingSample extends Application.LegacyApplication implements
         // The components this loginbox is composed of
         private final TextField loginName = new TextField("Name");
 
-        private final Button loginButton = new Button("Enter", this, "login");
+        private final Button loginButton = new Button("Enter",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        login();
+                    }
+                });
 
         private final Panel loginPanel = new Panel("Login");
 
         private final Panel statusPanel = new Panel();
 
         private final Button logoutButton = new Button("Logout",
-                UpgradingSample.this, "close");
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        close();
+                    }
+                });
 
         private final Label statusLabel = new Label();
 
@@ -145,7 +155,7 @@ public class UpgradingSample extends Application.LegacyApplication implements
 
         // Login into application
         public void login() {
-            final String name = (String) loginName.getValue();
+            final String name = loginName.getValue();
             if (name != null && name.length() > 0) {
                 setUser(name);
             }

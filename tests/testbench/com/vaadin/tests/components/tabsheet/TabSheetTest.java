@@ -80,6 +80,7 @@ public class TabSheetTest<T extends TabSheet> extends
         }
     };
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Class<T> getTestClass() {
         return (Class<T>) TabSheet.class;

@@ -26,7 +26,7 @@ import com.vaadin.data.util.MethodProperty.MethodException;
  * 
  * @since 6.6
  */
-public class NestedMethodProperty extends AbstractProperty {
+public class NestedMethodProperty<T> extends AbstractProperty<T> {
 
     // needed for de-serialization
     private String propertyName;
@@ -43,7 +43,7 @@ public class NestedMethodProperty extends AbstractProperty {
      */
     private Object instance;
 
-    private Class<?> type;
+    private Class<? extends T> type;
 
     /* Special serialization to handle method references */
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
@@ -158,13 +158,14 @@ public class NestedMethodProperty extends AbstractProperty {
         } catch (final NoSuchMethodException skipped) {
         }
 
-        this.type = MethodProperty.convertPrimitiveType(type);
+        this.type = (Class<? extends T>) MethodProperty
+                .convertPrimitiveType(type);
         this.propertyName = propertyName;
         this.getMethods = getMethods;
         this.setMethod = setMethod;
     }
 
-    public Class<?> getType() {
+    public Class<? extends T> getType() {
         return type;
     }
 
@@ -179,13 +180,13 @@ public class NestedMethodProperty extends AbstractProperty {
      * 
      * @return the value of the Property
      */
-    public Object getValue() {
+    public T getValue() {
         try {
             Object object = instance;
             for (Method m : getMethods) {
                 object = m.invoke(object);
             }
-            return object;
+            return (T) object;
         } catch (final Throwable e) {
             throw new MethodException(this, e);
         }

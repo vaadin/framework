@@ -48,7 +48,7 @@ import com.vaadin.terminal.gwt.client.ui.VSlider;
  */
 @SuppressWarnings("serial")
 @ClientWidget(VSlider.class)
-public class Slider extends AbstractField {
+public class Slider extends AbstractField<Number> {
 
     public static final int ORIENTATION_HORIZONTAL = 0;
 
@@ -408,10 +408,9 @@ public class Slider extends AbstractField {
         target.addAttribute("resolution", resolution);
 
         if (resolution > 0) {
-            target.addVariable(this, "value",
-                    ((Double) getValue()).doubleValue());
+            target.addVariable(this, "value", getValue().doubleValue());
         } else {
-            target.addVariable(this, "value", ((Double) getValue()).intValue());
+            target.addVariable(this, "value", getValue().intValue());
         }
 
         if (orientation == ORIENTATION_VERTICAL) {
@@ -493,7 +492,7 @@ public class Slider extends AbstractField {
     }
 
     @Override
-    public Class getType() {
+    public Class<Double> getType() {
         return Double.class;
     }
 

@@ -18,7 +18,8 @@ import com.vaadin.ui.TextField;
  * 
  * See <a href="http://dev.vaadin.com/ticket/4394">Ticket 4394</a>.
  */
-public class TestTextFieldValueChange extends AbstractTestFieldValueChange {
+public class TestTextFieldValueChange extends
+        AbstractTestFieldValueChange<String> {
 
     @Override
     protected void setUp() throws Exception {
@@ -36,7 +37,7 @@ public class TestTextFieldValueChange extends AbstractTestFieldValueChange {
     }
 
     @Override
-    protected void setValue(AbstractField field) {
+    protected void setValue(AbstractField<String> field) {
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("text", "newValue");
         field.changeVariables(field, variables);

@@ -91,7 +91,7 @@ public class BeanItemContainerFilteringTest extends TestBase {
 
                 public void valueChange(ValueChangeEvent event) {
                     container.removeAllContainerFilters();
-                    if ((Boolean) ((CheckBox) event.getProperty()).getValue()) {
+                    if (((CheckBox) event.getProperty()).getValue()) {
                         container.addContainerFilter("value", filterString
                                 .getValue().toString(), false, false);
                     }

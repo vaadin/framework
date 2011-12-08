@@ -118,15 +118,29 @@ public class FormTest extends AbstractFieldTest<Form> {
 
     private void createDataSourceSelect(String category) {
         LinkedHashMap<String, Item> options = new LinkedHashMap<String, Item>();
-        options.put("Person", new BeanItem<Person>(new Person("First", "Last",
-                "foo@vaadin.com", "02-111 2222", "Ruukinkatu 2-4", 20540,
-                "Turku")));
-        options.put("Product", new BeanItem<Product>(new Product(
-                "Computer Monitor", 399.99f,
-                "A monitor that can display both color and black and white.")));
+
+        options.put("Person", createPersonItem());
+        options.put("Product", createProductItem());
+
         createSelectAction("Form data source", category, options, "Person",
                 formItemDataSourceCommand);
 
+    }
+
+    private BeanItem<Product> createProductItem() {
+        return new BeanItem<Product>(new Product("Computer Monitor", 399.99f,
+                "A monitor that can display both color and black and white."));
+    }
+
+    private BeanItem<Person> createPersonItem() {
+        Person person = new Person("First", "Last", "foo@vaadin.com",
+                "02-111 2222", "Ruukinkatu 2-4", 20540, "Turku");
+
+        BeanItem<Person> personItem = new BeanItem<Person>(person);
+        // add nested properties from address
+        personItem.expandProperty("address");
+
+        return personItem;
     }
 
     private void createFormFactorySelect(String category) {
@@ -134,10 +148,10 @@ public class FormTest extends AbstractFieldTest<Form> {
         options.put("Default", DefaultFieldFactory.get());
         options.put("Custom FieldFactory", new FormFieldFactory() {
 
-            public Field createField(Item item, Object propertyId,
+            public Field<?> createField(Item item, Object propertyId,
                     Component uiContext) {
                 Class<?> type = item.getItemProperty(propertyId).getType();
-                Field c = null;
+                Field<?> c = null;
                 if (Number.class.isAssignableFrom(type)) {
                     TextField tf = new TextField();
                     tf.setCaption(DefaultFieldFactory

@@ -98,7 +98,8 @@ public class HierarchicalWrapperOrdering extends TestBase {
                         // Get first item
                         Object itemId = indexedContainer.getIdByIndex(0);
                         Item item = indexedContainer.getItem(itemId);
-                        Property property = item.getItemProperty("name");
+                        Property<String> property = (Property<String>) item
+                                .getItemProperty("name");
                         // Prepend with Z so item should get sorted later
                         property.setValue("Z " + property.getValue());
                         // this does not work alone, requires extraneous

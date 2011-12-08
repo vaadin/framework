@@ -47,7 +47,7 @@ import com.vaadin.util.SerializerHelper;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class MethodProperty<T> extends AbstractProperty {
+public class MethodProperty<T> extends AbstractProperty<T> {
 
     private static final Logger logger = Logger.getLogger(MethodProperty.class
             .getName());
@@ -170,7 +170,7 @@ public class MethodProperty<T> extends AbstractProperty {
     @SuppressWarnings("unchecked")
     public MethodProperty(Object instance, String beanPropertyName) {
 
-        final Class beanClass = instance.getClass();
+        final Class<?> beanClass = instance.getClass();
 
         // Assure that the first letter is upper cased (it is a common
         // mistake to write firstName, not FirstName).
@@ -349,7 +349,7 @@ public class MethodProperty<T> extends AbstractProperty {
             }
 
             // Tests the parameter types
-            final Class[] c = m[i].getParameterTypes();
+            final Class<?>[] c = m[i].getParameterTypes();
             if (c.length != getArgs.length) {
 
                 // not the right amount of parameters, try next method
@@ -398,7 +398,7 @@ public class MethodProperty<T> extends AbstractProperty {
                 }
 
                 // Checks parameter compatibility
-                final Class[] c = m[i].getParameterTypes();
+                final Class<?>[] c = m[i].getParameterTypes();
                 if (c.length != setArgs.length) {
 
                     // not the right amount of parameters, try next method
@@ -474,7 +474,9 @@ public class MethodProperty<T> extends AbstractProperty {
      *            {@link #setValue(Object newValue)} is called.
      */
     @SuppressWarnings("unchecked")
-    public MethodProperty(Class type, Object instance, Method getMethod,
+    // cannot use "Class<? extends T>" because of automatic primitive type
+    // conversions
+    public MethodProperty(Class<?> type, Object instance, Method getMethod,
             Method setMethod, Object[] getArgs, Object[] setArgs,
             int setArgumentIndex) {
 
@@ -495,13 +497,13 @@ public class MethodProperty<T> extends AbstractProperty {
         }
 
         // Gets the return type from get method
-        type = convertPrimitiveType(type);
+        Class<? extends T> convertedType = (Class<? extends T>) convertPrimitiveType(type);
 
         this.getMethod = getMethod;
         this.setMethod = setMethod;
         setArguments(getArgs, setArgs, setArgumentIndex);
         this.instance = instance;
-        this.type = type;
+        this.type = convertedType;
     }
 
     /**
@@ -569,8 +571,7 @@ public class MethodProperty<T> extends AbstractProperty {
      * 
      * @return type of the Property
      */
-    @SuppressWarnings("unchecked")
-    public final Class getType() {
+    public final Class<? extends T> getType() {
         return type;
     }
 
@@ -593,9 +594,9 @@ public class MethodProperty<T> extends AbstractProperty {
      * 
      * @return the value of the Property
      */
-    public Object getValue() {
+    public T getValue() {
         try {
-            return getMethod.invoke(instance, getArgs);
+            return (T) getMethod.invoke(instance, getArgs);
         } catch (final Throwable e) {
             throw new MethodException(this, e);
         }
@@ -642,7 +643,6 @@ public class MethodProperty<T> extends AbstractProperty {
      *         native type directly or through <code>String</code>.
      * @see #invokeSetMethod(Object)
      */
-    @SuppressWarnings("unchecked")
     public void setValue(Object newValue) throws Property.ReadOnlyException,
             Property.ConversionException {
 
@@ -675,6 +675,7 @@ public class MethodProperty<T> extends AbstractProperty {
         // convert using a string constructor
         try {
             // Gets the string constructor
+            @SuppressWarnings("rawtypes")
             final Constructor constr = type
                     .getConstructor(new Class[] { String.class });
 

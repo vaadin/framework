@@ -19,7 +19,7 @@ import com.vaadin.data.Property;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class ObjectProperty<T> extends AbstractProperty {
+public class ObjectProperty<T> extends AbstractProperty<T> {
 
     /**
      * The value contained by the Property.
@@ -48,9 +48,8 @@ public class ObjectProperty<T> extends AbstractProperty {
     /**
      * Creates a new instance of ObjectProperty with the given value and type.
      * 
-     * Any value of type Object is accepted because, if the type class contains
-     * a string constructor, the toString of the value is used to create the new
-     * value. See {@link #setValue(Object)}.
+     * Since Vaadin 7, only values of the correct type are accepted, and no
+     * automatic conversions are performed.
      * 
      * @param value
      *            the Initial value of the Property.
@@ -58,7 +57,7 @@ public class ObjectProperty<T> extends AbstractProperty {
      *            the type of the value. The value must be assignable to given
      *            type.
      */
-    public ObjectProperty(Object value, Class<T> type) {
+    public ObjectProperty(T value, Class<T> type) {
 
         // Set the values
         this.type = type;
@@ -69,7 +68,7 @@ public class ObjectProperty<T> extends AbstractProperty {
      * Creates a new instance of ObjectProperty with the given value, type and
      * read-only mode status.
      * 
-     * Any value of type Object is accepted, see
+     * Since Vaadin 7, only the correct type of values is accepted, see
      * {@link #ObjectProperty(Object, Class)}.
      * 
      * @param value
@@ -80,7 +79,7 @@ public class ObjectProperty<T> extends AbstractProperty {
      * @param readOnly
      *            Sets the read-only mode.
      */
-    public ObjectProperty(Object value, Class<T> type, boolean readOnly) {
+    public ObjectProperty(T value, Class<T> type, boolean readOnly) {
         this(value, type);
         setReadOnly(readOnly);
     }

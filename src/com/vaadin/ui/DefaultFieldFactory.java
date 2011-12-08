@@ -35,19 +35,20 @@ public class DefaultFieldFactory implements FormFieldFactory, TableFieldFactory 
     protected DefaultFieldFactory() {
     }
 
-    public Field createField(Item item, Object propertyId, Component uiContext) {
+    public Field<?> createField(Item item, Object propertyId,
+            Component uiContext) {
         Class<?> type = item.getItemProperty(propertyId).getType();
-        Field field = createFieldByPropertyType(type);
+        Field<?> field = createFieldByPropertyType(type);
         field.setCaption(createCaptionByPropertyId(propertyId));
         return field;
     }
 
-    public Field createField(Container container, Object itemId,
+    public Field<?> createField(Container container, Object itemId,
             Object propertyId, Component uiContext) {
-        Property containerProperty = container.getContainerProperty(itemId,
+        Property<?> containerProperty = container.getContainerProperty(itemId,
                 propertyId);
         Class<?> type = containerProperty.getType();
-        Field field = createFieldByPropertyType(type);
+        Field<?> field = createFieldByPropertyType(type);
         field.setCaption(createCaptionByPropertyId(propertyId));
         return field;
     }
@@ -110,7 +111,7 @@ public class DefaultFieldFactory implements FormFieldFactory, TableFieldFactory 
      *            the type of the property
      * @return the most suitable generic {@link Field} for given type
      */
-    public static Field createFieldByPropertyType(Class<?> type) {
+    public static Field<?> createFieldByPropertyType(Class<?> type) {
         // Null typed properties can not be edited
         if (type == null) {
             return null;

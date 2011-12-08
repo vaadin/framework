@@ -36,11 +36,6 @@ public class CustomComponent extends AbstractComponentContainer {
     private Component root = null;
 
     /**
-     * Type of the component.
-     */
-    private String componentType = null;
-
-    /**
      * Constructs a new custom component.
      * 
      * <p>
@@ -115,41 +110,7 @@ public class CustomComponent extends AbstractComponentContainer {
                     + " can be painted");
         }
 
-        if (getComponentType() != null) {
-            target.addAttribute("type", getComponentType());
-        }
         root.paint(target);
-    }
-
-    /**
-     * Gets the component type.
-     * 
-     * The component type is textual type of the component. This is included in
-     * the UIDL as component tag attribute.
-     * 
-     * @deprecated not more useful as the whole tag system has been removed
-     * 
-     * @return the component type.
-     */
-    @Deprecated
-    public String getComponentType() {
-        return componentType;
-    }
-
-    /**
-     * Sets the component type.
-     * 
-     * The component type is textual type of the component. This is included in
-     * the UIDL as component tag attribute.
-     * 
-     * @deprecated not more useful as the whole tag system has been removed
-     * 
-     * @param componentType
-     *            the componentType to set.
-     */
-    @Deprecated
-    public void setComponentType(String componentType) {
-        this.componentType = componentType;
     }
 
     private class ComponentIterator implements Iterator<Component>,

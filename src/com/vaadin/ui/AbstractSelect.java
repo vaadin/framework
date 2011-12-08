@@ -55,7 +55,8 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
  * @since 5.0
  */
 @SuppressWarnings("serial")
-public abstract class AbstractSelect extends AbstractField implements
+// TODO currently cannot specify type more precisely in case of multi-select
+public abstract class AbstractSelect extends AbstractField<Object> implements
         Container, Container.Viewer, Container.PropertySetChangeListener,
         Container.PropertySetChangeNotifier, Container.ItemSetChangeNotifier,
         Container.ItemSetChangeListener {
@@ -729,7 +730,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * 
      * @see com.vaadin.data.Container#getContainerProperty(Object, Object)
      */
-    public Property getContainerProperty(Object itemId, Object propertyId) {
+    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
         return items.getContainerProperty(itemId, propertyId);
     }
 
@@ -1077,10 +1078,13 @@ public abstract class AbstractSelect extends AbstractField implements
             break;
 
         case ITEM_CAPTION_MODE_PROPERTY:
-            final Property p = getContainerProperty(itemId,
+            final Property<?> p = getContainerProperty(itemId,
                     getItemCaptionPropertyId());
             if (p != null) {
-                caption = p.toString();
+                Object value = p.getValue();
+                if (value != null) {
+                    caption = value.toString();
+                }
             }
             break;
         }
@@ -1125,7 +1129,7 @@ public abstract class AbstractSelect extends AbstractField implements
             return null;
         }
 
-        final Property ip = getContainerProperty(itemId,
+        final Property<?> ip = getContainerProperty(itemId,
                 getItemIconPropertyId());
         if (ip == null) {
             return null;
@@ -1704,7 +1708,7 @@ public abstract class AbstractSelect extends AbstractField implements
                 Collection<?> pids = i.getItemPropertyIds();
                 if (pids != null) {
                     for (Iterator<?> it = pids.iterator(); it.hasNext();) {
-                        Property p = i.getItemProperty(it.next());
+                        Property<?> p = i.getItemProperty(it.next());
                         if (p != null
                                 && p instanceof Property.ValueChangeNotifier) {
                             ((Property.ValueChangeNotifier) p)
@@ -1716,7 +1720,7 @@ public abstract class AbstractSelect extends AbstractField implements
                 }
                 break;
             case ITEM_CAPTION_MODE_PROPERTY:
-                final Property p = getContainerProperty(itemId,
+                final Property<?> p = getContainerProperty(itemId,
                         getItemCaptionPropertyId());
                 if (p != null && p instanceof Property.ValueChangeNotifier) {
                     ((Property.ValueChangeNotifier) p)

@@ -17,16 +17,16 @@ public class HeaderUpdateWhenNoRows extends TestBase {
         table.setHeight("100px");
         table.setImmediate(true);
 
-        CheckBox showHeaders = new CheckBox("Show headers");
+        final CheckBox showHeaders = new CheckBox("Show headers");
         showHeaders.addListener(new ValueChangeListener() {
+
             public void valueChange(ValueChangeEvent event) {
-                if ((Boolean) event.getProperty().getValue()) {
+                if (showHeaders.getValue()) {
                     table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
                 } else {
                     table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
                 }
             }
-
         });
 
         showHeaders.setImmediate(true);

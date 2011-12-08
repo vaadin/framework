@@ -29,16 +29,20 @@ import com.vaadin.data.Property;
  * standard "1.0" notation with more zeroes.
  * </p>
  * 
+ * @param T
+ *            type of the underlying property (a PropertyFormatter is always a
+ *            Property&lt;String&gt;)
+ * 
  * @author IT Mill Ltd.
  * @since 5.3.0
  */
 @SuppressWarnings("serial")
-public abstract class PropertyFormatter extends AbstractProperty implements
-        Property.Viewer, Property.ValueChangeListener,
+public abstract class PropertyFormatter<T> extends AbstractProperty<String>
+        implements Property.Viewer, Property.ValueChangeListener,
         Property.ReadOnlyStatusChangeListener {
 
     /** Datasource that stores the actual value. */
-    Property dataSource;
+    Property<T> dataSource;
 
     /**
      * Construct a new {@code PropertyFormatter} that is not connected to any
@@ -57,7 +61,7 @@ public abstract class PropertyFormatter extends AbstractProperty implements
      * @param propertyDataSource
      *            to connect this property to.
      */
-    public PropertyFormatter(Property propertyDataSource) {
+    public PropertyFormatter(Property<T> propertyDataSource) {
 
         setPropertyDataSource(propertyDataSource);
     }
@@ -68,7 +72,7 @@ public abstract class PropertyFormatter extends AbstractProperty implements
      * @return the current data source as a Property, or <code>null</code> if
      *         none defined.
      */
-    public Property getPropertyDataSource() {
+    public Property<T> getPropertyDataSource() {
         return dataSource;
     }
 
@@ -99,7 +103,7 @@ public abstract class PropertyFormatter extends AbstractProperty implements
                         .removeListener(this);
             }
             readOnly = isReadOnly();
-            prevValue = toString();
+            prevValue = getStringValue();
         }
 
         dataSource = newDataSource;
@@ -117,7 +121,7 @@ public abstract class PropertyFormatter extends AbstractProperty implements
         if (isReadOnly() != readOnly) {
             fireReadOnlyStatusChange();
         }
-        String newVal = toString();
+        String newVal = getStringValue();
         if ((prevValue == null && newVal != null)
                 || (prevValue != null && !prevValue.equals(newVal))) {
             fireValueChange();
@@ -125,7 +129,7 @@ public abstract class PropertyFormatter extends AbstractProperty implements
     }
 
     /* Documented in the interface */
-    public Class getType() {
+    public Class<String> getType() {
         return String.class;
     }
 
@@ -135,22 +139,20 @@ public abstract class PropertyFormatter extends AbstractProperty implements
      * @return If the datasource returns null, this is null. Otherwise this is
      *         String given by format().
      */
-    public Object getValue() {
-        return toString();
+    public String getValue() {
+        return getStringValue();
     }
 
     /**
-     * Get the formatted value.
+     * Get the formatted value. For PropertyFormatter, this is identical with
+     * {@link #getValue()}.
      * 
      * @return If the datasource returns null, this is null. Otherwise this is
      *         String given by format().
      */
     @Override
-    public String toString() {
-        if (dataSource == null) {
-            return null;
-        }
-        Object value = dataSource.getValue();
+    public String getStringValue() {
+        T value = dataSource == null ? null : dataSource.getValue();
         if (value == null) {
             return null;
         }
@@ -173,7 +175,7 @@ public abstract class PropertyFormatter extends AbstractProperty implements
      *            datasource.
      * @return
      */
-    abstract public String format(Object value);
+    abstract public String format(T value);
 
     /**
      * Parse string and convert it to format compatible with datasource.
@@ -187,7 +189,7 @@ public abstract class PropertyFormatter extends AbstractProperty implements
      *             Any type of exception can be thrown to indicate that the
      *             conversion was not succesful.
      */
-    abstract public Object parse(String formattedValue) throws Exception;
+    abstract public T parse(String formattedValue) throws Exception;
 
     /**
      * Sets the Property's read-only mode to the specified status.
@@ -215,7 +217,7 @@ public abstract class PropertyFormatter extends AbstractProperty implements
         } else {
             try {
                 dataSource.setValue(parse(newValue.toString()));
-                if (!newValue.equals(toString())) {
+                if (!newValue.equals(getStringValue())) {
                     fireValueChange();
                 }
             } catch (ConversionException e) {

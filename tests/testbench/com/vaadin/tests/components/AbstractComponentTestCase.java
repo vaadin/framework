@@ -126,7 +126,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
         public void execute(T c, Boolean enabled, Object data) {
             if (c instanceof Field) {
-                ((Field) c).setRequired(enabled);
+                ((Field<?>) c).setRequired(enabled);
             } else {
                 throw new IllegalArgumentException(c.getClass().getName()
                         + " is not a field and cannot be set to required");
@@ -136,7 +136,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
     protected Command<T, String> requiredErrorMessageCommand = new Command<T, String>() {
 
         public void execute(T c, String value, Object data) {
-            ((Field) c).setRequiredError(value);
+            ((Field<?>) c).setRequiredError(value);
         }
 
     };

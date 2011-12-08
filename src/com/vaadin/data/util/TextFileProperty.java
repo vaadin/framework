@@ -26,7 +26,7 @@ import java.nio.charset.Charset;
  * 
  */
 @SuppressWarnings("serial")
-public class TextFileProperty extends AbstractProperty {
+public class TextFileProperty extends AbstractProperty<String> {
 
     private File file;
     private Charset charset = null;
@@ -64,7 +64,7 @@ public class TextFileProperty extends AbstractProperty {
      * 
      * @see com.vaadin.data.Property#getType()
      */
-    public Class<?> getType() {
+    public Class<String> getType() {
         return String.class;
     }
 
@@ -73,7 +73,7 @@ public class TextFileProperty extends AbstractProperty {
      * 
      * @see com.vaadin.data.Property#getValue()
      */
-    public Object getValue() {
+    public String getValue() {
         if (file == null) {
             return null;
         }

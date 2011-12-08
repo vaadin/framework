@@ -59,10 +59,10 @@ public class EditableTableLeak extends TestBase {
     }
 
     private static class CachingFieldFactory extends DefaultFieldFactory {
-        private final HashMap<Object, HashMap<Object, Field>> cache = new HashMap<Object, HashMap<Object, Field>>();
+        private final HashMap<Object, HashMap<Object, Field<?>>> cache = new HashMap<Object, HashMap<Object, Field<?>>>();
 
         @Override
-        public Field createField(Container container, Object itemId,
+        public Field<?> createField(Container container, Object itemId,
                 Object propertyId, Component uiContext) {
             if (cache.containsKey(itemId)) {
                 if (cache.get(itemId) != null
@@ -70,10 +70,10 @@ public class EditableTableLeak extends TestBase {
                     return cache.get(itemId).get(propertyId);
                 }
             }
-            Field f = super.createField(container, itemId, propertyId,
+            Field<?> f = super.createField(container, itemId, propertyId,
                     uiContext);
             if (!cache.containsKey(itemId)) {
-                cache.put(itemId, new HashMap<Object, Field>());
+                cache.put(itemId, new HashMap<Object, Field<?>>());
             }
             cache.get(itemId).put(propertyId, f);
             return f;
@@ -88,7 +88,7 @@ public class EditableTableLeak extends TestBase {
         useFieldFactory.addListener(new ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
-                if ((Boolean) useFieldFactory.getValue()) {
+                if (useFieldFactory.getValue()) {
                     table.setTableFieldFactory(new CachingFieldFactory());
                 } else {
                     table.setTableFieldFactory(DefaultFieldFactory.get());

@@ -128,7 +128,7 @@ public class Ticket2204 extends Application.LegacyApplication {
             Form f = (Form) cc;
             f.setFormFieldFactory(new FormFieldFactory() {
 
-                public Field createField(Item item, Object propertyId,
+                public Field<?> createField(Item item, Object propertyId,
                         Component uiContext) {
                     formTextArea = new RichTextArea();
                     formTextArea.setVisible(false);

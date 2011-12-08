@@ -34,7 +34,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
     /**
      * Mapping from property id to property.
      */
-    private HashMap<Object, Property> map = new HashMap<Object, Property>();
+    private HashMap<Object, Property<?>> map = new HashMap<Object, Property<?>>();
 
     /**
      * List of all property ids to maintain the order.
@@ -57,7 +57,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      *            the identifier of the Property to get.
      * @return the Property with the given ID or <code>null</code>
      */
-    public Property getItemProperty(Object id) {
+    public Property<?> getItemProperty(Object id) {
         return map.get(id);
     }
 
@@ -143,7 +143,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
 
         for (final Iterator<?> i = getItemPropertyIds().iterator(); i.hasNext();) {
             final Object propertyId = i.next();
-            retValue += getItemProperty(propertyId).toString();
+            retValue += getItemProperty(propertyId).getValue();
             if (i.hasNext()) {
                 retValue += " ";
             }
@@ -163,7 +163,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * @VERSION@
      * @since 3.0
      */
-    private class PropertySetChangeEvent extends EventObject implements
+    private static class PropertySetChangeEvent extends EventObject implements
             Item.PropertySetChangeEvent {
 
         private PropertySetChangeEvent(Item source) {
@@ -262,7 +262,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
         npsi.list = list != null ? (LinkedList<Object>) list.clone() : null;
         npsi.propertySetChangeListeners = propertySetChangeListeners != null ? (LinkedList<PropertySetChangeListener>) propertySetChangeListeners
                 .clone() : null;
-        npsi.map = (HashMap<Object, Property>) map.clone();
+        npsi.map = (HashMap<Object, Property<?>>) map.clone();
 
         return npsi;
     }

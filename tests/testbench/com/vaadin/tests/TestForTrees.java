@@ -86,7 +86,11 @@ public class TestForTrees extends CustomComponent implements Handler {
         main.addComponent(ol);
         contextTree = t;
 
-        final Button b = new Button("refresh view", this, "createNewView");
+        final Button b = new Button("refresh view", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                createNewView();
+            }
+        });
         main.addComponent(b);
 
     }
@@ -142,6 +146,7 @@ public class TestForTrees extends CustomComponent implements Handler {
         t.addListener(new Listener() {
             public void componentEvent(Event event) {
                 status.addComponent(new Label(event.getClass().getName()));
+                // TODO should not use Field.toString()
                 status.addComponent(new Label("selected: "
                         + event.getSource().toString()));
             }

@@ -136,7 +136,8 @@ public class QueryContainer implements Container, Container.Ordered,
         for (int i = 1; i <= count; i++) {
             final String columnName = metadata.getColumnName(i);
             list.add(columnName);
-            final Property p = getContainerProperty(new Integer(1), columnName);
+            final Property<?> p = getContainerProperty(new Integer(1),
+                    columnName);
             propertyTypes.put(columnName,
                     p == null ? Object.class : p.getType());
         }
@@ -228,7 +229,7 @@ public class QueryContainer implements Container, Container.Ordered,
      *         otherwise.
      */
 
-    public synchronized Property getContainerProperty(Object itemId,
+    public synchronized Property<?> getContainerProperty(Object itemId,
             Object propertyId) {
         if (!(itemId instanceof Integer && propertyId instanceof String)) {
             return null;
@@ -531,7 +532,7 @@ public class QueryContainer implements Container, Container.Ordered,
          *            identifier of the Property to get
          * @return the Property with the given ID or <code>null</code>
          */
-        public Property getItemProperty(Object propertyId) {
+        public Property<?> getItemProperty(Object propertyId) {
             return getContainerProperty(id, propertyId);
         }
 

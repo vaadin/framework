@@ -34,6 +34,9 @@ import java.util.regex.Pattern;
 import com.vaadin.annotations.RootInitRequiresBrowserDetals;
 import com.vaadin.annotations.RootTheme;
 import com.vaadin.annotations.RootWidgetset;
+import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ConverterFactory;
+import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.CombinedRequest;
@@ -50,6 +53,7 @@ import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 import com.vaadin.terminal.gwt.server.ChangeVariablesErrorEvent;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.Window;
 
@@ -511,6 +515,13 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * left unhandled.
      */
     private Terminal.ErrorListener errorHandler = this;
+
+    /**
+     * The converter factory that is used for all fields in the application.
+     */
+    // private ConverterFactory converterFactory = new
+    // DefaultConverterFactory();
+    private static ConverterFactory converterFactory = new DefaultConverterFactory();
 
     private LinkedList<RequestHandler> requestHandlers = new LinkedList<RequestHandler>();
 
@@ -1196,6 +1207,42 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public void setErrorHandler(Terminal.ErrorListener errorHandler) {
         this.errorHandler = errorHandler;
+    }
+
+    /**
+     * Gets the {@link ConverterFactory} used to locate a suitable
+     * {@link Converter} for fields in the application.
+     * 
+     * See {@link #setConverterFactory(ConverterFactory)} for more details
+     * 
+     * @return The converter factory used in the application
+     */
+    // public ConverterFactory getConverterFactory() {
+    // return converterFactory;
+    // }
+    // FIXME: Should not be static
+    public static ConverterFactory getConverterFactory() {
+        return converterFactory;
+    }
+
+    /**
+     * Sets the {@link ConverterFactory} used to locate a suitable
+     * {@link Converter} for fields in the application.
+     * 
+     * The {@link ConverterFactory} is used to find a suitable converter when
+     * binding data to a UI component and the data type does not match the UI
+     * component type, e.g. binding a Double to a TextField (which is based on a
+     * String).
+     * 
+     * The {@link Converter} for an individual field can be overridden using
+     * {@link AbstractField#setValueConverter(Converter)}.
+     * 
+     * @param converterFactory
+     *            The converter factory used in the application
+     */
+    // FIXME: Should not be static
+    public static void setConverterFactory(ConverterFactory converterFactory) {
+        Application.converterFactory = converterFactory;
     }
 
     /**

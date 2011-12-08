@@ -130,7 +130,7 @@ public class Ticket2998 extends Application.LegacyApplication {
                 close();
             } else {
                 date.setValue(run.getDate());
-                kilomiters.setValue(run.getKilometers());
+                kilomiters.setValue(String.valueOf(run.getKilometers()));
                 title.setValue(run.getTitle());
                 if (getParent() == null) {
                     workoutLog.getMainWindow().addWindow(this);
@@ -146,7 +146,7 @@ public class Ticket2998 extends Application.LegacyApplication {
         }
 
         @Override
-        public Field createField(Container container, Object itemId,
+        public Field<?> createField(Container container, Object itemId,
                 Object propertyId, Component uiContext) {
 
             /*
@@ -163,7 +163,7 @@ public class Ticket2998 extends Application.LegacyApplication {
                 return getSecondaryTypesList(itemId);
             }
 
-            final Field f = super.createField(container, itemId, propertyId,
+            final Field<?> f = super.createField(container, itemId, propertyId,
                     uiContext);
             if (f != null) {
                 if (f instanceof TextField) {
@@ -173,23 +173,18 @@ public class Ticket2998 extends Application.LegacyApplication {
                 if (propertyId.equals("kilometers")) {
                     f.setWidth("4em");
                     f.addValidator(new Validator() {
-                        public boolean isValid(Object value) {
+                        public void validate(Object value)
+                                throws InvalidValueException {
+                            // FIXME this does not follow the standard pattern
+                            // for validators and has side effects!
                             try {
                                 @SuppressWarnings("unused")
                                 float f = Float.parseFloat((String) value);
-                                return true;
                             } catch (Exception e) {
                                 f.getRoot()
                                         .showNotification("Bad number value");
                                 f.setValue(0);
-                                return false;
                             }
-                        }
-
-                        public void validate(Object value)
-                                throws InvalidValueException {
-                            // TODO Auto-generated method stub
-
                         }
                     });
                 }
@@ -203,7 +198,7 @@ public class Ticket2998 extends Application.LegacyApplication {
 
         private Map<Object, ListSelect> workoutIdToList = new HashMap<Object, ListSelect>();
 
-        private Field getSecondaryTypesList(Object itemId) {
+        private Field<?> getSecondaryTypesList(Object itemId) {
             ListSelect list = workoutIdToList.get(itemId);
             if (list == null) {
                 list = new ListSelect();
@@ -222,7 +217,7 @@ public class Ticket2998 extends Application.LegacyApplication {
 
         private Map<Object, ComboBox> workoutIdToCombobox = new HashMap<Object, ComboBox>();
 
-        private Field getTrainingTypeComboboxFor(Object itemId) {
+        private Field<?> getTrainingTypeComboboxFor(Object itemId) {
             ComboBox cb = workoutIdToCombobox.get(itemId);
             if (cb == null) {
                 final ComboBox cb2 = new ComboBox();

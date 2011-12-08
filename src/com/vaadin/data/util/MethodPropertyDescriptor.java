@@ -123,7 +123,7 @@ public class MethodPropertyDescriptor<BT> implements
         return propertyType;
     }
 
-    public Property createProperty(Object bean) {
+    public Property<?> createProperty(Object bean) {
         return new MethodProperty<Object>(propertyType, bean, readMethod,
                 writeMethod);
     }

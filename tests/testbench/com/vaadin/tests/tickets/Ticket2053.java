@@ -37,7 +37,7 @@ public class Ticket2053 extends Application.LegacyApplication {
                 tf.addListener(new Property.ValueChangeListener() {
                     public void valueChange(ValueChangeEvent event) {
                         main.addComponent(new Label(name + " send text:"
-                                + tf.toString()));
+                                + tf.getStringValue()));
                     }
                 });
                 for (int i = 0; i < 3; i++) {

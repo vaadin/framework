@@ -31,12 +31,8 @@ public class Ticket2107 extends Application.LegacyApplication {
         });
         tf.addValidator(new Validator() {
 
-            public boolean isValid(Object value) {
-                return value != null && value.toString().length() > 3;
-            }
-
             public void validate(Object value) throws InvalidValueException {
-                if (!isValid(value)) {
+                if (value == null || value.toString().length() <= 3) {
                     throw new InvalidValueException(
                             "Text length must exceed 3 characters");
                 }

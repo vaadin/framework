@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.vaadin.data.Validator;
+import com.vaadin.data.validator.CompositeValidator.CombinationMode;
 
 /**
  * The <code>CompositeValidator</code> allows you to chain (compose) many
@@ -128,38 +129,6 @@ public class CompositeValidator extends AbstractValidator {
                 throw first;
             }
         }
-    }
-
-    /**
-     * Checks the validity of the the given value. The value is valid, if:
-     * <ul>
-     * <li>{@link CombinationMode.AND}: All of the sub-validators are valid
-     * <li>{@link CombinationMode.OR}: Any of the sub-validators are valid
-     * </ul>
-     * 
-     * @param value
-     *            the value to check.
-     */
-    public boolean isValid(Object value) {
-        switch (mode) {
-        case AND:
-            for (Validator v : validators) {
-                if (!v.isValid(value)) {
-                    return false;
-                }
-            }
-            return true;
-
-        case OR:
-            for (Validator v : validators) {
-                if (v.isValid(value)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        throw new IllegalStateException(
-                "The validator is in unsupported operation mode");
     }
 
     /**

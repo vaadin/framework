@@ -17,7 +17,6 @@ import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.TableQuery;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Root;
@@ -65,7 +64,7 @@ public class CheckboxUpdateProblem extends Application.LegacyApplication
 
     public void valueChange(ValueChangeEvent event) {
 
-        Property property = event.getProperty();
+        Property<?> property = event.getProperty();
         if (property == testList) {
             Item item = testList.getItem(testList.getValue());
 
@@ -85,7 +84,7 @@ public class CheckboxUpdateProblem extends Application.LegacyApplication
             setWriteThrough(false);
             setInvalidCommitted(false);
 
-            save = new Button("Save", (ClickListener) this);
+            save = new Button("Save", this);
             getFooter().addComponent(save);
             getFooter().setVisible(false);
         }

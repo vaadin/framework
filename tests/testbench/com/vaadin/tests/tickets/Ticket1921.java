@@ -8,6 +8,7 @@ import com.vaadin.terminal.RequestHandler;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
@@ -28,7 +29,11 @@ public class Ticket1921 extends Application.LegacyApplication implements
         setTheme("tests-tickets");
         inner = new VerticalLayout();
         outer.addComponent(inner);
-        button = new Button("foo", this, "newState");
+        button = new Button("foo", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                newState();
+            }
+        });
         inner.addComponent(button);
 
         outer.setStyleName("red");

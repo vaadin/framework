@@ -21,8 +21,4 @@ public class NativeButton extends Button {
         super(caption, listener);
     }
 
-    public NativeButton(String caption, Object target, String methodName) {
-        super(caption, target, methodName);
-    }
-
 }

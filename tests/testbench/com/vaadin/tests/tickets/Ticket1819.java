@@ -50,7 +50,7 @@ public class Ticket1819 extends com.vaadin.Application.LegacyApplication {
                 StringBuffer msg = new StringBuffer();
                 for (Iterator<Select> i = listOfAllFields.iterator(); i
                         .hasNext();) {
-                    AbstractField af = i.next();
+                    AbstractField<?> af = i.next();
                     msg.append("<h1>" + af.getCaption() + "</h1>\n");
                     msg.append("Value=" + af.getValue() + "<br/>\n");
                 }

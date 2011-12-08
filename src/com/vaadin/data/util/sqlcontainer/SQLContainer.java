@@ -227,7 +227,7 @@ public class SQLContainer implements Container, Container.Filterable,
      * @see com.vaadin.data.Container#getContainerProperty(java.lang.Object,
      * java.lang.Object)
      */
-    public Property getContainerProperty(Object itemId, Object propertyId) {
+    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
         Item item = getItem(itemId);
         if (item == null) {
             return null;
@@ -1435,7 +1435,7 @@ public class SQLContainer implements Container, Container.Filterable,
      * Simple ItemSetChangeEvent implementation.
      */
     @SuppressWarnings("serial")
-    public class ItemSetChangeEvent extends EventObject implements
+    public static class ItemSetChangeEvent extends EventObject implements
             Container.ItemSetChangeEvent {
 
         private ItemSetChangeEvent(SQLContainer source) {

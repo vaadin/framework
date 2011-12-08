@@ -33,7 +33,7 @@ public class TextChangeEventsWithNonImmediateValueChange extends TestBase {
         tf.addListener(new ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
-                l.log("Value change:" + event.getProperty().toString());
+                l.log("Value change:" + event.getProperty().getValue());
             }
         });
 

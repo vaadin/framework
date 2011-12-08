@@ -35,7 +35,7 @@ public final class IsNull implements Filter {
 
     public boolean passesFilter(Object itemId, Item item)
             throws UnsupportedOperationException {
-        final Property p = item.getItemProperty(getPropertyId());
+        final Property<?> p = item.getItemProperty(getPropertyId());
         if (null == p) {
             return false;
         }

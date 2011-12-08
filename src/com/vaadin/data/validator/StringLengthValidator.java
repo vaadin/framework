@@ -61,7 +61,8 @@ public class StringLengthValidator extends AbstractValidator {
      *            the value to validate.
      * @return <code>true</code> for valid value, otherwise <code>false</code>.
      */
-    public boolean isValid(Object value) {
+    @Override
+    protected boolean internalIsValid(Object value) {
         if (value == null) {
             return allowNull;
         }

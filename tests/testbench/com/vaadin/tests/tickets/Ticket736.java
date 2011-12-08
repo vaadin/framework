@@ -4,11 +4,13 @@ import com.vaadin.Application;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
@@ -39,8 +41,19 @@ public class Ticket736 extends Application.LegacyApplication {
         // Select to use buffered mode for editing to enable commit and discard
         f.setWriteThrough(false);
         f.setReadThrough(false);
-        Button commit = new Button("Commit", f, "commit");
-        Button discard = new Button("Discard", f, "discard");
+        Button commit = new Button("Commit", new ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                f.commit();
+            }
+        });
+        Button discard = new Button("Discard", new ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                f.discard();
+            }
+
+        });
         HorizontalLayout ol = new HorizontalLayout();
         ol.setHeight("3em");
         ol.addComponent(commit);
@@ -49,8 +62,9 @@ public class Ticket736 extends Application.LegacyApplication {
         f.setFooter(ol);
 
         // Add some validators for the form
-        f.getField("zip").addValidator(new IsInteger());
-        f.getField("zip").setDescription("Jepjep");
+        f.getField("zip").addValidator(
+                new IntegerValidator("'{0}' is not a number"));
+        ((AbstractComponent) f.getField("zip")).setDescription("Jepjep");
         ((AbstractComponent) f.getField("zip")).setIcon(new ThemeResource(
                 "../runo/icons/16/folder.png"));
         f.getField("state").addValidator(new IsValidState());
@@ -84,7 +98,7 @@ public class Ticket736 extends Application.LegacyApplication {
     }
 
     /** Address pojo. */
-    public class Address {
+    public static class Address {
         String name = "";
         String street = "";
         String zip = "";
@@ -148,44 +162,18 @@ public class Ticket736 extends Application.LegacyApplication {
 
     }
 
-    /** Simple validator for checking if the validated value is an integer */
-    class IsInteger implements Validator {
-
-        public boolean isValid(Object value) {
-            try {
-                Integer.parseInt("" + value);
-                return true;
-            } catch (NumberFormatException e) {
-                return false;
-            }
-        }
+    /** Simple state validator */
+    static class IsValidState implements Validator {
 
         public void validate(Object value) throws InvalidValueException {
-            if (!isValid(value)) {
-                throw new InvalidValueException("'" + value
-                        + "' is not a number");
-            }
-        }
-    }
-
-    /** Simple state validator */
-    class IsValidState implements Validator {
-
-        public boolean isValid(Object value) {
             // Empty and null are accepted values
             if (value == null || "".equals("" + value)) {
-                return true;
+                return;
             }
 
             // Otherwise state must be two capital letter combo
-            if (value.toString().length() != 2) {
-                return false;
-            }
-            return value.toString().equals(("" + value).toUpperCase());
-        }
-
-        public void validate(Object value) throws InvalidValueException {
-            if (!isValid(value)) {
+            if (value.toString().length() != 2
+                    || !value.toString().equals(("" + value).toUpperCase())) {
                 throw new InvalidValueException(
                         "State must be either two capital letter abreviation or left empty");
             }

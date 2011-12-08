@@ -104,8 +104,9 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
                         + " not found");
             }
             try {
-                Property property = pd.createProperty(bean);
-                return (IDTYPE) property.getValue();
+                Property<IDTYPE> property = (Property<IDTYPE>) pd
+                        .createProperty(bean);
+                return property.getValue();
             } catch (MethodException e) {
                 throw new IllegalArgumentException(e);
             }
@@ -256,7 +257,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @see com.vaadin.data.Container#getContainerProperty(java.lang.Object,
      * java.lang.Object)
      */
-    public Property getContainerProperty(Object itemId, Object propertyId) {
+    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
         Item item = getItem(itemId);
         if (item == null) {
             return null;
@@ -371,7 +372,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      *            The id of the property
      */
     private void addValueChangeListener(Item item, Object propertyId) {
-        Property property = item.getItemProperty(propertyId);
+        Property<?> property = item.getItemProperty(propertyId);
         if (property instanceof ValueChangeNotifier) {
             // avoid multiple notifications for the same property if
             // multiple filters are in use
@@ -390,7 +391,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      *            The id of the property
      */
     private void removeValueChangeListener(Item item, Object propertyId) {
-        Property property = item.getItemProperty(propertyId);
+        Property<?> property = item.getItemProperty(propertyId);
         if (property instanceof ValueChangeNotifier) {
             ((ValueChangeNotifier) property).removeListener(this);
         }
@@ -746,9 +747,9 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         }
 
         model.put(propertyId, propertyDescriptor);
-        for (BeanItem item : itemIdToItem.values()) {
-            item.addItemProperty(propertyId, propertyDescriptor
-                    .createProperty((BEANTYPE) item.getBean()));
+        for (BeanItem<BEANTYPE> item : itemIdToItem.values()) {
+            item.addItemProperty(propertyId,
+                    propertyDescriptor.createProperty(item.getBean()));
         }
 
         // Sends a change event
@@ -767,12 +768,46 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @see NestedMethodProperty
      * 
      * @param propertyId
-     * @param propertyType
      * @return true if the property was added
      */
     public boolean addNestedContainerProperty(String propertyId) {
         return addContainerProperty(propertyId, new NestedPropertyDescriptor(
                 propertyId, type));
+    }
+
+    /**
+     * Adds a nested container properties for all sub-properties of a named
+     * property to the container. The named property itself is removed from the
+     * model as its subproperties are added.
+     * 
+     * All intermediate getters must exist and must return non-null values when
+     * the property value is accessed.
+     * 
+     * @see NestedMethodProperty
+     * @see #addNestedContainerProperty(String)
+     * 
+     * @param propertyId
+     */
+    @SuppressWarnings("unchecked")
+    public void addNestedContainerBean(String propertyId) {
+        Class<?> propertyType = getType(propertyId);
+        LinkedHashMap<String, VaadinPropertyDescriptor<Object>> pds = BeanItem
+                .getPropertyDescriptors((Class<Object>) propertyType);
+        for (String subPropertyId : pds.keySet()) {
+            String qualifiedPropertyId = propertyId + "." + subPropertyId;
+            NestedPropertyDescriptor<BEANTYPE> pd = new NestedPropertyDescriptor<BEANTYPE>(
+                    qualifiedPropertyId, (Class<BEANTYPE>) type);
+            model.put(qualifiedPropertyId, pd);
+            model.remove(propertyId);
+            for (BeanItem<BEANTYPE> item : itemIdToItem.values()) {
+                item.addItemProperty(propertyId,
+                        pd.createProperty(item.getBean()));
+                item.removeItemProperty(propertyId);
+            }
+        }
+
+        // Sends a change event
+        fireContainerPropertySetChange();
     }
 
     @Override

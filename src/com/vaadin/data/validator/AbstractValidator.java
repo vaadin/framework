@@ -21,6 +21,11 @@ import com.vaadin.data.Validator;
  * {@link InvalidValueException#getHtmlMessage()} and throw such exceptions from
  * {@link #validate(Object)}.
  * </p>
+ * <p>
+ * Since Vaadin 7, subclasses can either implement {@link #validate(Object)}
+ * directly or implement {@link #internalIsValid(Object)} when migrating legacy
+ * applications. To check validity, {@link #validate(Object)} should be used.
+ * </p>
  * 
  * @author IT Mill Ltd.
  * @version
@@ -47,8 +52,46 @@ public abstract class AbstractValidator implements Validator {
         this.errorMessage = errorMessage;
     }
 
+    /**
+     * Since Vaadin 7, subclasses of AbstractValidator should override
+     * {@link #internalIsValid(Object)} or {@link #validate(Object)} instead of
+     * {@link #isValid(Object)}. {@link #validate(Object)} should be used to
+     * check values.
+     * 
+     * This method may disappear in future Vaadin versions.
+     * 
+     * @param value
+     * @return true if the value is valid
+     * @deprecated override {@link #internalIsValid(Object)} or
+     *             {@link #validate(Object)} instead of {@link #isValid(Object)}
+     *             and use {@link #validate(Object)} to check value validity
+     */
+    @Deprecated
+    protected final boolean isValid(Object value) {
+        try {
+            validate(value);
+            return true;
+        } catch (InvalidValueException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Internally check the validity of a value. This method can be overridden
+     * in subclasses if customization of the error message is not needed -
+     * otherwise, subclasses should override {@link #validate(Object)} instead.
+     * 
+     * This method should not be called from outside the validator class itself.
+     * 
+     * @param value
+     * @return
+     */
+    protected boolean internalIsValid(Object value) {
+        return false;
+    }
+
     public void validate(Object value) throws InvalidValueException {
-        if (!isValid(value)) {
+        if (!internalIsValid(value)) {
             String message = errorMessage.replace("{0}", String.valueOf(value));
             throw new InvalidValueException(message);
         }

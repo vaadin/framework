@@ -37,7 +37,7 @@ public class CaptionsInLayouts extends TestBase {
     private HorizontalLayout horizontalLayout;
     private GridLayout gridLayout;
     private FormLayout formLayout;
-    private List<AbstractField> components = new ArrayList<AbstractField>();
+    private List<AbstractField<?>> components = new ArrayList<AbstractField<?>>();
     private CssLayout cssLayout;
     private HorizontalLayout layoutParent = new HorizontalLayout();
 
@@ -69,7 +69,7 @@ public class CaptionsInLayouts extends TestBase {
     }
 
     protected void prependCaptions(String prepend) {
-        for (AbstractField c : components) {
+        for (AbstractField<?> c : components) {
             c.setCaption(prepend + c.getCaption());
         }
 
@@ -102,14 +102,14 @@ public class CaptionsInLayouts extends TestBase {
     }
 
     protected void setRequired(boolean value) {
-        for (AbstractField c : components) {
+        for (AbstractField<?> c : components) {
             c.setRequired(value);
         }
 
     }
 
     protected void setIcon(boolean value) {
-        for (AbstractField c : components) {
+        for (AbstractField<?> c : components) {
             if (!value) {
                 c.setIcon(null);
             } else {
@@ -133,7 +133,7 @@ public class CaptionsInLayouts extends TestBase {
     }
 
     protected void setError(boolean value) {
-        for (AbstractField c : components) {
+        for (AbstractField<?> c : components) {
             if (value) {
                 c.setComponentError(new UserError("error"));
             } else {

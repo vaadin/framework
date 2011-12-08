@@ -595,8 +595,8 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
                     public void buttonClick(ClickEvent event) {
                         event.getButton()
                                 .getRoot()
-                                .showNotification((String) title.getValue(),
-                                        (String) message.getValue());
+                                .showNotification(title.getValue(),
+                                        message.getValue());
 
                     }
                 });
@@ -607,8 +607,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
             public void buttonClick(ClickEvent event) {
                 event.getButton()
                         .getRoot()
-                        .showNotification((String) title.getValue(),
-                                (String) message.getValue(),
+                        .showNotification(title.getValue(), message.getValue(),
                                 Notification.TYPE_WARNING_MESSAGE);
 
             }
@@ -620,8 +619,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
             public void buttonClick(ClickEvent event) {
                 event.getButton()
                         .getRoot()
-                        .showNotification((String) title.getValue(),
-                                (String) message.getValue(),
+                        .showNotification(title.getValue(), message.getValue(),
                                 Notification.TYPE_ERROR_MESSAGE);
 
             }
@@ -633,8 +631,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
             public void buttonClick(ClickEvent event) {
                 event.getButton()
                         .getRoot()
-                        .showNotification((String) title.getValue(),
-                                (String) message.getValue(),
+                        .showNotification(title.getValue(), message.getValue(),
                                 Notification.TYPE_TRAY_NOTIFICATION);
 
             }

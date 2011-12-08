@@ -8,12 +8,10 @@ public class Person implements Serializable {
     private String lastName = "";
     private String email = "";
     private String phoneNumber = "";
-    private String streetAddress = "";
-    private Integer postalCode = null;
-    private String city = "";
+    private Address address = new Address();
 
     public Person() {
-
+        address = new Address();
     }
 
     public Person(String firstName, String lastName, String email,
@@ -23,9 +21,7 @@ public class Person implements Serializable {
         setLastName(lastName);
         setEmail(email);
         setPhoneNumber(phoneNumber);
-        setStreetAddress(streetAddress);
-        setPostalCode(postalCode);
-        setCity(city);
+        address = new Address(streetAddress, postalCode, city);
     }
 
     /**
@@ -89,48 +85,12 @@ public class Person implements Serializable {
     }
 
     /**
-     * @return the streetAddress
+     * Returns the address where the person lives.
+     * 
+     * @return address (not null)
      */
-    public String getStreetAddress() {
-        return streetAddress;
-    }
-
-    /**
-     * @param streetAddress
-     *            the streetAddress to set
-     */
-    public void setStreetAddress(String streetAddress) {
-        this.streetAddress = streetAddress;
-    }
-
-    /**
-     * @return the postalCode
-     */
-    public Integer getPostalCode() {
-        return postalCode;
-    }
-
-    /**
-     * @param postalCode
-     *            the postalCode to set
-     */
-    public void setPostalCode(Integer postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    /**
-     * @return the city
-     */
-    public String getCity() {
-        return city;
-    }
-
-    /**
-     * @param city
-     *            the city to set
-     */
-    public void setCity(String city) {
-        this.city = city;
+    public Address getAddress() {
+        return address;
     }
 
 }

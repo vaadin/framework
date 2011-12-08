@@ -11,9 +11,6 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import com.vaadin.data.Property;
-import com.vaadin.data.util.MethodPropertyDescriptor;
-import com.vaadin.data.util.NestedPropertyDescriptor;
-import com.vaadin.data.util.VaadinPropertyDescriptor;
 import com.vaadin.data.util.NestedMethodPropertyTest.Person;
 
 public class PropertyDescriptorTest extends TestCase {
@@ -33,11 +30,12 @@ public class PropertyDescriptorTest extends TestCase {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         new ObjectOutputStream(baos).writeObject(descriptor);
+        @SuppressWarnings("unchecked")
         VaadinPropertyDescriptor<Person> descriptor2 = (VaadinPropertyDescriptor<Person>) new ObjectInputStream(
                 new ByteArrayInputStream(baos.toByteArray())).readObject();
 
-        Property property = descriptor2
-                .createProperty(new Person("John", null));
+        Property<?> property = descriptor2.createProperty(new Person("John",
+                null));
         Assert.assertEquals("John", property.getValue());
     }
 
@@ -47,10 +45,11 @@ public class PropertyDescriptorTest extends TestCase {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         new ObjectOutputStream(baos).writeObject(pd);
+        @SuppressWarnings("unchecked")
         VaadinPropertyDescriptor<Person> pd2 = (VaadinPropertyDescriptor<Person>) new ObjectInputStream(
                 new ByteArrayInputStream(baos.toByteArray())).readObject();
 
-        Property property = pd2.createProperty(new Person("John", null));
+        Property<?> property = pd2.createProperty(new Person("John", null));
         Assert.assertEquals("John", property.getValue());
     }
 }

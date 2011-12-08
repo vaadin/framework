@@ -30,7 +30,7 @@ public interface Item extends Serializable {
      *            identifier of the Property to get
      * @return the Property with the given ID or <code>null</code>
      */
-    public Property getItemProperty(Object id);
+    public Property<?> getItemProperty(Object id);
 
     /**
      * Gets the collection of IDs of all Properties stored in the Item.

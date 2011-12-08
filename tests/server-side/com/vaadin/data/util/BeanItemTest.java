@@ -12,11 +12,6 @@ import java.util.Map;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.MethodProperty;
-import com.vaadin.data.util.MethodPropertyDescriptor;
-import com.vaadin.data.util.VaadinPropertyDescriptor;
-
 /**
  * Test BeanItem specific features.
  * 
@@ -322,7 +317,7 @@ public class BeanItemTest extends TestCase {
                 MyClass.class.getDeclaredMethod("getName"),
                 MyClass.class.getDeclaredMethod("setName", String.class));
 
-        BeanItem<MyClass> item = new BeanItem(new MyClass("bean1"));
+        BeanItem<MyClass> item = new BeanItem<MyClass>(new MyClass("bean1"));
 
         Assert.assertEquals(6, item.getItemPropertyIds().size());
         Assert.assertEquals(null, item.getItemProperty("myname"));

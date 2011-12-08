@@ -11,7 +11,7 @@ public class TestReadOnlyValidation {
     public void testIntegerValidation() {
         TextField field = new TextField();
         field.addValidator(new IntegerValidator("Enter a Valid Number"));
-        field.setValue(Integer.valueOf(10));
+        field.setValue(String.valueOf(10));
         field.validate();
     }
 }

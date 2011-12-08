@@ -30,12 +30,15 @@ import java.io.Serializable;
  * needs to be changed through the implementing class.
  * </p>
  * 
+ * @param T
+ *            type of values of the property
+ * 
  * @author IT Mill Ltd
  * @version
  * @VERSION@
  * @since 3.0
  */
-public interface Property extends Serializable {
+public interface Property<T> extends Serializable {
 
     /**
      * Gets the value stored in the Property. The returned object is compatible
@@ -43,7 +46,7 @@ public interface Property extends Serializable {
      * 
      * @return the value stored in the Property
      */
-    public Object getValue();
+    public T getValue();
 
     /**
      * Sets the value of the Property.
@@ -52,37 +55,22 @@ public interface Property extends Serializable {
      * missing, one should declare the Property to be in read-only mode and
      * throw <code>Property.ReadOnlyException</code> in this function.
      * </p>
-     * Note : It is not required, but highly recommended to support setting the
-     * value also as a <code>String</code> in addition to the native type of the
-     * Property (as given by the <code>getType</code> method). If the
-     * <code>String</code> conversion fails or is unsupported, the method should
-     * throw <code>Property.ConversionException</code>. The string conversion
-     * should at least understand the format returned by the
-     * <code>toString</code> method of the Property.
+     * 
+     * Note : Since Vaadin 7.0, setting the value of a non-String property as a
+     * String is no longer supported.
      * 
      * @param newValue
      *            New value of the Property. This should be assignable to the
-     *            type returned by getType, but also String type should be
-     *            supported
+     *            type returned by getType
      * 
      * @throws Property.ReadOnlyException
      *             if the object is in read-only mode
      * @throws Property.ConversionException
      *             if newValue can't be converted into the Property's native
-     *             type directly or through String
+     *             type directly or using a converter
      */
     public void setValue(Object newValue) throws Property.ReadOnlyException,
             Property.ConversionException;
-
-    /**
-     * Returns the value of the Property in human readable textual format. The
-     * return value should be assignable to the <code>setValue</code> method if
-     * the Property is not in read-only mode.
-     * 
-     * @return <code>String</code> representation of the value stored in the
-     *         Property
-     */
-    public String toString();
 
     /**
      * Returns the type of the Property. The methods <code>getValue</code> and
@@ -93,7 +81,7 @@ public interface Property extends Serializable {
      * 
      * @return type of the Property
      */
-    public Class<?> getType();
+    public Class<? extends T> getType();
 
     /**
      * Tests if the Property is in read-only mode. In read-only mode calls to

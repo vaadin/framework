@@ -10,8 +10,6 @@ import java.io.Serializable;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import com.vaadin.data.util.NestedMethodProperty;
-
 public class NestedMethodPropertyTest extends TestCase {
 
     public static class Address implements Serializable {
@@ -126,34 +124,34 @@ public class NestedMethodPropertyTest extends TestCase {
     }
 
     public void testSingleLevelNestedSimpleProperty() {
-        NestedMethodProperty nameProperty = new NestedMethodProperty(vaadin,
-                "name");
+        NestedMethodProperty<String> nameProperty = new NestedMethodProperty<String>(
+                vaadin, "name");
 
         Assert.assertEquals(String.class, nameProperty.getType());
         Assert.assertEquals("Vaadin", nameProperty.getValue());
     }
 
     public void testSingleLevelNestedObjectProperty() {
-        NestedMethodProperty managerProperty = new NestedMethodProperty(vaadin,
-                "manager");
+        NestedMethodProperty<Person> managerProperty = new NestedMethodProperty<Person>(
+                vaadin, "manager");
 
         Assert.assertEquals(Person.class, managerProperty.getType());
         Assert.assertEquals(joonas, managerProperty.getValue());
     }
 
     public void testMultiLevelNestedProperty() {
-        NestedMethodProperty managerNameProperty = new NestedMethodProperty(
+        NestedMethodProperty<String> managerNameProperty = new NestedMethodProperty<String>(
                 vaadin, "manager.name");
-        NestedMethodProperty addressProperty = new NestedMethodProperty(vaadin,
-                "manager.address");
-        NestedMethodProperty streetProperty = new NestedMethodProperty(vaadin,
-                "manager.address.street");
-        NestedMethodProperty postalCodePrimitiveProperty = new NestedMethodProperty(
+        NestedMethodProperty<Address> addressProperty = new NestedMethodProperty<Address>(
+                vaadin, "manager.address");
+        NestedMethodProperty<String> streetProperty = new NestedMethodProperty<String>(
+                vaadin, "manager.address.street");
+        NestedMethodProperty<Integer> postalCodePrimitiveProperty = new NestedMethodProperty<Integer>(
                 vaadin, "manager.address.postalCodePrimitive");
-        NestedMethodProperty postalCodeObjectProperty = new NestedMethodProperty(
+        NestedMethodProperty<Integer> postalCodeObjectProperty = new NestedMethodProperty<Integer>(
                 vaadin, "manager.address.postalCodeObject");
-        NestedMethodProperty booleanProperty = new NestedMethodProperty(vaadin,
-                "manager.address.boolean");
+        NestedMethodProperty<Boolean> booleanProperty = new NestedMethodProperty<Boolean>(
+                vaadin, "manager.address.boolean");
 
         Assert.assertEquals(String.class, managerNameProperty.getType());
         Assert.assertEquals("Joonas", managerNameProperty.getValue());
@@ -166,25 +164,27 @@ public class NestedMethodPropertyTest extends TestCase {
 
         Assert.assertEquals(Integer.class,
                 postalCodePrimitiveProperty.getType());
-        Assert.assertEquals(20540, postalCodePrimitiveProperty.getValue());
+        Assert.assertEquals(Integer.valueOf(20540),
+                postalCodePrimitiveProperty.getValue());
 
         Assert.assertEquals(Integer.class, postalCodeObjectProperty.getType());
-        Assert.assertEquals(20540, postalCodeObjectProperty.getValue());
+        Assert.assertEquals(Integer.valueOf(20540),
+                postalCodeObjectProperty.getValue());
 
         Assert.assertEquals(Boolean.class, booleanProperty.getType());
-        Assert.assertEquals(true, booleanProperty.getValue());
+        Assert.assertEquals(Boolean.TRUE, booleanProperty.getValue());
     }
 
     public void testEmptyPropertyName() {
         try {
-            new NestedMethodProperty(vaadin, "");
+            new NestedMethodProperty<Object>(vaadin, "");
             fail();
         } catch (IllegalArgumentException e) {
             // should get exception
         }
 
         try {
-            new NestedMethodProperty(vaadin, " ");
+            new NestedMethodProperty<Object>(vaadin, " ");
             fail();
         } catch (IllegalArgumentException e) {
             // should get exception
@@ -193,25 +193,25 @@ public class NestedMethodPropertyTest extends TestCase {
 
     public void testInvalidPropertyName() {
         try {
-            new NestedMethodProperty(vaadin, ".");
+            new NestedMethodProperty<Object>(vaadin, ".");
             fail();
         } catch (IllegalArgumentException e) {
             // should get exception
         }
         try {
-            new NestedMethodProperty(vaadin, ".manager");
+            new NestedMethodProperty<Object>(vaadin, ".manager");
             fail();
         } catch (IllegalArgumentException e) {
             // should get exception
         }
         try {
-            new NestedMethodProperty(vaadin, "manager.");
+            new NestedMethodProperty<Object>(vaadin, "manager.");
             fail();
         } catch (IllegalArgumentException e) {
             // should get exception
         }
         try {
-            new NestedMethodProperty(vaadin, "manager..name");
+            new NestedMethodProperty<Object>(vaadin, "manager..name");
             fail();
         } catch (IllegalArgumentException e) {
             // should get exception
@@ -220,21 +220,21 @@ public class NestedMethodPropertyTest extends TestCase {
 
     public void testInvalidNestedPropertyName() {
         try {
-            new NestedMethodProperty(vaadin, "member");
+            new NestedMethodProperty<Object>(vaadin, "member");
             fail();
         } catch (IllegalArgumentException e) {
             // should get exception
         }
 
         try {
-            new NestedMethodProperty(vaadin, "manager.pet");
+            new NestedMethodProperty<Object>(vaadin, "manager.pet");
             fail();
         } catch (IllegalArgumentException e) {
             // should get exception
         }
 
         try {
-            new NestedMethodProperty(vaadin, "manager.address.city");
+            new NestedMethodProperty<Object>(vaadin, "manager.address.city");
             fail();
         } catch (IllegalArgumentException e) {
             // should get exception
@@ -242,10 +242,10 @@ public class NestedMethodPropertyTest extends TestCase {
     }
 
     public void testNullNestedProperty() {
-        NestedMethodProperty managerNameProperty = new NestedMethodProperty(
+        NestedMethodProperty<String> managerNameProperty = new NestedMethodProperty<String>(
                 vaadin, "manager.name");
-        NestedMethodProperty streetProperty = new NestedMethodProperty(vaadin,
-                "manager.address.street");
+        NestedMethodProperty<String> streetProperty = new NestedMethodProperty<String>(
+                vaadin, "manager.address.street");
 
         joonas.setAddress(null);
         try {
@@ -274,15 +274,15 @@ public class NestedMethodPropertyTest extends TestCase {
     }
 
     public void testMultiLevelNestedPropertySetValue() {
-        NestedMethodProperty managerNameProperty = new NestedMethodProperty(
+        NestedMethodProperty<String> managerNameProperty = new NestedMethodProperty<String>(
                 vaadin, "manager.name");
-        NestedMethodProperty addressProperty = new NestedMethodProperty(vaadin,
-                "manager.address");
-        NestedMethodProperty streetProperty = new NestedMethodProperty(vaadin,
-                "manager.address.street");
-        NestedMethodProperty postalCodePrimitiveProperty = new NestedMethodProperty(
+        NestedMethodProperty<Address> addressProperty = new NestedMethodProperty<Address>(
+                vaadin, "manager.address");
+        NestedMethodProperty<String> streetProperty = new NestedMethodProperty<String>(
+                vaadin, "manager.address.street");
+        NestedMethodProperty<Integer> postalCodePrimitiveProperty = new NestedMethodProperty<Integer>(
                 vaadin, "manager.address.postalCodePrimitive");
-        NestedMethodProperty postalCodeObjectProperty = new NestedMethodProperty(
+        NestedMethodProperty<Integer> postalCodeObjectProperty = new NestedMethodProperty<Integer>(
                 vaadin, "manager.address.postalCodeObject");
 
         managerNameProperty.setValue("Joonas L");
@@ -303,21 +303,22 @@ public class NestedMethodPropertyTest extends TestCase {
     }
 
     public void testSerialization() throws IOException, ClassNotFoundException {
-        NestedMethodProperty streetProperty = new NestedMethodProperty(vaadin,
-                "manager.address.street");
+        NestedMethodProperty<String> streetProperty = new NestedMethodProperty<String>(
+                vaadin, "manager.address.street");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         new ObjectOutputStream(baos).writeObject(streetProperty);
-        NestedMethodProperty property2 = (NestedMethodProperty) new ObjectInputStream(
+        @SuppressWarnings("unchecked")
+        NestedMethodProperty<String> property2 = (NestedMethodProperty<String>) new ObjectInputStream(
                 new ByteArrayInputStream(baos.toByteArray())).readObject();
 
         Assert.assertEquals("Ruukinkatu 2-4", property2.getValue());
     }
 
     public void testIsReadOnly() {
-        NestedMethodProperty streetProperty = new NestedMethodProperty(vaadin,
-                "manager.address.street");
-        NestedMethodProperty booleanProperty = new NestedMethodProperty(vaadin,
-                "manager.address.boolean");
+        NestedMethodProperty<String> streetProperty = new NestedMethodProperty<String>(
+                vaadin, "manager.address.street");
+        NestedMethodProperty<Boolean> booleanProperty = new NestedMethodProperty<Boolean>(
+                vaadin, "manager.address.boolean");
 
         Assert.assertFalse(streetProperty.isReadOnly());
         Assert.assertTrue(booleanProperty.isReadOnly());

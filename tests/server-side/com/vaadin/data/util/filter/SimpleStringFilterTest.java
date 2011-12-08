@@ -2,9 +2,8 @@ package com.vaadin.data.util.filter;
 
 import junit.framework.Assert;
 
-import com.vaadin.data.util.filter.SimpleStringFilter;
-
-public class SimpleStringFilterTest extends AbstractFilterTest {
+public class SimpleStringFilterTest extends
+        AbstractFilterTest<SimpleStringFilter> {
 
     protected static TestItem<String, String> createTestItem() {
         return new TestItem<String, String>("abcde", "TeSt");

@@ -48,7 +48,7 @@ import com.vaadin.terminal.gwt.client.ui.VPopupCalendar;
  */
 @SuppressWarnings("serial")
 @ClientWidget(VPopupCalendar.class)
-public class DateField extends AbstractField implements
+public class DateField extends AbstractField<Date> implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
     /* Private members */
@@ -228,7 +228,7 @@ public class DateField extends AbstractField implements
 
         // Gets the calendar
         final Calendar calendar = getCalendar();
-        final Date currentDate = (Date) getValue();
+        final Date currentDate = getValue();
 
         for (int r = resolution; r <= largestModifiable; r++) {
             switch (r) {
@@ -298,10 +298,10 @@ public class DateField extends AbstractField implements
                         || variables.containsKey("min")
                         || variables.containsKey("sec")
                         || variables.containsKey("msec") || variables
-                        .containsKey("dateString"))) {
+                            .containsKey("dateString"))) {
 
             // Old and new dates
-            final Date oldDate = (Date) getValue();
+            final Date oldDate = getValue();
             Date newDate = null;
 
             // this enables analyzing invalid input on the server
@@ -469,7 +469,7 @@ public class DateField extends AbstractField implements
      * the default documentation from implemented interface.
      */
     @Override
-    public Class<?> getType() {
+    public Class<Date> getType() {
         return Date.class;
     }
 
@@ -479,7 +479,7 @@ public class DateField extends AbstractField implements
      * @see com.vaadin.ui.AbstractField#setValue(java.lang.Object, boolean)
      */
     @Override
-    protected void setValue(Object newValue, boolean repaintIsNotNeeded)
+    protected void setValue(Date newValue, boolean repaintIsNotNeeded)
             throws Property.ReadOnlyException, Property.ConversionException {
 
         /*
@@ -544,7 +544,7 @@ public class DateField extends AbstractField implements
                 Form f = (Form) parenOfDateField;
                 Collection<?> visibleItemProperties = f.getItemPropertyIds();
                 for (Object fieldId : visibleItemProperties) {
-                    Field field = f.getField(fieldId);
+                    Field<?> field = f.getField(fieldId);
                     if (field == this) {
                         /*
                          * this datefield is logically in a form. Do the same
@@ -564,24 +564,8 @@ public class DateField extends AbstractField implements
         }
     }
 
-    /**
-     * Sets the DateField datasource. Datasource type must assignable to Date.
-     * 
-     * @see com.vaadin.data.Property.Viewer#setPropertyDataSource(Property)
-     */
     @Override
-    public void setPropertyDataSource(Property newDataSource) {
-        if (newDataSource == null
-                || Date.class.isAssignableFrom(newDataSource.getType())) {
-            super.setPropertyDataSource(newDataSource);
-        } else {
-            throw new IllegalArgumentException(
-                    "DateField only supports Date properties");
-        }
-    }
-
-    @Override
-    protected void setInternalValue(Object newValue) {
+    protected void setInternalValue(Date newValue) {
         // Also set the internal dateString
         if (newValue != null) {
             dateString = newValue.toString();
@@ -642,7 +626,7 @@ public class DateField extends AbstractField implements
         final Calendar newCal = (Calendar) calendar.clone();
 
         // Assigns the current time tom calendar.
-        final Date currentDate = (Date) getValue();
+        final Date currentDate = getValue();
         if (currentDate != null) {
             newCal.setTime(currentDate);
         }
@@ -752,18 +736,13 @@ public class DateField extends AbstractField implements
     }
 
     /**
-     * Tests the current value against registered validators if the field is not
-     * empty. Note that DateField is considered empty (value == null) and
+     * Validates the current value against registered validators if the field is
+     * not empty. Note that DateField is considered empty (value == null) and
      * invalid if it contains text typed in by the user that couldn't be parsed
      * into a Date value.
      * 
-     * @see com.vaadin.ui.AbstractField#isValid()
+     * @see com.vaadin.ui.AbstractField#validate()
      */
-    @Override
-    public boolean isValid() {
-        return uiHasValidDateString && super.isValid();
-    }
-
     @Override
     public void validate() throws InvalidValueException {
         /*

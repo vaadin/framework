@@ -48,7 +48,7 @@ public final class RowItem implements Item {
         this.id = id;
     }
 
-    public Property getItemProperty(Object id) {
+    public Property<?> getItemProperty(Object id) {
         if (id instanceof String && id != null) {
             for (ColumnProperty cp : properties) {
                 if (id.equals(cp.getPropertyId())) {
@@ -113,7 +113,8 @@ public final class RowItem implements Item {
             s.append("|");
             s.append(propId.toString());
             s.append(":");
-            s.append(getItemProperty(propId).toString());
+            Object value = getItemProperty(propId).getValue();
+            s.append((null != value) ? value.toString() : null);
         }
         return s.toString();
     }

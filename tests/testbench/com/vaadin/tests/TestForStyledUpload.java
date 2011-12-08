@@ -80,9 +80,19 @@ public class TestForStyledUpload extends Application.LegacyApplication
 
         });
 
-        final Button b = new Button("Update status", this, "readState");
+        final Button b = new Button("Update status",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        readState();
+                    }
+                });
 
-        final Button c = new Button("Update status with gc", this, "gc");
+        final Button c = new Button("Update status with gc",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        gc();
+                    }
+                });
 
         main.addComponent(up);
         l = new Label("Idle");

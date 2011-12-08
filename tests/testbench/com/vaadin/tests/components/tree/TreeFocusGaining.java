@@ -21,7 +21,7 @@ public class TreeFocusGaining extends TestBase {
         textField.addListener(new Property.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
-                log.log("TF value now:" + event.getProperty());
+                log.log("TF value now:" + event.getProperty().getValue());
             }
         });
 
@@ -31,7 +31,7 @@ public class TreeFocusGaining extends TestBase {
         tree.addListener(new Property.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
-                log.log("Tree value now:" + event.getProperty());
+                log.log("Tree value now:" + event.getProperty().getValue());
             }
         });
         tree.setImmediate(true);

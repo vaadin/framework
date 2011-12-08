@@ -9,28 +9,17 @@ import com.vaadin.data.Property;
 import com.vaadin.ui.Component.Focusable;
 
 /**
- * @author IT Mill Ltd.
+ * TODO document
  * 
+ * @param T
+ *            the type of values in the field, which might not be the same type
+ *            as that of the data source if converters are used
+ * 
+ * @author IT Mill Ltd.
  */
-public interface Field extends Component, BufferedValidatable, Property,
+public interface Field<T> extends Component, BufferedValidatable, Property<T>,
         Property.ValueChangeNotifier, Property.ValueChangeListener,
         Property.Editor, Focusable {
-
-    /**
-     * Sets the Caption.
-     * 
-     * @param caption
-     */
-    void setCaption(String caption);
-
-    String getDescription();
-
-    /**
-     * Sets the Description.
-     * 
-     * @param caption
-     */
-    void setDescription(String caption);
 
     /**
      * Is this field required.
@@ -80,7 +69,7 @@ public interface Field extends Component, BufferedValidatable, Property,
      * @since 3.0
      */
     @SuppressWarnings("serial")
-    public class ValueChangeEvent extends Component.Event implements
+    public static class ValueChangeEvent extends Component.Event implements
             Property.ValueChangeEvent {
 
         /**

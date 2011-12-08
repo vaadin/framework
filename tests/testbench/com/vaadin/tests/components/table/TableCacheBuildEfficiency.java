@@ -28,7 +28,7 @@ public class TableCacheBuildEfficiency extends TestBase {
 
         final Table table = new Table() {
             @Override
-            public Property getContainerProperty(Object itemId,
+            public Property<?> getContainerProperty(Object itemId,
                     Object propertyId) {
                 log("Fetched container property \"" + propertyId
                         + "\" for item \"" + itemId + "\"");

@@ -76,27 +76,6 @@ public class Button extends AbstractComponent implements
     }
 
     /**
-     * Creates a new push button with a method listening button clicks. Using
-     * this method is discouraged because it cannot be checked during
-     * compilation. Use
-     * {@link #Button(String, com.vaadin.ui.Button.ClickListener)} instead. The
-     * method must have either no parameters, or only one parameter of
-     * Button.ClickEvent type.
-     * 
-     * @param caption
-     *            the Button caption.
-     * @param target
-     *            the Object having the method for listening button clicks.
-     * @param methodName
-     *            the name of the method in target object, that receives button
-     *            click events.
-     */
-    public Button(String caption, Object target, String methodName) {
-        this(caption);
-        addListener(ClickEvent.class, target, methodName);
-    }
-
-    /**
      * Paints the content of this component.
      * 
      * @param event

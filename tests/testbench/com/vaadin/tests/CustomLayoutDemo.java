@@ -5,6 +5,7 @@
 package com.vaadin.tests;
 
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.CustomLayout;
@@ -40,7 +41,13 @@ public class CustomLayoutDemo extends com.vaadin.Application.LegacyApplication
 
     private final PasswordField loginPwd = new PasswordField("Password");
 
-    private final Button loginButton = new Button("Login", this, "loginClicked");
+    private final Button loginButton = new Button("Login",
+            new Button.ClickListener() {
+
+                public void buttonClick(ClickEvent event) {
+                    loginClicked();
+                }
+            });
 
     private final Tree menu = new Tree();
 

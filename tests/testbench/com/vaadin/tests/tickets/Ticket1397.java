@@ -31,7 +31,7 @@ public class Ticket1397 extends Application.LegacyApplication {
 
         PopupView.Content content = new PopupView.Content() {
             public String getMinimizedValueAsHTML() {
-                return prop.toString();
+                return String.valueOf(prop.getValue());
             }
 
             public Component getPopupComponent() {
@@ -69,7 +69,7 @@ public class Ticket1397 extends Application.LegacyApplication {
         panel2.addComponent(new myButton());
         PopupView.Content content2 = new PopupView.Content() {
             public String getMinimizedValueAsHTML() {
-                return prop2.toString();
+                return String.valueOf(prop2.getValue());
             }
 
             public Component getPopupComponent() {
@@ -90,7 +90,7 @@ public class Ticket1397 extends Application.LegacyApplication {
         PopupView.Content content3 = new PopupView.Content() {
 
             public String getMinimizedValueAsHTML() {
-                return op.toString();
+                return String.valueOf(op.getValue());
             }
 
             public Component getPopupComponent() {
@@ -114,7 +114,7 @@ public class Ticket1397 extends Application.LegacyApplication {
             final InlineDateField df = new InlineDateField("", new Date());
             PopupView pp = new PopupView(new PopupView.Content() {
                 public String getMinimizedValueAsHTML() {
-                    return df.toString();
+                    return String.valueOf(df.getValue());
                 }
 
                 public Component getPopupComponent() {
@@ -131,7 +131,8 @@ public class Ticket1397 extends Application.LegacyApplication {
                         + " and see how the overview-version changes.");
 
                 public String getMinimizedValueAsHTML() {
-                    return "" + tf.toString().length() + " characters of info";
+                    return "" + String.valueOf(tf.getValue()).length()
+                            + " characters of info";
                 }
 
                 public Component getPopupComponent() {

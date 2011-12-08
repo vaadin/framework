@@ -20,7 +20,7 @@ public class TableWithManyColumns extends TestBase {
         for (int row = 0; row < ROWS; row++) {
             Item i = t.addItem(String.valueOf(row));
             for (int col = 0; col < COLS; col++) {
-                Property p = i.getItemProperty("COLUMN_" + col);
+                Property<?> p = i.getItemProperty("COLUMN_" + col);
                 p.setValue("item " + row + "/" + col);
             }
         }

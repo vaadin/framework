@@ -40,12 +40,16 @@ public final class SimpleStringFilter implements Filter {
     }
 
     public boolean passesFilter(Object itemId, Item item) {
-        final Property p = item.getItemProperty(propertyId);
-        if (p == null || p.toString() == null) {
+        final Property<?> p = item.getItemProperty(propertyId);
+        if (p == null) {
             return false;
         }
-        final String value = ignoreCase ? p.toString().toLowerCase() : p
-                .toString();
+        Object propertyValue = p.getValue();
+        if (propertyValue == null) {
+            return false;
+        }
+        final String value = ignoreCase ? propertyValue.toString()
+                .toLowerCase() : propertyValue.toString();
         if (onlyMatchPrefix) {
             if (!value.startsWith(filterString)) {
                 return false;

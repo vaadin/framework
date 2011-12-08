@@ -65,7 +65,7 @@ public class Ticket1506_TestContainer implements Container {
         return a;
     }
 
-    public Property getContainerProperty(Object itemId, Object propertyId) {
+    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
         if (items.isEmpty()) {
             loadItems();
         }

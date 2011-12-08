@@ -164,9 +164,18 @@ public class TestForUpload extends CustomComponent implements
 
         });
 
-        final Button b = new Button("Reed state from upload", this, "readState");
+        final Button b = new Button("Reed state from upload",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        readState();
+                    }
+                });
 
-        final Button c = new Button("Force GC", this, "gc");
+        final Button c = new Button("Force GC", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                gc();
+            }
+        });
 
         main.addComponent(b);
         main.addComponent(c);
@@ -413,7 +422,7 @@ public class TestForUpload extends CustomComponent implements
     }
 
     private void beSluggish() {
-        if ((Boolean) beSluggish.getValue()) {
+        if (beSluggish.getValue()) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -424,7 +433,7 @@ public class TestForUpload extends CustomComponent implements
     }
 
     private void throwExecption() {
-        if ((Boolean) throwExecption.getValue()) {
+        if (throwExecption.getValue()) {
             throwExecption.setValue(false);
             throw new RuntimeException("Test execption in receiver.");
         }

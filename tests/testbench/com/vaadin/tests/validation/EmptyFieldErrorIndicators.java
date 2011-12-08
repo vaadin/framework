@@ -3,8 +3,8 @@ package com.vaadin.tests.validation;
 import java.util.Date;
 
 import com.vaadin.data.Validator.InvalidValueException;
-import com.vaadin.data.validator.AbstractValidator;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.util.AlwaysFailValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -77,16 +77,12 @@ public class EmptyFieldErrorIndicators extends TestBase {
         // hand-crafted form, not using form field factory
         final Form form = new Form() {
             @Override
-            public void addField(Object propertyId, Field field) {
+            public void addField(Object propertyId, Field<?> field) {
                 super.addField(propertyId, field);
                 field.setRequired(required);
                 field.setRequiredError("Missing required value!");
                 if (failValidator && !(field instanceof Button)) {
-                    field.addValidator(new AbstractValidator("Validation error") {
-                        public boolean isValid(Object value) {
-                            return false;
-                        }
-                    });
+                    field.addValidator(new AlwaysFailValidator());
                 }
             }
         };

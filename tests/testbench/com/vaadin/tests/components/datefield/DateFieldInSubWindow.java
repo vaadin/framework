@@ -60,9 +60,9 @@ public class DateFieldInSubWindow extends AbstractTestCase {
             public static final String COMMON_FIELD_WIDTH = "12em";
 
             @Override
-            public Field createField(Item item, Object propertyId,
+            public Field<?> createField(Item item, Object propertyId,
                     Component uiContext) {
-                Field f = super.createField(item, propertyId, uiContext);
+                Field<?> f = super.createField(item, propertyId, uiContext);
 
                 if ("myDate".equals(propertyId)) {
                     ((DateField) f).setResolution(DateField.RESOLUTION_MIN);

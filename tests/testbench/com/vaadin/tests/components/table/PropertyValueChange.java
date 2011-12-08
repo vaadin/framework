@@ -39,16 +39,17 @@ public class PropertyValueChange extends TestBase {
     // Also use column generator in test, to ensure it is possible to build
     // columns that update automatically.
     ColumnGenerator multiplier = new ColumnGenerator() {
-        private int getMultipliedValue(Property p) {
-            int i = ((Integer) p.getValue()).intValue();
+        private int getMultipliedValue(Property<Integer> p) {
+            int i = p.getValue().intValue();
             return i * 3;
         }
 
         public Component generateCell(Table source, Object itemId,
                 Object columnId) {
             final Label l = new Label();
-            final Property integer = source.getContainerProperty(itemId,
-                    "integer");
+            @SuppressWarnings("unchecked")
+            final Property<Integer> integer = (Property<Integer>) source
+                    .getContainerProperty(itemId, "integer");
             l.setValue(getMultipliedValue(integer));
 
             // we must hook value change listener to ensure updates in all use
@@ -134,7 +135,7 @@ class MyFieldFactory extends DefaultFieldFactory {
     }
 
     @Override
-    public Field createField(Container container, Object itemId,
+    public Field<?> createField(Container container, Object itemId,
             Object propertyId, Component uiContext) {
         if (propertyId.equals("text")) {
             // replace text fields with comboboxes

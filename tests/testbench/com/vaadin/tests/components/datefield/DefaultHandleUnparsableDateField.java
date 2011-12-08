@@ -17,7 +17,7 @@ public class DefaultHandleUnparsableDateField extends TestBase {
         date.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
                 if (date.isValid()) {
-                    getMainWindow().showNotification(date.toString());
+                    getMainWindow().showNotification(date.getStringValue());
                 }
 
             }

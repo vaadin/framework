@@ -16,11 +16,12 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VCheckBox;
 
 @ClientWidget(com.vaadin.terminal.gwt.client.ui.VCheckBox.class)
-public class CheckBox extends AbstractField {
+public class CheckBox extends AbstractField<Boolean> {
     /**
      * Creates a new checkbox.
      */
     public CheckBox() {
+        setValue(Boolean.FALSE);
     }
 
     /**
@@ -54,13 +55,13 @@ public class CheckBox extends AbstractField {
      *            the Initial state of the switch-button.
      * @param dataSource
      */
-    public CheckBox(String caption, Property dataSource) {
+    public CheckBox(String caption, Property<?> dataSource) {
         this(caption);
         setPropertyDataSource(dataSource);
     }
 
     @Override
-    public Class<?> getType() {
+    public Class<Boolean> getType() {
         return Boolean.class;
     }
 
@@ -68,7 +69,7 @@ public class CheckBox extends AbstractField {
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
-        target.addVariable(this, VCheckBox.VARIABLE_STATE, booleanValue());
+        target.addVariable(this, VCheckBox.VARIABLE_STATE, getValue());
     }
 
     @Override
@@ -79,7 +80,7 @@ public class CheckBox extends AbstractField {
             // Gets the new and old states
             final Boolean newValue = (Boolean) variables
                     .get(VCheckBox.VARIABLE_STATE);
-            final Boolean oldValue = (Boolean) getValue();
+            final Boolean oldValue = getValue();
 
             // The event is only sent if the switch state is changed
             if (newValue != null && !newValue.equals(oldValue)) {
@@ -112,21 +113,6 @@ public class CheckBox extends AbstractField {
     public void removeListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
 
-    }
-
-    /**
-     * Get the boolean value of the checkbox state.
-     * 
-     * @return True iff the checkbox is checked.
-     * @deprecated in Vaadin 7.0.0. Retained to ease migration from Vaadin 6
-     */
-    @Deprecated
-    public boolean booleanValue() {
-        // FIXME: How should null really be handled? A default converter that
-        // converts it to false? The only UI values supported are true and
-        // false.
-        Boolean value = (Boolean) getValue();
-        return (null == value) ? false : value.booleanValue();
     }
 
 }

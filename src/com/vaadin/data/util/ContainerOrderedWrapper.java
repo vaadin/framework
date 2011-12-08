@@ -437,7 +437,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      * Container Don't add a JavaDoc comment here, we use the default
      * documentation from implemented interface.
      */
-    public Property getContainerProperty(Object itemId, Object propertyId) {
+    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
         return container.getContainerProperty(itemId, propertyId);
     }
 

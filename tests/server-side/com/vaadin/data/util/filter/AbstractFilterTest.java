@@ -22,9 +22,9 @@ public abstract class AbstractFilterTest<FILTERTYPE extends Filter> extends
         }
     }
 
-    protected static class NullProperty implements Property {
+    protected static class NullProperty implements Property<String> {
 
-        public Object getValue() {
+        public String getValue() {
             return null;
         }
 
@@ -33,7 +33,7 @@ public abstract class AbstractFilterTest<FILTERTYPE extends Filter> extends
             throw new ReadOnlyException();
         }
 
-        public Class<?> getType() {
+        public Class<String> getType() {
             return String.class;
         }
 

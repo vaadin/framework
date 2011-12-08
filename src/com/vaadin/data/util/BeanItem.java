@@ -12,9 +12,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A wrapper class for adding the Item interface to any Java Bean.
@@ -162,7 +164,7 @@ public class BeanItem<BT> extends PropertysetItem {
                 final Method getMethod = pd.getReadMethod();
                 if ((getMethod != null)
                         && getMethod.getDeclaringClass() != Object.class) {
-                    VaadinPropertyDescriptor<BT> vaadinPropertyDescriptor = new MethodPropertyDescriptor(
+                    VaadinPropertyDescriptor<BT> vaadinPropertyDescriptor = new MethodPropertyDescriptor<BT>(
                             pd.getName(), pd.getPropertyType(),
                             pd.getReadMethod(), pd.getWriteMethod());
                     pdMap.put(pd.getName(), vaadinPropertyDescriptor);
@@ -210,6 +212,38 @@ public class BeanItem<BT> extends PropertysetItem {
             BeanInfo info = Introspector.getBeanInfo(beanClass);
             return Arrays.asList(info.getPropertyDescriptors());
         }
+    }
+
+    /**
+     * Expands nested bean properties by replacing a top-level property with
+     * some or all of its sub-properties. The expansion is not recursive.
+     * 
+     * @param propertyId
+     *            property id for the property whose sub-properties are to be
+     *            expanded,
+     * @param subPropertyIds
+     *            sub-properties to expand, all sub-properties are expanded if
+     *            not specified
+     */
+    public void expandProperty(String propertyId, String... subPropertyIds) {
+        Set<String> subPropertySet = new HashSet<String>(
+                Arrays.asList(subPropertyIds));
+
+        if (0 == subPropertyIds.length) {
+            // Enumerate all sub-properties
+            Class<?> propertyType = getItemProperty(propertyId).getType();
+            Map<String, ?> pds = getPropertyDescriptors(propertyType);
+            subPropertySet.addAll(pds.keySet());
+        }
+
+        for (String subproperty : subPropertySet) {
+            String qualifiedPropertyId = propertyId + "." + subproperty;
+            addItemProperty(qualifiedPropertyId,
+                    new NestedMethodProperty<Object>(getBean(),
+                            qualifiedPropertyId));
+        }
+
+        removeItemProperty(propertyId);
     }
 
     /**

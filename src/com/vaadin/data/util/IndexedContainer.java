@@ -76,7 +76,7 @@ public class IndexedContainer extends
     /**
      * Set of properties that are read-only.
      */
-    private HashSet<Property> readOnlyProperties = new HashSet<Property>();
+    private HashSet<Property<?>> readOnlyProperties = new HashSet<Property<?>>();
 
     /**
      * List of all Property value change event listeners listening all the
@@ -150,7 +150,7 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Container#getContainerProperty(java.lang.Object,
      * java.lang.Object)
      */
-    public Property getContainerProperty(Object itemId, Object propertyId) {
+    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
         if (!containsId(itemId)) {
             return null;
         }
@@ -425,7 +425,7 @@ public class IndexedContainer extends
      * @VERSION@
      * @since 3.0
      */
-    public class ItemSetChangeEvent extends BaseItemSetChangeEvent {
+    public static class ItemSetChangeEvent extends BaseItemSetChangeEvent {
 
         private final int addedItemIndex;
 
@@ -455,7 +455,7 @@ public class IndexedContainer extends
      * @VERSION@
      * @since 3.0
      */
-    private class PropertyValueChangeEvent extends EventObject implements
+    private static class PropertyValueChangeEvent extends EventObject implements
             Property.ValueChangeEvent, Serializable {
 
         private PropertyValueChangeEvent(Property source) {
@@ -680,7 +680,7 @@ public class IndexedContainer extends
          * 
          * @see com.vaadin.data.Item#getItemProperty(java.lang.Object)
          */
-        public Property getItemProperty(Object id) {
+        public Property<?> getItemProperty(Object id) {
             return new IndexedContainerProperty(itemId, id);
         }
 
@@ -691,8 +691,8 @@ public class IndexedContainer extends
         /**
          * Gets the <code>String</code> representation of the contents of the
          * Item. The format of the string is a space separated catenation of the
-         * <code>String</code> representations of the Properties contained by
-         * the Item.
+         * <code>String</code> representations of the values of the Properties
+         * contained by the Item.
          * 
          * @return <code>String</code> representation of the Item contents
          */
@@ -702,7 +702,7 @@ public class IndexedContainer extends
 
             for (final Iterator<?> i = propertyIds.iterator(); i.hasNext();) {
                 final Object propertyId = i.next();
-                retValue += getItemProperty(propertyId).toString();
+                retValue += getItemProperty(propertyId).getValue();
                 if (i.hasNext()) {
                     retValue += " ";
                 }
@@ -786,7 +786,7 @@ public class IndexedContainer extends
      * @VERSION@
      * @since 3.0
      */
-    private class IndexedContainerProperty implements Property,
+    private class IndexedContainerProperty implements Property<Object>,
             Property.ValueChangeNotifier {
 
         /**
@@ -910,9 +910,24 @@ public class IndexedContainer extends
          * 
          * @return <code>String</code> representation of the value stored in the
          *         Property
+         * @deprecated use the property value directly, or
+         *             {@link #getStringValue()} during migration period
          */
+        @Deprecated
         @Override
         public String toString() {
+            throw new UnsupportedOperationException(
+                    "Use Property.getValue() instead of IndexedContainerProperty.toString()");
+        }
+
+        /**
+         * Returns the value of the <code>Property</code> in human readable
+         * textual format.
+         * 
+         * @return String representation of the value stored in the Property
+         * @since 7.0
+         */
+        public String getStringValue() {
             final Object value = getValue();
             if (value == null) {
                 return null;
@@ -1038,7 +1053,7 @@ public class IndexedContainer extends
                 getPropertySetChangeListeners()) : null);
         nc.propertyValueChangeListeners = propertyValueChangeListeners != null ? (LinkedList<Property.ValueChangeListener>) propertyValueChangeListeners
                 .clone() : null;
-        nc.readOnlyProperties = readOnlyProperties != null ? (HashSet<Property>) readOnlyProperties
+        nc.readOnlyProperties = readOnlyProperties != null ? (HashSet<Property<?>>) readOnlyProperties
                 .clone() : null;
         nc.singlePropertyValueChangeListeners = singlePropertyValueChangeListeners != null ? (Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>>) singlePropertyValueChangeListeners
                 .clone() : null;

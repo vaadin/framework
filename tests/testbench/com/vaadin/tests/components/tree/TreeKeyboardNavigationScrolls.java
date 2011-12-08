@@ -5,8 +5,8 @@ package com.vaadin.tests.components.tree;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.util.HierarchicalContainer;
-import com.vaadin.data.validator.AbstractValidator;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.util.AlwaysFailValidator;
 import com.vaadin.ui.Tree;
 
 public class TreeKeyboardNavigationScrolls extends TestBase {
@@ -16,12 +16,7 @@ public class TreeKeyboardNavigationScrolls extends TestBase {
         Tree tree = new Tree();
         tree.setContainerDataSource(generateHierarchicalContainer());
         tree.setImmediate(true);
-        tree.addValidator(new AbstractValidator("failed") {
-            public boolean isValid(Object value) {
-                return false;
-            }
-
-        });
+        tree.addValidator(new AlwaysFailValidator("failed"));
         addComponent(tree);
     }
 

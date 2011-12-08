@@ -327,6 +327,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void setLocale(Locale locale) {
         this.locale = locale;
+
+        // FIXME: Reload value if there is a converter
         requestRepaint();
     }
 

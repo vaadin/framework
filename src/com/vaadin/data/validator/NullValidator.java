@@ -51,17 +51,6 @@ public class NullValidator implements Validator {
     }
 
     /**
-     * Tests if the given value is valid.
-     * 
-     * @param value
-     *            the value to validate.
-     * @returns <code>true</code> for valid value, otherwise <code>false</code>.
-     */
-    public boolean isValid(Object value) {
-        return onlyNullAllowed ? value == null : value != null;
-    }
-
-    /**
      * Returns <code>true</code> if nulls are allowed otherwise
      * <code>false</code>.
      */

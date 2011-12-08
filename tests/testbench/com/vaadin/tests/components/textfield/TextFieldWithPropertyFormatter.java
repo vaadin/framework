@@ -13,11 +13,10 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.TextField;
 
-@SuppressWarnings("unchecked")
 public class TextFieldWithPropertyFormatter extends TestBase {
 
-    private PropertyFormatter formatter;
-    private Property property;
+    private PropertyFormatter<BigDecimal> formatter;
+    private Property<BigDecimal> property;
 
     @Override
     protected void setup() {
@@ -26,10 +25,10 @@ public class TextFieldWithPropertyFormatter extends TestBase {
          * digits - rounds half up
          */
         // Property containing BigDecimal
-        property = new Property() {
+        property = new Property<BigDecimal>() {
             private BigDecimal value;
 
-            public Object getValue() {
+            public BigDecimal getValue() {
                 return value;
             }
 
@@ -44,7 +43,7 @@ public class TextFieldWithPropertyFormatter extends TestBase {
                 }
             }
 
-            public Class<?> getType() {
+            public Class<BigDecimal> getType() {
                 return BigDecimal.class;
             }
 
@@ -57,7 +56,7 @@ public class TextFieldWithPropertyFormatter extends TestBase {
             }
         };
 
-        formatter = new PropertyFormatter(property) {
+        formatter = new PropertyFormatter<BigDecimal>(property) {
 
             private final DecimalFormat df = new DecimalFormat("#,##0.00",
                     new DecimalFormatSymbols(new Locale("en", "UK")));
@@ -67,7 +66,7 @@ public class TextFieldWithPropertyFormatter extends TestBase {
             }
 
             @Override
-            public String format(Object value) {
+            public String format(BigDecimal value) {
 
                 final String retVal;
                 if (value == null) {
@@ -79,7 +78,7 @@ public class TextFieldWithPropertyFormatter extends TestBase {
             }
 
             @Override
-            public Object parse(String formattedValue) throws Exception {
+            public BigDecimal parse(String formattedValue) throws Exception {
                 if (formattedValue != null
                         && formattedValue.trim().length() != 0) {
                     BigDecimal value = (BigDecimal) df.parse(formattedValue);

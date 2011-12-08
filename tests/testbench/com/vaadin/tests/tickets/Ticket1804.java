@@ -94,7 +94,7 @@ public class Ticket1804 extends com.vaadin.Application.LegacyApplication {
                 StringBuffer msg = new StringBuffer();
                 for (Iterator<Select> i = listOfAllFields.iterator(); i
                         .hasNext();) {
-                    AbstractField af = i.next();
+                    AbstractField<?> af = i.next();
                     msg.append("<h1>" + af.getCaption() + "</h1>\n");
                     msg.append("Value=" + af.getValue() + "<br/>\n");
                     if (af.isValid()) {
@@ -128,7 +128,7 @@ public class Ticket1804 extends com.vaadin.Application.LegacyApplication {
     }
 
     /** Throws an exception when the string is empty or null. */
-    class EmptyStringValidator implements Validator {
+    static class EmptyStringValidator implements Validator {
 
         String msg;
 
@@ -136,12 +136,8 @@ public class Ticket1804 extends com.vaadin.Application.LegacyApplication {
             this.msg = msg;
         }
 
-        public boolean isValid(Object value) {
-            return !(value == null || value.toString().length() == 0);
-        }
-
         public void validate(Object value) throws InvalidValueException {
-            if (!isValid(value)) {
+            if (value == null || value.toString().length() == 0) {
                 throw new InvalidValueException(msg);
             }
         }
