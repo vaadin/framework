@@ -4,7 +4,9 @@
 
 package com.vaadin.data.util.converter;
 
-public interface ConverterFactory {
+import java.io.Serializable;
+
+public interface ConverterFactory extends Serializable {
     <SOURCE, TARGET> Converter<SOURCE, TARGET> createConverter(
             Class<SOURCE> sourceType, Class<TARGET> targetType);
 
