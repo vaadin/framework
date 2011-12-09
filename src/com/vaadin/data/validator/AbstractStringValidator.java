@@ -52,7 +52,7 @@ public abstract class AbstractStringValidator extends AbstractValidator {
      *         otherwise
      */
     @Override
-    protected boolean internalIsValid(Object value) {
+    protected boolean isValidValue(Object value) {
         if (value == null) {
             return true;
         }

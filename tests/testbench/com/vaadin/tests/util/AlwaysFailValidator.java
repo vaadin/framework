@@ -12,7 +12,7 @@ public class AlwaysFailValidator extends AbstractValidator {
     }
 
     @Override
-    protected boolean internalIsValid(Object value) {
+    protected boolean isValidValue(Object value) {
         return false;
     }
 }

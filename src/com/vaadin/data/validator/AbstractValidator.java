@@ -23,7 +23,7 @@ import com.vaadin.data.Validator;
  * </p>
  * <p>
  * Since Vaadin 7, subclasses can either implement {@link #validate(Object)}
- * directly or implement {@link #internalIsValid(Object)} when migrating legacy
+ * directly or implement {@link #isValidValue(Object)} when migrating legacy
  * applications. To check validity, {@link #validate(Object)} should be used.
  * </p>
  * 
@@ -54,20 +54,14 @@ public abstract class AbstractValidator implements Validator {
 
     /**
      * Since Vaadin 7, subclasses of AbstractValidator should override
-     * {@link #internalIsValid(Object)} or {@link #validate(Object)} instead of
-     * {@link #isValid(Object)}. {@link #validate(Object)} should be used to
-     * check values.
-     * 
-     * This method may disappear in future Vaadin versions.
+     * {@link #isValidValue(Object)} or {@link #validate(Object)} instead of
+     * {@link #isValid(Object)}. {@link #validate(Object)} should normally be
+     * used to check values.
      * 
      * @param value
      * @return true if the value is valid
-     * @deprecated override {@link #internalIsValid(Object)} or
-     *             {@link #validate(Object)} instead of {@link #isValid(Object)}
-     *             and use {@link #validate(Object)} to check value validity
      */
-    @Deprecated
-    protected final boolean isValid(Object value) {
+    public boolean isValid(Object value) {
         try {
             validate(value);
             return true;
@@ -77,21 +71,20 @@ public abstract class AbstractValidator implements Validator {
     }
 
     /**
-     * Internally check the validity of a value. This method can be overridden
-     * in subclasses if customization of the error message is not needed -
-     * otherwise, subclasses should override {@link #validate(Object)} instead.
+     * Internally check the validity of a value. This method can be used to
+     * perform validation in subclasses if customization of the error message is
+     * not needed. Otherwise, subclasses should override
+     * {@link #validate(Object)} and the return value of this method is ignored.
      * 
      * This method should not be called from outside the validator class itself.
      * 
      * @param value
      * @return
      */
-    protected boolean internalIsValid(Object value) {
-        return false;
-    }
+    protected abstract boolean isValidValue(Object value);
 
     public void validate(Object value) throws InvalidValueException {
-        if (!internalIsValid(value)) {
+        if (!isValidValue(value)) {
             String message = errorMessage.replace("{0}", String.valueOf(value));
             throw new InvalidValueException(message);
         }

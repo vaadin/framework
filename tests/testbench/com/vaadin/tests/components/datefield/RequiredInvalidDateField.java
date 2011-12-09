@@ -39,7 +39,7 @@ public class RequiredInvalidDateField extends TestBase {
                 "Day of month must be an even number") {
 
             @Override
-            protected boolean internalIsValid(Object value) {
+            protected boolean isValidValue(Object value) {
                 if (!(value instanceof Date)) {
                     return false;
                 }

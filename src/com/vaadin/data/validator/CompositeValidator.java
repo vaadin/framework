@@ -10,7 +10,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.vaadin.data.Validator;
-import com.vaadin.data.validator.CompositeValidator.CombinationMode;
 
 /**
  * The <code>CompositeValidator</code> allows you to chain (compose) many
@@ -129,6 +128,12 @@ public class CompositeValidator extends AbstractValidator {
                 throw first;
             }
         }
+    }
+
+    @Override
+    protected boolean isValidValue(Object value) {
+        // not used as validate() overridden
+        return false;
     }
 
     /**
