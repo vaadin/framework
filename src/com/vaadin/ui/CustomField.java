@@ -24,8 +24,11 @@ import com.vaadin.terminal.gwt.client.ui.VCustomComponent;
  * {@link #setInternalValue(Object)} and {@link #getInternalValue()} when
  * necessary.
  * 
- * It is also possible to override {@link #commit()},
- * {@link #setPropertyDataSource(Property)} and other logic of the field.
+ * It is also possible to override {@link #validate()},
+ * {@link #setInternalValue(Object)}, {@link #commit()},
+ * {@link #setPropertyDataSource(Property)}, {@link #isEmpty()} and other logic
+ * of the field. Methods overriding {@link #setInternalValue(Object)} should
+ * also call the corresponding superclass method.
  * 
  * @since 7.0
  */
