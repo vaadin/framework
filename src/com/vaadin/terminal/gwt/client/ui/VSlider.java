@@ -39,16 +39,13 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
     private boolean immediate;
     private boolean disabled;
     private boolean readonly;
-    private boolean scrollbarStyle;
 
     private int acceleration = 1;
-    private int handleSize;
     private double min;
     private double max;
     private int resolution;
     private Double value;
     private boolean vertical;
-    private boolean arrows;
 
     private final HTML feedback = new HTML("", false);
     private final VOverlay feedbackPopup = new VOverlay(true, false, true) {
@@ -130,18 +127,10 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
         readonly = uidl.getBooleanAttribute("readonly");
 
         vertical = uidl.hasAttribute("vertical");
-        arrows = uidl.hasAttribute("arrows");
 
         String style = "";
         if (uidl.hasAttribute("style")) {
             style = uidl.getStringAttribute("style");
-        }
-
-        scrollbarStyle = style.indexOf("scrollbar") > -1;
-
-        if (arrows) {
-            DOM.setStyleAttribute(smaller, "display", "block");
-            DOM.setStyleAttribute(bigger, "display", "block");
         }
 
         if (vertical) {
@@ -156,8 +145,6 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
         value = new Double(uidl.getDoubleVariable("value"));
 
         setFeedbackValue(value);
-
-        handleSize = uidl.getIntAttribute("hsize");
 
         buildBase();
 
@@ -233,29 +220,9 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
     }
 
     private void buildHandle() {
-        final String styleAttribute = vertical ? "height" : "width";
         final String handleAttribute = vertical ? "marginTop" : "marginLeft";
-        final String domProperty = vertical ? "offsetHeight" : "offsetWidth";
 
         DOM.setStyleAttribute(handle, handleAttribute, "0");
-
-        if (scrollbarStyle) {
-            // Only stretch the handle if scrollbar style is set.
-            int s = (int) (Double.parseDouble(DOM.getElementProperty(base,
-                    domProperty)) / 100 * handleSize);
-            if (handleSize == -1) {
-                final int baseS = Integer.parseInt(DOM.getElementProperty(base,
-                        domProperty));
-                final double range = (max - min) * (resolution + 1) * 3;
-                s = (int) (baseS - range);
-            }
-            if (s < 3) {
-                s = 3;
-            }
-            DOM.setStyleAttribute(handle, styleAttribute, s + "px");
-        } else {
-            DOM.setStyleAttribute(handle, styleAttribute, "");
-        }
 
         // Restore visibility
         DOM.setStyleAttribute(handle, "visibility", "visible");

@@ -53,15 +53,6 @@ public class Slider extends AbstractField<Double> {
 
     public static final int ORIENTATION_VERTICAL = 1;
 
-    /**
-     * Style constant representing a scrollbar styled slider. Use this with
-     * {@link #addStyleName(String)}. Default styling usually represents a
-     * common slider found e.g. in Adobe Photoshop. The client side
-     * implementation dictates how different styles will look.
-     */
-    @Deprecated
-    public static final String STYLE_SCROLLBAR = "scrollbar";
-
     /** Minimum value of slider */
     private double min = 0;
 
@@ -78,35 +69,6 @@ public class Slider extends AbstractField<Double> {
      * Slider orientation (horizontal/vertical), defaults .
      */
     private int orientation = ORIENTATION_HORIZONTAL;
-
-    /**
-     * Slider size in pixels. In horizontal mode, if set to -1, allow 100% width
-     * of container. In vertical mode, if set to -1, default height is
-     * determined by the client-side implementation.
-     * 
-     * @deprecated
-     */
-    @Deprecated
-    private int size = -1;
-
-    /**
-     * Handle (draggable control element) size in percents relative to base
-     * size. Must be a value between 1-99. Other values are converted to nearest
-     * bound. A negative value sets the width to auto (client-side
-     * implementation calculates).
-     * 
-     * @deprecated The size is dictated by the current theme.
-     */
-    @Deprecated
-    private int handleSize = -1;
-
-    /**
-     * Show arrows that can be pressed to slide the handle in some increments
-     * (client-side implementation decides the increment, usually somewhere
-     * between 5-10% of slide range).
-     */
-    @Deprecated
-    private final boolean arrows = false;
 
     /**
      * Default slider constructor. Sets all values to defaults and the slide
@@ -305,70 +267,6 @@ public class Slider extends AbstractField<Double> {
         super.setValue(newValue, repaintIsNotNeeded);
     }
 
-    /**
-     * Get the current slider size.
-     * 
-     * @return size in pixels or -1 for auto sizing.
-     * @deprecated use standard getWidth/getHeight instead
-     */
-    @Deprecated
-    public int getSize() {
-        return size;
-    }
-
-    /**
-     * Set the size for this slider.
-     * 
-     * @param size
-     *            in pixels, or -1 auto sizing.
-     * @deprecated use standard setWidth/setHeight instead
-     */
-    @Deprecated
-    public void setSize(int size) {
-        this.size = size;
-        switch (orientation) {
-        case ORIENTATION_HORIZONTAL:
-            setWidth(size, UNITS_PIXELS);
-            break;
-        default:
-            setHeight(size, UNITS_PIXELS);
-            break;
-        }
-        requestRepaint();
-    }
-
-    /**
-     * Get the handle size of this slider.
-     * 
-     * @return handle size in percentages.
-     * @deprecated The size is dictated by the current theme.
-     */
-    @Deprecated
-    public int getHandleSize() {
-        return handleSize;
-    }
-
-    /**
-     * Set the handle size of this slider.
-     * 
-     * @param handleSize
-     *            in percentages relative to slider base size.
-     * @deprecated The size is dictated by the current theme.
-     */
-    @Deprecated
-    public void setHandleSize(int handleSize) {
-        if (handleSize < 0) {
-            this.handleSize = -1;
-        } else if (handleSize > 99) {
-            this.handleSize = 99;
-        } else if (handleSize < 1) {
-            this.handleSize = 1;
-        } else {
-            this.handleSize = handleSize;
-        }
-        requestRepaint();
-    }
-
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
@@ -389,20 +287,6 @@ public class Slider extends AbstractField<Double> {
 
         if (orientation == ORIENTATION_VERTICAL) {
             target.addAttribute("vertical", true);
-        }
-
-        if (arrows) {
-            target.addAttribute("arrows", true);
-        }
-
-        if (size > -1) {
-            target.addAttribute("size", size);
-        }
-
-        if (min != max && min < max) {
-            target.addAttribute("hsize", handleSize);
-        } else {
-            target.addAttribute("hsize", 100);
         }
 
     }
