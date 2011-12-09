@@ -31,7 +31,7 @@ public class ProgrammaticCollapse extends TestBase {
                 new ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         boolean collapsed = !table.isCollapsed(1);
-                        table.getWindow().showNotification(
+                        table.getRoot().showNotification(
                                 "set collapsed: " + collapsed);
                         table.setCollapsed(1, collapsed);
                     }
@@ -40,7 +40,7 @@ public class ProgrammaticCollapse extends TestBase {
                 new ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         boolean collapsed = !table.isCollapsed(100);
-                        table.getWindow().showNotification(
+                        table.getRoot().showNotification(
                                 "set collapsed: " + collapsed);
                         table.setCollapsed(100, collapsed);
                     }
@@ -51,7 +51,7 @@ public class ProgrammaticCollapse extends TestBase {
 
                     public void buttonClick(ClickEvent event) {
                         collapsed = !collapsed;
-                        table.getWindow().showNotification(
+                        table.getRoot().showNotification(
                                 "set collapsed: " + collapsed);
                         for (int i = 0; i < 50; ++i) {
                             table.setCollapsed(i * 2, collapsed);

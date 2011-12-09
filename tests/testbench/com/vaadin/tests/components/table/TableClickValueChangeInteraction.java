@@ -9,13 +9,13 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 public class TableClickValueChangeInteraction extends TestBase {
 
-    final Window mainWindow = new Window();
+    final Root mainWindow = new Root();
 
     @Override
     public void setup() {
