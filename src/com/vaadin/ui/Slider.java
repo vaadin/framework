@@ -303,7 +303,7 @@ public class Slider extends AbstractField<Number> {
      *             If the given value is not inside the range of the slider.
      * @see #setMin(double) {@link #setMax(double)}
      */
-    public void setValue(Double value, boolean repaintIsNotNeeded)
+    protected void setValue(Double value, boolean repaintIsNotNeeded)
             throws ValueOutOfBoundsException {
         final double v = value.doubleValue();
         double newValue;
