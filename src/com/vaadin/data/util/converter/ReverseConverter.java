@@ -1,3 +1,7 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.data.util.converter;
 
 import java.util.Locale;
