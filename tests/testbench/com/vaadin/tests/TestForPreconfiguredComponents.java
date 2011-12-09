@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.tests;
@@ -23,7 +23,7 @@ import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.VerticalLayout;
 
 /**
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  */
 public class TestForPreconfiguredComponents extends CustomComponent implements
         Handler {

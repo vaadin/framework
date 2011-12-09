@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.data.util.sqlcontainer.query.generator;
 
@@ -19,7 +19,7 @@ import com.vaadin.data.util.sqlcontainer.query.generator.filter.StringDecorator;
 /**
  * Generates generic SQL that is supported by HSQLDB, MySQL and PostgreSQL.
  * 
- * @author Jonatan Kronqvist / IT Mill Ltd
+ * @author Jonatan Kronqvist / Vaadin Ltd
  */
 @SuppressWarnings("serial")
 public class DefaultSQLGenerator implements SQLGenerator {

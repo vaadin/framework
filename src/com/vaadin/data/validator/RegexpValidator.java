@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.data.validator;
 
@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
  * information.
  * </p>
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 5.4

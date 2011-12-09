@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.ui;
 
@@ -35,7 +35,6 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
  * Login page html can be overridden by replacing protected getLoginHTML method.
  * As the login page is actually an iframe, styles must be handled manually. By
  * default component tries to guess the right place for theme css.
- * <p>
  * 
  * @since 5.3
  */

@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -65,7 +65,7 @@ import com.vaadin.terminal.gwt.client.ui.VWindow;
  * Sub window is to be split into a separate component in Vaadin 7.
  * </p>
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -436,8 +436,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      * user closes the window.
      * 
      * <p>
-     * Since Vaadin 6.5, removing windows using {@link #removeWindow(Window)}
-     * does fire the CloseListener.
+     * Since Vaadin 6.5, removing a window using {@link #removeWindow(Window)}
+     * fires the CloseListener.
      * </p>
      */
     public interface CloseListener extends Serializable {

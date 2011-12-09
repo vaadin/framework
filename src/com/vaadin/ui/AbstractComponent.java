@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -37,7 +37,7 @@ import com.vaadin.tools.ReflectTools;
  * external component can inherit this class to easily qualify as Vaadin
  * components. Most components in Vaadin do just that.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0

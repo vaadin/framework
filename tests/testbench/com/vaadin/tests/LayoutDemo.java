@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.tests;
@@ -20,7 +20,7 @@ import com.vaadin.ui.VerticalLayout;
  * This example demonstrates layouts. Layouts are populated with sample Vaadin
  * UI components.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @since 4.0.0
  * 
  */

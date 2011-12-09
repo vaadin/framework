@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -15,7 +15,7 @@ import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
  * various layout components to enable them to place other components in
  * specific locations in the UI.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0

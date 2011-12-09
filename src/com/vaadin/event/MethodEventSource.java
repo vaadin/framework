@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.event;
@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
  * {@link com.vaadin.event com.vaadin.event package documentation}.
  * </p>
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0

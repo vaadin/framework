@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.data.validator;
@@ -8,7 +8,7 @@ package com.vaadin.data.validator;
  * This <code>StringLengthValidator</code> is used to validate the length of
  * strings.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0

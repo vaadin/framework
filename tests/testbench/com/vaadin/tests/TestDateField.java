@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.tests;
@@ -16,7 +16,7 @@ import com.vaadin.ui.VerticalLayout;
 
 /**
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  */
 public class TestDateField extends CustomComponent {
 

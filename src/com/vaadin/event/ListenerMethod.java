@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.event;
@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  * calling of the trigger method.
  * </p>
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -609,7 +609,7 @@ public class ListenerMethod implements EventListener, Serializable {
      * arbitrary exception. The original exception is wrapped into
      * MethodException instance and rethrown by the <code>ListenerMethod</code>.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0

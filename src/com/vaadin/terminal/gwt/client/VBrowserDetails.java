@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.terminal.gwt.client;
 
@@ -12,7 +12,7 @@ import com.vaadin.terminal.gwt.server.WebBrowser;
  * information about the browser. Used internally by {@link BrowserInfo} and
  * {@link WebBrowser}. Should not be used directly.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version @VERSION@
  * @since 6.3
  */

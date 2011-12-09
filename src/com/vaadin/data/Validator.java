@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.data;
@@ -37,7 +37,7 @@ import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
  * migration from earlier Vaadin versions.
  * </p>
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -65,7 +65,7 @@ public interface Validator extends Serializable {
      * {@link #getHtmlMessage()} and use the subclass in validators.
      * </p>
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -253,7 +253,7 @@ public interface Validator extends Serializable {
      * validation failed because the value was empty. What empty means is up to
      * the thrower.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 5.3.0

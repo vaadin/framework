@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.tests;
@@ -33,7 +33,7 @@ import com.vaadin.ui.VerticalLayout;
  * </p>
  * 
  * @since 3.1.1
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  */
 public class UpgradingSample extends Application.LegacyApplication implements
         Property.ValueChangeListener {

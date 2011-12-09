@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.ui;
 
@@ -13,7 +13,7 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * subcomponents in the order of their addition (vertically). A vertical layout
  * is by default 100% wide.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 5.3

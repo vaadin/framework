@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.client.ui;
@@ -33,7 +33,7 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutAct
 /**
  * This class represents a basic text input field with one row.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * 
  */
 public class VTextField extends TextBoxBase implements Paintable, Field,
@@ -554,7 +554,20 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     }
 
     public void onBeforeShortcutAction(Event e) {
+        // Remember current value to detect changes
+        String oldValue = valueBeforeEdit;
+
         valueChange(false);
+
+        /*
+         * The valueChange method updates valueBeforeEdit when a "text" variable
+         * is sent. This will cause a text change event to be simulated on the
+         * server. In that case, we should avoid sending the same text as a
+         * normal text change event. (#8035)
+         */
+        if (oldValue != valueBeforeEdit) {
+            lastTextChangeString = valueBeforeEdit;
+        }
     }
 
     // Here for backward compatibility; to be moved to TextArea

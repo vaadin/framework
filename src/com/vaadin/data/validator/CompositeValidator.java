@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.data.validator;
@@ -19,7 +19,7 @@ import com.vaadin.data.validator.CompositeValidator.CombinationMode;
  * validator validates the value. This behaviour is controlled by the modes
  * <code>AND</code> and <code>OR</code>.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0

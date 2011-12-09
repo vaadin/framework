@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -53,6 +53,8 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     @Override
     public void addComponent(Component c) {
+        // Add to components before calling super.addComponent
+        // so that it is available to AttachListeners
         components.add(c);
         try {
             super.addComponent(c);
@@ -71,6 +73,11 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      *            the component to be added.
      */
     public void addComponentAsFirst(Component c) {
+        // If c is already in this, we must remove it before proceeding
+        // see ticket #7668
+        if (c.getParent() == this) {
+            removeComponent(c);
+        }
         components.addFirst(c);
         try {
             super.addComponent(c);
@@ -87,10 +94,19 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * @param c
      *            the component to be added.
      * @param index
-     *            the Index of the component position. The components currently
+     *            the index of the component position. The components currently
      *            in and after the position are shifted forwards.
      */
     public void addComponent(Component c, int index) {
+        // If c is already in this, we must remove it before proceeding
+        // see ticket #7668
+        if (c.getParent() == this) {
+            // When c is removed, all components after it are shifted down
+            if (index > getComponentIndex(c)) {
+                index--;
+            }
+            removeComponent(c);
+        }
         components.add(index, c);
         try {
             super.addComponent(c);

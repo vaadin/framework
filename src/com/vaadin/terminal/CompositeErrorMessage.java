@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Class for combining multiple error messages together.
  * 
- * @author IT Mill Ltd
+ * @author Vaadin Ltd
  * @version
  * @VERSION@
  * @since 3.0

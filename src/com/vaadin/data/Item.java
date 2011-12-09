@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.data;
@@ -14,7 +14,7 @@ import java.util.Collection;
  * to enable a class to implement only the functionalities it needs.
  * </p>
  * 
- * @author IT Mill Ltd
+ * @author Vaadin Ltd
  * @version
  * @VERSION@
  * @since 3.0

@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal;
@@ -10,7 +10,7 @@ import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
  * <code>UserError</code> is a controlled error occurred in application. User
  * errors are occur in normal usage of the application and guide the user.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0

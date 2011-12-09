@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.client.ui;
@@ -1094,6 +1094,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     }
                     if (selected != row.isSelected()) {
                         row.toggleSelection();
+                        if (!isSingleSelectMode() && !selected) {
+                            // Update selection range in case a row is
+                            // unselected from the middle of a range - #8076
+                            removeRowFromUnsentSelectionRanges(row);
+                        }
                     }
                 }
             }
@@ -4121,7 +4126,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 VScrollTableRow r = (VScrollTableRow) renderedRows.get(ix);
                 r.setIndex(r.getIndex() + rows);
             }
-            fixSpacers();
+            setContainerHeight();
             return inserted;
         }
 
@@ -4129,6 +4134,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 int rows) {
             unlinkAllRowsStartingAt(firstIndex);
             insertRows(rowData, firstIndex, rows);
+            setContainerHeight();
         }
 
         /**
@@ -4247,7 +4253,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 VScrollTableRow r = (VScrollTableRow) renderedRows.get(ix);
                 r.setIndex(r.getIndex() - count);
             }
-            fixSpacers();
+            setContainerHeight();
         }
 
         protected void unlinkAllRowsStartingAt(int index) {
@@ -4840,44 +4846,44 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
             }
 
-            private void handleClickEvent(Event event, Element targetTdOrTr) {
-                if (client.hasEventListeners(VScrollTable.this,
+            /**
+             * If there are registered click listeners, sends a click event and
+             * returns true. Otherwise, does nothing and returns false.
+             * 
+             * @param event
+             * @param targetTdOrTr
+             * @param immediate
+             *            Whether the event is sent immediately
+             * @return Whether a click event was sent
+             */
+            private boolean handleClickEvent(Event event, Element targetTdOrTr,
+                    boolean immediate) {
+                if (!client.hasEventListeners(VScrollTable.this,
                         ITEM_CLICK_EVENT_ID)) {
-                    boolean doubleClick = (DOM.eventGetType(event) == Event.ONDBLCLICK);
-
-                    /* This row was clicked */
-                    client.updateVariable(paintableId, "clickedKey", ""
-                            + rowKey, false);
-
-                    if (getElement() == targetTdOrTr.getParentElement()) {
-                        /* A specific column was clicked */
-                        int childIndex = DOM.getChildIndex(getElement(),
-                                targetTdOrTr);
-                        String colKey = null;
-                        colKey = tHead.getHeaderCell(childIndex).getColKey();
-                        client.updateVariable(paintableId, "clickedColKey",
-                                colKey, false);
-                    }
-
-                    MouseEventDetails details = new MouseEventDetails(event);
-
-                    boolean imm = true;
-                    if (immediate && event.getButton() == Event.BUTTON_LEFT
-                            && !doubleClick && isSelectable() && !isSelected()) {
-                        /*
-                         * A left click when the table is selectable and in
-                         * immediate mode on a row that is not currently
-                         * selected will cause a selection event to be fired
-                         * after this click event. By making the click event
-                         * non-immediate we avoid sending two separate messages
-                         * to the server.
-                         */
-                        imm = false;
-                    }
-
-                    client.updateVariable(paintableId, "clickEvent",
-                            details.toString(), imm);
+                    // Don't send an event if nobody is listening
+                    return false;
                 }
+
+                // This row was clicked
+                client.updateVariable(paintableId, "clickedKey", "" + rowKey,
+                        false);
+
+                if (getElement() == targetTdOrTr.getParentElement()) {
+                    // A specific column was clicked
+                    int childIndex = DOM.getChildIndex(getElement(),
+                            targetTdOrTr);
+                    String colKey = null;
+                    colKey = tHead.getHeaderCell(childIndex).getColKey();
+                    client.updateVariable(paintableId, "clickedColKey", colKey,
+                            false);
+                }
+
+                MouseEventDetails details = new MouseEventDetails(event);
+
+                client.updateVariable(paintableId, "clickEvent",
+                        details.toString(), immediate);
+
+                return true;
             }
 
             private void handleTooltips(final Event event, Element target) {
@@ -4929,9 +4935,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 && (actionKeys != null || client
                                         .hasEventListeners(VScrollTable.this,
                                                 ITEM_CLICK_EVENT_ID))) {
-                            // Prevent browser context menu only if there are
-                            // action handlers or item click listeners
-                            // registered
+                            /*
+                             * Prevent browser context menu only if there are
+                             * action handlers or item click listeners
+                             * registered
+                             */
                             event.stopPropagation();
                             event.preventDefault();
                         }
@@ -4946,13 +4954,19 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     switch (type) {
                     case Event.ONDBLCLICK:
                         if (targetCellOrRowFound) {
-                            handleClickEvent(event, targetTdOrTr);
+                            handleClickEvent(event, targetTdOrTr, true);
                         }
                         break;
                     case Event.ONMOUSEUP:
                         if (targetCellOrRowFound) {
                             mDown = false;
-                            handleClickEvent(event, targetTdOrTr);
+                            /*
+                             * Queue here, send at the same time as the
+                             * corresponding value change event - see #7127
+                             */
+                            boolean clickEventSent = handleClickEvent(event,
+                                    targetTdOrTr, false);
+
                             if (event.getButton() == Event.BUTTON_LEFT
                                     && isSelectable()) {
 
@@ -5041,7 +5055,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                             .setPropertyJSO("onselectstart",
                                                     null);
                                 }
-                                sendSelectedRows();
+                                // Queue value change
+                                sendSelectedRows(false);
+                            }
+                            /*
+                             * Send queued click and value change events if any
+                             * If a click event is sent, send value change with
+                             * it regardless of the immediate flag, see #7127
+                             */
+                            if (immediate || clickEventSent) {
+                                client.sendPendingVariableChanges();
                             }
                         }
                         break;

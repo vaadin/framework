@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.data.util;
@@ -20,7 +20,7 @@ import com.vaadin.data.Property;
  * The class supports listeners who are interested in changes to the Property
  * set managed by the class.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -158,7 +158,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * An <code>event</code> object specifying an Item whose Property set has
      * changed.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0

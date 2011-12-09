@@ -9,7 +9,7 @@ import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Root;
 
 /**
- * @author Risto Yrjänä / IT Mill Ltd.
+ * @author Risto Yrjänä / Vaadin Ltd.
  * 
  */
 public class Ticket2742 extends Application.LegacyApplication {

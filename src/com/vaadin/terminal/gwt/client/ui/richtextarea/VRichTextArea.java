@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.client.ui.richtextarea;
@@ -38,7 +38,7 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHan
 /**
  * This class implements a basic client side rich text editor component.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * 
  */
 public class VRichTextArea extends Composite implements Paintable, Field,

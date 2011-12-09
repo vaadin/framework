@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.data.util;
@@ -27,7 +27,7 @@ import com.vaadin.terminal.Resource;
 /**
  * A hierarchical container wrapper for a filesystem.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -586,7 +586,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     /**
      * A Item wrapper for files in a filesystem.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -739,7 +739,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      * Generic file extension filter for displaying only files having certain
      * extension.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0

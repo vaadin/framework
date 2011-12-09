@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.data;
@@ -39,7 +39,7 @@ import com.vaadin.terminal.SystemError;
  * the object is in read-through mode.
  * </p>
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -144,7 +144,7 @@ public interface Buffered extends Serializable {
      * buffered object tried to access its data source or if there is a problem
      * in processing a data source.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0

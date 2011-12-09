@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -67,7 +67,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
  * Components in a Table will not have their caption nor icon rendered.
  * </p>
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -2716,7 +2716,7 @@ public class Table extends AbstractSelect implements Action.Container,
         rowCacheInvalidated = invalidated;
     }
 
-    private boolean isRowCacheInvalidated() {
+    protected boolean isRowCacheInvalidated() {
         return rowCacheInvalidated;
     }
 
@@ -3834,8 +3834,12 @@ public class Table extends AbstractSelect implements Action.Container,
         final LinkedList<Object> visible = new LinkedList<Object>();
 
         final Object[][] cells = getVisibleCells();
-        for (int i = 0; i < cells[CELL_ITEMID].length; i++) {
-            visible.add(cells[CELL_ITEMID][i]);
+        // may be null if the table has not been rendered yet (e.g. not attached
+        // to a layout)
+        if (null != cells) {
+            for (int i = 0; i < cells[CELL_ITEMID].length; i++) {
+                visible.add(cells[CELL_ITEMID][i]);
+            }
         }
 
         return visible;
@@ -4027,6 +4031,9 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public void setTableFieldFactory(TableFieldFactory fieldFactory) {
         this.fieldFactory = fieldFactory;
+
+        // Assure visual refresh
+        refreshRowCache();
     }
 
     /**

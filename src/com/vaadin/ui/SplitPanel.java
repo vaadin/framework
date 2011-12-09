@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -15,7 +15,7 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * <code>SplitPanel</code> is a component container, that can contain two
  * components (possibly containers) which are split by divider element.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 5.0

@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.data.util;
 
@@ -33,7 +33,7 @@ import com.vaadin.data.Property;
  *            type of the underlying property (a PropertyFormatter is always a
  *            Property&lt;String&gt;)
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @since 5.3.0
  */
 @SuppressWarnings("serial")

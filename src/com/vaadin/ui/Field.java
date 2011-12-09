@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -10,6 +10,7 @@ import com.vaadin.ui.Component.Focusable;
 
 /**
  * TODO document
+ * @author Vaadin Ltd.
  * 
  * @param T
  *            the type of values in the field, which might not be the same type
@@ -63,7 +64,7 @@ public interface Field<T> extends Component, BufferedValidatable, Property<T>,
      * An <code>Event</code> object specifying the Field whose value has been
      * changed.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0

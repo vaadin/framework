@@ -143,10 +143,6 @@
                 <include name="${toolkit-package}/tests/**/*" />
                 <include name="${toolkit-package}/launcher/**" />
             </fileset>
-            <fileset dir="${result-path}/src/core">
-                <include name="${toolkit-package}/launcher/**" />
-                <exclude name="${toolkit-package}/launcher/**/*.java" />
-            </fileset>
             <!-- test resources -->
             <fileset dir="tests/testbench">
                 <include name="${toolkit-package}/tests/**/*" />
@@ -155,6 +151,12 @@
                 <exclude name="**/*.html" />
                 <exclude name="**/*.css" />
                 <exclude name="**/*.xml" />
+            </fileset>
+
+        	<!-- Include files required by the DemoLauncher/DevelopmentServerLauncher -->
+            <fileset dir="tests/testbench">
+        		<include name="${toolkit-package}/launcher/jetty-webdefault.xml" />
+        		<include name="${toolkit-package}/launcher/keystore" />
             </fileset>
         </copy>
 
@@ -236,7 +238,7 @@
         Other files are just copied.
         -->
         
-        <loadfile property="ITMillApache2LicenseForJavaFiles" srcFile="build/ITMillApache2LicenseForJavaFiles.txt" />
+        <loadfile property="VaadinApache2LicenseForJavaFiles" srcFile="build/VaadinApache2LicenseForJavaFiles.txt" />
         <mkdir dir="${result-path}/src" />
         
         <mkdir dir="${result-path}/src/core" />
@@ -257,7 +259,7 @@
             <exclude name="**/*.xml" />
         </patternset>
         <filterset id="version-and-license">
-            <filter token="ITMillApache2LicenseForJavaFiles" value="${ITMillApache2LicenseForJavaFiles}" />
+            <filter token="VaadinApache2LicenseForJavaFiles" value="${VaadinApache2LicenseForJavaFiles}" />
             <filter token="VERSION" value="${version.full}" />
         </filterset>
         
@@ -439,6 +441,9 @@
     
     <target name="compile-widgetset" depends="init-deps" description="Compiles the widgetset given as the first parameter">
         <fail unless="widgetset" message="No widgetset parameter set"/>
+        <property name="widgetset-style" value="OBF" />
+    	<property name="widgetset-localWorkers" value="4" />
+    	<property name="widgetset-extraParams" value="" />
         <echo>Compiling widgetset ${widgetset}. Output directory: ${widgetsets-output-dir}</echo>
     	<mkdir dir="${widgetsets-output-dir}"/>
         <java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
@@ -450,9 +455,10 @@
             <arg value="-war" />
             <arg value="${widgetsets-output-dir}" />
             <arg value="-style" />
-            <arg value="OBF" />
+            <arg value="${widgetset-style}" />
             <arg value="-localWorkers" />
-            <arg value="4" />
+            <arg value="${widgetset-localWorkers}" />
+        	<arg line="${widgetset-extraParams}" />
             <arg value="${widgetset}" />
 
             <jvmarg value="-Xss8M"/>
@@ -607,7 +613,6 @@
         <jar file="${result-path}/${lib-sources-jar-name}" compress="true">
             <fileset dir="${result-path}/src/core">
                 <patternset>
-                    <exclude name="${toolkit-package}/launcher/**" />
                     <include name="**/*.java" />
                 </patternset>
             </fileset>

@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -44,9 +44,8 @@ import com.vaadin.terminal.gwt.client.ui.VSlider;
  * 
  * </code>
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  */
-@SuppressWarnings("serial")
 @ClientWidget(VSlider.class)
 public class Slider extends AbstractField<Number> {
 
@@ -110,7 +109,7 @@ public class Slider extends AbstractField<Number> {
     private final boolean arrows = false;
 
     /**
-     * Default Slider constructor. Sets all values to defaults and the slide
+     * Default slider constructor. Sets all values to defaults and the slide
      * handle at minimum value.
      * 
      */
@@ -120,11 +119,13 @@ public class Slider extends AbstractField<Number> {
     }
 
     /**
-     * Create a new slider with the caption given as parameter. All slider
-     * values set to defaults.
+     * Create a new slider with the caption given as parameter.
+     * 
+     * The range of the slider is set to 0-100 and only integer values are
+     * allowed.
      * 
      * @param caption
-     *            The caption for this Slider (e.g. "Volume").
+     *            The caption for this slider (e.g. "Volume").
      */
     public Slider(String caption) {
         this();
@@ -132,11 +133,14 @@ public class Slider extends AbstractField<Number> {
     }
 
     /**
-     * Create a new slider with given range and resolution
+     * Create a new slider with the given range and resolution.
      * 
      * @param min
+     *            The minimum value of the slider
      * @param max
+     *            The maximum value of the slider
      * @param resolution
+     *            The number of digits after the decimal point.
      */
     public Slider(double min, double max, int resolution) {
         this();
@@ -146,10 +150,12 @@ public class Slider extends AbstractField<Number> {
     }
 
     /**
-     * Create a new slider with given range
+     * Create a new slider with the given range that only allows integer values.
      * 
      * @param min
+     *            The minimum value of the slider
      * @param max
+     *            The maximum value of the slider
      */
     public Slider(int min, int max) {
         this();
@@ -159,11 +165,15 @@ public class Slider extends AbstractField<Number> {
     }
 
     /**
-     * Create a new slider with given caption and range
+     * Create a new slider with the given caption and range that only allows
+     * integer values.
      * 
      * @param caption
+     *            The caption for the slider
      * @param min
+     *            The minimum value of the slider
      * @param max
+     *            The maximum value of the slider
      */
     public Slider(String caption, int min, int max) {
         this(min, max);
@@ -171,20 +181,20 @@ public class Slider extends AbstractField<Number> {
     }
 
     /**
-     * Gets the biggest possible value in Sliders range.
+     * Gets the maximum slider value
      * 
-     * @return the biggest value slider can have
+     * @return the largest value the slider can have
      */
     public double getMax() {
         return max;
     }
 
     /**
-     * Set the maximum value of the Slider. If the current value of the Slider
-     * is out of new bounds, the value is set to new minimum.
+     * Set the maximum slider value. If the current value of the slider is
+     * larger than this, the value is set to the new maximum.
      * 
      * @param max
-     *            New maximum value of the Slider.
+     *            The new maximum slider value
      */
     public void setMax(double max) {
         this.max = max;
@@ -204,20 +214,20 @@ public class Slider extends AbstractField<Number> {
     }
 
     /**
-     * Gets the minimum value in Sliders range.
+     * Gets the minimum slider value
      * 
-     * @return the smalles value slider can have
+     * @return the smallest value the slider can have
      */
     public double getMin() {
         return min;
     }
 
     /**
-     * Set the minimum value of the Slider. If the current value of the Slider
-     * is out of new bounds, the value is set to new minimum.
+     * Set the minimum slider value. If the current value of the slider is
+     * smaller than this, the value is set to the new minimum.
      * 
-     * @param min
-     *            New minimum value of the Slider.
+     * @param max
+     *            The new minimum slider value
      */
     public void setMin(double min) {
         this.min = min;
@@ -237,18 +247,21 @@ public class Slider extends AbstractField<Number> {
     }
 
     /**
-     * Get the current orientation of the Slider (horizontal or vertical).
+     * Get the current orientation of the slider (horizontal or vertical).
      * 
-     * @return orientation
+     * @return {@link #ORIENTATION_HORIZONTAL} or
+     *         {@link #ORIENTATION_HORIZONTAL}
      */
     public int getOrientation() {
         return orientation;
     }
 
     /**
-     * Set the orientation of the Slider.
+     * Set the orientation of the slider.
      * 
-     * @param int new orientation
+     * @param The
+     *            new orientation, either {@link #ORIENTATION_HORIZONTAL} or
+     *            {@link #ORIENTATION_VERTICAL}
      */
     public void setOrientation(int orientation) {
         this.orientation = orientation;
@@ -256,7 +269,8 @@ public class Slider extends AbstractField<Number> {
     }
 
     /**
-     * Get the current resolution of the Slider.
+     * Get the current resolution of the slider. The resolution is the number of
+     * digits after the decimal point.
      * 
      * @return resolution
      */
@@ -265,7 +279,8 @@ public class Slider extends AbstractField<Number> {
     }
 
     /**
-     * Set a new resolution for the Slider.
+     * Set a new resolution for the slider. The resolution is the number of
+     * digits after the decimal point.
      * 
      * @param resolution
      */
@@ -278,14 +293,15 @@ public class Slider extends AbstractField<Number> {
     }
 
     /**
-     * Set the value of this Slider.
+     * Sets the value of the slider.
      * 
      * @param value
-     *            New value of Slider. Must be within Sliders range (min - max),
-     *            otherwise throws an exception.
+     *            The new value of the slider.
      * @param repaintIsNotNeeded
      *            If true, client-side is not requested to repaint itself.
      * @throws ValueOutOfBoundsException
+     *             If the given value is not inside the range of the slider.
+     * @see #setMin(double) {@link #setMax(double)}
      */
     public void setValue(Double value, boolean repaintIsNotNeeded)
             throws ValueOutOfBoundsException {
@@ -308,31 +324,33 @@ public class Slider extends AbstractField<Number> {
     }
 
     /**
-     * Set the value of this Slider.
+     * Sets the value of the slider.
      * 
      * @param value
-     *            New value of Slider. Must be within Sliders range (min - max),
-     *            otherwise throws an exception.
+     *            The new value of the slider.
      * @throws ValueOutOfBoundsException
+     *             If the given value is not inside the range of the slider.
+     * @see #setMin(double) {@link #setMax(double)}
      */
     public void setValue(Double value) throws ValueOutOfBoundsException {
         setValue(value, false);
     }
 
     /**
-     * Set the value of this Slider.
+     * Sets the value of the slider.
      * 
      * @param value
-     *            New value of Slider. Must be within Sliders range (min - max),
-     *            otherwise throws an exception.
+     *            The new value of the slider.
      * @throws ValueOutOfBoundsException
+     *             If the given value is not inside the range of the slider.
+     * @see #setMin(double) {@link #setMax(double)}
      */
     public void setValue(double value) throws ValueOutOfBoundsException {
         setValue(new Double(value), false);
     }
 
     /**
-     * Get the current Slider size.
+     * Get the current slider size.
      * 
      * @return size in pixels or -1 for auto sizing.
      * @deprecated use standard getWidth/getHeight instead
@@ -343,7 +361,7 @@ public class Slider extends AbstractField<Number> {
     }
 
     /**
-     * Set the size for this Slider.
+     * Set the size for this slider.
      * 
      * @param size
      *            in pixels, or -1 auto sizing.
@@ -364,7 +382,7 @@ public class Slider extends AbstractField<Number> {
     }
 
     /**
-     * Get the handle size of this Slider.
+     * Get the handle size of this slider.
      * 
      * @return handle size in percentages.
      * @deprecated The size is dictated by the current theme.
@@ -375,7 +393,7 @@ public class Slider extends AbstractField<Number> {
     }
 
     /**
-     * Set the handle size of this Slider.
+     * Set the handle size of this slider.
      * 
      * @param handleSize
      *            in percentages relative to slider base size.
@@ -466,9 +484,10 @@ public class Slider extends AbstractField<Number> {
     }
 
     /**
-     * ValueOutOfBoundsException
+     * Thrown when the value of the slider is about to be set to a value that is
+     * outside the valid range of the slider.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * 
      */
     public class ValueOutOfBoundsException extends Exception {
@@ -485,6 +504,11 @@ public class Slider extends AbstractField<Number> {
             value = valueOutOfBounds;
         }
 
+        /**
+         * Gets the value that is outside the valid range of the slider.
+         * 
+         * @return the value that is out of bounds
+         */
         public Double getValue() {
             return value;
         }

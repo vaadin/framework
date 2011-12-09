@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.tests;
@@ -26,7 +26,7 @@ import com.vaadin.ui.Tree;
  * contents are changed when menu items are clicked. Contents are HTML pages
  * located at themes/example/layout directory.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @since 4.0.0
  * 
  */

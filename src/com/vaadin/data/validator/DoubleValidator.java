@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.data.validator;
 
@@ -8,7 +8,7 @@ package com.vaadin.data.validator;
  * {@link com.vaadin.data.validator.AbstractStringValidator} for more
  * information.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 5.4

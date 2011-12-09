@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.event;
@@ -13,7 +13,7 @@ import com.vaadin.ui.Component;
 /**
  * Interface that serves as a wrapper for mouse related events.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @see ClickListener
  * @version
  * @VERSION@
@@ -29,7 +29,7 @@ public interface MouseEvents {
      * The information available for click events are terminal dependent.
      * Correct values for all event details cannot be guaranteed.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @see ClickListener
      * @version
      * @VERSION@
@@ -168,7 +168,7 @@ public interface MouseEvents {
      * {@link Component}.
      * 
      * @see ClickEvent
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 6.2
@@ -193,7 +193,7 @@ public interface MouseEvents {
      * Fired when the user double-clicks on a <code>Component</code>.
      * 
      * @see ClickEvent
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 6.2
@@ -210,7 +210,7 @@ public interface MouseEvents {
      * {@link Component}.
      * 
      * @see DoubleClickEvent
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 6.2

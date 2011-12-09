@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -30,7 +30,7 @@ import com.vaadin.ui.Component.Focusable;
 /**
  * A generic button component.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 3.0
@@ -137,7 +137,7 @@ public class Button extends AbstractComponent implements
     /**
      * Click event. This event is thrown, when the button is clicked.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0
@@ -298,7 +298,7 @@ public class Button extends AbstractComponent implements
      * Interface for listening for a {@link ClickEvent} fired by a
      * {@link Component}.
      * 
-     * @author IT Mill Ltd.
+     * @author Vaadin Ltd.
      * @version
      * @VERSION@
      * @since 3.0

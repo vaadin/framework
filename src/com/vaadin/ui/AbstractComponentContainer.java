@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -18,7 +18,7 @@ import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
  * components that need to contain other components inherit this class to easily
  * qualify as a component container.
  * 
- * @author IT Mill Ltd
+ * @author Vaadin Ltd
  * @version
  * @VERSION@
  * @since 3.0

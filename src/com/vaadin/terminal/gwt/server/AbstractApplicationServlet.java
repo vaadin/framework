@@ -1,5 +1,5 @@
 /*
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.terminal.gwt.server;
 
@@ -52,7 +52,7 @@ import com.vaadin.ui.Root;
  * cases this is unnecessary.
  * 
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 6.0

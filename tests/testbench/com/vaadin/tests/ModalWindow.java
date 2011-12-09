@@ -1,5 +1,5 @@
 /* 
-@ITMillApache2LicenseForJavaFiles@
+@VaadinApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.tests;
@@ -16,7 +16,7 @@ import com.vaadin.ui.Window;
  * Simple program that demonstrates "modal windows" that block all access other
  * windows.
  * 
- * @author IT Mill Ltd.
+ * @author Vaadin Ltd.
  * @since 4.0.1
  * @see com.vaadin.Application
  * @see com.vaadin.ui.Window
