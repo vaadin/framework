@@ -47,7 +47,7 @@ import com.vaadin.terminal.gwt.client.ui.VSlider;
  * @author Vaadin Ltd.
  */
 @ClientWidget(VSlider.class)
-public class Slider extends AbstractField<Number> {
+public class Slider extends AbstractField<Double> {
 
     public static final int ORIENTATION_HORIZONTAL = 0;
 
@@ -198,17 +198,8 @@ public class Slider extends AbstractField<Number> {
      */
     public void setMax(double max) {
         this.max = max;
-        try {
-            if ((new Double(getValue().toString())).doubleValue() > max) {
-                super.setValue(new Double(max));
-            }
-        } catch (final ClassCastException e) {
-            // FIXME: Handle exception
-            /*
-             * Where does ClassCastException come from? Can't see any casts
-             * above
-             */
-            super.setValue(new Double(max));
+        if (getValue() > max) {
+            setValue(max);
         }
         requestRepaint();
     }
@@ -231,17 +222,8 @@ public class Slider extends AbstractField<Number> {
      */
     public void setMin(double min) {
         this.min = min;
-        try {
-            if ((new Double(getValue().toString())).doubleValue() < min) {
-                super.setValue(new Double(min));
-            }
-        } catch (final ClassCastException e) {
-            // FIXME: Handle exception
-            /*
-             * Where does ClassCastException come from? Can't see any casts
-             * above
-             */
-            super.setValue(new Double(min));
+        if (getValue() < min) {
+            setValue(min);
         }
         requestRepaint();
     }
@@ -303,8 +285,8 @@ public class Slider extends AbstractField<Number> {
      *             If the given value is not inside the range of the slider.
      * @see #setMin(double) {@link #setMax(double)}
      */
-    protected void setValue(Double value, boolean repaintIsNotNeeded)
-            throws ValueOutOfBoundsException {
+    @Override
+    protected void setValue(Double value, boolean repaintIsNotNeeded) {
         final double v = value.doubleValue();
         double newValue;
         if (resolution > 0) {
@@ -320,33 +302,7 @@ public class Slider extends AbstractField<Number> {
                 throw new ValueOutOfBoundsException(value);
             }
         }
-        super.setValue(new Double(newValue), repaintIsNotNeeded);
-    }
-
-    /**
-     * Sets the value of the slider.
-     * 
-     * @param value
-     *            The new value of the slider.
-     * @throws ValueOutOfBoundsException
-     *             If the given value is not inside the range of the slider.
-     * @see #setMin(double) {@link #setMax(double)}
-     */
-    public void setValue(Double value) throws ValueOutOfBoundsException {
-        setValue(value, false);
-    }
-
-    /**
-     * Sets the value of the slider.
-     * 
-     * @param value
-     *            The new value of the slider.
-     * @throws ValueOutOfBoundsException
-     *             If the given value is not inside the range of the slider.
-     * @see #setMin(double) {@link #setMax(double)}
-     */
-    public void setValue(double value) throws ValueOutOfBoundsException {
-        setValue(new Double(value), false);
+        super.setValue(newValue, repaintIsNotNeeded);
     }
 
     /**
@@ -490,7 +446,7 @@ public class Slider extends AbstractField<Number> {
      * @author Vaadin Ltd.
      * 
      */
-    public class ValueOutOfBoundsException extends Exception {
+    public class ValueOutOfBoundsException extends RuntimeException {
 
         private final Double value;
 
