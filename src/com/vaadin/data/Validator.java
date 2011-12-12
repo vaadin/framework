@@ -20,11 +20,9 @@ import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
  * value.
  * </p>
  * <p>
- * {@link #isValid(Object)} and {@link #validate(Object)} can be used to check
- * if a value is valid. {@link #isValid(Object)} and {@link #validate(Object)}
- * must use the same validation logic so that iff {@link #isValid(Object)}
- * returns false, {@link #validate(Object)} throws an
- * {@link InvalidValueException}.
+ * {@link #validate(Object)} can be used to check if a value is valid. An
+ * {@link InvalidValueException} with an appropriate validation error message is
+ * thrown if the value is not valid.
  * </p>
  * <p>
  * Validators must not have any side effects.
