@@ -95,7 +95,7 @@ public class ClassPathExplorer {
     /**
      * Finds server side widgets with {@link ClientWidget} annotation on the
      * class path (entries that can contain widgets/widgetsets - see
-     * {@link #getRawClasspathEntries()}).
+     * getRawClasspathEntries()).
      * 
      * As a side effect, also accept criteria are searched under the same class
      * path entries and added into the acceptCriterion collection.

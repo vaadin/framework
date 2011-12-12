@@ -72,6 +72,9 @@ public class CompositeValidator extends AbstractValidator {
 
     /**
      * Constructs a composite validator in given mode.
+     * 
+     * @param mode
+     * @param errorMessage
      */
     public CompositeValidator(CombinationMode mode, String errorMessage) {
         super(errorMessage);
@@ -139,8 +142,8 @@ public class CompositeValidator extends AbstractValidator {
     /**
      * Gets the mode of the validator.
      * 
-     * @return Operation mode of the validator: {@link CombinationMode.AND} or
-     *         {@link CombinationMode.OR}.
+     * @return Operation mode of the validator: {@link CombinationMode#AND} or
+     *         {@link CombinationMode#OR}.
      */
     public final CombinationMode getMode() {
         return mode;
@@ -149,8 +152,8 @@ public class CompositeValidator extends AbstractValidator {
     /**
      * Sets the mode of the validator. The valid modes are:
      * <ul>
-     * <li>{@link CombinationMode.AND} (default)
-     * <li>{@link CombinationMode.OR}
+     * <li>{@link CombinationMode#AND} (default)
+     * <li>{@link CombinationMode#OR}
      * </ul>
      * 
      * @param mode
@@ -219,8 +222,11 @@ public class CompositeValidator extends AbstractValidator {
      * validators of given type null is returned.
      * </p>
      * 
+     * @param validatorType
+     *            The type of validators to return
+     * 
      * @return Collection<Validator> of validators compatible with given type
-     *         that must apply or null if none fould.
+     *         that must apply or null if none found.
      */
     public Collection<Validator> getSubValidators(Class validatorType) {
         if (mode != MODE_AND) {

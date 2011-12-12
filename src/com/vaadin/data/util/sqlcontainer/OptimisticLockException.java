@@ -3,6 +3,8 @@
  */
 package com.vaadin.data.util.sqlcontainer;
 
+import com.vaadin.data.util.sqlcontainer.query.TableQuery;
+
 /**
  * An OptimisticLockException is thrown when trying to update or delete a row
  * that has been changed since last read from the database.
@@ -12,7 +14,7 @@ package com.vaadin.data.util.sqlcontainer;
  * configuration. In order to turn on optimistic locking, you need to specify
  * the version column in your TableQuery instance.
  * 
- * @see com.vaadin.addon.sqlcontainer.query.TableQuery#setVersionColumn(String)
+ * @see TableQuery#setVersionColumn(String)
  * 
  * @author Jonatan Kronqvist / Vaadin Ltd
  */

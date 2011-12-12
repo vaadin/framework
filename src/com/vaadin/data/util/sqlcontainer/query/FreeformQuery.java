@@ -178,15 +178,14 @@ public class FreeformQuery implements QueryDelegate {
 
     /**
      * Fetches the results for the query. This implementation always fetches the
-     * entire record set, ignoring the offset and pagelength parameters. In
+     * entire record set, ignoring the offset and page length parameters. In
      * order to support lazy loading of records, you must supply a
      * FreeformQueryDelegate that implements the
      * FreeformQueryDelegate.getQueryString(int,int) method.
      * 
      * @throws SQLException
      * 
-     * @see com.vaadin.addon.sqlcontainer.query.FreeformQueryDelegate#getQueryString(int,
-     *      int) {@inheritDoc}
+     * @see FreeformQueryDelegate#getQueryString(int, int)
      */
     @SuppressWarnings("deprecation")
     public ResultSet getResults(int offset, int pagelength) throws SQLException {
@@ -249,8 +248,8 @@ public class FreeformQuery implements QueryDelegate {
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.addon.sqlcontainer.query.QueryDelegate#setFilters(java.util
-     * .List)
+     * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#setFilters(java
+     * .util.List)
      */
     public void setFilters(List<Filter> filters)
             throws UnsupportedOperationException {
@@ -262,6 +261,13 @@ public class FreeformQuery implements QueryDelegate {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#setOrderBy(java
+     * .util.List)
+     */
     public void setOrderBy(List<OrderBy> orderBys)
             throws UnsupportedOperationException {
         if (delegate != null) {
@@ -272,6 +278,13 @@ public class FreeformQuery implements QueryDelegate {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#storeRow(com.vaadin
+     * .data.util.sqlcontainer.RowItem)
+     */
     public int storeRow(RowItem row) throws SQLException {
         if (activeConnection == null) {
             throw new IllegalStateException("No transaction is active!");
@@ -287,6 +300,13 @@ public class FreeformQuery implements QueryDelegate {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#removeRow(com.vaadin
+     * .data.util.sqlcontainer.RowItem)
+     */
     public boolean removeRow(RowItem row) throws SQLException {
         if (activeConnection == null) {
             throw new IllegalStateException("No transaction is active!");
@@ -302,6 +322,12 @@ public class FreeformQuery implements QueryDelegate {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#beginTransaction()
+     */
     public synchronized void beginTransaction()
             throws UnsupportedOperationException, SQLException {
         if (activeConnection != null) {
@@ -311,6 +337,11 @@ public class FreeformQuery implements QueryDelegate {
         activeConnection.setAutoCommit(false);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.util.sqlcontainer.query.QueryDelegate#commit()
+     */
     public synchronized void commit() throws UnsupportedOperationException,
             SQLException {
         if (activeConnection == null) {
@@ -323,6 +354,11 @@ public class FreeformQuery implements QueryDelegate {
         activeConnection = null;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.util.sqlcontainer.query.QueryDelegate#rollback()
+     */
     public synchronized void rollback() throws UnsupportedOperationException,
             SQLException {
         if (activeConnection == null) {
@@ -333,6 +369,13 @@ public class FreeformQuery implements QueryDelegate {
         activeConnection = null;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#getPrimaryKeyColumns
+     * ()
+     */
     public List<String> getPrimaryKeyColumns() {
         return primaryKeyColumns;
     }
@@ -357,9 +400,8 @@ public class FreeformQuery implements QueryDelegate {
      * getContainsRowQueryString method in FreeformQueryDelegate and this will
      * be used instead of the logic.
      * 
-     * @see com.vaadin.addon.sqlcontainer.query.FreeformQueryDelegate#getContainsRowQueryString(Object...)
+     * @see FreeformQueryDelegate#getContainsRowQueryString(Object...)
      * 
-     *      {@inheritDoc}
      */
     @SuppressWarnings("deprecation")
     public boolean containsRowWithKey(Object... keys) throws SQLException {
