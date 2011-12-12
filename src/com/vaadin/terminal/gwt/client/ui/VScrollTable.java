@@ -6676,7 +6676,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             Element focusedElement = Util.getIEFocusedElement();
             if (Util.getPaintableForElement(client, getParent(), focusedElement) == this) {
                 // ..in that case, steal the focus back to the focus handler
-                // but not if focus is in a child component instead (#7965)
+                // but not if focus is in a child component instead (#7956)
                 focus();
                 return;
             }
