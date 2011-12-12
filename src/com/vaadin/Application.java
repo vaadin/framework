@@ -517,11 +517,10 @@ public class Application implements Terminal.ErrorListener, Serializable {
     private Terminal.ErrorListener errorHandler = this;
 
     /**
-     * The converter factory that is used for all fields in the application.
+     * The converter factory that is used to provide default converters for the
+     * application.
      */
-    // private ConverterFactory converterFactory = new
-    // DefaultConverterFactory();
-    private static ConverterFactory converterFactory = new DefaultConverterFactory();
+    private ConverterFactory converterFactory = new DefaultConverterFactory();
 
     private LinkedList<RequestHandler> requestHandlers = new LinkedList<RequestHandler>();
 
@@ -1217,32 +1216,31 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * 
      * @return The converter factory used in the application
      */
-    // public ConverterFactory getConverterFactory() {
-    // return converterFactory;
-    // }
-    // FIXME: Should not be static
-    public static ConverterFactory getConverterFactory() {
+    public ConverterFactory getConverterFactory() {
         return converterFactory;
     }
 
     /**
      * Sets the {@link ConverterFactory} used to locate a suitable
      * {@link Converter} for fields in the application.
-     * 
+     * <p>
      * The {@link ConverterFactory} is used to find a suitable converter when
      * binding data to a UI component and the data type does not match the UI
      * component type, e.g. binding a Double to a TextField (which is based on a
      * String).
-     * 
+     * </p>
+     * <p>
      * The {@link Converter} for an individual field can be overridden using
      * {@link AbstractField#setValueConverter(Converter)}.
+     * </p>
+     * <p>
+     * The converter factory must never be set to null.
      * 
      * @param converterFactory
      *            The converter factory used in the application
      */
-    // FIXME: Should not be static
-    public static void setConverterFactory(ConverterFactory converterFactory) {
-        Application.converterFactory = converterFactory;
+    public void setConverterFactory(ConverterFactory converterFactory) {
+        this.converterFactory = converterFactory;
     }
 
     /**

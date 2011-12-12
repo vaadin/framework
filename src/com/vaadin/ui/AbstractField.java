@@ -665,11 +665,14 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         // Sets the new data source
         dataSource = newDataSource;
 
-        // Check if the current converter is compatible. If not, get a new one
-        if (newDataSource == null) {
-            setValueConverter(null);
-        } else if (!isValueConverterType(newDataSource.getType())) {
-            setValueConverterFromFactory(newDataSource.getType());
+        // Check if the current converter is compatible.
+        if (newDataSource != null
+                && (getValueConverter() == null || !getValueConverter()
+                        .getSourceType().isAssignableFrom(
+                                newDataSource.getType()))) {
+            // Set a new value converter if there is a new data source and the
+            // there is no old converter or the old is incompatible.
+            updateValueConverterFromFactory(newDataSource.getType());
         }
         // Gets the value from source
         try {
@@ -713,23 +716,39 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         }
     }
 
-    private void setValueConverterFromFactory(Class<?> datamodelType) {
-        // FIXME Use thread local to get application
-        ConverterFactory factory = Application.getConverterFactory();
+    /**
+     * Sets the value converter for the field from the converter factory defined
+     * for the application. Clears the value converter if no application
+     * reference is available or if the factory returns null.
+     * 
+     * @param datamodelType
+     *            The type of the data model that we want to be able to convert
+     *            from
+     */
+    private void updateValueConverterFromFactory(Class<?> datamodelType) {
+        Converter<?, T> converter = null;
 
-        Converter<?, T> converter = (Converter<?, T>) factory.createConverter(
-                datamodelType, getType());
-
+        Application app = Application.getCurrentApplication();
+        if (app != null) {
+            ConverterFactory factory = app.getConverterFactory();
+            converter = (Converter<?, T>) factory.createConverter(
+                    datamodelType, getType());
+        }
         setValueConverter(converter);
     }
 
-    private boolean isValueConverterType(Class<?> type) {
-        if (getValueConverter() == null) {
-            return false;
-        }
-        return getValueConverter().getSourceType().isAssignableFrom(type);
-    }
-
+    /**
+     * Convert the given value from the data source type to the UI type.
+     * 
+     * @param newValue
+     *            The data source value to convert.
+     * @return The converted value that is compatible with the UI type or the
+     *         original value if its type is compatible and no value converter
+     *         is set.
+     * @throws Converter.ConversionException
+     *             if there is no converter and the type is not compatible with
+     *             the data source type.
+     */
     @SuppressWarnings("unchecked")
     private T convertFromDataSource(Object newValue)
             throws Converter.ConversionException {
@@ -753,6 +772,17 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         }
     }
 
+    /**
+     * Convert the given value from the UI type to the data source type.
+     * 
+     * @param fieldValue
+     *            The value to convert. Typically returned by
+     *            {@link #getFieldValue()}
+     * @return The converted value that is compatible with the data source type.
+     * @throws Converter.ConversionException
+     *             if there is no converter and the type is not compatible with
+     *             the data source type.
+     */
     private Object convertToDataSource(T fieldValue)
             throws Converter.ConversionException {
         if (valueConverter != null) {

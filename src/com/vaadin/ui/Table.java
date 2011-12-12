@@ -3467,10 +3467,12 @@ public class Table extends AbstractSelect implements Action.Container,
         if (hasConverter(colId)) {
             converter = getConverter(colId);
         } else {
-            // FIXME: Use thread local
-            converter = (Converter<Object, String>) Application
-                    .getConverterFactory().createConverter(property.getType(),
-                            String.class);
+            Application app = Application.getCurrentApplication();
+            if (app != null) {
+                converter = (Converter<Object, String>) app
+                        .getConverterFactory().createConverter(
+                                property.getType(), String.class);
+            }
         }
         Object value = property.getValue();
         if (converter != null) {
