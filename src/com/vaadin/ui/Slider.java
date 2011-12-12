@@ -268,6 +268,19 @@ public class Slider extends AbstractField<Double> {
     }
 
     @Override
+    public void setValue(Object newFieldValue)
+            throws com.vaadin.data.Property.ReadOnlyException,
+            com.vaadin.data.Property.ConversionException {
+        if (newFieldValue != null && newFieldValue instanceof Number
+                && !(newFieldValue instanceof Double)) {
+            // Support setting all types of Numbers
+            newFieldValue = ((Number) newFieldValue).doubleValue();
+        }
+
+        super.setValue(newFieldValue);
+    }
+
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
