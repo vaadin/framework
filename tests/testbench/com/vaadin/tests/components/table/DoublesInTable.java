@@ -252,7 +252,7 @@ public class DoublesInTable extends TestBase {
 
         t.setConverter("rent", new NumberToStringConverter() {
             @Override
-            protected NumberFormat getFormatter(Locale locale) {
+            protected NumberFormat getFormat(Locale locale) {
                 return NumberFormat.getCurrencyInstance(locale);
                 // DecimalFormat df = new DecimalFormat();
                 // df.setDecimalSeparatorAlwaysShown(true);

@@ -348,9 +348,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * Returns the value that is or should be displayed in the field. This is
      * always of type T.
      * 
-     * This method should return the same as
-     * convertFromDataSource(getDataSourceValue()) if there are no buffered
-     * changes in the field.
+     * This method should return the converter data source value if there are no
+     * buffered changes in the field.
      * 
      * @return The value of the field
      */
@@ -732,7 +731,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     @SuppressWarnings("unchecked")
-    private T convertFromDataSource(Object newValue) {
+    private T convertFromDataSource(Object newValue)
+            throws Converter.ConversionException {
         if (valueConverter != null) {
             return valueConverter.convertFromSourceToTarget(newValue,
                     getLocale());

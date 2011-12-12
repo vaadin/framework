@@ -7,8 +7,23 @@ package com.vaadin.data.util.converter;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * A converter that converts from {@link Long} to {@link Date} and back.
+ * 
+ * @author Vaadin Ltd
+ * @version
+ * @VERSION@
+ * @since 7.0
+ */
 public class LongToDateConverter implements Converter<Long, Date> {
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.util.converter.Converter#convertFromTargetToSource(java
+     * .lang.Object, java.util.Locale)
+     */
     public Long convertFromTargetToSource(Date value, Locale locale) {
         if (value == null) {
             return null;
@@ -17,6 +32,13 @@ public class LongToDateConverter implements Converter<Long, Date> {
         return value.getTime();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.util.converter.Converter#convertFromSourceToTarget(java
+     * .lang.Object, java.util.Locale)
+     */
     public Date convertFromSourceToTarget(Long value, Locale locale) {
         if (value == null) {
             return null;
@@ -25,10 +47,20 @@ public class LongToDateConverter implements Converter<Long, Date> {
         return new Date(value);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.util.converter.Converter#getSourceType()
+     */
     public Class<Long> getSourceType() {
         return Long.class;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.util.converter.Converter#getTargetType()
+     */
     public Class<Date> getTargetType() {
         return Date.class;
     }

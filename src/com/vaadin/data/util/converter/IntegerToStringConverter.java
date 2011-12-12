@@ -8,9 +8,31 @@ import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.util.Locale;
 
+/**
+ * A converter that converts from {@link Integer} to {@link String} and back.
+ * Uses the given locale and a {@link NumberFormat} instance for formatting and
+ * parsing.
+ * <p>
+ * Override and overwrite {@link #getFormat(Locale)} to use a different format.
+ * </p>
+ * 
+ * @author Vaadin Ltd
+ * @version
+ * @VERSION@
+ * @since 7.0
+ */
 public class IntegerToStringConverter implements Converter<Integer, String> {
 
-    protected NumberFormat getFormatter(Locale locale) {
+    /**
+     * Returns the format used by
+     * {@link #convertFromSourceToTarget(Integer, Locale)} and
+     * {@link #convertFromTargetToSource(String, Locale)}.
+     * 
+     * @param locale
+     *            The locale to use
+     * @return A NumberFormat instance
+     */
+    protected NumberFormat getFormat(Locale locale) {
         if (locale == null) {
             return NumberFormat.getIntegerInstance();
         } else {
@@ -18,7 +40,8 @@ public class IntegerToStringConverter implements Converter<Integer, String> {
         }
     }
 
-    public Integer convertFromTargetToSource(String value, Locale locale) {
+    public Integer convertFromTargetToSource(String value, Locale locale)
+            throws ConversionException {
         if (value == null) {
             return null;
         }
@@ -29,7 +52,7 @@ public class IntegerToStringConverter implements Converter<Integer, String> {
         // Parse and detect errors. If the full string was not used, it is
         // an error.
         ParsePosition parsePosition = new ParsePosition(0);
-        Number parsedValue = getFormatter(locale).parse(value, parsePosition);
+        Number parsedValue = getFormat(locale).parse(value, parsePosition);
         if (parsePosition.getIndex() != value.length()) {
             throw new ConversionException("Could not convert '" + value
                     + "' to " + getTargetType().getName());
@@ -42,12 +65,13 @@ public class IntegerToStringConverter implements Converter<Integer, String> {
         return parsedValue.intValue();
     }
 
-    public String convertFromSourceToTarget(Integer value, Locale locale) {
+    public String convertFromSourceToTarget(Integer value, Locale locale)
+            throws ConversionException {
         if (value == null) {
             return null;
         }
 
-        return getFormatter(locale).format(value);
+        return getFormat(locale).format(value);
     }
 
     public Class<Integer> getSourceType() {

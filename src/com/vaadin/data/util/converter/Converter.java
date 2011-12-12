@@ -21,11 +21,18 @@ import java.util.Locale;
  * converter).
  * </p>
  * <p>
+ * All Converters must be stateless and thread safe.
+ * </p>
+ * <p>
  * If conversion of a value fails, a {@link ConversionException} is thrown.
  * </p>
  * 
  * @param <SOURCE>
+ *            The source type. Must be compatible with what
+ *            {@link #getSourceType()} returns.
  * @param <TARGET>
+ *            The target type. Must be compatible with what
+ *            {@link #getTargetType()} returns.
  * @author Vaadin Ltd.
  * @version
  * @VERSION@
