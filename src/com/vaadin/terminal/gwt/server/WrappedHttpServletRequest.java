@@ -6,6 +6,7 @@ package com.vaadin.terminal.gwt.server;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,10 +57,6 @@ public class WrappedHttpServletRequest implements WrappedRequest {
         return request;
     }
 
-    public boolean isRunningInPortlet() {
-        return false;
-    }
-
     public void setAttribute(String name, Object o) {
         request.setAttribute(name, o);
     }
@@ -99,5 +96,21 @@ public class WrappedHttpServletRequest implements WrappedRequest {
     public BrowserDetails getBrowserDetails() {
         // No browserDetails available for normal requests
         return null;
+    }
+
+    public Locale getLocale() {
+        return request.getLocale();
+    }
+
+    public String getRemoteAddr() {
+        return request.getRemoteAddr();
+    }
+
+    public boolean isSecure() {
+        return request.isSecure();
+    }
+
+    public String getHeader(String headerName) {
+        return request.getHeader(headerName);
     }
 }

@@ -7,6 +7,7 @@ package com.vaadin.terminal;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Locale;
 import java.util.Map;
 
 import com.vaadin.Application;
@@ -211,5 +212,13 @@ public interface WrappedRequest extends Serializable {
      * @see BrowserDetails
      */
     public BrowserDetails getBrowserDetails();
+
+    public Locale getLocale();
+
+    public String getRemoteAddr();
+
+    public boolean isSecure();
+
+    public String getHeader(String headerName);
 
 }

@@ -30,7 +30,6 @@ import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.GenericPortlet;
 import javax.portlet.MimeResponse;
-import javax.portlet.PortalContext;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletException;
@@ -72,6 +71,105 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     private static final Logger logger = Logger
             .getLogger(AbstractApplicationPortlet.class.getName());
+
+    private static class WrappedHttpAndPortletRequest extends
+            WrappedPortletRequest {
+
+        public WrappedHttpAndPortletRequest(PortletRequest request,
+                HttpServletRequest originalRequest) {
+            super(request);
+            this.originalRequest = originalRequest;
+        }
+
+        private final HttpServletRequest originalRequest;
+
+        @Override
+        public String getParameter(String name) {
+            String parameter = super.getParameter(name);
+            if (parameter == null) {
+                parameter = originalRequest.getParameter(name);
+            }
+            return parameter;
+        }
+
+        @Override
+        public String getRemoteAddr() {
+            return originalRequest.getRemoteAddr();
+        }
+
+        @Override
+        public String getHeader(String name) {
+            String header = super.getHeader(name);
+            if (header == null) {
+                header = originalRequest.getHeader(name);
+            }
+            return header;
+        }
+
+        @Override
+        public Map<String, String[]> getParameterMap() {
+            Map<String, String[]> parameterMap = super.getParameterMap();
+            if (parameterMap == null) {
+                parameterMap = originalRequest.getParameterMap();
+            }
+            return parameterMap;
+        }
+    }
+
+    private static class WrappedGateinRequest extends
+            WrappedHttpAndPortletRequest {
+        public WrappedGateinRequest(PortletRequest request) {
+            super(request, getOriginalRequest(request));
+        }
+
+        private static final HttpServletRequest getOriginalRequest(
+                PortletRequest request) {
+            try {
+                Method getRealReq = request.getClass().getMethod(
+                        "getRealRequest");
+                HttpServletRequestWrapper origRequest = (HttpServletRequestWrapper) getRealReq
+                        .invoke(request);
+                return origRequest;
+            } catch (Exception e) {
+                throw new IllegalStateException("GateIn request not detected",
+                        e);
+            }
+        }
+    }
+
+    private static class WrappedLiferayRequest extends
+            WrappedHttpAndPortletRequest {
+
+        public WrappedLiferayRequest(PortletRequest request) {
+            super(request, getOriginalRequest(request));
+        }
+
+        @Override
+        public String getPortalProperty(String name) {
+            return PropsUtil.get(name);
+        }
+
+        private static HttpServletRequest getOriginalRequest(
+                PortletRequest request) {
+            try {
+                // httpRequest = PortalUtil.getHttpServletRequest(request);
+                HttpServletRequest httpRequest = (HttpServletRequest) PortalClassInvoker
+                        .invoke("com.liferay.portal.util.PortalUtil",
+                                "getHttpServletRequest", request);
+
+                // httpRequest =
+                // PortalUtil.getOriginalServletRequest(httpRequest);
+                httpRequest = (HttpServletRequest) PortalClassInvoker.invoke(
+                        "com.liferay.portal.util.PortalUtil",
+                        "getOriginalServletRequest", httpRequest);
+                return httpRequest;
+            } catch (Exception e) {
+                throw new IllegalStateException("Liferay request not detected",
+                        e);
+            }
+        }
+
+    }
 
     private static class AbstractApplicationPortletWrapper implements Callback {
 
@@ -165,12 +263,12 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * 
      * @param request
      */
-    private void checkWidgetsetVersion(PortletRequest request) {
-        if (!AbstractApplicationServlet.VERSION.equals(getHTTPRequestParameter(
-                request, "wsver"))) {
+    private void checkWidgetsetVersion(WrappedRequest request) {
+        if (!AbstractApplicationServlet.VERSION.equals(request
+                .getParameter("wsver"))) {
             logger.warning(String.format(WIDGETSET_MISMATCH_INFO,
                     AbstractApplicationServlet.VERSION,
-                    getHTTPRequestParameter(request, "wsver")));
+                    request.getParameter("wsver")));
         }
     }
 
@@ -278,11 +376,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @return The location of static resources (inside which there should be a
      *         VAADIN directory). Does not end with a slash (/).
      */
-    protected String getStaticFilesLocation(PortletRequest request) {
+    protected String getStaticFilesLocation(WrappedPortletRequest request) {
         // TODO allow overriding on portlet level?
-        String staticFileLocation = getPortalProperty(
-                Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH,
-                request.getPortalContext());
+        String staticFileLocation = request
+                .getPortalProperty(Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH);
         if (staticFileLocation != null) {
             // remove trailing slash if any
             while (staticFileLocation.endsWith(".")) {
@@ -356,8 +453,19 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             PortletResponse response) throws PortletException, IOException {
         AbstractApplicationPortletWrapper portletWrapper = new AbstractApplicationPortletWrapper(
                 this);
-        WrappedPortletRequest wrappedRequest = new WrappedPortletRequest(
-                request);
+
+        WrappedPortletRequest wrappedRequest;
+
+        String portalInfo = request.getPortalContext().getPortalInfo()
+                .toLowerCase();
+        if (portalInfo.contains("liferay")) {
+            wrappedRequest = new WrappedLiferayRequest(request);
+        } else if (portalInfo.contains("gatein")) {
+            wrappedRequest = new WrappedGateinRequest(request);
+        } else {
+            wrappedRequest = new WrappedPortletRequest(request);
+        }
+
         WrappedPortletResponse wrappedResponse = new WrappedPortletResponse(
                 response);
 
@@ -390,7 +498,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 // TODO What about PARAM_UNLOADBURST & redirectToApplication??
 
                 /* Find out which application this request is related to */
-                application = findApplicationInstance(request, requestType);
+                application = findApplicationInstance(wrappedRequest,
+                        requestType);
                 if (application == null) {
                     return;
                 }
@@ -409,8 +518,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                         .getApplicationManager(application);
 
                 /* Update browser information from request */
-                updateBrowserProperties(applicationContext.getBrowser(),
-                        request);
+                applicationContext.getBrowser().updateRequestDetails(
+                        wrappedRequest);
 
                 /*
                  * Call application requestStart before Application.init() is
@@ -483,7 +592,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     // Handles AJAX UIDL requests
                     if (isRepaintAll(request)) {
                         // warn if versions do not match
-                        checkWidgetsetVersion(request);
+                        checkWidgetsetVersion(wrappedRequest);
                     }
                     applicationManager.handleUidlRequest(wrappedRequest,
                             wrappedResponse, portletWrapper, root);
@@ -556,7 +665,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @throws IOException
      * @throws MalformedURLException
      */
-    private void handleOtherRequest(WrappedRequest request,
+    private void handleOtherRequest(WrappedPortletRequest request,
             WrappedResponse response, RequestType requestType,
             Application application, Root root,
             PortletApplicationContext2 applicationContext,
@@ -571,12 +680,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 response.setStatus(404);
             }
         } else if (requestType == RequestType.RENDER) {
-            PortletRequest portletRequest = ((WrappedPortletRequest) request)
-                    .getPortletRequest();
             PortletResponse portletResponse = ((WrappedPortletResponse) response)
                     .getPortletResponse();
-            writeAjaxPage((RenderRequest) portletRequest,
-                    (RenderResponse) portletResponse, root, application);
+            writeAjaxPage(request, (RenderResponse) portletResponse, root,
+                    application);
         } else if (requestType == RequestType.EVENT) {
             // nothing to do, listeners do all the work
         } else if (requestType == RequestType.ACTION) {
@@ -584,24 +691,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         } else {
             throw new IllegalStateException(
                     "handleRequest() without anything to do - should never happen!");
-        }
-    }
-
-    private void updateBrowserProperties(WebBrowser browser,
-            PortletRequest request) {
-        String userAgent = getHTTPHeader(request, "user-agent");
-        browser.updateRequestDetails(request.getLocale(), null,
-                request.isSecure(), userAgent);
-        if (getHTTPRequestParameter(request, "repaintAll") != null) {
-            browser.updateClientSideDetails(
-                    getHTTPRequestParameter(request, "sw"),
-                    getHTTPRequestParameter(request, "sh"),
-                    getHTTPRequestParameter(request, "tzo"),
-                    getHTTPRequestParameter(request, "rtzo"),
-                    getHTTPRequestParameter(request, "dstd"),
-                    getHTTPRequestParameter(request, "dstActive"),
-                    getHTTPRequestParameter(request, "curdate"),
-                    getHTTPRequestParameter(request, "td") != null);
         }
     }
 
@@ -714,9 +803,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         // Do not send any redirects when running inside a portlet.
     }
 
-    private Application findApplicationInstance(PortletRequest request,
-            RequestType requestType) throws PortletException,
-            SessionExpiredException, MalformedURLException {
+    private Application findApplicationInstance(
+            WrappedPortletRequest wrappedRequest, RequestType requestType)
+            throws PortletException, SessionExpiredException,
+            MalformedURLException {
+        PortletRequest request = wrappedRequest.getPortletRequest();
 
         boolean requestCanCreateApplication = requestCanCreateApplication(
                 request, requestType);
@@ -731,10 +822,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
              * user not specifically requested to close or restart it.
              */
 
-            final boolean restartApplication = (getHTTPRequestParameter(
-                    request, URL_PARAMETER_RESTART_APPLICATION) != null);
-            final boolean closeApplication = (getHTTPRequestParameter(request,
-                    URL_PARAMETER_CLOSE_APPLICATION) != null);
+            final boolean restartApplication = (wrappedRequest
+                    .getParameter(URL_PARAMETER_RESTART_APPLICATION) != null);
+            final boolean closeApplication = (wrappedRequest
+                    .getParameter(URL_PARAMETER_CLOSE_APPLICATION) != null);
 
             if (restartApplication) {
                 closeApplication(application, request.getPortletSession(false));
@@ -811,7 +902,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @param request
      * @return
      */
-    protected String getWidgetsetURL(String widgetset, PortletRequest request) {
+    protected String getWidgetsetURL(String widgetset,
+            WrappedPortletRequest request) {
         return getStaticFilesLocation(request) + "/" + WIDGETSET_DIRECTORY_PATH
                 + widgetset + "/" + widgetset + ".nocache.js?"
                 + new Date().getTime();
@@ -828,7 +920,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @param request
      * @return
      */
-    protected String getThemeURI(String themeName, PortletRequest request) {
+    protected String getThemeURI(String themeName, WrappedPortletRequest request) {
         return getStaticFilesLocation(request) + "/" + THEME_DIRECTORY_PATH
                 + themeName;
     }
@@ -861,7 +953,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      *             represented by the given URL.
      * @throws PortletException
      */
-    protected void writeAjaxPage(RenderRequest request,
+    protected void writeAjaxPage(WrappedPortletRequest request,
             RenderResponse response, Root root, Application application)
             throws IOException, MalformedURLException, PortletException {
 
@@ -902,7 +994,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
 
         writeAjaxPageHtmlMainDiv(request, response, page,
-                getApplicationDomId(request), classNames, divStyle);
+                getApplicationDomId(request.getPortletRequest()), classNames,
+                divStyle);
 
         page.close();
     }
@@ -933,16 +1026,16 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @throws IOException
      * @throws PortletException
      */
-    protected void writeAjaxPageHtmlVaadinScripts(RenderRequest request,
-            RenderResponse response, final BufferedWriter writer,
-            Application application, String themeName) throws IOException,
-            PortletException {
+    protected void writeAjaxPageHtmlVaadinScripts(
+            WrappedPortletRequest request, RenderResponse response,
+            final BufferedWriter writer, Application application,
+            String themeName) throws IOException, PortletException {
         String themeURI = getThemeURI(themeName, request);
 
         // fixed base theme to use - all portal pages with Vaadin
         // applications will load this exactly once
-        String portalTheme = getPortalProperty(PORTAL_PARAMETER_VAADIN_THEME,
-                request.getPortalContext());
+        String portalTheme = request
+                .getPortalProperty(PORTAL_PARAMETER_VAADIN_THEME);
 
         writer.write("<script type=\"text/javascript\">\n");
         writer.write("if(!vaadin || !vaadin.vaadinConfigurations) {\n "
@@ -976,13 +1069,13 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @param writer
      * @throws IOException
      */
-    protected void writeAjaxPageScriptWidgetset(RenderRequest request,
+    protected void writeAjaxPageScriptWidgetset(WrappedPortletRequest request,
             RenderResponse response, final BufferedWriter writer)
             throws IOException {
         String requestWidgetset = getApplicationOrSystemProperty(
                 PARAMETER_WIDGETSET, null);
-        String sharedWidgetset = getPortalProperty(
-                PORTAL_PARAMETER_VAADIN_WIDGETSET, request.getPortalContext());
+        String sharedWidgetset = request
+                .getPortalProperty(PORTAL_PARAMETER_VAADIN_WIDGETSET);
 
         String widgetset;
         if (requestWidgetset != null) {
@@ -1021,7 +1114,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @throws PortletException
      */
     protected Map<String, String> getVaadinConfigurationMap(
-            RenderRequest request, RenderResponse response,
+            WrappedPortletRequest request, RenderResponse response,
             Application application, String themeURI) throws PortletException {
         Map<String, String> config = new LinkedHashMap<String, String>();
 
@@ -1107,12 +1200,13 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @throws IOException
      * @throws PortletException
      */
-    protected void writeAjaxPageScriptConfigurations(RenderRequest request,
-            RenderResponse response, final BufferedWriter writer,
-            Map<String, String> config) throws IOException, PortletException {
+    protected void writeAjaxPageScriptConfigurations(
+            WrappedPortletRequest request, RenderResponse response,
+            final BufferedWriter writer, Map<String, String> config)
+            throws IOException, PortletException {
 
         writer.write("vaadin.vaadinConfigurations[\""
-                + getApplicationDomId(request) + "\"] = {");
+                + getApplicationDomId(request.getPortletRequest()) + "\"] = {");
 
         Iterator<String> keyIt = config.keySet().iterator();
         while (keyIt.hasNext()) {
@@ -1138,7 +1232,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @param portalTheme
      * @throws IOException
      */
-    protected void writeAjaxPageHtmlTheme(RenderRequest request,
+    protected void writeAjaxPageHtmlTheme(WrappedPortletRequest request,
             final BufferedWriter writer, String themeName, String themeURI,
             String portalTheme) throws IOException {
         writer.write("<script type=\"text/javascript\">\n");
@@ -1187,7 +1281,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @param divStyle
      * @throws IOException
      */
-    protected void writeAjaxPageHtmlMainDiv(RenderRequest request,
+    protected void writeAjaxPageHtmlMainDiv(WrappedPortletRequest request,
             RenderResponse response, final BufferedWriter writer, String id,
             String classNames, String divStyle) throws IOException {
         writer.write("<div id=\"" + id + "\" class=\"" + classNames + "\" "
@@ -1212,7 +1306,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @param window
      * @return
      */
-    protected String getThemeForRoot(PortletRequest request, Root root) {
+    protected String getThemeForRoot(WrappedPortletRequest request, Root root) {
         // Finds theme name
         String themeName;
 
@@ -1221,9 +1315,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         if (themeName == null) {
             // no, is the default theme defined by the portal?
-            themeName = getPortalProperty(
-                    Constants.PORTAL_PARAMETER_VAADIN_THEME,
-                    request.getPortalContext());
+            themeName = request
+                    .getPortalProperty(Constants.PORTAL_PARAMETER_VAADIN_THEME);
         }
 
         if (themeName == null) {
@@ -1385,162 +1478,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 + "\"message\" : " + message + "," + "\"url\" : " + url
                 + "}}, \"resources\": {}, \"locales\":[]}]");
         outWriter.close();
-    }
-
-    /**
-     * Returns a portal configuration property.
-     * 
-     * Liferay is handled separately as
-     * {@link PortalContext#getProperty(String)} does not return portal
-     * properties from e.g. portal-ext.properties .
-     * 
-     * @param name
-     * @param context
-     * @return
-     */
-    protected static String getPortalProperty(String name, PortalContext context) {
-        boolean isLifeRay = context.getPortalInfo().toLowerCase()
-                .contains("liferay");
-
-        // TODO test on non-LifeRay platforms
-
-        String value;
-        if (isLifeRay) {
-            value = getLifeRayPortalProperty(name);
-        } else {
-            value = context.getProperty(name);
-        }
-
-        return value;
-    }
-
-    private static String getLifeRayPortalProperty(String name) {
-        String value;
-        try {
-            value = PropsUtil.get(name);
-        } catch (Exception e) {
-            value = null;
-        }
-        return value;
-    }
-
-    /**
-     * Try to get an HTTP header value from a request using portal specific
-     * APIs.
-     * 
-     * @param name
-     *            HTTP header name
-     * @return the value of the header (empty string if defined without a value,
-     *         null if the parameter is not present or retrieving it failed)
-     */
-    private static String getHTTPHeader(PortletRequest request, String name) {
-        String value = null;
-        String portalInfo = request.getPortalContext().getPortalInfo()
-                .toLowerCase();
-        if (portalInfo.contains("liferay")) {
-            value = getLiferayHTTPHeader(request, name);
-        } else if (portalInfo.contains("gatein")) {
-            value = getGateInHTTPHeader(request, name);
-        }
-        return value;
-    }
-
-    /**
-     * Try to get the value of a HTTP request parameter from a portlet request
-     * using portal specific APIs. It is not possible to get the HTTP request
-     * parameters using the official Portlet 2.0 API.
-     * 
-     * @param name
-     *            HTTP request parameter name
-     * @return the value of the parameter (empty string if parameter defined
-     *         without a value, null if the parameter is not present or
-     *         retrieving it failed)
-     */
-    private static String getHTTPRequestParameter(PortletRequest request,
-            String name) {
-        String value = request.getParameter(name);
-        if (value == null) {
-            String portalInfo = request.getPortalContext().getPortalInfo()
-                    .toLowerCase();
-            if (portalInfo.contains("liferay")) {
-                value = getLiferayHTTPRequestParameter(request, name);
-            } else if (portalInfo.contains("gatein")) {
-                value = getGateInHTTPRequestParameter(request, name);
-            }
-        }
-        return value;
-    }
-
-    private static String getGateInHTTPRequestParameter(PortletRequest request,
-            String name) {
-        String value = null;
-        try {
-            Method getRealReq = request.getClass().getMethod("getRealRequest");
-            HttpServletRequestWrapper origRequest = (HttpServletRequestWrapper) getRealReq
-                    .invoke(request);
-            value = origRequest.getParameter(name);
-        } catch (Exception e) {
-            // do nothing - not on GateIn simple-portal
-        }
-        return value;
-    }
-
-    private static String getLiferayHTTPRequestParameter(
-            PortletRequest request, String name) {
-        try {
-            // httpRequest = PortalUtil.getHttpServletRequest(request);
-            HttpServletRequest httpRequest = (HttpServletRequest) PortalClassInvoker
-                    .invoke("com.liferay.portal.util.PortalUtil",
-                            "getHttpServletRequest", request);
-
-            // httpRequest =
-            // PortalUtil.getOriginalServletRequest(httpRequest);
-            httpRequest = (HttpServletRequest) PortalClassInvoker.invoke(
-                    "com.liferay.portal.util.PortalUtil",
-                    "getOriginalServletRequest", httpRequest);
-            if (httpRequest != null) {
-                return httpRequest.getParameter(name);
-            }
-        } catch (Exception e) {
-            // ignore and return null - unable to get the original request
-        }
-        return null;
-    }
-
-    private static String getGateInHTTPHeader(PortletRequest request,
-            String name) {
-        String value = null;
-        try {
-            Method getRealReq = request.getClass().getMethod("getRealRequest");
-            HttpServletRequestWrapper origRequest = (HttpServletRequestWrapper) getRealReq
-                    .invoke(request);
-            value = origRequest.getHeader(name);
-        } catch (Exception e) {
-            // do nothing - not on GateIn simple-portal
-        }
-        return value;
-    }
-
-    private static String getLiferayHTTPHeader(PortletRequest request,
-            String name) {
-        try {
-            // httpRequest = PortalUtil.getHttpServletRequest(request);
-            HttpServletRequest httpRequest = (HttpServletRequest) PortalClassInvoker
-                    .invoke("com.liferay.portal.util.PortalUtil",
-                            "getHttpServletRequest", request);
-
-            // httpRequest =
-            // PortalUtil.getOriginalServletRequest(httpRequest);
-            httpRequest = (HttpServletRequest) PortalClassInvoker.invoke(
-                    "com.liferay.portal.util.PortalUtil",
-                    "getOriginalServletRequest", httpRequest);
-            if (httpRequest != null) {
-                return httpRequest.getHeader(name);
-            }
-        } catch (Exception e) {
-            // ignore and return null - unable to get the original request
-        }
-        return null;
     }
 
     /**

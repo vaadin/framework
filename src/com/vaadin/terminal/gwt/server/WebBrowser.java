@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import com.vaadin.terminal.Terminal;
+import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.client.VBrowserDetails;
 
 /**
@@ -324,8 +325,8 @@ public class WebBrowser implements Terminal {
      *            the current date in milliseconds since the epoch
      * @param touchDevice
      */
-    void updateClientSideDetails(String sw, String sh, String tzo, String rtzo,
-            String dstSavings, String dstInEffect, String curDate,
+    private void updateClientSideDetails(String sw, String sh, String tzo,
+            String rtzo, String dstSavings, String dstInEffect, String curDate,
             boolean touchDevice) {
         if (sw != null) {
             try {
@@ -379,25 +380,29 @@ public class WebBrowser implements Terminal {
      * only. Updates all properties in the class according to the given
      * information.
      * 
-     * @param locale
-     *            The browser primary locale
-     * @param address
-     *            The browser ip address
-     * @param secureConnection
-     *            true if using an https connection
-     * @param agent
-     *            Raw userAgent string from the browser
+     * @param request
+     *            the wrapped request to read the information from
      */
-    void updateRequestDetails(Locale locale, String address,
-            boolean secureConnection, String agent) {
-        this.locale = locale;
-        this.address = address;
-        this.secureConnection = secureConnection;
+    void updateRequestDetails(WrappedRequest request) {
+        locale = request.getLocale();
+        address = request.getRemoteAddr();
+        secureConnection = request.isSecure();
+        String agent = request.getHeader("user-agent");
+
         if (agent != null) {
             browserApplication = agent;
             browserDetails = new VBrowserDetails(agent);
         }
 
+        if (request.getParameter("repaintAll") != null
+                || request.getParameter("browserDetails") != null) {
+            updateClientSideDetails(request.getParameter("sw"),
+                    request.getParameter("sh"), request.getParameter("tzo"),
+                    request.getParameter("rtzo"), request.getParameter("dstd"),
+                    request.getParameter("dston"),
+                    request.getParameter("curdate"),
+                    request.getParameter("td") != null);
+        }
     }
 
     /**

@@ -423,7 +423,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     .getApplicationManager(application, this);
 
             /* Update browser information from the request */
-            updateBrowserProperties(webApplicationContext.getBrowser(), request);
+            webApplicationContext.getBrowser().updateRequestDetails(
+                    wrappedRequest);
 
             /*
              * Call application requestStart before Application.init() is called
@@ -541,22 +542,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             }
         }
         return true;
-    }
-
-    private void updateBrowserProperties(WebBrowser browser,
-            HttpServletRequest request) {
-        // request based details updated always
-        browser.updateRequestDetails(request.getLocale(),
-                request.getRemoteAddr(), request.isSecure(),
-                request.getHeader("user-agent"));
-        if (request.getParameter("repaintAll") != null) {
-            browser.updateClientSideDetails(request.getParameter("sw"),
-                    request.getParameter("sh"), request.getParameter("tzo"),
-                    request.getParameter("rtzo"), request.getParameter("dstd"),
-                    request.getParameter("dston"),
-                    request.getParameter("curdate"),
-                    request.getParameter("td") != null);
-        }
     }
 
     protected ClassLoader getClassLoader() throws ServletException {

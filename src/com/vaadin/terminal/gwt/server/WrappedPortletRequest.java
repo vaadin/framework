@@ -6,13 +6,12 @@ package com.vaadin.terminal.gwt.server;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.portlet.ClientDataRequest;
 import javax.portlet.PortletRequest;
 import javax.portlet.ResourceRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 
 import com.vaadin.terminal.WrappedRequest;
 
@@ -29,33 +28,29 @@ public class WrappedPortletRequest implements WrappedRequest {
     }
 
     public int getContentLength() {
-        return ((ClientDataRequest) request).getContentLength();
+        try {
+            return ((ClientDataRequest) request).getContentLength();
+        } catch (ClassCastException e) {
+            throw new IllegalStateException(
+                    "Content lenght only available for ClientDataRequests");
+        }
     }
 
     public InputStream getInputStream() throws IOException {
-        return ((ClientDataRequest) request).getPortletInputStream();
+        try {
+            return ((ClientDataRequest) request).getPortletInputStream();
+        } catch (ClassCastException e) {
+            throw new IllegalStateException(
+                    "Input data only available for ClientDataRequests");
+        }
     }
 
     public String getParameter(String name) {
-        String value = request.getParameter(name);
-        if (value == null) {
-            // for GateIn portlet container simple-portal
-            try {
-                Method getRealReq = request.getClass().getMethod(
-                        "getRealRequest");
-                HttpServletRequestWrapper origRequest = (HttpServletRequestWrapper) getRealReq
-                        .invoke(request);
-                value = origRequest.getParameter(name);
-            } catch (Exception e) {
-                // do nothing - not on GateIn simple-portal
-            }
-        }
-        return value;
+        return request.getParameter(name);
     }
 
     public Map<String, String[]> getParameterMap() {
         return request.getParameterMap();
-        // TODO GateIn hack required here as well?
     }
 
     public String getRequestID() {
@@ -64,10 +59,6 @@ public class WrappedPortletRequest implements WrappedRequest {
 
     public Object getWrappedRequest() {
         return request;
-    }
-
-    public boolean isRunningInPortlet() {
-        return true;
     }
 
     public void setAttribute(String name, Object o) {
@@ -79,7 +70,7 @@ public class WrappedPortletRequest implements WrappedRequest {
             return ((ResourceRequest) request).getResourceID();
         } else {
             // We do not use paths in portlet mode
-            throw new UnsupportedOperationException(
+            throw new IllegalStateException(
                     "PathInfo only available when using ResourceRequests");
         }
     }
@@ -101,7 +92,12 @@ public class WrappedPortletRequest implements WrappedRequest {
     }
 
     public String getContentType() {
-        return ((ResourceRequest) request).getContentType();
+        try {
+            return ((ResourceRequest) request).getContentType();
+        } catch (ClassCastException e) {
+            throw new IllegalStateException(
+                    "Content type only available for ResourceRequests");
+        }
     }
 
     public String getStaticFileLocation() {
@@ -111,6 +107,26 @@ public class WrappedPortletRequest implements WrappedRequest {
     public BrowserDetails getBrowserDetails() {
         // No browserDetails available for normal requests
         return null;
+    }
+
+    public Locale getLocale() {
+        return request.getLocale();
+    }
+
+    public String getRemoteAddr() {
+        return null;
+    }
+
+    public boolean isSecure() {
+        return request.isSecure();
+    }
+
+    public String getHeader(String string) {
+        return null;
+    }
+
+    public String getPortalProperty(String name) {
+        return request.getPortalContext().getProperty(name);
     }
 
 }
