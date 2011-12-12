@@ -257,12 +257,12 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                 } catch (final Throwable e) {
 
                     // Sets the buffering state.
-                    currentBufferedSourceException = new Buffered.SourceException(
+                    SourceException sourceException = new Buffered.SourceException(
                             this, e);
-                    requestRepaint();
+                    setCurrentBufferedSourceException(sourceException);
 
                     // Throws the source exception.
-                    throw currentBufferedSourceException;
+                    throw sourceException;
                 } finally {
                     committingValueToDataSource = false;
                 }
@@ -281,9 +281,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         }
 
         // If successful, remove set the buffering state to be ok
-        if (currentBufferedSourceException != null) {
-            currentBufferedSourceException = null;
-            repaintNeeded = true;
+        if (getCurrentBufferedSourceException() != null) {
+            setCurrentBufferedSourceException(currentBufferedSourceException);
         }
 
         if (valueWasModifiedByDataSourceDuringCommit) {
@@ -310,9 +309,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                 newFieldValue = convertFromDataSource(getDataSourceValue());
 
                 // If successful, remove set the buffering state to be ok
-                if (currentBufferedSourceException != null) {
-                    currentBufferedSourceException = null;
-                    requestRepaint();
+                if (getCurrentBufferedSourceException() != null) {
+                    setCurrentBufferedSourceException(null);
                 }
             } catch (final Throwable e) {
                 // FIXME: What should really be done here if conversion fails?
@@ -579,9 +577,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             }
 
             // If successful, remove set the buffering state to be ok
-            if (currentBufferedSourceException != null) {
-                currentBufferedSourceException = null;
-                requestRepaint();
+            if (getCurrentBufferedSourceException() != null) {
+                setCurrentBufferedSourceException(null);
             }
 
             if (valueWasModifiedByDataSourceDuringCommit) {
@@ -681,9 +678,12 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                 setInternalValue(fieldValue);
             }
             setModified(false);
+            if (getCurrentBufferedSourceException() != null) {
+                setCurrentBufferedSourceException(null);
+            }
         } catch (final Throwable e) {
-            currentBufferedSourceException = new Buffered.SourceException(this,
-                    e);
+            setCurrentBufferedSourceException(new Buffered.SourceException(
+                    this, e));
             setModified(true);
         }
 
@@ -1005,13 +1005,13 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
         // Return if there are no errors at all
         if (superError == null && validationError == null
-                && currentBufferedSourceException == null) {
+                && getCurrentBufferedSourceException() == null) {
             return null;
         }
 
         // Throw combination of the error types
         return new CompositeErrorMessage(new ErrorMessage[] { superError,
-                validationError, currentBufferedSourceException });
+                validationError, getCurrentBufferedSourceException() });
 
     }
 
@@ -1356,6 +1356,15 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             Buffered.SourceException currentBufferedSourceException) {
         this.currentBufferedSourceException = currentBufferedSourceException;
         requestRepaint();
+    }
+
+    /**
+     * Gets the current buffered source exception.
+     * 
+     * @return The current source exception
+     */
+    protected Buffered.SourceException getCurrentBufferedSourceException() {
+        return currentBufferedSourceException;
     }
 
     /**
