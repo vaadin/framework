@@ -121,9 +121,9 @@ public class DateField extends AbstractField<Date> implements
     public static final Resolution RESOLUTION_YEAR = Resolution.YEAR;
 
     /**
-     * Specified smallest modifiable unit.
+     * Specified smallest modifiable unit for the date field.
      */
-    private Resolution resolution = Resolution.MILLISECOND;
+    private Resolution resolution = Resolution.DAY;
 
     /**
      * The internal calendar to be used in java.utl.Date conversions.
@@ -604,6 +604,8 @@ public class DateField extends AbstractField<Date> implements
 
     /**
      * Sets the resolution of the DateField.
+     * 
+     * The default resolution is {@link Resolution#DAY} since Vaadin 7.0.
      * 
      * @param resolution
      *            the resolution to set.
