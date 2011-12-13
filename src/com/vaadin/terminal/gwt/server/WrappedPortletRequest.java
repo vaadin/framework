@@ -100,8 +100,27 @@ public class WrappedPortletRequest implements WrappedRequest {
         }
     }
 
+    /*
+     * Return the URL from where static files, e.g. the widgetset and the theme,
+     * are served. In a standard configuration the VAADIN folder inside the
+     * returned folder is what is used for widgetsets and themes.
+     * 
+     * @return The location of static resources (inside which there should be a
+     * VAADIN directory). Does not end with a slash (/).
+     */
     public String getStaticFileLocation() {
-        throw new UnsupportedOperationException("Please implement me!");
+        String staticFileLocation = getPortalProperty(Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH);
+        if (staticFileLocation != null) {
+            // remove trailing slash if any
+            while (staticFileLocation.endsWith(".")) {
+                staticFileLocation = staticFileLocation.substring(0,
+                        staticFileLocation.length() - 1);
+            }
+            return staticFileLocation;
+        } else {
+            // default for Liferay
+            return "/html";
+        }
     }
 
     public BrowserDetails getBrowserDetails() {

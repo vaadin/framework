@@ -367,32 +367,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         return defaultValue;
     }
 
-    /**
-     * Return the URL from where static files, e.g. the widgetset and the theme,
-     * are served. In a standard configuration the VAADIN folder inside the
-     * returned folder is what is used for widgetsets and themes.
-     * 
-     * @param request
-     * @return The location of static resources (inside which there should be a
-     *         VAADIN directory). Does not end with a slash (/).
-     */
-    protected String getStaticFilesLocation(WrappedPortletRequest request) {
-        // TODO allow overriding on portlet level?
-        String staticFileLocation = request
-                .getPortalProperty(Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH);
-        if (staticFileLocation != null) {
-            // remove trailing slash if any
-            while (staticFileLocation.endsWith(".")) {
-                staticFileLocation = staticFileLocation.substring(0,
-                        staticFileLocation.length() - 1);
-            }
-            return staticFileLocation;
-        } else {
-            // default for Liferay
-            return "/html";
-        }
-    }
-
     protected enum RequestType {
         FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, ACTION, UNKNOWN;
     }
@@ -904,7 +878,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      */
     protected String getWidgetsetURL(String widgetset,
             WrappedPortletRequest request) {
-        return getStaticFilesLocation(request) + "/" + WIDGETSET_DIRECTORY_PATH
+        return request.getStaticFileLocation() + "/" + WIDGETSET_DIRECTORY_PATH
                 + widgetset + "/" + widgetset + ".nocache.js?"
                 + new Date().getTime();
     }
@@ -921,7 +895,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @return
      */
     protected String getThemeURI(String themeName, WrappedPortletRequest request) {
-        return getStaticFilesLocation(request) + "/" + THEME_DIRECTORY_PATH
+        return request.getStaticFileLocation() + "/" + THEME_DIRECTORY_PATH
                 + themeName;
     }
 
