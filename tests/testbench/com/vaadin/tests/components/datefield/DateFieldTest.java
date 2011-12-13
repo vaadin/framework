@@ -9,6 +9,7 @@ import java.util.Locale;
 
 import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.DateField.Resolution;
 
 public class DateFieldTest<T extends DateField> extends AbstractFieldTest<T> {
 
@@ -94,22 +95,22 @@ public class DateFieldTest<T extends DateField> extends AbstractFieldTest<T> {
     }
 
     private void createResolutionSelectAction(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
-        options.put("Year", DateField.RESOLUTION_YEAR);
-        options.put("Month", DateField.RESOLUTION_MONTH);
-        options.put("Day", DateField.RESOLUTION_DAY);
-        options.put("Hour", DateField.RESOLUTION_HOUR);
-        options.put("Min", DateField.RESOLUTION_MIN);
-        options.put("Sec", DateField.RESOLUTION_SEC);
-        options.put("Msec", DateField.RESOLUTION_MSEC);
+        LinkedHashMap<String, Resolution> options = new LinkedHashMap<String, Resolution>();
+        options.put("Year", DateField.Resolution.YEAR);
+        options.put("Month", DateField.Resolution.MONTH);
+        options.put("Day", DateField.Resolution.DAY);
+        options.put("Hour", DateField.Resolution.HOUR);
+        options.put("Min", DateField.Resolution.MINUTE);
+        options.put("Sec", DateField.Resolution.SECOND);
+        options.put("Msec", DateField.Resolution.MILLISECOND);
 
         createSelectAction("Resolution", category, options, "Year",
                 resolutionCommand);
     }
 
-    private Command<T, Integer> resolutionCommand = new Command<T, Integer>() {
+    private Command<T, Resolution> resolutionCommand = new Command<T, Resolution>() {
 
-        public void execute(T c, Integer value, Object data) {
+        public void execute(T c, Resolution value, Object data) {
             c.setResolution(value);
 
         }

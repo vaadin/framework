@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -51,52 +52,78 @@ import com.vaadin.terminal.gwt.client.ui.VPopupCalendar;
 public class DateField extends AbstractField<Date> implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
-    /* Private members */
+    /**
+     * Resolutions for DateFields
+     * 
+     * @author Vaadin Ltd.
+     * @version
+     * @VERSION@
+     * @since 7.0
+     */
+    public enum Resolution {
+        MILLISECOND, SECOND, MINUTE, HOUR, DAY, MONTH, YEAR;
+    };
 
     /**
      * Resolution identifier: milliseconds.
+     * 
+     * @deprecated Use {@link Resolution#MILLISECOND}
      */
-    public static final int RESOLUTION_MSEC = 0;
+    @Deprecated
+    public static final Resolution RESOLUTION_MSEC = Resolution.MILLISECOND;
 
     /**
      * Resolution identifier: seconds.
+     * 
+     * @deprecated Use {@link Resolution#SECOND}
      */
-    public static final int RESOLUTION_SEC = 1;
+    @Deprecated
+    public static final Resolution RESOLUTION_SEC = Resolution.SECOND;
 
     /**
      * Resolution identifier: minutes.
+     * 
+     * @deprecated Use {@link Resolution#MINUTE}
      */
-    public static final int RESOLUTION_MIN = 2;
+    @Deprecated
+    public static final Resolution RESOLUTION_MIN = Resolution.MINUTE;
 
     /**
      * Resolution identifier: hours.
+     * 
+     * @deprecated Use {@link Resolution#HOUR}
      */
-    public static final int RESOLUTION_HOUR = 3;
+    @Deprecated
+    public static final Resolution RESOLUTION_HOUR = Resolution.HOUR;
 
     /**
      * Resolution identifier: days.
+     * 
+     * @deprecated Use {@link Resolution#DAY}
      */
-    public static final int RESOLUTION_DAY = 4;
+    @Deprecated
+    public static final Resolution RESOLUTION_DAY = Resolution.DAY;
 
     /**
      * Resolution identifier: months.
+     * 
+     * @deprecated Use {@link Resolution#MONTH}
      */
-    public static final int RESOLUTION_MONTH = 5;
+    @Deprecated
+    public static final Resolution RESOLUTION_MONTH = Resolution.MONTH;
 
     /**
      * Resolution identifier: years.
+     * 
+     * @deprecated Use {@link Resolution#YEAR}
      */
-    public static final int RESOLUTION_YEAR = 6;
+    @Deprecated
+    public static final Resolution RESOLUTION_YEAR = Resolution.YEAR;
 
     /**
      * Specified smallest modifiable unit.
      */
-    private int resolution = RESOLUTION_MSEC;
-
-    /**
-     * Specified largest modifiable unit.
-     */
-    private static final int largestModifiable = RESOLUTION_YEAR;
+    private Resolution resolution = Resolution.MILLISECOND;
 
     /**
      * The internal calendar to be used in java.utl.Date conversions.
@@ -128,6 +155,27 @@ public class DateField extends AbstractField<Date> implements
     private String defaultParseErrorMessage = "Date format not recognized";
 
     private TimeZone timeZone = null;
+
+    private static Map<Resolution, String> variableNameForResolution = new HashMap<DateField.Resolution, String>();
+    private static Map<Resolution, Integer> calendarFieldForResolution = new HashMap<DateField.Resolution, Integer>();
+    {
+        calendarFieldForResolution.put(Resolution.MILLISECOND,
+                Calendar.MILLISECOND);
+        calendarFieldForResolution.put(Resolution.SECOND, Calendar.SECOND);
+        calendarFieldForResolution.put(Resolution.MINUTE, Calendar.MINUTE);
+        calendarFieldForResolution.put(Resolution.HOUR, Calendar.HOUR_OF_DAY);
+        calendarFieldForResolution.put(Resolution.DAY, Calendar.DAY_OF_MONTH);
+        calendarFieldForResolution.put(Resolution.MONTH, Calendar.MONTH);
+        calendarFieldForResolution.put(Resolution.YEAR, Calendar.YEAR);
+
+        variableNameForResolution.put(Resolution.MILLISECOND, "msec");
+        variableNameForResolution.put(Resolution.SECOND, "sec");
+        variableNameForResolution.put(Resolution.MINUTE, "min");
+        variableNameForResolution.put(Resolution.HOUR, "hour");
+        variableNameForResolution.put(Resolution.DAY, "day");
+        variableNameForResolution.put(Resolution.MONTH, "month");
+        variableNameForResolution.put(Resolution.YEAR, "year");
+    }
 
     /* Constructors */
 
@@ -230,48 +278,20 @@ public class DateField extends AbstractField<Date> implements
         final Calendar calendar = getCalendar();
         final Date currentDate = getValue();
 
-        for (int r = resolution; r <= largestModifiable; r++) {
-            switch (r) {
-            case RESOLUTION_MSEC:
-                target.addVariable(
-                        this,
-                        "msec",
-                        currentDate != null ? calendar
-                                .get(Calendar.MILLISECOND) : -1);
-                break;
-            case RESOLUTION_SEC:
-                target.addVariable(this, "sec",
-                        currentDate != null ? calendar.get(Calendar.SECOND)
-                                : -1);
-                break;
-            case RESOLUTION_MIN:
-                target.addVariable(this, "min",
-                        currentDate != null ? calendar.get(Calendar.MINUTE)
-                                : -1);
-                break;
-            case RESOLUTION_HOUR:
-                target.addVariable(
-                        this,
-                        "hour",
-                        currentDate != null ? calendar
-                                .get(Calendar.HOUR_OF_DAY) : -1);
-                break;
-            case RESOLUTION_DAY:
-                target.addVariable(
-                        this,
-                        "day",
-                        currentDate != null ? calendar
-                                .get(Calendar.DAY_OF_MONTH) : -1);
-                break;
-            case RESOLUTION_MONTH:
-                target.addVariable(this, "month",
-                        currentDate != null ? calendar.get(Calendar.MONTH) + 1
-                                : -1);
-                break;
-            case RESOLUTION_YEAR:
-                target.addVariable(this, "year",
-                        currentDate != null ? calendar.get(Calendar.YEAR) : -1);
-                break;
+        for (Resolution res : Resolution.values()) {
+            if (res.compareTo(resolution) >= 0) {
+                // Field should be included as resolution is higher than the
+                // resolution of this field
+                int value = -1;
+                if (currentDate != null) {
+                    value = calendar.get(calendarFieldForResolution.get(res));
+                    if (res == Resolution.MONTH) {
+                        // Calendar month is zero based
+                        value++;
+                    }
+                }
+                target.addVariable(this, variableNameForResolution.get(res),
+                        value);
             }
         }
     }
@@ -308,60 +328,49 @@ public class DateField extends AbstractField<Date> implements
             final String newDateString = (String) variables.get("dateString");
             dateString = newDateString;
 
-            // Gets the new date in parts
-            // Null values are converted to negative values.
-            int year = variables.containsKey("year") ? (variables.get("year") == null ? -1
-                    : ((Integer) variables.get("year")).intValue())
-                    : -1;
-            int month = variables.containsKey("month") ? (variables
-                    .get("month") == null ? -1 : ((Integer) variables
-                    .get("month")).intValue() - 1) : -1;
-            int day = variables.containsKey("day") ? (variables.get("day") == null ? -1
-                    : ((Integer) variables.get("day")).intValue())
-                    : -1;
-            int hour = variables.containsKey("hour") ? (variables.get("hour") == null ? -1
-                    : ((Integer) variables.get("hour")).intValue())
-                    : -1;
-            int min = variables.containsKey("min") ? (variables.get("min") == null ? -1
-                    : ((Integer) variables.get("min")).intValue())
-                    : -1;
-            int sec = variables.containsKey("sec") ? (variables.get("sec") == null ? -1
-                    : ((Integer) variables.get("sec")).intValue())
-                    : -1;
-            int msec = variables.containsKey("msec") ? (variables.get("msec") == null ? -1
-                    : ((Integer) variables.get("msec")).intValue())
-                    : -1;
+            // Clone the calendar for date operation
+            final Calendar cal = getCalendar();
 
-            // If all of the components is < 0 use the previous value
-            if (year < 0 && month < 0 && day < 0 && hour < 0 && min < 0
-                    && sec < 0 && msec < 0) {
+            // Gets the new date in parts
+            boolean hasChanges = false;
+            Map<Resolution, Integer> parts = new HashMap<DateField.Resolution, Integer>();
+            // FIXME: Should only allow resolution specified using setResolution
+            for (Resolution r : Resolution.values()) {
+                String variableName = variableNameForResolution.get(r);
+                Integer value = -1;
+                if (variables.containsKey(variableName)) {
+                    value = (Integer) variables.get(variableName);
+                    if (value == null) {
+                        value = -1;
+                    } else if (r == Resolution.MONTH) {
+                        // Calendar MONTH is zero based
+                        value--;
+                    }
+                }
+                if (value < 0) {
+                    // for resolutions that were not received - retain the
+                    // values
+                    // FIXME: Should be zeroed
+                    int calendarField = calendarFieldForResolution.get(r);
+                    parts.put(r, cal.get(calendarField));
+                } else {
+                    parts.put(r, value);
+                    hasChanges = true;
+                }
+            }
+
+            // If no field has a new value, use the previous value
+            if (!hasChanges) {
+                // Does this even happen?
                 newDate = null;
             } else {
-
-                // Clone the calendar for date operation
-                final Calendar cal = getCalendar();
-
-                // Make sure that meaningful values exists
-                // Use the previous value if some of the variables
-                // have not been changed.
-                year = year < 0 ? cal.get(Calendar.YEAR) : year;
-                month = month < 0 ? cal.get(Calendar.MONTH) : month;
-                day = day < 0 ? cal.get(Calendar.DAY_OF_MONTH) : day;
-                hour = hour < 0 ? cal.get(Calendar.HOUR_OF_DAY) : hour;
-                min = min < 0 ? cal.get(Calendar.MINUTE) : min;
-                sec = sec < 0 ? cal.get(Calendar.SECOND) : sec;
-                msec = msec < 0 ? cal.get(Calendar.MILLISECOND) : msec;
-
-                // Sets the calendar fields
-                cal.set(Calendar.YEAR, year);
-                cal.set(Calendar.MONTH, month);
-                cal.set(Calendar.DAY_OF_MONTH, day);
-                cal.set(Calendar.HOUR_OF_DAY, hour);
-                cal.set(Calendar.MINUTE, min);
-                cal.set(Calendar.SECOND, sec);
-                cal.set(Calendar.MILLISECOND, msec);
-
-                // Assigns the date
+                // Update the value based on the received info
+                // Must set in this order to avoid invalid dates (or wrong
+                // dates if lenient is true) in calendar
+                for (int r = Resolution.YEAR.ordinal(); r >= 0; r--) {
+                    Resolution res = Resolution.values()[r];
+                    cal.set(calendarFieldForResolution.get(res), parts.get(res));
+                }
                 newDate = cal.getTime();
             }
 
@@ -588,7 +597,7 @@ public class DateField extends AbstractField<Date> implements
      * 
      * @return int
      */
-    public int getResolution() {
+    public Resolution getResolution() {
         return resolution;
     }
 
@@ -598,7 +607,7 @@ public class DateField extends AbstractField<Date> implements
      * @param resolution
      *            the resolution to set.
      */
-    public void setResolution(int resolution) {
+    public void setResolution(Resolution resolution) {
         this.resolution = resolution;
         requestRepaint();
     }

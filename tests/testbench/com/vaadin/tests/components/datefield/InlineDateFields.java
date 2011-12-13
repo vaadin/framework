@@ -8,6 +8,7 @@ import java.util.Locale;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.DateField.Resolution;
 import com.vaadin.ui.InlineDateField;
 
 @SuppressWarnings("serial")
@@ -47,7 +48,7 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
         pd.setWidth(width);
         pd.setValue(new Date(12312312313L));
         pd.setLocale(locale);
-        pd.setResolution(DateField.RESOLUTION_YEAR);
+        pd.setResolution(DateField.Resolution.YEAR);
 
         return pd;
     }
@@ -66,18 +67,18 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
     }
 
     private Component createResolutionSelectAction() {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
-        options.put("Year", DateField.RESOLUTION_YEAR);
-        options.put("Month", DateField.RESOLUTION_MONTH);
-        options.put("Day", DateField.RESOLUTION_DAY);
-        options.put("Hour", DateField.RESOLUTION_HOUR);
-        options.put("Min", DateField.RESOLUTION_MIN);
-        options.put("Sec", DateField.RESOLUTION_SEC);
-        options.put("Msec", DateField.RESOLUTION_MSEC);
+        LinkedHashMap<String, Resolution> options = new LinkedHashMap<String, Resolution>();
+        options.put("Year", DateField.Resolution.YEAR);
+        options.put("Month", DateField.Resolution.MONTH);
+        options.put("Day", DateField.Resolution.DAY);
+        options.put("Hour", DateField.Resolution.HOUR);
+        options.put("Min", DateField.Resolution.MINUTE);
+        options.put("Sec", DateField.Resolution.SECOND);
+        options.put("Msec", DateField.Resolution.MILLISECOND);
         return createSelectAction("Resolution", options, "Year",
-                new Command<InlineDateField, Integer>() {
+                new Command<InlineDateField, Resolution>() {
 
-                    public void execute(InlineDateField c, Integer value,
+                    public void execute(InlineDateField c, Resolution value,
                             Object data) {
                         c.setResolution(value);
 
