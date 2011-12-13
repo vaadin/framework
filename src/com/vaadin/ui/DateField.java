@@ -61,16 +61,8 @@ public class DateField extends AbstractField<Date> implements
      * @since 7.0
      */
     public enum Resolution {
-        MILLISECOND, SECOND, MINUTE, HOUR, DAY, MONTH, YEAR;
+        SECOND, MINUTE, HOUR, DAY, MONTH, YEAR;
     };
-
-    /**
-     * Resolution identifier: milliseconds.
-     * 
-     * @deprecated Use {@link Resolution#MILLISECOND}
-     */
-    @Deprecated
-    public static final Resolution RESOLUTION_MSEC = Resolution.MILLISECOND;
 
     /**
      * Resolution identifier: seconds.
@@ -159,8 +151,6 @@ public class DateField extends AbstractField<Date> implements
     private static Map<Resolution, String> variableNameForResolution = new HashMap<DateField.Resolution, String>();
     private static Map<Resolution, Integer> calendarFieldForResolution = new HashMap<DateField.Resolution, Integer>();
     {
-        calendarFieldForResolution.put(Resolution.MILLISECOND,
-                Calendar.MILLISECOND);
         calendarFieldForResolution.put(Resolution.SECOND, Calendar.SECOND);
         calendarFieldForResolution.put(Resolution.MINUTE, Calendar.MINUTE);
         calendarFieldForResolution.put(Resolution.HOUR, Calendar.HOUR_OF_DAY);
@@ -168,7 +158,6 @@ public class DateField extends AbstractField<Date> implements
         calendarFieldForResolution.put(Resolution.MONTH, Calendar.MONTH);
         calendarFieldForResolution.put(Resolution.YEAR, Calendar.YEAR);
 
-        variableNameForResolution.put(Resolution.MILLISECOND, "msec");
         variableNameForResolution.put(Resolution.SECOND, "sec");
         variableNameForResolution.put(Resolution.MINUTE, "min");
         variableNameForResolution.put(Resolution.HOUR, "hour");

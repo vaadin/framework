@@ -74,7 +74,6 @@ public class PopupDateFields extends ComponentTestCase<PopupDateField> {
         options.put("Hour", DateField.Resolution.HOUR);
         options.put("Min", DateField.Resolution.MINUTE);
         options.put("Sec", DateField.Resolution.SECOND);
-        options.put("Msec", DateField.Resolution.MILLISECOND);
         return createSelectAction("Resolution", options, "Year",
                 new Command<PopupDateField, Resolution>() {
 

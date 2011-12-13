@@ -102,7 +102,6 @@ public class DateFieldTest<T extends DateField> extends AbstractFieldTest<T> {
         options.put("Hour", DateField.Resolution.HOUR);
         options.put("Min", DateField.Resolution.MINUTE);
         options.put("Sec", DateField.Resolution.SECOND);
-        options.put("Msec", DateField.Resolution.MILLISECOND);
 
         createSelectAction("Resolution", category, options, "Year",
                 resolutionCommand);

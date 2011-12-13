@@ -1247,8 +1247,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
         private ListBox sec;
 
-        private ListBox msec;
-
         private ListBox ampm;
 
         /**
@@ -1313,19 +1311,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 }
                 sec.addChangeHandler(this);
             }
-            if (getResolution() == VDateField.RESOLUTION_MSEC) {
-                msec = createListBox();
-                for (int i = 0; i < 1000; i++) {
-                    if (i < 10) {
-                        msec.addItem("00" + i);
-                    } else if (i < 100) {
-                        msec.addItem("0" + i);
-                    } else {
-                        msec.addItem("" + i);
-                    }
-                }
-                msec.addChangeHandler(this);
-            }
 
             final String delimiter = getDateTimeService().getClockDelimeter();
             if (isReadonly()) {
@@ -1357,16 +1342,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     add(new VLabel(s < 10 ? "0" + s : "" + s));
                 } else {
                     add(sec);
-                }
-            }
-            if (getResolution() == VDateField.RESOLUTION_MSEC) {
-                add(new VLabel("."));
-                if (isReadonly()) {
-                    final int m = getMilliseconds();
-                    final String ms = m < 100 ? "0" + m : "" + m;
-                    add(new VLabel(m < 10 ? "0" + ms : ms));
-                } else {
-                    add(msec);
                 }
             }
             if (getResolution() == VDateField.RESOLUTION_HOUR) {
@@ -1444,13 +1419,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
             if (getResolution() >= VDateField.RESOLUTION_SEC) {
                 sec.setSelectedIndex(value.getSeconds());
             }
-            if (getResolution() == VDateField.RESOLUTION_MSEC) {
-                if (selected) {
-                    msec.setSelectedIndex(getMilliseconds());
-                } else {
-                    msec.setSelectedIndex(0);
-                }
-            }
             if (getDateTimeService().isTwelveHourClock()) {
                 ampm.setSelectedIndex(value.getHours() < 12 ? 0 : 1);
             }
@@ -1461,9 +1429,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
             }
             if (sec != null) {
                 sec.setEnabled(isEnabled());
-            }
-            if (msec != null) {
-                msec.setEnabled(isEnabled());
             }
             if (ampm != null) {
                 ampm.setEnabled(isEnabled());
@@ -1524,15 +1489,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     timeChangeListener.changed(value.getHours(),
                             value.getMinutes(), s,
                             DateTimeService.getMilliseconds(value));
-                }
-                event.preventDefault();
-                event.stopPropagation();
-            } else if (event.getSource() == msec) {
-                final int ms = msec.getSelectedIndex();
-                DateTimeService.setMilliseconds(value, ms);
-                if (timeChangeListener != null) {
-                    timeChangeListener.changed(value.getHours(),
-                            value.getMinutes(), value.getSeconds(), ms);
                 }
                 event.preventDefault();
                 event.stopPropagation();
@@ -1705,8 +1661,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 return SUBPART_MINUTE_SELECT;
             } else if (contains(time.sec, subElement)) {
                 return SUBPART_SECS_SELECT;
-            } else if (contains(time.msec, subElement)) {
-                return SUBPART_MSECS_SELECT;
             } else if (contains(time.ampm, subElement)) {
                 return SUBPART_AMPM_SELECT;
 
@@ -1754,9 +1708,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
         }
         if (SUBPART_SECS_SELECT.equals(subPart)) {
             return time.sec.getElement();
-        }
-        if (SUBPART_MSECS_SELECT.equals(subPart)) {
-            return time.msec.getElement();
         }
         if (SUBPART_AMPM_SELECT.equals(subPart)) {
             return time.ampm.getElement();

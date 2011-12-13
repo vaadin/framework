@@ -32,7 +32,6 @@ public class VDateField extends FlowPanel implements Paintable, Field {
     public static final int RESOLUTION_HOUR = 8;
     public static final int RESOLUTION_MIN = 16;
     public static final int RESOLUTION_SEC = 32;
-    public static final int RESOLUTION_MSEC = 64;
 
     public static final String WEEK_NUMBERS = "wn";
 
@@ -114,9 +113,7 @@ public class VDateField extends FlowPanel implements Paintable, Field {
                 && dts.getFirstDayOfWeek() == 1;
 
         int newResolution;
-        if (uidl.hasVariable("msec")) {
-            newResolution = RESOLUTION_MSEC;
-        } else if (uidl.hasVariable("sec")) {
+        if (uidl.hasVariable("sec")) {
             newResolution = RESOLUTION_SEC;
         } else if (uidl.hasVariable("min")) {
             newResolution = RESOLUTION_MIN;
@@ -146,13 +143,11 @@ public class VDateField extends FlowPanel implements Paintable, Field {
                 .getIntVariable("min") : 0;
         final int sec = (currentResolution >= RESOLUTION_SEC) ? uidl
                 .getIntVariable("sec") : 0;
-        final int msec = (currentResolution >= RESOLUTION_MSEC) ? uidl
-                .getIntVariable("msec") : 0;
 
         // Construct new date for this datefield (only if not null)
         if (year > -1) {
             setCurrentDate(new Date((long) getTime(year, month, day, hour, min,
-                    sec, msec)));
+                    sec, 0)));
         } else {
             setCurrentDate(null);
         }

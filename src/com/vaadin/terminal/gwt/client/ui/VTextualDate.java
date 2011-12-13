@@ -146,9 +146,6 @@ public class VTextualDate extends VDateField implements Paintable, Field,
                             frmString += ":mm";
                             if (currentResolution >= RESOLUTION_SEC) {
                                 frmString += ":ss";
-                                if (currentResolution >= RESOLUTION_MSEC) {
-                                    frmString += ".SSS";
-                                }
                             }
                         }
                         if (dts.isTwelveHourClock()) {
@@ -297,10 +294,6 @@ public class VTextualDate extends VDateField implements Paintable, Field,
                             currentDate != null ? currentDate.getSeconds() : -1,
                             currentResolution == VDateField.RESOLUTION_SEC
                                     && immediate);
-        }
-        if (currentResolution == VDateField.RESOLUTION_MSEC) {
-            getClient().updateVariable(getId(), "msec",
-                    currentDate != null ? getMilliseconds() : -1, immediate);
         }
 
     }

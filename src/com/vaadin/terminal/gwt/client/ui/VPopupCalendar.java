@@ -123,14 +123,6 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
                             if (getCurrentResolution() > RESOLUTION_MIN) {
                                 getClient().updateVariable(getId(), "sec",
                                         newDate.getSeconds(), false);
-                                if (getCurrentResolution() == RESOLUTION_MSEC) {
-                                    getClient().updateVariable(
-                                            getId(),
-                                            "msec",
-                                            DateTimeService
-                                                    .getMilliseconds(newDate),
-                                            false);
-                                }
                             }
                         }
                     }
