@@ -929,7 +929,7 @@
         	<jvmarg value="-Demma.coverage.out.file=../${result-path}/unittests.ec" />
 
             <batchtest fork="yes">
-                <fileset dir="tests/server-side" includes="**/*.java" excludes="**/Abstract*.java" />
+                <fileset dir="tests/server-side" includes="**/*.java" excludes="**/Abstract*.java,com.vaadin.tests.data.bean.*.java" />
                 <fileset dir="tests/client-side" includes="**/*.java" excludes="**/Abstract*.java" />
             </batchtest>
         </junit>
