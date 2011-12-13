@@ -328,48 +328,49 @@ public class DateField extends AbstractField<Date> implements
             final String newDateString = (String) variables.get("dateString");
             dateString = newDateString;
 
-            // Clone the calendar for date operation
-            final Calendar cal = getCalendar();
-
             // Gets the new date in parts
             boolean hasChanges = false;
-            Map<Resolution, Integer> parts = new HashMap<DateField.Resolution, Integer>();
-            // FIXME: Should only allow resolution specified using setResolution
+            Map<Resolution, Integer> calendarFieldChanges = new HashMap<DateField.Resolution, Integer>();
             for (Resolution r : Resolution.values()) {
                 String variableName = variableNameForResolution.get(r);
-                Integer value = -1;
+                // Set value to zero for all resolutions that are not received
+                Integer value = 0;
                 if (variables.containsKey(variableName)) {
                     value = (Integer) variables.get(variableName);
-                    if (value == null) {
-                        value = -1;
-                    } else if (r == Resolution.MONTH) {
+                    if (r == Resolution.MONTH) {
                         // Calendar MONTH is zero based
                         value--;
                     }
                 }
-                if (value < 0) {
-                    // for resolutions that were not received - retain the
-                    // values
-                    // FIXME: Should be zeroed
-                    int calendarField = calendarFieldForResolution.get(r);
-                    parts.put(r, cal.get(calendarField));
-                } else {
-                    parts.put(r, value);
+                if (value >= 0) {
                     hasChanges = true;
+                    calendarFieldChanges.put(r, value);
                 }
             }
 
             // If no field has a new value, use the previous value
             if (!hasChanges) {
-                // Does this even happen?
                 newDate = null;
             } else {
+                // Clone the calendar for date operation
+                final Calendar cal = getCalendar();
+
                 // Update the value based on the received info
                 // Must set in this order to avoid invalid dates (or wrong
                 // dates if lenient is true) in calendar
                 for (int r = Resolution.YEAR.ordinal(); r >= 0; r--) {
                     Resolution res = Resolution.values()[r];
-                    cal.set(calendarFieldForResolution.get(res), parts.get(res));
+                    Integer newValue = 0;
+                    if (res.compareTo(resolution) >= 0) {
+                        // Field resolution should be included. Others are
+                        // skipped so that client can not make unexpected
+                        // changes (e.g. day change even though resolution is
+                        // year).
+                        if (calendarFieldChanges.containsKey(res)) {
+                            newValue = calendarFieldChanges.get(res);
+                        }
+                    }
+                    cal.set(calendarFieldForResolution.get(res), newValue);
                 }
                 newDate = cal.getTime();
             }
