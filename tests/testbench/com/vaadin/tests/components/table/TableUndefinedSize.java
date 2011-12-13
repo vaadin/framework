@@ -78,6 +78,7 @@ public class TableUndefinedSize extends TestBase {
         controls.addComponent(pageLength);
 
         CheckBox cb = new CheckBox("Column 1");
+        cb.setValue(true);
         cb.addListener(new ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
@@ -91,10 +92,10 @@ public class TableUndefinedSize extends TestBase {
             }
         });
         cb.setImmediate(true);
-        cb.setValue(true);
         visibilities.addComponent(cb);
 
         cb = new CheckBox("Column 2");
+        cb.setValue(true);
         cb.addListener(new ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
@@ -109,11 +110,10 @@ public class TableUndefinedSize extends TestBase {
             }
         });
         cb.setImmediate(true);
-        cb.setValue(true);
         visibilities.addComponent(cb);
 
         cb = new CheckBox("Column 3");
-
+        cb.setValue(true);
         cb.addListener(new ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
@@ -129,7 +129,6 @@ public class TableUndefinedSize extends TestBase {
             }
         });
         cb.setImmediate(true);
-        cb.setValue(true);
         visibilities.addComponent(cb);
 
         addComponent(log);
