@@ -64,6 +64,10 @@ public class DefaultFieldFactory implements FormFieldFactory, TableFieldFactory 
         String name = propertyId.toString();
         if (name.length() > 0) {
 
+            int dotLocation = name.lastIndexOf('.');
+            if (dotLocation > 0 && dotLocation < name.length() - 1) {
+                name = name.substring(dotLocation + 1);
+            }
             if (name.indexOf(' ') < 0
                     && name.charAt(0) == Character.toLowerCase(name.charAt(0))
                     && name.charAt(0) != Character.toUpperCase(name.charAt(0))) {
