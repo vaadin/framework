@@ -9,26 +9,23 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
 public class TableClickValueChangeInteraction extends TestBase {
 
-    final Root mainWindow = new Root();
-
     @Override
     public void setup() {
-        setMainWindow(mainWindow);
+        GridLayout grid = new GridLayout(4, 4);
+        grid.setSpacing(true);
+        grid.setMargin(true);
 
-        GridLayout layout = new GridLayout(4, 4);
-        layout.setSpacing(true);
-        layout.setMargin(true);
-        mainWindow.setContent(layout);
+        getLayout().removeAllComponents();
+        getLayout().addComponent(grid);
 
         for (int i = 0; i < 16; ++i) {
-            mainWindow.addComponent(makeTable((i & 8) > 0, (i & 4) > 0,
-                    (i & 2) > 0, (i & 1) > 0));
+            grid.addComponent(makeTable((i & 8) > 0, (i & 4) > 0, (i & 2) > 0,
+                    (i & 1) > 0));
         }
 
     }
@@ -72,7 +69,8 @@ public class TableClickValueChangeInteraction extends TestBase {
         if (listenValueChanges) {
             table.addListener(new ValueChangeListener() {
                 public void valueChange(ValueChangeEvent event) {
-                    valueChangeLabel.setValue("Value " + event.getProperty());
+                    valueChangeLabel.setValue("Value "
+                            + event.getProperty().getValue());
                 }
             });
         }
