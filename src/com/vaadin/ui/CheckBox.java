@@ -69,7 +69,9 @@ public class CheckBox extends AbstractField<Boolean> {
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
-        target.addVariable(this, VCheckBox.VARIABLE_STATE, getValue());
+        Boolean value = getValue();
+        boolean booleanValue = (value != null) ? value : false;
+        target.addVariable(this, VCheckBox.VARIABLE_STATE, booleanValue);
     }
 
     @Override
