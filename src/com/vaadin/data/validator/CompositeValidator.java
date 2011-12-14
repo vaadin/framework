@@ -19,12 +19,11 @@ import com.vaadin.data.Validator;
  * <code>AND</code> and <code>OR</code>.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
+ * @version @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class CompositeValidator extends AbstractValidator {
+public class CompositeValidator implements Validator {
 
     public enum CombinationMode {
         /**
@@ -52,6 +51,8 @@ public class CompositeValidator extends AbstractValidator {
     @Deprecated
     public static final CombinationMode MODE_OR = CombinationMode.OR;
 
+    private String errorMessage;
+
     /**
      * Operation mode.
      */
@@ -67,7 +68,7 @@ public class CompositeValidator extends AbstractValidator {
      * message.
      */
     public CompositeValidator() {
-        super("");
+        this(CombinationMode.AND, "");
     }
 
     /**
@@ -77,7 +78,7 @@ public class CompositeValidator extends AbstractValidator {
      * @param errorMessage
      */
     public CompositeValidator(CombinationMode mode, String errorMessage) {
-        super(errorMessage);
+        setErrorMessage(errorMessage);
         setMode(mode);
     }
 
@@ -100,7 +101,6 @@ public class CompositeValidator extends AbstractValidator {
      * @throws Validator.InvalidValueException
      *             if the value is not valid.
      */
-    @Override
     public void validate(Object value) throws Validator.InvalidValueException {
         switch (mode) {
         case AND:
@@ -131,12 +131,6 @@ public class CompositeValidator extends AbstractValidator {
                 throw first;
             }
         }
-    }
-
-    @Override
-    protected boolean isValidValue(Object value) {
-        // not used as validate() overridden
-        return false;
     }
 
     /**
@@ -171,10 +165,9 @@ public class CompositeValidator extends AbstractValidator {
      * Gets the error message for the composite validator. If the error message
      * is null, original error messages of the sub-validators are used instead.
      */
-    @Override
     public String getErrorMessage() {
-        if (super.getErrorMessage() != null) {
-            return super.getErrorMessage();
+        if (errorMessage != null) {
+            return errorMessage;
         }
 
         // TODO Return composite error message
@@ -229,7 +222,7 @@ public class CompositeValidator extends AbstractValidator {
      *         that must apply or null if none found.
      */
     public Collection<Validator> getSubValidators(Class validatorType) {
-        if (mode != MODE_AND) {
+        if (mode != CombinationMode.AND) {
             return null;
         }
 
@@ -249,6 +242,17 @@ public class CompositeValidator extends AbstractValidator {
         }
 
         return found.isEmpty() ? null : found;
+    }
+
+    /**
+     * Sets the message to be included in the exception in case the value does
+     * not validate. The exception message is typically shown to the end user.
+     * 
+     * @param errorMessage
+     *            the error message.
+     */
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
 }

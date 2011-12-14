@@ -3,12 +3,12 @@ package com.vaadin.tests.validation;
 import com.vaadin.data.Validator;
 import com.vaadin.data.validator.AbstractStringValidator;
 import com.vaadin.data.validator.CompositeValidator;
+import com.vaadin.data.validator.CompositeValidator.CombinationMode;
 import com.vaadin.data.validator.DoubleValidator;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.data.validator.StringLengthValidator;
-import com.vaadin.data.validator.CompositeValidator.CombinationMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -97,8 +97,7 @@ public class TestValidators extends TestBase {
         // TODO CompositeValidator
         tf = new TextField(
                 "A field, must be a floating point number with 4-5 chars");
-        CompositeValidator cv = new CompositeValidator(
-                CombinationMode.AND,
+        CompositeValidator cv = new CompositeValidator(CombinationMode.AND,
                 "The field must contain a floating point number with 4-5 characters");
         cv.addValidator(new StringLengthValidator(
                 "String length of '{0}' should be 4-5 characters", 4, 5, false));
@@ -128,7 +127,7 @@ public class TestValidators extends TestBase {
         Validator postalCodeValidator = new AbstractStringValidator(
                 "Postal code must be a number 10000-99999.") {
             @Override
-            protected boolean isValidString(String value) {
+            protected boolean isValidValue(String value) {
                 return value.matches("[1-9][0-9]{4}");
             }
         };

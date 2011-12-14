@@ -245,15 +245,12 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     public void commit() throws Buffered.SourceException, InvalidValueException {
         if (dataSource != null && !dataSource.isReadOnly()) {
             if ((isInvalidCommitted() || isValid())) {
-                final T fieldValue = getFieldValue();
                 try {
 
                     // Commits the value to datasource.
                     valueWasModifiedByDataSourceDuringCommit = false;
                     committingValueToDataSource = true;
-                    getPropertyDataSource().setValue(
-                            convertToDataSource(fieldValue));
-
+                    getPropertyDataSource().setValue(getConvertedFieldValue());
                 } catch (final Throwable e) {
 
                     // Sets the buffering state.
@@ -518,7 +515,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @throws Property.ConversionException
      */
     protected void setValue(T newFieldValue, boolean repaintIsNotNeeded)
-            throws Property.ReadOnlyException, Property.ConversionException {
+            throws Property.ReadOnlyException, Property.ConversionException,
+            InvalidValueException {
 
         if (!equals(newFieldValue, getInternalValue())) {
 
@@ -529,19 +527,19 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
             // Repaint is needed even when the client thinks that it knows the
             // new state if validity of the component may change
-            if (repaintIsNotNeeded && (isRequired() || getValidators() != null)) {
+            if (repaintIsNotNeeded
+                    && (isRequired() || getValidators() != null || getValueConverter() != null)) {
                 repaintIsNotNeeded = false;
             }
 
-            // If invalid values are not allowed, the value must be checked
             if (!isInvalidAllowed()) {
-                final Collection<Validator> v = getValidators();
-                if (v != null) {
-                    for (final Iterator<Validator> i = v.iterator(); i
-                            .hasNext();) {
-                        (i.next()).validate(newFieldValue);
-                    }
-                }
+                /*
+                 * If invalid values are not allowed the value must be validated
+                 * before it is set. If validation fails, the
+                 * InvalidValueException is thrown and the internal value is not
+                 * updated.
+                 */
+                validate(newFieldValue);
             }
 
             // Changes the value
@@ -717,15 +715,15 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     /**
-     * Sets the value converter for the field from the converter factory defined
-     * for the application. Clears the value converter if no application
+     * Retrieves a value converter for the field from the converter factory
+     * defined for the application. Clears the value converter if no application
      * reference is available or if the factory returns null.
      * 
      * @param datamodelType
      *            The type of the data model that we want to be able to convert
      *            from
      */
-    private void updateValueConverterFromFactory(Class<?> datamodelType) {
+    public void updateValueConverterFromFactory(Class<?> datamodelType) {
         Converter<?, T> converter = null;
 
         Application app = Application.getCurrentApplication();
@@ -822,6 +820,15 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         }
     }
 
+    /**
+     * Returns the current field value converted to the data source type.
+     * 
+     * @return The converted value that is compatible with the data source type
+     */
+    public Object getConvertedFieldValue() {
+        return convertToDataSource(getFieldValue());
+    }
+
     /* Validation */
 
     /**
@@ -891,8 +898,9 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * Checks the validity of the Field.
      * 
      * A field is invalid if it is set as required (using
-     * {@link #setRequired(boolean)} and is empty or if one or several of the
-     * validators added to the field indicate it is invalid.
+     * {@link #setRequired(boolean)} and is empty, if one or several of the
+     * validators added to the field indicate it is invalid or if the value
+     * cannot be converted provided a value converter has been set.
      * 
      * The "required" validation is a built-in validation feature. If the field
      * is required and empty this method throws an EmptyValueException with the
@@ -905,30 +913,49 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         if (isRequired() && isEmpty()) {
             throw new Validator.EmptyValueException(requiredError);
         }
+        validate(getFieldValue());
+    }
 
-        // If there is no validator, there can not be any errors
-        if (validators == null) {
-            return;
-        }
+    /**
+     * Validates that the given value pass the validators for the field.
+     * <p>
+     * This method does not check the requiredness of the field.
+     * 
+     * @param fieldValue
+     *            The value to check
+     * @throws Validator.InvalidValueException
+     *             if one or several validators fail
+     */
+    protected void validate(T fieldValue)
+            throws Validator.InvalidValueException {
 
-        final Object fieldValue = getFieldValue();
+        Object valueToValidate = fieldValue;
 
-        List<InvalidValueException> validationExceptions = null;
-
-        // Gets all the validation errors
-        for (Validator v : validators) {
+        // If there is a converter we start by converting the value as we want
+        // to validate the converted value
+        if (getValueConverter() != null) {
             try {
-                v.validate(fieldValue);
-            } catch (final Validator.InvalidValueException e) {
-                if (validationExceptions == null) {
-                    validationExceptions = new ArrayList<InvalidValueException>();
-                }
-                validationExceptions.add(e);
+                valueToValidate = getValueConverter()
+                        .convertFromTargetToSource(fieldValue, getLocale());
+            } catch (Exception e) {
+                throw new InvalidValueException(e.getMessage());
             }
         }
 
-        // If there were no error
-        if (validationExceptions == null) {
+        List<InvalidValueException> validationExceptions = new ArrayList<InvalidValueException>();
+        if (validators != null) {
+            // Gets all the validation errors
+            for (Validator v : validators) {
+                try {
+                    v.validate(valueToValidate);
+                } catch (final Validator.InvalidValueException e) {
+                    validationExceptions.add(e);
+                }
+            }
+        }
+
+        // If there were no errors
+        if (validationExceptions.isEmpty()) {
             return;
         }
 

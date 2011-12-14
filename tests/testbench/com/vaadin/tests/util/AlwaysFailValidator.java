@@ -2,7 +2,7 @@ package com.vaadin.tests.util;
 
 import com.vaadin.data.validator.AbstractValidator;
 
-public class AlwaysFailValidator extends AbstractValidator {
+public class AlwaysFailValidator extends AbstractValidator<Object> {
     public AlwaysFailValidator() {
         super("Validation error");
     }
@@ -14,5 +14,10 @@ public class AlwaysFailValidator extends AbstractValidator {
     @Override
     protected boolean isValidValue(Object value) {
         return false;
+    }
+
+    @Override
+    public Class getType() {
+        return Object.class;
     }
 }

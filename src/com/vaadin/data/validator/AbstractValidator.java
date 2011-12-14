@@ -27,13 +27,14 @@ import com.vaadin.data.Validator;
  * applications. To check validity, {@link #validate(Object)} should be used.
  * </p>
  * 
+ * @param <T>
+ *            The type
  * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 5.4
  */
-@SuppressWarnings("serial")
-public abstract class AbstractValidator implements Validator {
+public abstract class AbstractValidator<T> implements Validator {
 
     /**
      * Error message that is included in an {@link InvalidValueException} if
@@ -81,13 +82,33 @@ public abstract class AbstractValidator implements Validator {
      * @param value
      * @return
      */
-    protected abstract boolean isValidValue(Object value);
+    protected abstract boolean isValidValue(T value);
 
     public void validate(Object value) throws InvalidValueException {
-        if (!isValidValue(value)) {
-            String message = errorMessage.replace("{0}", String.valueOf(value));
+        // isValidType ensures that value can safely be cast to TYPE
+        if (!isValidType(value) || !isValidValue((T) value)) {
+            String message = getErrorMessage().replace("{0}",
+                    String.valueOf(value));
             throw new InvalidValueException(message);
         }
+    }
+
+    /**
+     * Checks the type of the value to validate to ensure it conforms with
+     * getType. Enables sub classes to handle the specific type instead of
+     * Object.
+     * 
+     * @param value
+     *            The value to check
+     * @return true if the value can safely be cast to the type specified by
+     *         {@link #getType()}
+     */
+    protected boolean isValidType(Object value) {
+        if (value == null) {
+            return true;
+        }
+
+        return getType().isAssignableFrom(value.getClass());
     }
 
     /**
@@ -112,4 +133,6 @@ public abstract class AbstractValidator implements Validator {
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
+
+    public abstract Class<T> getType();
 }

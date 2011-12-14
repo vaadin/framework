@@ -35,16 +35,21 @@ public class RequiredInvalidDateField extends TestBase {
 
         Date date = new Date(2011 - 1900, 9 - 1, 1);
 
-        Validator dateValidator = new AbstractValidator(
+        Validator dateValidator = new AbstractValidator<Date>(
                 "Day of month must be an even number") {
 
             @Override
-            protected boolean isValidValue(Object value) {
-                if (!(value instanceof Date)) {
-                    return false;
+            protected boolean isValidValue(Date value) {
+                if (value == null) {
+                    return true;
                 }
-                Date date = (Date) value;
-                return (date.getDate() % 2 == 0);
+
+                return (value.getDate() % 2 == 0);
+            }
+
+            @Override
+            public Class getType() {
+                return Date.class;
             }
         };
 

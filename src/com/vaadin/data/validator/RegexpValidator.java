@@ -62,8 +62,11 @@ public class RegexpValidator extends AbstractStringValidator {
         this.complete = complete;
     }
 
+    /* (non-Javadoc)
+     * @see com.vaadin.data.validator.AbstractValidator#isValidValue(java.lang.Object)
+     */
     @Override
-    protected boolean isValidString(String value) {
+    protected boolean isValidValue(String value) {
         if (complete) {
             return getMatcher(value).matches();
         } else {

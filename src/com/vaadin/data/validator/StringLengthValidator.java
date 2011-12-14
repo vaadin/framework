@@ -14,7 +14,7 @@ package com.vaadin.data.validator;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class StringLengthValidator extends AbstractValidator {
+public class StringLengthValidator extends AbstractStringValidator {
 
     private int minLength = -1;
 
@@ -62,15 +62,11 @@ public class StringLengthValidator extends AbstractValidator {
      * @return <code>true</code> for valid value, otherwise <code>false</code>.
      */
     @Override
-    protected boolean isValidValue(Object value) {
+    protected boolean isValidValue(String value) {
         if (value == null) {
             return allowNull;
         }
-        final String s = value.toString();
-        if (s == null) {
-            return allowNull;
-        }
-        final int len = s.length();
+        final int len = value.length();
         if ((minLength >= 0 && len < minLength)
                 || (maxLength >= 0 && len > maxLength)) {
             return false;
