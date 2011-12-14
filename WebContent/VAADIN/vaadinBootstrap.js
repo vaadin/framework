@@ -176,6 +176,7 @@
 			var app = apps[appId]; 
 			return app;
 		},
+		loadTheme: loadTheme,
 		registerWidgetset: function(widgetset, callback) {
 			log("Widgetset registered", widgetset)
 			widgetsets[widgetset].callback = callback;

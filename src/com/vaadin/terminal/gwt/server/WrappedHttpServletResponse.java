@@ -10,25 +10,46 @@ import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.WrappedResponse;
 
 /**
- * Concrete wrapper class for {@link HttpServletResponse}.
+ * Wrapper for {@link HttpServletResponse}.
  * 
- * @see Response
+ * @author Vaadin Ltd.
+ * @since 7.0
+ * 
+ * @see WrappedResponse
+ * @see WrappedHttpServletRequest
  */
 public class WrappedHttpServletResponse implements WrappedResponse {
 
     private final HttpServletResponse response;
+    private DeploymentConfiguration deploymentConfiguration;
 
-    public WrappedHttpServletResponse(HttpServletResponse response) {
+    /**
+     * Wraps a http servlet response and an associated deployment configuration
+     * 
+     * @param response
+     *            the http servlet response to wrap
+     * @param deploymentConfiguration
+     *            the associated deployment configuration
+     */
+    public WrappedHttpServletResponse(HttpServletResponse response,
+            DeploymentConfiguration deploymentConfiguration) {
         this.response = response;
+        this.deploymentConfiguration = deploymentConfiguration;
     }
 
     public OutputStream getOutputStream() throws IOException {
         return response.getOutputStream();
     }
 
+    /**
+     * Gets the original unwrapped <code>HttpServletResponse</code>
+     * 
+     * @return the unwrapped response
+     */
     public HttpServletResponse getHttpServletResponse() {
         return response;
     }
@@ -75,5 +96,9 @@ public class WrappedHttpServletResponse implements WrappedResponse {
 
     public void sendError(int errorCode, String message) throws IOException {
         response.sendError(errorCode, message);
+    }
+
+    public DeploymentConfiguration getDeploymentConfiguration() {
+        return deploymentConfiguration;
     }
 }

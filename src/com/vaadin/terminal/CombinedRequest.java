@@ -93,10 +93,6 @@ public class CombinedRequest implements WrappedRequest {
         return secondRequest.getContentType();
     }
 
-    public String getStaticFileLocation() {
-        return secondRequest.getStaticFileLocation();
-    }
-
     public BrowserDetails getBrowserDetails() {
         return new BrowserDetails() {
             public String getUriFragment() {
@@ -139,5 +135,9 @@ public class CombinedRequest implements WrappedRequest {
 
     public String getHeader(String name) {
         return secondRequest.getHeader(name);
+    }
+
+    public DeploymentConfiguration getDeploymentConfiguration() {
+        return secondRequest.getDeploymentConfiguration();
     }
 }

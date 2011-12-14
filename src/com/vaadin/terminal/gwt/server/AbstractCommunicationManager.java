@@ -62,6 +62,7 @@ import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.server.AjaxPageHandler.AjaxPageContext;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
@@ -95,26 +96,6 @@ public abstract class AbstractCommunicationManager implements
             .getLogger(AbstractCommunicationManager.class.getName());
 
     private static final RequestHandler APP_RESOURCE_HANDLER = new ApplicationResourceHandler();
-    private final AjaxPageHandler ajaxPageHandler = new AjaxPageHandler() {
-
-        @Override
-        protected String getApplicationOrSystemProperty(WrappedRequest request,
-                String parameter, String defaultValue) {
-            if (request instanceof CombinedRequest) {
-                CombinedRequest combinedRequest = (CombinedRequest) request;
-                request = combinedRequest.getSecondRequest();
-            }
-            WrappedHttpServletRequest r = (WrappedHttpServletRequest) request;
-            return r.getServlet().getApplicationOrSystemProperty(parameter,
-                    defaultValue);
-        }
-
-        @Override
-        protected AbstractCommunicationManager getCommunicationManager() {
-            return AbstractCommunicationManager.this;
-        }
-
-    };
 
     /**
      * TODO Document me!
@@ -209,7 +190,7 @@ public abstract class AbstractCommunicationManager implements
      */
     public AbstractCommunicationManager(Application application) {
         this.application = application;
-        application.addRequestHandler(ajaxPageHandler);
+        application.addRequestHandler(getAjaxPageHandler());
         application.addRequestHandler(APP_RESOURCE_HANDLER);
         requireLocale(application.getLocale().toString());
     }
@@ -1968,6 +1949,14 @@ public abstract class AbstractCommunicationManager implements
 
     abstract protected void cleanStreamVariable(VariableOwner owner, String name);
 
+    /**
+     * Gets the ajax page handler that should be used for generating ajax pages
+     * for this communication manager.
+     * 
+     * @return the ajax page handler to use
+     */
+    protected abstract AjaxPageHandler getAjaxPageHandler();
+
     protected boolean handleApplicationRequest(WrappedRequest request,
             WrappedResponse response) throws IOException {
         return application.handleRequest(request, response);
@@ -1989,12 +1978,13 @@ public abstract class AbstractCommunicationManager implements
             Root root = application.getRootForRequest(combinedRequest);
 
             // Use the same logic as for determined roots
-            String widgetset = ajaxPageHandler.getWidgetsetForRoot(
-                    combinedRequest, root);
-            String theme = ajaxPageHandler.getThemeForRoot(combinedRequest,
-                    root);
-            String themeUri = ajaxPageHandler.getThemeUri(theme,
-                    combinedRequest);
+            AjaxPageHandler ajaxPageHandler = getAjaxPageHandler();
+            AjaxPageContext context = ajaxPageHandler.createContext(
+                    combinedRequest, response, application, root.getRootId());
+
+            String widgetset = context.getWidgetsetName();
+            String theme = context.getThemeName();
+            String themeUri = ajaxPageHandler.getThemeUri(context, theme);
 
             // TODO These are not required if it was only the init of the root
             // that was delayed

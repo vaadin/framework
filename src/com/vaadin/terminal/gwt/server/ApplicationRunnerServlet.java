@@ -250,4 +250,17 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
         return staticFilesPath;
     }
 
+    @Override
+    protected WrappedHttpServletRequest createWrappedRequest(
+            HttpServletRequest request) {
+        return new WrappedHttpServletRequest(request,
+                getDeploymentConfiguration()) {
+            @Override
+            public String getRequestPathInfo() {
+                return ApplicationRunnerServlet.this
+                        .getRequestPathInfo(getHttpServletRequest());
+            }
+        };
+    }
+
 }

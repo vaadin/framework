@@ -36,6 +36,7 @@ import javax.servlet.http.HttpSession;
 
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
+import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.WrappedRequest;
@@ -74,8 +75,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         public void criticalNotification(WrappedRequest request,
                 WrappedResponse response, String cap, String msg,
                 String details, String outOfSyncURL) throws IOException {
-            servlet.criticalNotification(((WrappedHttpServletRequest) request)
-                    .getHttpServletRequest(),
+            servlet.criticalNotification(WrappedHttpServletRequest
+                    .cast(request).getHttpServletRequest(),
                     ((WrappedHttpServletResponse) response)
                             .getHttpServletResponse(), cap, msg, details,
                     outOfSyncURL);
@@ -148,6 +149,37 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     private final String resourcePath = null;
 
     private int resourceCacheTime = 3600;
+
+    private DeploymentConfiguration deploymentConfiguration = new DeploymentConfiguration() {
+        public String getStaticFileLocation(WrappedRequest request) {
+            HttpServletRequest servletRequest = WrappedHttpServletRequest.cast(
+                    request).getHttpServletRequest();
+            return AbstractApplicationServlet.this
+                    .getStaticFilesLocation(servletRequest);
+        }
+
+        public String getConfiguredWidgetset(WrappedRequest request) {
+            return getApplicationOrSystemProperty(
+                    AbstractApplicationServlet.PARAMETER_WIDGETSET,
+                    AbstractApplicationServlet.DEFAULT_WIDGETSET);
+        }
+
+        public String getConfiguredTheme(WrappedRequest request) {
+            // Use the default
+            return AbstractApplicationServlet.getDefaultTheme();
+        }
+
+        public String getApplicationOrSystemProperty(String propertyName,
+                String defaultValue) {
+            return AbstractApplicationServlet.this
+                    .getApplicationOrSystemProperty(propertyName, defaultValue);
+        }
+
+        public boolean isStandalone(WrappedRequest request) {
+            return true;
+        }
+    };
+
     static final String UPLOAD_URL_PREFIX = "APP/UPLOAD/";
 
     /**
@@ -363,10 +395,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             HttpServletResponse response) throws ServletException, IOException {
         AbstractApplicationServletWrapper servletWrapper = new AbstractApplicationServletWrapper(
                 this);
-        WrappedHttpServletRequest wrappedRequest = new WrappedHttpServletRequest(
-                request, this);
-        WrappedHttpServletResponse wrappedResponse = new WrappedHttpServletResponse(
-                response);
+        WrappedHttpServletRequest wrappedRequest = createWrappedRequest(request);
+        WrappedHttpServletResponse wrappedResponse = createWrappedResponse(response);
 
         RequestType requestType = getRequestType(request);
         if (!ensureCookiesEnabled(requestType, request, response)) {
@@ -509,6 +539,36 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             }
 
         }
+    }
+
+    private WrappedHttpServletResponse createWrappedResponse(
+            HttpServletResponse response) {
+        WrappedHttpServletResponse wrappedResponse = new WrappedHttpServletResponse(
+                response, getDeploymentConfiguration());
+        return wrappedResponse;
+    }
+
+    /**
+     * Create a wrapped request for a http servlet request. This method can be
+     * overridden if the wrapped request should have special properties.
+     * 
+     * @param request
+     *            the original http servlet request
+     * @return a wrapped request for the original request
+     */
+    protected WrappedHttpServletRequest createWrappedRequest(
+            HttpServletRequest request) {
+        return new WrappedHttpServletRequest(request,
+                getDeploymentConfiguration());
+    }
+
+    /**
+     * Gets a the deployment configuration for this servlet.
+     * 
+     * @return the deployment configuration
+     */
+    protected DeploymentConfiguration getDeploymentConfiguration() {
+        return deploymentConfiguration;
     }
 
     /**

@@ -10,6 +10,10 @@ import java.io.Serializable;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.portlet.PortletRequest;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+
 import com.vaadin.Application;
 import com.vaadin.RootRequiresMoreInformation;
 import com.vaadin.annotations.RootInitRequiresBrowserDetals;
@@ -95,6 +99,7 @@ public interface WrappedRequest extends Serializable {
      * @return the input stream from which the contents of the request can be
      *         read
      * @throws IOException
+     *             if the input stream can not be opened
      */
     public InputStream getInputStream() throws IOException;
 
@@ -187,14 +192,6 @@ public interface WrappedRequest extends Serializable {
     public String getContentType();
 
     /**
-     * Gets the base URL of the location of Vaadin's static files.
-     * 
-     * @return a string with the base URL for static files
-     */
-    // TODO Method would be more logical in WrappedResponse
-    public String getStaticFileLocation();
-
-    /**
      * Gets detailed information about the browser from which the request
      * originated. This consists of information that is not available from
      * normal HTTP requests, but requires additional information to be extracted
@@ -213,12 +210,59 @@ public interface WrappedRequest extends Serializable {
      */
     public BrowserDetails getBrowserDetails();
 
+    /**
+     * Gets locale information from the query, e.g. using the Accept-Language
+     * header.
+     * 
+     * @return the preferred Locale
+     * 
+     * @see ServletRequest#getLocale()
+     * @see PortletRequest#getLocale()
+     */
     public Locale getLocale();
 
+    /**
+     * Returns the IP address from which the request came. This might also be
+     * the address of a proxy between the server and the original requester.
+     * 
+     * @return a string containing the IP address, or <code>null</code> if the
+     *         address is not available
+     * 
+     * @see ServletRequest#getRemoteAddr()
+     */
     public String getRemoteAddr();
 
+    /**
+     * Checks whether the request was made using a secure channel, e.g. using
+     * https.
+     * 
+     * @return a boolean indicating if the request is secure
+     * 
+     * @see ServletRequest#isSecure()
+     * @see PortletRequest#isSecure()
+     */
     public boolean isSecure();
 
+    /**
+     * Gets the value of a request header, e.g. a http header for a
+     * {@link HttpServletRequest}.
+     * 
+     * @param headerName
+     *            the name of the header
+     * @return the header value, or <code>null</code> if the header is not
+     *         present in the request
+     * 
+     * @see HttpServletRequest#getHeader(String)
+     */
     public String getHeader(String headerName);
+
+    /**
+     * Gets the deployment configuration for the context of this request.
+     * 
+     * @return the deployment configuration
+     * 
+     * @see DeploymentConfiguration
+     */
+    public DeploymentConfiguration getDeploymentConfiguration();
 
 }

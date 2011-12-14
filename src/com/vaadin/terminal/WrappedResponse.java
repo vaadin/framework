@@ -34,4 +34,5 @@ public interface WrappedResponse extends Serializable {
 
     public void sendError(int errorCode, String message) throws IOException;
 
+    public DeploymentConfiguration getDeploymentConfiguration();
 }

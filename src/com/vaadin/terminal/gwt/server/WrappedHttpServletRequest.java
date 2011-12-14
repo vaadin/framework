@@ -11,22 +11,37 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.vaadin.terminal.CombinedRequest;
+import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.WrappedRequest;
 
 /**
- * Concrete wrapper class for {@link HttpServletRequest}.
+ * Wrapper for {@link HttpServletRequest}.
  * 
- * @see Request
+ * @author Vaadin Ltd.
+ * @since 7.0
+ * 
+ * @see WrappedRequest
+ * @see WrappedHttpServletResponse
  */
 public class WrappedHttpServletRequest implements WrappedRequest {
 
     private final HttpServletRequest request;
-    private final AbstractApplicationServlet servlet;
+    private final DeploymentConfiguration deploymentConfiguration;
 
+    /**
+     * Wraps a http servlet request and associates with a deployment
+     * configuration
+     * 
+     * @param request
+     *            the http servlet request to wrap
+     * @param deploymentConfiguration
+     *            the associated deployment configuration
+     */
     public WrappedHttpServletRequest(HttpServletRequest request,
-            AbstractApplicationServlet servlet) {
+            DeploymentConfiguration deploymentConfiguration) {
         this.request = request;
-        this.servlet = servlet;
+        this.deploymentConfiguration = deploymentConfiguration;
     }
 
     public Object getAttribute(String name) {
@@ -49,20 +64,12 @@ public class WrappedHttpServletRequest implements WrappedRequest {
         return request.getParameterMap();
     }
 
-    public String getRequestID() {
-        return "RequestURL:" + request.getRequestURI();
-    }
-
-    public Object getWrappedRequest() {
-        return request;
-    }
-
     public void setAttribute(String name, Object o) {
         request.setAttribute(name, o);
     }
 
     public String getRequestPathInfo() {
-        return servlet.getRequestPathInfo(request);
+        return request.getPathInfo();
     }
 
     public int getSessionMaxInactiveInterval() {
@@ -77,6 +84,11 @@ public class WrappedHttpServletRequest implements WrappedRequest {
         request.getSession().setAttribute(name, attribute);
     }
 
+    /**
+     * Gets the original, unwrapped HTTP servlet request.
+     * 
+     * @return the servlet request
+     */
     public HttpServletRequest getHttpServletRequest() {
         return request;
     }
@@ -85,12 +97,8 @@ public class WrappedHttpServletRequest implements WrappedRequest {
         return request.getContentType();
     }
 
-    public AbstractApplicationServlet getServlet() {
-        return servlet;
-    }
-
-    public String getStaticFileLocation() {
-        return servlet.getStaticFilesLocation(request);
+    public DeploymentConfiguration getDeploymentConfiguration() {
+        return deploymentConfiguration;
     }
 
     public BrowserDetails getBrowserDetails() {
@@ -112,5 +120,24 @@ public class WrappedHttpServletRequest implements WrappedRequest {
 
     public String getHeader(String headerName) {
         return request.getHeader(headerName);
+    }
+
+    /**
+     * Helper method to get a <code>WrappedHttpServletRequest</code> from a
+     * <code>WrappedRequest</code>. Aside from casting, this method also takes
+     * care of situations where there's another level of wrapping.
+     * 
+     * @param request
+     *            a wrapped request
+     * @return a wrapped http servlet request
+     * @throws ClassCastException
+     *             if the wrapped request doesn't wrap a http servlet request
+     */
+    public static WrappedHttpServletRequest cast(WrappedRequest request) {
+        if (request instanceof CombinedRequest) {
+            CombinedRequest combinedRequest = (CombinedRequest) request;
+            request = combinedRequest.getSecondRequest();
+        }
+        return (WrappedHttpServletRequest) request;
     }
 }

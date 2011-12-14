@@ -17,8 +17,18 @@ import javax.portlet.MimeResponse;
 import javax.portlet.PortletResponse;
 import javax.portlet.ResourceResponse;
 
+import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.WrappedResponse;
 
+/**
+ * Wrapper for {@link PortletResponse} and its subclasses.
+ * 
+ * @author Vaadin Ltd.
+ * @since 7.0
+ * 
+ * @see WrappedResponse
+ * @see WrappedPortletRequest
+ */
 public class WrappedPortletResponse implements WrappedResponse {
     private static final DateFormat HTTP_DATE_FORMAT = new SimpleDateFormat(
             "EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
@@ -27,15 +37,31 @@ public class WrappedPortletResponse implements WrappedResponse {
     }
 
     private final PortletResponse response;
+    private DeploymentConfiguration deploymentConfiguration;
 
-    public WrappedPortletResponse(PortletResponse response) {
+    /**
+     * Wraps a portlet response and an associated deployment configuration
+     * 
+     * @param response
+     *            the portlet response to wrap
+     * @param deploymentConfiguration
+     *            the associated deployment configuration
+     */
+    public WrappedPortletResponse(PortletResponse response,
+            DeploymentConfiguration deploymentConfiguration) {
         this.response = response;
+        this.deploymentConfiguration = deploymentConfiguration;
     }
 
     public OutputStream getOutputStream() throws IOException {
         return ((MimeResponse) response).getPortletOutputStream();
     }
 
+    /**
+     * Gets the original, unwrapped portlet response.
+     * 
+     * @return the unwrapped portlet response
+     */
     public PortletResponse getPortletResponse() {
         return response;
     }
@@ -68,5 +94,9 @@ public class WrappedPortletResponse implements WrappedResponse {
     public void sendError(int errorCode, String message) throws IOException {
         setStatus(errorCode);
         getWriter().write(message);
+    }
+
+    public DeploymentConfiguration getDeploymentConfiguration() {
+        return deploymentConfiguration;
     }
 }

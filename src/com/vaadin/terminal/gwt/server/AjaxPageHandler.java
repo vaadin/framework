@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.Writer;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,6 +17,8 @@ import com.vaadin.Application;
 import com.vaadin.RootRequiresMoreInformation;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
+import com.vaadin.terminal.DeploymentConfiguration;
+import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.RequestHandler;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
@@ -31,6 +34,90 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * @return the {@link AbstractCommunicationManager}
      */
     protected abstract AbstractCommunicationManager getCommunicationManager();
+
+    protected class AjaxPageContext {
+        private final WrappedResponse response;
+        private final WrappedRequest request;
+        private final Application application;
+        private final int rootId;
+
+        private Writer writer;
+        private Root root;
+        private String widgetsetName;
+        private String themeName;
+        private String appId;
+
+        private boolean rootFetched = false;
+
+        public AjaxPageContext(WrappedResponse response,
+                WrappedRequest request, Application application, int rootId) {
+            this.response = response;
+            this.request = request;
+            this.application = application;
+            this.rootId = rootId;
+        }
+
+        public WrappedResponse getResponse() {
+            return response;
+        }
+
+        public WrappedRequest getRequest() {
+            return request;
+        }
+
+        public Application getApplication() {
+            return application;
+        }
+
+        public Writer getWriter() throws IOException {
+            if (writer == null) {
+                response.setContentType("text/html");
+                writer = new BufferedWriter(new OutputStreamWriter(
+                        response.getOutputStream(), "UTF-8"));
+            }
+            return writer;
+        }
+
+        public int getRootId() {
+            return rootId;
+        }
+
+        public Root getRoot() {
+            if (!rootFetched) {
+                root = Root.getCurrentRoot();
+                rootFetched = true;
+            }
+            return root;
+        }
+
+        public String getWidgetsetName() {
+            if (widgetsetName == null) {
+                Root root = getRoot();
+                if (root != null) {
+                    widgetsetName = getWidgetsetForRoot(this);
+                }
+            }
+            return widgetsetName;
+        }
+
+        public String getThemeName() {
+            if (themeName == null) {
+                Root root = getRoot();
+                if (root != null) {
+                    themeName = findAndEscapeThemeName(this);
+                }
+            }
+            return themeName;
+        }
+
+        public String getAppId() {
+            if (appId == null) {
+                appId = getApplicationId(this);
+            }
+            return appId;
+        }
+
+    }
 
     public boolean handleRequest(Application application,
             WrappedRequest request, WrappedResponse response)
@@ -62,88 +149,63 @@ public abstract class AjaxPageHandler implements RequestHandler {
     protected final void writeAjaxPage(WrappedRequest request,
             WrappedResponse response, Application application, int rootId)
             throws IOException, JSONException {
-        final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
-                response.getOutputStream(), "UTF-8"));
 
-        Root root = Root.getCurrentRoot();
+        AjaxPageContext context = createContext(request, response, application,
+                rootId);
 
-        String title = ((root == null || root.getCaption() == null) ? "Vaadin "
-                + AbstractApplicationServlet.VERSION_MAJOR : root.getCaption());
+        DeploymentConfiguration deploymentConfiguration = request
+                .getDeploymentConfiguration();
 
-        /* Fetch relative url to application */
-        // don't use server and port in uri. It may cause problems with some
-        // virtual server configurations which lose the server name
-        String appUrl = application.getURL().getPath();
-        if (appUrl.endsWith("/")) {
-            appUrl = appUrl.substring(0, appUrl.length() - 1);
+        boolean standalone = deploymentConfiguration.isStandalone(request);
+        if (standalone) {
+            setAjaxPageHeaders(context);
+            writeAjaxPageHtmlHeadStart(context);
+            writeAjaxPageHtmlHeader(context);
+            writeAjaxPageHtmlBodyStart(context);
         }
-
-        String themeName = getThemeForRoot(request, root);
-
-        String themeUri = getThemeUri(themeName, request);
-
-        setAjaxPageHeaders(response);
-        writeAjaxPageHtmlHeadStart(page, request);
-        writeAjaxPageHtmlHeader(page, title, themeUri, request);
-        writeAjaxPageHtmlBodyStart(page, request);
-
-        String appId = appUrl;
-        if ("".equals(appUrl)) {
-            appId = "ROOT";
-        }
-        appId = appId.replaceAll("[^a-zA-Z0-9]", "");
-        // Add hashCode to the end, so that it is still (sort of) predictable,
-        // but indicates that it should not be used in CSS and such:
-        int hashCode = appId.hashCode();
-        if (hashCode < 0) {
-            hashCode = -hashCode;
-        }
-        appId = appId + "-" + hashCode;
-
-        String widgetset = getWidgetsetForRoot(request, root);
 
         // TODO include initial UIDL in the scripts?
-        writeAjaxPageHtmlVaadinScripts(page, appUrl, themeUri, appId, request,
-                application, rootId, widgetset);
+        writeAjaxPageHtmlVaadinScripts(context);
 
-        /*- Add classnames;
-         *      .v-app
-         *      .v-app-loading
-         *      .v-app-<simpleName for app class>
-         *      .v-theme-<themeName, remove non-alphanum>
-         */
+        writeAjaxPageHtmlMainDiv(context);
 
-        String appClass = "v-app-" + getApplicationCSSClassName(application);
-
-        String themeClass = "";
-        if (themeName != null) {
-            themeClass = "v-theme-" + themeName.replaceAll("[^a-zA-Z0-9]", "");
-        } else {
-            themeClass = "v-theme-"
-                    + AbstractApplicationServlet.getDefaultTheme().replaceAll(
-                            "[^a-zA-Z0-9]", "");
+        Writer page = context.getWriter();
+        if (standalone) {
+            page.write("</body>\n</html>\n");
         }
-
-        String classNames = "v-app " + themeClass + " " + appClass;
-
-        writeAjaxPageHtmlMainDiv(page, appId, classNames, request);
-
-        page.write("</body>\n</html>\n");
 
         page.close();
     }
 
-    public String getWidgetsetForRoot(WrappedRequest request, Root root) {
-        if (root == null) {
-            // Defer widgetset selection
-            return null;
-        }
+    public AjaxPageContext createContext(WrappedRequest request,
+            WrappedResponse response, Application application, int rootId) {
+        AjaxPageContext context = new AjaxPageContext(response, request,
+                application, rootId);
+        return context;
+    }
+
+    protected String getMainDivStyle(AjaxPageContext context) {
+        return null;
+    }
+
+    /**
+     * Creates and returns a unique ID for the DIV where the application is to
+     * be rendered.
+     * 
+     * @param context
+     * 
+     * @return the id to use in the DOM
+     */
+    protected abstract String getApplicationId(AjaxPageContext context);
+
+    public String getWidgetsetForRoot(AjaxPageContext context) {
+        Root root = context.getRoot();
+        WrappedRequest request = context.getRequest();
 
         String widgetset = root.getApplication().getWidgetsetForRoot(root);
         if (widgetset == null) {
-            widgetset = getApplicationOrSystemProperty(request,
-                    AbstractApplicationServlet.PARAMETER_WIDGETSET,
-                    AbstractApplicationServlet.DEFAULT_WIDGETSET);
+            widgetset = request.getDeploymentConfiguration()
+                    .getConfiguredWidgetset(request);
         }
 
         widgetset = AbstractApplicationServlet.stripSpecialChars(widgetset);
@@ -158,16 +220,42 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * the div element into which the actual Vaadin application will be
      * rendered.
      * 
-     * @param page
-     * @param appId
-     * @param classNames
-     * @param request
+     * @param context
+     * 
      * @throws IOException
      */
-    protected void writeAjaxPageHtmlMainDiv(final BufferedWriter page,
-            String appId, String classNames, WrappedRequest request)
+    protected void writeAjaxPageHtmlMainDiv(AjaxPageContext context)
             throws IOException {
-        page.write("<div id=\"" + appId + "\" class=\"" + classNames + "\">");
+        Writer page = context.getWriter();
+        String style = getMainDivStyle(context);
+        String themeName = context.getThemeName();
+
+        /*- Add classnames;
+         *      .v-app
+         *      .v-app-loading
+         *      .v-app-<simpleName for app class>
+         *      .v-theme-<themeName, remove non-alphanum>
+         */
+
+        String appClass = "v-app-"
+                + getApplicationCSSClassName(context.getApplication());
+
+        String themeClass = "";
+        if (themeName != null) {
+            themeClass = "v-theme-" + themeName.replaceAll("[^a-zA-Z0-9]", "");
+        } else {
+            themeClass = "v-theme-"
+                    + AbstractApplicationServlet.getDefaultTheme().replaceAll(
+                            "[^a-zA-Z0-9]", "");
+        }
+
+        String classNames = "v-app " + themeClass + " " + appClass;
+
+        if (style != null && style.length() != 0) {
+            style = " style=\"" + style + "\"";
+        }
+        page.write("<div id=\"" + context.getAppId() + "\" class=\""
+                + classNames + "\"" + style + ">");
         page.write("<div class=\"v-app-loading\"></div>");
         page.write("</div>\n");
         page.write("<noscript>" + getNoScriptMessage() + "</noscript>");
@@ -203,12 +291,11 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * <p>
      * Override this method if you want to add some custom html to the page.
      * 
-     * @param page
-     * @param request
      * @throws IOException
      */
-    protected void writeAjaxPageHtmlBodyStart(final BufferedWriter page,
-            final WrappedRequest request) throws IOException {
+    protected void writeAjaxPageHtmlBodyStart(AjaxPageContext context)
+            throws IOException {
+        Writer page = context.getWriter();
         page.write("\n</head>\n<body scroll=\"auto\" class=\""
                 + ApplicationConnection.GENERATED_BODY_CLASSNAME + "\">\n");
     }
@@ -219,29 +306,24 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * <p>
      * Override this method if you want to add some custom html around scripts.
      * 
-     * @param page
-     * @param appUrl
-     * @param themeUri
-     * @param appId
-     * @param request
-     * @param application
-     * @param rootId
+     * @param context
+     * 
      * @throws IOException
      * @throws JSONException
      */
-    protected void writeAjaxPageHtmlVaadinScripts(final BufferedWriter page,
-            String appUrl, String themeUri, String appId,
-            WrappedRequest request, Application application, int rootId,
-            String widgetset) throws IOException, JSONException {
+    protected void writeAjaxPageHtmlVaadinScripts(AjaxPageContext context)
+            throws IOException, JSONException {
+        WrappedRequest request = context.getRequest();
+        Writer page = context.getWriter();
 
-        String staticFileLocation = request.getStaticFileLocation();
+        DeploymentConfiguration deploymentConfiguration = request
+                .getDeploymentConfiguration();
+        String staticFileLocation = deploymentConfiguration
+                .getStaticFileLocation(request);
 
-        String widgetsetBase = staticFileLocation + "/"
-                + AbstractApplicationServlet.WIDGETSET_DIRECTORY_PATH;
-
-        // Get system messages
-        Application.SystemMessages systemMessages = AbstractApplicationServlet
-                .getSystemMessages(application.getClass());
+        page.write("<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
+                + "style=\"position:absolute;width:0;height:0;border:0;overflow:"
+                + "hidden;\" src=\"javascript:false\"></iframe>");
 
         page.write("<script type=\"text/javascript\" src=\"");
         page.write(staticFileLocation);
@@ -250,33 +332,90 @@ public abstract class AjaxPageHandler implements RequestHandler {
         page.write("<script type=\"text/javascript\">\n");
         page.write("//<![CDATA[\n");
 
-        JSONObject defaults = new JSONObject();
-        JSONObject appConfig = new JSONObject();
+        writeMainScriptTagContents(context);
+        page.write("//]]>\n</script>\n");
+    }
 
-        boolean isDebug = !application.isProductionMode();
+    protected void writeMainScriptTagContents(AjaxPageContext context)
+            throws JSONException, IOException {
+        JSONObject defaults = getDefaultParameters(context);
+        JSONObject appConfig = getApplicationParameters(context);
+
+        boolean isDebug = !context.getApplication().isProductionMode();
+        Writer page = context.getWriter();
+
+        page.write("vaadin.setDefaults(");
+        printJsonObject(page, defaults, isDebug);
+        page.write(");\n");
+
+        page.write("vaadin.initApplication(\"");
+        page.write(context.getAppId());
+        page.write("\",");
+        printJsonObject(page, appConfig, isDebug);
+        page.write(");\n");
+    }
+
+    private static void printJsonObject(Writer page, JSONObject jsonObject,
+            boolean isDebug) throws IOException, JSONException {
         if (isDebug) {
-            defaults.put("debug", true);
+            page.write(jsonObject.toString(4));
+        } else {
+            page.write(jsonObject.toString());
         }
+    }
 
-        page.write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
-                + "style=\"position:absolute;width:0;height:0;border:0;overflow:"
-                + "hidden;\" src=\"javascript:false\"></iframe>');\n");
+    protected JSONObject getApplicationParameters(AjaxPageContext context)
+            throws JSONException, PaintException {
+        Application application = context.getApplication();
+        int rootId = context.getRootId();
 
-        defaults.put("appUri", appUrl);
+        JSONObject appConfig = new JSONObject();
 
         appConfig.put(ApplicationConnection.ROOT_ID_PARAMETER, rootId);
 
-        if (isStandalone()) {
-            defaults.put("standalone", true);
+        if (context.getThemeName() != null) {
+            appConfig.put("themeUri",
+                    getThemeUri(context, context.getThemeName()));
         }
-
-        appConfig.put("themeUri", themeUri);
 
         JSONObject versionInfo = new JSONObject();
         versionInfo.put("vaadinVersion", AbstractApplicationServlet.VERSION);
         versionInfo.put("applicationVersion", application.getVersion());
         appConfig.put("versionInfo", versionInfo);
 
+        appConfig.put("widgetset", context.getWidgetsetName());
+
+        if (application.isRootInitPending(rootId)) {
+            appConfig.put("initPending", true);
+        } else {
+            // write the initial UIDL into the config
+            AbstractCommunicationManager manager = getCommunicationManager();
+            Root root = Root.getCurrentRoot();
+            manager.makeAllPaintablesDirty(root);
+            StringWriter sWriter = new StringWriter();
+            PrintWriter pWriter = new PrintWriter(sWriter);
+            pWriter.print("{");
+            if (manager.isXSRFEnabled(application)) {
+                pWriter.print(manager.getSecurityKeyUIDL(context.getRequest()));
+            }
+            manager.writeUidlResponce(null, true, pWriter, root, false);
+            pWriter.print("}");
+            appConfig.put("uidl", sWriter.toString());
+        }
+
+        return appConfig;
+    }
+
+    protected JSONObject getDefaultParameters(AjaxPageContext context)
+            throws JSONException {
+        JSONObject defaults = new JSONObject();
+
+        WrappedRequest request = context.getRequest();
+        Application application = context.getApplication();
+
+        // Get system messages
+        Application.SystemMessages systemMessages = AbstractApplicationServlet
+                .getSystemMessages(application.getClass());
         if (systemMessages != null) {
             // Write the CommunicationError -message to client
             JSONObject comErrMsg = new JSONObject();
@@ -298,59 +437,28 @@ public abstract class AjaxPageHandler implements RequestHandler {
             defaults.put("authErrMsg", authErrMsg);
         }
 
+        DeploymentConfiguration deploymentConfiguration = request
+                .getDeploymentConfiguration();
+        String staticFileLocation = deploymentConfiguration
+                .getStaticFileLocation(request);
+        String widgetsetBase = staticFileLocation + "/"
+                + AbstractApplicationServlet.WIDGETSET_DIRECTORY_PATH;
         defaults.put("widgetsetBase", widgetsetBase);
 
-        appConfig.put("widgetset", widgetset);
-
-        if (application.isRootInitPending(rootId)) {
-            appConfig.put("initPending", true);
-        } else {
-            // write the initial UIDL into the config
-            AbstractCommunicationManager manager = getCommunicationManager();
-            Root root = Root.getCurrentRoot();
-            manager.makeAllPaintablesDirty(root);
-            StringWriter sWriter = new StringWriter();
-            PrintWriter pWriter = new PrintWriter(sWriter);
-            pWriter.print("{");
-            if (manager.isXSRFEnabled(application)) {
-                pWriter.print(manager.getSecurityKeyUIDL(request));
-            }
-            manager.writeUidlResponce(null, true, pWriter, root, false);
-            pWriter.print("}");
-            appConfig.put("uidl", sWriter.toString());
+        if (!application.isProductionMode()) {
+            defaults.put("debug", true);
         }
 
-        page.write("vaadin.setDefaults(");
-        if (isDebug) {
-            page.write(defaults.toString(4));
-        } else {
-            page.write(defaults.toString());
+        if (deploymentConfiguration.isStandalone(request)) {
+            defaults.put("standalone", true);
         }
-        page.write(");\n");
 
-        page.write("vaadin.initApplication(\"");
-        page.write(appId);
-        page.write("\",");
-        if (isDebug) {
-            page.write(appConfig.toString(4));
-        } else {
-            page.write(appConfig.toString());
-        }
-        page.write(");\n");
-        page.write("//]]>\n</script>\n");
+        defaults.put("appUri", getAppUri(context));
+
+        return defaults;
     }
 
-    protected abstract String getApplicationOrSystemProperty(
-            WrappedRequest request, String parameter, String defaultValue);
-
-    /**
-     * @return true if the served application is considered to be the only or
-     *         main content of the host page. E.g. various embedding solutions
-     *         should override this to false.
-     */
-    protected boolean isStandalone() {
-        return true;
-    }
+    protected abstract String getAppUri(AjaxPageContext context);
 
     /**
      * Method to write the contents of head element in html kickstart page.
@@ -358,15 +466,13 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * Override this method if you want to add some custom html to the header of
      * the page.
      * 
-     * @param page
-     * @param title
-     * @param themeUri
-     * @param request
      * @throws IOException
      */
-    protected void writeAjaxPageHtmlHeader(final BufferedWriter page,
-            String title, String themeUri, final WrappedRequest request)
+    protected void writeAjaxPageHtmlHeader(AjaxPageContext context)
             throws IOException {
+        Writer page = context.getWriter();
+        String themeName = context.getThemeName();
+
         page.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
 
         // Chrome frame in all versions of IE (only if Chrome frame is
@@ -377,12 +483,17 @@ public abstract class AjaxPageHandler implements RequestHandler {
                 + "html, body {height:100%;margin:0;}</style>");
 
         // Add favicon links
-        if (themeUri != null) {
+        if (themeName != null) {
+            String themeUri = getThemeUri(context, themeName);
             page.write("<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\""
                     + themeUri + "/favicon.ico\" />");
             page.write("<link rel=\"icon\" type=\"image/vnd.microsoft.icon\" href=\""
                     + themeUri + "/favicon.ico\" />");
         }
+
+        Root root = context.getRoot();
+        String title = ((root == null || root.getCaption() == null) ? "Vaadin "
+                + AbstractApplicationServlet.VERSION_MAJOR : root.getCaption());
 
         page.write("<title>"
                 + AbstractApplicationServlet.safeEscapeForHtml(title)
@@ -394,9 +505,11 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * <p>
      * Override this method if you need to customize http headers of the page.
      * 
-     * @param response
+     * @param context
      */
-    protected void setAjaxPageHeaders(WrappedResponse response) {
+    protected void setAjaxPageHeaders(AjaxPageContext context) {
+        WrappedResponse response = context.getResponse();
+
         // Window renders are not cacheable
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Pragma", "no-cache");
@@ -413,12 +526,13 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * Override this method if you want to add some custom html to the very
      * beginning of the page.
      * 
-     * @param page
-     * @param request
+     * @param context
      * @throws IOException
      */
-    protected void writeAjaxPageHtmlHeadStart(final BufferedWriter page,
-            final WrappedRequest request) throws IOException {
+    protected void writeAjaxPageHtmlHeadStart(AjaxPageContext context)
+            throws IOException {
+        Writer page = context.getWriter();
+
         // write html header
         page.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD "
                 + "XHTML 1.0 Transitional//EN\" "
@@ -435,45 +549,41 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * A portal-wide default theme is fetched from the portal shared resource
      * directory (if any), other themes from the portlet.
      * 
+     * @param context
      * @param themeName
-     * @param request
+     * 
      * @return
      */
-    public String getThemeUri(String themeName, WrappedRequest request) {
-        if (themeName == null) {
-            return null;
-        }
-        final String staticFilePath = request.getStaticFileLocation();
+    public String getThemeUri(AjaxPageContext context, String themeName) {
+        WrappedRequest request = context.getRequest();
+        final String staticFilePath = request.getDeploymentConfiguration()
+                .getStaticFileLocation(request);
         return staticFilePath + "/"
                 + AbstractApplicationServlet.THEME_DIRECTORY_PATH + themeName;
     }
 
     /**
-     * Returns the theme for given request/root
+     * Override if required
      * 
-     * @param request
-     * @param root
+     * @param context
      * @return
      */
-    public String getThemeForRoot(WrappedRequest request, Root root) {
-        if (root == null) {
-            return null;
-        }
-        // Finds theme name
-        String themeName;
+    public String getThemeName(AjaxPageContext context) {
+        return context.getApplication().getThemeForRoot(context.getRoot());
+    }
 
-        if (request
-                .getParameter(AbstractApplicationServlet.URL_PARAMETER_THEME) != null) {
-            themeName = request
-                    .getParameter(AbstractApplicationServlet.URL_PARAMETER_THEME);
-        } else {
-            themeName = root.getApplication().getThemeForRoot(root);
-        }
-
+    /**
+     * Don not override.
+     * 
+     * @param context
+     * @return
+     */
+    public String findAndEscapeThemeName(AjaxPageContext context) {
+        String themeName = getThemeName(context);
         if (themeName == null) {
-            // no explicit theme for root defined
-            // using the default theme defined by Vaadin
-            themeName = AbstractApplicationServlet.getDefaultTheme();
+            WrappedRequest request = context.getRequest();
+            themeName = request.getDeploymentConfiguration()
+                    .getConfiguredTheme(request);
         }
 
         // XSS preventation, theme names shouldn't contain special chars anyway.

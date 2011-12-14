@@ -13,14 +13,36 @@ import javax.portlet.ClientDataRequest;
 import javax.portlet.PortletRequest;
 import javax.portlet.ResourceRequest;
 
+import com.vaadin.terminal.CombinedRequest;
+import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.WrappedRequest;
 
+/**
+ * Wrapper for {@link PortletRequest} and its subclasses.
+ * 
+ * @author Vaadin Ltd.
+ * @since 7.0
+ * 
+ * @see WrappedRequest
+ * @see WrappedPortletResponse
+ */
 public class WrappedPortletRequest implements WrappedRequest {
 
     private final PortletRequest request;
+    private final DeploymentConfiguration deploymentConfiguration;
 
-    public WrappedPortletRequest(PortletRequest request) {
+    /**
+     * Wraps a portlet request and an associated deployment configuration
+     * 
+     * @param request
+     *            the portlet request to wrap
+     * @param deploymentConfiguration
+     *            the associated deployment configuration
+     */
+    public WrappedPortletRequest(PortletRequest request,
+            DeploymentConfiguration deploymentConfiguration) {
         this.request = request;
+        this.deploymentConfiguration = deploymentConfiguration;
     }
 
     public Object getAttribute(String name) {
@@ -53,14 +75,6 @@ public class WrappedPortletRequest implements WrappedRequest {
         return request.getParameterMap();
     }
 
-    public String getRequestID() {
-        return "WindowID:" + request.getWindowID();
-    }
-
-    public Object getWrappedRequest() {
-        return request;
-    }
-
     public void setAttribute(String name, Object o) {
         request.setAttribute(name, o);
     }
@@ -69,9 +83,7 @@ public class WrappedPortletRequest implements WrappedRequest {
         if (request instanceof ResourceRequest) {
             return ((ResourceRequest) request).getResourceID();
         } else {
-            // We do not use paths in portlet mode
-            throw new IllegalStateException(
-                    "PathInfo only available when using ResourceRequests");
+            return null;
         }
     }
 
@@ -87,6 +99,11 @@ public class WrappedPortletRequest implements WrappedRequest {
         request.getPortletSession().setAttribute(name, attribute);
     }
 
+    /**
+     * Gets the original, unwrapped portlet request.
+     * 
+     * @return the unwrapped portlet request
+     */
     public PortletRequest getPortletRequest() {
         return request;
     }
@@ -97,29 +114,6 @@ public class WrappedPortletRequest implements WrappedRequest {
         } catch (ClassCastException e) {
             throw new IllegalStateException(
                     "Content type only available for ResourceRequests");
-        }
-    }
-
-    /*
-     * Return the URL from where static files, e.g. the widgetset and the theme,
-     * are served. In a standard configuration the VAADIN folder inside the
-     * returned folder is what is used for widgetsets and themes.
-     * 
-     * @return The location of static resources (inside which there should be a
-     * VAADIN directory). Does not end with a slash (/).
-     */
-    public String getStaticFileLocation() {
-        String staticFileLocation = getPortalProperty(Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH);
-        if (staticFileLocation != null) {
-            // remove trailing slash if any
-            while (staticFileLocation.endsWith(".")) {
-                staticFileLocation = staticFileLocation.substring(0,
-                        staticFileLocation.length() - 1);
-            }
-            return staticFileLocation;
-        } else {
-            // default for Liferay
-            return "/html";
         }
     }
 
@@ -144,8 +138,38 @@ public class WrappedPortletRequest implements WrappedRequest {
         return null;
     }
 
+    /**
+     * Reads a portal property from the portal context of the wrapped request.
+     * 
+     * @param name
+     *            a string with the name of the portal property to get
+     * @return a string with the value of the property, or <code>null</code> if
+     *         the property is not defined
+     */
     public String getPortalProperty(String name) {
         return request.getPortalContext().getProperty(name);
     }
 
+    public DeploymentConfiguration getDeploymentConfiguration() {
+        return deploymentConfiguration;
+    }
+
+    /**
+     * Helper method to get a <code>WrappedPortlettRequest</code> from a
+     * <code>WrappedRequest</code>. Aside from casting, this method also takes
+     * care of situations where there's another level of wrapping.
+     * 
+     * @param request
+     *            a wrapped request
+     * @return a wrapped portlet request
+     * @throws ClassCastException
+     *             if the wrapped request doesn't wrap a portlet request
+     */
+    public static WrappedPortletRequest cast(WrappedRequest request) {
+        if (request instanceof CombinedRequest) {
+            CombinedRequest combinedRequest = (CombinedRequest) request;
+            request = combinedRequest.getSecondRequest();
+        }
+        return (WrappedPortletRequest) request;
+    }
 }
