@@ -9,6 +9,9 @@ import java.util.Locale;
 /**
  * A converter that converts from {@link Boolean} to {@link String} and back.
  * The String representation is given by Boolean.toString().
+ * <p>
+ * Leading and trailing white spaces are ignored when converting from a String.
+ * </p>
  * 
  * @author Vaadin Ltd
  * @version
@@ -26,6 +29,13 @@ public class BooleanToStringConverter implements Converter<Boolean, String> {
      */
     public Boolean convertFromTargetToSource(String value, Locale locale)
             throws ConversionException {
+        if (value == null) {
+            return null;
+        }
+
+        // Remove leading and trailing white space
+        value = value.trim();
+
         try {
             return Boolean.valueOf(value);
         } catch (Exception e) {
@@ -44,7 +54,7 @@ public class BooleanToStringConverter implements Converter<Boolean, String> {
     public String convertFromSourceToTarget(Boolean value, Locale locale)
             throws ConversionException {
         if (value == null) {
-            return "";
+            return null;
         }
 
         return value.toString();

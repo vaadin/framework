@@ -46,7 +46,7 @@ public class IntegerToStringConverter implements Converter<Integer, String> {
             return null;
         }
 
-        // Remove extra spaces
+        // Remove leading and trailing white space
         value = value.trim();
 
         // Parse and detect errors. If the full string was not used, it is

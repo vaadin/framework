@@ -13,6 +13,9 @@ import java.util.Locale;
  * A converter that converts from {@link Date} to {@link String} and back. Uses
  * the given locale and {@link DateFormat} for formatting and parsing.
  * <p>
+ * Leading and trailing white spaces are ignored when converting from a String.
+ * </p>
+ * <p>
  * Override and overwrite {@link #getFormat(Locale)} to use a different format.
  * </p>
  * 
@@ -51,6 +54,9 @@ public class DateToStringConverter implements Converter<Date, String> {
         if (value == null) {
             return null;
         }
+
+        // Remove leading and trailing white space
+        value = value.trim();
 
         ParsePosition parsePosition = new ParsePosition(0);
         Date parsedValue = getFormat(locale).parse(value, parsePosition);

@@ -13,6 +13,9 @@ import java.util.Locale;
  * Uses the given locale and a {@link NumberFormat} instance for formatting and
  * parsing.
  * <p>
+ * Leading and trailing white spaces are ignored when converting from a String.
+ * </p>
+ * <p>
  * Override and overwrite {@link #getFormat(Locale)} to use a different format.
  * </p>
  * 
@@ -49,6 +52,13 @@ public class DoubleToStringConverter implements Converter<Double, String> {
      */
     public Double convertFromTargetToSource(String value, Locale locale)
             throws ConversionException {
+        if (value == null) {
+            return null;
+        }
+
+        // Remove leading and trailing white space
+        value = value.trim();
+
         ParsePosition parsePosition = new ParsePosition(0);
         Number parsedValue = getFormat(locale).parse(value, parsePosition);
         if (parsePosition.getIndex() != value.length()) {
