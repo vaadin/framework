@@ -125,6 +125,8 @@ public class ApplicationConnection {
 
     private int activeRequests = 0;
 
+    protected boolean cssLoaded = false;
+
     /** Parameters for this application connection loaded from the web-page */
     private ApplicationConfiguration configuration;
 
@@ -191,10 +193,16 @@ public class ApplicationConnection {
      * failed to start. This ensures that the applications are started in order,
      * to avoid session-id problems.
      * 
-     * @return
      */
     public void start() {
-        repaintAll();
+        String jsonText = configuration.getUIDL();
+        if (jsonText == null) {
+            // inital UIDL not in DOM, request later
+            repaintAll();
+        } else {
+            // initial UIDL provided in DOM, continue as if returned by request
+            handleJSONText(jsonText);
+        }
     }
 
     private native void initializeTestbenchHooks(
@@ -348,6 +356,20 @@ public class ApplicationConnection {
         return (activeRequests > 0);
     }
 
+    public void incrementActiveRequests() {
+        if (activeRequests < 0) {
+            activeRequests = 1;
+        } else {
+            activeRequests++;
+        }
+    }
+
+    public void decrementActiveRequests() {
+        if (activeRequests > 0) {
+            activeRequests--;
+        }
+    }
+
     private String getRepaintAllParameters() {
         // collect some client side data that will be sent to server on
         // initial uidl request
@@ -496,7 +518,7 @@ public class ApplicationConnection {
                         (new Timer() {
                             @Override
                             public void run() {
-                                activeRequests--;
+                                decrementActiveRequests();
                                 doUidlRequest(uri, payload, synchronous);
                             }
                         }).schedule(delay);
@@ -513,28 +535,10 @@ public class ApplicationConnection {
                         return;
                     }
 
-                    final Date start = new Date();
                     // for(;;);[realjson]
                     final String jsonText = response.getText().substring(9,
                             response.getText().length() - 1);
-                    final ValueMap json;
-                    try {
-                        json = parseJSONResponse(jsonText);
-                    } catch (final Exception e) {
-                        endRequest();
-                        showCommunicationError(e.getMessage()
-                                + " - Original JSON-text:" + jsonText);
-                        return;
-                    }
-
-                    VConsole.log("JSON parsing took "
-                            + (new Date().getTime() - start.getTime()) + "ms");
-                    if (applicationRunning) {
-                        handleReceivedJSONMessage(start, jsonText, json);
-                    } else {
-                        applicationRunning = true;
-                        handleWhenCSSLoaded(jsonText, json);
-                    }
+                    handleJSONText(jsonText);
                 }
 
             };
@@ -556,6 +560,34 @@ public class ApplicationConnection {
             endRequest();
         }
 
+    }
+
+    /**
+     * Handles received UIDL JSON text, parsing it, and passing it on to the
+     * appropriate handlers, while logging timiing information.
+     * 
+     * @param jsonText
+     */
+    private void handleJSONText(String jsonText) {
+        final Date start = new Date();
+        final ValueMap json;
+        try {
+            json = parseJSONResponse(jsonText);
+        } catch (final Exception e) {
+            endRequest();
+            showCommunicationError(e.getMessage() + " - Original JSON-text:"
+                    + jsonText);
+            return;
+        }
+
+        VConsole.log("JSON parsing took "
+                + (new Date().getTime() - start.getTime()) + "ms");
+        if (applicationRunning) {
+            handleReceivedJSONMessage(start, jsonText, json);
+        } else {
+            applicationRunning = true;
+            handleWhenCSSLoaded(jsonText, json);
+        }
     }
 
     /**
@@ -587,9 +619,7 @@ public class ApplicationConnection {
 
     protected void handleWhenCSSLoaded(final String jsonText,
             final ValueMap json) {
-        int heightOfLoadElement = DOM.getElementPropertyInt(loadElement,
-                "offsetHeight");
-        if (heightOfLoadElement == 0 && cssWaits < MAX_CSS_WAITS) {
+        if (!isCSSLoaded() && cssWaits < MAX_CSS_WAITS) {
             (new Timer() {
                 @Override
                 public void run() {
@@ -601,11 +631,23 @@ public class ApplicationConnection {
                     + "(.v-loading-indicator height == 0)");
             cssWaits++;
         } else {
+            cssLoaded = true;
             handleReceivedJSONMessage(new Date(), jsonText, json);
             if (cssWaits >= MAX_CSS_WAITS) {
                 VConsole.error("CSS files may have not loaded properly.");
             }
         }
+    }
+
+    /**
+     * Checks whether or not the CSS is loaded. By default checks the size of
+     * the loading indicator element.
+     * 
+     * @return
+     */
+    protected boolean isCSSLoaded() {
+        return cssLoaded
+                || DOM.getElementPropertyInt(loadElement, "offsetHeight") != 0;
     }
 
     /**
@@ -672,7 +714,7 @@ public class ApplicationConnection {
     }
 
     protected void startRequest() {
-        activeRequests++;
+        incrementActiveRequests();
         requestStartTime = new Date();
         // show initial throbber
         if (loadTimer == null) {
@@ -700,11 +742,11 @@ public class ApplicationConnection {
             checkForPendingVariableBursts();
             runPostRequestHooks(configuration.getRootPanelId());
         }
-        activeRequests--;
+        decrementActiveRequests();
         // deferring to avoid flickering
         Scheduler.get().scheduleDeferred(new Command() {
             public void execute() {
-                if (activeRequests == 0) {
+                if (!hasActiveRequest()) {
                     hideLoadingIndicator();
                 }
             }
@@ -785,11 +827,13 @@ public class ApplicationConnection {
     private void hideLoadingIndicator() {
         if (loadTimer != null) {
             loadTimer.cancel();
-            if (loadTimer2 != null) {
-                loadTimer2.cancel();
-                loadTimer3.cancel();
-            }
             loadTimer = null;
+        }
+        if (loadTimer2 != null) {
+            loadTimer2.cancel();
+            loadTimer3.cancel();
+            loadTimer2 = null;
+            loadTimer3 = null;
         }
         if (loadElement != null) {
             DOM.setStyleAttribute(loadElement, "display", "none");

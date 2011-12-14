@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.GeneralSecurityException;
@@ -94,7 +95,7 @@ public abstract class AbstractCommunicationManager implements
             .getLogger(AbstractCommunicationManager.class.getName());
 
     private static final RequestHandler APP_RESOURCE_HANDLER = new ApplicationResourceHandler();
-    private static final AjaxPageHandler AJAX_PAGE_HANDLER = new AjaxPageHandler() {
+    private final AjaxPageHandler ajaxPageHandler = new AjaxPageHandler() {
 
         @Override
         protected String getApplicationOrSystemProperty(WrappedRequest request,
@@ -106,6 +107,11 @@ public abstract class AbstractCommunicationManager implements
             WrappedHttpServletRequest r = (WrappedHttpServletRequest) request;
             return r.getServlet().getApplicationOrSystemProperty(parameter,
                     defaultValue);
+        }
+
+        @Override
+        protected AbstractCommunicationManager getCommunicationManager() {
+            return AbstractCommunicationManager.this;
         }
 
     };
@@ -203,7 +209,7 @@ public abstract class AbstractCommunicationManager implements
      */
     public AbstractCommunicationManager(Application application) {
         this.application = application;
-        application.addRequestHandler(AJAX_PAGE_HANDLER);
+        application.addRequestHandler(ajaxPageHandler);
         application.addRequestHandler(APP_RESOURCE_HANDLER);
         requireLocale(application.getLocale().toString());
     }
@@ -521,7 +527,7 @@ public abstract class AbstractCommunicationManager implements
      * Internally process a UIDL request from the client.
      * 
      * This method calls
-     * {@link #handleVariables(Request, Response, Callback, Application, Window)}
+     * {@link #handleVariables(WrappedRequest, WrappedResponse, Callback, Application, Root)}
      * to process any changes to variables by the client and then repaints
      * affected components using {@link #paintAfterVariableChanges()}.
      * 
@@ -725,17 +731,7 @@ public abstract class AbstractCommunicationManager implements
                 .getAttribute(WRITE_SECURITY_TOKEN_FLAG);
 
         if (writeSecurityTokenFlag != null) {
-            String seckey = (String) request
-                    .getSessionAttribute(ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
-            if (seckey == null) {
-                seckey = UUID.randomUUID().toString();
-                request.setSessionAttribute(
-                        ApplicationConnection.UIDL_SECURITY_TOKEN_ID, seckey);
-            }
-            outWriter.print("\"" + ApplicationConnection.UIDL_SECURITY_TOKEN_ID
-                    + "\":\"");
-            outWriter.print(seckey);
-            outWriter.print("\",");
+            outWriter.print(getSecurityKeyUIDL(request));
         }
 
         writeUidlResponce(callback, repaintAll, outWriter, root, analyzeLayouts);
@@ -744,6 +740,41 @@ public abstract class AbstractCommunicationManager implements
 
         outWriter.close();
 
+    }
+
+    /**
+     * Gets the security key (and generates one if needed) as UIDL.
+     * 
+     * @param request
+     * @return the security key UIDL or "" if the feature is turned off
+     */
+    public String getSecurityKeyUIDL(WrappedRequest request) {
+        final String seckey = getSecurityKey(request);
+        if (seckey != null) {
+            return "\"" + ApplicationConnection.UIDL_SECURITY_TOKEN_ID
+                    + "\":\"" + seckey + "\",";
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * Gets the security key (and generates one if needed).
+     * 
+     * @param request
+     * @return the security key
+     */
+    protected String getSecurityKey(WrappedRequest request) {
+        String seckey = null;
+        seckey = (String) request
+                .getSessionAttribute(ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
+        if (seckey == null) {
+            seckey = UUID.randomUUID().toString();
+            request.setSessionAttribute(
+                    ApplicationConnection.UIDL_SECURITY_TOKEN_ID, seckey);
+        }
+
+        return seckey;
     }
 
     public void writeUidlResponce(Callback callback, boolean repaintAll,
@@ -1076,6 +1107,18 @@ public abstract class AbstractCommunicationManager implements
     }
 
     /**
+     * Returns false if the cross site request forgery protection is turned off.
+     * 
+     * @param application
+     * @return false if the XSRF is turned off, true otherwise
+     */
+    public boolean isXSRFEnabled(Application application) {
+        return !"true"
+                .equals(application
+                        .getProperty(AbstractApplicationServlet.SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION));
+    }
+
+    /**
      * TODO document
      * 
      * If this method returns false, something was submitted that we did not
@@ -1099,9 +1142,7 @@ public abstract class AbstractCommunicationManager implements
 
             // Security: double cookie submission pattern unless disabled by
             // property
-            if (!"true"
-                    .equals(application2
-                            .getProperty(AbstractApplicationServlet.SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION))) {
+            if (isXSRFEnabled(application2)) {
                 if (bursts.length == 1 && "init".equals(bursts[0])) {
                     // init request; don't handle any variables, key sent in
                     // response.
@@ -1936,6 +1977,10 @@ public abstract class AbstractCommunicationManager implements
             WrappedResponse response, Application application)
             throws IOException {
 
+        // if we do not yet have a currentRoot, it should be initialized
+        // shortly, and we should send the initial UIDL
+        boolean sendUIDL = Root.getCurrentRoot() == null;
+
         // TODO Handle npe if id has not been registered
         CombinedRequest combinedRequest = application
                 .getCombinedRequest(request);
@@ -1944,11 +1989,11 @@ public abstract class AbstractCommunicationManager implements
             Root root = application.getRootForRequest(combinedRequest);
 
             // Use the same logic as for determined roots
-            String widgetset = AJAX_PAGE_HANDLER.getWidgetsetForRoot(
+            String widgetset = ajaxPageHandler.getWidgetsetForRoot(
                     combinedRequest, root);
-            String theme = AJAX_PAGE_HANDLER.getThemeForRoot(combinedRequest,
+            String theme = ajaxPageHandler.getThemeForRoot(combinedRequest,
                     root);
-            String themeUri = AJAX_PAGE_HANDLER.getThemeUri(theme,
+            String themeUri = ajaxPageHandler.getThemeUri(theme,
                     combinedRequest);
 
             // TODO These are not required if it was only the init of the root
@@ -1959,6 +2004,19 @@ public abstract class AbstractCommunicationManager implements
             // Root id might have changed based on e.g. window.name
             params.put(ApplicationConnection.ROOT_ID_PARAMETER,
                     root.getRootId());
+            if (sendUIDL) {
+                // TODO maybe unify w/ AjaxPageHandler & writeUidlResponCe()?
+                this.makeAllPaintablesDirty(root);
+                StringWriter sWriter = new StringWriter();
+                PrintWriter pWriter = new PrintWriter(sWriter);
+                pWriter.print("{");
+                if (isXSRFEnabled(application)) {
+                    pWriter.print(getSecurityKeyUIDL(combinedRequest));
+                }
+                writeUidlResponce(null, true, pWriter, root, false);
+                pWriter.print("}");
+                params.put("uidl", sWriter.toString());
+            }
             response.getWriter().write(params.toString());
         } catch (RootRequiresMoreInformation e) {
             // Requiring more information at this point is not allowed

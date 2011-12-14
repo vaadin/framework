@@ -143,6 +143,11 @@ public class ApplicationConfiguration implements EntryPoint {
         /*-{
             return this.getConfig("versionInfo").applicationVersion;
         }-*/;
+
+        private native String getUIDL()
+        /*-{
+           return this.getConfig("uidl");
+         }-*/;
     }
 
     /**
@@ -240,6 +245,16 @@ public class ApplicationConfiguration implements EntryPoint {
 
     public void setAppId(String appId) {
         id = appId;
+    }
+
+    /**
+     * Gets the initial UIDL from the DOM, if it was provided during the init
+     * process.
+     * 
+     * @return
+     */
+    public String getUIDL() {
+        return getJsoConfiguration(id).getUIDL();
     }
 
     /**
