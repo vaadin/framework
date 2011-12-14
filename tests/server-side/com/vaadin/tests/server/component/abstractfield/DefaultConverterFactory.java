@@ -11,7 +11,6 @@ import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
-import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
 
 public class DefaultConverterFactory extends TestCase {
@@ -27,17 +26,9 @@ public class DefaultConverterFactory extends TestCase {
     }
 
     public void testDefaultNumberConversion() {
-        Application.LegacyApplication app = new Application.LegacyApplication() {
-
-            @Override
-            public void init() {
-            }
-
-        };
-        app.setMainWindow(new Root());
-
+        Application app = new Application();
+        Application.setCurrentApplication(app);
         TextField tf = new TextField();
-        app.getMainWindow().addComponent(tf);
         tf.setLocale(new Locale("en", "US"));
         tf.setPropertyDataSource(new MethodProperty<Person>(paulaBean, "salary"));
         assertEquals("49,000", tf.getValue());
