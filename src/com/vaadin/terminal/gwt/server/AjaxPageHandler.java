@@ -7,6 +7,8 @@ package com.vaadin.terminal.gwt.server;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,6 +23,14 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.ui.Root;
 
 public abstract class AjaxPageHandler implements RequestHandler {
+
+    /**
+     * Returns the {@link AbstractCommunicationManager} that is handling the
+     * communication for the active application.
+     * 
+     * @return the {@link AbstractCommunicationManager}
+     */
+    protected abstract AbstractCommunicationManager getCommunicationManager();
 
     public boolean handleRequest(Application application,
             WrappedRequest request, WrappedResponse response)
@@ -294,6 +304,20 @@ public abstract class AjaxPageHandler implements RequestHandler {
 
         if (application.isRootInitPending(rootId)) {
             appConfig.put("initPending", true);
+        } else {
+            // write the initial UIDL into the config
+            AbstractCommunicationManager manager = getCommunicationManager();
+            Root root = Root.getCurrentRoot();
+            manager.makeAllPaintablesDirty(root);
+            StringWriter sWriter = new StringWriter();
+            PrintWriter pWriter = new PrintWriter(sWriter);
+            pWriter.print("{");
+            if (manager.isXSRFEnabled(application)) {
+                pWriter.print(manager.getSecurityKeyUIDL(request));
+            }
+            manager.writeUidlResponce(null, true, pWriter, root, false);
+            pWriter.print("}");
+            appConfig.put("uidl", sWriter.toString());
         }
 
         page.write("vaadin.setDefaults(");
