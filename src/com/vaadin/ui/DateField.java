@@ -347,6 +347,7 @@ public class DateField extends AbstractField<Date> implements
                 // Update the value based on the received info
                 // Must set in this order to avoid invalid dates (or wrong
                 // dates if lenient is true) in calendar
+                cal.set(Calendar.MILLISECOND, 0);
                 for (int r = Resolution.YEAR.ordinal(); r >= 0; r--) {
                     Resolution res = Resolution.values()[r];
                     Integer newValue = 0;
