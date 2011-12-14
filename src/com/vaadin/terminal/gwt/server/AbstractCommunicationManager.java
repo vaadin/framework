@@ -1910,6 +1910,8 @@ public abstract class AbstractCommunicationManager implements
     private final HashMap<Class<? extends Paintable>, Integer> typeToKey = new HashMap<Class<? extends Paintable>, Integer>();
     private int nextTypeKey = 0;
 
+    private AjaxPageHandler ajaxPageHandler;
+
     String getTagForType(Class<? extends Paintable> class1) {
         Integer object = typeToKey.get(class1);
         if (object == null) {
@@ -1955,7 +1957,15 @@ public abstract class AbstractCommunicationManager implements
      * 
      * @return the ajax page handler to use
      */
-    protected abstract AjaxPageHandler getAjaxPageHandler();
+    private AjaxPageHandler getAjaxPageHandler() {
+        if (ajaxPageHandler == null) {
+            ajaxPageHandler = createAjaxPageHandler();
+        }
+
+        return ajaxPageHandler;
+    }
+
+    protected abstract AjaxPageHandler createAjaxPageHandler();
 
     protected boolean handleApplicationRequest(WrappedRequest request,
             WrappedResponse response) throws IOException {
@@ -1996,7 +2006,7 @@ public abstract class AbstractCommunicationManager implements
                     root.getRootId());
             if (sendUIDL) {
                 // TODO maybe unify w/ AjaxPageHandler & writeUidlResponCe()?
-                this.makeAllPaintablesDirty(root);
+                makeAllPaintablesDirty(root);
                 StringWriter sWriter = new StringWriter();
                 PrintWriter pWriter = new PrintWriter(sWriter);
                 pWriter.print("{");

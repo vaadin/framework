@@ -34,57 +34,6 @@ import com.vaadin.ui.Component;
 @SuppressWarnings("serial")
 public class CommunicationManager extends AbstractCommunicationManager {
 
-    private final AjaxPageHandler ajaxPageHandler = new AjaxPageHandler() {
-        @Override
-        protected String getApplicationId(AjaxPageContext context) {
-            String appUrl = getAppUri(context);
-
-            String appId = appUrl;
-            if ("".equals(appUrl)) {
-                appId = "ROOT";
-            }
-            appId = appId.replaceAll("[^a-zA-Z0-9]", "");
-            // Add hashCode to the end, so that it is still (sort of)
-            // predictable, but indicates that it should not be used in CSS and
-            // such:
-            int hashCode = appId.hashCode();
-            if (hashCode < 0) {
-                hashCode = -hashCode;
-            }
-            appId = appId + "-" + hashCode;
-            return appId;
-        }
-
-        @Override
-        protected String getAppUri(AjaxPageContext context) {
-            /* Fetch relative url to application */
-            // don't use server and port in uri. It may cause problems with some
-            // virtual server configurations which lose the server name
-            Application application = context.getApplication();
-            URL url = application.getURL();
-            String appUrl = url.getPath();
-            if (appUrl.endsWith("/")) {
-                appUrl = appUrl.substring(0, appUrl.length() - 1);
-            }
-            return appUrl;
-        }
-
-        @Override
-        public String getThemeName(AjaxPageContext context) {
-            String themeName = context.getRequest().getParameter(
-                    AbstractApplicationServlet.URL_PARAMETER_THEME);
-            if (themeName == null) {
-                themeName = super.getThemeName(context);
-            }
-            return themeName;
-        }
-
-        @Override
-        protected AbstractCommunicationManager getCommunicationManager() {
-            return CommunicationManager.this;
-        }
-    };
-
     /**
      * @deprecated use {@link #CommunicationManager(Application)} instead
      * @param application
@@ -232,7 +181,58 @@ public class CommunicationManager extends AbstractCommunicationManager {
     }
 
     @Override
-    protected AjaxPageHandler getAjaxPageHandler() {
-        return ajaxPageHandler;
+    protected AjaxPageHandler createAjaxPageHandler() {
+        return new AjaxPageHandler() {
+            @Override
+            protected String getApplicationId(AjaxPageContext context) {
+                String appUrl = getAppUri(context);
+
+                String appId = appUrl;
+                if ("".equals(appUrl)) {
+                    appId = "ROOT";
+                }
+                appId = appId.replaceAll("[^a-zA-Z0-9]", "");
+                // Add hashCode to the end, so that it is still (sort of)
+                // predictable, but indicates that it should not be used in CSS
+                // and
+                // such:
+                int hashCode = appId.hashCode();
+                if (hashCode < 0) {
+                    hashCode = -hashCode;
+                }
+                appId = appId + "-" + hashCode;
+                return appId;
+            }
+
+            @Override
+            protected String getAppUri(AjaxPageContext context) {
+                /* Fetch relative url to application */
+                // don't use server and port in uri. It may cause problems with
+                // some
+                // virtual server configurations which lose the server name
+                Application application = context.getApplication();
+                URL url = application.getURL();
+                String appUrl = url.getPath();
+                if (appUrl.endsWith("/")) {
+                    appUrl = appUrl.substring(0, appUrl.length() - 1);
+                }
+                return appUrl;
+            }
+
+            @Override
+            public String getThemeName(AjaxPageContext context) {
+                String themeName = context.getRequest().getParameter(
+                        AbstractApplicationServlet.URL_PARAMETER_THEME);
+                if (themeName == null) {
+                    themeName = super.getThemeName(context);
+                }
+                return themeName;
+            }
+
+            @Override
+            protected AbstractCommunicationManager getCommunicationManager() {
+                return CommunicationManager.this;
+            }
+        };
     }
 }

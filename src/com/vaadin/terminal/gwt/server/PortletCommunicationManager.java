@@ -35,99 +35,6 @@ import com.vaadin.ui.Root;
 @SuppressWarnings("serial")
 public class PortletCommunicationManager extends AbstractCommunicationManager {
 
-    private final AjaxPageHandler ajaxPageHandler = new AjaxPageHandler() {
-
-        @Override
-        public boolean handleRequest(Application application,
-                WrappedRequest request, WrappedResponse response)
-                throws IOException {
-            PortletRequest portletRequest = WrappedPortletRequest.cast(request)
-                    .getPortletRequest();
-            if (portletRequest instanceof RenderRequest) {
-                return super.handleRequest(application, request, response);
-            } else {
-                return false;
-            }
-        }
-
-        @Override
-        protected String getApplicationId(AjaxPageContext context) {
-            PortletRequest portletRequest = WrappedPortletRequest.cast(
-                    context.getRequest()).getPortletRequest();
-            /*
-             * We need to generate a unique ID because some portals already
-             * create a DIV with the portlet's Window ID as the DOM ID.
-             */
-            return "v-" + portletRequest.getWindowID();
-        }
-
-        @Override
-        protected String getAppUri(AjaxPageContext context) {
-            return getRenderResponse(context).createActionURL().toString();
-        }
-
-        private RenderResponse getRenderResponse(AjaxPageContext context) {
-            PortletResponse response = ((WrappedPortletResponse) context
-                    .getResponse()).getPortletResponse();
-
-            RenderResponse renderResponse = (RenderResponse) response;
-            return renderResponse;
-        }
-
-        @Override
-        protected JSONObject getDefaultParameters(AjaxPageContext context)
-                throws JSONException {
-            /*
-             * We need this in order to get uploads to work. TODO this is not
-             * needed for uploads anymore, check if this is needed for some
-             * other things
-             */
-            JSONObject defaults = super.getDefaultParameters(context);
-            defaults.put("usePortletURLs", true);
-
-            ResourceURL uidlUrlBase = getRenderResponse(context)
-                    .createResourceURL();
-            uidlUrlBase.setResourceID("UIDL");
-            defaults.put("portletUidlURLBase", uidlUrlBase.toString());
-            defaults.put("pathInfo", "");
-
-            return defaults;
-        }
-
-        @Override
-        protected void writeMainScriptTagContents(AjaxPageContext context)
-                throws JSONException, IOException {
-            // fixed base theme to use - all portal pages with Vaadin
-            // applications will load this exactly once
-            String portalTheme = WrappedPortletRequest.cast(
-                    context.getRequest()).getPortalProperty(
-                    AbstractApplicationPortlet.PORTAL_PARAMETER_VAADIN_THEME);
-            if (portalTheme != null
-                    && !portalTheme.equals(context.getThemeName())) {
-                String portalThemeUri = getThemeUri(context, portalTheme);
-                // XSS safe - originates from portal properties
-                context.getWriter().write(
-                        "vaadin.loadTheme('" + portalThemeUri + "')");
-            }
-
-            super.writeMainScriptTagContents(context);
-        }
-
-        @Override
-        protected String getMainDivStyle(AjaxPageContext context) {
-            DeploymentConfiguration deploymentConfiguration = context
-                    .getRequest().getDeploymentConfiguration();
-            return deploymentConfiguration.getApplicationOrSystemProperty(
-                    AbstractApplicationPortlet.PORTLET_PARAMETER_STYLE, null);
-        }
-
-        @Override
-        protected AbstractCommunicationManager getCommunicationManager() {
-            return PortletCommunicationManager.this;
-        }
-
-    };
-
     private transient ResourceResponse currentUidlResponse;
 
     public PortletCommunicationManager(Application application) {
@@ -207,8 +114,101 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     }
 
     @Override
-    protected AjaxPageHandler getAjaxPageHandler() {
-        return ajaxPageHandler;
+    protected AjaxPageHandler createAjaxPageHandler() {
+        return new AjaxPageHandler() {
+            @Override
+            public boolean handleRequest(Application application,
+                    WrappedRequest request, WrappedResponse response)
+                    throws IOException {
+                PortletRequest portletRequest = WrappedPortletRequest.cast(
+                        request).getPortletRequest();
+                if (portletRequest instanceof RenderRequest) {
+                    return super.handleRequest(application, request, response);
+                } else {
+                    return false;
+                }
+            }
+
+            @Override
+            protected String getApplicationId(AjaxPageContext context) {
+                PortletRequest portletRequest = WrappedPortletRequest.cast(
+                        context.getRequest()).getPortletRequest();
+                /*
+                 * We need to generate a unique ID because some portals already
+                 * create a DIV with the portlet's Window ID as the DOM ID.
+                 */
+                return "v-" + portletRequest.getWindowID();
+            }
+
+            @Override
+            protected String getAppUri(AjaxPageContext context) {
+                return getRenderResponse(context).createActionURL().toString();
+            }
+
+            private RenderResponse getRenderResponse(AjaxPageContext context) {
+                PortletResponse response = ((WrappedPortletResponse) context
+                        .getResponse()).getPortletResponse();
+
+                RenderResponse renderResponse = (RenderResponse) response;
+                return renderResponse;
+            }
+
+            @Override
+            protected JSONObject getDefaultParameters(AjaxPageContext context)
+                    throws JSONException {
+                /*
+                 * We need this in order to get uploads to work. TODO this is
+                 * not needed for uploads anymore, check if this is needed for
+                 * some other things
+                 */
+                JSONObject defaults = super.getDefaultParameters(context);
+                defaults.put("usePortletURLs", true);
+
+                ResourceURL uidlUrlBase = getRenderResponse(context)
+                        .createResourceURL();
+                uidlUrlBase.setResourceID("UIDL");
+                defaults.put("portletUidlURLBase", uidlUrlBase.toString());
+                defaults.put("pathInfo", "");
+
+                return defaults;
+            }
+
+            @Override
+            protected void writeMainScriptTagContents(AjaxPageContext context)
+                    throws JSONException, IOException {
+                // fixed base theme to use - all portal pages with Vaadin
+                // applications will load this exactly once
+                String portalTheme = WrappedPortletRequest
+                        .cast(context.getRequest())
+                        .getPortalProperty(
+                                AbstractApplicationPortlet.PORTAL_PARAMETER_VAADIN_THEME);
+                if (portalTheme != null
+                        && !portalTheme.equals(context.getThemeName())) {
+                    String portalThemeUri = getThemeUri(context, portalTheme);
+                    // XSS safe - originates from portal properties
+                    context.getWriter().write(
+                            "vaadin.loadTheme('" + portalThemeUri + "')");
+                }
+
+                super.writeMainScriptTagContents(context);
+            }
+
+            @Override
+            protected String getMainDivStyle(AjaxPageContext context) {
+                DeploymentConfiguration deploymentConfiguration = context
+                        .getRequest().getDeploymentConfiguration();
+                return deploymentConfiguration.getApplicationOrSystemProperty(
+                        AbstractApplicationPortlet.PORTLET_PARAMETER_STYLE,
+                        null);
+            }
+
+            @Override
+            protected AbstractCommunicationManager getCommunicationManager() {
+                return PortletCommunicationManager.this;
+            }
+
+        };
+
     }
 
 }
