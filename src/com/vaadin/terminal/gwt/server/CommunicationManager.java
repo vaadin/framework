@@ -11,12 +11,14 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Root;
 
 /**
  * Application manager processes changes and paints for single application
@@ -230,8 +232,9 @@ public class CommunicationManager extends AbstractCommunicationManager {
             }
 
             @Override
-            protected AbstractCommunicationManager getCommunicationManager() {
-                return CommunicationManager.this;
+            protected String getInitialUIDL(WrappedRequest request, Root root)
+                    throws PaintException {
+                return CommunicationManager.this.getInitialUIDL(request, root);
             }
         };
     }

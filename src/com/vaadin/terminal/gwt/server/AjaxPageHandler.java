@@ -7,8 +7,6 @@ package com.vaadin.terminal.gwt.server;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.io.Writer;
 
 import javax.servlet.http.HttpServletResponse;
@@ -26,14 +24,6 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.ui.Root;
 
 public abstract class AjaxPageHandler implements RequestHandler {
-
-    /**
-     * Returns the {@link AbstractCommunicationManager} that is handling the
-     * communication for the active application.
-     * 
-     * @return the {@link AbstractCommunicationManager}
-     */
-    protected abstract AbstractCommunicationManager getCommunicationManager();
 
     protected class AjaxPageContext {
         private final WrappedResponse response;
@@ -389,18 +379,8 @@ public abstract class AjaxPageHandler implements RequestHandler {
             appConfig.put("initPending", true);
         } else {
             // write the initial UIDL into the config
-            AbstractCommunicationManager manager = getCommunicationManager();
-            Root root = Root.getCurrentRoot();
-            manager.makeAllPaintablesDirty(root);
-            StringWriter sWriter = new StringWriter();
-            PrintWriter pWriter = new PrintWriter(sWriter);
-            pWriter.print("{");
-            if (manager.isXSRFEnabled(application)) {
-                pWriter.print(manager.getSecurityKeyUIDL(context.getRequest()));
-            }
-            manager.writeUidlResponce(null, true, pWriter, root, false);
-            pWriter.print("}");
-            appConfig.put("uidl", sWriter.toString());
+            appConfig.put("uidl",
+                    getInitialUIDL(context.getRequest(), context.getRoot()));
         }
 
         return appConfig;
@@ -598,5 +578,19 @@ public abstract class AjaxPageHandler implements RequestHandler {
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                 e.getLocalizedMessage());
     }
+
+    /**
+     * Gets the initial UIDL message to send to the client.
+     * 
+     * @param request
+     *            the originating request
+     * @param root
+     *            the root for which the UIDL should be generated
+     * @return a string with the initial UIDL message
+     * @throws PaintException
+     *             if an exception occurs while painting the components
+     */
+    protected abstract String getInitialUIDL(WrappedRequest request, Root root)
+            throws PaintException;
 
 }

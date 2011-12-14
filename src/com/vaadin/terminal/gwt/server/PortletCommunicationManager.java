@@ -18,6 +18,7 @@ import com.vaadin.Application;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.DeploymentConfiguration;
+import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.VariableOwner;
@@ -203,8 +204,10 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             }
 
             @Override
-            protected AbstractCommunicationManager getCommunicationManager() {
-                return PortletCommunicationManager.this;
+            protected String getInitialUIDL(WrappedRequest request, Root root)
+                    throws PaintException {
+                return PortletCommunicationManager.this.getInitialUIDL(request,
+                        root);
             }
 
         };

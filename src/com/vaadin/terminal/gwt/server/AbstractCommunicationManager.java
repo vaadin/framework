@@ -2005,17 +2005,8 @@ public abstract class AbstractCommunicationManager implements
             params.put(ApplicationConnection.ROOT_ID_PARAMETER,
                     root.getRootId());
             if (sendUIDL) {
-                // TODO maybe unify w/ AjaxPageHandler & writeUidlResponCe()?
-                makeAllPaintablesDirty(root);
-                StringWriter sWriter = new StringWriter();
-                PrintWriter pWriter = new PrintWriter(sWriter);
-                pWriter.print("{");
-                if (isXSRFEnabled(application)) {
-                    pWriter.print(getSecurityKeyUIDL(combinedRequest));
-                }
-                writeUidlResponce(null, true, pWriter, root, false);
-                pWriter.print("}");
-                params.put("uidl", sWriter.toString());
+                String initialUIDL = getInitialUIDL(combinedRequest, root);
+                params.put("uidl", initialUIDL);
             }
             response.getWriter().write(params.toString());
         } catch (RootRequiresMoreInformation e) {
@@ -2026,6 +2017,34 @@ public abstract class AbstractCommunicationManager implements
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Generates the initial UIDL message that can e.g. be included in a html
+     * page to avoid a separate round trip just for getting the UIDL.
+     * 
+     * @param request
+     *            the request that caused the initialization
+     * @param root
+     *            the root for which the UIDL should be generated
+     * @return a string with the initial UIDL message
+     * @throws PaintException
+     *             if an exception occurs while painting
+     */
+    protected String getInitialUIDL(WrappedRequest request, Root root)
+            throws PaintException {
+        // TODO maybe unify writeUidlResponCe()?
+        makeAllPaintablesDirty(root);
+        StringWriter sWriter = new StringWriter();
+        PrintWriter pWriter = new PrintWriter(sWriter);
+        pWriter.print("{");
+        if (isXSRFEnabled(root.getApplication())) {
+            pWriter.print(getSecurityKeyUIDL(request));
+        }
+        writeUidlResponce(null, true, pWriter, root, false);
+        pWriter.print("}");
+        String initialUIDL = sWriter.toString();
+        return initialUIDL;
     }
 
     /**
