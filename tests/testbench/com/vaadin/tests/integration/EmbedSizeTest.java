@@ -6,8 +6,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Root;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.ResizeEvent;
+import com.vaadin.ui.Root.BrowserWindowResizeEvent;
 
 public class EmbedSizeTest extends TestBase {
 
@@ -35,11 +34,11 @@ public class EmbedSizeTest extends TestBase {
         addComponent(lazyCheckBox);
 
         addComponent(log);
-        mainWindow.addListener(new Window.ResizeListener() {
-            public void windowResized(ResizeEvent e) {
-                Window window = e.getWindow();
-                log.log("Resize event: " + window.getWidth() + " x "
-                        + window.getHeight());
+        mainWindow.addListener(new Root.BrowserWindowResizeListener() {
+            public void browserWindowResized(BrowserWindowResizeEvent event) {
+                log.log("Resize event: " + event.getWidth() + " x "
+                        + event.getHeight());
+
             }
         });
     }

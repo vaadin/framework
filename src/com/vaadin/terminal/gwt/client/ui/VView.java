@@ -94,7 +94,11 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
     private boolean resizeLazy = false;
 
+    /**
+     * Attribute name for the lazy resize setting .
+     */
     public static final String RESIZE_LAZY = "rL";
+
     /**
      * Reference to the parent frame/iframe. Null if there is no parent (i)frame
      * or if the application and parent frame are in different domains.

@@ -8,6 +8,8 @@ import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.BrowserWindowResizeEvent;
+import com.vaadin.ui.Root.BrowserWindowResizeListener;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.ResizeEvent;
 import com.vaadin.ui.Window.ResizeListener;
@@ -23,13 +25,13 @@ public class LazyWindowResize extends AbstractTestCase {
     protected ResizeListener resizeListener = new ResizeListener() {
 
         public void windowResized(ResizeEvent e) {
-            throw new RuntimeException("Out of order...");
-            // if (e.getWindow() == mainWindow) {
-            // log.log("Main window resized");
-            // } else {
-            // log.log("Sub window resized");
-            // }
+            log.log("Sub window resized");
+        }
+    };
 
+    protected BrowserWindowResizeListener browserWindowResizeListener = new BrowserWindowResizeListener() {
+        public void browserWindowResized(BrowserWindowResizeEvent event) {
+            log.log("Main window resized");
         }
     };
     private CheckBox immediateCheckBox;;;
@@ -71,10 +73,10 @@ public class LazyWindowResize extends AbstractTestCase {
             public void valueChange(ValueChangeEvent event) {
                 if (resizeListenerCheckBox.getValue()) {
                     subWindow.addListener(resizeListener);
-                    mainWindow.addListener(resizeListener);
+                    mainWindow.addListener(browserWindowResizeListener);
                 } else {
                     subWindow.removeListener(resizeListener);
-                    mainWindow.removeListener(resizeListener);
+                    mainWindow.removeListener(browserWindowResizeListener);
                 }
 
             }

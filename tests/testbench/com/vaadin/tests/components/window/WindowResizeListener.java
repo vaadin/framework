@@ -8,9 +8,9 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.BrowserWindowResizeEvent;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.ResizeEvent;
-import com.vaadin.ui.Window.ResizeListener;
 
 public class WindowResizeListener extends TestBase {
 
@@ -34,11 +34,11 @@ public class WindowResizeListener extends TestBase {
         final Label l = new Label();
         getLayout().addComponent(l);
 
-        getMainWindow().addListener(new ResizeListener() {
-            public void windowResized(ResizeEvent e) {
-                l.setValue("Current main window size: "
-                        + getMainWindow().getWidth() + " x "
-                        + getMainWindow().getHeight());
+        getMainWindow().addListener(new Root.BrowserWindowResizeListener() {
+            public void browserWindowResized(BrowserWindowResizeEvent event) {
+                l.setValue("Current browser window size: "
+                        + getMainWindow().getBrowserWindowWidth() + " x "
+                        + getMainWindow().getBrowserWindowHeight());
             }
         });
 

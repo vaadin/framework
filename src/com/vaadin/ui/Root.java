@@ -30,8 +30,8 @@ import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.terminal.gwt.client.ui.VPanel;
 import com.vaadin.terminal.gwt.client.ui.VView;
+import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Window.CloseListener;
-import com.vaadin.ui.Window.ResizeListener;
 
 /**
  * The topmost component in any component hierarchy. There is one root for every
@@ -72,6 +72,74 @@ import com.vaadin.ui.Window.ResizeListener;
 @ClientWidget(VView.class)
 public class Root extends AbstractComponentContainer implements
         Action.Container, Action.Notifier {
+
+    /**
+     * Listener that gets notified when the size of the browser window
+     * containing the root has changed.
+     * 
+     * @see Root#addListener(BrowserWindowResizeListener)
+     */
+    public interface BrowserWindowResizeListener extends Serializable {
+        /**
+         * Invoked when the browser window containing a Root has been resized.
+         * 
+         * @param event
+         *            a browser window resize event
+         */
+        public void browserWindowResized(BrowserWindowResizeEvent event);
+    }
+
+    /**
+     * Event that is fired when a browser window containing a root is resized.
+     */
+    public class BrowserWindowResizeEvent extends Component.Event {
+
+        private final int width;
+        private final int height;
+
+        /**
+         * Creates a new event
+         * 
+         * @param source
+         *            the root for which the browser window has been resized
+         * @param width
+         *            the new width of the browser window
+         * @param height
+         *            the new height of the browser window
+         */
+        public BrowserWindowResizeEvent(Root source, int width, int height) {
+            super(source);
+            this.width = width;
+            this.height = height;
+        }
+
+        @Override
+        public Root getSource() {
+            return (Root) super.getSource();
+        }
+
+        /**
+         * Gets the new browser window height
+         * 
+         * @return an integer with the new pixel height of the browser window
+         */
+        public int getHeight() {
+            return height;
+        }
+
+        /**
+         * Gets the new browser window width
+         * 
+         * @return an integer with the new pixel width of the browser window
+         */
+        public int getWidth() {
+            return width;
+        }
+    }
+
+    private static final Method BROWSWER_RESIZE_METHOD = ReflectTools
+            .findMethod(BrowserWindowResizeListener.class,
+                    "browserWindowResized", BrowserWindowResizeEvent.class);
 
     /**
      * Listener that listens changes in URI fragment.
@@ -209,6 +277,9 @@ public class Root extends AbstractComponentContainer implements
      * Thread local for keeping track of the current root.
      */
     private static final ThreadLocal<Root> currentRoot = new ThreadLocal<Root>();
+
+    private int browserWindowWidth = -1;
+    private int browserWindowHeight = -1;
 
     /**
      * Creates a new empty root without a caption. This root will have a
@@ -369,6 +440,10 @@ public class Root extends AbstractComponentContainer implements
         if (fragment != null) {
             target.addAttribute(VView.FRAGMENT_VARIABLE, fragment);
         }
+
+        if (isResizeLazy()) {
+            target.addAttribute(VView.RESIZE_LAZY, true);
+        }
     }
 
     @Override
@@ -383,6 +458,21 @@ public class Root extends AbstractComponentContainer implements
         if (variables.containsKey(VView.FRAGMENT_VARIABLE)) {
             String fragment = (String) variables.get(VView.FRAGMENT_VARIABLE);
             setFragment(fragment, true);
+        }
+
+        boolean sendResizeEvent = false;
+        if (variables.containsKey("height")) {
+            browserWindowHeight = ((Integer) variables.get("height"))
+                    .intValue();
+            sendResizeEvent = true;
+        }
+        if (variables.containsKey("width")) {
+            browserWindowWidth = ((Integer) variables.get("width")).intValue();
+            sendResizeEvent = true;
+        }
+        if (sendResizeEvent) {
+            fireEvent(new BrowserWindowResizeEvent(this, browserWindowWidth,
+                    browserWindowHeight));
         }
     }
 
@@ -540,6 +630,8 @@ public class Root extends AbstractComponentContainer implements
      * The current URI fragment.
      */
     private String fragment;
+
+    private boolean resizeLazy = false;
 
     /**
      * This method is used by Component.Focusable objects to request focus to
@@ -1162,13 +1254,26 @@ public class Root extends AbstractComponentContainer implements
      * Should resize operations be lazy, i.e. should there be a delay before
      * layout sizes are recalculated. Speeds up resize operations in slow UIs
      * with the penalty of slightly decreased usability.
+     * <p>
+     * Default value: <code>false</code>
      * 
      * @param resizeLazy
      *            true to use a delay before recalculating sizes, false to
      *            calculate immediately.
      */
     public void setResizeLazy(boolean resizeLazy) {
-        throw new RuntimeException("Not yet implemented");
+        this.resizeLazy = resizeLazy;
+        requestRepaint();
+    }
+
+    /**
+     * Checks whether lazy resize is enabled.
+     * 
+     * @return <code>true</code> if lazy resize is enabled, <code>false</code>
+     *         if lazy resize is not enabled
+     */
+    public boolean isResizeLazy() {
+        return resizeLazy;
     }
 
     /**
@@ -1255,11 +1360,51 @@ public class Root extends AbstractComponentContainer implements
         return fragment;
     }
 
-    public void addListener(ResizeListener resizeListener) {
-        throw new RuntimeException("Not yet implemented");
+    /**
+     * Adds a new {@link BrowserWindowResizeListener} to this root. The listener
+     * will be notified whenever the browser window within which this root
+     * resides is resized.
+     * 
+     * @param resizeListener
+     *            the listener to add
+     * 
+     * @see BrowserWindowResizeListener#browserWindowResized(BrowserWindowResizeEvent)
+     * @see #setResizeLazy(boolean)
+     */
+    public void addListener(BrowserWindowResizeListener resizeListener) {
+        addListener(BrowserWindowResizeEvent.class, resizeListener,
+                BROWSWER_RESIZE_METHOD);
     }
 
-    public void removeListener(ResizeListener resizeListener) {
-        throw new RuntimeException("Not yet implemented");
+    /**
+     * Removes a {@link BrowserWindowResizeListener} from this root. The
+     * listener will no longer be notified when the browser window is resized.
+     * 
+     * @param resizeListener
+     *            the listener to remove
+     */
+    public void removeListener(BrowserWindowResizeListener resizeListener) {
+        removeListener(BrowserWindowResizeEvent.class, resizeListener,
+                BROWSWER_RESIZE_METHOD);
+    }
+
+    /**
+     * Gets the last known height of the browser window in which this root
+     * resides.
+     * 
+     * @return the browser window height in pixels
+     */
+    public int getBrowserWindowHeight() {
+        return browserWindowHeight;
+    }
+
+    /**
+     * Gets the last known width of the browser window in which this root
+     * resides.
+     * 
+     * @return the browser window width in pixels
+     */
+    public int getBrowserWindowWidth() {
+        return browserWindowWidth;
     }
 }
