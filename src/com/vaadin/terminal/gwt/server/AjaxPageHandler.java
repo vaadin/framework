@@ -7,6 +7,7 @@ package com.vaadin.terminal.gwt.server;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.io.Writer;
 
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +26,7 @@ import com.vaadin.ui.Root;
 
 public abstract class AjaxPageHandler implements RequestHandler {
 
-    protected class AjaxPageContext {
+    protected class AjaxPageContext implements Serializable {
         private final WrappedResponse response;
         private final WrappedRequest request;
         private final Application application;
