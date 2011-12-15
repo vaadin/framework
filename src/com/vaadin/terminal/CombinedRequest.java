@@ -100,12 +100,11 @@ public class CombinedRequest implements WrappedRequest {
     public BrowserDetails getBrowserDetails() {
         return new BrowserDetails() {
             public String getUriFragment() {
-                String fragment = secondRequest.getParameter("f");
-                if (fragment == null || fragment.length() == 0) {
+                String fragment = secondRequest.getParameter("fr");
+                if (fragment == null) {
                     return "";
                 } else {
-                    // Trim the initial # char
-                    return fragment.substring(1);
+                    return fragment;
                 }
             }
 
