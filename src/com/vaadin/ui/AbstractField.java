@@ -379,10 +379,24 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         return writeThroughMode;
     }
 
-    /*
-     * Sets the field's write-through mode to the specified status Don't add a
-     * JavaDoc comment here, we use the default documentation from the
-     * implemented interface.
+    /**
+     * Sets the field's write-through mode to the specified status. When
+     * switching the write-through mode on, a {@link #commit()} will be
+     * performed.
+     * 
+     * @see #setBuffered(boolean) for an easier way to control read through and
+     *      write through modes
+     * 
+     * @param writeThrough
+     *            Boolean value to indicate if the object should be in
+     *            write-through mode after the call.
+     * @throws SourceException
+     *             If the operation fails because of an exception is thrown by
+     *             the data source.
+     * @throws InvalidValueException
+     *             If the implicit commit operation fails because of a
+     *             validation error.
+     * 
      */
     public void setWriteThrough(boolean writeThrough)
             throws Buffered.SourceException, InvalidValueException {
@@ -403,10 +417,21 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         return readThroughMode;
     }
 
-    /*
-     * Sets the field's read-through mode to the specified status Don't add a
-     * JavaDoc comment here, we use the default documentation from the
-     * implemented interface.
+    /**
+     * Sets the field's read-through mode to the specified status. When
+     * switching read-through mode on, the object's value is updated from the
+     * data source.
+     * 
+     * @see #setBuffered(boolean) for an easier way to control read through and
+     *      write through modes
+     * 
+     * @param readThrough
+     *            Boolean value to indicate if the object should be in
+     *            read-through mode after the call.
+     * 
+     * @throws SourceException
+     *             If the operation fails because of an exception is thrown by
+     *             the data source. The cause is included in the exception.
      */
     public void setReadThrough(boolean readThrough)
             throws Buffered.SourceException {
@@ -418,6 +443,41 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             setInternalValue(convertFromDataSource(getDataSourceValue()));
             fireValueChange(false);
         }
+    }
+
+    /**
+     * Sets the buffered mode of this Field.
+     * <p>
+     * When the field is in buffered mode, changes will not be committed to the
+     * property data source until {@link #commit()} is called.
+     * </p>
+     * <p>
+     * Changing buffered mode will change the read through and write through
+     * state for the field.
+     * </p>
+     * <p>
+     * Mixing calls to {@link #setBuffered(boolean)} and
+     * {@link #setReadThrough(boolean)} or {@link #setWriteThrough(boolean)} is
+     * generally a bad idea.
+     * </p>
+     * 
+     * @param buffered
+     *            true if buffered mode should be turned on, false otherwise
+     */
+    public void setBuffered(boolean buffered) {
+        setReadThrough(!buffered);
+        setWriteThrough(!buffered);
+    }
+
+    /**
+     * Checks the buffered mode of this Field.
+     * <p>
+     * This method only returns true if both read and write buffering is used.
+     * 
+     * @return true if buffered mode is on, false otherwise
+     */
+    public boolean isBuffered() {
+        return !isReadThrough() && !isWriteThrough();
     }
 
     /* Property interface implementation */
