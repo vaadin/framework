@@ -30,13 +30,15 @@ public class DefaultConverterFactory extends TestCase {
         Application.setCurrentApplication(app);
         TextField tf = new TextField();
         tf.setLocale(new Locale("en", "US"));
-        tf.setPropertyDataSource(new MethodProperty<Person>(paulaBean, "salary"));
+        tf.setPropertyDataSource(new MethodProperty<Integer>(paulaBean,
+                "salary"));
         assertEquals("49,000", tf.getValue());
 
         tf.setLocale(new Locale("fi", "FI"));
         // FIXME: The following line should not be necessary and should be
         // removed
-        tf.setPropertyDataSource(new MethodProperty<Person>(paulaBean, "salary"));
+        tf.setPropertyDataSource(new MethodProperty<Integer>(paulaBean,
+                "salary"));
         String value = tf.getValue();
         // Java uses a non-breaking space (ascii 160) instead of space when
         // formatting
