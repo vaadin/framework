@@ -174,8 +174,11 @@ public class FieldBinder implements Serializable {
      *            The field to bind
      * @param propertyId
      *            The propertyId to bind to the field
+     * @throws BindException
+     *             If the property id is already bound to another field by this
+     *             field binder
      */
-    public void bind(Field<?> field, Object propertyId) {
+    public void bind(Field<?> field, Object propertyId) throws BindException {
         if (propertyIdToField.containsKey(propertyId)
                 && propertyIdToField.get(propertyId) != field) {
             throw new BindException("Property id " + propertyId
@@ -322,7 +325,10 @@ public class FieldBinder implements Serializable {
         if (getItemDataSource() == null) {
             return new ArrayList<Object>();
         }
-        return Collections.unmodifiableCollection(propertyIdToField.keySet());
+        List<Object> unboundPropertyIds = new ArrayList<Object>();
+        unboundPropertyIds.addAll(getItemDataSource().getItemPropertyIds());
+        unboundPropertyIds.removeAll(propertyIdToField.keySet());
+        return unboundPropertyIds;
     }
 
     /**
