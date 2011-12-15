@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.vaadin.Application;
-import com.vaadin.Application.LegacyApplication;
 import com.vaadin.annotations.RootInitRequiresBrowserDetals;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
@@ -891,77 +890,35 @@ public class Root extends AbstractComponentContainer implements
     }
 
     /**
-     * <b>Adding a component directly to a root is generally not supported.</b>
-     * To maintain backwards compatibility, adding components is still supported
-     * for roots in a {@link LegacyApplication}, where the component will be
-     * added to the content container.
+     * Adds a component to this root. The component is not added directly to the
+     * root, but instead to the content container ({@link #getContent()}).
      * 
-     * @see Window#addComponent(Component)
+     * @param component
+     *            the component to add to this root
      * 
-     * @deprecated Add components to the content container (
-     *             {@link #getContent()}) instead.
+     * @see #getContent()
      */
     @Override
-    @Deprecated
-    public void addComponent(Component c) {
-        // Use the thread local as the instance field might not yet be inited
-        if (isLegacyApplication()) {
-            getContent().addComponent(c);
-        } else {
-            throw new UnsupportedOperationException(
-                    "Add components to the Root's content instead");
-        }
-    }
-
-    private boolean isLegacyApplication() {
-        return Application.getCurrentApplication() instanceof Application.LegacyApplication
-                || getApplication() instanceof Application.LegacyApplication;
+    public void addComponent(Component component) {
+        getContent().addComponent(component);
     }
 
     /**
-     * <b>Removing a component from a root is generally not supported.</b> To
-     * maintain backwards compatibility, removing components is still supported
-     * for roots in a {@link LegacyApplication}, where the component will be
-     * removed from the content container.
-     * 
-     * @see Window#removeComponent(Component)
-     * 
-     * @deprecated Remove components from the content container (
-     *             {@link #getContent()}) instead.
+     * This implementation removes the component from the content container (
+     * {@link #getContent()}) instead of from the actual root.
      */
     @Override
-    @Deprecated
-    public void removeComponent(Component c) {
-        // Use the thread local as the instance field might not yet be inited
-        if (isLegacyApplication()) {
-            getContent().removeComponent(c);
-        } else {
-            throw new UnsupportedOperationException(
-                    "Remove components from the Root's content instead");
-        }
+    public void removeComponent(Component component) {
+        getContent().removeComponent(component);
     }
 
     /**
-     * <b>Removing components from a root is generally not supported.</b> To
-     * maintain backwards compatibility, removing components is still supported
-     * for roots in a {@link LegacyApplication}, where the components will be
-     * removed from the content container.
-     * 
-     * @see Window#removeAllComponents()
-     * 
-     * @deprecated Remove components from the content container (
-     *             {@link #getContent()}) instead.
+     * This implementation removes the components from the content container (
+     * {@link #getContent()}) instead of from the actual root.
      */
     @Override
-    @Deprecated
     public void removeAllComponents() {
-        // Use the thread local as the instance field might not yet be inited
-        if (isLegacyApplication()) {
-            getContent().removeAllComponents();
-        } else {
-            throw new UnsupportedOperationException(
-                    "Remove components from the Root's content instead");
-        }
+        getContent().removeAllComponents();
     }
 
     /**
