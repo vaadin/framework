@@ -55,7 +55,7 @@ public class IntegerToStringConverter implements Converter<Integer, String> {
         Number parsedValue = getFormat(locale).parse(value, parsePosition);
         if (parsePosition.getIndex() != value.length()) {
             throw new ConversionException("Could not convert '" + value
-                    + "' to " + getTargetType().getName());
+                    + "' to " + getSourceType().getName());
         }
 
         if (parsedValue == null) {
