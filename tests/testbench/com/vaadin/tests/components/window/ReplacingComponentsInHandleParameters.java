@@ -6,7 +6,6 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
 public class ReplacingComponentsInHandleParameters extends TestBase {
@@ -28,19 +27,22 @@ public class ReplacingComponentsInHandleParameters extends TestBase {
                 event.getButton().setCaption("Clicked!");
             }
         };
+
         final Window main = new Window() {
             @Override
             public void handleParameters(Map<String, String[]> parameters) {
                 super.handleParameters(parameters);
                 removeAllComponents();
-                addComponent(new Label(
-                        "Reload window (without ?restartApplication), then click the button twice."));
-
-                Button btn = new Button("Click me", clickListener);
+                Button btn = new Button("Testing 2", clickListener);
                 btn.setDebugId("TestId");
                 addComponent(btn);
             }
         };
+
+        Button btn = new Button("Testing", clickListener);
+        btn.setDebugId("TestId");
+        main.addComponent(btn);
+
         setMainWindow(main);
     }
 }
