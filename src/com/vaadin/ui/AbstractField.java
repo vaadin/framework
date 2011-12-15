@@ -279,7 +279,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
         // If successful, remove set the buffering state to be ok
         if (getCurrentBufferedSourceException() != null) {
-            setCurrentBufferedSourceException(currentBufferedSourceException);
+            setCurrentBufferedSourceException(null);
         }
 
         if (valueWasModifiedByDataSourceDuringCommit) {
