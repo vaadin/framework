@@ -1,3 +1,6 @@
+/* 
+@VaadinApache2LicenseForJavaFiles@
+ */
 package com.vaadin.data.fieldbinder;
 
 import java.util.EnumSet;
