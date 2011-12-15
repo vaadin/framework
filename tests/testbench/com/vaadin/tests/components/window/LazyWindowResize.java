@@ -34,7 +34,8 @@ public class LazyWindowResize extends AbstractTestCase {
             log.log("Main window resized");
         }
     };
-    private CheckBox immediateCheckBox;;;
+
+    private CheckBox immediateCheckBox;
 
     @Override
     protected String getDescription() {
