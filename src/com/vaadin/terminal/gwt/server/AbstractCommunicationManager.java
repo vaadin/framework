@@ -68,7 +68,6 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Root;
-import com.vaadin.ui.Window;
 
 /**
  * This is a common base class for the server-side implementations of the
@@ -869,7 +868,7 @@ public abstract class AbstractCommunicationManager implements
                 paintablePainted(p);
 
                 if (analyzeLayouts) {
-                    Window w = (Window) p;
+                    Root w = (Root) p;
                     invalidComponentRelativeSizes = ComponentSizeValidator
                             .validateComponentRelativeSizes(w.getContent(),
                                     null, null);
