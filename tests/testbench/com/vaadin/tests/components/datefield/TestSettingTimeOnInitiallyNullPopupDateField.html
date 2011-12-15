@@ -78,13 +78,18 @@
 </tr>
 <tr>
 	<td>mouseClick</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFieldTest::Root/VOverlay[2]/VMenuBar[0]#item6</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFieldTest::Root/VOverlay[2]/VMenuBar[0]#item5</td>
 	<td>30,12</td>
 </tr>
 <tr>
 	<td>mouseClick</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFieldTest::PID_StestComponent#popupButton</td>
 	<td>19,15</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFieldTest::Root/VOverlay[0]/VCalendarPanel[0]#h</td>
+	<td>index=0</td>
 </tr>
 <tr>
 	<td>select</td>
@@ -98,25 +103,14 @@
 </tr>
 <tr>
 	<td>select</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFieldTest::Root/VOverlay[0]/VCalendarPanel[0]#ms</td>
-	<td>index=0</td>
-</tr>
-<tr>
-	<td>select</td>
-	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFieldTest::Root/VOverlay[0]/VCalendarPanel[0]#h</td>
-	<td>index=0</td>
-</tr>
-<tr>
-	<td>select</td>
 	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFieldTest::Root/VOverlay[0]/VCalendarPanel[0]#ampm</td>
 	<td>index=1</td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>12:00:00.000</td>
-	<td></td>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFieldTest::PID_SLog_row_0</td>
+	<td>*. ValueChangeEvent, new value: Dec 15, 2011 12:00:00.000</td>
 </tr>
-
 </tbody></table>
 </body>
 </html>
