@@ -5,6 +5,7 @@ import java.sql.Date;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.DateField.Resolution;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Root;
 
@@ -55,6 +56,7 @@ public class DateFieldPopupOffScreen extends AbstractTestCase {
 
     private DateField createDateField() {
         DateField df = new DateField();
+        df.setResolution(Resolution.SECOND);
         df.setDescription("This is a long, multiline tooltip.<br/>It should always be on screen so it can be read.");
         df.setValue(new Date(1000000L));
         return df;
