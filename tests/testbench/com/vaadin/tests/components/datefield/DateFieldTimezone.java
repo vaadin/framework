@@ -14,6 +14,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.DateField.Resolution;
 
 public class DateFieldTimezone extends TestBase {
 
@@ -25,6 +26,8 @@ public class DateFieldTimezone extends TestBase {
 
     @Override
     protected void setup() {
+        dateField.setResolution(Resolution.SECOND);
+
         ArrayList<String> timeZoneCodes = new ArrayList<String>();
         timeZoneCodes.add(nullValue);
         timeZoneCodes.addAll(Arrays.asList(TimeZone.getAvailableIDs()));
@@ -73,7 +76,7 @@ public class DateFieldTimezone extends TestBase {
         dateField.setLocale(EN);
         dateField.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                Date date = (Date) dateField.getValue();
+                Date date = dateField.getValue();
                 DateFormat format = DateFormat.getDateTimeInstance(
                         DateFormat.SHORT, DateFormat.LONG, EN);
                 format.setTimeZone(UTC);
