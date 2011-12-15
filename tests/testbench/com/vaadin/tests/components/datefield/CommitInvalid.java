@@ -6,7 +6,6 @@ import java.util.Locale;
 
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
@@ -64,7 +63,6 @@ public class CommitInvalid extends TestBase {
          */
         integerProperty = new ObjectProperty<Integer>(42);
         integerField = new TextField("Another Field", integerProperty);
-        integerField.addValidator(new IntegerValidator("Not an integer"));
         integerField.setDebugId("_IF");
         form.addField("text", integerField);
 
