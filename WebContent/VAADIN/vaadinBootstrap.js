@@ -86,11 +86,8 @@
 				// Root id
 				url += ((/\?/).test(url) ? "&" : "?") + "browserDetails";
 				url += '&rootId=' + getConfig('rootId');
-				// Uri fragment
-				url += '&f=' + encodeURIComponent(location.hash);
-				if (window.name) {
-					url += '&wn=' + encodeURIComponent(window.name);
-				}
+				url += '&' + vaadin.getBrowserDetailsParameters(appId); 
+				
 				// Timestamp to avoid caching
 				url += '&' + (new Date()).getTime();
 				
@@ -186,6 +183,77 @@
 				callback(appId);
 			}
 			widgetsets[widgetset].pendingApps = null;
+		},
+		getBrowserDetailsParameters: function(parentElementId) {
+			// Screen height and width
+			var url = 'sh=' + window.screen.height;
+			url += '&sw=' + window.screen.width;
+			
+			// Window height and width
+			var cw = 0;
+			var ch = 0;
+			if(typeof(window.innerWidth) == 'number') {
+				// Modern browsers
+				cw = window.innerWidth;
+				ch = window.innerHeight;
+			} else {
+				// IE 8
+				cw = document.documentElement.clientWidth;
+				ch = document.documentElement.clientHeight;
+			}
+			url += '&cw=' + cw + '&ch=' + ch;
+			
+
+			var d = new Date();
+			
+			url += '&curdate=' + d.getTime();
+			
+			var tzo1 = d.getTimezoneOffset(); // current offset
+			var dstDiff = 0;
+			var rtzo = tzo1;
+			
+			for (var m=12;m>0;m--) {
+				d.setUTCMonth(m);
+				var tzo2 = d.getTimezoneOffset();
+				if (tzo1 != tzo2) {
+					dstDiff =  (tzo1 > tzo2 ? tzo1-tzo2 : tzo2-tzo1); // offset w/o DST
+					rtzo = (tzo1 > tzo2 ? tzo1 : tzo2); // offset w/o DST
+					break;
+				}
+			}
+
+			// Time zone offset
+			url += '&tzo=' + tzo1;
+			
+			// DST difference
+			url += '&dstd=' + dstDiff;
+			
+			// Raw time zone offset
+			url += '&rtzo=' + rtzo;
+			
+			// DST in effect?
+			url += '&dston=' + (tzo1 != rtzo);
+			
+			var pe = document.getElementById(parentElementId);
+			if (pe) {
+				url += '&vw=' + pe.offsetWidth;
+				url += '&vh=' + pe.offsetHeight;
+			}
+			
+			// Uri fragment
+			if (location.hash) {
+				//Remove initial #
+				url += '&fr=' + encodeURIComponent(location.hash.replace(/^#/, ""));
+			}
+			// Window name
+			if (window.name) {
+				url += '&wn=' + encodeURIComponent(window.name);
+			}
+			
+			// Detect touch device support
+	        try { document.createEvent("TouchEvent"); url += "&td=1";} catch(e){};
+	        
+	        return url;
 		}
 	};
 	

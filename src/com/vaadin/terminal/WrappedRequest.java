@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.vaadin.Application;
 import com.vaadin.RootRequiresMoreInformation;
 import com.vaadin.annotations.RootInitRequiresBrowserDetals;
+import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.ui.Root;
 
 /**
@@ -48,6 +49,14 @@ public interface WrappedRequest extends Serializable {
          * @return the string value of window.name in the browser
          */
         public String getWindowName();
+
+        /**
+         * Gets a reference to the {@link WebBrowser} object containing
+         * additional information, e.g. screen size and the time zone offset.
+         * 
+         * @return the web browser object
+         */
+        public WebBrowser getWebBrowser();
     }
 
     /**

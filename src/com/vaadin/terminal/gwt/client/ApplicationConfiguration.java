@@ -210,6 +210,8 @@ public class ApplicationConfiguration implements EntryPoint {
 
     private String windowId;
 
+    private boolean browserDetailsSent = false;
+
     static// TODO consider to make this hashmap per application
     LinkedList<Command> callbacks = new LinkedList<Command>();
 
@@ -314,6 +316,11 @@ public class ApplicationConfiguration implements EntryPoint {
 
         communicationError = jsoConfiguration.getConfigError("comErrMsg");
         authorizationError = jsoConfiguration.getConfigError("authErrMsg");
+
+        // boostrap sets initPending to false if it has sent the browser details
+        if (jsoConfiguration.getConfigBoolean("initPending") == Boolean.FALSE) {
+            setBrowserDetailsSent();
+        }
 
     }
 
@@ -587,5 +594,26 @@ public class ApplicationConfiguration implements EntryPoint {
         var re = /debug=q[^\/]*$/;
         return re.test(uri);
     }-*/;
+
+    /**
+     * Checks whether information from the web browser (e.g. uri fragment and
+     * screen size) has been sent to the server.
+     * 
+     * @return <code>true</code> if browser information has already been sent
+     * 
+     * @see ApplicationConnection#getNativeBrowserDetailsParameters(String)
+     */
+    public boolean isBrowserDetailsSent() {
+        return browserDetailsSent;
+    }
+
+    /**
+     * Registers that the browser details have been sent.
+     * {@link #isBrowserDetailsSent()} will return
+     * <code> after this method has been invoked.
+     */
+    public void setBrowserDetailsSent() {
+        browserDetailsSent = true;
+    }
 
 }

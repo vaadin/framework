@@ -4,8 +4,6 @@
 
 package com.vaadin.terminal.gwt.client;
 
-import java.util.Date;
-
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
@@ -284,88 +282,6 @@ public class BrowserInfo {
     /*-{
     	return $wnd.screen.height;
     }-*/;
-
-    /**
-     * Get's the timezone offset from GMT in minutes, as reported by the
-     * browser. DST affects this value.
-     * 
-     * @return offset to GMT in minutes
-     */
-    public native int getTimezoneOffset()
-    /*-{
-    	return new Date().getTimezoneOffset();
-    }-*/;
-
-    /**
-     * Gets the timezone offset from GMT in minutes, as reported by the browser
-     * AND adjusted to ignore daylight savings time. DST does not affect this
-     * value.
-     * 
-     * @return offset to GMT in minutes
-     */
-    public native int getRawTimezoneOffset()
-    /*-{
-        var d = new Date();
-        var tzo1 = d.getTimezoneOffset(); // current offset
-
-        for (var m=12;m>0;m--) {
-            d.setUTCMonth(m);
-            var tzo2 = d.getTimezoneOffset();
-            if (tzo1 != tzo2) {
-                // NOTE js indicates this 'backwards' (e.g -180) 
-                return (tzo1 > tzo2 ? tzo1 : tzo2); // offset w/o DST
-            }
-        }
-
-        return tzo1; // no DST
-
-    }-*/;
-
-    /**
-     * Gets the difference in minutes between the browser's GMT timezone and
-     * DST.
-     * 
-     * @return the amount of minutes that the timezone shifts when DST is in
-     *         effect
-     */
-    public native int getDSTSavings()
-    /*-{
-        var d = new Date();
-        var tzo1 = d.getTimezoneOffset(); // current offset
-
-        for (var m=12;m>0;m--) {
-            d.setUTCMonth(m);
-            var tzo2 = d.getTimezoneOffset();
-            if (tzo1 != tzo2) {
-                // NOTE js indicates this 'backwards' (e.g -180) 
-                return (tzo1 > tzo2 ? tzo1-tzo2 : tzo2-tzo1); // offset w/o DST
-            }
-        }
-
-        return 0; // no DST
-    }-*/;
-
-    /**
-     * Determines whether daylight savings time (DST) is currently in effect in
-     * the region of the browser or not.
-     * 
-     * @return true if the browser resides at a location that currently is in
-     *         DST
-     */
-    public boolean isDSTInEffect() {
-        return getTimezoneOffset() != getRawTimezoneOffset();
-    }
-
-    /**
-     * Returns the current date and time of the browser. This will not be
-     * entirely accurate due to varying network latencies, but should provide a
-     * close-enough value for most cases.
-     * 
-     * @return the current date and time of the browser.
-     */
-    public Date getCurrentDate() {
-        return new Date();
-    }
 
     /**
      * @return true if the browser runs on a touch based device.

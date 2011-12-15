@@ -10,6 +10,10 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 
+import com.vaadin.Application;
+import com.vaadin.terminal.gwt.server.WebApplicationContext;
+import com.vaadin.terminal.gwt.server.WebBrowser;
+
 /**
  * A {@link WrappedRequest} with path and parameters from one request and
  * {@link WrappedRequest.BrowserDetails} extracted from another request.
@@ -107,6 +111,12 @@ public class CombinedRequest implements WrappedRequest {
 
             public String getWindowName() {
                 return secondRequest.getParameter("wn");
+            }
+
+            public WebBrowser getWebBrowser() {
+                WebApplicationContext context = (WebApplicationContext) Application
+                        .getCurrentApplication().getContext();
+                return context.getBrowser();
             }
         };
     }

@@ -26,7 +26,6 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusWidget;
@@ -373,35 +372,30 @@ public class ApplicationConnection {
     private String getRepaintAllParameters() {
         // collect some client side data that will be sent to server on
         // initial uidl request
-        int clientHeight = Window.getClientHeight();
-        int clientWidth = Window.getClientWidth();
-        com.google.gwt.dom.client.Element pe = view.getElement()
-                .getParentElement();
-        int offsetHeight = pe.getOffsetHeight();
-        int offsetWidth = pe.getOffsetWidth();
-        int screenWidth = BrowserInfo.get().getScreenWidth();
-        int screenHeight = BrowserInfo.get().getScreenHeight();
-        int tzOffset = BrowserInfo.get().getTimezoneOffset();
-        int rtzOffset = BrowserInfo.get().getRawTimezoneOffset();
-        int dstDiff = BrowserInfo.get().getDSTSavings();
-        boolean dstInEffect = BrowserInfo.get().isDSTInEffect();
-        long curDate = BrowserInfo.get().getCurrentDate().getTime();
+        String nativeBootstrapParameters = getNativeBrowserDetailsParameters(getConfiguration()
+                .getRootPanelId());
         String widgetsetVersion = ApplicationConfiguration.VERSION;
-
-        String token = History.getToken();
 
         // TODO figure out how client and view size could be used better on
         // server. screen size can be accessed via Browser object, but other
         // values currently only via transaction listener.
-        String parameters = "repaintAll=1&" + "sh=" + screenHeight + "&sw="
-                + screenWidth + "&cw=" + clientWidth + "&ch=" + clientHeight
-                + "&vw=" + offsetWidth + "&vh=" + offsetHeight + "&fr=" + token
-                + "&tzo=" + tzOffset + "&rtzo=" + rtzOffset + "&dstd="
-                + dstDiff + "&dston=" + dstInEffect + "&curdate=" + curDate
-                + "&wsver=" + widgetsetVersion
-                + (BrowserInfo.get().isTouchDevice() ? "&td=1" : "");
+        String parameters = "repaintAll=1&" + nativeBootstrapParameters
+                + "&wsver=" + widgetsetVersion;
         return parameters;
     }
+
+    /**
+     * Gets the browser detail parameters that are sent by the bootstrap
+     * javascript for two-request initialization.
+     * 
+     * @param parentElementId
+     * @return
+     */
+    private static native String getNativeBrowserDetailsParameters(
+            String parentElementId)
+    /*-{
+       return $wnd.vaadin.getBrowserDetailsParameters(parentElementId);
+    }-*/;
 
     protected void repaintAll() {
         String repainAllParameters = getRepaintAllParameters();
@@ -1366,7 +1360,18 @@ public class ApplicationConnection {
                 req.append(VAR_BURST_SEPARATOR);
             }
         }
-        makeUidlRequest(req.toString(), "", forceSync);
+
+        // Include the browser detail parameters if they aren't already sent
+        String extraParams;
+        if (!getConfiguration().isBrowserDetailsSent()) {
+            extraParams = getNativeBrowserDetailsParameters(getConfiguration()
+                    .getRootPanelId());
+            getConfiguration().setBrowserDetailsSent();
+        } else {
+            extraParams = "";
+        }
+
+        makeUidlRequest(req.toString(), extraParams, forceSync);
     }
 
     private void makeUidlRequest(String string) {
