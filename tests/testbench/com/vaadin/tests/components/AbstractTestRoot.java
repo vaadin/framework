@@ -51,7 +51,7 @@ public abstract class AbstractTestRoot extends Root {
         getLayout().replaceComponent(oldComponent, newComponent);
     }
 
-    public abstract String getTestDescription();
+    protected abstract String getTestDescription();
 
     protected abstract Integer getTicketNumber();
 
