@@ -110,7 +110,7 @@ public class FieldBinder implements Serializable {
      * fields if you change the enabled status of the fields through some other
      * method than {@link #setFieldsEnabled(boolean)}.
      * 
-     * @return true if the fields are set to read only, false otherwise
+     * @return true if the fields are enabled, false otherwise
      */
     public boolean isFieldsEnabled() {
         return fieldsEnabled;
