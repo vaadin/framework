@@ -8,8 +8,7 @@ import junit.framework.TestCase;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
-import com.vaadin.data.util.HierarchicalContainer;
-import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.tests.util.TestUtil;
 
 public class TestContainerSorting extends TestCase {
 
@@ -93,12 +92,12 @@ public class TestContainerSorting extends TestCase {
                 "Might and Magic", "Natural languages", "PHP",
                 "Programming languages", "Python", "Red Alert", "Swedish",
                 "Toyota", "Volvo" });
-        assertArrays(
+        TestUtil.assertArrays(
                 hc.rootItemIds().toArray(),
                 new Integer[] { nameToId.get("Cars"), nameToId.get("Games"),
                         nameToId.get("Natural languages"),
                         nameToId.get("Programming languages") });
-        assertArrays(
+        TestUtil.assertArrays(
                 hc.getChildren(nameToId.get("Games")).toArray(),
                 new Integer[] { nameToId.get("Call of Duty"),
                         nameToId.get("Fallout"),
@@ -168,21 +167,7 @@ public class TestContainerSorting extends TestCase {
             actual[index++] = o;
         }
 
-        assertArrays(actual, idOrder);
-
-    }
-
-    private void assertArrays(Object[] actualObjects, Object[] expectedObjects) {
-        assertEquals(
-                "Actual contains a different number of values than was expected",
-                expectedObjects.length, actualObjects.length);
-
-        for (int i = 0; i < actualObjects.length; i++) {
-            Object actual = actualObjects[i];
-            Object expected = expectedObjects[i];
-
-            assertEquals("Item[" + i + "] does not match", expected, actual);
-        }
+        TestUtil.assertArrays(actual, idOrder);
 
     }
 
