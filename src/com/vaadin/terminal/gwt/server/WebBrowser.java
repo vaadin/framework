@@ -394,8 +394,7 @@ public class WebBrowser implements Terminal {
             browserDetails = new VBrowserDetails(agent);
         }
 
-        if (request.getParameter("repaintAll") != null
-                || request.getParameter("browserDetails") != null) {
+        if (request.getParameter("sw") != null) {
             updateClientSideDetails(request.getParameter("sw"),
                     request.getParameter("sh"), request.getParameter("tzo"),
                     request.getParameter("rtzo"), request.getParameter("dstd"),
