@@ -36,6 +36,10 @@ public class DateToStringConverter implements Converter<Date, String> {
      * @return A DateFormat instance
      */
     protected DateFormat getFormat(Locale locale) {
+        if (locale == null) {
+            locale = Locale.getDefault();
+        }
+
         DateFormat f = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
                 DateFormat.MEDIUM, locale);
         f.setLenient(false);

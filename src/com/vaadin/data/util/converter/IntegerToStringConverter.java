@@ -34,10 +34,9 @@ public class IntegerToStringConverter implements Converter<Integer, String> {
      */
     protected NumberFormat getFormat(Locale locale) {
         if (locale == null) {
-            return NumberFormat.getIntegerInstance();
-        } else {
-            return NumberFormat.getIntegerInstance(locale);
+            locale = Locale.getDefault();
         }
+        return NumberFormat.getIntegerInstance(locale);
     }
 
     public Integer convertFromTargetToSource(String value, Locale locale)

@@ -33,10 +33,10 @@ public class NumberToStringConverter implements Converter<Number, String> {
      */
     protected NumberFormat getFormat(Locale locale) {
         if (locale == null) {
-            return NumberFormat.getNumberInstance();
-        } else {
-            return NumberFormat.getNumberInstance(locale);
+            locale = Locale.getDefault();
         }
+
+        return NumberFormat.getNumberInstance(locale);
     }
 
     /*
