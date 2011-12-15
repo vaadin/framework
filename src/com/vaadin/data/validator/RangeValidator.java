@@ -8,6 +8,11 @@ package com.vaadin.data.validator;
  * given limits. Typically you want to use a sub class of this like
  * {@link IntegerRangeValidator}, {@link DoubleRangeValidator} or
  * {@link DateRangeValidator} in applications.
+ * <p>
+ * Note that {@link RangeValidator} always accept null values. Make a field
+ * required to ensure that no empty values are accepted or override
+ * {@link #isValidValue(Comparable)}.
+ * </p>
  * 
  * @param <T>
  *            The type of Number to validate. Must implement Comparable so that
@@ -127,8 +132,12 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
         this.maxValue = maxValue;
     }
 
-    /* (non-Javadoc)
-     * @see com.vaadin.data.validator.AbstractValidator#isValidValue(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.validator.AbstractValidator#isValidValue(java.lang.Object
+     * )
      */
     @Override
     protected boolean isValidValue(T value) {
@@ -161,7 +170,9 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
         return true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.vaadin.data.validator.AbstractValidator#getType()
      */
     @Override
