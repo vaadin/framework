@@ -83,6 +83,7 @@ public class DateFieldRangeValidation extends TestBase {
         toField.setPropertyDataSource(bi.getItemProperty("to"));
 
         actualDateField = createDateField();
+        actualDateField.setValue(new Date(2011 - 1900, 12 - 1, 1));
         actualDateField.addValidator(new RangeValidator<Date>("", Date.class,
                 null, null) {
             @Override
@@ -121,7 +122,6 @@ public class DateFieldRangeValidation extends TestBase {
     private PopupDateField createDateField() {
         PopupDateField df = new PopupDateField();
         df.setResolution(Resolution.DAY);
-        df.setValue(new Date());
         df.setWriteThrough(true);
         df.setReadThrough(true);
         df.setImmediate(true);
