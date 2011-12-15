@@ -1,5 +1,9 @@
+/* 
+@VaadinApache2LicenseForJavaFiles@
+ */
 package com.vaadin.data.fieldbinder;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,7 +19,7 @@ import com.vaadin.ui.Field;
 /**
  * FIXME Javadoc
  */
-public class FieldBinder {
+public class FieldBinder implements Serializable {
 
     private Item item;
     private boolean fieldsBuffered = true;
@@ -457,7 +461,7 @@ public class FieldBinder {
      * FIXME Javadoc
      * 
      */
-    public interface CommitHandler {
+    public interface CommitHandler extends Serializable {
         /**
          * Called before changes are committed to the field and the item is
          * updated.
@@ -489,7 +493,7 @@ public class FieldBinder {
      * FIXME javadoc
      * 
      */
-    public static class CommitEvent {
+    public static class CommitEvent implements Serializable {
         private FieldBinder fieldBinder;
 
         private CommitEvent(FieldBinder fieldBinder) {
