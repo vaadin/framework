@@ -131,6 +131,44 @@ public interface Buffered extends Serializable {
     public void setReadThrough(boolean readThrough) throws SourceException;
 
     /**
+     * Sets the object's buffered mode to the specified status.
+     * <p>
+     * When the object is in buffered mode, an internal buffer will be used to
+     * store changes until {@link #commit()} is called. Calling
+     * {@link #discard()} will revert the internal buffer to the value of the
+     * data source.
+     * </p>
+     * <p>
+     * This is an easier way to use {@link #setReadThrough(boolean)} and
+     * {@link #setWriteThrough(boolean)} and not as error prone. Changing
+     * buffered mode will change both the read through and write through state
+     * of the object.
+     * </p>
+     * <p>
+     * Mixing calls to {@link #setBuffered(boolean)}/{@link #isBuffered()} and
+     * {@link #setReadThrough(boolean)}/{@link #isReadThrough()} or
+     * {@link #setWriteThrough(boolean)}/{@link #isWriteThrough()} is generally
+     * a bad idea.
+     * </p>
+     * 
+     * @param buffered
+     *            true if buffered mode should be turned on, false otherwise
+     * @since 7.0
+     */
+    public void setBuffered(boolean buffered);
+
+    /**
+     * Checks the buffered mode of this Object.
+     * <p>
+     * This method only returns true if both read and write buffering is used.
+     * </p>
+     * 
+     * @return true if buffered mode is on, false otherwise
+     * @since 7.0
+     */
+    public boolean isBuffered();
+
+    /**
      * Tests if the value stored in the object has been modified since it was
      * last updated from the data source.
      * 
