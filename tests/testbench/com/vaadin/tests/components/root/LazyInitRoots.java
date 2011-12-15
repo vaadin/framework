@@ -6,10 +6,10 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.tests.components.AbstractTestApplication;
+import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Root;
-import com.vaadin.ui.VerticalLayout;
 
 public class LazyInitRoots extends AbstractTestApplication {
 
@@ -28,6 +28,7 @@ public class LazyInitRoots extends AbstractTestApplication {
     public Root getRoot(WrappedRequest request)
             throws RootRequiresMoreInformation {
         if (request.getParameter("lazyCreate") != null) {
+            // Root created on second request
             BrowserDetails browserDetails = request.getBrowserDetails();
             if (browserDetails == null) {
                 throw new RootRequiresMoreInformation();
@@ -39,9 +40,12 @@ public class LazyInitRoots extends AbstractTestApplication {
                 return root;
             }
         } else if (request.getParameter("lazyInit") != null) {
+            // Root inited on second request
             return new LazyInitRoot();
         } else {
-            VerticalLayout content = new VerticalLayout();
+            // The standard root
+            Root root = new Root();
+            ComponentContainer content = root.getContent();
             Link lazyCreateLink = new Link("Open lazyCreate root",
                     new ExternalResource(getURL() + "?lazyCreate#lazyCreate"));
             lazyCreateLink.setTargetName("_blank");
@@ -52,7 +56,7 @@ public class LazyInitRoots extends AbstractTestApplication {
             lazyInitLink.setTargetName("_blank");
             content.addComponent(lazyInitLink);
 
-            return new Root(content);
+            return root;
         }
     }
 
@@ -63,7 +67,7 @@ public class LazyInitRoots extends AbstractTestApplication {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(7883);
+        return Integer.valueOf(7883); // + #7882 + #7884
     }
 
 }
