@@ -36,12 +36,22 @@ public class BooleanToStringConverter implements Converter<Boolean, String> {
         // Remove leading and trailing white space
         value = value.trim();
 
-        try {
-            return Boolean.valueOf(value);
-        } catch (Exception e) {
+        if (getTrueString().equals(value)) {
+            return true;
+        } else if (getFalseString().equals(value)) {
+            return false;
+        } else {
             throw new ConversionException("Cannot convert " + value
                     + " to Boolean");
         }
+    }
+
+    protected String getTrueString() {
+        return Boolean.TRUE.toString();
+    }
+
+    protected String getFalseString() {
+        return Boolean.FALSE.toString();
     }
 
     /*
@@ -56,8 +66,11 @@ public class BooleanToStringConverter implements Converter<Boolean, String> {
         if (value == null) {
             return null;
         }
-
-        return value.toString();
+        if (value) {
+            return getTrueString();
+        } else {
+            return getFalseString();
+        }
     }
 
     /*
