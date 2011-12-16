@@ -4052,15 +4052,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 reactLastRow = totalRows - 1;
             }
             if (lastRendered < reactFirstRow || firstRendered > reactLastRow) {
-                /*
-                 * #8040 - scroll position is completely changed since the
-                 * latest request, so request a new set of rows.
-                 * 
-                 * TODO: We should probably check whether the fetched rows match
-                 * the current scroll position right when they arrive, so as to
-                 * not waste time rendering a set of rows that will never be
-                 * visible...
-                 */
+                // #8040 - scroll position is completely changed
+                // TODO: should probably be done earlier
                 rowRequestHandler.setReqFirstRow(reactFirstRow);
                 rowRequestHandler.setReqRows(reactLastRow - reactFirstRow + 1);
                 rowRequestHandler.deferRowFetch(1);
