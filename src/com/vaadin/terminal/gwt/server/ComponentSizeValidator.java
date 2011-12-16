@@ -25,7 +25,6 @@ import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.GridLayout.Area;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet;
@@ -198,11 +197,7 @@ public class ComponentSizeValidator implements Serializable {
                     AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
                     boolean vertical = false;
 
-                    if (ol instanceof OrderedLayout) {
-                        if (((OrderedLayout) ol).getOrientation() == OrderedLayout.ORIENTATION_VERTICAL) {
-                            vertical = true;
-                        }
-                    } else if (ol instanceof VerticalLayout) {
+                    if (ol instanceof VerticalLayout) {
                         vertical = true;
                     }
 
@@ -231,11 +226,7 @@ public class ComponentSizeValidator implements Serializable {
                     AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
                     boolean horizontal = true;
 
-                    if (ol instanceof OrderedLayout) {
-                        if (((OrderedLayout) ol).getOrientation() == OrderedLayout.ORIENTATION_VERTICAL) {
-                            horizontal = false;
-                        }
-                    } else if (ol instanceof VerticalLayout) {
+                    if (ol instanceof VerticalLayout) {
                         horizontal = false;
                     }
 
@@ -426,9 +417,7 @@ public class ComponentSizeValidator implements Serializable {
 
             if (parent instanceof AbstractOrderedLayout) {
                 boolean horizontal = true;
-                if (parent instanceof OrderedLayout) {
-                    horizontal = ((OrderedLayout) parent).getOrientation() == OrderedLayout.ORIENTATION_HORIZONTAL;
-                } else if (parent instanceof VerticalLayout) {
+                if (parent instanceof VerticalLayout) {
                     horizontal = false;
                 }
                 if (horizontal
@@ -528,11 +517,7 @@ public class ComponentSizeValidator implements Serializable {
             if (parent instanceof AbstractOrderedLayout) {
                 AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
                 boolean horizontal = true;
-                if (ol instanceof OrderedLayout) {
-                    if (((OrderedLayout) ol).getOrientation() == OrderedLayout.ORIENTATION_VERTICAL) {
-                        horizontal = false;
-                    }
-                } else if (ol instanceof VerticalLayout) {
+                if (ol instanceof VerticalLayout) {
                     horizontal = false;
                 }
 

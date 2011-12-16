@@ -21,9 +21,8 @@ import com.vaadin.terminal.gwt.client.ui.VFormLayout;
  * bottom are by default on.
  * 
  */
-@SuppressWarnings({ "deprecation", "serial" })
 @ClientWidget(VFormLayout.class)
-public class FormLayout extends OrderedLayout {
+public class FormLayout extends AbstractOrderedLayout {
 
     public FormLayout() {
         super();
