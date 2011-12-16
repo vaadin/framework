@@ -16,9 +16,9 @@ package com.vaadin.data.validator;
 @SuppressWarnings("serial")
 public class StringLengthValidator extends AbstractStringValidator {
 
-    private int minLength = -1;
+    private Integer minLength = null;
 
-    private int maxLength = -1;
+    private Integer maxLength = null;
 
     private boolean allowNull = true;
 
@@ -33,21 +33,25 @@ public class StringLengthValidator extends AbstractStringValidator {
     }
 
     /**
-     * Creates a new StringLengthValidator with a given error message,
-     * permissable lengths and null-string allowance.
+     * Creates a new StringLengthValidator with a given error message and
+     * minimum and maximum length limits.
      * 
      * @param errorMessage
      *            the message to display in case the value does not validate.
      * @param minLength
-     *            the minimum permissible length of the string.
+     *            the minimum permissible length of the string or null for no
+     *            limit. A negative value for no limit is also supported for
+     *            backwards compatibility.
      * @param maxLength
-     *            the maximum permissible length of the string.
+     *            the maximum permissible length of the string or null for no
+     *            limit. A negative value for no limit is also supported for
+     *            backwards compatibility.
      * @param allowNull
      *            Are null strings permissible? This can be handled better by
      *            setting a field as required or not.
      */
-    public StringLengthValidator(String errorMessage, int minLength,
-            int maxLength, boolean allowNull) {
+    public StringLengthValidator(String errorMessage, Integer minLength,
+            Integer maxLength, boolean allowNull) {
         this(errorMessage);
         setMinLength(minLength);
         setMaxLength(maxLength);
@@ -67,8 +71,8 @@ public class StringLengthValidator extends AbstractStringValidator {
             return allowNull;
         }
         final int len = value.length();
-        if ((minLength >= 0 && len < minLength)
-                || (maxLength >= 0 && len > maxLength)) {
+        if ((minLength != null && minLength > -1 && len < minLength)
+                || (maxLength != null && maxLength > -1 && len > maxLength)) {
             return false;
         }
         return true;
@@ -88,18 +92,18 @@ public class StringLengthValidator extends AbstractStringValidator {
     /**
      * Gets the maximum permissible length of the string.
      * 
-     * @return the maximum length of the string.
+     * @return the maximum length of the string or null if there is no limit
      */
-    public final int getMaxLength() {
+    public Integer getMaxLength() {
         return maxLength;
     }
 
     /**
      * Gets the minimum permissible length of the string.
      * 
-     * @return the minimum length of the string.
+     * @return the minimum length of the string or null if there is no limit
      */
-    public final int getMinLength() {
+    public Integer getMinLength() {
         return minLength;
     }
 
@@ -116,12 +120,9 @@ public class StringLengthValidator extends AbstractStringValidator {
      * Sets the maximum permissible length of the string.
      * 
      * @param maxLength
-     *            the length to set.
+     *            the maximum length to accept or null for no limit
      */
-    public void setMaxLength(int maxLength) {
-        if (maxLength < -1) {
-            maxLength = -1;
-        }
+    public void setMaxLength(Integer maxLength) {
         this.maxLength = maxLength;
     }
 
@@ -129,12 +130,9 @@ public class StringLengthValidator extends AbstractStringValidator {
      * Sets the minimum permissible length.
      * 
      * @param minLength
-     *            the length to set.
+     *            the minimum length to accept or null for no limit
      */
-    public void setMinLength(int minLength) {
-        if (minLength < -1) {
-            minLength = -1;
-        }
+    public void setMinLength(Integer minLength) {
         this.minLength = minLength;
     }
 
