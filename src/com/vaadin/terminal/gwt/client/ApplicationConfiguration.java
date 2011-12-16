@@ -511,9 +511,9 @@ public class ApplicationConfiguration implements EntryPoint {
     }-*/;
 
     /**
-     * Checks whether debugging should be quit
+     * Checks whether debug logging should be quiet
      * 
-     * @return true if debug should be quiet
+     * @return <code>true</code> if debug logging should be quiet
      */
     public native static boolean isQuietDebugMode()
     /*-{
