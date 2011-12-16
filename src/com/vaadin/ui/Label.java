@@ -154,34 +154,6 @@ public class Label extends AbstractComponent implements Property,
     }
 
     /**
-     * Set the component to read-only. Readonly is not used in label.
-     * 
-     * @param readOnly
-     *            True to enable read-only mode, False to disable it.
-     */
-    @Override
-    public void setReadOnly(boolean readOnly) {
-        if (dataSource == null) {
-            throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
-        }
-        dataSource.setReadOnly(readOnly);
-    }
-
-    /**
-     * Is the component read-only ? Readonly is not used in label - this returns
-     * allways false.
-     * 
-     * @return <code>true</code> if the component is in read only mode.
-     */
-    @Override
-    public boolean isReadOnly() {
-        if (dataSource == null) {
-            throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
-        }
-        return dataSource.isReadOnly();
-    }
-
-    /**
      * Paints the content of this component.
      * 
      * @param target
