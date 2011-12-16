@@ -12,4 +12,9 @@ public enum Sex {
     public String getStringRepresentation() {
         return stringRepresentation;
     }
+
+    @Override
+    public String toString() {
+        return getStringRepresentation();
+    }
 }
