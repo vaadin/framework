@@ -5,21 +5,29 @@ package com.vaadin.data.fieldbinder;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.logging.Logger;
+
+import org.apache.tools.ant.BuildException;
 
 import com.vaadin.data.fieldbinder.FieldBinder.BindException;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 
 /**
- * FIXME Javadoc
+ * Class for constructing form fields based on a data type.
+ * <p>
  * 
+ * FIXME Javadoc
  */
-public class FormBuilder {
+public class FormBuilder implements Serializable {
 
     private FieldBinderFieldFactory fieldFactory = new com.vaadin.data.fieldbinder.DefaultFieldBinderFieldFactory();
     private FieldBinder fieldBinder;
+    private static final Logger logger = Logger.getLogger(FormBuilder.class
+            .getName());
 
     /**
      * Constructs a FormBuilder that can be used to build forms automatically.
@@ -77,11 +85,11 @@ public class FormBuilder {
      * @param propertyId
      *            The property id to bind to. Must be present in the field
      *            finder.
-     * @return The created and bound field
+     * @return The created and bound field. Can be any type of {@link Field}.
      */
     public Field<?> buildAndBind(String caption, Object propertyId) {
         Class<?> type = getFieldBinder().getPropertyType(propertyId);
-        return buildAndBind(caption, propertyId, type);
+        return buildAndBind(caption, propertyId, type, Field.class);
 
     }
 
@@ -96,29 +104,44 @@ public class FormBuilder {
      *            binder.
      * @param type
      *            The data model type we want to edit using the field
+     * @param fieldType
+     *            The type of field we want to create
      * @return The created and bound field
      */
     protected Field<?> buildAndBind(String caption, Object propertyId,
-            Class<?> type) {
-        Field<?> field = build(caption, type);
+            Class<?> type, Class<? extends Field> fieldType) {
+        Field<?> field = build(caption, type, fieldType);
         fieldBinder.bind(field, propertyId);
         return field;
     }
 
     /**
-     * Creates a field based on the given type. The type should be the data
-     * model type and not a Vaadin Field type.
+     * Creates a field based on the given data type.
+     * <p>
+     * The data type is the type that we want to edit using the field. The field
+     * type is the type of field we want to create, can be {@link Field} if any
+     * Field is good.
+     * </p>
      * 
      * @param caption
      *            The caption for the new field
-     * @param type
+     * @param dataType
      *            The data model type that we want to edit using the field
+     * @param fieldType
+     *            The type of field that we want to create
      * @return A Field capable of editing the given type
      */
-    protected Field<?> build(String caption, Class<?> type) {
-        System.err.println("Building a field with caption " + caption
-                + " of type " + type.getName());
-        Field<?> field = getFieldFactory().createField(type);
+    protected Field<?> build(String caption, Class<?> dataType,
+            Class<? extends Field> fieldType) {
+        logger.finest("Building a field with caption " + caption + " of type "
+                + dataType.getName());
+        Field<?> field = getFieldFactory().createField(dataType, fieldType);
+        if (field == null) {
+            throw new BuildException("Unable to build a field of type "
+                    + fieldType.getName() + " for editing "
+                    + dataType.getName());
+        }
+
         field.setCaption(caption);
         return field;
     }
@@ -171,6 +194,8 @@ public class FormBuilder {
                 // Process next field
                 continue;
             }
+            Class<? extends Field> fieldType = (Class<? extends Field>) f
+                    .getType();
 
             Object propertyId = null;
             if (propertyIdAnnotation != null) {
@@ -210,7 +235,7 @@ public class FormBuilder {
                             .createCaptionByPropertyId(propertyId);
                 }
                 // Create the component (Field)
-                builtField = build(caption, propertyType);
+                builtField = build(caption, propertyType, fieldType);
                 // Store it in the field
                 setJavaFieldValue(object, f, builtField);
             }
