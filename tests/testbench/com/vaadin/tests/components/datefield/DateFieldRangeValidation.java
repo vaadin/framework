@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.datefield;
 
 import java.util.Date;
+import java.util.Locale;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -121,6 +122,7 @@ public class DateFieldRangeValidation extends TestBase {
 
     private PopupDateField createDateField() {
         PopupDateField df = new PopupDateField();
+        df.setLocale(new Locale("en", "US"));
         df.setResolution(Resolution.DAY);
         df.setWriteThrough(true);
         df.setReadThrough(true);
