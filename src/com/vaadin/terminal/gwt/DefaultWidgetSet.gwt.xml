@@ -17,6 +17,10 @@
 	<replace-with class="com.vaadin.terminal.gwt.client.VSchedulerImpl">
 		<when-type-is class="com.google.gwt.core.client.impl.SchedulerImpl" />
 	</replace-with>
+	
+	<replace-with class="com.vaadin.terminal.gwt.client.VDebugConsole">
+		<when-type-is class="com.vaadin.terminal.gwt.client.Console" />
+	</replace-with>
 
 	<!-- Use our own history impl for IE to workaround #2931. -->
 	<replace-with class="com.vaadin.terminal.gwt.client.HistoryImplIEVaadin">

@@ -44,4 +44,10 @@ public class NullConsole implements Console {
         GWT.log(e.getMessage(), e);
     }
 
+    public void setQuietMode(boolean quietDebugMode) {
+    }
+
+    public void init() {
+    }
+
 }
