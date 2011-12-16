@@ -40,14 +40,12 @@ public class UriFragmentTest extends AbstractTestRoot {
 
     @Override
     public String getTestDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "URI fragment status should be known when the page is loaded and retained while navigating to different fragments or using the back and forward buttons.";
     }
 
     @Override
     protected Integer getTicketNumber() {
-        // TODO Auto-generated method stub
-        return null;
+        return Integer.valueOf(8048);
     }
 
 }
