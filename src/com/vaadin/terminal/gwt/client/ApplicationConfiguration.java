@@ -450,8 +450,12 @@ public class ApplicationConfiguration implements EntryPoint {
         // Prepare VConsole for debugging
         if (isDebugMode()) {
             Console console = GWT.create(Console.class);
-            console.setQuietMode(isQuietDebugMode());
-            console.init();
+            if (console instanceof VDebugConsole) {
+                // Methods from VDebugConsole not present in Console
+                VDebugConsole vDebugConsole = (VDebugConsole) console;
+                vDebugConsole.setQuietMode(isQuietDebugMode());
+                vDebugConsole.init();
+            }
             VConsole.setImplementation(console);
         } else {
             VConsole.setImplementation((Console) GWT.create(NullConsole.class));
@@ -507,9 +511,9 @@ public class ApplicationConfiguration implements EntryPoint {
     }-*/;
 
     /**
-     * Checks whether debug logging should be quiet
+     * Checks whether debugging should be quit
      * 
-     * @return <code>true</code> if debug logging should be quiet
+     * @return true if debug should be quiet
      */
     public native static boolean isQuietDebugMode()
     /*-{
