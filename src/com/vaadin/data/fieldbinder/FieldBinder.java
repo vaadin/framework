@@ -10,18 +10,31 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.TransactionalProperty;
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.data.util.TransactionalPropertyWrapper;
 import com.vaadin.ui.Field;
 
 /**
  * FIXME Javadoc
+ * 
+ * See also {@link BeanFieldBinder} which makes binding fields easier when your
+ * data is in a bean.
+ * 
+ * @author Vaadin Ltd
+ * @version @version@
+ * @since 7.0
  */
 public class FieldBinder implements Serializable {
 
-    private Item item;
+    private static final Logger logger = Logger.getLogger(FieldBinder.class
+            .getName());
+
+    private Item itemDataSource;
     private boolean fieldsBuffered = true;
 
     private boolean fieldsEnabled = true;
@@ -32,14 +45,33 @@ public class FieldBinder implements Serializable {
     private List<CommitHandler> commitHandlers = new ArrayList<CommitHandler>();
 
     /**
+     * Constructs a field binder. Use {@link #setItemDataSource(Item)} to set a
+     * data source for the field binder.
+     * 
+     */
+    public FieldBinder() {
+
+    }
+
+    /**
+     * Constructs a field binder that uses the given data source.
+     * 
+     * @param itemDataSource
+     *            The data source to bind the fields to
+     */
+    public FieldBinder(Item itemDataSource) {
+        setItemDataSource(itemDataSource);
+    }
+
+    /**
      * Updates the item that is used by this FieldBinder. Rebinds all fields to
      * the properties in the new item.
      * 
-     * @param item
+     * @param itemDataSource
      *            The new item to use
      */
-    public void setItemDataSource(Item item) {
-        this.item = item;
+    public void setItemDataSource(Item itemDataSource) {
+        this.itemDataSource = itemDataSource;
 
         for (Field<?> f : fieldToPropertyId.keySet()) {
             bind(f, fieldToPropertyId.get(f));
@@ -57,7 +89,7 @@ public class FieldBinder implements Serializable {
      * @return The item used by this FieldBinder
      */
     public Item getItemDataSource() {
-        return item;
+        return itemDataSource;
     }
 
     /**
@@ -96,10 +128,7 @@ public class FieldBinder implements Serializable {
 
         this.fieldsBuffered = fieldsBuffered;
         for (Field<?> field : getFields()) {
-            // FIXME: Could use setBuffered if that was in Field
-            field.setReadThrough(!isFieldsBuffered());
-            field.setWriteThrough(!isFieldsBuffered());
-
+            field.setBuffered(fieldsBuffered);
         }
     }
 
@@ -186,13 +215,18 @@ public class FieldBinder implements Serializable {
         }
         fieldToPropertyId.put(field, propertyId);
         propertyIdToField.put(propertyId, field);
-        if (item == null) {
+        if (itemDataSource == null) {
             // Will be bound when data source is set
             return;
         }
 
-        field.setPropertyDataSource(getItemProperty(propertyId));
+        field.setPropertyDataSource(wrapInTransactionalProperty(getItemProperty(propertyId)));
         configureField(field);
+    }
+
+    private <T> TransactionalProperty<T> wrapInTransactionalProperty(
+            Property<T> itemProperty) {
+        return new TransactionalPropertyWrapper<T>(itemProperty);
     }
 
     /**
@@ -241,7 +275,12 @@ public class FieldBinder implements Serializable {
                     "The given field is not part of this FieldBinder");
         }
 
-        if (field.getPropertyDataSource() == getItemProperty(propertyId)) {
+        Property fieldDataSource = field.getPropertyDataSource();
+        if (fieldDataSource instanceof TransactionalPropertyWrapper) {
+            fieldDataSource = ((TransactionalPropertyWrapper) fieldDataSource)
+                    .getWrappedProperty();
+        }
+        if (fieldDataSource == getItemProperty(propertyId)) {
             field.setPropertyDataSource(null);
         }
         fieldToPropertyId.remove(field);
@@ -344,21 +383,39 @@ public class FieldBinder implements Serializable {
      *             If the commit was aborted
      */
     public void commit() throws CommitException {
-        // FIXME #8094 begintransaction()
-
+        if (!isFieldsBuffered()) {
+            // Not using buffered mode, nothing to do
+            return;
+        }
+        for (Field<?> f : fieldToPropertyId.keySet()) {
+            ((TransactionalProperty<?>) f.getPropertyDataSource())
+                    .startTransaction();
+        }
         try {
             firePreCommitEvent();
+            // Commit the field values to the properties
             for (Field<?> f : fieldToPropertyId.keySet()) {
                 f.commit();
             }
             firePostCommitEvent();
-        } catch (CommitException e) {
-            // rollback
+
+            // Commit the properties
+            for (Field<?> f : fieldToPropertyId.keySet()) {
+                ((TransactionalProperty<?>) f.getPropertyDataSource()).commit();
+            }
+
         } catch (Exception e) {
-            // rollback
+            for (Field<?> f : fieldToPropertyId.keySet()) {
+                try {
+                    ((TransactionalProperty<?>) f.getPropertyDataSource())
+                            .rollback();
+                } catch (Exception rollbackException) {
+                    // FIXME: What to do ?
+                }
+            }
+
             throw new CommitException("Commit failed", e);
         }
-        // FIXME #8094 endtransaction()
 
     }
 
@@ -429,7 +486,7 @@ public class FieldBinder implements Serializable {
      * item ( {@link CommitHandler#preCommit(CommitEvent)}) and after the item
      * has been updated ({@link CommitHandler#postCommit(CommitEvent)}). If a
      * {@link CommitHandler} throws a CommitException the whole commit is
-     * aborted and the fields retinas their old values.
+     * aborted and the fields retain their old values.
      * 
      * @param commitHandler
      *            The commit handler to add
@@ -511,7 +568,7 @@ public class FieldBinder implements Serializable {
          * 
          * @return The FieldBinder that is being committed.
          */
-        protected FieldBinder getFieldBinder() {
+        public FieldBinder getFieldBinder() {
             return fieldBinder;
         }
 
