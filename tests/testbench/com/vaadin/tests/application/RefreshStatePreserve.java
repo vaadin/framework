@@ -19,7 +19,7 @@ public class RefreshStatePreserve extends AbstractTestApplication {
     }
 
     @Override
-    protected boolean preserverRootStateOnRefresh() {
+    protected boolean preserveRootStateOnRefresh() {
         return true;
     }
 

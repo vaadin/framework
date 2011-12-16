@@ -2293,7 +2293,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
         Integer rootId = getRootId(request);
 
         synchronized (this) {
-            boolean preserveRootState = preserverRootStateOnRefresh();
+            boolean preserveRootState = preserveRootStateOnRefresh();
 
             BrowserDetails browserDetails = request.getBrowserDetails();
 
@@ -2363,7 +2363,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
         return root;
     }
 
-    protected boolean preserverRootStateOnRefresh() {
+    protected boolean preserveRootStateOnRefresh() {
         return false;
     }
 
