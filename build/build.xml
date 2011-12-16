@@ -771,14 +771,10 @@
         <echo>Installing ${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name} to ${nightly.publish}</echo>
         <echo>Hopefully you have permissions for the copy operation with SSH.</echo>
 
-        <!-- FIXME tries to publish a ZIP; how does the download site handle these? -->
-        <property name="package.filename" value="${result-path}/${base-name}.zip"/>
-
         <!-- Copy the linux installation package and the JAR. -->
         <exec executable="scp" searchpath="true" resultproperty="nightly.install.scp.result">
             <arg value="-B"/>
             <arg value="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}"/>
-            <arg value="${package.filename}"/>
             <arg value="${nightly.publish}"/>
         </exec>
 
