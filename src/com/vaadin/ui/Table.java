@@ -4051,44 +4051,6 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Gets the FieldFactory that is used to create editor for table cells.
-     * 
-     * The FieldFactory is only used if the Table is editable.
-     * 
-     * @return FieldFactory used to create the Field instances.
-     * @see #isEditable
-     * @deprecated use {@link #getTableFieldFactory()} instead
-     */
-    @Deprecated
-    public FieldFactory getFieldFactory() {
-        if (fieldFactory instanceof FieldFactory) {
-            return (FieldFactory) fieldFactory;
-
-        }
-        return null;
-    }
-
-    /**
-     * Sets the FieldFactory that is used to create editor for table cells.
-     * 
-     * The FieldFactory is only used if the Table is editable. By default the
-     * BaseFieldFactory is used.
-     * 
-     * @param fieldFactory
-     *            the field factory to set.
-     * @see #isEditable
-     * @see BaseFieldFactory
-     * @deprecated use {@link #setTableFieldFactory(TableFieldFactory)} instead
-     */
-    @Deprecated
-    public void setFieldFactory(FieldFactory fieldFactory) {
-        this.fieldFactory = fieldFactory;
-
-        // Assure visual refresh
-        refreshRowCache();
-    }
-
-    /**
      * Is table editable.
      * 
      * If table is editable a editor of type Field is created for each table

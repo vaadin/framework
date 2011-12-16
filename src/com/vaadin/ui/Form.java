@@ -1041,23 +1041,6 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     }
 
     /**
-     * Sets the field factory of Form.
-     * 
-     * <code>FieldFactory</code> is used to create fields for form properties.
-     * By default the form uses BaseFieldFactory to create Field instances.
-     * 
-     * @param fieldFactory
-     *            the New factory used to create the fields.
-     * @see Field
-     * @see FormFieldFactory
-     * @deprecated use {@link #setFormFieldFactory(FormFieldFactory)} instead
-     */
-    @Deprecated
-    public void setFieldFactory(FieldFactory fieldFactory) {
-        this.fieldFactory = fieldFactory;
-    }
-
-    /**
      * Sets the field factory used by this Form to genarate Fields for
      * properties.
      * 
@@ -1080,23 +1063,6 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      */
     public FormFieldFactory getFormFieldFactory() {
         return fieldFactory;
-    }
-
-    /**
-     * Get the field factory of the form.
-     * 
-     * @return the FieldFactory Factory used to create the fields.
-     * @deprecated Use {@link #getFormFieldFactory()} instead. Set the
-     *             FormFieldFactory using
-     *             {@link #setFormFieldFactory(FormFieldFactory)}.
-     */
-    @Deprecated
-    public FieldFactory getFieldFactory() {
-        if (fieldFactory instanceof FieldFactory) {
-            return (FieldFactory) fieldFactory;
-
-        }
-        return null;
     }
 
     /**
