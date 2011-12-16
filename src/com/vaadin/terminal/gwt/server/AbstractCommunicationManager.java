@@ -1985,6 +1985,7 @@ public abstract class AbstractCommunicationManager implements
 
         try {
             Root root = application.getRootForRequest(combinedRequest);
+            response.setContentType("application/json; charset=UTF-8");
 
             // Use the same logic as for determined roots
             AjaxPageHandler ajaxPageHandler = getAjaxPageHandler();
