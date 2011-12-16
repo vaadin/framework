@@ -503,6 +503,8 @@ public class Root extends AbstractComponentContainer implements
         } else {
             this.application = application;
         }
+
+        attach();
     }
 
     /**
