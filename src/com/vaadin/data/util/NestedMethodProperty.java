@@ -213,9 +213,13 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
             throw new Property.ReadOnlyException();
         }
 
-        Object value = MethodProperty.convertValue(newValue, type);
+        // Checks the type of the value
+        if (newValue != null && !type.isAssignableFrom(newValue.getClass())) {
+            throw new Property.ConversionException(
+                    "Invalid value type for NestedMethodProperty.");
+        }
 
-        invokeSetMethod(value);
+        invokeSetMethod((T) newValue);
         fireValueChange();
     }
 
@@ -225,7 +229,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
      * 
      * @param value
      */
-    protected void invokeSetMethod(Object value) {
+    protected void invokeSetMethod(T value) {
         try {
             Object object = instance;
             for (int i = 0; i < getMethods.size() - 1; i++) {

@@ -5,7 +5,6 @@
 package com.vaadin.data.util;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
@@ -630,9 +629,10 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     }
 
     /**
-     * Sets the value of the property. This method supports setting from
-     * <code>String</code>s if either <code>String</code> is directly assignable
-     * to property type, or the type class contains a string constructor.
+     * Sets the value of the property.
+     * 
+     * Note that since Vaadin 7, no conversions are performed and the value must
+     * be of the correct type.
      * 
      * @param newValue
      *            the New value of the property.
@@ -643,6 +643,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      *         native type directly or through <code>String</code>.
      * @see #invokeSetMethod(Object)
      */
+    @SuppressWarnings("unchecked")
     public void setValue(Object newValue) throws Property.ReadOnlyException,
             Property.ConversionException {
 
@@ -651,40 +652,14 @@ public class MethodProperty<T> extends AbstractProperty<T> {
             throw new Property.ReadOnlyException();
         }
 
-        Object value = convertValue(newValue, type);
+        // Checks the type of the value
+        if (newValue != null && !type.isAssignableFrom(newValue.getClass())) {
+            throw new Property.ConversionException(
+                    "Invalid value type for ObjectProperty.");
+        }
 
-        invokeSetMethod(value);
+        invokeSetMethod((T) newValue);
         fireValueChange();
-    }
-
-    /**
-     * Convert a value to the given type, using a constructor of the type that
-     * takes a single String parameter (toString() for the value) if necessary.
-     * 
-     * @param value
-     *            to convert
-     * @param type
-     *            type into which the value should be converted
-     * @return converted value
-     */
-    static Object convertValue(Object value, Class<?> type) {
-        if (null == value || type.isAssignableFrom(value.getClass())) {
-            return value;
-        }
-
-        // convert using a string constructor
-        try {
-            // Gets the string constructor
-            @SuppressWarnings("rawtypes")
-            final Constructor constr = type
-                    .getConstructor(new Class[] { String.class });
-
-            // Create a new object from the string
-            return constr.newInstance(new Object[] { value.toString() });
-
-        } catch (final java.lang.Exception e) {
-            throw new Property.ConversionException(e);
-        }
     }
 
     /**
@@ -693,7 +668,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * 
      * @param value
      */
-    protected void invokeSetMethod(Object value) {
+    protected void invokeSetMethod(T value) {
 
         try {
             // Construct a temporary argument array only if needed

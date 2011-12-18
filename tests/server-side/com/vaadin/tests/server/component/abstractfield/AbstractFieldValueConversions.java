@@ -6,7 +6,7 @@ import junit.framework.TestCase;
 
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.NumberToStringConverter;
+import com.vaadin.data.util.converter.IntegerToStringConverter;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
@@ -22,7 +22,7 @@ public class AbstractFieldValueConversions extends TestCase {
 
     public void testWithoutConversion() {
         TextField tf = new TextField();
-        tf.setPropertyDataSource(new MethodProperty<Person>(paulaBean,
+        tf.setPropertyDataSource(new MethodProperty<String>(paulaBean,
                 "firstName"));
         assertEquals("Paula", tf.getValue());
         assertEquals("Paula", tf.getPropertyDataSource().getValue());
@@ -52,7 +52,7 @@ public class AbstractFieldValueConversions extends TestCase {
                 return String.class;
             }
         });
-        tf.setPropertyDataSource(new MethodProperty<Person>(paulaBean,
+        tf.setPropertyDataSource(new MethodProperty<String>(paulaBean,
                 "firstName"));
         assertEquals("Paula", tf.getValue());
         assertEquals("Paula", tf.getPropertyDataSource().getValue());
@@ -95,8 +95,8 @@ public class AbstractFieldValueConversions extends TestCase {
     public void testIntegerStringConversion() {
         TextField tf = new TextField();
 
-        tf.setValueConverter(new NumberToStringConverter());
-        tf.setPropertyDataSource(new MethodProperty<Person>(paulaBean, "age"));
+        tf.setValueConverter(new IntegerToStringConverter());
+        tf.setPropertyDataSource(new MethodProperty<Integer>(paulaBean, "age"));
         assertEquals(34, tf.getPropertyDataSource().getValue());
         assertEquals("34", tf.getValue());
         tf.setValue("12");
@@ -138,10 +138,10 @@ public class AbstractFieldValueConversions extends TestCase {
             }
 
         });
-        MethodProperty<Person> property = new MethodProperty<Person>(paulaBean,
-                "deceased");
+        MethodProperty<Boolean> property = new MethodProperty<Boolean>(
+                paulaBean, "deceased");
         cb.setPropertyDataSource(property);
-        assertNull(property.getValue());
+        assertEquals(Boolean.FALSE, property.getValue());
         assertEquals(Boolean.FALSE, cb.getValue());
         Boolean newDmValue = cb.getValueConverter().convertFromSourceToTarget(
                 cb.getValue(), new Locale("fi", "FI"));

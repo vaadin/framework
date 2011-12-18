@@ -4,8 +4,6 @@
 
 package com.vaadin.data.util;
 
-import java.lang.reflect.Constructor;
-
 import com.vaadin.data.Property;
 
 /**
@@ -107,18 +105,19 @@ public class ObjectProperty<T> extends AbstractProperty<T> {
     }
 
     /**
-     * Sets the value of the property. This method supports setting from
-     * <code>String</code> if either <code>String</code> is directly assignable
-     * to property type, or the type class contains a string constructor.
+     * Sets the value of the property.
+     * 
+     * Note that since Vaadin 7, no conversions are performed and the value must
+     * be of the correct type.
      * 
      * @param newValue
      *            the New value of the property.
      * @throws <code>Property.ReadOnlyException</code> if the object is in
      *         read-only mode
-     * @throws <code>Property.ConversionException</code> if the newValue can't
-     *         be converted into the Property's native type directly or through
-     *         <code>String</code>
+     * @throws <code>Property.ConversionException</code> if the newValue is not
+     *         of a correct type
      */
+    @SuppressWarnings("unchecked")
     public void setValue(Object newValue) throws Property.ReadOnlyException,
             Property.ConversionException {
 
@@ -127,29 +126,15 @@ public class ObjectProperty<T> extends AbstractProperty<T> {
             throw new Property.ReadOnlyException();
         }
 
-        // Tries to assign the compatible value directly
-        if (newValue == null || type.isAssignableFrom(newValue.getClass())) {
-            @SuppressWarnings("unchecked")
-            // the cast is safe after an isAssignableFrom check
-            T value = (T) newValue;
-            this.value = value;
-        } else {
-            try {
-
-                // Gets the string constructor
-                final Constructor<T> constr = getType().getConstructor(
-                        new Class[] { String.class });
-
-                // Creates new object from the string
-                value = constr
-                        .newInstance(new Object[] { newValue.toString() });
-
-            } catch (final java.lang.Exception e) {
-                throw new Property.ConversionException(e);
-            }
+        // Checks the type of the value
+        if (newValue != null && !type.isAssignableFrom(newValue.getClass())) {
+            throw new Property.ConversionException(
+                    "Invalid value type for ObjectProperty.");
         }
+
+        // the cast is safe after an isAssignableFrom check
+        this.value = (T) newValue;
 
         fireValueChange();
     }
-
 }
