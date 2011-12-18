@@ -1,7 +1,12 @@
+/* 
+@VaadinApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.data.validator;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -52,6 +57,30 @@ public class BeanValidationValidator implements Validator {
     private Class<?> beanClass;
     private MethodProperty method;
     private Locale locale;
+
+    /**
+     * Simple implementation of a message interpolator context that returns
+     * fixed values.
+     */
+    protected static class SimpleContext implements Context, Serializable {
+
+        private final Object value;
+        private final ConstraintDescriptor<?> descriptor;
+
+        public SimpleContext(Object value, ConstraintDescriptor<?> descriptor) {
+            this.value = value;
+            this.descriptor = descriptor;
+        }
+
+        public ConstraintDescriptor<?> getConstraintDescriptor() {
+            return descriptor;
+        }
+
+        public Object getValidatedValue() {
+            return value;
+        }
+
+    }
 
     /**
      * Creates a Vaadin {@link Validator} utilizing JSR-303 bean validation.
@@ -168,22 +197,13 @@ public class BeanValidationValidator implements Validator {
         Set<?> violations = validator.validateValue(beanClass, propertyName,
                 convertedValue);
         if (violations.size() > 0) {
-            final Object finalValue = convertedValue;
             List<String> exceptions = new ArrayList<String>();
             for (Object v : violations) {
                 final ConstraintViolation<?> violation = (ConstraintViolation<?>) v;
                 String msg = factory.getMessageInterpolator().interpolate(
-                        violation.getMessageTemplate(), new Context() {
-
-                            public ConstraintDescriptor<?> getConstraintDescriptor() {
-                                return violation.getConstraintDescriptor();
-                            }
-
-                            public Object getValidatedValue() {
-                                return finalValue;
-                            }
-
-                        }, locale);
+                        violation.getMessageTemplate(),
+                        new SimpleContext(convertedValue, violation
+                                .getConstraintDescriptor()), locale);
                 exceptions.add(msg);
             }
             StringBuilder b = new StringBuilder();
@@ -264,16 +284,7 @@ public class BeanValidationValidator implements Validator {
                             "Annotation must have message attribute");
                 }
                 String msg = factory.getMessageInterpolator().interpolate(
-                        messageTemplate, new Context() {
-
-                            public Object getValidatedValue() {
-                                return value;
-                            }
-
-                            public ConstraintDescriptor<?> getConstraintDescriptor() {
-                                return d;
-                            }
-                        }, locale);
+                        messageTemplate, new SimpleContext(value, d), locale);
                 exceptions.add(msg);
             }
         }

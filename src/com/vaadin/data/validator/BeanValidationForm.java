@@ -1,3 +1,7 @@
+/* 
+@VaadinApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.data.validator;
 
 import java.util.Collection;
