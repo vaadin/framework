@@ -45,6 +45,7 @@ public class BeanValidationValidator implements Validator {
 
     private static final long serialVersionUID = 1L;
     private static ValidatorFactory factory;
+    private static Boolean implementationAvailable = null;
 
     private transient javax.validation.Validator javaxBeanValidator;
     private String propertyName;
@@ -108,6 +109,10 @@ public class BeanValidationValidator implements Validator {
      */
     public static BeanValidationValidator addValidator(Field field,
             Object objectPropertyId, Class<?> beanClass) {
+        if (objectPropertyId == null || !(objectPropertyId instanceof String)) {
+            throw new IllegalArgumentException("Property id must be a non-null String");
+        }
+
         String propertyId = (String) objectPropertyId;
         BeanValidationValidator validator = new BeanValidationValidator(
                 beanClass, propertyId);
@@ -174,10 +179,11 @@ public class BeanValidationValidator implements Validator {
             List<String> exceptions = new ArrayList<String>();
             for (Object v : violations) {
                 final ConstraintViolation<?> violation = (ConstraintViolation<?>) v;
-                String msg = getJavaxBeanValidatorFactory().getMessageInterpolator().interpolate(
-                        violation.getMessageTemplate(),
-                        new SimpleContext(value, violation
-                                .getConstraintDescriptor()), locale);
+                String msg = getJavaxBeanValidatorFactory()
+                        .getMessageInterpolator().interpolate(
+                                violation.getMessageTemplate(),
+                                new SimpleContext(value, violation
+                                        .getConstraintDescriptor()), locale);
                 exceptions.add(msg);
             }
             StringBuilder b = new StringBuilder();
@@ -226,8 +232,9 @@ public class BeanValidationValidator implements Validator {
                     throw new InvalidValueException(
                             "Annotation must have message attribute");
                 }
-                String msg = getJavaxBeanValidatorFactory().getMessageInterpolator().interpolate(
-                        messageTemplate, new SimpleContext(value, d), locale);
+                String msg = getJavaxBeanValidatorFactory()
+                        .getMessageInterpolator().interpolate(messageTemplate,
+                                new SimpleContext(value, d), locale);
                 exceptions.add(msg);
             }
         }
@@ -281,11 +288,14 @@ public class BeanValidationValidator implements Validator {
     }
 
     public static boolean isImplementationAvailable() {
-        try {
-            getJavaxBeanValidatorFactory();
-            return true;
-        } catch (Exception e) {
-            return false;
+        if (implementationAvailable == null) {
+            try {
+                getJavaxBeanValidatorFactory();
+                implementationAvailable = true;
+            } catch (Exception e) {
+                implementationAvailable = false;
+            }
         }
+        return implementationAvailable;
     }
 }
