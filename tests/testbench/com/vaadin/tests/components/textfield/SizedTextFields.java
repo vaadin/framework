@@ -3,6 +3,7 @@ package com.vaadin.tests.components.textfield;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -37,10 +38,10 @@ public class SizedTextFields extends TestBase {
         vl.setHeight("40px");
         vl.setWidth("200px");
 
-        tf = new TextField();
-        tf.setRows(2); // make it text area, instead of oneliner
-        tf.setSizeFull();
-        vl.addComponent(tf);
+        TextArea ta = new TextArea();
+        ta.setRows(2); // make it text area, instead of oneliner
+        ta.setSizeFull();
+        vl.addComponent(ta);
         vl.setCaption("Fullsize textarea in 100px height 200px width box");
         cssLayout.addComponent(vl);
 

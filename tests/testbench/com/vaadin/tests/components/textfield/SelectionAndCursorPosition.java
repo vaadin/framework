@@ -10,34 +10,28 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
 public class SelectionAndCursorPosition extends TestBase {
 
-    TextField tf = new TextField();
+    TextField tf = createTextField();
+    TextArea ta = createTextArea();
 
     @Override
     protected void setup() {
-
-        tf.setCaption("Text field");
-        tf.setValue("So we have some text to select");
-        tf.setWidth("400px");
-
         FormLayout fl = new FormLayout();
         Panel panel = new Panel(fl);
         panel.setCaption("Hackers panel");
         CheckBox ml = new CheckBox("Multiline");
         ml.setImmediate(true);
         ml.addListener(new Property.ValueChangeListener() {
-            @SuppressWarnings("deprecation")
             public void valueChange(ValueChangeEvent event) {
-                if (tf.getHeight() < 0) {
-                    tf.setHeight("50px");
+                if (tf.getApplication() == null) {
+                    replaceComponent(ta, tf);
                 } else {
-                    tf.setSizeUndefined();
-                    tf.setRows(0);
+                    replaceComponent(tf, ta);
                 }
-                tf.setWidth("400px");
             }
         });
         fl.addComponent(ml);
@@ -58,8 +52,8 @@ public class SelectionAndCursorPosition extends TestBase {
         b = new Button("select");
         b.addListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
-                int startPos = Integer.parseInt((String) start.getValue());
-                int lenght = Integer.parseInt((String) length.getValue());
+                int startPos = Integer.parseInt(start.getValue());
+                int lenght = Integer.parseInt(length.getValue());
                 tf.setSelectionRange(startPos, lenght);
             }
         });
@@ -74,7 +68,7 @@ public class SelectionAndCursorPosition extends TestBase {
         b = new Button("set");
         b.addListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
-                int startPos = Integer.parseInt((String) pos.getValue());
+                int startPos = Integer.parseInt(pos.getValue());
                 tf.setCursorPosition(startPos);
             }
         });
@@ -88,6 +82,25 @@ public class SelectionAndCursorPosition extends TestBase {
         getLayout().addComponent(tf);
         getLayout().addComponent(panel);
 
+    }
+
+    private static TextField createTextField() {
+        TextField tf = new TextField();
+        tf.setCaption("Text field");
+        tf.setValue("So we have some text to select");
+        tf.setWidth("400px");
+
+        return tf;
+    }
+
+    private static TextArea createTextArea() {
+        TextArea ta = new TextArea();
+        ta.setCaption("Text area");
+        ta.setValue("So we have some text to select");
+        ta.setWidth("400px");
+        ta.setHeight("50px");
+
+        return ta;
     }
 
     @Override

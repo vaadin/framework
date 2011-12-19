@@ -7,18 +7,18 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Root;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.TextArea;
 
 public class Notifications extends TestBase implements ClickListener {
 
     private static final String CAPTION = "CAPTION";
-    private TextField tf;
+    private TextArea tf;
     private NativeSelect type;
 
     @SuppressWarnings("deprecation")
     @Override
     protected void setup() {
-        tf = new TextField("Text", "Hello world");
+        tf = new TextArea("Text", "Hello world");
         tf.setRows(10);
         addComponent(tf);
         type = new NativeSelect();
@@ -51,7 +51,7 @@ public class Notifications extends TestBase implements ClickListener {
     }
 
     public void buttonClick(ClickEvent event) {
-        Notification n = new Notification((String) tf.getValue(),
+        Notification n = new Notification(tf.getValue(),
                 (Integer) type.getValue());
         Root.getCurrentRoot().showNotification(n);
 

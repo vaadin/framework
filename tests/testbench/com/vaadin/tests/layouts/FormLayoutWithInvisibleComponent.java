@@ -5,11 +5,11 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.TextArea;
 
 public class FormLayoutWithInvisibleComponent extends TestBase {
 
-    private TextField messages;
+    private TextArea messages;
 
     @Override
     protected String getDescription() {
@@ -37,7 +37,7 @@ public class FormLayoutWithInvisibleComponent extends TestBase {
         control.setImmediate(true);
         formLayout.addComponent(control);
 
-        messages = new TextField("Messages hidden");
+        messages = new TextArea("Messages hidden");
         messages.setRows(10);
         messages.setColumns(40);
         messages.setVisible(false);

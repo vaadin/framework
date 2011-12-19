@@ -8,11 +8,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
 import com.vaadin.terminal.gwt.client.ui.VListSelect;
-import com.vaadin.terminal.gwt.client.ui.VPasswordField;
 import com.vaadin.terminal.gwt.client.ui.VSplitPanelHorizontal;
 import com.vaadin.terminal.gwt.client.ui.VSplitPanelVertical;
-import com.vaadin.terminal.gwt.client.ui.VTextArea;
-import com.vaadin.terminal.gwt.client.ui.VTextField;
 import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VWindow;
@@ -86,12 +83,6 @@ public class WidgetSet {
                     return VListSelect.class;
                 }
             }
-        } else if (widgetClass == VTextField.class) {
-            if (uidl.hasAttribute("multiline")) {
-                return VTextArea.class;
-            } else if (uidl.hasAttribute("secret")) {
-                return VPasswordField.class;
-            }
         } else if (widgetClass == VSplitPanelHorizontal.class
                 && uidl.hasAttribute("vertical")) {
             return VSplitPanelVertical.class;
@@ -141,9 +132,6 @@ public class WidgetSet {
          */
         if (fullyqualifiedName.equals("com.vaadin.ui.Select")) {
             loadImplementation(VListSelect.class);
-        } else if (fullyqualifiedName.equals("com.vaadin.ui.TextField")) {
-            loadImplementation(VTextArea.class);
-            loadImplementation(VPasswordField.class);
         } else if (fullyqualifiedName.equals("com.vaadin.ui.SplitPanel")) {
             loadImplementation(VSplitPanelVertical.class);
         }

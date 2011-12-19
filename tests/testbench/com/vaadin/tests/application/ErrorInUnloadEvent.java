@@ -9,6 +9,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -38,9 +39,8 @@ public class ErrorInUnloadEvent extends AbstractTestCase {
         FormLayout formLayout = new FormLayout();
         final TextField userField = new TextField("Username");
         userField.setDebugId("user");
-        final TextField passwordField = new TextField("Password");
+        final PasswordField passwordField = new PasswordField("Password");
         passwordField.setDebugId("pwd");
-        passwordField.setSecret(true);
         Button login = new Button("login");
         login.setDebugId("loginButton");
         login.setClickShortcut(KeyCode.ENTER);
@@ -51,8 +51,8 @@ public class ErrorInUnloadEvent extends AbstractTestCase {
 
         login.addListener(new ClickListener() {
             public void buttonClick(final ClickEvent event) {
-                String username = (String) userField.getValue();
-                String password = (String) passwordField.getValue();
+                String username = userField.getValue();
+                String password = passwordField.getValue();
 
                 setUser(username);
                 showMainWindow();
