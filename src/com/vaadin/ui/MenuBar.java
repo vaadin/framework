@@ -33,20 +33,6 @@ public class MenuBar extends AbstractComponent {
     // Number of items in this menu
     private int numberOfItems = 0;
 
-    /**
-     * @deprecated
-     * @see #setCollapse(boolean)
-     */
-    @Deprecated
-    private boolean collapseItems;
-
-    /**
-     * @deprecated
-     * @see #setSubmenuIcon(Resource)
-     */
-    @Deprecated
-    private Resource submenuIcon;
-
     private MenuItem moreItem;
 
     private boolean openRootOnHover;
@@ -67,10 +53,6 @@ public class MenuBar extends AbstractComponent {
         }
 
         target.startTag("options");
-
-        if (submenuIcon != null) {
-            target.addAttribute("submenuIcon", submenuIcon);
-        }
 
         if (getWidth() > -1) {
             target.startTag("moreItem");
@@ -193,7 +175,6 @@ public class MenuBar extends AbstractComponent {
      */
     public MenuBar() {
         menuItems = new ArrayList<MenuItem>();
-        setCollapse(true);
         setMoreMenuItem(null);
     }
 
@@ -308,54 +289,6 @@ public class MenuBar extends AbstractComponent {
      */
     public int getSize() {
         return menuItems.size();
-    }
-
-    /**
-     * Set the icon to be used if a sub-menu has children. Defaults to null;
-     * 
-     * @param icon
-     * @deprecated (since 6.2, will be removed in 7.0) Icon is set in theme, no
-     *             need to worry about the visual representation here.
-     */
-    @Deprecated
-    public void setSubmenuIcon(Resource icon) {
-        submenuIcon = icon;
-        requestRepaint();
-    }
-
-    /**
-     * @deprecated
-     * @see #setSubmenuIcon(Resource)
-     */
-    @Deprecated
-    public Resource getSubmenuIcon() {
-        return submenuIcon;
-    }
-
-    /**
-     * Enable or disable collapsing top-level items. Top-level items will
-     * collapse together if there is not enough room for them. Items that don't
-     * fit will be placed under the "More" menu item.
-     * 
-     * Collapsing is enabled by default.
-     * 
-     * @param collapse
-     * @deprecated (since 6.2, will be removed in 7.0) Collapsing is always
-     *             enabled if the MenuBar has a specified width.
-     */
-    @Deprecated
-    public void setCollapse(boolean collapse) {
-        collapseItems = collapse;
-        requestRepaint();
-    }
-
-    /**
-     * @see #setCollapse(boolean)
-     * @deprecated
-     */
-    @Deprecated
-    public boolean getCollapse() {
-        return collapseItems;
     }
 
     /**

@@ -56,7 +56,6 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
     protected ApplicationConnection client;
 
     protected final VMenuBar hostReference = this;
-    protected String submenuIcon = null;
     protected CustomMenuItem moreItem = null;
 
     // Only used by the root menu bar
@@ -198,14 +197,6 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
         UIDL options = uidl.getChildUIDL(0);
 
-        // FIXME remove in version 7
-        if (options.hasAttribute("submenuIcon")) {
-            submenuIcon = client.translateVaadinUri(uidl.getChildUIDL(0)
-                    .getStringAttribute("submenuIcon"));
-        } else {
-            submenuIcon = null;
-        }
-
         if (uidl.hasAttribute("width")) {
             UIDL moreItemUIDL = options.getChildUIDL(0);
             StringBuffer itemHTML = new StringBuffer();
@@ -316,13 +307,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         } else {
             // Add submenu indicator
             if (item.getChildCount() > 0) {
-                // FIXME For compatibility reasons: remove in version 7
                 String bgStyle = "";
-                if (submenuIcon != null) {
-                    bgStyle = " style=\"background-image: url("
-                            + Util.escapeAttribute(submenuIcon)
-                            + "); text-indent: -999px; width: 1em;\"";
-                }
                 itemHTML.append("<span class=\"" + CLASSNAME
                         + "-submenu-indicator\"" + bgStyle + ">&#x25BA;</span>");
             }
