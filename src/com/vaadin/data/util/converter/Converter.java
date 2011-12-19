@@ -115,7 +115,7 @@ public interface Converter<SOURCE, TARGET> extends Serializable {
      * @VERSION@
      * @since 7.0
      */
-    public class ConversionException extends RuntimeException {
+    public static class ConversionException extends RuntimeException {
 
         /**
          * Constructs a new <code>ConversionException</code> without a detail
