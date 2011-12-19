@@ -4,9 +4,7 @@
 package com.vaadin.data.fieldbinder;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.NestedMethodProperty;
 import com.vaadin.data.validator.BeanValidationValidator;
 import com.vaadin.ui.Field;
 
@@ -70,6 +68,18 @@ public class BeanFieldBinder<T> extends FieldBinder {
         }
     }
 
+    /**
+     * Helper method for setting the data source directly using a bean. This
+     * method wraps the bean in a {@link BeanItem} and calls
+     * {@link #setItemDataSource(Item)}.
+     * 
+     * @param bean
+     *            The bean to use as data source.
+     */
+    public void setItemDataSource(T bean) {
+        setItemDataSource(new BeanItem(bean));
+    }
+
     @Override
     public void setItemDataSource(Item item) {
         if (!(item instanceof BeanItem)) {
@@ -86,24 +96,19 @@ public class BeanFieldBinder<T> extends FieldBinder {
 
     @Override
     public void bind(Field field, Object propertyId) {
-        try {
-            super.bind(field, propertyId);
-        } catch (BindException e) {
-            // System.out.println("Trying to add nested property " +
-            // propertyId);
-            if (getItemDataSource() != null
-                    && field.getPropertyDataSource() == null) {
-                // Workaround for nested properties in BeanItem.
-
-                // FIXME: BeanItem.setAddNestedPropertiesAutomatically would be
-                // a nice, real fix..
-                Property p = new NestedMethodProperty(getItemDataSource()
-                        .getBean(), (String) propertyId);
-                getItemDataSource().addItemProperty(propertyId, p);
-                super.bind(field, propertyId);
+        if (getItemDataSource() != null) {
+            // The data source is set so the property must be found in the item.
+            // If it is not we try to add it.
+            try {
+                getItemProperty(propertyId);
+            } catch (BindException e) {
+                // Not found, try to add a nested property;
+                // BeanItem property ids are always strings so this is safe
+                getItemDataSource().addNestedProperty((String) propertyId);
             }
         }
 
+        super.bind(field, propertyId);
     }
 
     @Override
