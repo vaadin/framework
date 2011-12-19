@@ -74,6 +74,9 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
     private ApplicationConnection connection;
 
+    /** Identifies the click event */
+    public static final String CLICK_EVENT_ID = "click";
+
     /**
      * We are postponing resize process with IE. IE bugs with scrollbars in some
      * situations, that causes false onWindowResized calls. With Timer we will

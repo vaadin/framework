@@ -27,7 +27,7 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
-import com.vaadin.terminal.gwt.client.ui.VPanel;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Window.CloseListener;
@@ -280,6 +280,9 @@ public class Root extends AbstractComponentContainer implements
     private int browserWindowWidth = -1;
     private int browserWindowHeight = -1;
 
+    /** Identifies the click event */
+    private static final String CLICK_EVENT_ID = VView.CLICK_EVENT_ID;
+
     /**
      * Creates a new empty root without a caption. This root will have a
      * {@link VerticalLayout} with margins enabled as its content.
@@ -445,9 +448,26 @@ public class Root extends AbstractComponentContainer implements
         }
     }
 
+    /**
+     * Fire a click event to all click listeners.
+     * 
+     * @param object
+     *            The raw "value" of the variable change from the client side.
+     */
+    private void fireClick(Map<String, Object> parameters) {
+        MouseEventDetails mouseDetails = MouseEventDetails
+                .deSerialize((String) parameters.get("mouseDetails"));
+        fireEvent(new ClickEvent(this, mouseDetails));
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
+
+        if (variables.containsKey(CLICK_EVENT_ID)) {
+            fireClick((Map<String, Object>) variables.get(CLICK_EVENT_ID));
+        }
 
         // Actions
         if (actionManager != null) {
@@ -1247,7 +1267,7 @@ public class Root extends AbstractComponentContainer implements
      *            The listener to add
      */
     public void addListener(ClickListener listener) {
-        addListener(VPanel.CLICK_EVENT_IDENTIFIER, ClickEvent.class, listener,
+        addListener(CLICK_EVENT_ID, ClickEvent.class, listener,
                 ClickListener.clickMethod);
     }
 
@@ -1259,8 +1279,7 @@ public class Root extends AbstractComponentContainer implements
      *            The listener to remove
      */
     public void removeListener(ClickListener listener) {
-        removeListener(VPanel.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
-                listener);
+        removeListener(CLICK_EVENT_ID, ClickEvent.class, listener);
     }
 
     public void addListener(FragmentChangedListener listener) {
