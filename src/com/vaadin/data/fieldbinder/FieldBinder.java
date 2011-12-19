@@ -16,7 +16,9 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.TransactionalProperty;
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.data.fieldbinder.FormBuilder.FormBuilderException;
 import com.vaadin.data.util.TransactionalPropertyWrapper;
+import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Field;
 
 /**
@@ -618,6 +620,68 @@ public class FieldBinder implements Serializable {
             }
         }
         return false;
+    }
+
+    /**
+     * Binds fields for the given class.
+     * <p>
+     * This method processes all fields whose type extends {@link Field} and
+     * that can be mapped to a property id. Property id mapping is done based on
+     * the field name or on a {@link PropertyId} annotation on the field. All
+     * non-null fields for which a property id can be determined are bound to
+     * the property id.
+     * 
+     * @param object
+     *            The object to process
+     * @throws FormBuilderException
+     *             If there is a problem building or binding a field
+     */
+    public void bindFields(Object object) throws BindException {
+        Class<?> objectClass = object.getClass();
+
+        for (java.lang.reflect.Field f : objectClass.getDeclaredFields()) {
+
+            if (!Field.class.isAssignableFrom(f.getType())) {
+                // Process next field
+                continue;
+            }
+
+            PropertyId propertyIdAnnotation = f.getAnnotation(PropertyId.class);
+
+            Class<? extends Field> fieldType = (Class<? extends Field>) f
+                    .getType();
+
+            Object propertyId = null;
+            if (propertyIdAnnotation != null) {
+                // @PropertyId(propertyId) always overrides property id
+                propertyId = propertyIdAnnotation.value();
+            } else {
+                propertyId = f.getName();
+            }
+
+            // Ensure that the property id exists
+            Class<?> propertyType;
+
+            try {
+                propertyType = getPropertyType(propertyId);
+            } catch (BindException e) {
+                // Property id was not found, skip this field
+                continue;
+            }
+
+            try {
+                // Get the field from the object
+                Field<?> field = (Field<?>) ReflectTools.getJavaFieldValue(
+                        object, f);
+                // Bind it to the property id
+                bind(field, propertyId);
+            } catch (Exception e) {
+                // If we cannot determine the value, just skip the field and try
+                // the next one
+                continue;
+            }
+
+        }
     }
 
     public static class CommitException extends Exception {
