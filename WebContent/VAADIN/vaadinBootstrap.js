@@ -6,7 +6,7 @@
 	
 	
     var log;
-    if (typeof console === "undefined") {
+    if (typeof console === "undefined" || !window.location.search.match(/[&?]debug(&|$)/)) {
     	//If no console.log present, just use a no-op
     	log = function() {};
     } else if (typeof console.log === "function") {
@@ -97,7 +97,6 @@
 					if (r.readyState == 4) {
 						if (r.status == 200){
 							log("Got root config response", r.responseText);
-							// TODO Does this work in all supported browsers?
 							var updatedConfig = JSON.parse(r.responseText);
 							
 							// Copy new properties to the config object
