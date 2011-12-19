@@ -136,6 +136,11 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     private String requiredError = "";
 
     /**
+     * The error message that is shown when the field value cannot be converted.
+     */
+    private String valueConversionError = "Could not convert value to {0}";
+
+    /**
      * Is automatic validation enabled.
      */
     private boolean validationVisible = true;
@@ -848,8 +853,13 @@ public abstract class AbstractField<T> extends AbstractComponent implements
              * If there is a value converter, always use it. It must convert or
              * throw an exception.
              */
-            return valueConverter.convertFromTargetToSource(fieldValue,
-                    getLocale());
+            try {
+                return valueConverter.convertFromTargetToSource(fieldValue,
+                        getLocale());
+            } catch (com.vaadin.data.util.converter.Converter.ConversionException e) {
+                throw new ConversionException(
+                        getValueConversionError(valueConverter.getSourceType()));
+            }
         }
 
         if (fieldValue == null) {
@@ -871,12 +881,24 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             return fieldValue;
         } else {
             throw new Converter.ConversionException(
-                    "Unable to convert value of type "
-                            + fieldValue.getClass().getName()
-                            + " to "
-                            + type.getName()
-                            + ". No value converter is set and the types are not compatible.");
+                    getValueConversionError(type));
+        }
+    }
 
+    /**
+     * Returns the value conversion error with {0} replaced by the data source
+     * type.
+     * 
+     * @param dataSourceType
+     *            The type of the data source
+     * @return The value conversion error string with parameters replaced.
+     */
+    protected String getValueConversionError(Class<?> dataSourceType) {
+        if (dataSourceType == null) {
+            return getValueConversionError();
+        } else {
+            return getValueConversionError().replace("{0}",
+                    dataSourceType.getSimpleName());
         }
     }
 
@@ -998,7 +1020,9 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                 valueToValidate = getValueConverter()
                         .convertFromTargetToSource(fieldValue, getLocale());
             } catch (Exception e) {
-                throw new InvalidValueException(e.getMessage());
+                throw new InvalidValueException(
+                        getValueConversionError(getValueConverter()
+                                .getSourceType()));
             }
         }
 
@@ -1388,6 +1412,29 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
     public String getRequiredError() {
         return requiredError;
+    }
+
+    /**
+     * Gets the error that is shown if the field value cannot be converted to
+     * the data source type.
+     * 
+     * @return The error that is shown if conversion of the field value fails
+     */
+    public String getValueConversionError() {
+        return valueConversionError;
+    }
+
+    /**
+     * Sets the error that is shown if the field value cannot be converted to
+     * the data source type. If {0} is present in the message, it will be
+     * replaced by the simple name of the data source type.
+     * 
+     * @param valueConversionError
+     *            Message to be shown when conversion of the value fails
+     */
+    public void setValueConversionError(String valueConversionError) {
+        this.valueConversionError = valueConversionError;
+        requestRepaint();
     }
 
     /**
