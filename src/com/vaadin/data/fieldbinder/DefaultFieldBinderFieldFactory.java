@@ -23,7 +23,7 @@ public class DefaultFieldBinderFieldFactory implements FieldBinderFieldFactory {
 
     public static final Object CAPTION_PROPERTY_ID = "Caption";
 
-    public Field createField(Class<?> type, Class<? extends Field> fieldType) {
+    public <T extends Field> T createField(Class<?> type, Class<T> fieldType) {
         if (Enum.class.isAssignableFrom(type)) {
             return createEnumField(type, fieldType);
         } else if (Boolean.class.isAssignableFrom(type)
@@ -33,12 +33,12 @@ public class DefaultFieldBinderFieldFactory implements FieldBinderFieldFactory {
         return createDefaultField(type, fieldType);
     }
 
-    private Field createEnumField(Class<?> type,
-            Class<? extends Field> fieldType) {
+    private <T extends Field> T createEnumField(Class<?> type,
+            Class<T> fieldType) {
         if (AbstractSelect.class.isAssignableFrom(fieldType)) {
             AbstractSelect s = createCompatibleSelect((Class<? extends AbstractSelect>) fieldType);
             populateWithEnumData(s, (Class<? extends Enum>) type);
-            return s;
+            return (T) s;
         }
 
         return null;
@@ -68,41 +68,41 @@ public class DefaultFieldBinderFieldFactory implements FieldBinderFieldFactory {
         return select;
     }
 
-    protected Field createBooleanField(Class<? extends Field> fieldType) {
+    protected <T extends Field> T createBooleanField(Class<T> fieldType) {
         if (fieldType.isAssignableFrom(CheckBox.class)) {
             CheckBox cb = new CheckBox(null);
             cb.setImmediate(true);
-            return cb;
+            return (T) cb;
         } else if (AbstractTextField.class.isAssignableFrom(fieldType)) {
-            return createAbstractTextField((Class<? extends AbstractTextField>) fieldType);
+            return (T) createAbstractTextField((Class<? extends AbstractTextField>) fieldType);
         }
 
         return null;
     }
 
-    protected AbstractTextField createAbstractTextField(
-            Class<? extends AbstractTextField> fieldType) {
+    protected <T extends AbstractTextField> T createAbstractTextField(
+            Class<T> fieldType) {
         if (fieldType.isAssignableFrom(PasswordField.class)) {
             PasswordField pf = new PasswordField();
             pf.setImmediate(true);
-            return pf;
+            return (T) pf;
         } else if (fieldType.isAssignableFrom(TextField.class)) {
             TextField tf = new TextField();
             tf.setImmediate(true);
-            return tf;
+            return (T) tf;
         } else if (fieldType.isAssignableFrom(TextArea.class)) {
             TextArea ta = new TextArea();
             ta.setImmediate(true);
-            return ta;
+            return (T) ta;
         }
 
         return null;
     }
 
-    protected Field createDefaultField(Class<?> type,
-            Class<? extends Field> fieldType) {
+    protected <T extends Field> T createDefaultField(Class<?> type,
+            Class<T> fieldType) {
         if (AbstractTextField.class.isAssignableFrom(fieldType)) {
-            return createAbstractTextField((Class<? extends AbstractTextField>) fieldType);
+            return (T) createAbstractTextField((Class<? extends AbstractTextField>) fieldType);
         }
         return null;
     }
@@ -113,7 +113,6 @@ public class DefaultFieldBinderFieldFactory implements FieldBinderFieldFactory {
      */
     protected void populateWithEnumData(AbstractSelect select,
             Class<? extends Enum> enumClass) {
-        // TODO EnumContainer?
         select.removeAllItems();
         for (Object p : select.getContainerPropertyIds()) {
             select.removeContainerProperty(p);

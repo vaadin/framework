@@ -27,5 +27,5 @@ public interface FieldBinderFieldFactory extends Serializable {
      * @return A field that can be assigned to the given fieldType and that is
      *         capable of editing the given type of data
      */
-    Field<?> createField(Class<?> dataType, Class<? extends Field> fieldType);
+    <T extends Field> T createField(Class<?> dataType, Class<T> fieldType);
 }

@@ -91,6 +91,24 @@ public class FormBuilder implements Serializable {
     }
 
     /**
+     * Builds a field using the given caption and binds it to the given property
+     * id using the field binder. Ensures the new field is of the given type.
+     * 
+     * @param caption
+     *            The caption for the field
+     * @param propertyId
+     *            The property id to bind to. Must be present in the field
+     *            finder.
+     * @return The created and bound field. Can be any type of {@link Field}.
+     */
+    public <T extends Field> T buildAndBind(String caption, Object propertyId,
+            Class<T> fieldType) {
+        Class<?> type = getFieldBinder().getPropertyType(propertyId);
+        return buildAndBind(caption, propertyId, type, fieldType);
+
+    }
+
+    /**
      * Builds a field with the given type and binds it to the given property id
      * using the field binder.
      * 
@@ -105,9 +123,9 @@ public class FormBuilder implements Serializable {
      *            The type of field we want to create
      * @return The created and bound field
      */
-    protected Field<?> buildAndBind(String caption, Object propertyId,
-            Class<?> type, Class<? extends Field> fieldType) {
-        Field<?> field = build(caption, type, fieldType);
+    protected <T extends Field> T buildAndBind(String caption,
+            Object propertyId, Class<?> type, Class<T> fieldType) {
+        T field = build(caption, type, fieldType);
         fieldBinder.bind(field, propertyId);
         return field;
     }
@@ -128,11 +146,11 @@ public class FormBuilder implements Serializable {
      *            The type of field that we want to create
      * @return A Field capable of editing the given type
      */
-    protected Field<?> build(String caption, Class<?> dataType,
-            Class<? extends Field> fieldType) {
+    protected <T extends Field> T build(String caption, Class<?> dataType,
+            Class<T> fieldType) {
         logger.finest("Building a field with caption " + caption + " of type "
                 + dataType.getName());
-        Field<?> field = getFieldFactory().createField(dataType, fieldType);
+        T field = getFieldFactory().createField(dataType, fieldType);
         if (field == null) {
             throw new BuildException("Unable to build a field of type "
                     + fieldType.getName() + " for editing "
