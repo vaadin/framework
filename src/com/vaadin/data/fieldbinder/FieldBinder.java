@@ -198,6 +198,9 @@ public class FieldBinder implements Serializable {
      * Binds the field with the given propertyId from the current item. If an
      * item has not been set then the binding is postponed until the item is set
      * using {@link #setItemDataSource(Item)}.
+     * <p>
+     * This method also adds validators when applicable.
+     * </p>
      * 
      * @param field
      *            The field to bind
@@ -291,15 +294,13 @@ public class FieldBinder implements Serializable {
      * Configures a field with the settings set for this FieldBinder.
      * <p>
      * By default this updates the buffered, read only and enabled state of the
-     * field.
+     * field. Also adds validators when applicable.
      * 
      * @param field
      *            The field to update
      */
     protected void configureField(Field<?> field) {
-        // FIXME: Could use setBuffered if that was in Field
-        field.setReadThrough(!isFieldsBuffered());
-        field.setWriteThrough(!isFieldsBuffered());
+        field.setBuffered(isFieldsBuffered());
 
         field.setEnabled(isFieldsEnabled());
         field.setReadOnly(isFieldsReadOnly());
@@ -477,6 +478,18 @@ public class FieldBinder implements Serializable {
      */
     public Field<?> getFieldForPropertyId(Object propertyId) {
         return propertyIdToField.get(propertyId);
+    }
+
+    /**
+     * Returns the property id that is bound to the given field
+     * 
+     * @param field
+     *            The field to use to lookup the property id
+     * @return The property id that is bound to the field or null if the field
+     *         is not bound to any property id by this FieldBinder
+     */
+    public Object getPropertyIdForField(Field field) {
+        return fieldToPropertyId.get(field);
     }
 
     /**

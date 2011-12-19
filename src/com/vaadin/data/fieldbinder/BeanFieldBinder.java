@@ -7,6 +7,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.NestedMethodProperty;
+import com.vaadin.data.validator.BeanValidationValidator;
 import com.vaadin.ui.Field;
 
 public class BeanFieldBinder<T> extends FieldBinder {
@@ -105,68 +106,15 @@ public class BeanFieldBinder<T> extends FieldBinder {
 
     }
 
-    // private static void addFieldsFromType(List<Object> fields, Class<?> type,
-    // String prefix) {
-    // for (java.lang.reflect.Field f : getAllFields(type)) {
-    // if (isSimpleType(f)) {
-    // fields.add(prefix + f.getName());
-    // } else {
-    // String subPrefix = f.getName() + ".";
-    // if (!prefix.equals("")) {
-    // subPrefix = prefix + subPrefix;
-    // }
-    //
-    // addFieldsFromType(fields, f.getType(), subPrefix);
-    // }
-    //
-    // }
-    //
-    // }
-
-    // /**
-    // * Return a list of all fields in the given class. Includes private fields
-    // * and also fields from super classes.
-    // *
-    // * @param type
-    // * @return
-    // */
-    // private static List<java.lang.reflect.Field> getAllFields(Class<?> type)
-    // {
-    // System.out.println("getAllFields for " + type.getName());
-    // List<java.lang.reflect.Field> fields = new
-    // ArrayList<java.lang.reflect.Field>();
-    //
-    // Class<?> superClass = type.getSuperclass();
-    // if (superClass != Object.class) {
-    // fields.addAll(getAllFields(superClass));
-    // }
-    //
-    // for (java.lang.reflect.Field f : type.getDeclaredFields()) {
-    // fields.add(f);
-    // }
-    //
-    // return fields;
-    // }
-
-    // private static boolean isSimpleType(java.lang.reflect.Field f) {
-    // // FIXME: What other classes? Boolean, Integer etc. How do we know what
-    // // is a mapped class that should be expanded? Or should we make the user
-    // // provide them?
-    // Class<?> type = f.getType();
-    // if (type.isPrimitive()) {
-    // return true;
-    // }
-    // if (Enum.class.isAssignableFrom(type)) {
-    // return true;
-    // }
-    // if (Number.class.isAssignableFrom(type)) {
-    // return true;
-    // }
-    // if (CharSequence.class.isAssignableFrom(type)) {
-    // return true;
-    // }
-    //
-    // return false;
-    // }
+    @Override
+    protected void configureField(Field<?> field) {
+        super.configureField(field);
+        // Add Bean validators if there are annotations
+        BeanValidationValidator validator = BeanValidationValidator
+                .addValidator(field, getPropertyIdForField(field), beanType);
+        if (field.getLocale() != null) {
+            validator.setLocale(field.getLocale());
+        }
+    }
 
 }
