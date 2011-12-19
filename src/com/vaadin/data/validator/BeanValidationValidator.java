@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,9 +24,7 @@ import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.PropertyDescriptor;
 
-import com.vaadin.data.Property;
 import com.vaadin.data.Validator;
-import com.vaadin.data.util.MethodProperty;
 import com.vaadin.ui.Field;
 
 /**
@@ -55,7 +52,6 @@ public class BeanValidationValidator implements Validator {
     private transient javax.validation.Validator validator;
     private String propertyName;
     private Class<?> beanClass;
-    private MethodProperty method;
     private Locale locale;
 
     /**
@@ -94,12 +90,6 @@ public class BeanValidationValidator implements Validator {
         this.beanClass = beanClass;
         this.propertyName = propertyName;
         validator = factory.getValidator();
-        try {
-            method = new MethodProperty(beanClass.newInstance(), propertyName);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Class '" + beanClass
-                    + "' must contain default constructor");
-        }
         locale = Locale.getDefault();
     }
 
@@ -180,29 +170,15 @@ public class BeanValidationValidator implements Validator {
     }
 
     public void validate(final Object value) throws InvalidValueException {
-        Object convertedValue = value;
-        try {
-            convertedValue = convertValue(value);
-        } catch (Exception e) {
-            String msg = getErrorMessage(value);
-            if (msg != null) {
-                throw new InvalidValueException(msg);
-            } else {
-                // there should be always some constraints if conversion is
-                // needed
-                // for example if String -> Integer then Digits annotation
-                throw new InvalidValueException("Conversion exception");
-            }
-        }
         Set<?> violations = validator.validateValue(beanClass, propertyName,
-                convertedValue);
+                value);
         if (violations.size() > 0) {
             List<String> exceptions = new ArrayList<String>();
             for (Object v : violations) {
                 final ConstraintViolation<?> violation = (ConstraintViolation<?>) v;
                 String msg = factory.getMessageInterpolator().interpolate(
                         violation.getMessageTemplate(),
-                        new SimpleContext(convertedValue, violation
+                        new SimpleContext(value, violation
                                 .getConstraintDescriptor()), locale);
                 exceptions.add(msg);
             }
@@ -214,38 +190,6 @@ public class BeanValidationValidator implements Validator {
                 b.append(exceptions.get(i));
             }
             throw new InvalidValueException(b.toString());
-        }
-    }
-
-    /**
-     * Convert the value the way {@link MethodProperty} does: if the bean field
-     * is assignable from the value, return the value directly. Otherwise, try
-     * to find a constructor for bean field type that takes a String and call it
-     * with value.toString() .
-     * 
-     * @param value
-     *            the value to convert
-     * @return converted value, assignable to the field of the bean
-     * @throws {@link ConversionException} if no suitable conversion found or
-     *         the target type constructor from string threw an exception
-     */
-    private Object convertValue(Object value)
-            throws Property.ConversionException {
-        // Try to assign the compatible value directly
-        if (value == null
-                || method.getType().isAssignableFrom(value.getClass())) {
-            return value;
-        } else {
-            try {
-                // Gets the string constructor
-                final Constructor constr = method.getType().getConstructor(
-                        new Class[] { String.class });
-
-                return constr.newInstance(new Object[] { value.toString() });
-
-            } catch (final java.lang.Exception e) {
-                throw new Property.ConversionException(e);
-            }
         }
     }
 
