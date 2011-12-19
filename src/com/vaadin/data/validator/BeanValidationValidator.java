@@ -4,8 +4,6 @@
 
 package com.vaadin.data.validator;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -46,10 +44,9 @@ import com.vaadin.ui.Field;
 public class BeanValidationValidator implements Validator {
 
     private static final long serialVersionUID = 1L;
-    private static ValidatorFactory factory = Validation
-            .buildDefaultValidatorFactory();
+    private static ValidatorFactory factory;
 
-    private transient javax.validation.Validator validator;
+    private transient javax.validation.Validator javaxBeanValidator;
     private String propertyName;
     private Class<?> beanClass;
     private Locale locale;
@@ -89,7 +86,6 @@ public class BeanValidationValidator implements Validator {
     public BeanValidationValidator(Class<?> beanClass, String propertyName) {
         this.beanClass = beanClass;
         this.propertyName = propertyName;
-        validator = factory.getValidator();
         locale = Locale.getDefault();
     }
 
@@ -111,12 +107,13 @@ public class BeanValidationValidator implements Validator {
      * @return the created validator
      */
     public static BeanValidationValidator addValidator(Field field,
-            Object propertyId, Class<?> beanClass) {
+            Object objectPropertyId, Class<?> beanClass) {
+        String propertyId = (String) objectPropertyId;
         BeanValidationValidator validator = new BeanValidationValidator(
-                beanClass, String.valueOf(propertyId));
-        PropertyDescriptor constraintsForProperty = validator.validator
-                .getConstraintsForClass(beanClass).getConstraintsForProperty(
-                        propertyId.toString());
+                beanClass, propertyId);
+        PropertyDescriptor constraintsForProperty = validator
+                .getJavaxBeanValidator().getConstraintsForClass(beanClass)
+                .getConstraintsForProperty(propertyId);
         if (constraintsForProperty != null) {
             int nonNotNullValidators = constraintsForProperty
                     .getConstraintDescriptors().size();
@@ -148,8 +145,9 @@ public class BeanValidationValidator implements Validator {
      * @return true if the field is marked as not null
      */
     public boolean isRequired() {
-        PropertyDescriptor desc = validator.getConstraintsForClass(beanClass)
-                .getConstraintsForProperty(propertyName);
+        PropertyDescriptor desc = getJavaxBeanValidator()
+                .getConstraintsForClass(beanClass).getConstraintsForProperty(
+                        propertyName);
         if (desc != null) {
             Iterator<ConstraintDescriptor<?>> it = desc
                     .getConstraintDescriptors().iterator();
@@ -170,13 +168,13 @@ public class BeanValidationValidator implements Validator {
     }
 
     public void validate(final Object value) throws InvalidValueException {
-        Set<?> violations = validator.validateValue(beanClass, propertyName,
-                value);
+        Set<?> violations = getJavaxBeanValidator().validateValue(beanClass,
+                propertyName, value);
         if (violations.size() > 0) {
             List<String> exceptions = new ArrayList<String>();
             for (Object v : violations) {
                 final ConstraintViolation<?> violation = (ConstraintViolation<?>) v;
-                String msg = factory.getMessageInterpolator().interpolate(
+                String msg = getJavaxBeanValidatorFactory().getMessageInterpolator().interpolate(
                         violation.getMessageTemplate(),
                         new SimpleContext(value, violation
                                 .getConstraintDescriptor()), locale);
@@ -195,7 +193,8 @@ public class BeanValidationValidator implements Validator {
 
     private String getErrorMessage(final Object value,
             Class<? extends Annotation>... an) {
-        BeanDescriptor beanDesc = validator.getConstraintsForClass(beanClass);
+        BeanDescriptor beanDesc = getJavaxBeanValidator()
+                .getConstraintsForClass(beanClass);
         PropertyDescriptor desc = beanDesc
                 .getConstraintsForProperty(propertyName);
         if (desc == null) {
@@ -227,7 +226,7 @@ public class BeanValidationValidator implements Validator {
                     throw new InvalidValueException(
                             "Annotation must have message attribute");
                 }
-                String msg = factory.getMessageInterpolator().interpolate(
+                String msg = getJavaxBeanValidatorFactory().getMessageInterpolator().interpolate(
                         messageTemplate, new SimpleContext(value, d), locale);
                 exceptions.add(msg);
             }
@@ -265,9 +264,28 @@ public class BeanValidationValidator implements Validator {
         return locale;
     }
 
-    private void readObject(ObjectInputStream in) throws IOException,
-            ClassNotFoundException {
-        in.defaultReadObject();
-        validator = factory.getValidator();
+    protected static ValidatorFactory getJavaxBeanValidatorFactory() {
+        if (factory == null) {
+            factory = Validation.buildDefaultValidatorFactory();
+        }
+
+        return factory;
+    }
+
+    protected javax.validation.Validator getJavaxBeanValidator() {
+        if (javaxBeanValidator == null) {
+            javaxBeanValidator = getJavaxBeanValidatorFactory().getValidator();
+        }
+
+        return javaxBeanValidator;
+    }
+
+    public static boolean isImplementationAvailable() {
+        try {
+            getJavaxBeanValidatorFactory();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

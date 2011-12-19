@@ -115,10 +115,12 @@ public class BeanFieldBinder<T> extends FieldBinder {
     protected void configureField(Field<?> field) {
         super.configureField(field);
         // Add Bean validators if there are annotations
-        BeanValidationValidator validator = BeanValidationValidator
-                .addValidator(field, getPropertyIdForField(field), beanType);
-        if (field.getLocale() != null) {
-            validator.setLocale(field.getLocale());
+        if (BeanValidationValidator.isImplementationAvailable()) {
+            BeanValidationValidator validator = BeanValidationValidator
+                    .addValidator(field, getPropertyIdForField(field), beanType);
+            if (field.getLocale() != null) {
+                validator.setLocale(field.getLocale());
+            }
         }
     }
 
