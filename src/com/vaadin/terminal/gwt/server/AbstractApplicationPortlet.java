@@ -442,20 +442,23 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     protected enum RequestType {
-        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, ACTION, UNKNOWN;
+        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, ACTION, UNKNOWN, BROWSER_DETAILS;
     }
 
     protected RequestType getRequestType(PortletRequest request) {
         if (request instanceof RenderRequest) {
             return RequestType.RENDER;
         } else if (request instanceof ResourceRequest) {
-            if (isUIDLRequest((ResourceRequest) request)) {
+            ResourceRequest resourceRequest = (ResourceRequest) request;
+            if (isUIDLRequest(resourceRequest)) {
                 return RequestType.UIDL;
-            } else if (isFileUploadRequest((ResourceRequest) request)) {
+            } else if (isBrowserDetailsRequeset(resourceRequest)) {
+                return RequestType.BROWSER_DETAILS;
+            } else if (isFileUploadRequest(resourceRequest)) {
                 return RequestType.FILE_UPLOAD;
-            } else if (isApplicationResourceRequest((ResourceRequest) request)) {
+            } else if (isApplicationResourceRequest(resourceRequest)) {
                 return RequestType.APPLICATION_RESOURCE;
-            } else if (isDummyRequest((ResourceRequest) request)) {
+            } else if (isDummyRequest(resourceRequest)) {
                 return RequestType.DUMMY;
             } else {
                 return RequestType.STATIC_FILE;
@@ -466,6 +469,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             return RequestType.EVENT;
         }
         return RequestType.UNKNOWN;
+    }
+
+    private boolean isBrowserDetailsRequeset(ResourceRequest request) {
+        return request.getResourceID() != null
+                && request.getResourceID().equals("browserDetails");
     }
 
     private boolean isApplicationResourceRequest(ResourceRequest request) {
@@ -599,6 +607,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 synchronized (application) {
                     if (application.isRunning()) {
                         switch (requestType) {
+                        case BROWSER_DETAILS:
+                            // Should not try to find a root here as the
+                            // combined request details might change the root
+                            break;
                         case FILE_UPLOAD:
                             // no window
                             break;
@@ -638,6 +650,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 if (requestType == RequestType.FILE_UPLOAD) {
                     applicationManager.handleFileUpload(wrappedRequest,
                             wrappedResponse);
+                    return;
+                } else if (requestType == RequestType.BROWSER_DETAILS) {
+                    applicationManager.handleBrowserDetailsRequest(
+                            wrappedRequest, wrappedResponse, application);
                     return;
                 } else if (requestType == RequestType.UIDL) {
                     // Handles AJAX UIDL requests

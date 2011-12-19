@@ -82,7 +82,7 @@
 			
 			var fetchRootConfig = function() {
 				log('Fetching root config');
-				var url = getConfig('appUri');
+				var url = getConfig('browserDetailsUrl') || getConfig('appUri');
 				// Root id
 				url += ((/\?/).test(url) ? "&" : "?") + "browserDetails";
 				url += '&rootId=' + getConfig('rootId');

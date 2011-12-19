@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.portlet.MimeResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
@@ -208,6 +209,21 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                     throws PaintException {
                 return PortletCommunicationManager.this.getInitialUIDL(request,
                         root);
+            }
+
+            @Override
+            protected JSONObject getApplicationParameters(
+                    AjaxPageContext context) throws JSONException,
+                    PaintException {
+                JSONObject parameters = super.getApplicationParameters(context);
+                WrappedPortletResponse wrappedPortletResponse = (WrappedPortletResponse) context
+                        .getResponse();
+                MimeResponse portletResponse = (MimeResponse) wrappedPortletResponse
+                        .getPortletResponse();
+                ResourceURL resourceURL = portletResponse.createResourceURL();
+                resourceURL.setResourceID("browserDetails");
+                parameters.put("browserDetailsUrl", resourceURL.toString());
+                return parameters;
             }
 
         };
