@@ -1,9 +1,15 @@
 package com.vaadin.terminal.gwt.server;
 
+import java.io.Serializable;
+
 import com.vaadin.Application;
 import com.vaadin.ui.Root;
 
-class ServletPortletHelper {
+/*
+ @VaadinApache2LicenseForJavaFiles@
+ */
+
+class ServletPortletHelper implements Serializable {
     public static class ApplicationClassException extends Exception {
 
         public ApplicationClassException(String message, Throwable cause) {
