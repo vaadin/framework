@@ -19,8 +19,9 @@ public class RefreshStatePreserve extends AbstractTestApplication {
     }
 
     @Override
-    protected boolean preserveRootStateOnRefresh() {
-        return true;
+    public void init() {
+        super.init();
+        setRootPreserveStrategy(new WindowNameRootPreserveStrategy());
     }
 
     @Override
