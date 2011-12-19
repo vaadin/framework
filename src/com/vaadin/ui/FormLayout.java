@@ -28,6 +28,7 @@ public class FormLayout extends AbstractOrderedLayout {
         super();
         setSpacing(true);
         setMargin(true, false, true, false);
+        setWidth(100, UNITS_PERCENTAGE);
     }
 
 }
