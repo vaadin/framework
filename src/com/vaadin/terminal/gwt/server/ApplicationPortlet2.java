@@ -8,6 +8,7 @@ import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.gwt.server.ServletPortletHelper.ApplicationClassException;
 
 /**
  * TODO Write documentation, fix JavaDoc tags.
@@ -18,23 +19,16 @@ public class ApplicationPortlet2 extends AbstractApplicationPortlet {
 
     private Class<? extends Application> applicationClass;
 
-    @SuppressWarnings("unchecked")
     @Override
     public void init(PortletConfig config) throws PortletException {
         super.init(config);
-        final String applicationClassName = config
-                .getInitParameter("application");
-        if (applicationClassName == null) {
-            throw new PortletException(
-                    "Application not specified in portlet parameters");
-        }
-
         try {
-            applicationClass = (Class<? extends Application>) getClassLoader()
-                    .loadClass(applicationClassName);
-        } catch (final ClassNotFoundException e) {
-            throw new PortletException("Failed to load application class: "
-                    + applicationClassName);
+            applicationClass = ServletPortletHelper.getApplicationClass(
+                    config.getInitParameter("application"),
+                    config.getInitParameter(Application.ROOT_PARAMETER),
+                    getClassLoader());
+        } catch (ApplicationClassException e) {
+            throw new PortletException(e);
         }
     }
 

@@ -8,7 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import com.vaadin.Application;
-import com.vaadin.ui.Root;
+import com.vaadin.terminal.gwt.server.ServletPortletHelper.ApplicationClassException;
 
 /**
  * This servlet connects a Vaadin Application to Web.
@@ -44,53 +44,13 @@ public class ApplicationServlet extends AbstractApplicationServlet {
         // Loads the application class using the same class loader
         // as the servlet itself
 
-        // Gets the application class name
-        final String applicationClassName = servletConfig
-                .getInitParameter("application");
-        if (applicationClassName == null) {
-            String rootParam = servletConfig
-                    .getInitParameter(Application.ROOT_PARAMETER);
-
-            // Validate the parameter value
-            verifyRootClass(rootParam);
-
-            // Application can be used if a valid rootLayout is defined
-            applicationClass = Application.class;
-            return;
-        }
-
         try {
-            applicationClass = (Class<? extends Application>) getClassLoader()
-                    .loadClass(applicationClassName);
-        } catch (final ClassNotFoundException e) {
-            throw new ServletException("Failed to load application class: "
-                    + applicationClassName);
-        }
-    }
-
-    private void verifyRootClass(String className) throws ServletException {
-        if (className == null) {
-            throw new ServletException(Application.ROOT_PARAMETER
-                    + " servlet parameter not defined");
-        }
-
-        // Check that the root layout class can be found
-        try {
-            Class<?> rootClass = getClassLoader().loadClass(className);
-            if (!Root.class.isAssignableFrom(rootClass)) {
-                throw new ServletException(className
-                        + " does not implement Root");
-            }
-            // Try finding a default constructor, else throw exception
-            rootClass.getConstructor();
-        } catch (ClassNotFoundException e) {
-            throw new ServletException(className + " could not be loaded", e);
-        } catch (SecurityException e) {
-            throw new ServletException("Could not access " + className
-                    + " class", e);
-        } catch (NoSuchMethodException e) {
-            throw new ServletException(className
-                    + " doesn't have a public no-args constructor");
+            applicationClass = ServletPortletHelper.getApplicationClass(
+                    servletConfig.getInitParameter("application"),
+                    servletConfig.getInitParameter(Application.ROOT_PARAMETER),
+                    getClassLoader());
+        } catch (ApplicationClassException e) {
+            throw new ServletException(e);
         }
     }
 
