@@ -108,8 +108,13 @@ public class DefaultFieldBinderFieldFactory implements FieldBinderFieldFactory {
     }
 
     /**
+     * Populates the given select with all the enums in the given {@link Enum}
+     * class. Uses {@link Enum}.toString() for caption.
+     * 
      * @param select
+     *            The select to populate
      * @param enumClass
+     *            The Enum class to use
      */
     protected void populateWithEnumData(AbstractSelect select,
             Class<? extends Enum> enumClass) {
