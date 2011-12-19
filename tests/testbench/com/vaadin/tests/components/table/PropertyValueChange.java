@@ -50,7 +50,7 @@ public class PropertyValueChange extends TestBase {
             @SuppressWarnings("unchecked")
             final Property<Integer> integer = (Property<Integer>) source
                     .getContainerProperty(itemId, "integer");
-            l.setValue(getMultipliedValue(integer));
+            l.setValue(String.valueOf(getMultipliedValue(integer)));
 
             // we must hook value change listener to ensure updates in all use
             // cases (eg. edit mode)
@@ -58,7 +58,7 @@ public class PropertyValueChange extends TestBase {
                 Property.ValueChangeNotifier notifier = (Property.ValueChangeNotifier) integer;
                 notifier.addListener(new ValueChangeListener() {
                     public void valueChange(ValueChangeEvent event) {
-                        l.setValue(getMultipliedValue(integer));
+                        l.setValue(String.valueOf(getMultipliedValue(integer)));
                     }
                 });
             }
