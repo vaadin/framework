@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -539,7 +538,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * Keeps track of the roots that should be remembered when the browser is
      * refreshed.
      */
-    private Map<String, Integer> retainOnRefreshRoots = new WeakHashMap<String, Integer>();
+    private Map<String, Integer> retainOnRefreshRoots = new HashMap<String, Integer>();
 
     /**
      * Keeps track of which roots have been inited.
