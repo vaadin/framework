@@ -219,28 +219,19 @@ public abstract class AjaxPageHandler implements RequestHandler {
             throws IOException {
         Writer page = context.getWriter();
         String style = getMainDivStyle(context);
-        String themeName = context.getThemeName();
 
         /*- Add classnames;
          *      .v-app
          *      .v-app-loading
          *      .v-app-<simpleName for app class>
-         *      .v-theme-<themeName, remove non-alphanum>
+         *- Additionally added from javascript:
+         *      .v-theme-<themeName, remove non-alphanum> 
          */
 
         String appClass = "v-app-"
                 + getApplicationCSSClassName(context.getApplication());
 
-        String themeClass = "";
-        if (themeName != null) {
-            themeClass = "v-theme-" + themeName.replaceAll("[^a-zA-Z0-9]", "");
-        } else {
-            themeClass = "v-theme-"
-                    + AbstractApplicationServlet.getDefaultTheme().replaceAll(
-                            "[^a-zA-Z0-9]", "");
-        }
-
-        String classNames = "v-app " + themeClass + " " + appClass;
+        String classNames = "v-app " + appClass;
 
         if (style != null && style.length() != 0) {
             style = " style=\"" + style + "\"";

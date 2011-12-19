@@ -793,6 +793,12 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         // No longer added by AbstractApplicationServlet/Portlet
         root.removeStyleName("v-app-loading");
 
+        String themeUri = applicationConnection.getConfiguration()
+                .getThemeUri();
+        String themeName = themeUri.substring(themeUri.lastIndexOf('/'));
+        themeName = themeName.replaceAll("[^a-zA-Z0-9]", "");
+        root.addStyleName("v-theme-" + themeName);
+
         root.add(this);
 
         if (applicationConnection.getConfiguration().isStandalone()) {
