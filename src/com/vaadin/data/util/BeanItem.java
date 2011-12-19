@@ -238,12 +238,23 @@ public class BeanItem<BT> extends PropertysetItem {
 
         for (String subproperty : subPropertySet) {
             String qualifiedPropertyId = propertyId + "." + subproperty;
-            addItemProperty(qualifiedPropertyId,
-                    new NestedMethodProperty<Object>(getBean(),
-                            qualifiedPropertyId));
+            addNestedProperty(qualifiedPropertyId);
         }
 
         removeItemProperty(propertyId);
+    }
+
+    /**
+     * Adds a nested property to the item.
+     * 
+     * @param nestedPropertyId
+     *            property id to add. This property must not exist in the item
+     *            already and must of of form "field1.field2" where field2 is a
+     *            field in the object referenced to by field1
+     */
+    public void addNestedProperty(String nestedPropertyId) {
+        addItemProperty(nestedPropertyId, new NestedMethodProperty<Object>(
+                getBean(), nestedPropertyId));
     }
 
     /**
