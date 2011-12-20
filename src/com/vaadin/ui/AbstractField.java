@@ -1333,8 +1333,17 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     /**
+     * Returns the internal field value, which might not match the data source
+     * value e.g. if the field has been modified and is not in write-through
+     * mode.
      * 
-     * @return
+     * This method can be overridden by subclasses together with
+     * {@link #setInternalValue(Object)} to compute internal field value at
+     * runtime. When doing so, typically also {@link #isModified()} needs to be
+     * overridden and care should be taken in the management of the empty state
+     * and buffering support.
+     * 
+     * @return internal field value
      */
     protected T getInternalValue() {
         return value;
@@ -1345,6 +1354,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * change the internal Field value. It does not trigger valuechange events.
      * It can be overridden by the inheriting classes to update all dependent
      * variables.
+     * 
+     * Subclasses can also override {@link #getInternalValue()} if necessary.
      * 
      * @param newValue
      *            the new value to be set.
