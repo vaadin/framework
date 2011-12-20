@@ -25,4 +25,8 @@ public interface Console {
             Set<Paintable> zeroHeightComponents,
             Set<Paintable> zeroWidthComponents);
 
+    public abstract void setQuietMode(boolean quietDebugMode);
+
+    public abstract void init();
+
 }

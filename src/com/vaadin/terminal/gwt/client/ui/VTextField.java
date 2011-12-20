@@ -138,18 +138,28 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         return lastTextChangeString;
     }
 
-    private boolean communicateTextValueToServer() {
+    private void communicateTextValueToServer() {
         String text = getText();
         if (prompting) {
             // Input prompt visible, text is actually ""
             text = "";
         }
         if (!text.equals(getLastCommunicatedString())) {
+            if (text.equals(valueBeforeEdit)) {
+                /*
+                 * Value change for the current text has been enqueued, but we
+                 * can't know that it has been sent to the server. Ensure that
+                 * all pending changes are sent now. Sending a value change
+                 * without a text change will simulate a TextChangeEvent on the
+                 * server.
+                 */
+                client.sendPendingVariableChanges();
+            } else {
+                // Default case - just send an immediate text change message
+                client.updateVariable(id, VAR_CUR_TEXT, text, true);
+            }
             lastTextChangeString = text;
-            client.updateVariable(id, VAR_CUR_TEXT, text, true);
-            return true;
         }
-        return false;
     }
 
     private Timer textChangeEventTrigger = new Timer() {
@@ -158,10 +168,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         public void run() {
             if (isAttached()) {
                 updateCursorPosition();
-                boolean textChanged = communicateTextValueToServer();
-                if (textChanged) {
-                    client.sendPendingVariableChanges();
-                }
+                communicateTextValueToServer();
                 scheduled = false;
             }
         }
@@ -554,20 +561,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     }
 
     public void onBeforeShortcutAction(Event e) {
-        // Remember current value to detect changes
-        String oldValue = valueBeforeEdit;
-
         valueChange(false);
-
-        /*
-         * The valueChange method updates valueBeforeEdit when a "text" variable
-         * is sent. This will cause a text change event to be simulated on the
-         * server. In that case, we should avoid sending the same text as a
-         * normal text change event. (#8035)
-         */
-        if (oldValue != valueBeforeEdit) {
-            lastTextChangeString = valueBeforeEdit;
-        }
     }
 
     // Here for backward compatibility; to be moved to TextArea

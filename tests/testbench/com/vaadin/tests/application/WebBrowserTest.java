@@ -71,6 +71,7 @@ public class WebBrowserTest extends TestBase {
 
                         curDateLabel.setValue(getBrowser().getCurrentDate()
                                 .toString());
+
                     }
                 });
 
@@ -82,7 +83,6 @@ public class WebBrowserTest extends TestBase {
         addComponent(curDateLabel);
         addComponent(diffLabel);
         addComponent(containsLabel);
-
     }
 
     @Override

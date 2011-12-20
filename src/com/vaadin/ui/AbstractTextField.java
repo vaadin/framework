@@ -70,6 +70,8 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      */
     private boolean textChangeEventPending;
 
+    private boolean isFiringTextChangeEvent = false;
+
     private TextChangeEventMode textChangeEventMode = TextChangeEventMode.LAZY;
 
     private final int DEFAULT_TEXTCHANGE_TIMEOUT = 400;
@@ -449,9 +451,14 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     /* ** Text Change Events ** */
 
     private void firePendingTextChangeEvent() {
-        if (textChangeEventPending) {
+        if (textChangeEventPending && !isFiringTextChangeEvent) {
+            isFiringTextChangeEvent = true;
             textChangeEventPending = false;
-            fireEvent(new TextChangeEventImpl(this));
+            try {
+                fireEvent(new TextChangeEventImpl(this));
+            } finally {
+                isFiringTextChangeEvent = false;
+            }
         }
     }
 
@@ -494,11 +501,6 @@ public abstract class AbstractTextField extends AbstractField<String> implements
             firePendingTextChangeEvent();
         }
 
-        /*
-         * Reset lastKnownTextContent field on value change. We know the value
-         * now.
-         */
-        lastKnownTextContent = null;
         super.setInternalValue(newValue);
     }
 

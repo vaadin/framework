@@ -23,6 +23,8 @@ public class WebBrowser implements Terminal {
 
     private int screenHeight = 0;
     private int screenWidth = 0;
+    private int clientHeight = 0;
+    private int clientWidth = 0;
     private String browserApplication = null;
     private Locale locale;
     private String address;
@@ -61,6 +63,24 @@ public class WebBrowser implements Terminal {
      */
     public int getScreenWidth() {
         return screenWidth;
+    }
+
+    /**
+     * Gets the height of the client (browser window)
+     * 
+     * @return The height of the client or 0 if unknown.
+     */
+    public int getClientHeight() {
+        return clientHeight;
+    }
+
+    /**
+     * Gets the width of the client (browser window)
+     * 
+     * @return The width of the client or 0 if unknown.
+     */
+    public int getClientWidth() {
+        return clientWidth;
     }
 
     /**
@@ -313,6 +333,10 @@ public class WebBrowser implements Terminal {
      *            Screen width
      * @param sh
      *            Screen height
+     * @param cw
+     *            Client width
+     * @param ch
+     *            Client height
      * @param tzo
      *            TimeZone offset in minutes from GMT
      * @param rtzo
@@ -325,15 +349,23 @@ public class WebBrowser implements Terminal {
      *            the current date in milliseconds since the epoch
      * @param touchDevice
      */
-    private void updateClientSideDetails(String sw, String sh, String tzo,
-            String rtzo, String dstSavings, String dstInEffect, String curDate,
-            boolean touchDevice) {
+    void updateClientSideDetails(String sw, String sh, String cw, String ch,
+            String tzo, String rtzo, String dstSavings, String dstInEffect,
+            String curDate, boolean touchDevice) {
         if (sw != null) {
             try {
                 screenHeight = Integer.parseInt(sh);
                 screenWidth = Integer.parseInt(sw);
             } catch (final NumberFormatException e) {
                 screenHeight = screenWidth = 0;
+            }
+        }
+        if (cw != null) {
+            try {
+                clientHeight = Integer.parseInt(ch);
+                clientWidth = Integer.parseInt(cw);
+            } catch (final NumberFormatException e) {
+                clientHeight = clientWidth = 0;
             }
         }
         if (tzo != null) {
@@ -396,7 +428,8 @@ public class WebBrowser implements Terminal {
 
         if (request.getParameter("sw") != null) {
             updateClientSideDetails(request.getParameter("sw"),
-                    request.getParameter("sh"), request.getParameter("tzo"),
+                    request.getParameter("sh"), request.getParameter("cw"),
+                    request.getParameter("ch"), request.getParameter("tzo"),
                     request.getParameter("rtzo"), request.getParameter("dstd"),
                     request.getParameter("dston"),
                     request.getParameter("curdate"),

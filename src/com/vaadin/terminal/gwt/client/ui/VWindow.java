@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.Console;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
@@ -40,7 +41,6 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VDebugConsole;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
@@ -1134,7 +1134,7 @@ public class VWindow extends VOverlay implements Container,
                 // debug window
                 Widget w = Util.findWidget(target, null);
                 while (w != null) {
-                    if (w instanceof VDebugConsole) {
+                    if (w instanceof Console) {
                         return true; // allow debug-window clicks
                     } else if (w instanceof Paintable) {
                         return false;
