@@ -393,7 +393,7 @@
 	</target>
 	
 	<target name="echo-prefix">
-		<propertyregex property="message-prefixed" input="${prefix}${message}" regexp="\n" replace="\0${prefix}" global="true" defaultValue="${prefix}${message}" />
+		<antcontrib:propertyregex property="message-prefixed" input="${prefix}${message}" regexp="\n" replace="\0${prefix}" global="true" defaultValue="${prefix}${message}" />
 		<echo message="${message-prefixed}" />
 	</target>
 	
