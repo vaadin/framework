@@ -3,6 +3,7 @@ package com.vaadin.tests.components.textfield;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -15,8 +16,9 @@ import com.vaadin.ui.TextField;
 
 public class SelectionAndCursorPosition extends TestBase {
 
-    TextField tf = createTextField();
-    TextArea ta = createTextArea();
+    TextField textField = createTextField();
+    TextArea textArea = createTextArea();
+    AbstractTextField activeComponent = textField;
 
     @Override
     protected void setup() {
@@ -27,10 +29,12 @@ public class SelectionAndCursorPosition extends TestBase {
         ml.setImmediate(true);
         ml.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                if (tf.getApplication() == null) {
-                    replaceComponent(ta, tf);
+                if (textField.getApplication() == null) {
+                    replaceComponent(textArea, textField);
+                    activeComponent = textField;
                 } else {
-                    replaceComponent(tf, ta);
+                    replaceComponent(textField, textArea);
+                    activeComponent = textArea;
                 }
             }
         });
@@ -39,7 +43,7 @@ public class SelectionAndCursorPosition extends TestBase {
         Button b = new Button("Select all ( selectAll() )");
         b.addListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
-                tf.selectAll();
+                activeComponent.selectAll();
             }
         });
         fl.addComponent(b);
@@ -54,7 +58,8 @@ public class SelectionAndCursorPosition extends TestBase {
             public void buttonClick(ClickEvent event) {
                 int startPos = Integer.parseInt(start.getValue());
                 int lenght = Integer.parseInt(length.getValue());
-                tf.setSelectionRange(startPos, lenght);
+
+                activeComponent.setSelectionRange(startPos, lenght);
             }
         });
 
@@ -69,7 +74,7 @@ public class SelectionAndCursorPosition extends TestBase {
         b.addListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
                 int startPos = Integer.parseInt(pos.getValue());
-                tf.setCursorPosition(startPos);
+                activeComponent.setCursorPosition(startPos);
             }
         });
 
@@ -79,7 +84,7 @@ public class SelectionAndCursorPosition extends TestBase {
                 .setCaption("Set cursor position ( setCursorPosition(int pos) )");
         fl.addComponent(setCursorPosition);
 
-        getLayout().addComponent(tf);
+        getLayout().addComponent(textField);
         getLayout().addComponent(panel);
 
     }
