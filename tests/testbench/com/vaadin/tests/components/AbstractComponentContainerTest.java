@@ -1,5 +1,6 @@
 package com.vaadin.tests.components;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
@@ -284,6 +285,11 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         addCommands.put("PopupDateField", addPopupDateFieldCommand);
         addCommands.put("VerticalSplitPanel", addVerticalSplitPanelCommand);
         addCommands.put("HorizontalSplitPanel", addHorizontalSplitPanelCommand);
+
+        HashSet<String> noVerticalSize = new HashSet<String>();
+        noVerticalSize.add("TextField");
+        noVerticalSize.add("Button");
+
         // addCommands.put("AbsoluteLayout", addAbsoluteLayoutCommand);
         // addCommands.put("HorizontalLayout", addHorizontalLayoutCommand);
         // addCommands.put("VerticalLayout", addVerticalLayoutCommand);
@@ -303,6 +309,10 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
             createCategory(componentCategory, subCategory);
 
             for (ComponentSize size : sizes) {
+                if (size.getHeight() != null
+                        && noVerticalSize.contains(componentCategory)) {
+                    continue;
+                }
                 createClickAction(size.toString(), componentCategory,
                         addCommands.get(componentCategory), size);
             }
