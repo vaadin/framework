@@ -76,13 +76,6 @@ public class WebBrowserTest extends TestBase {
                 });
 
         addComponent(update);
-        addComponent(new Button("Hide non-static info",
-                new Button.ClickListener() {
-
-                    public void buttonClick(ClickEvent event) {
-
-                    }
-                }));
         addComponent(offsetLabel);
         addComponent(rawOffsetLabel);
         addComponent(dstDiffLabel);
