@@ -3,7 +3,6 @@ package com.vaadin.tests.components.tabsheet;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 
 public class VerticalScrollbarPosition extends TestBase {
 
@@ -28,9 +27,9 @@ public class VerticalScrollbarPosition extends TestBase {
         tf.setWidth("200px");
         tabsheet.addTab(
                 tf,
-                "A text field that is 200px wide, the tab bar for the tabsheet is wider",
+                "A text area that is 200px wide, the tab bar for the tabsheet is wider",
                 null);
-        TextField tf2 = new TextField("Another tab", "b");
+        TextArea tf2 = new TextArea("Another tab", "b");
         tf2.setWidth("1000px");
         tf2.setHeight("50px");
         tabsheet.addTab(tf2);
