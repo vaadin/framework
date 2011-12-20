@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.vaadin.Application;
 import com.vaadin.RootRequiresMoreInformation;
-import com.vaadin.annotations.RootInitRequiresBrowserDetals;
+import com.vaadin.annotations.RootInitRequiresBrowserDetails;
 import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.ui.Root;
 
@@ -210,7 +210,7 @@ public interface WrappedRequest extends Serializable {
      * cases, for instance when {@link Application#getRoot} is called again
      * after throwing {@link RootRequiresMoreInformation} or in
      * {@link Root#init(WrappedRequest)} if the Root class is annotated with
-     * {@link RootInitRequiresBrowserDetals}
+     * {@link RootInitRequiresBrowserDetails}
      * 
      * @return the browser details, or <code>null</code> if details are not
      *         available

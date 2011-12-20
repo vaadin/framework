@@ -27,6 +27,6 @@ import com.vaadin.ui.Root;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RootInitRequiresBrowserDetals {
+public @interface RootInitRequiresBrowserDetails {
     // No methods
 }

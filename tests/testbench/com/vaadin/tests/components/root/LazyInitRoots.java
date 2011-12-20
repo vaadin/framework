@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.root;
 
 import com.vaadin.RootRequiresMoreInformation;
-import com.vaadin.annotations.RootInitRequiresBrowserDetals;
+import com.vaadin.annotations.RootInitRequiresBrowserDetails;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
@@ -12,7 +12,7 @@ import com.vaadin.ui.Root;
 
 public class LazyInitRoots extends AbstractTestApplication {
 
-    @RootInitRequiresBrowserDetals
+    @RootInitRequiresBrowserDetails
     private static class LazyInitRoot extends Root {
         @Override
         public void init(WrappedRequest request) {

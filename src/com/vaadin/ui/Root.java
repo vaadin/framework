@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.vaadin.Application;
-import com.vaadin.annotations.RootInitRequiresBrowserDetals;
+import com.vaadin.annotations.RootInitRequiresBrowserDetails;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
@@ -60,7 +60,7 @@ import com.vaadin.ui.Window.CloseListener;
  * {@link #setContent(ComponentContainer)}.
  * </p>
  * <p>
- * If a {@link RootInitRequiresBrowserDetals} annotation is present on a class
+ * If a {@link RootInitRequiresBrowserDetails} annotation is present on a class
  * extending <code>Root</code>, the framework will ensure {@link BrowserDetails}
  * are present in the {@link WrappedRequest} passed to the init method.
  * </p>
@@ -1094,7 +1094,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * request that caused this root to be created. By default, the
      * {@link BrowserDetails} are note guaranteed to be available in the
      * request. Availability of the browser details can be requested by adding
-     * the {@link RootInitRequiresBrowserDetals} annotation to the class.
+     * the {@link RootInitRequiresBrowserDetails} annotation to the class.
      * </p>
      * 
      * @param request

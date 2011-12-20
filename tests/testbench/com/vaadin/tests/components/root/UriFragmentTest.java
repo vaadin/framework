@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.root;
 
-import com.vaadin.annotations.RootInitRequiresBrowserDetals;
+import com.vaadin.annotations.RootInitRequiresBrowserDetails;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
-@RootInitRequiresBrowserDetals
+@RootInitRequiresBrowserDetails
 public class UriFragmentTest extends AbstractTestRoot {
 
     private final Label fragmentLabel = new Label();
