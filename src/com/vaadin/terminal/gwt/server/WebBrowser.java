@@ -184,6 +184,34 @@ public class WebBrowser implements Terminal {
     }
 
     /**
+     * Tests whether the user is using Chrome Frame.
+     * 
+     * @return true if the user is using Chrome Frame, false if the user is not
+     *         using Chrome or if no information on the browser is present
+     */
+    public boolean isChromeFrame() {
+        if (browserDetails == null) {
+            return false;
+        }
+
+        return browserDetails.isChromeFrame();
+    }
+
+    /**
+     * Tests whether the user's browser is Chrome Frame capable.
+     * 
+     * @return true if the user can use Chrome Frame, false if the user can not
+     *         or if no information on the browser is present
+     */
+    public boolean isChromeFrameCapable() {
+        if (browserDetails == null) {
+            return false;
+        }
+
+        return browserDetails.isChromeFrameCapable();
+    }
+
+    /**
      * Gets the major version of the browser the user is using.
      * 
      * <p>

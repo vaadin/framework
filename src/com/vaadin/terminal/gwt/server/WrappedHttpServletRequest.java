@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.vaadin.Application;
 import com.vaadin.terminal.CombinedRequest;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.WrappedRequest;
@@ -102,8 +103,21 @@ public class WrappedHttpServletRequest implements WrappedRequest {
     }
 
     public BrowserDetails getBrowserDetails() {
-        // No browserDetails available for normal requests
-        return null;
+        return new BrowserDetails() {
+            public String getUriFragment() {
+                return null;
+            }
+
+            public String getWindowName() {
+                return null;
+            }
+
+            public WebBrowser getWebBrowser() {
+                WebApplicationContext context = (WebApplicationContext) Application
+                        .getCurrentApplication().getContext();
+                return context.getBrowser();
+            }
+        };
     }
 
     public Locale getLocale() {

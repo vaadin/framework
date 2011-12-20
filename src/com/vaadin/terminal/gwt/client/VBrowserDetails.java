@@ -22,6 +22,9 @@ public class VBrowserDetails implements Serializable {
     private boolean isWebKit = false;
     private boolean isPresto = false;
 
+    private boolean isChromeFrameCapable = false;
+    private boolean isChromeFrame = false;
+
     private boolean isSafari = false;
     private boolean isChrome = false;
     private boolean isFirefox = false;
@@ -58,6 +61,10 @@ public class VBrowserDetails implements Serializable {
         isIE = userAgent.indexOf("msie") != -1 && !isOpera
                 && (userAgent.indexOf("webtv") == -1);
         isFirefox = userAgent.indexOf(" firefox/") != -1;
+
+        // chromeframe
+        isChromeFrameCapable = userAgent.indexOf("chromeframe") != -1;
+        isChromeFrame = isChromeFrameCapable && !isIE;
 
         // Rendering engine version
         try {
@@ -210,6 +217,24 @@ public class VBrowserDetails implements Serializable {
     }
 
     /**
+     * Tests if the browser is capable of running ChromeFrame.
+     * 
+     * @return true if it has ChromeFrame, false otherwise
+     */
+    public boolean isChromeFrameCapable() {
+        return isChromeFrameCapable;
+    }
+
+    /**
+     * Tests if the browser is running ChromeFrame.
+     * 
+     * @return true if it is ChromeFrame, false otherwise
+     */
+    public boolean isChromeFrame() {
+        return isChromeFrame;
+    }
+
+    /**
      * Tests if the browser is Opera.
      * 
      * @return true if it is Opera, false otherwise
@@ -304,7 +329,9 @@ public class VBrowserDetails implements Serializable {
 
     /**
      * Checks if the browser is so old that it simply won't work with a Vaadin
-     * application.
+     * application. NOTE that the browser might still be capable of running
+     * Crome Frame, so you might still want to check
+     * {@link #isChromeFrameCapable()} if this returns true.
      * 
      * @return true if the browser won't work, false if not the browser is
      *         supported or might work
