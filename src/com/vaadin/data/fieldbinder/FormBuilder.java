@@ -4,6 +4,7 @@
 package com.vaadin.data.fieldbinder;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Logger;
 
 import org.apache.tools.ant.BuildException;
@@ -232,7 +233,21 @@ public class FormBuilder implements Serializable {
                 builtField = build(caption, propertyType, fieldType);
 
                 // Store it in the field
-                ReflectTools.setJavaFieldValue(object, f, builtField);
+                try {
+                    ReflectTools.setJavaFieldValue(object, f, builtField);
+                } catch (IllegalArgumentException e) {
+                    throw new BuildException(
+                            "Could not assign value to field '" + f.getName()
+                                    + "'", e);
+                } catch (IllegalAccessException e) {
+                    throw new BuildException(
+                            "Could not assign value to field '" + f.getName()
+                                    + "'", e);
+                } catch (InvocationTargetException e) {
+                    throw new BuildException(
+                            "Could not assign value to field '" + f.getName()
+                                    + "'", e);
+                }
             }
 
             // Bind it to the property id
