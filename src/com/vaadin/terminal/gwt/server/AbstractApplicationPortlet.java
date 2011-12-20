@@ -298,6 +298,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     @Override
     public void init(PortletConfig config) throws PortletException {
         super.init(config);
+        applicationProperties = new Properties();
 
         // Read default parameters from the context
         final PortletContext context = config.getPortletContext();
@@ -309,7 +310,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
 
         // Override with application settings from portlet.xml
-        applicationProperties = new Properties();
         for (final Enumeration<String> e = config.getInitParameterNames(); e
                 .hasMoreElements();) {
             final String name = e.nextElement();
