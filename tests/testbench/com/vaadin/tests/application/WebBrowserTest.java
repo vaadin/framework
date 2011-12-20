@@ -35,12 +35,6 @@ public class WebBrowserTest extends TestBase {
         final Label containsLabel = new Label("n/a");
         containsLabel.setCaption("Browser could be in Helsinki");
 
-        final Label screenSizeLabel = new Label("n/a");
-        screenSizeLabel.setCaption("Screen size");
-
-        final Label browserSizeLabel = new Label("n/a");
-        browserSizeLabel.setCaption("Client (browser window) size");
-
         final Button update = new Button("Get TimeZone from browser",
                 new Button.ClickListener() {
 
@@ -78,14 +72,17 @@ public class WebBrowserTest extends TestBase {
                         curDateLabel.setValue(getBrowser().getCurrentDate()
                                 .toString());
 
-                        screenSizeLabel.setValue(getBrowser().getScreenWidth()
-                                + " x " + getBrowser().getScreenHeight());
-                        browserSizeLabel.setValue(getBrowser().getClientWidth()
-                                + " x " + getBrowser().getClientHeight());
                     }
                 });
 
         addComponent(update);
+        addComponent(new Button("Hide non-static info",
+                new Button.ClickListener() {
+
+                    public void buttonClick(ClickEvent event) {
+
+                    }
+                }));
         addComponent(offsetLabel);
         addComponent(rawOffsetLabel);
         addComponent(dstDiffLabel);
@@ -93,9 +90,6 @@ public class WebBrowserTest extends TestBase {
         addComponent(curDateLabel);
         addComponent(diffLabel);
         addComponent(containsLabel);
-        addComponent(screenSizeLabel);
-        addComponent(browserSizeLabel);
-
     }
 
     @Override
