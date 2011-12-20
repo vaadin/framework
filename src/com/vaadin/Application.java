@@ -2414,4 +2414,22 @@ public class Application implements Terminal.ErrorListener, Serializable {
     public boolean isRootInitPending(int rootId) {
         return !initedRoots.contains(Integer.valueOf(rootId));
     }
+
+    /**
+     * Gets all the roots of this application. This includes roots that have
+     * been requested but not yet initialized. Please note, that roots are not
+     * automatically removed e.g. if the browser window is closed and that there
+     * is no way to manually remove a root. Inactive roots will thus not be
+     * released for GC until the entire application is released when the session
+     * has timed out (unless there are dangling references). Improved support
+     * for releasing unused roots is planned for an upcoming alpha release of
+     * Vaadin 7.
+     * 
+     * @return a collection of roots belonging to this application
+     * 
+     * @since 7.0
+     */
+    public Collection<Root> getRoots() {
+        return Collections.unmodifiableCollection(roots.values());
+    }
 }
