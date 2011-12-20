@@ -6,7 +6,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 
@@ -14,7 +14,7 @@ public class Ticket2319 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root mainw = new Root();
+        LegacyWindow mainw = new LegacyWindow();
         setMainWindow(mainw);
 
         mainw.addComponent(new Label(

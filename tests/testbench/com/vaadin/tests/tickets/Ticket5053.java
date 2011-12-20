@@ -2,7 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 /**
  * #5053: Last ComboBox item may not be shown if null selection enabled
@@ -11,7 +11,7 @@ public class Ticket5053 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root main = new Root();
+        LegacyWindow main = new LegacyWindow();
         setMainWindow(main);
 
         ComboBox combobox = new ComboBox("My ComboBox");

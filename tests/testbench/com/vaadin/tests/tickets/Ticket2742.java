@@ -6,7 +6,7 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 /**
  * @author Risto Yrjänä / Vaadin Ltd.
@@ -21,7 +21,7 @@ public class Ticket2742 extends Application.LegacyApplication {
      */
     @Override
     public void init() {
-        Root mainWindow = new Root();
+        LegacyWindow mainWindow = new LegacyWindow();
         setMainWindow(mainWindow);
 
         String shortString = "Short";

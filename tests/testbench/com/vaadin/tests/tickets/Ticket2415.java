@@ -3,14 +3,14 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 public class Ticket2415 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        final Root main = new Root("");
+        final LegacyWindow main = new LegacyWindow("");
         setMainWindow(main);
 
         final TextField tf = new TextField("Try to change me");

@@ -6,7 +6,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2209OL2 extends Application.LegacyApplication {
@@ -17,7 +17,7 @@ public class Ticket2209OL2 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        setMainWindow(new Root());
+        setMainWindow(new LegacyWindow());
         getMainWindow().getContent().setWidth("250px");
         gl = new VerticalLayout();
         gl.setSizeUndefined();

@@ -5,7 +5,7 @@ import com.vaadin.data.util.MethodProperty;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.Table.ColumnGenerator;
@@ -18,7 +18,7 @@ public class Ticket2125 extends Application.LegacyApplication {
 
     }
 
-    class MainWindow extends Root {
+    class MainWindow extends LegacyWindow {
         MainWindow(String caption) {
             super(caption);
 

@@ -6,7 +6,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket1834PanelScrolling extends
         com.vaadin.Application.LegacyApplication {
@@ -19,8 +19,8 @@ public class Ticket1834PanelScrolling extends
 
     @Override
     public void init() {
-        final Root main = new Root(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final LegacyWindow main = new LegacyWindow(getClass().getName()
+                .substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         HorizontalLayout currentState = new HorizontalLayout();

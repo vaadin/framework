@@ -11,7 +11,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket1975 extends Application.LegacyApplication {
 
@@ -20,7 +20,7 @@ public class Ticket1975 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root w = new Root(getClass().getName());
+        LegacyWindow w = new LegacyWindow(getClass().getName());
         setMainWindow(w);
         setTheme("tests-tickets");
         GridLayout layout = new GridLayout(1, 10);

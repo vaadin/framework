@@ -13,7 +13,7 @@ import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -119,7 +119,7 @@ public class DateFieldInSubWindow extends AbstractTestCase {
 
     @Override
     public void init() {
-        Root mainWindow = new Root();
+        LegacyWindow mainWindow = new LegacyWindow();
         setMainWindow(mainWindow);
         Button open = new Button("Open window", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {

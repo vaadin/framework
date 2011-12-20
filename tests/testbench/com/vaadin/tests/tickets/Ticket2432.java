@@ -8,14 +8,14 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.Layout.SpacingHandler;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket2432 extends Application.LegacyApplication {
 
     @Override
     public void init() {
 
-        Root w = new Root();
+        LegacyWindow w = new LegacyWindow();
         setMainWindow(w);
         w.getContent().setSizeFull();
         ((SpacingHandler) w.getContent()).setSpacing(true);

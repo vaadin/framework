@@ -1,7 +1,7 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -10,7 +10,7 @@ public class Ticket2325 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root main = new Root("Testing....");
+        LegacyWindow main = new LegacyWindow("Testing....");
         setMainWindow(main);
 
         final VerticalLayout lo = new VerticalLayout();

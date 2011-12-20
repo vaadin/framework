@@ -8,7 +8,7 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
@@ -19,7 +19,7 @@ public class Ticket1811 extends com.vaadin.Application.LegacyApplication {
     @Override
     public void init() {
 
-        final Root main = new Root("#1811");
+        final LegacyWindow main = new LegacyWindow("#1811");
         setMainWindow(main);
 
         Validator strLenValidator = new StringLengthValidator(

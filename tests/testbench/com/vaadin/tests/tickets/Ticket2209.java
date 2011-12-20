@@ -7,7 +7,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket2209 extends Application.LegacyApplication {
 
@@ -17,7 +17,7 @@ public class Ticket2209 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        setMainWindow(new Root());
+        setMainWindow(new LegacyWindow());
 
         gl = new GridLayout(1, 2);
         gl.setStyleName("borders");

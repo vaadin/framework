@@ -6,7 +6,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 public class Ticket124 extends Application.LegacyApplication {
@@ -16,7 +16,8 @@ public class Ticket124 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root w = new Root("#124: Insert & remove row for GridLayout");
+        LegacyWindow w = new LegacyWindow(
+                "#124: Insert & remove row for GridLayout");
         setMainWindow(w);
         setTheme("tests-tickets");
         // gl = new GridLayout(4, 4);

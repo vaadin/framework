@@ -7,7 +7,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ProgressIndicator;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket1581 extends com.vaadin.Application.LegacyApplication {
 
@@ -17,8 +17,8 @@ public class Ticket1581 extends com.vaadin.Application.LegacyApplication {
 
     @Override
     public void init() {
-        final Root main = new Root(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final LegacyWindow main = new LegacyWindow(getClass().getName()
+                .substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         main.addComponent(new Label("Test the second issue in ticket #1581"));

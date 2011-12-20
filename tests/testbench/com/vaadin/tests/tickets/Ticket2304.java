@@ -3,15 +3,15 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.themes.Reindeer;
 
 public class Ticket2304 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        final Root main = new Root(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final LegacyWindow main = new LegacyWindow(getClass().getName()
+                .substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         Panel p = new Panel();

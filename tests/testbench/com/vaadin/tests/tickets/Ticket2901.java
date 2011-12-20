@@ -2,7 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 
@@ -16,7 +16,8 @@ public class Ticket2901 extends Application.LegacyApplication {
     @Override
     public void init() {
 
-        final Root mainWin = new Root("Test app to break layout in IE6");
+        final LegacyWindow mainWin = new LegacyWindow(
+                "Test app to break layout in IE6");
         setMainWindow(mainWin);
 
         VerticalSplitPanel sp = new VerticalSplitPanel();

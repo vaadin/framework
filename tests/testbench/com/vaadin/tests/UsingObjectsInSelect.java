@@ -11,7 +11,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Select;
 
 public class UsingObjectsInSelect extends
@@ -27,7 +27,7 @@ public class UsingObjectsInSelect extends
 
     @Override
     public void init() {
-        final Root main = new Root("Select demo");
+        final LegacyWindow main = new LegacyWindow("Select demo");
         setMainWindow(main);
 
         final Panel panel = new Panel("Select demo");

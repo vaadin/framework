@@ -13,7 +13,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -23,7 +23,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
 
     @Override
     public void init() {
-        Root w = new Root("main window");
+        LegacyWindow w = new LegacyWindow("main window");
         setMainWindow(w);
         setTheme("tests-tickets");
 

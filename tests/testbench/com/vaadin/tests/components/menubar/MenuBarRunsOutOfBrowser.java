@@ -4,7 +4,7 @@ import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.MenuBar;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class MenuBarRunsOutOfBrowser extends AbstractTestCase {
@@ -12,7 +12,7 @@ public class MenuBarRunsOutOfBrowser extends AbstractTestCase {
     @Override
     public void init() {
         setTheme("runo");
-        Root main = new Root("Test");
+        LegacyWindow main = new LegacyWindow("Test");
         main.setSizeFull();
         setMainWindow(main);
         main.getContent().setSizeFull();

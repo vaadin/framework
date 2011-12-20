@@ -3,13 +3,13 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket2411 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root w = new Root(getClass().getSimpleName());
+        LegacyWindow w = new LegacyWindow(getClass().getSimpleName());
         setMainWindow(w);
 
         // VerticalLayout l = new VerticalLayout();

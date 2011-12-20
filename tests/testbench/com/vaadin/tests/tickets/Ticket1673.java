@@ -3,14 +3,14 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket1673 extends com.vaadin.Application.LegacyApplication {
 
     @Override
     public void init() {
 
-        final Root main = new Root("#1673");
+        final LegacyWindow main = new LegacyWindow("#1673");
         setMainWindow(main);
 
         main.addComponent(new Button("close", new Button.ClickListener() {

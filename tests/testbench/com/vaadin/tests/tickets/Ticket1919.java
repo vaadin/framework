@@ -5,7 +5,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket1919 extends com.vaadin.Application.LegacyApplication {
 
@@ -14,8 +14,8 @@ public class Ticket1919 extends com.vaadin.Application.LegacyApplication {
 
     @Override
     public void init() {
-        final Root main = new Root(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final LegacyWindow main = new LegacyWindow(getClass().getName()
+                .substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         setTheme("tests-tickets");

@@ -11,7 +11,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
@@ -22,12 +22,12 @@ public class LayoutTesterApplication extends AbstractTestCase {
     private int layoutCount = 1;
 
     private Method[] layoutGetters;
-    private Root mainWindow;
+    private LegacyWindow mainWindow;
     private NativeSelect layoutSelector;
 
     @Override
     public void init() {
-        mainWindow = new Root("LayoutTesterApplication");
+        mainWindow = new LegacyWindow("LayoutTesterApplication");
         setMainWindow(mainWindow);
         loadLayoutGetters();
         nextLaytout();

@@ -25,7 +25,7 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
@@ -42,7 +42,7 @@ public class TestSizeableIncomponents extends Application.LegacyApplication {
 
         initComponentList();
 
-        Root w = new Root();
+        LegacyWindow w = new LegacyWindow();
         setMainWindow(w);
         setTheme("tests-components");
 

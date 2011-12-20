@@ -8,7 +8,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -30,7 +30,7 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
         Table table = new Table();
         table.setPageLength(50);
 
-        setMainWindow(new Root(""));
+        setMainWindow(new LegacyWindow(""));
         getMainWindow().getContent().setSizeUndefined();
 
         Component l2 = null;

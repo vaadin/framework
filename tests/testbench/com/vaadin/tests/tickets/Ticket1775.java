@@ -4,14 +4,14 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket1775 extends com.vaadin.Application.LegacyApplication {
 
     @Override
     public void init() {
 
-        final Root main = new Root("#1775");
+        final LegacyWindow main = new LegacyWindow("#1775");
         setMainWindow(main);
         setTheme("tests-tickets");
         String layoutName = "Ticket1775";

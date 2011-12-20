@@ -4,7 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
@@ -12,7 +12,7 @@ public class Ticket2186 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root main = new Root("Quick test");
+        LegacyWindow main = new LegacyWindow("Quick test");
         setMainWindow(main);
 
         HorizontalLayout base = new HorizontalLayout();

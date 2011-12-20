@@ -6,14 +6,14 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.SpacingHandler;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2232 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        setMainWindow(new Root());
+        setMainWindow(new LegacyWindow());
         setTheme("tests-tickets");
 
         getMainWindow()

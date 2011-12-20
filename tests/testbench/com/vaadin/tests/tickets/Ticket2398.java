@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 
 public class Ticket2398 extends Application.LegacyApplication {
@@ -11,7 +11,7 @@ public class Ticket2398 extends Application.LegacyApplication {
     @Override
     public void init() {
 
-        final Root mainWin = new Root();
+        final LegacyWindow mainWin = new LegacyWindow();
         setMainWindow(mainWin);
 
         Table t = new Table();

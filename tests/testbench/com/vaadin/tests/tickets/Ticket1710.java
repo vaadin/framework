@@ -21,7 +21,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -33,7 +33,7 @@ public class Ticket1710 extends com.vaadin.Application.LegacyApplication {
         setTheme("tests-tickets");
 
         VerticalLayout lo = new VerticalLayout();
-        setMainWindow(new Root("#1710", lo));
+        setMainWindow(new LegacyWindow("#1710", lo));
         lo.setMargin(true);
         lo.setSpacing(true);
         lo.setWidth("100%");

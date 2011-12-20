@@ -3,13 +3,13 @@ package com.vaadin.tests.tickets;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 
 public class Ticket2341 extends com.vaadin.Application.LegacyApplication {
     @Override
     public void init() {
-        Root main = new Root();
+        LegacyWindow main = new LegacyWindow();
         setMainWindow(main);
         constructTables((Layout) main.getContent());
     }

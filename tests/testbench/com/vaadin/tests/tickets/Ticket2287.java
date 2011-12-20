@@ -3,14 +3,14 @@ package com.vaadin.tests.tickets;
 import java.net.URL;
 
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket2287 extends Ticket2292 {
 
     @Override
     public void init() {
-        final Root main = new Root(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final LegacyWindow main = new LegacyWindow(getClass().getName()
+                .substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
         URL url = getURL();
         main.addComponent(new Label(

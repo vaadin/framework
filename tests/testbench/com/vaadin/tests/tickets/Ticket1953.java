@@ -4,7 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket1953 extends Application.LegacyApplication {
     public static final String cellStyle = "test-cell";
@@ -16,8 +16,8 @@ public class Ticket1953 extends Application.LegacyApplication {
     @Override
     public void init() {
 
-        final Root main = new Root(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final LegacyWindow main = new LegacyWindow(getClass().getName()
+                .substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         setTheme("tests-tickets");

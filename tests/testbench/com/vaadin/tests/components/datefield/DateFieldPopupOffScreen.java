@@ -7,7 +7,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.DateField.Resolution;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class DateFieldPopupOffScreen extends AbstractTestCase {
 
@@ -23,7 +23,7 @@ public class DateFieldPopupOffScreen extends AbstractTestCase {
 
     @Override
     public void init() {
-        Root mainWindow = new Root(getClass().getName());
+        LegacyWindow mainWindow = new LegacyWindow(getClass().getName());
 
         GridLayout mainLayout = new GridLayout(3, 3);
         mainLayout.setSizeFull();

@@ -7,7 +7,7 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 public class Ticket2053 extends Application.LegacyApplication {
@@ -17,7 +17,7 @@ public class Ticket2053 extends Application.LegacyApplication {
     @Override
     public void init() {
 
-        final Root main = new Root("#2053");
+        final LegacyWindow main = new LegacyWindow("#2053");
         setMainWindow(main);
         Button nothing = new Button("Do nothing");
         main.addComponent(nothing);
@@ -27,10 +27,10 @@ public class Ticket2053 extends Application.LegacyApplication {
         Button add = new Button("Add a window", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 final String name = "Child " + (++childs);
-                Root c = new Root(name);
+                LegacyWindow c = new LegacyWindow(name);
 
                 addWindow(c);
-                main.open(new ExternalResource(getWindowUrl(c)), "_new");
+                main.open(new ExternalResource(c.getURL()), "_new");
                 main.addComponent(new Label(name + " opened"));
                 final TextField tf = new TextField("Non immediate textfield");
                 c.addComponent(tf);

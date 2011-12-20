@@ -4,7 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.Table.ColumnGenerator;
@@ -15,7 +15,7 @@ public class Ticket2208 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root mainWindow = new Root();
+        LegacyWindow mainWindow = new LegacyWindow();
         setMainWindow(mainWindow);
 
         t = new Table("A table");

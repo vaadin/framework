@@ -4,7 +4,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.AbstractTestCase;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
@@ -16,7 +16,7 @@ public class TableExtraScrollbars extends AbstractTestCase {
     @Override
     public void init() {
         setTheme("runo");
-        Root w = new Root("Table scrollbars bug example");
+        LegacyWindow w = new LegacyWindow("Table scrollbars bug example");
         setMainWindow(w);
 
         VerticalLayout vl = new VerticalLayout();

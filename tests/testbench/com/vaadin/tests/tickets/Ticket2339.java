@@ -6,14 +6,15 @@ import java.io.IOException;
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomLayout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket2339 extends Application.LegacyApplication {
 
     @Override
     public void init() {
 
-        final Root mainWin = new Root(getClass().getSimpleName());
+        final LegacyWindow mainWin = new LegacyWindow(getClass()
+                .getSimpleName());
         setMainWindow(mainWin);
 
         try {

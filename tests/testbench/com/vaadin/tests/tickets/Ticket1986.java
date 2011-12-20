@@ -8,7 +8,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
 
@@ -16,7 +16,7 @@ public class Ticket1986 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root w = new Root(getClass().getName());
+        LegacyWindow w = new LegacyWindow(getClass().getName());
         setMainWindow(w);
 
         int index = 1;

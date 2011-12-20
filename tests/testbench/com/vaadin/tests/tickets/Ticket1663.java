@@ -1,7 +1,7 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.terminal.SystemError;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 public class Ticket1663 extends com.vaadin.Application.LegacyApplication {
@@ -9,7 +9,7 @@ public class Ticket1663 extends com.vaadin.Application.LegacyApplication {
     @Override
     public void init() {
 
-        Root main = new Root("#1663");
+        LegacyWindow main = new LegacyWindow("#1663");
         setMainWindow(main);
 
         TextField tf = new TextField("First name");

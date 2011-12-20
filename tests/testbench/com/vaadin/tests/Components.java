@@ -24,7 +24,7 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.ItemStyleGenerator;
 import com.vaadin.ui.VerticalLayout;
@@ -35,7 +35,7 @@ public class Components extends Application.LegacyApplication {
     private Map<Class<? extends AbstractComponentTest<?>>, String> tests = new HashMap<Class<? extends AbstractComponentTest<?>>, String>();
     private Tree naviTree;
     private HorizontalSplitPanel sp;
-    private Root mainWindow;
+    private LegacyWindow mainWindow;
     private final Embedded applicationEmbedder = new Embedded();
     private String baseUrl;
     private List<Class<? extends Component>> componentsWithoutTests = new ArrayList<Class<? extends Component>>();
@@ -86,7 +86,7 @@ public class Components extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        mainWindow = new Root();
+        mainWindow = new LegacyWindow();
         setTheme("tests-components");
         mainWindow.getContent().setSizeFull();
         setMainWindow(mainWindow);

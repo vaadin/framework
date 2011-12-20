@@ -7,16 +7,16 @@ import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
 import com.vaadin.ui.Root.BrowserWindowResizeEvent;
 import com.vaadin.ui.Root.BrowserWindowResizeListener;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.ResizeEvent;
 import com.vaadin.ui.Window.ResizeListener;
 
 public class LazyWindowResize extends AbstractTestCase {
 
-    private Root mainWindow;
+    private LegacyWindow mainWindow;
     private Window subWindow;
     private CheckBox lazyMode;
     private Log log = new Log(5);
@@ -49,7 +49,7 @@ public class LazyWindowResize extends AbstractTestCase {
 
     @Override
     public void init() {
-        mainWindow = new Root("Resize test");
+        mainWindow = new LegacyWindow("Resize test");
         setMainWindow(mainWindow);
         subWindow = new Window("Sub window");
         subWindow.setHeight("50%");

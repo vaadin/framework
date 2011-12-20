@@ -23,7 +23,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -39,7 +39,7 @@ public class Ticket1878 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root w = new Root(getClass().getSimpleName());
+        LegacyWindow w = new LegacyWindow(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
 

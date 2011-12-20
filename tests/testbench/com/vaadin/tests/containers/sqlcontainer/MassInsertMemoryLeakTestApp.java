@@ -12,7 +12,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.ProgressIndicator;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 // author table in testdb (MySQL) is set out as follows
@@ -32,7 +32,7 @@ public class MassInsertMemoryLeakTestApp extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        setMainWindow(new Root("SQLContainer Test", buildLayout()));
+        setMainWindow(new LegacyWindow("SQLContainer Test", buildLayout()));
 
         process.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {

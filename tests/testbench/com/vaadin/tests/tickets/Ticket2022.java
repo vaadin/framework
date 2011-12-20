@@ -2,13 +2,13 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.CustomLayout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket2022 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root w = new Root(getClass().getSimpleName());
+        LegacyWindow w = new LegacyWindow(getClass().getSimpleName());
         setMainWindow(w);
         setTheme("tests-tickets");
         CustomLayout l;

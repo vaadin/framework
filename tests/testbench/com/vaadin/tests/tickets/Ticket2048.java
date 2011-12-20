@@ -10,7 +10,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2048 extends Application.LegacyApplication {
@@ -21,7 +21,7 @@ public class Ticket2048 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root w = new Root(getClass().getSimpleName());
+        LegacyWindow w = new LegacyWindow(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
         // splitPanel = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);

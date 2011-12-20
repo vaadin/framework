@@ -4,7 +4,7 @@ import com.vaadin.terminal.Sizeable;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -29,7 +29,7 @@ public class ComplexGLColumnExpansionWithColSpan extends AbstractTestCase {
         mainLayout.setMargin(true);
         mainLayout.setHeight(100, Sizeable.UNITS_PERCENTAGE);
         mainLayout.setWidth(100, Sizeable.UNITS_PERCENTAGE);
-        setMainWindow(new Root("Vaadin Test", mainLayout));
+        setMainWindow(new LegacyWindow("Vaadin Test", mainLayout));
 
         cols = 1;
         final GridLayout gl = new GridLayout(cols, 3);

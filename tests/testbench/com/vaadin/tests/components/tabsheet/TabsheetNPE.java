@@ -5,7 +5,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.VerticalLayout;
@@ -29,7 +29,7 @@ public class TabsheetNPE extends AbstractTestCase implements ClickListener {
 
     @Override
     public void init() {
-        setMainWindow(new Root("TabSheet Demo", createMainLayout()));
+        setMainWindow(new LegacyWindow("TabSheet Demo", createMainLayout()));
     }
 
     private VerticalLayout createMainLayout() {

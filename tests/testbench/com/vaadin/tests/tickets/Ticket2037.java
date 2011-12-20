@@ -4,14 +4,14 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2037 extends com.vaadin.Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root main = new Root();
+        LegacyWindow main = new LegacyWindow();
         setMainWindow(main);
 
         main.addComponent(new Label(

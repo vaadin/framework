@@ -8,18 +8,18 @@ import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2061 extends Application.LegacyApplication {
 
-    private Root mainWindow;
+    private LegacyWindow mainWindow;
 
     @Override
     public void init() {
-        mainWindow = new Root("Ticket 2061");
+        mainWindow = new LegacyWindow("Ticket 2061");
         mainWindow.setSizeFull();
         mainWindow.getContent().setSizeFull();
         setMainWindow(mainWindow);

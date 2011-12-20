@@ -4,13 +4,13 @@ import com.vaadin.Application;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket2283 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root w = new Root(getClass().getSimpleName());
+        LegacyWindow w = new LegacyWindow(getClass().getSimpleName());
         setMainWindow(w);
 
         GridLayout gl = new GridLayout(2, 2);

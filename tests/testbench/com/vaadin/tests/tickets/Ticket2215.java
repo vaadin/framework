@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
@@ -11,7 +11,7 @@ public class Ticket2215 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        setMainWindow(new Root());
+        setMainWindow(new LegacyWindow());
 
         VerticalLayout ol = new VerticalLayout();
         Panel p = new Panel("Test");

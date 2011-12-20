@@ -10,7 +10,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
@@ -19,7 +19,7 @@ import com.vaadin.ui.Window;
 
 public class ScrollbarStressTest extends Application.LegacyApplication {
 
-    final Root main = new Root("Scrollbar Stress Test");
+    final LegacyWindow main = new LegacyWindow("Scrollbar Stress Test");
 
     final Panel panel = new Panel("Panel");
     final VerticalSplitPanel splitPanel = new VerticalSplitPanel();

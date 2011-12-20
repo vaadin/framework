@@ -6,7 +6,6 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.tests.components.AbstractTestApplication;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Root;
@@ -29,14 +28,17 @@ public class LazyInitRoots extends AbstractTestApplication {
             throws RootRequiresMoreInformation {
         if (request.getParameter("lazyCreate") != null) {
             // Root created on second request
-            BrowserDetails browserDetails = request.getBrowserDetails();
+            final BrowserDetails browserDetails = request.getBrowserDetails();
             if (browserDetails == null) {
                 throw new RootRequiresMoreInformation();
             } else {
-                Root root = new Root();
-                root.getContent().addComponent(
-                        new Label("Lazy create root: "
+                Root root = new Root() {
+                    @Override
+                    protected void init(WrappedRequest request) {
+                        addComponent(new Label("Lazy create root: "
                                 + browserDetails.getUriFragment()));
+                    }
+                };
                 return root;
             }
         } else if (request.getParameter("lazyInit") != null) {
@@ -44,17 +46,22 @@ public class LazyInitRoots extends AbstractTestApplication {
             return new LazyInitRoot();
         } else {
             // The standard root
-            Root root = new Root();
-            ComponentContainer content = root.getContent();
-            Link lazyCreateLink = new Link("Open lazyCreate root",
-                    new ExternalResource(getURL() + "?lazyCreate#lazyCreate"));
-            lazyCreateLink.setTargetName("_blank");
-            content.addComponent(lazyCreateLink);
+            Root root = new Root() {
+                @Override
+                protected void init(WrappedRequest request) {
+                    Link lazyCreateLink = new Link("Open lazyCreate root",
+                            new ExternalResource(getURL()
+                                    + "?lazyCreate#lazyCreate"));
+                    lazyCreateLink.setTargetName("_blank");
+                    addComponent(lazyCreateLink);
 
-            Link lazyInitLink = new Link("Open lazyInit root",
-                    new ExternalResource(getURL() + "?lazyInit#lazyInit"));
-            lazyInitLink.setTargetName("_blank");
-            content.addComponent(lazyInitLink);
+                    Link lazyInitLink = new Link("Open lazyInit root",
+                            new ExternalResource(getURL()
+                                    + "?lazyInit#lazyInit"));
+                    lazyInitLink.setTargetName("_blank");
+                    addComponent(lazyInitLink);
+                }
+            };
 
             return root;
         }

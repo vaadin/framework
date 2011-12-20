@@ -5,7 +5,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 
 /**
@@ -16,7 +16,7 @@ import com.vaadin.ui.Table;
  */
 public class Ticket2126 extends com.vaadin.Application.LegacyApplication {
 
-    Root main = new Root();
+    LegacyWindow main = new LegacyWindow();
     Table table = new Table();
 
     @Override

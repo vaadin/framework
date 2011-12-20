@@ -5,7 +5,7 @@ import com.vaadin.data.Container;
 import com.vaadin.tests.TestForTablesInitialColumnWidthLogicRendering;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 
 /**
@@ -17,7 +17,7 @@ public class Ticket161 extends Application.LegacyApplication {
     @Override
     public void init() {
 
-        final Root mainWin = new Root("Test app to #1368");
+        final LegacyWindow mainWin = new LegacyWindow("Test app to #1368");
         setMainWindow(mainWin);
 
         t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(3, 100);

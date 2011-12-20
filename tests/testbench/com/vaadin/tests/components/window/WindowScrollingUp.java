@@ -3,7 +3,7 @@ package com.vaadin.tests.components.window;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 
 public class WindowScrollingUp extends AbstractTestCase {
@@ -31,7 +31,7 @@ public class WindowScrollingUp extends AbstractTestCase {
             }
         });
 
-        setMainWindow(new Root(""));
+        setMainWindow(new LegacyWindow(""));
         getMainWindow().addComponent(table);
         getMainWindow().addComponent(up);
 

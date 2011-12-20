@@ -7,7 +7,7 @@ import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
@@ -20,7 +20,7 @@ public class Ticket1857 extends Application.LegacyApplication implements
         setTheme("tests-tickets");
 
         VerticalLayout el = new VerticalLayout();
-        Root main = new Root("Testcase for #1857", el);
+        LegacyWindow main = new LegacyWindow("Testcase for #1857", el);
         setMainWindow(main);
         el.setMargin(true);
         el.setSpacing(true);
@@ -42,7 +42,7 @@ public class Ticket1857 extends Application.LegacyApplication implements
         actionHandlerEnabler.setImmediate(true);
         actionHandlerEnabler.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                if (((Boolean) actionHandlerEnabler.getValue()).booleanValue()) {
+                if (actionHandlerEnabler.getValue().booleanValue()) {
                     t.addActionHandler(Ticket1857.this);
                 } else {
                     t.removeActionHandler(Ticket1857.this);
@@ -55,7 +55,7 @@ public class Ticket1857 extends Application.LegacyApplication implements
         cellStylesEnabler.setImmediate(true);
         cellStylesEnabler.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                if (((Boolean) cellStylesEnabler.getValue()).booleanValue()) {
+                if (cellStylesEnabler.getValue().booleanValue()) {
                     t.setCellStyleGenerator(new Table.CellStyleGenerator() {
                         public String getStyle(Object itemId, Object propertyId) {
                             Object cell = t.getContainerProperty(itemId,

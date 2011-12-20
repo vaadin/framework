@@ -10,7 +10,7 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Window;
 
@@ -21,7 +21,7 @@ public class Ticket1804 extends com.vaadin.Application.LegacyApplication {
     @Override
     public void init() {
 
-        final Root main = new Root("#1804");
+        final LegacyWindow main = new LegacyWindow("#1804");
         setMainWindow(main);
 
         com.vaadin.ui.Select s;

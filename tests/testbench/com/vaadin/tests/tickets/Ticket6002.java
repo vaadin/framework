@@ -5,7 +5,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -13,7 +13,7 @@ public class Ticket6002 extends TestBase {
 
     @Override
     public void setup() {
-        Root main = new Root("The Main Window");
+        LegacyWindow main = new LegacyWindow("The Main Window");
         setMainWindow(main);
 
         final VerticalLayout mainLayout = new VerticalLayout();

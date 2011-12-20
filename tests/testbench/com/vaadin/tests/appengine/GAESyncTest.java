@@ -12,7 +12,7 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 public class GAESyncTest extends Application.LegacyApplication {
@@ -45,7 +45,7 @@ public class GAESyncTest extends Application.LegacyApplication {
 
     }
 
-    private class IntrWindow extends Root {
+    private class IntrWindow extends LegacyWindow {
         private int n = 0;
         private static final long serialVersionUID = -6521351715072191625l;
         TextField tf;
@@ -139,8 +139,8 @@ public class GAESyncTest extends Application.LegacyApplication {
     }
 
     @Override
-    public Root getWindow(String name) {
-        Root w = super.getWindow(name);
+    public LegacyWindow getWindow(String name) {
+        LegacyWindow w = super.getWindow(name);
         if (w == null) {
             w = new IntrWindow(this);
             addWindow(w);

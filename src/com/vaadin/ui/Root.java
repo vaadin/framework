@@ -6,6 +6,8 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -69,7 +71,7 @@ import com.vaadin.ui.Window.CloseListener;
  * @since 7.0
  */
 @ClientWidget(VView.class)
-public class Root extends AbstractComponentContainer implements
+public abstract class Root extends AbstractComponentContainer implements
         Action.Container, Action.Notifier {
 
     /**
@@ -184,6 +186,127 @@ public class Root extends AbstractComponentContainer implements
          */
         public String getFragment() {
             return fragment;
+        }
+    }
+
+    /**
+     * Helper class to emulate the main window from Vaadin 6 using roots. This
+     * class should be used in the same way as Window used as a browser level
+     * window in Vaadin 6 together with {@Application.LegacyApplication
+     * }
+     */
+    @Deprecated
+    public static class LegacyWindow extends Root {
+        private String name;
+
+        /**
+         * Create a new legacy window
+         */
+        public LegacyWindow() {
+            super();
+        }
+
+        /**
+         * Creates a new legacy window with the given caption
+         * 
+         * @param caption
+         *            the caption of the window
+         */
+        public LegacyWindow(String caption) {
+            super(caption);
+        }
+
+        /**
+         * Creates a legacy window with the given caption and content layout
+         * 
+         * @param caption
+         * @param content
+         */
+        public LegacyWindow(String caption, ComponentContainer content) {
+            super(caption, content);
+        }
+
+        @Override
+        protected void init(WrappedRequest request) {
+            // Just empty
+        }
+
+        /**
+         * Gets the unique name of the window. The name of the window is used to
+         * uniquely identify it.
+         * <p>
+         * The name also determines the URL that can be used for direct access
+         * to a window. All windows can be accessed through
+         * {@code http://host:port/app/win} where {@code http://host:port/app}
+         * is the application URL (as returned by {@link Application#getURL()}
+         * and {@code win} is the window name.
+         * </p>
+         * <p>
+         * Note! Portlets do not support direct window access through URLs.
+         * </p>
+         * 
+         * @return the Name of the Window.
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * Sets the unique name of the window. The name of the window is used to
+         * uniquely identify it inside the application.
+         * <p>
+         * The name also determines the URL that can be used for direct access
+         * to a window. All windows can be accessed through
+         * {@code http://host:port/app/win} where {@code http://host:port/app}
+         * is the application URL (as returned by {@link Application#getURL()}
+         * and {@code win} is the window name.
+         * </p>
+         * <p>
+         * This method can only be called before the window is added to an
+         * application.
+         * <p>
+         * Note! Portlets do not support direct window access through URLs.
+         * </p>
+         * 
+         * @param name
+         *            the new name for the window or null if the application
+         *            should automatically assign a name to it
+         * @throws IllegalStateException
+         *             if the window is attached to an application
+         */
+        public void setName(String name) {
+            this.name = name;
+            // The name can not be changed in application
+            if (getApplication() != null) {
+                throw new IllegalStateException(
+                        "Window name can not be changed while "
+                                + "the window is in application");
+            }
+
+        }
+
+        /**
+         * Gets the full URL of the window. The returned URL is window specific
+         * and can be used to directly refer to the window.
+         * <p>
+         * Note! This method can not be used for portlets.
+         * </p>
+         * 
+         * @return the URL of the window or null if the window is not attached
+         *         to an application
+         */
+        public URL getURL() {
+            Application application = getApplication();
+            if (application == null) {
+                return null;
+            }
+
+            try {
+                return new URL(application.getURL(), getName() + "/");
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(
+                        "Internal problem getting window URL, please report");
+            }
         }
     }
 
@@ -977,9 +1100,7 @@ public class Root extends AbstractComponentContainer implements
      * @param request
      *            the wrapped request that caused this root to be created
      */
-    protected void init(WrappedRequest request) {
-        // Default implementation doesn't do anything
-    }
+    protected abstract void init(WrappedRequest request);
 
     /**
      * Sets the thread local for the current root. This method is used by the

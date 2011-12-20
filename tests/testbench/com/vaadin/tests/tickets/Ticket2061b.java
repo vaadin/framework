@@ -12,7 +12,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
@@ -24,12 +24,12 @@ import com.vaadin.ui.VerticalSplitPanel;
 public class Ticket2061b extends Application.LegacyApplication implements
         SelectedTabChangeListener {
 
-    private Root mainWindow;
+    private LegacyWindow mainWindow;
     private Panel p;
 
     @Override
     public void init() {
-        mainWindow = new Root("Ticket 2061b");
+        mainWindow = new LegacyWindow("Ticket 2061b");
         mainWindow.setSizeFull();
         AbstractOrderedLayout mainLayout = (AbstractOrderedLayout) mainWindow
                 .getContent();

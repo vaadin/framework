@@ -4,7 +4,7 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket2023 extends com.vaadin.Application.LegacyApplication
         implements Button.ClickListener {
@@ -13,7 +13,7 @@ public class Ticket2023 extends com.vaadin.Application.LegacyApplication
 
     @Override
     public void init() {
-        Root main = new Root();
+        LegacyWindow main = new LegacyWindow();
         setMainWindow(main);
 
         String[] sizes = { "20", "100", "1", "0", "-1", "", "z" };

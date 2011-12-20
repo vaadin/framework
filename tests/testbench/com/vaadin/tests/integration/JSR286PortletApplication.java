@@ -25,6 +25,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 /**
@@ -32,7 +33,7 @@ import com.vaadin.ui.TextField;
  */
 public class JSR286PortletApplication extends Application.LegacyApplication {
 
-    Root main = new Root();
+    LegacyWindow main = new LegacyWindow();
     TextField tf = new TextField("Some value");
     Label userInfo = new Label();
     Link portletEdit = new Link();

@@ -13,7 +13,7 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 
@@ -56,7 +56,7 @@ public class CustomLayoutDemo extends com.vaadin.Application.LegacyApplication
      */
     @Override
     public void init() {
-        final Root mainWindow = new Root("CustomLayout demo");
+        final LegacyWindow mainWindow = new LegacyWindow("CustomLayout demo");
         setMainWindow(mainWindow);
 
         // set the application to use example -theme

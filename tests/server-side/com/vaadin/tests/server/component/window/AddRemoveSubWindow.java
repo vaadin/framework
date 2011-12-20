@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Window;
 
 public class AddRemoveSubWindow {
@@ -16,7 +17,7 @@ public class AddRemoveSubWindow {
 
         @Override
         public void init() {
-            Root w = new Root("Main window");
+            LegacyWindow w = new LegacyWindow("Main window");
             setMainWindow(w);
         }
     }
@@ -44,7 +45,7 @@ public class AddRemoveSubWindow {
 
         // Try to add the same sub window to another window
         try {
-            Root w = new Root();
+            LegacyWindow w = new LegacyWindow();
             w.addWindow(subWindow);
             assertTrue("Window.addWindow did not throw the expected exception",
                     false);

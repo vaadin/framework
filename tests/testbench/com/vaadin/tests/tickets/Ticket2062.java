@@ -2,7 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
@@ -12,7 +12,7 @@ public class Ticket2062 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        setMainWindow(new Root("Ticket2062"));
+        setMainWindow(new LegacyWindow("Ticket2062"));
         getMainWindow().setSizeFull();
 
         HorizontalSplitPanel p = new HorizontalSplitPanel();

@@ -4,7 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
@@ -13,7 +13,8 @@ public class Ticket932 extends Application.LegacyApplication {
     @Override
     public void init() {
 
-        final Root mainWin = new Root("Test app for max length feature");
+        final LegacyWindow mainWin = new LegacyWindow(
+                "Test app for max length feature");
         setMainWindow(mainWin);
 
         final TextField tx = new TextField(

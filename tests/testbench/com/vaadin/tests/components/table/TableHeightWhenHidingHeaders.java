@@ -4,7 +4,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 
 /**
@@ -18,7 +18,7 @@ public class TableHeightWhenHidingHeaders extends AbstractTestCase {
 
     @Override
     public void init() {
-        Root mainWindow = new Root();
+        LegacyWindow mainWindow = new LegacyWindow();
         setMainWindow(mainWindow);
 
         final Table table = new Table("Test table");

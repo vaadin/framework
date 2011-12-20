@@ -7,7 +7,6 @@ package com.vaadin;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -214,10 +213,10 @@ public class Application implements Terminal.ErrorListener, Serializable {
         private static final Pattern WINDOW_NAME_PATTERN = Pattern
                 .compile("^/?([^/]+).*");
 
-        private Root mainWindow;
+        private Root.LegacyWindow mainWindow;
         private String theme;
 
-        private Map<String, Root> legacyRootNames = new HashMap<String, Root>();
+        private Map<String, Root.LegacyWindow> legacyRootNames = new HashMap<String, Root.LegacyWindow>();
 
         /**
          * Sets the main window of this application. Setting window as a main
@@ -226,7 +225,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * @param mainWindow
          *            the root to set as the default window
          */
-        public void setMainWindow(Root mainWindow) {
+        public void setMainWindow(Root.LegacyWindow mainWindow) {
             if (this.mainWindow != null) {
                 throw new IllegalStateException(
                         "mainWindow has already been set");
@@ -253,7 +252,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * 
          * @return the root used as the default window
          */
-        public Root getMainWindow() {
+        public Root.LegacyWindow getMainWindow() {
             return mainWindow;
         }
 
@@ -268,7 +267,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * @see Application#getRoot(WrappedRequest)
          */
         @Override
-        public Root getRoot(WrappedRequest request) {
+        public Root.LegacyWindow getRoot(WrappedRequest request) {
             String pathInfo = request.getRequestPathInfo();
             String name = null;
             if (pathInfo != null && pathInfo.length() > 0) {
@@ -278,7 +277,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
                     name = matcher.group(1);
                 }
             }
-            Root window = getWindow(name);
+            Root.LegacyWindow window = getWindow(name);
             if (window != null) {
                 return window;
             }
@@ -336,7 +335,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * @return a root corresponding to the name, or <code>null</code> to use
          *         the default window
          */
-        public Root getWindow(String name) {
+        public Root.LegacyWindow getWindow(String name) {
             return legacyRootNames.get(name);
         }
 
@@ -356,27 +355,13 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * 
          * @see #addWindow(Root, String)
          */
-        public String addWindow(Root root) {
-            String name = Integer.toString(namelessRootIndex++);
-            addWindow(root, name);
-            return name;
-        }
+        public void addWindow(Root.LegacyWindow root) {
+            if (root.getName() == null) {
+                String name = Integer.toString(namelessRootIndex++);
+                root.setName(name);
+            }
 
-        /**
-         * Adds a named browser level window to this application. This method is
-         * intended to be used instead of the old pattern of assigning a name to
-         * the window and then adding it to the application - {@link Root} has
-         * no methods for setting and getting names.
-         * 
-         * @param root
-         *            the root window to add
-         * @param name
-         *            the name to assign to the root
-         * 
-         * @see #addWindow(Root)
-         */
-        public void addWindow(Root root, String name) {
-            legacyRootNames.put(name, root);
+            legacyRootNames.put(root.getName(), root);
             root.setApplication(this);
         }
 
@@ -393,8 +378,9 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * @param root
          *            the root to remove
          */
-        public void removeWindow(Root root) {
-            for (Entry<String, Root> entry : legacyRootNames.entrySet()) {
+        public void removeWindow(Root.LegacyWindow root) {
+            for (Entry<String, Root.LegacyWindow> entry : legacyRootNames
+                    .entrySet()) {
                 if (entry.getValue() == root) {
                     legacyRootNames.remove(entry.getKey());
                 }
@@ -410,71 +396,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * 
          * @return the unmodifiable collection of windows.
          */
-        public Collection<Root> getWindows() {
+        public Collection<Root.LegacyWindow> getWindows() {
             return Collections.unmodifiableCollection(legacyRootNames.values());
-        }
-
-        /**
-         * Gets the full URL of a window. The returned URL is window specific
-         * and can be used to directly refer to the window.
-         * <p>
-         * Note! This method can not be used for portlets.
-         * </p>
-         * 
-         * @param root
-         *            the root to get the URL for
-         * 
-         * @return the URL of the window or <code>null</code> if the window is
-         *         not attached to an application
-         */
-        public URL getWindowUrl(Root root) {
-            if (root.getApplication() != this) {
-                return null;
-            }
-            String windowName = getWindowName(root);
-            URL url;
-            try {
-                url = new URL(getURL(), windowName);
-                return url;
-            } catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        /**
-         * Gets the unique name of a window. The name of the window is used to
-         * uniquely identify it. As Root doesn't have any methods for setting or
-         * getting its name, <code>LegacyApplication</code> will instead take
-         * care of maintaining the names assigned to windows.
-         * <p>
-         * The name also determines the URL that can be used for direct access
-         * to a window. All windows can be accessed through
-         * {@code http://host:port/app/win} where {@code http://host:port/app}
-         * is the application URL (as returned by {@link Application#getURL()}
-         * and {@code win} is the window name.
-         * </p>
-         * <p>
-         * Note! Portlets do not support direct window access through URLs.
-         * </p>
-         * 
-         * @param root
-         *            the root to get a name for
-         * 
-         * @return the name of the root, or <code>null</code> if the root has
-         *         not been added to this application
-         */
-        public String getWindowName(Root root) {
-            if (root == mainWindow) {
-                return "";
-            } else if (root.getApplication() != this) {
-                return null;
-            }
-            for (Entry<String, Root> entry : legacyRootNames.entrySet()) {
-                if (entry.getValue() == root) {
-                    return entry.getKey();
-                }
-            }
-            return addWindow(root);
         }
     }
 

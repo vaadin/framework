@@ -10,7 +10,7 @@ import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket1921 extends Application.LegacyApplication implements
@@ -25,7 +25,7 @@ public class Ticket1921 extends Application.LegacyApplication implements
     public void init() {
 
         outer = new VerticalLayout();
-        setMainWindow(new Root("#1921", outer));
+        setMainWindow(new LegacyWindow("#1921", outer));
         setTheme("tests-tickets");
         inner = new VerticalLayout();
         outer.addComponent(inner);

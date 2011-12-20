@@ -10,13 +10,13 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class ErrorInUnloadEvent extends AbstractTestCase {
 
-    private Root mainWindow;
+    private LegacyWindow mainWindow;
 
     @Override
     public void init() {
@@ -29,7 +29,7 @@ public class ErrorInUnloadEvent extends AbstractTestCase {
 
     private void showLoginWindow() {
         if (mainWindow == null) {
-            mainWindow = new Root();
+            mainWindow = new LegacyWindow();
             setMainWindow(mainWindow);
         } else {
             mainWindow.removeAllComponents();
@@ -62,7 +62,7 @@ public class ErrorInUnloadEvent extends AbstractTestCase {
 
     private void showMainWindow() {
         if (mainWindow == null) {
-            mainWindow = new Root();
+            mainWindow = new LegacyWindow();
             setMainWindow(mainWindow);
         } else {
             mainWindow.removeAllComponents();

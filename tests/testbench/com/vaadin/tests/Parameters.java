@@ -18,7 +18,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
@@ -40,7 +40,7 @@ public class Parameters extends com.vaadin.Application.LegacyApplication
 
     @Override
     public void init() {
-        final Root main = new Root("Parameters demo");
+        final LegacyWindow main = new LegacyWindow("Parameters demo");
         setMainWindow(main);
 
         // This class acts both as URI handler and parameter handler

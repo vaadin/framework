@@ -8,7 +8,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
@@ -32,7 +32,7 @@ public class ModalWindow extends com.vaadin.Application.LegacyApplication
     public void init() {
 
         // Create main window
-        final Root main = new Root("ModalWindow demo");
+        final LegacyWindow main = new LegacyWindow("ModalWindow demo");
         setMainWindow(main);
         main.addComponent(new Label("ModalWindow demo"));
 

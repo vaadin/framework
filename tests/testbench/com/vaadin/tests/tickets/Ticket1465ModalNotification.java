@@ -6,6 +6,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Window;
 
 public class Ticket1465ModalNotification extends Application.LegacyApplication {
@@ -13,7 +14,8 @@ public class Ticket1465ModalNotification extends Application.LegacyApplication {
     @Override
     public void init() {
 
-        final Root mainWin = new Root("ButtonPanel containing a table test");
+        final LegacyWindow mainWin = new LegacyWindow(
+                "ButtonPanel containing a table test");
         setMainWindow(mainWin);
 
         final Window modal = new Window("Modal window");

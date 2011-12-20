@@ -2,14 +2,14 @@ package com.vaadin.tests.components;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public abstract class TestBase extends AbstractTestCase {
 
     @Override
     public final void init() {
-        window = new Root(getClass().getName());
+        window = new LegacyWindow(getClass().getName());
         setMainWindow(window);
         window.getContent().setSizeFull();
 
@@ -24,7 +24,7 @@ public abstract class TestBase extends AbstractTestCase {
         setup();
     }
 
-    private Root window;
+    private LegacyWindow window;
     private VerticalLayout layout;
 
     public TestBase() {

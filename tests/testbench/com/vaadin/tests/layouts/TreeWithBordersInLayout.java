@@ -2,7 +2,7 @@ package com.vaadin.tests.layouts;
 
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 
@@ -14,7 +14,7 @@ public class TreeWithBordersInLayout extends AbstractTestCase {
     public void init() {
         Layout mainLayout = new VerticalLayout();
         mainLayout.setSizeUndefined();
-        setMainWindow(new Root("main window", mainLayout));
+        setMainWindow(new LegacyWindow("main window", mainLayout));
 
         setTheme("tests-tickets");
 

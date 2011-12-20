@@ -2,7 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TabSheet;
 
 public class Ticket2098 extends Application.LegacyApplication {
@@ -11,14 +11,14 @@ public class Ticket2098 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root w = new Root(getClass().getSimpleName());
+        LegacyWindow w = new LegacyWindow(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
         w.addComponent(new Label(info));
         createUI(w);
     }
 
-    private void createUI(Root w) {
+    private void createUI(LegacyWindow w) {
         TabSheet ts = new TabSheet();
         Label l1 = new Label("111");
         Label l2 = new Label("222");

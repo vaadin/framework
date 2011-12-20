@@ -7,14 +7,14 @@ import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 public class Ticket2090 extends Application.LegacyApplication {
 
     Label label = new Label();
     Button target = new Button();
-    Root w = new Root("#2090");
+    LegacyWindow w = new LegacyWindow("#2090");
 
     @Override
     public void init() {

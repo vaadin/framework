@@ -8,7 +8,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
@@ -20,7 +20,7 @@ public class ComboBoxReapperingOldValue extends Application.LegacyApplication
 
     @Override
     public void init() {
-        Root mainWindow = new Root("ComboBoxCacheTest");
+        LegacyWindow mainWindow = new LegacyWindow("ComboBoxCacheTest");
         setMainWindow(mainWindow);
 
         VerticalLayout layout = new VerticalLayout();

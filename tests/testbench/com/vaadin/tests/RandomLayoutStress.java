@@ -17,7 +17,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
@@ -49,7 +49,7 @@ public class RandomLayoutStress extends
      */
     @Override
     public void init() {
-        final Root mainWindow = new Root("Layout demo");
+        final LegacyWindow mainWindow = new LegacyWindow("Layout demo");
         setMainWindow(mainWindow);
 
         // Create horizontal ordered layout

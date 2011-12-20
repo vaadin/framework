@@ -7,7 +7,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket1737 extends Application.LegacyApplication {
@@ -28,8 +28,8 @@ public class Ticket1737 extends Application.LegacyApplication {
     @Override
     public void init() {
 
-        final Root main = new Root(getClass().getName().substring(
-                getClass().getName().lastIndexOf(".") + 1));
+        final LegacyWindow main = new LegacyWindow(getClass().getName()
+                .substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
         VerticalLayout el = new VerticalLayout();

@@ -2,7 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.CustomLayout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TabSheet;
 
 public class Ticket1519 extends Application.LegacyApplication {
@@ -10,7 +10,7 @@ public class Ticket1519 extends Application.LegacyApplication {
     @Override
     public void init() {
 
-        final Root mainWin = new Root("Test app to #1519");
+        final LegacyWindow mainWin = new LegacyWindow("Test app to #1519");
         setMainWindow(mainWin);
 
         setTheme("tests-tickets");

@@ -23,7 +23,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.FailedListener;
@@ -286,7 +286,7 @@ public class TestForStyledUpload extends Application.LegacyApplication
 
     @Override
     public void init() {
-        Root w = new Root();
+        LegacyWindow w = new LegacyWindow();
         setTheme("runo");
         w.addComponent(main);
         setMainWindow(w);

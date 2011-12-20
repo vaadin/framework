@@ -14,7 +14,7 @@ import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 
@@ -43,7 +43,7 @@ public class TreeFilesystemContainer extends
 
     @Override
     public void init() {
-        final Root w = new Root("Tree FilesystemContainer demo");
+        final LegacyWindow w = new LegacyWindow("Tree FilesystemContainer demo");
         setMainWindow(w);
         final VerticalLayout main = new VerticalLayout();
         w.setContent(main);

@@ -19,7 +19,7 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
@@ -57,7 +57,7 @@ public class UpgradingSample extends Application.LegacyApplication implements
     public void init() {
 
         // Create the main window of the application
-        final Root main = new Root("Login example", layout);
+        final LegacyWindow main = new LegacyWindow("Login example", layout);
         setMainWindow(main);
 
         // Add menu and loginbox to the application

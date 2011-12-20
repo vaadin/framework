@@ -21,7 +21,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -246,7 +246,7 @@ public class Ticket2998 extends Application.LegacyApplication {
      */
     private void buildView() {
 
-        final Root w = new Root("Workout Log");
+        final LegacyWindow w = new LegacyWindow("Workout Log");
 
         // set theme and some layout stuff
         setMainWindow(w);

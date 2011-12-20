@@ -8,7 +8,7 @@ import com.vaadin.data.validator.CompositeValidator.CombinationMode;
 import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 public class Ticket20 extends Application.LegacyApplication {
@@ -16,7 +16,7 @@ public class Ticket20 extends Application.LegacyApplication {
     @Override
     public void init() {
 
-        final Root mainWin = new Root("Test app for #20");
+        final LegacyWindow mainWin = new LegacyWindow("Test app for #20");
         setMainWindow(mainWin);
 
         final TextField tx = new TextField("Integer");

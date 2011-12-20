@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 public class Ticket2002 extends Application.LegacyApplication {
@@ -28,7 +28,7 @@ public class Ticket2002 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root w = new Root(getClass().getName());
+        LegacyWindow w = new LegacyWindow(getClass().getName());
         setMainWindow(w);
 
         GridLayout layout = new GridLayout(2, 2);

@@ -15,7 +15,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket736 extends Application.LegacyApplication {
 
@@ -24,7 +24,7 @@ public class Ticket736 extends Application.LegacyApplication {
     @Override
     public void init() {
 
-        final Root mainWin = new Root("Test app for #736");
+        final LegacyWindow mainWin = new LegacyWindow("Test app for #736");
         setMainWindow(mainWin);
 
         setTheme("runo");

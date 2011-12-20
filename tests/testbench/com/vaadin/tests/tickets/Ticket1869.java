@@ -4,7 +4,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket1869 extends com.vaadin.Application.LegacyApplication {
@@ -13,7 +13,7 @@ public class Ticket1869 extends com.vaadin.Application.LegacyApplication {
     public void init() {
 
         GridLayout lo = new GridLayout(2, 1);
-        setMainWindow(new Root("#1869", lo));
+        setMainWindow(new LegacyWindow("#1869", lo));
         lo.setMargin(true);
         lo.setSpacing(true);
 

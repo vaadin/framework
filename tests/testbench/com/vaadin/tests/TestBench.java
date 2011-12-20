@@ -25,6 +25,7 @@ import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.Root.FragmentChangedEvent;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 
@@ -47,7 +48,7 @@ public class TestBench extends com.vaadin.Application.LegacyApplication
 
     HierarchicalContainer testables = new HierarchicalContainer();
 
-    Root mainWindow = new Root("TestBench window");
+    LegacyWindow mainWindow = new LegacyWindow("TestBench window");
 
     // Main layout consists of tree menu and body layout
     HorizontalSplitPanel mainLayout = new HorizontalSplitPanel();

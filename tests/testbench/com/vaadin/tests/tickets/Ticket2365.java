@@ -4,7 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2365 extends Application.LegacyApplication {
@@ -12,7 +12,8 @@ public class Ticket2365 extends Application.LegacyApplication {
     @Override
     public void init() {
 
-        final Root mainWin = new Root(getClass().getSimpleName());
+        final LegacyWindow mainWin = new LegacyWindow(getClass()
+                .getSimpleName());
         setMainWindow(mainWin);
 
         VerticalLayout lo = new VerticalLayout();

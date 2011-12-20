@@ -2,13 +2,13 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.ProgressIndicator;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket2420 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        final Root main = new Root("Hello window");
+        final LegacyWindow main = new LegacyWindow("Hello window");
         setMainWindow(main);
 
         setTheme("tests-tickets");

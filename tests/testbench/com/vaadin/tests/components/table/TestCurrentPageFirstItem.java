@@ -7,7 +7,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
@@ -23,7 +23,7 @@ public class TestCurrentPageFirstItem extends Application.LegacyApplication
     @Override
     public void init() {
         try {
-            Root main = new Root("Table header Test");
+            LegacyWindow main = new LegacyWindow("Table header Test");
             setMainWindow(main);
             main.setSizeFull();
             // setTheme("testtheme");

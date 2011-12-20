@@ -4,7 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class GridLayoutInsidePanel2 extends Application.LegacyApplication {
 
@@ -12,7 +12,7 @@ public class GridLayoutInsidePanel2 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root w = new Root("Main");
+        LegacyWindow w = new LegacyWindow("Main");
         setMainWindow(w);
         layout = (Layout) w.getContent();
         GridLayout gl = new GridLayout(1, 1);

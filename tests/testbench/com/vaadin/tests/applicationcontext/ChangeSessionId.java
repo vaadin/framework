@@ -6,7 +6,7 @@ import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class ChangeSessionId extends AbstractTestCase {
 
@@ -16,7 +16,7 @@ public class ChangeSessionId extends AbstractTestCase {
 
     @Override
     public void init() {
-        Root mainWindow = new Root("Sestest Application");
+        LegacyWindow mainWindow = new LegacyWindow("Sestest Application");
         mainWindow.addComponent(log);
         mainWindow.addComponent(loginButton);
         mainWindow.addComponent(new Button("Show session id",

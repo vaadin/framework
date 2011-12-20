@@ -9,7 +9,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
@@ -20,7 +20,7 @@ public class Ticket1983 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root main = new Root("Test for ticket 1983");
+        LegacyWindow main = new LegacyWindow("Test for ticket 1983");
         main.setContent(new TestLayout());
         setMainWindow(main);
     }

@@ -9,7 +9,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket2014 extends Application.LegacyApplication {
 
@@ -19,7 +19,7 @@ public class Ticket2014 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root w = new Root(getClass().getName());
+        LegacyWindow w = new LegacyWindow(getClass().getName());
         setMainWindow(w);
         // setTheme("tests-ticket");
         GridLayout layout = new GridLayout(10, 10);

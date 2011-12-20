@@ -10,7 +10,7 @@ import com.vaadin.data.Item;
 import com.vaadin.tests.util.SampleDirectory;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.ExpandEvent;
 
@@ -33,7 +33,7 @@ public class TreeFilesystem extends com.vaadin.Application.LegacyApplication
 
     @Override
     public void init() {
-        final Root main = new Root("Tree filesystem demo");
+        final LegacyWindow main = new LegacyWindow("Tree filesystem demo");
         setMainWindow(main);
 
         // Main window contains heading and panel

@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.tests.TestForTablesInitialColumnWidthLogicRendering;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 
 /**
@@ -15,7 +15,7 @@ public class Ticket1368 extends Application.LegacyApplication {
     @Override
     public void init() {
 
-        final Root mainWin = new Root("Test app to #1368");
+        final LegacyWindow mainWin = new LegacyWindow("Test app to #1368");
         setMainWindow(mainWin);
 
         t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(3, 5);

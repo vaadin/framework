@@ -6,14 +6,14 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Validator;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 public class Ticket2107 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        final Root w = new Root("Testing for #2107");
+        final LegacyWindow w = new LegacyWindow("Testing for #2107");
         setMainWindow(w);
 
         final TextField tf = new TextField(
@@ -47,7 +47,7 @@ public class Ticket2107 extends Application.LegacyApplication {
         b.setImmediate(true);
         b.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                tf.setRequiredError((Boolean) b.getValue() ? "Field must not be empty"
+                tf.setRequiredError(b.getValue() ? "Field must not be empty"
                         : null);
             }
         });

@@ -4,7 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 public class Ticket1916 extends Application.LegacyApplication {
@@ -21,7 +21,7 @@ public class Ticket1916 extends Application.LegacyApplication {
         test.addComponent(tf);
         test.setComponentAlignment(tf, Alignment.MIDDLE_CENTER);
 
-        Root w = new Root("Test #1916", test);
+        LegacyWindow w = new LegacyWindow("Test #1916", test);
         setMainWindow(w);
     }
 

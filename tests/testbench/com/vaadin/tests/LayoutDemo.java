@@ -12,7 +12,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 
@@ -31,7 +31,7 @@ public class LayoutDemo extends com.vaadin.Application.LegacyApplication {
      */
     @Override
     public void init() {
-        final Root mainWindow = new Root("Layout demo");
+        final LegacyWindow mainWindow = new LegacyWindow("Layout demo");
         setMainWindow(mainWindow);
 
         //

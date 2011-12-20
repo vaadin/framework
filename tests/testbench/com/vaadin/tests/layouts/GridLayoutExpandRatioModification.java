@@ -6,7 +6,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -21,7 +21,7 @@ public class GridLayoutExpandRatioModification extends TestBase implements
 
     @Override
     public void setup() {
-        Root main = new Root("The Main Window");
+        LegacyWindow main = new LegacyWindow("The Main Window");
         mainLayout = new GridLayout(3, 3);
         main.setContent(mainLayout);
         setMainWindow(main);

@@ -36,7 +36,7 @@ import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupView;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.Slider.ValueOutOfBoundsException;
 import com.vaadin.ui.TabSheet;
@@ -62,7 +62,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
     private static final Resource ICON_OK = new ThemeResource(
             "../runo/icons/16/ok.png");
 
-    private Root main;
+    private LegacyWindow main;
     private VerticalLayout mainLayout;
     private TabSheet tabs;
 
@@ -82,7 +82,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        main = new Root("Vaadin Liferay Theme");
+        main = new LegacyWindow("Vaadin Liferay Theme");
         mainLayout = (VerticalLayout) main.getContent();
         mainLayout.setMargin(false);
         setMainWindow(main);

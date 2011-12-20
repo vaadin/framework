@@ -19,7 +19,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 
 public class CheckboxUpdateProblem extends Application.LegacyApplication
@@ -32,7 +32,7 @@ public class CheckboxUpdateProblem extends Application.LegacyApplication
 
     @Override
     public void init() {
-        setMainWindow(new Root("Test window"));
+        setMainWindow(new LegacyWindow("Test window"));
         horizontalSplit.setSizeFull();
         testList = new Table();
 

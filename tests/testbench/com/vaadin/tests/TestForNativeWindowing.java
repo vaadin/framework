@@ -11,12 +11,12 @@ import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Window;
 
 public class TestForNativeWindowing extends Application.LegacyApplication {
 
-    Root main = new Root("Windowing test");
+    LegacyWindow main = new LegacyWindow("Windowing test");
 
     @Override
     public void init() {
@@ -96,16 +96,17 @@ public class TestForNativeWindowing extends Application.LegacyApplication {
     }
 
     @Override
-    public Root getWindow(String name) {
+    public LegacyWindow getWindow(String name) {
 
-        final Root w = super.getWindow(name);
+        final LegacyWindow w = super.getWindow(name);
         if (w != null) {
             return w;
         }
 
         if (name != null && name.startsWith("mainwin-")) {
             final String postfix = name.substring("mainwin-".length());
-            final Root ww = new Root("Window: " + postfix);
+            final LegacyWindow ww = new LegacyWindow("Window: " + postfix);
+            ww.setName(name);
             ww.addComponent(new Label(
                     "This is a application-level window opened with name: "
                             + name));
@@ -117,7 +118,7 @@ public class TestForNativeWindowing extends Application.LegacyApplication {
                             + " times"));
                 }
             }));
-            addWindow(ww, name);
+            addWindow(ww);
             return ww;
         }
 

@@ -6,14 +6,14 @@ import java.io.IOException;
 import com.vaadin.Application;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2303 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root w = new Root("main window");
+        LegacyWindow w = new LegacyWindow("main window");
 
         String customlayout = "<div location=\"test\"></div>";
         CustomLayout cl = null;

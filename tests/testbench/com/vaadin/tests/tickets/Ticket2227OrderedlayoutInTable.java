@@ -5,7 +5,7 @@ import com.vaadin.data.Item;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
@@ -14,7 +14,7 @@ public class Ticket2227OrderedlayoutInTable extends
 
     @Override
     public void init() {
-        Root w = new Root();
+        LegacyWindow w = new LegacyWindow();
         Table t = new Table();
         t.setWidth("500px");
         t.setHeight("200px");

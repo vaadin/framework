@@ -4,13 +4,13 @@ import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Validator;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 public class Ticket1900 extends Application.LegacyApplication {
 
     TextField f[] = new TextField[5];
-    Root main = new Root("#1900 test");
+    LegacyWindow main = new LegacyWindow("#1900 test");
 
     @Override
     public void init() {

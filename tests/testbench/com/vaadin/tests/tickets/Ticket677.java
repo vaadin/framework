@@ -16,7 +16,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
@@ -40,7 +40,7 @@ public class Ticket677 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root main = new Root();
+        LegacyWindow main = new LegacyWindow();
         setMainWindow(main);
 
         main.addComponent(info);

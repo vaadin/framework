@@ -5,14 +5,14 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 public class Ticket2038 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        final Root w = new Root("Testing for #2038");
+        final LegacyWindow w = new LegacyWindow("Testing for #2038");
         setMainWindow(w);
 
         final TextField tf = new TextField(

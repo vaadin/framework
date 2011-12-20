@@ -11,7 +11,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
@@ -22,7 +22,8 @@ public class Ticket1435 extends Application.LegacyApplication {
     @Override
     public void init() {
 
-        final Root mainWin = new Root("ButtonPanel containing a table test");
+        final LegacyWindow mainWin = new LegacyWindow(
+                "ButtonPanel containing a table test");
         setMainWindow(mainWin);
         ((AbstractOrderedLayout) mainWin.getContent()).setSpacing(true);
 

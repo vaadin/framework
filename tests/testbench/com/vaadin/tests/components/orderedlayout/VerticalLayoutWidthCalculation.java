@@ -4,7 +4,7 @@ import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -12,7 +12,8 @@ import com.vaadin.ui.Window;
 public class VerticalLayoutWidthCalculation extends AbstractTestCase {
     @Override
     public void init() {
-        final Root mainWindow = new Root("Vaadintest Application");
+        final LegacyWindow mainWindow = new LegacyWindow(
+                "Vaadintest Application");
         mainWindow.addWindow(createSubWindow());
         setMainWindow(mainWindow);
 

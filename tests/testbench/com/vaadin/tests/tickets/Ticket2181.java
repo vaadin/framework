@@ -12,7 +12,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -23,7 +23,7 @@ public class Ticket2181 extends Application.LegacyApplication implements
     // private static final Object PROPERTY_CAPTION = new Object();
 
     private static final String caption = "This is a caption which is very long and nice and perhaps sometimes should be clipped";
-    Root main = new Root("#2181 test");
+    LegacyWindow main = new LegacyWindow("#2181 test");
     TextField tf1 = new TextField(caption, "Test field - undefined width");
     TextField tf2 = new TextField(caption, "Test field - 150px wide");
     Button setButton = new Button("Set", this);

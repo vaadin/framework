@@ -7,7 +7,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 
 public class Ticket1995 extends Application.LegacyApplication {
@@ -17,7 +17,7 @@ public class Ticket1995 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        final Root mainWin = new Root(getClass().getName());
+        final LegacyWindow mainWin = new LegacyWindow(getClass().getName());
         setMainWindow(mainWin);
 
         table = new Table();

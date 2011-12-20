@@ -6,6 +6,7 @@ import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.LoginForm.LoginEvent;
 import com.vaadin.ui.LoginForm.LoginListener;
 import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 @SuppressWarnings("serial")
 public class LoginFormWithMultipleWindows extends Application {
@@ -15,7 +16,7 @@ public class LoginFormWithMultipleWindows extends Application {
         return new LoginFormWindow();
     }
 
-    public class LoginFormWindow extends Root {
+    public class LoginFormWindow extends LegacyWindow {
         public LoginFormWindow() {
             super();
 

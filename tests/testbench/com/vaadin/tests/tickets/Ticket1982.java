@@ -10,7 +10,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket1982 extends Application.LegacyApplication {
 
@@ -18,7 +18,7 @@ public class Ticket1982 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root main = new Root();
+        LegacyWindow main = new LegacyWindow();
         setMainWindow(main);
 
         GridLayout gl = new GridLayout(2, 2);

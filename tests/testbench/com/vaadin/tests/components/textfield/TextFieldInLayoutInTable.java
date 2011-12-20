@@ -3,18 +3,18 @@ package com.vaadin.tests.components.textfield;
 import com.vaadin.Application;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-@SuppressWarnings("serial")
 public class TextFieldInLayoutInTable extends Application.LegacyApplication {
 
     @Override
     public void init() {
 
-        final Root mainWindow = new Root(this.getClass().getName());
+        final LegacyWindow mainWindow = new LegacyWindow(this.getClass()
+                .getName());
         setMainWindow(mainWindow);
 
         final Table table = new Table();

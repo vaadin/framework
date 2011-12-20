@@ -11,6 +11,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.Root.FragmentChangedEvent;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -27,7 +28,7 @@ public class Ticket34 extends Application.LegacyApplication {
 
         mainLayout = new VerticalLayout();
         mainLayout.setSizeFull();
-        final Root mainWin = new Root(
+        final LegacyWindow mainWin = new LegacyWindow(
                 "Test app for URI fragment management/reading", mainLayout);
         setMainWindow(mainWin);
 

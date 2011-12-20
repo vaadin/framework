@@ -9,7 +9,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -21,7 +21,7 @@ public class Ticket2405 extends Application.LegacyApplication {
     @Override
     public void init() {
 
-        final Root root = new Root("VaadinTunes");
+        final LegacyWindow root = new LegacyWindow("VaadinTunes");
         root.setWidth("90%");
         root.setHeight("90%");
 

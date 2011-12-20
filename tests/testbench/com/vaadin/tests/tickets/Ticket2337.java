@@ -5,7 +5,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket2337 extends Application.LegacyApplication {
 
@@ -13,7 +13,7 @@ public class Ticket2337 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        Root w = new Root();
+        LegacyWindow w = new LegacyWindow();
         setMainWindow(w);
         Button b = new Button("add", new Button.ClickListener() {
 

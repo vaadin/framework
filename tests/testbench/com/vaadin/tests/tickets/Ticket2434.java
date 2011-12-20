@@ -2,7 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.tests.TestForTablesInitialColumnWidthLogicRendering;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 
 public class Ticket2434 extends Application.LegacyApplication {
@@ -10,7 +10,7 @@ public class Ticket2434 extends Application.LegacyApplication {
     @Override
     public void init() {
 
-        Root w = new Root();
+        LegacyWindow w = new LegacyWindow();
 
         setMainWindow(w);
 

@@ -5,7 +5,7 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 /**
@@ -18,7 +18,8 @@ public class Ticket5157 extends Application.LegacyApplication {
 
     @Override
     public void init() {
-        final Root mainWindow = new Root("Forumtests Application");
+        final LegacyWindow mainWindow = new LegacyWindow(
+                "Forumtests Application");
         setMainWindow(mainWindow);
 
         Panel p = new Panel();
