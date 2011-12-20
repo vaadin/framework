@@ -82,7 +82,15 @@
 			
 			var fetchRootConfig = function() {
 				log('Fetching root config');
-				var url = getConfig('browserDetailsUrl') || getConfig('appUri');
+				var url = getConfig('browserDetailsUrl');
+				if (!url) {
+					// No special url defined, use the default URL
+					url = getConfig('appUri');
+					// Add a slash to the end, because ApplicationConiguration.loadFromDOM does so...
+					if (url.length == 0 || url.substr(url.length-1) !== "/") {
+						url += '/';
+					}
+				}
 				// Root id
 				url += ((/\?/).test(url) ? "&" : "?") + "browserDetails";
 				url += '&rootId=' + getConfig('rootId');
