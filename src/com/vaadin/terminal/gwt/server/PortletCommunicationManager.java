@@ -189,7 +189,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                     String portalThemeUri = getThemeUri(context, portalTheme);
                     // XSS safe - originates from portal properties
                     context.getWriter().write(
-                            "vaadin.loadTheme('" + portalThemeUri + "')");
+                            "vaadin.loadTheme('" + portalThemeUri + "');");
                 }
 
                 super.writeMainScriptTagContents(context);

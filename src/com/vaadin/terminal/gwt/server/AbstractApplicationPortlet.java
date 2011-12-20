@@ -44,6 +44,7 @@ import com.liferay.portal.kernel.util.PortalClassInvoker;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
+import com.vaadin.RootRequiresMoreInformation;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.WrappedRequest;
@@ -609,6 +610,14 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 synchronized (application) {
                     if (application.isRunning()) {
                         switch (requestType) {
+                        case RENDER:
+                            try {
+                                root = application
+                                        .getRootForRequest(wrappedRequest);
+                            } catch (RootRequiresMoreInformation e) {
+                                // Ignore problem and continue without root
+                            }
+                            break;
                         case BROWSER_DETAILS:
                             // Should not try to find a root here as the
                             // combined request details might change the root
@@ -967,6 +976,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             throws PortletException {
         try {
             final Application application = getApplicationClass().newInstance();
+            if (application.getRootPreserveStrategy() == null) {
+                application
+                        .setRootPreserveStrategy(new Application.WindowNameRootPreserveStrategy());
+            }
             return application;
         } catch (final IllegalAccessException e) {
             throw new PortletException("getNewApplication failed", e);
