@@ -199,7 +199,16 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             throws javax.servlet.ServletException {
         super.init(servletConfig);
 
-        // Stores the application parameters into Properties object
+        // Read default parameters from server.xml
+        final ServletContext context = servletConfig.getServletContext();
+        for (final Enumeration<String> e = context.getInitParameterNames(); e
+                .hasMoreElements();) {
+            final String name = e.nextElement();
+            applicationProperties.setProperty(name,
+                    context.getInitParameter(name));
+        }
+
+        // Override with application config from web.xml
         applicationProperties = new Properties();
         for (final Enumeration<String> e = servletConfig
                 .getInitParameterNames(); e.hasMoreElements();) {
@@ -208,14 +217,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     servletConfig.getInitParameter(name));
         }
 
-        // Overrides with server.xml parameters
-        final ServletContext context = servletConfig.getServletContext();
-        for (final Enumeration<String> e = context.getInitParameterNames(); e
-                .hasMoreElements();) {
-            final String name = e.nextElement();
-            applicationProperties.setProperty(name,
-                    context.getInitParameter(name));
-        }
         checkProductionMode();
         checkCrossSiteProtection();
         checkResourceCacheTime();

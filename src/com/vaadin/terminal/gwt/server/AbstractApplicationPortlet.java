@@ -298,7 +298,17 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     @Override
     public void init(PortletConfig config) throws PortletException {
         super.init(config);
-        // Stores the application parameters into Properties object
+
+        // Read default parameters from the context
+        final PortletContext context = config.getPortletContext();
+        for (final Enumeration<String> e = context.getInitParameterNames(); e
+                .hasMoreElements();) {
+            final String name = e.nextElement();
+            applicationProperties.setProperty(name,
+                    context.getInitParameter(name));
+        }
+
+        // Override with application settings from portlet.xml
         applicationProperties = new Properties();
         for (final Enumeration<String> e = config.getInitParameterNames(); e
                 .hasMoreElements();) {
@@ -307,14 +317,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     config.getInitParameter(name));
         }
 
-        // Overrides with server.xml parameters
-        final PortletContext context = config.getPortletContext();
-        for (final Enumeration<String> e = context.getInitParameterNames(); e
-                .hasMoreElements();) {
-            final String name = e.nextElement();
-            applicationProperties.setProperty(name,
-                    context.getInitParameter(name));
-        }
         checkProductionMode();
         checkCrossSiteProtection();
     }
