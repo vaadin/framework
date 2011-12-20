@@ -595,7 +595,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 request.getHeader("user-agent"));
         if (request.getParameter("repaintAll") != null) {
             browser.updateClientSideDetails(request.getParameter("sw"),
-                    request.getParameter("sh"), request.getParameter("tzo"),
+                    request.getParameter("sh"), request.getParameter("cw"),
+                    request.getParameter("ch"), request.getParameter("tzo"),
                     request.getParameter("rtzo"), request.getParameter("dstd"),
                     request.getParameter("dston"),
                     request.getParameter("curdate"),

@@ -567,6 +567,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             browser.updateClientSideDetails(
                     getHTTPRequestParameter(request, "sw"),
                     getHTTPRequestParameter(request, "sh"),
+                    getHTTPRequestParameter(request, "cw"),
+                    getHTTPRequestParameter(request, "ch"),
                     getHTTPRequestParameter(request, "tzo"),
                     getHTTPRequestParameter(request, "rtzo"),
                     getHTTPRequestParameter(request, "dstd"),
