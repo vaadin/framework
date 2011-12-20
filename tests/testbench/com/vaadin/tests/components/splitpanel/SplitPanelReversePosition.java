@@ -8,7 +8,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalSplitPanel;
 
 public class SplitPanelReversePosition extends TestBase {
@@ -31,9 +31,9 @@ public class SplitPanelReversePosition extends TestBase {
             }
         });
 
-        TextField field = new TextField("");
-        field.setSizeFull();
-        hsplit.addComponent(field);
+        TextArea area = new TextArea("");
+        area.setSizeFull();
+        hsplit.addComponent(area);
 
         final VerticalSplitPanel vsplit = new VerticalSplitPanel();
         vsplit.setSizeFull();
@@ -48,13 +48,13 @@ public class SplitPanelReversePosition extends TestBase {
 
         addComponent(hsplit);
 
-        field = new TextField("");
-        field.setSizeFull();
-        vsplit.addComponent(field);
+        area = new TextArea("");
+        area.setSizeFull();
+        vsplit.addComponent(area);
 
-        field = new TextField("");
-        field.setSizeFull();
-        vsplit.addComponent(field);
+        area = new TextArea("");
+        area.setSizeFull();
+        vsplit.addComponent(area);
 
         HorizontalLayout buttons = new HorizontalLayout();
         buttons.setSpacing(true);

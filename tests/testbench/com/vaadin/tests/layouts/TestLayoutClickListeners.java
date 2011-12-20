@@ -14,6 +14,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -117,7 +118,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
         gl.setStyleName("borders");
         gl.setSpacing(true);
         addContent(gl, 4);
-        TextField largeTextarea = new TextField("Large textarea");
+        TextArea largeTextarea = new TextArea("Large textarea");
         largeTextarea.setWidth("100%");
         largeTextarea.setHeight("99%");
         gl.addComponent(largeTextarea, 0, 3, 3, 3);
