@@ -34,7 +34,7 @@
 
 	<!-- Upload war to deploy to ssh host -->
 	<target name="integration-test-upload-demo">
-		<antcontrib:scp file="${demo.war}" todir="${user}@${test.integration.server}:integration-tests/servers/demo.war" keyfile="${sshkey.file}" passphrase="${passphrase}" />
+		<scp file="${demo.war}" todir="${user}@${test.integration.server}:integration-tests/servers/demo.war" keyfile="${sshkey.file}" passphrase="${passphrase}" />
 	</target>
 	
 	<!-- Run basic integration test test -->
@@ -329,11 +329,11 @@
 			</then>
 		</antcontrib:if>
 		
-		<antcontrib:scp todir="${user}@${target-host}:." keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" >
+		<scp todir="${user}@${target-host}:." keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" >
 			<fileset dir="integration_base_files">
 				<include name="*" />
 			</fileset>
-		</antcontrib:scp>
+		</scp>
 		
 		<!-- trycatch probably not needed any more as it just fails with the original message and doesn't do anything in the finally block -->
 		<antcontrib:trycatch property="error_message">
@@ -345,7 +345,7 @@
 					<param name="message" value="${lock-output}" />
 				</antcall>
 
-				<antcontrib:scp file="${demo.war}" todir="${user}@${target-host}:demo.war" keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" />
+				<scp file="${demo.war}" todir="${user}@${target-host}:demo.war" keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" />
 				
 				<!-- timeout in 15 minutes -->
 				<sshexec host="${target-host}" outputproperty="start-output" timeout="900000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml startup-and-deploy" failonerror="false" />
