@@ -117,4 +117,17 @@ public class CheckBox extends AbstractField<Boolean> {
 
     }
 
+    /**
+     * Get the boolean value of the button state.
+     * 
+     * @return True iff the button is pressed down or checked.
+     * 
+     * @deprecated Use {@link #getValue()} instead and, if needed, handle null
+     *             values.
+     */
+    @Deprecated
+    public boolean booleanValue() {
+        Boolean value = getValue();
+        return (null == value) ? false : value.booleanValue();
+    }
 }
