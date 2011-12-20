@@ -106,10 +106,6 @@ public abstract class AbstractCommunicationManager implements
         public void criticalNotification(WrappedRequest request,
                 WrappedResponse response, String cap, String msg,
                 String details, String outOfSyncURL) throws IOException;
-
-        public InputStream getThemeResourceAsStream(String themeName,
-                String resource) throws IOException;
-
     }
 
     static class UploadInterruptedException extends Exception {
@@ -714,7 +710,7 @@ public abstract class AbstractCommunicationManager implements
             outWriter.print(getSecurityKeyUIDL(request));
         }
 
-        writeUidlResponce(callback, repaintAll, outWriter, root, analyzeLayouts);
+        writeUidlResponce(repaintAll, outWriter, root, analyzeLayouts);
 
         closeJsonMessage(outWriter);
 
@@ -757,7 +753,7 @@ public abstract class AbstractCommunicationManager implements
         return seckey;
     }
 
-    public void writeUidlResponce(Callback callback, boolean repaintAll,
+    public void writeUidlResponce(boolean repaintAll,
             final PrintWriter outWriter, Root root, boolean analyzeLayouts)
             throws PaintException {
         outWriter.print("\"changes\":[");
@@ -970,8 +966,7 @@ public abstract class AbstractCommunicationManager implements
             final String resource = (String) i.next();
             InputStream is = null;
             try {
-                is = callback
-                        .getThemeResourceAsStream(getTheme(root), resource);
+                is = getThemeResourceAsStream(root, getTheme(root), resource);
             } catch (final Exception e) {
                 // FIXME: Handle exception
                 logger.log(Level.FINER, "Failed to get theme resource stream.",
@@ -1037,12 +1032,15 @@ public abstract class AbstractCommunicationManager implements
         }
     }
 
+    protected abstract InputStream getThemeResourceAsStream(Root root,
+            String themeName, String resource);
+
     private int getTimeoutInterval() {
         return maxInactiveInterval;
     }
 
     private String getTheme(Root root) {
-        String themeName = null;// window.getTheme();
+        String themeName = root.getApplication().getThemeForRoot(root);
         String requestThemeName = getRequestTheme();
 
         if (requestThemeName != null) {
@@ -2041,7 +2039,7 @@ public abstract class AbstractCommunicationManager implements
         if (isXSRFEnabled(root.getApplication())) {
             pWriter.print(getSecurityKeyUIDL(request));
         }
-        writeUidlResponce(null, true, pWriter, root, false);
+        writeUidlResponce(true, pWriter, root, false);
         pWriter.print("}");
         String initialUIDL = sWriter.toString();
         return initialUIDL;

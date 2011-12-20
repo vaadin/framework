@@ -81,14 +81,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                             .getHttpServletResponse(), cap, msg, details,
                     outOfSyncURL);
         }
-
-        public InputStream getThemeResourceAsStream(String themeName,
-                String resource) throws IOException {
-            return servlet.getServletContext().getResourceAsStream(
-                    "/" + AbstractApplicationServlet.THEME_DIRECTORY_PATH
-                            + themeName + "/" + resource);
-        }
-
     }
 
     // TODO Move some (all?) of the constants to a separate interface (shared

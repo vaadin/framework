@@ -5,10 +5,13 @@
 package com.vaadin.terminal.gwt.server;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.servlet.ServletContext;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.PaintException;
@@ -237,5 +240,17 @@ public class CommunicationManager extends AbstractCommunicationManager {
                 return CommunicationManager.this.getInitialUIDL(request, root);
             }
         };
+    }
+
+    @Override
+    protected InputStream getThemeResourceAsStream(Root root, String themeName,
+            String resource) {
+        WebApplicationContext context = (WebApplicationContext) root
+                .getApplication().getContext();
+        ServletContext servletContext = context.getHttpSession()
+                .getServletContext();
+        return servletContext.getResourceAsStream("/"
+                + AbstractApplicationServlet.THEME_DIRECTORY_PATH + themeName
+                + "/" + resource);
     }
 }

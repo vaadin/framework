@@ -4,10 +4,12 @@
 package com.vaadin.terminal.gwt.server;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.portlet.MimeResponse;
+import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
@@ -228,6 +230,18 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
 
         };
 
+    }
+
+    @Override
+    protected InputStream getThemeResourceAsStream(Root root, String themeName,
+            String resource) {
+        PortletApplicationContext2 context = (PortletApplicationContext2) root
+                .getApplication().getContext();
+        PortletContext portletContext = context.getPortletSession()
+                .getPortletContext();
+        return portletContext.getResourceAsStream("/"
+                + AbstractApplicationPortlet.THEME_DIRECTORY_PATH + themeName
+                + "/" + resource);
     }
 
 }

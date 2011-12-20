@@ -188,14 +188,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     (MimeResponse) portletResponse, cap, msg, details,
                     outOfSyncURL);
         }
-
-        public InputStream getThemeResourceAsStream(String themeName,
-                String resource) throws IOException {
-            return portlet.getPortletContext().getResourceAsStream(
-                    "/" + AbstractApplicationPortlet.THEME_DIRECTORY_PATH
-                            + themeName + "/" + resource);
-        }
-
     }
 
     /**
