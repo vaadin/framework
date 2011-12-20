@@ -8,8 +8,6 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.vaadin.data.fieldbinder.FormBuilder.FormBuilderException;
-
 /**
  * An util class with helpers for reflection operations. Used internally by
  * Vaadin and should not be used by application developers. Subject to change at
@@ -54,16 +52,16 @@ public class ReflectTools {
      * @param field
      *            The field we want to get the value for
      * @return The value of the field in the object
-     * @throws FormBuilderException
-     *             If the field value cannot be determined
      * @throws InvocationTargetException
+     *             If the value could not be retrieved
      * @throws IllegalAccessException
+     *             If the value could not be retrieved
      * @throws IllegalArgumentException
+     *             If the value could not be retrieved
      */
     public static Object getJavaFieldValue(Object object,
-            java.lang.reflect.Field field) throws FormBuilderException,
-            IllegalArgumentException, IllegalAccessException,
-            InvocationTargetException {
+            java.lang.reflect.Field field) throws IllegalArgumentException,
+            IllegalAccessException, InvocationTargetException {
         PropertyDescriptor pd;
         try {
             pd = new PropertyDescriptor(field.getName(), object.getClass());
@@ -95,7 +93,11 @@ public class ReflectTools {
      *            The field we want to set the value for
      * @param value
      *            The value to set
-     * @throws FormBuilderException
+     * @throws IllegalAccessException
+     *             If the value could not be assigned to the field
+     * @throws IllegalArgumentException
+     *             If the value could not be assigned to the field
+     * @throws InvocationTargetException
      *             If the value could not be assigned to the field
      */
     public static void setJavaFieldValue(Object object,
