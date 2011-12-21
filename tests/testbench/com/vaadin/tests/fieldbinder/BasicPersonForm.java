@@ -7,7 +7,7 @@ import com.vaadin.data.fieldbinder.FieldBinder.CommitException;
 import com.vaadin.data.fieldbinder.FieldBinder.CommitHandler;
 import com.vaadin.data.fieldbinder.FormBuilder;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.converter.BooleanToStringConverter;
+import com.vaadin.data.util.converter.StringToBooleanConverter;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
@@ -160,7 +160,7 @@ public class BasicPersonForm extends TestBase {
         age.addValidator(new IntegerRangeValidator(
                 "Must be between 0 and 150, {0} is not", 0, 150));
         sex.setPageLength(0);
-        deceased.setConverter(new BooleanToStringConverter() {
+        deceased.setConverter(new StringToBooleanConverter() {
             @Override
             protected String getTrueString() {
                 return "YAY!";

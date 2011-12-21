@@ -7,7 +7,7 @@ package com.vaadin.data.util.converter;
 import java.util.Locale;
 
 /**
- * A converter that converts from {@link Boolean} to {@link String} and back.
+ * A converter that converts from {@link String} to {@link Boolean} and back.
  * The String representation is given by Boolean.toString().
  * <p>
  * Leading and trailing white spaces are ignored when converting from a String.
@@ -18,7 +18,7 @@ import java.util.Locale;
  * @VERSION@
  * @since 7.0
  */
-public class BooleanToStringConverter implements Converter<Boolean, String> {
+public class StringToBooleanConverter implements Converter<String, Boolean> {
 
     /*
      * (non-Javadoc)

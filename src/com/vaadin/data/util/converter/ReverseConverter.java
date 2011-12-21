@@ -20,10 +20,10 @@ import java.util.Locale;
  * @VERSION@
  * @since 7.0
  */
-public class ReverseConverter<MODEL, PRESENTATION> implements
-        Converter<MODEL, PRESENTATION> {
+public class ReverseConverter<PRESENTATION, MODEL> implements
+        Converter<PRESENTATION, MODEL> {
 
-    private Converter<PRESENTATION, MODEL> realConverter;
+    private Converter<MODEL, PRESENTATION> realConverter;
 
     /**
      * Creates a converter from source to target based on a converter that
@@ -32,7 +32,7 @@ public class ReverseConverter<MODEL, PRESENTATION> implements
      * @param converter
      *            The converter to use in a reverse fashion
      */
-    public ReverseConverter(Converter<PRESENTATION, MODEL> converter) {
+    public ReverseConverter(Converter<MODEL, PRESENTATION> converter) {
         this.realConverter = converter;
     }
 

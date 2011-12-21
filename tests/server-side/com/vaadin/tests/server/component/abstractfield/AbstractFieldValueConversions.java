@@ -6,7 +6,7 @@ import junit.framework.TestCase;
 
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.IntegerToStringConverter;
+import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
@@ -64,7 +64,7 @@ public class AbstractFieldValueConversions extends TestCase {
 
     public void testFailingConversion() {
         TextField tf = new TextField();
-        tf.setConverter(new Converter<Integer, String>() {
+        tf.setConverter(new Converter<String, Integer>() {
 
             public Integer convertToModel(String value, Locale locale) {
                 throw new ConversionException("Failed");
@@ -95,7 +95,7 @@ public class AbstractFieldValueConversions extends TestCase {
     public void testIntegerStringConversion() {
         TextField tf = new TextField();
 
-        tf.setConverter(new IntegerToStringConverter());
+        tf.setConverter(new StringToIntegerConverter());
         tf.setPropertyDataSource(new MethodProperty<Integer>(paulaBean, "age"));
         assertEquals(34, tf.getPropertyDataSource().getValue());
         assertEquals("34", tf.getValue());
@@ -111,16 +111,14 @@ public class AbstractFieldValueConversions extends TestCase {
         CheckBox cb = new CheckBox();
         cb.setConverter(new Converter<Boolean, Boolean>() {
 
-            public Boolean convertToModel(Boolean value,
-                    Locale locale) {
+            public Boolean convertToModel(Boolean value, Locale locale) {
                 // value from a CheckBox should never be null as long as it is
                 // not set to null (handled by conversion below).
                 assertNotNull(value);
                 return value;
             }
 
-            public Boolean convertToPresentation(Boolean value,
-                    Locale locale) {
+            public Boolean convertToPresentation(Boolean value, Locale locale) {
                 // Datamodel -> field
                 if (value == null) {
                     return false;

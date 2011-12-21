@@ -38,7 +38,7 @@ import java.util.Locale;
  * @VERSION@
  * @since 7.0
  */
-public interface Converter<MODEL, PRESENTATION> extends Serializable {
+public interface Converter<PRESENTATION, MODEL> extends Serializable {
 
     /**
      * Converts the given value from target type to source type.
