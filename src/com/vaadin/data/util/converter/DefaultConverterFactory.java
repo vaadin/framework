@@ -27,10 +27,10 @@ public class DefaultConverterFactory implements ConverterFactory {
     private final static Logger log = Logger
             .getLogger(DefaultConverterFactory.class.getName());
 
-    public <SOURCE, TARGET> Converter<SOURCE, TARGET> createConverter(
-            Class<SOURCE> sourceType, Class<TARGET> targetType) {
-        Converter<SOURCE, TARGET> converter = findConverter(sourceType,
-                targetType);
+    public <PRESENTATION, MODEL> Converter<PRESENTATION, MODEL> createConverter(
+            Class<PRESENTATION> presentationType, Class<MODEL> modelType) {
+        Converter<PRESENTATION, MODEL> converter = findConverter(
+                presentationType, modelType);
         if (converter != null) {
             log.finest(getClass().getName() + " created a "
                     + converter.getClass());
@@ -38,32 +38,32 @@ public class DefaultConverterFactory implements ConverterFactory {
         }
 
         // Try to find a reverse converter
-        Converter<TARGET, SOURCE> reverseConverter = findConverter(targetType,
-                sourceType);
+        Converter<MODEL, PRESENTATION> reverseConverter = findConverter(
+                modelType, presentationType);
         if (reverseConverter != null) {
             log.finest(getClass().getName() + " created a reverse "
                     + reverseConverter.getClass());
-            return new ReverseConverter<SOURCE, TARGET>(reverseConverter);
+            return new ReverseConverter<PRESENTATION, MODEL>(reverseConverter);
         }
 
         log.finest(getClass().getName() + " could not find a converter for "
-                + sourceType.getName() + " to " + targetType.getName()
+                + presentationType.getName() + " to " + modelType.getName()
                 + " conversion");
         return null;
 
     }
 
-    protected <SOURCE, TARGET> Converter<SOURCE, TARGET> findConverter(
-            Class<SOURCE> sourceType, Class<TARGET> targetType) {
-        if (targetType == String.class) {
+    protected <PRESENTATION, MODEL> Converter<PRESENTATION, MODEL> findConverter(
+            Class<PRESENTATION> presentationType, Class<MODEL> modelType) {
+        if (presentationType == String.class) {
             // TextField converters and more
-            Converter<SOURCE, TARGET> converter = (Converter<SOURCE, TARGET>) createStringConverter(sourceType);
+            Converter<PRESENTATION, MODEL> converter = (Converter<PRESENTATION, MODEL>) createStringConverter(modelType);
             if (converter != null) {
                 return converter;
             }
-        } else if (targetType == Date.class) {
+        } else if (presentationType == Date.class) {
             // DateField converters and more
-            Converter<SOURCE, TARGET> converter = (Converter<SOURCE, TARGET>) createDateConverter(sourceType);
+            Converter<PRESENTATION, MODEL> converter = (Converter<PRESENTATION, MODEL>) createDateConverter(modelType);
             if (converter != null) {
                 return converter;
             }
@@ -73,25 +73,25 @@ public class DefaultConverterFactory implements ConverterFactory {
 
     }
 
-    protected Converter<?, Date> createDateConverter(Class<?> sourceType) {
+    protected Converter<Date, ?> createDateConverter(Class<?> sourceType) {
         if (Long.class.isAssignableFrom(sourceType)) {
-            return new LongToDateConverter();
+            return new DateToLongConverter();
         } else {
             return null;
         }
     }
 
-    protected Converter<?, String> createStringConverter(Class<?> sourceType) {
+    protected Converter<String, ?> createStringConverter(Class<?> sourceType) {
         if (Double.class.isAssignableFrom(sourceType)) {
-            return new DoubleToStringConverter();
+            return new StringToDoubleConverter();
         } else if (Integer.class.isAssignableFrom(sourceType)) {
-            return new IntegerToStringConverter();
+            return new StringToIntegerConverter();
         } else if (Boolean.class.isAssignableFrom(sourceType)) {
-            return new BooleanToStringConverter();
+            return new StringToBooleanConverter();
         } else if (Number.class.isAssignableFrom(sourceType)) {
-            return new NumberToStringConverter();
+            return new StringToNumberConverter();
         } else if (Date.class.isAssignableFrom(sourceType)) {
-            return new DateToStringConverter();
+            return new StringToDateConverter();
         } else {
             return null;
         }

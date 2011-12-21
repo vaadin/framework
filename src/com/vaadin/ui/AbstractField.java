@@ -72,7 +72,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * A converter used to convert from the data model type to the field type
      * and vice versa.
      */
-    private Converter<Object, T> converter = null;
+    private Converter<T, Object> converter = null;
     /**
      * Connected data-source.
      */
@@ -787,13 +787,13 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      *            from
      */
     public void setConverter(Class<?> datamodelType) {
-        Converter<?, T> converter = null;
+        Converter<T, ?> converter = null;
 
         Application app = Application.getCurrentApplication();
         if (app != null) {
             ConverterFactory factory = app.getConverterFactory();
-            converter = (Converter<?, T>) factory.createConverter(
-                    datamodelType, getType());
+            converter = (Converter<T, ?>) factory.createConverter(getType(),
+                    datamodelType);
         }
         setConverter(converter);
     }
@@ -850,8 +850,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
              * an exception.
              */
             try {
-                return converter.convertToModel(fieldValue,
-                        getLocale());
+                return converter.convertToModel(fieldValue, getLocale());
             } catch (com.vaadin.data.util.converter.Converter.ConversionException e) {
                 throw new Converter.ConversionException(
                         getValueConversionError(converter.getModelType()), e);
@@ -1030,8 +1029,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         // to validate the converted value
         if (getConverter() != null) {
             try {
-                valueToValidate = getConverter().convertToModel(
-                        fieldValue, getLocale());
+                valueToValidate = getConverter().convertToModel(fieldValue,
+                        getLocale());
             } catch (Exception e) {
                 throw new InvalidValueException(
                         getValueConversionError(getConverter().getModelType()));
@@ -1586,23 +1585,20 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * 
      * @return The converter or null if none is set.
      */
-    public Converter<Object, T> getConverter() {
+    public Converter<T, Object> getConverter() {
         return converter;
     }
 
     /**
-     * Sets the converter used to convert the property data source value to the
-     * field value. The converter must have a target type that matches the field
-     * type.
-     * 
-     * The source for the converter is the data model and the target is the
-     * field.
+     * Sets the converter used to convert the field value to property data
+     * source type. The converter must have a presentation type that matches the
+     * field type.
      * 
      * @param converter
      *            The new converter to use.
      */
-    public void setConverter(Converter<?, T> converter) {
-        this.converter = (Converter<Object, T>) converter;
+    public void setConverter(Converter<T, ?> converter) {
+        this.converter = (Converter<T, Object>) converter;
         requestRepaint();
     }
 

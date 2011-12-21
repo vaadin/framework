@@ -410,7 +410,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private boolean painted = false;
 
-    private HashMap<Object, Converter> propertyValueConverters = new HashMap<Object, Converter>();
+    private HashMap<Object, Converter<String, Object>> propertyValueConverters = new HashMap<Object, Converter<String, Object>>();
 
     /* Table constructors */
 
@@ -3462,16 +3462,16 @@ public class Table extends AbstractSelect implements Action.Container,
         if (property == null) {
             return "";
         }
-        Converter<Object, String> converter = null;
+        Converter<String, Object> converter = null;
 
         if (hasConverter(colId)) {
             converter = getConverter(colId);
         } else {
             Application app = Application.getCurrentApplication();
             if (app != null) {
-                converter = (Converter<Object, String>) app
-                        .getConverterFactory().createConverter(
-                                property.getType(), String.class);
+                converter = (Converter<String, Object>) app
+                        .getConverterFactory().createConverter(String.class,
+                                property.getType());
             }
         }
         Object value = property.getValue();
@@ -5143,7 +5143,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param converter
      *            The converter to use for the property id
      */
-    public void setConverter(Object propertyId, Converter<?, String> converter) {
+    public void setConverter(Object propertyId, Converter<String, ?> converter) {
         if (!getContainerPropertyIds().contains(propertyId)) {
             throw new IllegalArgumentException("PropertyId " + propertyId
                     + " must be in the container");
@@ -5158,7 +5158,8 @@ public class Table extends AbstractSelect implements Action.Container,
         // + ") must match converter source type ("
         // + converter.getSourceType() + ")");
         // }
-        propertyValueConverters.put(propertyId, converter);
+        propertyValueConverters.put(propertyId,
+                (Converter<String, Object>) converter);
         refreshRowCache();
     }
 
@@ -5182,7 +5183,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @return The converter used to format the propertyId or null if no
      *         converter has been set
      */
-    public Converter<Object, String> getConverter(Object propertyId) {
+    public Converter<String, Object> getConverter(Object propertyId) {
         return propertyValueConverters.get(propertyId);
     }
 

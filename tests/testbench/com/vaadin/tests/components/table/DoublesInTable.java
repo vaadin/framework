@@ -9,7 +9,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.NumberToStringConverter;
+import com.vaadin.data.util.converter.StringToNumberConverter;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
@@ -143,12 +143,11 @@ public class DoublesInTable extends TestBase {
     }
 
     private void addConverters(Table t) {
-        t.setConverter("sex", new Converter<Sex, String>() {
+        t.setConverter("sex", new Converter<String, Sex>() {
 
             public Sex convertToModel(String value, Locale locale)
                     throws com.vaadin.data.util.converter.Converter.ConversionException {
-                // not used in this test - Table only converts from source to
-                // target
+                // not used in this test - Table only converts to presentation
                 return null;
             }
 
@@ -168,7 +167,7 @@ public class DoublesInTable extends TestBase {
                 return String.class;
             }
         });
-        t.setConverter("deceased", new Converter<Boolean, String>() {
+        t.setConverter("deceased", new Converter<String, Boolean>() {
 
             public Boolean convertToModel(String value, Locale locale) {
                 // not used in this test - Table only converts from source to
@@ -192,7 +191,7 @@ public class DoublesInTable extends TestBase {
                 return String.class;
             }
         });
-        t.setConverter("age", new Converter<Integer, String>() {
+        t.setConverter("age", new Converter<String, Integer>() {
 
             public Integer convertToModel(String value, Locale locale)
                     throws com.vaadin.data.util.converter.Converter.ConversionException {
@@ -225,12 +224,11 @@ public class DoublesInTable extends TestBase {
                 return String.class;
             }
         });
-        t.setConverter("address", new Converter<Address, String>() {
+        t.setConverter("address", new Converter<String, Address>() {
 
             public Address convertToModel(String value, Locale locale)
                     throws ConversionException {
-                // not used in this test - Table only converts from source to
-                // target
+                // not used in this test - Table only converts to presentation
                 return null;
             }
 
@@ -250,7 +248,7 @@ public class DoublesInTable extends TestBase {
 
         });
 
-        t.setConverter("rent", new NumberToStringConverter() {
+        t.setConverter("rent", new StringToNumberConverter() {
             @Override
             protected NumberFormat getFormat(Locale locale) {
                 return NumberFormat.getCurrencyInstance(locale);

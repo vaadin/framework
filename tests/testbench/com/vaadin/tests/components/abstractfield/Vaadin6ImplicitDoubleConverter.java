@@ -5,7 +5,7 @@ import java.util.Locale;
 import com.vaadin.data.util.converter.Converter;
 
 public class Vaadin6ImplicitDoubleConverter implements
-        Converter<Double, String> {
+        Converter<String, Double> {
 
     public Double convertToModel(String value, Locale locale)
             throws com.vaadin.data.util.converter.Converter.ConversionException {

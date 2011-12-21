@@ -9,9 +9,12 @@ import java.text.ParsePosition;
 import java.util.Locale;
 
 /**
- * A converter that converts from {@link Integer} to {@link String} and back.
+ * A converter that converts from {@link String} to {@link Double} and back.
  * Uses the given locale and a {@link NumberFormat} instance for formatting and
  * parsing.
+ * <p>
+ * Leading and trailing white spaces are ignored when converting from a String.
+ * </p>
  * <p>
  * Override and overwrite {@link #getFormat(Locale)} to use a different format.
  * </p>
@@ -21,12 +24,11 @@ import java.util.Locale;
  * @VERSION@
  * @since 7.0
  */
-public class IntegerToStringConverter implements Converter<Integer, String> {
+public class StringToDoubleConverter implements Converter<String, Double> {
 
     /**
-     * Returns the format used by
-     * {@link #convertToPresentation(Integer, Locale)} and
-     * {@link #convertToModel(String, Locale)}.
+     * Returns the format used by {@link #convertToPresentation(Double, Locale)}
+     * and {@link #convertToModel(String, Locale)}.
      * 
      * @param locale
      *            The locale to use
@@ -36,10 +38,18 @@ public class IntegerToStringConverter implements Converter<Integer, String> {
         if (locale == null) {
             locale = Locale.getDefault();
         }
-        return NumberFormat.getIntegerInstance(locale);
+
+        return NumberFormat.getNumberInstance(locale);
     }
 
-    public Integer convertToModel(String value, Locale locale)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.util.converter.Converter#convertFromTargetToSource(java
+     * .lang.Object, java.util.Locale)
+     */
+    public Double convertToModel(String value, Locale locale)
             throws ConversionException {
         if (value == null) {
             return null;
@@ -48,23 +58,23 @@ public class IntegerToStringConverter implements Converter<Integer, String> {
         // Remove leading and trailing white space
         value = value.trim();
 
-        // Parse and detect errors. If the full string was not used, it is
-        // an error.
         ParsePosition parsePosition = new ParsePosition(0);
         Number parsedValue = getFormat(locale).parse(value, parsePosition);
         if (parsePosition.getIndex() != value.length()) {
             throw new ConversionException("Could not convert '" + value
-                    + "' to " + getModelType().getName());
+                    + "' to " + getPresentationType().getName());
         }
-
-        if (parsedValue == null) {
-            // Convert "" to null
-            return null;
-        }
-        return parsedValue.intValue();
+        return parsedValue.doubleValue();
     }
 
-    public String convertToPresentation(Integer value, Locale locale)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.util.converter.Converter#convertFromSourceToTarget(java
+     * .lang.Object, java.util.Locale)
+     */
+    public String convertToPresentation(Double value, Locale locale)
             throws ConversionException {
         if (value == null) {
             return null;
@@ -73,12 +83,21 @@ public class IntegerToStringConverter implements Converter<Integer, String> {
         return getFormat(locale).format(value);
     }
 
-    public Class<Integer> getModelType() {
-        return Integer.class;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.util.converter.Converter#getSourceType()
+     */
+    public Class<Double> getModelType() {
+        return Double.class;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.util.converter.Converter#getTargetType()
+     */
     public Class<String> getPresentationType() {
         return String.class;
     }
-
 }

@@ -15,7 +15,7 @@ import java.util.Locale;
  * @VERSION@
  * @since 7.0
  */
-public class LongToDateConverter implements Converter<Long, Date> {
+public class DateToLongConverter implements Converter<Date, Long> {
 
     /*
      * (non-Javadoc)
