@@ -1212,7 +1212,9 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * null resets the item caption mode to
      * <code>ITEM_CAPTION_EXPLICIT_DEFAULTS_ID</code>.
      * </p>
-     * 
+     * <p>
+     * Note that the type of the property used for caption must be String
+     * </p>
      * <p>
      * Setting the property id to null disables this feature. The id is null by
      * default
