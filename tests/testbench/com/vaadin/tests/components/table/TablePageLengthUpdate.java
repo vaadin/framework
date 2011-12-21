@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.data.util.MethodProperty;
-import com.vaadin.terminal.Sizeable;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -61,8 +60,7 @@ public class TablePageLengthUpdate extends TestBase {
     }
 
     public String getTableHeight() {
-        return "" + (int) table.getHeight()
-                + Sizeable.UNIT_SYMBOLS[table.getHeightUnits()];
+        return "" + (int) table.getHeight() + table.getHeightUnits().getSymbol();
     }
 
     public void setTableHeight(String height) {

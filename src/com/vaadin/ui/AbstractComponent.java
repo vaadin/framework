@@ -140,8 +140,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
     private float width = SIZE_UNDEFINED;
     private float height = SIZE_UNDEFINED;
-    private int widthUnit = UNITS_PIXELS;
-    private int heightUnit = UNITS_PIXELS;
+    private Unit widthUnit = Unit.PIXELS;
+    private Unit heightUnit = Unit.PIXELS;
     private static final Pattern sizePattern = Pattern
             .compile("^(-?\\d+(\\.\\d+)?)(%|px|em|ex|in|cm|mm|pt|pc)?$");
 
@@ -743,13 +743,13 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             // Only paint content of visible components.
             if (isVisible()) {
                 if (getHeight() >= 0
-                        && (getHeightUnits() != UNITS_PERCENTAGE || ComponentSizeValidator
+                        && (getHeightUnits() != Unit.PERCENTAGE || ComponentSizeValidator
                                 .parentCanDefineHeight(this))) {
                     target.addAttribute("height", "" + getCSSHeight());
                 }
 
                 if (getWidth() >= 0
-                        && (getWidthUnits() != UNITS_PERCENTAGE || ComponentSizeValidator
+                        && (getWidthUnits() != Unit.PERCENTAGE || ComponentSizeValidator
                                 .parentCanDefineWidth(this))) {
                     target.addAttribute("width", "" + getCSSWidth());
                 }
@@ -807,10 +807,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @return CSS height
      */
     private String getCSSHeight() {
-        if (getHeightUnits() == UNITS_PIXELS) {
-            return ((int) getHeight()) + UNIT_SYMBOLS[getHeightUnits()];
+        if (getHeightUnits() == Unit.PIXELS) {
+            return ((int) getHeight()) + getHeightUnits().getSymbol();
         } else {
-            return getHeight() + UNIT_SYMBOLS[getHeightUnits()];
+            return getHeight() + getHeightUnits().getSymbol();
         }
     }
 
@@ -820,10 +820,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @return CSS width
      */
     private String getCSSWidth() {
-        if (getWidthUnits() == UNITS_PIXELS) {
-            return ((int) getWidth()) + UNIT_SYMBOLS[getWidthUnits()];
+        if (getWidthUnits() == Unit.PIXELS) {
+            return ((int) getWidth()) + getWidthUnits().getSymbol();
         } else {
-            return getWidth() + UNIT_SYMBOLS[getWidthUnits()];
+            return getWidth() + getWidthUnits().getSymbol();
         }
     }
 
@@ -1299,7 +1299,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * @see com.vaadin.terminal.Sizeable#getHeightUnits()
      */
-    public int getHeightUnits() {
+    public Unit getHeightUnits() {
         return heightUnit;
     }
 
@@ -1317,7 +1317,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * @see com.vaadin.terminal.Sizeable#getWidthUnits()
      */
-    public int getWidthUnits() {
+    public Unit getWidthUnits() {
         return widthUnit;
     }
 
@@ -1326,7 +1326,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * @see com.vaadin.terminal.Sizeable#setHeight(float, int)
      */
-    public void setHeight(float height, int unit) {
+    public void setHeight(float height, Unit unit) {
         this.height = height;
         heightUnit = unit;
         requestRepaint();
@@ -1339,8 +1339,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @see com.vaadin.terminal.Sizeable#setSizeFull()
      */
     public void setSizeFull() {
-        setWidth(100, UNITS_PERCENTAGE);
-        setHeight(100, UNITS_PERCENTAGE);
+        setWidth(100, Unit.PERCENTAGE);
+        setHeight(100, Unit.PERCENTAGE);
     }
 
     /*
@@ -1349,8 +1349,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @see com.vaadin.terminal.Sizeable#setSizeUndefined()
      */
     public void setSizeUndefined() {
-        setWidth(-1, UNITS_PIXELS);
-        setHeight(-1, UNITS_PIXELS);
+        setWidth(-1, Unit.PIXELS);
+        setHeight(-1, Unit.PIXELS);
     }
 
     /*
@@ -1358,7 +1358,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * @see com.vaadin.terminal.Sizeable#setWidth(float, int)
      */
-    public void setWidth(float width, int unit) {
+    public void setWidth(float width, Unit unit) {
         this.width = width;
         widthUnit = unit;
         requestRepaint();
@@ -1371,8 +1371,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @see com.vaadin.terminal.Sizeable#setWidth(java.lang.String)
      */
     public void setWidth(String width) {
-        float[] p = parseStringSize(width);
-        setWidth(p[0], (int) p[1]);
+        Size size = parseStringSize(width);
+        setWidth(size.getSize(), size.getUnit());
     }
 
     /*
@@ -1381,58 +1381,56 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @see com.vaadin.terminal.Sizeable#setHeight(java.lang.String)
      */
     public void setHeight(String height) {
-        float[] p = parseStringSize(height);
-        setHeight(p[0], (int) p[1]);
+        Size size = parseStringSize(height);
+        setHeight(size.getSize(), size.getUnit());
     }
 
     /*
      * Returns array with size in index 0 unit in index 1. Null or empty string
-     * will produce {-1,UNITS_PIXELS}
+     * will produce {-1,Unit#PIXELS}
      */
-    private static float[] parseStringSize(String s) {
-        float[] values = { -1, UNITS_PIXELS };
+    private static Size parseStringSize(String s) {
         if (s == null) {
-            return values;
+            return null;
         }
         s = s.trim();
         if ("".equals(s)) {
-            return values;
+            return null;
         }
-
+        float size = 0;
+        Unit unit = null;
         Matcher matcher = sizePattern.matcher(s);
         if (matcher.find()) {
-            values[0] = Float.parseFloat(matcher.group(1));
-            if (values[0] < 0) {
-                values[0] = -1;
+            size = Float.parseFloat(matcher.group(1));
+            if (size < 0) {
+                size = -1;
             } else {
-                String unit = matcher.group(3);
-                if (unit == null) {
-                    values[1] = UNITS_PIXELS;
-                } else if (unit.equals("px")) {
-                    values[1] = UNITS_PIXELS;
-                } else if (unit.equals("%")) {
-                    values[1] = UNITS_PERCENTAGE;
-                } else if (unit.equals("em")) {
-                    values[1] = UNITS_EM;
-                } else if (unit.equals("ex")) {
-                    values[1] = UNITS_EX;
-                } else if (unit.equals("in")) {
-                    values[1] = UNITS_INCH;
-                } else if (unit.equals("cm")) {
-                    values[1] = UNITS_CM;
-                } else if (unit.equals("mm")) {
-                    values[1] = UNITS_MM;
-                } else if (unit.equals("pt")) {
-                    values[1] = UNITS_POINTS;
-                } else if (unit.equals("pc")) {
-                    values[1] = UNITS_PICAS;
-                }
+                String symbol = matcher.group(3);
+                unit = Unit.getUnitFromSymbol(symbol);
             }
         } else {
             throw new IllegalArgumentException("Invalid size argument: \"" + s
                     + "\" (should match " + sizePattern.pattern() + ")");
         }
-        return values;
+        return new Size(size, unit);
+    }
+
+    private static class Size {
+        float size;
+        Unit unit;
+
+        public Size(float size, Unit unit) {
+            this.size = size;
+            this.unit = unit;
+        }
+
+        public float getSize() {
+            return size;
+        }
+
+        public Unit getUnit() {
+            return unit;
+        }
     }
 
     public interface ComponentErrorEvent extends Terminal.ErrorEvent {

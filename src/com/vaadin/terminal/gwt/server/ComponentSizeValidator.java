@@ -16,7 +16,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.terminal.Sizeable;
+import com.vaadin.terminal.Sizeable.Unit;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -314,7 +314,7 @@ public class ComponentSizeValidator implements Serializable {
             width += "MAIN WINDOW";
         } else if (component.getWidth() >= 0) {
             width += "ABSOLUTE, " + component.getWidth() + " "
-                    + Sizeable.UNIT_SYMBOLS[component.getWidthUnits()];
+                    + component.getWidthUnits().getSymbol();
         } else {
             width += "UNDEFINED";
         }
@@ -330,7 +330,7 @@ public class ComponentSizeValidator implements Serializable {
             height += "MAIN WINDOW";
         } else if (component.getHeight() > 0) {
             height += "ABSOLUTE, " + component.getHeight() + " "
-                    + Sizeable.UNIT_SYMBOLS[component.getHeightUnits()];
+                    + component.getHeightUnits().getSymbol();
         } else {
             height += "UNDEFINED";
         }
@@ -477,7 +477,7 @@ public class ComponentSizeValidator implements Serializable {
     }
 
     private static boolean hasRelativeHeight(Component component) {
-        return (component.getHeightUnits() == Sizeable.UNITS_PERCENTAGE && component
+        return (component.getHeightUnits() == Unit.PERCENTAGE && component
                 .getHeight() > 0);
     }
 
@@ -493,7 +493,7 @@ public class ComponentSizeValidator implements Serializable {
 
     private static boolean hasRelativeWidth(Component paintable) {
         return paintable.getWidth() > 0
-                && paintable.getWidthUnits() == Sizeable.UNITS_PERCENTAGE;
+                && paintable.getWidthUnits() == Unit.PERCENTAGE;
     }
 
     public static boolean parentCanDefineWidth(Component component) {

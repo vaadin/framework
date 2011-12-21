@@ -18,71 +18,127 @@ import java.io.Serializable;
 public interface Sizeable extends Serializable {
 
     /**
-     * Unit code representing pixels.
+     * @deprecated from 7.0, use {@link Unit#PIXELS} instead    
      */
-    public static final int UNITS_PIXELS = 0;
+    @Deprecated
+    public static final Unit UNITS_PIXELS = Unit.PIXELS;
 
     /**
-     * Unit code representing points (1/72nd of an inch).
+     * @deprecated from 7.0, use {@link Unit#POINTS} instead    
      */
-    public static final int UNITS_POINTS = 1;
+    @Deprecated
+    public static final Unit UNITS_POINTS = Unit.POINTS;
 
     /**
-     * Unit code representing picas (12 points).
+     * @deprecated from 7.0, use {@link Unit#PICAS} instead    
      */
-    public static final int UNITS_PICAS = 2;
+    @Deprecated
+    public static final Unit UNITS_PICAS = Unit.PICAS;
 
     /**
-     * Unit code representing the font-size of the relevant font.
+     * @deprecated from 7.0, use {@link Unit#EM} instead    
      */
-    public static final int UNITS_EM = 3;
+    @Deprecated
+    public static final Unit UNITS_EM = Unit.EM;
 
     /**
-     * Unit code representing the x-height of the relevant font.
+     * @deprecated from 7.0, use {@link Unit#EX} instead    
      */
-    public static final int UNITS_EX = 4;
+    @Deprecated
+    public static final Unit UNITS_EX = Unit.EX;
 
     /**
-     * Unit code representing millimeters.
+     * @deprecated from 7.0, use {@link Unit#MM} instead    
      */
-    public static final int UNITS_MM = 5;
+    @Deprecated
+    public static final Unit UNITS_MM = Unit.MM;
 
     /**
-     * Unit code representing centimeters.
+     * @deprecated from 7.0, use {@link Unit#CM} instead    
      */
-    public static final int UNITS_CM = 6;
+    @Deprecated
+    public static final Unit UNITS_CM = Unit.CM;
 
     /**
-     * Unit code representing inches.
+     * @deprecated from 7.0, use {@link Unit#INCH} instead    
      */
-    public static final int UNITS_INCH = 7;
+    @Deprecated
+    public static final Unit UNITS_INCH = Unit.INCH;
 
     /**
-     * Unit code representing in percentage of the containing element defined by
-     * terminal.
+     * @deprecated from 7.0, use {@link Unit#PERCENTAGE} instead    
      */
-    public static final int UNITS_PERCENTAGE = 8;
+    @Deprecated
+    public static final Unit UNITS_PERCENTAGE = Unit.PERCENTAGE;
 
     public static final float SIZE_UNDEFINED = -1;
 
-    /**
-     * Textual representations of units symbols. Supported units and their
-     * symbols are:
-     * <ul>
-     * <li>{@link #UNITS_PIXELS}: "px"</li>
-     * <li>{@link #UNITS_POINTS}: "pt"</li>
-     * <li>{@link #UNITS_PICAS}: "pc"</li>
-     * <li>{@link #UNITS_EM}: "em"</li>
-     * <li>{@link #UNITS_EX}: "ex"</li>
-     * <li>{@link #UNITS_MM}: "mm"</li>
-     * <li>{@link #UNITS_CM}. "cm"</li>
-     * <li>{@link #UNITS_INCH}: "in"</li>
-     * <li>{@link #UNITS_PERCENTAGE}: "%"</li>
-     * </ul>
-     * These can be used like <code>Sizeable.UNIT_SYMBOLS[UNITS_PIXELS]</code>.
-     */
-    public static final String[] UNIT_SYMBOLS = { "px", "pt", "pc", "em", "ex",
-            "mm", "cm", "in", "%" };
+    public enum Unit {
+        /**
+         * Unit code representing pixels.
+         */
+        PIXELS("px"),
+        /**
+         * Unit code representing points (1/72nd of an inch).
+         */
+        POINTS("pt"),
+        /**
+         * Unit code representing picas (12 points).
+         */
+        PICAS("pc"),
+        /**
+         * Unit code representing the font-size of the relevant font.
+         */
+        EM("em"),
+        /**
+         * Unit code representing the x-height of the relevant font.
+         */
+        EX("ex"),
+        /**
+         * Unit code representing millimeters.
+         */
+        MM("mm"),
+        /**
+         * Unit code representing centimeters.
+         */
+        CM("cm"),
+        /**
+         * Unit code representing inches.
+         */
+        INCH("in"),
+        /**
+         * Unit code representing in percentage of the containing element
+         * defined by terminal.
+         */
+        PERCENTAGE("%");
+
+        private String symbol;
+
+        private Unit(String symbol) {
+            this.symbol = symbol;
+        }
+
+        public String getSymbol() {
+            return symbol;
+        }
+
+        @Override
+        public String toString() {
+            return symbol;
+        }
+
+        public static Unit getUnitFromSymbol(String symbol) {
+            if (symbol == null) {
+                return null;
+            }
+            for (Unit unit : Unit.values()) {
+                if (symbol.equals(unit.getSymbol())) {
+                    return unit;
+                }
+            }
+            return null;
+        }
+    }
 
     /**
      * Gets the width of the object. Negative number implies unspecified size
@@ -105,14 +161,14 @@ public interface Sizeable extends Serializable {
      * 
      * @return units used in width property.
      */
-    public int getWidthUnits();
+    public Unit getWidthUnits();
 
     /**
      * Gets the height property units.
      * 
      * @return units used in height property.
      */
-    public int getHeightUnits();
+    public Unit getHeightUnits();
 
     /**
      * Sets the height of the component using String presentation.
@@ -139,13 +195,9 @@ public interface Sizeable extends Serializable {
      * @param width
      *            the width of the object.
      * @param unit
-     *            the unit used for the width. Possible values include
-     *            {@link #UNITS_PIXELS}, {@link #UNITS_POINTS},
-     *            {@link #UNITS_PICAS}, {@link #UNITS_EM}, {@link #UNITS_EX},
-     *            {@link #UNITS_MM}, {@link #UNITS_CM}, {@link #UNITS_INCH},
-     *            {@link #UNITS_PERCENTAGE}.
+     *            the unit used for the width.
      */
-    public void setWidth(float width, int unit);
+    public void setWidth(float width, Unit unit);
 
     /**
      * Sets the height of the object. Negative number implies unspecified size
@@ -154,13 +206,9 @@ public interface Sizeable extends Serializable {
      * @param height
      *            the height of the object.
      * @param unit
-     *            the unit used for the width. Possible values include
-     *            {@link #UNITS_PIXELS}, {@link #UNITS_POINTS},
-     *            {@link #UNITS_PICAS}, {@link #UNITS_EM}, {@link #UNITS_EX},
-     *            {@link #UNITS_MM}, {@link #UNITS_CM}, {@link #UNITS_INCH},
-     *            {@link #UNITS_PERCENTAGE}.
+     *            the unit used for the width.
      */
-    public void setHeight(float height, int unit);
+    public void setHeight(float height, Unit unit);
 
     /**
      * Sets the width of the component using String presentation.

@@ -55,7 +55,7 @@ public class Ticket1435 extends Application.LegacyApplication {
 
         // Last known height before the panel was collapsed
         private float lastHeight = -1;
-        private int lastHeightUnit = -1;
+        private Unit lastHeightUnit = null;
 
         public ButtonPanel(String labelString) {
             setCompositionRoot(root);
@@ -163,7 +163,7 @@ public class Ticket1435 extends Application.LegacyApplication {
             root.setExpandRatio(container, 1);
         }
 
-        public void setHeight(int height, int unit) {
+        public void setHeight(int height, Unit unit) {
             root.setHeight(height, unit);
             lastHeight = height;
             lastHeightUnit = unit;
@@ -183,7 +183,7 @@ public class Ticket1435 extends Application.LegacyApplication {
             root.setWidth(width);
         }
 
-        public void setWidth(int width, int unit) {
+        public void setWidth(int width, Unit unit) {
             root.setWidth(width, unit);
         }
 
