@@ -24,7 +24,7 @@ public class DoubleInTextField extends AbstractComponentDataBindingTest {
         addComponent(salary6);
         salary6.setPropertyDataSource(new MethodProperty<Double>(person,
                 "salaryDouble"));
-        salary6.setValueConverter(new Vaadin6ImplicitDoubleConverter());
+        salary6.setConverter(new Vaadin6ImplicitDoubleConverter());
 
     }
 

@@ -53,6 +53,7 @@ import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Root;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
 
 /**
@@ -1226,7 +1227,9 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * </p>
      * <p>
      * The {@link Converter} for an individual field can be overridden using
-     * {@link AbstractField#setValueConverter(Converter)}.
+     * {@link AbstractField#setConverter(Converter)} and for invidual property
+     * ids in a {@link Table} using
+     * {@link Table#setConverter(Object, Converter)}.
      * </p>
      * <p>
      * The converter factory must never be set to null.
