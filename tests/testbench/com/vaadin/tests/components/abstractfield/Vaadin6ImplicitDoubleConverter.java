@@ -7,7 +7,7 @@ import com.vaadin.data.util.converter.Converter;
 public class Vaadin6ImplicitDoubleConverter implements
         Converter<Double, String> {
 
-    public Double convertFromTargetToSource(String value, Locale locale)
+    public Double convertToModel(String value, Locale locale)
             throws com.vaadin.data.util.converter.Converter.ConversionException {
         if (null == value) {
             return null;
@@ -15,7 +15,7 @@ public class Vaadin6ImplicitDoubleConverter implements
         return new Double(value.toString());
     }
 
-    public String convertFromSourceToTarget(Double value, Locale locale)
+    public String convertToPresentation(Double value, Locale locale)
             throws com.vaadin.data.util.converter.Converter.ConversionException {
         if (value == null) {
             return null;
@@ -24,11 +24,11 @@ public class Vaadin6ImplicitDoubleConverter implements
 
     }
 
-    public Class<Double> getSourceType() {
+    public Class<Double> getModelType() {
         return Double.class;
     }
 
-    public Class<String> getTargetType() {
+    public Class<String> getPresentationType() {
         return String.class;
     }
 

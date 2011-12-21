@@ -24,8 +24,8 @@ public class NumberToStringConverter implements Converter<Number, String> {
 
     /**
      * Returns the format used by
-     * {@link #convertFromSourceToTarget(Number, Locale)} and
-     * {@link #convertFromTargetToSource(String, Locale)}.
+     * {@link #convertToPresentation(Number, Locale)} and
+     * {@link #convertToModel(String, Locale)}.
      * 
      * @param locale
      *            The locale to use
@@ -46,7 +46,7 @@ public class NumberToStringConverter implements Converter<Number, String> {
      * com.vaadin.data.util.converter.Converter#convertFromTargetToSource(java
      * .lang.Object, java.util.Locale)
      */
-    public Number convertFromTargetToSource(String value, Locale locale)
+    public Number convertToModel(String value, Locale locale)
             throws ConversionException {
         if (value == null) {
             return null;
@@ -61,7 +61,7 @@ public class NumberToStringConverter implements Converter<Number, String> {
         Number parsedValue = getFormat(locale).parse(value, parsePosition);
         if (parsePosition.getIndex() != value.length()) {
             throw new ConversionException("Could not convert '" + value
-                    + "' to " + getTargetType().getName());
+                    + "' to " + getPresentationType().getName());
         }
 
         if (parsedValue == null) {
@@ -78,7 +78,7 @@ public class NumberToStringConverter implements Converter<Number, String> {
      * com.vaadin.data.util.converter.Converter#convertFromSourceToTarget(java
      * .lang.Object, java.util.Locale)
      */
-    public String convertFromSourceToTarget(Number value, Locale locale)
+    public String convertToPresentation(Number value, Locale locale)
             throws ConversionException {
         if (value == null) {
             return null;
@@ -92,7 +92,7 @@ public class NumberToStringConverter implements Converter<Number, String> {
      * 
      * @see com.vaadin.data.util.converter.Converter#getSourceType()
      */
-    public Class<Number> getSourceType() {
+    public Class<Number> getModelType() {
         return Number.class;
     }
 
@@ -101,7 +101,7 @@ public class NumberToStringConverter implements Converter<Number, String> {
      * 
      * @see com.vaadin.data.util.converter.Converter#getTargetType()
      */
-    public Class<String> getTargetType() {
+    public Class<String> getPresentationType() {
         return String.class;
     }
 

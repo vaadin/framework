@@ -726,7 +726,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
         // Check if the current converter is compatible.
         if (newDataSource != null
-                && (getConverter() == null || !getConverter().getSourceType()
+                && (getConverter() == null || !getConverter().getModelType()
                         .isAssignableFrom(newDataSource.getType()))) {
             // Set a new converter if there is a new data source and the
             // there is no old converter or the old is incompatible.
@@ -813,7 +813,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     private T convertFromDataSource(Object newValue)
             throws Converter.ConversionException {
         if (converter != null) {
-            return converter.convertFromSourceToTarget(newValue, getLocale());
+            return converter.convertToPresentation(newValue, getLocale());
         }
         if (newValue == null) {
             return null;
@@ -850,11 +850,11 @@ public abstract class AbstractField<T> extends AbstractComponent implements
              * an exception.
              */
             try {
-                return converter.convertFromTargetToSource(fieldValue,
+                return converter.convertToModel(fieldValue,
                         getLocale());
             } catch (com.vaadin.data.util.converter.Converter.ConversionException e) {
                 throw new Converter.ConversionException(
-                        getValueConversionError(converter.getSourceType()), e);
+                        getValueConversionError(converter.getModelType()), e);
             }
         }
 
@@ -1030,11 +1030,11 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         // to validate the converted value
         if (getConverter() != null) {
             try {
-                valueToValidate = getConverter().convertFromTargetToSource(
+                valueToValidate = getConverter().convertToModel(
                         fieldValue, getLocale());
             } catch (Exception e) {
                 throw new InvalidValueException(
-                        getValueConversionError(getConverter().getSourceType()));
+                        getValueConversionError(getConverter().getModelType()));
             }
         }
 

@@ -28,8 +28,8 @@ public class DoubleToStringConverter implements Converter<Double, String> {
 
     /**
      * Returns the format used by
-     * {@link #convertFromSourceToTarget(Double, Locale)} and
-     * {@link #convertFromTargetToSource(String, Locale)}.
+     * {@link #convertToPresentation(Double, Locale)} and
+     * {@link #convertToModel(String, Locale)}.
      * 
      * @param locale
      *            The locale to use
@@ -50,7 +50,7 @@ public class DoubleToStringConverter implements Converter<Double, String> {
      * com.vaadin.data.util.converter.Converter#convertFromTargetToSource(java
      * .lang.Object, java.util.Locale)
      */
-    public Double convertFromTargetToSource(String value, Locale locale)
+    public Double convertToModel(String value, Locale locale)
             throws ConversionException {
         if (value == null) {
             return null;
@@ -63,7 +63,7 @@ public class DoubleToStringConverter implements Converter<Double, String> {
         Number parsedValue = getFormat(locale).parse(value, parsePosition);
         if (parsePosition.getIndex() != value.length()) {
             throw new ConversionException("Could not convert '" + value
-                    + "' to " + getTargetType().getName());
+                    + "' to " + getPresentationType().getName());
         }
         return parsedValue.doubleValue();
     }
@@ -75,7 +75,7 @@ public class DoubleToStringConverter implements Converter<Double, String> {
      * com.vaadin.data.util.converter.Converter#convertFromSourceToTarget(java
      * .lang.Object, java.util.Locale)
      */
-    public String convertFromSourceToTarget(Double value, Locale locale)
+    public String convertToPresentation(Double value, Locale locale)
             throws ConversionException {
         if (value == null) {
             return null;
@@ -89,7 +89,7 @@ public class DoubleToStringConverter implements Converter<Double, String> {
      * 
      * @see com.vaadin.data.util.converter.Converter#getSourceType()
      */
-    public Class<Double> getSourceType() {
+    public Class<Double> getModelType() {
         return Double.class;
     }
 
@@ -98,7 +98,7 @@ public class DoubleToStringConverter implements Converter<Double, String> {
      * 
      * @see com.vaadin.data.util.converter.Converter#getTargetType()
      */
-    public Class<String> getTargetType() {
+    public Class<String> getPresentationType() {
         return String.class;
     }
 }

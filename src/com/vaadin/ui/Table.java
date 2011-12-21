@@ -3476,7 +3476,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         Object value = property.getValue();
         if (converter != null) {
-            return converter.convertFromSourceToTarget(value, getLocale());
+            return converter.convertToPresentation(value, getLocale());
         }
         return (null != value) ? value.toString() : "";
     }
@@ -5131,7 +5131,18 @@ public class Table extends AbstractSelect implements Action.Container,
         return rowGenerator;
     }
 
-    // FIXME: Javadoc
+    /**
+     * Sets a converter for a property id.
+     * <p>
+     * The converter is used to format the the data for the given property id
+     * before displaying it in the table.
+     * </p>
+     * 
+     * @param propertyId
+     *            The propertyId to format using the converter
+     * @param converter
+     *            The converter to use for the property id
+     */
     public void setConverter(Object propertyId, Converter<?, String> converter) {
         if (!getContainerPropertyIds().contains(propertyId)) {
             throw new IllegalArgumentException("PropertyId " + propertyId
@@ -5151,12 +5162,26 @@ public class Table extends AbstractSelect implements Action.Container,
         refreshRowCache();
     }
 
-    // FIXME: Javadoc
+    /**
+     * Checks if there is a converter set explicitly for the given property id.
+     * 
+     * @param propertyId
+     *            The propertyId to check
+     * @return true if a converter has been set for the property id, false
+     *         otherwise
+     */
     protected boolean hasConverter(Object propertyId) {
         return propertyValueConverters.containsKey(propertyId);
     }
 
-    // FIXME: Javadoc
+    /**
+     * Returns the converter used to format the given propertyId.
+     * 
+     * @param propertyId
+     *            The propertyId to check
+     * @return The converter used to format the propertyId or null if no
+     *         converter has been set
+     */
     public Converter<Object, String> getConverter(Object propertyId) {
         return propertyValueConverters.get(propertyId);
     }
