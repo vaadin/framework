@@ -20,7 +20,7 @@ import com.vaadin.ui.Field;
  */
 public class FormBuilder implements Serializable {
 
-    private FieldBinderFieldFactory fieldFactory = new com.vaadin.data.fieldbinder.DefaultFieldBinderFieldFactory();
+    private FormBuilderFieldFactory fieldFactory = new DefaultFormBuilderFieldFactory();
     private FieldBinder fieldBinder;
     private static final Logger logger = Logger.getLogger(FormBuilder.class
             .getName());
@@ -46,14 +46,14 @@ public class FormBuilder implements Serializable {
     /**
      * TODO: javadoc
      */
-    public FieldBinderFieldFactory getFieldFactory() {
+    public FormBuilderFieldFactory getFieldFactory() {
         return fieldFactory;
     }
 
     /**
      * TODO: javadoc
      */
-    public void setFieldFactory(FieldBinderFieldFactory fieldFactory) {
+    public void setFieldFactory(FormBuilderFieldFactory fieldFactory) {
         this.fieldFactory = fieldFactory;
     }
 

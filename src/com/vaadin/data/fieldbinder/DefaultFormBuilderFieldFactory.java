@@ -17,7 +17,7 @@ import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
-public class DefaultFieldBinderFieldFactory implements FieldBinderFieldFactory {
+public class DefaultFormBuilderFieldFactory implements FormBuilderFieldFactory {
 
     public static final Object CAPTION_PROPERTY_ID = "Caption";
 
