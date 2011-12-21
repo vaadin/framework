@@ -36,19 +36,19 @@ public class AbstractFieldValueConversions extends TestCase {
         TextField tf = new TextField();
         tf.setConverter(new Converter<String, String>() {
 
-            public String convertFromTargetToSource(String value, Locale locale) {
+            public String convertToModel(String value, Locale locale) {
                 return value;
             }
 
-            public String convertFromSourceToTarget(String value, Locale locale) {
+            public String convertToPresentation(String value, Locale locale) {
                 return value;
             }
 
-            public Class<String> getSourceType() {
+            public Class<String> getModelType() {
                 return String.class;
             }
 
-            public Class<String> getTargetType() {
+            public Class<String> getPresentationType() {
                 return String.class;
             }
         });
@@ -66,20 +66,20 @@ public class AbstractFieldValueConversions extends TestCase {
         TextField tf = new TextField();
         tf.setConverter(new Converter<Integer, String>() {
 
-            public Integer convertFromTargetToSource(String value, Locale locale) {
+            public Integer convertToModel(String value, Locale locale) {
                 throw new ConversionException("Failed");
             }
 
-            public String convertFromSourceToTarget(Integer value, Locale locale) {
+            public String convertToPresentation(Integer value, Locale locale) {
                 throw new ConversionException("Failed");
             }
 
-            public Class<Integer> getSourceType() {
+            public Class<Integer> getModelType() {
                 // TODO Auto-generated method stub
                 return null;
             }
 
-            public Class<String> getTargetType() {
+            public Class<String> getPresentationType() {
                 // TODO Auto-generated method stub
                 return null;
             }
@@ -111,7 +111,7 @@ public class AbstractFieldValueConversions extends TestCase {
         CheckBox cb = new CheckBox();
         cb.setConverter(new Converter<Boolean, Boolean>() {
 
-            public Boolean convertFromTargetToSource(Boolean value,
+            public Boolean convertToModel(Boolean value,
                     Locale locale) {
                 // value from a CheckBox should never be null as long as it is
                 // not set to null (handled by conversion below).
@@ -119,7 +119,7 @@ public class AbstractFieldValueConversions extends TestCase {
                 return value;
             }
 
-            public Boolean convertFromSourceToTarget(Boolean value,
+            public Boolean convertToPresentation(Boolean value,
                     Locale locale) {
                 // Datamodel -> field
                 if (value == null) {
@@ -129,11 +129,11 @@ public class AbstractFieldValueConversions extends TestCase {
                 return value;
             }
 
-            public Class<Boolean> getSourceType() {
+            public Class<Boolean> getModelType() {
                 return Boolean.class;
             }
 
-            public Class<Boolean> getTargetType() {
+            public Class<Boolean> getPresentationType() {
                 return Boolean.class;
             }
 
@@ -143,7 +143,7 @@ public class AbstractFieldValueConversions extends TestCase {
         cb.setPropertyDataSource(property);
         assertEquals(Boolean.FALSE, property.getValue());
         assertEquals(Boolean.FALSE, cb.getValue());
-        Boolean newDmValue = cb.getConverter().convertFromSourceToTarget(
+        Boolean newDmValue = cb.getConverter().convertToPresentation(
                 cb.getValue(), new Locale("fi", "FI"));
         assertEquals(Boolean.FALSE, newDmValue);
 

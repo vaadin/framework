@@ -8,13 +8,13 @@ import java.io.Serializable;
 import java.util.Locale;
 
 /**
- * Interface that implements conversion between objects of one type to another
- * and back.
+ * Interface that implements conversion between objects between model and
+ * presentation types.
  * <p>
- * Typically {@link #convertFromSourceToTarget(Object, Locale)} and
- * {@link #convertFromTargetToSource(Object, Locale)} should be symmetric so
- * that chaining these together returns the original result for all input but
- * this is not a requirement.
+ * Typically {@link #convertToPresentation(Object, Locale)} and
+ * {@link #convertToModel(Object, Locale)} should be symmetric so that chaining
+ * these together returns the original result for all input but this is not a
+ * requirement.
  * </p>
  * <p>
  * Converters must not have any side effects (never update UI from inside a
@@ -27,18 +27,18 @@ import java.util.Locale;
  * If conversion of a value fails, a {@link ConversionException} is thrown.
  * </p>
  * 
- * @param <SOURCE>
- *            The source type. Must be compatible with what
- *            {@link #getSourceType()} returns.
- * @param <TARGET>
- *            The target type. Must be compatible with what
- *            {@link #getTargetType()} returns.
+ * @param <MODEL>
+ *            The model type. Must be compatible with what
+ *            {@link #getModelType()} returns.
+ * @param <PRESENTATION>
+ *            The presentation type. Must be compatible with what
+ *            {@link #getPresentationType()} returns.
  * @author Vaadin Ltd.
  * @version
  * @VERSION@
  * @since 7.0
  */
-public interface Converter<SOURCE, TARGET> extends Serializable {
+public interface Converter<MODEL, PRESENTATION> extends Serializable {
 
     /**
      * Converts the given value from target type to source type.
@@ -46,9 +46,8 @@ public interface Converter<SOURCE, TARGET> extends Serializable {
      * A converter can optionally use locale to do the conversion.
      * </p>
      * A converter should in most cases be symmetric so chaining
-     * {@link #convertFromSourceToTarget(Object, Locale)} and
-     * {@link #convertFromTargetToSource(Object, Locale)} should return the
-     * original value.
+     * {@link #convertToPresentation(Object, Locale)} and
+     * {@link #convertToModel(Object, Locale)} should return the original value.
      * 
      * @param value
      *            The value to convert, compatible with the target type. Can be
@@ -59,7 +58,7 @@ public interface Converter<SOURCE, TARGET> extends Serializable {
      * @throws ConversionException
      *             If the value could not be converted
      */
-    public SOURCE convertFromTargetToSource(TARGET value, Locale locale)
+    public MODEL convertToModel(PRESENTATION value, Locale locale)
             throws ConversionException;
 
     /**
@@ -68,9 +67,8 @@ public interface Converter<SOURCE, TARGET> extends Serializable {
      * A converter can optionally use locale to do the conversion.
      * </p>
      * A converter should in most cases be symmetric so chaining
-     * {@link #convertFromSourceToTarget(Object, Locale)} and
-     * {@link #convertFromTargetToSource(Object, Locale)} should return the
-     * original value.
+     * {@link #convertToPresentation(Object, Locale)} and
+     * {@link #convertToModel(Object, Locale)} should return the original value.
      * 
      * @param value
      *            The value to convert, compatible with the target type. Can be
@@ -81,34 +79,33 @@ public interface Converter<SOURCE, TARGET> extends Serializable {
      * @throws ConversionException
      *             If the value could not be converted
      */
-    public TARGET convertFromSourceToTarget(SOURCE value, Locale locale)
+    public PRESENTATION convertToPresentation(MODEL value, Locale locale)
             throws ConversionException;
 
     /**
      * The source type of the converter.
      * 
      * Values of this type can be passed to
-     * {@link #convertFromSourceToTarget(Object, Locale)}.
+     * {@link #convertToPresentation(Object, Locale)}.
      * 
      * @return The source type
      */
-    public Class<SOURCE> getSourceType();
+    public Class<MODEL> getModelType();
 
     /**
      * The target type of the converter.
      * 
      * Values of this type can be passed to
-     * {@link #convertFromTargetToSource(Object, Locale)}.
+     * {@link #convertToModel(Object, Locale)}.
      * 
      * @return The target type
      */
-    public Class<TARGET> getTargetType();
+    public Class<PRESENTATION> getPresentationType();
 
     /**
      * An exception that signals that the value passed to
-     * {@link Converter#convertFromSourceToTarget(Object, Locale)} or
-     * {@link Converter#convertFromTargetToSource(Object, Locale)} could not be
-     * converted.
+     * {@link Converter#convertToPresentation(Object, Locale)} or
+     * {@link Converter#convertToModel(Object, Locale)} could not be converted.
      * 
      * @author Vaadin Ltd
      * @version

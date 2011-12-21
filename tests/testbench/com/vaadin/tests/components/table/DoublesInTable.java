@@ -145,14 +145,14 @@ public class DoublesInTable extends TestBase {
     private void addConverters(Table t) {
         t.setConverter("sex", new Converter<Sex, String>() {
 
-            public Sex convertFromTargetToSource(String value, Locale locale)
+            public Sex convertToModel(String value, Locale locale)
                     throws com.vaadin.data.util.converter.Converter.ConversionException {
                 // not used in this test - Table only converts from source to
                 // target
                 return null;
             }
 
-            public String convertFromSourceToTarget(Sex value, Locale locale)
+            public String convertToPresentation(Sex value, Locale locale)
                     throws com.vaadin.data.util.converter.Converter.ConversionException {
                 if (value == null) {
                     value = Sex.UNKNOWN;
@@ -160,23 +160,23 @@ public class DoublesInTable extends TestBase {
                 return value.getStringRepresentation();
             }
 
-            public Class<Sex> getSourceType() {
+            public Class<Sex> getModelType() {
                 return Sex.class;
             }
 
-            public Class<String> getTargetType() {
+            public Class<String> getPresentationType() {
                 return String.class;
             }
         });
         t.setConverter("deceased", new Converter<Boolean, String>() {
 
-            public Boolean convertFromTargetToSource(String value, Locale locale) {
+            public Boolean convertToModel(String value, Locale locale) {
                 // not used in this test - Table only converts from source to
                 // target
                 return null;
             }
 
-            public String convertFromSourceToTarget(Boolean value, Locale locale) {
+            public String convertToPresentation(Boolean value, Locale locale) {
                 if (value == null || value) {
                     return "YES, DEAD!";
                 } else {
@@ -184,24 +184,24 @@ public class DoublesInTable extends TestBase {
                 }
             }
 
-            public Class<Boolean> getSourceType() {
+            public Class<Boolean> getModelType() {
                 return Boolean.class;
             }
 
-            public Class<String> getTargetType() {
+            public Class<String> getPresentationType() {
                 return String.class;
             }
         });
         t.setConverter("age", new Converter<Integer, String>() {
 
-            public Integer convertFromTargetToSource(String value, Locale locale)
+            public Integer convertToModel(String value, Locale locale)
                     throws com.vaadin.data.util.converter.Converter.ConversionException {
                 // not used in this test - Table only converts from source to
                 // target
                 return null;
             }
 
-            public String convertFromSourceToTarget(Integer value, Locale locale)
+            public String convertToPresentation(Integer value, Locale locale)
                     throws com.vaadin.data.util.converter.Converter.ConversionException {
                 if (value == null) {
                     return null;
@@ -217,34 +217,34 @@ public class DoublesInTable extends TestBase {
                 }
             }
 
-            public Class<Integer> getSourceType() {
+            public Class<Integer> getModelType() {
                 return Integer.class;
             }
 
-            public Class<String> getTargetType() {
+            public Class<String> getPresentationType() {
                 return String.class;
             }
         });
         t.setConverter("address", new Converter<Address, String>() {
 
-            public Address convertFromTargetToSource(String value, Locale locale)
+            public Address convertToModel(String value, Locale locale)
                     throws ConversionException {
                 // not used in this test - Table only converts from source to
                 // target
                 return null;
             }
 
-            public String convertFromSourceToTarget(Address value, Locale locale)
+            public String convertToPresentation(Address value, Locale locale)
                     throws ConversionException {
                 return value.getStreetAddress() + ", " + value.getCity() + " ("
                         + value.getCountry() + ")";
             }
 
-            public Class<Address> getSourceType() {
+            public Class<Address> getModelType() {
                 return Address.class;
             }
 
-            public Class<String> getTargetType() {
+            public Class<String> getPresentationType() {
                 return String.class;
             }
 

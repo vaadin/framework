@@ -10,9 +10,9 @@ import java.util.Locale;
  * A converter that wraps another {@link Converter} and reverses source and
  * target types.
  * 
- * @param <SOURCE>
+ * @param <MODEL>
  *            The source type
- * @param <TARGET>
+ * @param <PRESENTATION>
  *            The target type
  * 
  * @author Vaadin Ltd
@@ -20,10 +20,10 @@ import java.util.Locale;
  * @VERSION@
  * @since 7.0
  */
-public class ReverseConverter<SOURCE, TARGET> implements
-        Converter<SOURCE, TARGET> {
+public class ReverseConverter<MODEL, PRESENTATION> implements
+        Converter<MODEL, PRESENTATION> {
 
-    private Converter<TARGET, SOURCE> realConverter;
+    private Converter<PRESENTATION, MODEL> realConverter;
 
     /**
      * Creates a converter from source to target based on a converter that
@@ -32,7 +32,7 @@ public class ReverseConverter<SOURCE, TARGET> implements
      * @param converter
      *            The converter to use in a reverse fashion
      */
-    public ReverseConverter(Converter<TARGET, SOURCE> converter) {
+    public ReverseConverter(Converter<PRESENTATION, MODEL> converter) {
         this.realConverter = converter;
     }
 
@@ -43,9 +43,9 @@ public class ReverseConverter<SOURCE, TARGET> implements
      * com.vaadin.data.util.converter.Converter#convertFromTargetToSource(java
      * .lang.Object, java.util.Locale)
      */
-    public SOURCE convertFromTargetToSource(TARGET value, Locale locale)
+    public MODEL convertToModel(PRESENTATION value, Locale locale)
             throws com.vaadin.data.util.converter.Converter.ConversionException {
-        return realConverter.convertFromSourceToTarget(value, locale);
+        return realConverter.convertToPresentation(value, locale);
     }
 
     /*
@@ -55,9 +55,9 @@ public class ReverseConverter<SOURCE, TARGET> implements
      * com.vaadin.data.util.converter.Converter#convertFromSourceToTarget(java
      * .lang.Object, java.util.Locale)
      */
-    public TARGET convertFromSourceToTarget(SOURCE value, Locale locale)
+    public PRESENTATION convertToPresentation(MODEL value, Locale locale)
             throws com.vaadin.data.util.converter.Converter.ConversionException {
-        return realConverter.convertFromTargetToSource(value, locale);
+        return realConverter.convertToModel(value, locale);
     }
 
     /*
@@ -65,8 +65,8 @@ public class ReverseConverter<SOURCE, TARGET> implements
      * 
      * @see com.vaadin.data.util.converter.Converter#getSourceType()
      */
-    public Class<SOURCE> getSourceType() {
-        return realConverter.getTargetType();
+    public Class<MODEL> getModelType() {
+        return realConverter.getPresentationType();
     }
 
     /*
@@ -74,8 +74,8 @@ public class ReverseConverter<SOURCE, TARGET> implements
      * 
      * @see com.vaadin.data.util.converter.Converter#getTargetType()
      */
-    public Class<TARGET> getTargetType() {
-        return realConverter.getSourceType();
+    public Class<PRESENTATION> getPresentationType() {
+        return realConverter.getModelType();
     }
 
 }

@@ -28,8 +28,8 @@ public class DateToStringConverter implements Converter<Date, String> {
 
     /**
      * Returns the format used by
-     * {@link #convertFromSourceToTarget(Date, Locale)} and
-     * {@link #convertFromTargetToSource(String, Locale)}.
+     * {@link #convertToPresentation(Date, Locale)} and
+     * {@link #convertToModel(String, Locale)}.
      * 
      * @param locale
      *            The locale to use
@@ -53,7 +53,7 @@ public class DateToStringConverter implements Converter<Date, String> {
      * com.vaadin.data.util.converter.Converter#convertFromTargetToSource(java
      * .lang.Object, java.util.Locale)
      */
-    public Date convertFromTargetToSource(String value, Locale locale)
+    public Date convertToModel(String value, Locale locale)
             throws com.vaadin.data.util.converter.Converter.ConversionException {
         if (value == null) {
             return null;
@@ -66,7 +66,7 @@ public class DateToStringConverter implements Converter<Date, String> {
         Date parsedValue = getFormat(locale).parse(value, parsePosition);
         if (parsePosition.getIndex() != value.length()) {
             throw new ConversionException("Could not convert '" + value
-                    + "' to " + getTargetType().getName());
+                    + "' to " + getPresentationType().getName());
         }
 
         return parsedValue;
@@ -79,7 +79,7 @@ public class DateToStringConverter implements Converter<Date, String> {
      * com.vaadin.data.util.converter.Converter#convertFromSourceToTarget(java
      * .lang.Object, java.util.Locale)
      */
-    public String convertFromSourceToTarget(Date value, Locale locale)
+    public String convertToPresentation(Date value, Locale locale)
             throws com.vaadin.data.util.converter.Converter.ConversionException {
         if (value == null) {
             return null;
@@ -93,7 +93,7 @@ public class DateToStringConverter implements Converter<Date, String> {
      * 
      * @see com.vaadin.data.util.converter.Converter#getSourceType()
      */
-    public Class<Date> getSourceType() {
+    public Class<Date> getModelType() {
         return Date.class;
     }
 
@@ -102,7 +102,7 @@ public class DateToStringConverter implements Converter<Date, String> {
      * 
      * @see com.vaadin.data.util.converter.Converter#getTargetType()
      */
-    public Class<String> getTargetType() {
+    public Class<String> getPresentationType() {
         return String.class;
     }
 

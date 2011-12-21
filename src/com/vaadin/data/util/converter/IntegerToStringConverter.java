@@ -25,8 +25,8 @@ public class IntegerToStringConverter implements Converter<Integer, String> {
 
     /**
      * Returns the format used by
-     * {@link #convertFromSourceToTarget(Integer, Locale)} and
-     * {@link #convertFromTargetToSource(String, Locale)}.
+     * {@link #convertToPresentation(Integer, Locale)} and
+     * {@link #convertToModel(String, Locale)}.
      * 
      * @param locale
      *            The locale to use
@@ -39,7 +39,7 @@ public class IntegerToStringConverter implements Converter<Integer, String> {
         return NumberFormat.getIntegerInstance(locale);
     }
 
-    public Integer convertFromTargetToSource(String value, Locale locale)
+    public Integer convertToModel(String value, Locale locale)
             throws ConversionException {
         if (value == null) {
             return null;
@@ -54,7 +54,7 @@ public class IntegerToStringConverter implements Converter<Integer, String> {
         Number parsedValue = getFormat(locale).parse(value, parsePosition);
         if (parsePosition.getIndex() != value.length()) {
             throw new ConversionException("Could not convert '" + value
-                    + "' to " + getSourceType().getName());
+                    + "' to " + getModelType().getName());
         }
 
         if (parsedValue == null) {
@@ -64,7 +64,7 @@ public class IntegerToStringConverter implements Converter<Integer, String> {
         return parsedValue.intValue();
     }
 
-    public String convertFromSourceToTarget(Integer value, Locale locale)
+    public String convertToPresentation(Integer value, Locale locale)
             throws ConversionException {
         if (value == null) {
             return null;
@@ -73,11 +73,11 @@ public class IntegerToStringConverter implements Converter<Integer, String> {
         return getFormat(locale).format(value);
     }
 
-    public Class<Integer> getSourceType() {
+    public Class<Integer> getModelType() {
         return Integer.class;
     }
 
-    public Class<String> getTargetType() {
+    public Class<String> getPresentationType() {
         return String.class;
     }
 
