@@ -7,8 +7,6 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Logger;
 
-import org.apache.tools.ant.BuildException;
-
 import com.vaadin.data.fieldbinder.FieldBinder.BindException;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.DefaultFieldFactory;
@@ -278,6 +276,18 @@ public class FormBuilder implements Serializable {
         public FormBuilderException(Throwable cause) {
             super(cause);
             // TODO Auto-generated constructor stub
+        }
+
+    }
+
+    public static class BuildException extends RuntimeException {
+
+        public BuildException(String message) {
+            super(message);
+        }
+
+        public BuildException(String message, Throwable t) {
+            super(message, t);
         }
 
     }

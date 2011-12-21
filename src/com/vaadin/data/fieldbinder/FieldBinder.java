@@ -708,7 +708,7 @@ public class FieldBinder implements Serializable {
 
     }
 
-    public class BindException extends RuntimeException {
+    public static class BindException extends RuntimeException {
 
         public BindException(String message) {
             super(message);
