@@ -226,7 +226,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     }
 
     @Override
-    public void setWidth(float width, int unit) {
+    public void setWidth(float width, Unit unit) {
         /*
          * child tree repaints may be needed, due to our fall back support for
          * invalid relative sizes
@@ -237,9 +237,9 @@ public abstract class AbstractComponentContainer extends AbstractComponent
             // children currently in invalid state may need repaint
             dirtyChildren = getInvalidSizedChildren(false);
         } else if ((width == SIZE_UNDEFINED && getWidth() != SIZE_UNDEFINED)
-                || (unit == UNITS_PERCENTAGE
-                        && getWidthUnits() != UNITS_PERCENTAGE && !ComponentSizeValidator
-                        .parentCanDefineWidth(this))) {
+                || (unit == Unit.PERCENTAGE
+                        && getWidthUnits() != Unit.PERCENTAGE && !ComponentSizeValidator
+                            .parentCanDefineWidth(this))) {
             /*
              * relative width children may get to invalid state if width becomes
              * invalid. Width may also become invalid if units become percentage
@@ -326,7 +326,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     }
 
     @Override
-    public void setHeight(float height, int unit) {
+    public void setHeight(float height, Unit unit) {
         /*
          * child tree repaints may be needed, due to our fall back support for
          * invalid relative sizes
@@ -337,9 +337,9 @@ public abstract class AbstractComponentContainer extends AbstractComponent
             // children currently in invalid state may need repaint
             dirtyChildren = getInvalidSizedChildren(true);
         } else if ((height == SIZE_UNDEFINED && getHeight() != SIZE_UNDEFINED)
-                || (unit == UNITS_PERCENTAGE
-                        && getHeightUnits() != UNITS_PERCENTAGE && !ComponentSizeValidator
-                        .parentCanDefineHeight(this))) {
+                || (unit == Unit.PERCENTAGE
+                        && getHeightUnits() != Unit.PERCENTAGE && !ComponentSizeValidator
+                            .parentCanDefineHeight(this))) {
             /*
              * relative height children may get to invalid state if height
              * becomes invalid. Height may also become invalid if units become

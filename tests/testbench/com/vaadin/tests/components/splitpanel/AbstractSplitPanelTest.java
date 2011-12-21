@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.splitpanel;
 
 import com.vaadin.terminal.Sizeable;
+import com.vaadin.terminal.Sizeable.Unit;
 import com.vaadin.tests.components.AbstractLayoutTest;
 import com.vaadin.ui.AbstractSplitPanel;
 import com.vaadin.ui.AbstractSplitPanel.SplitterClickEvent;
@@ -55,7 +56,7 @@ public abstract class AbstractSplitPanelTest<T extends AbstractSplitPanel>
 
         private boolean reverse = false;
         private int position;
-        private int unit;
+        private Unit unit;
         private String posString;
 
         public SplitPosition(String pos) {
@@ -67,10 +68,10 @@ public abstract class AbstractSplitPanelTest<T extends AbstractSplitPanel>
 
             if (pos.endsWith("px")) {
                 position = Integer.parseInt(pos.substring(0, pos.length() - 2));
-                unit = Sizeable.UNITS_PIXELS;
+                unit = Sizeable.Unit.PIXELS;
             } else if (pos.endsWith("%")) {
                 position = Integer.parseInt(pos.substring(0, pos.length() - 1));
-                unit = Sizeable.UNITS_PERCENTAGE;
+                unit = Sizeable.Unit.PERCENTAGE;
             } else {
                 throw new RuntimeException("Could not parse " + pos);
             }

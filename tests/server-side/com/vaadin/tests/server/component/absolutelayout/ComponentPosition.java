@@ -3,6 +3,7 @@ package com.vaadin.tests.server.component.absolutelayout;
 import junit.framework.TestCase;
 
 import com.vaadin.terminal.Sizeable;
+import com.vaadin.terminal.Sizeable.Unit;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 
@@ -12,7 +13,7 @@ public class ComponentPosition extends TestCase {
     private static final String PARTIAL_CSS = "top:7.0px;left:7.0em;";
     private static final Float CSS_VALUE = Float.valueOf(7);
 
-    private static final int UNIT_UNSET = Sizeable.UNITS_PIXELS;
+    private static final Unit UNIT_UNSET = Sizeable.Unit.PIXELS;
 
     /**
      * Add component w/o giving positions, assert that everything is unset
@@ -51,11 +52,11 @@ public class ComponentPosition extends TestCase {
         assertEquals(CSS_VALUE, layout.getPosition(b).getLeftValue());
         assertEquals(CSS_VALUE, layout.getPosition(b).getRightValue());
 
-        assertEquals(Sizeable.UNITS_PIXELS, layout.getPosition(b).getTopUnits());
-        assertEquals(Sizeable.UNITS_PICAS, layout.getPosition(b)
+        assertEquals(Sizeable.Unit.PIXELS, layout.getPosition(b).getTopUnits());
+        assertEquals(Sizeable.Unit.PICAS, layout.getPosition(b)
                 .getBottomUnits());
-        assertEquals(Sizeable.UNITS_EM, layout.getPosition(b).getLeftUnits());
-        assertEquals(Sizeable.UNITS_PERCENTAGE, layout.getPosition(b)
+        assertEquals(Sizeable.Unit.EM, layout.getPosition(b).getLeftUnits());
+        assertEquals(Sizeable.Unit.PERCENTAGE, layout.getPosition(b)
                 .getRightUnits());
 
         assertEquals(7, layout.getPosition(b).getZIndex());
@@ -77,9 +78,9 @@ public class ComponentPosition extends TestCase {
         assertEquals(CSS_VALUE, layout.getPosition(b).getLeftValue());
         assertNull(layout.getPosition(b).getRightValue());
 
-        assertEquals(Sizeable.UNITS_PIXELS, layout.getPosition(b).getTopUnits());
+        assertEquals(Sizeable.Unit.PIXELS, layout.getPosition(b).getTopUnits());
         assertEquals(UNIT_UNSET, layout.getPosition(b).getBottomUnits());
-        assertEquals(Sizeable.UNITS_EM, layout.getPosition(b).getLeftUnits());
+        assertEquals(Sizeable.Unit.EM, layout.getPosition(b).getLeftUnits());
         assertEquals(UNIT_UNSET, layout.getPosition(b).getRightUnits());
 
         assertEquals(-1, layout.getPosition(b).getZIndex());
@@ -104,9 +105,9 @@ public class ComponentPosition extends TestCase {
         assertEquals(CSS_VALUE, layout.getPosition(b).getLeftValue());
         assertNull(layout.getPosition(b).getRightValue());
 
-        assertEquals(Sizeable.UNITS_PIXELS, layout.getPosition(b).getTopUnits());
+        assertEquals(Sizeable.Unit.PIXELS, layout.getPosition(b).getTopUnits());
         assertEquals(UNIT_UNSET, layout.getPosition(b).getBottomUnits());
-        assertEquals(Sizeable.UNITS_EM, layout.getPosition(b).getLeftUnits());
+        assertEquals(Sizeable.Unit.EM, layout.getPosition(b).getLeftUnits());
         assertEquals(UNIT_UNSET, layout.getPosition(b).getRightUnits());
 
         assertEquals(-1, layout.getPosition(b).getZIndex());
@@ -131,21 +132,20 @@ public class ComponentPosition extends TestCase {
         layout.getPosition(b).setBottomValue(SIZE);
         layout.getPosition(b).setLeftValue(SIZE);
 
-        layout.getPosition(b).setTopUnits(Sizeable.UNITS_CM);
-        layout.getPosition(b).setRightUnits(Sizeable.UNITS_EX);
-        layout.getPosition(b).setBottomUnits(Sizeable.UNITS_INCH);
-        layout.getPosition(b).setLeftUnits(Sizeable.UNITS_MM);
+        layout.getPosition(b).setTopUnits(Sizeable.Unit.CM);
+        layout.getPosition(b).setRightUnits(Sizeable.Unit.EX);
+        layout.getPosition(b).setBottomUnits(Sizeable.Unit.INCH);
+        layout.getPosition(b).setLeftUnits(Sizeable.Unit.MM);
 
         assertEquals(SIZE, layout.getPosition(b).getTopValue());
         assertEquals(SIZE, layout.getPosition(b).getRightValue());
         assertEquals(SIZE, layout.getPosition(b).getBottomValue());
         assertEquals(SIZE, layout.getPosition(b).getLeftValue());
 
-        assertEquals(Sizeable.UNITS_CM, layout.getPosition(b).getTopUnits());
-        assertEquals(Sizeable.UNITS_EX, layout.getPosition(b).getRightUnits());
-        assertEquals(Sizeable.UNITS_INCH, layout.getPosition(b)
-                .getBottomUnits());
-        assertEquals(Sizeable.UNITS_MM, layout.getPosition(b).getLeftUnits());
+        assertEquals(Sizeable.Unit.CM, layout.getPosition(b).getTopUnits());
+        assertEquals(Sizeable.Unit.EX, layout.getPosition(b).getRightUnits());
+        assertEquals(Sizeable.Unit.INCH, layout.getPosition(b).getBottomUnits());
+        assertEquals(Sizeable.Unit.MM, layout.getPosition(b).getLeftUnits());
 
     }
 
@@ -159,21 +159,20 @@ public class ComponentPosition extends TestCase {
         Button b = new Button();
         layout.addComponent(b);
 
-        layout.getPosition(b).setTop(SIZE, Sizeable.UNITS_CM);
-        layout.getPosition(b).setRight(SIZE, Sizeable.UNITS_EX);
-        layout.getPosition(b).setBottom(SIZE, Sizeable.UNITS_INCH);
-        layout.getPosition(b).setLeft(SIZE, Sizeable.UNITS_MM);
+        layout.getPosition(b).setTop(SIZE, Sizeable.Unit.CM);
+        layout.getPosition(b).setRight(SIZE, Sizeable.Unit.EX);
+        layout.getPosition(b).setBottom(SIZE, Sizeable.Unit.INCH);
+        layout.getPosition(b).setLeft(SIZE, Sizeable.Unit.MM);
 
         assertEquals(SIZE, layout.getPosition(b).getTopValue());
         assertEquals(SIZE, layout.getPosition(b).getRightValue());
         assertEquals(SIZE, layout.getPosition(b).getBottomValue());
         assertEquals(SIZE, layout.getPosition(b).getLeftValue());
 
-        assertEquals(Sizeable.UNITS_CM, layout.getPosition(b).getTopUnits());
-        assertEquals(Sizeable.UNITS_EX, layout.getPosition(b).getRightUnits());
-        assertEquals(Sizeable.UNITS_INCH, layout.getPosition(b)
-                .getBottomUnits());
-        assertEquals(Sizeable.UNITS_MM, layout.getPosition(b).getLeftUnits());
+        assertEquals(Sizeable.Unit.CM, layout.getPosition(b).getTopUnits());
+        assertEquals(Sizeable.Unit.EX, layout.getPosition(b).getRightUnits());
+        assertEquals(Sizeable.Unit.INCH, layout.getPosition(b).getBottomUnits());
+        assertEquals(Sizeable.Unit.MM, layout.getPosition(b).getLeftUnits());
 
     }
 

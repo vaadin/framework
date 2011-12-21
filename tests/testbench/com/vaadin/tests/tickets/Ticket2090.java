@@ -3,7 +3,6 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
@@ -54,9 +53,8 @@ public class Ticket2090 extends Application.LegacyApplication {
 
     private void updateLabel() {
         label.setValue("width: " + target.getWidth()
-                + Sizeable.UNIT_SYMBOLS[target.getWidthUnits()] + ", height: "
-                + target.getHeight()
-                + Sizeable.UNIT_SYMBOLS[target.getHeightUnits()]);
+                + target.getWidthUnits().getSymbol() + ", height: "
+                + target.getHeight() + target.getHeightUnits().getSymbol());
     }
 
 }

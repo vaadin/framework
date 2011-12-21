@@ -263,7 +263,7 @@ public class LoginForm extends CustomComponent {
     }
 
     @Override
-    public void setWidth(float width, int unit) {
+    public void setWidth(float width, Unit unit) {
         super.setWidth(width, unit);
         if (iframe != null) {
             if (width < 0) {
@@ -275,7 +275,7 @@ public class LoginForm extends CustomComponent {
     }
 
     @Override
-    public void setHeight(float height, int unit) {
+    public void setHeight(float height, Unit unit) {
         super.setHeight(height, unit);
         if (iframe != null) {
             if (height < 0) {
