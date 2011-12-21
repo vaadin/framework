@@ -44,4 +44,15 @@ public class IntegerValidator extends AbstractStringValidator {
         }
     }
 
+    @Override
+    public void validate(Object value) throws InvalidValueException {
+        if (value != null && value instanceof Integer) {
+            // Allow Integers to pass through the validator for easier
+            // migration. Otherwise a TextField connected to an integer property
+            // with an IntegerValidator will fail.
+            return;
+        }
+
+        super.validate(value);
+    }
 }
