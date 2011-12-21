@@ -40,7 +40,7 @@ public class TableMultiSelectSimple extends TestBase {
 
         for (int i = 0; i < 10; i++) {
             t.addItem(i);
-            t.getContainerProperty(i, "string").setValue(i);
+            t.getContainerProperty(i, "string").setValue(String.valueOf(i));
             t.getContainerProperty(i, "button")
                     .setValue(new Button("Click me"));
         }
