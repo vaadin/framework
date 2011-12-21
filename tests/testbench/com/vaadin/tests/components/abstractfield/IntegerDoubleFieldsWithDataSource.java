@@ -38,7 +38,7 @@ public class IntegerDoubleFieldsWithDataSource extends TestBase {
                 try {
                     log.log("Value for " + tf.getCaption() + " changed to "
                             + tf.getValue());
-                    log.log("Converted value is " + tf.getConvertedFieldValue());
+                    log.log("Converted value is " + tf.getConvertedValue());
                 } catch (Exception e) {
                     // TODO: handle exception
                     e.printStackTrace();

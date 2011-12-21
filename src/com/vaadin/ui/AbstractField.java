@@ -255,7 +255,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                     // Commits the value to datasource.
                     valueWasModifiedByDataSourceDuringCommit = false;
                     committingValueToDataSource = true;
-                    getPropertyDataSource().setValue(getConvertedFieldValue());
+                    getPropertyDataSource().setValue(getConvertedValue());
                 } catch (final Throwable e) {
 
                     // Sets the buffering state.
@@ -532,8 +532,10 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * <p>
      * Note that the object returned is compatible with getType(). For example,
      * if the type is String, this returns Strings even when the underlying
-     * datasource is of some other type. In order to access the native value of
-     * the datasource, use getDataSourceValue() instead.
+     * datasource is of some other type. In order to access the converted value,
+     * use {@link #getConvertedValue()} and to access the value of the property
+     * data source, use {@link Property#getValue()} for the property data
+     * source.
      * </p>
      * 
      * <p>
@@ -898,11 +900,28 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
     /**
      * Returns the current field value converted to the data source type.
+     * <p>
+     * This returns the same as {@link AbstractField#getValue()} if no converter
+     * has been set.
+     * </p>
      * 
      * @return The converted value that is compatible with the data source type
      */
-    public Object getConvertedFieldValue() {
+    public Object getConvertedValue() {
         return convertToDataSource(getFieldValue());
+    }
+
+    /**
+     * Sets the value of the field using a value of the data source type. The
+     * value given is converted to the field type and then assigned to the
+     * field. This will update the property data source in the same way as when
+     * {@link #setValue(Object)} is called.
+     * 
+     * @param value
+     *            The value to set. Must be the same type as the data source.
+     */
+    public void setConvertedValue(Object value) {
+        setValue(convertFromDataSource(value));
     }
 
     /* Validation */
