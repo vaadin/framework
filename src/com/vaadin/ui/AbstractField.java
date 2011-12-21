@@ -857,7 +857,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                         getLocale());
             } catch (com.vaadin.data.util.converter.Converter.ConversionException e) {
                 throw new Converter.ConversionException(
-                        getValueConversionError(valueConverter.getSourceType()));
+                        getValueConversionError(valueConverter.getSourceType()),
+                        e);
             }
         }
 
