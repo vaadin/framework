@@ -32,9 +32,9 @@ import com.vaadin.ui.Field;
  * The annotations of the fields of the beans are used to determine the
  * validation to perform.
  * 
- * Note that a JSR-303 implementation (e.g. Hibernate Validator or agimatec
- * validation) must be present on the project classpath when using bean
- * validation.
+ * Note that a JSR-303 implementation (e.g. Hibernate Validator or Apache Bean
+ * Validation - formerly agimatec validation) must be present on the project
+ * classpath when using bean validation.
  * 
  * @since 7.0
  * 
@@ -61,6 +61,15 @@ public class BeanValidationValidator implements Validator {
         private final Object value;
         private final ConstraintDescriptor<?> descriptor;
 
+        /**
+         * Create a simple immutable message interpolator context.
+         * 
+         * @param value
+         *            value being validated
+         * @param descriptor
+         *            ConstraintDescriptor corresponding to the constraint being
+         *            validated
+         */
         public SimpleContext(Object value, ConstraintDescriptor<?> descriptor) {
             this.value = value;
             this.descriptor = descriptor;
@@ -100,17 +109,18 @@ public class BeanValidationValidator implements Validator {
      * 
      * @param field
      *            the {@link Field} component to which to add a validator
-     * @param propertyId
+     * @param objectPropertyId
      *            the property ID of the field of the bean that this field
      *            displays
      * @param beanClass
      *            the class of the bean with the bean validation annotations
      * @return the created validator
      */
-    public static BeanValidationValidator addValidator(Field field,
+    public static BeanValidationValidator addValidator(Field<?> field,
             Object objectPropertyId, Class<?> beanClass) {
         if (objectPropertyId == null || !(objectPropertyId instanceof String)) {
-            throw new IllegalArgumentException("Property id must be a non-null String");
+            throw new IllegalArgumentException(
+                    "Property id must be a non-null String");
         }
 
         String propertyId = (String) objectPropertyId;
@@ -134,6 +144,13 @@ public class BeanValidationValidator implements Validator {
         return validator;
     }
 
+    /**
+     * Check the validity of a value. Normally, {@link #validate(Object)} should
+     * be used instead of this method to also get the validation error message.
+     * 
+     * @param value
+     * @return true if the value is valid
+     */
     public boolean isValid(Object value) {
         try {
             validate(value);
@@ -167,6 +184,12 @@ public class BeanValidationValidator implements Validator {
         return false;
     }
 
+    /**
+     * Returns the message to show if a value is required but missing. The
+     * message that of the {@link NotNull} annotation.
+     * 
+     * @return error message to show for missing required value
+     */
     @SuppressWarnings("unchecked")
     public String getRequiredMessage() {
         return getErrorMessage(null, NotNull.class);
@@ -265,12 +288,18 @@ public class BeanValidationValidator implements Validator {
     /**
      * Gets the locale used for validation error messages.
      * 
-     * @return
+     * @return locale used for validation
      */
     public Locale getLocale() {
         return locale;
     }
 
+    /**
+     * Returns the underlying JSR-303 bean validator factory used. A factory is
+     * created using {@link Validation} if necessary.
+     * 
+     * @return {@link ValidatorFactory} to use
+     */
     protected static ValidatorFactory getJavaxBeanValidatorFactory() {
         if (factory == null) {
             factory = Validation.buildDefaultValidatorFactory();
@@ -279,6 +308,13 @@ public class BeanValidationValidator implements Validator {
         return factory;
     }
 
+    /**
+     * Returns a shared Validator instance to use. An instance is created using
+     * the validator factory if necessary and thereafter reused by the
+     * {@link BeanValidationValidator} instance.
+     * 
+     * @return the JSR-303 {@link javax.validation.Validator} to use
+     */
     protected javax.validation.Validator getJavaxBeanValidator() {
         if (javaxBeanValidator == null) {
             javaxBeanValidator = getJavaxBeanValidatorFactory().getValidator();
@@ -287,6 +323,12 @@ public class BeanValidationValidator implements Validator {
         return javaxBeanValidator;
     }
 
+    /**
+     * Checks whether a bean validation implementation (e.g. Hibernate Validator
+     * or Apache Bean Validation) is available.
+     * 
+     * @return true if a JSR-303 bean validation implementation is available
+     */
     public static boolean isImplementationAvailable() {
         if (implementationAvailable == null) {
             try {
