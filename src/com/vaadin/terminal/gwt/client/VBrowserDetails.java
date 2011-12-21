@@ -64,7 +64,7 @@ public class VBrowserDetails implements Serializable {
 
         // chromeframe
         isChromeFrameCapable = userAgent.indexOf("chromeframe") != -1;
-        isChromeFrame = isChromeFrameCapable && !isIE;
+        isChromeFrame = isChromeFrameCapable && !isChrome;
 
         // Rendering engine version
         try {
