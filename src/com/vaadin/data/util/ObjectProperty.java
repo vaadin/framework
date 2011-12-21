@@ -114,12 +114,9 @@ public class ObjectProperty<T> extends AbstractProperty<T> {
      *            the New value of the property.
      * @throws <code>Property.ReadOnlyException</code> if the object is in
      *         read-only mode
-     * @throws <code>Property.ConversionException</code> if the newValue is not
-     *         of a correct type
      */
     @SuppressWarnings("unchecked")
-    public void setValue(Object newValue) throws Property.ReadOnlyException,
-            Property.ConversionException {
+    public void setValue(Object newValue) throws Property.ReadOnlyException {
 
         // Checks the mode
         if (isReadOnly()) {
@@ -128,7 +125,7 @@ public class ObjectProperty<T> extends AbstractProperty<T> {
 
         // Checks the type of the value
         if (newValue != null && !type.isAssignableFrom(newValue.getClass())) {
-            throw new Property.ConversionException(
+            throw new IllegalArgumentException(
                     "Invalid value type for ObjectProperty.");
         }
 

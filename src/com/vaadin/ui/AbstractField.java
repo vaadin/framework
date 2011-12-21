@@ -557,11 +557,11 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @throws Property.ConversionException
      */
     public void setValue(Object newFieldValue)
-            throws Property.ReadOnlyException, Property.ConversionException {
+            throws Property.ReadOnlyException, Converter.ConversionException {
         // This check is needed as long as setValue accepts Object instead of T
         if (newFieldValue != null) {
             if (!getType().isAssignableFrom(newFieldValue.getClass())) {
-                throw new ConversionException("Value of type "
+                throw new Converter.ConversionException("Value of type "
                         + newFieldValue.getClass() + " cannot be assigned to "
                         + getClass().getName());
             }
@@ -577,10 +577,9 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @param repaintIsNotNeeded
      *            True iff caller is sure that repaint is not needed.
      * @throws Property.ReadOnlyException
-     * @throws Property.ConversionException
      */
     protected void setValue(T newFieldValue, boolean repaintIsNotNeeded)
-            throws Property.ReadOnlyException, Property.ConversionException,
+            throws Property.ReadOnlyException, Converter.ConversionException,
             InvalidValueException {
 
         if (!equals(newFieldValue, getInternalValue())) {
@@ -826,7 +825,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         if (getType().isAssignableFrom(newValue.getClass())) {
             return (T) newValue;
         } else {
-            throw new ConversionException(
+            throw new Converter.ConversionException(
                     "Unable to convert value of type "
                             + newValue.getClass().getName()
                             + " to "
@@ -857,7 +856,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                 return valueConverter.convertFromTargetToSource(fieldValue,
                         getLocale());
             } catch (com.vaadin.data.util.converter.Converter.ConversionException e) {
-                throw new ConversionException(
+                throw new Converter.ConversionException(
                         getValueConversionError(valueConverter.getSourceType()));
             }
         }

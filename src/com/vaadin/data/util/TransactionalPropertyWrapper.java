@@ -37,8 +37,7 @@ public class TransactionalPropertyWrapper<T> extends AbstractProperty<T>
         return wrappedProperty.getValue();
     }
 
-    public void setValue(Object newValue) throws ReadOnlyException,
-            ConversionException {
+    public void setValue(Object newValue) throws ReadOnlyException {
         // Causes a value change to be sent to this listener which in turn fires
         // a new value change event for this property
         wrappedProperty.setValue(newValue);

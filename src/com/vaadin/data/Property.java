@@ -65,12 +65,8 @@ public interface Property<T> extends Serializable {
      * 
      * @throws Property.ReadOnlyException
      *             if the object is in read-only mode
-     * @throws Property.ConversionException
-     *             if newValue can't be converted into the Property's native
-     *             type directly or using a converter
      */
-    public void setValue(Object newValue) throws Property.ReadOnlyException,
-            Property.ConversionException;
+    public void setValue(Object newValue) throws Property.ReadOnlyException;
 
     /**
      * Returns the type of the Property. The methods <code>getValue</code> and
@@ -133,62 +129,6 @@ public interface Property<T> extends Serializable {
          */
         public ReadOnlyException(String msg) {
             super(msg);
-        }
-    }
-
-    /**
-     * An exception that signals that the value passed to the
-     * <code>setValue</code> method couldn't be converted to the native type of
-     * the Property.
-     * 
-     * @author Vaadin Ltd
-     * @version
-     * @VERSION@
-     * @since 3.0
-     */
-    @SuppressWarnings("serial")
-    public class ConversionException extends RuntimeException {
-
-        /**
-         * Constructs a new <code>ConversionException</code> without a detail
-         * message.
-         */
-        public ConversionException() {
-        }
-
-        /**
-         * Constructs a new <code>ConversionException</code> with the specified
-         * detail message.
-         * 
-         * @param msg
-         *            the detail message
-         */
-        public ConversionException(String msg) {
-            super(msg);
-        }
-
-        /**
-         * Constructs a new <code>ConversionException</code> from another
-         * exception.
-         * 
-         * @param cause
-         *            The cause of the the conversion failure
-         */
-        public ConversionException(Throwable cause) {
-            super(cause);
-        }
-
-        /**
-         * Constructs a new <code>ConversionException</code> with the specified
-         * detail message and cause.
-         * 
-         * @param message
-         *            the detail message
-         * @param cause
-         *            The cause of the the conversion failure
-         */
-        public ConversionException(String message, Throwable cause) {
-            super(message, cause);
         }
     }
 

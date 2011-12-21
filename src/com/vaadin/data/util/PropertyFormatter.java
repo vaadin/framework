@@ -204,8 +204,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
         }
     }
 
-    public void setValue(Object newValue) throws ReadOnlyException,
-            ConversionException {
+    public void setValue(Object newValue) throws ReadOnlyException {
         if (dataSource == null) {
             return;
         }
@@ -220,10 +219,8 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
                 if (!newValue.equals(getStringValue())) {
                     fireValueChange();
                 }
-            } catch (ConversionException e) {
-                throw e;
             } catch (Exception e) {
-                throw new ConversionException(e);
+                throw new IllegalArgumentException("Could not parse value", e);
             }
         }
     }

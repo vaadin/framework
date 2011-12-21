@@ -505,8 +505,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     }
 
     @Override
-    public void setValue(Object newValue) throws ReadOnlyException,
-            ConversionException {
+    public void setValue(Object newValue) throws ReadOnlyException {
         super.setValue(newValue);
         /*
          * Make sure w reset lastKnownTextContent field on value change. The

@@ -32,14 +32,14 @@ public class TextFieldWithPropertyFormatter extends TestBase {
                 return value;
             }
 
-            public void setValue(Object newValue) throws ReadOnlyException,
-                    ConversionException {
+            public void setValue(Object newValue) throws ReadOnlyException {
                 if (newValue == null) {
                     value = null;
                 } else if (newValue instanceof BigDecimal) {
                     value = (BigDecimal) newValue;
                 } else {
-                    throw new ConversionException();
+                    throw new IllegalArgumentException(
+                            "Value must be of type BigDecimal");
                 }
             }
 

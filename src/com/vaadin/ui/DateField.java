@@ -4,7 +4,6 @@
 
 package com.vaadin.ui;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,6 +18,7 @@ import java.util.TimeZone;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -424,7 +424,7 @@ public class DateField extends AbstractField<Date> implements
                      * this case the invalid text remains in the DateField.
                      */
                     requestRepaint();
-                } catch (ConversionException e) {
+                } catch (Converter.ConversionException e) {
 
                     /*
                      * Datefield now contains some text that could't be parsed
@@ -504,9 +504,9 @@ public class DateField extends AbstractField<Date> implements
      *             to keep the old value and indicate an error
      */
     protected Date handleUnparsableDateString(String dateString)
-            throws Property.ConversionException {
+            throws Converter.ConversionException {
         currentParseErrorMessage = null;
-        throw new Property.ConversionException(getParseErrorMessage());
+        throw new Converter.ConversionException(getParseErrorMessage());
     }
 
     /* Property features */
@@ -527,7 +527,7 @@ public class DateField extends AbstractField<Date> implements
      */
     @Override
     protected void setValue(Date newValue, boolean repaintIsNotNeeded)
-            throws Property.ReadOnlyException, Property.ConversionException {
+            throws Property.ReadOnlyException {
 
         /*
          * First handle special case when the client side component have a date
@@ -560,23 +560,7 @@ public class DateField extends AbstractField<Date> implements
             return;
         }
 
-        if (newValue == null || newValue instanceof Date) {
-            super.setValue(newValue, repaintIsNotNeeded);
-        } else {
-            // Try to parse the given string value to Date
-            try {
-                final SimpleDateFormat parser = new SimpleDateFormat();
-                final TimeZone currentTimeZone = getTimeZone();
-                if (currentTimeZone != null) {
-                    parser.setTimeZone(currentTimeZone);
-                }
-                final Date val = parser.parse(newValue.toString());
-                super.setValue(val, repaintIsNotNeeded);
-            } catch (final ParseException e) {
-                uiHasValidDateString = false;
-                throw new Property.ConversionException(getParseErrorMessage());
-            }
-        }
+        super.setValue(newValue, repaintIsNotNeeded);
     }
 
     /**

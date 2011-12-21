@@ -87,7 +87,7 @@ public class AbstractFieldValueConversions extends TestCase {
         try {
             tf.setValue(1);
             fail("setValue(Integer) should throw an exception");
-        } catch (com.vaadin.data.Property.ConversionException e) {
+        } catch (Converter.ConversionException e) {
             // OK, expected
         }
     }

@@ -5,7 +5,6 @@
 package com.vaadin.data.util;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -865,8 +864,7 @@ public class IndexedContainer extends
          * 
          * @see com.vaadin.data.Property#setValue(java.lang.Object)
          */
-        public void setValue(Object newValue)
-                throws Property.ReadOnlyException, Property.ConversionException {
+        public void setValue(Object newValue) throws Property.ReadOnlyException {
 
             // Gets the Property set
             final Map<Object, Object> propertySet = items.get(itemId);
@@ -877,22 +875,8 @@ public class IndexedContainer extends
             } else if (getType().isAssignableFrom(newValue.getClass())) {
                 propertySet.put(propertyId, newValue);
             } else {
-                try {
-
-                    // Gets the string constructor
-                    final Constructor<?> constr = getType().getConstructor(
-                            new Class[] { String.class });
-
-                    // Creates new object from the string
-                    propertySet.put(propertyId, constr
-                            .newInstance(new Object[] { newValue.toString() }));
-
-                } catch (final java.lang.Exception e) {
-                    throw new Property.ConversionException(
-                            "Conversion for value '" + newValue + "' of class "
-                                    + newValue.getClass().getName() + " to "
-                                    + getType().getName() + " failed", e);
-                }
+                throw new IllegalArgumentException("Value is of invalid type, "
+                        + getType().getName() + " expected");
             }
 
             // update the container filtering if this property is being filtered

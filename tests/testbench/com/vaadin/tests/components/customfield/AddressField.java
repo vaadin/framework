@@ -48,8 +48,7 @@ public class AddressField extends CustomField<Address> {
     }
 
     @Override
-    public void setInternalValue(Address address) throws ReadOnlyException,
-            ConversionException {
+    public void setInternalValue(Address address) throws ReadOnlyException {
         // create the address if not given
         if (null == address) {
             address = new Address();

@@ -3,7 +3,6 @@
  */
 package com.vaadin.data.util.sqlcontainer;
 
-import java.lang.reflect.Constructor;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -69,8 +68,7 @@ final public class ColumnProperty implements Property {
         return value;
     }
 
-    public void setValue(Object newValue) throws ReadOnlyException,
-            ConversionException {
+    public void setValue(Object newValue) throws ReadOnlyException {
         if (newValue == null && !nullable) {
             throw new NotNullableException(
                     "Null values are not allowed for this property.");
@@ -109,19 +107,9 @@ final public class ColumnProperty implements Property {
                 }
             }
 
-            /*
-             * If the type is not correct, try to generate it through a possibly
-             * existing String constructor.
-             */
             if (!getType().isAssignableFrom(newValue.getClass())) {
-                try {
-                    final Constructor<?> constr = getType().getConstructor(
-                            new Class[] { String.class });
-                    newValue = constr.newInstance(new Object[] { newValue
-                            .toString() });
-                } catch (Exception e) {
-                    throw new ConversionException(e);
-                }
+                throw new IllegalArgumentException(
+                        "Illegal value type for ColumnProperty");
             }
 
             /*

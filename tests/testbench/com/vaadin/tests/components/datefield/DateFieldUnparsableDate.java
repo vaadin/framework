@@ -3,6 +3,7 @@ package com.vaadin.tests.components.datefield;
 import java.util.Date;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.DateField;
 
@@ -16,14 +17,14 @@ public class DateFieldUnparsableDate extends TestBase {
             addListener(new Property.ValueChangeListener() {
                 public void valueChange(
                         com.vaadin.data.Property.ValueChangeEvent event) {
-                    oldDate = (Date) getValue();
+                    oldDate = getValue();
                 }
             });
         }
 
         @Override
         protected Date handleUnparsableDateString(String dateString)
-                throws ConversionException {
+                throws Converter.ConversionException {
             return oldDate;
         }
     }
@@ -35,7 +36,7 @@ public class DateFieldUnparsableDate extends TestBase {
 
         @Override
         protected Date handleUnparsableDateString(String dateString)
-                throws ConversionException {
+                throws Converter.ConversionException {
             return null;
         }
     }
@@ -47,8 +48,9 @@ public class DateFieldUnparsableDate extends TestBase {
 
         @Override
         protected Date handleUnparsableDateString(String dateString)
-                throws ConversionException {
-            throw new ConversionException("You should not enter invalid dates!");
+                throws Converter.ConversionException {
+            throw new Converter.ConversionException(
+                    "You should not enter invalid dates!");
         }
     }
 
@@ -59,11 +61,12 @@ public class DateFieldUnparsableDate extends TestBase {
 
         @Override
         protected Date handleUnparsableDateString(String dateString)
-                throws ConversionException {
+                throws Converter.ConversionException {
             if (dateString != null && dateString.equals("today")) {
                 return new Date();
             }
-            throw new ConversionException("You should not enter invalid dates!");
+            throw new Converter.ConversionException(
+                    "You should not enter invalid dates!");
         }
     }
 

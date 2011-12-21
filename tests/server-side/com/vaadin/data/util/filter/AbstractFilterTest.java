@@ -28,8 +28,7 @@ public abstract class AbstractFilterTest<FILTERTYPE extends Filter> extends
             return null;
         }
 
-        public void setValue(Object newValue) throws ReadOnlyException,
-                ConversionException {
+        public void setValue(Object newValue) throws ReadOnlyException {
             throw new ReadOnlyException();
         }
 

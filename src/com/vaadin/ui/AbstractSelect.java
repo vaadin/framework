@@ -516,16 +516,9 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
                 // Sets the caption property, if used
                 if (getItemCaptionPropertyId() != null) {
-                    try {
-                        getContainerProperty(newItemCaption,
-                                getItemCaptionPropertyId()).setValue(
-                                newItemCaption);
-                    } catch (final Property.ConversionException ignored) {
-                        /*
-                         * The conversion exception is safely ignored, the
-                         * caption is just missing
-                         */
-                    }
+                    getContainerProperty(newItemCaption,
+                            getItemCaptionPropertyId())
+                            .setValue(newItemCaption);
                 }
                 if (isMultiSelect()) {
                     Set values = new HashSet((Collection) getValue());
@@ -615,8 +608,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @see com.vaadin.ui.AbstractField#setValue(java.lang.Object)
      */
     @Override
-    public void setValue(Object newValue) throws Property.ReadOnlyException,
-            Property.ConversionException {
+    public void setValue(Object newValue) throws Property.ReadOnlyException {
         if (newValue == getNullSelectionItemId()) {
             newValue = null;
         }
@@ -642,7 +634,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      */
     @Override
     protected void setValue(Object newValue, boolean repaintIsNotNeeded)
-            throws Property.ReadOnlyException, Property.ConversionException {
+            throws Property.ReadOnlyException {
 
         if (isMultiSelect()) {
             if (newValue == null) {
