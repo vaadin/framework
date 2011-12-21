@@ -4,6 +4,7 @@
 package com.vaadin.data.util;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.util.converter.Converter;
 
 /**
  * Formatting proxy for a {@link Property}.
@@ -33,10 +34,12 @@ import com.vaadin.data.Property;
  *            type of the underlying property (a PropertyFormatter is always a
  *            Property&lt;String&gt;)
  * 
+ * @deprecated Since 7.0 replaced by {@link Converter}
  * @author Vaadin Ltd.
  * @since 5.3.0
  */
 @SuppressWarnings("serial")
+@Deprecated
 public abstract class PropertyFormatter<T> extends AbstractProperty<String>
         implements Property.Viewer, Property.ValueChangeListener,
         Property.ReadOnlyStatusChangeListener {

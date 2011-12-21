@@ -15,7 +15,7 @@ import com.vaadin.ui.Field;
  * @version @version@
  * @since 7.0
  */
-public interface FieldBinderFieldFactory extends Serializable {
+public interface FormBuilderFieldFactory extends Serializable {
     /**
      * Creates a field based on the data type that we want to edit
      * 

@@ -43,4 +43,16 @@ public class DoubleValidator extends AbstractStringValidator {
         }
     }
 
+    @Override
+    public void validate(Object value) throws InvalidValueException {
+        if (value != null && value instanceof Double) {
+            // Allow Doubles to pass through the validator for easier
+            // migration. Otherwise a TextField connected to an double property
+            // with a DoubleValidator will fail.
+            return;
+        }
+
+        super.validate(value);
+    }
+
 }

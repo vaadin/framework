@@ -369,15 +369,15 @@
 				</antcall>
 				
 				<!-- Run theme tests in all browsers if there's a property with the test files -->
-				<if>
+				<antcontrib:if>
 					<isset property="testfiles-theme" />
-					<then>
+					<antcontrib:then>
 						<antcall target="integration-test-theme">
 							<param name="server-name" value="${target-server}" />
 							<param name="deployment.url" value="http://${target-host}:${target-port}" />
 						</antcall>
-					</then>
-				</if>
+					</antcontrib:then>
+				</antcontrib:if>
 				
 				<!-- timeout in five minutes -->
 				<sshexec host="${target-host}" outputproperty="stop-output" timeout="300000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml shutdown-and-cleanup" failonerror="false" />

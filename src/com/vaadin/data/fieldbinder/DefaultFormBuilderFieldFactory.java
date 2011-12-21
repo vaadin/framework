@@ -14,12 +14,10 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
-public class DefaultFieldBinderFieldFactory implements FieldBinderFieldFactory {
+public class DefaultFormBuilderFieldFactory implements FormBuilderFieldFactory {
 
     public static final Object CAPTION_PROPERTY_ID = "Caption";
 
@@ -29,6 +27,10 @@ public class DefaultFieldBinderFieldFactory implements FieldBinderFieldFactory {
         } else if (Boolean.class.isAssignableFrom(type)
                 || boolean.class.isAssignableFrom(type)) {
             return createBooleanField(fieldType);
+        }
+        if (AbstractTextField.class.isAssignableFrom(fieldType)) {
+            return fieldType.cast(createAbstractTextField(fieldType
+                    .asSubclass(AbstractTextField.class)));
         }
         return createDefaultField(type, fieldType);
     }
@@ -82,27 +84,23 @@ public class DefaultFieldBinderFieldFactory implements FieldBinderFieldFactory {
 
     protected <T extends AbstractTextField> T createAbstractTextField(
             Class<T> fieldType) {
-        if (fieldType.isAssignableFrom(PasswordField.class)) {
-            PasswordField pf = new PasswordField();
-            pf.setImmediate(true);
-            return (T) pf;
-        } else if (fieldType.isAssignableFrom(TextField.class)) {
-            TextField tf = new TextField();
-            tf.setImmediate(true);
-            return (T) tf;
-        } else if (fieldType.isAssignableFrom(TextArea.class)) {
-            TextArea ta = new TextArea();
-            ta.setImmediate(true);
-            return (T) ta;
+        if (fieldType == AbstractTextField.class) {
+            fieldType = (Class<T>) TextField.class;
         }
-
-        return null;
+        try {
+            T field = fieldType.newInstance();
+            field.setImmediate(true);
+            return field;
+        } catch (Exception e) {
+            throw new FormBuilder.BuildException(
+                    "Could not create a field of type " + fieldType, e);
+        }
     }
 
     protected <T extends Field> T createDefaultField(Class<?> type,
             Class<T> fieldType) {
-        if (AbstractTextField.class.isAssignableFrom(fieldType)) {
-            return (T) createAbstractTextField((Class<? extends AbstractTextField>) fieldType);
+        if (fieldType.isAssignableFrom(TextField.class)) {
+            return fieldType.cast(createAbstractTextField(TextField.class));
         }
         return null;
     }
