@@ -492,7 +492,7 @@ public class DateField extends AbstractField<Date> implements
      * This method is called to handle a non-empty date string from the client
      * if the client could not parse it as a Date.
      * 
-     * By default, a Property.ConversionException is thrown, and the current
+     * By default, a Converter.ConversionException is thrown, and the current
      * value is not modified.
      * 
      * This can be overridden to handle conversions, to return null (equivalent
@@ -500,7 +500,7 @@ public class DateField extends AbstractField<Date> implements
      * 
      * @param dateString
      * @return parsed Date
-     * @throws Property.ConversionException
+     * @throws Converter.ConversionException
      *             to keep the old value and indicate an error
      */
     protected Date handleUnparsableDateString(String dateString)

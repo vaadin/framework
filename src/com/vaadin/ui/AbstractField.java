@@ -542,7 +542,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * </p>
      * 
      * @return the current value of the field.
-     * @throws Property.ConversionException
      */
     public T getValue() {
         return getFieldValue();
@@ -554,7 +553,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @param newFieldValue
      *            the New value of the field.
      * @throws Property.ReadOnlyException
-     * @throws Property.ConversionException
      */
     public void setValue(Object newFieldValue)
             throws Property.ReadOnlyException, Converter.ConversionException {

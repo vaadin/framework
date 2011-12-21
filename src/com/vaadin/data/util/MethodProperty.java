@@ -638,9 +638,6 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      *            the New value of the property.
      * @throws <code>Property.ReadOnlyException</code> if the object is in
      *         read-only mode.
-     * @throws <code>Property.ConversionException</code> if
-     *         <code>newValue</code> can't be converted into the Property's
-     *         native type directly or through <code>String</code>.
      * @see #invokeSetMethod(Object)
      */
     @SuppressWarnings("unchecked")
