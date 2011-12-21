@@ -72,7 +72,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * A converter used to convert from the data model type to the field type
      * and vice versa.
      */
-    private Converter<Object, T> valueConverter = null;
+    private Converter<Object, T> converter = null;
     /**
      * Connected data-source.
      */
@@ -138,7 +138,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     /**
      * The error message that is shown when the field value cannot be converted.
      */
-    private String valueConversionError = "Could not convert value to {0}";
+    private String conversionError = "Could not convert value to {0}";
 
     /**
      * Is automatic validation enabled.
@@ -538,7 +538,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * 
      * <p>
      * Since Vaadin 7.0, no implicit conversions between other data types and
-     * String are performed, but a value converter is used if set.
+     * String are performed, but a converter is used if set.
      * </p>
      * 
      * @return the current value of the field.
@@ -590,7 +590,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             // Repaint is needed even when the client thinks that it knows the
             // new state if validity of the component may change
             if (repaintIsNotNeeded
-                    && (isRequired() || getValidators() != null || getValueConverter() != null)) {
+                    && (isRequired() || getValidators() != null || getConverter() != null)) {
                 repaintIsNotNeeded = false;
             }
 
@@ -724,12 +724,11 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
         // Check if the current converter is compatible.
         if (newDataSource != null
-                && (getValueConverter() == null || !getValueConverter()
-                        .getSourceType().isAssignableFrom(
-                                newDataSource.getType()))) {
-            // Set a new value converter if there is a new data source and the
+                && (getConverter() == null || !getConverter().getSourceType()
+                        .isAssignableFrom(newDataSource.getType()))) {
+            // Set a new converter if there is a new data source and the
             // there is no old converter or the old is incompatible.
-            updateValueConverterFromFactory(newDataSource.getType());
+            setConverter(newDataSource.getType());
         }
         // Gets the value from source
         try {
@@ -777,15 +776,15 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     /**
-     * Retrieves a value converter for the field from the converter factory
-     * defined for the application. Clears the value converter if no application
-     * reference is available or if the factory returns null.
+     * Retrieves a converter for the field from the converter factory defined
+     * for the application. Clears the converter if no application reference is
+     * available or if the factory returns null.
      * 
      * @param datamodelType
      *            The type of the data model that we want to be able to convert
      *            from
      */
-    public void updateValueConverterFromFactory(Class<?> datamodelType) {
+    public void setConverter(Class<?> datamodelType) {
         Converter<?, T> converter = null;
 
         Application app = Application.getCurrentApplication();
@@ -794,7 +793,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             converter = (Converter<?, T>) factory.createConverter(
                     datamodelType, getType());
         }
-        setValueConverter(converter);
+        setConverter(converter);
     }
 
     /**
@@ -803,8 +802,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @param newValue
      *            The data source value to convert.
      * @return The converted value that is compatible with the UI type or the
-     *         original value if its type is compatible and no value converter
-     *         is set.
+     *         original value if its type is compatible and no converter is set.
      * @throws Converter.ConversionException
      *             if there is no converter and the type is not compatible with
      *             the data source type.
@@ -812,9 +810,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     @SuppressWarnings("unchecked")
     private T convertFromDataSource(Object newValue)
             throws Converter.ConversionException {
-        if (valueConverter != null) {
-            return valueConverter.convertFromSourceToTarget(newValue,
-                    getLocale());
+        if (converter != null) {
+            return converter.convertFromSourceToTarget(newValue, getLocale());
         }
         if (newValue == null) {
             return null;
@@ -828,7 +825,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                             + newValue.getClass().getName()
                             + " to "
                             + getType()
-                            + ". No value converter is set and the types are not compatible.");
+                            + ". No converter is set and the types are not compatible.");
         }
     }
 
@@ -845,18 +842,17 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     private Object convertToDataSource(T fieldValue)
             throws Converter.ConversionException {
-        if (valueConverter != null) {
+        if (converter != null) {
             /*
-             * If there is a value converter, always use it. It must convert or
-             * throw an exception.
+             * If there is a converter, always use it. It must convert or throw
+             * an exception.
              */
             try {
-                return valueConverter.convertFromTargetToSource(fieldValue,
+                return converter.convertFromTargetToSource(fieldValue,
                         getLocale());
             } catch (com.vaadin.data.util.converter.Converter.ConversionException e) {
                 throw new Converter.ConversionException(
-                        getValueConversionError(valueConverter.getSourceType()),
-                        e);
+                        getValueConversionError(converter.getSourceType()), e);
             }
         }
 
@@ -893,9 +889,9 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     protected String getValueConversionError(Class<?> dataSourceType) {
         if (dataSourceType == null) {
-            return getValueConversionError();
+            return getConversionError();
         } else {
-            return getValueConversionError().replace("{0}",
+            return getConversionError().replace("{0}",
                     dataSourceType.getSimpleName());
         }
     }
@@ -980,7 +976,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * A field is invalid if it is set as required (using
      * {@link #setRequired(boolean)} and is empty, if one or several of the
      * validators added to the field indicate it is invalid or if the value
-     * cannot be converted provided a value converter has been set.
+     * cannot be converted provided a converter has been set.
      * 
      * The "required" validation is a built-in validation feature. If the field
      * is required and empty this method throws an EmptyValueException with the
@@ -1013,14 +1009,13 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
         // If there is a converter we start by converting the value as we want
         // to validate the converted value
-        if (getValueConverter() != null) {
+        if (getConverter() != null) {
             try {
-                valueToValidate = getValueConverter()
-                        .convertFromTargetToSource(fieldValue, getLocale());
+                valueToValidate = getConverter().convertFromTargetToSource(
+                        fieldValue, getLocale());
             } catch (Exception e) {
                 throw new InvalidValueException(
-                        getValueConversionError(getValueConverter()
-                                .getSourceType()));
+                        getValueConversionError(getConverter().getSourceType()));
             }
         }
 
@@ -1429,8 +1424,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * 
      * @return The error that is shown if conversion of the field value fails
      */
-    public String getValueConversionError() {
-        return valueConversionError;
+    public String getConversionError() {
+        return conversionError;
     }
 
     /**
@@ -1441,8 +1436,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @param valueConversionError
      *            Message to be shown when conversion of the value fails
      */
-    public void setValueConversionError(String valueConversionError) {
-        this.valueConversionError = valueConversionError;
+    public void setConversionError(String valueConversionError) {
+        this.conversionError = valueConversionError;
         requestRepaint();
     }
 
@@ -1572,8 +1567,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * 
      * @return The converter or null if none is set.
      */
-    public Converter<Object, T> getValueConverter() {
-        return valueConverter;
+    public Converter<Object, T> getConverter() {
+        return converter;
     }
 
     /**
@@ -1584,12 +1579,11 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * The source for the converter is the data model and the target is the
      * field.
      * 
-     * @param valueConverter
-     *            The new value converter to use.
+     * @param converter
+     *            The new converter to use.
      */
-    public void setValueConverter(Converter<?, T> valueConverter) {
-        //
-        this.valueConverter = (Converter<Object, T>) valueConverter;
+    public void setConverter(Converter<?, T> converter) {
+        this.converter = (Converter<Object, T>) converter;
         requestRepaint();
     }
 

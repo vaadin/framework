@@ -160,7 +160,7 @@ public class BasicPersonForm extends TestBase {
         age.addValidator(new IntegerRangeValidator(
                 "Must be between 0 and 150, {0} is not", 0, 150));
         sex.setPageLength(0);
-        deceased.setValueConverter(new BooleanToStringConverter() {
+        deceased.setConverter(new BooleanToStringConverter() {
             @Override
             protected String getTrueString() {
                 return "YAY!";

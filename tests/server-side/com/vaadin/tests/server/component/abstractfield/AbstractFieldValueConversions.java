@@ -34,7 +34,7 @@ public class AbstractFieldValueConversions extends TestCase {
 
     public void testStringIdentityConversion() {
         TextField tf = new TextField();
-        tf.setValueConverter(new Converter<String, String>() {
+        tf.setConverter(new Converter<String, String>() {
 
             public String convertFromTargetToSource(String value, Locale locale) {
                 return value;
@@ -64,7 +64,7 @@ public class AbstractFieldValueConversions extends TestCase {
 
     public void testFailingConversion() {
         TextField tf = new TextField();
-        tf.setValueConverter(new Converter<Integer, String>() {
+        tf.setConverter(new Converter<Integer, String>() {
 
             public Integer convertFromTargetToSource(String value, Locale locale) {
                 throw new ConversionException("Failed");
@@ -95,7 +95,7 @@ public class AbstractFieldValueConversions extends TestCase {
     public void testIntegerStringConversion() {
         TextField tf = new TextField();
 
-        tf.setValueConverter(new IntegerToStringConverter());
+        tf.setConverter(new IntegerToStringConverter());
         tf.setPropertyDataSource(new MethodProperty<Integer>(paulaBean, "age"));
         assertEquals(34, tf.getPropertyDataSource().getValue());
         assertEquals("34", tf.getValue());
@@ -109,7 +109,7 @@ public class AbstractFieldValueConversions extends TestCase {
 
     public void testBooleanNullConversion() {
         CheckBox cb = new CheckBox();
-        cb.setValueConverter(new Converter<Boolean, Boolean>() {
+        cb.setConverter(new Converter<Boolean, Boolean>() {
 
             public Boolean convertFromTargetToSource(Boolean value,
                     Locale locale) {
@@ -143,7 +143,7 @@ public class AbstractFieldValueConversions extends TestCase {
         cb.setPropertyDataSource(property);
         assertEquals(Boolean.FALSE, property.getValue());
         assertEquals(Boolean.FALSE, cb.getValue());
-        Boolean newDmValue = cb.getValueConverter().convertFromSourceToTarget(
+        Boolean newDmValue = cb.getConverter().convertFromSourceToTarget(
                 cb.getValue(), new Locale("fi", "FI"));
         assertEquals(Boolean.FALSE, newDmValue);
 
