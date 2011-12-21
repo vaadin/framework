@@ -193,9 +193,8 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
     }
 
     /**
-     * Sets the value of the property. This method supports setting from
-     * <code>String</code>s if either <code>String</code> is directly assignable
-     * to property type, or the type class contains a string constructor.
+     * Sets the value of the property. The new value must be assignable to the
+     * type of this property.
      * 
      * @param newValue
      *            the New value of the property.
