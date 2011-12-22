@@ -805,7 +805,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             /*
              * UIDL request contains valid repaintAll=1 event, the user probably
              * wants to initiate a new application through a custom index.html
-             * without using writeAjaxPage.
+             * without using the bootstrap page.
              */
             return true;
 

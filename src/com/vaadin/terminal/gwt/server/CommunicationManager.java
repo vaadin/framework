@@ -186,10 +186,10 @@ public class CommunicationManager extends AbstractCommunicationManager {
     }
 
     @Override
-    protected AjaxPageHandler createAjaxPageHandler() {
-        return new AjaxPageHandler() {
+    protected BootstrapHandler createBootstrapHandler() {
+        return new BootstrapHandler() {
             @Override
-            protected String getApplicationId(AjaxPageContext context) {
+            protected String getApplicationId(BootstrapContext context) {
                 String appUrl = getAppUri(context);
 
                 String appId = appUrl;
@@ -210,7 +210,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
             }
 
             @Override
-            protected String getAppUri(AjaxPageContext context) {
+            protected String getAppUri(BootstrapContext context) {
                 /* Fetch relative url to application */
                 // don't use server and port in uri. It may cause problems with
                 // some
@@ -225,7 +225,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
             }
 
             @Override
-            public String getThemeName(AjaxPageContext context) {
+            public String getThemeName(BootstrapContext context) {
                 String themeName = context.getRequest().getParameter(
                         AbstractApplicationServlet.URL_PARAMETER_THEME);
                 if (themeName == null) {

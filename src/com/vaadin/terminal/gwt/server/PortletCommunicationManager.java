@@ -118,8 +118,8 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     }
 
     @Override
-    protected AjaxPageHandler createAjaxPageHandler() {
-        return new AjaxPageHandler() {
+    protected BootstrapHandler createBootstrapHandler() {
+        return new BootstrapHandler() {
             @Override
             public boolean handleRequest(Application application,
                     WrappedRequest request, WrappedResponse response)
@@ -134,7 +134,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             }
 
             @Override
-            protected String getApplicationId(AjaxPageContext context) {
+            protected String getApplicationId(BootstrapContext context) {
                 PortletRequest portletRequest = WrappedPortletRequest.cast(
                         context.getRequest()).getPortletRequest();
                 /*
@@ -145,11 +145,11 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             }
 
             @Override
-            protected String getAppUri(AjaxPageContext context) {
+            protected String getAppUri(BootstrapContext context) {
                 return getRenderResponse(context).createActionURL().toString();
             }
 
-            private RenderResponse getRenderResponse(AjaxPageContext context) {
+            private RenderResponse getRenderResponse(BootstrapContext context) {
                 PortletResponse response = ((WrappedPortletResponse) context
                         .getResponse()).getPortletResponse();
 
@@ -158,7 +158,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             }
 
             @Override
-            protected JSONObject getDefaultParameters(AjaxPageContext context)
+            protected JSONObject getDefaultParameters(BootstrapContext context)
                     throws JSONException {
                 /*
                  * We need this in order to get uploads to work. TODO this is
@@ -178,7 +178,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             }
 
             @Override
-            protected void writeMainScriptTagContents(AjaxPageContext context)
+            protected void writeMainScriptTagContents(BootstrapContext context)
                     throws JSONException, IOException {
                 // fixed base theme to use - all portal pages with Vaadin
                 // applications will load this exactly once
@@ -198,7 +198,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             }
 
             @Override
-            protected String getMainDivStyle(AjaxPageContext context) {
+            protected String getMainDivStyle(BootstrapContext context) {
                 DeploymentConfiguration deploymentConfiguration = context
                         .getRequest().getDeploymentConfiguration();
                 return deploymentConfiguration.getApplicationOrSystemProperty(
@@ -215,7 +215,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
 
             @Override
             protected JSONObject getApplicationParameters(
-                    AjaxPageContext context) throws JSONException,
+                    BootstrapContext context) throws JSONException,
                     PaintException {
                 JSONObject parameters = super.getApplicationParameters(context);
                 WrappedPortletResponse wrappedPortletResponse = (WrappedPortletResponse) context

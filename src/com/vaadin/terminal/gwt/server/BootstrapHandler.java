@@ -24,12 +24,12 @@ import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.ui.Root;
 
-public abstract class AjaxPageHandler implements RequestHandler {
+public abstract class BootstrapHandler implements RequestHandler {
 
     /** Cookie used to ignore browser checks */
     private static final String FORCE_LOAD_COOKIE = "vaadinforceload=1";
 
-    protected class AjaxPageContext implements Serializable {
+    protected class BootstrapContext implements Serializable {
         private final WrappedResponse response;
         private final WrappedRequest request;
         private final Application application;
@@ -43,7 +43,7 @@ public abstract class AjaxPageHandler implements RequestHandler {
 
         private boolean rootFetched = false;
 
-        public AjaxPageContext(WrappedResponse response,
+        public BootstrapContext(WrappedResponse response,
                 WrappedRequest request, Application application, int rootId) {
             this.response = response;
             this.request = request;
@@ -147,7 +147,7 @@ public abstract class AjaxPageHandler implements RequestHandler {
         }
 
         try {
-            writeAjaxPage(request, response, application, rootId);
+            writeBootstrapPage(request, response, application, rootId);
         } catch (JSONException e) {
             writeError(response, e);
         }
@@ -194,28 +194,28 @@ public abstract class AjaxPageHandler implements RequestHandler {
         page.close();
     }
 
-    protected final void writeAjaxPage(WrappedRequest request,
+    protected final void writeBootstrapPage(WrappedRequest request,
             WrappedResponse response, Application application, int rootId)
             throws IOException, JSONException {
 
-        AjaxPageContext context = createContext(request, response, application,
-                rootId);
+        BootstrapContext context = createContext(request, response,
+                application, rootId);
 
         DeploymentConfiguration deploymentConfiguration = request
                 .getDeploymentConfiguration();
 
         boolean standalone = deploymentConfiguration.isStandalone(request);
         if (standalone) {
-            setAjaxPageHeaders(context);
-            writeAjaxPageHtmlHeadStart(context);
-            writeAjaxPageHtmlHeader(context);
-            writeAjaxPageHtmlBodyStart(context);
+            setBootstrapPageHeaders(context);
+            writeBootstrapPageHtmlHeadStart(context);
+            writeBootstrapPageHtmlHeader(context);
+            writeBootstrapPageHtmlBodyStart(context);
         }
 
         // TODO include initial UIDL in the scripts?
-        writeAjaxPageHtmlVaadinScripts(context);
+        writeBootstrapPageHtmlVaadinScripts(context);
 
-        writeAjaxPageHtmlMainDiv(context);
+        writeBootstrapPageHtmlMainDiv(context);
 
         Writer page = context.getWriter();
         if (standalone) {
@@ -225,14 +225,14 @@ public abstract class AjaxPageHandler implements RequestHandler {
         page.close();
     }
 
-    public AjaxPageContext createContext(WrappedRequest request,
+    public BootstrapContext createContext(WrappedRequest request,
             WrappedResponse response, Application application, int rootId) {
-        AjaxPageContext context = new AjaxPageContext(response, request,
+        BootstrapContext context = new BootstrapContext(response, request,
                 application, rootId);
         return context;
     }
 
-    protected String getMainDivStyle(AjaxPageContext context) {
+    protected String getMainDivStyle(BootstrapContext context) {
         return null;
     }
 
@@ -244,9 +244,9 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * 
      * @return the id to use in the DOM
      */
-    protected abstract String getApplicationId(AjaxPageContext context);
+    protected abstract String getApplicationId(BootstrapContext context);
 
-    public String getWidgetsetForRoot(AjaxPageContext context) {
+    public String getWidgetsetForRoot(BootstrapContext context) {
         Root root = context.getRoot();
         WrappedRequest request = context.getRequest();
 
@@ -272,7 +272,7 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * 
      * @throws IOException
      */
-    protected void writeAjaxPageHtmlMainDiv(AjaxPageContext context)
+    protected void writeBootstrapPageHtmlMainDiv(BootstrapContext context)
             throws IOException {
         Writer page = context.getWriter();
         String style = getMainDivStyle(context);
@@ -332,7 +332,7 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * 
      * @throws IOException
      */
-    protected void writeAjaxPageHtmlBodyStart(AjaxPageContext context)
+    protected void writeBootstrapPageHtmlBodyStart(BootstrapContext context)
             throws IOException {
         Writer page = context.getWriter();
         page.write("\n</head>\n<body scroll=\"auto\" class=\""
@@ -350,7 +350,7 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * @throws IOException
      * @throws JSONException
      */
-    protected void writeAjaxPageHtmlVaadinScripts(AjaxPageContext context)
+    protected void writeBootstrapPageHtmlVaadinScripts(BootstrapContext context)
             throws IOException, JSONException {
         WrappedRequest request = context.getRequest();
         Writer page = context.getWriter();
@@ -375,7 +375,7 @@ public abstract class AjaxPageHandler implements RequestHandler {
         page.write("//]]>\n</script>\n");
     }
 
-    protected void writeMainScriptTagContents(AjaxPageContext context)
+    protected void writeMainScriptTagContents(BootstrapContext context)
             throws JSONException, IOException {
         JSONObject defaults = getDefaultParameters(context);
         JSONObject appConfig = getApplicationParameters(context);
@@ -403,7 +403,7 @@ public abstract class AjaxPageHandler implements RequestHandler {
         }
     }
 
-    protected JSONObject getApplicationParameters(AjaxPageContext context)
+    protected JSONObject getApplicationParameters(BootstrapContext context)
             throws JSONException, PaintException {
         Application application = context.getApplication();
         int rootId = context.getRootId();
@@ -435,7 +435,7 @@ public abstract class AjaxPageHandler implements RequestHandler {
         return appConfig;
     }
 
-    protected JSONObject getDefaultParameters(AjaxPageContext context)
+    protected JSONObject getDefaultParameters(BootstrapContext context)
             throws JSONException {
         JSONObject defaults = new JSONObject();
 
@@ -487,7 +487,7 @@ public abstract class AjaxPageHandler implements RequestHandler {
         return defaults;
     }
 
-    protected abstract String getAppUri(AjaxPageContext context);
+    protected abstract String getAppUri(BootstrapContext context);
 
     /**
      * Method to write the contents of head element in html kickstart page.
@@ -497,7 +497,7 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * 
      * @throws IOException
      */
-    protected void writeAjaxPageHtmlHeader(AjaxPageContext context)
+    protected void writeBootstrapPageHtmlHeader(BootstrapContext context)
             throws IOException {
         Writer page = context.getWriter();
         String themeName = context.getThemeName();
@@ -536,7 +536,7 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * 
      * @param context
      */
-    protected void setAjaxPageHeaders(AjaxPageContext context) {
+    protected void setBootstrapPageHeaders(BootstrapContext context) {
         WrappedResponse response = context.getResponse();
 
         // Window renders are not cacheable
@@ -558,7 +558,7 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * @param context
      * @throws IOException
      */
-    protected void writeAjaxPageHtmlHeadStart(AjaxPageContext context)
+    protected void writeBootstrapPageHtmlHeadStart(BootstrapContext context)
             throws IOException {
         Writer page = context.getWriter();
 
@@ -583,7 +583,7 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * 
      * @return
      */
-    public String getThemeUri(AjaxPageContext context, String themeName) {
+    public String getThemeUri(BootstrapContext context, String themeName) {
         WrappedRequest request = context.getRequest();
         final String staticFilePath = request.getDeploymentConfiguration()
                 .getStaticFileLocation(request);
@@ -597,7 +597,7 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * @param context
      * @return
      */
-    public String getThemeName(AjaxPageContext context) {
+    public String getThemeName(BootstrapContext context) {
         return context.getApplication().getThemeForRoot(context.getRoot());
     }
 
@@ -607,7 +607,7 @@ public abstract class AjaxPageHandler implements RequestHandler {
      * @param context
      * @return
      */
-    public String findAndEscapeThemeName(AjaxPageContext context) {
+    public String findAndEscapeThemeName(BootstrapContext context) {
         String themeName = getThemeName(context);
         if (themeName == null) {
             WrappedRequest request = context.getRequest();

@@ -62,7 +62,7 @@ import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.server.AjaxPageHandler.AjaxPageContext;
+import com.vaadin.terminal.gwt.server.BootstrapHandler.BootstrapContext;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
@@ -185,7 +185,7 @@ public abstract class AbstractCommunicationManager implements
      */
     public AbstractCommunicationManager(Application application) {
         this.application = application;
-        application.addRequestHandler(getAjaxPageHandler());
+        application.addRequestHandler(getBootstrapHandler());
         application.addRequestHandler(APP_RESOURCE_HANDLER);
         requireLocale(application.getLocale().toString());
     }
@@ -1907,7 +1907,7 @@ public abstract class AbstractCommunicationManager implements
     private final HashMap<Class<? extends Paintable>, Integer> typeToKey = new HashMap<Class<? extends Paintable>, Integer>();
     private int nextTypeKey = 0;
 
-    private AjaxPageHandler ajaxPageHandler;
+    private BootstrapHandler bootstrapHandler;
 
     String getTagForType(Class<? extends Paintable> class1) {
         Integer object = typeToKey.get(class1);
@@ -1949,20 +1949,20 @@ public abstract class AbstractCommunicationManager implements
     abstract protected void cleanStreamVariable(VariableOwner owner, String name);
 
     /**
-     * Gets the ajax page handler that should be used for generating ajax pages
-     * for this communication manager.
+     * Gets the bootstrap handler that should be used for generating the pages
+     * bootstrapping applications for this communication manager.
      * 
-     * @return the ajax page handler to use
+     * @return the bootstrap handler to use
      */
-    private AjaxPageHandler getAjaxPageHandler() {
-        if (ajaxPageHandler == null) {
-            ajaxPageHandler = createAjaxPageHandler();
+    private BootstrapHandler getBootstrapHandler() {
+        if (bootstrapHandler == null) {
+            bootstrapHandler = createBootstrapHandler();
         }
 
-        return ajaxPageHandler;
+        return bootstrapHandler;
     }
 
-    protected abstract AjaxPageHandler createAjaxPageHandler();
+    protected abstract BootstrapHandler createBootstrapHandler();
 
     protected boolean handleApplicationRequest(WrappedRequest request,
             WrappedResponse response) throws IOException {
@@ -1986,13 +1986,13 @@ public abstract class AbstractCommunicationManager implements
             response.setContentType("application/json; charset=UTF-8");
 
             // Use the same logic as for determined roots
-            AjaxPageHandler ajaxPageHandler = getAjaxPageHandler();
-            AjaxPageContext context = ajaxPageHandler.createContext(
+            BootstrapHandler bootstrapHandler = getBootstrapHandler();
+            BootstrapContext context = bootstrapHandler.createContext(
                     combinedRequest, response, application, root.getRootId());
 
             String widgetset = context.getWidgetsetName();
             String theme = context.getThemeName();
-            String themeUri = ajaxPageHandler.getThemeUri(context, theme);
+            String themeUri = bootstrapHandler.getThemeUri(context, theme);
 
             // TODO These are not required if it was only the init of the root
             // that was delayed
