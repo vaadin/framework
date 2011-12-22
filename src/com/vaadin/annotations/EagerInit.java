@@ -1,3 +1,6 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
 package com.vaadin.annotations;
 
 import java.lang.annotation.ElementType;
