@@ -26,10 +26,8 @@ import com.vaadin.ui.Root;
 
 public abstract class BootstrapHandler implements RequestHandler {
 
-    /** Cookie used to ignore browser checks */
-    private static final String FORCE_LOAD_COOKIE = "vaadinforceload=1";
-
     protected class BootstrapContext implements Serializable {
+
         private final WrappedResponse response;
         private final WrappedRequest request;
         private final Application application;
@@ -117,21 +115,6 @@ public abstract class BootstrapHandler implements RequestHandler {
             WrappedRequest request, WrappedResponse response)
             throws IOException {
 
-        if (request.getBrowserDetails() != null) {
-            // Check if the browser is supported; we'll activate Chrome Frame
-            // silently if available.
-            WebBrowser b = request.getBrowserDetails().getWebBrowser();
-            if (b.isTooOldToFunctionProperly() && !b.isChromeFrameCapable()) {
-                // bypass if cookie set
-                String c = request.getHeader("Cookie");
-                if (c == null || !c.contains(FORCE_LOAD_COOKIE)) {
-                    writeBrowserTooOldPage(request, response);
-                    return true;
-                }
-
-            }
-        }
-
         // TODO Should all urls be handled here?
         int rootId;
         try {
@@ -153,45 +136,6 @@ public abstract class BootstrapHandler implements RequestHandler {
         }
 
         return true;
-    }
-
-    /**
-     * Writes a page encouraging the user to upgrade to a more current browser.
-     * 
-     * @param request
-     * @param response
-     * @throws IOException
-     */
-    protected void writeBrowserTooOldPage(WrappedRequest request,
-            WrappedResponse response) throws IOException {
-        Writer page = response.getWriter();
-        WebBrowser b = request.getBrowserDetails().getWebBrowser();
-
-        page.write("<html><body><h1>I'm sorry, but your browser is not supported</h1>"
-                + "<p>The version ("
-                + b.getBrowserMajorVersion()
-                + "."
-                + b.getBrowserMinorVersion()
-                + ") of the browser you are using "
-                + " is outdated and not supported.</p>"
-                + "<p>You should <b>consider upgrading</b> to a more up-to-date browser.</p> "
-                + "<p>The most popular browsers are <b>"
-                + " <a href=\"https://www.google.com/chrome\">Chrome</a>,"
-                + " <a href=\"http://www.mozilla.com/firefox\">Firefox</a>,"
-                + (b.isWindows() ? " <a href=\"http://windows.microsoft.com/en-US/internet-explorer/downloads/ie\">Internet Explorer</a>,"
-                        : "")
-                + " <a href=\"http://www.opera.com/browser\">Opera</a>"
-                + " and <a href=\"http://www.apple.com/safari\">Safari</a>.</b><br/>"
-                + "Upgrading to the latest version of one of these <b>will make the web safer, faster and better looking.</b></p>"
-                + (b.isIE() ? "<script type=\"text/javascript\" src=\"http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js\"></script>"
-                        + "<p>If you can not upgrade your browser, please consider trying <a onclick=\"CFInstall.check({mode:'overlay'});return false;\" href=\"http://www.google.com/chromeframe\">Chrome Frame</a>.</p>"
-                        : "") //
-                + "<p><sub><a onclick=\"document.cookie='"
-                + FORCE_LOAD_COOKIE
-                + "';window.location.reload();return false;\" href=\"#\">Continue without updating</a> (not recommended)</sub></p>"
-                + "</body>\n" + "</html>");
-
-        page.close();
     }
 
     protected final void writeBootstrapPage(WrappedRequest request,

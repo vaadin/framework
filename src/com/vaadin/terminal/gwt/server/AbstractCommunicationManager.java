@@ -187,6 +187,7 @@ public abstract class AbstractCommunicationManager implements
         this.application = application;
         application.addRequestHandler(getBootstrapHandler());
         application.addRequestHandler(APP_RESOURCE_HANDLER);
+        application.addRequestHandler(UnsupportedBrowserHandler.getInstance());
         requireLocale(application.getLocale().toString());
     }
 
