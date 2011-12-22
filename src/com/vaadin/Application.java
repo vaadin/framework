@@ -2319,6 +2319,10 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * detect that the application is opened in a browser window where it has
      * previously been open. The framework attempts to discover this by checking
      * the value of window.name in the browser.
+     * <p>
+     * NOTE that you should avoid turning this feature on/off on-the-fly when
+     * the UI is already shown, as it might not be retained as intended.
+     * </p>
      * 
      * @param rootPreserved
      *            <code>true</code>if the same Root instance should be reused
