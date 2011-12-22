@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.validator.BeanValidationValidator;
+import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.ui.Field;
 
 public class BeanFieldGroup<T> extends FieldGroup {
@@ -120,7 +120,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
         super.configureField(field);
         // Add Bean validators if there are annotations
         if (isBeanValidationImplementationAvailable()) {
-            BeanValidationValidator validator = new BeanValidationValidator(
+            BeanValidator validator = new BeanValidator(
                     beanType, getPropertyId(field).toString());
             field.addValidator(validator);
             if (field.getLocale() != null) {

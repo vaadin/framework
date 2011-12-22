@@ -34,7 +34,7 @@ import com.vaadin.data.Validator;
  * @author Petri Hakala
  * @author Henri Sara
  */
-public class BeanValidationValidator implements Validator {
+public class BeanValidator implements Validator {
 
     private static final long serialVersionUID = 1L;
     private static ValidatorFactory factory;
@@ -85,7 +85,7 @@ public class BeanValidationValidator implements Validator {
      * @param propertyName
      *            property to validate
      */
-    public BeanValidationValidator(Class<?> beanClass, String propertyName) {
+    public BeanValidator(Class<?> beanClass, String propertyName) {
         this.beanClass = beanClass;
         this.propertyName = propertyName;
         locale = Locale.getDefault();
@@ -158,7 +158,7 @@ public class BeanValidationValidator implements Validator {
     /**
      * Returns a shared Validator instance to use. An instance is created using
      * the validator factory if necessary and thereafter reused by the
-     * {@link BeanValidationValidator} instance.
+     * {@link BeanValidator} instance.
      * 
      * @return the JSR-303 {@link javax.validation.Validator} to use
      */
