@@ -23,7 +23,6 @@ public class UnsupportedBrowserHandler implements RequestHandler {
     /** Cookie used to ignore browser checks */
     public static final String FORCE_LOAD_COOKIE = "vaadinforceload=1";
 
-    @Override
     public boolean handleRequest(Application application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
