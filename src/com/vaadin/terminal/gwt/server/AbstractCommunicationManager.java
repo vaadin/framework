@@ -962,7 +962,13 @@ public abstract class AbstractCommunicationManager implements
                 Component p = (Component) it.next();
                 if (p.getApplication() == null) {
                     unregisterPaintable(p);
-                    idPaintableMap.remove(paintableIdMap.get(p));
+                    // Take into account that some other component may have
+                    // reused p's ID by now (this can happen when manually
+                    // assigning IDs with setDebugId().) See #8090.
+                    String pid = paintableIdMap.get(p);
+                    if (idPaintableMap.get(pid) == p) {
+                        idPaintableMap.remove(pid);
+                    }
                     it.remove();
                     dirtyPaintables.remove(p);
                 }

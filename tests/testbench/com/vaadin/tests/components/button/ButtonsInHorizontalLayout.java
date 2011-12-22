@@ -5,6 +5,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.BaseTheme;
 
 public class ButtonsInHorizontalLayout extends AbstractTestCase {
 
@@ -12,16 +13,30 @@ public class ButtonsInHorizontalLayout extends AbstractTestCase {
     public void init() {
         VerticalLayout content = new VerticalLayout();
         content.setMargin(true);
+        content.setSpacing(true);
+
+        content.addComponent(createButtonLayout(null));
+        content.addComponent(createButtonLayout(BaseTheme.BUTTON_LINK));
+
+        setMainWindow(new Window("", content));
+    }
+
+    private HorizontalLayout createButtonLayout(String style) {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setSpacing(true);
-        layout.addComponent(new Button(
-                "Look at me in IE7 or IE8 in compatibility mode"));
-        layout.addComponent(new Button(
-                "Look at me in IE7 or IE8 in compatibility mode"));
-        layout.addComponent(new Button(
-                "Look at me in IE7 or IE8 in compatibility mode"));
-        content.addComponent(layout);
-        setMainWindow(new Window("", content));
+        layout.addComponent(createButton(style));
+        layout.addComponent(createButton(style));
+        layout.addComponent(createButton(style));
+        return layout;
+    }
+
+    private Button createButton(String style) {
+        Button button = new Button(
+                "Look at me in IE7 or IE8 in compatibility mode");
+        if (style != null && style.length() != 0) {
+            button.setStyleName(style);
+        }
+        return button;
     }
 
     @Override

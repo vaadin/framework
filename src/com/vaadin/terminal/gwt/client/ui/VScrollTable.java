@@ -4056,7 +4056,20 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             if (reactLastRow >= totalRows) {
                 reactLastRow = totalRows - 1;
             }
-            if (lastRendered < reactLastRow) {
+            if (lastRendered < reactFirstRow || firstRendered > reactLastRow) {
+                /*
+                 * #8040 - scroll position is completely changed since the
+                 * latest request, so request a new set of rows.
+                 * 
+                 * TODO: We should probably check whether the fetched rows match
+                 * the current scroll position right when they arrive, so as to
+                 * not waste time rendering a set of rows that will never be
+                 * visible...
+                 */
+                rowRequestHandler.setReqFirstRow(reactFirstRow);
+                rowRequestHandler.setReqRows(reactLastRow - reactFirstRow + 1);
+                rowRequestHandler.deferRowFetch(1);
+            } else if (lastRendered < reactLastRow) {
                 // get some cache rows below visible area
                 rowRequestHandler.setReqFirstRow(lastRendered + 1);
                 rowRequestHandler.setReqRows(reactLastRow - lastRendered);
@@ -6657,8 +6670,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (BrowserInfo.get().isIE()) {
             // IE sometimes moves focus to a clicked table cell...
             Element focusedElement = Util.getIEFocusedElement();
-            if (getElement().isOrHasChild(focusedElement)) {
+            if (Util.getPaintableForElement(client, getParent(), focusedElement) == this) {
                 // ..in that case, steal the focus back to the focus handler
+                // but not if focus is in a child component instead (#7965)
                 focus();
                 return;
             }

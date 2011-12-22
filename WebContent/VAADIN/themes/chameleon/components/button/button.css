@@ -182,7 +182,7 @@ body.v-ie .v-pressed.v-button-borderless {
 	font-weight: normal;
 	text-shadow: none;
 	border: none;
-	padding: 1px;
+	margin: 1px;
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
 	}

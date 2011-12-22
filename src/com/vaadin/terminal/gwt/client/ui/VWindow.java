@@ -1099,9 +1099,9 @@ public class VWindow extends VOverlay implements Container,
      *               the browser to compute it based on the window contents. 
      */
     public void setHeight(String height) {
-        if (!isAttached() || (height == null 
-                ? this.height == null 
-                : height.equals(this.height))) {
+        if (!isAttached()
+                || (height == null ? this.height == null : height
+                        .equals(this.height))) {
             return;
         }
         if (height == null || "".equals(height)) {
@@ -1113,17 +1113,17 @@ public class VWindow extends VOverlay implements Container,
             renderSpace.setHeight(MIN_CONTENT_AREA_HEIGHT);
         } else {
             getElement().getStyle().setProperty("height", height);
-            int contentHeight =
-                    getElement().getOffsetHeight() - getExtraHeight();
+            int contentHeight = getElement().getOffsetHeight()
+                    - getExtraHeight();
             if (contentHeight < MIN_CONTENT_AREA_HEIGHT) {
                 contentHeight = MIN_CONTENT_AREA_HEIGHT;
                 int rootHeight = contentHeight + getExtraHeight();
-                getElement().getStyle().setProperty(
-                        "height", rootHeight + "px");
+                getElement().getStyle()
+                        .setProperty("height", rootHeight + "px");
             }
             renderSpace.setHeight(contentHeight);
-            contentPanel.getElement().getStyle().setProperty(
-                    "height", contentHeight + "px");
+            contentPanel.getElement().getStyle()
+                    .setProperty("height", contentHeight + "px");
         }
         this.height = height;
         updateShadowSizeAndPosition();
