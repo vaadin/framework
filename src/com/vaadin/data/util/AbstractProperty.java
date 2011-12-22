@@ -59,8 +59,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
      * format.
      * 
      * @return String representation of the value stored in the Property
-     * @deprecated use the property value directly, or {@link #getStringValue()}
-     *             during migration period
+     * @deprecated use {@link #getValue()} instead and possibly toString on that
      */
     @Deprecated
     @Override
@@ -68,21 +67,6 @@ public abstract class AbstractProperty<T> implements Property<T>,
         throw new UnsupportedOperationException(
                 "Use Property.getValue() instead of " + getClass()
                         + ".toString()");
-    }
-
-    /**
-     * Returns the value of the <code>Property</code> in human readable textual
-     * format.
-     * 
-     * @return String representation of the value stored in the Property
-     * @since 7.0
-     */
-    public String getStringValue() {
-        final Object value = getValue();
-        if (value == null) {
-            return null;
-        }
-        return value.toString();
     }
 
     /* Events */

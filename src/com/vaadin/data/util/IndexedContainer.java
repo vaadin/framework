@@ -894,29 +894,14 @@ public class IndexedContainer extends
          * 
          * @return <code>String</code> representation of the value stored in the
          *         Property
-         * @deprecated use the property value directly, or
-         *             {@link #getStringValue()} during migration period
+         * @deprecated use {@link #getValue()} instead and possibly toString on
+         *             that
          */
         @Deprecated
         @Override
         public String toString() {
             throw new UnsupportedOperationException(
                     "Use Property.getValue() instead of IndexedContainerProperty.toString()");
-        }
-
-        /**
-         * Returns the value of the <code>Property</code> in human readable
-         * textual format.
-         * 
-         * @return String representation of the value stored in the Property
-         * @since 7.0
-         */
-        public String getStringValue() {
-            final Object value = getValue();
-            if (value == null) {
-                return null;
-            }
-            return value.toString();
         }
 
         /**

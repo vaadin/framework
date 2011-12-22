@@ -62,12 +62,12 @@ public class TestForContainerFilterable extends CustomComponent {
         filterButton.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 ic.removeAllContainerFilters();
-                if (fooFilter.getStringValue().length() > 0) {
-                    ic.addContainerFilter("foo", fooFilter.getStringValue(), false,
+                if (fooFilter.getValue().length() > 0) {
+                    ic.addContainerFilter("foo", fooFilter.getValue(), false,
                             false);
                 }
-                if (barFilter.getStringValue().length() > 0) {
-                    ic.addContainerFilter("bar", barFilter.getStringValue(), true,
+                if (barFilter.getValue().length() > 0) {
+                    ic.addContainerFilter("bar", barFilter.getValue(), true,
                             true);
                 }
                 count.setValue("Rows in table: " + ic.size());

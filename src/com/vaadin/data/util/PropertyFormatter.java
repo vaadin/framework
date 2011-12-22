@@ -106,7 +106,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
                         .removeListener(this);
             }
             readOnly = isReadOnly();
-            prevValue = getStringValue();
+            prevValue = getValue();
         }
 
         dataSource = newDataSource;
@@ -124,7 +124,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
         if (isReadOnly() != readOnly) {
             fireReadOnlyStatusChange();
         }
-        String newVal = getStringValue();
+        String newVal = getValue();
         if ((prevValue == null && newVal != null)
                 || (prevValue != null && !prevValue.equals(newVal))) {
             fireValueChange();
@@ -143,18 +143,6 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
      *         String given by format().
      */
     public String getValue() {
-        return getStringValue();
-    }
-
-    /**
-     * Get the formatted value. For PropertyFormatter, this is identical with
-     * {@link #getValue()}.
-     * 
-     * @return If the datasource returns null, this is null. Otherwise this is
-     *         String given by format().
-     */
-    @Override
-    public String getStringValue() {
         T value = dataSource == null ? null : dataSource.getValue();
         if (value == null) {
             return null;
@@ -219,7 +207,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
         } else {
             try {
                 dataSource.setValue(parse(newValue.toString()));
-                if (!newValue.equals(getStringValue())) {
+                if (!newValue.equals(getValue())) {
                     fireValueChange();
                 }
             } catch (Exception e) {
