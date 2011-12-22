@@ -1227,7 +1227,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * </p>
      * <p>
      * The {@link Converter} for an individual field can be overridden using
-     * {@link AbstractField#setConverter(Converter)} and for invidual property
+     * {@link AbstractField#setConverter(Converter)} and for individual property
      * ids in a {@link Table} using
      * {@link Table#setConverter(Object, Converter)}.
      * </p>
