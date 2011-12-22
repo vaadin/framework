@@ -1372,7 +1372,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void setWidth(String width) {
         Size size = parseStringSize(width);
-        setWidth(size.getSize(), size.getUnit());
+        if (size != null) {
+            setWidth(size.getSize(), size.getUnit());
+        } else {
+            setWidth(-1, Unit.PIXELS);
+        }
     }
 
     /*
@@ -1382,7 +1386,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void setHeight(String height) {
         Size size = parseStringSize(height);
-        setHeight(size.getSize(), size.getUnit());
+        if (size != null) {
+            setHeight(size.getSize(), size.getUnit());
+        } else {
+            setHeight(-1, Unit.PIXELS);
+        }
     }
 
     /*
