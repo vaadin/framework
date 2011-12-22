@@ -6,10 +6,9 @@ package com.vaadin.data.util;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeNotifier;
-import com.vaadin.data.TransactionalProperty;
 
 public class TransactionalPropertyWrapper<T> extends AbstractProperty<T>
-        implements ValueChangeNotifier, TransactionalProperty<T> {
+        implements ValueChangeNotifier, Property.Transactional<T> {
 
     private Property<T> wrappedProperty;
     private boolean inTransaction = false;

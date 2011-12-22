@@ -240,7 +240,7 @@ public class FieldGroup implements Serializable {
         configureField(field);
     }
 
-    private <T> TransactionalProperty<T> wrapInTransactionalProperty(
+    private <T> Property.Transactional<T> wrapInTransactionalProperty(
             Property<T> itemProperty) {
         return new TransactionalPropertyWrapper<T>(itemProperty);
     }
