@@ -2391,4 +2391,17 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
             w.attach();
         }
     }
+
+    /**
+     * Notifies the child components and subwindows that the window is detached
+     * from the application.
+     */
+    @Override
+    public void detach() {
+        super.detach();
+        for (Window w : subwindows) {
+            w.detach();
+        }
+    }
+
 }
