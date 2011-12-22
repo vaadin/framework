@@ -150,17 +150,6 @@ public class ProgressIndicator extends AbstractField<Number> implements
     }
 
     /**
-     * @see com.vaadin.ui.AbstractField#toString()
-     * @deprecated use the data source value instead of toString()
-     */
-    @Deprecated
-    @Override
-    public String toString() {
-        throw new UnsupportedOperationException(
-                "Use Property.getValue() instead of ProgressIndicator.toString()");
-    }
-
-    /**
      * @see com.vaadin.ui.AbstractField#getType()
      */
     @Override

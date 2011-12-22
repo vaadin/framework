@@ -375,7 +375,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
 
     @Override
     protected boolean isEmpty() {
-        return super.isEmpty() || getStringValue().length() == 0;
+        return super.isEmpty() || getValue().length() == 0;
     }
 
     /**

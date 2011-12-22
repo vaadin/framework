@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.vaadin.Application;
 import com.vaadin.data.Buffered;
@@ -62,6 +63,9 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         Property.ReadOnlyStatusChangeNotifier, Action.ShortcutNotifier {
 
     /* Private members */
+
+    private static final Logger logger = Logger.getLogger(AbstractField.class
+            .getName());
 
     /**
      * Value of the abstract field.
@@ -340,16 +344,20 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         }
     }
 
+    /**
+     * Gets the value from the data source. This is only here because of clarity
+     * in the code that handles both the data model value and the field value.
+     * 
+     * @return The value of the property data source
+     */
     private Object getDataSourceValue() {
         return dataSource.getValue();
     }
 
     /**
-     * Returns the value that is or should be displayed in the field. This is
-     * always of type T.
-     * 
-     * This method should return the converter data source value if there are no
-     * buffered changes in the field.
+     * Returns the field value. This is always identical to {@link #getValue()}
+     * and only here because of clarity in the code that handles both the data
+     * model value and the field value.
      * 
      * @return The value of the field
      */
@@ -488,32 +496,21 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     /* Property interface implementation */
 
     /**
-     * Returns the value of the Property in human readable textual format.
+     * Returns the (field) value converted to a String using toString().
      * 
      * @see java.lang.Object#toString()
-     * @deprecated get the string representation from the data source, or use
-     *             getStringValue() during migration
+     * @deprecated Instead use {@link #getValue()} to get the value of the
+     *             field, {@link #getConvertedValue()} to get the field value
+     *             converted to the data model type or
+     *             {@link #getPropertyDataSource()} .getValue() to get the value
+     *             of the data source.
      */
     @Deprecated
     @Override
     public String toString() {
-        throw new UnsupportedOperationException(
-                "Use Property.getValue() instead of " + getClass()
-                        + ".toString()");
-    }
-
-    /**
-     * Returns the (UI type) value of the field converted to a String.
-     * 
-     * This method exists to help migration from the use of Property.toString()
-     * to get the field value. For new applications, it is often better to
-     * access getValue() directly.
-     * 
-     * @return string representation of the field value or null if the value is
-     *         null
-     * @since 7.0
-     */
-    public String getStringValue() {
+        logger.warning("You are using AbstractField.toString() to get the value for a "
+                + getClass().getSimpleName()
+                + ". This is not recommended and will not be supported in future versions.");
         final Object value = getFieldValue();
         if (value == null) {
             return null;

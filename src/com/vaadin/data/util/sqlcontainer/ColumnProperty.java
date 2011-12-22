@@ -160,34 +160,13 @@ final public class ColumnProperty implements Property {
      * Returns the value of the Property in human readable textual format.
      * 
      * @see java.lang.Object#toString()
-     * @deprecated get the string representation from the value, or use
-     *             getStringValue() during migration
+     * @deprecated get the string representation from the value
      */
     @Deprecated
     @Override
     public String toString() {
         throw new UnsupportedOperationException(
                 "Use ColumnProperty.getValue() instead of ColumnProperty.toString()");
-    }
-
-    /**
-     * Returns the (UI type) value of the field converted to a String using
-     * toString().
-     * 
-     * This method exists to help migration from the use of Property.toString()
-     * to get the field value - for new applications, access getValue()
-     * directly. This method may disappear in future Vaadin versions.
-     * 
-     * @return string representation of the field value or null if the value is
-     *         null
-     * @since 7.0
-     */
-    public String getStringValue() {
-        final Object value = getValue();
-        if (value == null) {
-            return null;
-        }
-        return value.toString();
     }
 
     public void setOwner(RowItem owner) {
