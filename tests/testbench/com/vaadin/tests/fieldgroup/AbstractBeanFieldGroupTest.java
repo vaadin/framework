@@ -9,7 +9,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Root;
 
-public abstract class AbstractBeanFieldBinderTest extends TestBase {
+public abstract class AbstractBeanFieldGroupTest extends TestBase {
 
     private Button commitButton;
     protected Log log = new Log(5);
