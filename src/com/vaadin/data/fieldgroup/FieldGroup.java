@@ -15,7 +15,6 @@ import java.util.logging.Logger;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.data.TransactionalProperty;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.TransactionalPropertyWrapper;
 import com.vaadin.tools.ReflectTools;
@@ -408,7 +407,7 @@ public class FieldGroup implements Serializable {
             return;
         }
         for (Field<?> f : fieldToPropertyId.keySet()) {
-            ((TransactionalProperty<?>) f.getPropertyDataSource())
+            ((Property.Transactional<?>) f.getPropertyDataSource())
                     .startTransaction();
         }
         try {
@@ -421,13 +420,14 @@ public class FieldGroup implements Serializable {
 
             // Commit the properties
             for (Field<?> f : fieldToPropertyId.keySet()) {
-                ((TransactionalProperty<?>) f.getPropertyDataSource()).commit();
+                ((Property.Transactional<?>) f.getPropertyDataSource())
+                        .commit();
             }
 
         } catch (Exception e) {
             for (Field<?> f : fieldToPropertyId.keySet()) {
                 try {
-                    ((TransactionalProperty<?>) f.getPropertyDataSource())
+                    ((Property.Transactional<?>) f.getPropertyDataSource())
                             .rollback();
                 } catch (Exception rollbackException) {
                     // FIXME: What to do ?
