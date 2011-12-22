@@ -1,4 +1,4 @@
-package com.vaadin.tests.fieldbinder;
+package com.vaadin.tests.fieldgroup;
 
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
