@@ -14,10 +14,7 @@ import com.vaadin.terminal.WrappedResponse;
  * 
  * <p>
  * This handler is usually added to the application by
- * {@link AbstractCommunicationManager}. It can be removed/replaced by doing
- * something like this: <code><pre>
- * application.removeRequestHandler(AbstractCommunicationManager.UNSUPPORTED_BROWSER_HANDLER);
- * </pre></code>
+ * {@link AbstractCommunicationManager}.
  * </p>
  */
 @SuppressWarnings("serial")
