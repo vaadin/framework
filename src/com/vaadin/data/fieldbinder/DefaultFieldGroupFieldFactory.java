@@ -19,7 +19,7 @@ import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
-public class DefaultFormBuilderFieldFactory implements FieldGroupFieldFactory {
+public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
 
     public static final Object CAPTION_PROPERTY_ID = "Caption";
 
