@@ -1,7 +1,7 @@
 package com.vaadin.tests.fieldbinder;
 
-import com.vaadin.data.fieldbinder.BeanFieldGroup;
-import com.vaadin.data.fieldbinder.PropertyId;
+import com.vaadin.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;

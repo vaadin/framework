@@ -1,10 +1,10 @@
 package com.vaadin.tests.fieldbinder;
 
-import com.vaadin.data.fieldbinder.BeanFieldGroup;
-import com.vaadin.data.fieldbinder.FieldGroup;
-import com.vaadin.data.fieldbinder.FieldGroup.CommitEvent;
-import com.vaadin.data.fieldbinder.FieldGroup.CommitException;
-import com.vaadin.data.fieldbinder.FieldGroup.CommitHandler;
+import com.vaadin.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitEvent;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitHandler;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.converter.StringToBooleanConverter;
 import com.vaadin.data.validator.EmailValidator;

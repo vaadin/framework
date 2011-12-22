@@ -1,7 +1,7 @@
 package com.vaadin.tests.fieldbinder;
 
-import com.vaadin.data.fieldbinder.BeanFieldGroup;
-import com.vaadin.data.fieldbinder.FieldGroup.CommitException;
+import com.vaadin.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;

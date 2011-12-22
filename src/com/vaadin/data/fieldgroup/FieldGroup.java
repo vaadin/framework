@@ -1,7 +1,7 @@
 /* 
 @VaadinApache2LicenseForJavaFiles@
  */
-package com.vaadin.data.fieldbinder;
+package com.vaadin.data.fieldgroup;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;

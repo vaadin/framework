@@ -1,12 +1,12 @@
 /* 
 @VaadinApache2LicenseForJavaFiles@
  */
-package com.vaadin.data.fieldbinder;
+package com.vaadin.data.fieldgroup;
 
 import java.util.EnumSet;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.fieldbinder.FieldGroup.BindException;
+import com.vaadin.data.fieldgroup.FieldGroup.BindException;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.CheckBox;
