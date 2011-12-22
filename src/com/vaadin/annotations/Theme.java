@@ -16,7 +16,7 @@ import com.vaadin.ui.Root;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface RootTheme {
+public @interface Theme {
     /**
      * @return simple name of the theme
      */

@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.root;
 
-import com.vaadin.annotations.RootTheme;
+import com.vaadin.annotations.Theme;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.ui.Label;
 
-@RootTheme("tests-tickets")
+@Theme("tests-tickets")
 public class TestRootTheme extends AbstractTestRoot {
 
     @Override

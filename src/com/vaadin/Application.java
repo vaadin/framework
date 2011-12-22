@@ -30,7 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.vaadin.annotations.RootInitRequiresBrowserDetails;
-import com.vaadin.annotations.RootTheme;
+import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.RootWidgetset;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
@@ -1974,7 +1974,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @since 7.0
      */
     public String getThemeForRoot(Root root) {
-        RootTheme rootTheme = getAnnotationFor(root.getClass(), RootTheme.class);
+        Theme rootTheme = getAnnotationFor(root.getClass(), Theme.class);
         if (rootTheme != null) {
             return rootTheme.value();
         } else {
