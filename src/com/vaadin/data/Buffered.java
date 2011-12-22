@@ -77,7 +77,11 @@ public interface Buffered extends Serializable {
      * 
      * @return <code>true</code> if the object is in write-through mode,
      *         <code>false</code> if it's not.
+     * @deprecated Use {@link #setBuffered(boolean)} instead. Note that
+     *             setReadThrough(true), setWriteThrough(true) equals
+     *             setBuffered(false)
      */
+    @Deprecated
     public boolean isWriteThrough();
 
     /**
@@ -95,7 +99,11 @@ public interface Buffered extends Serializable {
      *             If the implicit commit operation fails because of a
      *             validation error.
      * 
+     * @deprecated Use {@link #setBuffered(boolean)} instead. Note that
+     *             setReadThrough(true), setWriteThrough(true) equals
+     *             setBuffered(false)
      */
+    @Deprecated
     public void setWriteThrough(boolean writeThrough) throws SourceException,
             InvalidValueException;
 
@@ -112,7 +120,11 @@ public interface Buffered extends Serializable {
      * 
      * @return <code>true</code> if the object is in read-through mode,
      *         <code>false</code> if it's not.
+     * @deprecated Use {@link #isBuffered(boolean)} instead. Note that
+     *             setReadThrough(true), setWriteThrough(true) equals
+     *             setBuffered(false)
      */
+    @Deprecated
     public boolean isReadThrough();
 
     /**
@@ -127,7 +139,11 @@ public interface Buffered extends Serializable {
      * @throws SourceException
      *             If the operation fails because of an exception is thrown by
      *             the data source. The cause is included in the exception.
+     * @deprecated Use {@link #setBuffered(boolean)} instead. Note that
+     *             setReadThrough(true), setWriteThrough(true) equals
+     *             setBuffered(false)
      */
+    @Deprecated
     public void setReadThrough(boolean readThrough) throws SourceException;
 
     /**

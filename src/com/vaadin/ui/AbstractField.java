@@ -409,8 +409,11 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @throws InvalidValueException
      *             If the implicit commit operation fails because of a
      *             validation error.
-     * 
+     * @deprecated Use {@link #setBuffered(boolean)} instead. Note that
+     *             setReadThrough(true), setWriteThrough(true) equals
+     *             setBuffered(false)
      */
+    @Deprecated
     public void setWriteThrough(boolean writeThrough)
             throws Buffered.SourceException, InvalidValueException {
         if (writeThroughMode == writeThrough) {
@@ -445,7 +448,11 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @throws SourceException
      *             If the operation fails because of an exception is thrown by
      *             the data source. The cause is included in the exception.
+     * @deprecated Use {@link #setBuffered(boolean)} instead. Note that
+     *             setReadThrough(true), setWriteThrough(true) equals
+     *             setBuffered(false)
      */
+    @Deprecated
     public void setReadThrough(boolean readThrough)
             throws Buffered.SourceException {
         if (readThroughMode == readThrough) {

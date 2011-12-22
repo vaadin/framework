@@ -39,8 +39,7 @@ public class Ticket736 extends Application.LegacyApplication {
         mainWin.addComponent(f);
 
         // Select to use buffered mode for editing to enable commit and discard
-        f.setWriteThrough(false);
-        f.setReadThrough(false);
+        f.setBuffered(true);
         Button commit = new Button("Commit", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {

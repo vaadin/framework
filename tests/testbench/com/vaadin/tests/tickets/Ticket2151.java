@@ -90,8 +90,7 @@ public class Ticket2151 extends Application.LegacyApplication {
             b = class1.newInstance();
             b.setCaption("Button of type " + class1.getSimpleName());
             try {
-                b.setWriteThrough(true);
-                b.setReadThrough(true);
+                b.setBuffered(false);
                 ObjectProperty<String> prop = new ObjectProperty<String>(
                         "ABC 123");
                 /*

@@ -422,6 +422,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * we use the default one from the interface.
      */
     @Override
+    @Deprecated
     public boolean isReadThrough() {
         return readThrough;
     }
@@ -431,6 +432,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * we use the default one from the interface.
      */
     @Override
+    @Deprecated
     public boolean isWriteThrough() {
         return writeThrough;
     }

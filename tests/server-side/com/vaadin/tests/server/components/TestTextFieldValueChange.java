@@ -55,8 +55,7 @@ public class TestTextFieldValueChange extends
         getField().setPropertyDataSource(property);
 
         // defaults, buffering off
-        getField().setWriteThrough(true);
-        getField().setReadThrough(true);
+        getField().setBuffered(false);
 
         // Expectations and start test
         getListener().valueChange(EasyMock.isA(ValueChangeEvent.class));
@@ -143,8 +142,7 @@ public class TestTextFieldValueChange extends
                 initialValue);
 
         // set buffering
-        getField().setWriteThrough(false);
-        getField().setReadThrough(false);
+        getField().setBuffered(true);
 
         // Value change should only happen once, when setting the property,
         // further changes via property should not cause value change listener
