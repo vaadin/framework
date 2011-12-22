@@ -44,7 +44,7 @@ import java.util.logging.Logger;
 
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
-import com.vaadin.RootRequiresMoreInformation;
+import com.vaadin.RootRequiresMoreInformationException;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.CombinedRequest;
@@ -2007,7 +2007,7 @@ public abstract class AbstractCommunicationManager implements
                 params.put("uidl", initialUIDL);
             }
             response.getWriter().write(params.toString());
-        } catch (RootRequiresMoreInformation e) {
+        } catch (RootRequiresMoreInformationException e) {
             // Requiring more information at this point is not allowed
             // TODO handle in a better way
             throw new RuntimeException(e);

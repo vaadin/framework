@@ -20,6 +20,6 @@ import com.vaadin.terminal.WrappedRequest.BrowserDetails;
  * 
  * @since 7.0
  */
-public class RootRequiresMoreInformation extends Exception {
+public class RootRequiresMoreInformationException extends Exception {
     // Nothing of interest here
 }

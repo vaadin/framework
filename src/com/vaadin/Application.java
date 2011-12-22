@@ -134,12 +134,12 @@ public class Application implements Terminal.ErrorListener, Serializable {
          *            the request to get the root for
          * @return integer id of the root, or <code>null</code> if no root is
          *         found
-         * @throws RootRequiresMoreInformation
+         * @throws RootRequiresMoreInformationException
          *             if full details from the browser are required to resolve
          *             the root
          */
         public Integer getPreservedRootForRequest(WrappedRequest request)
-                throws RootRequiresMoreInformation;
+                throws RootRequiresMoreInformationException;
 
         /**
          * Used to tell whether the browser details are required when
@@ -171,13 +171,13 @@ public class Application implements Terminal.ErrorListener, Serializable {
         private final Map<String, Integer> retainOnRefreshRoots = new HashMap<String, Integer>();
 
         public Integer getPreservedRootForRequest(WrappedRequest request)
-                throws RootRequiresMoreInformation {
+                throws RootRequiresMoreInformationException {
             if (retainOnRefreshRoots.isEmpty()) {
                 return null;
             }
             BrowserDetails browserDetails = request.getBrowserDetails();
             if (browserDetails == null) {
-                throw new RootRequiresMoreInformation();
+                throw new RootRequiresMoreInformationException();
             } else {
                 String windowName = browserDetails.getWindowName();
                 return retainOnRefreshRoots.get(windowName);
@@ -1885,7 +1885,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * 
      * <p>
      * If {@link BrowserDetails} are required to create a Root, the
-     * implementation can throw a {@link RootRequiresMoreInformation} exception.
+     * implementation can throw a {@link RootRequiresMoreInformationException} exception.
      * In this case, the framework will instruct the browser to send the
      * additional details, whereupon this method is invoked again with the
      * browser details present in the wrapped request. Throwing the exception if
@@ -1901,19 +1901,19 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @param request
      *            the wrapped request for which a root is needed
      * @return a root instance to use for the request
-     * @throws RootRequiresMoreInformation
+     * @throws RootRequiresMoreInformationException
      *             may be thrown by an implementation to indicate that
      *             {@link BrowserDetails} are required to create a root
      * 
      * @see #getRootClassName(WrappedRequest)
      * @see Root
-     * @see RootRequiresMoreInformation
+     * @see RootRequiresMoreInformationException
      * @see WrappedRequest#getBrowserDetails()
      * 
      * @since 7.0
      */
     protected Root getRoot(WrappedRequest request)
-            throws RootRequiresMoreInformation {
+            throws RootRequiresMoreInformationException {
         String rootClassName = getRootClassName(request);
         try {
             Class<? extends Root> rootClass = Class.forName(rootClassName)
@@ -2260,7 +2260,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * Finds the {@link Root} to which a particular request belongs. If the
      * request originates from an existing Root, that root is returned. In other
      * cases, the method attempts to create and initialize a new root and might
-     * throw a {@link RootRequiresMoreInformation} if all required information
+     * throw a {@link RootRequiresMoreInformationException} if all required information
      * is not available.
      * <p>
      * Please note that this method can also return a newly created
@@ -2273,17 +2273,17 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @param request
      *            the request for which a root is desired
      * @return a root belonging to the request
-     * @throws RootRequiresMoreInformation
+     * @throws RootRequiresMoreInformationException
      *             if no existing root could be found and creating a new root
      *             requires additional information from the browser
      * 
      * @see #getRoot(WrappedRequest)
-     * @see RootRequiresMoreInformation
+     * @see RootRequiresMoreInformationException
      * 
      * @since 7.0
      */
     public Root getRootForRequest(WrappedRequest request)
-            throws RootRequiresMoreInformation {
+            throws RootRequiresMoreInformationException {
         Root root = Root.getCurrentRoot();
         if (root != null) {
             return root;

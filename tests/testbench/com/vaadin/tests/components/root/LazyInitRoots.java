@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.root;
 
-import com.vaadin.RootRequiresMoreInformation;
+import com.vaadin.RootRequiresMoreInformationException;
 import com.vaadin.annotations.RootInitRequiresBrowserDetails;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.WrappedRequest;
@@ -25,12 +25,12 @@ public class LazyInitRoots extends AbstractTestApplication {
 
     @Override
     public Root getRoot(WrappedRequest request)
-            throws RootRequiresMoreInformation {
+            throws RootRequiresMoreInformationException {
         if (request.getParameter("lazyCreate") != null) {
             // Root created on second request
             final BrowserDetails browserDetails = request.getBrowserDetails();
             if (browserDetails == null) {
-                throw new RootRequiresMoreInformation();
+                throw new RootRequiresMoreInformationException();
             } else {
                 Root root = new Root() {
                     @Override

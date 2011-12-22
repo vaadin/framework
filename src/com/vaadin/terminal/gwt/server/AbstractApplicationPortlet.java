@@ -44,7 +44,7 @@ import com.liferay.portal.kernel.util.PortalClassInvoker;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
-import com.vaadin.RootRequiresMoreInformation;
+import com.vaadin.RootRequiresMoreInformationException;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.WrappedRequest;
@@ -606,7 +606,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                             try {
                                 root = application
                                         .getRootForRequest(wrappedRequest);
-                            } catch (RootRequiresMoreInformation e) {
+                            } catch (RootRequiresMoreInformationException e) {
                                 // Ignore problem and continue without root
                             }
                             break;

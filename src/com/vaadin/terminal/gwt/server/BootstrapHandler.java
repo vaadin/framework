@@ -13,7 +13,7 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
-import com.vaadin.RootRequiresMoreInformation;
+import com.vaadin.RootRequiresMoreInformationException;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.DeploymentConfiguration;
@@ -142,7 +142,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             }
 
             rootId = root.getRootId();
-        } catch (RootRequiresMoreInformation e) {
+        } catch (RootRequiresMoreInformationException e) {
             rootId = application.registerPendingRoot(request);
         }
 

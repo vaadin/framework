@@ -1,7 +1,7 @@
 package com.vaadin.tests.application;
 
 import com.vaadin.Application;
-import com.vaadin.RootRequiresMoreInformation;
+import com.vaadin.RootRequiresMoreInformationException;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.PaintException;
@@ -77,7 +77,7 @@ public class ThreadLocalInstances extends AbstractTestApplication {
 
     @Override
     protected Root getRoot(WrappedRequest request)
-            throws RootRequiresMoreInformation {
+            throws RootRequiresMoreInformationException {
         return mainWindow;
     }
 
