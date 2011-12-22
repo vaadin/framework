@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.vaadin.annotations.RootInitRequiresBrowserDetails;
+import com.vaadin.annotations.EagerInit;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.util.converter.Converter;
@@ -2268,8 +2268,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
             if (!initedRoots.contains(rootId)) {
                 boolean initRequiresBrowserDetails = preserveRoot
-                        || root.getClass().isAnnotationPresent(
-                                RootInitRequiresBrowserDetails.class);
+                        || !root.getClass()
+                                .isAnnotationPresent(EagerInit.class);
                 if (initRequiresBrowserDetails && browserDetails == null) {
                     pendingRoots.put(rootId, new PendingRootRequest(request));
                 } else {

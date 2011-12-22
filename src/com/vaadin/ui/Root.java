@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.vaadin.Application;
-import com.vaadin.annotations.RootInitRequiresBrowserDetails;
+import com.vaadin.annotations.EagerInit;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
@@ -60,9 +60,10 @@ import com.vaadin.ui.Window.CloseListener;
  * {@link #setContent(ComponentContainer)}.
  * </p>
  * <p>
- * If a {@link RootInitRequiresBrowserDetails} annotation is present on a class
- * extending <code>Root</code>, the framework will ensure {@link BrowserDetails}
- * are present in the {@link WrappedRequest} passed to the init method.
+ * If a {@link EagerInit} annotation is present on a class extending
+ * <code>Root</code>, the framework will use a faster initialization method
+ * which will not ensure that {@link BrowserDetails} are present in the
+ * {@link WrappedRequest} passed to the init method.
  * </p>
  * 
  * @see #init(WrappedRequest)
@@ -193,6 +194,15 @@ public abstract class Root extends AbstractComponentContainer implements
      * Helper class to emulate the main window from Vaadin 6 using roots. This
      * class should be used in the same way as Window used as a browser level
      * window in Vaadin 6 together with {@Application.LegacyApplication
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
      * }
      */
     @Deprecated
@@ -1092,9 +1102,10 @@ public abstract class Root extends AbstractComponentContainer implements
      * <p>
      * The {@link WrappedRequest} can be used to get information about the
      * request that caused this root to be created. By default, the
-     * {@link BrowserDetails} are note guaranteed to be available in the
-     * request. Availability of the browser details can be requested by adding
-     * the {@link RootInitRequiresBrowserDetails} annotation to the class.
+     * {@link BrowserDetails} will be available in the request. If the browser
+     * details are not required, loading the application in the browser can take
+     * some shortcuts giving a faster initial rendering. This can be indicated
+     * by adding the {@link EagerInit} annotation to the Root class.
      * </p>
      * 
      * @param request

@@ -1,13 +1,11 @@
 package com.vaadin.tests.application;
 
-import com.vaadin.annotations.RootInitRequiresBrowserDetails;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestApplication;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Root;
 
 public class RefreshStatePreserve extends AbstractTestApplication {
-    @RootInitRequiresBrowserDetails
     public static class RefreshStateRoot extends Root {
         @Override
         public void init(WrappedRequest request) {

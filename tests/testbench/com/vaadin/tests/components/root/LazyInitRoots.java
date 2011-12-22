@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.root;
 
 import com.vaadin.RootRequiresMoreInformationException;
-import com.vaadin.annotations.RootInitRequiresBrowserDetails;
+import com.vaadin.annotations.EagerInit;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
@@ -12,14 +12,13 @@ import com.vaadin.ui.Root;
 
 public class LazyInitRoots extends AbstractTestApplication {
 
-    @RootInitRequiresBrowserDetails
-    private static class LazyInitRoot extends Root {
+    @EagerInit
+    private static class EagerInitRoot extends Root {
         @Override
         public void init(WrappedRequest request) {
             BrowserDetails browserDetails = request.getBrowserDetails();
             getContent().addComponent(
-                    new Label("Lazy init root: "
-                            + browserDetails.getUriFragment()));
+                    new Label("Lazy init root: " + browserDetails));
         }
     }
 
@@ -41,9 +40,9 @@ public class LazyInitRoots extends AbstractTestApplication {
                 };
                 return root;
             }
-        } else if (request.getParameter("lazyInit") != null) {
+        } else if (request.getParameter("eagerInit") != null) {
             // Root inited on second request
-            return new LazyInitRoot();
+            return new EagerInitRoot();
         } else {
             // The standard root
             Root root = new Root() {
@@ -55,9 +54,9 @@ public class LazyInitRoots extends AbstractTestApplication {
                     lazyCreateLink.setTargetName("_blank");
                     addComponent(lazyCreateLink);
 
-                    Link lazyInitLink = new Link("Open lazyInit root",
+                    Link lazyInitLink = new Link("Open eagerInit root",
                             new ExternalResource(getURL()
-                                    + "?lazyInit#lazyInit"));
+                                    + "?eagerInit#eagerInit"));
                     lazyInitLink.setTargetName("_blank");
                     addComponent(lazyInitLink);
                 }

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.vaadin.Application;
 import com.vaadin.RootRequiresMoreInformationException;
-import com.vaadin.annotations.RootInitRequiresBrowserDetails;
+import com.vaadin.annotations.EagerInit;
 import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.ui.Root;
 
@@ -209,8 +209,8 @@ public interface WrappedRequest extends Serializable {
      * This information is only guaranteed to be available in some special
      * cases, for instance when {@link Application#getRoot} is called again
      * after throwing {@link RootRequiresMoreInformationException} or in
-     * {@link Root#init(WrappedRequest)} if the Root class is annotated with
-     * {@link RootInitRequiresBrowserDetails}
+     * {@link Root#init(WrappedRequest)} for a Root class not annotated with
+     * {@link EagerInit}
      * 
      * @return the browser details, or <code>null</code> if details are not
      *         available
