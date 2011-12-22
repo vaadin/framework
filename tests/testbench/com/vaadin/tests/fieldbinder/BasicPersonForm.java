@@ -1,10 +1,10 @@
 package com.vaadin.tests.fieldbinder;
 
-import com.vaadin.data.fieldbinder.BeanFieldBinder;
-import com.vaadin.data.fieldbinder.FieldBinder;
-import com.vaadin.data.fieldbinder.FieldBinder.CommitEvent;
-import com.vaadin.data.fieldbinder.FieldBinder.CommitException;
-import com.vaadin.data.fieldbinder.FieldBinder.CommitHandler;
+import com.vaadin.data.fieldbinder.BeanFieldGroup;
+import com.vaadin.data.fieldbinder.FieldGroup;
+import com.vaadin.data.fieldbinder.FieldGroup.CommitEvent;
+import com.vaadin.data.fieldbinder.FieldGroup.CommitException;
+import com.vaadin.data.fieldbinder.FieldGroup.CommitHandler;
 import com.vaadin.data.fieldbinder.FormBuilder;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.converter.StringToBooleanConverter;
@@ -65,7 +65,7 @@ public class BasicPersonForm extends TestBase {
             super("Configuration");
             BeanItem<Configuration> bi = new BeanItem<BasicPersonForm.Configuration>(
                     configuration);
-            FieldBinder confBinder = new FieldBinder(bi);
+            FieldGroup confBinder = new FieldGroup(bi);
             confBinder.setItemDataSource(bi);
             confBinder.setFieldsBuffered(false);
 
@@ -83,7 +83,7 @@ public class BasicPersonForm extends TestBase {
         Panel confPanel = new ConfigurationPanel();
         addComponent(confPanel);
 
-        final FieldBinder binder = new BeanFieldBinder<Person>(Person.class);
+        final FieldGroup binder = new BeanFieldGroup<Person>(Person.class);
         binder.addCommitHandler(new CommitHandler() {
 
             public void preCommit(CommitEvent commitEvent)
@@ -176,7 +176,7 @@ public class BasicPersonForm extends TestBase {
         binder.setItemDataSource(new BeanItem<Person>(p));
     }
 
-    public static Person getPerson(FieldBinder binder) {
+    public static Person getPerson(FieldGroup binder) {
         return ((BeanItem<Person>) binder.getItemDataSource()).getBean();
     }
 

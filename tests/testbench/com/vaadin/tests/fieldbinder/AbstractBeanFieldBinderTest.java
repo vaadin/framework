@@ -1,7 +1,7 @@
 package com.vaadin.tests.fieldbinder;
 
-import com.vaadin.data.fieldbinder.BeanFieldBinder;
-import com.vaadin.data.fieldbinder.FieldBinder.CommitException;
+import com.vaadin.data.fieldbinder.BeanFieldGroup;
+import com.vaadin.data.fieldbinder.FieldGroup.CommitException;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
@@ -16,7 +16,7 @@ public abstract class AbstractBeanFieldBinderTest extends TestBase {
 
     private Button discardButton;
     private Button showBeanButton;
-    private BeanFieldBinder fieldBinder;
+    private BeanFieldGroup fieldBinder;
 
     @Override
     protected void setup() {
@@ -73,11 +73,11 @@ public abstract class AbstractBeanFieldBinderTest extends TestBase {
         return commitButton;
     }
 
-    protected BeanFieldBinder getFieldBinder() {
+    protected BeanFieldGroup getFieldBinder() {
         return fieldBinder;
     }
 
-    protected void setFieldBinder(BeanFieldBinder beanFieldBinder) {
+    protected void setFieldBinder(BeanFieldGroup beanFieldBinder) {
         fieldBinder = beanFieldBinder;
     }
 

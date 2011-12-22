@@ -8,11 +8,11 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.BeanValidationValidator;
 import com.vaadin.ui.Field;
 
-public class BeanFieldBinder<T> extends FieldBinder {
+public class BeanFieldGroup<T> extends FieldGroup {
 
     private Class<T> beanType;
 
-    public BeanFieldBinder(Class<T> beanType) {
+    public BeanFieldGroup(Class<T> beanType) {
         this.beanType = beanType;
     }
 

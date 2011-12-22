@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Logger;
 
-import com.vaadin.data.fieldbinder.FieldBinder.BindException;
+import com.vaadin.data.fieldbinder.FieldGroup.BindException;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
@@ -21,7 +21,7 @@ import com.vaadin.ui.Field;
 public class FormBuilder implements Serializable {
 
     private FormBuilderFieldFactory fieldFactory = new DefaultFormBuilderFieldFactory();
-    private FieldBinder fieldBinder;
+    private FieldGroup fieldBinder;
     private static final Logger logger = Logger.getLogger(FormBuilder.class
             .getName());
 
@@ -32,14 +32,14 @@ public class FormBuilder implements Serializable {
      *            The FieldBinder to use for binding the fields to the data
      *            source
      */
-    public FormBuilder(FieldBinder fieldBinder) {
+    public FormBuilder(FieldGroup fieldBinder) {
         this.fieldBinder = fieldBinder;
     }
 
     /**
      * TODO: javadoc
      */
-    protected FieldBinder getFieldBinder() {
+    protected FieldGroup getFieldBinder() {
         return fieldBinder;
     }
 

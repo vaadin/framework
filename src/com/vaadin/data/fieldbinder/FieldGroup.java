@@ -20,20 +20,31 @@ import com.vaadin.data.fieldbinder.FormBuilder.FormBuilderException;
 import com.vaadin.data.util.TransactionalPropertyWrapper;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Field;
+import com.vaadin.ui.Form;
 
 /**
- * FIXME Javadoc
- * 
- * See also {@link BeanFieldBinder} which makes binding fields easier when your
- * data is in a bean.
+ * FieldGroup provides an easy way of binding fields to data and handling
+ * commits of these fields.
+ * <p>
+ * The functionality of FieldGroup is similar to {@link Form} but
+ * {@link FieldGroup} does not handle layouts in any way. The typical use case
+ * is to create a layout outside the FieldGroup and then use FieldGroup to bind
+ * the fields to a data source.
+ * </p>
+ * <p>
+ * {@link FieldGroup} is not a UI component so it cannot be added to a layout.
+ * Using the buildAndBind methods {@link FieldGroup} can create fields for you
+ * using a FieldGroupFieldFactory but you still have to add them to the correct
+ * position in your layout.
+ * </p>
  * 
  * @author Vaadin Ltd
  * @version @version@
  * @since 7.0
  */
-public class FieldBinder implements Serializable {
+public class FieldGroup implements Serializable {
 
-    private static final Logger logger = Logger.getLogger(FieldBinder.class
+    private static final Logger logger = Logger.getLogger(FieldGroup.class
             .getName());
 
     private Item itemDataSource;
@@ -51,7 +62,7 @@ public class FieldBinder implements Serializable {
      * data source for the field binder.
      * 
      */
-    public FieldBinder() {
+    public FieldGroup() {
 
     }
 
@@ -61,7 +72,7 @@ public class FieldBinder implements Serializable {
      * @param itemDataSource
      *            The data source to bind the fields to
      */
-    public FieldBinder(Item itemDataSource) {
+    public FieldGroup(Item itemDataSource) {
         setItemDataSource(itemDataSource);
     }
 
@@ -523,7 +534,7 @@ public class FieldBinder implements Serializable {
     }
 
     /**
-     * Returns a list of all commit handlers for this {@link FieldBinder}.
+     * Returns a list of all commit handlers for this {@link FieldGroup}.
      * <p>
      * Use {@link #addCommitHandler(CommitHandler)} and
      * {@link #removeCommitHandler(CommitHandler)} to register or unregister a
@@ -572,9 +583,9 @@ public class FieldBinder implements Serializable {
      * 
      */
     public static class CommitEvent implements Serializable {
-        private FieldBinder fieldBinder;
+        private FieldGroup fieldBinder;
 
-        private CommitEvent(FieldBinder fieldBinder) {
+        private CommitEvent(FieldGroup fieldBinder) {
             this.fieldBinder = fieldBinder;
         }
 
@@ -583,7 +594,7 @@ public class FieldBinder implements Serializable {
          * 
          * @return The FieldBinder that is being committed.
          */
-        public FieldBinder getFieldBinder() {
+        public FieldGroup getFieldBinder() {
             return fieldBinder;
         }
 

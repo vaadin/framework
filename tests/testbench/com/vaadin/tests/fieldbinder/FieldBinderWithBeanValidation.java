@@ -1,8 +1,8 @@
 package com.vaadin.tests.fieldbinder;
 
-import com.vaadin.data.fieldbinder.BeanFieldBinder;
-import com.vaadin.data.fieldbinder.FieldBinder;
-import com.vaadin.data.fieldbinder.FieldBinder.CommitException;
+import com.vaadin.data.fieldbinder.BeanFieldGroup;
+import com.vaadin.data.fieldbinder.FieldGroup;
+import com.vaadin.data.fieldbinder.FieldGroup.CommitException;
 import com.vaadin.data.fieldbinder.FormBuilder;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.tests.components.TestBase;
@@ -33,7 +33,7 @@ public class FieldBinderWithBeanValidation extends TestBase {
     protected void setup() {
         addComponent(log);
 
-        final BeanFieldBinder<PersonWithBeanValidationAnnotations> binder = new BeanFieldBinder<PersonWithBeanValidationAnnotations>(
+        final BeanFieldGroup<PersonWithBeanValidationAnnotations> binder = new BeanFieldGroup<PersonWithBeanValidationAnnotations>(
                 PersonWithBeanValidationAnnotations.class);
 
         FormBuilder builder = new FormBuilder(binder);
@@ -88,7 +88,7 @@ public class FieldBinderWithBeanValidation extends TestBase {
                 p));
     }
 
-    public static Person getPerson(FieldBinder binder) {
+    public static Person getPerson(FieldGroup binder) {
         return ((BeanItem<Person>) binder.getItemDataSource()).getBean();
     }
 

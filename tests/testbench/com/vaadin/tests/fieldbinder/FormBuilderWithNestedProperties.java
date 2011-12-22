@@ -1,7 +1,7 @@
 package com.vaadin.tests.fieldbinder;
 
-import com.vaadin.data.fieldbinder.BeanFieldBinder;
-import com.vaadin.data.fieldbinder.FieldBinder;
+import com.vaadin.data.fieldbinder.BeanFieldGroup;
+import com.vaadin.data.fieldbinder.FieldGroup;
 import com.vaadin.data.fieldbinder.FormBuilder;
 import com.vaadin.data.fieldbinder.PropertyId;
 import com.vaadin.data.util.BeanItem;
@@ -21,7 +21,7 @@ public class FormBuilderWithNestedProperties extends TestBase {
 
     @Override
     protected void setup() {
-        FieldBinder fieldBinder = new BeanFieldBinder<Person>(Person.class);
+        FieldGroup fieldBinder = new BeanFieldGroup<Person>(Person.class);
         FormBuilder b = new FormBuilder(fieldBinder);
         b.buildAndBindFields(this);
 

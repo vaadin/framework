@@ -1,6 +1,6 @@
 package com.vaadin.tests.fieldbinder;
 
-import com.vaadin.data.fieldbinder.BeanFieldBinder;
+import com.vaadin.data.fieldbinder.BeanFieldGroup;
 import com.vaadin.data.fieldbinder.FormBuilder;
 import com.vaadin.data.fieldbinder.PropertyId;
 import com.vaadin.tests.data.bean.Address;
@@ -31,7 +31,7 @@ public class FormWithNestedProperties extends AbstractBeanFieldBinderTest {
     protected void setup() {
         super.setup();
 
-        setFieldBinder(new BeanFieldBinder<Person>(Person.class));
+        setFieldBinder(new BeanFieldGroup<Person>(Person.class));
         getFieldBinder().bindFields(this);
         country = new FormBuilder(getFieldBinder()).buildAndBind("country",
                 "address.country", NativeSelect.class);
