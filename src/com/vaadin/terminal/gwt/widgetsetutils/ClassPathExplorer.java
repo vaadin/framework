@@ -33,6 +33,7 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.ui.ClientWidget;
+import com.vaadin.ui.Root;
 
 /**
  * Utility class to collect widgetset related information from classpath.
@@ -563,7 +564,7 @@ public class ClassPathExplorer {
 
             Class<?> c = Class.forName(fullclassName);
 
-            if (c.getAnnotation(ClientWidget.class) != null) {
+            if (c.getAnnotation(ClientWidget.class) != null || Root.class == c) {
                 paintables.add((Class<? extends Paintable>) c);
                 // System.out.println("Found paintable " + fullclassName);
             } else if (c.getAnnotation(ClientCriterion.class) != null) {

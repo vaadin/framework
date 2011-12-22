@@ -26,6 +26,7 @@ import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.ClientWidget.LoadStyle;
+import com.vaadin.ui.Root;
 
 /**
  * WidgetMapGenerator's are GWT generator to build WidgetMapImpl dynamically
@@ -161,12 +162,10 @@ public class WidgetMapGenerator extends Generator {
                 .iterator(); iterator.hasNext();) {
             Class<? extends Paintable> class1 = iterator.next();
 
-            ClientWidget annotation = class1.getAnnotation(ClientWidget.class);
-
-            if (typeOracle.findType(annotation.value().getName()) == null) {
+            Class<? extends com.vaadin.terminal.gwt.client.Paintable> clientClass = getClientClass(class1);
+            if (typeOracle.findType(clientClass.getName()) == null) {
                 // GWT widget not inherited
-                logger.log(Type.WARN, "Widget class "
-                        + annotation.value().getName()
+                logger.log(Type.WARN, "Widget class " + clientClass.getName()
                         + " was not found. The component " + class1.getName()
                         + " will not be included in the widgetset.");
                 iterator.remove();
@@ -225,6 +224,9 @@ public class WidgetMapGenerator extends Generator {
      *         the client side engine
      */
     protected LoadStyle getLoadStyle(Class<? extends Paintable> paintableType) {
+        if (Root.class == paintableType) {
+            return LoadStyle.EAGER;
+        }
         ClientWidget annotation = paintableType
                 .getAnnotation(ClientWidget.class);
         return annotation.loadStyle();
@@ -249,9 +251,7 @@ public class WidgetMapGenerator extends Generator {
         HashSet<Class<? extends com.vaadin.terminal.gwt.client.Paintable>> widgetsWithInstantiator = new HashSet<Class<? extends com.vaadin.terminal.gwt.client.Paintable>>();
         
         for (Class<? extends Paintable> class1 : paintablesHavingWidgetAnnotation) {
-            ClientWidget annotation = class1.getAnnotation(ClientWidget.class);
-            Class<? extends com.vaadin.terminal.gwt.client.Paintable> clientClass = annotation
-                    .value();
+            Class<? extends com.vaadin.terminal.gwt.client.Paintable> clientClass = getClientClass(class1);
             if(widgetsWithInstantiator.contains(clientClass)) {
                 continue;
             }
@@ -357,9 +357,7 @@ public class WidgetMapGenerator extends Generator {
                 .println("fullyQualifiedName = fullyQualifiedName.intern();");
 
         for (Class<? extends Paintable> class1 : paintablesHavingWidgetAnnotation) {
-            ClientWidget annotation = class1.getAnnotation(ClientWidget.class);
-            Class<? extends com.vaadin.terminal.gwt.client.Paintable> clientClass = annotation
-                    .value();
+            Class<? extends com.vaadin.terminal.gwt.client.Paintable> clientClass = getClientClass(class1);
             sourceWriter.print("if ( fullyQualifiedName == \"");
             sourceWriter.print(class1.getName());
             sourceWriter.print("\" ) { ensureInstantiator("
@@ -373,5 +371,17 @@ public class WidgetMapGenerator extends Generator {
         sourceWriter.outdent();
         sourceWriter.println("}");
 
+    }
+
+    private static Class<? extends com.vaadin.terminal.gwt.client.Paintable> getClientClass(
+            Class<? extends Paintable> class1) {
+        Class<? extends com.vaadin.terminal.gwt.client.Paintable> clientClass;
+        if (Root.class == class1) {
+            clientClass = VView.class;
+        } else {
+            ClientWidget annotation = class1.getAnnotation(ClientWidget.class);
+            clientClass = annotation.value();
+        }
+        return clientClass;
     }
 }

@@ -37,6 +37,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomLayout;
+import com.vaadin.ui.Root;
 
 /**
  * User Interface Description Language Target.
@@ -1038,6 +1039,9 @@ public class JsonPaintTarget implements PaintTarget {
     }
 
     private boolean hasClientWidgetMapping(Class<? extends Paintable> class1) {
+        if (Root.class == class1) {
+            return true;
+        }
         try {
             return class1.isAnnotationPresent(ClientWidget.class);
         } catch (NoClassDefFoundError e) {

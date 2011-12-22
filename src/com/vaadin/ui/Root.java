@@ -71,7 +71,8 @@ import com.vaadin.ui.Window.CloseListener;
  * 
  * @since 7.0
  */
-@ClientWidget(VView.class)
+// @ClientWidget(VView.class) - Can't have annotation because of eager
+// classloaders in application servers and hard coded logic in client side code
 public abstract class Root extends AbstractComponentContainer implements
         Action.Container, Action.Notifier {
 
