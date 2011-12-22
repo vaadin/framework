@@ -2227,25 +2227,22 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
             root = roots.get(rootId);
 
-            boolean preserveRoot = isRootPreserved();
-
-            if (root == null && preserveRoot) {
+            if (root == null && isRootPreserved()) {
                 // Check for a known root
-                if (retainOnRefreshRoots.isEmpty()) {
-                    return null;
-                }
+                if (!retainOnRefreshRoots.isEmpty()) {
 
-                Integer retainedRootId;
-                if (!hasBrowserDetails) {
-                    throw new RootRequiresMoreInformationException();
-                } else {
-                    String windowName = browserDetails.getWindowName();
-                    retainedRootId = retainOnRefreshRoots.get(windowName);
-                }
+                    Integer retainedRootId;
+                    if (!hasBrowserDetails) {
+                        throw new RootRequiresMoreInformationException();
+                    } else {
+                        String windowName = browserDetails.getWindowName();
+                        retainedRootId = retainOnRefreshRoots.get(windowName);
+                    }
 
-                if (retainedRootId != null) {
-                    rootId = retainedRootId;
-                    root = roots.get(rootId);
+                    if (retainedRootId != null) {
+                        rootId = retainedRootId;
+                        root = roots.get(rootId);
+                    }
                 }
             }
 
@@ -2269,22 +2266,24 @@ public class Application implements Terminal.ErrorListener, Serializable {
             }
 
             if (!initedRoots.contains(rootId)) {
-                boolean initRequiresBrowserDetails = preserveRoot
+                boolean initRequiresBrowserDetails = isRootPreserved()
                         || !root.getClass()
                                 .isAnnotationPresent(EagerInit.class);
                 if (initRequiresBrowserDetails && !hasBrowserDetails) {
                     pendingRoots.put(rootId, new PendingRootRequest(request));
                 } else {
-                    if (preserveRoot) {
+                    root.doInit(request);
+
+                    // Remember that this root has been initialized
+                    initedRoots.add(rootId);
+
+                    // init() might turn on preserve so do this afterwards
+                    if (isRootPreserved()) {
                         // Remember this root
                         String windowName = request.getBrowserDetails()
                                 .getWindowName();
                         retainOnRefreshRoots.put(windowName, rootId);
                     }
-                    root.doInit(request);
-
-                    // Remember that this root has been initialized
-                    initedRoots.add(rootId);
                 }
             }
         } // end synchronized block
@@ -2327,6 +2326,9 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public void setRootPreserved(boolean rootPreserved) {
         this.rootPreserved = rootPreserved;
+        if (!rootPreserved) {
+            retainOnRefreshRoots.clear();
+        }
     }
 
     /**
