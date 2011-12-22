@@ -24,8 +24,8 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.data.util.converter.Converter#convertFromTargetToSource(java
-     * .lang.Object, java.util.Locale)
+     * com.vaadin.data.util.converter.Converter#convertToModel(java.lang.Object,
+     * java.util.Locale)
      */
     public Boolean convertToModel(String value, Locale locale)
             throws ConversionException {
@@ -46,10 +46,20 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
         }
     }
 
+    /**
+     * Gets the string representation for true. Default is "true".
+     * 
+     * @return the string representation for true
+     */
     protected String getTrueString() {
         return Boolean.TRUE.toString();
     }
 
+    /**
+     * Gets the string representation for false. Default is "false".
+     * 
+     * @return the string representation for false
+     */
     protected String getFalseString() {
         return Boolean.FALSE.toString();
     }
@@ -58,8 +68,8 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.data.util.converter.Converter#convertFromSourceToTarget(java
-     * .lang.Object, java.util.Locale)
+     * com.vaadin.data.util.converter.Converter#convertToPresentation(java.lang
+     * .Object, java.util.Locale)
      */
     public String convertToPresentation(Boolean value, Locale locale)
             throws ConversionException {
@@ -76,7 +86,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.data.util.converter.Converter#getSourceType()
+     * @see com.vaadin.data.util.converter.Converter#getModelType()
      */
     public Class<Boolean> getModelType() {
         return Boolean.class;
@@ -85,7 +95,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.data.util.converter.Converter#getTargetType()
+     * @see com.vaadin.data.util.converter.Converter#getPresentationType()
      */
     public Class<String> getPresentationType() {
         return String.class;

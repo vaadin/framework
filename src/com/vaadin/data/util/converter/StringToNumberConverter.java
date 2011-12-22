@@ -42,8 +42,8 @@ public class StringToNumberConverter implements Converter<String, Number> {
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.data.util.converter.Converter#convertFromTargetToSource(java
-     * .lang.Object, java.util.Locale)
+     * com.vaadin.data.util.converter.Converter#convertToModel(java.lang.Object,
+     * java.util.Locale)
      */
     public Number convertToModel(String value, Locale locale)
             throws ConversionException {
@@ -74,8 +74,8 @@ public class StringToNumberConverter implements Converter<String, Number> {
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.data.util.converter.Converter#convertFromSourceToTarget(java
-     * .lang.Object, java.util.Locale)
+     * com.vaadin.data.util.converter.Converter#convertToPresentation(java.lang
+     * .Object, java.util.Locale)
      */
     public String convertToPresentation(Number value, Locale locale)
             throws ConversionException {
@@ -89,7 +89,7 @@ public class StringToNumberConverter implements Converter<String, Number> {
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.data.util.converter.Converter#getSourceType()
+     * @see com.vaadin.data.util.converter.Converter#getModelType()
      */
     public Class<Number> getModelType() {
         return Number.class;
@@ -98,7 +98,7 @@ public class StringToNumberConverter implements Converter<String, Number> {
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.data.util.converter.Converter#getTargetType()
+     * @see com.vaadin.data.util.converter.Converter#getPresentationType()
      */
     public Class<String> getPresentationType() {
         return String.class;

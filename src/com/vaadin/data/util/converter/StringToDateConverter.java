@@ -49,8 +49,8 @@ public class StringToDateConverter implements Converter<String, Date> {
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.data.util.converter.Converter#convertFromTargetToSource(java
-     * .lang.Object, java.util.Locale)
+     * com.vaadin.data.util.converter.Converter#convertToModel(java.lang.Object,
+     * java.util.Locale)
      */
     public Date convertToModel(String value, Locale locale)
             throws com.vaadin.data.util.converter.Converter.ConversionException {
@@ -75,8 +75,8 @@ public class StringToDateConverter implements Converter<String, Date> {
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.data.util.converter.Converter#convertFromSourceToTarget(java
-     * .lang.Object, java.util.Locale)
+     * com.vaadin.data.util.converter.Converter#convertToPresentation(java.lang
+     * .Object, java.util.Locale)
      */
     public String convertToPresentation(Date value, Locale locale)
             throws com.vaadin.data.util.converter.Converter.ConversionException {
@@ -90,7 +90,7 @@ public class StringToDateConverter implements Converter<String, Date> {
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.data.util.converter.Converter#getSourceType()
+     * @see com.vaadin.data.util.converter.Converter#getModelType()
      */
     public Class<Date> getModelType() {
         return Date.class;
@@ -99,7 +99,7 @@ public class StringToDateConverter implements Converter<String, Date> {
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.data.util.converter.Converter#getTargetType()
+     * @see com.vaadin.data.util.converter.Converter#getPresentationType()
      */
     public Class<String> getPresentationType() {
         return String.class;

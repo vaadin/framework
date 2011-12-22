@@ -39,8 +39,7 @@ public class ReverseConverter<PRESENTATION, MODEL> implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.util.converter.Converter#convertFromTargetToSource(java
+     * @see com.vaadin.data.util.converter.Converter#convertToModel(java
      * .lang.Object, java.util.Locale)
      */
     public MODEL convertToModel(PRESENTATION value, Locale locale)
@@ -52,8 +51,8 @@ public class ReverseConverter<PRESENTATION, MODEL> implements
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.data.util.converter.Converter#convertFromSourceToTarget(java
-     * .lang.Object, java.util.Locale)
+     * com.vaadin.data.util.converter.Converter#convertToPresentation(java.lang
+     * .Object, java.util.Locale)
      */
     public PRESENTATION convertToPresentation(MODEL value, Locale locale)
             throws com.vaadin.data.util.converter.Converter.ConversionException {

@@ -8,8 +8,7 @@ import java.io.Serializable;
 import java.util.Locale;
 
 /**
- * Interface that implements conversion between objects between model and
- * presentation types.
+ * Interface that implements conversion between a model and a presentation type.
  * <p>
  * Typically {@link #convertToPresentation(Object, Locale)} and
  * {@link #convertToModel(Object, Locale)} should be symmetric so that chaining
