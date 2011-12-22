@@ -96,6 +96,8 @@ public abstract class AbstractCommunicationManager implements
 
     private static final RequestHandler APP_RESOURCE_HANDLER = new ApplicationResourceHandler();
 
+    private static final RequestHandler UNSUPPORTED_BROWSER_HANDLER = new UnsupportedBrowserHandler();
+
     /**
      * TODO Document me!
      * 
@@ -187,7 +189,7 @@ public abstract class AbstractCommunicationManager implements
         this.application = application;
         application.addRequestHandler(getBootstrapHandler());
         application.addRequestHandler(APP_RESOURCE_HANDLER);
-        application.addRequestHandler(UnsupportedBrowserHandler.getInstance());
+        application.addRequestHandler(UNSUPPORTED_BROWSER_HANDLER);
         requireLocale(application.getLocale().toString());
     }
 

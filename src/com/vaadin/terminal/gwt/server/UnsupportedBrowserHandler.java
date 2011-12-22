@@ -13,10 +13,10 @@ import com.vaadin.terminal.WrappedResponse;
  * use is unsupported. Recognizes Chrome Frame and allow it to be used.
  * 
  * <p>
- * This handler is a usually used as a singleton added to the application by
+ * This handler is usually added to the application by
  * {@link AbstractCommunicationManager}. It can be removed/replaced by doing
  * something like this: <code><pre>
- * application.removeRequestHandler(UnsupportedBrowserHandler.getInstance());
+ * application.removeRequestHandler(AbstractCommunicationManager.UNSUPPORTED_BROWSER_HANDLER);
  * </pre></code>
  * </p>
  */
@@ -25,20 +25,6 @@ public class UnsupportedBrowserHandler implements RequestHandler {
 
     /** Cookie used to ignore browser checks */
     public static final String FORCE_LOAD_COOKIE = "vaadinforceload=1";
-
-    private static UnsupportedBrowserHandler instance;
-
-    /**
-     * Get the {@link UnsupportedBrowserHandler} singleton instance.
-     * 
-     * @return the {@link UnsupportedBrowserHandler} singleton
-     */
-    public static synchronized UnsupportedBrowserHandler getInstance() {
-        if (instance == null) {
-            instance = new UnsupportedBrowserHandler();
-        }
-        return instance;
-    }
 
     @Override
     public boolean handleRequest(Application application,
