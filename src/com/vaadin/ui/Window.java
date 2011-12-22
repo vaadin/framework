@@ -2380,4 +2380,15 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
         }
     }
 
+    /**
+     * Notifies the child components and subwindows that the window is attached
+     * to the application.
+     */
+    @Override
+    public void attach() {
+        super.attach();
+        for (Window w : subwindows) {
+            w.attach();
+        }
+    }
 }
