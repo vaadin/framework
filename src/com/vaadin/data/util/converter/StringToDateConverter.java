@@ -65,7 +65,7 @@ public class StringToDateConverter implements Converter<String, Date> {
         Date parsedValue = getFormat(locale).parse(value, parsePosition);
         if (parsePosition.getIndex() != value.length()) {
             throw new ConversionException("Could not convert '" + value
-                    + "' to " + getPresentationType().getName());
+                    + "' to " + getModelType().getName());
         }
 
         return parsedValue;

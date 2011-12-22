@@ -60,7 +60,7 @@ public class StringToNumberConverter implements Converter<String, Number> {
         Number parsedValue = getFormat(locale).parse(value, parsePosition);
         if (parsePosition.getIndex() != value.length()) {
             throw new ConversionException("Could not convert '" + value
-                    + "' to " + getPresentationType().getName());
+                    + "' to " + getModelType().getName());
         }
 
         if (parsedValue == null) {

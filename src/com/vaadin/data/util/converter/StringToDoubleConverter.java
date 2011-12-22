@@ -62,7 +62,7 @@ public class StringToDoubleConverter implements Converter<String, Double> {
         Number parsedValue = getFormat(locale).parse(value, parsePosition);
         if (parsePosition.getIndex() != value.length()) {
             throw new ConversionException("Could not convert '" + value
-                    + "' to " + getPresentationType().getName());
+                    + "' to " + getModelType().getName());
         }
         return parsedValue.doubleValue();
     }
