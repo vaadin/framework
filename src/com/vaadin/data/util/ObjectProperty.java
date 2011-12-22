@@ -125,8 +125,9 @@ public class ObjectProperty<T> extends AbstractProperty<T> {
 
         // Checks the type of the value
         if (newValue != null && !type.isAssignableFrom(newValue.getClass())) {
-            throw new IllegalArgumentException(
-                    "Invalid value type for ObjectProperty.");
+            throw new IllegalArgumentException("Invalid value type "
+                    + newValue.getClass().getName()
+                    + " for ObjectProperty of type " + type.getName() + ".");
         }
 
         // the cast is safe after an isAssignableFrom check
