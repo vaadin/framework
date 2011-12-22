@@ -27,7 +27,7 @@ public class AddressField extends CustomField<Address> {
     }
 
     @Override
-    protected Component createContent() {
+    protected Component initContent() {
         if (parentForm != null) {
             addressForm = new EmbeddedForm(parentForm);
         } else {

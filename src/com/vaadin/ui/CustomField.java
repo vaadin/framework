@@ -18,7 +18,7 @@ import com.vaadin.terminal.gwt.client.ui.VCustomComponent;
  * creation of e.g. form fields by composing Vaadin components. Customization of
  * both the visual presentation and the logic of the field is possible.
  * 
- * Subclasses must implement {@link #getType()} and {@link #createContent()}.
+ * Subclasses must implement {@link #getType()} and {@link #initContent()}.
  * 
  * Most custom fields can simply compose a user interface that calls the methods
  * {@link #setInternalValue(Object)} and {@link #getInternalValue()} when
@@ -29,6 +29,9 @@ import com.vaadin.terminal.gwt.client.ui.VCustomComponent;
  * {@link #setPropertyDataSource(Property)}, {@link #isEmpty()} and other logic
  * of the field. Methods overriding {@link #setInternalValue(Object)} should
  * also call the corresponding superclass method.
+ * 
+ * @param <T>
+ *            field value type
  * 
  * @since 7.0
  */
@@ -95,13 +98,13 @@ public abstract class CustomField<T> extends AbstractField<T> implements
     }
 
     /**
-     * Returns the content of the
+     * Returns the content (UI) of the custom component.
      * 
-     * @return
+     * @return Component
      */
     protected Component getContent() {
         if (null == root) {
-            root = createContent();
+            root = initContent();
         }
         return root;
     }
@@ -114,9 +117,9 @@ public abstract class CustomField<T> extends AbstractField<T> implements
      * layout or when {@link #getContent()} is called explicitly for the first
      * time. It is only called once for a {@link CustomField}.
      * 
-     * @return
+     * @return {@link Component} representing the UI of the CustomField
      */
-    protected abstract Component createContent();
+    protected abstract Component initContent();
 
     private void requestContentRepaint() {
         if (getParent() == null) {

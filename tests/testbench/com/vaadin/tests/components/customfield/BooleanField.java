@@ -16,7 +16,7 @@ import com.vaadin.ui.VerticalLayout;
 public class BooleanField extends CustomField {
 
     @Override
-    protected Component createContent() {
+    protected Component initContent() {
         VerticalLayout layout = new VerticalLayout();
 
         layout.addComponent(new Label("Please click the button"));
