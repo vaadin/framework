@@ -38,7 +38,6 @@ public class BeanValidationValidator implements Validator {
 
     private static final long serialVersionUID = 1L;
     private static ValidatorFactory factory;
-    private static Boolean implementationAvailable = null;
 
     private transient javax.validation.Validator javaxBeanValidator;
     private String propertyName;
@@ -169,24 +168,6 @@ public class BeanValidationValidator implements Validator {
         }
 
         return javaxBeanValidator;
-    }
-
-    /**
-     * Checks whether a bean validation implementation (e.g. Hibernate Validator
-     * or Apache Bean Validation) is available.
-     * 
-     * @return true if a JSR-303 bean validation implementation is available
-     */
-    public static boolean isImplementationAvailable() {
-        if (implementationAvailable == null) {
-            try {
-                getJavaxBeanValidatorFactory();
-                implementationAvailable = true;
-            } catch (Exception e) {
-                implementationAvailable = false;
-            }
-        }
-        return implementationAvailable;
     }
 
 }

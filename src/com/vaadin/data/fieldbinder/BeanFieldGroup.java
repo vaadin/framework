@@ -3,6 +3,8 @@
  */
 package com.vaadin.data.fieldbinder;
 
+import java.lang.reflect.Method;
+
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.BeanValidationValidator;
@@ -11,6 +13,8 @@ import com.vaadin.ui.Field;
 public class BeanFieldGroup<T> extends FieldGroup {
 
     private Class<T> beanType;
+
+    private static Boolean beanValidationImplementationAvailable = null;
 
     public BeanFieldGroup(Class<T> beanType) {
         this.beanType = beanType;
@@ -115,7 +119,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
     protected void configureField(Field<?> field) {
         super.configureField(field);
         // Add Bean validators if there are annotations
-        if (BeanValidationValidator.isImplementationAvailable()) {
+        if (isBeanValidationImplementationAvailable()) {
             BeanValidationValidator validator = new BeanValidationValidator(
                     beanType, getPropertyId(field).toString());
             field.addValidator(validator);
@@ -125,4 +129,29 @@ public class BeanFieldGroup<T> extends FieldGroup {
         }
     }
 
+    /**
+     * Checks whether a bean validation implementation (e.g. Hibernate Validator
+     * or Apache Bean Validation) is available.
+     * 
+     * TODO move this method to some more generic location
+     * 
+     * @return true if a JSR-303 bean validation implementation is available
+     */
+    protected static boolean isBeanValidationImplementationAvailable() {
+        if (beanValidationImplementationAvailable != null) {
+            return beanValidationImplementationAvailable;
+        }
+        try {
+            Class<?> validationClass = Class
+                    .forName("javax.validation.Validation");
+            Method buildFactoryMethod = validationClass
+                    .getMethod("buildDefaultValidatorFactory");
+            Object factory = buildFactoryMethod.invoke(null);
+            beanValidationImplementationAvailable = (factory != null);
+        } catch (Exception e) {
+            // no bean validation implementation available
+            beanValidationImplementationAvailable = false;
+        }
+        return beanValidationImplementationAvailable;
+    }
 }
