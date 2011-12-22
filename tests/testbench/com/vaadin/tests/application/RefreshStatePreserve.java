@@ -21,7 +21,7 @@ public class RefreshStatePreserve extends AbstractTestApplication {
     @Override
     public void init() {
         super.init();
-        setRootPreserveStrategy(new WindowNameRootPreserveStrategy());
+        setRootPreserved(true);
     }
 
     @Override

@@ -119,83 +119,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
     public static final String ROOT_PARAMETER = "root";
 
     /**
-     * Represents a strategy for retaining root instances when the contents of
-     * the browser have been reloaded, e.g. if the user presses refresh or
-     * navigates back to the application from another page.
-     * 
-     * @since 7.0
-     */
-    public interface RootPreserveStrategy extends Serializable {
-        /**
-         * Finds the id of an existing root that should be used to serve a
-         * request.
-         * 
-         * @param request
-         *            the request to get the root for
-         * @return integer id of the root, or <code>null</code> if no root is
-         *         found
-         * @throws RootRequiresMoreInformationException
-         *             if full details from the browser are required to resolve
-         *             the root
-         */
-        public Integer getPreservedRootForRequest(WrappedRequest request)
-                throws RootRequiresMoreInformationException;
-
-        /**
-         * Used to tell whether the browser details are required when
-         * {@link #registerRoot(Root, WrappedRequest)} is called.
-         * 
-         * @return <code>true</code> if the browser details are needed,
-         *         <code>false</code> if they are not needed
-         */
-        public boolean reqsterRequiresBrowserDetails();
-
-        /**
-         * This method is called by the framework when a root has been
-         * initialized and should possibly be preserved for future lookups.
-         * 
-         * @param root
-         *            the newly initialized root
-         * @param request
-         *            the associated request
-         */
-        public void registerRoot(Root root, WrappedRequest request);
-    }
-
-    public static class WindowNameRootPreserveStrategy implements
-            RootPreserveStrategy {
-        /**
-         * Keeps track of the roots that should be remembered when the browser
-         * is refreshed.
-         */
-        private final Map<String, Integer> retainOnRefreshRoots = new HashMap<String, Integer>();
-
-        public Integer getPreservedRootForRequest(WrappedRequest request)
-                throws RootRequiresMoreInformationException {
-            if (retainOnRefreshRoots.isEmpty()) {
-                return null;
-            }
-            BrowserDetails browserDetails = request.getBrowserDetails();
-            if (browserDetails == null) {
-                throw new RootRequiresMoreInformationException();
-            } else {
-                String windowName = browserDetails.getWindowName();
-                return retainOnRefreshRoots.get(windowName);
-            }
-        }
-
-        public void registerRoot(Root root, WrappedRequest request) {
-            String windowName = request.getBrowserDetails().getWindowName();
-            Integer rootId = Integer.valueOf(root.getRootId());
-            retainOnRefreshRoots.put(windowName, rootId);
-        }
-
-        public boolean reqsterRequiresBrowserDetails() {
-            return true;
-        }
-    }
-
-    /**
      * A special application designed to help migrating applications from Vaadin
      * 6 to Vaadin 7. The legacy application supports setting a main window,
      * adding additional browser level windows and defining the theme for the
@@ -535,7 +458,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     private Map<Integer, PendingRootRequest> pendingRoots = new HashMap<Integer, PendingRootRequest>();
 
-    private RootPreserveStrategy rootPreserveStrategy = null;
+    private final Map<String, Integer> retainOnRefreshRoots = new HashMap<String, Integer>();
 
     /**
      * Keeps track of which roots have been inited.
@@ -1885,9 +1808,9 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * 
      * <p>
      * If {@link BrowserDetails} are required to create a Root, the
-     * implementation can throw a {@link RootRequiresMoreInformationException} exception.
-     * In this case, the framework will instruct the browser to send the
-     * additional details, whereupon this method is invoked again with the
+     * implementation can throw a {@link RootRequiresMoreInformationException}
+     * exception. In this case, the framework will instruct the browser to send
+     * the additional details, whereupon this method is invoked again with the
      * browser details present in the wrapped request. Throwing the exception if
      * the browser details are already available is not supported.
      * </p>
@@ -2153,6 +2076,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     private static final ThreadLocal<Application> currentApplication = new ThreadLocal<Application>();
 
+    private boolean rootPreserved = false;
+
     /**
      * Gets the currently used application. The current application is
      * automatically defined when processing requests to the server. In other
@@ -2260,8 +2185,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * Finds the {@link Root} to which a particular request belongs. If the
      * request originates from an existing Root, that root is returned. In other
      * cases, the method attempts to create and initialize a new root and might
-     * throw a {@link RootRequiresMoreInformationException} if all required information
-     * is not available.
+     * throw a {@link RootRequiresMoreInformationException} if all required
+     * information is not available.
      * <p>
      * Please note that this method can also return a newly created
      * <code>Root</code> which has not yet been initialized. You can use
@@ -2291,8 +2216,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
         Integer rootId = getRootId(request);
 
         synchronized (this) {
-            RootPreserveStrategy rootPreserveStrategy = getRootPreserveStrategy();
-
             BrowserDetails browserDetails = request.getBrowserDetails();
 
             if (browserDetails != null) {
@@ -2302,10 +2225,22 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
             root = roots.get(rootId);
 
-            if (root == null && rootPreserveStrategy != null) {
+            boolean preserveRoot = isRootPreserved();
+
+            if (root == null && preserveRoot) {
                 // Check for a known root
-                Integer retainedRootId = rootPreserveStrategy
-                        .getPreservedRootForRequest(request);
+                if (retainOnRefreshRoots.isEmpty()) {
+                    return null;
+                }
+
+                Integer retainedRootId;
+                if (browserDetails == null) {
+                    throw new RootRequiresMoreInformationException();
+                } else {
+                    String windowName = browserDetails.getWindowName();
+                    retainedRootId = retainOnRefreshRoots.get(windowName);
+                }
+
                 if (retainedRootId != null) {
                     rootId = retainedRootId;
                     root = roots.get(rootId);
@@ -2332,16 +2267,17 @@ public class Application implements Terminal.ErrorListener, Serializable {
             }
 
             if (!initedRoots.contains(rootId)) {
-                boolean initRequiresBrowserDetails = (rootPreserveStrategy != null && rootPreserveStrategy
-                        .reqsterRequiresBrowserDetails())
+                boolean initRequiresBrowserDetails = preserveRoot
                         || root.getClass().isAnnotationPresent(
                                 RootInitRequiresBrowserDetails.class);
                 if (initRequiresBrowserDetails && browserDetails == null) {
                     pendingRoots.put(rootId, new PendingRootRequest(request));
                 } else {
-                    if (rootPreserveStrategy != null) {
+                    if (preserveRoot) {
                         // Remember this root
-                        rootPreserveStrategy.registerRoot(root, request);
+                        String windowName = request.getBrowserDetails()
+                                .getWindowName();
+                        retainOnRefreshRoots.put(windowName, rootId);
                     }
                     root.doInit(request);
 
@@ -2378,28 +2314,30 @@ public class Application implements Terminal.ErrorListener, Serializable {
     }
 
     /**
-     * Gets the current strategy for preserving Root instances e.g. when the
-     * browser window is reloaded.
+     * Sets whether the same Root state should be reused if the framework can
+     * detect that the application is opened in a browser window where it has
+     * previously been open. The framework attempts to discover this by checking
+     * the value of window.name in the browser.
      * 
-     * @return the current root preserver strategy, or <code>null</code> if
-     *         roots should not be preserved
-     * 
-     * @see RootPreserveStrategy
+     * @param rootPreserved
+     *            <code>true</code>if the same Root instance should be reused
+     *            e.g. when the browser window is refreshed.
      */
-    public RootPreserveStrategy getRootPreserveStrategy() {
-        return rootPreserveStrategy;
+    public void setRootPreserved(boolean rootPreserved) {
+        this.rootPreserved = rootPreserved;
     }
 
     /**
-     * Sets the current strategy for preserving Roots e.g. when the browser
-     * window is reloaded.
+     * Checks whether the same Root state should be reused if the framework can
+     * detect that the application is opened in a browser window where it has
+     * previously been open. The framework attempts to discover this by checking
+     * the value of window.name in the browser.
      * 
-     * @param rootPreserveStrategy
-     *            the new root preserve strategy
+     * @return <code>true</code>if the same Root instance should be reused e.g.
+     *         when the browser window is refreshed.
      */
-    public void setRootPreserveStrategy(
-            RootPreserveStrategy rootPreserveStrategy) {
-        this.rootPreserveStrategy = rootPreserveStrategy;
+    public boolean isRootPreserved() {
+        return rootPreserved;
     }
 
     /**

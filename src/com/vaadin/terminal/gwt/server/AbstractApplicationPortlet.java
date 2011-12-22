@@ -968,10 +968,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             throws PortletException {
         try {
             final Application application = getApplicationClass().newInstance();
-            if (application.getRootPreserveStrategy() == null) {
-                application
-                        .setRootPreserveStrategy(new Application.WindowNameRootPreserveStrategy());
-            }
+            application.setRootPreserved(true);
             return application;
         } catch (final IllegalAccessException e) {
             throw new PortletException("getNewApplication failed", e);
