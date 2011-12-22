@@ -460,7 +460,9 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      * 
      * For a browser level window the CloseListener is fired when the browser
      * level window is closed. Note that closing a browser level window does not
-     * mean it will be destroyed.
+     * mean it will be destroyed. Also note that Opera does not send events like
+     * all other browsers and therefore the close listener might not be called
+     * if Opera is used.
      * 
      * <p>
      * Since Vaadin 6.5, removing windows using {@link #removeWindow(Window)}

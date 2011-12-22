@@ -66,7 +66,10 @@ public class WebBrowser implements Terminal {
     }
 
     /**
-     * Gets the height of the client (browser window)
+     * Gets the height of the client (browser window).
+     * <p>
+     * Note that the client size is only updated on a full repaint, not when the
+     * browser window size changes
      * 
      * @return The height of the client or 0 if unknown.
      */
@@ -76,6 +79,9 @@ public class WebBrowser implements Terminal {
 
     /**
      * Gets the width of the client (browser window)
+     * <p>
+     * Note that the client size is only updated on a full repaint, not when the
+     * browser window size changes
      * 
      * @return The width of the client or 0 if unknown.
      */
