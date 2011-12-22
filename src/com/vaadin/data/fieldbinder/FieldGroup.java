@@ -48,10 +48,10 @@ public class FieldGroup implements Serializable {
             .getName());
 
     private Item itemDataSource;
-    private boolean fieldsBuffered = true;
+    private boolean buffered = true;
 
-    private boolean fieldsEnabled = true;
-    private boolean fieldsReadOnly = false;
+    private boolean enabled = true;
+    private boolean readOnly = false;
 
     private HashMap<Object, Field<?>> propertyIdToField = new HashMap<Object, Field<?>>();
     private LinkedHashMap<Field<?>, Object> fieldToPropertyId = new LinkedHashMap<Field<?>, Object>();
@@ -96,7 +96,7 @@ public class FieldGroup implements Serializable {
      * {@link #commit()} for the item to be updated unless buffered mode has
      * been switched off.
      * 
-     * @see #setFieldsBuffered(boolean)
+     * @see #setBuffered(boolean)
      * @see #commit()
      * 
      * @return The item used by this FieldBinder
@@ -109,14 +109,14 @@ public class FieldGroup implements Serializable {
      * Checks the buffered mode for the bound fields.
      * <p>
      * 
-     * @see #setFieldsBuffered(boolean) for more details on buffered mode
+     * @see #setBuffered(boolean) for more details on buffered mode
      * 
-     * @see Field#isFieldsBuffered()
+     * @see Field#isBuffered()
      * @return true if buffered mode is on, false otherwise
      * 
      */
-    public boolean isFieldsBuffered() {
-        return fieldsBuffered;
+    public boolean isBuffered() {
+        return buffered;
     }
 
     /**
@@ -130,18 +130,18 @@ public class FieldGroup implements Serializable {
      * The default is to use buffered mode.
      * </p>
      * 
-     * @see Field#setFieldsBuffered(boolean)
-     * @param fieldsBuffered
+     * @see Field#setBuffered(boolean)
+     * @param buffered
      *            true to turn on buffered mode, false otherwise
      */
-    public void setFieldsBuffered(boolean fieldsBuffered) {
-        if (fieldsBuffered == this.fieldsBuffered) {
+    public void setBuffered(boolean buffered) {
+        if (buffered == this.buffered) {
             return;
         }
 
-        this.fieldsBuffered = fieldsBuffered;
+        this.buffered = buffered;
         for (Field<?> field : getFields()) {
-            field.setBuffered(fieldsBuffered);
+            field.setBuffered(buffered);
         }
     }
 
@@ -150,12 +150,12 @@ public class FieldGroup implements Serializable {
      * <p>
      * Note that this will not accurately represent the enabled status of all
      * fields if you change the enabled status of the fields through some other
-     * method than {@link #setFieldsEnabled(boolean)}.
+     * method than {@link #setEnabled(boolean)}.
      * 
      * @return true if the fields are enabled, false otherwise
      */
-    public boolean isFieldsEnabled() {
-        return fieldsEnabled;
+    public boolean isEnabled() {
+        return enabled;
     }
 
     /**
@@ -164,8 +164,8 @@ public class FieldGroup implements Serializable {
      * @param fieldsEnabled
      *            true to enable all bound fields, false to disable them
      */
-    public void setFieldsEnabled(boolean fieldsEnabled) {
-        this.fieldsEnabled = fieldsEnabled;
+    public void setEnabled(boolean fieldsEnabled) {
+        enabled = fieldsEnabled;
         for (Field<?> field : getFields()) {
             field.setEnabled(fieldsEnabled);
         }
@@ -176,12 +176,12 @@ public class FieldGroup implements Serializable {
      * <p>
      * Note that this will not accurately represent the read only status of all
      * fields if you change the read only status of the fields through some
-     * other method than {@link #setFieldsReadOnly(boolean)}.
+     * other method than {@link #setReadOnly(boolean)}.
      * 
      * @return true if the fields are set to read only, false otherwise
      */
-    public boolean isFieldsReadOnly() {
-        return fieldsReadOnly;
+    public boolean isReadOnly() {
+        return readOnly;
     }
 
     /**
@@ -191,8 +191,8 @@ public class FieldGroup implements Serializable {
      *            true to set all bound fields to read only, false to set them
      *            to read write
      */
-    public void setFieldsReadOnly(boolean fieldsReadOnly) {
-        this.fieldsReadOnly = fieldsReadOnly;
+    public void setReadOnly(boolean fieldsReadOnly) {
+        readOnly = fieldsReadOnly;
     }
 
     /**
@@ -284,7 +284,7 @@ public class FieldGroup implements Serializable {
      *             If the field is not bound by this field binder or not bound
      *             to the correct property id
      */
-    public void remove(Field<?> field) throws BindException {
+    public void unbind(Field<?> field) throws BindException {
         Object propertyId = fieldToPropertyId.get(field);
         if (propertyId == null) {
             throw new BindException(
@@ -313,10 +313,10 @@ public class FieldGroup implements Serializable {
      *            The field to update
      */
     protected void configureField(Field<?> field) {
-        field.setBuffered(isFieldsBuffered());
+        field.setBuffered(isBuffered());
 
-        field.setEnabled(isFieldsEnabled());
-        field.setReadOnly(isFieldsReadOnly());
+        field.setEnabled(isEnabled());
+        field.setReadOnly(isReadOnly());
     }
 
     /**
@@ -374,7 +374,7 @@ public class FieldGroup implements Serializable {
      * 
      * @return A collection of property ids that have not been bound to fields
      */
-    protected Collection<Object> getUnboundPropertyIds() {
+    public Collection<Object> getUnboundPropertyIds() {
         if (getItemDataSource() == null) {
             return new ArrayList<Object>();
         }
@@ -397,7 +397,7 @@ public class FieldGroup implements Serializable {
      *             If the commit was aborted
      */
     public void commit() throws CommitException {
-        if (!isFieldsBuffered()) {
+        if (!isBuffered()) {
             // Not using buffered mode, nothing to do
             return;
         }
@@ -489,7 +489,7 @@ public class FieldGroup implements Serializable {
      * @return The field that is bound to the property id or null if no field is
      *         bound to that property id
      */
-    public Field<?> getFieldForPropertyId(Object propertyId) {
+    public Field<?> getField(Object propertyId) {
         return propertyIdToField.get(propertyId);
     }
 
@@ -501,7 +501,7 @@ public class FieldGroup implements Serializable {
      * @return The property id that is bound to the field or null if the field
      *         is not bound to any property id by this FieldBinder
      */
-    public Object getPropertyIdForField(Field field) {
+    public Object getPropertyId(Field<?> field) {
         return fieldToPropertyId.get(field);
     }
 
@@ -608,7 +608,7 @@ public class FieldGroup implements Serializable {
      * 
      * @return true if all bound fields are valid, false otherwise.
      */
-    public boolean isAllFieldsValid() {
+    public boolean isValid() {
         try {
             for (Field<?> field : getFields()) {
                 field.validate();
@@ -624,7 +624,7 @@ public class FieldGroup implements Serializable {
      * 
      * @return true if at least on field has been modified, false otherwise
      */
-    public boolean isAnyFieldModified() {
+    public boolean isModified() {
         for (Field<?> field : getFields()) {
             if (field.isModified()) {
                 return true;

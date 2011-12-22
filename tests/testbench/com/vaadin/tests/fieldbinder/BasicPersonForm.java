@@ -67,7 +67,7 @@ public class BasicPersonForm extends TestBase {
                     configuration);
             FieldGroup confBinder = new FieldGroup(bi);
             confBinder.setItemDataSource(bi);
-            confBinder.setFieldsBuffered(false);
+            confBinder.setBuffered(false);
 
             FormBuilder builder = new FormBuilder(confBinder);
             for (Object propertyId : bi.getItemPropertyIds()) {
@@ -108,7 +108,7 @@ public class BasicPersonForm extends TestBase {
             }
         });
 
-        binder.setFieldsBuffered(true);
+        binder.setBuffered(true);
 
         FormBuilder builder = new FormBuilder(binder);
         builder.buildAndBindFields(this);
