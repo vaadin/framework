@@ -105,6 +105,11 @@ public interface Property<T> extends Serializable {
      * A Property that is capable of handle a transaction that can end in commit
      * or rollback.
      * 
+     * Note that this does not refer to e.g. database transactions but rather
+     * two-phase commit that allows resetting old field values on a form etc. if
+     * the commit of one of the properties fails after others have already been
+     * committed. If
+     * 
      * @param <T>
      *            The type of the property
      * @author Vaadin Ltd
