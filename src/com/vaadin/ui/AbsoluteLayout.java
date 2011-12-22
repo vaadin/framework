@@ -176,10 +176,10 @@ public class AbsoluteLayout extends AbstractLayout implements
         private Float bottomValue = null;
         private Float leftValue = null;
 
-        private Unit topUnits;
-        private Unit rightUnits;
-        private Unit bottomUnits;
-        private Unit leftUnits;
+        private Unit topUnits = Unit.PIXELS;
+        private Unit rightUnits = Unit.PIXELS;
+        private Unit bottomUnits = Unit.PIXELS;
+        private Unit leftUnits = Unit.PIXELS;
 
         /**
          * Sets the position attributes using CSS syntax. Attributes not
@@ -193,7 +193,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          */
         public void setCSSString(String css) {
             topValue = rightValue = bottomValue = leftValue = null;
-            topUnits = rightUnits = bottomUnits = leftUnits = null;
+            topUnits = rightUnits = bottomUnits = leftUnits = Unit.PIXELS;
             zIndex = -1;
             if (css == null) {
                 return;
