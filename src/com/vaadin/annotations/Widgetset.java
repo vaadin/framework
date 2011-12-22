@@ -16,7 +16,7 @@ import com.vaadin.ui.Root;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface RootWidgetset {
+public @interface Widgetset {
     /**
      * @return name of the widgetset
      */

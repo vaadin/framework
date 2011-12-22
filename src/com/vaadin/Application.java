@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 
 import com.vaadin.annotations.RootInitRequiresBrowserDetails;
 import com.vaadin.annotations.Theme;
-import com.vaadin.annotations.RootWidgetset;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
@@ -1996,8 +1996,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @since 7.0
      */
     public String getWidgetsetForRoot(Root root) {
-        RootWidgetset rootWidgetset = getAnnotationFor(root.getClass(),
-                RootWidgetset.class);
+        Widgetset rootWidgetset = getAnnotationFor(root.getClass(),
+                Widgetset.class);
         if (rootWidgetset != null) {
             return rootWidgetset.value();
         } else {

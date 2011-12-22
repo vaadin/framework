@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.root;
 
-import com.vaadin.annotations.RootWidgetset;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestRoot;
 
-@RootWidgetset("invalid")
+@Widgetset("invalid")
 public class TestRootWidgetset extends AbstractTestRoot {
 
     @Override
