@@ -28,7 +28,8 @@ public class LazyInitRoots extends AbstractTestApplication {
         if (request.getParameter("lazyCreate") != null) {
             // Root created on second request
             final BrowserDetails browserDetails = request.getBrowserDetails();
-            if (browserDetails == null) {
+            if (browserDetails == null
+                    || browserDetails.getUriFragment() == null) {
                 throw new RootRequiresMoreInformationException();
             } else {
                 Root root = new Root() {

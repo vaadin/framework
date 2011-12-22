@@ -2217,8 +2217,10 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
         synchronized (this) {
             BrowserDetails browserDetails = request.getBrowserDetails();
+            boolean hasBrowserDetails = browserDetails != null
+                    && browserDetails.getUriFragment() != null;
 
-            if (browserDetails != null) {
+            if (hasBrowserDetails) {
                 // Don't wait for a second request any more
                 pendingRoots.remove(rootId);
             }
@@ -2234,7 +2236,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
                 }
 
                 Integer retainedRootId;
-                if (browserDetails == null) {
+                if (!hasBrowserDetails) {
                     throw new RootRequiresMoreInformationException();
                 } else {
                     String windowName = browserDetails.getWindowName();
@@ -2270,7 +2272,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
                 boolean initRequiresBrowserDetails = preserveRoot
                         || !root.getClass()
                                 .isAnnotationPresent(EagerInit.class);
-                if (initRequiresBrowserDetails && browserDetails == null) {
+                if (initRequiresBrowserDetails && !hasBrowserDetails) {
                     pendingRoots.put(rootId, new PendingRootRequest(request));
                 } else {
                     if (preserveRoot) {
