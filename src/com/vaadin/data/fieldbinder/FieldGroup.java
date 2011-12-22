@@ -16,7 +16,6 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.TransactionalProperty;
 import com.vaadin.data.Validator.InvalidValueException;
-import com.vaadin.data.fieldbinder.FormBuilder.FormBuilderException;
 import com.vaadin.data.util.TransactionalPropertyWrapper;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Field;
@@ -547,8 +546,10 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * FIXME Javadoc
-     * 
+     * CommitHandlers are used by {@link FieldGroup#commit()} as part of the
+     * commit transactions. CommitHandlers can perform custom operations as part
+     * of the commit and cause the commit to be aborted by throwing a
+     * {@link CommitException}.
      */
     public interface CommitHandler extends Serializable {
         /**
@@ -634,21 +635,42 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * Binds fields for the given class.
+     * Binds member fields found in the given object.
      * <p>
-     * This method processes all fields whose type extends {@link Field} and
-     * that can be mapped to a property id. Property id mapping is done based on
-     * the field name or on a {@link PropertyId} annotation on the field. All
-     * non-null fields for which a property id can be determined are bound to
-     * the property id.
+     * This method processes all (Java) member fields whose type extends
+     * {@link Field} and that can be mapped to a property id. Property id
+     * mapping is done based on the field name or on a @{@link PropertyId}
+     * annotation on the field. All non-null fields for which a property id can
+     * be determined are bound to the property id.
+     * </p>
+     * <p>
+     * For example:
      * 
-     * @param object
-     *            The object to process
-     * @throws FormBuilderException
-     *             If there is a problem building or binding a field
+     * <pre>
+     * public class MyForm extends VerticalLayout {
+     * private TextField firstName = new TextField("First name");
+     * @PropertyId("last")
+     * private TextField lastName = new TextField("Last name"); 
+     * private TextField age = new TextField("Age"); ... }
+     * 
+     * MyForm myForm = new MyForm(); 
+     * ... 
+     * fieldGroup.bindMemberFields(myForm);
+     * </pre>
+     * 
+     * </p>
+     * This binds the firstName TextField to a "firstName" property id in the
+     * item, lastName TextField to a "last" property and the age TextField to a
+     * "age" property id.
+     * 
+     * @param objectWithMemberFields
+     *            The object that contains (Java) member fields to bind
+     * @throws BindException
+     *             If there is a problem binding a field
      */
-    public void bindFields(Object object) throws BindException {
-        Class<?> objectClass = object.getClass();
+    public void bindMemberFields(Object objectWithMemberFields)
+            throws BindException {
+        Class<?> objectClass = objectWithMemberFields.getClass();
 
         for (java.lang.reflect.Field f : objectClass.getDeclaredFields()) {
 
@@ -683,7 +705,7 @@ public class FieldGroup implements Serializable {
             try {
                 // Get the field from the object
                 Field<?> field = (Field<?>) ReflectTools.getJavaFieldValue(
-                        object, f);
+                        objectWithMemberFields, f);
                 // Bind it to the property id
                 bind(field, propertyId);
             } catch (Exception e) {

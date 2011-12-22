@@ -32,7 +32,7 @@ public class FormWithNestedProperties extends AbstractBeanFieldBinderTest {
         super.setup();
 
         setFieldBinder(new BeanFieldGroup<Person>(Person.class));
-        getFieldBinder().bindFields(this);
+        getFieldBinder().bindMemberFields(this);
         country = new FormBuilder(getFieldBinder()).buildAndBind("country",
                 "address.country", NativeSelect.class);
         addComponent(firstName);
