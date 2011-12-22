@@ -10,6 +10,7 @@ import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
@@ -30,7 +31,16 @@ public class AttachShouldBeCalledForSubWindows extends AbstractTestCase
                 log(this);
                 super.attach();
             }
+
+            @Override
+            public void addWindow(Window w) {
+                log.log("Adding sub window");
+                super.addWindow(w);
+                log.log("Sub window added");
+
+            }
         };
+        mainWindow.setCaption("Main window");
         mainWindow.addComponent(log);
         mainWindow.getContent().setSizeFull();
         Label label = new Label("This is the main app") {
@@ -45,15 +55,14 @@ public class AttachShouldBeCalledForSubWindows extends AbstractTestCase
         Window loginWindow = createSubWindow();
         if (addSubWindowBeforeMainWindow) {
             mainWindow.addWindow(loginWindow);
-            log.log("Sub window added to application");
         }
 
+        log.log("Setting main window");
         setMainWindow(mainWindow); // At this point
         log.log("Main window set");
 
         if (!addSubWindowBeforeMainWindow) {
             mainWindow.addWindow(loginWindow);
-            log.log("Sub window added to application");
         }
     }
 
@@ -85,12 +94,13 @@ public class AttachShouldBeCalledForSubWindows extends AbstractTestCase
         return w;
     }
 
-    public void log(Object o) {
-        Class cls = o.getClass();
+    public void log(Component c) {
+        Class<?> cls = c.getClass();
         if (cls.isAnonymousClass()) {
             cls = cls.getSuperclass();
         }
-        log.log(cls.getName() + " attached to application");
+        log.log(cls.getName() + " '" + c.getCaption()
+                + "' attached to application");
     }
 
     @Override
