@@ -6,6 +6,7 @@ package com.vaadin.data.fieldbinder;
 import java.util.EnumSet;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.fieldbinder.FieldGroup.BindException;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.CheckBox;
@@ -14,10 +15,11 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
+import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
-public class DefaultFormBuilderFieldFactory implements FormBuilderFieldFactory {
+public class DefaultFormBuilderFieldFactory implements FieldGroupFieldFactory {
 
     public static final Object CAPTION_PROPERTY_ID = "Caption";
 
@@ -31,8 +33,17 @@ public class DefaultFormBuilderFieldFactory implements FormBuilderFieldFactory {
         if (AbstractTextField.class.isAssignableFrom(fieldType)) {
             return fieldType.cast(createAbstractTextField(fieldType
                     .asSubclass(AbstractTextField.class)));
+        } else if (fieldType == RichTextArea.class) {
+            return fieldType.cast(createRichTextArea());
         }
         return createDefaultField(type, fieldType);
+    }
+
+    protected RichTextArea createRichTextArea() {
+        RichTextArea rta = new RichTextArea();
+        rta.setImmediate(true);
+
+        return rta;
     }
 
     private <T extends Field> T createEnumField(Class<?> type,
@@ -92,11 +103,24 @@ public class DefaultFormBuilderFieldFactory implements FormBuilderFieldFactory {
             field.setImmediate(true);
             return field;
         } catch (Exception e) {
-            throw new FormBuilder.BuildException(
-                    "Could not create a field of type " + fieldType, e);
+            throw new BindException("Could not create a field of type "
+                    + fieldType, e);
         }
     }
 
+    /**
+     * Fallback when no specific field has been created. Typically returns a
+     * TextField.
+     * 
+     * @param <T>
+     *            The type of field to create
+     * @param type
+     *            The type of data that should be edited
+     * @param fieldType
+     *            The type of field to create
+     * @return A field capable of editing the data or null if no field could be
+     *         created
+     */
     protected <T extends Field> T createDefaultField(Class<?> type,
             Class<T> fieldType) {
         if (fieldType.isAssignableFrom(TextField.class)) {

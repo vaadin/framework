@@ -4,6 +4,7 @@
 package com.vaadin.data.fieldbinder;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,6 +19,7 @@ import com.vaadin.data.TransactionalProperty;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.TransactionalPropertyWrapper;
 import com.vaadin.tools.ReflectTools;
+import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 
@@ -55,6 +57,11 @@ public class FieldGroup implements Serializable {
     private HashMap<Object, Field<?>> propertyIdToField = new HashMap<Object, Field<?>>();
     private LinkedHashMap<Field<?>, Object> fieldToPropertyId = new LinkedHashMap<Field<?>, Object>();
     private List<CommitHandler> commitHandlers = new ArrayList<CommitHandler>();
+
+    /**
+     * The field factory used by builder methods.
+     */
+    private FieldGroupFieldFactory fieldFactory;
 
     /**
      * Constructs a field binder. Use {@link #setItemDataSource(Item)} to set a
@@ -635,6 +642,28 @@ public class FieldGroup implements Serializable {
     }
 
     /**
+     * Gets the field factory for the {@link FieldGroup}. The field factory is
+     * only used when {@link FieldGroup} creates a new field.
+     * 
+     * @return The field factory in use
+     * 
+     */
+    public FieldGroupFieldFactory getFieldFactory() {
+        return fieldFactory;
+    }
+
+    /**
+     * Sets the field factory for the {@link FieldGroup}. The field factory is
+     * only used when {@link FieldGroup} creates a new field.
+     * 
+     * @param fieldFactory
+     *            The field factory to use
+     */
+    public void setFieldFactory(FieldGroupFieldFactory fieldFactory) {
+        this.fieldFactory = fieldFactory;
+    }
+
+    /**
      * Binds member fields found in the given object.
      * <p>
      * This method processes all (Java) member fields whose type extends
@@ -659,9 +688,9 @@ public class FieldGroup implements Serializable {
      * </pre>
      * 
      * </p>
-     * This binds the firstName TextField to a "firstName" property id in the
-     * item, lastName TextField to a "last" property and the age TextField to a
-     * "age" property id.
+     * This binds the firstName TextField to a "firstName" property in the item,
+     * lastName TextField to a "last" property and the age TextField to a "age"
+     * property.
      * 
      * @param objectWithMemberFields
      *            The object that contains (Java) member fields to bind
@@ -670,18 +699,87 @@ public class FieldGroup implements Serializable {
      */
     public void bindMemberFields(Object objectWithMemberFields)
             throws BindException {
+        buildAndBindMemberFields(objectWithMemberFields, false);
+    }
+
+    /**
+     * Binds member fields found in the given object and builds member fields
+     * that have not been initialized.
+     * <p>
+     * This method processes all (Java) member fields whose type extends
+     * {@link Field} and that can be mapped to a property id. Property id
+     * mapping is done based on the field name or on a @{@link PropertyId}
+     * annotation on the field. Fields that are not initialized (null) are built
+     * using the field factory. All non-null fields for which a property id can
+     * be determined are bound to the property id.
+     * </p>
+     * <p>
+     * For example:
+     * 
+     * <pre>
+     * public class MyForm extends VerticalLayout {
+     * private TextField firstName = new TextField("First name");
+     * @PropertyId("last")
+     * private TextField lastName = new TextField("Last name"); 
+     * private TextField age;
+     * 
+     * MyForm myForm = new MyForm(); 
+     * ... 
+     * fieldGroup.buildAndBindMemberFields(myForm);
+     * </pre>
+     * 
+     * </p>
+     * <p>
+     * This binds the firstName TextField to a "firstName" property in the item,
+     * lastName TextField to a "last" property and builds an age TextField using
+     * the field factory and then binds it to the "age" property.
+     * </p>
+     * 
+     * @param objectWithMemberFields
+     *            The object that contains (Java) member fields to build and
+     *            bind
+     * @throws BindException
+     *             If there is a problem binding or building a field
+     */
+    public void buildAndBindMemberFields(Object objectWithMemberFields)
+            throws BindException {
+        buildAndBindMemberFields(objectWithMemberFields, true);
+    }
+
+    /**
+     * Binds member fields found in the given object and optionally builds
+     * member fields that have not been initialized.
+     * <p>
+     * This method processes all (Java) member fields whose type extends
+     * {@link Field} and that can be mapped to a property id. Property id
+     * mapping is done based on the field name or on a @{@link PropertyId}
+     * annotation on the field. Fields that are not initialized (null) are built
+     * using the field factory is buildFields is true. All non-null fields for
+     * which a property id can be determined are bound to the property id.
+     * </p>
+     * 
+     * @param objectWithMemberFields
+     *            The object that contains (Java) member fields to build and
+     *            bind
+     * @throws BindException
+     *             If there is a problem binding or building a field
+     */
+    protected void buildAndBindMemberFields(Object objectWithMemberFields,
+            boolean buildFields) throws BindException {
         Class<?> objectClass = objectWithMemberFields.getClass();
 
-        for (java.lang.reflect.Field f : objectClass.getDeclaredFields()) {
+        for (java.lang.reflect.Field memberField : objectClass
+                .getDeclaredFields()) {
 
-            if (!Field.class.isAssignableFrom(f.getType())) {
+            if (!Field.class.isAssignableFrom(memberField.getType())) {
                 // Process next field
                 continue;
             }
 
-            PropertyId propertyIdAnnotation = f.getAnnotation(PropertyId.class);
+            PropertyId propertyIdAnnotation = memberField
+                    .getAnnotation(PropertyId.class);
 
-            Class<? extends Field> fieldType = (Class<? extends Field>) f
+            Class<? extends Field> fieldType = (Class<? extends Field>) memberField
                     .getType();
 
             Object propertyId = null;
@@ -689,7 +787,7 @@ public class FieldGroup implements Serializable {
                 // @PropertyId(propertyId) always overrides property id
                 propertyId = propertyIdAnnotation.value();
             } else {
-                propertyId = f.getName();
+                propertyId = memberField.getName();
             }
 
             // Ensure that the property id exists
@@ -702,18 +800,51 @@ public class FieldGroup implements Serializable {
                 continue;
             }
 
+            Field<?> field;
             try {
                 // Get the field from the object
-                Field<?> field = (Field<?>) ReflectTools.getJavaFieldValue(
-                        objectWithMemberFields, f);
-                // Bind it to the property id
-                bind(field, propertyId);
+                field = (Field<?>) ReflectTools.getJavaFieldValue(
+                        objectWithMemberFields, memberField);
             } catch (Exception e) {
                 // If we cannot determine the value, just skip the field and try
                 // the next one
                 continue;
             }
 
+            if (field == null && buildFields) {
+                Caption captionAnnotation = memberField
+                        .getAnnotation(Caption.class);
+                String caption;
+                if (captionAnnotation != null) {
+                    caption = captionAnnotation.value();
+                } else {
+                    caption = DefaultFieldFactory
+                            .createCaptionByPropertyId(propertyId);
+                }
+
+                // Create the component (Field)
+                field = build(caption, propertyType, fieldType);
+
+                // Store it in the field
+                try {
+                    ReflectTools.setJavaFieldValue(objectWithMemberFields,
+                            memberField, field);
+                } catch (IllegalArgumentException e) {
+                    throw new BindException("Could not assign value to field '"
+                            + memberField.getName() + "'", e);
+                } catch (IllegalAccessException e) {
+                    throw new BindException("Could not assign value to field '"
+                            + memberField.getName() + "'", e);
+                } catch (InvocationTargetException e) {
+                    throw new BindException("Could not assign value to field '"
+                            + memberField.getName() + "'", e);
+                }
+            }
+
+            if (field != null) {
+                // Bind it to the property id
+                bind(field, propertyId);
+            }
         }
     }
 
@@ -751,5 +882,97 @@ public class FieldGroup implements Serializable {
             super(message, t);
         }
 
+    }
+
+    /**
+     * Builds a field and binds it to the given property id using the field
+     * binder.
+     * 
+     * @param propertyId
+     *            The property id to bind to. Must be present in the field
+     *            finder.
+     * @throws BindException
+     *             If there is a problem while building or binding
+     * @return The created and bound field
+     */
+    public Field<?> buildAndBind(Object propertyId) throws BindException {
+        String caption = DefaultFieldFactory
+                .createCaptionByPropertyId(propertyId);
+        return buildAndBind(caption, propertyId);
+    }
+
+    /**
+     * Builds a field using the given caption and binds it to the given property
+     * id using the field binder.
+     * 
+     * @param caption
+     *            The caption for the field
+     * @param propertyId
+     *            The property id to bind to. Must be present in the field
+     *            finder.
+     * @throws BindException
+     *             If there is a problem while building or binding
+     * @return The created and bound field. Can be any type of {@link Field}.
+     */
+    public Field<?> buildAndBind(String caption, Object propertyId)
+            throws BindException {
+        Class<?> type = getPropertyType(propertyId);
+        return buildAndBind(caption, propertyId, Field.class);
+
+    }
+
+    /**
+     * Builds a field using the given caption and binds it to the given property
+     * id using the field binder. Ensures the new field is of the given type.
+     * 
+     * @param caption
+     *            The caption for the field
+     * @param propertyId
+     *            The property id to bind to. Must be present in the field
+     *            finder.
+     * @throws BindException
+     *             If the field could not be created
+     * @return The created and bound field. Can be any type of {@link Field}.
+     */
+
+    public <T extends Field> T buildAndBind(String caption, Object propertyId,
+            Class<T> fieldType) throws BindException {
+        Class<?> type = getPropertyType(propertyId);
+
+        T field = build(caption, type, fieldType);
+        bind(field, propertyId);
+
+        return field;
+    }
+
+    /**
+     * Creates a field based on the given data type.
+     * <p>
+     * The data type is the type that we want to edit using the field. The field
+     * type is the type of field we want to create, can be {@link Field} if any
+     * Field is good.
+     * </p>
+     * 
+     * @param caption
+     *            The caption for the new field
+     * @param dataType
+     *            The data model type that we want to edit using the field
+     * @param fieldType
+     *            The type of field that we want to create
+     * @return A Field capable of editing the given type
+     * @throws BindException
+     *             If the field could not be created
+     */
+    protected <T extends Field> T build(String caption, Class<?> dataType,
+            Class<T> fieldType) throws BindException {
+        T field = getFieldFactory().createField(dataType, fieldType);
+        if (field == null) {
+            throw new BindException("Unable to build a field of type "
+                    + fieldType.getName() + " for editing "
+                    + dataType.getName());
+        }
+
+        field.setCaption(caption);
+        return field;
     }
 }

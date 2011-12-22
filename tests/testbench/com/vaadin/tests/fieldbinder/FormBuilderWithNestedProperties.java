@@ -2,7 +2,6 @@ package com.vaadin.tests.fieldbinder;
 
 import com.vaadin.data.fieldbinder.BeanFieldGroup;
 import com.vaadin.data.fieldbinder.FieldGroup;
-import com.vaadin.data.fieldbinder.FormBuilder;
 import com.vaadin.data.fieldbinder.PropertyId;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.tests.components.TestBase;
@@ -21,15 +20,14 @@ public class FormBuilderWithNestedProperties extends TestBase {
 
     @Override
     protected void setup() {
-        FieldGroup fieldBinder = new BeanFieldGroup<Person>(Person.class);
-        FormBuilder b = new FormBuilder(fieldBinder);
-        b.buildAndBindFields(this);
+        FieldGroup fieldGroup = new BeanFieldGroup<Person>(Person.class);
+        fieldGroup.buildAndBindMemberFields(this);
 
         addComponent(firstName);
         addComponent(lastName);
         addComponent(streetAddress);
 
-        fieldBinder.setItemDataSource(new BeanItem<Person>(new Person("Who",
+        fieldGroup.setItemDataSource(new BeanItem<Person>(new Person("Who",
                 "me?", "email", 1, Sex.MALE, new Address("street name", 202020,
                         "City", Country.FINLAND))));
     }

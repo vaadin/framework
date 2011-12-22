@@ -3,7 +3,6 @@ package com.vaadin.tests.fieldbinder;
 import com.vaadin.data.fieldbinder.BeanFieldGroup;
 import com.vaadin.data.fieldbinder.FieldGroup;
 import com.vaadin.data.fieldbinder.FieldGroup.CommitException;
-import com.vaadin.data.fieldbinder.FormBuilder;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.data.bean.Address;
@@ -33,11 +32,10 @@ public class FieldBinderWithBeanValidation extends TestBase {
     protected void setup() {
         addComponent(log);
 
-        final BeanFieldGroup<PersonWithBeanValidationAnnotations> binder = new BeanFieldGroup<PersonWithBeanValidationAnnotations>(
+        final BeanFieldGroup<PersonWithBeanValidationAnnotations> fieldGroup = new BeanFieldGroup<PersonWithBeanValidationAnnotations>(
                 PersonWithBeanValidationAnnotations.class);
 
-        FormBuilder builder = new FormBuilder(binder);
-        builder.buildAndBindFields(this);
+        fieldGroup.buildAndBindMemberFields(this);
         addComponent(firstName);
         addComponent(lastName);
         addComponent(email);
@@ -50,7 +48,7 @@ public class FieldBinderWithBeanValidation extends TestBase {
             public void buttonClick(ClickEvent event) {
                 String msg = "Commit succesful";
                 try {
-                    binder.commit();
+                    fieldGroup.commit();
                 } catch (CommitException e) {
                     msg = "Commit failed: " + e.getMessage();
                 }
@@ -63,7 +61,7 @@ public class FieldBinderWithBeanValidation extends TestBase {
                 new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        binder.discard();
+                        fieldGroup.discard();
                         log.log("Discarded changes");
 
                     }
@@ -72,7 +70,7 @@ public class FieldBinderWithBeanValidation extends TestBase {
                 new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        log.log(getPerson(binder).toString());
+                        log.log(getPerson(fieldGroup).toString());
 
                     }
                 });
@@ -84,8 +82,9 @@ public class FieldBinderWithBeanValidation extends TestBase {
         PersonWithBeanValidationAnnotations p = new PersonWithBeanValidationAnnotations(
                 "John", "Doe", "john@doe.com", 64, Sex.MALE, new Address(
                         "John street", 11223, "John's town", Country.USA));
-        binder.setItemDataSource(new BeanItem<PersonWithBeanValidationAnnotations>(
-                p));
+        fieldGroup
+                .setItemDataSource(new BeanItem<PersonWithBeanValidationAnnotations>(
+                        p));
     }
 
     public static Person getPerson(FieldGroup binder) {

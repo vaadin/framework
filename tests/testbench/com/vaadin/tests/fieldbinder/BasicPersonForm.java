@@ -5,7 +5,6 @@ import com.vaadin.data.fieldbinder.FieldGroup;
 import com.vaadin.data.fieldbinder.FieldGroup.CommitEvent;
 import com.vaadin.data.fieldbinder.FieldGroup.CommitException;
 import com.vaadin.data.fieldbinder.FieldGroup.CommitHandler;
-import com.vaadin.data.fieldbinder.FormBuilder;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.converter.StringToBooleanConverter;
 import com.vaadin.data.validator.EmailValidator;
@@ -65,13 +64,12 @@ public class BasicPersonForm extends TestBase {
             super("Configuration");
             BeanItem<Configuration> bi = new BeanItem<BasicPersonForm.Configuration>(
                     configuration);
-            FieldGroup confBinder = new FieldGroup(bi);
-            confBinder.setItemDataSource(bi);
-            confBinder.setBuffered(false);
+            FieldGroup confFieldGroup = new FieldGroup(bi);
+            confFieldGroup.setItemDataSource(bi);
+            confFieldGroup.setBuffered(false);
 
-            FormBuilder builder = new FormBuilder(confBinder);
             for (Object propertyId : bi.getItemPropertyIds()) {
-                addComponent(builder.buildAndBind(propertyId));
+                addComponent(confFieldGroup.buildAndBind(propertyId));
             }
 
         }
@@ -83,8 +81,8 @@ public class BasicPersonForm extends TestBase {
         Panel confPanel = new ConfigurationPanel();
         addComponent(confPanel);
 
-        final FieldGroup binder = new BeanFieldGroup<Person>(Person.class);
-        binder.addCommitHandler(new CommitHandler() {
+        final FieldGroup fieldGroup = new BeanFieldGroup<Person>(Person.class);
+        fieldGroup.addCommitHandler(new CommitHandler() {
 
             public void preCommit(CommitEvent commitEvent)
                     throws CommitException {
@@ -108,10 +106,9 @@ public class BasicPersonForm extends TestBase {
             }
         });
 
-        binder.setBuffered(true);
+        fieldGroup.setBuffered(true);
 
-        FormBuilder builder = new FormBuilder(binder);
-        builder.buildAndBindFields(this);
+        fieldGroup.buildAndBindMemberFields(this);
         addComponent(firstName);
         addComponent(lastName);
         addComponent(email);
@@ -124,7 +121,7 @@ public class BasicPersonForm extends TestBase {
             public void buttonClick(ClickEvent event) {
                 String msg = "Commit succesful";
                 try {
-                    binder.commit();
+                    fieldGroup.commit();
                 } catch (CommitException e) {
                     msg = "Commit failed: " + e.getMessage();
                 }
@@ -137,7 +134,7 @@ public class BasicPersonForm extends TestBase {
                 new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        binder.discard();
+                        fieldGroup.discard();
                         log.log("Discarded changes");
 
                     }
@@ -146,7 +143,7 @@ public class BasicPersonForm extends TestBase {
                 new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        log.log(getPerson(binder).toString());
+                        log.log(getPerson(fieldGroup).toString());
 
                     }
                 });
@@ -173,7 +170,7 @@ public class BasicPersonForm extends TestBase {
         });
         Person p = new Person("John", "Doe", "john@doe.com", 64, Sex.MALE,
                 new Address("John street", 11223, "John's town", Country.USA));
-        binder.setItemDataSource(new BeanItem<Person>(p));
+        fieldGroup.setItemDataSource(new BeanItem<Person>(p));
     }
 
     public static Person getPerson(FieldGroup binder) {
