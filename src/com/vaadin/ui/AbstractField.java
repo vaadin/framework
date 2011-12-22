@@ -850,7 +850,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                 return converter.convertToModel(fieldValue, getLocale());
             } catch (com.vaadin.data.util.converter.Converter.ConversionException e) {
                 throw new Converter.ConversionException(
-                        getValueConversionError(converter.getModelType()), e);
+                        getConversionError(converter.getModelType()), e);
             }
         }
 
@@ -872,20 +872,18 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         if (type.isAssignableFrom(fieldValue.getClass())) {
             return fieldValue;
         } else {
-            throw new Converter.ConversionException(
-                    getValueConversionError(type));
+            throw new Converter.ConversionException(getConversionError(type));
         }
     }
 
     /**
-     * Returns the value conversion error with {0} replaced by the data source
-     * type.
+     * Returns the conversion error with {0} replaced by the data source type.
      * 
      * @param dataSourceType
      *            The type of the data source
      * @return The value conversion error string with parameters replaced.
      */
-    protected String getValueConversionError(Class<?> dataSourceType) {
+    protected String getConversionError(Class<?> dataSourceType) {
         if (dataSourceType == null) {
             return getConversionError();
         } else {
@@ -895,10 +893,12 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     /**
-     * Returns the current field value converted to the data source type.
+     * Returns the current value (as returned by {@link #getValue()}) converted
+     * to the data source type.
      * <p>
      * This returns the same as {@link AbstractField#getValue()} if no converter
-     * has been set.
+     * has been set. The value is not necessarily the same as the data source
+     * value e.g. if the field is in buffered mode and has been modified.
      * </p>
      * 
      * @return The converted value that is compatible with the data source type
@@ -1030,7 +1030,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                         getLocale());
             } catch (Exception e) {
                 throw new InvalidValueException(
-                        getValueConversionError(getConverter().getModelType()));
+                        getConversionError(getConverter().getModelType()));
             }
         }
 
