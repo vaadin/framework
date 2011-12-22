@@ -1423,7 +1423,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         return new Size(size, unit);
     }
 
-    private static class Size {
+    private static class Size implements Serializable {
         float size;
         Unit unit;
 
