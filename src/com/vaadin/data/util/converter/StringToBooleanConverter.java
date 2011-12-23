@@ -41,8 +41,8 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
         } else if (getFalseString().equals(value)) {
             return false;
         } else {
-            throw new ConversionException("Cannot convert " + value
-                    + " to Boolean");
+            throw new ConversionException("Cannot convert " + value + " to "
+                    + getModelType().getName());
         }
     }
 

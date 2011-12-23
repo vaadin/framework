@@ -1,4 +1,4 @@
-package com.vaadin.tests.fieldbinder;
+package com.vaadin.tests.fieldgroup;
 
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.PropertyId;
@@ -11,7 +11,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 
-public class FormWithNestedProperties extends AbstractBeanFieldBinderTest {
+public class FormWithNestedProperties extends AbstractBeanFieldGroupTest {
 
     private Log log = new Log(5);
 

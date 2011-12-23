@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>New Test</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">New Test</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.fieldgroup.BasicPersonForm?restartApplication</td>
+	<td></td>
+</tr>
+<!--assert we are starting with what we think we are starting with-->
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[2]/VTextField[0]</td>
+	<td>John</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[3]/VTextArea[0]</td>
+	<td>Doe</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[4]/VTextField[0]</td>
+	<td>john@doe.com</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[5]/VTextField[0]</td>
+	<td>64</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[6]/VScrollTable[0]/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[0]</td>
+	<td>v-selected</td>
+</tr>
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[6]/VScrollTable[0]/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[2]</td>
+	<td>v-selected</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[7]/VTextField[0]</td>
+	<td>NAAAAAH</td>
+</tr>
+<!--make some changes-->
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[2]/VTextField[0]</td>
+	<td>John123</td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[3]/VTextArea[0]</td>
+	<td>Doe123</td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[4]/VTextField[0]</td>
+	<td>john@doe.com123</td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[5]/VTextField[0]</td>
+	<td>64123</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[6]/VScrollTable[0]/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[0]</td>
+	<td>33,8</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[7]/VTextField[0]</td>
+	<td>72,10</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[7]/VTextField[0]</td>
+	<td>-18,15</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[7]/VTextField[0]</td>
+	<td>YAY!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[10]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::PID_SLog_row_0</td>
+	<td>1. Person [firstName=John, lastName=Doe, email=john@doe.com, age=64, sex=Male, address=Address [streetAddress=John street, postalCode=11223, city=John's town, country=USA], deceased=false, salary=null, salaryDouble=null, rent=null]</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[9]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::PID_SLog_row_0</td>
+	<td>2. Discarded changes</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[10]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::PID_SLog_row_0</td>
+	<td>3. Person [firstName=John, lastName=Doe, email=john@doe.com, age=64, sex=Male, address=Address [streetAddress=John street, postalCode=11223, city=John's town, country=USA], deceased=false, salary=null, salaryDouble=null, rent=null]</td>
+</tr>
+<!--we should still be at the state we started from-->
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[2]/VTextField[0]</td>
+	<td>John</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[3]/VTextArea[0]</td>
+	<td>Doe</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[4]/VTextField[0]</td>
+	<td>john@doe.com</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[5]/VTextField[0]</td>
+	<td>64</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[6]/VScrollTable[0]/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[0]</td>
+	<td>v-selected</td>
+</tr>
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[6]/VScrollTable[0]/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[2]</td>
+	<td>v-selected</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestsfieldgroupBasicPersonForm::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[7]/VTextField[0]</td>
+	<td>NAAAAAH</td>
+</tr>
+</tbody></table>
+</body>
+</html>
