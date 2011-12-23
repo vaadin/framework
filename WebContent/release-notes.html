@@ -38,16 +38,11 @@
       <h2 id="tableofcontents">Release Notes for Vaadin Framework @version@</h2>
       <ul>
         <li><a href="#overview">Package contents</a></li>
-        <li><a href="#security-fixes">Security fixes in Vaadin @version-minor@</a></li>
         <li><a href="#enhancements">Enhancements in Vaadin @version-minor@</a></li>
-        <li><a href="#fixes">Fixes in Vaadin @version@</a></li>
-        <li><a href="#backwardsincompatibilities">Backwards
-            incompatible changes in Vaadin @version-minor@</a>
-        </li>
+        <li><a href="#changelog">Complete change log for Vaadin @version@</a></li>
+        <li><a href="#migrating">Migrating from Vaadin 6 to Vaadin 7</a></li>
         <li><a href="#dependencies">Vaadin @version@ dependencies</a></li>
         <li><a href="#upgrading">Upgrading to Vaadin @version-minor@</a></li>
-        <li><a href="#knownissues">Known problems and limitations in
-            Vaadin @version@</a></li>
         <li><a href="#supportedversions">Supported technologies</a></li>
         <li><a href="#vaadinontheweb">Vaadin on the Web</a></li>
       </ul>
@@ -94,7 +89,7 @@
         Vaadin Wiki.
       </p>
 
-      <h3>ChangeLog</h3>
+      <h3 id="changelog">ChangeLog</h3>
 
       <p>
         For a complete list of changes in this release, please see the <a
@@ -113,10 +108,10 @@
       <p>
         A detailed list of migration changes are given in the <a
         href="http://dev.vaadin.com/wiki/Vaadin7/MigrationGuide">Vaadin 7 Migration
-        Guide</p>.
+        Guide</a>.
       </p>
 
-      <h2 id="dependencies">Vaadin @version@ dependencies</h2>
+      <h2 id="dependencies">Vaadin @version@ Dependencies</h2>
 
       <h3>Google Web Toolkit (GWT)</h3>
 
@@ -140,7 +135,7 @@
 
       <h2 id="upgrading">Upgrading to Vaadin @version-minor@</h2>
 
-      <h3>Upgrading Eclipse Plugin</h3>
+      <h3>Upgrading the Eclipse Plugin</h3>
 
       <p>
         This release requires that you use the <i>experimental</i> Vaadin Plugin for
@@ -280,16 +275,16 @@
         href="http://dev.vaadin.com/">dev.vaadin.com</a>.
       </p>
 
-      <h2 id="supportedversions">Supported technologies</h2>
+      <h2 id="supportedversions">Supported Technologies</h2>
 
       <p>
-        Vaadin is compatible with <b>Java 5</b> and it is also compatible with most other
+        Vaadin 7 is compatible with <b>Java 5</b> and it is also compatible with most other
         operating system supporting Java 5 or newer. However, using Java 6 is recommended,
         as it is required by widget set compilation.
       </p>
 
       <p>
-        Vaadin is supported on the following <b>operating systems</b>:
+        Vaadin 7 is supported on the following <b>operating systems</b>:
       </p>
 
       <ul>
@@ -300,22 +295,22 @@
       </ul>
 
       <p>
-        Vaadin requires <b>Java Servlet API 2.4</b> but also supports later versions and
+        Vaadin 7 requires <b>Java Servlet API 2.4</b> but also supports later versions and
         should work with any Java application server that conforms to the standard. The
         following <b>application servers</b> are supported:
       </p>
 
       <ul>
-        <li>Apache Tomcat, version 4.1-7.0</li>
+        <li>Apache Tomcat, version 5.0-7.0</li>
         <li>Oracle WebLogic&reg; Server, version 9.2-10.3.5(11gR1)</li>
         <li>IBM WebSphere&reg; Application Server, version 6.1-8.0</li>
-        <li>JBoss Application Server, 3.2.8-7.0</li>
+        <li>JBoss Application Server, 4.0.0-7.0</li>
         <li>Jetty, version 5.0-7.0</li>
         <li>Glassfish, version 2.0-3.1</li>
       </ul>
 
       <p>
-        Vaadin supports JSR-168 and JSR-286 Portlet specifications. All portals that
+        Vaadin 7 supports the JSR-286 Portlet specification. All portals that
         implement either of the portlet specifications should work. The following
         <b>portals</b> are supported:
       </p>
@@ -353,32 +348,33 @@
         <li><a href="http://vaadin.com/learn">vaadin.com/learn -
             Getting started with Vaadin</a></li>
         <li><a href="http://vaadin.com/forum">vaadin.com/forum -
-            Forums for Vaadin related discussions 
+            Forums for Vaadin related discussions</a>
         </li>
         <li><a href="http://vaadin.com/book">vaadin.com/book - Book
-            of Vaadin - everything you need to know about Vaadin 
+            of Vaadin - everything you need to know about Vaadin</a> 
         </li>
         <li><a href="http://vaadin.com/api">vaadin.com/api - Online
-            javadocs 
+            javadocs</a>
         </li>
         <li><a href="http://vaadin.com/directory">vaadin.com/directory
-            - Add-ons for Vaadin 
+            - Add-ons for Vaadin</a>
         </li>
-        <li><a href="http://dev.vaadin.com">dev.vaadin.com - Bug
-            tracker 
-        </li>
-        <li><a
-            href="http://dev.vaadin.com/svn/versions/@version-minor@">dev.vaadin.com/svn/versions/@version-minor@
-            - Source code 
-        </li>
+
         <li><a href="http://vaadin.com/pro-account">vaadin.com/pro-account
-            - Commercial support and tools for Vaadin development 
+            - Commercial support and tools for Vaadin development </a>
         </li>
         <li><a href="http://vaadin.com/services">vaadin.com/services
-            - Expert services for Vaadin 
+            - Expert services for Vaadin</a>
         </li>
         <li><a href="http://vaadin.com/company">vaadin.com/company
-            - Information about the company behind Vaadin 
+            - Information about the company behind Vaadin</a>
+        </li>
+
+        <li><a href="http://dev.vaadin.com">dev.vaadin.com - Bug tracker</a></li>
+
+        <li><a
+        href="http://dev.vaadin.com/wiki/Vaadin/Development/StartingVaadin7Development">How
+        to get the source code of Vaadin</a>
         </li>
       </ul>
 	</div> <!-- /content-->
