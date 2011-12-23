@@ -379,7 +379,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
 
         int sum = 0;
         for (int j = 0; j < 100; j++) {
-            t.addItem(new Object[] { j, "Bar value " + j,
+            t.addItem(new Object[] { "" + j, "Bar value " + j,
                     "Last column value " + j, new TextField() }, j);
             sum += j;
         }
