@@ -43,6 +43,7 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.TwinColSelect;
@@ -218,10 +219,10 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
 
         l.addComponent(new Label("Normal TextArea", Label.CONTENT_XHTML));
 
-        tf = new TextField();
-        tf.setHeight("5em");
-        tf.setInputPrompt("Enter text");
-        l.addComponent(tf);
+        TextArea ta = new TextArea();
+        ta.setHeight("5em");
+        ta.setInputPrompt("Enter text");
+        l.addComponent(ta);
 
         return l;
     }
