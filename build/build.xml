@@ -200,7 +200,11 @@
                     <include name="reindeer/**/*" />
                 </patternset>
             </zipfileset>
-            
+            <zipfileset prefix="VAADIN" dir="${output-dir}/WebContent/VAADIN">
+                <patternset>
+                    <include name="vaadinBootstrap.js" />
+                </patternset>
+            </zipfileset>
         </zip>
         
         <echo>##teamcity[publishArtifacts '${result-path}/${base-name}-liferay.zip']</echo>
