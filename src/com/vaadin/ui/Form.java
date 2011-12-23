@@ -17,6 +17,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Validatable;
 import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
@@ -58,9 +59,12 @@ import com.vaadin.terminal.gwt.client.ui.VForm;
  * @version
  * @VERSION@
  * @since 3.0
+ * @deprecated Use {@link FieldGroup} instead of {@link Form} for more
+ *             flexibility.
  */
 @SuppressWarnings("serial")
 @ClientWidget(VForm.class)
+@Deprecated
 public class Form extends AbstractField<Object> implements Item.Editor,
         Buffered, Item, Validatable, Action.Notifier {
 
