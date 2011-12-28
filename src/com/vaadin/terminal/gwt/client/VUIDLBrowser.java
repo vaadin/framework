@@ -25,7 +25,6 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
-import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VWindow;
 
 public class VUIDLBrowser extends SimpleTree {
@@ -103,9 +102,6 @@ public class VUIDLBrowser extends SimpleTree {
             if (widgetClassByDecodedTag == VUnknownComponent.class) {
                 return conf.getUnknownServerClassNameByEncodedTagName(name)
                         + "(NO CLIENT IMPLEMENTATION FOUND)";
-            } else if (widgetClassByDecodedTag == VView.class
-                    && uidl.hasAttribute("sub")) {
-                return "com.vaadin.terminal.gwt.ui.VWindow";
             } else {
                 return widgetClassByDecodedTag.getName();
             }
@@ -201,7 +197,7 @@ public class VUIDLBrowser extends SimpleTree {
                     tmp.addItem(name + "=" + value);
                 }
                 if (tmp != null) {
-                   add(tmp);
+                    add(tmp);
                 }
             } catch (final Exception e) {
                 // Ignored, no variables
