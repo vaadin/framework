@@ -95,7 +95,7 @@ def tagCommand(version, changeset, bookRepo):
     tagUrl = repoRoot+"/releases/"+version
 
     # Book tag parameters
-    if not re.search(r'branches/[0-9\.]+$', bookRepo):
+    if (not re.search(r'branches/[0-9\.]+$', bookRepo)) and (not re.search(r'doc/trunk$', bookRepo)):
         print "Bad documentation branch '%s' for release." % (bookRepo)
         sys.exit(1)
     bookTagUrl = repoRoot+"/doc/tags/"+version

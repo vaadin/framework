@@ -58,6 +58,13 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
 
     private String valueBeforeEdit = null;
 
+    /**
+     * Set to false if a text change event has been sent since the last value
+     * change event. This means that {@link #valueBeforeEdit} should not be
+     * trusted when determining whether a text change even should be sent.
+     */
+    private boolean valueBeforeEditIsSynced = true;
+
     private boolean immediate = false;
     private int extraHorizontalPixels = -1;
     private int extraVerticalPixels = -1;
@@ -145,18 +152,22 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             text = "";
         }
         if (!text.equals(getLastCommunicatedString())) {
-            if (text.equals(valueBeforeEdit)) {
+            if (valueBeforeEditIsSynced && text.equals(valueBeforeEdit)) {
                 /*
-                 * Value change for the current text has been enqueued, but we
-                 * can't know that it has been sent to the server. Ensure that
-                 * all pending changes are sent now. Sending a value change
-                 * without a text change will simulate a TextChangeEvent on the
-                 * server.
+                 * Value change for the current text has been enqueued since the
+                 * last text change event was sent, but we can't know that it
+                 * has been sent to the server. Ensure that all pending changes
+                 * are sent now. Sending a value change without a text change
+                 * will simulate a TextChangeEvent on the server.
                  */
                 client.sendPendingVariableChanges();
             } else {
                 // Default case - just send an immediate text change message
                 client.updateVariable(id, VAR_CUR_TEXT, text, true);
+
+                // Shouldn't investigate valueBeforeEdit to avoid duplicate text
+                // change events as the states are not in sync any more
+                valueBeforeEditIsSynced = false;
             }
             lastTextChangeString = text;
         }
@@ -334,6 +345,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         }
 
         lastTextChangeString = valueBeforeEdit = text;
+        valueBeforeEditIsSynced = true;
     }
 
     protected void onCut() {
@@ -423,6 +435,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
                 sendValueChange = immediate;
                 client.updateVariable(id, "text", getText(), false);
                 valueBeforeEdit = newText;
+                valueBeforeEditIsSynced = true;
             }
 
             /*

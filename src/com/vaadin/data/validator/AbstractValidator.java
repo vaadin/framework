@@ -49,7 +49,7 @@ public abstract class AbstractValidator implements Validator {
 
     public void validate(Object value) throws InvalidValueException {
         if (!isValid(value)) {
-            String message = errorMessage.replace("{0}", String.valueOf(value));
+            String message = getErrorMessage().replace("{0}", String.valueOf(value));
             throw new InvalidValueException(message);
         }
     }

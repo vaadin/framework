@@ -19,10 +19,9 @@ public class TextChangeEventsWithNonImmediateValueChange extends TestBase {
         TextChangeListener inputEventListener = new TextChangeListener() {
 
             public void textChange(TextChangeEvent event) {
-                l.log("Text change event for  "
-                        + event.getComponent().getCaption()
-                        + ", text content currently:'" + event.getText()
-                        + "' Cursor at index:" + event.getCursorPosition());
+                l.log("Text change event, text content currently:'"
+                        + event.getText() + "' Cursor at index:"
+                        + event.getCursorPosition());
             }
         };
 
@@ -33,7 +32,7 @@ public class TextChangeEventsWithNonImmediateValueChange extends TestBase {
         tf.addListener(new ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
-                l.log("Value change:" + event.getProperty().toString());
+                l.log("Value change: '" + event.getProperty().toString() + "'");
             }
         });
 
@@ -44,7 +43,8 @@ public class TextChangeEventsWithNonImmediateValueChange extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "Type a, pause for a second, type ENTER,  type a. Text field should not forget the last textchange event right after valuechange (enter).";
+        return "Type a, pause for a second, type ENTER,  type a. Text field should not forget the last textchange event right after valuechange (enter)."
+                + "<br />Then press backspace. The text field should send a text change event even though the text in the field is the same as the field's value";
     }
 
     @Override
