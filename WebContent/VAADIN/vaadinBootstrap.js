@@ -72,6 +72,14 @@
 				throw "Application " + appId + " already initialized";
 			}
 			log("init application", appId, config);
+			
+			var testbenchId = appId.replace(/-\d+$/, '');
+			window.vaadin.clients[testbenchId] = {
+					isActive: function() {
+						return true;
+					}
+			}
+			
 			var getConfig = function(name) {
 				var value = config[name];
 				if (value === undefined) {
@@ -176,6 +184,7 @@
 			
 			return app;
 		},
+		clients: {},
 		getApp: function(appId) {
 			var app = apps[appId]; 
 			return app;

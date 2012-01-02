@@ -227,10 +227,6 @@ public class ApplicationConnection {
     		return componentLocator.@com.vaadin.terminal.gwt.client.ComponentLocator::getPathForElement(Lcom/google/gwt/user/client/Element;)(element);
     	}
 
-    	if (!$wnd.vaadin.clients) {
-    		$wnd.vaadin.clients = {};
-    	}
-
     	$wnd.vaadin.clients[TTAppId] = client;
     }-*/;
 
@@ -626,6 +622,9 @@ public class ApplicationConnection {
             cssWaits++;
         } else {
             cssLoaded = true;
+
+            // Update counter so TestBench knows something is going on
+            incrementActiveRequests();
             handleReceivedJSONMessage(new Date(), jsonText, json);
             if (cssWaits >= MAX_CSS_WAITS) {
                 VConsole.error("CSS files may have not loaded properly.");
