@@ -37,7 +37,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
 
     private int pos = 50;
 
-    private int posUnit = UNITS_PERCENTAGE;
+    private Unit posUnit = Unit.PERCENTAGE;
 
     private boolean posReversed = false;
 
@@ -209,7 +209,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
-        final String position = pos + UNIT_SYMBOLS[posUnit];
+        final String position = pos + posUnit.getSymbol();
 
         target.addAttribute("position", position);
 
@@ -278,7 +278,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      * @param unit
      *            the unit (from {@link Sizeable}) in which the size is given.
      */
-    public void setSplitPosition(int pos, int unit) {
+    public void setSplitPosition(int pos, Unit unit) {
         setSplitPosition(pos, unit, true, false);
     }
 
@@ -294,7 +294,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      *            second region else it is measured by the first region
      * 
      */
-    public void setSplitPosition(int pos, int unit, boolean reverse) {
+    public void setSplitPosition(int pos, Unit unit, boolean reverse) {
         setSplitPosition(pos, unit, true, reverse);
     }
 
@@ -313,7 +313,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      * 
      * @return unit of position of the splitter
      */
-    public int getSplitPositionUnit() {
+    public Unit getSplitPositionUnit() {
         return posUnit;
     }
 
@@ -329,9 +329,9 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      *            position info has come from the client side, thus it already
      *            knows the position.
      */
-    private void setSplitPosition(int pos, int unit, boolean repaintNeeded,
+    private void setSplitPosition(int pos, Unit unit, boolean repaintNeeded,
             boolean reverse) {
-        if (unit != UNITS_PERCENTAGE && unit != UNITS_PIXELS) {
+        if (unit != Unit.PERCENTAGE && unit != Unit.PIXELS) {
             throw new IllegalArgumentException(
                     "Only percentage and pixel units are allowed");
         }

@@ -55,7 +55,7 @@ public abstract class CustomField<T> extends AbstractField<T> implements
      */
     public CustomField() {
         // expand horizontally by default
-        setWidth(100, UNITS_PERCENTAGE);
+        setWidth(100, Unit.PERCENTAGE);
     }
 
     /**
@@ -138,13 +138,13 @@ public abstract class CustomField<T> extends AbstractField<T> implements
     // AbstractComponentContainer
 
     @Override
-    public void setHeight(float height, int unit) {
+    public void setHeight(float height, Unit unit) {
         super.setHeight(height, unit);
         requestContentRepaint();
     }
 
     @Override
-    public void setWidth(float height, int unit) {
+    public void setWidth(float height, Unit unit) {
         super.setWidth(height, unit);
         requestContentRepaint();
     }

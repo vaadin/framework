@@ -2,7 +2,6 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.terminal.Sizeable;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -97,9 +96,7 @@ class ResizeListenerWindow extends Window {
     }
 
     public void updateLabel() {
-        sizeLabel
-                .setValue(getWidth() + Sizeable.UNIT_SYMBOLS[getWidthUnits()]
-                        + " x " + getHeight()
-                        + Sizeable.UNIT_SYMBOLS[getHeightUnits()]);
+        sizeLabel.setValue(getWidth() + getWidthUnits().getSymbol() + " x "
+                + getHeight() + getHeightUnits().getSymbol());
     }
 }

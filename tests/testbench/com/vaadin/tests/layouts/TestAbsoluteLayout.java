@@ -47,10 +47,10 @@ public class TestAbsoluteLayout extends TestBase {
                 s.addContainerProperty("caption", String.class, "");
                 s.setItemCaptionPropertyId("caption");
                 s.setNullSelectionAllowed(false);
-                for (int i = 0; i < Layout.UNIT_SYMBOLS.length; i++) {
+                for (int i = 0; i < Layout.Unit.values().length; i++) {
                     Item unitItem = s.addItem(i);
                     unitItem.getItemProperty("caption").setValue(
-                            Layout.UNIT_SYMBOLS[i]);
+                            Layout.Unit.values()[i]);
                 }
                 return s;
             }

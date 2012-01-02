@@ -176,10 +176,10 @@ public class AbsoluteLayout extends AbstractLayout implements
         private Float bottomValue = null;
         private Float leftValue = null;
 
-        private int topUnits;
-        private int rightUnits;
-        private int bottomUnits;
-        private int leftUnits;
+        private Unit topUnits = Unit.PIXELS;
+        private Unit rightUnits = Unit.PIXELS;
+        private Unit bottomUnits = Unit.PIXELS;
+        private Unit leftUnits = Unit.PIXELS;
 
         /**
          * Sets the position attributes using CSS syntax. Attributes not
@@ -193,7 +193,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          */
         public void setCSSString(String css) {
             topValue = rightValue = bottomValue = leftValue = null;
-            topUnits = rightUnits = bottomUnits = leftUnits = 0;
+            topUnits = rightUnits = bottomUnits = leftUnits = Unit.PIXELS;
             zIndex = -1;
             if (css == null) {
                 return;
@@ -215,45 +215,29 @@ public class AbsoluteLayout extends AbstractLayout implements
                     } else {
                         value = "";
                     }
-                    String unit = value.replaceAll("[0-9\\.\\-]+", "");
-                    if (!unit.equals("")) {
-                        value = value.substring(0, value.indexOf(unit)).trim();
+                    String symbol = value.replaceAll("[0-9\\.\\-]+", "");
+                    if (!symbol.equals("")) {
+                        value = value.substring(0, value.indexOf(symbol))
+                                .trim();
                     }
                     float v = Float.parseFloat(value);
-                    int unitInt = parseCssUnit(unit);
+                    Unit unit = Unit.getUnitFromSymbol(symbol);
                     if (key.equals("top")) {
                         topValue = v;
-                        topUnits = unitInt;
+                        topUnits = unit;
                     } else if (key.equals("right")) {
                         rightValue = v;
-                        rightUnits = unitInt;
+                        rightUnits = unit;
                     } else if (key.equals("bottom")) {
                         bottomValue = v;
-                        bottomUnits = unitInt;
+                        bottomUnits = unit;
                     } else if (key.equals("left")) {
                         leftValue = v;
-                        leftUnits = unitInt;
+                        leftUnits = unit;
                     }
                 }
             }
             requestRepaint();
-        }
-
-        /**
-         * Parses a string and checks if a unit is found. If a unit is not found
-         * from the string the unit pixels is used.
-         * 
-         * @param string
-         *            The string to parse the unit from
-         * @return The found unit
-         */
-        private int parseCssUnit(String string) {
-            for (int i = 0; i < UNIT_SYMBOLS.length; i++) {
-                if (UNIT_SYMBOLS[i].equals(string)) {
-                    return i;
-                }
-            }
-            return 0; // defaults to px (eg. top:0;)
         }
 
         /**
@@ -264,16 +248,16 @@ public class AbsoluteLayout extends AbstractLayout implements
         public String getCSSString() {
             String s = "";
             if (topValue != null) {
-                s += "top:" + topValue + UNIT_SYMBOLS[topUnits] + ";";
+                s += "top:" + topValue + topUnits.getSymbol() + ";";
             }
             if (rightValue != null) {
-                s += "right:" + rightValue + UNIT_SYMBOLS[rightUnits] + ";";
+                s += "right:" + rightValue + rightUnits.getSymbol() + ";";
             }
             if (bottomValue != null) {
-                s += "bottom:" + bottomValue + UNIT_SYMBOLS[bottomUnits] + ";";
+                s += "bottom:" + bottomValue + bottomUnits.getSymbol() + ";";
             }
             if (leftValue != null) {
-                s += "left:" + leftValue + UNIT_SYMBOLS[leftUnits] + ";";
+                s += "left:" + leftValue + leftUnits.getSymbol() + ";";
             }
             if (zIndex >= 0) {
                 s += "z-index:" + zIndex + ";";
@@ -291,7 +275,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          *            The unit of the 'top' attribute. See UNIT_SYMBOLS for a
          *            description of the available units.
          */
-        public void setTop(Float topValue, int topUnits) {
+        public void setTop(Float topValue, Unit topUnits) {
             this.topValue = topValue;
             this.topUnits = topUnits;
             requestRepaint();
@@ -307,7 +291,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          *            The unit of the 'right' attribute. See UNIT_SYMBOLS for a
          *            description of the available units.
          */
-        public void setRight(Float rightValue, int rightUnits) {
+        public void setRight(Float rightValue, Unit rightUnits) {
             this.rightValue = rightValue;
             this.rightUnits = rightUnits;
             requestRepaint();
@@ -323,7 +307,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          *            The unit of the 'bottom' attribute. See UNIT_SYMBOLS for a
          *            description of the available units.
          */
-        public void setBottom(Float bottomValue, int bottomUnits) {
+        public void setBottom(Float bottomValue, Unit bottomUnits) {
             this.bottomValue = bottomValue;
             this.bottomUnits = bottomUnits;
             requestRepaint();
@@ -339,7 +323,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          *            The unit of the 'left' attribute. See UNIT_SYMBOLS for a
          *            description of the available units.
          */
-        public void setLeft(Float leftValue, int leftUnits) {
+        public void setLeft(Float leftValue, Unit leftUnits) {
             this.leftValue = leftValue;
             this.leftUnits = leftUnits;
             requestRepaint();
@@ -456,7 +440,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *         available units.
          */
-        public int getTopUnits() {
+        public Unit getTopUnits() {
             return topUnits;
         }
 
@@ -467,7 +451,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *            available units.
          */
-        public void setTopUnits(int topUnits) {
+        public void setTopUnits(Unit topUnits) {
             this.topUnits = topUnits;
             requestRepaint();
         }
@@ -478,7 +462,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *         available units.
          */
-        public int getRightUnits() {
+        public Unit getRightUnits() {
             return rightUnits;
         }
 
@@ -489,7 +473,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *            available units.
          */
-        public void setRightUnits(int rightUnits) {
+        public void setRightUnits(Unit rightUnits) {
             this.rightUnits = rightUnits;
             requestRepaint();
         }
@@ -500,7 +484,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *         available units.
          */
-        public int getBottomUnits() {
+        public Unit getBottomUnits() {
             return bottomUnits;
         }
 
@@ -511,7 +495,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *            available units.
          */
-        public void setBottomUnits(int bottomUnits) {
+        public void setBottomUnits(Unit bottomUnits) {
             this.bottomUnits = bottomUnits;
             requestRepaint();
         }
@@ -522,7 +506,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *         available units.
          */
-        public int getLeftUnits() {
+        public Unit getLeftUnits() {
             return leftUnits;
         }
 
@@ -533,7 +517,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *            available units.
          */
-        public void setLeftUnits(int leftUnits) {
+        public void setLeftUnits(Unit leftUnits) {
             this.leftUnits = leftUnits;
             requestRepaint();
         }
