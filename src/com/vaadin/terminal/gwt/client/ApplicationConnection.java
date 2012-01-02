@@ -199,6 +199,9 @@ public class ApplicationConnection {
             // inital UIDL not in DOM, request later
             repaintAll();
         } else {
+            // Update counter so TestBench knows something is still going on
+            incrementActiveRequests();
+
             // initial UIDL provided in DOM, continue as if returned by request
             handleJSONText(jsonText);
         }
@@ -622,9 +625,6 @@ public class ApplicationConnection {
             cssWaits++;
         } else {
             cssLoaded = true;
-
-            // Update counter so TestBench knows something is going on
-            incrementActiveRequests();
             handleReceivedJSONMessage(new Date(), jsonText, json);
             if (cssWaits >= MAX_CSS_WAITS) {
                 VConsole.error("CSS files may have not loaded properly.");
