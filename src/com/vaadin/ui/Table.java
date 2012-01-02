@@ -130,30 +130,54 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public static final String ALIGN_RIGHT = "e";
 
-    /**
-     * Column header mode: Column headers are hidden.
-     */
-    public static final int COLUMN_HEADER_MODE_HIDDEN = -1;
+    public enum ColumnHeaderMode {
+        /**
+         * Column headers are hidden.
+         */
+        HIDDEN,
+        /**
+         * Property ID:s are used as column headers.
+         */
+        ID,
+        /**
+         * Column headers are explicitly specified with
+         * {@link #setColumnHeaders(String[])}.
+         */
+        EXPLICIT,
+        /**
+         * Column headers are explicitly specified with
+         * {@link #setColumnHeaders(String[])}. If a header is not specified for
+         * a given property, its property id is used instead.
+         * <p>
+         * <b>This is the default behavior. </b>
+         */
+        EXPLICIT_DEFAULTS_ID
+    }
 
     /**
-     * Column header mode: Property ID:s are used as column headers.
+     * @deprecated from 7.0, use {@link ColumnHeaderMode#HIDDEN} instead
      */
-    public static final int COLUMN_HEADER_MODE_ID = 0;
+    @Deprecated
+    public static final ColumnHeaderMode COLUMN_HEADER_MODE_HIDDEN = ColumnHeaderMode.HIDDEN;
 
     /**
-     * Column header mode: Column headers are explicitly specified with
-     * {@link #setColumnHeaders(String[])}.
+     * @deprecated from 7.0, use {@link ColumnHeaderMode#ID} instead
      */
-    public static final int COLUMN_HEADER_MODE_EXPLICIT = 1;
+    @Deprecated
+    public static final ColumnHeaderMode COLUMN_HEADER_MODE_ID = ColumnHeaderMode.ID;
 
     /**
-     * Column header mode: Column headers are explicitly specified with
-     * {@link #setColumnHeaders(String[])}. If a header is not specified for a
-     * given property, its property id is used instead.
-     * <p>
-     * <b>This is the default behavior. </b>
+     * @deprecated from 7.0, use {@link ColumnHeaderMode#EXPLICIT} instead
      */
-    public static final int COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID = 2;
+    @Deprecated
+    public static final ColumnHeaderMode COLUMN_HEADER_MODE_EXPLICIT = ColumnHeaderMode.EXPLICIT;
+
+    /**
+     * @deprecated from 7.0, use {@link ColumnHeaderMode#EXPLICIT_DEFAULTS_ID}
+     *             instead
+     */
+    @Deprecated
+    public static final ColumnHeaderMode COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID = ColumnHeaderMode.EXPLICIT_DEFAULTS_ID;
 
     /**
      * Row caption mode: The row headers are hidden. <b>This is the default
@@ -290,7 +314,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Holds value of property columnHeaderMode.
      */
-    private int columnHeaderMode = COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID;
+    private ColumnHeaderMode columnHeaderMode = ColumnHeaderMode.EXPLICIT_DEFAULTS_ID;
 
     /**
      * Should the Table footer be visible?
@@ -1397,7 +1421,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @return the Value of property columnHeaderMode.
      */
-    public int getColumnHeaderMode() {
+    public ColumnHeaderMode getColumnHeaderMode() {
         return columnHeaderMode;
     }
 
@@ -1407,10 +1431,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param columnHeaderMode
      *            the New value of property columnHeaderMode.
      */
-    public void setColumnHeaderMode(int columnHeaderMode) {
-        if (columnHeaderMode != this.columnHeaderMode
-                && columnHeaderMode >= COLUMN_HEADER_MODE_HIDDEN
-                && columnHeaderMode <= COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID) {
+    public void setColumnHeaderMode(ColumnHeaderMode columnHeaderMode) {
+        if (columnHeaderMode != this.columnHeaderMode) {
             this.columnHeaderMode = columnHeaderMode;
             requestRepaint();
         }
