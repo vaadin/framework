@@ -16,6 +16,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.Table.ColumnGenerator;
+import com.vaadin.ui.Table.ColumnHeaderMode;
 import com.vaadin.ui.Table.ColumnResizeEvent;
 import com.vaadin.ui.Table.ColumnResizeListener;
 import com.vaadin.ui.Table.FooterClickEvent;
@@ -173,9 +174,9 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
         }
     };
-    private Command<T, Integer> columnHeaderModeCommand = new Command<T, Integer>() {
+    private Command<T, ColumnHeaderMode> columnHeaderModeCommand = new Command<T, ColumnHeaderMode>() {
 
-        public void execute(T c, Integer columnHeaderMode, Object data) {
+        public void execute(T c, ColumnHeaderMode columnHeaderMode, Object data) {
             c.setColumnHeaderMode(columnHeaderMode);
 
         }
@@ -476,13 +477,12 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     }
 
     private void createColumnHeaderMode(String category) {
-        LinkedHashMap<String, Integer> columnHeaderModeOptions = new LinkedHashMap<String, Integer>();
-        columnHeaderModeOptions.put("Hidden", Table.COLUMN_HEADER_MODE_HIDDEN);
-        columnHeaderModeOptions.put("Id", Table.COLUMN_HEADER_MODE_ID);
-        columnHeaderModeOptions.put("Explicit",
-                Table.COLUMN_HEADER_MODE_EXPLICIT);
+        LinkedHashMap<String, ColumnHeaderMode> columnHeaderModeOptions = new LinkedHashMap<String, ColumnHeaderMode>();
+        columnHeaderModeOptions.put("Hidden", ColumnHeaderMode.HIDDEN);
+        columnHeaderModeOptions.put("Id", ColumnHeaderMode.ID);
+        columnHeaderModeOptions.put("Explicit", ColumnHeaderMode.EXPLICIT);
         columnHeaderModeOptions.put("Explicit defaults id",
-                Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
+                ColumnHeaderMode.EXPLICIT_DEFAULTS_ID);
 
         createSelectAction("Column header mode", category,
                 columnHeaderModeOptions, "Explicit defaults id",
@@ -740,17 +740,17 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     }
 
     protected void createHeaderVisibilitySelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
-        options.put("Explicit", Table.COLUMN_HEADER_MODE_EXPLICIT);
+        LinkedHashMap<String, ColumnHeaderMode> options = new LinkedHashMap<String, ColumnHeaderMode>();
+        options.put("Explicit", ColumnHeaderMode.EXPLICIT);
         options.put("Explicit defaults id",
-                Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
-        options.put("Id", Table.COLUMN_HEADER_MODE_ID);
-        options.put("Hidden", Table.COLUMN_HEADER_MODE_HIDDEN);
+                ColumnHeaderMode.EXPLICIT_DEFAULTS_ID);
+        options.put("Id", ColumnHeaderMode.ID);
+        options.put("Hidden", ColumnHeaderMode.HIDDEN);
 
         createSelectAction("Header mode", category, options,
-                "Explicit defaults id", new Command<T, Integer>() {
+                "Explicit defaults id", new Command<T, ColumnHeaderMode>() {
 
-                    public void execute(T c, Integer value, Object data) {
+                    public void execute(T c, ColumnHeaderMode value, Object data) {
                         c.setColumnHeaderMode(value);
 
                     }
