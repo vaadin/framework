@@ -62,7 +62,7 @@
 	window.vaadin = window.vaadin || {
 		setDefaults: function(d) {
 			if (defaults) {
-				throw "Defaults already defined";
+				log("Ignoring new defaults as defaults have already been loaded");
 			}
 			log("Got defaults", d)
 			defaults = d;
