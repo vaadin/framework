@@ -63,6 +63,7 @@
 		setDefaults: function(d) {
 			if (defaults) {
 				log("Ignoring new defaults as defaults have already been loaded");
+				return;
 			}
 			log("Got defaults", d)
 			defaults = d;
