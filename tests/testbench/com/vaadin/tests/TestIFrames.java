@@ -6,6 +6,7 @@ package com.vaadin.tests;
 
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.VerticalLayout;
 
 public class TestIFrames extends CustomComponent {
@@ -31,7 +32,7 @@ public class TestIFrames extends CustomComponent {
         final int height = 250;
         final String iFrame = "<iframe height=\"" + height + "\" width=\""
                 + width + "\" src=\"" + URL + "\" />";
-        return new Label(iFrame, Label.CONTENT_XHTML);
+        return new Label(iFrame, ContentMode.XHTML);
     }
 
 }

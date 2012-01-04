@@ -10,6 +10,7 @@ import java.util.Random;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Select;
@@ -19,7 +20,7 @@ public class UsingObjectsInSelect extends
 
     private final Select select = new Select();
     private final Label selectedTask = new Label("Selected task",
-            Label.CONTENT_XHTML);
+            ContentMode.XHTML);
 
     public LinkedList<?> exampleTasks = new LinkedList<Object>();
 

@@ -10,6 +10,7 @@ import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.Root.LegacyWindow;
@@ -75,7 +76,7 @@ public class Ticket2279 extends Application.LegacyApplication {
         vl.setHeight("500px");
         vl.setStyleName("borders");
         label = new Label("<b>Error messages follows:</b><br/>",
-                Label.CONTENT_XHTML);
+                ContentMode.XHTML);
         vl.addComponent(label);
         layout.addComponent(vl);
 
@@ -86,7 +87,7 @@ public class Ticket2279 extends Application.LegacyApplication {
         gl.setHeight("500px");
         gl.setStyleName("borders");
         label = new Label("<b>Error messages follows:</b><br/>",
-                Label.CONTENT_XHTML);
+                ContentMode.XHTML);
         gl.addComponent(label);
         layout.addComponent(gl);
 

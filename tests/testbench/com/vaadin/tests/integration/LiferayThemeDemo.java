@@ -26,6 +26,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.MenuBar;
@@ -131,7 +132,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         l.setMargin(true);
         l.setCaption("Labels");
 
-        l.addComponent(new Label("Normal Label", Label.CONTENT_XHTML));
+        l.addComponent(new Label("Normal Label", ContentMode.XHTML));
         l.addComponent(new Label(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit."));
         return l;
@@ -212,12 +213,12 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         l.setWidth("400px");
         l.setColumnExpandRatio(0, 1);
 
-        l.addComponent(new Label("Normal TextField", Label.CONTENT_XHTML));
+        l.addComponent(new Label("Normal TextField", ContentMode.XHTML));
         TextField tf = new TextField();
         tf.setInputPrompt("Enter text");
         l.addComponent(tf);
 
-        l.addComponent(new Label("Normal TextArea", Label.CONTENT_XHTML));
+        l.addComponent(new Label("Normal TextArea", ContentMode.XHTML));
 
         TextArea ta = new TextArea();
         ta.setHeight("5em");
@@ -338,7 +339,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         l.setColumnExpandRatio(0, 2);
         l.setColumnExpandRatio(1, 5);
 
-        l.addComponent(new Label("Normal Panel", Label.CONTENT_XHTML));
+        l.addComponent(new Label("Normal Panel", ContentMode.XHTML));
 
         Panel p = new Panel("Normal Panel");
         p.setHeight("100px");
@@ -347,7 +348,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
 
         l.addComponent(new Label(
                 "Light Style (<code>LiferayTheme.PANEL_LIGHT</code>)",
-                Label.CONTENT_XHTML));
+                ContentMode.XHTML));
 
         Panel p2 = new Panel("Light Style Panel");
         p2.setStyleName(LiferayTheme.PANEL_LIGHT);
@@ -410,7 +411,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         w2.setPositionX(350);
         w2.setPositionY(160);
         w2.addComponent(new Label("<code>Window.setResizable(false)</code>",
-                Label.CONTENT_XHTML));
+                ContentMode.XHTML));
 
         tabs.addListener(new TabSheet.SelectedTabChangeListener() {
             public void selectedTabChange(SelectedTabChangeEvent event) {
@@ -441,7 +442,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         l.addComponent(lockCheckBox, 1, 0);
         l.newLine();
 
-        Label label = new Label("Normal SplitPanel", Label.CONTENT_XHTML);
+        Label label = new Label("Normal SplitPanel", ContentMode.XHTML);
         label.setWidth(null);
         l.addComponent(label);
         final HorizontalSplitPanel sp = new HorizontalSplitPanel();
@@ -454,7 +455,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
 
         label = new Label(
                 "Small Style<br />(<code>LiferayTheme.SPLITPANEL_SMALL</code>)",
-                Label.CONTENT_XHTML);
+                ContentMode.XHTML);
         label.setWidth(null);
         l.addComponent(label);
 
@@ -514,7 +515,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         l.setWidth("400px");
         l.setColumnExpandRatio(0, 1);
 
-        l.addComponent(new Label("Horizontal Slider", Label.CONTENT_XHTML));
+        l.addComponent(new Label("Horizontal Slider", ContentMode.XHTML));
         Slider s = new Slider();
         s.setWidth("200px");
         try {
@@ -525,7 +526,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         }
         l.addComponent(s);
 
-        l.addComponent(new Label("Vertical Slider", Label.CONTENT_XHTML));
+        l.addComponent(new Label("Vertical Slider", ContentMode.XHTML));
         s = new Slider();
         s.setOrientation(Slider.ORIENTATION_VERTICAL);
         s.setHeight("200px");
@@ -587,10 +588,10 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         message.setValue("Jumped over the lazy dog.");
         message.setWidth("15em");
 
-        l.addComponent(new Label("<h3>Type</h3>", Label.CONTENT_XHTML));
-        l.addComponent(new Label("<h3>Preview</h3>", Label.CONTENT_XHTML));
+        l.addComponent(new Label("<h3>Type</h3>", ContentMode.XHTML));
+        l.addComponent(new Label("<h3>Preview</h3>", ContentMode.XHTML));
 
-        l.addComponent(new Label("Humanized", Label.CONTENT_XHTML));
+        l.addComponent(new Label("Humanized", ContentMode.XHTML));
         Button show = new Button("Humanized Notification",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
@@ -603,7 +604,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
                 });
         l.addComponent(show);
 
-        l.addComponent(new Label("Warning", Label.CONTENT_XHTML));
+        l.addComponent(new Label("Warning", ContentMode.XHTML));
         show = new Button("Warning Notification", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 event.getButton()
@@ -615,7 +616,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         });
         l.addComponent(show);
 
-        l.addComponent(new Label("Error", Label.CONTENT_XHTML));
+        l.addComponent(new Label("Error", ContentMode.XHTML));
         show = new Button("Error Notification", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 event.getButton()
@@ -627,7 +628,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         });
         l.addComponent(show);
 
-        l.addComponent(new Label("Tray", Label.CONTENT_XHTML));
+        l.addComponent(new Label("Tray", ContentMode.XHTML));
         show = new Button("Tray Notification", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 event.getButton()

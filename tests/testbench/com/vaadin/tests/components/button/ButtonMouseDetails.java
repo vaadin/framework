@@ -4,10 +4,11 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 
 public class ButtonMouseDetails extends TestBase {
 
-    private Label out = new Label("", Label.CONTENT_PREFORMATTED);
+    private Label out = new Label("", ContentMode.PREFORMATTED);
 
     private int clickCounter = 1;
 

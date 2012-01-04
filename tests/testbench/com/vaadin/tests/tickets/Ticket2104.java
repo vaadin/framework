@@ -10,6 +10,7 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
@@ -18,7 +19,7 @@ public class Ticket2104 extends Application.LegacyApplication {
 
     private static final Label info = new Label(
             "Click event should _always_ come trough. Switching features on/off should immediatly affect the tree (verify w/ debug window)",
-            Label.CONTENT_RAW);
+            ContentMode.RAW);
 
     Tree tree = new Tree();
     Table table = new Table();

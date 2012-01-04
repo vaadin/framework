@@ -7,6 +7,7 @@ import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root.BrowserWindowResizeEvent;
 import com.vaadin.ui.Root.BrowserWindowResizeListener;
 import com.vaadin.ui.Root.LegacyWindow;
@@ -97,7 +98,7 @@ public class LazyWindowResize extends AbstractTestCase {
         mainWindow.addComponent(resizeListenerCheckBox);
         mainWindow.addComponent(immediateCheckBox);
         mainWindow.addComponent(log);
-        mainWindow.addComponent(new Label("<br/><br/>", Label.CONTENT_XHTML));
+        mainWindow.addComponent(new Label("<br/><br/>", ContentMode.XHTML));
         mainWindow.addComponent(new Label(LoremIpsum.get(10000)));
 
         setLazy(false);

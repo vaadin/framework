@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.VerticalLayout;
 
 public class Log extends VerticalLayout {
@@ -49,7 +50,7 @@ public class Log extends VerticalLayout {
     }
 
     private Label createEventLabel() {
-        Label l = new Label("&nbsp;", Label.CONTENT_XHTML);
+        Label l = new Label("&nbsp;", ContentMode.XHTML);
         l.setWidth(null);
         return l;
     }

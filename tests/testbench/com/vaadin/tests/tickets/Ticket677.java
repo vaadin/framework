@@ -15,6 +15,7 @@ import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
@@ -30,7 +31,7 @@ public class Ticket677 extends Application.LegacyApplication {
                     + "<li> focusing should fail (try tabbing as well) [worked previousy]"
                     + "<li> no variable changes should be sent from disabled fields [changed sent previously]"
                     + "<li> try further toggling and tabbing around",
-            Label.CONTENT_RAW);
+            ContentMode.RAW);
 
     Panel root = new Panel("Enabled");
     Panel one = new Panel("Enabled");

@@ -11,6 +11,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.VerticalLayout;
@@ -69,7 +70,7 @@ public class PopupViewOffScreen extends TestBase {
         Label l = new Label(
                 "<div style='width: 100%; height: 100%; background: " + bg
                         + "'>" + LoremIpsum.get(2000) + "</div>",
-                Label.CONTENT_XHTML);
+                ContentMode.XHTML);
         l.setSizeFull();
         p.addComponent(l);
         PopupView pv = new PopupView("Click here to popup", p);

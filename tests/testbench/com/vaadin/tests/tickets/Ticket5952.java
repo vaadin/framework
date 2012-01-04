@@ -2,6 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket5952 extends Application.LegacyApplication {
@@ -23,7 +24,7 @@ public class Ticket5952 extends Application.LegacyApplication {
                 + "      <mn>2</mn>"
                 + "    </msup>"
                 + "  </mrow>" + "</math>";
-        Label mathLabel = new Label(mathml, Label.CONTENT_XML);
+        Label mathLabel = new Label(mathml, ContentMode.XML);
         mainWindow.addComponent(mathLabel);
     }
 }

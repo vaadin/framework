@@ -10,6 +10,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.VerticalLayout;
 
 public class IconsInCaption extends TestBase {
@@ -103,7 +104,7 @@ public class IconsInCaption extends TestBase {
         ComponentContainer container = containerClass.newInstance();
         for (String size : sizes) {
             Label title = new Label("<h3>" + size + "x" + size + "</h3>",
-                    Label.CONTENT_XHTML);
+                    ContentMode.XHTML);
             container.addComponent(title);
             for (String icon : icons) {
                 ThemeResource res = new ThemeResource("../runo/icons/" + size

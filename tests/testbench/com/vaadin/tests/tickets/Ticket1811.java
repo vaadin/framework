@@ -8,6 +8,7 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
@@ -70,7 +71,7 @@ public class Ticket1811 extends com.vaadin.Application.LegacyApplication {
                 }
                 Window w = new Window("Status of the fields");
                 w.setModal(true);
-                w.addComponent(new Label(msg.toString(), Label.CONTENT_XHTML));
+                w.addComponent(new Label(msg.toString(), ContentMode.XHTML));
                 main.addWindow(w);
             }
         });

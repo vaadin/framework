@@ -13,6 +13,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
@@ -102,7 +103,7 @@ public class PerformanceTestBasicComponentRendering extends CustomComponent {
     }
 
     private void addInfo() {
-        main.addComponent(new Label(DESCRIPTION, Label.CONTENT_XHTML));
+        main.addComponent(new Label(DESCRIPTION, ContentMode.XHTML));
     }
 
 }

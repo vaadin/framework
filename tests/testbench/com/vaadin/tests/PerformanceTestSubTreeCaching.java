@@ -10,6 +10,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
@@ -86,7 +87,7 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
     }
 
     private void addInfo() {
-        main.addComponent(new Label(DESCRIPTION, Label.CONTENT_XHTML));
+        main.addComponent(new Label(DESCRIPTION, ContentMode.XHTML));
     }
 
 }

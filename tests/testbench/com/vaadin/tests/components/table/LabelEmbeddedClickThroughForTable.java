@@ -8,6 +8,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Table;
 
 public class LabelEmbeddedClickThroughForTable extends TestBase {
@@ -36,7 +37,7 @@ public class LabelEmbeddedClickThroughForTable extends TestBase {
         item.getItemProperty("Column 1").setValue("String A");
         item.getItemProperty("Column 2").setValue(new Label("Label A"));
         item.getItemProperty("Column 3").setValue(
-                new Label("<b>Label A</b>", Label.CONTENT_XHTML));
+                new Label("<b>Label A</b>", ContentMode.XHTML));
         item.getItemProperty("Column 4").setValue(
                 new Embedded("An embedded image", new ThemeResource(
                         "../runo/icons/32/ok.png")));
@@ -48,7 +49,7 @@ public class LabelEmbeddedClickThroughForTable extends TestBase {
                 .setValue(
                         new Label(
                                 "<a style=\"color: blue\" href=\"javascript:false\">Label A</a>",
-                                Label.CONTENT_XHTML));
+                                ContentMode.XHTML));
         item.getItemProperty("Column 4").setValue(
                 new Embedded("", new ThemeResource(
                         "../runo/icons/32/cancel.png")));

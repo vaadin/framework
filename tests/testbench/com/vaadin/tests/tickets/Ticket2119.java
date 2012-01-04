@@ -6,6 +6,7 @@ import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Select;
@@ -56,7 +57,7 @@ public class Ticket2119 extends Application.LegacyApplication {
                         + "  - Go to the second Window\n"
                         + "     - Click the arrow in the Select\n"
                         + "  --> The opened list correctly shows the new value but the old one is shown in the \"input\" part");
-        label.setContentMode(Label.CONTENT_PREFORMATTED);
+        label.setContentMode(ContentMode.PREFORMATTED);
         layout.addComponent(label);
 
         final Select select = new Select("Test Select");

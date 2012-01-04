@@ -24,6 +24,7 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.ItemStyleGenerator;
@@ -96,7 +97,7 @@ public class Components extends Application.LegacyApplication {
         naviLayout
                 .addComponent(new Label(
                         "Click to open a test case.<br/>Right click to open test in a new window<br/><br/>",
-                        Label.CONTENT_XHTML));
+                        ContentMode.XHTML));
         naviLayout.addComponent(createMenu());
         naviLayout.addComponent(createMissingTestsList());
 
@@ -107,7 +108,7 @@ public class Components extends Application.LegacyApplication {
         embeddingLayout
                 .addComponent(new Label(
                         "<b>Do not use the embedded version for creating automated tests. Open the test in a new window before recording.</b><br/>",
-                        Label.CONTENT_XHTML));
+                        ContentMode.XHTML));
         applicationEmbedder.setSizeFull();
         embeddingLayout.addComponent(applicationEmbedder);
         embeddingLayout.setExpandRatio(applicationEmbedder, 1);
@@ -130,7 +131,7 @@ public class Components extends Application.LegacyApplication {
                     + component.getSimpleName() + "</font><br/>";
         }
         return new Label("<b>Components without a test:</B><br/>"
-                + missingTests, Label.CONTENT_XHTML);
+                + missingTests, ContentMode.XHTML);
     }
 
     private Component createMenu() {

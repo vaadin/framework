@@ -22,6 +22,7 @@ import com.vaadin.terminal.gwt.server.PortletApplicationContext2;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext2.PortletListener;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Root;
@@ -54,7 +55,7 @@ public class JSR286PortletApplication extends Application.LegacyApplication {
         main.addComponent(specialNameResourceTest);
 
         userInfo.setCaption("User info");
-        userInfo.setContentMode(Label.CONTENT_PREFORMATTED);
+        userInfo.setContentMode(ContentMode.PREFORMATTED);
         main.addComponent(userInfo);
 
         tf.setEnabled(false);

@@ -14,6 +14,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.PopupDateField;
 
 @SuppressWarnings("serial")
@@ -36,7 +37,7 @@ public class DateFieldEmptyValid extends TestBase {
 
     @Override
     protected void setup() {
-        addComponent(new Label("<br/><br/>", Label.CONTENT_XHTML));
+        addComponent(new Label("<br/><br/>", ContentMode.XHTML));
         log = new Log(8);
         addComponent(log);
         df = new MyDateField();

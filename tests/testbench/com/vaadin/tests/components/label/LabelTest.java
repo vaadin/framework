@@ -7,6 +7,7 @@ import java.util.List;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 
 public class LabelTest extends AbstractComponentTest<Label> implements
         ValueChangeListener {
@@ -29,8 +30,8 @@ public class LabelTest extends AbstractComponentTest<Label> implements
         }
     };
 
-    private Command<Label, Integer> contentModeCommand = new Command<Label, Integer>() {
-        public void execute(Label c, Integer value, Object data) {
+    private Command<Label, ContentMode> contentModeCommand = new Command<Label, ContentMode>() {
+        public void execute(Label c, ContentMode value, Object data) {
             c.setContentMode(value);
         }
     };
@@ -68,13 +69,14 @@ public class LabelTest extends AbstractComponentTest<Label> implements
 
     @SuppressWarnings("deprecation")
     private void createContentModeSelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
-        options.put("Text", Label.CONTENT_TEXT);
-        options.put("Preformatted", Label.CONTENT_PREFORMATTED);
-        options.put("Raw", Label.CONTENT_RAW);
-        options.put("UIDL", Label.CONTENT_UIDL);
-        options.put("XHTML", Label.CONTENT_XHTML);
-        options.put("XML", Label.CONTENT_XML);
+        LinkedHashMap<String, ContentMode> options = new LinkedHashMap<String, ContentMode>();
+        options.put("Text", ContentMode.TEXT);
+        options.put("Preformatted", ContentMode.PREFORMATTED);
+        options.put("Raw", ContentMode.RAW);
+        options.put("UIDL", ContentMode.XML); // Deprecated UIDL mode still used
+                                              // to avoid breaking old tests
+        options.put("XHTML", ContentMode.XHTML);
+        options.put("XML", ContentMode.XML);
 
         createSelectAction("Content mode", category, options, "Text",
                 contentModeCommand);

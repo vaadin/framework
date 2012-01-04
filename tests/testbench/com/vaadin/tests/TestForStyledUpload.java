@@ -19,6 +19,7 @@ import com.vaadin.terminal.StreamResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
@@ -163,11 +164,11 @@ public class TestForStyledUpload extends Application.LegacyApplication
                     "Upload finished, but output buffer is null!!"));
         } else {
             status.addComponent(new Label(
-                    "<b>Name:</b> " + event.getFilename(), Label.CONTENT_XHTML));
+                    "<b>Name:</b> " + event.getFilename(), ContentMode.XHTML));
             status.addComponent(new Label("<b>Mimetype:</b> "
-                    + event.getMIMEType(), Label.CONTENT_XHTML));
+                    + event.getMIMEType(), ContentMode.XHTML));
             status.addComponent(new Label("<b>Size:</b> " + event.getLength()
-                    + " bytes.", Label.CONTENT_XHTML));
+                    + " bytes.", ContentMode.XHTML));
 
             status.addComponent(new Link("Download " + buffer.getFileName(),
                     new StreamResource(buffer, buffer.getFileName(), this)));

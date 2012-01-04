@@ -16,8 +16,7 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
 /**
  * Label component for showing non-editable short texts.
  * 
- * The label content can be set to the modes specified by the final members
- * CONTENT_*
+ * The label content can be set to the modes specified by {@link ContentMode}
  * 
  * <p>
  * The contents of the label may contain simple formatting:
@@ -46,61 +45,159 @@ public class Label extends AbstractComponent implements Property,
         Property.ValueChangeNotifier, Comparable<Object> {
 
     /**
-     * Content mode, where the label contains only plain text. The getValue()
-     * result is coded to XML when painting.
-     */
-    public static final int CONTENT_TEXT = 0;
-
-    /**
-     * Content mode, where the label contains preformatted text.
-     */
-    public static final int CONTENT_PREFORMATTED = 1;
-
-    /**
-     * Formatted content mode, where the contents is XML restricted to the UIDL
-     * 1.0 formatting markups.
+     * Content modes defining how the client should interpret a Label's value.
      * 
-     * @deprecated Use CONTENT_XML instead.
+     * @sine 7.0
+     */
+    public enum ContentMode {
+        /**
+         * Content mode, where the label contains only plain text. The
+         * getValue() result is coded to XML when painting.
+         */
+        TEXT(null) {
+            @Override
+            public void paintText(String text, PaintTarget target)
+                    throws PaintException {
+                target.addText(text);
+            }
+        },
+
+        /**
+         * Content mode, where the label contains preformatted text.
+         */
+        PREFORMATTED("pre") {
+            @Override
+            public void paintText(String text, PaintTarget target)
+                    throws PaintException {
+                target.startTag("pre");
+                target.addText(text);
+                target.endTag("pre");
+            }
+        },
+
+        /**
+         * Content mode, where the label contains XHTML. Contents is then
+         * enclosed in DIV elements having namespace of
+         * "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd".
+         */
+        XHTML("xhtml") {
+            @Override
+            public void paintText(String text, PaintTarget target)
+                    throws PaintException {
+                target.startTag("data");
+                target.addXMLSection("div", text,
+                        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd");
+                target.endTag("data");
+            }
+        },
+
+        /**
+         * Content mode, where the label contains well-formed or well-balanced
+         * XML. Each of the root elements must have their default namespace
+         * specified.
+         */
+        XML("xml") {
+            @Override
+            public void paintText(String text, PaintTarget target)
+                    throws PaintException {
+                target.addXMLSection("data", text, null);
+            }
+        },
+
+        /**
+         * Content mode, where the label contains RAW output. Output is not
+         * required to comply to with XML. In Web Adapter output is inserted
+         * inside the resulting HTML document as-is. This is useful for some
+         * specific purposes where possibly broken HTML content needs to be
+         * shown, but in most cases XHTML mode should be preferred.
+         */
+        RAW("raw") {
+            @Override
+            public void paintText(String text, PaintTarget target)
+                    throws PaintException {
+                target.startTag("data");
+                target.addAttribute("escape", false);
+                target.addText(text);
+                target.endTag("data");
+            }
+        };
+
+        private final String uidlName;
+
+        /**
+         * The default content mode is text
+         */
+        public static ContentMode DEFAULT = TEXT;
+
+        private ContentMode(String uidlName) {
+            this.uidlName = uidlName;
+        }
+
+        /**
+         * Gets the name representing this content mode in UIDL messages
+         * 
+         * @return the UIDL name of this content mode
+         */
+        public String getUidlName() {
+            return uidlName;
+        }
+
+        /**
+         * Adds the text value to a {@link PaintTarget} according to this
+         * content mode
+         * 
+         * @param text
+         *            the text to add
+         * @param target
+         *            the paint target to add the value to
+         * @throws PaintException
+         *             if the paint operation failed
+         */
+        public abstract void paintText(String text, PaintTarget target)
+                throws PaintException;
+    }
+
+    /**
+     * @deprecated From 7.0, use {@link ContentMode#TEXT} instead
      */
     @Deprecated
-    public static final int CONTENT_UIDL = 2;
+    public static final ContentMode CONTENT_TEXT = ContentMode.TEXT;
 
     /**
-     * Content mode, where the label contains XHTML. Contents is then enclosed
-     * in DIV elements having namespace of
-     * "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd".
+     * @deprecated From 7.0, use {@link ContentMode#PREFORMATTED} instead
      */
-    public static final int CONTENT_XHTML = 3;
+    @Deprecated
+    public static final ContentMode CONTENT_PREFORMATTED = ContentMode.PREFORMATTED;
 
     /**
-     * Content mode, where the label contains well-formed or well-balanced XML.
-     * Each of the root elements must have their default namespace specified.
+     * @deprecated From 7.0, use {@link ContentMode#XHTML} instead
      */
-    public static final int CONTENT_XML = 4;
+    @Deprecated
+    public static final ContentMode CONTENT_XHTML = ContentMode.XHTML;
 
     /**
-     * Content mode, where the label contains RAW output. Output is not required
-     * to comply to with XML. In Web Adapter output is inserted inside the
-     * resulting HTML document as-is. This is useful for some specific purposes
-     * where possibly broken HTML content needs to be shown, but in most cases
-     * XHTML mode should be preferred.
+     * @deprecated From 7.0, use {@link ContentMode#XML} instead
      */
-    public static final int CONTENT_RAW = 5;
+    @Deprecated
+    public static final ContentMode CONTENT_XML = ContentMode.XML;
 
     /**
-     * The default content mode is plain text.
+     * @deprecated From 7.0, use {@link ContentMode#RAW} instead
      */
-    public static final int CONTENT_DEFAULT = CONTENT_TEXT;
+    @Deprecated
+    public static final ContentMode CONTENT_RAW = ContentMode.RAW;
 
-    /** Array of content mode names that are rendered in UIDL as mode attribute. */
-    private static final String[] CONTENT_MODE_NAME = { "text", "pre", "uidl",
-            "xhtml", "xml", "raw" };
+    /**
+     * @deprecated From 7.0, use {@link ContentMode#DEFAULT} instead
+     */
+    @Deprecated
+    public static final ContentMode CONTENT_DEFAULT = ContentMode.DEFAULT;
 
     private static final String DATASOURCE_MUST_BE_SET = "Datasource must be set";
 
     private Property dataSource;
 
-    private int contentMode = CONTENT_DEFAULT;
+    private ContentMode contentMode = ContentMode.DEFAULT;
 
     /**
      * Creates an empty Label.
@@ -115,7 +212,7 @@ public class Label extends AbstractComponent implements Property,
      * @param content
      */
     public Label(String content) {
-        this(content, CONTENT_DEFAULT);
+        this(content, ContentMode.DEFAULT);
     }
 
     /**
@@ -125,7 +222,7 @@ public class Label extends AbstractComponent implements Property,
      * @param contentSource
      */
     public Label(Property contentSource) {
-        this(contentSource, CONTENT_DEFAULT);
+        this(contentSource, ContentMode.DEFAULT);
     }
 
     /**
@@ -134,7 +231,7 @@ public class Label extends AbstractComponent implements Property,
      * @param content
      * @param contentMode
      */
-    public Label(String content, int contentMode) {
+    public Label(String content, ContentMode contentMode) {
         this(new ObjectProperty<String>(content, String.class), contentMode);
     }
 
@@ -145,9 +242,9 @@ public class Label extends AbstractComponent implements Property,
      * @param contentSource
      * @param contentMode
      */
-    public Label(Property contentSource, int contentMode) {
+    public Label(Property contentSource, ContentMode contentMode) {
         setPropertyDataSource(contentSource);
-        if (contentMode != CONTENT_DEFAULT) {
+        if (contentMode != ContentMode.DEFAULT) {
             setContentMode(contentMode);
         }
         setWidth(100, UNITS_PERCENTAGE);
@@ -163,30 +260,11 @@ public class Label extends AbstractComponent implements Property,
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        if (contentMode != CONTENT_TEXT) {
-            target.addAttribute("mode", CONTENT_MODE_NAME[contentMode]);
+        String uidlName = contentMode.getUidlName();
+        if (uidlName != null) {
+            target.addAttribute("mode", uidlName);
         }
-        if (contentMode == CONTENT_TEXT) {
-            target.addText(getStringValue());
-        } else if (contentMode == CONTENT_UIDL) {
-            target.addUIDL(getStringValue());
-        } else if (contentMode == CONTENT_XHTML) {
-            target.startTag("data");
-            target.addXMLSection("div", getStringValue(),
-                    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd");
-            target.endTag("data");
-        } else if (contentMode == CONTENT_PREFORMATTED) {
-            target.startTag("pre");
-            target.addText(getStringValue());
-            target.endTag("pre");
-        } else if (contentMode == CONTENT_XML) {
-            target.addXMLSection("data", getStringValue(), null);
-        } else if (contentMode == CONTENT_RAW) {
-            target.startTag("data");
-            target.addAttribute("escape", false);
-            target.addText(getStringValue());
-            target.endTag("data");
-        }
+        contentMode.paintText(getStringValue(), target);
 
     }
 
@@ -300,67 +378,27 @@ public class Label extends AbstractComponent implements Property,
     /**
      * Gets the content mode of the Label.
      * 
-     * <p>
-     * Possible content modes include:
-     * <ul>
-     * <li><b>CONTENT_TEXT</b> Content mode, where the label contains only plain
-     * text. The getValue() result is coded to XML when painting.</li>
-     * <li><b>CONTENT_PREFORMATTED</b> Content mode, where the label contains
-     * preformatted text.</li>
-     * <li><b>CONTENT_UIDL</b> Formatted content mode, where the contents is XML
-     * restricted to the UIDL 1.0 formatting markups.</li>
-     * <li><b>CONTENT_XHTML</b> Content mode, where the label contains XHTML.
-     * Contents is then enclosed in DIV elements having namespace of
-     * "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd".</li>
-     * <li><b>CONTENT_XML</b> Content mode, where the label contains well-formed
-     * or well-balanced XML. Each of the root elements must have their default
-     * namespace specified.</li>
-     * <li><b>CONTENT_RAW</b> Content mode, where the label contains RAW output.
-     * Output is not required to comply to with XML. In Web Adapter output is
-     * inserted inside the resulting HTML document as-is. This is useful for
-     * some specific purposes where possibly broken HTML content needs to be
-     * shown, but in most cases XHTML mode should be preferred.</li>
-     * </ul>
-     * </p>
-     * 
      * @return the Content mode of the label.
+     * 
+     * @see ContentMode
      */
-    public int getContentMode() {
+    public ContentMode getContentMode() {
         return contentMode;
     }
 
     /**
      * Sets the content mode of the Label.
      * 
-     * <p>
-     * Possible content modes include:
-     * <ul>
-     * <li><b>CONTENT_TEXT</b> Content mode, where the label contains only plain
-     * text. The getValue() result is coded to XML when painting.</li>
-     * <li><b>CONTENT_PREFORMATTED</b> Content mode, where the label contains
-     * preformatted text.</li>
-     * <li><b>CONTENT_UIDL</b> Formatted content mode, where the contents is XML
-     * restricted to the UIDL 1.0 formatting markups.</li>
-     * <li><b>CONTENT_XHTML</b> Content mode, where the label contains XHTML.
-     * Contents is then enclosed in DIV elements having namespace of
-     * "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd".</li>
-     * <li><b>CONTENT_XML</b> Content mode, where the label contains well-formed
-     * or well-balanced XML. Each of the root elements must have their default
-     * namespace specified.</li>
-     * <li><b>CONTENT_RAW</b> Content mode, where the label contains RAW output.
-     * Output is not required to comply to with XML. In Web Adapter output is
-     * inserted inside the resulting HTML document as-is. This is useful for
-     * some specific purposes where possibly broken HTML content needs to be
-     * shown, but in most cases XHTML mode should be preferred.</li>
-     * </ul>
-     * </p>
-     * 
      * @param contentMode
      *            the New content mode of the label.
+     * 
+     * @see ContentMode
      */
-    public void setContentMode(int contentMode) {
-        if (contentMode != this.contentMode && contentMode >= CONTENT_TEXT
-                && contentMode <= CONTENT_RAW) {
+    public void setContentMode(ContentMode contentMode) {
+        if (contentMode == null) {
+            throw new IllegalArgumentException("Content mode can not be null");
+        }
+        if (contentMode != this.contentMode) {
             this.contentMode = contentMode;
             requestRepaint();
         }
@@ -480,17 +518,15 @@ public class Label extends AbstractComponent implements Property,
         String thisValue;
         String otherValue;
 
-        if (contentMode == CONTENT_XML || contentMode == CONTENT_UIDL
-                || contentMode == CONTENT_XHTML) {
+        if (contentMode == ContentMode.XML || contentMode == ContentMode.XHTML) {
             thisValue = stripTags(getStringValue());
         } else {
             thisValue = getStringValue();
         }
 
         if (other instanceof Label
-                && (((Label) other).getContentMode() == CONTENT_XML
-                        || ((Label) other).getContentMode() == CONTENT_UIDL || ((Label) other)
-                        .getContentMode() == CONTENT_XHTML)) {
+                && (((Label) other).getContentMode() == ContentMode.XML || ((Label) other)
+                        .getContentMode() == ContentMode.XHTML)) {
             otherValue = stripTags(((Label) other).getStringValue());
         } else {
             // TODO not a good idea - and might assume that Field.toString()

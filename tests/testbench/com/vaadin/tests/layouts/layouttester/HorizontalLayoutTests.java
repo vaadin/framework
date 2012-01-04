@@ -14,6 +14,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Select;
@@ -114,7 +115,7 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
 
         final AbstractComponent c1 = new Button("BUTTON");
         final AbstractComponent c2 = new Label("<b>LABEL</b>",
-                Label.CONTENT_XHTML);
+                ContentMode.XHTML);
         final AbstractComponent c3 = new Table("TABLE");
         c3.setHeight("100px");
         c3.setWidth("100%");

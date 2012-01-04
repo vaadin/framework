@@ -4,6 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.tests.TestForTablesInitialColumnWidthLogicRendering;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
@@ -45,7 +46,7 @@ public class Ticket1225 extends Application.LegacyApplication {
 
         Label red = new Label(
                 "<div style='background:red;width:100%;height:100%;'>??</div>",
-                Label.CONTENT_XHTML);
+                ContentMode.XHTML);
         // red.setCaption("cap");
         // red.setSizeFull();
 
@@ -58,7 +59,7 @@ public class Ticket1225 extends Application.LegacyApplication {
         ts.getTab(red).setCaption("REd tab");
 
         Label l = new Label("<div style='background:blue;'>sdf</div>",
-                Label.CONTENT_XHTML);
+                ContentMode.XHTML);
         el.addComponent(l);
         el.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
 

@@ -3,6 +3,7 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 
@@ -36,7 +37,7 @@ public class Ticket2240 extends Application.LegacyApplication {
         layout.setStyleName("borders");
         // layout.setSizeFull();
         final Label l = new Label(txt);
-        l.setContentMode(Label.CONTENT_XHTML);
+        l.setContentMode(ContentMode.XHTML);
         // l.setWidth("100%");
 
         TextField tf = new TextField("This is a textField");
