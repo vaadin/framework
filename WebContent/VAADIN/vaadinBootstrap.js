@@ -100,9 +100,15 @@
 						url += '/';
 					}
 				}
-				// Root id
 				url += ((/\?/).test(url) ? "&" : "?") + "browserDetails";
-				url += '&rootId=' + getConfig('rootId');
+				var rootId = getConfig("rootId");
+				if (rootId !== undefined) {
+					url += "&rootId=" + rootId;
+				}
+
+				url += '&initialPath=' + encodeURIComponent(getConfig("initialPath"));
+				url += '&initialParams=' + encodeURIComponent(JSON.stringify(getConfig("initialParams")));
+				
 				url += '&' + vaadin.getBrowserDetailsParameters(appId); 
 				
 				// Timestamp to avoid caching
@@ -122,7 +128,6 @@
 									config[property] = updatedConfig[property];
 								}
 							}
-							config.initPending = false;
 							
 							// Try bootstrapping again, this time without fetching missing info
 							bootstrapApp(false);
@@ -143,8 +148,7 @@
 			apps[appId] = app;
 			
 			if (!window.name) {
-				var rootId = getConfig('rootId');
-				window.name =  appId + '-' + rootId;
+				window.name =  appId + '-' + Math.random();
 			}
 			
 			var bootstrapApp = function(mayDefer) {
@@ -155,12 +159,11 @@
 				
 				var widgetsetBase = getConfig('widgetsetBase');
 				var widgetset = getConfig('widgetset');
-				var initPending = getConfig('initPending');
 				if (widgetset && widgetsetBase) {
 					loadWidgetset(widgetsetBase, widgetset);
 				}
 				
-				if (initPending) {
+				if (getConfig('uidl') === undefined) {
 					if (mayDefer) {
 						fetchRootConfig();
 					} else {

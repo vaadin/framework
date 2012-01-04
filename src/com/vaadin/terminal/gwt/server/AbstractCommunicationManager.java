@@ -1986,11 +1986,9 @@ public abstract class AbstractCommunicationManager implements
         // shortly, and we should send the initial UIDL
         boolean sendUIDL = Root.getCurrentRoot() == null;
 
-        // TODO Handle npe if id has not been registered
-        CombinedRequest combinedRequest = application
-                .getCombinedRequest(request);
-
         try {
+            CombinedRequest combinedRequest = new CombinedRequest(request);
+
             Root root = application.getRootForRequest(combinedRequest);
             response.setContentType("application/json; charset=UTF-8");
 

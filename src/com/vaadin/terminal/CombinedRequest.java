@@ -7,10 +7,15 @@ package com.vaadin.terminal;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
 import com.vaadin.Application;
+import com.vaadin.external.json.JSONArray;
+import com.vaadin.external.json.JSONException;
+import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.terminal.gwt.server.WebBrowser;
 
@@ -26,8 +31,7 @@ import com.vaadin.terminal.gwt.server.WebBrowser;
 public class CombinedRequest implements WrappedRequest {
 
     private final WrappedRequest secondRequest;
-    private final Map<String, String[]> parameterMap;
-    private final String pathInfo;
+    private Map<String, String[]> parameterMap;
 
     /**
      * Creates a new combined request based on the second request and some
@@ -36,20 +40,31 @@ public class CombinedRequest implements WrappedRequest {
      * @param secondRequest
      *            the second request which will be used as the foundation of the
      *            combined request
-     * @param parameterMap
-     *            the parameter map from the first request
-     * @param pathInfo
-     *            the path info from string the first request
+     * @throws JSONException
+     *             if the initialParams parameter can not be decoded
      */
-    public CombinedRequest(WrappedRequest secondRequest,
-            Map<String, String[]> parameterMap, String pathInfo) {
+    public CombinedRequest(WrappedRequest secondRequest) throws JSONException {
         this.secondRequest = secondRequest;
-        this.parameterMap = parameterMap;
-        this.pathInfo = pathInfo;
+
+        HashMap<String, String[]> map = new HashMap<String, String[]>();
+        JSONObject initialParams = new JSONObject(
+                secondRequest.getParameter("initialParams"));
+        for (Iterator<?> keys = initialParams.keys(); keys.hasNext();) {
+            String name = (String) keys.next();
+            JSONArray jsonValues = initialParams.getJSONArray(name);
+            String[] values = new String[jsonValues.length()];
+            for (int i = 0; i < values.length; i++) {
+                values[i] = jsonValues.getString(i);
+            }
+            map.put(name, values);
+        }
+
+        parameterMap = Collections.unmodifiableMap(map);
+
     }
 
     public String getParameter(String parameter) {
-        String[] strings = parameterMap.get(parameter);
+        String[] strings = getParameterMap().get(parameter);
         if (strings == null || strings.length == 0) {
             return null;
         } else {
@@ -58,7 +73,7 @@ public class CombinedRequest implements WrappedRequest {
     }
 
     public Map<String, String[]> getParameterMap() {
-        return Collections.unmodifiableMap(parameterMap);
+        return parameterMap;
     }
 
     public int getContentLength() {
@@ -78,7 +93,7 @@ public class CombinedRequest implements WrappedRequest {
     }
 
     public String getRequestPathInfo() {
-        return pathInfo;
+        return secondRequest.getParameter("initialPath");
     }
 
     public int getSessionMaxInactiveInterval() {

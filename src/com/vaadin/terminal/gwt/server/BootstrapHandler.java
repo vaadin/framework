@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.io.Writer;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,7 +32,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         private final WrappedResponse response;
         private final WrappedRequest request;
         private final Application application;
-        private final int rootId;
+        private final Integer rootId;
 
         private Writer writer;
         private Root root;
@@ -42,7 +43,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         private boolean rootFetched = false;
 
         public BootstrapContext(WrappedResponse response,
-                WrappedRequest request, Application application, int rootId) {
+                WrappedRequest request, Application application, Integer rootId) {
             this.response = response;
             this.request = request;
             this.application = application;
@@ -70,7 +71,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             return writer;
         }
 
-        public int getRootId() {
+        public Integer getRootId() {
             return rootId;
         }
 
@@ -116,7 +117,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             throws IOException {
 
         // TODO Should all urls be handled here?
-        int rootId;
+        Integer rootId = null;
         try {
             Root root = application.getRootForRequest(request);
             if (root == null) {
@@ -124,9 +125,9 @@ public abstract class BootstrapHandler implements RequestHandler {
                 return true;
             }
 
-            rootId = root.getRootId();
+            rootId = Integer.valueOf(root.getRootId());
         } catch (RootRequiresMoreInformationException e) {
-            rootId = application.registerPendingRoot(request);
+            // Just keep going without rootId
         }
 
         try {
@@ -139,7 +140,7 @@ public abstract class BootstrapHandler implements RequestHandler {
     }
 
     protected final void writeBootstrapPage(WrappedRequest request,
-            WrappedResponse response, Application application, int rootId)
+            WrappedResponse response, Application application, Integer rootId)
             throws IOException, JSONException {
 
         BootstrapContext context = createContext(request, response,
@@ -170,7 +171,7 @@ public abstract class BootstrapHandler implements RequestHandler {
     }
 
     public BootstrapContext createContext(WrappedRequest request,
-            WrappedResponse response, Application application, int rootId) {
+            WrappedResponse response, Application application, Integer rootId) {
         BootstrapContext context = new BootstrapContext(response, request,
                 application, rootId);
         return context;
@@ -350,11 +351,13 @@ public abstract class BootstrapHandler implements RequestHandler {
     protected JSONObject getApplicationParameters(BootstrapContext context)
             throws JSONException, PaintException {
         Application application = context.getApplication();
-        int rootId = context.getRootId();
+        Integer rootId = context.getRootId();
 
         JSONObject appConfig = new JSONObject();
 
-        appConfig.put(ApplicationConnection.ROOT_ID_PARAMETER, rootId);
+        if (rootId != null) {
+            appConfig.put(ApplicationConnection.ROOT_ID_PARAMETER, rootId);
+        }
 
         if (context.getThemeName() != null) {
             appConfig.put("themeUri",
@@ -368,8 +371,13 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         appConfig.put("widgetset", context.getWidgetsetName());
 
-        if (application.isRootInitPending(rootId)) {
-            appConfig.put("initPending", true);
+        if (rootId == null || application.isRootInitPending(rootId.intValue())) {
+            appConfig.put("initialPath", context.getRequest()
+                    .getRequestPathInfo());
+
+            Map<String, String[]> parameterMap = context.getRequest()
+                    .getParameterMap();
+            appConfig.put("initialParams", parameterMap);
         } else {
             // write the initial UIDL into the config
             appConfig.put("uidl",

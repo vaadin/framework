@@ -325,55 +325,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
     }
 
-    /**
-     * Helper class to keep track of the information from an initial request if
-     * another request is required before the <code>Root</code> can be
-     * initialized.
-     * 
-     * The saved information is then used together with information from the
-     * second request to create a {@link CombinedRequest} containing relevant
-     * parts from each request.
-     */
-    private static class PendingRootRequest implements Serializable {
-
-        private final Map<String, String[]> parameterMap;
-        private final String pathInfo;
-
-        /**
-         * Creates a new pending request from an initial request. This is done
-         * by saving the parameterMap and the pathInfo from the provided wrapped
-         * request.
-         * 
-         * @param request
-         *            the initial request from which the required data is
-         *            extracted
-         */
-        public PendingRootRequest(WrappedRequest request) {
-            // Create a defensive copy in case the Map instance is reused
-            parameterMap = new HashMap<String, String[]>(
-                    request.getParameterMap());
-            pathInfo = request.getRequestPathInfo();
-        }
-
-        /**
-         * Creates a new request by combining information from the initial
-         * request with information from the provided second request.
-         * 
-         * @param secondRequest
-         *            the second request, should contain the information
-         *            required for providing {@link BrowserDetails}
-         * @return a request providing a combined view of the information from
-         *         the two original requests
-         * 
-         * @see CombinedRequest#CombinedRequest(WrappedRequest, Map, String)
-         */
-        public CombinedRequest getCombinedRequest(
-                final WrappedRequest secondRequest) {
-            return new CombinedRequest(secondRequest,
-                    Collections.unmodifiableMap(parameterMap), pathInfo);
-        }
-    }
-
     private final static Logger logger = Logger.getLogger(Application.class
             .getName());
 
@@ -451,12 +402,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
     private Map<Integer, Root> roots = new HashMap<Integer, Root>();
 
     private boolean productionMode = true;
-
-    /**
-     * Keeps track of requests for which a root should be created once more
-     * information is available.
-     */
-    private Map<Integer, PendingRootRequest> pendingRoots = new HashMap<Integer, PendingRootRequest>();
 
     private final Map<String, Integer> retainOnRefreshRoots = new HashMap<String, Integer>();
 
@@ -2129,59 +2074,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
     }
 
     /**
-     * Registers a request that will lead to a root being created in a
-     * subsequent request. When the initial request does not contain all the
-     * information required to initialize a {@link Root}, some information from
-     * the initial request is still needed when processing a subsequent request
-     * containing the rest of the required information. By registering the
-     * initial request, it can be combined with the subsequent request using the
-     * root id returned by this method.
-     * 
-     * @param request
-     *            the initial request from which information is required when
-     *            the subsequent request is processed
-     * @return the root id that should be used to associate the passed request
-     *         with future requests related to the same Root
-     * 
-     * @see #getCombinedRequest(WrappedRequest)
-     * @see #getRoot(WrappedRequest)
-     * 
-     * @since 7.0
-     */
-    public int registerPendingRoot(WrappedRequest request) {
-        int rootId = nextRootId++;
-        pendingRoots.put(Integer.valueOf(rootId), new PendingRootRequest(
-                request));
-        return rootId;
-    }
-
-    /**
-     * Gets a request containing some aspects from the original request and some
-     * aspects from the current request. This is used during the two phase
-     * initialization of Roots with the first request registered using
-     * {@link #registerPendingRoot(WrappedRequest)}
-     * 
-     * @param request
-     *            the second request, should be sent from the bootstrap
-     *            javascript
-     * @return a request containing some aspects of the initial request and some
-     *         aspects from the current request
-     * 
-     * @see #registerPendingRoot(WrappedRequest)
-     * 
-     * @since 7.0
-     */
-    public CombinedRequest getCombinedRequest(WrappedRequest request) {
-        PendingRootRequest pendingRootRequest = pendingRoots
-                .get(getRootId(request));
-        if (pendingRootRequest == null) {
-            return null;
-        } else {
-            return pendingRootRequest.getCombinedRequest(request);
-        }
-    }
-
-    /**
      * Finds the {@link Root} to which a particular request belongs. If the
      * request originates from an existing Root, that root is returned. In other
      * cases, the method attempts to create and initialize a new root and might
@@ -2219,11 +2111,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
             BrowserDetails browserDetails = request.getBrowserDetails();
             boolean hasBrowserDetails = browserDetails != null
                     && browserDetails.getUriFragment() != null;
-
-            if (hasBrowserDetails) {
-                // Don't wait for a second request any more
-                pendingRoots.remove(rootId);
-            }
 
             root = roots.get(rootId);
 
@@ -2269,9 +2156,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
                 boolean initRequiresBrowserDetails = isRootPreserved()
                         || !root.getClass()
                                 .isAnnotationPresent(EagerInit.class);
-                if (initRequiresBrowserDetails && !hasBrowserDetails) {
-                    pendingRoots.put(rootId, new PendingRootRequest(request));
-                } else {
+                if (!initRequiresBrowserDetails || hasBrowserDetails) {
                     root.doInit(request);
 
                     // Remember that this root has been initialized
