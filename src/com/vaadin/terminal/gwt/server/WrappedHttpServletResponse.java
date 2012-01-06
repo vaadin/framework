@@ -4,11 +4,8 @@
 
 package com.vaadin.terminal.gwt.server;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.WrappedResponse;
@@ -22,9 +19,9 @@ import com.vaadin.terminal.WrappedResponse;
  * @see WrappedResponse
  * @see WrappedHttpServletRequest
  */
-public class WrappedHttpServletResponse implements WrappedResponse {
+public class WrappedHttpServletResponse extends HttpServletResponseWrapper
+        implements WrappedResponse {
 
-    private final HttpServletResponse response;
     private DeploymentConfiguration deploymentConfiguration;
 
     /**
@@ -37,12 +34,8 @@ public class WrappedHttpServletResponse implements WrappedResponse {
      */
     public WrappedHttpServletResponse(HttpServletResponse response,
             DeploymentConfiguration deploymentConfiguration) {
-        this.response = response;
+        super(response);
         this.deploymentConfiguration = deploymentConfiguration;
-    }
-
-    public OutputStream getOutputStream() throws IOException {
-        return response.getOutputStream();
     }
 
     /**
@@ -51,23 +44,7 @@ public class WrappedHttpServletResponse implements WrappedResponse {
      * @return the unwrapped response
      */
     public HttpServletResponse getHttpServletResponse() {
-        return response;
-    }
-
-    public void setContentType(String type) {
-        response.setContentType(type);
-    }
-
-    public PrintWriter getWriter() throws IOException {
-        return response.getWriter();
-    }
-
-    public void setStatus(int responseStatus) {
-        response.setStatus(responseStatus);
-    }
-
-    public void setHeader(String name, String value) {
-        response.setHeader(name, value);
+        return this;
     }
 
     public void setCacheTime(long milliseconds) {
@@ -88,14 +65,6 @@ public class WrappedHttpServletResponse implements WrappedResponse {
             // Required to apply caching in some Tomcats
             response.setHeader("Pragma", "cache");
         }
-    }
-
-    public void setDateHeader(String name, long timestamp) {
-        response.setDateHeader(name, timestamp);
-    }
-
-    public void sendError(int errorCode, String message) throws IOException {
-        response.sendError(errorCode, message);
     }
 
     public DeploymentConfiguration getDeploymentConfiguration() {

@@ -260,8 +260,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
                 getDeploymentConfiguration()) {
             @Override
             public String getRequestPathInfo() {
-                return ApplicationRunnerServlet.this
-                        .getRequestPathInfo(getHttpServletRequest());
+                return ApplicationRunnerServlet.this.getRequestPathInfo(this);
             }
         };
     }
