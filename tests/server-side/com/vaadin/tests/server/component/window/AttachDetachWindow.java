@@ -3,61 +3,36 @@ package com.vaadin.tests.server.component.window;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Test;
+
 import com.vaadin.Application;
-import com.vaadin.ui.Component;
+import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-import org.junit.Test;
-
 public class AttachDetachWindow {
 
-    private Application testApp = new Application() {
-        @Override
-        public void init() {
-        }
-    };
+    private Application testApp = new Application();
 
-    private class TestWindow extends Window {
+    private interface TestContainer {
+        public boolean attachCalled();
+
+        public boolean detachCalled();
+
+        public TestContent getTestContent();
+
+        public Application getApplication();
+    }
+
+    private class TestWindow extends Window implements TestContainer {
         boolean windowAttachCalled = false;
-        boolean contentAttachCalled = false;
-        boolean childAttachCalled = false;
         boolean windowDetachCalled = false;
-        boolean contentDetachCalled = false;
-        boolean childDetachCalled = false;
+        private TestContent testContent = new TestContent();;
 
         TestWindow() {
-            setContent(new VerticalLayout() {
-                @Override
-                public void attach() {
-                    super.attach();
-                    contentAttachCalled = true;
-                }
-
-                @Override
-                public void detach() {
-                    super.detach();
-                    contentDetachCalled = true;
-                }
-            });
-            addComponent(new Label() {
-                @Override
-                public void attach() {
-                    super.attach();
-                    childAttachCalled = true;
-                }
-
-                @Override
-                public void detach() {
-                    super.detach();
-                    childDetachCalled = true;
-                }
-            });
-        }
-
-        Component getChild() {
-            return getComponentIterator().next();
+            setContent(testContent);
         }
 
         @Override
@@ -71,9 +46,97 @@ public class AttachDetachWindow {
             super.detach();
             windowDetachCalled = true;
         }
+
+        public boolean attachCalled() {
+            return windowAttachCalled;
+        }
+
+        public boolean detachCalled() {
+            return windowDetachCalled;
+        }
+
+        public TestContent getTestContent() {
+            return testContent;
+        }
     }
 
-    TestWindow main = new TestWindow();
+    private class TestContent extends VerticalLayout {
+        boolean contentDetachCalled = false;
+        boolean childDetachCalled = false;
+        boolean contentAttachCalled = false;
+        boolean childAttachCalled = false;
+
+        private Label child = new Label() {
+            @Override
+            public void attach() {
+                super.attach();
+                childAttachCalled = true;
+            }
+
+            @Override
+            public void detach() {
+                super.detach();
+                childDetachCalled = true;
+            }
+        };
+
+        public TestContent() {
+            addComponent(child);
+        }
+
+        @Override
+        public void attach() {
+            super.attach();
+            contentAttachCalled = true;
+        }
+
+        @Override
+        public void detach() {
+            super.detach();
+            contentDetachCalled = true;
+        }
+    }
+
+    private class TestRoot extends Root implements TestContainer {
+        boolean rootAttachCalled = false;
+        boolean rootDetachCalled = false;
+        private TestContent testContent = new TestContent();;
+
+        public TestRoot() {
+            setContent(testContent);
+        }
+
+        @Override
+        protected void init(WrappedRequest request) {
+            // Do nothing
+        }
+
+        public boolean attachCalled() {
+            return rootAttachCalled;
+        }
+
+        public boolean detachCalled() {
+            return rootDetachCalled;
+        }
+
+        public TestContent getTestContent() {
+            return testContent;
+        }
+
+        @Override
+        public void attach() {
+            super.attach();
+            rootAttachCalled = true;
+        }
+
+        @Override
+        public void detach() {
+            super.detach();
+            rootDetachCalled = true;
+        }
+    }
+
+    TestRoot main = new TestRoot();
     TestWindow sub = new TestWindow();
 
     @Test
@@ -86,7 +149,7 @@ public class AttachDetachWindow {
         assertUnattached(sub);
 
         // attaching main should recurse to sub
-        testApp.setMainWindow(main);
+        main.setApplication(testApp);
         assertAttached(main);
         assertAttached(sub);
     }
@@ -96,7 +159,7 @@ public class AttachDetachWindow {
         assertUnattached(main);
         assertUnattached(sub);
 
-        testApp.setMainWindow(main);
+        main.setApplication(testApp);
         assertAttached(main);
         assertUnattached(sub);
 
@@ -108,7 +171,7 @@ public class AttachDetachWindow {
 
     @Test
     public void removeSubWindowBeforeDetachingMainWindow() {
-        testApp.addWindow(main);
+        main.setApplication(testApp);
         main.addWindow(sub);
 
         // sub should be detached when removing from attached main
@@ -117,18 +180,18 @@ public class AttachDetachWindow {
         assertDetached(sub);
 
         // main detach should recurse to sub
-        testApp.removeWindow(main);
+        main.setApplication(null);
         assertDetached(main);
         assertDetached(sub);
     }
 
     @Test
     public void removeSubWindowAfterDetachingMainWindow() {
-        testApp.addWindow(main);
+        main.setApplication(testApp);
         main.addWindow(sub);
 
         // main detach should recurse to sub
-        testApp.removeWindow(main);
+        main.setApplication(null);
         assertDetached(main);
         assertDetached(sub);
 
@@ -141,27 +204,31 @@ public class AttachDetachWindow {
      * Asserts that win and its children are attached to testApp and their
      * attach() methods have been called.
      */
-    private void assertAttached(TestWindow win) {
-        assertTrue("window attach not called", win.windowAttachCalled);
-        assertTrue("window content attach not called", win.contentAttachCalled);
-        assertTrue("window child attach not called", win.childAttachCalled);
+    private void assertAttached(TestContainer win) {
+        TestContent testContent = win.getTestContent();
+        
+        assertTrue("window attach not called", win.attachCalled());
+        assertTrue("window content attach not called",
+                testContent.contentAttachCalled);
+        assertTrue("window child attach not called",
+                testContent.childAttachCalled);
 
         assertSame("window not attached", win.getApplication(), testApp);
-        assertSame("window content not attached", win.getContent()
-                .getApplication(), testApp);
-        assertSame("window children not attached", win.getChild()
-                .getApplication(), testApp);
+        assertSame("window content not attached", testContent.getApplication(),
+                testApp);
+        assertSame("window children not attached",
+                testContent.child.getApplication(), testApp);
     }
 
     /**
      * Asserts that win and its children are not attached.
      */
-    private void assertUnattached(TestWindow win) {
+    private void assertUnattached(TestContainer win) {
         assertSame("window not detached", win.getApplication(), null);
-        assertSame("window content not detached", win.getContent()
+        assertSame("window content not detached", win.getTestContent()
                 .getApplication(), null);
-        assertSame("window children not detached", win.getChild()
-                .getApplication(), null);
+        assertSame("window children not detached",
+                win.getTestContent().child.getApplication(), null);
     }
 
     /**
@@ -170,10 +237,12 @@ public class AttachDetachWindow {
      * 
      * @param win
      */
-    private void assertDetached(TestWindow win) {
+    private void assertDetached(TestContainer win) {
         assertUnattached(win);
-        assertTrue("window detach not called", win.windowDetachCalled);
-        assertTrue("window content detach not called", win.contentDetachCalled);
-        assertTrue("window child detach not called", win.childDetachCalled);
+        assertTrue("window detach not called", win.detachCalled());
+        assertTrue("window content detach not called",
+                win.getTestContent().contentDetachCalled);
+        assertTrue("window child detach not called",
+                win.getTestContent().childDetachCalled);
     }
 }

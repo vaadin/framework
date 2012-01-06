@@ -12,6 +12,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Window;
 
 public class AttachShouldBeCalledForSubWindows extends AbstractTestCase
@@ -25,7 +26,7 @@ public class AttachShouldBeCalledForSubWindows extends AbstractTestCase
     @Override
     public void init() {
 
-        Window mainWindow = new Window() {
+        Root.LegacyWindow mainWindow = new Root.LegacyWindow() {
             @Override
             public void attach() {
                 log(this);
