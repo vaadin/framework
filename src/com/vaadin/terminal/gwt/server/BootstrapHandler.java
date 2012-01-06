@@ -309,12 +309,17 @@ public abstract class BootstrapHandler implements RequestHandler {
                 + "style=\"position:absolute;width:0;height:0;border:0;overflow:"
                 + "hidden;\" src=\"javascript:false\"></iframe>");
 
+        String bootstrapLocation = staticFileLocation
+                + "/VAADIN/vaadinBootstrap.js";
         page.write("<script type=\"text/javascript\" src=\"");
-        page.write(staticFileLocation);
-        page.write("/VAADIN/vaadinBootstrap.js\"></script>\n");
+        page.write(bootstrapLocation);
+        page.write("\"></script>\n");
 
         page.write("<script type=\"text/javascript\">\n");
         page.write("//<![CDATA[\n");
+        page.write("if (!window.vaadin) alert("
+                + JSONObject.quote("Failed to load the bootstrap javascript: "
+                        + bootstrapLocation) + ");\n");
 
         writeMainScriptTagContents(context);
         page.write("//]]>\n</script>\n");
