@@ -62,8 +62,11 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         this.request.set(request);
-        super.service(request, response);
-        this.request.set(null);
+        try {
+            super.service(request, response);
+        } finally {
+            this.request.set(null);
+        }
     }
 
     @Override
