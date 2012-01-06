@@ -194,8 +194,7 @@ public abstract class Root extends AbstractComponentContainer implements
     /**
      * Helper class to emulate the main window from Vaadin 6 using roots. This
      * class should be used in the same way as Window used as a browser level
-     * window in Vaadin 6 with {@Application.LegacyApplication
-     * }
+     * window in Vaadin 6 with {@link com.vaadin.Application.LegacyApplication}
      */
     @Deprecated
     @EagerInit
