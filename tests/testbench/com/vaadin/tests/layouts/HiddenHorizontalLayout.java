@@ -5,6 +5,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.VerticalLayout;
 
 public class HiddenHorizontalLayout extends TestBase {
@@ -41,7 +42,7 @@ public class HiddenHorizontalLayout extends TestBase {
                 + "3. Click \"toggle layout visibility\"<br>"
                 + "4. Resize browser window to full <br/>"
                 + "5. Click \"toggle layout visibility\"<br/>",
-                Label.CONTENT_XHTML);
+                ContentMode.XHTML);
         vl.addComponent(l);
         Button b = new Button("toggle layout visibility",
                 new Button.ClickListener() {

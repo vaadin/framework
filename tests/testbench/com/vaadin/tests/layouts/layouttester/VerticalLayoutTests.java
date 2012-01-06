@@ -14,6 +14,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.NativeSelect;
@@ -46,7 +47,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
             ((TextField) components[i]).setValue("FIELD " + i);
             vlo.addComponent(components[i]);
             vlo.setComponentAlignment(components[i], alignments[i]);
-            vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+            vlo.addComponent(new Label("<hr />", ContentMode.XHTML));
         }
         baseLayout.addComponent(vlo);
         vlo = getTestLaytout();
@@ -55,7 +56,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
             ((TextField) components[i]).setValue("FIELD " + i);
             vlo.addComponent(components[i]);
             vlo.setComponentAlignment(components[i], alignments[i]);
-            vlo.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+            vlo.addComponent(new Label("<hr />", ContentMode.XHTML));
         }
         baseLayout.addComponent(vlo);
         return baseLayout;
@@ -115,7 +116,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
 
         final AbstractComponent c1 = new Button("BUTTON");
         final AbstractComponent c2 = new Label("<b>LABEL</b>",
-                Label.CONTENT_XHTML);
+                ContentMode.XHTML);
         final AbstractComponent c3 = new Table("TABLE");
         c3.setHeight("100px");
         c3.setWidth("100%");
@@ -268,7 +269,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         button4.setEnabled(false);
 
         vlo2.addComponent(c1);
-        vlo2.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+        vlo2.addComponent(new Label("<hr />", ContentMode.XHTML));
         vlo2.addComponent(c2);
         vlo2.setExpandRatio(c1, 0.5f);
         vlo2.setExpandRatio(c2, 0.5f);
@@ -453,7 +454,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         final VerticalLayout vlo2 = getTestLaytout();
 
         vlo2.addComponent(c1);
-        vlo2.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+        vlo2.addComponent(new Label("<hr />", ContentMode.XHTML));
         vlo2.addComponent(c2);
         vlo2.setExpandRatio(c1, 0.5f);
         vlo2.setExpandRatio(c2, 0.5f);

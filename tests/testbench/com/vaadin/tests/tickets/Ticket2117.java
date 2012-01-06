@@ -6,6 +6,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket2117 extends Application.LegacyApplication {
@@ -54,7 +55,7 @@ public class Ticket2117 extends Application.LegacyApplication {
                         + "'>"
                         + getURL().toExternalForm()
                         + "</a> which opens new windows to this uri. They should end up having a separate Window and URL.",
-                Label.CONTENT_XHTML));
+                ContentMode.XHTML));
         return w;
     }
 }

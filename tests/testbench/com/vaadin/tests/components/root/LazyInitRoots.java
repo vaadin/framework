@@ -7,6 +7,7 @@ import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.tests.components.AbstractTestApplication;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Root;
 
@@ -16,9 +17,7 @@ public class LazyInitRoots extends AbstractTestApplication {
     private static class EagerInitRoot extends Root {
         @Override
         public void init(WrappedRequest request) {
-            BrowserDetails browserDetails = request.getBrowserDetails();
-            getContent().addComponent(
-                    new Label("Lazy init root: " + browserDetails));
+            addComponent(getRequestInfo("EagerInitRoot", request));
         }
     }
 
@@ -27,7 +26,7 @@ public class LazyInitRoots extends AbstractTestApplication {
             throws RootRequiresMoreInformationException {
         if (request.getParameter("lazyCreate") != null) {
             // Root created on second request
-            final BrowserDetails browserDetails = request.getBrowserDetails();
+            BrowserDetails browserDetails = request.getBrowserDetails();
             if (browserDetails == null
                     || browserDetails.getUriFragment() == null) {
                 throw new RootRequiresMoreInformationException();
@@ -35,20 +34,21 @@ public class LazyInitRoots extends AbstractTestApplication {
                 Root root = new Root() {
                     @Override
                     protected void init(WrappedRequest request) {
-                        addComponent(new Label("Lazy create root: "
-                                + browserDetails.getUriFragment()));
+                        addComponent(getRequestInfo("LazyCreateRoot", request));
                     }
                 };
                 return root;
             }
         } else if (request.getParameter("eagerInit") != null) {
-            // Root inited on second request
+            // Root inited on first request
             return new EagerInitRoot();
         } else {
             // The standard root
             Root root = new Root() {
                 @Override
                 protected void init(WrappedRequest request) {
+                    addComponent(getRequestInfo("NormalRoot", request));
+
                     Link lazyCreateLink = new Link("Open lazyCreate root",
                             new ExternalResource(getURL()
                                     + "?lazyCreate#lazyCreate"));
@@ -65,6 +65,15 @@ public class LazyInitRoots extends AbstractTestApplication {
 
             return root;
         }
+    }
+
+    public static Label getRequestInfo(String name, WrappedRequest request) {
+        String info = name;
+        info += "<br />pathInfo: " + request.getRequestPathInfo();
+        info += "<br />parameters: " + request.getParameterMap().keySet();
+        info += "<br />uri fragment: "
+                + request.getBrowserDetails().getUriFragment();
+        return new Label(info, ContentMode.XHTML);
     }
 
     @Override

@@ -9,6 +9,7 @@ import java.io.File;
 import com.vaadin.Application;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root;
 
@@ -64,7 +65,7 @@ public class SampleDirectory {
         errorPanel.setStyleName("strong");
         errorPanel.setComponentError(new SystemError(
                 "Cannot provide sample directory"));
-        errorPanel.addComponent(new Label(errorMessage, Label.CONTENT_XHTML));
+        errorPanel.addComponent(new Label(errorMessage, ContentMode.XHTML));
         // Remove all components from applications main window
         root.getContent().removeAllComponents();
         // Add error panel

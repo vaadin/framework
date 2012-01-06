@@ -6,6 +6,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 
 public class ApplicationCloseTest extends TestBase {
 
@@ -14,7 +15,7 @@ public class ApplicationCloseTest extends TestBase {
     @Override
     protected void setup() {
         Label applications = new Label("Applications in session: <br/>",
-                Label.CONTENT_XHTML);
+                ContentMode.XHTML);
         for (Application a : ((WebApplicationContext) getContext())
                 .getApplications()) {
             applications.setValue(applications.getValue() + "App: " + a
@@ -50,7 +51,7 @@ public class ApplicationCloseTest extends TestBase {
                         / 1000
                         / 1000
                         + "MiB memory for this application.<br/>Total memory usage reported as "
-                        + totalUsageString + "<br/>", Label.CONTENT_XHTML);
+                        + totalUsageString + "<br/>", ContentMode.XHTML);
 
         addComponent(thisApp);
         addComponent(memoryUsage);

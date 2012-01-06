@@ -11,6 +11,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.VerticalLayout;
 
@@ -45,7 +46,7 @@ public class TestForRichTextEditor extends CustomComponent implements
 
         main.addComponent(new Button("commit content to label below"));
 
-        l = new Label("", Label.CONTENT_XHTML);
+        l = new Label("", ContentMode.XHTML);
         main.addComponent(l);
 
         CheckBox b = new CheckBox("enabled");

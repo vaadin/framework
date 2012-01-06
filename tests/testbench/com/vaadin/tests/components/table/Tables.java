@@ -13,6 +13,7 @@ import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.ui.AbstractSelect.MultiSelectMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.Table.ColumnGenerator;
@@ -241,7 +242,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
                                 l.setWidth(col.width);
                                 if (col.html) {
                                     l.setValue(value);
-                                    l.setContentMode(Label.CONTENT_XHTML);
+                                    l.setContentMode(ContentMode.XHTML);
                                 } else {
                                     l.setValue(value);
                                 }

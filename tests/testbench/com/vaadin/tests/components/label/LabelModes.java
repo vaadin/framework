@@ -2,6 +2,7 @@ package com.vaadin.tests.components.label;
 
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 
 public class LabelModes extends ComponentTestCase<Label> {
 
@@ -23,17 +24,17 @@ public class LabelModes extends ComponentTestCase<Label> {
         addTestComponent(l);
 
         l = createLabel("This label                       contains\nnewlines and spaces\nand is in\npreformatted mode");
-        l.setContentMode(Label.CONTENT_PREFORMATTED);
+        l.setContentMode(ContentMode.PREFORMATTED);
         l.setWidth(null);
         addTestComponent(l);
 
         l = createLabel("This label                       contains\nnewlines and spaces\nand is in\nhtml mode");
-        l.setContentMode(Label.CONTENT_XHTML);
+        l.setContentMode(ContentMode.XHTML);
         l.setWidth(null);
         addTestComponent(l);
 
         l = createLabel("This label                       contains\nnewlines and spaces\nand is in\nraw mode");
-        l.setContentMode(Label.CONTENT_RAW);
+        l.setContentMode(ContentMode.RAW);
         l.setWidth(null);
         addTestComponent(l);
 

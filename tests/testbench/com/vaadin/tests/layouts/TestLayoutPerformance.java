@@ -9,6 +9,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
@@ -33,12 +34,12 @@ public class TestLayoutPerformance extends TestBase {
     @Override
     protected void setup() {
         Label label = new Label("<h1>CssLayout performance test.</h1>",
-                Label.CONTENT_XHTML);
+                ContentMode.XHTML);
         getLayout().addComponent(label);
 
         label = new Label(
                 "<em>Hint</em>. Use debug dialog to measure rendering times TODO: extend with size settings (to both layout and content).",
-                Label.CONTENT_XHTML);
+                ContentMode.XHTML);
         getLayout().addComponent(label);
 
         ns = new NativeSelect("Select component to test");
@@ -65,11 +66,11 @@ public class TestLayoutPerformance extends TestBase {
         b.addListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                int components = Integer.parseInt((String) n.getValue());
+                int components = Integer.parseInt(n.getValue());
                 Layout layout = getCurrentLayout();
                 for (int i = 0; i < components; i++) {
                     Component component = newTestComponent();
-                    if ((Boolean) cb.getValue()) {
+                    if (cb.getValue()) {
                         component.setCaption("caption " + i);
                     }
                     layout.addComponent(component);

@@ -194,8 +194,7 @@ public abstract class Root extends AbstractComponentContainer implements
     /**
      * Helper class to emulate the main window from Vaadin 6 using roots. This
      * class should be used in the same way as Window used as a browser level
-     * window in Vaadin 6 with {@Application.LegacyApplication
-     * }
+     * window in Vaadin 6 with {@link com.vaadin.Application.LegacyApplication}
      */
     @Deprecated
     @EagerInit
@@ -642,15 +641,17 @@ public abstract class Root extends AbstractComponentContainer implements
      * @see #getApplication()
      */
     public void setApplication(Application application) {
-        if (application == null) {
-            throw new NullPointerException("application");
-        } else if (this.application != null) {
+        if ((application == null) == (this.application == null)) {
             throw new IllegalStateException("Application has already been set");
         } else {
             this.application = application;
         }
 
-        attach();
+        if (application != null) {
+            attach();
+        } else {
+            detach();
+        }
     }
 
     /**
@@ -1510,4 +1511,29 @@ public abstract class Root extends AbstractComponentContainer implements
     public int getBrowserWindowWidth() {
         return browserWindowWidth;
     }
+
+    /**
+     * Notifies the child components and windows that the root is attached to
+     * the application.
+     */
+    @Override
+    public void attach() {
+        super.attach();
+        for (Window w : windows) {
+            w.attach();
+        }
+    }
+
+    /**
+     * Notifies the child components and windows that the root is detached from
+     * the application.
+     */
+    @Override
+    public void detach() {
+        super.detach();
+        for (Window w : windows) {
+            w.detach();
+        }
+    }
+
 }

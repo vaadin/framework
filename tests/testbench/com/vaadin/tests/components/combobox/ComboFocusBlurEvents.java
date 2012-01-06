@@ -10,6 +10,7 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.TextField;
 
 public class ComboFocusBlurEvents extends TestBase {
@@ -18,18 +19,18 @@ public class ComboFocusBlurEvents extends TestBase {
 
     @Override
     protected void setup() {
-        
+
         List<String> list = new ArrayList<String>();
         for (int i = 0; i < 100; i++) {
             list.add("Item " + i);
         }
-        
+
         ComboBox cb = new ComboBox("Combobox", list);
         cb.setImmediate(true);
         cb.setInputPrompt("Enter text");
         cb.setDescription("Some Combobox");
         addComponent(cb);
-                        
+
         final ObjectProperty<String> log = new ObjectProperty<String>("");
 
         cb.addListener(new FieldEvents.FocusListener() {
@@ -47,7 +48,7 @@ public class ComboFocusBlurEvents extends TestBase {
                 counter++;
             }
         });
-        
+
         TextField field = new TextField("Some textfield");
         field.setImmediate(true);
         addComponent(field);
@@ -55,7 +56,7 @@ public class ComboFocusBlurEvents extends TestBase {
         Label output = new Label(log);
         output.setCaption("Events:");
 
-        output.setContentMode(Label.CONTENT_XHTML);
+        output.setContentMode(ContentMode.XHTML);
         addComponent(output);
 
     }

@@ -17,6 +17,7 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.NativeSelect;
@@ -161,7 +162,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
 
         // Custom components
         layout.addComponent(new Label("<B>Below are few custom components</B>",
-                Label.CONTENT_XHTML));
+                ContentMode.XHTML));
         final TestForUpload tfu = new TestForUpload();
         layout.addComponent(tfu);
 

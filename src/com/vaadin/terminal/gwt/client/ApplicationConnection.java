@@ -199,6 +199,9 @@ public class ApplicationConnection {
             // inital UIDL not in DOM, request later
             repaintAll();
         } else {
+            // Update counter so TestBench knows something is still going on
+            incrementActiveRequests();
+
             // initial UIDL provided in DOM, continue as if returned by request
             handleJSONText(jsonText);
         }
@@ -225,10 +228,6 @@ public class ApplicationConnection {
     	}
     	client.getPathForElement = function(element) {
     		return componentLocator.@com.vaadin.terminal.gwt.client.ComponentLocator::getPathForElement(Lcom/google/gwt/user/client/Element;)(element);
-    	}
-
-    	if (!$wnd.vaadin.clients) {
-    		$wnd.vaadin.clients = {};
     	}
 
     	$wnd.vaadin.clients[TTAppId] = client;

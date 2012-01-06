@@ -19,13 +19,14 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Table;
 
 public class EditableTableLeak extends TestBase {
     private final Table table = new Table("ISO-3166 Country Codes and flags");
     private final CheckBox useFieldFactory = new CheckBox(
             "Use a caching TableFieldFactory");
-    private final Label sizeLabel = new Label("", Label.CONTENT_XHTML);
+    private final Label sizeLabel = new Label("", ContentMode.XHTML);
 
     private long size = 0;
 

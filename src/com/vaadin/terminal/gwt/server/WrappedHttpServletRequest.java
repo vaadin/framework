@@ -4,12 +4,8 @@
 
 package com.vaadin.terminal.gwt.server;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Locale;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.CombinedRequest;
@@ -25,9 +21,9 @@ import com.vaadin.terminal.WrappedRequest;
  * @see WrappedRequest
  * @see WrappedHttpServletResponse
  */
-public class WrappedHttpServletRequest implements WrappedRequest {
+public class WrappedHttpServletRequest extends HttpServletRequestWrapper
+        implements WrappedRequest {
 
-    private final HttpServletRequest request;
     private final DeploymentConfiguration deploymentConfiguration;
 
     /**
@@ -41,48 +37,24 @@ public class WrappedHttpServletRequest implements WrappedRequest {
      */
     public WrappedHttpServletRequest(HttpServletRequest request,
             DeploymentConfiguration deploymentConfiguration) {
-        this.request = request;
+        super(request);
         this.deploymentConfiguration = deploymentConfiguration;
     }
 
-    public Object getAttribute(String name) {
-        return request.getAttribute(name);
-    }
-
-    public int getContentLength() {
-        return request.getContentLength();
-    }
-
-    public InputStream getInputStream() throws IOException {
-        return request.getInputStream();
-    }
-
-    public String getParameter(String name) {
-        return request.getParameter(name);
-    }
-
-    public Map<String, String[]> getParameterMap() {
-        return request.getParameterMap();
-    }
-
-    public void setAttribute(String name, Object o) {
-        request.setAttribute(name, o);
-    }
-
     public String getRequestPathInfo() {
-        return request.getPathInfo();
+        return getPathInfo();
     }
 
     public int getSessionMaxInactiveInterval() {
-        return request.getSession().getMaxInactiveInterval();
+        return getSession().getMaxInactiveInterval();
     }
 
     public Object getSessionAttribute(String name) {
-        return request.getSession().getAttribute(name);
+        return getSession().getAttribute(name);
     }
 
     public void setSessionAttribute(String name, Object attribute) {
-        request.getSession().setAttribute(name, attribute);
+        getSession().setAttribute(name, attribute);
     }
 
     /**
@@ -91,11 +63,7 @@ public class WrappedHttpServletRequest implements WrappedRequest {
      * @return the servlet request
      */
     public HttpServletRequest getHttpServletRequest() {
-        return request;
-    }
-
-    public String getContentType() {
-        return request.getContentType();
+        return this;
     }
 
     public DeploymentConfiguration getDeploymentConfiguration() {
@@ -118,22 +86,6 @@ public class WrappedHttpServletRequest implements WrappedRequest {
                 return context.getBrowser();
             }
         };
-    }
-
-    public Locale getLocale() {
-        return request.getLocale();
-    }
-
-    public String getRemoteAddr() {
-        return request.getRemoteAddr();
-    }
-
-    public boolean isSecure() {
-        return request.isSecure();
-    }
-
-    public String getHeader(String headerName) {
-        return request.getHeader(headerName);
     }
 
     /**

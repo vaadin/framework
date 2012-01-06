@@ -12,6 +12,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.VerticalLayout;
 
 public class PerformanceTestLabelsAndOrderedLayouts extends CustomComponent {
@@ -73,7 +74,7 @@ public class PerformanceTestLabelsAndOrderedLayouts extends CustomComponent {
     }
 
     private void addInfo() {
-        main.addComponent(new Label(DESCRIPTION, Label.CONTENT_XHTML));
+        main.addComponent(new Label(DESCRIPTION, ContentMode.XHTML));
     }
 
 }

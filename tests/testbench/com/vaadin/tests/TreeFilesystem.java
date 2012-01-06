@@ -9,6 +9,7 @@ import java.io.File;
 import com.vaadin.data.Item;
 import com.vaadin.tests.util.SampleDirectory;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Tree;
@@ -37,7 +38,7 @@ public class TreeFilesystem extends com.vaadin.Application.LegacyApplication
         setMainWindow(main);
 
         // Main window contains heading and panel
-        main.addComponent(new Label("<h2>Tree demo</h2>", Label.CONTENT_XHTML));
+        main.addComponent(new Label("<h2>Tree demo</h2>", ContentMode.XHTML));
 
         // configure file structure panel
         main.addComponent(explorerPanel);

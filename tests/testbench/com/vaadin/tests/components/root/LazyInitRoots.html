@@ -13,25 +13,34 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/run/com.vaadin.tests.components.root.LazyInitRoots/?restartApplication&amp;lazyCreate#lazyCreate</td>
+	<td>/run/com.vaadin.tests.components.root.LazyInitRoots/normalPath?restartApplication#normalFragment</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsrootLazyInitRoots::/VVerticalLayout[0]/ChildComponentContainer[0]/VLabel[0]</td>
-	<td>Lazy create root: lazyCreate</td>
+	<td>NormalRoot<br />pathInfo: /normalPath<br />parameters: [restartApplication]<br />uri fragment: normalFragment</td>
 </tr>
 <tr>
 	<td>open</td>
-	<td>/run/com.vaadin.tests.components.root.LazyInitRoots/?restartApplication&amp;lazyInit#lazyInit</td>
+	<td>/run/com.vaadin.tests.components.root.LazyInitRoots/lazyCreatePath?lazyCreate#lazyCreateFragment</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestscomponentsrootLazyInitRoots::/VVerticalLayout[0]/ChildComponentContainer[0]/VLabel[0]</td>
-	<td>Lazy init root: lazyInit</td>
+	<td>LazyCreateRoot<br />pathInfo: /lazyCreatePath<br />parameters: [lazyCreate]<br />uri fragment: lazyCreateFragment</td>
 </tr>
-
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.root.LazyInitRoots/eagerPath/?eagerInit#eagerFragment</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsrootLazyInitRoots::/VVerticalLayout[0]/ChildComponentContainer[0]/VLabel[0]</td>
+	<td>EagerInitRoot<br />pathInfo: /eagerPath/<br />parameters: [eagerInit]<br />uri fragment: null</td>
+</tr>
 </tbody></table>
 </body>
 </html>

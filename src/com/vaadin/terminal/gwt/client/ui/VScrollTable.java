@@ -3925,7 +3925,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         Element table = DOM.createTable();
 
         private int firstRendered;
-
         private int lastRendered;
 
         private char[] aligns;
@@ -4034,6 +4033,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             ensureCacheFilled();
         }
 
+        /**
+         * Ensure we have the correct set of rows on client side, e.g. if the
+         * content on the server side has changed, or the client scroll position
+         * has changed since the last request.
+         */
         protected void ensureCacheFilled() {
             int reactFirstRow = (int) (firstRowInViewPort - pageLength
                     * cache_react_rate);
@@ -4063,7 +4067,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 rowRequestHandler.setReqFirstRow(lastRendered + 1);
                 rowRequestHandler.setReqRows(reactLastRow - lastRendered);
                 rowRequestHandler.deferRowFetch(1);
-            } else if (scrollBody.getFirstRendered() > reactFirstRow) {
+            } else if (firstRendered > reactFirstRow) {
                 /*
                  * Branch for fetching cache above visible area.
                  * 
@@ -6101,17 +6105,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         final int firstRendered = scrollBody.getFirstRendered();
 
         if (postLimit <= lastRendered && preLimit >= firstRendered) {
+            // we're within no-react area, no need to request more rows
             // remember which firstvisible we requested, in case the server has
             // a differing opinion
             lastRequestedFirstvisible = firstRowInViewPort;
             client.updateVariable(paintableId, "firstvisible",
                     firstRowInViewPort, false);
-            return; // scrolled withing "non-react area"
+            return;
         }
 
         if (firstRowInViewPort - pageLength * cache_rate > lastRendered
                 || firstRowInViewPort + pageLength + pageLength * cache_rate < firstRendered) {
-            // need a totally new set
+            // need a totally new set of rows
             rowRequestHandler
                     .setReqFirstRow((firstRowInViewPort - (int) (pageLength * cache_rate)));
             int last = firstRowInViewPort + (int) (cache_rate * pageLength)

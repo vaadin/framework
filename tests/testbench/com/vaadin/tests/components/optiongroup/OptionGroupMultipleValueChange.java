@@ -4,6 +4,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.OptionGroup;
 
 public class OptionGroupMultipleValueChange extends TestBase {
@@ -26,7 +27,7 @@ public class OptionGroupMultipleValueChange extends TestBase {
         og.setImmediate(true);
         addComponent(og);
 
-        final Label events = new Label("", Label.CONTENT_PREFORMATTED);
+        final Label events = new Label("", ContentMode.PREFORMATTED);
         events.setWidth(null);
         addComponent(events);
 

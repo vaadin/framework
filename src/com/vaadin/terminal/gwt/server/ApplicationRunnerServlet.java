@@ -62,8 +62,11 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         this.request.set(request);
-        super.service(request, response);
-        this.request.set(null);
+        try {
+            super.service(request, response);
+        } finally {
+            this.request.set(null);
+        }
     }
 
     @Override
@@ -257,8 +260,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
                 getDeploymentConfiguration()) {
             @Override
             public String getRequestPathInfo() {
-                return ApplicationRunnerServlet.this
-                        .getRequestPathInfo(getHttpServletRequest());
+                return ApplicationRunnerServlet.this.getRequestPathInfo(this);
             }
         };
     }

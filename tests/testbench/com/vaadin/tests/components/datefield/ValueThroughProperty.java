@@ -12,6 +12,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.PopupDateField;
 
 public class ValueThroughProperty extends TestBase {
@@ -25,7 +26,7 @@ public class ValueThroughProperty extends TestBase {
                         + "Then try to set DateField's value using the first button. It sets the value "
                         + "correctly (as we can see from the Label) but the client-side is not updated.<br/>"
                         + "Using second button updates value correctly on the client-side too.",
-                Label.CONTENT_XML));
+                ContentMode.XML));
 
         final PopupDateField df = new PopupDateField(dateProperty);
         df.setLocale(new Locale("en", "US"));

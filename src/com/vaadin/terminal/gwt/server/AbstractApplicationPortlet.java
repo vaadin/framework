@@ -748,7 +748,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         if (requestType == RequestType.APPLICATION_RESOURCE
                 || requestType == RequestType.RENDER) {
             if (!applicationManager.handleApplicationRequest(request, response)) {
-                response.setStatus(404);
+                response.sendError(HttpServletResponse.SC_NOT_FOUND,
+                        "Not found");
             }
         } else if (requestType == RequestType.EVENT) {
             // nothing to do, listeners do all the work

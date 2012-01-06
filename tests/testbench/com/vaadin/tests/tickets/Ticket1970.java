@@ -6,6 +6,7 @@ import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket1970 extends Application.LegacyApplication {
@@ -62,11 +63,11 @@ public class Ticket1970 extends Application.LegacyApplication {
                     }
                 }));
         w.addComponent(new Label("<a href='" + getURL().toExternalForm() + "'>"
-                + getURL().toExternalForm() + "</a>", Label.CONTENT_XHTML));
+                + getURL().toExternalForm() + "</a>", ContentMode.XHTML));
         w.addComponent(new Label(
                 "<h2>How to reproduce</h2>Open the above link in another browser"
                         + " window and then press the Show-button on this window.",
-                Label.CONTENT_XHTML));
+                ContentMode.XHTML));
 
         return w;
     }

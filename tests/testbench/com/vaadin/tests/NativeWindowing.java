@@ -11,6 +11,7 @@ import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Window;
 
@@ -69,7 +70,7 @@ public class NativeWindowing extends Application.LegacyApplication {
                                         + "<p>Lorem ipsum dolor sit amet.</p>"
                                         + "<p>Lorem ipsum dolor sit amet.</p>"
                                         + "<p>Lorem ipsum dolor sit amet.</p>",
-                                Label.CONTENT_XHTML));
+                                ContentMode.XHTML));
 
                     }
                 }));

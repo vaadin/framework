@@ -11,6 +11,7 @@ import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.Root.LegacyWindow;
@@ -96,7 +97,7 @@ public class CustomLayoutDemo extends com.vaadin.Application.LegacyApplication
 
         // Add heading label and custom layout panel to main window
         mainWindow.addComponent(new Label("<h3>Custom layout demo</h3>",
-                Label.CONTENT_XHTML));
+                ContentMode.XHTML));
         mainWindow.addComponent(customLayoutPanel);
     }
 
@@ -112,7 +113,7 @@ public class CustomLayoutDemo extends com.vaadin.Application.LegacyApplication
             username.setValue("Anonymous");
         }
         mainLayout.replaceComponent(loginButton, new Label("Welcome user <em>"
-                + username.getValue() + "</em>", Label.CONTENT_XHTML));
+                + username.getValue() + "</em>", ContentMode.XHTML));
     }
 
     /**

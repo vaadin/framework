@@ -10,6 +10,7 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Window;
@@ -108,7 +109,7 @@ public class Ticket1804 extends com.vaadin.Application.LegacyApplication {
                 w.setModal(true);
                 w.setScrollable(true);
                 w.setHeight("80%");
-                w.addComponent(new Label(msg.toString(), Label.CONTENT_XHTML));
+                w.addComponent(new Label(msg.toString(), ContentMode.XHTML));
                 main.addWindow(w);
             }
         });

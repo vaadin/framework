@@ -3,6 +3,7 @@ package com.vaadin.tests.components.label;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 
 public class Labels extends ComponentTestCase<Label> {
 
@@ -37,13 +38,13 @@ public class Labels extends ComponentTestCase<Label> {
         l = createLabel(
                 "<div style='border: 1px solid red'><h1>Hello\n\n\n</h1><p/><h2>I am a rich Label</h3></div>",
                 "This is an XHTML label with rich content");
-        l.setContentMode(Label.CONTENT_XHTML);
+        l.setContentMode(ContentMode.XHTML);
         addTestComponent(l);
 
         l = createLabel(
                 "<div style='border: 1px solid blue'><h1>Hello</h1><p/><h2>I am a rich Label</h3></div>",
                 "This is an XHTML label with fixed 200px width and rich content");
-        l.setContentMode(Label.CONTENT_XHTML);
+        l.setContentMode(ContentMode.XHTML);
         l.setWidth("200px");
         addTestComponent(l);
 

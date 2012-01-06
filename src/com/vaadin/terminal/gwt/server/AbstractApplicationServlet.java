@@ -75,10 +75,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         public void criticalNotification(WrappedRequest request,
                 WrappedResponse response, String cap, String msg,
                 String details, String outOfSyncURL) throws IOException {
-            servlet.criticalNotification(WrappedHttpServletRequest
-                    .cast(request).getHttpServletRequest(),
-                    ((WrappedHttpServletResponse) response)
-                            .getHttpServletResponse(), cap, msg, details,
+            servlet.criticalNotification(
+                    WrappedHttpServletRequest.cast(request),
+                    ((WrappedHttpServletResponse) response), cap, msg, details,
                     outOfSyncURL);
         }
     }
@@ -144,8 +143,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
     private DeploymentConfiguration deploymentConfiguration = new DeploymentConfiguration() {
         public String getStaticFileLocation(WrappedRequest request) {
-            HttpServletRequest servletRequest = WrappedHttpServletRequest.cast(
-                    request).getHttpServletRequest();
+            HttpServletRequest servletRequest = WrappedHttpServletRequest
+                    .cast(request);
             return AbstractApplicationServlet.this
                     .getStaticFilesLocation(servletRequest);
         }
@@ -382,14 +381,17 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @throws IOException
      *             if the request for the TRACE cannot be handled.
      */
-    @SuppressWarnings("unchecked")
     @Override
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
+        service(createWrappedRequest(request), createWrappedResponse(response));
+    }
+
+    private void service(WrappedHttpServletRequest request,
+            WrappedHttpServletResponse response) throws ServletException,
+            IOException {
         AbstractApplicationServletWrapper servletWrapper = new AbstractApplicationServletWrapper(
                 this);
-        WrappedHttpServletRequest wrappedRequest = createWrappedRequest(request);
-        WrappedHttpServletResponse wrappedResponse = createWrappedResponse(response);
 
         RequestType requestType = getRequestType(request);
         if (!ensureCookiesEnabled(requestType, request, response)) {
@@ -446,8 +448,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     .getApplicationManager(application, this);
 
             /* Update browser information from the request */
-            webApplicationContext.getBrowser().updateRequestDetails(
-                    wrappedRequest);
+            webApplicationContext.getBrowser().updateRequestDetails(request);
 
             /*
              * Call application requestStart before Application.init() is called
@@ -471,21 +472,20 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             /* Handle the request */
             if (requestType == RequestType.FILE_UPLOAD) {
-                applicationManager.handleFileUpload(wrappedRequest,
-                        wrappedResponse);
+                applicationManager.handleFileUpload(request, response);
                 return;
             } else if (requestType == RequestType.UIDL) {
                 // Handles AJAX UIDL requests
-                Root root = application.getRootForRequest(wrappedRequest);
+                Root root = application.getRootForRequest(request);
                 if (root == null) {
                     throw new ServletException(ERROR_NO_WINDOW_FOUND);
                 }
-                applicationManager.handleUidlRequest(wrappedRequest,
-                        wrappedResponse, servletWrapper, root);
+                applicationManager.handleUidlRequest(request, response,
+                        servletWrapper, root);
                 return;
             } else if (requestType == RequestType.BROWSER_DETAILS) {
-                applicationManager.handleBrowserDetailsRequest(wrappedRequest,
-                        wrappedResponse, application);
+                applicationManager.handleBrowserDetailsRequest(request,
+                        response, application);
                 return;
             }
 
@@ -496,8 +496,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 return;
             }
 
-            if (applicationManager.handleApplicationRequest(wrappedRequest,
-                    wrappedResponse)) {
+            if (applicationManager.handleApplicationRequest(request, response)) {
                 return;
             }
             // TODO Should return 404 error here and not do anything more

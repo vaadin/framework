@@ -5,6 +5,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.TextField;
 
 public class ClipContent extends TestBase {
@@ -14,7 +15,7 @@ public class ClipContent extends TestBase {
 
         Label text = new Label(
                 "1_long_line_that_should_be_clipped<br/>2_long_line_that_should_be_clipped<br/>3_long_line_that_should_be_clipped<br/>4_long_line_that_should_be_clipped<br/>",
-                Label.CONTENT_XHTML);
+                ContentMode.XHTML);
 
         final CustomComponent cc = new CustomComponent(text);
         cc.setWidth("20px");
@@ -24,7 +25,7 @@ public class ClipContent extends TestBase {
         w.setValue("20px");
         w.addListener(new TextField.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                cc.setWidth((String) w.getValue());
+                cc.setWidth(w.getValue());
             }
         });
         addComponent(w);
@@ -32,7 +33,7 @@ public class ClipContent extends TestBase {
         h.setValue("20px");
         h.addListener(new TextField.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                cc.setHeight((String) h.getValue());
+                cc.setHeight(h.getValue());
             }
         });
         addComponent(h);

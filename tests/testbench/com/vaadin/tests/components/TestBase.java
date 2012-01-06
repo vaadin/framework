@@ -2,6 +2,7 @@ package com.vaadin.tests.components;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
@@ -13,7 +14,7 @@ public abstract class TestBase extends AbstractTestCase {
         setMainWindow(window);
         window.getContent().setSizeFull();
 
-        Label label = new Label(getDescription(), Label.CONTENT_XHTML);
+        Label label = new Label(getDescription(), ContentMode.XHTML);
         label.setWidth("100%");
         window.getContent().addComponent(label);
 

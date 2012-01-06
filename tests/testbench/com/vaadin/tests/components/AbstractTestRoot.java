@@ -7,6 +7,7 @@ import com.vaadin.terminal.gwt.server.AbstractWebApplicationContext;
 import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
 
@@ -16,7 +17,7 @@ public abstract class AbstractTestRoot extends Root {
     public void init(WrappedRequest request) {
         setCaption(getClass().getName());
 
-        Label label = new Label(getTestDescription(), Label.CONTENT_XHTML);
+        Label label = new Label(getTestDescription(), ContentMode.XHTML);
         label.setWidth("100%");
 
         layout = new VerticalLayout();
