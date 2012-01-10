@@ -199,8 +199,8 @@
         <echo>Adding test class files and resources and launcher configuration.</echo>
         <copy todir="${output-dir}/WebContent/WEB-INF/classes">
             <fileset dir="${result-classes-testbench}">
-                <include name="${toolkit-package}/tests/**/*" />
-                <include name="${toolkit-package}/launcher/**" />
+                <include name="${vaadin-package}/tests/**/*" />
+                <include name="${vaadin-package}/launcher/**" />
             </fileset>
             <!-- test resources -->
             <fileset dir="tests/testbench">
@@ -703,9 +703,7 @@
         <property name="javadoc.destdir" value="${output-dir}/WebContent/docs/api"/>
         
         <javadoc destdir="${javadoc.destdir}" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath.client-side">
-            <packageset dir="${result-src-core}">
-                <include name="${toolkit-package}/**" />
-            </packageset>
+            <packageset dir="${result-src-core}"/>
             <doctitle>${javadoc.doctitle}</doctitle>
             <!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
             <bottom>${javadoc.bottom}</bottom>
