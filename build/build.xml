@@ -202,6 +202,10 @@
                 <include name="${vaadin-package}/tests/**/*" />
                 <include name="${vaadin-package}/launcher/**" />
             </fileset>
+            <fileset dir="${result-classes-junit}}">
+            	<!-- VaadinClasses is used by both JUnit and TestBench tests -->
+                <include name="**/VaadinClasses.class" />
+            </fileset>
             <!-- test resources -->
             <fileset dir="tests/testbench">
                 <include name="${vaadin-package}/tests/**/*" />
