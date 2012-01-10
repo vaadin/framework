@@ -162,6 +162,9 @@ public class OrderedLayoutCases extends AbstractTestRoot {
         addComponent(currentLayout);
 
         getLayout().setSpacing(true);
+        getContent().setSizeFull();
+        getLayout().setSizeFull();
+        getLayout().setExpandRatio(currentLayout, 1);
     }
 
     private static NativeSelect createSimpleSelector(String caption,
