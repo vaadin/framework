@@ -43,6 +43,16 @@
              uri="antlib:org.apache.maven.artifact.ant"
              classpathref="maven-ant-tasks.classpath" />
 
+	<!-- result source and classes folders -->
+	<property name="result-src-core" value="${result-path}/src/core"/>
+	<property name="result-src-junit" value="${result-path}/src/junit"/>
+	<property name="result-src-testbench" value="${result-path}/src/testbench"/>
+	<property name="result-classes-core" value="${result-path}/classes/core"/>
+	<property name="result-classes-junit" value="${result-path}/classes/junit"/>
+	<property name="result-classes-testbench" value="${result-path}/classes/testbench"/>
+
+	<!-- Folder where Emma instrumented classes are placed (if Emma is used)-->
+	<property name="result-classes-emma-core" value="${result-path}/classes/emma-core"/>
 	
     <!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <target name="clean-result" depends="build.properties">
@@ -132,8 +142,8 @@
         <mkdir dir="${result-path}" />
 
         <!-- Create dirs that might be used by the test coverage generation -->
-    	<mkdir dir="${result-classes-core-for-emma-war}" />
-    	<mkdir dir="${result-classes-core-for-emma-junit}" />
+    	<mkdir dir="${result-classes-emma-core}" />
+    	<mkdir dir="${result-path}/junit_emma_classes" />
     	<mkdir dir="${result-path}/coverage" />
 
         <echo>We are using gwt version ${gwt-version}.</echo>
@@ -200,12 +210,8 @@
         <echo>Adding test class files and resources and launcher configuration.</echo>
         <copy todir="${output-dir}/WebContent/WEB-INF/classes">
             <fileset dir="${result-classes-testbench}">
-                <include name="${vaadin-package}/tests/**/*" />
-                <include name="${vaadin-package}/launcher/**" />
-            </fileset>
-            <fileset dir="${result-classes-junit}">
-            	<!-- VaadinClasses is used by both JUnit and TestBench tests -->
-                <include name="**/VaadinClasses*.class" />
+                <include name="${toolkit-package}/tests/**/*" />
+                <include name="${toolkit-package}/launcher/**" />
             </fileset>
             <!-- test resources -->
             <fileset dir="tests/testbench">
@@ -294,14 +300,14 @@
          * tests/client-side (Client-side JUnit test cases)
 
         These are copied to 
-         * ${result-path}/src/core
-         * ${result-path}/src/tests
-         * ${result-path}/src/junit
+         * {$result-path}/src/core
+         * {$result-path}/src/tests
+         * {$result-path}/src/junit
 
         And compiled to 
-         * ${result-path}/classes/core
-         * ${result-path}/classes/tests
-         * ${result-path}/classes/junit
+         * {$result-path}/classes/core
+         * {$result-path}/classes/tests
+         * {$result-path}/classes/junit
          
         Java/HTML/CSS/XML files are filtered so the license is added and the version is set. 
         Other files are just copied.
@@ -623,7 +629,7 @@
         	
 		<emma enabled="${emma.enabled}" >
 			<instr instrpath="${result-classes-core}"
-				destdir="${result-classes-core-for-emma-war}"
+				destdir="${result-classes-emma-core}"
 				mode="copy"
 				metadatafile="${result-path}/war.es"
 				merge="false"
@@ -647,7 +653,7 @@
                 <attribute name="Bundle-Version" value="${version.full}" />
             </manifest>
             <!-- Include any instrumented class files before the normal classes -->
-            <fileset dir="${result-classes-core-for-emma-war}" />
+            <fileset dir="${result-classes-emma-core}"/>
             <fileset dir="${result-classes-core}"/>
             <!-- add sources -->
             <fileset dir="${result-src-core}"/>
@@ -708,7 +714,9 @@
         <property name="javadoc.destdir" value="${output-dir}/WebContent/docs/api"/>
         
         <javadoc destdir="${javadoc.destdir}" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath.client-side">
-            <packageset dir="${result-src-core}"/>
+            <packageset dir="${result-src-core}">
+                <include name="${toolkit-package}/**" />
+            </packageset>
             <doctitle>${javadoc.doctitle}</doctitle>
             <!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
             <bottom>${javadoc.bottom}</bottom>
