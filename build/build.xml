@@ -43,14 +43,6 @@
              uri="antlib:org.apache.maven.artifact.ant"
              classpathref="maven-ant-tasks.classpath" />
 
-	<!-- result source and classes folders -->
-	<property name="result-src-core" value="${result-path}/src/core"/>
-	<property name="result-src-junit" value="${result-path}/src/junit"/>
-	<property name="result-src-testbench" value="${result-path}/src/testbench"/>
-	<property name="result-classes-core" value="${result-path}/classes/core"/>
-	<property name="result-classes-junit" value="${result-path}/classes/junit"/>
-	<property name="result-classes-testbench" value="${result-path}/classes/testbench"/>
-
 	<!-- Folder where Emma instrumented classes are placed (if Emma is used)-->
 	<property name="result-classes-emma-core" value="${result-path}/classes/emma-core"/>
 	
@@ -74,9 +66,6 @@
 		<property name="result-classes-core" value="${result-path}/classes/core"/>
 		<property name="result-classes-junit" value="${result-path}/classes/junit"/>
 		<property name="result-classes-testbench" value="${result-path}/classes/testbench"/>
-		<!-- Folder where Emma instrumented classes are placed (if Emma is used)-->
-		<property name="result-classes-core-for-emma-war" value="${result-path}/classes/emma-war"/>
-		<property name="result-classes-core-for-emma-junit" value="${result-path}/classes/emma-junit"/>
 
 	</target>
     <target name="clean-all" depends="clean-result">
@@ -300,14 +289,14 @@
          * tests/client-side (Client-side JUnit test cases)
 
         These are copied to 
-         * {$result-path}/src/core
-         * {$result-path}/src/tests
-         * {$result-path}/src/junit
+         * ${result-path}/src/core
+         * ${result-path}/src/tests
+         * ${result-path}/src/junit
 
         And compiled to 
-         * {$result-path}/classes/core
-         * {$result-path}/classes/tests
-         * {$result-path}/classes/junit
+         * ${result-path}/classes/core
+         * ${result-path}/classes/tests
+         * ${result-path}/classes/junit
          
         Java/HTML/CSS/XML files are filtered so the license is added and the version is set. 
         Other files are just copied.
