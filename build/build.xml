@@ -43,8 +43,6 @@
              uri="antlib:org.apache.maven.artifact.ant"
              classpathref="maven-ant-tasks.classpath" />
 
-	<!-- Folder where Emma instrumented classes are placed (if Emma is used)-->
-	<property name="result-classes-emma-core" value="${result-path}/classes/emma-core"/>
 	
     <!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <target name="clean-result" depends="build.properties">
@@ -66,6 +64,8 @@
 		<property name="result-classes-core" value="${result-path}/classes/core"/>
 		<property name="result-classes-junit" value="${result-path}/classes/junit"/>
 		<property name="result-classes-testbench" value="${result-path}/classes/testbench"/>
+		<!-- Folder where Emma instrumented classes are placed (if Emma is used)-->
+		<property name="result-classes-emma-core" value="${result-path}/classes/emma-core"/>
 
 	</target>
     <target name="clean-all" depends="clean-result">
@@ -978,7 +978,7 @@
 		</emma>    	    	
         <junit printsummary="yes"> 
             <classpath> 
-                <pathelement path="${result-classes-core-for-emma-junit}" />
+                <pathelement path="${result-path}/junit_emma_classes" />
                 <pathelement path="${result-classes-core}" />
                 <pathelement path="${result-classes-junit}" />
             	<path refid="emma.lib" />
