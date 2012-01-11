@@ -266,6 +266,8 @@ public class OrderedLayoutCases extends TestBase {
                         setChildState(0, 1, 2);
                         // Height: 100% to middle child
                         setChildState(1, 1, 4);
+                        // Alignment: bottom left to right child
+                        setChildState(2, 4, 7);
                     }
                 }));
 
@@ -277,6 +279,8 @@ public class OrderedLayoutCases extends TestBase {
                         setChildState(0, 1, 2);
                         // Height: 100% to middle child
                         setChildState(1, 1, 4);
+                        // Alignment: bottom left to right child
+                        setChildState(2, 4, 7);
                     }
                 }));
 
