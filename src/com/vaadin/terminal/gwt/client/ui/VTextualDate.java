@@ -392,10 +392,10 @@ public class VTextualDate extends VDateField implements Paintable, Field,
      * automatically adjusted by the browser.
      */
     public void updateWidth() {
-        if (isUndefinedWidth()) {
+        if (!needLayout) {
             return;
         }
-        needLayout = true;
+
         fieldExtraWidth = -1;
         iLayout(true);
     }
