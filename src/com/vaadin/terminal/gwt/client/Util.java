@@ -1080,6 +1080,8 @@ public class Util {
                 VConsole.log("\t\t" + var[1] + " (" + var[2] + ")" + " : "
                         + var[0]);
             }
+        } else {
+            VConsole.log("\t" + id + ": Warning: no corresponding paintable!");
         }
     }
 

@@ -5148,4 +5148,14 @@ public class Table extends AbstractSelect implements Action.Container,
     public RowGenerator getRowGenerator() {
         return rowGenerator;
     }
+
+    @Override
+    public void setVisible(boolean visible) {
+        if (!isVisible() && visible) {
+            // We need to ensure that the rows are sent to the client when the
+            // Table is made visible if it has been rendered as invisible.
+            setRowCacheInvalidated(true);
+        }
+        super.setVisible(visible);
+    }
 }

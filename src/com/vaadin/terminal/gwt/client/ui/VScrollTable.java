@@ -2292,26 +2292,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * of the caption container element by the correct amount
          */
         public void resizeCaptionContainer(int rightSpacing) {
+
+            int captionContainerWidth = width
+                    - colResizeWidget.getOffsetWidth() - rightSpacing;
+
             if (BrowserInfo.get().isIE6() || td.getClassName().contains("-asc")
                     || td.getClassName().contains("-desc")) {
-                /*
-                 * Room for the sort indicator is made by subtracting the styled
-                 * margin and width of the resizer from the width of the caption
-                 * container.
-                 */
-                int captionContainerWidth = width
-                        - sortIndicator.getOffsetWidth()
-                        - colResizeWidget.getOffsetWidth() - rightSpacing;
-                captionContainer.getStyle().setPropertyPx("width",
-                        captionContainerWidth);
-            } else {
-                /*
-                 * Set the caption container element as wide as possible when
-                 * the sorting indicator is not visible.
-                 */
-                captionContainer.getStyle().setPropertyPx("width",
-                        width - rightSpacing);
+                // Leave room for the sort indicator
+                captionContainerWidth -= sortIndicator.getOffsetWidth();
             }
+            captionContainer.getStyle().setPropertyPx("width",
+                    captionContainerWidth);
 
             // Apply/Remove spacing if defined
             if (rightSpacing > 0) {
@@ -6071,7 +6062,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     public void onScroll(ScrollEvent event) {
         scrollLeft = scrollBodyPanel.getElement().getScrollLeft();
         scrollTop = scrollBodyPanel.getScrollPosition();
-        if (!initializedAndAttached) {
+        /*
+         * #6970 - IE sometimes fires scroll events for a detached table.
+         * 
+         * FIXME initializedAndAttached should probably be renamed - its name
+         * doesn't seem to reflect its semantics. onDetach() doesn't set it to
+         * false, and changing that might break something else, so we need to
+         * check isAttached() separately.
+         */
+        if (!initializedAndAttached || !isAttached()) {
             return;
         }
         if (!enabled) {

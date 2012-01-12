@@ -591,6 +591,11 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
             String ownAppId = connection.getConfiguration().getRootPanelId();
 
+            // Hiding elements causes browser to forget scroll position -> must
+            // save values and restore when the elements are visible again #7976
+            int originalScrollTop = Window.getScrollTop();
+            int originalScrollLeft = Window.getScrollLeft();
+
             // Set display: none for all Vaadin apps
             for (int i = 0; i < vaadinApps.size(); i++) {
                 String appId = vaadinApps.get(i);
@@ -628,6 +633,9 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                     layoutStyle.setProperty("display", originalDisplay);
                 }
             }
+
+            // Scroll back to original location
+            Window.scrollTo(originalScrollLeft, originalScrollTop);
 
             return w;
         }

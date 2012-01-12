@@ -10,10 +10,14 @@ public class TableHeaderZoom extends TestBase {
     @Override
     protected void setup() {
         Table table = new Table();
-        table.setHeight("100px");
-        table.setWidth("200px");
-        table.setEnabled(false);
+        table.setHeight("400px");
+        table.setWidth("400px");
         table.addContainerProperty("Column 1", String.class, "");
+        table.addContainerProperty("Column 2", String.class, "");
+
+        for (int i = 0; i < 100; ++i) {
+            table.addItem(new Object[] { "" + i, "foo" }, i);
+        }
 
         Window main = getMainWindow();
         main.setContent(new CssLayout());
