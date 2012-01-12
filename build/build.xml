@@ -132,8 +132,8 @@
         <mkdir dir="${result-path}" />
 
         <!-- Create dirs that might be used by the test coverage generation -->
-    	<mkdir dir="${result-classes-emma-core}" />
-    	<mkdir dir="${result-path}/junit_emma_classes" />
+    	<mkdir dir="${result-classes-core-for-emma-war}" />
+    	<mkdir dir="${result-classes-core-for-emma-junit}" />
     	<mkdir dir="${result-path}/coverage" />
 
         <echo>We are using gwt version ${gwt-version}.</echo>
@@ -647,7 +647,7 @@
                 <attribute name="Bundle-Version" value="${version.full}" />
             </manifest>
             <!-- Include any instrumented class files before the normal classes -->
-            <fileset dir="${result-classes-core-for-emma-war}"/>
+            <fileset dir="${result-classes-core-for-emma-war}" />
             <fileset dir="${result-classes-core}"/>
             <!-- add sources -->
             <fileset dir="${result-src-core}"/>
