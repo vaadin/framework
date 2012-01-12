@@ -19,3 +19,11 @@
 .v-readonly.v-datefield-enabled-readonly-styled .v-datefield-button {
 	display: none;
 }
+
+.popup-style .v-datefield-calendarpanel-header,
+.v-datefield-popup-popup-style .v-datefield-calendarpanel-time {
+	background: red;
+}
+.popup-style .v-datefield-calendarpanel-body {
+	background: yellow;
+}
