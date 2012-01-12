@@ -65,7 +65,8 @@
 		<property name="result-classes-junit" value="${result-path}/classes/junit"/>
 		<property name="result-classes-testbench" value="${result-path}/classes/testbench"/>
 		<!-- Folder where Emma instrumented classes are placed (if Emma is used)-->
-		<property name="result-classes-emma-core" value="${result-path}/classes/emma-core"/>
+		<property name="result-classes-core-for-emma-war" value="${result-path}/classes/emma-war"/>
+		<property name="result-classes-core-for-emma-junit" value="${result-path}/classes/emma-junit"/>
 
 	</target>
     <target name="clean-all" depends="clean-result">
@@ -622,7 +623,7 @@
         	
 		<emma enabled="${emma.enabled}" >
 			<instr instrpath="${result-classes-core}"
-				destdir="${result-classes-emma-core}"
+				destdir="${result-classes-core-for-emma-war}"
 				mode="copy"
 				metadatafile="${result-path}/war.es"
 				merge="false"
@@ -646,7 +647,7 @@
                 <attribute name="Bundle-Version" value="${version.full}" />
             </manifest>
             <!-- Include any instrumented class files before the normal classes -->
-            <fileset dir="${result-classes-emma-core}"/>
+            <fileset dir="${result-classes-core-for-emma-war}"/>
             <fileset dir="${result-classes-core}"/>
             <!-- add sources -->
             <fileset dir="${result-src-core}"/>
@@ -982,7 +983,7 @@
 		</emma>    	    	
         <junit printsummary="yes"> 
             <classpath> 
-                <pathelement path="${result-path}/junit_emma_classes" />
+                <pathelement path="${result-classes-core-for-emma-junit}" />
                 <pathelement path="${result-classes-core}" />
                 <pathelement path="${result-classes-junit}" />
             	<path refid="emma.lib" />
