@@ -225,10 +225,6 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         }
 
         if (lastReadOnlyState != readonly || lastEnabledState != isEnabled()) {
-            // Enabled or readonly state changed. Differences in theming might
-            // affect the width (for instance if the popup button is hidden) so
-            // we have to recalculate the width (IF the width of the field is
-            // fixed)
             updateWidth();
         }
 
