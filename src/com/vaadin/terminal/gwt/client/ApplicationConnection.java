@@ -97,9 +97,9 @@ public class ApplicationConnection {
     public static final String ATTRIBUTE_ERROR = "error";
 
     /**
-     * A string that, if found in a non-JSON response to a UIDL request,
-     * followed by a colon, optional whitespace, and a URI, will cause the
-     * browser to synchronously load the URI.
+     * A string that, if found in a non-JSON response to a UIDL request, will
+     * cause the browser to refresh the page. If followed by a colon, optional
+     * whitespace, and a URI, causes the browser to synchronously load the URI.
      * 
      * <p>
      * This allows, for instance, a servlet filter to redirect the application
@@ -110,12 +110,12 @@ public class ApplicationConnection {
      * if (sessionExpired) {
      *     response.setHeader(&quot;Content-Type&quot;, &quot;text/html&quot;);
      *     response.getWriter().write(
-     *             myLoginPageHtml + &quot;&lt;!-- Vaadin-Redirect: &quot;
+     *             myLoginPageHtml + &quot;&lt;!-- Vaadin-Refresh: &quot;
      *                     + request.getContextPath() + &quot; --&gt;&quot;);
      * }
      * </pre>
      */
-    public static final String UIDL_REDIRECT_TOKEN = "Vaadin-Redirect";
+    public static final String UIDL_REFRESH_TOKEN = "Vaadin-Refresh";
 
     // will hold the UIDL security key (for XSS protection) once received
     private String uidlSecurityKey = "init";
@@ -544,13 +544,15 @@ public class ApplicationConnection {
                          * the request and served non-UIDL content (for
                          * instance, a login page if the session has expired.)
                          * If the response contains a magic substring, do a
-                         * synchronous redirect to the given URI. See #8241
+                         * synchronous refresh.
                          */
-                        MatchResult redirectUri = RegExp.compile(
-                                UIDL_REDIRECT_TOKEN + ":\\s*(.*?)(\\s|$)")
+                        MatchResult refreshToken = RegExp.compile(
+                                UIDL_REFRESH_TOKEN + "(:\\s*(.*?))?(\\s|$)")
                                 .exec(response.getText());
-                        if (redirectUri != null) {
-                            redirect(redirectUri.getGroup(1));
+                        if (refreshToken != null) {
+                            redirect(refreshToken.getGroup(2));
+                            VConsole.log("*** REDIRECT : "
+                                    + refreshToken.getGroup(2));
                             return;
                         }
                     }
