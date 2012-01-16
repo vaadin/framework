@@ -327,7 +327,8 @@ public class VFormLayout extends SimplePanel implements Container {
         }
 
         private void setStyles(String[] styles) {
-            String style = CLASSNAME;
+            String styleName = CLASSNAME;
+
             if (styles != null) {
                 for (String style : styles) {
                     if (ApplicationConnection.DISABLED_CLASSNAME.equals(style)) {
@@ -339,7 +340,8 @@ public class VFormLayout extends SimplePanel implements Container {
                     styleName += " " + CLASSNAME + "-" + style;
                 }
             }
-            setStyleName(style);
+
+            setStyleName(styleName);
         }
 
         public void updateCaption(UIDL uidl) {
