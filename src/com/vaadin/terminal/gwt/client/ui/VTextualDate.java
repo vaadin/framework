@@ -384,8 +384,16 @@ public class VTextualDate extends VDateField implements Paintable, Field,
         return fieldExtraWidth;
     }
 
+    /**
+     * Force an recalculation of the width of the component IF the width has
+     * been defined. Does nothing if width is undefined as the width will be
+     * automatically adjusted by the browser.
+     */
     public void updateWidth() {
-        needLayout = true;
+        if (!needLayout) {
+            return;
+        }
+
         fieldExtraWidth = -1;
         iLayout();
     }

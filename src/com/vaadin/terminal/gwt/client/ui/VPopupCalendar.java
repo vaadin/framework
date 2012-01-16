@@ -45,6 +45,9 @@ import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.TimeChangeListener;
 public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         ClickHandler, CloseHandler<PopupPanel>, SubPartAware {
 
+    private static final String POPUP_PRIMARY_STYLE_NAME = VDateField.CLASSNAME
+            + "-popup";
+
     private final Button calendarToggle;
 
     private VCalendarPanel calendar;
@@ -90,7 +93,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         });
 
         popup = new VOverlay(true, true, true);
-        popup.setStyleName(VDateField.CLASSNAME + "-popup");
+        popup.setStyleName(POPUP_PRIMARY_STYLE_NAME);
         popup.setWidget(calendar);
         popup.addCloseHandler(this);
 
@@ -154,13 +157,18 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
     @SuppressWarnings("deprecation")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         boolean lastReadOnlyState = readonly;
+        boolean lastEnabledState = isEnabled();
+
         parsable = uidl.getBooleanAttribute("parsable");
 
         super.updateFromUIDL(uidl, client);
 
-        popup.setStyleName(VDateField.CLASSNAME + "-popup "
-                + VDateField.CLASSNAME + "-"
-                + resolutionToString(currentResolution));
+        String popupStyleNames = ApplicationConnection.getStyleName(
+                POPUP_PRIMARY_STYLE_NAME, uidl, false);
+        popupStyleNames += " " + VDateField.CLASSNAME + "-"
+                + resolutionToString(currentResolution);
+        popup.setStyleName(popupStyleNames);
+
         calendar.setDateTimeService(getDateTimeService());
         calendar.setShowISOWeekNumbers(isShowISOWeekNumbers());
         if (calendar.getResolution() != currentResolution) {
@@ -216,7 +224,11 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
             calendarToggle.removeStyleName(CLASSNAME + "-button-readonly");
         }
 
-        if (lastReadOnlyState != readonly) {
+        if (lastReadOnlyState != readonly || lastEnabledState != isEnabled()) {
+            // Enabled or readonly state changed. Differences in theming might
+            // affect the width (for instance if the popup button is hidden) so
+            // we have to recalculate the width (IF the width of the field is
+            // fixed)
             updateWidth();
         }
 

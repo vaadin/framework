@@ -22,6 +22,8 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -93,6 +95,27 @@ public class ApplicationConnection {
 
     public static final String ATTRIBUTE_DESCRIPTION = "description";
     public static final String ATTRIBUTE_ERROR = "error";
+
+    /**
+     * A string that, if found in a non-JSON response to a UIDL request, will
+     * cause the browser to refresh the page. If followed by a colon, optional
+     * whitespace, and a URI, causes the browser to synchronously load the URI.
+     * 
+     * <p>
+     * This allows, for instance, a servlet filter to redirect the application
+     * to a custom login page when the session expires. For example:
+     * </p>
+     * 
+     * <pre>
+     * if (sessionExpired) {
+     *     response.setHeader(&quot;Content-Type&quot;, &quot;text/html&quot;);
+     *     response.getWriter().write(
+     *             myLoginPageHtml + &quot;&lt;!-- Vaadin-Refresh: &quot;
+     *                     + request.getContextPath() + &quot; --&gt;&quot;);
+     * }
+     * </pre>
+     */
+    public static final String UIDL_REFRESH_TOKEN = "Vaadin-Refresh";
 
     // will hold the UIDL security key (for XSS protection) once received
     private String uidlSecurityKey = "init";
@@ -511,6 +534,27 @@ public class ApplicationConnection {
                                 + statusCode);
                         endRequest();
                         return;
+                    }
+
+                    String contentType = response.getHeader("Content-Type");
+                    if (contentType == null
+                            || !contentType.startsWith("application/json")) {
+                        /*
+                         * A servlet filter or equivalent may have intercepted
+                         * the request and served non-UIDL content (for
+                         * instance, a login page if the session has expired.)
+                         * If the response contains a magic substring, do a
+                         * synchronous refresh.
+                         */
+                        MatchResult refreshToken = RegExp.compile(
+                                UIDL_REFRESH_TOKEN + "(:\\s*(.*?))?(\\s|$)")
+                                .exec(response.getText());
+                        if (refreshToken != null) {
+                            redirect(refreshToken.getGroup(2));
+                            VConsole.log("*** REDIRECT : "
+                                    + refreshToken.getGroup(2));
+                            return;
+                        }
                     }
 
                     final Date start = new Date();
@@ -1812,9 +1856,60 @@ public class ApplicationConnection {
             fw.setEnabled(enabled);
         }
 
+        TooltipInfo tooltipInfo = componentDetail.getTooltipInfo(null);
+        // Update tooltip
+        if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)) {
+            tooltipInfo
+                    .setTitle(uidl.getStringAttribute(ATTRIBUTE_DESCRIPTION));
+        } else {
+            tooltipInfo.setTitle(null);
+        }
+
+        // add error classname to components w/ error
+        if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
+            tooltipInfo.setErrorUidl(uidl.getErrors());
+        } else {
+            tooltipInfo.setErrorUidl(null);
+        }
+
+        // Style names
+        component.setStyleName(getStyleName(component.getStylePrimaryName(),
+                uidl, component instanceof Field));
+
+        // Set captions
+        if (manageCaption) {
+            final Container parent = Util.getLayout(component);
+            if (parent != null) {
+                parent.updateCaption((Paintable) component, uidl);
+            }
+        }
+        /*
+         * updateComponentSize need to be after caption update so caption can be
+         * taken into account
+         */
+
+        updateComponentSize(componentDetail, uidl);
+
+        return false;
+    }
+
+    /**
+     * Generates the style name for the widget based on the given primary style
+     * name (typically returned by Widget.getPrimaryStyleName()) and the UIDL.
+     * An additional "modified" style name can be added if the field parameter
+     * is set to true.
+     * 
+     * @param primaryStyleName
+     * @param uidl
+     * @param isField
+     * @return
+     */
+    public static String getStyleName(String primaryStyleName, UIDL uidl,
+            boolean field) {
+        boolean enabled = !uidl.getBooleanAttribute("disabled");
+
         StringBuffer styleBuf = new StringBuffer();
-        final String primaryName = component.getStylePrimaryName();
-        styleBuf.append(primaryName);
+        styleBuf.append(primaryStyleName);
 
         // first disabling and read-only status
         if (!enabled) {
@@ -1832,7 +1927,7 @@ public class ApplicationConnection {
             final String[] styles = uidl.getStringAttribute("style").split(" ");
             for (int i = 0; i < styles.length; i++) {
                 styleBuf.append(" ");
-                styleBuf.append(primaryName);
+                styleBuf.append(primaryStyleName);
                 styleBuf.append("-");
                 styleBuf.append(styles[i]);
                 styleBuf.append(" ");
@@ -1841,55 +1936,25 @@ public class ApplicationConnection {
         }
 
         // add modified classname to Fields
-        if (uidl.hasAttribute("modified") && component instanceof Field) {
+        if (field && uidl.hasAttribute("modified")) {
             styleBuf.append(" ");
             styleBuf.append(MODIFIED_CLASSNAME);
         }
 
-        TooltipInfo tooltipInfo = componentDetail.getTooltipInfo(null);
-        // Update tooltip
-        if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)) {
-            tooltipInfo
-                    .setTitle(uidl.getStringAttribute(ATTRIBUTE_DESCRIPTION));
-        } else {
-            tooltipInfo.setTitle(null);
-        }
-
-        // add error classname to components w/ error
         if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
-            tooltipInfo.setErrorUidl(uidl.getErrors());
             styleBuf.append(" ");
-            styleBuf.append(primaryName);
+            styleBuf.append(primaryStyleName);
             styleBuf.append(ERROR_CLASSNAME_EXT);
-        } else {
-            tooltipInfo.setErrorUidl(null);
         }
-
         // add required style to required components
         if (uidl.hasAttribute("required")) {
             styleBuf.append(" ");
-            styleBuf.append(primaryName);
+            styleBuf.append(primaryStyleName);
             styleBuf.append(REQUIRED_CLASSNAME_EXT);
         }
 
-        // Styles + disabled & readonly
-        component.setStyleName(styleBuf.toString());
+        return styleBuf.toString();
 
-        // Set captions
-        if (manageCaption) {
-            final Container parent = Util.getLayout(component);
-            if (parent != null) {
-                parent.updateCaption((Paintable) component, uidl);
-            }
-        }
-        /*
-         * updateComponentSize need to be after caption update so caption can be
-         * taken into account
-         */
-
-        updateComponentSize(componentDetail, uidl);
-
-        return false;
     }
 
     private void updateComponentSize(ComponentDetail cd, UIDL uidl) {

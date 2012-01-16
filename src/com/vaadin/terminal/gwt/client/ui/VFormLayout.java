@@ -114,8 +114,7 @@ public class VFormLayout extends SimplePanel implements Container {
                 final Paintable p = client.getPaintable(childUidl);
                 Caption caption = componentToCaption.get(p);
                 if (caption == null) {
-                    caption = new Caption(p, client,
-                            getStylesFromUIDL(childUidl));
+                    caption = new Caption(p, client);
                     caption.addClickHandler(this);
                     componentToCaption.put(p, caption);
                 }
@@ -197,7 +196,7 @@ public class VFormLayout extends SimplePanel implements Container {
                 if (oldComponent == candidate) {
                     Caption oldCap = componentToCaption.get(oldComponent);
                     final Caption newCap = new Caption(
-                            (Paintable) newComponent, client, null);
+                            (Paintable) newComponent, client);
                     newCap.addClickHandler(this);
                     newCap.setStyleName(oldCap.getStyleName());
                     componentToCaption.put((Paintable) newComponent, newCap);
@@ -319,12 +318,15 @@ public class VFormLayout extends SimplePanel implements Container {
          *            return null
          * @param client
          */
-        public Caption(Paintable component, ApplicationConnection client,
-                String[] styles) {
+        public Caption(Paintable component, ApplicationConnection client) {
             super();
             this.client = client;
             owner = component;
 
+            sinkEvents(VTooltip.TOOLTIP_EVENTS);
+        }
+
+        private void setStyles(String[] styles) {
             String style = CLASSNAME;
             if (styles != null) {
                 for (int i = 0; i < styles.length; i++) {
@@ -332,16 +334,13 @@ public class VFormLayout extends SimplePanel implements Container {
                 }
             }
             setStyleName(style);
-
-            sinkEvents(VTooltip.TOOLTIP_EVENTS);
         }
 
         public void updateCaption(UIDL uidl) {
             setVisible(!uidl.getBooleanAttribute("invisible"));
 
-            setStyleName(getElement(),
-                    ApplicationConnection.DISABLED_CLASSNAME,
-                    uidl.hasAttribute("disabled"));
+            // Update styles as they might have changed when the caption changed
+            setStyles(getStylesFromUIDL(uidl));
 
             boolean isEmpty = true;
 
