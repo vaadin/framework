@@ -18,7 +18,6 @@ import java.util.jar.JarEntry;
 import org.junit.Test;
 
 import com.vaadin.Application;
-import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
@@ -103,11 +102,13 @@ public class VaadinClasses {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static List<Class<? extends AbstractComponentTest<?>>> getBasicComponentTests() {
+    public static List<Class<?>> getBasicComponentTests() {
         try {
-            return (List) findClasses(AbstractComponentTest.class,
+            // Given as name to avoid dependencies on testbench source folder
+            return (List) findClasses(
+                    Class.forName("com.vaadin.tests.components.AbstractComponentTest"),
                     "com.vaadin.tests.components");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

@@ -32,7 +32,7 @@ import com.vaadin.ui.Window;
 public class Components extends Application {
 
     private static final Object CAPTION = "c";
-    private Map<Class<? extends AbstractComponentTest<?>>, String> tests = new HashMap<Class<? extends AbstractComponentTest<?>>, String>();
+    private Map<Class<? extends AbstractComponentTest>, String> tests = new HashMap<Class<? extends AbstractComponentTest>, String>();
     private Tree naviTree;
     private HorizontalSplitPanel sp;
     private Window mainWindow;
@@ -41,10 +41,9 @@ public class Components extends Application {
     private List<Class<? extends Component>> componentsWithoutTests = new ArrayList<Class<? extends Component>>();
 
     {
-        for (Class<? extends AbstractComponentTest<?>> c : VaadinClasses
-                .getBasicComponentTests()) {
+        for (Class<?> c : VaadinClasses.getBasicComponentTests()) {
             String testClass = c.getSimpleName();
-            tests.put(c, testClass);
+            tests.put((Class<? extends AbstractComponentTest>) c, testClass);
         }
 
         List<Class<? extends Component>> componentsWithoutTest = VaadinClasses
@@ -171,7 +170,7 @@ public class Components extends Application {
         hc.setItemSorter(sorter);
         naviTree.addContainerProperty(CAPTION, String.class, "");
         naviTree.setItemCaptionPropertyId(CAPTION);
-        for (Class<? extends AbstractComponentTest<?>> cls : tests.keySet()) {
+        for (Class<? extends AbstractComponentTest> cls : tests.keySet()) {
             addTreeItem(cls);
         }
         hc.sort(new Object[] { CAPTION }, new boolean[] { true });
@@ -226,13 +225,13 @@ public class Components extends Application {
     }
 
     @SuppressWarnings("unchecked")
-    private void addTreeItem(Class<? extends AbstractComponentTest<?>> cls) {
+    private void addTreeItem(Class<? extends AbstractComponentTest> cls) {
         String name = tests.get(cls);
         if (name == null) {
             name = cls.getSimpleName();
         }
 
-        Class<? extends AbstractComponentTest<?>> superClass = (Class<? extends AbstractComponentTest<?>>) cls
+        Class<? extends AbstractComponentTest> superClass = (Class<? extends AbstractComponentTest>) cls
                 .getSuperclass();
 
         // This cast is needed only to make compilation through Ant work ..
@@ -249,9 +248,9 @@ public class Components extends Application {
     }
 
     protected Component createTestComponent(
-            Class<? extends AbstractComponentTest<?>> cls) {
+            Class<? extends AbstractComponentTest> cls) {
         try {
-            AbstractComponentTest<?> t = cls.newInstance();
+            AbstractComponentTest t = cls.newInstance();
             t.init();
             ComponentContainer c = t.getMainWindow().getContent();
             t.getMainWindow().setContent(null);
