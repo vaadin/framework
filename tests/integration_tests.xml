@@ -268,15 +268,15 @@
 			<param name="target-server" value="weblogic10" />
 		</antcall>
 	</target>
-
+	
 	<target name="integration-test-weblogic12">
 		<antcall target="run-generic-integration-test">
-			<param name="startDelay" value="600" />
 			<param name="target-port" value="7001" />
 			<param name="target-server" value="weblogic12" />
 		</antcall>
 	</target>
-
+	
+	
 	<target name="integration-test-weblogicPortal">
 		<fileset dir="integration-testscripts" id="html-test-files" includes="weblogic-portal/integration-test-WebLogic-Portal-10.3.2-portlet2.html" />
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
