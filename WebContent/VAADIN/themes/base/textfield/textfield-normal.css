@@ -2,6 +2,7 @@
 	text-align: left /* Force default alignment */
 }
 .v-textarea {
+	resize: none;
 }
 .v-textfield-focus,
 .v-textarea-focus {
