@@ -1058,13 +1058,13 @@ public class Table extends AbstractSelect implements Action.Container,
      * @return the header for the specified column if it has one.
      */
     public String getColumnHeader(Object propertyId) {
-        if (getColumnHeaderMode() == COLUMN_HEADER_MODE_HIDDEN) {
+        if (getColumnHeaderMode() == ColumnHeaderMode.HIDDEN) {
             return null;
         }
 
         String header = columnHeaders.get(propertyId);
-        if ((header == null && getColumnHeaderMode() == COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID)
-                || getColumnHeaderMode() == COLUMN_HEADER_MODE_ID) {
+        if ((header == null && getColumnHeaderMode() == ColumnHeaderMode.EXPLICIT_DEFAULTS_ID)
+                || getColumnHeaderMode() == ColumnHeaderMode.ID) {
             header = propertyId.toString();
         }
 
@@ -1432,6 +1432,9 @@ public class Table extends AbstractSelect implements Action.Container,
      *            the New value of property columnHeaderMode.
      */
     public void setColumnHeaderMode(ColumnHeaderMode columnHeaderMode) {
+        if(columnHeaderMode == null){
+            throw new IllegalArgumentException("Column header mode can not be null");
+        }
         if (columnHeaderMode != this.columnHeaderMode) {
             this.columnHeaderMode = columnHeaderMode;
             requestRepaint();
@@ -2950,7 +2953,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     private boolean areColumnHeadersEnabled() {
-        return getColumnHeaderMode() != COLUMN_HEADER_MODE_HIDDEN;
+        return getColumnHeaderMode() != ColumnHeaderMode.HIDDEN;
     }
 
     private void paintVisibleColumns(PaintTarget target) throws PaintException {
