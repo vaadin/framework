@@ -17,6 +17,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -1133,8 +1134,23 @@ public class ApplicationConnection {
      * "burst" to queue that will be purged after current request is handled.
      * 
      */
-    @SuppressWarnings("unchecked")
     public void sendPendingVariableChanges() {
+        if (!deferedSendPending) {
+            deferedSendPending = true;
+            Scheduler.get().scheduleDeferred(sendPendingCommand);
+        }
+    }
+
+    private final ScheduledCommand sendPendingCommand = new ScheduledCommand() {
+        public void execute() {
+            deferedSendPending = false;
+            doSendPendingVariableChanges();
+        }
+    };
+    private boolean deferedSendPending = false;
+
+    @SuppressWarnings("unchecked")
+    private void doSendPendingVariableChanges() {
         if (applicationRunning) {
             if (hasActiveRequest()) {
                 // skip empty queues if there are pending bursts to be sent
