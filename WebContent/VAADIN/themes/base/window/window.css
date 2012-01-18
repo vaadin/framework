@@ -2,10 +2,15 @@
 	background: #fff;
 }
 .v-window-outerheader {
-	cursor: move;
 	padding: 0.3em 1em;
 	height: 1em;
 }
+
+.v-window-outerheader,
+.v-window-draggingCurtain {
+ 	cursor: move;	
+}
+
 .v-window-header {
 	font-weight: bold;
 }
@@ -40,16 +45,22 @@ div.v-window-header {
 	zoom: 1;
 	height: 10px;
 	position: relative;
+	cursor: move;
 }
 .v-window-resizebox {
 	width: 10px;
 	height: 10px;
-	cursor: se-resize;
 	background: #ddd;
 	overflow: hidden;
 	position: absolute;
 	right: 0;
 }
+
+.v-window-resizebox,
+.v-window-resizingCurtain {
+	cursor: se-resize;
+}
+
 .v-window div.v-window-footer-noresize {
 	height: 0;
 }
