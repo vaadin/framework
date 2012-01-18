@@ -95,7 +95,11 @@
 	padding: 0.2em 0.5em;
 }
 .v-tabsheet-tabitem .v-caption {
-	cursor: pointer;
+	cursor: inherit;
+}
+.v-tabsheet.v-disabled .v-tabsheet-tabitem,
+.v-tabsheet-tabitemcell-disabled .v-tabsheet-tabitem {
+	cursor: default;
 }
 .v-tabsheet-tabitem-selected {
 	cursor: default;

@@ -105,7 +105,6 @@
 	width: 16px;
 	height: 14px;
 	overflow: hidden;
-	cursor: default;
 	opacity: .5;
 	filter: alpha(opacity=50);
 	}
