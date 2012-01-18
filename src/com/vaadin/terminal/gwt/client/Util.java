@@ -30,6 +30,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
+import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 
 public class Util {
 
@@ -936,45 +937,60 @@ public class Util {
         return idx;
     }
 
-    private static void printPaintablesVariables(ArrayList<String[]> vars,
-            String id, ApplicationConnection c) {
+    private static void printPaintablesInvocations(
+            ArrayList<MethodInvocation> invocations, String id,
+            ApplicationConnection c) {
         VPaintableWidget paintable = (VPaintableWidget) VPaintableMap.get(c)
                 .getPaintable(id);
         if (paintable != null) {
             VConsole.log("\t" + id + " (" + paintable.getClass() + ") :");
-            for (String[] var : vars) {
-                VConsole.log("\t\t" + var[1] + " (" + var[2] + ")" + " : "
-                        + var[0]);
+            for (MethodInvocation invocation : invocations) {
+                String formattedParams = invocation.getParameters();
+                if (ApplicationConnection.UPDATE_VARIABLE_METHOD
+                        .equals(invocation.getMethodName())) {
+                    // if an updateVariable call, format as variable changes
+                    // ensure with limit that also trailing parameters are
+                    // included
+                    String[] split = invocation
+                            .getParameters()
+                            .split(String
+                                    .valueOf(ApplicationConnection.VAR_FIELD_SEPARATOR),
+                                    3);
+
+                    // unless of correct length, do not reformat
+                    if (split.length == 3) {
+                        // TODO needs to be reworked
+                        // name, type, value
+                        formattedParams = split[0] + " (" + split[1] + ")"
+                                + " : " + split[2];
+                    }
+                }
+                VConsole.log("\t\t" + invocation.getMethodName() + "("
+                        + formattedParams + ")");
             }
         }
     }
 
     static void logVariableBurst(ApplicationConnection c,
-            ArrayList<String> loggedBurst) {
+            ArrayList<MethodInvocation> loggedBurst) {
         try {
             VConsole.log("Variable burst to be sent to server:");
             String curId = null;
-            ArrayList<String[]> vars = new ArrayList<String[]>();
+            ArrayList<MethodInvocation> invocations = new ArrayList<MethodInvocation>();
             for (int i = 0; i < loggedBurst.size(); i++) {
-                String value = loggedBurst.get(i++);
-                String[] split = loggedBurst
-                        .get(i)
-                        .split(String
-                                .valueOf(ApplicationConnection.VAR_FIELD_SEPARATOR));
-                String id = split[0];
+                String id = loggedBurst.get(i).getPaintableId();
 
                 if (curId == null) {
                     curId = id;
                 } else if (!curId.equals(id)) {
-                    printPaintablesVariables(vars, curId, c);
-                    vars.clear();
+                    printPaintablesInvocations(invocations, curId, c);
+                    invocations.clear();
                     curId = id;
                 }
-                split[0] = value;
-                vars.add(split);
+                invocations.add(loggedBurst.get(i));
             }
-            if (!vars.isEmpty()) {
-                printPaintablesVariables(vars, curId, c);
+            if (!invocations.isEmpty()) {
+                printPaintablesInvocations(invocations, curId, c);
             }
         } catch (Exception e) {
             VConsole.error(e);

@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
+import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.ui.Field;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
@@ -73,6 +74,8 @@ public class ApplicationConnection {
 
     private static final String ERROR_CLASSNAME_EXT = "-error";
 
+    public static final String UPDATE_VARIABLE_METHOD = "v";
+
     public static final char VAR_RECORD_SEPARATOR = '\u001e';
 
     public static final char VAR_FIELD_SEPARATOR = '\u001f';
@@ -106,7 +109,7 @@ public class ApplicationConnection {
 
     private final HashMap<String, String> resourcesMap = new HashMap<String, String>();
 
-    private final ArrayList<String> pendingVariables = new ArrayList<String>();
+    private ArrayList<MethodInvocation> pendingInvocations = new ArrayList<MethodInvocation>();
 
     private WidgetSet widgetSet;
 
@@ -129,7 +132,7 @@ public class ApplicationConnection {
     private ApplicationConfiguration configuration;
 
     /** List of pending variable change bursts that must be submitted in order */
-    private final ArrayList<ArrayList<String>> pendingVariableBursts = new ArrayList<ArrayList<String>>();
+    private final ArrayList<ArrayList<MethodInvocation>> pendingBursts = new ArrayList<ArrayList<MethodInvocation>>();
 
     /** Timer for automatic refirect to SessionExpiredURL */
     private Timer redirectTimer;
@@ -750,14 +753,14 @@ public class ApplicationConnection {
      * change set if it exists.
      */
     private void checkForPendingVariableBursts() {
-        cleanVariableBurst(pendingVariables);
-        if (pendingVariableBursts.size() > 0) {
-            for (Iterator<ArrayList<String>> iterator = pendingVariableBursts
+        cleanVariableBurst(pendingInvocations);
+        if (pendingBursts.size() > 0) {
+            for (Iterator<ArrayList<MethodInvocation>> iterator = pendingBursts
                     .iterator(); iterator.hasNext();) {
                 cleanVariableBurst(iterator.next());
             }
-            ArrayList<String> nextBurst = pendingVariableBursts.get(0);
-            pendingVariableBursts.remove(0);
+            ArrayList<MethodInvocation> nextBurst = pendingBursts.get(0);
+            pendingBursts.remove(0);
             buildAndSendVariableBurst(nextBurst, false);
         }
     }
@@ -768,16 +771,13 @@ public class ApplicationConnection {
      * 
      * @param variableBurst
      */
-    private void cleanVariableBurst(ArrayList<String> variableBurst) {
-        for (int i = 1; i < variableBurst.size(); i += 2) {
-            String id = variableBurst.get(i);
-            id = id.substring(0, id.indexOf(VAR_FIELD_SEPARATOR));
+    private void cleanVariableBurst(ArrayList<MethodInvocation> variableBurst) {
+        for (int i = 1; i < variableBurst.size(); i++) {
+            String id = variableBurst.get(i).getPaintableId();
             if (!getPaintableMap().hasPaintable(id)
                     && !getPaintableMap().isDragAndDropPaintable(id)) {
                 // variable owner does not exist anymore
-                variableBurst.remove(i - 1);
-                variableBurst.remove(i - 1);
-                i -= 2;
+                variableBurst.remove(i);
                 VConsole.log("Removed variable from removed component: " + id);
             }
         }
@@ -1108,17 +1108,16 @@ public class ApplicationConnection {
 
     private void addVariableToQueue(String paintableId, String variableName,
             String encodedValue, boolean immediate, char type) {
-        final String id = paintableId + VAR_FIELD_SEPARATOR + variableName
-                + VAR_FIELD_SEPARATOR + type;
-        for (int i = 1; i < pendingVariables.size(); i += 2) {
-            if ((pendingVariables.get(i)).equals(id)) {
-                pendingVariables.remove(i - 1);
-                pendingVariables.remove(i - 1);
-                break;
-            }
-        }
-        pendingVariables.add(encodedValue);
-        pendingVariables.add(id);
+        // TODO could eliminate invocations of same shared variable setter
+        String param = variableName + VAR_FIELD_SEPARATOR + type
+                + VAR_FIELD_SEPARATOR + encodedValue;
+        addMethodInvocationToQueue(paintableId, new MethodInvocation(
+                paintableId, UPDATE_VARIABLE_METHOD, param), immediate);
+    }
+
+    private void addMethodInvocationToQueue(String paintableId,
+            MethodInvocation invocation, boolean immediate) {
+        pendingInvocations.add(invocation);
         if (immediate) {
             sendPendingVariableChanges();
         }
@@ -1154,15 +1153,12 @@ public class ApplicationConnection {
         if (applicationRunning) {
             if (hasActiveRequest()) {
                 // skip empty queues if there are pending bursts to be sent
-                if (pendingVariables.size() > 0
-                        || pendingVariableBursts.size() == 0) {
-                    ArrayList<String> burst = (ArrayList<String>) pendingVariables
-                            .clone();
-                    pendingVariableBursts.add(burst);
-                    pendingVariables.clear();
+                if (pendingInvocations.size() > 0 || pendingBursts.size() == 0) {
+                    pendingBursts.add(pendingInvocations);
+                    pendingInvocations = new ArrayList<MethodInvocation>();
                 }
             } else {
-                buildAndSendVariableBurst(pendingVariables, false);
+                buildAndSendVariableBurst(pendingInvocations, false);
             }
         }
     }
@@ -1174,35 +1170,38 @@ public class ApplicationConnection {
      * at the same time. This is ok as we can assume that DOM will never be
      * updated after this.
      * 
-     * @param pendingVariables
-     *            Vector of variable changes to send
+     * @param pendingInvocations
+     *            List of RPC method invocations to send
      * @param forceSync
      *            Should we use synchronous request?
      */
-    private void buildAndSendVariableBurst(ArrayList<String> pendingVariables,
-            boolean forceSync) {
+    private void buildAndSendVariableBurst(
+            ArrayList<MethodInvocation> pendingInvocations, boolean forceSync) {
         final StringBuffer req = new StringBuffer();
 
-        while (!pendingVariables.isEmpty()) {
+        while (!pendingInvocations.isEmpty()) {
             if (ApplicationConfiguration.isDebugMode()) {
-                Util.logVariableBurst(this, pendingVariables);
+                Util.logVariableBurst(this, pendingInvocations);
             }
-            for (int i = 0; i < pendingVariables.size(); i++) {
+            // TODO use JSON for messages
+            for (int i = 0; i < pendingInvocations.size(); i++) {
                 if (i > 0) {
-                    if (i % 2 == 0) {
-                        req.append(VAR_RECORD_SEPARATOR);
-                    } else {
-                        req.append(VAR_FIELD_SEPARATOR);
-                    }
+                    req.append(VAR_RECORD_SEPARATOR);
                 }
-                req.append(pendingVariables.get(i));
+                MethodInvocation invocation = pendingInvocations.get(i);
+                req.append(invocation.getPaintableId());
+                req.append(VAR_FIELD_SEPARATOR);
+                req.append(invocation.getMethodName());
+                req.append(VAR_FIELD_SEPARATOR);
+                // TODO support multiple parameters
+                req.append(invocation.getParameters());
             }
 
-            pendingVariables.clear();
-            // Append all the busts to this synchronous request
-            if (forceSync && !pendingVariableBursts.isEmpty()) {
-                pendingVariables = pendingVariableBursts.get(0);
-                pendingVariableBursts.remove(0);
+            pendingInvocations.clear();
+            // Append all the bursts to this synchronous request
+            if (forceSync && !pendingBursts.isEmpty()) {
+                pendingInvocations = pendingBursts.get(0);
+                pendingBursts.remove(0);
                 req.append(VAR_BURST_SEPARATOR);
             }
         }

@@ -123,10 +123,11 @@ public abstract class AbstractCommunicationManager implements
     private static final String WRITE_SECURITY_TOKEN_FLAG = "writeSecurityToken";
 
     /* Variable records indexes */
-    private static final int VAR_PID = 1;
-    private static final int VAR_NAME = 2;
+    private static final int VAR_PID = 0;
+    private static final int VAR_METHOD = 1;
+    private static final int VAR_VARNAME = 2;
     private static final int VAR_TYPE = 3;
-    private static final int VAR_VALUE = 0;
+    private static final int VAR_VALUE = 4;
 
     private static final char VTYPE_PAINTABLE = 'p';
     private static final char VTYPE_BOOLEAN = 'b';
@@ -1151,8 +1152,7 @@ public abstract class AbstractCommunicationManager implements
 
             for (int bi = 1; bi < bursts.length; bi++) {
                 final String burst = bursts[bi];
-                success = handleVariableBurst(request, application2, success,
-                        burst);
+                success = handleBurst(request, application2, success, burst);
 
                 // In case that there were multiple bursts, we know that this is
                 // a special synchronous case for closing window. Thus we are
@@ -1182,14 +1182,16 @@ public abstract class AbstractCommunicationManager implements
         return success;
     }
 
-    public boolean handleVariableBurst(Object source, Application app,
-            boolean success, final String burst) {
+    public boolean handleBurst(Object source, Application app, boolean success,
+            final String burst) {
         // extract variables to two dim string array
         final String[] tmp = burst.split(String.valueOf(VAR_RECORD_SEPARATOR));
-        final String[][] variableRecords = new String[tmp.length][4];
+        // TODO support variable number of parameters
+        final String[][] variableRecords = new String[tmp.length][5];
         for (int i = 0; i < tmp.length; i++) {
-            variableRecords[i] = tmp[i].split(String
-                    .valueOf(VAR_FIELD_SEPARATOR));
+            // ensure with limit that also trailing parameters are included
+            variableRecords[i] = tmp[i].split(
+                    String.valueOf(VAR_FIELD_SEPARATOR), 5);
         }
 
         for (int i = 0; i < variableRecords.length; i++) {
@@ -1199,6 +1201,12 @@ public abstract class AbstractCommunicationManager implements
                 nextVariable = variableRecords[i + 1];
             }
             final VariableOwner owner = getVariableOwner(variable[VAR_PID]);
+            final String methodName = variable[VAR_METHOD];
+            if (!ApplicationConnection.UPDATE_VARIABLE_METHOD
+                    .equals(methodName)) {
+                // TODO handle other RPC calls
+                continue;
+            }
             if (owner != null && owner.isEnabled()) {
                 Map<String, Object> m;
                 if (nextVariable != null
@@ -1206,13 +1214,13 @@ public abstract class AbstractCommunicationManager implements
                     // we have more than one value changes in row for
                     // one variable owner, collect them in HashMap
                     m = new HashMap<String, Object>();
-                    m.put(variable[VAR_NAME],
+                    m.put(variable[VAR_VARNAME],
                             convertVariableValue(variable[VAR_TYPE].charAt(0),
                                     variable[VAR_VALUE]));
                 } else {
                     // use optimized single value map
                     m = Collections.singletonMap(
-                            variable[VAR_NAME],
+                            variable[VAR_VARNAME],
                             convertVariableValue(variable[VAR_TYPE].charAt(0),
                                     variable[VAR_VALUE]));
                 }
@@ -1227,7 +1235,7 @@ public abstract class AbstractCommunicationManager implements
                     } else {
                         nextVariable = null;
                     }
-                    m.put(variable[VAR_NAME],
+                    m.put(variable[VAR_VARNAME],
                             convertVariableValue(variable[VAR_TYPE].charAt(0),
                                     variable[VAR_VALUE]));
                 }
@@ -1246,7 +1254,7 @@ public abstract class AbstractCommunicationManager implements
                 // Handle special case where window-close is called
                 // after the window has been removed from the
                 // application or the application has closed
-                if ("close".equals(variable[VAR_NAME])
+                if ("close".equals(variable[VAR_VARNAME])
                         && "true".equals(variable[VAR_VALUE])) {
                     // Silently ignore this
                     continue;
