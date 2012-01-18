@@ -45,6 +45,7 @@ import java.util.logging.Logger;
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
 import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.CombinedRequest;
@@ -62,6 +63,7 @@ import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.server.BootstrapHandler.BootstrapContext;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.ui.AbstractComponent;
@@ -140,12 +142,9 @@ public abstract class AbstractCommunicationManager implements
     private static final char VTYPE_STRINGARRAY = 'c';
     private static final char VTYPE_MAP = 'm';
 
-    private static final char VAR_RECORD_SEPARATOR = '\u001e';
-
-    private static final char VAR_FIELD_SEPARATOR = '\u001f';
-
     public static final char VAR_BURST_SEPARATOR = '\u001d';
 
+    @Deprecated
     public static final char VAR_ARRAYITEM_SEPARATOR = '\u001c';
 
     public static final char VAR_ESCAPE_CHARACTER = '\u001b';
@@ -1182,102 +1181,171 @@ public abstract class AbstractCommunicationManager implements
         return success;
     }
 
+    /**
+     * Helper class for parsing variable change RPC calls.
+     * 
+     * TODO refactor the code related to this, maybe eliminate this class
+     */
+    private static class VariableChange {
+        private final String name;
+        private final char type;
+        private final String value;
+
+        public VariableChange(MethodInvocation invocation) {
+            name = invocation.getParameters()[0];
+            type = invocation.getParameters()[1].charAt(0);
+            value = invocation.getParameters()[2];
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public char getType() {
+            return type;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
     public boolean handleBurst(Object source, Application app, boolean success,
             final String burst) {
-        // extract variables to two dim string array
-        final String[] tmp = burst.split(String.valueOf(VAR_RECORD_SEPARATOR));
-        // TODO support variable number of parameters
-        final String[][] variableRecords = new String[tmp.length][5];
-        for (int i = 0; i < tmp.length; i++) {
-            // ensure with limit that also trailing parameters are included
-            variableRecords[i] = tmp[i].split(
-                    String.valueOf(VAR_FIELD_SEPARATOR), 5);
-        }
+        try {
+            List<MethodInvocation> invocations = parseInvocations(burst);
 
-        for (int i = 0; i < variableRecords.length; i++) {
-            String[] variable = variableRecords[i];
-            String[] nextVariable = null;
-            if (i + 1 < variableRecords.length) {
-                nextVariable = variableRecords[i + 1];
-            }
-            final VariableOwner owner = getVariableOwner(variable[VAR_PID]);
-            final String methodName = variable[VAR_METHOD];
-            if (!ApplicationConnection.UPDATE_VARIABLE_METHOD
-                    .equals(methodName)) {
-                // TODO handle other RPC calls
-                continue;
-            }
-            if (owner != null && owner.isEnabled()) {
-                Map<String, Object> m;
-                if (nextVariable != null
-                        && variable[VAR_PID].equals(nextVariable[VAR_PID])) {
-                    // we have more than one value changes in row for
-                    // one variable owner, collect them in HashMap
-                    m = new HashMap<String, Object>();
-                    m.put(variable[VAR_VARNAME],
-                            convertVariableValue(variable[VAR_TYPE].charAt(0),
-                                    variable[VAR_VALUE]));
+            // perform the method invocations, grouping consecutive variable
+            // changes for the same paintable
+            // TODO simplify to do each call separately? breaks old semantics
+            for (int i = 0; i < invocations.size(); i++) {
+                MethodInvocation invocation = invocations.get(i);
+
+                MethodInvocation nextInvocation = null;
+                if (i + 1 < invocations.size()) {
+                    nextInvocation = invocations.get(i + 1);
+                }
+
+                final VariableOwner owner = getVariableOwner(invocation
+                        .getPaintableId());
+                final String methodName = invocation.getMethodName();
+
+                if (owner != null && owner.isEnabled()) {
+                    if (!ApplicationConnection.UPDATE_VARIABLE_METHOD
+                            .equals(methodName)) {
+                        // TODO handle other RPC calls
+                        continue;
+                    }
+
+                    VariableChange change = new VariableChange(invocation);
+
+                    // TODO could optimize with a single value map if only one
+                    // change for a paintable
+
+                    Map<String, Object> m = new HashMap<String, Object>();
+                    m.put(change.getName(),
+                            convertVariableValue(change.getType(),
+                                    change.getValue()));
+                    while (nextInvocation != null
+                            && invocation.getPaintableId().equals(
+                                    nextInvocation.getPaintableId())) {
+                        change = new VariableChange(invocation);
+                        m.put(change.getName(),
+                                convertVariableValue(change.getType(),
+                                        change.getValue()));
+                        i++;
+                        invocation = nextInvocation;
+                        if (i + 1 < invocations.size()) {
+                            nextInvocation = invocations.get(i + 1);
+                        } else {
+                            nextInvocation = null;
+                        }
+                    }
+
+                    try {
+                        changeVariables(source, owner, m);
+                    } catch (Exception e) {
+                        if (owner instanceof Component) {
+                            handleChangeVariablesError(app, (Component) owner,
+                                    e, m);
+                        } else {
+                            // TODO DragDropService error handling
+                            throw new RuntimeException(e);
+                        }
+                    }
                 } else {
-                    // use optimized single value map
-                    m = Collections.singletonMap(
-                            variable[VAR_VARNAME],
-                            convertVariableValue(variable[VAR_TYPE].charAt(0),
-                                    variable[VAR_VALUE]));
-                }
+                    // TODO convert window close to a separate RPC call, not a
+                    // variable change
 
-                // collect following variable changes for this owner
-                while (nextVariable != null
-                        && variable[VAR_PID].equals(nextVariable[VAR_PID])) {
-                    i++;
-                    variable = nextVariable;
-                    if (i + 1 < variableRecords.length) {
-                        nextVariable = variableRecords[i + 1];
-                    } else {
-                        nextVariable = null;
-                    }
-                    m.put(variable[VAR_VARNAME],
-                            convertVariableValue(variable[VAR_TYPE].charAt(0),
-                                    variable[VAR_VALUE]));
-                }
-                try {
-                    changeVariables(source, owner, m);
-                } catch (Exception e) {
-                    if (owner instanceof Component) {
-                        handleChangeVariablesError(app, (Component) owner, e, m);
-                    } else {
-                        // TODO DragDropService error handling
-                        throw new RuntimeException(e);
-                    }
-                }
-            } else {
+                    VariableChange change = new VariableChange(invocation);
 
-                // Handle special case where window-close is called
-                // after the window has been removed from the
-                // application or the application has closed
-                if ("close".equals(variable[VAR_VARNAME])
-                        && "true".equals(variable[VAR_VALUE])) {
-                    // Silently ignore this
+                    // Handle special case where window-close is called
+                    // after the window has been removed from the
+                    // application or the application has closed
+                    if ("close".equals(change.getName())
+                            && "true".equals(change.getValue())) {
+                        // Silently ignore this
+                        continue;
+                    }
+
+                    // Ignore variable change
+                    String msg = "Warning: Ignoring RPC call for ";
+                    if (owner != null) {
+                        msg += "disabled component " + owner.getClass();
+                        String caption = ((Component) owner).getCaption();
+                        if (caption != null) {
+                            msg += ", caption=" + caption;
+                        }
+                    } else {
+                        msg += "non-existent component, VAR_PID="
+                                + invocation.getPaintableId();
+                        success = false;
+                    }
+                    logger.warning(msg);
                     continue;
                 }
-
-                // Ignore variable change
-                String msg = "Warning: Ignoring variable change for ";
-                if (owner != null) {
-                    msg += "disabled component " + owner.getClass();
-                    String caption = ((Component) owner).getCaption();
-                    if (caption != null) {
-                        msg += ", caption=" + caption;
-                    }
-                } else {
-                    msg += "non-existent component, VAR_PID="
-                            + variable[VAR_PID];
-                    success = false;
-                }
-                logger.warning(msg);
-                continue;
             }
+
+        } catch (JSONException e) {
+            logger.warning("Unable to parse RPC call from the client: "
+                    + e.getMessage());
+            throw new RuntimeException(e);
         }
+
         return success;
+    }
+
+    /**
+     * Parse a message burst from the client into a list of MethodInvocation
+     * instances.
+     * 
+     * @param burst
+     *            message string (JSON)
+     * @return list of MethodInvocation to perform
+     * @throws JSONException
+     */
+    private List<MethodInvocation> parseInvocations(final String burst)
+            throws JSONException {
+        JSONArray invocationsJson = new JSONArray(burst);
+
+        ArrayList<MethodInvocation> invocations = new ArrayList<MethodInvocation>();
+
+        // parse JSON to MethodInvocations
+        for (int i = 0; i < invocationsJson.length(); ++i) {
+            JSONArray invocationJson = invocationsJson.getJSONArray(i);
+            String paintableId = invocationJson.getString(0);
+            String methodName = invocationJson.getString(1);
+            JSONArray parametersJson = invocationJson.getJSONArray(2);
+            String[] parameters = new String[parametersJson.length()];
+            // TODO support typed parameters
+            for (int j = 0; j < parametersJson.length(); ++j) {
+                parameters[j] = parametersJson.getString(j);
+            }
+            MethodInvocation invocation = new MethodInvocation(paintableId,
+                    methodName, parameters);
+            invocations.add(invocation);
+        }
+        return invocations;
     }
 
     protected void changeVariables(Object source, final VariableOwner owner,
@@ -1488,9 +1556,9 @@ public abstract class AbstractCommunicationManager implements
     }
 
     /**
-     * Decode encoded burst, record, field and array item separator characters
-     * in a variable value String received from the client. This protects from
-     * separator injection attacks.
+     * Decode encoded burst and other separator characters in a variable value
+     * String received from the client. This protects from separator injection
+     * attacks.
      * 
      * @param encodedValue
      *            to decode
@@ -1510,8 +1578,6 @@ public abstract class AbstractCommunicationManager implements
                     result.append(VAR_ESCAPE_CHARACTER);
                     break;
                 case VAR_BURST_SEPARATOR + 0x30:
-                case VAR_RECORD_SEPARATOR + 0x30:
-                case VAR_FIELD_SEPARATOR + 0x30:
                 case VAR_ARRAYITEM_SEPARATOR + 0x30:
                     // +0x30 makes these letters for easier reading
                     result.append((char) (character - 0x30));

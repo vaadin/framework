@@ -23,6 +23,8 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -76,12 +78,9 @@ public class ApplicationConnection {
 
     public static final String UPDATE_VARIABLE_METHOD = "v";
 
-    public static final char VAR_RECORD_SEPARATOR = '\u001e';
-
-    public static final char VAR_FIELD_SEPARATOR = '\u001f';
-
     public static final char VAR_BURST_SEPARATOR = '\u001d';
 
+    @Deprecated
     public static final char VAR_ARRAYITEM_SEPARATOR = '\u001c';
 
     public static final char VAR_ESCAPE_CHARACTER = '\u001b';
@@ -1109,10 +1108,10 @@ public class ApplicationConnection {
     private void addVariableToQueue(String paintableId, String variableName,
             String encodedValue, boolean immediate, char type) {
         // TODO could eliminate invocations of same shared variable setter
-        String param = variableName + VAR_FIELD_SEPARATOR + type
-                + VAR_FIELD_SEPARATOR + encodedValue;
         addMethodInvocationToQueue(paintableId, new MethodInvocation(
-                paintableId, UPDATE_VARIABLE_METHOD, param), immediate);
+                paintableId, UPDATE_VARIABLE_METHOD, new String[] {
+                        variableName, String.valueOf(type), encodedValue }),
+                immediate);
     }
 
     private void addMethodInvocationToQueue(String paintableId,
@@ -1183,19 +1182,26 @@ public class ApplicationConnection {
             if (ApplicationConfiguration.isDebugMode()) {
                 Util.logVariableBurst(this, pendingInvocations);
             }
-            // TODO use JSON for messages
-            for (int i = 0; i < pendingInvocations.size(); i++) {
-                if (i > 0) {
-                    req.append(VAR_RECORD_SEPARATOR);
+
+            JSONArray reqJson = new JSONArray();
+
+            // TODO support typed parameters
+            for (MethodInvocation invocation : pendingInvocations) {
+                JSONArray invocationJson = new JSONArray();
+                invocationJson.set(0,
+                        new JSONString(invocation.getPaintableId()));
+                invocationJson.set(1,
+                        new JSONString(invocation.getMethodName()));
+                JSONArray paramJson = new JSONArray();
+                for (int i = 0; i < invocation.getParameters().length; ++i) {
+                    paramJson.set(i, new JSONString(
+                            invocation.getParameters()[i]));
                 }
-                MethodInvocation invocation = pendingInvocations.get(i);
-                req.append(invocation.getPaintableId());
-                req.append(VAR_FIELD_SEPARATOR);
-                req.append(invocation.getMethodName());
-                req.append(VAR_FIELD_SEPARATOR);
-                // TODO support multiple parameters
-                req.append(invocation.getParameters());
+                invocationJson.set(2, paramJson);
+                reqJson.set(reqJson.size(), invocationJson);
             }
+
+            req.append(reqJson.toString());
 
             pendingInvocations.clear();
             // Append all the bursts to this synchronous request
@@ -1531,9 +1537,8 @@ public class ApplicationConnection {
     }
 
     /**
-     * Encode burst, record, field and array item separator characters in a
-     * String for transport over the network. This protects from separator
-     * injection attacks.
+     * Encode burst and other separator characters in a String for transport
+     * over the network. This protects from separator injection attacks.
      * 
      * @param value
      *            to encode
@@ -1547,8 +1552,6 @@ public class ApplicationConnection {
             case VAR_ESCAPE_CHARACTER:
                 // fall-through - escape character is duplicated
             case VAR_BURST_SEPARATOR:
-            case VAR_RECORD_SEPARATOR:
-            case VAR_FIELD_SEPARATOR:
             case VAR_ARRAYITEM_SEPARATOR:
                 result.append(VAR_ESCAPE_CHARACTER);
                 // encode as letters for easier reading

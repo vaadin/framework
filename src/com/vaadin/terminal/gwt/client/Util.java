@@ -945,25 +945,18 @@ public class Util {
         if (paintable != null) {
             VConsole.log("\t" + id + " (" + paintable.getClass() + ") :");
             for (MethodInvocation invocation : invocations) {
-                String formattedParams = invocation.getParameters();
+                String[] parameters = invocation.getParameters();
+                String formattedParams = null;
                 if (ApplicationConnection.UPDATE_VARIABLE_METHOD
-                        .equals(invocation.getMethodName())) {
-                    // if an updateVariable call, format as variable changes
-                    // ensure with limit that also trailing parameters are
-                    // included
-                    String[] split = invocation
-                            .getParameters()
-                            .split(String
-                                    .valueOf(ApplicationConnection.VAR_FIELD_SEPARATOR),
-                                    3);
-
-                    // unless of correct length, do not reformat
-                    if (split.length == 3) {
-                        // TODO needs to be reworked
-                        // name, type, value
-                        formattedParams = split[0] + " (" + split[1] + ")"
-                                + " : " + split[2];
-                    }
+                        .equals(invocation.getMethodName())
+                        && parameters.length == 3) {
+                    // name, type, value
+                    formattedParams = parameters[0] + " (" + parameters[1]
+                            + ")" + " : " + parameters[2];
+                }
+                if (null == formattedParams) {
+                    formattedParams = (null != parameters) ? parameters
+                            .toString() : null;
                 }
                 VConsole.log("\t\t" + invocation.getMethodName() + "("
                         + formattedParams + ")");
