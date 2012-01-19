@@ -327,7 +327,7 @@
 			<antcall target="integration-test-liferay5" />
 			<antcall target="integration-test-weblogic9" />
 			<antcall target="integration-test-weblogic10" />
-			<!--<antcall target="integration-test-weblogic12" />-->
+			<antcall target="integration-test-weblogic12" />
 			<antcall target="integration-test-gatein3" />
 			<antcall target="integration-test-glassfish2" />
 			<antcall target="integration-test-glassfish3" />
