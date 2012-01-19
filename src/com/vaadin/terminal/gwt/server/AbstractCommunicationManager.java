@@ -1248,7 +1248,9 @@ public abstract class AbstractCommunicationManager implements
                                     change.getValue()));
                     while (nextInvocation != null
                             && invocation.getPaintableId().equals(
-                                    nextInvocation.getPaintableId())) {
+                                    nextInvocation.getPaintableId())
+                            && ApplicationConnection.UPDATE_VARIABLE_METHOD
+                                    .equals(nextInvocation.getMethodName())) {
                         change = new VariableChange(invocation);
                         m.put(change.getName(),
                                 convertVariableValue(change.getType(),
