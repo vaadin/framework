@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,7 +88,7 @@ import com.vaadin.ui.Root;
  */
 @SuppressWarnings("serial")
 public abstract class AbstractCommunicationManager implements
-        Paintable.RepaintRequestListener, Serializable {
+        Paintable.RepaintRequestListener, PaintableIdMapper, Serializable {
 
     private static final String DASHDASH = "--";
 
@@ -127,25 +126,8 @@ public abstract class AbstractCommunicationManager implements
     /* Variable records indexes */
     private static final int VAR_PID = 0;
     private static final int VAR_METHOD = 1;
-    private static final int VAR_VARNAME = 2;
-    private static final int VAR_TYPE = 3;
-    private static final int VAR_VALUE = 4;
-
-    private static final char VTYPE_PAINTABLE = 'p';
-    private static final char VTYPE_BOOLEAN = 'b';
-    private static final char VTYPE_DOUBLE = 'd';
-    private static final char VTYPE_FLOAT = 'f';
-    private static final char VTYPE_LONG = 'l';
-    private static final char VTYPE_INTEGER = 'i';
-    private static final char VTYPE_STRING = 's';
-    private static final char VTYPE_ARRAY = 'a';
-    private static final char VTYPE_STRINGARRAY = 'c';
-    private static final char VTYPE_MAP = 'm';
 
     public static final char VAR_BURST_SEPARATOR = '\u001d';
-
-    @Deprecated
-    public static final char VAR_ARRAYITEM_SEPARATOR = '\u001c';
 
     public static final char VAR_ESCAPE_CHARACTER = '\u001b';
 
@@ -1150,8 +1132,9 @@ public abstract class AbstractCommunicationManager implements
             }
 
             for (int bi = 1; bi < bursts.length; bi++) {
-                final String burst = bursts[bi];
-                success = handleBurst(request, application2, success, burst);
+                // unescape any encoded separator characters in the burst
+                final String burst = unescapeBurst(bursts[bi]);
+                success &= handleBurst(request, application2, burst);
 
                 // In case that there were multiple bursts, we know that this is
                 // a special synchronous case for closing window. Thus we are
@@ -1184,40 +1167,73 @@ public abstract class AbstractCommunicationManager implements
     /**
      * Helper class for parsing variable change RPC calls.
      * 
-     * TODO refactor the code related to this, maybe eliminate this class
+     * Note that variable changes still only support the old data types and
+     * partly use Vaadin 6 way of encoding of values. Other RPC method calls
+     * support more data types.
+     * 
+     * @since 7.0
      */
-    private static class VariableChange {
+    private class VariableChange {
         private final String name;
-        private final char type;
-        private final String value;
+        private final Object value;
 
-        public VariableChange(MethodInvocation invocation) {
-            name = invocation.getParameters()[0];
-            type = invocation.getParameters()[1].charAt(0);
-            value = invocation.getParameters()[2];
+        public VariableChange(MethodInvocation invocation) throws JSONException {
+            name = (String) invocation.getParameters()[0];
+            value = invocation.getParameters()[1];
         }
 
+        /**
+         * Returns the variable name for the modification.
+         * 
+         * @return variable name
+         */
         public String getName() {
             return name;
         }
 
-        public char getType() {
-            return type;
-        }
-
-        public String getValue() {
+        /**
+         * Returns the (parsed and converted) value of the updated variable.
+         * 
+         * @return variable value
+         */
+        public Object getValue() {
             return value;
         }
     }
 
-    public boolean handleBurst(Object source, Application app, boolean success,
+    /**
+     * Processes a message burst received from the client.
+     * 
+     * A burst can contain any number of RPC calls, including legacy variable
+     * change calls that are processed separately.
+     * 
+     * Consecutive changes to the value of the same variable are combined and
+     * changeVariables() is only called once for them. This preserves the Vaadin
+     * 6 semantics for components and add-ons that do not use Vaadin 7 RPC
+     * directly.
+     * 
+     * @param source
+     * @param app
+     *            application receiving the burst
+     * @param burst
+     *            the content of the burst as a String to be parsed
+     * @return true if the processing of the burst was successful and there were
+     *         no messages to non-existent components
+     */
+    public boolean handleBurst(Object source, Application app,
             final String burst) {
+        boolean success = true;
         try {
             List<MethodInvocation> invocations = parseInvocations(burst);
 
-            // perform the method invocations, grouping consecutive variable
-            // changes for the same paintable
-            // TODO simplify to do each call separately? breaks old semantics
+            // Perform the method invocations, grouping consecutive variable
+            // changes for the same Paintable.
+
+            // Combining of variable changes is currently needed to preserve the
+            // old semantics for any component that relies on them. If the
+            // support for legacy variable change events is removed, each call
+            // can be performed separately and thelogic here simplified.
+
             for (int i = 0; i < invocations.size(); i++) {
                 MethodInvocation invocation = invocations.get(i);
 
@@ -1243,20 +1259,16 @@ public abstract class AbstractCommunicationManager implements
                     // change for a paintable
 
                     Map<String, Object> m = new HashMap<String, Object>();
-                    m.put(change.getName(),
-                            convertVariableValue(change.getType(),
-                                    change.getValue()));
+                    m.put(change.getName(), change.getValue());
                     while (nextInvocation != null
                             && invocation.getPaintableId().equals(
                                     nextInvocation.getPaintableId())
                             && ApplicationConnection.UPDATE_VARIABLE_METHOD
                                     .equals(nextInvocation.getMethodName())) {
-                        change = new VariableChange(invocation);
-                        m.put(change.getName(),
-                                convertVariableValue(change.getType(),
-                                        change.getValue()));
                         i++;
                         invocation = nextInvocation;
+                        change = new VariableChange(invocation);
+                        m.put(change.getName(), change.getValue());
                         if (i + 1 < invocations.size()) {
                             nextInvocation = invocations.get(i + 1);
                         } else {
@@ -1285,7 +1297,7 @@ public abstract class AbstractCommunicationManager implements
                     // after the window has been removed from the
                     // application or the application has closed
                     if ("close".equals(change.getName())
-                            && "true".equals(change.getValue())) {
+                            && Boolean.TRUE.equals(change.getValue())) {
                         // Silently ignore this
                         continue;
                     }
@@ -1301,6 +1313,7 @@ public abstract class AbstractCommunicationManager implements
                     } else {
                         msg += "non-existent component, VAR_PID="
                                 + invocation.getPaintableId();
+                        // TODO should this cause the message to be ignored?
                         success = false;
                     }
                     logger.warning(msg);
@@ -1311,6 +1324,7 @@ public abstract class AbstractCommunicationManager implements
         } catch (JSONException e) {
             logger.warning("Unable to parse RPC call from the client: "
                     + e.getMessage());
+            // TODO or return success = false?
             throw new RuntimeException(e);
         }
 
@@ -1338,10 +1352,10 @@ public abstract class AbstractCommunicationManager implements
             String paintableId = invocationJson.getString(0);
             String methodName = invocationJson.getString(1);
             JSONArray parametersJson = invocationJson.getJSONArray(2);
-            String[] parameters = new String[parametersJson.length()];
-            // TODO support typed parameters
+            Object[] parameters = new Object[parametersJson.length()];
             for (int j = 0; j < parametersJson.length(); ++j) {
-                parameters[j] = parametersJson.getString(j);
+                parameters[j] = JsonDecoder.convertVariableValue(
+                        parametersJson.getJSONArray(j), this);
             }
             MethodInvocation invocation = new MethodInvocation(paintableId,
                     methodName, parameters);
@@ -1462,111 +1476,15 @@ public abstract class AbstractCommunicationManager implements
 
     }
 
-    private Object convertVariableValue(char variableType, String strValue) {
-        Object val = null;
-        switch (variableType) {
-        case VTYPE_ARRAY:
-            val = convertArray(strValue);
-            break;
-        case VTYPE_MAP:
-            val = convertMap(strValue);
-            break;
-        case VTYPE_STRINGARRAY:
-            val = convertStringArray(strValue);
-            break;
-        case VTYPE_STRING:
-            // decode encoded separators
-            val = decodeVariableValue(strValue);
-            break;
-        case VTYPE_INTEGER:
-            val = Integer.valueOf(strValue);
-            break;
-        case VTYPE_LONG:
-            val = Long.valueOf(strValue);
-            break;
-        case VTYPE_FLOAT:
-            val = Float.valueOf(strValue);
-            break;
-        case VTYPE_DOUBLE:
-            val = Double.valueOf(strValue);
-            break;
-        case VTYPE_BOOLEAN:
-            val = Boolean.valueOf(strValue);
-            break;
-        case VTYPE_PAINTABLE:
-            val = idPaintableMap.get(strValue);
-            break;
-        }
-
-        return val;
-    }
-
-    private Object convertMap(String strValue) {
-        String[] parts = strValue
-                .split(String.valueOf(VAR_ARRAYITEM_SEPARATOR));
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        for (int i = 0; i < parts.length; i += 2) {
-            String key = parts[i];
-            if (key.length() > 0) {
-                char variabletype = key.charAt(0);
-                // decode encoded separators
-                String decodedValue = decodeVariableValue(parts[i + 1]);
-                String decodedKey = decodeVariableValue(key.substring(1));
-                Object value = convertVariableValue(variabletype, decodedValue);
-                map.put(decodedKey, value);
-            }
-        }
-        return map;
-    }
-
-    private String[] convertStringArray(String strValue) {
-        // need to return delimiters and filter them out; otherwise empty
-        // strings are lost
-        // an extra empty delimiter at the end is automatically eliminated
-        final String arrayItemSeparator = String
-                .valueOf(VAR_ARRAYITEM_SEPARATOR);
-        StringTokenizer tokenizer = new StringTokenizer(strValue,
-                arrayItemSeparator, true);
-        List<String> tokens = new ArrayList<String>();
-        String prevToken = arrayItemSeparator;
-        while (tokenizer.hasMoreTokens()) {
-            String token = tokenizer.nextToken();
-            if (!arrayItemSeparator.equals(token)) {
-                // decode encoded separators
-                tokens.add(decodeVariableValue(token));
-            } else if (arrayItemSeparator.equals(prevToken)) {
-                tokens.add("");
-            }
-            prevToken = token;
-        }
-        return tokens.toArray(new String[tokens.size()]);
-    }
-
-    private Object convertArray(String strValue) {
-        String[] val = strValue.split(String.valueOf(VAR_ARRAYITEM_SEPARATOR));
-        if (val.length == 0 || (val.length == 1 && val[0].length() == 0)) {
-            return new Object[0];
-        }
-        Object[] values = new Object[val.length];
-        for (int i = 0; i < values.length; i++) {
-            String string = val[i];
-            // first char of string is type
-            char variableType = string.charAt(0);
-            values[i] = convertVariableValue(variableType, string.substring(1));
-        }
-        return values;
-    }
-
     /**
-     * Decode encoded burst and other separator characters in a variable value
-     * String received from the client. This protects from separator injection
-     * attacks.
+     * Unescape encoded burst separator characters in a burst received from the
+     * client. This protects from separator injection attacks.
      * 
      * @param encodedValue
      *            to decode
      * @return decoded value
      */
-    protected String decodeVariableValue(String encodedValue) {
+    protected String unescapeBurst(String encodedValue) {
         final StringBuilder result = new StringBuilder();
         final StringCharacterIterator iterator = new StringCharacterIterator(
                 encodedValue);
@@ -1580,7 +1498,6 @@ public abstract class AbstractCommunicationManager implements
                     result.append(VAR_ESCAPE_CHARACTER);
                     break;
                 case VAR_BURST_SEPARATOR + 0x30:
-                case VAR_ARRAYITEM_SEPARATOR + 0x30:
                     // +0x30 makes these letters for easier reading
                     result.append((char) (character - 0x30));
                     break;
@@ -1794,6 +1711,10 @@ public abstract class AbstractCommunicationManager implements
         response.setContentType("application/json; charset=UTF-8");
         // some dirt to prevent cross site scripting
         outWriter.print("for(;;);[{");
+    }
+
+    public Paintable getPaintable(String paintableId) {
+        return idPaintableMap.get(paintableId);
     }
 
     /**

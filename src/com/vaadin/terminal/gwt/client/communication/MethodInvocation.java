@@ -10,11 +10,10 @@ public class MethodInvocation {
 
     private final String paintableId;
     private final String methodName;
-    private final String[] parameters;
+    private final Object[] parameters;
 
-    // TODO Parameters should be an Object[]?
     public MethodInvocation(String paintableId, String methodName,
-            String[] parameters) {
+            Object[] parameters) {
         this.paintableId = paintableId;
         this.methodName = methodName;
         this.parameters = parameters;
@@ -28,7 +27,7 @@ public class MethodInvocation {
         return methodName;
     }
 
-    public String[] getParameters() {
+    public Object[] getParameters() {
         return parameters;
     }
 }

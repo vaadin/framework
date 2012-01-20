@@ -945,14 +945,18 @@ public class Util {
         if (paintable != null) {
             VConsole.log("\t" + id + " (" + paintable.getClass() + ") :");
             for (MethodInvocation invocation : invocations) {
-                String[] parameters = invocation.getParameters();
+                Object[] parameters = invocation.getParameters();
                 String formattedParams = null;
                 if (ApplicationConnection.UPDATE_VARIABLE_METHOD
                         .equals(invocation.getMethodName())
-                        && parameters.length == 3) {
-                    // name, type, value
-                    formattedParams = parameters[0] + " (" + parameters[1]
-                            + ")" + " : " + parameters[2];
+                        && parameters.length == 2) {
+                    // name, value
+                    Object value = parameters[1];
+                    // TODO paintables inside lists/maps get rendered as
+                    // components in the debug console
+                    String formattedValue = value instanceof Paintable ? c
+                            .getPid((Paintable) value) : String.valueOf(value);
+                    formattedParams = parameters[0] + " : " + formattedValue;
                 }
                 if (null == formattedParams) {
                     formattedParams = (null != parameters) ? parameters
