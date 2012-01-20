@@ -15,6 +15,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.Table.ColumnHeaderMode;
@@ -43,9 +44,9 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     }
 
     /* COMMANDS */
-    private Command<T, String> columnAlignmentCommand = new Command<T, String>() {
+    private Command<T, Align> columnAlignmentCommand = new Command<T, Align>() {
 
-        public void execute(T c, String alignment, Object propertyId) {
+        public void execute(T c, Align alignment, Object propertyId) {
             c.setColumnAlignment(propertyId, alignment);
         }
 
@@ -136,7 +137,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     protected Command<T, Object> alignColumnLeftCommand = new Command<T, Object>() {
 
         public void execute(T c, Object propertyId, Object data) {
-            c.setColumnAlignment(propertyId, (String) data);
+            c.setColumnAlignment(propertyId, (Align) data);
         }
     };
 
@@ -603,10 +604,10 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         createBooleanAction("Collapsed", category, false, columnCollapsed,
                 propertyId);
         t.log("Collapsed");
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
-        options.put("Left", Table.ALIGN_LEFT);
-        options.put("Center", Table.ALIGN_CENTER);
-        options.put("Right", Table.ALIGN_RIGHT);
+        LinkedHashMap<String, Align> options = new LinkedHashMap<String, Align>();
+        options.put("Left", Align.LEFT);
+        options.put("Center", Align.CENTER);
+        options.put("Right", Align.RIGHT);
 
         createSelectAction("Alignment", category, options, "Left",
                 columnAlignmentCommand, propertyId);

@@ -115,20 +115,66 @@ public class Table extends AbstractSelect implements Action.Container,
 
     protected static final int CELL_FIRSTCOL = 5;
 
-    /**
-     * Left column alignment. <b>This is the default behaviour. </b>
-     */
-    public static final String ALIGN_LEFT = "b";
+    public enum Align {
+        /**
+         * Left column alignment. <b>This is the default behaviour. </b>
+         */
+        LEFT("b"),
+
+        /**
+         * Center column alignment.
+         */
+        CENTER("c"),
+
+        /**
+         * Right column alignment.
+         */
+        RIGHT("e");
+
+        private String alignment;
+
+        private Align(String alignment) {
+            this.alignment = alignment;
+        }
+
+        @Override
+        public String toString() {
+            return alignment;
+        }
+
+        public Align convertStringToAlign(String string) {
+            if (string == null) {
+                return null;
+            }
+            if (string.equals("b")) {
+                return Align.LEFT;
+            } else if (string.equals("c")) {
+                return Align.CENTER;
+            } else if (string.equals("e")) {
+                return Align.RIGHT;
+            } else {
+                return null;
+            }
+        }
+    }
 
     /**
-     * Center column alignment.
+     * @deprecated from 7.0, use {@link Align#LEFT} instead
      */
-    public static final String ALIGN_CENTER = "c";
+    @Deprecated
+    public static final Align ALIGN_LEFT = Align.LEFT;
 
     /**
-     * Right column alignment.
+     * @deprecated from 7.0, use {@link Align#CENTER} instead
      */
-    public static final String ALIGN_RIGHT = "e";
+    @Deprecated
+    public static final Align ALIGN_CENTER = Align.CENTER;
+
+    /**
+     * @deprecated from 7.0, use {@link Align#RIGHT} instead
+     */
+    @Deprecated
+    public static final Align ALIGN_RIGHT = Align.RIGHT;
 
     public enum ColumnHeaderMode {
         /**
@@ -278,7 +324,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Holds alignments for visible columns (by propertyId).
      */
-    private HashMap<Object, String> columnAlignments = new HashMap<Object, String>();
+    private HashMap<Object, Align> columnAlignments = new HashMap<Object, Align>();
 
     /**
      * Holds column widths in pixels (Integer) or expand ratios (Float) for
@@ -536,7 +582,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     final Object col = i.next();
                     if (!newVC.contains(col)) {
                         setColumnHeader(col, null);
-                        setColumnAlignment(col, null);
+                        setColumnAlignment(col, (Align) null);
                         setColumnIcon(col, null);
                     }
                 }
@@ -680,21 +726,21 @@ public class Table extends AbstractSelect implements Action.Container,
      * {@link #getVisibleColumns()}. The possible values for the alignments
      * include:
      * <ul>
-     * <li>{@link #ALIGN_LEFT}: Left alignment</li>
-     * <li>{@link #ALIGN_CENTER}: Centered</li>
-     * <li>{@link #ALIGN_RIGHT}: Right alignment</li>
+     * <li>{@link Align#LEFT}: Left alignment</li>
+     * <li>{@link Align#CENTER}: Centered</li>
+     * <li>{@link Align#RIGHT}: Right alignment</li>
      * </ul>
-     * The alignments default to {@link #ALIGN_LEFT}: any null values are
+     * The alignments default to {@link Align#LEFT}: any null values are
      * rendered as align lefts.
      * </p>
      * 
      * @return the Column alignments array.
      */
-    public String[] getColumnAlignments() {
+    public Align[] getColumnAlignments() {
         if (columnAlignments == null) {
             return null;
         }
-        final String[] alignments = new String[visibleColumns.size()];
+        final Align[] alignments = new Align[visibleColumns.size()];
         int i = 0;
         for (final Iterator<Object> it = visibleColumns.iterator(); it
                 .hasNext(); i++) {
@@ -708,39 +754,29 @@ public class Table extends AbstractSelect implements Action.Container,
      * Sets the column alignments.
      * 
      * <p>
-     * The items in the array must match the properties identified by
-     * {@link #getVisibleColumns()}. The possible values for the alignments
-     * include:
+     * The amount of items in the array must match the amount of properties
+     * identified by {@link #getVisibleColumns()}. The possible values for the
+     * alignments include:
      * <ul>
-     * <li>{@link #ALIGN_LEFT}: Left alignment</li>
-     * <li>{@link #ALIGN_CENTER}: Centered</li>
-     * <li>{@link #ALIGN_RIGHT}: Right alignment</li>
+     * <li>{@link Align#LEFT}: Left alignment</li>
+     * <li>{@link Align#CENTER}: Centered</li>
+     * <li>{@link Align#RIGHT}: Right alignment</li>
      * </ul>
-     * The alignments default to {@link #ALIGN_LEFT}
+     * The alignments default to {@link Align#LEFT}
      * </p>
      * 
      * @param columnAlignments
      *            the Column alignments array.
      */
-    public void setColumnAlignments(String[] columnAlignments) {
+    public void setColumnAlignments(Align... columnAlignments) {
 
         if (columnAlignments.length != visibleColumns.size()) {
             throw new IllegalArgumentException(
                     "The length of the alignments array must match the number of visible columns");
         }
 
-        // Checks all alignments
-        for (int i = 0; i < columnAlignments.length; i++) {
-            final String a = columnAlignments[i];
-            if (a != null && !a.equals(ALIGN_LEFT) && !a.equals(ALIGN_CENTER)
-                    && !a.equals(ALIGN_RIGHT)) {
-                throw new IllegalArgumentException("Column " + i
-                        + " aligment '" + a + "' is invalid");
-            }
-        }
-
         // Resets the alignments
-        final HashMap<Object, String> newCA = new HashMap<Object, String>();
+        final HashMap<Object, Align> newCA = new HashMap<Object, Align>();
         int i = 0;
         for (final Iterator<Object> it = visibleColumns.iterator(); it
                 .hasNext() && i < columnAlignments.length; i++) {
@@ -1097,9 +1133,9 @@ public class Table extends AbstractSelect implements Action.Container,
      *            the propertyID identifying the column.
      * @return the specified column's alignment if it as one; null otherwise.
      */
-    public String getColumnAlignment(Object propertyId) {
-        final String a = columnAlignments.get(propertyId);
-        return a == null ? ALIGN_LEFT : a;
+    public Align getColumnAlignment(Object propertyId) {
+        final Align a = columnAlignments.get(propertyId);
+        return a == null ? Align.LEFT : a;
     }
 
     /**
@@ -1107,8 +1143,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * <p>
      * Throws IllegalArgumentException if the alignment is not one of the
-     * following: {@link #ALIGN_LEFT}, {@link #ALIGN_CENTER} or
-     * {@link #ALIGN_RIGHT}
+     * following: {@link Align#LEFT}, {@link Align#CENTER} or
+     * {@link Align#RIGHT}
      * </p>
      * 
      * @param propertyId
@@ -1116,17 +1152,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param alignment
      *            the desired alignment.
      */
-    public void setColumnAlignment(Object propertyId, String alignment) {
-
-        // Checks for valid alignments
-        if (alignment != null && !alignment.equals(ALIGN_LEFT)
-                && !alignment.equals(ALIGN_CENTER)
-                && !alignment.equals(ALIGN_RIGHT)) {
-            throw new IllegalArgumentException("Column alignment '" + alignment
-                    + "' is not supported.");
-        }
-
-        if (alignment == null || alignment.equals(ALIGN_LEFT)) {
+    public void setColumnAlignment(Object propertyId, Align alignment) {
+        if (alignment == null || alignment == Align.LEFT) {
             columnAlignments.remove(propertyId);
         } else {
             columnAlignments.put(propertyId, alignment);
@@ -1432,8 +1459,9 @@ public class Table extends AbstractSelect implements Action.Container,
      *            the New value of property columnHeaderMode.
      */
     public void setColumnHeaderMode(ColumnHeaderMode columnHeaderMode) {
-        if(columnHeaderMode == null){
-            throw new IllegalArgumentException("Column header mode can not be null");
+        if (columnHeaderMode == null) {
+            throw new IllegalArgumentException(
+                    "Column header mode can not be null");
         }
         if (columnHeaderMode != this.columnHeaderMode) {
             this.columnHeaderMode = columnHeaderMode;
@@ -2984,8 +3012,9 @@ public class Table extends AbstractSelect implements Action.Container,
                         target.addAttribute("sortable", true);
                     }
                 }
-                if (!ALIGN_LEFT.equals(getColumnAlignment(colId))) {
-                    target.addAttribute("align", getColumnAlignment(colId));
+                if (!Align.LEFT.equals(getColumnAlignment(colId))) {
+                    target.addAttribute("align", getColumnAlignment(colId)
+                            .toString());
                 }
                 paintColumnWidth(target, colId);
                 target.endTag("column");
@@ -3746,7 +3775,7 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue, String columnHeader, Resource columnIcon,
-            String columnAlignment) throws UnsupportedOperationException {
+            Align columnAlignment) throws UnsupportedOperationException {
         if (!this.addContainerProperty(propertyId, type, defaultValue)) {
             return false;
         }

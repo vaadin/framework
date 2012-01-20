@@ -5,6 +5,7 @@ import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
 
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.Align;
 
 public class TableColumnAlignments {
 
@@ -15,7 +16,7 @@ public class TableColumnAlignments {
                     properties, 10);
             Object[] expected = new Object[properties];
             for (int i = 0; i < properties; i++) {
-                expected[i] = Table.ALIGN_LEFT;
+                expected[i] = Align.LEFT;
             }
             org.junit.Assert.assertArrayEquals("getColumnAlignments", expected,
                     t.getColumnAlignments());
@@ -27,9 +28,8 @@ public class TableColumnAlignments {
         int properties = 5;
         Table t = TableGenerator
                 .createTableWithDefaultContainer(properties, 10);
-        String[] explicitAlignments = new String[] { Table.ALIGN_CENTER,
-                Table.ALIGN_LEFT, Table.ALIGN_RIGHT, Table.ALIGN_RIGHT,
-                Table.ALIGN_LEFT };
+        Align[] explicitAlignments = new Align[] { Align.CENTER, Align.LEFT,
+                Align.RIGHT, Align.RIGHT, Align.LEFT };
 
         t.setColumnAlignments(explicitAlignments);
 
@@ -40,28 +40,10 @@ public class TableColumnAlignments {
     @Test
     public void invalidColumnAlignmentStrings() {
         Table t = TableGenerator.createTableWithDefaultContainer(3, 7);
-        String[] defaultAlignments = new String[] { Table.ALIGN_LEFT,
-                Table.ALIGN_LEFT, Table.ALIGN_LEFT };
+        Align[] defaultAlignments = new Align[] { Align.LEFT, Align.LEFT,
+                Align.LEFT };
         try {
-            t.setColumnAlignments(new String[] { "a", "b", "c" });
-            junit.framework.Assert
-                    .fail("No exception thrown for invalid array length");
-        } catch (IllegalArgumentException e) {
-            // Ok, expected
-        }
-
-        assertArrayEquals("Invalid change affected alignments",
-                defaultAlignments, t.getColumnAlignments());
-
-    }
-
-    @Test
-    public void invalidColumnAlignmentString() {
-        Table t = TableGenerator.createTableWithDefaultContainer(3, 7);
-        String[] defaultAlignments = new String[] { Table.ALIGN_LEFT,
-                Table.ALIGN_LEFT, Table.ALIGN_LEFT };
-        try {
-            t.setColumnAlignment("Property 1", "a");
+            t.setColumnAlignments(new Align[] { Align.RIGHT, Align.RIGHT });
             junit.framework.Assert
                     .fail("No exception thrown for invalid array length");
         } catch (IllegalArgumentException e) {
@@ -76,10 +58,10 @@ public class TableColumnAlignments {
     @Test
     public void columnAlignmentForPropertyNotInContainer() {
         Table t = TableGenerator.createTableWithDefaultContainer(3, 7);
-        String[] defaultAlignments = new String[] { Table.ALIGN_LEFT,
-                Table.ALIGN_LEFT, Table.ALIGN_LEFT };
+        Align[] defaultAlignments = new Align[] { Align.LEFT, Align.LEFT,
+                Align.LEFT };
         try {
-            t.setColumnAlignment("Property 1200", Table.ALIGN_LEFT);
+            t.setColumnAlignment("Property 1200", Align.LEFT);
             // FIXME: Uncomment as there should be an exception (#6475)
             // junit.framework.Assert
             // .fail("No exception thrown for property not in container");
@@ -100,12 +82,11 @@ public class TableColumnAlignments {
     @Test
     public void invalidColumnAlignmentsLength() {
         Table t = TableGenerator.createTableWithDefaultContainer(7, 7);
-        String[] defaultAlignments = new String[] { Table.ALIGN_LEFT,
-                Table.ALIGN_LEFT, Table.ALIGN_LEFT, Table.ALIGN_LEFT,
-                Table.ALIGN_LEFT, Table.ALIGN_LEFT, Table.ALIGN_LEFT };
+        Align[] defaultAlignments = new Align[] { Align.LEFT, Align.LEFT,
+                Align.LEFT, Align.LEFT, Align.LEFT, Align.LEFT, Align.LEFT };
 
         try {
-            t.setColumnAlignments(new String[] { Table.ALIGN_LEFT });
+            t.setColumnAlignments(new Align[] { Align.LEFT });
             junit.framework.Assert
                     .fail("No exception thrown for invalid array length");
         } catch (IllegalArgumentException e) {
@@ -115,7 +96,7 @@ public class TableColumnAlignments {
                 defaultAlignments, t.getColumnAlignments());
 
         try {
-            t.setColumnAlignments(new String[] {});
+            t.setColumnAlignments(new Align[] {});
             junit.framework.Assert
                     .fail("No exception thrown for invalid array length");
         } catch (IllegalArgumentException e) {
@@ -125,10 +106,9 @@ public class TableColumnAlignments {
                 defaultAlignments, t.getColumnAlignments());
 
         try {
-            t.setColumnAlignments(new String[] { Table.ALIGN_LEFT,
-                    Table.ALIGN_LEFT, Table.ALIGN_LEFT, Table.ALIGN_LEFT,
-                    Table.ALIGN_LEFT, Table.ALIGN_LEFT, Table.ALIGN_LEFT,
-                    Table.ALIGN_LEFT });
+            t.setColumnAlignments(new Align[] { Align.LEFT, Align.LEFT,
+                    Align.LEFT, Align.LEFT, Align.LEFT, Align.LEFT, Align.LEFT,
+                    Align.LEFT });
             junit.framework.Assert
                     .fail("No exception thrown for invalid array length");
         } catch (IllegalArgumentException e) {
@@ -144,13 +124,11 @@ public class TableColumnAlignments {
         int properties = 5;
         Table t = TableGenerator
                 .createTableWithDefaultContainer(properties, 10);
-        String[] explicitAlignments = new String[] { Table.ALIGN_CENTER,
-                Table.ALIGN_LEFT, Table.ALIGN_RIGHT, Table.ALIGN_RIGHT,
-                Table.ALIGN_LEFT };
+        Align[] explicitAlignments = new Align[] { Align.CENTER, Align.LEFT,
+                Align.RIGHT, Align.RIGHT, Align.LEFT };
 
-        String[] currentAlignments = new String[] { Table.ALIGN_LEFT,
-                Table.ALIGN_LEFT, Table.ALIGN_LEFT, Table.ALIGN_LEFT,
-                Table.ALIGN_LEFT };
+        Align[] currentAlignments = new Align[] { Align.LEFT, Align.LEFT,
+                Align.LEFT, Align.LEFT, Align.LEFT };
 
         for (int i = 0; i < properties; i++) {
             t.setColumnAlignment("Property " + i, explicitAlignments[i]);
