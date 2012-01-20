@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.PaintableMap;
 
 public abstract class ClickEventHandler implements DoubleClickHandler,
         ContextMenuHandler, MouseUpHandler {
@@ -81,7 +82,8 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
 
     protected void fireClick(NativeEvent event) {
         ApplicationConnection client = getApplicationConnection();
-        String pid = getApplicationConnection().getPid(paintable);
+        String pid = PaintableMap.get(getApplicationConnection()).getPid(
+                paintable);
 
         MouseEventDetails mouseDetails = new MouseEventDetails(event,
                 getRelativeToElement());

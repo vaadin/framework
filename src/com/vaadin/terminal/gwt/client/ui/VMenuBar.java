@@ -36,6 +36,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.PaintableMap;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -219,8 +220,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             moreItem.setHTML(itemHTML.toString());
             moreItem.setCommand(emptyCommand);
 
-            collapsedRootItems = new VMenuBar(true,
-                    (VMenuBar) client.getPaintable(uidlId));
+            collapsedRootItems = new VMenuBar(true, (VMenuBar) PaintableMap
+                    .get(client).getPaintable(uidlId));
             moreItem.setSubMenu(collapsedRootItems);
             moreItem.addStyleName(CLASSNAME + "-more-menuitem");
         }

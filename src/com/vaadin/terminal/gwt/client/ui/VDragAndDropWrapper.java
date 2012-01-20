@@ -27,6 +27,7 @@ import com.google.gwt.xhr.client.XMLHttpRequest;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.PaintableMap;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -468,7 +469,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     }
 
     private String getPid() {
-        return client.getPid(this);
+        return PaintableMap.get(client).getPid((Paintable) this);
     }
 
     public VDropHandler getDropHandler() {

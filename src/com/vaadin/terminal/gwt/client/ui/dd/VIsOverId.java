@@ -7,6 +7,7 @@
 package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.PaintableMap;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 final public class VIsOverId extends VAcceptCriterion {
@@ -16,10 +17,13 @@ final public class VIsOverId extends VAcceptCriterion {
         try {
 
             String pid = configuration.getStringAttribute("s");
-            Paintable paintable = VDragAndDropManager.get()
-                    .getCurrentDropHandler().getPaintable();
-            String pid2 = VDragAndDropManager.get().getCurrentDropHandler()
-                    .getApplicationConnection().getPid(paintable);
+            VDropHandler currentDropHandler = VDragAndDropManager.get()
+                    .getCurrentDropHandler();
+            Paintable paintable = currentDropHandler.getPaintable();
+            PaintableMap paintableMap = PaintableMap.get(currentDropHandler
+                    .getApplicationConnection());
+
+            String pid2 = paintableMap.getPid(paintable);
             if (pid2.equals(pid)) {
                 Object searchedId = drag.getDropDetails().get("itemIdOver");
                 String[] stringArrayAttribute = configuration

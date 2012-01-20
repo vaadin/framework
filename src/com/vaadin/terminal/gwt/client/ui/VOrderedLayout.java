@@ -18,6 +18,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.PaintableMap;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.RenderSpace;
@@ -898,7 +899,7 @@ public class VOrderedLayout extends CellBasedLayout {
 
         for (int i = 0; i < renderedWidgets.size(); i++) {
             Widget widget = renderedWidgets.get(i);
-            String pid = client.getPid(widget.getElement());
+            String pid = PaintableMap.get(client).getPid(widget);
 
             ChildComponentContainer container = getComponentContainer(widget);
 

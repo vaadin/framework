@@ -747,11 +747,12 @@ public class Util {
             ApplicationConnection client, Container parent, Element element) {
         Element rootElement = ((Widget) parent).getElement();
         while (element != null && element != rootElement) {
-            Paintable paintable = client.getPaintable(element);
+            Paintable paintable = PaintableMap.get(client)
+                    .getPaintable(element);
             if (paintable == null) {
                 String ownerPid = VCaption.getCaptionOwnerPid(element);
                 if (ownerPid != null) {
-                    paintable = client.getPaintable(ownerPid);
+                    paintable = PaintableMap.get(client).getPaintable(ownerPid);
                 }
             }
 
@@ -796,11 +797,12 @@ public class Util {
             ApplicationConnection client, Widget parent, Element element) {
         Element rootElement = parent.getElement();
         while (element != null && element != rootElement) {
-            Paintable paintable = client.getPaintable(element);
+            Paintable paintable = PaintableMap.get(client)
+                    .getPaintable(element);
             if (paintable == null) {
                 String ownerPid = VCaption.getCaptionOwnerPid(element);
                 if (ownerPid != null) {
-                    paintable = client.getPaintable(ownerPid);
+                    paintable = PaintableMap.get(client).getPaintable(ownerPid);
                 }
             }
 
@@ -946,7 +948,7 @@ public class Util {
 
     private static void printPaintablesVariables(ArrayList<String[]> vars,
             String id, ApplicationConnection c) {
-        Paintable paintable = c.getPaintable(id);
+        Paintable paintable = PaintableMap.get(c).getPaintable(id);
         if (paintable != null) {
             VConsole.log("\t" + id + " (" + paintable.getClass() + ") :");
             for (String[] var : vars) {

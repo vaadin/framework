@@ -126,8 +126,8 @@ public class VUIDLBrowser extends SimpleTree {
             // same
             // host page
             for (ApplicationConnection applicationConnection : runningApplications) {
-                Paintable paintable = applicationConnection.getPaintable(uidl
-                        .getId());
+                Paintable paintable = PaintableMap.get(applicationConnection)
+                        .getPaintable(uidl.getId());
                 highlight(paintable);
                 if (event != null && event.getNativeEvent().getShiftKey()) {
                     applicationConnection.highlightComponent(paintable);

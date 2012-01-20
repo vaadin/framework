@@ -4,6 +4,7 @@
 package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.PaintableMap;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 /**
@@ -21,8 +22,10 @@ final public class VDragSourceIs extends VAcceptCriterion {
             for (int i = 0; i < c; i++) {
                 String requiredPid = configuration
                         .getStringAttribute("component" + i);
-                Paintable paintable = VDragAndDropManager.get()
-                        .getCurrentDropHandler().getApplicationConnection()
+                VDropHandler currentDropHandler = VDragAndDropManager.get()
+                        .getCurrentDropHandler();
+                Paintable paintable = PaintableMap.get(
+                        currentDropHandler.getApplicationConnection())
                         .getPaintable(requiredPid);
                 if (paintable == component) {
                     return true;

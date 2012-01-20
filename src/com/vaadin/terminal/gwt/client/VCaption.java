@@ -54,7 +54,7 @@ public class VCaption extends HTML {
         owner = component;
 
         if (client != null && owner != null) {
-            setOwnerPid(getElement(), client.getPid(owner));
+            setOwnerPid(getElement(), PaintableMap.get(client).getPid(owner));
         }
 
         setStyleName(CLASSNAME);

@@ -518,7 +518,8 @@ public final class UIDL extends JavaScriptObject {
      */
     public Paintable getPaintableAttribute(String name,
             ApplicationConnection connection) {
-        return connection.getPaintable(getStringAttribute(name));
+        return PaintableMap.get(connection).getPaintable(
+                getStringAttribute(name));
     }
 
     /**
@@ -530,7 +531,8 @@ public final class UIDL extends JavaScriptObject {
      */
     public Paintable getPaintableVariable(String name,
             ApplicationConnection connection) {
-        return connection.getPaintable(getStringVariable(name));
+        return PaintableMap.get(connection).getPaintable(
+                getStringVariable(name));
     }
 
     /**

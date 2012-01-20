@@ -62,6 +62,7 @@ import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.PaintableMap;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -1304,7 +1305,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private void purgeUnregistryBag() {
         for (Iterator<Panel> iterator = lazyUnregistryBag.iterator(); iterator
                 .hasNext();) {
-            client.unregisterChildPaintables(iterator.next());
+            PaintableMap.get(client).unregisterChildPaintables(iterator.next());
         }
         lazyUnregistryBag.clear();
     }

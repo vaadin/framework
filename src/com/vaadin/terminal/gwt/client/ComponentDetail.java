@@ -11,15 +11,19 @@ import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 
 class ComponentDetail {
 
-    private Paintable component;
+    // private Paintable paintable;
     private TooltipInfo tooltipInfo = new TooltipInfo();
-    private String pid;
 
-    public ComponentDetail(ApplicationConnection client, String pid,
-            Paintable component) {
-        this.component = component;
-        this.pid = pid;
+    // private String pid;
+
+    public ComponentDetail() {
+
     }
+
+    // public ComponentDetail(String pid, Paintable paintable) {
+    // this.paintable = paintable;
+    // this.pid = pid;
+    // }
 
     /**
      * Returns a TooltipInfo assosiated with Component. If element is given,
@@ -52,19 +56,19 @@ class ComponentDetail {
     private Size offsetSize;
     private HashMap<Object, TooltipInfo> additionalTooltips;
 
-    /**
-     * @return the pid
-     */
-    String getPid() {
-        return pid;
-    }
+    // /**
+    // * @return the pid
+    // */
+    // String getPid() {
+    // return pid;
+    // }
 
-    /**
-     * @return the component
-     */
-    Paintable getComponent() {
-        return component;
-    }
+    // /**
+    // * @return the component
+    // */
+    // Paintable getPaintable() {
+    // return paintable;
+    // }
 
     /**
      * @return the relativeSize

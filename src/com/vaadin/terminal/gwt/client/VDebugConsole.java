@@ -97,7 +97,7 @@ public class VDebugConsole extends VOverlay implements Console {
                                 RootPanel.get(), eventTarget);
                     }
                     if (paintable != null) {
-                        String pid = a.getPid(paintable);
+                        String pid = PaintableMap.get(a).getPid(paintable);
                         VUIDLBrowser.highlight(paintable);
                         label.setText("Currently focused  :"
                                 + paintable.getClass() + " ID:" + pid);
@@ -547,7 +547,7 @@ public class VDebugConsole extends VOverlay implements Console {
     private void printLayoutError(ValueMap valueMap, SimpleTree root,
             final ApplicationConnection ac) {
         final String pid = valueMap.getString("id");
-        final Paintable paintable = ac.getPaintable(pid);
+        final Paintable paintable = PaintableMap.get(ac).getPaintable(pid);
 
         SimpleTree errorNode = new SimpleTree();
         VerticalPanel errorDetails = new VerticalPanel();
