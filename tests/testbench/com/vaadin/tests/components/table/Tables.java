@@ -27,6 +27,7 @@ import com.vaadin.ui.Table.GeneratedRow;
 import com.vaadin.ui.Table.HeaderClickEvent;
 import com.vaadin.ui.Table.HeaderClickListener;
 import com.vaadin.ui.Table.RowGenerator;
+import com.vaadin.ui.Table.RowHeaderMode;
 
 public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         implements ItemClickListener, HeaderClickListener, FooterClickListener,
@@ -110,10 +111,10 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         }
     };
 
-    protected Command<T, Integer> rowHeaderModeCommand = new Command<T, Integer>() {
+    protected Command<T, RowHeaderMode> rowHeaderModeCommand = new Command<T, RowHeaderMode>() {
 
-        public void execute(Table c, Integer value, Object data) {
-            if (value == Table.ROW_HEADER_MODE_PROPERTY) {
+        public void execute(Table c, RowHeaderMode value, Object data) {
+            if (value == RowHeaderMode.PROPERTY) {
                 c.setItemCaptionPropertyId("Property 3");
             }
             c.setRowHeaderMode(value);
@@ -653,16 +654,15 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     }
 
     private void createRowHeaderModeSelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
-        options.put("Explicit", Table.ROW_HEADER_MODE_EXPLICIT);
-        options.put("Explicit defaults id",
-                Table.ROW_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
-        options.put("Hidden", Table.ROW_HEADER_MODE_HIDDEN);
-        options.put("Icon only", Table.ROW_HEADER_MODE_ICON_ONLY);
-        options.put("Id", Table.ROW_HEADER_MODE_ID);
-        options.put("Index", Table.ROW_HEADER_MODE_INDEX);
-        options.put("Item", Table.ROW_HEADER_MODE_ITEM);
-        options.put("'Property 3' property", Table.ROW_HEADER_MODE_PROPERTY);
+        LinkedHashMap<String, RowHeaderMode> options = new LinkedHashMap<String, RowHeaderMode>();
+        options.put("Explicit", RowHeaderMode.EXPLICIT);
+        options.put("Explicit defaults id", RowHeaderMode.EXPLICIT_DEFAULTS_ID);
+        options.put("Hidden", RowHeaderMode.HIDDEN);
+        options.put("Icon only", RowHeaderMode.ICON_ONLY);
+        options.put("Id", RowHeaderMode.ID);
+        options.put("Index", RowHeaderMode.INDEX);
+        options.put("Item", RowHeaderMode.ITEM);
+        options.put("'Property 3' property", RowHeaderMode.PROPERTY);
 
         createSelectAction("Row header mode", category, options, "Hidden",
                 rowHeaderModeCommand);

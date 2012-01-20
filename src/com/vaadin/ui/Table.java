@@ -225,51 +225,105 @@ public class Table extends AbstractSelect implements Action.Container,
     @Deprecated
     public static final ColumnHeaderMode COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID = ColumnHeaderMode.EXPLICIT_DEFAULTS_ID;
 
-    /**
-     * Row caption mode: The row headers are hidden. <b>This is the default
-     * mode. </b>
-     */
-    public static final int ROW_HEADER_MODE_HIDDEN = -1;
+    public enum RowHeaderMode {
+        /**
+         * Row caption mode: The row headers are hidden. <b>This is the default
+         * mode. </b>
+         */
+        HIDDEN(null),
+        /**
+         * Row caption mode: Items Id-objects toString is used as row caption.
+         */
+        ID(ItemCaptionMode.ID),
+        /**
+         * Row caption mode: Item-objects toString is used as row caption.
+         */
+        ITEM(ItemCaptionMode.ITEM),
+        /**
+         * Row caption mode: Index of the item is used as item caption. The
+         * index mode can only be used with the containers implementing the
+         * {@link com.vaadin.data.Container.Indexed} interface.
+         */
+        INDEX(ItemCaptionMode.INDEX),
+        /**
+         * Row caption mode: Item captions are explicitly specified, but if the
+         * caption is missing, the item id objects <code>toString()</code> is
+         * used instead.
+         */
+        EXPLICIT_DEFAULTS_ID(ItemCaptionMode.EXPLICIT_DEFAULTS_ID),
+        /**
+         * Row caption mode: Item captions are explicitly specified.
+         */
+        EXPLICIT(ItemCaptionMode.EXPLICIT),
+        /**
+         * Row caption mode: Only icons are shown, the captions are hidden.
+         */
+        ICON_ONLY(ItemCaptionMode.ICON_ONLY),
+        /**
+         * Row caption mode: Item captions are read from property specified with
+         * {@link #setItemCaptionPropertyId(Object)}.
+         */
+        PROPERTY(ItemCaptionMode.PROPERTY);
+
+        ItemCaptionMode mode;
+
+        private RowHeaderMode(ItemCaptionMode mode) {
+            this.mode = mode;
+        }
+
+        public ItemCaptionMode getItemCaptionMode() {
+            return mode;
+        }
+    }
 
     /**
-     * Row caption mode: Items Id-objects toString is used as row caption.
+     * @deprecated from 7.0, use {@link RowHeaderMode#HIDDEN} instead
      */
-    public static final int ROW_HEADER_MODE_ID = AbstractSelect.ITEM_CAPTION_MODE_ID;
+    @Deprecated
+    public static final RowHeaderMode ROW_HEADER_MODE_HIDDEN = RowHeaderMode.HIDDEN;
 
     /**
-     * Row caption mode: Item-objects toString is used as row caption.
+     * @deprecated from 7.0, use {@link RowHeaderMode#ID} instead
      */
-    public static final int ROW_HEADER_MODE_ITEM = AbstractSelect.ITEM_CAPTION_MODE_ITEM;
+    @Deprecated
+    public static final RowHeaderMode ROW_HEADER_MODE_ID = RowHeaderMode.ID;
 
     /**
-     * Row caption mode: Index of the item is used as item caption. The index
-     * mode can only be used with the containers implementing Container.Indexed
-     * interface.
+     * @deprecated from 7.0, use {@link RowHeaderMode#ITEM} instead
      */
-    public static final int ROW_HEADER_MODE_INDEX = AbstractSelect.ITEM_CAPTION_MODE_INDEX;
+    @Deprecated
+    public static final RowHeaderMode ROW_HEADER_MODE_ITEM = RowHeaderMode.ITEM;
 
     /**
-     * Row caption mode: Item captions are explicitly specified.
+     * @deprecated from 7.0, use {@link RowHeaderMode#INDEX} instead
      */
-    public static final int ROW_HEADER_MODE_EXPLICIT = AbstractSelect.ITEM_CAPTION_MODE_EXPLICIT;
+    @Deprecated
+    public static final RowHeaderMode ROW_HEADER_MODE_INDEX = RowHeaderMode.INDEX;
 
     /**
-     * Row caption mode: Item captions are read from property specified with
-     * {@link #setItemCaptionPropertyId(Object)}.
+     * @deprecated from 7.0, use {@link RowHeaderMode#EXPLICIT_DEFAULTS_ID}
+     *             instead
      */
-    public static final int ROW_HEADER_MODE_PROPERTY = AbstractSelect.ITEM_CAPTION_MODE_PROPERTY;
+    @Deprecated
+    public static final RowHeaderMode ROW_HEADER_MODE_EXPLICIT_DEFAULTS_ID = RowHeaderMode.EXPLICIT_DEFAULTS_ID;
 
     /**
-     * Row caption mode: Only icons are shown, the captions are hidden.
+     * @deprecated from 7.0, use {@link RowHeaderMode#EXPLICIT} instead
      */
-    public static final int ROW_HEADER_MODE_ICON_ONLY = AbstractSelect.ITEM_CAPTION_MODE_ICON_ONLY;
+    @Deprecated
+    public static final RowHeaderMode ROW_HEADER_MODE_EXPLICIT = RowHeaderMode.EXPLICIT;
 
     /**
-     * Row caption mode: Item captions are explicitly specified, but if the
-     * caption is missing, the item id objects <code>toString()</code> is used
-     * instead.
+     * @deprecated from 7.0, use {@link RowHeaderMode#ICON_ONLY} instead
      */
-    public static final int ROW_HEADER_MODE_EXPLICIT_DEFAULTS_ID = AbstractSelect.ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID;
+    @Deprecated
+    public static final RowHeaderMode ROW_HEADER_MODE_ICON_ONLY = RowHeaderMode.ICON_ONLY;
+
+    /**
+     * @deprecated from 7.0, use {@link RowHeaderMode#PROPERTY} instead
+     */
+    @Deprecated
+    public static final RowHeaderMode ROW_HEADER_MODE_PROPERTY = RowHeaderMode.PROPERTY;
 
     /**
      * The default rate that table caches rows for smooth scrolling.
@@ -363,14 +417,14 @@ public class Table extends AbstractSelect implements Action.Container,
     private ColumnHeaderMode columnHeaderMode = ColumnHeaderMode.EXPLICIT_DEFAULTS_ID;
 
     /**
+     * Holds value of property rowHeaderMode.
+     */
+    private RowHeaderMode rowHeaderMode = RowHeaderMode.EXPLICIT_DEFAULTS_ID;
+
+    /**
      * Should the Table footer be visible?
      */
     private boolean columnFootersVisible = false;
-
-    /**
-     * True iff the row captions are hidden.
-     */
-    private boolean rowCaptionsAreHidden = true;
 
     /**
      * Page contents buffer used in buffered mode.
@@ -1803,7 +1857,7 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
 
-        final int headmode = getRowHeaderMode();
+        final RowHeaderMode headmode = getRowHeaderMode();
         final boolean[] iscomponent = new boolean[cols];
         for (int i = 0; i < cols; i++) {
             iscomponent[i] = columnGenerators.containsKey(colids[i])
@@ -1824,7 +1878,7 @@ public class Table extends AbstractSelect implements Action.Container,
             cells[CELL_KEY][i] = itemIdMapper.key(id);
             if (headmode != ROW_HEADER_MODE_HIDDEN) {
                 switch (headmode) {
-                case ROW_HEADER_MODE_INDEX:
+                case INDEX:
                     cells[CELL_HEADER][i] = String.valueOf(i + firstIndex + 1);
                     break;
                 default:
@@ -2123,17 +2177,17 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param mode
      *            the One of the modes listed above.
      */
-    public void setRowHeaderMode(int mode) {
-        if (ROW_HEADER_MODE_HIDDEN == mode) {
-            rowCaptionsAreHidden = true;
-        } else {
-            rowCaptionsAreHidden = false;
-            setItemCaptionMode(mode);
+    public void setRowHeaderMode(RowHeaderMode mode) {
+        if (mode != null) {
+            rowHeaderMode = mode;
+            if (mode != RowHeaderMode.HIDDEN) {
+                setItemCaptionMode(mode.getItemCaptionMode());
+            }
+            // Assures the visual refresh. No need to reset the page buffer
+            // before
+            // as the content has not changed, only the alignments.
+            refreshRenderedCells();
         }
-
-        // Assures the visual refresh. No need to reset the page buffer before
-        // as the content has not changed, only the alignments.
-        refreshRenderedCells();
     }
 
     /**
@@ -2142,9 +2196,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * @return the Row header mode.
      * @see #setRowHeaderMode(int)
      */
-    public int getRowHeaderMode() {
-        return rowCaptionsAreHidden ? ROW_HEADER_MODE_HIDDEN
-                : getItemCaptionMode();
+    public RowHeaderMode getRowHeaderMode() {
+        return rowHeaderMode;
     }
 
     /**
