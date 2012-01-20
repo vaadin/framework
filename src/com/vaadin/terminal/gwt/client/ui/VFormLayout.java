@@ -327,13 +327,21 @@ public class VFormLayout extends SimplePanel implements Container {
         }
 
         private void setStyles(String[] styles) {
-            String style = CLASSNAME;
+            String styleName = CLASSNAME;
+
             if (styles != null) {
-                for (int i = 0; i < styles.length; i++) {
-                    style += " " + CLASSNAME + "-" + styles[i];
+                for (String style : styles) {
+                    if (ApplicationConnection.DISABLED_CLASSNAME.equals(style)) {
+                        // Add v-disabled also without classname prefix so
+                        // generic v-disabled CSS rules work
+                        styleName += " " + style;
+                    }
+
+                    styleName += " " + CLASSNAME + "-" + style;
                 }
             }
-            setStyleName(style);
+
+            setStyleName(styleName);
         }
 
         public void updateCaption(UIDL uidl) {

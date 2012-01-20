@@ -340,7 +340,7 @@ public class VTextualDate extends VDateField implements Paintable, Field,
 
     @Override
     public void setWidth(String newWidth) {
-        if (!"".equals(newWidth) && (width == null || !newWidth.equals(width))) {
+        if (!"".equals(newWidth) && (isUndefinedWidth() || !newWidth.equals(width))) {
             if (BrowserInfo.get().isIE6()) {
                 // in IE6 cols ~ min-width
                 DOM.setElementProperty(text.getElement(), "size", "1");
@@ -353,18 +353,20 @@ public class VTextualDate extends VDateField implements Paintable, Field,
                 needLayout = false;
             }
         } else {
-            if ("".equals(newWidth) && width != null && !"".equals(width)) {
+            if ("".equals(newWidth) && !isUndefinedWidth()) {
+                // Changing from defined to undefined
                 if (BrowserInfo.get().isIE6()) {
                     // revert IE6 hack
                     DOM.setElementProperty(text.getElement(), "size", "");
                 }
                 super.setWidth("");
-                needLayout = true;
-                iLayout();
-                needLayout = false;
+                iLayout(true);
                 width = null;
             }
         }
+    }
+    protected boolean isUndefinedWidth() {
+    	return width == null || "".equals(width);
     }
 
     /**
@@ -390,16 +392,20 @@ public class VTextualDate extends VDateField implements Paintable, Field,
      * automatically adjusted by the browser.
      */
     public void updateWidth() {
-        if (!needLayout) {
+        if (isUndefinedWidth()) {
             return;
         }
-
+        needLayout = true;
         fieldExtraWidth = -1;
-        iLayout();
+        iLayout(true);
     }
 
     public void iLayout() {
-        if (needLayout) {
+        iLayout(false);
+    }
+
+    public void iLayout(boolean force) {
+        if (needLayout || force) {
             int textFieldWidth = getOffsetWidth() - getFieldExtraWidth();
             if (textFieldWidth < 0) {
                 // Field can never be smaller than 0 (causes exception in IE)
