@@ -24,7 +24,7 @@ public abstract class AbstractTestRoot extends Root {
 
         getContent().addComponent(label);
         getContent().addComponent(layout);
-        ((VerticalLayout) getContent()).setExpandRatio(label, 1);
+        ((VerticalLayout) getContent()).setExpandRatio(layout, 1);
 
         setup(request);
     }
