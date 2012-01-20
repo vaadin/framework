@@ -45,7 +45,7 @@ public class ApplicationConfiguration implements EntryPoint {
         private native String getConfigString(String name)
         /*-{
             var value = this.getConfig(name);
-            if (!value) {
+            if (value === null || value === undefined) {
                 return null;
             } else {
                 return value +"";
