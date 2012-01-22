@@ -66,7 +66,7 @@ public class Util {
     }-*/;
 
     private static final int LAZY_SIZE_CHANGE_TIMEOUT = 400;
-    private static Set<Paintable> latelyChangedWidgets = new HashSet<Paintable>();
+    private static Set<Widget> latelyChangedWidgets = new HashSet<Widget>();
 
     private static Timer lazySizeChangeTimer = new Timer() {
         private boolean lazySizeChangeTimerScheduled = false;
@@ -105,12 +105,12 @@ public class Util {
      * @param lazy
      *            run componentSizeUpdated lazyly
      */
-    public static void notifyParentOfSizeChange(Paintable widget, boolean lazy) {
+    public static void notifyParentOfSizeChange(Widget widget, boolean lazy) {
         if (lazy) {
             latelyChangedWidgets.add(widget);
             lazySizeChangeTimer.schedule(LAZY_SIZE_CHANGE_TIMEOUT);
         } else {
-            Set<Paintable> widgets = new HashSet<Paintable>();
+            Set<Widget> widgets = new HashSet<Widget>();
             widgets.add(widget);
             Util.componentSizeUpdated(widgets);
         }
@@ -122,15 +122,14 @@ public class Util {
      * 
      * @param paintables
      */
-    public static void componentSizeUpdated(Set<Paintable> paintables) {
-        if (paintables.isEmpty()) {
+    public static void componentSizeUpdated(Set<Widget> widgets) {
+        if (widgets.isEmpty()) {
             return;
         }
 
-        Map<Container, Set<Paintable>> childWidgets = new HashMap<Container, Set<Paintable>>();
+        Map<Container, Set<Widget>> childWidgets = new HashMap<Container, Set<Widget>>();
 
-        for (Paintable paintable : paintables) {
-            Widget widget = (Widget) paintable;
+        for (Widget widget : widgets) {
             if (!widget.isAttached()) {
                 continue;
             }
@@ -142,19 +141,19 @@ public class Util {
                 parent = parent.getParent();
             }
             if (parent != null) {
-                Set<Paintable> set = childWidgets.get(parent);
+                Set<Widget> set = childWidgets.get(parent);
                 if (set == null) {
-                    set = new HashSet<Paintable>();
+                    set = new HashSet<Widget>();
                     childWidgets.put((Container) parent, set);
                 }
-                set.add(paintable);
+                set.add(widget);
             }
         }
 
-        Set<Paintable> parentChanges = new HashSet<Paintable>();
+        Set<Widget> parentChanges = new HashSet<Widget>();
         for (Container parent : childWidgets.keySet()) {
             if (!parent.requestLayout(childWidgets.get(parent))) {
-                parentChanges.add(parent);
+                parentChanges.add(parent.getWidgetForPaintable());
             }
         }
 
@@ -614,13 +613,7 @@ public class Util {
     }
 
     public static void updateRelativeChildrenAndSendSizeUpdateEvent(
-            ApplicationConnection client, HasWidgets container) {
-        updateRelativeChildrenAndSendSizeUpdateEvent(client, container,
-                (Paintable) container);
-    }
-
-    public static void updateRelativeChildrenAndSendSizeUpdateEvent(
-            ApplicationConnection client, HasWidgets container, Paintable widget) {
+            ApplicationConnection client, HasWidgets container, Widget widget) {
         /*
          * Relative sized children must be updated first so the component has
          * the correct outer dimensions when signaling a size change to the
@@ -632,7 +625,7 @@ public class Util {
             client.handleComponentRelativeSize(w);
         }
 
-        HashSet<Paintable> widgets = new HashSet<Paintable>();
+        HashSet<Widget> widgets = new HashSet<Widget>();
         widgets.add(widget);
         Util.componentSizeUpdated(widgets);
     }
@@ -740,31 +733,27 @@ public class Util {
      *            The widget that contains <literal>element</literal>.
      * @param element
      *            An element that is a sub element of the parent
-     * @return The Paintable which the element is a part of. Null if the element
-     *         does not belong to a child.
+     * @return The VPaintableWidget which the element is a part of. Null if the
+     *         element does not belong to a child.
      */
-    public static Paintable getChildPaintableForElement(
+    public static VPaintableWidget getChildPaintableForElement(
             ApplicationConnection client, Container parent, Element element) {
-        Element rootElement = ((Widget) parent).getElement();
+        Element rootElement = parent.getWidgetForPaintable().getElement();
         while (element != null && element != rootElement) {
-            Paintable paintable = PaintableMap.get(client)
+            VPaintableWidget paintable = VPaintableMap.get(client)
                     .getPaintable(element);
             if (paintable == null) {
                 String ownerPid = VCaption.getCaptionOwnerPid(element);
                 if (ownerPid != null) {
-                    paintable = PaintableMap.get(client).getPaintable(ownerPid);
+                    paintable = (VPaintableWidget) VPaintableMap.get(client)
+                            .getPaintable(ownerPid);
                 }
             }
 
-            if (paintable != null) {
-                try {
-                    if (parent.hasChildComponent((Widget) paintable)) {
-                        return paintable;
-                    }
-                } catch (ClassCastException e) {
-                    // We assume everything is a widget however there is no need
-                    // to crash everything if there is a paintable that is not.
-                }
+            if (paintable != null
+                    && parent.hasChildComponent(paintable
+                            .getWidgetForPaintable())) {
+                return paintable;
             }
 
             element = (Element) element.getParentElement();
@@ -780,7 +769,7 @@ public class Util {
      * <literal>element</literal> is not part of any child component, null is
      * returned.
      * 
-     * This method returns the deepest nested Paintable. See
+     * This method returns the deepest nested VPaintableWidget. See
      * {@link #getChildPaintableForElement(ApplicationConnection, Container, Element)}
      * for the immediate child component of parent that contains the element.
      * 
@@ -790,19 +779,20 @@ public class Util {
      *            The widget that contains <literal>element</literal>.
      * @param element
      *            An element that is a sub element of the parent
-     * @return The Paintable which the element is a part of. Null if the element
-     *         does not belong to a child.
+     * @return The VPaintableWidget which the element is a part of. Null if the
+     *         element does not belong to a child.
      */
-    public static Paintable getPaintableForElement(
+    public static VPaintableWidget getPaintableForElement(
             ApplicationConnection client, Widget parent, Element element) {
         Element rootElement = parent.getElement();
         while (element != null && element != rootElement) {
-            Paintable paintable = PaintableMap.get(client)
+            VPaintableWidget paintable = VPaintableMap.get(client)
                     .getPaintable(element);
             if (paintable == null) {
                 String ownerPid = VCaption.getCaptionOwnerPid(element);
                 if (ownerPid != null) {
-                    paintable = PaintableMap.get(client).getPaintable(ownerPid);
+                    paintable = (VPaintableWidget) VPaintableMap.get(client)
+                            .getPaintable(ownerPid);
                 }
             }
 
@@ -948,7 +938,8 @@ public class Util {
 
     private static void printPaintablesVariables(ArrayList<String[]> vars,
             String id, ApplicationConnection c) {
-        Paintable paintable = PaintableMap.get(c).getPaintable(id);
+        VPaintableWidget paintable = (VPaintableWidget) VPaintableMap.get(c)
+                .getPaintable(id);
         if (paintable != null) {
             VConsole.log("\t" + id + " (" + paintable.getClass() + ") :");
             for (String[] var : vars) {

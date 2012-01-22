@@ -35,14 +35,14 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
-import com.vaadin.terminal.gwt.client.Paintable;
-import com.vaadin.terminal.gwt.client.PaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VMenuBar extends SimpleFocusablePanel implements Paintable,
+public class VMenuBar extends SimpleFocusablePanel implements VPaintableWidget,
         CloseHandler<PopupPanel>, ContainerResizedListener, KeyPressHandler,
         KeyDownHandler, FocusHandler, SubPartAware {
 
@@ -220,7 +220,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             moreItem.setHTML(itemHTML.toString());
             moreItem.setCommand(emptyCommand);
 
-            collapsedRootItems = new VMenuBar(true, (VMenuBar) PaintableMap
+            collapsedRootItems = new VMenuBar(true, (VMenuBar) VPaintableMap
                     .get(client).getPaintable(uidlId));
             moreItem.setSubMenu(collapsedRootItems);
             moreItem.addStyleName(CLASSNAME + "-more-menuitem");
@@ -1549,6 +1549,10 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             }
         }
         return null;
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }

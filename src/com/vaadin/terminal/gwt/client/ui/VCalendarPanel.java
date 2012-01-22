@@ -1165,7 +1165,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
         // elapsed, another timer is triggered to go off every 150ms. Both
         // timers are cancelled on mouseup or mouseout.
         if (event.getSource() instanceof VEventButton) {
-            final Widget sender = (Widget) event.getSource();
+            final VEventButton sender = (VEventButton) event.getSource();
             processClickEvent(sender);
             mouseTimer = new Timer() {
                 @Override

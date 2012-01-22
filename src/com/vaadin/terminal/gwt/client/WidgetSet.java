@@ -25,7 +25,7 @@ public class WidgetSet {
 
     /**
      * Create an uninitialized component that best matches given UIDL. The
-     * component must be a {@link Widget} that implements {@link Paintable}.
+     * component must be a {@link Widget} that implements {@link VPaintableWidget}.
      * 
      * @param uidl
      *            UIDL to be painted with returned component.
@@ -35,7 +35,7 @@ public class WidgetSet {
      * @return New uninitialized and unregistered component that can paint given
      *         UIDL.
      */
-    public Paintable createWidget(UIDL uidl, ApplicationConfiguration conf) {
+    public VPaintableWidget createWidget(UIDL uidl, ApplicationConfiguration conf) {
         /*
          * Yes, this (including the generated code in WidgetMap) may look very
          * odd code, but due the nature of GWT, we cannot do this any cleaner.
@@ -46,7 +46,7 @@ public class WidgetSet {
          * TODO should try to get rid of these exceptions here
          */
 
-        final Class<? extends Paintable> classType = resolveWidgetType(uidl,
+        final Class<? extends VPaintableWidget> classType = resolveWidgetType(uidl,
                 conf);
         if (classType == null || classType == VUnknownComponent.class) {
             String serverSideName = conf
@@ -65,11 +65,11 @@ public class WidgetSet {
 
     }
 
-    protected Class<? extends Paintable> resolveWidgetType(UIDL uidl,
+    protected Class<? extends VPaintableWidget> resolveWidgetType(UIDL uidl,
             ApplicationConfiguration conf) {
         final String tag = uidl.getTag();
 
-        Class<? extends Paintable> widgetClass = conf
+        Class<? extends VPaintableWidget> widgetClass = conf
                 .getWidgetClassByEncodedTag(tag);
 
         // add our historical quirks
@@ -116,12 +116,12 @@ public class WidgetSet {
      * @param applicationConfiguration
      * @return
      */
-    public Class<? extends Paintable> getImplementationByClassName(
+    public Class<? extends VPaintableWidget> getImplementationByClassName(
             String fullyqualifiedName) {
         if (fullyqualifiedName == null) {
             return VUnknownComponent.class;
         }
-        Class<? extends Paintable> implementationByServerSideClassName = widgetMap
+        Class<? extends VPaintableWidget> implementationByServerSideClassName = widgetMap
                 .getImplementationByServerSideClassName(fullyqualifiedName);
 
         /*
@@ -140,11 +140,11 @@ public class WidgetSet {
 
     }
 
-    public Class<? extends Paintable>[] getDeferredLoadedWidgets() {
+    public Class<? extends VPaintableWidget>[] getDeferredLoadedWidgets() {
         return widgetMap.getDeferredLoadedWidgets();
     }
 
-    public void loadImplementation(Class<? extends Paintable> nextType) {
+    public void loadImplementation(Class<? extends VPaintableWidget> nextType) {
         widgetMap.ensureInstantiator(nextType);
     }
 

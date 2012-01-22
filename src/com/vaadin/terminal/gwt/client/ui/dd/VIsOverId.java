@@ -6,9 +6,9 @@
  */
 package com.vaadin.terminal.gwt.client.ui.dd;
 
-import com.vaadin.terminal.gwt.client.Paintable;
-import com.vaadin.terminal.gwt.client.PaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 final public class VIsOverId extends VAcceptCriterion {
 
@@ -19,8 +19,8 @@ final public class VIsOverId extends VAcceptCriterion {
             String pid = configuration.getStringAttribute("s");
             VDropHandler currentDropHandler = VDragAndDropManager.get()
                     .getCurrentDropHandler();
-            Paintable paintable = currentDropHandler.getPaintable();
-            PaintableMap paintableMap = PaintableMap.get(currentDropHandler
+            VPaintableWidget paintable = currentDropHandler.getPaintable();
+            VPaintableMap paintableMap = VPaintableMap.get(currentDropHandler
                     .getApplicationConnection());
 
             String pid2 = paintableMap.getPid(paintable);

@@ -14,7 +14,7 @@ public class VCaption extends HTML {
 
     public static final String CLASSNAME = "v-caption";
 
-    private final Paintable owner;
+    private final VPaintableWidget owner;
 
     private Element errorIndicatorElement;
 
@@ -48,13 +48,13 @@ public class VCaption extends HTML {
      *            null
      * @param client
      */
-    public VCaption(Paintable component, ApplicationConnection client) {
+    public VCaption(VPaintableWidget component, ApplicationConnection client) {
         super();
         this.client = client;
         owner = component;
 
         if (client != null && owner != null) {
-            setOwnerPid(getElement(), PaintableMap.get(client).getPid(owner));
+            setOwnerPid(getElement(), VPaintableMap.get(client).getPid(owner));
         }
 
         setStyleName(CLASSNAME);
@@ -264,7 +264,8 @@ public class VCaption extends HTML {
              * the responsibility of reacting to ONLOAD from VCaption to layouts
              */
             if (owner != null) {
-                Util.notifyParentOfSizeChange(owner, true);
+                Util.notifyParentOfSizeChange(owner.getWidgetForPaintable(),
+                        true);
             } else {
                 VConsole.log("Warning: Icon load event was not propagated because VCaption owner is unknown.");
             }
@@ -293,7 +294,7 @@ public class VCaption extends HTML {
      * 
      * @return owner Widget
      */
-    public Paintable getOwner() {
+    public VPaintableWidget getOwner() {
         return owner;
     }
 

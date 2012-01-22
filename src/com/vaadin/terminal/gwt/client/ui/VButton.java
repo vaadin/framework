@@ -19,18 +19,19 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Accessibility;
 import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VButton extends FocusWidget implements Paintable, ClickHandler,
-        FocusHandler, BlurHandler {
+public class VButton extends FocusWidget implements VPaintableWidget,
+        ClickHandler, FocusHandler, BlurHandler {
 
     public static final String CLASSNAME = "v-button";
     private static final String CLASSNAME_PRESSED = "v-pressed";
@@ -503,6 +504,10 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
 
     public void onBlur(BlurEvent arg0) {
         client.updateVariable(id, EventId.BLUR, "", true);
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }

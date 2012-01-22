@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.Field;
@@ -41,7 +41,7 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHan
  * @author Vaadin Ltd.
  * 
  */
-public class VRichTextArea extends Composite implements Paintable, Field,
+public class VRichTextArea extends Composite implements VPaintableWidget, Field,
         ChangeHandler, BlurHandler, KeyPressHandler, KeyDownHandler,
         BeforeShortcutActionListener, Focusable {
 
@@ -392,6 +392,10 @@ public class VRichTextArea extends Composite implements Paintable, Field,
 
     public void setTabIndex(int index) {
         rta.setTabIndex(index);
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }

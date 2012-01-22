@@ -1,3 +1,6 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal.gwt.client;
 
 import java.util.Collection;
@@ -12,12 +15,18 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 
-public class PaintableMap {
+public class VPaintableMap {
 
-    private Map<String, Paintable> idToPaintable = new HashMap<String, Paintable>();
+    private Map<String, VPaintable> idToPaintable = new HashMap<String, VPaintable>();
+    private Map<VPaintable, String> paintableToId = new HashMap<VPaintable, String>();
+
+    public static VPaintableMap get(ApplicationConnection applicationConnection) {
+        return applicationConnection.getPaintableMap();
+    }
 
     @Deprecated
     private final ComponentDetailMap idToComponentDetail = ComponentDetailMap
@@ -31,7 +40,7 @@ public class PaintableMap {
      * @param id
      *            The Paintable id
      */
-    public Paintable getPaintable(String pid) {
+    public VPaintable getPaintable(String pid) {
         return idToPaintable.get(pid);
     }
 
@@ -41,12 +50,8 @@ public class PaintableMap {
      * @param element
      *            Root element of the paintable
      */
-    public Paintable getPaintable(Element element) {
-        return getPaintable(getPid(element));
-    }
-
-    public static PaintableMap get(ApplicationConnection applicationConnection) {
-        return applicationConnection.getPaintableMap();
+    public VPaintableWidget getPaintable(Element element) {
+        return (VPaintableWidget) getPaintable(getPid(element));
     }
 
     /**
@@ -76,24 +81,29 @@ public class PaintableMap {
      */
     public void clear() {
         idToPaintable.clear();
+        paintableToId.clear();
         idToComponentDetail.clear();
     }
 
     @Deprecated
-    public Widget getWidget(Paintable paintable) {
-        return (Widget) paintable;
+    public Widget getWidget(VPaintableWidget paintable) {
+        return paintable.getWidgetForPaintable();
     }
 
     @Deprecated
-    public Paintable getPaintable(Widget widget) {
-        return (Paintable) widget;
+    public VPaintableWidget getPaintable(Widget widget) {
+        return getPaintable(widget.getElement());
     }
 
-    public void registerPaintable(String pid, Paintable paintable) {
+    public void registerPaintable(String pid, VPaintable paintable) {
         ComponentDetail componentDetail = GWT.create(ComponentDetail.class);
         idToComponentDetail.put(pid, componentDetail);
         idToPaintable.put(pid, paintable);
-        setPid(((Widget) paintable).getElement(), pid);
+        paintableToId.put(paintable, pid);
+        if (paintable instanceof VPaintableWidget) {
+            VPaintableWidget pw = (VPaintableWidget) paintable;
+            setPid(pw.getWidgetForPaintable().getElement(), pid);
+        }
     }
 
     private native void setPid(Element el, String pid)
@@ -113,15 +123,15 @@ public class PaintableMap {
      * @return the id for the given paintable or null if the paintable could not
      *         be found
      */
-    public String getPid(Paintable paintable) {
-        return getPid(getWidget(paintable));
+    public String getPid(VPaintable paintable) {
+        if (paintable == null) {
+            return null;
+        }
+        return paintableToId.get(paintable);
     }
 
     @Deprecated
     public String getPid(Widget widget) {
-        if (widget == null) {
-            return null;
-        }
         return getPid(widget.getElement());
     }
 
@@ -149,7 +159,12 @@ public class PaintableMap {
      * @return the element for the paintable corresponding to the pid
      */
     public Element getElement(String pid) {
-        return ((Widget) getPaintable(pid)).getElement();
+        VPaintable p = getPaintable(pid);
+        if (p instanceof VPaintableWidget) {
+            return ((VPaintableWidget) p).getWidgetForPaintable().getElement();
+        }
+
+        return null;
     }
 
     /**
@@ -161,7 +176,7 @@ public class PaintableMap {
      * @param p
      *            the paintable to remove
      */
-    public void unregisterPaintable(Paintable p) {
+    public void unregisterPaintable(VPaintable p) {
 
         // add to unregistry que
 
@@ -170,6 +185,11 @@ public class PaintableMap {
             return;
         }
         String id = getPid(p);
+        Widget widget = null;
+        if (p instanceof VPaintableWidget) {
+            widget = ((VPaintableWidget) p).getWidgetForPaintable();
+        }
+
         if (id == null) {
             /*
              * Uncomment the following to debug unregistring components. No
@@ -180,21 +200,19 @@ public class PaintableMap {
             // if (!(p instanceof VScrollTableRow)) {
             // VConsole.log("Trying to unregister Paintable not created by Application Connection.");
             // }
-            if (p instanceof HasWidgets) {
-                unregisterChildPaintables((HasWidgets) p);
-            }
         } else {
             unregistryBag.add(id);
-            if (p instanceof HasWidgets) {
-                unregisterChildPaintables((HasWidgets) p);
-            }
         }
+        if (widget != null && widget instanceof HasWidgets) {
+            unregisterChildPaintables((HasWidgets) widget);
+        }
+
     }
 
     void purgeUnregistryBag(boolean unregisterPaintables) {
         if (unregisterPaintables) {
             for (String pid : unregistryBag) {
-                Paintable paintable = getPaintable(pid);
+                VPaintable paintable = getPaintable(pid);
                 if (paintable == null) {
                     /*
                      * this should never happen, but it does :-( See e.g.
@@ -206,12 +224,18 @@ public class PaintableMap {
                             + ") that is never registered (or already unregistered)");
                     continue;
                 }
+                Widget widget = null;
+                if (paintable instanceof VPaintableWidget) {
+                    widget = ((VPaintableWidget) paintable)
+                            .getWidgetForPaintable();
+                }
+
                 // check if can be cleaned
-                Widget component = getWidget(paintable);
-                if (!component.isAttached()) {
+                if (widget == null || !widget.isAttached()) {
                     // clean reference to paintable
                     idToComponentDetail.remove(pid);
                     idToPaintable.remove(pid);
+                    paintableToId.remove(paintable);
                 }
                 /*
                  * else NOP : same component has been reattached to another
@@ -233,12 +257,16 @@ public class PaintableMap {
      * @param container
      */
     public void unregisterChildPaintables(HasWidgets container) {
+        // FIXME: This should be based on the paintable hierarchy
         final Iterator<Widget> it = container.iterator();
         while (it.hasNext()) {
             final Widget w = it.next();
-            if (w instanceof Paintable) {
-                unregisterPaintable((Paintable) w);
+            VPaintableWidget p = getPaintable(w);
+            if (p != null) {
+                // This will unregister the paintable and all its children
+                unregisterPaintable(p);
             } else if (w instanceof HasWidgets) {
+                // For normal widget containers, unregister the children
                 unregisterChildPaintables((HasWidgets) w);
             }
         }
@@ -268,7 +296,7 @@ public class PaintableMap {
      * @return
      */
     @Deprecated
-    public Size getOffsetSize(Paintable paintable) {
+    public Size getOffsetSize(VPaintableWidget paintable) {
         return getComponentDetail(paintable).getOffsetSize();
     }
 
@@ -279,7 +307,7 @@ public class PaintableMap {
      * @return
      */
     @Deprecated
-    public FloatSize getRelativeSize(Paintable paintable) {
+    public FloatSize getRelativeSize(VPaintableWidget paintable) {
         return getComponentDetail(paintable).getRelativeSize();
     }
 
@@ -290,7 +318,7 @@ public class PaintableMap {
      * @return
      */
     @Deprecated
-    public void setOffsetSize(Paintable paintable, Size newSize) {
+    public void setOffsetSize(VPaintableWidget paintable, Size newSize) {
         getComponentDetail(paintable).setOffsetSize(newSize);
     }
 
@@ -301,12 +329,13 @@ public class PaintableMap {
      * @return
      */
     @Deprecated
-    public void setRelativeSize(Paintable paintable, FloatSize relativeSize) {
+    public void setRelativeSize(VPaintableWidget paintable,
+            FloatSize relativeSize) {
         getComponentDetail(paintable).setRelativeSize(relativeSize);
 
     }
 
-    private ComponentDetail getComponentDetail(Paintable paintable) {
+    private ComponentDetail getComponentDetail(VPaintable paintable) {
         return idToComponentDetail.get(getPid(paintable));
     }
 
@@ -321,12 +350,12 @@ public class PaintableMap {
      * @return
      */
     @Deprecated
-    public TooltipInfo getTooltipInfo(Paintable paintable, Object key) {
+    public TooltipInfo getTooltipInfo(VPaintableWidget paintable, Object key) {
         return getComponentDetail(paintable).getTooltipInfo(key);
     }
 
-    public Collection<? extends Paintable> getPaintables() {
-        return Collections.unmodifiableCollection(idToPaintable.values());
+    public Collection<? extends VPaintable> getPaintables() {
+        return Collections.unmodifiableCollection(paintableToId.keySet());
     }
 
     /**
@@ -336,7 +365,7 @@ public class PaintableMap {
      * @return
      */
     @Deprecated
-    public void registerTooltip(Paintable paintable, Object key,
+    public void registerTooltip(VPaintableWidget paintable, Object key,
             TooltipInfo tooltip) {
         getComponentDetail(paintable).putAdditionalTooltip(key, tooltip);
 
@@ -349,8 +378,21 @@ public class PaintableMap {
      * @return
      */
     @Deprecated
-    public boolean hasEventListeners(Paintable paintable, String eventIdentifier) {
+    public boolean hasEventListeners(VPaintable paintable,
+            String eventIdentifier) {
         return getComponentDetail(paintable).hasEventListeners(eventIdentifier);
+    }
+
+    /**
+     * Tests if the widget is the root widget of a VPaintableWidget.
+     * 
+     * @param widget
+     *            The widget to test
+     * @return true if the widget is the root widget of a VPaintableWidget,
+     *         false otherwise
+     */
+    public boolean isPaintable(Widget w) {
+        return getPid(w) != null;
     }
 
 }

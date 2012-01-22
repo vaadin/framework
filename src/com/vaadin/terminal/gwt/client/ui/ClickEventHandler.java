@@ -17,11 +17,10 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.Paintable;
-import com.vaadin.terminal.gwt.client.PaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 public abstract class ClickEventHandler implements DoubleClickHandler,
         ContextMenuHandler, MouseUpHandler {
@@ -31,10 +30,11 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
     private HandlerRegistration contextMenuHandlerRegistration;
 
     protected String clickEventIdentifier;
-    protected Paintable paintable;
+    protected VPaintableWidget paintable;
     private ApplicationConnection client;
 
-    public ClickEventHandler(Paintable paintable, String clickEventIdentifier) {
+    public ClickEventHandler(VPaintableWidget paintable,
+            String clickEventIdentifier) {
         this.paintable = paintable;
         this.clickEventIdentifier = clickEventIdentifier;
     }
@@ -82,7 +82,7 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
 
     protected void fireClick(NativeEvent event) {
         ApplicationConnection client = getApplicationConnection();
-        String pid = PaintableMap.get(getApplicationConnection()).getPid(
+        String pid = VPaintableMap.get(getApplicationConnection()).getPid(
                 paintable);
 
         MouseEventDetails mouseDetails = new MouseEventDetails(event,
@@ -128,11 +128,7 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
      *         or null if no relative coordinates can be calculated.
      */
     protected Element getRelativeToElement() {
-        if (paintable instanceof Widget) {
-            return ((Widget) paintable).getElement();
-        }
-
-        return null;
+        return paintable.getWidgetForPaintable().getElement();
     }
 
 }

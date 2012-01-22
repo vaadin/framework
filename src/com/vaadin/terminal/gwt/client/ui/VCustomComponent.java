@@ -12,10 +12,11 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 public class VCustomComponent extends SimplePanel implements Container {
 
@@ -41,15 +42,17 @@ public class VCustomComponent extends SimplePanel implements Container {
 
         final UIDL child = uidl.getChildUIDL(0);
         if (child != null) {
-            final Paintable p = client.getPaintable(child);
-            if (p != getWidget()) {
+            final VPaintableWidget paintable = client.getPaintable(child);
+            Widget widget = paintable.getWidgetForPaintable();
+            if (widget != getWidget()) {
                 if (getWidget() != null) {
-                    client.unregisterPaintable((Paintable) getWidget());
+                    client.unregisterPaintable(VPaintableMap.get(client)
+                            .getPaintable(getWidget()));
                     clear();
                 }
-                setWidget((Widget) p);
+                setWidget(widget);
             }
-            p.updateFromUIDL(child, client);
+            paintable.updateFromUIDL(child, client);
         }
 
         boolean updateDynamicSize = updateDynamicSize();
@@ -118,11 +121,11 @@ public class VCustomComponent extends SimplePanel implements Container {
         }
     }
 
-    public void updateCaption(Paintable component, UIDL uidl) {
+    public void updateCaption(VPaintableWidget component, UIDL uidl) {
         // NOP, custom component dont render composition roots caption
     }
 
-    public boolean requestLayout(Set<Paintable> child) {
+    public boolean requestLayout(Set<Widget> children) {
         // If a child grows in size, it will not necessarily be calculated
         // correctly unless we remove previous size definitions
         if (isDynamicWidth()) {
@@ -163,6 +166,10 @@ public class VCustomComponent extends SimplePanel implements Container {
                 client.handleComponentRelativeSize(getWidget());
             }
         }
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }

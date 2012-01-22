@@ -37,11 +37,11 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Focusable;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
 /**
@@ -58,7 +58,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
     private String theme;
 
-    private Paintable layout;
+    private VPaintableWidget layout;
 
     private final LinkedHashSet<VWindow> subWindows = new LinkedHashSet<VWindow>();
 
@@ -334,18 +334,18 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
         // Draw this application level window
         UIDL childUidl = uidl.getChildUIDL(childIndex);
-        final Paintable lo = client.getPaintable(childUidl);
+        final VPaintableWidget lo = client.getPaintable(childUidl);
 
         if (layout != null) {
             if (layout != lo) {
                 // remove old
                 client.unregisterPaintable(layout);
                 // add new
-                setWidget((Widget) lo);
+                setWidget(lo.getWidgetForPaintable());
                 layout = lo;
             }
         } else {
-            setWidget((Widget) lo);
+            setWidget(lo.getWidgetForPaintable());
             layout = lo;
         }
 
@@ -377,7 +377,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                 }
             } else {
                 // subwindows
-                final Paintable w = client.getPaintable(childUidl);
+                final VPaintableWidget w = client.getPaintable(childUidl);
                 if (subWindows.contains(w)) {
                     removedSubWindows.remove(w);
                 } else {
@@ -400,9 +400,11 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             // set focused component when render phase is finished
             Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
-                    final Paintable toBeFocused = uidl.getPaintableAttribute(
-                            "focused", connection);
+                    VPaintableWidget paintable = (VPaintableWidget) uidl
+                            .getPaintableAttribute("focused", connection);
 
+                    final Widget toBeFocused = paintable
+                            .getWidgetForPaintable();
                     /*
                      * Two types of Widgets can be focused, either implementing
                      * GWT HasFocus of a thinner Vaadin specific Focusable
@@ -475,9 +477,10 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         if (uidl.hasAttribute("scrollTo")) {
             Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
-                    final Paintable paintable = uidl.getPaintableAttribute(
-                            "scrollTo", connection);
-                    ((Widget) paintable).getElement().scrollIntoView();
+                    final VPaintableWidget paintable = (VPaintableWidget) uidl
+                            .getPaintableAttribute("scrollTo", connection);
+                    paintable.getWidgetForPaintable().getElement()
+                            .scrollIntoView();
                 }
             });
         }
@@ -643,7 +646,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                 Element targetElement;
                 if (appId.equals(ownAppId)) {
                     // Only hide the contents of current application
-                    targetElement = ((Widget) layout).getElement();
+                    targetElement = layout.getWidgetForPaintable().getElement();
                 } else {
                     // Hide everything for other applications
                     targetElement = Document.get().getElementById(appId);
@@ -661,7 +664,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                 String appId = vaadinApps.get(i);
                 Element targetElement;
                 if (appId.equals(ownAppId)) {
-                    targetElement = ((Widget) layout).getElement();
+                    targetElement = layout.getWidgetForPaintable().getElement();
                 } else {
                     targetElement = Document.get().getElementById(appId);
                 }
@@ -714,10 +717,10 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         }
 
         setWidget(newComponent);
-        layout = (Paintable) newComponent;
+        layout = (VPaintableWidget) newComponent;
     }
 
-    public boolean requestLayout(Set<Paintable> child) {
+    public boolean requestLayout(Set<Widget> children) {
         /*
          * Can never propagate further and we do not want need to re-layout the
          * layout which has caused this request.
@@ -725,7 +728,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         updateParentFrameSize();
 
         // layout size change may affect its available space (scrollbars)
-        connection.handleComponentRelativeSize((Widget) layout);
+        connection.handleComponentRelativeSize(layout.getWidgetForPaintable());
 
         return true;
 
@@ -758,7 +761,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         return null;
     }-*/;
 
-    public void updateCaption(Paintable component, UIDL uidl) {
+    public void updateCaption(VPaintableWidget component, UIDL uidl) {
         // NOP Subwindows never draw caption for their first child (layout)
     }
 
@@ -818,6 +821,10 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
     public void focus() {
         getElement().focus();
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }

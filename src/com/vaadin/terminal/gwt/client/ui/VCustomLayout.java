@@ -20,13 +20,14 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 /**
  * Custom Layout implements complex layout defined with HTML template.
@@ -34,7 +35,7 @@ import com.vaadin.terminal.gwt.client.VCaptionWrapper;
  * @author Vaadin Ltd
  * 
  */
-public class VCustomLayout extends ComplexPanel implements Paintable,
+public class VCustomLayout extends ComplexPanel implements VPaintableWidget,
         Container, ContainerResizedListener {
 
     public static final String CLASSNAME = "v-customlayout";
@@ -46,7 +47,7 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
     private final HashMap<String, Widget> locationToWidget = new HashMap<String, Widget>();
 
     /** Widget to captionwrapper map */
-    private final HashMap<Paintable, VCaptionWrapper> widgetToCaptionWrapper = new HashMap<Paintable, VCaptionWrapper>();
+    private final HashMap<VPaintableWidget, VCaptionWrapper> paintableToCaptionWrapper = new HashMap<VPaintableWidget, VCaptionWrapper>();
 
     /** Name of the currently rendered style */
     String currentTemplateName;
@@ -161,15 +162,17 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
             final UIDL uidlForChild = (UIDL) i.next();
             if (uidlForChild.getTag().equals("location")) {
                 final String location = uidlForChild.getStringAttribute("name");
-                final Paintable child = client.getPaintable(uidlForChild
-                        .getChildUIDL(0));
+                UIDL childUIDL = uidlForChild.getChildUIDL(0);
+                final VPaintableWidget childPaintable = client
+                        .getPaintable(childUIDL);
+                Widget childWidget = childPaintable.getWidgetForPaintable();
                 try {
-                    setWidget((Widget) child, location);
-                    child.updateFromUIDL(uidlForChild.getChildUIDL(0), client);
+                    setWidget(childWidget, location);
+                    childPaintable.updateFromUIDL(childUIDL, client);
                 } catch (final IllegalArgumentException e) {
                     // If no location is found, this component is not visible
                 }
-                oldWidgets.remove(child);
+                oldWidgets.remove(childWidget);
             }
         }
         for (Iterator<Widget> iterator = oldWidgets.iterator(); iterator
@@ -384,24 +387,26 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
     }
 
     /** Update caption for given widget */
-    public void updateCaption(Paintable component, UIDL uidl) {
-        VCaptionWrapper wrapper = widgetToCaptionWrapper.get(component);
+    public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
+        VCaptionWrapper wrapper = paintableToCaptionWrapper.get(paintable);
+        Widget widget = paintable.getWidgetForPaintable();
         if (VCaption.isNeeded(uidl)) {
             if (wrapper == null) {
-                final String loc = getLocation((Widget) component);
-                super.remove((Widget) component);
-                wrapper = new VCaptionWrapper(component, client);
+                // Add a wrapper between the layout and the child widget
+                final String loc = getLocation(widget);
+                super.remove(widget);
+                wrapper = new VCaptionWrapper(paintable, client);
                 super.add(wrapper, locationToElement.get(loc));
-                widgetToCaptionWrapper.put(component, wrapper);
+                paintableToCaptionWrapper.put(paintable, wrapper);
             }
             wrapper.updateCaption(uidl);
         } else {
             if (wrapper != null) {
-                final String loc = getLocation((Widget) component);
+                // Remove the wrapper and add the widget directly to the layout
+                final String loc = getLocation(widget);
                 super.remove(wrapper);
-                super.add((Widget) wrapper.getPaintable(),
-                        locationToElement.get(loc));
-                widgetToCaptionWrapper.remove(component);
+                super.add(widget, locationToElement.get(loc));
+                paintableToCaptionWrapper.remove(paintable);
             }
         }
     }
@@ -421,14 +426,15 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
     /** Removes given widget from the layout */
     @Override
     public boolean remove(Widget w) {
-        client.unregisterPaintable((Paintable) w);
+        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(w);
+        client.unregisterPaintable(paintable);
         final String location = getLocation(w);
         if (location != null) {
             locationToWidget.remove(location);
         }
-        final VCaptionWrapper cw = widgetToCaptionWrapper.get(w);
+        final VCaptionWrapper cw = paintableToCaptionWrapper.get(paintable);
         if (cw != null) {
-            widgetToCaptionWrapper.remove(w);
+            paintableToCaptionWrapper.remove(paintable);
             return super.remove(cw);
         } else if (w != null) {
             return super.remove(w);
@@ -447,7 +453,7 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
     public void clear() {
         super.clear();
         locationToWidget.clear();
-        widgetToCaptionWrapper.clear();
+        paintableToCaptionWrapper.clear();
     }
 
     public void iLayout() {
@@ -513,7 +519,7 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
     	}
     }-*/;
 
-    public boolean requestLayout(Set<Paintable> child) {
+    public boolean requestLayout(Set<Widget> children) {
         updateRelativeSizedComponents(true, true);
 
         if (width.equals("") || height.equals("")) {
@@ -640,6 +646,10 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
 
         boolean larger = newSizePx > currentSizePx;
         return larger;
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }

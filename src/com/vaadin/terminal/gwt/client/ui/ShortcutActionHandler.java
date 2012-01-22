@@ -19,9 +19,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
 
 /**
@@ -52,12 +53,12 @@ public class ShortcutActionHandler {
     }
 
     /**
-     * A focusable {@link Paintable} implementing this interface will be
+     * A focusable {@link VPaintableWidget} implementing this interface will be
      * notified before shortcut actions are handled if it will be the target of
      * the action (most commonly means it is the focused component during the
      * keyboard combination is triggered by the user).
      */
-    public interface BeforeShortcutActionListener extends Paintable {
+    public interface BeforeShortcutActionListener extends VPaintableWidget {
         /**
          * This method is called by ShortcutActionHandler before firing the
          * shortcut if the Paintable is currently focused (aka the target of the
@@ -111,7 +112,7 @@ public class ShortcutActionHandler {
         }
     }
 
-    public void handleKeyboardEvent(final Event event, Paintable target) {
+    public void handleKeyboardEvent(final Event event, VPaintableWidget target) {
         final int modifiers = KeyboardListenerCollection
                 .getKeyboardModifiers(event);
         final char keyCode = (char) DOM.eventGetKeyCode(event);
@@ -133,16 +134,17 @@ public class ShortcutActionHandler {
     }
 
     private void fireAction(final Event event, final ShortcutAction a,
-            Paintable target) {
+            VPaintableWidget target) {
         final Element et = DOM.eventGetTarget(event);
         if (target == null) {
             Widget w = Util.findWidget(et, null);
-            while (w != null && !(w instanceof Paintable)) {
+            VPaintableMap paintableMap = VPaintableMap.get(client);
+            while (w != null && !paintableMap.isPaintable(w)) {
                 w = w.getParent();
             }
-            target = (Paintable) w;
+            target = paintableMap.getPaintable(w);
         }
-        final Paintable finalTarget = target;
+        final VPaintableWidget finalTarget = target;
 
         event.preventDefault();
 

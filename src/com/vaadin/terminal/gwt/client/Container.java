@@ -8,7 +8,7 @@ import java.util.Set;
 
 import com.google.gwt.user.client.ui.Widget;
 
-public interface Container extends Paintable {
+public interface Container extends VPaintableWidget {
 
     /**
      * Replace child of this layout with another component.
@@ -47,7 +47,7 @@ public interface Container extends Paintable {
      * @param uidl
      *            UIDL of the child component.
      */
-    void updateCaption(Paintable component, UIDL uidl);
+    void updateCaption(VPaintableWidget component, UIDL uidl);
 
     /**
      * Called when a child components size has been updated in the rendering
@@ -58,7 +58,7 @@ public interface Container extends Paintable {
      * @return true if the size of the Container remains the same, false if the
      *         event need to be propagated to the Containers parent
      */
-    boolean requestLayout(Set<Paintable> children);
+    boolean requestLayout(Set<Widget> children);
 
     /**
      * Returns the size currently allocated for the child component.

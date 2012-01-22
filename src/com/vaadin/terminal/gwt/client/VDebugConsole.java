@@ -90,14 +90,14 @@ public class VDebugConsole extends VOverlay implements Console {
 
                 for (ApplicationConnection a : ApplicationConfiguration
                         .getRunningApplications()) {
-                    Paintable paintable = Util.getPaintableForElement(a,
+                    VPaintableWidget paintable = Util.getPaintableForElement(a,
                             a.getView(), eventTarget);
                     if (paintable == null) {
                         paintable = Util.getPaintableForElement(a,
                                 RootPanel.get(), eventTarget);
                     }
                     if (paintable != null) {
-                        String pid = PaintableMap.get(a).getPid(paintable);
+                        String pid = VPaintableMap.get(a).getPid(paintable);
                         VUIDLBrowser.highlight(paintable);
                         label.setText("Currently focused  :"
                                 + paintable.getClass() + " ID:" + pid);
@@ -119,7 +119,7 @@ public class VDebugConsole extends VOverlay implements Console {
                         .getClientY());
                 for (ApplicationConnection a : ApplicationConfiguration
                         .getRunningApplications()) {
-                    Paintable paintable = Util.getPaintableForElement(a,
+                    VPaintableWidget paintable = Util.getPaintableForElement(a,
                             a.getView(), eventTarget);
                     if (paintable == null) {
                         paintable = Util.getPaintableForElement(a,
@@ -483,8 +483,8 @@ public class VDebugConsole extends VOverlay implements Console {
      }-*/;
 
     public void printLayoutProblems(ValueMap meta, ApplicationConnection ac,
-            Set<Paintable> zeroHeightComponents,
-            Set<Paintable> zeroWidthComponents) {
+            Set<VPaintableWidget> zeroHeightComponents,
+            Set<VPaintableWidget> zeroWidthComponents) {
         JsArray<ValueMap> valueMapArray = meta
                 .getJSValueMapArray("invalidLayouts");
         int size = valueMapArray.length();
@@ -521,9 +521,10 @@ public class VDebugConsole extends VOverlay implements Console {
     }
 
     private void printClientSideDetectedIssues(
-            Set<Paintable> zeroHeightComponents, ApplicationConnection ac) {
-        for (final Paintable paintable : zeroHeightComponents) {
-            final Container layout = Util.getLayout((Widget) paintable);
+            Set<VPaintableWidget> zeroHeightComponents, ApplicationConnection ac) {
+        for (final VPaintableWidget paintable : zeroHeightComponents) {
+            final Container layout = Util.getLayout(paintable
+                    .getWidgetForPaintable());
 
             VerticalPanel errorDetails = new VerticalPanel();
             errorDetails.add(new Label("" + Util.getSimpleName(paintable)
@@ -533,7 +534,8 @@ public class VDebugConsole extends VOverlay implements Console {
             emphasisInUi.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {
                     if (paintable != null) {
-                        Element element2 = ((Widget) layout).getElement();
+                        Element element2 = layout.getWidgetForPaintable()
+                                .getElement();
                         Widget.setStyleName(element2, "invalidlayout",
                                 emphasisInUi.getValue());
                     }
@@ -547,7 +549,8 @@ public class VDebugConsole extends VOverlay implements Console {
     private void printLayoutError(ValueMap valueMap, SimpleTree root,
             final ApplicationConnection ac) {
         final String pid = valueMap.getString("id");
-        final Paintable paintable = PaintableMap.get(ac).getPaintable(pid);
+        final VPaintableWidget paintable = (VPaintableWidget) VPaintableMap
+                .get(ac).getPaintable(pid);
 
         SimpleTree errorNode = new SimpleTree();
         VerticalPanel errorDetails = new VerticalPanel();
@@ -565,7 +568,8 @@ public class VDebugConsole extends VOverlay implements Console {
         emphasisInUi.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 if (paintable != null) {
-                    Element element2 = ((Widget) paintable).getElement();
+                    Element element2 = paintable.getWidgetForPaintable()
+                            .getElement();
                     Widget.setStyleName(element2, "invalidlayout",
                             emphasisInUi.getValue());
                 }

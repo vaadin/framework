@@ -8,6 +8,7 @@ import com.google.gwt.dom.client.AudioElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -46,4 +47,9 @@ public class VAudio extends VMediaBase {
     protected String getDefaultAltHtml() {
         return "Your browser does not support the <code>audio</code> element.";
     }
+
+    public Widget getWidgetForPaintable() {
+        return this;
+    }
+
 }

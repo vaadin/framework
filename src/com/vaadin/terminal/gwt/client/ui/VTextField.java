@@ -21,10 +21,11 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.TextBoxBase;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventId;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
@@ -36,7 +37,7 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutAct
  * @author Vaadin Ltd.
  * 
  */
-public class VTextField extends TextBoxBase implements Paintable, Field,
+public class VTextField extends TextBoxBase implements VPaintableWidget, Field,
         ChangeHandler, FocusHandler, BlurHandler, BeforeShortcutActionListener,
         KeyDownHandler {
 
@@ -605,5 +606,9 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
             valueChange(false);
         }
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 }

@@ -13,16 +13,17 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 
-public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
-        ContainerResizedListener {
+public class VSlider extends SimpleFocusablePanel implements VPaintableWidget,
+        Field, ContainerResizedListener {
 
     public static final String CLASSNAME = "v-slider";
 
@@ -564,5 +565,9 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
      */
     protected int getNavigationRightKey() {
         return KeyCodes.KEY_RIGHT;
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 }

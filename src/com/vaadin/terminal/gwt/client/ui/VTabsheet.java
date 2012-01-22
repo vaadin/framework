@@ -23,13 +23,14 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 public class VTabsheet extends VTabsheetBase {
 
@@ -800,22 +801,24 @@ public class VTabsheet extends VTabsheetBase {
         tab.recalculateCaptionWidth();
 
         UIDL tabContentUIDL = null;
-        Paintable tabContent = null;
+        VPaintableWidget tabContentPaintable = null;
+        Widget tabContentWidget = null;
         if (tabUidl.getChildCount() > 0) {
             tabContentUIDL = tabUidl.getChildUIDL(0);
-            tabContent = client.getPaintable(tabContentUIDL);
+            tabContentPaintable = client.getPaintable(tabContentUIDL);
+            tabContentWidget = tabContentPaintable.getWidgetForPaintable();
         }
 
-        if (tabContent != null) {
+        if (tabContentPaintable != null) {
             /* This is a tab with content information */
 
-            int oldIndex = tp.getWidgetIndex((Widget) tabContent);
+            int oldIndex = tp.getWidgetIndex(tabContentWidget);
             if (oldIndex != -1 && oldIndex != index) {
                 /*
                  * The tab has previously been rendered in another position so
                  * we must move the cached content to correct position
                  */
-                tp.insert((Widget) tabContent, index);
+                tp.insert(tabContentWidget, index);
             }
         } else {
             /* A tab whose content has not yet been loaded */
@@ -839,10 +842,10 @@ public class VTabsheet extends VTabsheetBase {
         } else {
             if (tabContentUIDL != null) {
                 // updating a drawn child on hidden tab
-                if (tp.getWidgetIndex((Widget) tabContent) < 0) {
-                    tp.insert((Widget) tabContent, index);
+                if (tp.getWidgetIndex(tabContentWidget) < 0) {
+                    tp.insert(tabContentWidget, index);
                 }
-                tabContent.updateFromUIDL(tabContentUIDL, client);
+                tabContentPaintable.updateFromUIDL(tabContentUIDL, client);
             } else if (tp.getWidgetCount() <= index) {
                 tp.add(new PlaceHolder());
             }
@@ -865,30 +868,32 @@ public class VTabsheet extends VTabsheetBase {
     }
 
     private void renderContent(final UIDL contentUIDL) {
-        final Paintable content = client.getPaintable(contentUIDL);
+        final VPaintableWidget content = client.getPaintable(contentUIDL);
         if (tp.getWidgetCount() > activeTabIndex) {
             Widget old = tp.getWidget(activeTabIndex);
             if (old != content) {
                 tp.remove(activeTabIndex);
-                if (old instanceof Paintable) {
-                    client.unregisterPaintable((Paintable) old);
+                VPaintableMap paintableMap = VPaintableMap.get(client);
+                if (paintableMap.isPaintable(old)) {
+                    paintableMap.unregisterPaintable(paintableMap
+                            .getPaintable(old));
                 }
-                tp.insert((Widget) content, activeTabIndex);
+                tp.insert(content.getWidgetForPaintable(), activeTabIndex);
             }
         } else {
-            tp.add((Widget) content);
+            tp.add(content.getWidgetForPaintable());
         }
 
         tp.showWidget(activeTabIndex);
 
         VTabsheet.this.iLayout();
-        (content).updateFromUIDL(contentUIDL, client);
+        content.updateFromUIDL(contentUIDL, client);
         /*
          * The size of a cached, relative sized component must be updated to
          * report correct size to updateOpenTabSize().
          */
         if (contentUIDL.getBooleanAttribute("cached")) {
-            client.handleComponentRelativeSize((Widget) content);
+            client.handleComponentRelativeSize(content.getWidgetForPaintable());
         }
         updateOpenTabSize();
         VTabsheet.this.removeStyleDependentName("loading");
@@ -1089,7 +1094,7 @@ public class VTabsheet extends VTabsheetBase {
     }
 
     @Override
-    protected Iterator getPaintableIterator() {
+    protected Iterator<Widget> getWidgetIterator() {
         return tp.iterator();
     }
 
@@ -1105,19 +1110,19 @@ public class VTabsheet extends VTabsheetBase {
         tp.replaceComponent(oldComponent, newComponent);
     }
 
-    public void updateCaption(Paintable component, UIDL uidl) {
+    public void updateCaption(VPaintableWidget component, UIDL uidl) {
         /* Tabsheet does not render its children's captions */
     }
 
-    public boolean requestLayout(Set<Paintable> child) {
+    public boolean requestLayout(Set<Widget> children) {
         if (!isDynamicHeight() && !isDynamicWidth()) {
             /*
              * If the height and width has been specified for this container the
              * child components cannot make the size of the layout change
              */
             // layout size change may affect its available space (scrollbars)
-            for (Paintable paintable : child) {
-                client.handleComponentRelativeSize((Widget) paintable);
+            for (Widget widget : children) {
+                client.handleComponentRelativeSize(widget);
             }
             return true;
         }
@@ -1165,9 +1170,10 @@ public class VTabsheet extends VTabsheetBase {
     }
 
     @Override
-    protected Paintable getTab(int index) {
+    protected VPaintableWidget getTab(int index) {
         if (tp.getWidgetCount() > index) {
-            return (Paintable) tp.getWidget(index);
+            Widget widget = tp.getWidget(index);
+            return VPaintableMap.get(client).getPaintable(widget);
         }
         return null;
     }
@@ -1184,4 +1190,7 @@ public class VTabsheet extends VTabsheetBase {
         }
     }
 
+    public Widget getWidgetForPaintable() {
+        return this;
+    }
 }

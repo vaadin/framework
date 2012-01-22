@@ -28,12 +28,13 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 public class VSplitPanel extends ComplexPanel implements Container,
         ContainerResizedListener {
@@ -283,24 +284,29 @@ public class VSplitPanel extends ComplexPanel implements Container,
         position = uidl.getStringAttribute("position");
         setSplitPosition(position);
 
-        final Paintable newFirstChild = client.getPaintable(uidl
-                .getChildUIDL(0));
-        final Paintable newSecondChild = client.getPaintable(uidl
-                .getChildUIDL(1));
+        final VPaintableWidget newFirstChildPaintable = client
+                .getPaintable(uidl.getChildUIDL(0));
+        final VPaintableWidget newSecondChildPaintable = client
+                .getPaintable(uidl.getChildUIDL(1));
+        Widget newFirstChild = newFirstChildPaintable.getWidgetForPaintable();
+        Widget newSecondChild = newSecondChildPaintable.getWidgetForPaintable();
+
         if (firstChild != newFirstChild) {
             if (firstChild != null) {
-                client.unregisterPaintable((Paintable) firstChild);
+                client.unregisterPaintable(VPaintableMap.get(client)
+                        .getPaintable(firstChild));
             }
-            setFirstWidget((Widget) newFirstChild);
+            setFirstWidget(newFirstChild);
         }
         if (secondChild != newSecondChild) {
             if (secondChild != null) {
-                client.unregisterPaintable((Paintable) secondChild);
+                client.unregisterPaintable(VPaintableMap.get(client)
+                        .getPaintable(secondChild));
             }
-            setSecondWidget((Widget) newSecondChild);
+            setSecondWidget(newSecondChild);
         }
-        newFirstChild.updateFromUIDL(uidl.getChildUIDL(0), client);
-        newSecondChild.updateFromUIDL(uidl.getChildUIDL(1), client);
+        newFirstChildPaintable.updateFromUIDL(uidl.getChildUIDL(0), client);
+        newSecondChildPaintable.updateFromUIDL(uidl.getChildUIDL(1), client);
 
         renderInformation.updateSize(getElement());
 
@@ -762,11 +768,11 @@ public class VSplitPanel extends ComplexPanel implements Container,
         }
     }
 
-    public boolean requestLayout(Set<Paintable> child) {
+    public boolean requestLayout(Set<Widget> children) {
         // content size change might cause change to its available space
         // (scrollbars)
-        for (Paintable paintable : child) {
-            client.handleComponentRelativeSize((Widget) paintable);
+        for (Widget widget : children) {
+            client.handleComponentRelativeSize(widget);
         }
         if (height != null && width != null) {
             /*
@@ -785,7 +791,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     }
 
-    public void updateCaption(Paintable component, UIDL uidl) {
+    public void updateCaption(VPaintableWidget component, UIDL uidl) {
         // TODO Implement caption handling
     }
 
@@ -838,5 +844,9 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 }

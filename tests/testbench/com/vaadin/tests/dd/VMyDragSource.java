@@ -10,8 +10,9 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
@@ -19,7 +20,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
 /**
  * Example code to implement Component that has something to drag.
  */
-public class VMyDragSource extends Composite implements Paintable,
+public class VMyDragSource extends Composite implements VPaintableWidget,
         MouseDownHandler, MouseMoveHandler, MouseOutHandler {
 
     private boolean mouseDown;
@@ -87,6 +88,10 @@ public class VMyDragSource extends Composite implements Paintable,
     public void onMouseOut(MouseOutEvent event) {
         mouseDown = false;
         mDownEvent = null;
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }

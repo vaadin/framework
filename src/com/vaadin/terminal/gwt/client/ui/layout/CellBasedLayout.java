@@ -17,8 +17,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
 
 public abstract class CellBasedLayout extends ComplexPanel implements Container {
@@ -375,8 +376,9 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
             widgetToComponentContainer.remove(widget);
             remove(child);
             if (!relocated) {
-                Paintable p = (Paintable) widget;
-                client.unregisterPaintable(p);
+                VPaintableMap paintableMap = VPaintableMap.get(client);
+                VPaintableWidget p = paintableMap.getPaintable(widget);
+                paintableMap.unregisterPaintable(p);
             }
         }
 
@@ -389,8 +391,10 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
             return;
         }
 
-        componentContainer.setWidget(newComponent);
-        client.unregisterPaintable((Paintable) oldComponent);
+        componentContainer.setPaintable(VPaintableMap.get(client).getPaintable(
+                newComponent));
+        client.unregisterPaintable(VPaintableMap.get(client).getPaintable(
+                oldComponent));
         widgetToComponentContainer.put(newComponent, componentContainer);
     }
 

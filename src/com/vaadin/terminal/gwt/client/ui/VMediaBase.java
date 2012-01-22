@@ -9,11 +9,11 @@ import com.google.gwt.dom.client.MediaElement;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 
-public abstract class VMediaBase extends Widget implements Paintable {
+public abstract class VMediaBase extends Widget implements VPaintableWidget {
     public static final String ATTR_PAUSE = "pause";
     public static final String ATTR_PLAY = "play";
     public static final String ATTR_MUTED = "muted";

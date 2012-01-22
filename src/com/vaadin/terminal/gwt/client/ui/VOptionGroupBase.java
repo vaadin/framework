@@ -19,11 +19,11 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Focusable;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-abstract class VOptionGroupBase extends Composite implements Paintable, Field,
-        ClickHandler, ChangeHandler, KeyPressHandler, Focusable {
+abstract class VOptionGroupBase extends Composite implements VPaintableWidget,
+        Field, ClickHandler, ChangeHandler, KeyPressHandler, Focusable {
 
     public static final String CLASSNAME_OPTION = "v-select-option";
 

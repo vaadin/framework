@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 public class VNativeSelect extends VOptionGroupBase implements Field {
@@ -107,4 +108,7 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
         select.setFocus(true);
     }
 
+    public Widget getWidgetForPaintable() {
+        return this;
+    }
 }

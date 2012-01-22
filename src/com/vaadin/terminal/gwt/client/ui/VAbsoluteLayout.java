@@ -24,11 +24,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.EventId;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 public class VAbsoluteLayout extends ComplexPanel implements Container {
 
@@ -58,7 +59,7 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
             this, EventId.LAYOUT_CLICK) {
 
         @Override
-        protected Paintable getChildComponent(Element element) {
+        protected VPaintableWidget getChildComponent(Element element) {
             return getComponent(element);
         }
 
@@ -130,15 +131,15 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
         }
     }
 
-    public boolean requestLayout(Set<Paintable> children) {
+    public boolean requestLayout(Set<Widget> children) {
         // component inside an absolute panel never affects parent nor the
         // layout
         return true;
     }
 
-    public void updateCaption(Paintable component, UIDL uidl) {
-        AbsoluteWrapper parent2 = (AbsoluteWrapper) ((Widget) component)
-                .getParent();
+    public void updateCaption(VPaintableWidget component, UIDL uidl) {
+        AbsoluteWrapper parent2 = (AbsoluteWrapper) (component
+                .getWidgetForPaintable()).getParent();
         parent2.updateCaption(uidl);
     }
 
@@ -243,10 +244,10 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
         private String bottom;
         private String zIndex;
 
-        private Paintable paintable;
+        private VPaintableWidget paintable;
         private VCaption caption;
 
-        public AbsoluteWrapper(Paintable paintable) {
+        public AbsoluteWrapper(VPaintableWidget paintable) {
             this.paintable = paintable;
             setStyleName(CLASSNAME + "-wrapper");
         }
@@ -272,7 +273,7 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
         @Override
         public void setWidget(Widget w) {
             // this fixes #5457 (Widget implementation can change on-the-fly)
-            paintable = (Paintable) w;
+            paintable = VPaintableMap.get(client).getPaintable(w);
             super.setWidget(w);
         }
 
@@ -286,8 +287,8 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
 
         public void updateFromUIDL(UIDL componentUIDL) {
             setPosition(componentUIDL.getStringAttribute("css"));
-            if (getWidget() != paintable) {
-                setWidget((Widget) paintable);
+            if (getWidget() != paintable.getWidgetForPaintable()) {
+                setWidget(paintable.getWidgetForPaintable());
             }
             UIDL childUIDL = componentUIDL.getChildUIDL(0);
             paintable.updateFromUIDL(childUIDL, client);
@@ -295,7 +296,8 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
                 // child may need relative size adjustment if wrapper details
                 // have changed this could be optimized (check if wrapper size
                 // has changed)
-                client.handleComponentRelativeSize((Widget) paintable);
+                client.handleComponentRelativeSize(paintable
+                        .getWidgetForPaintable());
             }
         }
 
@@ -362,8 +364,12 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
      */
-    private Paintable getComponent(Element element) {
+    private VPaintableWidget getComponent(Element element) {
         return Util.getPaintableForElement(client, this, element);
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }

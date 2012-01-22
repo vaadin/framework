@@ -1,15 +1,16 @@
 package com.vaadin.tests.dd;
 
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 
 public class VMyDropTarget extends Composite implements VHasDropHandler,
-        VDropHandler, Paintable {
+        VDropHandler, VPaintableWidget {
 
     private ApplicationConnection client;
 
@@ -30,7 +31,7 @@ public class VMyDropTarget extends Composite implements VHasDropHandler,
         return false;
     }
 
-    public Paintable getPaintable() {
+    public VPaintableWidget getPaintable() {
         // Drophandler implemented by Paintable itself
         return this;
     }
@@ -47,6 +48,10 @@ public class VMyDropTarget extends Composite implements VHasDropHandler,
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         this.client = client;
 
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }

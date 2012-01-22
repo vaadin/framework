@@ -22,11 +22,12 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Focusable;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
 public class VPanel extends SimplePanel implements Container,
@@ -53,7 +54,7 @@ public class VPanel extends SimplePanel implements Container,
 
     private String height;
 
-    private Paintable layout;
+    private VPaintableWidget layout;
 
     ShortcutActionHandler shortcutHandler;
 
@@ -222,12 +223,12 @@ public class VPanel extends SimplePanel implements Container,
 
         // Render content
         final UIDL layoutUidl = uidl.getChildUIDL(0);
-        final Paintable newLayout = client.getPaintable(layoutUidl);
+        final VPaintableWidget newLayout = client.getPaintable(layoutUidl);
         if (newLayout != layout) {
             if (layout != null) {
                 client.unregisterPaintable(layout);
             }
-            setWidget((Widget) newLayout);
+            setWidget(newLayout.getWidgetForPaintable());
             layout = newLayout;
         }
         layout.updateFromUIDL(layoutUidl, client);
@@ -329,7 +330,7 @@ public class VPanel extends SimplePanel implements Container,
              */
             int captionWidth = captionText.getOffsetWidth()
                     + getCaptionMarginLeft() + getCaptionPaddingHorizontal();
-            int layoutWidth = ((Widget) layout).getOffsetWidth()
+            int layoutWidth = layout.getWidgetForPaintable().getOffsetWidth()
                     + getContainerBorderWidth();
             int width = layoutWidth;
             if (captionWidth > width) {
@@ -469,7 +470,8 @@ public class VPanel extends SimplePanel implements Container,
 
             if (height.equals("")) {
                 // Width change may affect height
-                Util.updateRelativeChildrenAndSendSizeUpdateEvent(client, this);
+                Util.updateRelativeChildrenAndSendSizeUpdateEvent(client, this,
+                        this);
             }
 
         }
@@ -508,12 +510,12 @@ public class VPanel extends SimplePanel implements Container,
 
     public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
         // TODO This is untested as no layouts require this
-        if (oldComponent != layout) {
+        if (oldComponent != layout.getWidgetForPaintable()) {
             return;
         }
 
         setWidget(newComponent);
-        layout = (Paintable) newComponent;
+        layout = VPaintableMap.get(client).getPaintable(newComponent);
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
@@ -537,10 +539,10 @@ public class VPanel extends SimplePanel implements Container,
         return new RenderSpace(w, h, true);
     }
 
-    public boolean requestLayout(Set<Paintable> child) {
+    public boolean requestLayout(Set<Widget> children) {
         // content size change might cause change to its available space
         // (scrollbars)
-        client.handleComponentRelativeSize((Widget) layout);
+        client.handleComponentRelativeSize(layout.getWidgetForPaintable());
         if (height != null && height != "" && width != null && width != "") {
             /*
              * If the height and width has been specified the child components
@@ -552,7 +554,7 @@ public class VPanel extends SimplePanel implements Container,
         return !renderInformation.updateSize(getElement());
     }
 
-    public void updateCaption(Paintable component, UIDL uidl) {
+    public void updateCaption(VPaintableWidget component, UIDL uidl) {
         // NOP: layouts caption, errors etc not rendered in Panel
     }
 
@@ -564,6 +566,10 @@ public class VPanel extends SimplePanel implements Container,
 
     public ShortcutActionHandler getShortcutActionHandler() {
         return shortcutHandler;
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }

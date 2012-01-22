@@ -9,7 +9,7 @@ import com.google.gwt.user.client.Command;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 public abstract class VAbstractDropHandler implements VDropHandler {
@@ -129,6 +129,6 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      * side counterpart of the Paintable is expected to implement
      * {@link DropTarget} interface.
      */
-    public abstract Paintable getPaintable();
+    public abstract VPaintableWidget getPaintable();
 
 }

@@ -11,13 +11,14 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VLink extends HTML implements Paintable, ClickHandler {
+public class VLink extends HTML implements VPaintableWidget, ClickHandler {
 
     public static final String CLASSNAME = "v-link";
 
@@ -177,6 +178,10 @@ public class VLink extends HTML implements Paintable, ClickHandler {
             event.preventDefault();
         }
 
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }

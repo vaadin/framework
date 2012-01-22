@@ -9,15 +9,21 @@ abstract class WidgetMap {
 
     protected static HashMap<Class, WidgetInstantiator> instmap = new HashMap<Class, WidgetInstantiator>();
 
-    public Paintable instantiate(Class<? extends Paintable> classType) {
+    // FIXME: Should use Paintable and not VPaintableWidget
+    public VPaintableWidget instantiate(
+            Class<? extends VPaintableWidget> classType) {
         return instmap.get(classType).get();
     }
 
-    public abstract Class<? extends Paintable> getImplementationByServerSideClassName(
+    // FIXME: Should use Paintable and not VPaintableWidget
+    public abstract Class<? extends VPaintableWidget> getImplementationByServerSideClassName(
             String fullyqualifiedName);
 
-    public abstract Class<? extends Paintable>[] getDeferredLoadedWidgets();
+    // FIXME: Should use Paintable and not VPaintableWidget
+    public abstract Class<? extends VPaintableWidget>[] getDeferredLoadedWidgets();
 
-    public abstract void ensureInstantiator(Class<? extends Paintable> classType);
+    // FIXME: Should use Paintable and not VPaintableWidget
+    public abstract void ensureInstantiator(
+            Class<? extends VPaintableWidget> classType);
 
 }

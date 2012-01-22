@@ -13,13 +13,13 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
 
 public class ChildComponentContainer extends Panel {
@@ -68,10 +68,11 @@ public class ChildComponentContainer extends Panel {
     private VCaption caption = null;
     private DivElement containerDIV;
     private DivElement widgetDIV;
+    private VPaintableWidget paintable;
     private Widget widget;
     private FloatSize relativeSize = null;
 
-    public ChildComponentContainer(Widget widget, int orientation) {
+    public ChildComponentContainer(VPaintableWidget child, int orientation) {
         super();
 
         containerDIV = Document.get().createDivElement();
@@ -99,11 +100,15 @@ public class ChildComponentContainer extends Panel {
 
         setOrientation(orientation);
 
-        setWidget(widget);
-
+        setPaintable(child);
     }
 
-    public void setWidget(Widget w) {
+    public void setPaintable(VPaintableWidget childPaintable) {
+        paintable = childPaintable;
+        setWidget(childPaintable.getWidgetForPaintable());
+    }
+
+    private void setWidget(Widget w) {
         // Validate
         if (w == widget) {
             return;
@@ -187,7 +192,7 @@ public class ChildComponentContainer extends Panel {
         if (fixedWidth < 0 && BrowserInfo.get().isOpera()) {
             setUnlimitedContainerWidth();
         }
-        ((Paintable) widget).updateFromUIDL(childUIDL, client);
+        paintable.updateFromUIDL(childUIDL, client);
     }
 
     public void setUnlimitedContainerWidth() {
@@ -404,7 +409,7 @@ public class ChildComponentContainer extends Panel {
             VCaption newCaption = caption;
 
             if (newCaption == null) {
-                newCaption = new VCaption((Paintable) widget, client);
+                newCaption = new VCaption(paintable, client);
                 // Set initial height to avoid Safari flicker
                 newCaption.setHeight("18px");
                 // newCaption.setHeight(newCaption.getHeight()); // This might

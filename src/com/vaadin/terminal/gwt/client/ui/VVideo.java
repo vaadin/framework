@@ -8,6 +8,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.VideoElement;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -73,5 +74,9 @@ public class VVideo extends VMediaBase {
     @Override
     protected String getDefaultAltHtml() {
         return "Your browser does not support the <code>video</code> element.";
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 }

@@ -10,27 +10,27 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Element;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.Paintable;
-import com.vaadin.terminal.gwt.client.PaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 public abstract class LayoutClickEventHandler extends ClickEventHandler {
 
-    public LayoutClickEventHandler(Paintable paintable,
+    public LayoutClickEventHandler(VPaintableWidget paintable,
             String clickEventIdentifier) {
         super(paintable, clickEventIdentifier);
     }
 
-    protected abstract Paintable getChildComponent(Element element);
+    protected abstract VPaintableWidget getChildComponent(Element element);
 
     @Override
     protected void fireClick(NativeEvent event) {
         ApplicationConnection client = getApplicationConnection();
-        String pid = PaintableMap.get(getApplicationConnection()).getPid(
+        String pid = VPaintableMap.get(getApplicationConnection()).getPid(
                 paintable);
 
         MouseEventDetails mouseDetails = new MouseEventDetails(event,
                 getRelativeToElement());
-        Paintable childComponent = getChildComponent((Element) event
+        VPaintableWidget childComponent = getChildComponent((Element) event
                 .getEventTarget().cast());
 
         Map<String, Object> parameters = new HashMap<String, Object>();

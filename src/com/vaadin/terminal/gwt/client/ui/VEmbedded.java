@@ -21,15 +21,16 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VEmbedded extends HTML implements Paintable {
+public class VEmbedded extends HTML implements VPaintableWidget {
     public static final String CLICK_EVENT_IDENTIFIER = "click";
 
     private static String CLASSNAME = "v-embedded";
@@ -430,6 +431,10 @@ public class VEmbedded extends HTML implements Paintable {
                     getElement().getFirstChildElement().getOffsetHeight(),
                     Unit.PX);
         }
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }

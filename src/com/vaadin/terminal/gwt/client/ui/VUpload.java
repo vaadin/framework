@@ -21,9 +21,10 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
@@ -34,7 +35,7 @@ import com.vaadin.terminal.gwt.client.VTooltip;
  * events even though the upload component is already detached.
  * 
  */
-public class VUpload extends SimplePanel implements Paintable {
+public class VUpload extends SimplePanel implements VPaintableWidget {
 
     private final class MyFileUpload extends FileUpload {
         @Override
@@ -352,6 +353,10 @@ public class VUpload extends SimplePanel implements Paintable {
             onloadstrategy.unHookEvents(synthesizedFrame);
             synthesizedFrame = null;
         }
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }

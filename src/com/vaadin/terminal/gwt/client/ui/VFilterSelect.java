@@ -42,11 +42,12 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
@@ -58,7 +59,7 @@ import com.vaadin.terminal.gwt.client.VTooltip;
  * TODO needs major refactoring (to be extensible etc)
  */
 @SuppressWarnings("deprecation")
-public class VFilterSelect extends Composite implements Paintable, Field,
+public class VFilterSelect extends Composite implements VPaintableWidget, Field,
         KeyDownHandler, KeyUpHandler, ClickHandler, FocusHandler, BlurHandler,
         Focusable {
 
@@ -1932,5 +1933,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     protected void onDetach() {
         super.onDetach();
         suggestionPopup.hide();
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 }
