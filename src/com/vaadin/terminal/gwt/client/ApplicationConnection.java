@@ -544,15 +544,13 @@ public class ApplicationConnection {
                          * the request and served non-UIDL content (for
                          * instance, a login page if the session has expired.)
                          * If the response contains a magic substring, do a
-                         * synchronous refresh.
+                         * synchronous refresh. See #8241.
                          */
                         MatchResult refreshToken = RegExp.compile(
                                 UIDL_REFRESH_TOKEN + "(:\\s*(.*?))?(\\s|$)")
                                 .exec(response.getText());
                         if (refreshToken != null) {
                             redirect(refreshToken.getGroup(2));
-                            VConsole.log("*** REDIRECT : "
-                                    + refreshToken.getGroup(2));
                             return;
                         }
                     }
