@@ -23,5 +23,4 @@ if [ -a /home/integration/demo.war ]
 fi
      
 echo Cleaning deploy dir
-ant -f /home/integration/deploy.xml clean
-
+rm -rf /home/integration/deploy/*
