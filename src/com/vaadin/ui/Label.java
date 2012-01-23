@@ -10,7 +10,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.VLabelPaintable;
+import com.vaadin.terminal.gwt.client.ui.label.VLabelPaintable;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**

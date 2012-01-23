@@ -2,7 +2,7 @@
 @VaadinApache2LicenseForJavaFiles@
  */
 
-package com.vaadin.terminal.gwt.client.ui;
+package com.vaadin.terminal.gwt.client.ui.label;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
