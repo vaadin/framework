@@ -1242,17 +1242,19 @@ public abstract class AbstractCommunicationManager implements
                     nextInvocation = invocations.get(i + 1);
                 }
 
-                final VariableOwner owner = getVariableOwner(invocation
-                        .getPaintableId());
                 final String methodName = invocation.getMethodName();
 
-                if (owner != null && owner.isEnabled()) {
-                    if (!ApplicationConnection.UPDATE_VARIABLE_METHOD
-                            .equals(methodName)) {
-                        // TODO handle other RPC calls
-                        continue;
-                    }
+                if (!ApplicationConnection.UPDATE_VARIABLE_METHOD
+                        .equals(methodName)) {
+                    // handle other RPC calls than variable changes
+                    applyInvocation(invocation);
+                    continue;
+                }
 
+                final VariableOwner owner = getVariableOwner(invocation
+                        .getPaintableId());
+
+                if (owner != null && owner.isEnabled()) {
                     VariableChange change = new VariableChange(invocation);
 
                     // TODO could optimize with a single value map if only one
@@ -1288,8 +1290,8 @@ public abstract class AbstractCommunicationManager implements
                         }
                     }
                 } else {
-                    // TODO convert window close to a separate RPC call, not a
-                    // variable change
+                    // TODO convert window close to a separate RPC call and
+                    // handle above - not a variable change
 
                     VariableChange change = new VariableChange(invocation);
 
@@ -1329,6 +1331,23 @@ public abstract class AbstractCommunicationManager implements
         }
 
         return success;
+    }
+
+    /**
+     * Execute an RPC call from the client by finding its target and letting the
+     * RPC mechanism call the correct method for it.
+     * 
+     * @param invocation
+     */
+    protected void applyInvocation(MethodInvocation invocation) {
+        final RpcTarget target = getRpcTarget(invocation.getPaintableId());
+        if (null != target) {
+            ServerRpcManager.applyInvocation(target, invocation);
+        } else {
+            // TODO better exception?
+            throw new RuntimeException("No RPC target for paintable "
+                    + invocation.getPaintableId());
+        }
     }
 
     /**
@@ -1375,6 +1394,25 @@ public abstract class AbstractCommunicationManager implements
             return getDragAndDropService();
         }
         return owner;
+    }
+
+    /**
+     * Returns the RPC call target for a paintable ID.
+     * 
+     * @since 7.0
+     * 
+     * @param string
+     *            paintable ID
+     * @return RPC call target or null if none found
+     */
+    protected RpcTarget getRpcTarget(String string) {
+        // TODO improve this - VariableOwner and RpcManager separate?
+        VariableOwner owner = getVariableOwner(string);
+        if (owner instanceof RpcTarget) {
+            return (RpcTarget) owner;
+        } else {
+            return null;
+        }
     }
 
     private VariableOwner getDragAndDropService() {

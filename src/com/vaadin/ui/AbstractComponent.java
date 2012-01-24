@@ -29,6 +29,9 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
+import com.vaadin.terminal.gwt.server.RpcManager;
+import com.vaadin.terminal.gwt.server.RpcTarget;
+import com.vaadin.terminal.gwt.server.ServerRpcManager;
 import com.vaadin.tools.ReflectTools;
 
 /**
@@ -152,6 +155,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * handling/notifying is delegated, usually to the containing window.
      */
     private ActionManager actionManager;
+
+    /**
+     * RPC call manager that handles incoming RPC calls.
+     */
+    private RpcManager rpcManager = null;
 
     /* Constructor */
 
@@ -1527,6 +1535,30 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         if (actionManager != null) {
             actionManager.removeAction(shortcut);
         }
+    }
+
+    /**
+     * Sets the RPC interface implementation for this component.
+     * 
+     * A component should have exactly one RPC interface and its implementation
+     * to be able to receive RPC calls.
+     * 
+     * @since 7.0
+     * 
+     * @param implementation
+     *            RPC interface implementation
+     */
+    protected void setRpcImplementation(Object implementation) {
+        if (this instanceof RpcTarget) {
+            rpcManager = new ServerRpcManager((RpcTarget) this, implementation);
+        } else {
+            throw new RuntimeException(
+                    "Cannot register an RPC implementation for a component that is not an RpcTarget");
+        }
+    }
+
+    public RpcManager getRpcManager() {
+        return rpcManager;
     }
 
 }

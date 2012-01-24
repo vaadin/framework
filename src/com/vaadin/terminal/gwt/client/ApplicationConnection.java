@@ -1112,7 +1112,20 @@ public class ApplicationConnection {
                 immediate);
     }
 
-    private void addMethodInvocationToQueue(MethodInvocation invocation,
+    /**
+     * Adds an explicit RPC method invocation to the send queue.
+     * 
+     * @since 7.0
+     * 
+     * @param invocation
+     *            RPC method invocation
+     * @param immediate
+     *            true to trigger sending within a short time window (possibly
+     *            combining subsequent calls to a single request), false to let
+     *            the framework delay sending of RPC calls and variable changes
+     *            until the next immediate change
+     */
+    public void addMethodInvocationToQueue(MethodInvocation invocation,
             boolean immediate) {
         pendingInvocations.add(invocation);
         if (immediate) {
