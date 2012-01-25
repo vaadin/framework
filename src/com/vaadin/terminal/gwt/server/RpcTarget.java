@@ -1,4 +1,10 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.terminal.gwt.server;
+
+import java.io.Serializable;
 
 import com.vaadin.terminal.VariableOwner;
 
@@ -9,7 +15,7 @@ import com.vaadin.terminal.VariableOwner;
  * 
  * @since 7.0
  */
-public interface RpcTarget {
+public interface RpcTarget extends Serializable {
     /**
      * Returns the RPC manager instance to use when receiving calls for an RPC
      * interface.

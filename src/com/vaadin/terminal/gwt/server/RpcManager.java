@@ -1,4 +1,10 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.terminal.gwt.server;
+
+import java.io.Serializable;
 
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 
@@ -8,6 +14,6 @@ import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
  * 
  * @since 7.0
  */
-public interface RpcManager {
+public interface RpcManager extends Serializable {
     public void applyInvocation(MethodInvocation invocation);
 }

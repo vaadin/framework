@@ -1,5 +1,10 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.terminal.gwt.server;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,7 +24,7 @@ import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
  * 
  * @since 7.0
  */
-public class JsonDecoder {
+public class JsonDecoder implements Serializable {
 
     /**
      * Convert a JSON array with two elements (type and value) into a

@@ -1,4 +1,10 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.terminal.gwt.server;
+
+import java.io.Serializable;
 
 import com.vaadin.terminal.Paintable;
 
@@ -8,7 +14,7 @@ import com.vaadin.terminal.Paintable;
  * 
  * @since 7.0
  */
-public interface PaintableIdMapper {
+public interface PaintableIdMapper extends Serializable {
     /**
      * Get the {@link Paintable} instance corresponding to a paintable id.
      * 
