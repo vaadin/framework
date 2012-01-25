@@ -60,6 +60,9 @@
 .v-datefield-calendarpanel-day-focused {
 	outline: 1px dotted black;
 }
+.v-datefield-calendarpanel-day-offmonth {
+    color: #666;
+}
 
 .v-ie6 .v-datefield-calendarpanel-day,
 .v-ie7 .v-datefield-calendarpanel-day {

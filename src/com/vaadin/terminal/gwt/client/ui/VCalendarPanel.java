@@ -103,6 +103,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     private static final String CN_SELECTED = "selected";
 
+    private static final String CN_OFFMONTH = "offmonth";
+
     /**
      * Represents a click handler for when a user selects a value by using the
      * mouse
@@ -117,7 +119,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
          */
         public void onClick(ClickEvent event) {
             Day day = (Day) event.getSource();
-            focusDay(day.getDay());
+            focusDay(day.getDate());
             selectFocused();
             onSubmit();
         }
@@ -150,6 +152,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private DateTimeService dateTimeService;
 
     private boolean showISOWeekNumbers;
+
+    private Date displayedMonth;
 
     private Date focusedDate;
 
@@ -190,18 +194,18 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * Sets the focus to given day of current time. Used when moving in the
      * calender with the keyboard.
      * 
-     * @param day
+     * @param date
      *            The day number from by Date.getDate()
      */
-    private void focusDay(int day) {
+    private void focusDay(Date day) {
         // Only used when calender body is present
         if (resolution > VDateField.RESOLUTION_MONTH) {
             if (focusedDay != null) {
                 focusedDay.removeStyleDependentName(CN_FOCUSED);
             }
 
-            if (day > 0 && focusedDate != null) {
-                focusedDate.setDate(day);
+            if (day != null && focusedDate != null) {
+                focusedDate.setTime(day.getTime());
                 int rowCount = days.getRowCount();
                 for (int i = 0; i < rowCount; i++) {
                     int cellCount = days.getCellCount(i);
@@ -209,7 +213,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
                         Widget widget = days.getWidget(i, j);
                         if (widget != null && widget instanceof Day) {
                             Day curday = (Day) widget;
-                            if (curday.getDay() == day) {
+                            if (curday.getDate().equals(day)) {
                                 curday.addStyleDependentName(CN_FOCUSED);
                                 focusedDay = curday;
                                 focusedRow = i;
@@ -225,9 +229,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
     /**
      * Sets the selection hightlight to a given date of current time
      * 
-     * @param day
+     * @param date
      */
-    private void selectDate(int day) {
+    private void selectDate(Date date) {
         if (selectedDay != null) {
             selectedDay.removeStyleDependentName(CN_SELECTED);
         }
@@ -239,7 +243,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 Widget widget = days.getWidget(i, j);
                 if (widget != null && widget instanceof Day) {
                     Day curday = (Day) widget;
-                    if (curday.getDay() == day) {
+                    if (curday.getDate().equals(date)) {
                         curday.addStyleDependentName(CN_SELECTED);
                         selectedDay = curday;
                         return;
@@ -278,7 +282,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
             // it was forced to 1 above.
             value.setDate(focusedDate.getDate());
 
-            selectDate(focusedDate.getDate());
+            selectDate(focusedDate);
         } else {
             VConsole.log("Trying to select a the focused date which is NULL!");
         }
@@ -467,97 +471,62 @@ public class VCalendarPanel extends FocusableFlexTable implements
             }
         }
 
-        // The day of month that is selected, -1 if no day of this month is
-        // selected (i.e, showing another month/year than selected or nothing is
-        // selected)
-        int dayOfMonthSelected = -1;
-        // The day of month that is today, -1 if no day of this month is today
-        // (i.e., showing another month/year than current)
-        int dayOfMonthToday = -1;
-
-        boolean initiallyNull = value == null;
-
-        if (!initiallyNull && value.getMonth() == focusedDate.getMonth()
-                && value.getYear() == focusedDate.getYear()) {
-            dayOfMonthSelected = value.getDate();
-        }
-        final Date today = new Date();
-        if (today.getMonth() == focusedDate.getMonth()
-                && today.getYear() == focusedDate.getYear()) {
-            dayOfMonthToday = today.getDate();
-        }
+        // today must have zeroed hours, minutes, seconds, and milliseconds
+        final Date tmp = new Date();
+        final Date today = new Date(tmp.getYear(), tmp.getMonth(),
+                tmp.getDate());
 
         final int startWeekDay = getDateTimeService().getStartWeekDay(
                 focusedDate);
-        final int daysInMonth = DateTimeService
-                .getNumberOfDaysInMonth(focusedDate);
-
-        int dayCount = 0;
-        final Date curr = new Date(focusedDate.getTime());
+        final Date curr = (Date) focusedDate.clone();
+        // Start from the first day of the week that at least partially belongs
+        // to the current month
+        curr.setDate(-startWeekDay);
 
         // No month has more than 6 weeks so 6 is a safe maximum for rows.
         for (int weekOfMonth = 1; weekOfMonth < 7; weekOfMonth++) {
-            boolean weekNumberProcessed[] = new boolean[] { false, false,
-                    false, false, false, false, false };
-
             for (int dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
-                if (!(weekOfMonth == 1 && dayOfWeek < startWeekDay)) {
 
-                    if (dayCount >= daysInMonth) {
-                        // All days printed and we are done
-                        break;
-                    }
+                // Actually write the day of month
+                Day day = new Day((Date) curr.clone());
 
-                    final int dayOfMonth = ++dayCount;
-
-                    curr.setDate(dayCount);
-
-                    // Actually write the day of month
-                    Day day = new Day(dayOfMonth);
-
-                    if (dayOfMonthSelected == dayOfMonth) {
-                        day.addStyleDependentName(CN_SELECTED);
-                        selectedDay = day;
-                    }
-
-                    if (dayOfMonthToday == dayOfMonth) {
-                        day.addStyleDependentName(CN_TODAY);
-                    }
-
-                    if (dayOfMonth == focusedDate.getDate()) {
-                        focusedDay = day;
-                        focusedRow = weekOfMonth;
-                        if (hasFocus) {
-                            day.addStyleDependentName(CN_FOCUSED);
-                        }
-                    }
-
-                    days.setWidget(weekOfMonth, firstWeekdayColumn + dayOfWeek,
-                            day);
-
-                    // ISO week numbers if requested
-                    if (!weekNumberProcessed[weekOfMonth]) {
-                        days.getCellFormatter().setVisible(weekOfMonth,
-                                weekColumn, isShowISOWeekNumbers());
-                        if (isShowISOWeekNumbers()) {
-                            final String baseCssClass = VDateField.CLASSNAME
-                                    + "-calendarpanel-weeknumber";
-                            String weekCssClass = baseCssClass;
-
-                            int weekNumber = DateTimeService
-                                    .getISOWeekNumber(curr);
-
-                            days.setHTML(weekOfMonth, 0, "<span class=\""
-                                    + weekCssClass + "\"" + ">" + weekNumber
-                                    + "</span>");
-                            weekNumberProcessed[weekOfMonth] = true;
-                        }
-
+                if (curr.equals(value)) {
+                    day.addStyleDependentName(CN_SELECTED);
+                    selectedDay = day;
+                }
+                if (curr.equals(today)) {
+                    day.addStyleDependentName(CN_TODAY);
+                }
+                if (curr.equals(focusedDate)) {
+                    focusedDay = day;
+                    focusedRow = weekOfMonth;
+                    if (hasFocus) {
+                        day.addStyleDependentName(CN_FOCUSED);
                     }
                 }
+                if (curr.getMonth() != focusedDate.getMonth()) {
+                    day.addStyleDependentName(CN_OFFMONTH);
+                }
+
+                days.setWidget(weekOfMonth, firstWeekdayColumn + dayOfWeek, day);
+
+                // ISO week numbers if requested
+                days.getCellFormatter().setVisible(weekOfMonth, weekColumn,
+                        isShowISOWeekNumbers());
+                if (isShowISOWeekNumbers()) {
+                    final String baseCssClass = VDateField.CLASSNAME
+                            + "-calendarpanel-weeknumber";
+                    String weekCssClass = baseCssClass;
+
+                    int weekNumber = DateTimeService.getISOWeekNumber(curr);
+
+                    days.setHTML(weekOfMonth, 0, "<span class=\""
+                            + weekCssClass + "\"" + ">" + weekNumber
+                            + "</span>");
+                }
+                curr.setDate(curr.getDate() + 1);
             }
         }
-
     }
 
     /**
@@ -621,6 +590,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
         while (focusedDate.getMonth() != requestedMonth) {
             focusedDate.setDate(focusedDate.getDate() - 1);
         }
+        displayedMonth.setMonth(displayedMonth.getMonth() + 1);
 
         renderCalendar();
     }
@@ -640,6 +610,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
         while (focusedDate.getMonth() == currentMonth) {
             focusedDate.setDate(focusedDate.getDate() - 1);
         }
+        displayedMonth.setMonth(displayedMonth.getMonth() - 1);
 
         renderCalendar();
     }
@@ -649,6 +620,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     private void focusPreviousYear(int years) {
         focusedDate.setYear(focusedDate.getYear() - years);
+        displayedMonth.setYear(displayedMonth.getYear() - years);
         renderCalendar();
     }
 
@@ -657,6 +629,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     private void focusNextYear(int years) {
         focusedDate.setYear(focusedDate.getYear() + years);
+        displayedMonth.setYear(displayedMonth.getYear() + years);
         renderCalendar();
     }
 
@@ -905,7 +878,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
             if (newCurrentDate.getMonth() == focusedDate.getMonth()) {
                 // Month did not change, only move the selection
-                focusDay(focusedDate.getDate() + 1);
+                focusDay(newCurrentDate);
             } else {
                 // If the month changed we need to re-render the calendar
                 focusedDate.setDate(focusedDate.getDate() + 1);
@@ -924,7 +897,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
             if (newCurrentDate.getMonth() == focusedDate.getMonth()) {
                 // Month did not change, only move the selection
-                focusDay(focusedDate.getDate() - 1);
+                focusDay(newCurrentDate);
             } else {
                 // If the month changed we need to re-render the calendar
                 focusedDate.setDate(focusedDate.getDate() - 1);
@@ -944,10 +917,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
             if (newCurrentDate.getMonth() == focusedDate.getMonth()
                     && focusedRow > 1) {
                 // Month did not change, only move the selection
-                focusDay(focusedDate.getDate() - 7);
+                focusDay(newCurrentDate);
             } else {
                 // If the month changed we need to re-render the calendar
-                focusedDate.setDate(focusedDate.getDate() - 7);
+                focusedDate = newCurrentDate;
                 renderCalendar();
             }
 
@@ -963,10 +936,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
             if (newCurrentDate.getMonth() == focusedDate.getMonth()) {
                 // Month did not change, only move the selection
-                focusDay(focusedDate.getDate() + 7);
+                focusDay(newCurrentDate);
             } else {
                 // If the month changed we need to re-render the calendar
-                focusedDate.setDate(focusedDate.getDate() + 7);
+                focusedDate = newCurrentDate;
                 renderCalendar();
 
             }
@@ -1210,27 +1183,28 @@ public class VCalendarPanel extends FocusableFlexTable implements
             return;
         }
 
-        Date oldFocusedValue = focusedDate;
+        Date oldDisplayedMonth = displayedMonth;
         value = currentDate;
 
         if (value == null) {
-            focusedDate = null;
+            focusedDate = displayedMonth = null;
         } else {
             focusedDate = (Date) value.clone();
+            displayedMonth = (Date) value.clone();
         }
 
         // Re-render calendar if month or year of focused date has changed
-        if (oldFocusedValue == null || value == null
-                || oldFocusedValue.getYear() != value.getYear()
-                || oldFocusedValue.getMonth() != value.getMonth()) {
+        if (oldDisplayedMonth == null || value == null
+                || oldDisplayedMonth.getYear() != value.getYear()
+                || oldDisplayedMonth.getMonth() != value.getMonth()) {
             renderCalendar();
         } else {
-            focusDay(currentDate.getDate());
+            focusDay(currentDate);
             selectFocused();
         }
 
         if (!hasFocus) {
-            focusDay(-1);
+            focusDay((Date) null);
         }
     }
 
@@ -1555,17 +1529,17 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private class Day extends InlineHTML {
         private static final String BASECLASS = VDateField.CLASSNAME
                 + "-calendarpanel-day";
-        private final int day;
+        private final Date date;
 
-        Day(int dayOfMonth) {
-            super("" + dayOfMonth);
+        Day(Date date) {
+            super("" + date.getDate());
             setStyleName(BASECLASS);
-            day = dayOfMonth;
+            this.date = date;
             addClickHandler(dayClickHandler);
         }
 
-        public int getDay() {
-            return day;
+        public Date getDate() {
+            return date;
         }
     }
 
@@ -1648,7 +1622,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     public void onBlur(final BlurEvent event) {
         if (event.getSource() instanceof VCalendarPanel) {
             hasFocus = false;
-            focusDay(-1);
+            focusDay(null);
         }
     }
 
@@ -1665,7 +1639,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
             // Focuses the current day if the calendar shows the days
             if (focusedDay != null) {
-                focusDay(focusedDay.getDay());
+                focusDay(focusedDate);
             }
         }
     }
@@ -1696,7 +1670,15 @@ public class VCalendarPanel extends FocusableFlexTable implements
             // Day, find out which dayOfMonth and use that as the identifier
             Day day = Util.findWidget(subElement, Day.class);
             if (day != null) {
-                return SUBPART_DAY + day.getDay();
+                Date date = day.getDate();
+                int id = date.getDate();
+                if (date.getMonth() < displayedMonth.getMonth()) {
+                    id -= DateTimeService.getNumberOfDaysInMonth(date);
+                } else if (date.getMonth() > displayedMonth.getMonth()) {
+                    id += DateTimeService
+                            .getNumberOfDaysInMonth(displayedMonth);
+                }
+                return SUBPART_DAY + id;
             }
         } else if (time != null) {
             if (contains(time.hours, subElement)) {
@@ -1762,14 +1744,18 @@ public class VCalendarPanel extends FocusableFlexTable implements
             return time.ampm.getElement();
         }
         if (subPart.startsWith(SUBPART_DAY)) {
+            // can be less than 1 or greater than the number of days in the current month
+            // these map to the "off-month" days
             int dayOfMonth = Integer.parseInt(subPart.substring(SUBPART_DAY
                     .length()));
+            Date date = new Date(displayedMonth.getYear(),
+                    displayedMonth.getMonth(), dayOfMonth);
             Iterator<Widget> iter = days.iterator();
             while (iter.hasNext()) {
                 Widget w = iter.next();
                 if (w instanceof Day) {
                     Day day = (Day) w;
-                    if (day.getDay() == dayOfMonth) {
+                    if (day.getDate().equals(date)) {
                         return day.getElement();
                     }
                 }
