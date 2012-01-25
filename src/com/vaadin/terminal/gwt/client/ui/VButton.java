@@ -4,6 +4,7 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -29,12 +30,35 @@ import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
+import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc;
+import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc.InitializableClientToServerRpc;
 
 public class VButton extends FocusWidget implements VPaintableWidget,
         ClickHandler, FocusHandler, BlurHandler {
 
     public static final String CLASSNAME = "v-button";
     private static final String CLASSNAME_PRESSED = "v-pressed";
+
+    /**
+     * RPC interface for calls from client to server.
+     * 
+     * @since 7.0
+     */
+    public interface ButtonClientToServerRpc extends ClientToServerRpc {
+        /**
+         * Button click event.
+         * 
+         * @param mouseEventDetails
+         *            serialized mouse event details
+         */
+        public void click(String mouseEventDetails);
+
+        /**
+         * Indicate to the server that the client has disabled the button as a
+         * result of a click.
+         */
+        public void disableOnClick();
+    }
 
     public static final String ATTR_DISABLE_ON_CLICK = "dc";
 
@@ -93,6 +117,7 @@ public class VButton extends FocusWidget implements VPaintableWidget,
     private HandlerRegistration blurHandlerRegistration;
 
     private int clickShortcut = 0;
+    private ButtonClientToServerRpc buttonRpcProxy;
 
     public VButton() {
         super(DOM.createDiv());
@@ -357,17 +382,24 @@ public class VButton extends FocusWidget implements VPaintableWidget,
         }
         if (disableOnClick) {
             setEnabled(false);
-            client.updateVariable(id, "disabledOnClick", true, false);
+            getButtonRpcProxy().disableOnClick();
         }
-
-        client.updateVariable(id, "state", true, false);
 
         // Add mouse details
         MouseEventDetails details = new MouseEventDetails(
                 event.getNativeEvent(), getElement());
-        client.updateVariable(id, "mousedetails", details.serialize(), true);
+        getButtonRpcProxy().click(details.serialize());
 
         clickPending = false;
+    }
+
+    protected ButtonClientToServerRpc getButtonRpcProxy() {
+        if (null == buttonRpcProxy) {
+            buttonRpcProxy = GWT.create(ButtonClientToServerRpc.class);
+            ((InitializableClientToServerRpc) buttonRpcProxy).initRpc(id,
+                    client);
+        }
+        return buttonRpcProxy;
     }
 
     /*

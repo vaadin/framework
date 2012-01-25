@@ -4,6 +4,7 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -25,6 +26,8 @@ import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
+import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc.InitializableClientToServerRpc;
+import com.vaadin.terminal.gwt.client.ui.VButton.ButtonClientToServerRpc;
 
 public class VNativeButton extends Button implements VPaintableWidget,
         ClickHandler, FocusHandler, BlurHandler {
@@ -36,6 +39,8 @@ public class VNativeButton extends Button implements VPaintableWidget,
     protected String id;
 
     protected ApplicationConnection client;
+
+    private ButtonClientToServerRpc buttonRpcProxy;
 
     protected Element errorIndicatorElement;
 
@@ -170,16 +175,24 @@ public class VNativeButton extends Button implements VPaintableWidget,
         }
         if (disableOnClick) {
             setEnabled(false);
-            client.updateVariable(id, "disabledOnClick", true, false);
+            getButtonRpcProxy().disableOnClick();
         }
 
         // Add mouse details
         MouseEventDetails details = new MouseEventDetails(
                 event.getNativeEvent(), getElement());
-        client.updateVariable(id, "mousedetails", details.serialize(), false);
+        getButtonRpcProxy().click(details.serialize());
 
-        client.updateVariable(id, "state", true, true);
         clickPending = false;
+    }
+
+    protected ButtonClientToServerRpc getButtonRpcProxy() {
+        if (null == buttonRpcProxy) {
+            buttonRpcProxy = GWT.create(ButtonClientToServerRpc.class);
+            ((InitializableClientToServerRpc) buttonRpcProxy).initRpc(id,
+                    client);
+        }
+        return buttonRpcProxy;
     }
 
     public void onFocus(FocusEvent arg0) {

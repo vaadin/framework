@@ -23,6 +23,8 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VButton;
+import com.vaadin.terminal.gwt.client.ui.VButton.ButtonClientToServerRpc;
+import com.vaadin.terminal.gwt.server.RpcTarget;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 import com.vaadin.ui.Component.Focusable;
@@ -39,7 +41,7 @@ import com.vaadin.ui.Component.Focusable;
 @ClientWidget(value = VButton.class, loadStyle = LoadStyle.EAGER)
 public class Button extends AbstractComponent implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, Focusable,
-        Action.ShortcutNotifier {
+        Action.ShortcutNotifier, RpcTarget {
 
     /* Private members */
 
@@ -49,6 +51,18 @@ public class Button extends AbstractComponent implements
      * Creates a new push button.
      */
     public Button() {
+        // TODO take the implementation out of an anonymous class?
+        registerRpcImplementation(new ButtonClientToServerRpc() {
+            public void click(String mouseEventDetails) {
+                fireClick(MouseEventDetails.deSerialize(mouseEventDetails));
+            }
+
+            public void disableOnClick() {
+                // Could be optimized so the button is not repainted because of
+                // this (client side has already disabled the button)
+                setEnabled(false);
+            }
+        }, ButtonClientToServerRpc.class);
     }
 
     /**
@@ -107,24 +121,6 @@ public class Button extends AbstractComponent implements
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
-
-        if (variables.containsKey("disabledOnClick")) {
-            // Could be optimized so the button is not repainted because of this
-            // (client side has already disabled the button)
-            setEnabled(false);
-        }
-
-        if (!isReadOnly() && variables.containsKey("state")) {
-            // Send click events when the button is pushed
-            if (variables.containsKey("mousedetails")) {
-                fireClick(MouseEventDetails.deSerialize((String) variables
-                        .get("mousedetails")));
-            } else {
-                // for compatibility with custom implementations which
-                // don't send mouse details
-                fireClick();
-            }
-        }
 
         if (variables.containsKey(FocusEvent.EVENT_ID)) {
             fireEvent(new FocusEvent(this));
