@@ -954,8 +954,9 @@ public class Util {
                     Object value = parameters[1];
                     // TODO paintables inside lists/maps get rendered as
                     // components in the debug console
-                    String formattedValue = value instanceof Paintable ? c
-                            .getPid((Paintable) value) : String.valueOf(value);
+                    String formattedValue = value instanceof VPaintable ? c
+                            .getPaintableMap().getPid((VPaintable) value)
+                            : String.valueOf(value);
                     formattedParams = parameters[0] + " : " + formattedValue;
                 }
                 if (null == formattedParams) {
