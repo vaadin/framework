@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.client;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -960,8 +961,8 @@ public class Util {
                     formattedParams = parameters[0] + " : " + formattedValue;
                 }
                 if (null == formattedParams) {
-                    formattedParams = (null != parameters) ? parameters
-                            .toString() : null;
+                    formattedParams = (null != parameters) ? Arrays
+                            .toString(parameters) : null;
                 }
                 VConsole.log("\t\t" + invocation.getInterfaceName() + "."
                         + invocation.getMethodName() + "(" + formattedParams
