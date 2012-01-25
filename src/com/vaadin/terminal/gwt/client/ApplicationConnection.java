@@ -77,6 +77,7 @@ public class ApplicationConnection {
 
     private static final String ERROR_CLASSNAME_EXT = "-error";
 
+    public static final String UPDATE_VARIABLE_INTERFACE = "v";
     public static final String UPDATE_VARIABLE_METHOD = "v";
 
     public static final char VAR_BURST_SEPARATOR = '\u001d';
@@ -1108,8 +1109,8 @@ public class ApplicationConnection {
         // note that type is now deduced from value
         // TODO could eliminate invocations of same shared variable setter
         addMethodInvocationToQueue(new MethodInvocation(paintableId,
-                UPDATE_VARIABLE_METHOD, new Object[] { variableName, value }),
-                immediate);
+                UPDATE_VARIABLE_INTERFACE, UPDATE_VARIABLE_METHOD,
+                new Object[] { variableName, value }), immediate);
     }
 
     /**
@@ -1201,6 +1202,8 @@ public class ApplicationConnection {
                 invocationJson.set(0,
                         new JSONString(invocation.getPaintableId()));
                 invocationJson.set(1,
+                        new JSONString(invocation.getInterfaceName()));
+                invocationJson.set(2,
                         new JSONString(invocation.getMethodName()));
                 JSONArray paramJson = new JSONArray();
                 for (int i = 0; i < invocation.getParameters().length; ++i) {
@@ -1208,7 +1211,7 @@ public class ApplicationConnection {
                     paramJson.set(i, JsonEncoder.encode(
                             invocation.getParameters()[i], getPaintableMap()));
                 }
-                invocationJson.set(2, paramJson);
+                invocationJson.set(3, paramJson);
                 reqJson.set(reqJson.size(), invocationJson);
             }
 

@@ -963,8 +963,9 @@ public class Util {
                     formattedParams = (null != parameters) ? parameters
                             .toString() : null;
                 }
-                VConsole.log("\t\t" + invocation.getMethodName() + "("
-                        + formattedParams + ")");
+                VConsole.log("\t\t" + invocation.getInterfaceName() + "."
+                        + invocation.getMethodName() + "(" + formattedParams
+                        + ")");
             }
         }
     }

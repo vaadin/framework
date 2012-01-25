@@ -55,7 +55,6 @@ public class RpcProxyGenerator extends Generator {
 
         ClassSourceFileComposerFactory composer = new ClassSourceFileComposerFactory(
                 requestedType.getPackage().getName(), generatedClassName);
-        // composer.setSuperclass(requestedType.getQualifiedSourceName());
         composer.addImplementedInterface(requestedType.getQualifiedSourceName());
         composer.addImplementedInterface(initializableInterface
                 .getQualifiedSourceName());
@@ -77,8 +76,8 @@ public class RpcProxyGenerator extends Generator {
             writeCommonFieldsAndMethods(logger, writer, typeOracle);
 
             // actual proxy methods forwarding calls to the server
-            writeRemoteProxyMethods(logger, writer, typeOracle, requestedType
-                    .isClassOrInterface().getMethods());
+            writeRemoteProxyMethods(logger, writer, typeOracle, requestedType,
+                    requestedType.isClassOrInterface().getMethods());
 
             // End of class
             writer.outdent();
@@ -115,14 +114,16 @@ public class RpcProxyGenerator extends Generator {
     }
 
     private static void writeRemoteProxyMethods(TreeLogger logger,
-            SourceWriter writer, TypeOracle typeOracle, JMethod[] methods) {
+            SourceWriter writer, TypeOracle typeOracle,
+            JClassType requestedType, JMethod[] methods) {
         for (JMethod m : methods) {
             writer.print(m.getReadableDeclaration(false, false, false, false,
                     true));
             writer.println(" {");
             writer.indent();
 
-            writer.print("client.addMethodInvocationToQueue(new MethodInvocation(paintableId, \"");
+            writer.print("client.addMethodInvocationToQueue(new MethodInvocation(paintableId, \""
+                    + requestedType.getQualifiedBinaryName() + "\", \"");
             writer.print(m.getName());
             writer.print("\", new Object[] {");
             // new Object[] { ... } for parameters - autoboxing etc. by the

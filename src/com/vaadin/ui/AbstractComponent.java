@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -157,9 +158,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     private ActionManager actionManager;
 
     /**
-     * RPC call manager that handles incoming RPC calls.
+     * A map from RPC interface class to the RPC call manager that handles
+     * incoming RPC calls for that interface.
      */
-    private RpcManager rpcManager = null;
+    private Map<Class<?>, RpcManager> rpcManagerMap = new HashMap<Class<?>, RpcManager>();
 
     /* Constructor */
 
@@ -1538,27 +1540,32 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     }
 
     /**
-     * Sets the RPC interface implementation for this component.
+     * Registers an RPC interface implementation for this component.
      * 
-     * A component should have exactly one RPC interface and its implementation
-     * to be able to receive RPC calls.
+     * A component can listen to multiple RPC interfaces, and subclasses can
+     * register additional implementations.
      * 
      * @since 7.0
      * 
      * @param implementation
      *            RPC interface implementation
+     * @param rpcInterfaceType
+     *            RPC interface class for which the implementation should be
+     *            registered
      */
-    protected void setRpcImplementation(Object implementation) {
+    protected <T> void registerRpcImplementation(T implementation,
+            Class<T> rpcInterfaceType) {
         if (this instanceof RpcTarget) {
-            rpcManager = new ServerRpcManager((RpcTarget) this, implementation);
+            rpcManagerMap.put(rpcInterfaceType, new ServerRpcManager<T>(
+                    (RpcTarget) this, implementation, rpcInterfaceType));
         } else {
             throw new RuntimeException(
                     "Cannot register an RPC implementation for a component that is not an RpcTarget");
         }
     }
 
-    public RpcManager getRpcManager() {
-        return rpcManager;
+    public RpcManager getRpcManager(Class<?> rpcInterface) {
+        return rpcManagerMap.get(rpcInterface);
     }
 
 }

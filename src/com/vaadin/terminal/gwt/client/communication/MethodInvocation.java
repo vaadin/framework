@@ -9,18 +9,24 @@ package com.vaadin.terminal.gwt.client.communication;
 public class MethodInvocation {
 
     private final String paintableId;
+    private final String interfaceName;
     private final String methodName;
     private final Object[] parameters;
 
-    public MethodInvocation(String paintableId, String methodName,
-            Object[] parameters) {
+    public MethodInvocation(String paintableId, String interfaceName,
+            String methodName, Object[] parameters) {
         this.paintableId = paintableId;
+        this.interfaceName = interfaceName;
         this.methodName = methodName;
         this.parameters = parameters;
     }
 
     public String getPaintableId() {
         return paintableId;
+    }
+
+    public String getInterfaceName() {
+        return interfaceName;
     }
 
     public String getMethodName() {

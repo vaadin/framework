@@ -10,5 +10,13 @@ import com.vaadin.terminal.VariableOwner;
  * @since 7.0
  */
 public interface RpcTarget {
-    public RpcManager getRpcManager();
+    /**
+     * Returns the RPC manager instance to use when receiving calls for an RPC
+     * interface.
+     * 
+     * @param rpcInterface
+     *            interface for which the call was made
+     * @return RpcManager or null if none found for the interface
+     */
+    public RpcManager getRpcManager(Class<?> rpcInterface);
 }

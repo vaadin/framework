@@ -1242,10 +1242,10 @@ public abstract class AbstractCommunicationManager implements
                     nextInvocation = invocations.get(i + 1);
                 }
 
-                final String methodName = invocation.getMethodName();
+                final String interfaceName = invocation.getInterfaceName();
 
-                if (!ApplicationConnection.UPDATE_VARIABLE_METHOD
-                        .equals(methodName)) {
+                if (!ApplicationConnection.UPDATE_VARIABLE_INTERFACE
+                        .equals(interfaceName)) {
                     // handle other RPC calls than variable changes
                     applyInvocation(invocation);
                     continue;
@@ -1369,15 +1369,16 @@ public abstract class AbstractCommunicationManager implements
         for (int i = 0; i < invocationsJson.length(); ++i) {
             JSONArray invocationJson = invocationsJson.getJSONArray(i);
             String paintableId = invocationJson.getString(0);
-            String methodName = invocationJson.getString(1);
-            JSONArray parametersJson = invocationJson.getJSONArray(2);
+            String interfaceName = invocationJson.getString(1);
+            String methodName = invocationJson.getString(2);
+            JSONArray parametersJson = invocationJson.getJSONArray(3);
             Object[] parameters = new Object[parametersJson.length()];
             for (int j = 0; j < parametersJson.length(); ++j) {
                 parameters[j] = JsonDecoder.convertVariableValue(
                         parametersJson.getJSONArray(j), this);
             }
             MethodInvocation invocation = new MethodInvocation(paintableId,
-                    methodName, parameters);
+                    interfaceName, methodName, parameters);
             invocations.add(invocation);
         }
         return invocations;
