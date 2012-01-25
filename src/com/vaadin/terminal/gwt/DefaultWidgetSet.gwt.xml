@@ -35,6 +35,12 @@
 			class="com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterionFactory" />
 	</generate-with>
 
+	<!-- Generate client side proxies for client to server RPC interfaces -->
+	<generate-with
+		class="com.vaadin.terminal.gwt.widgetsetutils.RpcProxyGenerator">
+		<when-type-assignable class="com.vaadin.terminal.gwt.client.communication.ClientToServerRpc" />
+	</generate-with> -->	
+
 	<!-- Fall through to this rule for everything but IE -->
 	<replace-with
 		class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategy">
