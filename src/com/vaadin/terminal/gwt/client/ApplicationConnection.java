@@ -1821,7 +1821,7 @@ public class ApplicationConnection {
         while (childWidgets.hasNext()) {
             final Widget child = childWidgets.next();
 
-            if (child instanceof VPaintableWidget) {
+            if (getPaintableMap().isPaintable(child)) {
 
                 if (handleComponentRelativeSize(child)) {
                     /*
@@ -1856,7 +1856,7 @@ public class ApplicationConnection {
         if (paintable == null) {
             return false;
         }
-        boolean debugSizes = false;
+        boolean debugSizes = true;
 
         FloatSize relativeSize = paintableMap.getRelativeSize(paintable);
         if (relativeSize == null) {
