@@ -36,6 +36,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.ui.Field;
+import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
@@ -1586,9 +1587,10 @@ public class ApplicationConnection {
      * 
      * @return Returns true iff no further painting is needed by caller
      */
-    public boolean updateComponent(Widget component, UIDL uidl,
+    @Deprecated
+    public boolean updateComponent(VPaintableWidget paintable, UIDL uidl,
             boolean manageCaption) {
-        VPaintableWidget paintable = paintableMap.getPaintable(component);
+        Widget component = paintable.getWidgetForPaintable();
 
         String pid = paintableMap.getPid(paintable);
         if (pid == null) {
@@ -2029,6 +2031,10 @@ public class ApplicationConnection {
         if (!paintableMap.hasPaintable(pid)) {
             // Create and register a new paintable if no old was found
             VPaintableWidget p = widgetSet.createWidget(uidl, configuration);
+            if (p instanceof VAbstractPaintableWidget) {
+                ((VAbstractPaintableWidget) p).setConnection(this);
+                ((VAbstractPaintableWidget) p).init();
+            }
             paintableMap.registerPaintable(pid, p);
         }
         return (VPaintableWidget) paintableMap.getPaintable(pid);
@@ -2192,7 +2198,7 @@ public class ApplicationConnection {
         }
     };
 
-    private VPaintableMap paintableMap = new VPaintableMap();
+    private VPaintableMap paintableMap = GWT.create(VPaintableMap.class);
 
     /**
      * Components can call this function to run all layout functions. This is
@@ -2275,7 +2281,7 @@ public class ApplicationConnection {
      * @return true if at least one listener has been registered on server side
      *         for the event identified by eventIdentifier.
      */
-    public boolean hasEventListeners(VPaintable paintable,
+    public boolean hasEventListeners(VPaintableWidget paintable,
             String eventIdentifier) {
         return paintableMap.hasEventListeners(paintable, eventIdentifier);
     }
@@ -2328,6 +2334,33 @@ public class ApplicationConnection {
     @Deprecated
     public void unregisterPaintable(VPaintable p) {
         paintableMap.unregisterPaintable(p);
+    }
+
+    public VTooltip getVTooltip() {
+        return tooltip;
+    }
+
+    @Deprecated
+    public void handleWidgetTooltipEvent(Event event, Widget owner, Object key) {
+        handleTooltipEvent(event, getPaintableMap().getPaintable(owner), key);
+
+    }
+
+    @Deprecated
+    public void handleWidgetTooltipEvent(Event event, Widget owner) {
+        handleTooltipEvent(event, getPaintableMap().getPaintable(owner));
+
+    }
+
+    @Deprecated
+    public void registerWidgetTooltip(Widget owner, Object key, TooltipInfo info) {
+        registerTooltip(getPaintableMap().getPaintable(owner), key, info);
+    }
+
+    @Deprecated
+    public boolean hasWidgetEventListeners(Widget widget, String eventIdentifier) {
+        return hasEventListeners(getPaintableMap().getPaintable(widget),
+                eventIdentifier);
     }
 
 }

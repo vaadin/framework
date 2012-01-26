@@ -830,6 +830,24 @@ public class Util {
     }-*/;
 
     /**
+     * Helper method to find the nearest parent paintable instance by traversing
+     * the DOM upwards from given element.
+     * 
+     * @param element
+     *            the element to start from
+     */
+    public static VPaintableWidget findPaintable(ApplicationConnection client,
+            Element element) {
+        Widget widget = Util.findWidget(element, null);
+        VPaintableMap vPaintableMap = VPaintableMap.get(client);
+        while (widget != null && !vPaintableMap.isPaintable(widget)) {
+            widget = widget.getParent();
+        }
+        return vPaintableMap.getPaintable(widget);
+
+    }
+
+    /**
      * Helper method to find first instance of given Widget type found by
      * traversing DOM upwards from given element.
      * 

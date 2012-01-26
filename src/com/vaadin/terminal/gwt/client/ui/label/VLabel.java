@@ -34,15 +34,10 @@ public class VLabel extends HTML {
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (event.getTypeInt() == Event.ONLOAD) {
-            // FIXME: Should not be here but in paintable
             Util.notifyParentOfSizeChange(this, true);
-            event.cancelBubble(true);
+            event.stopPropagation();
             return;
         }
-        // FIXME: Move to paintable
-        // if (client != null) {
-        // client.handleTooltipEvent(event, this);
-        // }
     }
 
     @Override

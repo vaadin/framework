@@ -24,21 +24,19 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComputedStyle;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.terminal.gwt.client.ui.VTreeTable.VTreeTableScrollBody.VTreeTableRow;
 
 public class VTreeTable extends VScrollTable {
 
-    private static class PendingNavigationEvent {
-        private final int keycode;
-        private final boolean ctrl;
-        private final boolean shift;
+    static class PendingNavigationEvent {
+        final int keycode;
+        final boolean ctrl;
+        final boolean shift;
 
         public PendingNavigationEvent(int keycode, boolean ctrl, boolean shift) {
             this.keycode = keycode;
@@ -59,82 +57,14 @@ public class VTreeTable extends VScrollTable {
         }
     }
 
-    public static final String ATTRIBUTE_HIERARCHY_COLUMN_INDEX = "hci";
-    private boolean collapseRequest;
+    boolean collapseRequest;
     private boolean selectionPending;
-    private int colIndexOfHierarchy;
-    private String collapsedRowKey;
-    private VTreeTableScrollBody scrollBody;
-    private boolean animationsEnabled;
-    private LinkedList<PendingNavigationEvent> pendingNavigationEvents = new LinkedList<VTreeTable.PendingNavigationEvent>();
-    private boolean focusParentResponsePending;
-
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        FocusableScrollPanel widget = null;
-        int scrollPosition = 0;
-        if (collapseRequest) {
-            widget = (FocusableScrollPanel) getWidget(1);
-            scrollPosition = widget.getScrollPosition();
-        }
-        animationsEnabled = uidl.getBooleanAttribute("animate");
-        colIndexOfHierarchy = uidl
-                .hasAttribute(ATTRIBUTE_HIERARCHY_COLUMN_INDEX) ? uidl
-                .getIntAttribute(ATTRIBUTE_HIERARCHY_COLUMN_INDEX) : 0;
-        int oldTotalRows = getTotalRows();
-        super.updateFromUIDL(uidl, client);
-        if (collapseRequest) {
-            if (collapsedRowKey != null && scrollBody != null) {
-                VScrollTableRow row = getRenderedRowByKey(collapsedRowKey);
-                if (row != null) {
-                    setRowFocus(row);
-                    focus();
-                }
-            }
-
-            int scrollPosition2 = widget.getScrollPosition();
-            if (scrollPosition != scrollPosition2) {
-                widget.setScrollPosition(scrollPosition);
-            }
-
-            // check which rows are needed from the server and initiate a
-            // deferred fetch
-            onScroll(null);
-        }
-        // Recalculate table size if collapse request, or if page length is zero
-        // (not sent by server) and row count changes (#7908).
-        if (collapseRequest
-                || (!uidl.hasAttribute("pagelength") && getTotalRows() != oldTotalRows)) {
-            /*
-             * Ensure that possibly removed/added scrollbars are considered.
-             * Triggers row calculations, removes cached rows etc. Basically
-             * cleans up state. Be careful if touching this, you will break
-             * pageLength=0 if you remove this.
-             */
-            triggerLazyColumnAdjustment(true);
-
-            collapseRequest = false;
-        }
-        if (uidl.hasAttribute("focusedRow")) {
-            String key = uidl.getStringAttribute("focusedRow");
-            setRowFocus(getRenderedRowByKey(key));
-            focusParentResponsePending = false;
-        } else if (uidl.hasAttribute("clearFocusPending")) {
-            // Special case to detect a response to a focusParent request that
-            // does not return any focusedRow because the selected node has no
-            // parent
-            focusParentResponsePending = false;
-        }
-
-        while (!collapseRequest && !focusParentResponsePending
-                && !pendingNavigationEvents.isEmpty()) {
-            // Keep replaying any queued events as long as we don't have any
-            // potential content changes pending
-            PendingNavigationEvent event = pendingNavigationEvents
-                    .removeFirst();
-            handleNavigation(event.keycode, event.ctrl, event.shift);
-        }
-    }
+    int colIndexOfHierarchy;
+    String collapsedRowKey;
+    VTreeTableScrollBody scrollBody;
+    boolean animationsEnabled;
+    LinkedList<PendingNavigationEvent> pendingNavigationEvents = new LinkedList<VTreeTable.PendingNavigationEvent>();
+    boolean focusParentResponsePending;
 
     @Override
     protected VScrollTableBody createScrollBody() {
