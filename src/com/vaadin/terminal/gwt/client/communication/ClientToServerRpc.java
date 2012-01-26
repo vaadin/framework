@@ -4,6 +4,8 @@
 
 package com.vaadin.terminal.gwt.client.communication;
 
+import java.io.Serializable;
+
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 
 /**
@@ -16,7 +18,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
  * 
  * @since 7.0
  */
-public interface ClientToServerRpc {
+public interface ClientToServerRpc extends Serializable {
     /**
      * Initialization support for client to server RPC interfaces.
      * 
