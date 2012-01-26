@@ -17,7 +17,8 @@ import com.google.gwt.user.client.ui.Widget;
 public interface VPaintableWidget extends VPaintable {
 
     /**
-     * TODO: Renamed to getWidget
+     * TODO: Rename to getWidget
      */
     public Widget getWidgetForPaintable();
+
 }

@@ -335,7 +335,7 @@ public class VPaintableMap {
 
     }
 
-    private ComponentDetail getComponentDetail(VPaintable paintable) {
+    private ComponentDetail getComponentDetail(VPaintableWidget paintable) {
         return idToComponentDetail.get(getPid(paintable));
     }
 
@@ -344,7 +344,7 @@ public class VPaintableMap {
     }
 
     /**
-     * FIXME: Should not be here
+     * FIXME: Should be moved to VAbstractPaintableWidget
      * 
      * @param paintable
      * @return
@@ -352,6 +352,11 @@ public class VPaintableMap {
     @Deprecated
     public TooltipInfo getTooltipInfo(VPaintableWidget paintable, Object key) {
         return getComponentDetail(paintable).getTooltipInfo(key);
+    }
+
+    @Deprecated
+    public TooltipInfo getWidgetTooltipInfo(Widget widget, Object key) {
+        return getTooltipInfo(getPaintable(widget), key);
     }
 
     public Collection<? extends VPaintable> getPaintables() {
@@ -378,7 +383,7 @@ public class VPaintableMap {
      * @return
      */
     @Deprecated
-    public boolean hasEventListeners(VPaintable paintable,
+    public boolean hasEventListeners(VPaintableWidget paintable,
             String eventIdentifier) {
         return getComponentDetail(paintable).hasEventListeners(eventIdentifier);
     }

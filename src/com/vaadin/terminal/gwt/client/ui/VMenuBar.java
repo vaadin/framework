@@ -4,9 +4,7 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Stack;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -35,14 +33,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VMenuBar extends SimpleFocusablePanel implements VPaintableWidget,
+public class VMenuBar extends SimpleFocusablePanel implements
         CloseHandler<PopupPanel>, ContainerResizedListener, KeyPressHandler,
         KeyDownHandler, FocusHandler, SubPartAware {
 
@@ -82,7 +78,7 @@ public class VMenuBar extends SimpleFocusablePanel implements VPaintableWidget,
     protected VMenuBar parentMenu;
     protected CustomMenuItem selected;
 
-    private boolean enabled = true;
+    boolean enabled = true;
 
     private String width = "notinited";
 
@@ -94,9 +90,9 @@ public class VMenuBar extends SimpleFocusablePanel implements VPaintableWidget,
                 }
             });
 
-    private boolean openRootOnHover;
+    boolean openRootOnHover;
 
-    private boolean htmlContentAllowed;
+    boolean htmlContentAllowed;
 
     public VMenuBar() {
         // Create an empty horizontal menubar
@@ -166,133 +162,6 @@ public class VMenuBar extends SimpleFocusablePanel implements VPaintableWidget,
             menuVisible = false;
         }
     }
-
-    /**
-     * This method must be implemented to update the client-side component from
-     * UIDL data received from server.
-     * 
-     * This method is called when the page is loaded for the first time, and
-     * every time UI changes in the component are received from the server.
-     */
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // This call should be made first. Ensure correct implementation,
-        // and let the containing layout manage caption, etc.
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-
-        htmlContentAllowed = uidl.hasAttribute(HTML_CONTENT_ALLOWED);
-
-        openRootOnHover = uidl.getBooleanAttribute(OPEN_ROOT_MENU_ON_HOWER);
-
-        enabled = !uidl.getBooleanAttribute("disabled");
-
-        // For future connections
-        this.client = client;
-        uidlId = uidl.getId();
-
-        // Empty the menu every time it receives new information
-        if (!getItems().isEmpty()) {
-            clearItems();
-        }
-
-        UIDL options = uidl.getChildUIDL(0);
-
-        if (uidl.hasAttribute("width")) {
-            UIDL moreItemUIDL = options.getChildUIDL(0);
-            StringBuffer itemHTML = new StringBuffer();
-
-            if (moreItemUIDL.hasAttribute("icon")) {
-                itemHTML.append("<img src=\""
-                        + Util.escapeAttribute(client
-                                .translateVaadinUri(moreItemUIDL
-                                        .getStringAttribute("icon")))
-                        + "\" class=\"" + Icon.CLASSNAME + "\" alt=\"\" />");
-            }
-
-            String moreItemText = moreItemUIDL.getStringAttribute("text");
-            if ("".equals(moreItemText)) {
-                moreItemText = "&#x25BA;";
-            }
-            itemHTML.append(moreItemText);
-
-            moreItem = GWT.create(CustomMenuItem.class);
-            moreItem.setHTML(itemHTML.toString());
-            moreItem.setCommand(emptyCommand);
-
-            collapsedRootItems = new VMenuBar(true, (VMenuBar) VPaintableMap
-                    .get(client).getPaintable(uidlId));
-            moreItem.setSubMenu(collapsedRootItems);
-            moreItem.addStyleName(CLASSNAME + "-more-menuitem");
-        }
-
-        UIDL uidlItems = uidl.getChildUIDL(1);
-        Iterator<Object> itr = uidlItems.getChildIterator();
-        Stack<Iterator<Object>> iteratorStack = new Stack<Iterator<Object>>();
-        Stack<VMenuBar> menuStack = new Stack<VMenuBar>();
-        VMenuBar currentMenu = this;
-
-        while (itr.hasNext()) {
-            UIDL item = (UIDL) itr.next();
-            CustomMenuItem currentItem = null;
-
-            final int itemId = item.getIntAttribute("id");
-
-            boolean itemHasCommand = item.hasAttribute("command");
-            boolean itemIsCheckable = item.hasAttribute(ATTRIBUTE_CHECKED);
-
-            String itemHTML = buildItemHTML(item);
-
-            Command cmd = null;
-            if (!item.hasAttribute("separator")) {
-                if (itemHasCommand || itemIsCheckable) {
-                    // Construct a command that fires onMenuClick(int) with the
-                    // item's id-number
-                    cmd = new Command() {
-                        public void execute() {
-                            hostReference.onMenuClick(itemId);
-                        }
-                    };
-                }
-            }
-
-            currentItem = currentMenu.addItem(itemHTML.toString(), cmd);
-            currentItem.updateFromUIDL(item, client);
-
-            if (item.getChildCount() > 0) {
-                menuStack.push(currentMenu);
-                iteratorStack.push(itr);
-                itr = item.getChildIterator();
-                currentMenu = new VMenuBar(true, currentMenu);
-                if (uidl.hasAttribute("style")) {
-                    for (String style : uidl.getStringAttribute("style").split(
-                            " ")) {
-                        currentMenu.addStyleDependentName(style);
-                    }
-                }
-                currentItem.setSubMenu(currentMenu);
-            }
-
-            while (!itr.hasNext() && !iteratorStack.empty()) {
-                boolean hasCheckableItem = false;
-                for (CustomMenuItem menuItem : currentMenu.getItems()) {
-                    hasCheckableItem = hasCheckableItem
-                            || menuItem.isCheckable();
-                }
-                if (hasCheckableItem) {
-                    currentMenu.addStyleDependentName("check-column");
-                } else {
-                    currentMenu.removeStyleDependentName("check-column");
-                }
-
-                itr = iteratorStack.pop();
-                currentMenu = menuStack.pop();
-            }
-        }// while
-
-        iLayout(false);
-
-    }// updateFromUIDL
 
     /**
      * Build the HTML content for a menu item.
@@ -473,7 +342,7 @@ public class VMenuBar extends SimpleFocusablePanel implements VPaintableWidget,
         // Handle tooltips
         if (targetItem == null && client != null) {
             // Handle root menubar tooltips
-            client.handleTooltipEvent(e, this);
+            client.handleWidgetTooltipEvent(e, this);
         } else if (targetItem != null) {
             // Handle item tooltips
             targetItem.onBrowserEvent(e);
@@ -1051,7 +920,7 @@ public class VMenuBar extends SimpleFocusablePanel implements VPaintableWidget,
                 TooltipInfo info = new TooltipInfo(description);
 
                 VMenuBar root = findRootMenu();
-                client.registerTooltip(root, this, info);
+                client.registerWidgetTooltip(root, this, info);
             }
         }
 
@@ -1059,7 +928,7 @@ public class VMenuBar extends SimpleFocusablePanel implements VPaintableWidget,
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             if (client != null) {
-                client.handleTooltipEvent(event, findRootMenu(), this);
+                client.handleWidgetTooltipEvent(event, findRootMenu(), this);
             }
         }
 

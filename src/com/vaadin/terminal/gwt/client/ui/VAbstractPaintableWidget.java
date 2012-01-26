@@ -1,12 +1,16 @@
 package com.vaadin.terminal.gwt.client.ui;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 public abstract class VAbstractPaintableWidget implements VPaintableWidget {
 
     private Widget widget;
+    private ApplicationConnection connection;
+
+    /* State variables */
+//    private boolean enabled = true;
 
     /**
      * Default constructor
@@ -15,14 +19,18 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     }
 
     /**
+     * Called after the application connection reference has been set up
+     */
+    public void init() {
+    }
+
+    /**
      * Creates and returns the widget for this VPaintableWidget. This method
      * should only be called once when initializing the paintable.
      * 
      * @return
      */
-    protected Widget createWidget() {
-        return GWT.create(getWidgetClass());
-    }
+    protected abstract Widget createWidget();
 
     /**
      * Returns the widget associated with this paintable. The widget returned by
@@ -38,12 +46,27 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         return widget;
     }
 
-    /**
-     * Returns the class of the widget for this paintable. Used to instansiate
-     * the widget.
+    /*
+     * (non-Javadoc)
      * 
-     * @return The widget class.
+     * @see com.vaadin.terminal.gwt.client.VPaintable#getConnection()
      */
-    protected abstract Class<? extends Widget> getWidgetClass();
+    public final ApplicationConnection getConnection() {
+        return connection;
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.terminal.gwt.client.VPaintable#setConnection(com.vaadin.terminal
+     * .gwt.client.ApplicationConnection)
+     */
+    public final void setConnection(ApplicationConnection connection) {
+        this.connection = connection;
+    }
+
+//    public boolean isEnabled() {
+//        return enabled;
+//    }
 }
