@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.ui.VMenuBar.CustomMenuItem;
 
 public class VMenuBarPaintable extends VAbstractPaintableWidget {
@@ -66,12 +65,10 @@ public class VMenuBarPaintable extends VAbstractPaintableWidget {
 
             getWidgetForPaintable().moreItem = GWT.create(CustomMenuItem.class);
             getWidgetForPaintable().moreItem.setHTML(itemHTML.toString());
-            getWidgetForPaintable().moreItem
-                    .setCommand(getWidgetForPaintable().emptyCommand);
+            getWidgetForPaintable().moreItem.setCommand(VMenuBar.emptyCommand);
 
             getWidgetForPaintable().collapsedRootItems = new VMenuBar(true,
-                    (VMenuBar) VPaintableMap.get(client).getPaintable(
-                            getWidgetForPaintable().uidlId));
+                    getWidgetForPaintable());
             getWidgetForPaintable().moreItem
                     .setSubMenu(getWidgetForPaintable().collapsedRootItems);
             getWidgetForPaintable().moreItem.addStyleName(VMenuBar.CLASSNAME
