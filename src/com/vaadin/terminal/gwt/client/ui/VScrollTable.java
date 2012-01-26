@@ -61,12 +61,13 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
@@ -77,6 +78,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.terminal.gwt.client.ui.label.VLabel;
 
 /**
  * VScrollTable
@@ -1304,7 +1306,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private void purgeUnregistryBag() {
         for (Iterator<Panel> iterator = lazyUnregistryBag.iterator(); iterator
                 .hasNext();) {
-            client.unregisterChildPaintables(iterator.next());
+            VPaintableMap.get(client)
+                    .unregisterChildPaintables(iterator.next());
         }
         lazyUnregistryBag.clear();
     }
@@ -4637,11 +4640,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         addCell(uidl, cell.toString(), aligns[col++], style,
                                 isRenderHtmlInCells(), sorted, description);
                     } else {
-                        final Paintable cellContent = client
+                        final VPaintableWidget cellContent = client
                                 .getPaintable((UIDL) cell);
 
-                        addCell(uidl, (Widget) cellContent, aligns[col++],
-                                style, sorted);
+                        addCell(uidl, cellContent.getWidgetForPaintable(),
+                                aligns[col++], style, sorted);
                         paintComponent(cellContent, (UIDL) cell);
                     }
                 }
@@ -4715,7 +4718,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 return index;
             }
 
-            protected void paintComponent(Paintable p, UIDL uidl) {
+            protected void paintComponent(VPaintableWidget p, UIDL uidl) {
                 if (isAttached()) {
                     p.updateFromUIDL(uidl, client);
                 } else {
@@ -4731,7 +4734,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 super.onAttach();
                 if (pendingComponentPaints != null) {
                     for (UIDL uidl : pendingComponentPaints) {
-                        Paintable paintable = client.getPaintable(uidl);
+                        VPaintableWidget paintable = (VPaintableWidget) VPaintableMap
+                                .get(client).getPaintable(uidl.getId());
                         paintable.updateFromUIDL(uidl, client);
                     }
                 }
@@ -5509,13 +5513,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             }
 
-            public boolean requestLayout(Set<Paintable> children) {
+            public boolean requestLayout(Set<Widget> children) {
                 // row size should never change and system wouldn't event
                 // survive as this is a kind of fake paitable
                 return true;
             }
 
-            public void updateCaption(Paintable component, UIDL uidl) {
+            public void updateCaption(VPaintableWidget component, UIDL uidl) {
                 // NOP, not rendered
             }
 
@@ -5523,6 +5527,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 // Should never be called,
                 // Component container interface faked here to get layouts
                 // render properly
+            }
+
+            public Widget getWidgetForPaintable() {
+                return this;
             }
         }
 
@@ -5657,7 +5665,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             if (!hasFocus) {
                 scrollBodyPanel.setFocus(true);
             }
+
         }
+
     }
 
     /**
@@ -6304,7 +6314,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         @Override
-        public Paintable getPaintable() {
+        public VPaintableWidget getPaintable() {
             return VScrollTable.this;
         }
 
@@ -6865,4 +6875,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             VConsole.error(msg);
         }
     }
+
+    public Widget getWidgetForPaintable() {
+        return this;
+    }
+
 }

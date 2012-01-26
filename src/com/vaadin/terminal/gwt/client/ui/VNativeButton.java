@@ -15,18 +15,19 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VNativeButton extends Button implements Paintable, ClickHandler,
-        FocusHandler, BlurHandler {
+public class VNativeButton extends Button implements VPaintableWidget,
+        ClickHandler, FocusHandler, BlurHandler {
 
     public static final String CLASSNAME = "v-nativebutton";
 
@@ -197,4 +198,7 @@ public class VNativeButton extends Button implements Paintable, ClickHandler,
         }
     }
 
+    public Widget getWidgetForPaintable() {
+        return this;
+    }
 }

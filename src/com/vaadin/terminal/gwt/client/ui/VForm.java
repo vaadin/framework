@@ -17,13 +17,14 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VErrorMessage;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 public class VForm extends ComplexPanel implements Container, KeyDownHandler {
 
@@ -149,12 +150,12 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
             Container newFooter = (Container) client.getPaintable(uidl
                     .getChildUIDL(1));
             if (footer == null) {
-                add((Widget) newFooter, footerContainer);
+                add(newFooter.getWidgetForPaintable(), footerContainer);
                 footer = newFooter;
             } else if (newFooter != footer) {
-                remove((Widget) footer);
+                remove(footer.getWidgetForPaintable());
                 client.unregisterPaintable(footer);
-                add((Widget) newFooter, footerContainer);
+                add(newFooter.getWidgetForPaintable(), footerContainer);
             }
             footer = newFooter;
             footer.updateFromUIDL(uidl.getChildUIDL(1), client);
@@ -162,7 +163,7 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
             updateSize();
         } else {
             if (footer != null) {
-                remove((Widget) footer);
+                remove(footer.getWidgetForPaintable());
                 client.unregisterPaintable(footer);
                 // needed for the main layout to know the space it has available
                 updateSize();
@@ -173,12 +174,12 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
         Container newLo = (Container) client.getPaintable(layoutUidl);
         if (lo == null) {
             lo = newLo;
-            add((Widget) lo, fieldContainer);
+            add(lo.getWidgetForPaintable(), fieldContainer);
         } else if (lo != newLo) {
             client.unregisterPaintable(lo);
-            remove((Widget) lo);
+            remove(lo.getWidgetForPaintable());
             lo = newLo;
-            add((Widget) lo, fieldContainer);
+            add(lo.getWidgetForPaintable(), fieldContainer);
         }
         lo.updateFromUIDL(layoutUidl, client);
 
@@ -240,16 +241,18 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
         }
         remove(oldComponent);
         if (oldComponent == lo) {
-            lo = (Container) newComponent;
-            add((Widget) lo, fieldContainer);
+            lo = (Container) VPaintableMap.get(client).getPaintable(
+                    newComponent);
+            add(newComponent, fieldContainer);
         } else {
-            footer = (Container) newComponent;
-            add((Widget) footer, footerContainer);
+            footer = (Container) VPaintableMap.get(client).getPaintable(
+                    newComponent);
+            add(newComponent, footerContainer);
         }
 
     }
 
-    public boolean requestLayout(Set<Paintable> child) {
+    public boolean requestLayout(Set<Widget> child) {
 
         if (height != null && !"".equals(height) && width != null
                 && !"".equals(width)) {
@@ -269,7 +272,7 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
 
     }
 
-    public void updateCaption(Paintable component, UIDL uidl) {
+    public void updateCaption(VPaintableWidget component, UIDL uidl) {
         // NOP form don't render caption for neither field layout nor footer
         // layout
     }
@@ -317,11 +320,16 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
 
         if (!rendering && height.equals("")) {
             // Width might affect height
-            Util.updateRelativeChildrenAndSendSizeUpdateEvent(client, this);
+            Util.updateRelativeChildrenAndSendSizeUpdateEvent(client, this,
+                    this);
         }
     }
 
     public void onKeyDown(KeyDownEvent event) {
         shortcutHandler.handleKeyboardEvent(Event.as(event.getNativeEvent()));
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 }

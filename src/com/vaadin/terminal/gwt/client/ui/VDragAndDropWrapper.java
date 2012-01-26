@@ -26,12 +26,14 @@ import com.google.gwt.xhr.client.ReadyStateChangeHandler;
 import com.google.gwt.xhr.client.XMLHttpRequest;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.VPaintable;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ValueMap;
 import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
@@ -111,13 +113,13 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             VTransferable transferable = new VTransferable();
             transferable.setDragSource(VDragAndDropWrapper.this);
 
-            Paintable paintable;
-            Widget w = Util.findWidget((Element) event.getEventTarget().cast(),
-                    null);
-            while (w != null && !(w instanceof Paintable)) {
-                w = w.getParent();
+            Widget widget = Util.findWidget((Element) event.getEventTarget()
+                    .cast(), null);
+            VPaintableMap vPaintableMap = VPaintableMap.get(client);
+            while (widget != null && !vPaintableMap.isPaintable(widget)) {
+                widget = widget.getParent();
             }
-            paintable = (Paintable) w;
+            VPaintableWidget paintable = vPaintableMap.getPaintable(widget);
 
             transferable.setData("component", paintable);
             VDragEvent dragEvent = VDragAndDropManager.get().startDrag(
@@ -129,8 +131,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             if (dragStartMode == WRAPPER) {
                 dragEvent.createDragImage(getElement(), true);
             } else {
-                dragEvent.createDragImage(((Widget) paintable).getElement(),
-                        true);
+                dragEvent.createDragImage(widget.getElement(), true);
             }
             return true;
         }
@@ -468,7 +469,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     }
 
     private String getPid() {
-        return client.getPid(this);
+        return VPaintableMap.get(client).getPid((VPaintable) this);
     }
 
     public VDropHandler getDropHandler() {
@@ -547,7 +548,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         }
 
         @Override
-        public Paintable getPaintable() {
+        public VPaintableWidget getPaintable() {
             return VDragAndDropWrapper.this;
         }
 

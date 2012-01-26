@@ -13,8 +13,9 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 abstract class VTabsheetBase extends ComplexPanel implements Container {
 
@@ -50,10 +51,10 @@ abstract class VTabsheetBase extends ComplexPanel implements Container {
         final UIDL tabs = uidl.getChildUIDL(0);
 
         // Paintables in the TabSheet before update
-        ArrayList<Object> oldPaintables = new ArrayList<Object>();
-        for (Iterator<Object> iterator = getPaintableIterator(); iterator
+        ArrayList<Widget> oldWidgets = new ArrayList<Widget>();
+        for (Iterator<Widget> iterator = getWidgetIterator(); iterator
                 .hasNext();) {
-            oldPaintables.add(iterator.next());
+            oldWidgets.add(iterator.next());
         }
 
         // Clear previous values
@@ -86,21 +87,24 @@ abstract class VTabsheetBase extends ComplexPanel implements Container {
         }
 
         for (int i = 0; i < getTabCount(); i++) {
-            Paintable p = getTab(i);
-            oldPaintables.remove(p);
+            VPaintableWidget p = getTab(i);
+            // During the initial rendering the paintable might be null (this is
+            // weird...)
+            if (p != null) {
+                oldWidgets.remove(p.getWidgetForPaintable());
+            }
         }
 
         // Perform unregister for any paintables removed during update
-        for (Iterator<Object> iterator = oldPaintables.iterator(); iterator
+        for (Iterator<Widget> iterator = oldWidgets.iterator(); iterator
                 .hasNext();) {
-            Object oldPaintable = iterator.next();
-            if (oldPaintable instanceof Paintable) {
-                Widget w = (Widget) oldPaintable;
-                if (w.isAttached()) {
-                    w.removeFromParent();
-                }
-                client.unregisterPaintable((Paintable) oldPaintable);
+            Widget oldWidget = iterator.next();
+            VPaintableWidget oldPaintable = VPaintableMap.get(client)
+                    .getPaintable(oldWidget);
+            if (oldWidget.isAttached()) {
+                oldWidget.removeFromParent();
             }
+            VPaintableMap.get(client).unregisterPaintable(oldPaintable);
         }
 
     }
@@ -112,7 +116,7 @@ abstract class VTabsheetBase extends ComplexPanel implements Container {
      *         {@link #updateFromUIDL(UIDL, ApplicationConnection)} checks if
      *         instanceof Paintable. Therefore set to <Object>
      */
-    abstract protected Iterator<Object> getPaintableIterator();
+    abstract protected Iterator<Widget> getWidgetIterator();
 
     /**
      * Clears current tabs and contents
@@ -143,7 +147,7 @@ abstract class VTabsheetBase extends ComplexPanel implements Container {
      * Implement in extending classes. This method should return the Paintable
      * corresponding to the given index.
      */
-    protected abstract Paintable getTab(int index);
+    protected abstract VPaintableWidget getTab(int index);
 
     /**
      * Implement in extending classes. This method should remove the rendered

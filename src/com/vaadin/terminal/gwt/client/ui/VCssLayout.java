@@ -23,16 +23,18 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.EventId;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ValueMap;
 
-public class VCssLayout extends SimplePanel implements Paintable, Container {
+public class VCssLayout extends SimplePanel implements VPaintableWidget,
+        Container {
     public static final String TAGNAME = "csslayout";
     public static final String CLASSNAME = "v-" + TAGNAME;
 
@@ -44,7 +46,7 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
             this, EventId.LAYOUT_CLICK) {
 
         @Override
-        protected Paintable getChildComponent(Element element) {
+        protected VPaintableWidget getChildComponent(Element element) {
             return panel.getComponent(element);
         }
 
@@ -126,7 +128,7 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
         panel.replaceChildComponent(oldComponent, newComponent);
     }
 
-    public void updateCaption(Paintable component, UIDL uidl) {
+    public void updateCaption(VPaintableWidget component, UIDL uidl) {
         panel.updateCaption(component, uidl);
     }
 
@@ -143,7 +145,7 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
 
         public void updateRelativeSizes() {
             for (Widget w : getChildren()) {
-                if (w instanceof Paintable) {
+                if (w instanceof VPaintableWidget) {
                     client.handleComponentRelativeSize(w);
                 }
             }
@@ -169,11 +171,11 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
             for (final Iterator<Object> i = uidl.getChildIterator(); i
                     .hasNext();) {
                 final UIDL r = (UIDL) i.next();
-                final Paintable child = client.getPaintable(r);
-                final Widget widget = (Widget) child;
+                final VPaintableWidget child = client.getPaintable(r);
+                final Widget widget = child.getWidgetForPaintable();
                 if (widget.getParent() == this) {
-                    oldWidgets.remove(child);
-                    VCaption vCaption = widgetToCaption.get(child);
+                    oldWidgets.remove(widget);
+                    VCaption vCaption = widgetToCaption.get(widget);
                     if (vCaption != null) {
                         addOrMove(vCaption, lastIndex++);
                         oldWidgets.remove(vCaption);
@@ -212,8 +214,10 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
             // them
             for (Widget w : oldWidgets) {
                 remove(w);
-                if (w instanceof Paintable) {
-                    final Paintable p = (Paintable) w;
+                VPaintableMap paintableMap = VPaintableMap.get(client);
+                if (paintableMap.isPaintable(w)) {
+                    final VPaintableWidget p = VPaintableMap.get(client)
+                            .getPaintable(w);
                     client.unregisterPaintable(p);
                 }
                 VCaption vCaption = widgetToCaption.remove(w);
@@ -251,12 +255,12 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
             }
         }
 
-        public void updateCaption(Paintable component, UIDL uidl) {
-            VCaption caption = widgetToCaption.get(component);
+        public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
+            Widget widget = paintable.getWidgetForPaintable();
+            VCaption caption = widgetToCaption.get(widget);
             if (VCaption.isNeeded(uidl)) {
-                Widget widget = (Widget) component;
                 if (caption == null) {
-                    caption = new VCaption(component, client);
+                    caption = new VCaption(paintable, client);
                     widgetToCaption.put(widget, caption);
                     insert(caption, getWidgetIndex(widget));
                     lastIndex++;
@@ -267,11 +271,11 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
                 caption.updateCaption(uidl);
             } else if (caption != null) {
                 remove(caption);
-                widgetToCaption.remove(component);
+                widgetToCaption.remove(widget);
             }
         }
 
-        private Paintable getComponent(Element element) {
+        private VPaintableWidget getComponent(Element element) {
             return Util
                     .getPaintableForElement(client, VCssLayout.this, element);
         }
@@ -307,7 +311,7 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
         return space;
     }
 
-    public boolean requestLayout(Set<Paintable> children) {
+    public boolean requestLayout(Set<Widget> children) {
         if (hasSize()) {
             return true;
         } else {
@@ -338,5 +342,9 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
             }
         }
         return cssProperty;
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 }

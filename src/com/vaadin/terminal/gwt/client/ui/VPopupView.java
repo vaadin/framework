@@ -25,13 +25,13 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
 
@@ -84,7 +84,7 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
     /**
      * 
      * 
-     * @see com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.terminal.gwt.client.UIDL,
+     * @see com.vaadin.terminal.gwt.client.VPaintableWidget#updateFromUIDL(com.vaadin.terminal.gwt.client.UIDL,
      *      com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -230,7 +230,7 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
      */
     protected class CustomPopup extends VOverlay {
 
-        private Paintable popupComponentPaintable = null;
+        private VPaintableWidget popupComponentPaintable = null;
         private Widget popupComponentWidget = null;
         private VCaptionWrapper captionWrapper = null;
 
@@ -346,15 +346,13 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
 
         public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
-            Paintable newPopupComponent = client.getPaintable(uidl
+            VPaintableWidget newPopupComponent = client.getPaintable(uidl
                     .getChildUIDL(0));
 
             if (newPopupComponent != popupComponentPaintable) {
-
-                setWidget((Widget) newPopupComponent);
-
-                popupComponentWidget = (Widget) newPopupComponent;
-
+                Widget newWidget = newPopupComponent.getWidgetForPaintable();
+                setWidget(newWidget);
+                popupComponentWidget = newWidget;
                 popupComponentPaintable = newPopupComponent;
             }
 
@@ -443,12 +441,12 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
         popup.popupComponentWidget = newComponent;
     }
 
-    public boolean requestLayout(Set<Paintable> child) {
+    public boolean requestLayout(Set<Widget> children) {
         popup.updateShadowSizeAndPosition();
         return true;
     }
 
-    public void updateCaption(Paintable component, UIDL uidl) {
+    public void updateCaption(VPaintableWidget component, UIDL uidl) {
         if (VCaption.isNeeded(uidl)) {
             if (popup.captionWrapper != null) {
                 popup.captionWrapper.updateCaption(uidl);
@@ -462,9 +460,6 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
                 popup.setWidget(popup.popupComponentWidget);
             }
         }
-
-        popup.popupComponentWidget = (Widget) component;
-        popup.popupComponentPaintable = component;
     }
 
     @Override
@@ -499,6 +494,10 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
             }
 
         };
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }// class VPopupView

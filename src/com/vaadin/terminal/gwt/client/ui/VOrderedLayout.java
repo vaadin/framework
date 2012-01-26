@@ -17,12 +17,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventId;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ValueMap;
 import com.vaadin.terminal.gwt.client.ui.layout.CellBasedLayout;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
@@ -59,7 +60,7 @@ public class VOrderedLayout extends CellBasedLayout {
             this, EventId.LAYOUT_CLICK) {
 
         @Override
-        protected Paintable getChildComponent(Element element) {
+        protected VPaintableWidget getChildComponent(Element element) {
             return getComponent(element);
         }
 
@@ -114,15 +115,16 @@ public class VOrderedLayout extends CellBasedLayout {
         int pos = 0;
         for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL childUIDL = (UIDL) it.next();
-            final Paintable child = client.getPaintable(childUIDL);
-            Widget widget = (Widget) child;
+            final VPaintableWidget childPaintable = client
+                    .getPaintable(childUIDL);
+            Widget widget = childPaintable.getWidgetForPaintable();
 
             // Create container for component
             ChildComponentContainer childComponentContainer = getComponentContainer(widget);
 
             if (childComponentContainer == null) {
                 // This is a new component
-                childComponentContainer = createChildContainer(widget);
+                childComponentContainer = createChildContainer(childPaintable);
             } else {
                 /*
                  * The widget may be null if the same paintable has been
@@ -130,7 +132,7 @@ public class VOrderedLayout extends CellBasedLayout {
                  * been invisible. Ensure the childComponentContainer has the
                  * widget attached. See e.g. #5372
                  */
-                childComponentContainer.setWidget(widget);
+                childComponentContainer.setPaintable(childPaintable);
             }
 
             addOrMoveChild(childComponentContainer, pos++);
@@ -703,7 +705,7 @@ public class VOrderedLayout extends CellBasedLayout {
         return orientation == ORIENTATION_VERTICAL;
     }
 
-    private ChildComponentContainer createChildContainer(Widget child) {
+    private ChildComponentContainer createChildContainer(VPaintableWidget child) {
 
         // Create a container DIV for the child
         ChildComponentContainer childComponent = new ChildComponentContainer(
@@ -786,10 +788,10 @@ public class VOrderedLayout extends CellBasedLayout {
         root.getStyle().setPropertyPx("height", activeLayoutSize.getHeight());
     }
 
-    public boolean requestLayout(Set<Paintable> children) {
-        for (Paintable p : children) {
+    public boolean requestLayout(Set<Widget> children) {
+        for (Widget p : children) {
             /* Update widget size from DOM */
-            ChildComponentContainer componentContainer = getComponentContainer((Widget) p);
+            ChildComponentContainer componentContainer = getComponentContainer(p);
             // This should no longer be needed (after #2563)
             // if (isDynamicWidth()) {
             // componentContainer.setUnlimitedContainerWidth();
@@ -898,7 +900,7 @@ public class VOrderedLayout extends CellBasedLayout {
 
         for (int i = 0; i < renderedWidgets.size(); i++) {
             Widget widget = renderedWidgets.get(i);
-            String pid = client.getPid(widget.getElement());
+            String pid = VPaintableMap.get(client).getPid(widget);
 
             ChildComponentContainer container = getComponentContainer(widget);
 
@@ -940,15 +942,16 @@ public class VOrderedLayout extends CellBasedLayout {
         }
     }
 
-    public void updateCaption(Paintable component, UIDL uidl) {
-        ChildComponentContainer componentContainer = getComponentContainer((Widget) component);
+    public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
+        Widget widget = paintable.getWidgetForPaintable();
+        ChildComponentContainer componentContainer = getComponentContainer(widget);
         componentContainer.updateCaption(uidl, client);
         if (!isRendering) {
             /*
              * This was a component-only update and the possible size change
              * must be propagated to the layout
              */
-            client.captionSizeUpdated(component);
+            client.captionSizeUpdated(widget);
         }
     }
 
@@ -962,8 +965,12 @@ public class VOrderedLayout extends CellBasedLayout {
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
      */
-    private Paintable getComponent(Element element) {
+    private VPaintableWidget getComponent(Element element) {
         return Util.getPaintableForElement(client, this, element);
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }

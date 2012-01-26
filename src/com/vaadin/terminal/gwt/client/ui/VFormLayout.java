@@ -23,11 +23,12 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Focusable;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
@@ -81,8 +82,8 @@ public class VFormLayout extends SimplePanel implements Container {
         private static final int COLUMN_ERRORFLAG = 1;
         private static final int COLUMN_WIDGET = 2;
 
-        private HashMap<Paintable, Caption> componentToCaption = new HashMap<Paintable, Caption>();
-        private HashMap<Paintable, ErrorFlag> componentToError = new HashMap<Paintable, ErrorFlag>();
+        private HashMap<Widget, Caption> widgetToCaption = new HashMap<Widget, Caption>();
+        private HashMap<Widget, ErrorFlag> widgetToError = new HashMap<Widget, ErrorFlag>();
 
         public VFormLayoutTable() {
             DOM.setElementProperty(getElement(), "cellPadding", "0");
@@ -111,27 +112,31 @@ public class VFormLayout extends SimplePanel implements Container {
             for (final Iterator<?> it = uidl.getChildIterator(); it.hasNext(); i++) {
                 prepareCell(i, 1);
                 final UIDL childUidl = (UIDL) it.next();
-                final Paintable p = client.getPaintable(childUidl);
-                Caption caption = componentToCaption.get(p);
+                final VPaintableWidget childPaintable = client
+                        .getPaintable(childUidl);
+                Widget childWidget = childPaintable.getWidgetForPaintable();
+                Caption caption = widgetToCaption.get(childWidget);
                 if (caption == null) {
-                    caption = new Caption(p, client,
+                    caption = new Caption(childPaintable, client,
                             getStylesFromUIDL(childUidl));
                     caption.addClickHandler(this);
-                    componentToCaption.put(p, caption);
+                    widgetToCaption.put(childWidget, caption);
                 }
-                ErrorFlag error = componentToError.get(p);
+                ErrorFlag error = widgetToError.get(childWidget);
                 if (error == null) {
                     error = new ErrorFlag();
-                    componentToError.put(p, error);
+                    widgetToError.put(childWidget, error);
                 }
                 prepareCell(i, COLUMN_WIDGET);
-                final Paintable oldComponent = (Paintable) getWidget(i,
-                        COLUMN_WIDGET);
-                if (oldComponent == null) {
-                    setWidget(i, COLUMN_WIDGET, (Widget) p);
-                } else if (oldComponent != p) {
-                    client.unregisterPaintable(oldComponent);
-                    setWidget(i, COLUMN_WIDGET, (Widget) p);
+
+                Widget oldWidget = getWidget(i, COLUMN_WIDGET);
+                if (oldWidget == null) {
+                    setWidget(i, COLUMN_WIDGET, childWidget);
+                } else if (oldWidget != childWidget) {
+                    final VPaintableWidget oldPaintable = VPaintableMap.get(
+                            client).getPaintable(oldWidget);
+                    client.unregisterPaintable(oldPaintable);
+                    setWidget(i, COLUMN_WIDGET, childWidget);
                 }
                 getCellFormatter().setStyleName(i, COLUMN_WIDGET,
                         CLASSNAME + "-contentcell");
@@ -145,7 +150,7 @@ public class VFormLayout extends SimplePanel implements Container {
                         CLASSNAME + "-errorcell");
                 setWidget(i, COLUMN_ERRORFLAG, error);
 
-                p.updateFromUIDL(childUidl, client);
+                childPaintable.updateFromUIDL(childUidl, client);
 
                 String rowstyles = CLASSNAME + "-row";
                 if (i == 0) {
@@ -160,9 +165,11 @@ public class VFormLayout extends SimplePanel implements Container {
             }
 
             while (getRowCount() > i) {
-                final Paintable p = (Paintable) getWidget(i, COLUMN_WIDGET);
+                Widget w = getWidget(i, COLUMN_WIDGET);
+                final VPaintableWidget p = VPaintableMap.get(client)
+                        .getPaintable(w);
                 client.unregisterPaintable(p);
-                componentToCaption.remove(p);
+                widgetToCaption.remove(w);
                 removeRow(i);
             }
 
@@ -170,8 +177,8 @@ public class VFormLayout extends SimplePanel implements Container {
              * Must update relative sized fields last when it is clear how much
              * space they are allowed to use
              */
-            for (Paintable p : componentToCaption.keySet()) {
-                client.handleComponentRelativeSize((Widget) p);
+            for (Widget p : widgetToCaption.keySet()) {
+                client.handleComponentRelativeSize(p);
             }
         }
 
@@ -195,16 +202,21 @@ public class VFormLayout extends SimplePanel implements Container {
             for (i = 0; i < getRowCount(); i++) {
                 Widget candidate = getWidget(i, COLUMN_WIDGET);
                 if (oldComponent == candidate) {
-                    Caption oldCap = componentToCaption.get(oldComponent);
-                    final Caption newCap = new Caption(
-                            (Paintable) newComponent, client, null);
+                    VPaintableMap paintableMap = VPaintableMap.get(client);
+                    VPaintableWidget oldPaintable = paintableMap
+                            .getPaintable(oldComponent);
+                    VPaintableWidget newPaintable = paintableMap
+                            .getPaintable(newComponent);
+                    Caption oldCap = widgetToCaption.get(oldComponent);
+                    final Caption newCap = new Caption(newPaintable, client,
+                            null);
                     newCap.addClickHandler(this);
                     newCap.setStyleName(oldCap.getStyleName());
-                    componentToCaption.put((Paintable) newComponent, newCap);
-                    ErrorFlag error = componentToError.get(newComponent);
+                    widgetToCaption.put(newComponent, newCap);
+                    ErrorFlag error = widgetToError.get(newComponent);
                     if (error == null) {
                         error = new ErrorFlag();
-                        componentToError.put((Paintable) newComponent, error);
+                        widgetToError.put(newComponent, error);
                     }
 
                     setWidget(i, COLUMN_CAPTION, newCap);
@@ -217,24 +229,26 @@ public class VFormLayout extends SimplePanel implements Container {
         }
 
         public boolean hasChildComponent(Widget component) {
-            return componentToCaption.containsKey(component);
+            return widgetToCaption.containsKey(component);
         }
 
-        public void updateCaption(Paintable component, UIDL uidl) {
-            final Caption c = componentToCaption.get(component);
+        public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
+            final Caption c = widgetToCaption.get(paintable
+                    .getWidgetForPaintable());
             if (c != null) {
                 c.updateCaption(uidl);
             }
-            final ErrorFlag e = componentToError.get(component);
+            final ErrorFlag e = widgetToError.get(paintable
+                    .getWidgetForPaintable());
             if (e != null) {
-                e.updateFromUIDL(uidl, component);
+                e.updateFromUIDL(uidl, paintable);
             }
 
         }
 
         public int getAllocatedWidth(Widget child, int availableWidth) {
-            Caption caption = componentToCaption.get(child);
-            ErrorFlag error = componentToError.get(child);
+            Caption caption = widgetToCaption.get(child);
+            ErrorFlag error = widgetToError.get(child);
             int width = availableWidth;
 
             if (caption != null) {
@@ -294,7 +308,7 @@ public class VFormLayout extends SimplePanel implements Container {
         table.replaceChildComponent(oldComponent, newComponent);
     }
 
-    public void updateCaption(Paintable component, UIDL uidl) {
+    public void updateCaption(VPaintableWidget component, UIDL uidl) {
         table.updateCaption(component, uidl);
     }
 
@@ -302,7 +316,7 @@ public class VFormLayout extends SimplePanel implements Container {
 
         public static final String CLASSNAME = "v-caption";
 
-        private final Paintable owner;
+        private final VPaintableWidget owner;
 
         private Element requiredFieldIndicator;
 
@@ -319,8 +333,8 @@ public class VFormLayout extends SimplePanel implements Container {
          *            return null
          * @param client
          */
-        public Caption(Paintable component, ApplicationConnection client,
-                String[] styles) {
+        public Caption(VPaintableWidget component,
+                ApplicationConnection client, String[] styles) {
             super();
             this.client = client;
             owner = component;
@@ -423,7 +437,7 @@ public class VFormLayout extends SimplePanel implements Container {
          * 
          * @return owner Widget
          */
-        public Paintable getOwner() {
+        public VPaintableWidget getOwner() {
             return owner;
         }
 
@@ -440,14 +454,14 @@ public class VFormLayout extends SimplePanel implements Container {
         private static final String CLASSNAME = VFormLayout.CLASSNAME
                 + "-error-indicator";
         Element errorIndicatorElement;
-        private Paintable owner;
+        private VPaintableWidget owner;
 
         public ErrorFlag() {
             setStyleName(CLASSNAME);
             sinkEvents(VTooltip.TOOLTIP_EVENTS);
         }
 
-        public void updateFromUIDL(UIDL uidl, Paintable component) {
+        public void updateFromUIDL(UIDL uidl, VPaintableWidget component) {
             owner = component;
             if (uidl.hasAttribute("error")
                     && !uidl.getBooleanAttribute("hideErrors")) {
@@ -475,7 +489,7 @@ public class VFormLayout extends SimplePanel implements Container {
 
     }
 
-    public boolean requestLayout(Set<Paintable> child) {
+    public boolean requestLayout(Set<Widget> children) {
         if (height.equals("") || width.equals("")) {
             // A dynamic size might change due to children changes
             return false;
@@ -519,9 +533,14 @@ public class VFormLayout extends SimplePanel implements Container {
             table.setContentWidths();
             if (height.equals("")) {
                 // Width might affect height
-                Util.updateRelativeChildrenAndSendSizeUpdateEvent(client, this);
+                Util.updateRelativeChildrenAndSendSizeUpdateEvent(client, this,
+                        this);
             }
         }
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }

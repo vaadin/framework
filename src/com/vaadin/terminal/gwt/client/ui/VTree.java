@@ -40,7 +40,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -58,7 +58,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 /**
  * 
  */
-public class VTree extends FocusElementPanel implements Paintable,
+public class VTree extends FocusElementPanel implements VPaintableWidget,
         VHasDropHandler, FocusHandler, BlurHandler, KeyPressHandler,
         KeyDownHandler, SubPartAware, ActionOwner {
 
@@ -464,7 +464,7 @@ public class VTree extends FocusElementPanel implements Paintable,
                 }
 
                 @Override
-                public Paintable getPaintable() {
+                public VPaintableWidget getPaintable() {
                     return VTree.this;
                 }
 
@@ -2241,5 +2241,9 @@ public class VTree extends FocusElementPanel implements Paintable,
             event.stopPropagation();
             event.preventDefault();
         }
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 }

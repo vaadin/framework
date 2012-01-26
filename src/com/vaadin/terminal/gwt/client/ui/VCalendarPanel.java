@@ -40,6 +40,7 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.DateTimeService;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.ui.label.VLabel;
 
 @SuppressWarnings("deprecation")
 public class VCalendarPanel extends FocusableFlexTable implements
@@ -1165,7 +1166,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
         // elapsed, another timer is triggered to go off every 150ms. Both
         // timers are cancelled on mouseup or mouseout.
         if (event.getSource() instanceof VEventButton) {
-            final Widget sender = (Widget) event.getSource();
+            final VEventButton sender = (VEventButton) event.getSource();
             processClickEvent(sender);
             mouseTimer = new Timer() {
                 @Override

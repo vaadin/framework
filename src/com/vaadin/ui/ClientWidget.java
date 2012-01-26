@@ -11,7 +11,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.widgetsetutils.CustomWidgetMapGenerator;
 import com.vaadin.terminal.gwt.widgetsetutils.EagerWidgetMapGenerator;
 import com.vaadin.terminal.gwt.widgetsetutils.LazyWidgetMapGenerator;
@@ -36,7 +36,7 @@ public @interface ClientWidget {
     /**
      * @return the client side counterpart for the annotated component
      */
-    Class<? extends Paintable> value();
+    Class<? extends VPaintableWidget> value();
 
     /**
      * Depending on the used WidgetMap generator, these optional hints may be

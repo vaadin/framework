@@ -24,15 +24,17 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.EventId;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.layout.CellBasedLayout;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
-public class VGridLayout extends SimplePanel implements Paintable, Container {
+public class VGridLayout extends SimplePanel implements VPaintableWidget,
+        Container {
 
     public static final String CLASSNAME = "v-gridlayout";
 
@@ -44,7 +46,7 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
 
     protected HashMap<Widget, ChildComponentContainer> widgetToComponentContainer = new HashMap<Widget, ChildComponentContainer>();
 
-    private HashMap<Paintable, Cell> paintableToCell = new HashMap<Paintable, Cell>();
+    private HashMap<Widget, Cell> widgetToCell = new HashMap<Widget, Cell>();
 
     private int spacingPixelsHorizontal;
     private int spacingPixelsVertical;
@@ -74,7 +76,7 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
             this, EventId.LAYOUT_CLICK) {
 
         @Override
-        protected Paintable getChildComponent(Element element) {
+        protected VPaintableWidget getChildComponent(Element element) {
             return getComponent(element);
         }
 
@@ -239,10 +241,11 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         for (Widget w : nonRenderedWidgets.keySet()) {
             ChildComponentContainer childComponentContainer = widgetToComponentContainer
                     .get(w);
-            paintableToCell.remove(w);
+            widgetToCell.remove(w);
             widgetToComponentContainer.remove(w);
             childComponentContainer.removeFromParent();
-            client.unregisterPaintable((Paintable) w);
+            VPaintableMap paintableMap = VPaintableMap.get(client);
+            paintableMap.unregisterPaintable(paintableMap.getPaintable(w));
         }
         nonRenderedWidgets = null;
 
@@ -295,8 +298,8 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
             } else {
                 expandRows();
                 layoutCells();
-                for (Paintable c : paintableToCell.keySet()) {
-                    client.handleComponentRelativeSize((Widget) c);
+                for (Widget w : widgetToCell.keySet()) {
+                    client.handleComponentRelativeSize(w);
                 }
             }
         }
@@ -388,8 +391,8 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
 
                 }
                 layoutCells();
-                for (Paintable c : paintableToCell.keySet()) {
-                    client.handleComponentRelativeSize((Widget) c);
+                for (Widget w : widgetToCell.keySet()) {
+                    client.handleComponentRelativeSize(w);
                 }
                 if (heightChanged && "".equals(height)) {
                     Util.notifyParentOfSizeChange(this, false);
@@ -699,7 +702,7 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
     }
 
     public boolean hasChildComponent(Widget component) {
-        return paintableToCell.containsKey(component);
+        return widgetToCell.containsKey(component);
     }
 
     public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
@@ -709,30 +712,31 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
             return;
         }
 
-        componentContainer.setWidget(newComponent);
+        componentContainer.setPaintable(VPaintableMap.get(client).getPaintable(
+                newComponent));
         widgetToComponentContainer.put(newComponent, componentContainer);
 
-        paintableToCell.put((Paintable) newComponent,
-                paintableToCell.get(oldComponent));
+        widgetToCell.put(newComponent, widgetToCell.get(oldComponent));
     }
 
-    public void updateCaption(Paintable component, UIDL uidl) {
-        ChildComponentContainer cc = widgetToComponentContainer.get(component);
+    public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
+        Widget widget = paintable.getWidgetForPaintable();
+        ChildComponentContainer cc = widgetToComponentContainer.get(widget);
         if (cc != null) {
             cc.updateCaption(uidl, client);
         }
         if (!rendering) {
             // ensure rel size details are updated
-            paintableToCell.get(component).updateRelSizeStatus(uidl);
+            widgetToCell.get(widget).updateRelSizeStatus(uidl);
             /*
              * This was a component-only update and the possible size change
              * must be propagated to the layout
              */
-            client.captionSizeUpdated(component);
+            client.captionSizeUpdated(widget);
         }
     }
 
-    public boolean requestLayout(final Set<Paintable> changedChildren) {
+    public boolean requestLayout(final Set<Widget> changedChildren) {
         boolean needsLayout = false;
         boolean reDistributeColSpanWidths = false;
         boolean reDistributeRowSpanHeights = false;
@@ -743,9 +747,9 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         }
         ArrayList<Integer> dirtyColumns = new ArrayList<Integer>();
         ArrayList<Integer> dirtyRows = new ArrayList<Integer>();
-        for (Paintable paintable : changedChildren) {
+        for (Widget widget : changedChildren) {
 
-            Cell cell = paintableToCell.get(paintable);
+            Cell cell = widgetToCell.get(widget);
             if (!cell.hasRelativeHeight() || !cell.hasRelativeWidth()) {
                 // cell sizes will only stay still if only relatively
                 // sized components
@@ -886,7 +890,7 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
-        Cell cell = paintableToCell.get(child);
+        Cell cell = widgetToCell.get(child);
         assert cell != null;
         return cell.getAllocatedSpace();
     }
@@ -994,12 +998,13 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         protected void render() {
             assert childUidl != null;
 
-            Paintable paintable = client.getPaintable(childUidl);
+            VPaintableWidget paintable = client.getPaintable(childUidl);
+            Widget w = paintable.getWidgetForPaintable();
             assert paintable != null;
-            if (cc == null || cc.getWidget() != paintable) {
-                if (widgetToComponentContainer.containsKey(paintable)) {
+            if (cc == null || cc.getWidget() != w) {
+                if (widgetToComponentContainer.containsKey(w)) {
                     // Component moving from one place to another
-                    cc = widgetToComponentContainer.get(paintable);
+                    cc = widgetToComponentContainer.get(w);
                     cc.setWidth("");
                     cc.setHeight("");
                     /*
@@ -1007,23 +1012,23 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
                      * and this layout has been hidden when moving out, see
                      * #5372
                      */
-                    cc.setWidget((Widget) paintable);
+                    cc.setPaintable(paintable);
                 } else {
                     // A new component
-                    cc = new ChildComponentContainer((Widget) paintable,
+                    cc = new ChildComponentContainer(paintable,
                             CellBasedLayout.ORIENTATION_VERTICAL);
-                    widgetToComponentContainer.put((Widget) paintable, cc);
+                    widgetToComponentContainer.put(w, cc);
                     cc.setWidth("");
                     canvas.add(cc, 0, 0);
                 }
-                paintableToCell.put(paintable, this);
+                widgetToCell.put(w, this);
             }
             cc.renderChild(childUidl, client, -1);
             if (sizeChangedDuringRendering && Util.isCached(childUidl)) {
                 client.handleComponentRelativeSize(cc.getWidget());
             }
             cc.updateWidgetSize();
-            nonRenderedWidgets.remove(paintable);
+            nonRenderedWidgets.remove(w);
         }
 
         public UIDL getChildUIDL() {
@@ -1062,17 +1067,19 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
                     // canvas later during the render phase
                     cc = null;
                 } else if (cc != null
-                        && cc.getWidget() != client.getPaintable(c)) {
+                        && cc.getWidget() != client.getPaintable(c)
+                                .getWidgetForPaintable()) {
                     // content has changed
                     cc = null;
-                    Paintable paintable = client.getPaintable(c);
-                    if (widgetToComponentContainer.containsKey(paintable)) {
+                    VPaintableWidget paintable = client.getPaintable(c);
+                    Widget w = paintable.getWidgetForPaintable();
+                    if (widgetToComponentContainer.containsKey(w)) {
                         // cc exist for this component (moved) use that for this
                         // cell
-                        cc = widgetToComponentContainer.get(paintable);
+                        cc = widgetToComponentContainer.get(w);
                         cc.setWidth("");
                         cc.setHeight("");
-                        paintableToCell.put(paintable, this);
+                        widgetToCell.put(w, this);
                     }
                 }
             }
@@ -1125,8 +1132,12 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
      */
-    private Paintable getComponent(Element element) {
+    private VPaintableWidget getComponent(Element element) {
         return Util.getPaintableForElement(client, this, element);
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }

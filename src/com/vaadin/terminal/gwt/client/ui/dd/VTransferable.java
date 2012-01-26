@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.event.dd.DragSource;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 /**
  * Client side counterpart for Transferable in com.vaadin.event.Transferable
@@ -16,7 +16,7 @@ import com.vaadin.terminal.gwt.client.Paintable;
  */
 public class VTransferable {
 
-    private Paintable component;
+    private VPaintableWidget component;
 
     private final Map<String, Object> variables = new HashMap<String, Object>();
 
@@ -26,7 +26,7 @@ public class VTransferable {
      * 
      * @return the component
      */
-    public Paintable getDragSource() {
+    public VPaintableWidget getDragSource() {
         return component;
     }
 
@@ -41,7 +41,7 @@ public class VTransferable {
      * @param component
      *            the component to set
      */
-    public void setDragSource(Paintable component) {
+    public void setDragSource(VPaintableWidget component) {
         this.component = component;
     }
 

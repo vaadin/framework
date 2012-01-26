@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.DateTimeService;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusChangeListener;
@@ -42,8 +42,8 @@ import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.TimeChangeListener;
  * <code>setCalendarPanel(VCalendarPanel panel)</code> method.
  * 
  */
-public class VPopupCalendar extends VTextualDate implements Paintable, Field,
-        ClickHandler, CloseHandler<PopupPanel>, SubPartAware {
+public class VPopupCalendar extends VTextualDate implements VPaintableWidget,
+        Field, ClickHandler, CloseHandler<PopupPanel>, SubPartAware {
 
     private final Button calendarToggle;
 

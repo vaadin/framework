@@ -8,15 +8,16 @@ import java.util.Date;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.DateTimeService;
 import com.vaadin.terminal.gwt.client.LocaleNotLoadedException;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VDateField extends FlowPanel implements Paintable, Field {
+public class VDateField extends FlowPanel implements VPaintableWidget, Field {
 
     public static final String CLASSNAME = "v-datefield";
 
@@ -268,5 +269,9 @@ public class VDateField extends FlowPanel implements Paintable, Field {
      */
     protected void setDate(Date date) {
         this.date = date;
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 }

@@ -24,9 +24,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ValueMap;
 
 /**
@@ -333,10 +333,10 @@ public class VDragAndDropManager {
             }
 
             private void addActiveDragSourceStyleName() {
-                Paintable dragSource = currentDrag.getTransferable()
+                VPaintableWidget dragSource = currentDrag.getTransferable()
                         .getDragSource();
-                ((Widget) dragSource)
-                        .addStyleName(ACTIVE_DRAG_SOURCE_STYLENAME);
+                dragSource.getWidgetForPaintable().addStyleName(
+                        ACTIVE_DRAG_SOURCE_STYLENAME);
             }
         };
 
@@ -499,8 +499,8 @@ public class VDragAndDropManager {
                      * handled. E.g. hidden on start, removed in drophandler ->
                      * would flicker in case removed eagerly.
                      */
-                    final Paintable dragSource = currentDrag.getTransferable()
-                            .getDragSource();
+                    final VPaintableWidget dragSource = currentDrag
+                            .getTransferable().getDragSource();
                     final ApplicationConnection client = currentDropHandler
                             .getApplicationConnection();
                     Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
@@ -543,8 +543,9 @@ public class VDragAndDropManager {
 
     }
 
-    private void removeActiveDragSourceStyleName(Paintable dragSource) {
-        ((Widget) dragSource).removeStyleName(ACTIVE_DRAG_SOURCE_STYLENAME);
+    private void removeActiveDragSourceStyleName(VPaintableWidget dragSource) {
+        dragSource.getWidgetForPaintable().removeStyleName(
+                ACTIVE_DRAG_SOURCE_STYLENAME);
     }
 
     private void clearDragElement() {
@@ -578,7 +579,7 @@ public class VDragAndDropManager {
         if (currentDropHandler == null) {
             return;
         }
-        Paintable paintable = currentDropHandler.getPaintable();
+        VPaintableWidget paintable = currentDropHandler.getPaintable();
         ApplicationConnection client = currentDropHandler
                 .getApplicationConnection();
         /*

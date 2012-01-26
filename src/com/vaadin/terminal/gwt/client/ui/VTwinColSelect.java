@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -626,5 +627,9 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         }
 
         return null;
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 }

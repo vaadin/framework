@@ -4,6 +4,8 @@
 
 package com.vaadin.terminal.gwt.client;
 
+import com.google.gwt.user.client.ui.Widget;
+
 /**
  * An interface used by client-side widgets or paintable parts to receive
  * updates from the corresponding server-side components in the form of
@@ -12,7 +14,10 @@ package com.vaadin.terminal.gwt.client;
  * Updates can be sent back to the server using the
  * {@link ApplicationConnection#updateVariable()} methods.
  */
-public interface Paintable {
+public interface VPaintableWidget extends VPaintable {
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client);
+    /**
+     * TODO: Renamed to getWidget
+     */
+    public Widget getWidgetForPaintable();
 }

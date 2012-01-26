@@ -226,4 +226,9 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
             });
         }
     }
+
+    public Widget getWidgetForPaintable() {
+        return this;
+    }
+
 }

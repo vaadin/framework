@@ -37,10 +37,10 @@ import com.vaadin.terminal.gwt.client.Console;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
@@ -88,7 +88,7 @@ public class VWindow extends VOverlay implements Container,
 
     public static final int Z_INDEX = 10000;
 
-    private Paintable layout;
+    private VPaintableWidget layout;
 
     private Element contents;
 
@@ -365,20 +365,20 @@ public class VWindow extends VOverlay implements Container,
             childUidl = uidl.getChildUIDL(childIndex++);
         }
 
-        final Paintable lo = client.getPaintable(childUidl);
+        final VPaintableWidget lo = client.getPaintable(childUidl);
         if (layout != null) {
             if (layout != lo) {
                 // remove old
                 client.unregisterPaintable(layout);
-                contentPanel.remove((Widget) layout);
+                contentPanel.remove(layout.getWidgetForPaintable());
                 // add new
                 if (!showingUrl) {
-                    contentPanel.setWidget((Widget) lo);
+                    contentPanel.setWidget(lo.getWidgetForPaintable());
                 }
                 layout = lo;
             }
         } else if (!showingUrl) {
-            contentPanel.setWidget((Widget) lo);
+            contentPanel.setWidget(lo.getWidgetForPaintable());
             layout = lo;
         }
 
@@ -947,8 +947,9 @@ public class VWindow extends VOverlay implements Container,
     private void updateContentsSize() {
         // Update child widget dimensions
         if (client != null) {
-            client.handleComponentRelativeSize((Widget) layout);
-            client.runDescendentsLayout((HasWidgets) layout);
+            client.handleComponentRelativeSize(layout.getWidgetForPaintable());
+            client.runDescendentsLayout((HasWidgets) layout
+                    .getWidgetForPaintable());
         }
 
         Util.runWebkitOverflowAutoFix(contentPanel.getElement());
@@ -1136,7 +1137,7 @@ public class VWindow extends VOverlay implements Container,
                 while (w != null) {
                     if (w instanceof Console) {
                         return true; // allow debug-window clicks
-                    } else if (w instanceof Paintable) {
+                    } else if (w instanceof VPaintableWidget) {
                         return false;
                     }
                     w = w.getParent();
@@ -1184,7 +1185,7 @@ public class VWindow extends VOverlay implements Container,
         contentPanel.setWidget(newComponent);
     }
 
-    public boolean requestLayout(Set<Paintable> child) {
+    public boolean requestLayout(Set<Widget> children) {
         if (dynamicWidth && !layoutRelativeWidth) {
             setNaturalWidth();
         }
@@ -1193,11 +1194,11 @@ public class VWindow extends VOverlay implements Container,
         }
         updateShadowSizeAndPosition();
         // layout size change may affect its available space (scrollbars)
-        client.handleComponentRelativeSize((Widget) layout);
+        client.handleComponentRelativeSize(layout.getWidgetForPaintable());
         return true;
     }
 
-    public void updateCaption(Paintable component, UIDL uidl) {
+    public void updateCaption(VPaintableWidget component, UIDL uidl) {
         // NOP, window has own caption, layout captio not rendered
     }
 
@@ -1240,6 +1241,10 @@ public class VWindow extends VOverlay implements Container,
 
     public void focus() {
         contentPanel.focus();
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 
 }

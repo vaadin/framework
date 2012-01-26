@@ -10,8 +10,9 @@ import java.util.Iterator;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
@@ -110,6 +111,10 @@ public class VListSelect extends VOptionGroupBase {
         select.setFocus(true);
     }
 
+    public Widget getWidgetForPaintable() {
+        return this;
+    }
+
 }
 
 /**
@@ -118,7 +123,7 @@ public class VListSelect extends VOptionGroupBase {
  */
 class TooltipListBox extends ListBox {
     private ApplicationConnection client;
-    private Paintable pntbl;
+    private VPaintableWidget pntbl;
 
     TooltipListBox(boolean isMultiselect) {
         super(isMultiselect);
@@ -129,7 +134,7 @@ class TooltipListBox extends ListBox {
         this.client = client;
     }
 
-    public void setSelect(Paintable s) {
+    public void setSelect(VPaintableWidget s) {
         pntbl = s;
     }
 
@@ -140,4 +145,5 @@ class TooltipListBox extends ListBox {
             client.handleTooltipEvent(event, pntbl);
         }
     }
+
 }

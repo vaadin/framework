@@ -22,8 +22,8 @@ public interface Console {
 
     public abstract void printLayoutProblems(ValueMap meta,
             ApplicationConnection applicationConnection,
-            Set<Paintable> zeroHeightComponents,
-            Set<Paintable> zeroWidthComponents);
+            Set<VPaintableWidget> zeroHeightComponents,
+            Set<VPaintableWidget> zeroWidthComponents);
 
     public abstract void setQuietMode(boolean quietDebugMode);
 

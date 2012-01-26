@@ -24,14 +24,14 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 /**
  * TODO make this work (just an early prototype). We may want to have paging
  * style table which will be much lighter than VScrollTable is.
  */
-public class VTablePaging extends Composite implements Table, Paintable,
+public class VTablePaging extends Composite implements Table, VPaintableWidget,
         ClickHandler {
 
     private final Grid tBody = new Grid();
@@ -199,10 +199,10 @@ public class VTablePaging extends Composite implements Table, Paintable,
                     tBody.setWidget(curRowIndex, colIndex, new BodyCell(row,
                             (String) cell));
                 } else {
-                    final Paintable cellContent = client
+                    final VPaintableWidget cellContent = client
                             .getPaintable((UIDL) cell);
                     final BodyCell bodyCell = new BodyCell(row);
-                    bodyCell.setWidget((Widget) cellContent);
+                    bodyCell.setWidget(cellContent.getWidgetForPaintable());
                     tBody.setWidget(curRowIndex, colIndex, bodyCell);
                 }
                 colIndex++;
@@ -442,5 +442,9 @@ public class VTablePaging extends Composite implements Table, Paintable,
     public boolean remove(Widget w) {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    public Widget getWidgetForPaintable() {
+        return this;
     }
 }

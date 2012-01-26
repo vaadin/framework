@@ -45,7 +45,7 @@ public class ApplicationConfiguration implements EntryPoint {
         private native String getConfigString(String name)
         /*-{
             var value = this.getConfig(name);
-            if (!value) {
+            if (value === null || value === undefined) {
                 return null;
             } else {
                 return value +"";
@@ -206,7 +206,7 @@ public class ApplicationConfiguration implements EntryPoint {
 
     private HashMap<String, String> unknownComponents;
 
-    private Class<? extends Paintable>[] classes = new Class[1024];
+    private Class<? extends VPaintableWidget>[] classes = new Class[1024];
 
     private String windowId;
 
@@ -381,7 +381,7 @@ public class ApplicationConfiguration implements EntryPoint {
         return useDebugIdInDom;
     }
 
-    public Class<? extends Paintable> getWidgetClassByEncodedTag(String tag) {
+    public Class<? extends VPaintableWidget> getWidgetClassByEncodedTag(String tag) {
         try {
             int parseInt = Integer.parseInt(tag);
             return classes[parseInt];
@@ -483,7 +483,7 @@ public class ApplicationConfiguration implements EntryPoint {
         public void run() {
             pending = false;
             if (!isBusy()) {
-                Class<? extends Paintable> nextType = getNextType();
+                Class<? extends VPaintableWidget> nextType = getNextType();
                 if (nextType == null) {
                     // ensured that all widgets are loaded
                     deferredWidgetLoader = null;
@@ -496,8 +496,8 @@ public class ApplicationConfiguration implements EntryPoint {
             }
         }
 
-        private Class<? extends Paintable> getNextType() {
-            Class<? extends Paintable>[] deferredLoadedWidgets = widgetSet
+        private Class<? extends VPaintableWidget> getNextType() {
+            Class<? extends VPaintableWidget>[] deferredLoadedWidgets = widgetSet
                     .getDeferredLoadedWidgets();
             if (deferredLoadedWidgets.length <= nextWidgetIndex) {
                 return null;
