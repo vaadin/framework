@@ -23,6 +23,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VButton;
+import com.vaadin.terminal.gwt.client.ui.VButtonPaintable;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 import com.vaadin.ui.Component.Focusable;
@@ -36,7 +37,7 @@ import com.vaadin.ui.Component.Focusable;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(value = VButton.class, loadStyle = LoadStyle.EAGER)
+@ClientWidget(value = VButtonPaintable.class, loadStyle = LoadStyle.EAGER)
 public class Button extends AbstractComponent implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, Focusable,
         Action.ShortcutNotifier {
