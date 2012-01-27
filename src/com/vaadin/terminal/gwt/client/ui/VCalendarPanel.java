@@ -72,7 +72,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * FocusChangeListener is notified when the panel changes its _focused_
-     * value. It can be set with
+     * value.
      */
     public interface FocusChangeListener {
         void focusChanged(Date focusedDate);
@@ -191,21 +191,22 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * Sets the focus to given day of current time. Used when moving in the
-     * calender with the keyboard.
+     * Sets the focus to given date in the current view. Used when moving in the
+     * calendar with the keyboard.
      * 
      * @param date
-     *            The day number from by Date.getDate()
+     *            A Date representing the day of month to be focused. Must be
+     *            one of the days currently visible.
      */
-    private void focusDay(Date day) {
+    private void focusDay(Date date) {
         // Only used when calender body is present
         if (resolution > VDateField.RESOLUTION_MONTH) {
             if (focusedDay != null) {
                 focusedDay.removeStyleDependentName(CN_FOCUSED);
             }
 
-            if (day != null && focusedDate != null) {
-                focusedDate.setTime(day.getTime());
+            if (date != null && focusedDate != null) {
+                focusedDate.setTime(date.getTime());
                 int rowCount = days.getRowCount();
                 for (int i = 0; i < rowCount; i++) {
                     int cellCount = days.getCellCount(i);
@@ -213,7 +214,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
                         Widget widget = days.getWidget(i, j);
                         if (widget != null && widget instanceof Day) {
                             Day curday = (Day) widget;
-                            if (curday.getDate().equals(day)) {
+                            if (curday.getDate().equals(date)) {
                                 curday.addStyleDependentName(CN_FOCUSED);
                                 focusedDay = curday;
                                 focusedRow = i;
@@ -227,9 +228,12 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * Sets the selection hightlight to a given date of current time
+     * Sets the selection highlight to a given day in the current view
      * 
      * @param date
+     *            A Date representing the day of month to be selected. Must be
+     *            one of the days currently visible.
+     * 
      */
     private void selectDate(Date date) {
         if (selectedDay != null) {
@@ -1526,6 +1530,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     }
 
+    /**
+     * A widget representing a single day in the calendar panel.
+     */
     private class Day extends InlineHTML {
         private static final String BASECLASS = VDateField.CLASSNAME
                 + "-calendarpanel-day";
@@ -1672,6 +1679,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
             if (day != null) {
                 Date date = day.getDate();
                 int id = date.getDate();
+                // Zero or negative ids map to days of the preceding month,
+                // past-the-end-of-month ids to days of the following month
                 if (date.getMonth() < displayedMonth.getMonth()) {
                     id -= DateTimeService.getNumberOfDaysInMonth(date);
                 } else if (date.getMonth() > displayedMonth.getMonth()) {
@@ -1744,8 +1753,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
             return time.ampm.getElement();
         }
         if (subPart.startsWith(SUBPART_DAY)) {
-            // can be less than 1 or greater than the number of days in the current month
-            // these map to the "off-month" days
+            // Zero or negative ids map to days in the preceding month,
+            // past-the-end-of-month ids to days in the following month
             int dayOfMonth = Integer.parseInt(subPart.substring(SUBPART_DAY
                     .length()));
             Date date = new Date(displayedMonth.getYear(),
