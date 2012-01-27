@@ -61,41 +61,85 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         Container.PropertySetChangeNotifier, Container.ItemSetChangeNotifier,
         Container.ItemSetChangeListener {
 
+    public enum ItemCaptionMode {
+        /**
+         * Item caption mode: Item's ID's <code>String</code> representation is
+         * used as caption.
+         */
+        ID,
+        /**
+         * Item caption mode: Item's <code>String</code> representation is used
+         * as caption.
+         */
+        ITEM,
+        /**
+         * Item caption mode: Index of the item is used as caption. The index
+         * mode can only be used with the containers implementing the
+         * {@link com.vaadin.data.Container.Indexed} interface.
+         */
+        INDEX,
+        /**
+         * Item caption mode: If an Item has a caption it's used, if not, Item's
+         * ID's <code>String</code> representation is used as caption. <b>This
+         * is the default</b>.
+         */
+        EXPLICIT_DEFAULTS_ID,
+        /**
+         * Item caption mode: Captions must be explicitly specified.
+         */
+        EXPLICIT,
+        /**
+         * Item caption mode: Only icons are shown, captions are hidden.
+         */
+        ICON_ONLY,
+        /**
+         * Item caption mode: Item captions are read from property specified
+         * with <code>setItemCaptionPropertyId</code>.
+         */
+        PROPERTY;
+    }
+
     /**
-     * Item caption mode: Item's ID's <code>String</code> representation is used
-     * as caption.
+     * @deprecated from 7.0, use {@link ItemCaptionMode.ID} instead
      */
-    public static final int ITEM_CAPTION_MODE_ID = 0;
+    @Deprecated
+    public static final ItemCaptionMode ITEM_CAPTION_MODE_ID = ItemCaptionMode.ID;
+
     /**
-     * Item caption mode: Item's <code>String</code> representation is used as
-     * caption.
+     * @deprecated from 7.0, use {@link ItemCaptionMode.ID} instead
      */
-    public static final int ITEM_CAPTION_MODE_ITEM = 1;
+    @Deprecated
+    public static final ItemCaptionMode ITEM_CAPTION_MODE_ITEM = ItemCaptionMode.ITEM;
+
     /**
-     * Item caption mode: Index of the item is used as caption. The index mode
-     * can only be used with the containers implementing the
-     * {@link com.vaadin.data.Container.Indexed} interface.
+     * @deprecated from 7.0, use {@link ItemCaptionMode.ID} instead
      */
-    public static final int ITEM_CAPTION_MODE_INDEX = 2;
+    @Deprecated
+    public static final ItemCaptionMode ITEM_CAPTION_MODE_INDEX = ItemCaptionMode.INDEX;
+
     /**
-     * Item caption mode: If an Item has a caption it's used, if not, Item's
-     * ID's <code>String</code> representation is used as caption. <b>This is
-     * the default</b>.
+     * @deprecated from 7.0, use {@link ItemCaptionMode.ID} instead
      */
-    public static final int ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID = 3;
+    @Deprecated
+    public static final ItemCaptionMode ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID = ItemCaptionMode.EXPLICIT_DEFAULTS_ID;
+
     /**
-     * Item caption mode: Captions must be explicitly specified.
+     * @deprecated from 7.0, use {@link ItemCaptionMode.ID} instead
      */
-    public static final int ITEM_CAPTION_MODE_EXPLICIT = 4;
+    @Deprecated
+    public static final ItemCaptionMode ITEM_CAPTION_MODE_EXPLICIT = ItemCaptionMode.EXPLICIT;
+
     /**
-     * Item caption mode: Only icons are shown, captions are hidden.
+     * @deprecated from 7.0, use {@link ItemCaptionMode.ID} instead
      */
-    public static final int ITEM_CAPTION_MODE_ICON_ONLY = 5;
+    @Deprecated
+    public static final ItemCaptionMode ITEM_CAPTION_MODE_ICON_ONLY = ItemCaptionMode.ICON_ONLY;
+
     /**
-     * Item caption mode: Item captions are read from property specified with
-     * <code>setItemCaptionPropertyId</code>.
+     * @deprecated from 7.0, use {@link ItemCaptionMode.ID} instead
      */
-    public static final int ITEM_CAPTION_MODE_PROPERTY = 6;
+    @Deprecated
+    public static final ItemCaptionMode ITEM_CAPTION_MODE_PROPERTY = ItemCaptionMode.PROPERTY;
 
     /**
      * Interface for option filtering, used to filter options based on user
@@ -175,7 +219,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Item caption mode.
      */
-    private int itemCaptionMode = ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID;
+    private ItemCaptionMode itemCaptionMode = ItemCaptionMode.EXPLICIT_DEFAULTS_ID;
 
     /**
      * Item caption source property id.
@@ -1038,11 +1082,11 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
         switch (getItemCaptionMode()) {
 
-        case ITEM_CAPTION_MODE_ID:
+        case ID:
             caption = itemId.toString();
             break;
 
-        case ITEM_CAPTION_MODE_INDEX:
+        case INDEX:
             if (items instanceof Container.Indexed) {
                 caption = String.valueOf(((Container.Indexed) items)
                         .indexOfId(itemId));
@@ -1051,25 +1095,25 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             }
             break;
 
-        case ITEM_CAPTION_MODE_ITEM:
+        case ITEM:
             final Item i = getItem(itemId);
             if (i != null) {
                 caption = i.toString();
             }
             break;
 
-        case ITEM_CAPTION_MODE_EXPLICIT:
+        case EXPLICIT:
             caption = itemCaptions.get(itemId);
             break;
 
-        case ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID:
+        case EXPLICIT_DEFAULTS_ID:
             caption = itemCaptions.get(itemId);
             if (caption == null) {
                 caption = itemId.toString();
             }
             break;
 
-        case ITEM_CAPTION_MODE_PROPERTY:
+        case PROPERTY:
             final Property<?> p = getContainerProperty(itemId,
                     getItemCaptionPropertyId());
             if (p != null) {
@@ -1086,7 +1130,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     /**
-     * Sets the icon for an item.
+     * Sets tqhe icon for an item.
      * 
      * @param itemId
      *            the id of the item to be assigned an icon.
@@ -1163,8 +1207,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @param mode
      *            the One of the modes listed above.
      */
-    public void setItemCaptionMode(int mode) {
-        if (ITEM_CAPTION_MODE_ID <= mode && mode <= ITEM_CAPTION_MODE_PROPERTY) {
+    public void setItemCaptionMode(ItemCaptionMode mode) {
+        if (mode != null) {
             itemCaptionMode = mode;
             requestRepaint();
         }
@@ -1198,7 +1242,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      * @return the One of the modes listed above.
      */
-    public int getItemCaptionMode() {
+    public ItemCaptionMode getItemCaptionMode() {
         return itemCaptionMode;
     }
 
@@ -1689,7 +1733,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
         public void addNotifierForItem(Object itemId) {
             switch (getItemCaptionMode()) {
-            case ITEM_CAPTION_MODE_ITEM:
+            case ITEM:
                 final Item i = getItem(itemId);
                 if (i == null) {
                     return;
@@ -1713,7 +1757,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
                 }
                 break;
-            case ITEM_CAPTION_MODE_PROPERTY:
+            case PROPERTY:
                 final Property<?> p = getContainerProperty(itemId,
                         getItemCaptionPropertyId());
                 if (p != null && p instanceof Property.ValueChangeNotifier) {

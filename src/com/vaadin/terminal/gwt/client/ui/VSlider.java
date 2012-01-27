@@ -391,10 +391,6 @@ public class VSlider extends SimpleFocusablePanel implements VPaintableWidget,
                 setValueByEvent(event, true);
                 DOM.eventCancelBubble(event, true);
             }
-        } else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN && dragging) {
-            dragging = false;
-            DOM.releaseCapture(getElement());
-            setValueByEvent(event, true);
         }
     }
 

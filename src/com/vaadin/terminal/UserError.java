@@ -89,6 +89,12 @@ public class UserError implements ErrorMessage {
 
     public UserError(String message, ContentMode contentMode,
             ErrorLevel errorLevel) {
+        if (contentMode == null) {
+            contentMode = ContentMode.TEXT;
+        }
+        if (errorLevel == null) {
+            errorLevel = ErrorLevel.ERROR;
+        }
         msg = message;
         mode = contentMode;
         level = errorLevel;

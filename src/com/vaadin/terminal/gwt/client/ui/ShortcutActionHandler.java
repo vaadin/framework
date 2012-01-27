@@ -15,13 +15,11 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.KeyboardListenerCollection;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
 
@@ -137,12 +135,7 @@ public class ShortcutActionHandler {
             VPaintableWidget target) {
         final Element et = DOM.eventGetTarget(event);
         if (target == null) {
-            Widget w = Util.findWidget(et, null);
-            VPaintableMap paintableMap = VPaintableMap.get(client);
-            while (w != null && !paintableMap.isPaintable(w)) {
-                w = w.getParent();
-            }
-            target = paintableMap.getPaintable(w);
+            target = Util.findPaintable(client, et);
         }
         final VPaintableWidget finalTarget = target;
 

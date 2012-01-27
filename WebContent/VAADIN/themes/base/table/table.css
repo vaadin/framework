@@ -49,6 +49,12 @@
 	cursor: pointer;
 }
 
+.v-table.v-disabled .v-table-header-cell,
+.v-table.v-disabled .v-table-header-cell-asc,
+.v-table.v-disabled .v-table-header-cell-desc {
+	cursor: default;
+}
+
 .v-table-footer-wrap {
 	overflow: hidden;
 	border: 1px solid #aaa;
@@ -84,6 +90,9 @@
 	cursor: col-resize;	
 	width: 1px;
 	overflow: hidden;
+}
+.v-table.v-disabled .v-table-resizer {
+	cursor: default;	
 }
 .v-table-caption-container {
 	overflow: hidden;
@@ -173,6 +182,9 @@
 	width: 14px;
 	position: relative; /* hide this from IE, it works without it */
 	cursor: pointer;
+}
+.v-table.v-disabled .v-table-column-selector {
+	cursor: default;
 }
 .v-table-focus-slot-left {
 	border-left: 2px solid #999;

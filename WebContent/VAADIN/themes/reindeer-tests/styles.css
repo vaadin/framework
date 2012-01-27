@@ -2,3 +2,28 @@
 
 .table-equal-rowheight .v-table-row {height: 30px;}
 .table-equal-rowheight .v-table-row-odd {height: 30px;}
+
+.v-datefield-enabled-readonly-styled {
+	background: #ddd;
+}
+
+.v-datefield-enabled-readonly-styled input.v-datefield-textfield {
+	border: 1px solid black;
+}
+
+.v-datefield-enabled-readonly-styled .v-datefield.v-disabled {
+	opacity: 1;
+}
+
+.v-disabled.v-datefield-enabled-readonly-styled .v-datefield-button,
+.v-readonly.v-datefield-enabled-readonly-styled .v-datefield-button {
+	display: none;
+}
+
+.popup-style .v-datefield-calendarpanel-header,
+.v-datefield-popup-popup-style .v-datefield-calendarpanel-time {
+	background: red;
+}
+.popup-style .v-datefield-calendarpanel-body {
+	background: yellow;
+}

@@ -42,12 +42,12 @@ public interface Container extends VPaintableWidget {
      * must provide service for it's childen to show those elements for them.
      * </p>
      * 
-     * @param component
+     * @param paintable
      *            Child component for which service is requested.
      * @param uidl
      *            UIDL of the child component.
      */
-    void updateCaption(VPaintableWidget component, UIDL uidl);
+    void updateCaption(VPaintableWidget paintable, UIDL uidl);
 
     /**
      * Called when a child components size has been updated in the rendering

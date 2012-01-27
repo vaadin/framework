@@ -25,20 +25,37 @@
 	
     <target name="init-deps" depends="common.init-deps" >
         <property name="ivy.resolved" value="1" />
-        <ivy:resolve file="build/ivy/ivy.xml" resolveid="common" conf="ss.compile, cs.compile, ss.test.runtime"/>
-        <ivy:cachepath pathid="compile.classpath" conf="ss.compile"/>
-        <ivy:cachepath pathid="client-side.compile.classpath" conf="cs.compile"/>
-        <ivy:cachepath pathid="test.runtime.classpath" conf="ss.test.runtime"/>
+        <ivy:resolve file="build/ivy/ivy.xml" resolveid="common" conf="ss.compile, cs.compile, ss.test.compile"/>
+        <ivy:cachepath pathid="compile.classpath.server-side" conf="ss.compile"/>
+        <ivy:cachepath pathid="compile.classpath.client-side" conf="cs.compile"/>
+        <ivy:cachepath pathid="compile.classpath.server-side-tests" conf="ss.test.compile"/>
     </target>
 
     <!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <target name="clean-result" depends="">
-        <property file="build/build.properties" />
+    <target name="clean-result" depends="build.properties">
 
         <!-- Clean build result directory. -->
         <delete dir="${result-path}" includes="**/*" followsymlinks="false" defaultexcludes="false" includeemptydirs="true" failonerror="false"/>
     </target>
 
+	<target name="build.properties">
+        <property file="build/build.properties" />
+		
+        <property file="build/VERSION.properties" />
+        <property file="build/GWT-VERSION.properties" />
+
+		<!-- result source and classes folders -->
+		<property name="result-src-core" value="${result-path}/src/core"/>
+		<property name="result-src-junit" value="${result-path}/src/junit"/>
+		<property name="result-src-testbench" value="${result-path}/src/testbench"/>
+		<property name="result-classes-core" value="${result-path}/classes/core"/>
+		<property name="result-classes-junit" value="${result-path}/classes/junit"/>
+		<property name="result-classes-testbench" value="${result-path}/classes/testbench"/>
+		<!-- Folder where Emma instrumented classes are placed (if Emma is used)-->
+		<property name="result-classes-core-for-emma-war" value="${result-path}/classes/emma-war"/>
+		<property name="result-classes-core-for-emma-junit" value="${result-path}/classes/emma-junit"/>
+
+	</target>
     <target name="clean-all" depends="clean-result">
     </target>
 
@@ -62,7 +79,7 @@
     <!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- ================================================================== -->
 
-     <target name="init" depends="init-deps">
+     <target name="init" depends="init-deps, build.properties">
         <!-- Current timestamp in different formats. -->
         <tstamp>
             <format property="build.date" pattern="yyyy-MM-dd"/>
@@ -70,9 +87,6 @@
         <tstamp>
             <format property="build.date.compact" pattern="yyyyMMdd"/>
         </tstamp>
-
-        <property file="build/VERSION.properties" />
-        <property file="build/GWT-VERSION.properties" />
 
         <antcontrib:propertyregex property="version.major" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\1"/>
         <antcontrib:propertyregex property="version.minor" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\2"/>
@@ -85,17 +99,16 @@
         <echo>Full Version: ${version.full}</echo>
 
         <!-- Other properties -->
-        <property file="build/build.properties" />
         <property file="build/html-style.properties" />
 
-        <echo>Vaadin package is: ${toolkit-package}</echo>
+        <echo>Vaadin package is: ${vaadin-package}</echo>
 
         <!-- Create result dir unless already exists -->
         <mkdir dir="${result-path}" />
 
         <!-- Create dirs that might be used by the test coverage generation -->
-    	<mkdir dir="${result-path}/war_emma_classes" />
-    	<mkdir dir="${result-path}/junit_emma_classes" />
+    	<mkdir dir="${result-classes-core-for-emma-war}" />
+    	<mkdir dir="${result-classes-core-for-emma-junit}" />
     	<mkdir dir="${result-path}/coverage" />
 
         <echo>We are using gwt version ${gwt-version}.</echo>
@@ -139,13 +152,17 @@
 
         <echo>Adding test class files and resources and launcher configuration.</echo>
         <copy todir="${output-dir}/WebContent/WEB-INF/classes">
-            <fileset dir="${result-path}/classes">
-                <include name="${toolkit-package}/tests/**/*" />
-                <include name="${toolkit-package}/launcher/**" />
+            <fileset dir="${result-classes-testbench}">
+                <include name="${vaadin-package}/tests/**/*" />
+                <include name="${vaadin-package}/launcher/**" />
+            </fileset>
+            <fileset dir="${result-classes-junit}">
+            	<!-- VaadinClasses is used by both JUnit and TestBench tests -->
+                <include name="**/VaadinClasses*.class" />
             </fileset>
             <!-- test resources -->
             <fileset dir="tests/testbench">
-                <include name="${toolkit-package}/tests/**/*" />
+                <include name="${vaadin-package}/tests/**/*" />
                 <!-- Pre-processed versions of these copied above -->
                 <exclude name="**/*.java" />
                 <exclude name="**/*.html" />
@@ -155,8 +172,8 @@
 
         	<!-- Include files required by the DemoLauncher/DevelopmentServerLauncher -->
             <fileset dir="tests/testbench">
-        		<include name="${toolkit-package}/launcher/jetty-webdefault.xml" />
-        		<include name="${toolkit-package}/launcher/keystore" />
+        		<include name="${vaadin-package}/launcher/jetty-webdefault.xml" />
+        		<include name="${vaadin-package}/launcher/keystore" />
             </fileset>
         </copy>
 
@@ -216,11 +233,11 @@
     <!-- However, since compiling the server-side is required by the client-side -->
     <!-- compilation, the server-side will actually be built before it.          -->
     <target name="build"
-            depends="compile-server-side, compile-client-side, vaadin.jar, vaadin-sources.jar"
+            depends="compile-server-side, compile-tests, compile-client-side, vaadin.jar, vaadin-sources.jar"
             description="Build package required files, without packing them.">
     </target>
 
-    <target name="compile-server-side" depends="compile-java, webcontent"/>
+    <target name="compile-server-side" depends="compile-core, webcontent"/>
 
     <!-- Copy and preprocess sources for packaging 
     NOTE: Replaces <version></version> tags with build version tag for some "textual" files
@@ -234,20 +251,25 @@
          * tests/client-side (Client-side JUnit test cases)
 
         These are copied to 
-         * {$result-path}/src/core
-         * {$result-path}/src/tests
-         * {$result-path}/src/junit
+         * ${result-path}/src/core
+         * ${result-path}/src/tests
+         * ${result-path}/src/junit
 
+        And compiled to 
+         * ${result-path}/classes/core
+         * ${result-path}/classes/tests
+         * ${result-path}/classes/junit
+         
         Java/HTML/CSS/XML files are filtered so the license is added and the version is set. 
         Other files are just copied.
         -->
         
         <loadfile property="VaadinApache2LicenseForJavaFiles" srcFile="build/VaadinApache2LicenseForJavaFiles.txt" />
-        <mkdir dir="${result-path}/src" />
         
-        <mkdir dir="${result-path}/src/core" />
-        <mkdir dir="${result-path}/src/tests" />
-        <mkdir dir="${result-path}/src/junit" />
+        <mkdir dir="${result-path}/src" />
+        <mkdir dir="${result-src-core}" />
+        <mkdir dir="${result-src-testbench}" />
+        <mkdir dir="${result-src-junit}" />
 
         <patternset id="preprocessable-files">
             <include name="**/*.java" />
@@ -274,7 +296,7 @@
 
         <echo>Copying src directory and processing copied files.</echo>
         <echo>Replacing &lt;version&gt; tag with build version for java/html/css/xml files.</echo>
-        <copy todir="${result-path}/src/core" overwrite="yes">
+        <copy todir="${result-src-core}" overwrite="yes">
             <filterset refid="version-and-license"/>
             <filterset refid="pre-css-style"/>
             <fileset dir="src">
@@ -282,13 +304,13 @@
             </fileset>
         </copy>
 
-        <copy todir="${result-path}/src/tests">
+        <copy todir="${result-src-testbench}">
             <filterset refid="version-and-license"/>
             <fileset dir="tests/testbench">
                 <patternset refid="preprocessable-files" />
             </fileset>
         </copy>
-        <copy todir="${result-path}/src/junit">
+        <copy todir="${result-src-junit}">
             <filterset refid="version-and-license"/>
             <fileset dir="tests/server-side">
                 <patternset refid="preprocessable-files" />
@@ -304,17 +326,17 @@
 
         <!-- Add other files such as images, these are not filtered or processed by fixcrlf task -->
         <echo>Copying non java/html/css/xml files such as images.</echo>
-        <copy todir="${result-path}/src/core">
+        <copy todir="${result-src-core}">
             <fileset dir="src">
                 <patternset refid="non-preprocessable-files" />
             </fileset>
         </copy>
-        <copy todir="${result-path}/src/tests">
+        <copy todir="${result-src-testbench}">
             <fileset dir="tests/testbench">
                 <patternset refid="non-preprocessable-files" />
             </fileset>
         </copy>
-        <copy todir="${result-path}/src/junit">
+        <copy todir="${result-src-junit}">
             <fileset dir="tests/server-side">
                 <patternset refid="non-preprocessable-files" />
             </fileset>
@@ -331,12 +353,11 @@
     <target name="webcontent" depends="preprocess-src,defaulttheme">
 
         <!-- Add WebContent -->
-        <echo>Adding VAADIN/themes and demo files.</echo>
+        <echo>Adding VAADIN/themes and META-INF</echo>
         <copy todir="${output-dir}/WebContent">
             <fileset dir="WebContent">
                 <exclude name="**/.svn" />
-                <!-- TODO check what is necessary -->
-                <include name="demo/**/*" />
+                <include name="WEB-INF/lib/hsqldb.jar" />
                 <include name="VAADIN/themes/**/*" />
             	<include name="VAADIN/vaadinBootstrap.js" />
                 <include name="META-INF/**/*" />
@@ -379,27 +400,40 @@
         </copy>
     </target>
 
-    <target name="compile-java" depends="init, webcontent">
+    <target name="compile-core" depends="init, preprocess-src">
         <echo>Compiling src (server-side)</echo>
-        
-        <!-- Compile all sources at the same time as they depend on each other -->
-        <mkdir dir="${result-path}/classes" />
-        <javac source="1.5" target="1.5" includeantruntime="false" destdir="${result-path}/classes" debug="true" encoding="UTF-8">
-         	<classpath>
-        		<path refid="compile.classpath" />
-        		<path refid="test.runtime.classpath" />
-			</classpath>        	               
-             <src path="${result-path}/src/core"/>
-             <src path="${result-path}/src/tests"/>
-             <src path="${result-path}/src/junit"/>
+    	<!-- Compile core sources first as the other sources depend on these -->
+        <mkdir dir="${result-classes-core}" />
+        <javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-classes-core}" debug="true" encoding="UTF-8" includeantruntime="false">
+            <src path="${result-src-core}"/>
         </javac>
+    </target>
+	
+    <target name="compile-tests" depends="compile-core">
+        <echo>Compiling src (Server and client side JUnit tests)</echo>
+    	<!-- Compile server and client side JUnit tests -->
+        <mkdir dir="${result-classes-junit}" />
+        <javac source="1.5" target="1.5" classpathref="compile.classpath.server-side-tests" destdir="${result-classes-junit}" debug="true" encoding="UTF-8" includeantruntime="false">
+        	<classpath path="${result-classes-core}"></classpath>
+            <src path="${result-src-junit}"/>
+        </javac>
+    	
+        <echo>Compiling src (TestBench tests)</echo>
+    	<!-- Compile TestBench tests -->
+        <mkdir dir="${result-classes-testbench}" />
+        <javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-classes-testbench}" debug="true" encoding="UTF-8" includeantruntime="false">
+        	<classpath path="${result-classes-junit}"></classpath>
+        	<classpath path="${result-classes-core}"></classpath>
+            <src path="${result-src-testbench}"/>
+        </javac>
+    	
     </target>
 
     <target name="compile-helpers" depends="init">
     	<mkdir dir="${buildhelpers-classes}" />
         <ivy:cachepath pathid="buildhelpers.dependencies" resolveId="buildhelpers" conf="compile" file="build/ivy/buildhelpers-ivy.xml"/>        
         <javac source="1.5" target="1.5" includeantruntime="false" srcdir="${buildhelpers-src}" 
-        	classpathref="buildhelpers.dependencies" destdir="${buildhelpers-classes}" debug="true" encoding="UTF-8" />
+                	classpathref="buildhelpers.dependencies" destdir="${buildhelpers-classes}" debug="true" encoding="UTF-8" />
     </target>
     
     <target name="defaulttheme" depends="init, compile-helpers">
@@ -441,8 +475,8 @@
     </target>
 
     <!-- The widgetset generator is currently compiled along with rest of server-side Java. -->    
-    <target name="compile-widgetset-generator" depends="init, preprocess-src, compile-java"/>
-    
+    <target name="compile-widgetset-generator" depends="compile-core"/>
+
     <target name="compile-widgetset" depends="init-deps" description="Compiles the widgetset given as the first parameter">
         <fail unless="widgetset" message="No widgetset parameter set"/>
         <property name="widgetset-style" value="OBF" />
@@ -452,9 +486,9 @@
     	<mkdir dir="${widgetsets-output-dir}"/>
         <java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
         	<classpath>
-        		   <path refid="client-side.compile.classpath" />
-        		   <pathelement location="${result-path}/classes" />
-        	       <pathelement location="${result-path}/src/core" />
+        		   <path refid="compile.classpath.client-side" />
+        		   <pathelement location="${result-classes-core}" />
+        	       <pathelement location="${result-src-core}" />
             </classpath>            
             <arg value="-war" />
             <arg value="${widgetsets-output-dir}" />
@@ -476,14 +510,14 @@
     
     <target name="compile-widgetset-default">
         <antcall target="compile-widgetset">
-            <reference refid="client-side.compile.classpath" />
+            <reference refid="compile.classpath.client-side" />
             <param name="widgetset" value="com.vaadin.terminal.gwt.DefaultWidgetSet"/>
         </antcall>
     </target>
     
     <target name="compile-widgetset-portal-default" unless="compile.only.default-widgetset">
         <antcall target="compile-widgetset">
-            <reference refid="client-side.compile.classpath" />
+            <reference refid="compile.classpath.client-side" />
             <param name="widgetset" value="com.vaadin.portal.gwt.PortalDefaultWidgetSet"/>
         </antcall>
     </target>
@@ -500,12 +534,7 @@
     </target>
 
     <!-- Definitions for building local components, i.e., not for an installation package. -->
-    <target name="init-nonpackage">
-        <property file="build/VERSION.properties" />
-        <property file="build/GWT-VERSION.properties" />
-
-        <property file="build/build.properties" />
-
+    <target name="init-nonpackage" depends="build.properties">
         <!-- Definitions for building the client-side. -->
         <property name="widgetsets-output-dir" value="WebContent/VAADIN/widgetsets" />
 
@@ -537,18 +566,14 @@
         <echo file="${output-dir}/META-INF/GWT-VERSION">${gwt-version}</echo> 
         	
 		<emma enabled="${emma.enabled}" >
-			<instr instrpath="${result-path}/classes"
-				destdir="${result-path}/war_emma_classes"
+			<instr instrpath="${result-classes-core}"
+				destdir="${result-classes-core-for-emma-war}"
 				mode="copy"
 				metadatafile="${result-path}/war.es"
 				merge="false"
 			>
 				<filter includes="com.vaadin.*" />
 				<filter excludes="com.vaadin.terminal.gwt.*" />
-				<filter excludes="com.vaadin.tests.*" />
-				<filter excludes="*Test*" />
-				<filter excludes="com.vaadin.launcher.*" />
-				<filter excludes="com.vaadin.data.util.sqlcontainer.*" />
 			</instr>
 		</emma>    	
     	
@@ -566,24 +591,10 @@
                 <attribute name="Bundle-Version" value="${version.full}" />
             </manifest>
             <!-- Include any instrumented class files before the normal classes -->
-            <fileset dir="${result-path}/war_emma_classes">
-                <patternset>
-                    <exclude name="${toolkit-package}/tests/**"/>
-                    <exclude name="${toolkit-package}/launcher/**" />
-                </patternset>
-            </fileset>
-            <fileset dir="${result-path}/classes">
-                <patternset>
-                    <exclude name="${toolkit-package}/tests/**"/>
-                    <exclude name="${toolkit-package}/launcher/**" />
-                </patternset>
-            </fileset>
+            <fileset dir="${result-classes-core-for-emma-war}" />
+            <fileset dir="${result-classes-core}"/>
             <!-- add sources -->
-            <fileset dir="${result-path}/src/core">
-                <patternset>
-                    <exclude name="${toolkit-package}/launcher/**" />
-                </patternset>
-            </fileset>
+            <fileset dir="${result-src-core}"/>
             <fileset dir="${output-dir}/WebContent">
                 <patternset>
                     <include name="VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
@@ -615,7 +626,7 @@
 
     <target name="vaadin-sources.jar" depends="init">
         <jar file="${result-path}/${lib-sources-jar-name}" compress="true">
-            <fileset dir="${result-path}/src/core">
+            <fileset dir="${result-src-core}">
                 <patternset>
                     <include name="**/*.java" />
                 </patternset>
@@ -641,10 +652,8 @@
     <target name="javadoc" depends="init, preprocess-src">
         <property name="javadoc.destdir" value="${output-dir}/WebContent/docs/api"/>
         
-        <javadoc destdir="${javadoc.destdir}" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath">
-            <packageset dir="${result-path}/src/core">
-                <include name="${toolkit-package}/**" />
-            </packageset>
+        <javadoc destdir="${javadoc.destdir}" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath.client-side">
+            <packageset dir="${result-src-core}"/>
             <doctitle>${javadoc.doctitle}</doctitle>
             <!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
             <bottom>${javadoc.bottom}</bottom>
@@ -734,7 +743,7 @@
 
 
     <!-- Initialize a nightly build. -->
-    <target name="nightly-init">
+    <target name="nightly-init" depends="build.properties">
 
         <!-- Mandatory parameters. -->
         <fail unless="build.number" message="The build.number property must be defined."/>
@@ -742,8 +751,6 @@
 
         <!-- Optional parameters. -->
         <property name="build.tag" value="dev"/>
-
-        <property file="build/VERSION.properties" />
 
         <echo>Base version: ${version}</echo>
         <echo>Build number: ${build.number}</echo>
@@ -870,7 +877,7 @@
     <!-- Automated tests.                                                   -->
     <!-- ================================================================== -->
 
-    <target name="tests" depends="compile-java, internal-package-war">
+    <target name="tests" depends="compile-tests, internal-package-war">
         <!-- Run all different types of tests in parallel to decrease testing time -->
         <parallel threadcount="3">
         	<sequential>
@@ -890,7 +897,7 @@
 					<include name="*.em" />
 				</fileset>
 			</merge>
-			<report sourcepath="${result-path}/src/core" >
+			<report sourcepath="${result-src-core}" >
 				<fileset dir="${result-path}" >
 					<include name="combined.es" />
 				</fileset>
@@ -903,38 +910,34 @@
     </target>
     
     <!-- Assumes java classes have been compiled but depends does not work out well as this is run from a <parallel> task-->
-    <target name="server-side-tests" depends="init-deps" unless="tests.serverside.skip">    	
+    <target name="server-side-tests" unless="tests.serverside.skip" depends="compile-tests">
 		<emma enabled="${emma.enabled}" >
-			<instr instrpath="${result-path}/classes"
+			<instr instrpath="${result-classes-core}"
+				destdir="${result-classes-core-for-emma-junit}"
 				mode="copy"
-				destdir="${result-path}/junit_emma_classes"
 				metadatafile="${result-path}/unittests.em"
-				merge="false"
-			>
+   			    merge="false"
+		        >
 				<filter includes="com.vaadin.*" />
-				<filter excludes="com.vaadin.tests.*" />
-				<filter excludes="com.vaadin.terminal.gwt.client.*" />
-				<filter excludes="com.vaadin.terminal.gwt.widgetsetutils.*" />
-				<filter excludes="*Test*" />
-				<filter excludes="com.vaadin.launcher.*" />
+				<filter excludes="com.vaadin.terminal.gwt.*" />
 			</instr>
 		</emma>    	    	
         <junit printsummary="yes"> 
             <classpath> 
-                <pathelement path="${result-path}/junit_emma_classes" />
-                <pathelement path="${result-path}/classes" />            	
-            	<path refid="test.runtime.classpath"></path>
-                <path refid="compile.classpath"></path>
+                <pathelement path="${result-classes-core-for-emma-junit}" />
+                <pathelement path="${result-classes-core}" />
+                <pathelement path="${result-classes-junit}" />
+            	<path refid="compile.classpath.server-side-tests"></path>
             </classpath>
         	<jvmarg value="-Demma.coverage.out.file=../${result-path}/unittests.ec" />
 
             <batchtest fork="yes">
-                <fileset dir="tests/server-side" includes="**/*.java" excludes="**/Abstract*.java,com/vaadin/tests/data/bean/*.java,com/vaadin/tests/util/*.java" />
+                <fileset dir="tests/server-side" includes="**/*.java" excludes="**/Abstract*.java,com/vaadin/tests/data/bean/*.java,com/vaadin/tests/util/*.java,**/VaadinClasses.java" />
                 <fileset dir="tests/client-side" includes="**/*.java" excludes="**/Abstract*.java" />
             </batchtest>
         </junit>
 		<emma enabled="${emma.enabled}" >
-			<report sourcepath="${result-path}/src/core" >
+			<report sourcepath="${result-src-core}" >
 				<fileset dir="${result-path}" >
 					<include name="unittests.*" />
 				</fileset>
@@ -989,7 +992,7 @@
         </ant>
     	
 		<emma enabled="${emma.enabled}" >
-			<report sourcepath="${result-path}/src/core" >
+			<report sourcepath="${result-src-core}" >
 				<fileset dir="${result-path}" >
 					<include name="war.*" />
 				</fileset>

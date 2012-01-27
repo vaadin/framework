@@ -52,6 +52,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
@@ -103,16 +104,30 @@ import com.vaadin.terminal.gwt.client.ui.label.VLabel;
  * 
  * TODO implement unregistering for child components in Cells
  */
-public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
-        VHasDropHandler, FocusHandler, BlurHandler, Focusable, ActionOwner {
+public class VScrollTable extends FlowPanel implements HasWidgets,
+        ScrollHandler, VHasDropHandler, FocusHandler, BlurHandler, Focusable,
+        ActionOwner {
 
-    public static final String ATTRIBUTE_PAGEBUFFER_FIRST = "pb-ft";
-    public static final String ATTRIBUTE_PAGEBUFFER_LAST = "pb-l";
+    public enum SelectMode {
+        NONE(0), SINGLE(1), MULTI(2);
+        private int id;
+
+        private SelectMode(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+    }
 
     private static final String ROW_HEADER_COLUMN_KEY = "0";
 
     public static final String CLASSNAME = "v-table";
     public static final String CLASSNAME_SELECTION_FOCUS = CLASSNAME + "-focus";
+
+    public static final String ATTRIBUTE_PAGEBUFFER_FIRST = "pb-ft";
+    public static final String ATTRIBUTE_PAGEBUFFER_LAST = "pb-l";
 
     public static final String ITEM_CLICK_EVENT_ID = "itemClick";
     public static final String HEADER_CLICK_EVENT_ID = "handleHeaderClick";
@@ -162,10 +177,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     protected ApplicationConnection client;
     protected String paintableId;
 
-    private boolean immediate;
+    boolean immediate;
     private boolean nullSelectionAllowed = true;
 
-    private int selectMode = Table.SELECT_MODE_NONE;
+    private SelectMode selectMode = SelectMode.NONE;
 
     private final HashSet<String> selectedRowKeys = new HashSet<String>();
 
@@ -178,15 +193,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     /*
      * These are used when jumping between pages when pressing Home and End
      */
-    private boolean selectLastItemInNextRender = false;
-    private boolean selectFirstItemInNextRender = false;
-    private boolean focusFirstItemInNextRender = false;
-    private boolean focusLastItemInNextRender = false;
+    boolean selectLastItemInNextRender = false;
+    boolean selectFirstItemInNextRender = false;
+    boolean focusFirstItemInNextRender = false;
+    boolean focusLastItemInNextRender = false;
 
     /*
      * The currently focused row
      */
-    private VScrollTableRow focusedRow;
+    VScrollTableRow focusedRow;
 
     /*
      * Helper to store selection range start in when using the keyboard
@@ -197,7 +212,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * Flag for notifying when the selection has changed and should be sent to
      * the server
      */
-    private boolean selectionChanged = false;
+    boolean selectionChanged = false;
 
     /*
      * The speed (in pixels) which the scrolling scrolls vertically/horizontally
@@ -206,7 +221,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     private Timer scrollingVelocityTimer = null;
 
-    private String[] bodyActionKeys;
+    String[] bodyActionKeys;
 
     private boolean enableDebug = false;
 
@@ -282,19 +297,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     private final HashSet<SelectionRange> selectedRowRanges = new HashSet<SelectionRange>();
 
-    private boolean initializedAndAttached = false;
+    boolean initializedAndAttached = false;
 
     /**
      * Flag to indicate if a column width recalculation is needed due update.
      */
-    private boolean headerChangedDuringUpdate = false;
+    boolean headerChangedDuringUpdate = false;
 
     protected final TableHead tHead = new TableHead();
 
-    private final TableFooter tFoot = new TableFooter();
+    final TableFooter tFoot = new TableFooter();
 
-    private final FocusableScrollPanel scrollBodyPanel = new FocusableScrollPanel(
-            true);
+    final FocusableScrollPanel scrollBodyPanel = new FocusableScrollPanel(true);
 
     private KeyPressHandler navKeyPressHandler = new KeyPressHandler() {
         public void onKeyPress(KeyPressEvent keyPressEvent) {
@@ -383,12 +397,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
         }
     };
-    private int totalRows;
+    int totalRows;
 
     private Set<String> collapsedColumns;
 
-    private final RowRequestHandler rowRequestHandler;
-    private VScrollTableBody scrollBody;
+    final RowRequestHandler rowRequestHandler;
+    VScrollTableBody scrollBody;
     private int firstvisible = 0;
     private boolean sortAscending;
     private String sortColumn;
@@ -403,9 +417,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private String[] visibleColOrder;
     private boolean initialContentReceived = false;
     private Element scrollPositionElement;
-    private boolean enabled;
-    private boolean showColHeaders;
-    private boolean showColFooters;
+    boolean enabled;
+    boolean showColHeaders;
+    boolean showColFooters;
 
     /** flag to indicate that table body has changed */
     private boolean isNewBody = true;
@@ -420,15 +434,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private final ArrayList<Panel> lazyUnregistryBag = new ArrayList<Panel>();
     private String height;
     private String width = "";
-    private boolean rendering = false;
+    boolean rendering = false;
     private boolean hasFocus = false;
     private int dragmode;
 
     private int multiselectmode;
-    private int tabIndex;
+    int tabIndex;
     private TouchScrollDelegate touchScrollDelegate;
 
-    private int lastRenderedHeight;
+    int lastRenderedHeight;
 
     /**
      * Values (serverCacheFirst+serverCacheLast) sent by server that tells which
@@ -442,8 +456,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * scrolling in the client will cause empty buttons to be rendered
      * (cached=true request for non-existing components)
      */
-    private int serverCacheFirst = -1;
-    private int serverCacheLast = -1;
+    int serverCacheFirst = -1;
+    int serverCacheLast = -1;
 
     public VScrollTable() {
         setMultiSelectMode(MULTISELECT_MODE_DEFAULT);
@@ -810,211 +824,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         return KeyCodes.KEY_END;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.terminal
-     * .gwt.client.UIDL, com.vaadin.terminal.gwt.client.ApplicationConnection)
-     */
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        rendering = true;
-
-        if (uidl.hasAttribute(ATTRIBUTE_PAGEBUFFER_FIRST)) {
-            serverCacheFirst = uidl.getIntAttribute(ATTRIBUTE_PAGEBUFFER_FIRST);
-            serverCacheLast = uidl.getIntAttribute(ATTRIBUTE_PAGEBUFFER_LAST);
-        } else {
-            serverCacheFirst = -1;
-            serverCacheLast = -1;
-        }
-        /*
-         * We need to do this before updateComponent since updateComponent calls
-         * this.setHeight() which will calculate a new body height depending on
-         * the space available.
-         */
-        if (uidl.hasAttribute("colfooters")) {
-            showColFooters = uidl.getBooleanAttribute("colfooters");
-        }
-
-        tFoot.setVisible(showColFooters);
-
-        if (client.updateComponent(this, uidl, true)) {
-            rendering = false;
-            return;
-        }
-
-        enabled = !uidl.hasAttribute("disabled");
-
-        if (BrowserInfo.get().isIE8() && !enabled) {
-            /*
-             * The disabled shim will not cover the table body if it is relative
-             * in IE8. See #7324
-             */
-            scrollBodyPanel.getElement().getStyle()
-                    .setPosition(Position.STATIC);
-        } else if (BrowserInfo.get().isIE8()) {
-            scrollBodyPanel.getElement().getStyle()
-                    .setPosition(Position.RELATIVE);
-        }
-
-        this.client = client;
-        paintableId = uidl.getStringAttribute("id");
-        immediate = uidl.getBooleanAttribute("immediate");
-
-        int previousTotalRows = totalRows;
-        updateTotalRows(uidl);
-        boolean totalRowsChanged = (totalRows != previousTotalRows);
-
-        updateDragMode(uidl);
-
-        updateSelectionProperties(uidl);
-
-        if (uidl.hasAttribute("alb")) {
-            bodyActionKeys = uidl.getStringArrayAttribute("alb");
-        } else {
-            // Need to clear the actions if the action handlers have been
-            // removed
-            bodyActionKeys = null;
-        }
-
-        setCacheRateFromUIDL(uidl);
-
-        recalcWidths = uidl.hasAttribute("recalcWidths");
-        if (recalcWidths) {
-            tHead.clear();
-            tFoot.clear();
-        }
-
-        updatePageLength(uidl);
-
-        updateFirstVisibleAndScrollIfNeeded(uidl);
-
-        showRowHeaders = uidl.getBooleanAttribute("rowheaders");
-        showColHeaders = uidl.getBooleanAttribute("colheaders");
-
-        updateSortingProperties(uidl);
-
-        boolean keyboardSelectionOverRowFetchInProgress = selectSelectedRows(uidl);
-
-        updateActionMap(uidl);
-
-        updateColumnProperties(uidl);
-
-        UIDL ac = uidl.getChildByTagName("-ac");
-        if (ac == null) {
-            if (dropHandler != null) {
-                // remove dropHandler if not present anymore
-                dropHandler = null;
-            }
-        } else {
-            if (dropHandler == null) {
-                dropHandler = new VScrollTableDropHandler();
-            }
-            dropHandler.updateAcceptRules(ac);
-        }
-
-        UIDL partialRowAdditions = uidl.getChildByTagName("prows");
-        UIDL partialRowUpdates = uidl.getChildByTagName("urows");
-        if (partialRowUpdates != null || partialRowAdditions != null) {
-            // we may have pending cache row fetch, cancel it. See #2136
-            rowRequestHandler.cancel();
-
-            updateRowsInBody(partialRowUpdates);
-            addAndRemoveRows(partialRowAdditions);
-        } else {
-            UIDL rowData = uidl.getChildByTagName("rows");
-            if (rowData != null) {
-                // we may have pending cache row fetch, cancel it. See #2136
-                rowRequestHandler.cancel();
-
-                if (!recalcWidths && initializedAndAttached) {
-                    updateBody(rowData, uidl.getIntAttribute("firstrow"),
-                            uidl.getIntAttribute("rows"));
-                    if (headerChangedDuringUpdate) {
-                        triggerLazyColumnAdjustment(true);
-                    } else if (!isScrollPositionVisible()
-                            || totalRowsChanged
-                            || lastRenderedHeight != scrollBody
-                                    .getOffsetHeight()) {
-                        // webkits may still bug with their disturbing scrollbar
-                        // bug, see #3457
-                        // Run overflow fix for the scrollable area
-                        // #6698 - If there's a scroll going on, don't abort it
-                        // by changing overflows as the length of the contents
-                        // *shouldn't* have changed (unless the number of rows
-                        // or the height of the widget has also changed)
-                        Scheduler.get().scheduleDeferred(new Command() {
-                            public void execute() {
-                                Util.runWebkitOverflowAutoFix(scrollBodyPanel
-                                        .getElement());
-                            }
-                        });
-                    }
-                } else {
-                    initializeRows(uidl, rowData);
-                }
-            }
-        }
-
-        if (!isSelectable()) {
-            scrollBody.addStyleName(CLASSNAME + "-body-noselection");
-        } else {
-            scrollBody.removeStyleName(CLASSNAME + "-body-noselection");
-        }
-
-        hideScrollPositionAnnotation();
-        purgeUnregistryBag();
-
-        // selection is no in sync with server, avoid excessive server visits by
-        // clearing to flag used during the normal operation
-        if (!keyboardSelectionOverRowFetchInProgress) {
-            selectionChanged = false;
-        }
-
-        /*
-         * This is called when the Home or page up button has been pressed in
-         * selectable mode and the next selected row was not yet rendered in the
-         * client
-         */
-        if (selectFirstItemInNextRender || focusFirstItemInNextRender) {
-            selectFirstRenderedRowInViewPort(focusFirstItemInNextRender);
-            selectFirstItemInNextRender = focusFirstItemInNextRender = false;
-        }
-
-        /*
-         * This is called when the page down or end button has been pressed in
-         * selectable mode and the next selected row was not yet rendered in the
-         * client
-         */
-        if (selectLastItemInNextRender || focusLastItemInNextRender) {
-            selectLastRenderedRowInViewPort(focusLastItemInNextRender);
-            selectLastItemInNextRender = focusLastItemInNextRender = false;
-        }
-        multiselectPending = false;
-
-        if (focusedRow != null) {
-            if (!focusedRow.isAttached() && !rowRequestHandler.isRunning()) {
-                // focused row has been orphaned, can't focus
-                focusRowFromBody();
-            }
-        }
-
-        tabIndex = uidl.hasAttribute("tabindex") ? uidl
-                .getIntAttribute("tabindex") : 0;
-        setProperTabIndex();
-
-        resizeSortedColumnForSortIndicator();
-
-        // Remember this to detect situations where overflow hack might be
-        // needed during scrolling
-        lastRenderedHeight = scrollBody.getOffsetHeight();
-
-        rendering = false;
-        headerChangedDuringUpdate = false;
-
-    }
-
-    private void initializeRows(UIDL uidl, UIDL rowData) {
+    void initializeRows(UIDL uidl, UIDL rowData) {
         if (scrollBody != null) {
             scrollBody.removeFromParent();
             lazyUnregistryBag.add(scrollBody);
@@ -1037,7 +847,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         scrollBody.restoreRowVisibility();
     }
 
-    private void updateColumnProperties(UIDL uidl) {
+    void updateColumnProperties(UIDL uidl) {
         updateColumnOrder(uidl);
 
         updateCollapsedColumns(uidl);
@@ -1072,7 +882,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
     }
 
-    private boolean selectSelectedRows(UIDL uidl) {
+    boolean selectSelectedRows(UIDL uidl) {
         boolean keyboardSelectionOverRowFetchInProgress = false;
 
         if (uidl.hasVariable("selected")) {
@@ -1109,7 +919,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         return keyboardSelectionOverRowFetchInProgress;
     }
 
-    private void updateSortingProperties(UIDL uidl) {
+    void updateSortingProperties(UIDL uidl) {
         oldSortColumn = sortColumn;
         if (uidl.hasVariable("sortascending")) {
             sortAscending = uidl.getBooleanVariable("sortascending");
@@ -1117,7 +927,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
     }
 
-    private void resizeSortedColumnForSortIndicator() {
+    void resizeSortedColumnForSortIndicator() {
         // Force recalculation of the captionContainer element inside the header
         // cell to accomodate for the size of the sort arrow.
         HeaderCell sortedHeader = tHead.getHeaderCell(sortColumn);
@@ -1132,7 +942,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
     }
 
-    private void updateFirstVisibleAndScrollIfNeeded(UIDL uidl) {
+    void updateFirstVisibleAndScrollIfNeeded(UIDL uidl) {
         firstvisible = uidl.hasVariable("firstvisible") ? uidl
                 .getIntVariable("firstvisible") : 0;
         if (firstvisible != lastRequestedFirstvisible && scrollBody != null) {
@@ -1147,7 +957,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         return (int) (rowIx * scrollBody.getRowHeight());
     }
 
-    private void updatePageLength(UIDL uidl) {
+    void updatePageLength(UIDL uidl) {
         int oldPageLength = pageLength;
         if (uidl.hasAttribute("pagelength")) {
             pageLength = uidl.getIntAttribute("pagelength");
@@ -1162,7 +972,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
     }
 
-    private void updateSelectionProperties(UIDL uidl) {
+    void updateSelectionProperties(UIDL uidl) {
         setMultiSelectMode(uidl.hasAttribute("multiselectmode") ? uidl
                 .getIntAttribute("multiselectmode") : MULTISELECT_MODE_DEFAULT);
 
@@ -1171,18 +981,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         if (uidl.hasAttribute("selectmode")) {
             if (uidl.getBooleanAttribute("readonly")) {
-                selectMode = Table.SELECT_MODE_NONE;
+                selectMode = SelectMode.NONE;
             } else if (uidl.getStringAttribute("selectmode").equals("multi")) {
-                selectMode = Table.SELECT_MODE_MULTI;
+                selectMode = SelectMode.MULTI;
             } else if (uidl.getStringAttribute("selectmode").equals("single")) {
-                selectMode = Table.SELECT_MODE_SINGLE;
+                selectMode = SelectMode.SINGLE;
             } else {
-                selectMode = Table.SELECT_MODE_NONE;
+                selectMode = SelectMode.NONE;
             }
         }
     }
 
-    private void updateDragMode(UIDL uidl) {
+    void updateDragMode(UIDL uidl) {
         dragmode = uidl.hasAttribute("dragmode") ? uidl
                 .getIntAttribute("dragmode") : 0;
         if (BrowserInfo.get().isIE()) {
@@ -1219,7 +1029,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         return totalRows;
     }
 
-    private void focusRowFromBody() {
+    void focusRowFromBody() {
         if (selectedRowKeys.size() == 1) {
             // try to focus a row currently selected and in viewport
             String selectedRowKey = selectedRowKeys.iterator().next();
@@ -1247,7 +1057,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * @param focusOnly
      *            Should the focus only be moved to the last row
      */
-    private void selectLastRenderedRowInViewPort(boolean focusOnly) {
+    void selectLastRenderedRowInViewPort(boolean focusOnly) {
         int index = firstRowInViewPort + getFullyVisibleRowCount();
         VScrollTableRow lastRowInViewport = scrollBody.getRowByRowIndex(index);
         if (lastRowInViewport == null) {
@@ -1272,7 +1082,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * @param focusOnly
      *            Should the focus only be moved to the first row
      */
-    private void selectFirstRenderedRowInViewPort(boolean focusOnly) {
+    void selectFirstRenderedRowInViewPort(boolean focusOnly) {
         int index = firstRowInViewPort;
         VScrollTableRow firstInViewport = scrollBody.getRowByRowIndex(index);
         if (firstInViewport == null) {
@@ -1286,7 +1096,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
     }
 
-    private void setCacheRateFromUIDL(UIDL uidl) {
+    void setCacheRateFromUIDL(UIDL uidl) {
         setCacheRate(uidl.hasAttribute("cr") ? uidl.getDoubleAttribute("cr")
                 : CACHE_RATE_DEFAULT);
     }
@@ -1303,7 +1113,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * IScrollTableRows). This is done lazily as Table must survive from
      * "subtreecaching" logic.
      */
-    private void purgeUnregistryBag() {
+    void purgeUnregistryBag() {
         for (Iterator<Panel> iterator = lazyUnregistryBag.iterator(); iterator
                 .hasNext();) {
             VPaintableMap.get(client)
@@ -1312,7 +1122,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         lazyUnregistryBag.clear();
     }
 
-    private void updateActionMap(UIDL mainUidl) {
+    void updateActionMap(UIDL mainUidl) {
         UIDL actionsUidl = mainUidl.getChildByTagName("actions");
         if (actionsUidl == null) {
             return;
@@ -1414,7 +1224,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * @param reqRows
      *            amount of rows in data set
      */
-    private void updateBody(UIDL uidl, int firstRow, int reqRows) {
+    void updateBody(UIDL uidl, int firstRow, int reqRows) {
         if (uidl == null || reqRows < 1) {
             // container is empty, remove possibly existing rows
             if (firstRow <= 0) {
@@ -1431,7 +1241,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         discardRowsOutsideCacheWindow();
     }
 
-    private void updateRowsInBody(UIDL partialRowUpdates) {
+    void updateRowsInBody(UIDL partialRowUpdates) {
         if (partialRowUpdates == null) {
             return;
         }
@@ -1564,20 +1374,20 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     }
 
     private boolean isMultiSelectModeSimple() {
-        return selectMode == Table.SELECT_MODE_MULTI
+        return selectMode == SelectMode.MULTI
                 && multiselectmode == MULTISELECT_MODE_SIMPLE;
     }
 
     private boolean isSingleSelectMode() {
-        return selectMode == Table.SELECT_MODE_SINGLE;
+        return selectMode == SelectMode.SINGLE;
     }
 
     private boolean isMultiSelectModeAny() {
-        return selectMode == Table.SELECT_MODE_MULTI;
+        return selectMode == SelectMode.MULTI;
     }
 
     private boolean isMultiSelectModeDefault() {
-        return selectMode == Table.SELECT_MODE_MULTI
+        return selectMode == SelectMode.MULTI
                 && multiselectmode == MULTISELECT_MODE_DEFAULT;
     }
 
@@ -1593,7 +1403,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     }
 
     protected boolean isSelectable() {
-        return selectMode > Table.SELECT_MODE_NONE;
+        return selectMode.getId() > SelectMode.NONE.getId();
     }
 
     private boolean isCollapsedColumn(String colKey) {
@@ -1769,7 +1579,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
         }
         client.updateVariable(paintableId, "columnorder", columnOrder, false);
-        if (client.hasEventListeners(this, COLUMN_REORDER_EVENT_ID)) {
+        if (client.hasWidgetEventListeners(this, COLUMN_REORDER_EVENT_ID)) {
             client.sendPendingVariableChanges();
         }
     }
@@ -2108,19 +1918,19 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         style.setDisplay(Display.BLOCK);
     }
 
-    private void hideScrollPositionAnnotation() {
+    void hideScrollPositionAnnotation() {
         if (scrollPositionElement != null) {
             DOM.setStyleAttribute(scrollPositionElement, "display", "none");
         }
     }
 
-    private boolean isScrollPositionVisible() {
+    boolean isScrollPositionVisible() {
         return scrollPositionElement != null
                 && !scrollPositionElement.getStyle().getDisplay()
                         .equals(Display.NONE.toString());
     }
 
-    private class RowRequestHandler extends Timer {
+    class RowRequestHandler extends Timer {
 
         private int reqFirstRow = 0;
         private int reqRows = 0;
@@ -2295,26 +2105,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * of the caption container element by the correct amount
          */
         public void resizeCaptionContainer(int rightSpacing) {
+            int captionContainerWidth = width
+                    - colResizeWidget.getOffsetWidth() - rightSpacing;
+
             if (td.getClassName().contains("-asc")
                     || td.getClassName().contains("-desc")) {
-                /*
-                 * Room for the sort indicator is made by subtracting the styled
-                 * margin and width of the resizer from the width of the caption
-                 * container.
-                 */
-                int captionContainerWidth = width
-                        - sortIndicator.getOffsetWidth()
-                        - colResizeWidget.getOffsetWidth() - rightSpacing;
-                captionContainer.getStyle().setPropertyPx("width",
-                        captionContainerWidth);
-            } else {
-                /*
-                 * Set the caption container element as wide as possible when
-                 * the sorting indicator is not visible.
-                 */
-                captionContainer.getStyle().setPropertyPx("width",
-                        width - rightSpacing);
+                // Leave room for the sort indicator
+                captionContainerWidth -= sortIndicator.getOffsetWidth();
             }
+            captionContainer.getStyle().setPropertyPx("width",
+                    captionContainerWidth);
 
             // Apply/Remove spacing if defined
             if (rightSpacing > 0) {
@@ -2512,7 +2312,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          *            The click event
          */
         private void fireHeaderClickedEvent(Event event) {
-            if (client.hasEventListeners(VScrollTable.this,
+            if (client.hasWidgetEventListeners(VScrollTable.this,
                     HEADER_CLICK_EVENT_ID)) {
                 MouseEventDetails details = new MouseEventDetails(event);
                 client.updateVariable(paintableId, "headerClickEvent",
@@ -3543,7 +3343,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          *            The click event
          */
         private void fireFooterClickedEvent(Event event) {
-            if (client.hasEventListeners(VScrollTable.this,
+            if (client.hasWidgetEventListeners(VScrollTable.this,
                     FOOTER_CLICK_EVENT_ID)) {
                 MouseEventDetails details = new MouseEventDetails(event);
                 client.updateVariable(paintableId, "footerClickEvent",
@@ -4295,12 +4095,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             final VScrollTableRow toBeRemoved = (VScrollTableRow) renderedRows
                     .get(index);
             // Unregister row tooltip
-            client.registerTooltip(VScrollTable.this, toBeRemoved.getElement(),
-                    null);
+            client.registerWidgetTooltip(VScrollTable.this,
+                    toBeRemoved.getElement(), null);
             for (int i = 0; i < toBeRemoved.getElement().getChildCount(); i++) {
                 // Unregister cell tooltips
                 Element td = toBeRemoved.getElement().getChild(i).cast();
-                client.registerTooltip(VScrollTable.this, td, null);
+                client.registerWidgetTooltip(VScrollTable.this, td, null);
             }
             lazyUnregistryBag.add(toBeRemoved);
             tBodyElement.removeChild(toBeRemoved.getElement());
@@ -4559,10 +4359,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 String rowDescription = uidl.getStringAttribute("rowdescr");
                 if (rowDescription != null && !rowDescription.equals("")) {
                     TooltipInfo info = new TooltipInfo(rowDescription);
-                    client.registerTooltip(VScrollTable.this, rowElement, info);
+                    client.registerWidgetTooltip(VScrollTable.this, rowElement,
+                            info);
                 } else {
                     // Remove possibly previously set tooltip
-                    client.registerTooltip(VScrollTable.this, rowElement, null);
+                    client.registerWidgetTooltip(VScrollTable.this, rowElement,
+                            null);
                 }
 
                 tHead.getColumnAlignments();
@@ -4797,10 +4599,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                 if (description != null && !description.equals("")) {
                     TooltipInfo info = new TooltipInfo(description);
-                    client.registerTooltip(VScrollTable.this, td, info);
+                    client.registerWidgetTooltip(VScrollTable.this, td, info);
                 } else {
                     // Remove possibly previously set tooltip
-                    client.registerTooltip(VScrollTable.this, td, null);
+                    client.registerWidgetTooltip(VScrollTable.this, td, null);
                 }
 
                 td.appendChild(container);
@@ -4879,7 +4681,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
              */
             private boolean handleClickEvent(Event event, Element targetTdOrTr,
                     boolean immediate) {
-                if (!client.hasEventListeners(VScrollTable.this,
+                if (!client.hasWidgetEventListeners(VScrollTable.this,
                         ITEM_CLICK_EVENT_ID)) {
                     // Don't send an event if nobody is listening
                     return false;
@@ -4923,22 +4725,24 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                     if (!containsWidget) {
                         // Only text nodes has tooltips
-                        if (client.getTooltipTitleInfo(VScrollTable.this,
-                                target) != null) {
+                        if (VPaintableMap.get(client).getWidgetTooltipInfo(
+                                VScrollTable.this, target) != null) {
                             // Cell has description, use it
-                            client.handleTooltipEvent(event, VScrollTable.this,
-                                    target);
+                            client.handleWidgetTooltipEvent(event,
+                                    VScrollTable.this, target);
                         } else {
                             // Cell might have row description, use row
                             // description
-                            client.handleTooltipEvent(event, VScrollTable.this,
+                            client.handleWidgetTooltipEvent(event,
+                                    VScrollTable.this,
                                     target.getParentElement());
                         }
                     }
 
                 } else {
                     // Table row (tr)
-                    client.handleTooltipEvent(event, VScrollTable.this, target);
+                    client.handleWidgetTooltipEvent(event, VScrollTable.this,
+                            target);
                 }
             }
 
@@ -4954,7 +4758,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         showContextMenu(event);
                         if (enabled
                                 && (actionKeys != null || client
-                                        .hasEventListeners(VScrollTable.this,
+                                        .hasWidgetEventListeners(
+                                                VScrollTable.this,
                                                 ITEM_CLICK_EVENT_ID))) {
                             /*
                              * Prevent browser context menu only if there are
@@ -5243,7 +5048,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     Element targetTdOrTr) {
                 mDown = true;
                 VTransferable transferable = new VTransferable();
-                transferable.setDragSource(VScrollTable.this);
+                transferable.setDragSource(VPaintableMap.get(client)
+                        .getPaintable(VScrollTable.this));
                 transferable.setData("itemId", "" + rowKey);
                 NodeList<TableCellElement> cells = rowElement.getCells();
                 for (int i = 0; i < cells.getLength(); i++) {
@@ -5972,9 +5778,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private int contentAreaBorderHeight = -1;
     private int scrollLeft;
     private int scrollTop;
-    private VScrollTableDropHandler dropHandler;
+    VScrollTableDropHandler dropHandler;
     private boolean navKeyDown;
-    private boolean multiselectPending;
+    boolean multiselectPending;
 
     /**
      * @return border top + border bottom of the scrollable area of table
@@ -6066,7 +5872,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     public void onScroll(ScrollEvent event) {
         scrollLeft = scrollBodyPanel.getElement().getScrollLeft();
         scrollTop = scrollBodyPanel.getScrollPosition();
-        if (!initializedAndAttached) {
+        /*
+         * #6970 - IE sometimes fires scroll events for a detached table.
+         * 
+         * FIXME initializedAndAttached should probably be renamed - its name
+         * doesn't seem to reflect its semantics. onDetach() doesn't set it to
+         * false, and changing that might break something else, so we need to
+         * check isAttached() separately.
+         */
+        if (!initializedAndAttached || !isAttached()) {
             return;
         }
         if (!enabled) {
@@ -6315,7 +6129,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         @Override
         public VPaintableWidget getPaintable() {
-            return VScrollTable.this;
+            return VPaintableMap.get(client).getPaintable(VScrollTable.this);
         }
 
         public ApplicationConnection getApplicationConnection() {
@@ -6752,7 +6566,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * actions may need focus.
      * 
      */
-    private void setProperTabIndex() {
+    void setProperTabIndex() {
         int storedScrollTop = 0;
         int storedScrollLeft = 0;
 

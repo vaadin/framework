@@ -129,14 +129,14 @@ public interface Sizeable extends Serializable {
 
         public static Unit getUnitFromSymbol(String symbol) {
             if (symbol == null) {
-                return null;
+                return Unit.PIXELS; // Defaults to pixels
             }
             for (Unit unit : Unit.values()) {
                 if (symbol.equals(unit.getSymbol())) {
                     return unit;
                 }
             }
-            return null;
+            return Unit.PIXELS; // Defaults to pixels
         }
     }
 

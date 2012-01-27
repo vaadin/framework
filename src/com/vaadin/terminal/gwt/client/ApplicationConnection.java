@@ -25,6 +25,8 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONString;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -41,6 +43,7 @@ import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.ui.Field;
+import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
@@ -101,6 +104,27 @@ public class ApplicationConnection {
 
     public static final String ATTRIBUTE_DESCRIPTION = "description";
     public static final String ATTRIBUTE_ERROR = "error";
+
+    /**
+     * A string that, if found in a non-JSON response to a UIDL request, will
+     * cause the browser to refresh the page. If followed by a colon, optional
+     * whitespace, and a URI, causes the browser to synchronously load the URI.
+     * 
+     * <p>
+     * This allows, for instance, a servlet filter to redirect the application
+     * to a custom login page when the session expires. For example:
+     * </p>
+     * 
+     * <pre>
+     * if (sessionExpired) {
+     *     response.setHeader(&quot;Content-Type&quot;, &quot;text/html&quot;);
+     *     response.getWriter().write(
+     *             myLoginPageHtml + &quot;&lt;!-- Vaadin-Refresh: &quot;
+     *                     + request.getContextPath() + &quot; --&gt;&quot;);
+     * }
+     * </pre>
+     */
+    public static final String UIDL_REFRESH_TOKEN = "Vaadin-Refresh";
 
     // will hold the UIDL security key (for XSS protection) once received
     private String uidlSecurityKey = "init";
@@ -524,6 +548,25 @@ public class ApplicationConnection {
                                 + statusCode);
                         endRequest();
                         return;
+                    }
+
+                    String contentType = response.getHeader("Content-Type");
+                    if (contentType == null
+                            || !contentType.startsWith("application/json")) {
+                        /*
+                         * A servlet filter or equivalent may have intercepted
+                         * the request and served non-UIDL content (for
+                         * instance, a login page if the session has expired.)
+                         * If the response contains a magic substring, do a
+                         * synchronous refresh. See #8241.
+                         */
+                        MatchResult refreshToken = RegExp.compile(
+                                UIDL_REFRESH_TOKEN + "(:\\s*(.*?))?(\\s|$)")
+                                .exec(response.getText());
+                        if (refreshToken != null) {
+                            redirect(refreshToken.getGroup(2));
+                            return;
+                        }
                     }
 
                     // for(;;);[realjson]
@@ -1540,9 +1583,10 @@ public class ApplicationConnection {
      * 
      * @return Returns true iff no further painting is needed by caller
      */
-    public boolean updateComponent(Widget component, UIDL uidl,
+    @Deprecated
+    public boolean updateComponent(VPaintableWidget paintable, UIDL uidl,
             boolean manageCaption) {
-        VPaintableWidget paintable = paintableMap.getPaintable(component);
+        Widget component = paintable.getWidgetForPaintable();
 
         String pid = paintableMap.getPid(paintable);
         if (pid == null) {
@@ -1603,9 +1647,68 @@ public class ApplicationConnection {
             fw.setEnabled(enabled);
         }
 
+        // Style names
+        component.setStyleName(getStyleName(component.getStylePrimaryName(),
+                uidl, component instanceof Field));
+
+        TooltipInfo tooltipInfo = paintableMap.getTooltipInfo(paintable, null);
+        // Update tooltip
+        if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)) {
+            tooltipInfo
+                    .setTitle(uidl.getStringAttribute(ATTRIBUTE_DESCRIPTION));
+        } else {
+            tooltipInfo.setTitle(null);
+        }
+
+        // Set captions
+        if (manageCaption) {
+            final Container parent = Util.getLayout(component);
+            if (parent != null) {
+                parent.updateCaption(paintable, uidl);
+            }
+        }
+
+        // add error classname to components w/ error
+        if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
+            tooltipInfo.setErrorUidl(uidl.getErrors());
+        } else {
+            tooltipInfo.setErrorUidl(null);
+        }
+
+        // Set captions
+        if (manageCaption) {
+            final Container parent = Util.getLayout(component);
+            if (parent != null) {
+                parent.updateCaption(paintable, uidl);
+            }
+        }
+        /*
+         * updateComponentSize need to be after caption update so caption can be
+         * taken into account
+         */
+
+        updateComponentSize(paintable, uidl);
+
+        return false;
+    }
+
+    /**
+     * Generates the style name for the widget based on the given primary style
+     * name (typically returned by Widget.getPrimaryStyleName()) and the UIDL.
+     * An additional "modified" style name can be added if the field parameter
+     * is set to true.
+     * 
+     * @param primaryStyleName
+     * @param uidl
+     * @param isField
+     * @return
+     */
+    public static String getStyleName(String primaryStyleName, UIDL uidl,
+            boolean field) {
+        boolean enabled = !uidl.getBooleanAttribute("disabled");
+
         StringBuffer styleBuf = new StringBuffer();
-        final String primaryName = component.getStylePrimaryName();
-        styleBuf.append(primaryName);
+        styleBuf.append(primaryStyleName);
 
         // first disabling and read-only status
         if (!enabled) {
@@ -1623,7 +1726,7 @@ public class ApplicationConnection {
             final String[] styles = uidl.getStringAttribute("style").split(" ");
             for (int i = 0; i < styles.length; i++) {
                 styleBuf.append(" ");
-                styleBuf.append(primaryName);
+                styleBuf.append(primaryStyleName);
                 styleBuf.append("-");
                 styleBuf.append(styles[i]);
                 styleBuf.append(" ");
@@ -1632,55 +1735,25 @@ public class ApplicationConnection {
         }
 
         // add modified classname to Fields
-        if (uidl.hasAttribute("modified") && component instanceof Field) {
+        if (field && uidl.hasAttribute("modified")) {
             styleBuf.append(" ");
             styleBuf.append(MODIFIED_CLASSNAME);
         }
 
-        TooltipInfo tooltipInfo = paintableMap.getTooltipInfo(paintable, null);
-        // Update tooltip
-        if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)) {
-            tooltipInfo
-                    .setTitle(uidl.getStringAttribute(ATTRIBUTE_DESCRIPTION));
-        } else {
-            tooltipInfo.setTitle(null);
-        }
-
         // add error classname to components w/ error
         if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
-            tooltipInfo.setErrorUidl(uidl.getErrors());
             styleBuf.append(" ");
-            styleBuf.append(primaryName);
+            styleBuf.append(primaryStyleName);
             styleBuf.append(ERROR_CLASSNAME_EXT);
-        } else {
-            tooltipInfo.setErrorUidl(null);
         }
-
         // add required style to required components
         if (uidl.hasAttribute("required")) {
             styleBuf.append(" ");
-            styleBuf.append(primaryName);
+            styleBuf.append(primaryStyleName);
             styleBuf.append(REQUIRED_CLASSNAME_EXT);
         }
 
-        // Styles + disabled & readonly
-        component.setStyleName(styleBuf.toString());
-
-        // Set captions
-        if (manageCaption) {
-            final Container parent = Util.getLayout(component);
-            if (parent != null) {
-                parent.updateCaption(paintable, uidl);
-            }
-        }
-        /*
-         * updateComponentSize need to be after caption update so caption can be
-         * taken into account
-         */
-
-        updateComponentSize(paintable, uidl);
-
-        return false;
+        return styleBuf.toString();
     }
 
     private void updateComponentSize(VPaintableWidget paintable, UIDL uidl) {
@@ -1773,7 +1846,7 @@ public class ApplicationConnection {
         while (childWidgets.hasNext()) {
             final Widget child = childWidgets.next();
 
-            if (child instanceof VPaintableWidget) {
+            if (getPaintableMap().isPaintable(child)) {
 
                 if (handleComponentRelativeSize(child)) {
                     /*
@@ -1808,7 +1881,7 @@ public class ApplicationConnection {
         if (paintable == null) {
             return false;
         }
-        boolean debugSizes = false;
+        boolean debugSizes = true;
 
         FloatSize relativeSize = paintableMap.getRelativeSize(paintable);
         if (relativeSize == null) {
@@ -1983,6 +2056,10 @@ public class ApplicationConnection {
         if (!paintableMap.hasPaintable(pid)) {
             // Create and register a new paintable if no old was found
             VPaintableWidget p = widgetSet.createWidget(uidl, configuration);
+            if (p instanceof VAbstractPaintableWidget) {
+                ((VAbstractPaintableWidget) p).setConnection(this);
+                ((VAbstractPaintableWidget) p).init();
+            }
             paintableMap.registerPaintable(pid, p);
         }
         return (VPaintableWidget) paintableMap.getPaintable(pid);
@@ -2146,7 +2223,7 @@ public class ApplicationConnection {
         }
     };
 
-    private VPaintableMap paintableMap = new VPaintableMap();
+    private VPaintableMap paintableMap = GWT.create(VPaintableMap.class);
 
     /**
      * Components can call this function to run all layout functions. This is
@@ -2229,7 +2306,7 @@ public class ApplicationConnection {
      * @return true if at least one listener has been registered on server side
      *         for the event identified by eventIdentifier.
      */
-    public boolean hasEventListeners(VPaintable paintable,
+    public boolean hasEventListeners(VPaintableWidget paintable,
             String eventIdentifier) {
         return paintableMap.hasEventListeners(paintable, eventIdentifier);
     }
@@ -2282,6 +2359,33 @@ public class ApplicationConnection {
     @Deprecated
     public void unregisterPaintable(VPaintable p) {
         paintableMap.unregisterPaintable(p);
+    }
+
+    public VTooltip getVTooltip() {
+        return tooltip;
+    }
+
+    @Deprecated
+    public void handleWidgetTooltipEvent(Event event, Widget owner, Object key) {
+        handleTooltipEvent(event, getPaintableMap().getPaintable(owner), key);
+
+    }
+
+    @Deprecated
+    public void handleWidgetTooltipEvent(Event event, Widget owner) {
+        handleTooltipEvent(event, getPaintableMap().getPaintable(owner));
+
+    }
+
+    @Deprecated
+    public void registerWidgetTooltip(Widget owner, Object key, TooltipInfo info) {
+        registerTooltip(getPaintableMap().getPaintable(owner), key, info);
+    }
+
+    @Deprecated
+    public boolean hasWidgetEventListeners(Widget widget, String eventIdentifier) {
+        return hasEventListeners(getPaintableMap().getPaintable(widget),
+                eventIdentifier);
     }
 
 }

@@ -1334,9 +1334,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Sizeable#setHeight(float, int)
+     * @see com.vaadin.terminal.Sizeable#setHeight(float, Unit)
      */
     public void setHeight(float height, Unit unit) {
+        if (unit == null) {
+            throw new IllegalArgumentException("Unit can not be null");
+        }
         this.height = height;
         heightUnit = unit;
         requestRepaint();
@@ -1366,9 +1369,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Sizeable#setWidth(float, int)
+     * @see com.vaadin.terminal.Sizeable#setWidth(float, Unit)
      */
     public void setWidth(float width, Unit unit) {
+        if (unit == null) {
+            throw new IllegalArgumentException("Unit can not be null");
+        }
         this.width = width;
         widthUnit = unit;
         requestRepaint();

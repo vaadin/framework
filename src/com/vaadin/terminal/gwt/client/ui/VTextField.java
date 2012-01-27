@@ -90,12 +90,6 @@ public class VTextField extends TextBoxBase implements VPaintableWidget, Field,
 
     protected VTextField(Element node) {
         super(node);
-        if (BrowserInfo.get().getIEVersion() > 0
-                && BrowserInfo.get().getIEVersion() < 8) {
-            // Fixes IE margin problem (#2058)
-            DOM.setStyleAttribute(node, "marginTop", "-1px");
-            DOM.setStyleAttribute(node, "marginBottom", "-1px");
-        }
         setStyleName(CLASSNAME);
         addChangeHandler(this);
         if (BrowserInfo.get().isIE()) {

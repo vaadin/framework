@@ -47,6 +47,7 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable;
+import com.vaadin.terminal.gwt.client.ui.VScrollTablePaintable;
 import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
 
 /**
@@ -73,7 +74,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
  * @since 3.0
  */
 @SuppressWarnings({ "deprecation" })
-@ClientWidget(VScrollTable.class)
+@ClientWidget(VScrollTablePaintable.class)
 public class Table extends AbstractSelect implements Action.Container,
         Container.Ordered, Container.Sortable, ItemClickSource,
         ItemClickNotifier, DragSource, DropTarget {
@@ -115,91 +116,215 @@ public class Table extends AbstractSelect implements Action.Container,
 
     protected static final int CELL_FIRSTCOL = 5;
 
-    /**
-     * Left column alignment. <b>This is the default behaviour. </b>
-     */
-    public static final String ALIGN_LEFT = "b";
+    public enum Align {
+        /**
+         * Left column alignment. <b>This is the default behaviour. </b>
+         */
+        LEFT("b"),
+
+        /**
+         * Center column alignment.
+         */
+        CENTER("c"),
+
+        /**
+         * Right column alignment.
+         */
+        RIGHT("e");
+
+        private String alignment;
+
+        private Align(String alignment) {
+            this.alignment = alignment;
+        }
+
+        @Override
+        public String toString() {
+            return alignment;
+        }
+
+        public Align convertStringToAlign(String string) {
+            if (string == null) {
+                return null;
+            }
+            if (string.equals("b")) {
+                return Align.LEFT;
+            } else if (string.equals("c")) {
+                return Align.CENTER;
+            } else if (string.equals("e")) {
+                return Align.RIGHT;
+            } else {
+                return null;
+            }
+        }
+    }
 
     /**
-     * Center column alignment.
+     * @deprecated from 7.0, use {@link Align#LEFT} instead
      */
-    public static final String ALIGN_CENTER = "c";
+    @Deprecated
+    public static final Align ALIGN_LEFT = Align.LEFT;
 
     /**
-     * Right column alignment.
+     * @deprecated from 7.0, use {@link Align#CENTER} instead
      */
-    public static final String ALIGN_RIGHT = "e";
+    @Deprecated
+    public static final Align ALIGN_CENTER = Align.CENTER;
 
     /**
-     * Column header mode: Column headers are hidden.
+     * @deprecated from 7.0, use {@link Align#RIGHT} instead
      */
-    public static final int COLUMN_HEADER_MODE_HIDDEN = -1;
+    @Deprecated
+    public static final Align ALIGN_RIGHT = Align.RIGHT;
+
+    public enum ColumnHeaderMode {
+        /**
+         * Column headers are hidden.
+         */
+        HIDDEN,
+        /**
+         * Property ID:s are used as column headers.
+         */
+        ID,
+        /**
+         * Column headers are explicitly specified with
+         * {@link #setColumnHeaders(String[])}.
+         */
+        EXPLICIT,
+        /**
+         * Column headers are explicitly specified with
+         * {@link #setColumnHeaders(String[])}. If a header is not specified for
+         * a given property, its property id is used instead.
+         * <p>
+         * <b>This is the default behavior. </b>
+         */
+        EXPLICIT_DEFAULTS_ID
+    }
 
     /**
-     * Column header mode: Property ID:s are used as column headers.
+     * @deprecated from 7.0, use {@link ColumnHeaderMode#HIDDEN} instead
      */
-    public static final int COLUMN_HEADER_MODE_ID = 0;
+    @Deprecated
+    public static final ColumnHeaderMode COLUMN_HEADER_MODE_HIDDEN = ColumnHeaderMode.HIDDEN;
 
     /**
-     * Column header mode: Column headers are explicitly specified with
-     * {@link #setColumnHeaders(String[])}.
+     * @deprecated from 7.0, use {@link ColumnHeaderMode#ID} instead
      */
-    public static final int COLUMN_HEADER_MODE_EXPLICIT = 1;
+    @Deprecated
+    public static final ColumnHeaderMode COLUMN_HEADER_MODE_ID = ColumnHeaderMode.ID;
 
     /**
-     * Column header mode: Column headers are explicitly specified with
-     * {@link #setColumnHeaders(String[])}. If a header is not specified for a
-     * given property, its property id is used instead.
-     * <p>
-     * <b>This is the default behavior. </b>
+     * @deprecated from 7.0, use {@link ColumnHeaderMode#EXPLICIT} instead
      */
-    public static final int COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID = 2;
+    @Deprecated
+    public static final ColumnHeaderMode COLUMN_HEADER_MODE_EXPLICIT = ColumnHeaderMode.EXPLICIT;
 
     /**
-     * Row caption mode: The row headers are hidden. <b>This is the default
-     * mode. </b>
+     * @deprecated from 7.0, use {@link ColumnHeaderMode#EXPLICIT_DEFAULTS_ID}
+     *             instead
      */
-    public static final int ROW_HEADER_MODE_HIDDEN = -1;
+    @Deprecated
+    public static final ColumnHeaderMode COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID = ColumnHeaderMode.EXPLICIT_DEFAULTS_ID;
+
+    public enum RowHeaderMode {
+        /**
+         * Row caption mode: The row headers are hidden. <b>This is the default
+         * mode. </b>
+         */
+        HIDDEN(null),
+        /**
+         * Row caption mode: Items Id-objects toString is used as row caption.
+         */
+        ID(ItemCaptionMode.ID),
+        /**
+         * Row caption mode: Item-objects toString is used as row caption.
+         */
+        ITEM(ItemCaptionMode.ITEM),
+        /**
+         * Row caption mode: Index of the item is used as item caption. The
+         * index mode can only be used with the containers implementing the
+         * {@link com.vaadin.data.Container.Indexed} interface.
+         */
+        INDEX(ItemCaptionMode.INDEX),
+        /**
+         * Row caption mode: Item captions are explicitly specified, but if the
+         * caption is missing, the item id objects <code>toString()</code> is
+         * used instead.
+         */
+        EXPLICIT_DEFAULTS_ID(ItemCaptionMode.EXPLICIT_DEFAULTS_ID),
+        /**
+         * Row caption mode: Item captions are explicitly specified.
+         */
+        EXPLICIT(ItemCaptionMode.EXPLICIT),
+        /**
+         * Row caption mode: Only icons are shown, the captions are hidden.
+         */
+        ICON_ONLY(ItemCaptionMode.ICON_ONLY),
+        /**
+         * Row caption mode: Item captions are read from property specified with
+         * {@link #setItemCaptionPropertyId(Object)}.
+         */
+        PROPERTY(ItemCaptionMode.PROPERTY);
+
+        ItemCaptionMode mode;
+
+        private RowHeaderMode(ItemCaptionMode mode) {
+            this.mode = mode;
+        }
+
+        public ItemCaptionMode getItemCaptionMode() {
+            return mode;
+        }
+    }
 
     /**
-     * Row caption mode: Items Id-objects toString is used as row caption.
+     * @deprecated from 7.0, use {@link RowHeaderMode#HIDDEN} instead
      */
-    public static final int ROW_HEADER_MODE_ID = AbstractSelect.ITEM_CAPTION_MODE_ID;
+    @Deprecated
+    public static final RowHeaderMode ROW_HEADER_MODE_HIDDEN = RowHeaderMode.HIDDEN;
 
     /**
-     * Row caption mode: Item-objects toString is used as row caption.
+     * @deprecated from 7.0, use {@link RowHeaderMode#ID} instead
      */
-    public static final int ROW_HEADER_MODE_ITEM = AbstractSelect.ITEM_CAPTION_MODE_ITEM;
+    @Deprecated
+    public static final RowHeaderMode ROW_HEADER_MODE_ID = RowHeaderMode.ID;
 
     /**
-     * Row caption mode: Index of the item is used as item caption. The index
-     * mode can only be used with the containers implementing Container.Indexed
-     * interface.
+     * @deprecated from 7.0, use {@link RowHeaderMode#ITEM} instead
      */
-    public static final int ROW_HEADER_MODE_INDEX = AbstractSelect.ITEM_CAPTION_MODE_INDEX;
+    @Deprecated
+    public static final RowHeaderMode ROW_HEADER_MODE_ITEM = RowHeaderMode.ITEM;
 
     /**
-     * Row caption mode: Item captions are explicitly specified.
+     * @deprecated from 7.0, use {@link RowHeaderMode#INDEX} instead
      */
-    public static final int ROW_HEADER_MODE_EXPLICIT = AbstractSelect.ITEM_CAPTION_MODE_EXPLICIT;
+    @Deprecated
+    public static final RowHeaderMode ROW_HEADER_MODE_INDEX = RowHeaderMode.INDEX;
 
     /**
-     * Row caption mode: Item captions are read from property specified with
-     * {@link #setItemCaptionPropertyId(Object)}.
+     * @deprecated from 7.0, use {@link RowHeaderMode#EXPLICIT_DEFAULTS_ID}
+     *             instead
      */
-    public static final int ROW_HEADER_MODE_PROPERTY = AbstractSelect.ITEM_CAPTION_MODE_PROPERTY;
+    @Deprecated
+    public static final RowHeaderMode ROW_HEADER_MODE_EXPLICIT_DEFAULTS_ID = RowHeaderMode.EXPLICIT_DEFAULTS_ID;
 
     /**
-     * Row caption mode: Only icons are shown, the captions are hidden.
+     * @deprecated from 7.0, use {@link RowHeaderMode#EXPLICIT} instead
      */
-    public static final int ROW_HEADER_MODE_ICON_ONLY = AbstractSelect.ITEM_CAPTION_MODE_ICON_ONLY;
+    @Deprecated
+    public static final RowHeaderMode ROW_HEADER_MODE_EXPLICIT = RowHeaderMode.EXPLICIT;
 
     /**
-     * Row caption mode: Item captions are explicitly specified, but if the
-     * caption is missing, the item id objects <code>toString()</code> is used
-     * instead.
+     * @deprecated from 7.0, use {@link RowHeaderMode#ICON_ONLY} instead
      */
-    public static final int ROW_HEADER_MODE_EXPLICIT_DEFAULTS_ID = AbstractSelect.ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID;
+    @Deprecated
+    public static final RowHeaderMode ROW_HEADER_MODE_ICON_ONLY = RowHeaderMode.ICON_ONLY;
+
+    /**
+     * @deprecated from 7.0, use {@link RowHeaderMode#PROPERTY} instead
+     */
+    @Deprecated
+    public static final RowHeaderMode ROW_HEADER_MODE_PROPERTY = RowHeaderMode.PROPERTY;
 
     /**
      * The default rate that table caches rows for smooth scrolling.
@@ -254,7 +379,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Holds alignments for visible columns (by propertyId).
      */
-    private HashMap<Object, String> columnAlignments = new HashMap<Object, String>();
+    private HashMap<Object, Align> columnAlignments = new HashMap<Object, Align>();
 
     /**
      * Holds column widths in pixels (Integer) or expand ratios (Float) for
@@ -290,17 +415,17 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Holds value of property columnHeaderMode.
      */
-    private int columnHeaderMode = COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID;
+    private ColumnHeaderMode columnHeaderMode = ColumnHeaderMode.EXPLICIT_DEFAULTS_ID;
+
+    /**
+     * Holds value of property rowHeaderMode.
+     */
+    private RowHeaderMode rowHeaderMode = RowHeaderMode.EXPLICIT_DEFAULTS_ID;
 
     /**
      * Should the Table footer be visible?
      */
     private boolean columnFootersVisible = false;
-
-    /**
-     * True iff the row captions are hidden.
-     */
-    private boolean rowCaptionsAreHidden = true;
 
     /**
      * Page contents buffer used in buffered mode.
@@ -512,7 +637,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     final Object col = i.next();
                     if (!newVC.contains(col)) {
                         setColumnHeader(col, null);
-                        setColumnAlignment(col, null);
+                        setColumnAlignment(col, (Align) null);
                         setColumnIcon(col, null);
                     }
                 }
@@ -656,21 +781,21 @@ public class Table extends AbstractSelect implements Action.Container,
      * {@link #getVisibleColumns()}. The possible values for the alignments
      * include:
      * <ul>
-     * <li>{@link #ALIGN_LEFT}: Left alignment</li>
-     * <li>{@link #ALIGN_CENTER}: Centered</li>
-     * <li>{@link #ALIGN_RIGHT}: Right alignment</li>
+     * <li>{@link Align#LEFT}: Left alignment</li>
+     * <li>{@link Align#CENTER}: Centered</li>
+     * <li>{@link Align#RIGHT}: Right alignment</li>
      * </ul>
-     * The alignments default to {@link #ALIGN_LEFT}: any null values are
+     * The alignments default to {@link Align#LEFT}: any null values are
      * rendered as align lefts.
      * </p>
      * 
      * @return the Column alignments array.
      */
-    public String[] getColumnAlignments() {
+    public Align[] getColumnAlignments() {
         if (columnAlignments == null) {
             return null;
         }
-        final String[] alignments = new String[visibleColumns.size()];
+        final Align[] alignments = new Align[visibleColumns.size()];
         int i = 0;
         for (final Iterator<Object> it = visibleColumns.iterator(); it
                 .hasNext(); i++) {
@@ -684,39 +809,29 @@ public class Table extends AbstractSelect implements Action.Container,
      * Sets the column alignments.
      * 
      * <p>
-     * The items in the array must match the properties identified by
-     * {@link #getVisibleColumns()}. The possible values for the alignments
-     * include:
+     * The amount of items in the array must match the amount of properties
+     * identified by {@link #getVisibleColumns()}. The possible values for the
+     * alignments include:
      * <ul>
-     * <li>{@link #ALIGN_LEFT}: Left alignment</li>
-     * <li>{@link #ALIGN_CENTER}: Centered</li>
-     * <li>{@link #ALIGN_RIGHT}: Right alignment</li>
+     * <li>{@link Align#LEFT}: Left alignment</li>
+     * <li>{@link Align#CENTER}: Centered</li>
+     * <li>{@link Align#RIGHT}: Right alignment</li>
      * </ul>
-     * The alignments default to {@link #ALIGN_LEFT}
+     * The alignments default to {@link Align#LEFT}
      * </p>
      * 
      * @param columnAlignments
      *            the Column alignments array.
      */
-    public void setColumnAlignments(String[] columnAlignments) {
+    public void setColumnAlignments(Align... columnAlignments) {
 
         if (columnAlignments.length != visibleColumns.size()) {
             throw new IllegalArgumentException(
                     "The length of the alignments array must match the number of visible columns");
         }
 
-        // Checks all alignments
-        for (int i = 0; i < columnAlignments.length; i++) {
-            final String a = columnAlignments[i];
-            if (a != null && !a.equals(ALIGN_LEFT) && !a.equals(ALIGN_CENTER)
-                    && !a.equals(ALIGN_RIGHT)) {
-                throw new IllegalArgumentException("Column " + i
-                        + " aligment '" + a + "' is invalid");
-            }
-        }
-
         // Resets the alignments
-        final HashMap<Object, String> newCA = new HashMap<Object, String>();
+        final HashMap<Object, Align> newCA = new HashMap<Object, Align>();
         int i = 0;
         for (final Iterator<Object> it = visibleColumns.iterator(); it
                 .hasNext() && i < columnAlignments.length; i++) {
@@ -1034,13 +1149,13 @@ public class Table extends AbstractSelect implements Action.Container,
      * @return the header for the specified column if it has one.
      */
     public String getColumnHeader(Object propertyId) {
-        if (getColumnHeaderMode() == COLUMN_HEADER_MODE_HIDDEN) {
+        if (getColumnHeaderMode() == ColumnHeaderMode.HIDDEN) {
             return null;
         }
 
         String header = columnHeaders.get(propertyId);
-        if ((header == null && getColumnHeaderMode() == COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID)
-                || getColumnHeaderMode() == COLUMN_HEADER_MODE_ID) {
+        if ((header == null && getColumnHeaderMode() == ColumnHeaderMode.EXPLICIT_DEFAULTS_ID)
+                || getColumnHeaderMode() == ColumnHeaderMode.ID) {
             header = propertyId.toString();
         }
 
@@ -1073,9 +1188,9 @@ public class Table extends AbstractSelect implements Action.Container,
      *            the propertyID identifying the column.
      * @return the specified column's alignment if it as one; null otherwise.
      */
-    public String getColumnAlignment(Object propertyId) {
-        final String a = columnAlignments.get(propertyId);
-        return a == null ? ALIGN_LEFT : a;
+    public Align getColumnAlignment(Object propertyId) {
+        final Align a = columnAlignments.get(propertyId);
+        return a == null ? Align.LEFT : a;
     }
 
     /**
@@ -1083,8 +1198,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * <p>
      * Throws IllegalArgumentException if the alignment is not one of the
-     * following: {@link #ALIGN_LEFT}, {@link #ALIGN_CENTER} or
-     * {@link #ALIGN_RIGHT}
+     * following: {@link Align#LEFT}, {@link Align#CENTER} or
+     * {@link Align#RIGHT}
      * </p>
      * 
      * @param propertyId
@@ -1092,17 +1207,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param alignment
      *            the desired alignment.
      */
-    public void setColumnAlignment(Object propertyId, String alignment) {
-
-        // Checks for valid alignments
-        if (alignment != null && !alignment.equals(ALIGN_LEFT)
-                && !alignment.equals(ALIGN_CENTER)
-                && !alignment.equals(ALIGN_RIGHT)) {
-            throw new IllegalArgumentException("Column alignment '" + alignment
-                    + "' is not supported.");
-        }
-
-        if (alignment == null || alignment.equals(ALIGN_LEFT)) {
+    public void setColumnAlignment(Object propertyId, Align alignment) {
+        if (alignment == null || alignment == Align.LEFT) {
             columnAlignments.remove(propertyId);
         } else {
             columnAlignments.put(propertyId, alignment);
@@ -1397,7 +1503,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @return the Value of property columnHeaderMode.
      */
-    public int getColumnHeaderMode() {
+    public ColumnHeaderMode getColumnHeaderMode() {
         return columnHeaderMode;
     }
 
@@ -1407,10 +1513,12 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param columnHeaderMode
      *            the New value of property columnHeaderMode.
      */
-    public void setColumnHeaderMode(int columnHeaderMode) {
-        if (columnHeaderMode != this.columnHeaderMode
-                && columnHeaderMode >= COLUMN_HEADER_MODE_HIDDEN
-                && columnHeaderMode <= COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID) {
+    public void setColumnHeaderMode(ColumnHeaderMode columnHeaderMode) {
+        if (columnHeaderMode == null) {
+            throw new IllegalArgumentException(
+                    "Column header mode can not be null");
+        }
+        if (columnHeaderMode != this.columnHeaderMode) {
             this.columnHeaderMode = columnHeaderMode;
             requestRepaint();
         }
@@ -1750,7 +1858,7 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
 
-        final int headmode = getRowHeaderMode();
+        final RowHeaderMode headmode = getRowHeaderMode();
         final boolean[] iscomponent = new boolean[cols];
         for (int i = 0; i < cols; i++) {
             iscomponent[i] = columnGenerators.containsKey(colids[i])
@@ -1771,7 +1879,7 @@ public class Table extends AbstractSelect implements Action.Container,
             cells[CELL_KEY][i] = itemIdMapper.key(id);
             if (headmode != ROW_HEADER_MODE_HIDDEN) {
                 switch (headmode) {
-                case ROW_HEADER_MODE_INDEX:
+                case INDEX:
                     cells[CELL_HEADER][i] = String.valueOf(i + firstIndex + 1);
                     break;
                 default:
@@ -2070,17 +2178,17 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param mode
      *            the One of the modes listed above.
      */
-    public void setRowHeaderMode(int mode) {
-        if (ROW_HEADER_MODE_HIDDEN == mode) {
-            rowCaptionsAreHidden = true;
-        } else {
-            rowCaptionsAreHidden = false;
-            setItemCaptionMode(mode);
+    public void setRowHeaderMode(RowHeaderMode mode) {
+        if (mode != null) {
+            rowHeaderMode = mode;
+            if (mode != RowHeaderMode.HIDDEN) {
+                setItemCaptionMode(mode.getItemCaptionMode());
+            }
+            // Assures the visual refresh. No need to reset the page buffer
+            // before
+            // as the content has not changed, only the alignments.
+            refreshRenderedCells();
         }
-
-        // Assures the visual refresh. No need to reset the page buffer before
-        // as the content has not changed, only the alignments.
-        refreshRenderedCells();
     }
 
     /**
@@ -2089,9 +2197,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * @return the Row header mode.
      * @see #setRowHeaderMode(int)
      */
-    public int getRowHeaderMode() {
-        return rowCaptionsAreHidden ? ROW_HEADER_MODE_HIDDEN
-                : getItemCaptionMode();
+    public RowHeaderMode getRowHeaderMode() {
+        return rowHeaderMode;
     }
 
     /**
@@ -2928,7 +3035,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     private boolean areColumnHeadersEnabled() {
-        return getColumnHeaderMode() != COLUMN_HEADER_MODE_HIDDEN;
+        return getColumnHeaderMode() != ColumnHeaderMode.HIDDEN;
     }
 
     private void paintVisibleColumns(PaintTarget target) throws PaintException {
@@ -2959,8 +3066,9 @@ public class Table extends AbstractSelect implements Action.Container,
                         target.addAttribute("sortable", true);
                     }
                 }
-                if (!ALIGN_LEFT.equals(getColumnAlignment(colId))) {
-                    target.addAttribute("align", getColumnAlignment(colId));
+                if (!Align.LEFT.equals(getColumnAlignment(colId))) {
+                    target.addAttribute("align", getColumnAlignment(colId)
+                            .toString());
                 }
                 paintColumnWidth(target, colId);
                 target.endTag("column");
@@ -3050,6 +3158,9 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         if (start > cells[CELL_ITEMID].length || start < 0) {
             start = 0;
+        }
+        if (end > cells[CELL_ITEMID].length) {
+            end = cells[CELL_ITEMID].length;
         }
 
         for (int indexInRowbuffer = start; indexInRowbuffer < end; indexInRowbuffer++) {
@@ -3721,7 +3832,7 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue, String columnHeader, Resource columnIcon,
-            String columnAlignment) throws UnsupportedOperationException {
+            Align columnAlignment) throws UnsupportedOperationException {
         if (!this.addContainerProperty(propertyId, type, defaultValue)) {
             return false;
         }
@@ -5187,4 +5298,13 @@ public class Table extends AbstractSelect implements Action.Container,
         return propertyValueConverters.get(propertyId);
     }
 
+    @Override
+    public void setVisible(boolean visible) {
+        if (!isVisible() && visible) {
+            // We need to ensure that the rows are sent to the client when the
+            // Table is made visible if it has been rendered as invisible.
+            setRowCacheInvalidated(true);
+        }
+        super.setVisible(visible);
+    }
 }

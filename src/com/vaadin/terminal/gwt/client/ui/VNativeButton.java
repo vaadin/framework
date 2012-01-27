@@ -19,24 +19,21 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc.InitializableClientToServerRpc;
 import com.vaadin.terminal.gwt.client.ui.VButton.ButtonClientToServerRpc;
 
-public class VNativeButton extends Button implements VPaintableWidget,
-        ClickHandler, FocusHandler, BlurHandler {
+public class VNativeButton extends Button implements ClickHandler,
+        FocusHandler, BlurHandler {
 
     public static final String CLASSNAME = "v-nativebutton";
 
     protected String width = null;
 
-    protected String id;
+    protected String paintableId;
 
     protected ApplicationConnection client;
 
@@ -55,10 +52,10 @@ public class VNativeButton extends Button implements VPaintableWidget,
      */
     private boolean clickPending;
 
-    private HandlerRegistration focusHandlerRegistration;
-    private HandlerRegistration blurHandlerRegistration;
+    protected HandlerRegistration focusHandlerRegistration;
+    protected HandlerRegistration blurHandlerRegistration;
 
-    private boolean disableOnClick = false;
+    protected boolean disableOnClick = false;
 
     public VNativeButton() {
         setStyleName(CLASSNAME);
@@ -71,56 +68,6 @@ public class VNativeButton extends Button implements VPaintableWidget,
         sinkEvents(VTooltip.TOOLTIP_EVENTS);
         sinkEvents(Event.ONMOUSEDOWN);
         sinkEvents(Event.ONMOUSEUP);
-    }
-
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-
-        // Ensure correct implementation,
-        // but don't let container manage caption etc.
-        if (client.updateComponent(this, uidl, false)) {
-            return;
-        }
-
-        disableOnClick = uidl.hasAttribute(VButton.ATTR_DISABLE_ON_CLICK);
-
-        focusHandlerRegistration = EventHelper.updateFocusHandler(this, client,
-                focusHandlerRegistration);
-        blurHandlerRegistration = EventHelper.updateBlurHandler(this, client,
-                blurHandlerRegistration);
-
-        // Save details
-        this.client = client;
-        id = uidl.getId();
-
-        // Set text
-        setText(uidl.getStringAttribute("caption"));
-
-        // handle error
-        if (uidl.hasAttribute("error")) {
-            if (errorIndicatorElement == null) {
-                errorIndicatorElement = DOM.createSpan();
-                errorIndicatorElement.setClassName("v-errorindicator");
-            }
-            getElement().insertBefore(errorIndicatorElement, captionElement);
-
-        } else if (errorIndicatorElement != null) {
-            getElement().removeChild(errorIndicatorElement);
-            errorIndicatorElement = null;
-        }
-
-        if (uidl.hasAttribute("icon")) {
-            if (icon == null) {
-                icon = new Icon(client);
-                getElement().insertBefore(icon.getElement(), captionElement);
-            }
-            icon.setUri(uidl.getStringAttribute("icon"));
-        } else {
-            if (icon != null) {
-                getElement().removeChild(icon.getElement());
-                icon = null;
-            }
-        }
-
     }
 
     @Override
@@ -148,7 +95,7 @@ public class VNativeButton extends Button implements VPaintableWidget,
         }
 
         if (client != null) {
-            client.handleTooltipEvent(event, this);
+            client.handleWidgetTooltipEvent(event, this);
         }
     }
 
@@ -166,7 +113,7 @@ public class VNativeButton extends Button implements VPaintableWidget,
      * .dom.client.ClickEvent)
      */
     public void onClick(ClickEvent event) {
-        if (id == null || client == null) {
+        if (paintableId == null || client == null) {
             return;
         }
 
@@ -189,18 +136,18 @@ public class VNativeButton extends Button implements VPaintableWidget,
     protected ButtonClientToServerRpc getButtonRpcProxy() {
         if (null == buttonRpcProxy) {
             buttonRpcProxy = GWT.create(ButtonClientToServerRpc.class);
-            ((InitializableClientToServerRpc) buttonRpcProxy).initRpc(id,
-                    client);
+            ((InitializableClientToServerRpc) buttonRpcProxy).initRpc(
+                    paintableId, client);
         }
         return buttonRpcProxy;
     }
 
     public void onFocus(FocusEvent arg0) {
-        client.updateVariable(id, EventId.FOCUS, "", true);
+        client.updateVariable(paintableId, EventId.FOCUS, "", true);
     }
 
     public void onBlur(BlurEvent arg0) {
-        client.updateVariable(id, EventId.BLUR, "", true);
+        client.updateVariable(paintableId, EventId.BLUR, "", true);
     }
 
     @Override

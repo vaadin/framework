@@ -155,7 +155,7 @@ public class CompositeValidator implements Validator {
      */
     public void setMode(CombinationMode mode) {
         if (mode == null) {
-            throw new IllegalStateException(
+            throw new IllegalArgumentException(
                     "The validator can't be set to null");
         }
         this.mode = mode;

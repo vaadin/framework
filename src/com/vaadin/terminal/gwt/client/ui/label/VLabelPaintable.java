@@ -6,26 +6,20 @@ package com.vaadin.terminal.gwt.client.ui.label;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.PreElement;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
 
-public class VLabelPaintable implements VPaintableWidget {
-
-    private VLabel widget = GWT.create(VLabel.class);
-    private ApplicationConnection client;
-
+public class VLabelPaintable extends VAbstractPaintableWidget {
     public VLabelPaintable() {
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-
-        if (client.updateComponent(getWidgetForPaintable(), uidl, true)) {
+        if (client.updateComponent(this, uidl, true)) {
             return;
         }
-
-        this.client = client;
 
         boolean sinkOnloads = false;
 
@@ -64,8 +58,14 @@ public class VLabelPaintable implements VPaintableWidget {
         }
     }
 
+    @Override
+    protected Widget createWidget() {
+        return GWT.create(VLabel.class);
+    }
+
+    @Override
     public VLabel getWidgetForPaintable() {
-        return widget;
+        return (VLabel) super.getWidgetForPaintable();
     }
 
 }
