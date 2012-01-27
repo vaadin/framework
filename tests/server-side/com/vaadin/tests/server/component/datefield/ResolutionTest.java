@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.datefield;
+package com.vaadin.tests.server.component.datefield;
 
 import java.util.ArrayList;
 
