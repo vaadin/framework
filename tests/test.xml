@@ -94,7 +94,7 @@
 			<include name="**/**.java" />
 		</fileset>
 		
-		<antcontrib:for threadCount="40" parallel="true" keepgoing="true" param="target">
+		<antcontrib:for threadCount="30" parallel="true" keepgoing="true" param="target">
 			<path>
 				<fileset refid="tests-fileset" />
 			</path>

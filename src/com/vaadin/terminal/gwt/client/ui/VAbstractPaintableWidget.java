@@ -1,3 +1,6 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -10,7 +13,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     private ApplicationConnection connection;
 
     /* State variables */
-//    private boolean enabled = true;
+    // private boolean enabled = true;
 
     /**
      * Default constructor
@@ -66,7 +69,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         this.connection = connection;
     }
 
-//    public boolean isEnabled() {
-//        return enabled;
-//    }
+    // public boolean isEnabled() {
+    // return enabled;
+    // }
 }

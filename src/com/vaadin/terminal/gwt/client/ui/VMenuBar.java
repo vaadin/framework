@@ -1420,8 +1420,4 @@ public class VMenuBar extends SimpleFocusablePanel implements
         return null;
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }

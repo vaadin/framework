@@ -734,8 +734,10 @@ public class VDebugConsole extends VOverlay implements Console {
 
             forceLayout.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {
-                    // TODO for each client in appconf force layout
-                    // VDebugConsole.this.client.forceLayout();
+                    for (ApplicationConnection applicationConnection : ApplicationConfiguration
+                            .getRunningApplications()) {
+                        applicationConnection.forceLayout();
+                    }
                 }
             });
 

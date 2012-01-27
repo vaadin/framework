@@ -125,7 +125,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
         // see ticket #7668
         if (c.getParent() == this) {
             // When c is removed, all components after it are shifted down
-            if (index > components.indexOf(c)) {
+            if (index > getComponentIndex(c)) {
                 index--;
             }
             removeComponent(c);
@@ -273,6 +273,30 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
 
     public void removeListener(LayoutClickListener listener) {
         removeListener(CLICK_EVENT, LayoutClickEvent.class, listener);
+    }
+
+    /**
+     * Returns the index of the given component.
+     * 
+     * @param component
+     *            The component to look up.
+     * @return The index of the component or -1 if the component is not a child.
+     */
+    public int getComponentIndex(Component component) {
+        return components.indexOf(component);
+    }
+
+    /**
+     * Returns the component at the given position.
+     * 
+     * @param index
+     *            The position of the component.
+     * @return The component at the given index.
+     * @throws IndexOutOfBoundsException
+     *             If the index is out of range.
+     */
+    public Component getComponent(int index) throws IndexOutOfBoundsException {
+        return components.get(index);
     }
 
 }

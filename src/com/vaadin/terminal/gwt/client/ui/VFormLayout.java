@@ -117,8 +117,7 @@ public class VFormLayout extends SimplePanel implements Container {
                 Widget childWidget = childPaintable.getWidgetForPaintable();
                 Caption caption = widgetToCaption.get(childWidget);
                 if (caption == null) {
-                    caption = new Caption(childPaintable, client,
-                            getStylesFromUIDL(childUidl));
+                    caption = new Caption(childPaintable, client);
                     caption.addClickHandler(this);
                     widgetToCaption.put(childWidget, caption);
                 }
@@ -208,8 +207,7 @@ public class VFormLayout extends SimplePanel implements Container {
                     VPaintableWidget newPaintable = paintableMap
                             .getPaintable(newComponent);
                     Caption oldCap = widgetToCaption.get(oldComponent);
-                    final Caption newCap = new Caption(newPaintable, client,
-                            null);
+                    final Caption newCap = new Caption(newPaintable, client);
                     newCap.addClickHandler(this);
                     newCap.setStyleName(oldCap.getStyleName());
                     widgetToCaption.put(newComponent, newCap);
@@ -333,29 +331,37 @@ public class VFormLayout extends SimplePanel implements Container {
          *            return null
          * @param client
          */
-        public Caption(VPaintableWidget component,
-                ApplicationConnection client, String[] styles) {
+        public Caption(VPaintableWidget component, ApplicationConnection client) {
             super();
             this.client = client;
             owner = component;
 
-            String style = CLASSNAME;
+            sinkEvents(VTooltip.TOOLTIP_EVENTS);
+        }
+
+        private void setStyles(String[] styles) {
+            String styleName = CLASSNAME;
+
             if (styles != null) {
-                for (int i = 0; i < styles.length; i++) {
-                    style += " " + CLASSNAME + "-" + styles[i];
+                for (String style : styles) {
+                    if (ApplicationConnection.DISABLED_CLASSNAME.equals(style)) {
+                        // Add v-disabled also without classname prefix so
+                        // generic v-disabled CSS rules work
+                        styleName += " " + style;
+                    }
+
+                    styleName += " " + CLASSNAME + "-" + style;
                 }
             }
-            setStyleName(style);
 
-            sinkEvents(VTooltip.TOOLTIP_EVENTS);
+            setStyleName(styleName);
         }
 
         public void updateCaption(UIDL uidl) {
             setVisible(!uidl.getBooleanAttribute("invisible"));
 
-            setStyleName(getElement(),
-                    ApplicationConnection.DISABLED_CLASSNAME,
-                    uidl.hasAttribute("disabled"));
+            // Update styles as they might have changed when the caption changed
+            setStyles(getStylesFromUIDL(uidl));
 
             boolean isEmpty = true;
 

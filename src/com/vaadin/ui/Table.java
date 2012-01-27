@@ -3159,6 +3159,9 @@ public class Table extends AbstractSelect implements Action.Container,
         if (start > cells[CELL_ITEMID].length || start < 0) {
             start = 0;
         }
+        if (end > cells[CELL_ITEMID].length) {
+            end = cells[CELL_ITEMID].length;
+        }
 
         for (int indexInRowbuffer = start; indexInRowbuffer < end; indexInRowbuffer++) {
             final Object itemId = cells[CELL_ITEMID][indexInRowbuffer];
@@ -5295,4 +5298,13 @@ public class Table extends AbstractSelect implements Action.Container,
         return propertyValueConverters.get(propertyId);
     }
 
+    @Override
+    public void setVisible(boolean visible) {
+        if (!isVisible() && visible) {
+            // We need to ensure that the rows are sent to the client when the
+            // Table is made visible if it has been rendered as invisible.
+            setRowCacheInvalidated(true);
+        }
+        super.setVisible(visible);
+    }
 }
