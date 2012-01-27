@@ -277,7 +277,6 @@
 		</antcall>
 	</target>
 
-
 	<target name="integration-test-weblogicPortal">
 		<fileset dir="integration-testscripts" id="html-test-files" includes="weblogic-portal/integration-test-WebLogic-Portal-10.3.2-portlet2.html" />
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
