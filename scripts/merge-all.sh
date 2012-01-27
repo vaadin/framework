@@ -4,7 +4,7 @@ AUTOMERGE=$2
 if [ "$FROM" = "" ]
 then
 	echo "Usage: $0 <from version> [automerge]"
-	exit
+	exit 3
 fi
 if [ "$AUTOMERGE" = "automerge" ]
 then
@@ -16,7 +16,7 @@ localchanges=`svn stat|wc -l`
 if [ "$localchanges" != "0" ] && [ "$IGNOREDIRTY" != "ignoredirty" ]
 then
 	echo "You must have a clean working space copy"
-	exit
+	exit 4
 fi
 
 currentrepowithoutversion=`svn info|grep URL|sed "s/URL: //"|sed "s/\/[^\/]*$//"`
@@ -61,3 +61,4 @@ then
 	echo $cmd
 fi
 
+exit 0
