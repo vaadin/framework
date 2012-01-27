@@ -40,7 +40,7 @@ cmd=""
 for revision in $unmerged
 do
 	thiscmd=`dirname $0`"/merge.sh $FROM $revision $AUTOCOMMIT $IGNOREDIRTY"
-	cmd="$thiscmd && "
+	cmd="$cmd $thiscmd && "
 	if [ "$AUTOMERGE" = "automerge" ]
 	then
 		echo "Merging [$revision]..."
