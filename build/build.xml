@@ -487,8 +487,8 @@
         <java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
         	<classpath>
         		   <path refid="compile.classpath.client-side" />
-        		   <pathelement location="${result-path}/classes" />
-        	       <pathelement location="${result-path}/src/core" />
+        		   <pathelement location="${result-classes-core}" />
+        	       <pathelement location="${result-src-core}" />
             </classpath>            
             <arg value="-war" />
             <arg value="${widgetsets-output-dir}" />
