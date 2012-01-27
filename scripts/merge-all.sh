@@ -20,8 +20,8 @@ then
 fi
 
 currentrepowithoutversion=`svn info|grep URL|sed "s/URL: //"|sed "s/\/[^\/]*$//"`
-
 sourceurl="$currentrepowithoutversion/$FROM"
+unmerged=`svn mergeinfo --show-revs eligible $sourceurl|sed "s/r//g"`
 
 if [ "$unmerged" = "" ]
 then
