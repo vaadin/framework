@@ -17,11 +17,15 @@ public class TextFieldValueGoesMissing extends TestBase {
         final Label label1 = new Label("1");
         final Label label2 = new Label("2");
 
-        Button button = new Button("Refresh");
+        Button button = new Button("Replace label");
         button.addListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                verticalLayout.replaceComponent(label1, label2);
+                if (verticalLayout.getComponentIndex(label1) > -1) {
+                    verticalLayout.replaceComponent(label1, label2);
+                } else {
+                    verticalLayout.replaceComponent(label2, label1);
+                }
             }
         });
         verticalLayout.addComponent(button);
@@ -41,7 +45,7 @@ public class TextFieldValueGoesMissing extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "Enter a text in the TextField in the table and press the 'replace label' button. This replaces the label which is in the same layout as the table but should not cause the TextField in the table to lose its contents";
+        return "Enter a text in the TextField in the table and press the 'Replace label' button. This replaces the label which is in the same layout as the table but should not cause the TextField in the table to lose its contents";
     }
 
     @Override
