@@ -69,4 +69,11 @@ public class VTextArea extends VTextField {
         super.onBrowserEvent(event);
     }
 
+    @Override
+    public int getCursorPos() {
+        // This is needed so that TextBoxImplIE6 is used to return the correct
+        // position for old Internet Explorer versions where it has to be
+        // detected in a different way.
+        return getImpl().getTextAreaCursorPos(getElement());
+    }
 }

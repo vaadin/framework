@@ -20,12 +20,12 @@ import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.LocaleNotLoadedException;
 import com.vaadin.terminal.gwt.client.LocaleService;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
-public class VTextualDate extends VDateField implements VPaintableWidget, Field,
-        ChangeHandler, ContainerResizedListener, Focusable, SubPartAware {
+public class VTextualDate extends VDateField implements VPaintableWidget,
+        Field, ChangeHandler, ContainerResizedListener, Focusable, SubPartAware {
 
     private static final String PARSE_ERROR_CLASSNAME = CLASSNAME
             + "-parseerror";
@@ -331,7 +331,8 @@ public class VTextualDate extends VDateField implements VPaintableWidget, Field,
 
     @Override
     public void setWidth(String newWidth) {
-        if (!"".equals(newWidth) && (width == null || !newWidth.equals(width))) {
+        if (!"".equals(newWidth)
+                && (isUndefinedWidth() || !newWidth.equals(width))) {
             needLayout = true;
             width = newWidth;
             super.setWidth(width);
@@ -340,14 +341,16 @@ public class VTextualDate extends VDateField implements VPaintableWidget, Field,
                 needLayout = false;
             }
         } else {
-            if ("".equals(newWidth) && width != null && !"".equals(width)) {
+            if ("".equals(newWidth) && !isUndefinedWidth()) {
                 super.setWidth("");
-                needLayout = true;
-                iLayout();
-                needLayout = false;
+                iLayout(true);
                 width = null;
             }
         }
+    }
+
+    protected boolean isUndefinedWidth() {
+        return width == null || "".equals(width);
     }
 
     /**
@@ -363,14 +366,26 @@ public class VTextualDate extends VDateField implements VPaintableWidget, Field,
         return fieldExtraWidth;
     }
 
+    /**
+     * Force an recalculation of the width of the component IF the width has
+     * been defined. Does nothing if width is undefined as the width will be
+     * automatically adjusted by the browser.
+     */
     public void updateWidth() {
+        if (isUndefinedWidth()) {
+            return;
+        }
         needLayout = true;
         fieldExtraWidth = -1;
-        iLayout();
+        iLayout(true);
     }
 
     public void iLayout() {
-        if (needLayout) {
+        iLayout(false);
+    }
+
+    public void iLayout(boolean force) {
+        if (needLayout || force) {
             int textFieldWidth = getOffsetWidth() - getFieldExtraWidth();
             if (textFieldWidth < 0) {
                 // Field can never be smaller than 0 (causes exception in IE)

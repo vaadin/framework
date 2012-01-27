@@ -11,7 +11,6 @@ import java.util.EventObject;
 import java.util.Locale;
 
 import com.vaadin.Application;
-import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.Paintable;
@@ -363,12 +362,6 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      * </p>
      * 
      * <p>
-     * The read-only status affects only the user; the value can still be
-     * changed programmatically, for example, with
-     * {@link Property#setValue(Object)}.
-     * </p>
-     * 
-     * <p>
      * The method will return {@code true} if the component or any of its
      * parents is in the read-only mode.
      * </p>
@@ -393,12 +386,6 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      * Notice that the read-only mode only affects whether the user can change
      * the <i>value</i> of the component; it is possible to, for example, scroll
      * a read-only table.
-     * </p>
-     * 
-     * <p>
-     * The read-only status affects only the user; the value can still be
-     * changed programmatically, for example, with
-     * {@link Property#setValue(Object)}.
      * </p>
      * 
      * <p>

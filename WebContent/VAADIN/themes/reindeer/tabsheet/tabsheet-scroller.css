@@ -24,7 +24,6 @@
 	width: 18px;
 	height: 17px;
 	overflow: hidden;
-	cursor: default;
 }
 .v-tabsheet-scroller button::-moz-focus-inner {
 	border: none;

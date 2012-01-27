@@ -140,6 +140,7 @@ public class VWindow extends VOverlay implements Container,
 
     private Element modalityCurtain;
     private Element draggingCurtain;
+    private Element resizingCurtain;
 
     private Element headerText;
 
@@ -568,12 +569,17 @@ public class VWindow extends VOverlay implements Container,
 
         this.draggable = draggable;
 
+        setCursorProperties();
+    }
+
+    private void setCursorProperties() {
         if (!this.draggable) {
             header.getStyle().setProperty("cursor", "default");
+            footer.getStyle().setProperty("cursor", "default");
         } else {
             header.getStyle().setProperty("cursor", "");
+            footer.getStyle().setProperty("cursor", "");
         }
-
     }
 
     private void setNaturalWidth() {
@@ -703,28 +709,62 @@ public class VWindow extends VOverlay implements Container,
     }
 
     /*
-     * Shows (or hides) an empty div on top of all other content; used when
-     * resizing or moving, so that iframes (etc) do not steal event.
+     * Shows an empty div on top of all other content; used when moving, so that
+     * iframes (etc) do not steal event.
      */
-    private void showDraggingCurtain(boolean show) {
-        if (show && draggingCurtain == null) {
+    private void showDraggingCurtain() {
+        DOM.appendChild(RootPanel.getBodyElement(), getDraggingCurtain());
+    }
 
-            draggingCurtain = DOM.createDiv();
-            DOM.setStyleAttribute(draggingCurtain, "position", "absolute");
-            DOM.setStyleAttribute(draggingCurtain, "top", "0px");
-            DOM.setStyleAttribute(draggingCurtain, "left", "0px");
-            DOM.setStyleAttribute(draggingCurtain, "width", "100%");
-            DOM.setStyleAttribute(draggingCurtain, "height", "100%");
-            DOM.setStyleAttribute(draggingCurtain, "zIndex", ""
-                    + VOverlay.Z_INDEX);
-
-            DOM.appendChild(RootPanel.getBodyElement(), draggingCurtain);
-        } else if (!show && draggingCurtain != null) {
-
+    private void hideDraggingCurtain() {
+        if (draggingCurtain != null) {
             DOM.removeChild(RootPanel.getBodyElement(), draggingCurtain);
-            draggingCurtain = null;
+        }
+    }
+
+    /*
+     * Shows an empty div on top of all other content; used when resizing, so
+     * that iframes (etc) do not steal event.
+     */
+    private void showResizingCurtain() {
+        DOM.appendChild(RootPanel.getBodyElement(), getResizingCurtain());
+    }
+
+    private void hideResizingCurtain() {
+        if (resizingCurtain != null) {
+            DOM.removeChild(RootPanel.getBodyElement(), resizingCurtain);
+        }
+    }
+
+    private Element getDraggingCurtain() {
+        if (draggingCurtain == null) {
+            draggingCurtain = createCurtain();
+            draggingCurtain.setClassName(CLASSNAME + "-draggingCurtain");
         }
 
+        return draggingCurtain;
+    }
+
+    private Element getResizingCurtain() {
+        if (resizingCurtain == null) {
+            resizingCurtain = createCurtain();
+            resizingCurtain.setClassName(CLASSNAME + "-resizingCurtain");
+        }
+
+        return resizingCurtain;
+    }
+
+    private Element createCurtain() {
+        Element curtain = DOM.createDiv();
+
+        DOM.setStyleAttribute(curtain, "position", "absolute");
+        DOM.setStyleAttribute(curtain, "top", "0px");
+        DOM.setStyleAttribute(curtain, "left", "0px");
+        DOM.setStyleAttribute(curtain, "width", "100%");
+        DOM.setStyleAttribute(curtain, "height", "100%");
+        DOM.setStyleAttribute(curtain, "zIndex", "" + VOverlay.Z_INDEX);
+
+        return curtain;
     }
 
     private void setResizable(boolean resizability) {
@@ -844,7 +884,7 @@ public class VWindow extends VOverlay implements Container,
                 if (!isActive()) {
                     bringToFront();
                 }
-                showDraggingCurtain(true);
+                showResizingCurtain();
                 if (BrowserInfo.get().isIE()) {
                     DOM.setStyleAttribute(resizeBox, "visibility", "hidden");
                 }
@@ -862,7 +902,7 @@ public class VWindow extends VOverlay implements Container,
             case Event.ONTOUCHCANCEL:
                 DOM.releaseCapture(getElement());
             case Event.ONLOSECAPTURE:
-                showDraggingCurtain(false);
+                hideResizingCurtain();
                 if (BrowserInfo.get().isIE()) {
                     DOM.setStyleAttribute(resizeBox, "visibility", "");
                 }
@@ -1097,7 +1137,7 @@ public class VWindow extends VOverlay implements Container,
 
     private void beginMovingWindow(Event event) {
         if (draggable) {
-            showDraggingCurtain(true);
+            showDraggingCurtain();
             dragging = true;
             startX = Util.getTouchOrMouseClientX(event);
             startY = Util.getTouchOrMouseClientY(event);
@@ -1110,7 +1150,7 @@ public class VWindow extends VOverlay implements Container,
 
     private void stopMovingWindow() {
         dragging = false;
-        showDraggingCurtain(false);
+        hideDraggingCurtain();
         DOM.releaseCapture(getElement());
     }
 

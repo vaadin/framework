@@ -54,7 +54,7 @@ public class VTabsheet extends VTabsheetBase {
 
     /**
      * Representation of a single "tab" shown in the TabBar
-     * 
+     *
      */
     private static class Tab extends SimplePanel {
         private static final String TD_CLASSNAME = CLASSNAME + "-tabitemcell";
@@ -64,6 +64,8 @@ public class VTabsheet extends VTabsheetBase {
                 + "-selected";
         private static final String TD_SELECTED_FIRST_CLASSNAME = TD_SELECTED_CLASSNAME
                 + "-first";
+        private static final String TD_DISABLED_CLASSNAME = TD_CLASSNAME
+                + "-disabled";
 
         private static final String DIV_CLASSNAME = CLASSNAME + "-tabitem";
         private static final String DIV_SELECTED_CLASSNAME = DIV_CLASSNAME
@@ -116,6 +118,7 @@ public class VTabsheet extends VTabsheetBase {
 
         public void setEnabledOnServer(boolean enabled) {
             enabledOnServer = enabled;
+            setStyleName(td, TD_DISABLED_CLASSNAME, !enabled);
         }
 
         public void addClickHandler(ClickHandler handler) {

@@ -8,7 +8,7 @@ if lockfile -r0 -! /home/integration/deploy/lock.file &> /dev/null
 
   AGE=$[($DATE - $LOCK_AGE)/60]
 
-  if [ "$AGE" -gt "15" ]
+  if [ "$AGE" -gt "20" ]
     then
      echo lock.file is $AGE min old.
      ./cleanup.sh
