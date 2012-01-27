@@ -404,7 +404,7 @@
         <echo>Compiling src (server-side)</echo>
     	<!-- Compile core sources first as the other sources depend on these -->
         <mkdir dir="${result-classes-core}" />
-        <javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-classes-core}" debug="true" encoding="UTF-8" includeantruntime="false">
+        <javac source="1.5" target="1.5" classpathref="compile.classpath" destdir="${result-classes-core}" debug="true" encoding="UTF-8" includeantruntime="false">
             <src path="${result-src-core}"/>
         </javac>
     </target>
@@ -413,7 +413,7 @@
         <echo>Compiling src (Server and client side JUnit tests)</echo>
     	<!-- Compile server and client side JUnit tests -->
         <mkdir dir="${result-classes-junit}" />
-        <javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-classes-junit}" debug="true" encoding="UTF-8" includeantruntime="false">
+        <javac source="1.5" target="1.5" classpathref="compile.classpath" destdir="${result-classes-junit}" debug="true" encoding="UTF-8" includeantruntime="false">
         	<classpath path="${result-classes-core}"></classpath>
             <src path="${result-src-junit}"/>
         </javac>
@@ -421,7 +421,7 @@
         <echo>Compiling src (TestBench tests)</echo>
     	<!-- Compile TestBench tests -->
         <mkdir dir="${result-classes-testbench}" />
-        <javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-classes-testbench}" debug="true" encoding="UTF-8" includeantruntime="false">
+        <javac source="1.5" target="1.5" classpathref="compile.classpath" destdir="${result-classes-testbench}" debug="true" encoding="UTF-8" includeantruntime="false">
         	<classpath path="${result-classes-junit}"></classpath>
         	<classpath path="${result-classes-core}"></classpath>
             <src path="${result-src-testbench}"/>
@@ -652,7 +652,7 @@
     <target name="javadoc" depends="init, preprocess-src">
         <property name="javadoc.destdir" value="${output-dir}/WebContent/docs/api"/>
         
-        <javadoc destdir="${javadoc.destdir}" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath.client-side">
+        <javadoc destdir="${javadoc.destdir}" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="client-side.compile.classpath">
             <packageset dir="${result-src-core}"/>
             <doctitle>${javadoc.doctitle}</doctitle>
             <!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
