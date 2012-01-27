@@ -24,7 +24,13 @@ msg="[merge from $FROM] $msg"
 if [ "$AUTOCOMMIT" = "autocommit" ]
 then
 	echo "Trying to commit..."
-	svn commit -m "$msg"
+	if [ "$SVN_USER" != "" ]
+	then
+		svn commit -m "$msg" --username $SVN_USER --password $SVN_PASS
+	else
+		svn commit -m "$msg"
+	fi
+	
 	RET=$?
 	if [ "$RET" != "0" ]
 	then
