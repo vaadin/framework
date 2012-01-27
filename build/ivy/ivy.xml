@@ -6,7 +6,7 @@
     <configurations >
    		<conf name="ss.compile" extends="cs.compile" description="Server side compilation dependencies" visibility="private"/>
    		<conf name="cs.compile" description="Client side compilation dependencies" visibility="private"/>
-   		<conf name="ss.test.runtime" description="Test runtime dependencies" visibility="private"/>
+   		<conf name="ss.test.compile" extends="ss.compile" description="Test compilation dependencies" visibility="private"/>
    		<conf name="taskdefs" description="Ant task definitions" visibility="private" />
 	</configurations>
     <publications />        
@@ -26,21 +26,21 @@
         <dependency org="com.google.gwt" name="gwt-dev" rev="2.4.0" conf="cs.compile->master" />
          
    		<!-- Test frameworks & related -->
-   		<dependency org="junit" name="junit" rev="4.5" conf="ss.test.runtime -> master"/>
-   		<dependency org="org.easymock" name="easymock" rev="3.0" conf="ss.test.runtime -> master, runtime(*)"/>  
-   		<dependency org="org.hsqldb" name="hsqldb" rev="2.2.6" conf="ss.test.runtime -> master, runtime(*)"/>  
+   		<dependency org="junit" name="junit" rev="4.5" conf="ss.test.compile -> master"/>
+   		<dependency org="org.easymock" name="easymock" rev="3.0" conf="ss.test.compile -> master, runtime(*)"/>  
+   		<dependency org="org.hsqldb" name="hsqldb" rev="2.2.6" conf="ss.test.compile -> master, runtime(*)"/>  
    		   		
    		<!-- Ant tasks -->   	
    		<dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" conf="taskdefs ->master"/>
    		<dependency org="org.apache.maven" name="maven-ant-tasks" rev="2.0.10" conf="taskdefs ->master"/>
    	   	   		
    		<!-- Emma -->
-   		<dependency org="emma" name="emma_ant" rev="2.0.5312" conf="ss.test.runtime,taskdefs ->master"/>
-   		<dependency org="emma" name="emma" rev="2.0.5312-patched" conf="ss.test.runtime,taskdefs ->*"/>
+   		<dependency org="emma" name="emma_ant" rev="2.0.5312" conf="ss.test.compile,taskdefs ->master"/>
+   		<dependency org="emma" name="emma" rev="2.0.5312-patched" conf="ss.test.compile,taskdefs ->*"/>
 
         <!-- Bean Validation implementation -->
-        <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.1" conf="ss.test.runtime -> default"/>
-        <dependency org="org.hibernate" name="hibernate-validator" rev="4.2.0.Final" conf="ss.test.runtime -> default"/>
+        <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.1" conf="ss.test.compile -> default"/>
+        <dependency org="org.hibernate" name="hibernate-validator" rev="4.2.0.Final" conf="ss.test.compile -> default"/>
 	</dependencies>
 
 </ivy-module>

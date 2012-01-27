@@ -25,10 +25,10 @@
 	
     <target name="init-deps" depends="common.init-deps" >
         <property name="ivy.resolved" value="1" />
-        <ivy:resolve file="build/ivy/ivy.xml" resolveid="common" conf="ss.compile, cs.compile, ss.test.runtime"/>
-        <ivy:cachepath pathid="compile.classpath" conf="ss.compile"/>
-        <ivy:cachepath pathid="client-side.compile.classpath" conf="cs.compile"/>
-        <ivy:cachepath pathid="test.runtime.classpath" conf="ss.test.runtime"/>
+        <ivy:resolve file="build/ivy/ivy.xml" resolveid="common" conf="ss.compile, cs.compile, ss.test.compile"/>
+        <ivy:cachepath pathid="compile.classpath.server-side" conf="ss.compile"/>
+        <ivy:cachepath pathid="compile.classpath.client-side" conf="cs.compile"/>
+        <ivy:cachepath pathid="compile.classpath.server-side-tests" conf="ss.test.compile"/>
     </target>
 
     <!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -404,7 +404,7 @@
         <echo>Compiling src (server-side)</echo>
     	<!-- Compile core sources first as the other sources depend on these -->
         <mkdir dir="${result-classes-core}" />
-        <javac source="1.5" target="1.5" classpathref="compile.classpath" destdir="${result-classes-core}" debug="true" encoding="UTF-8" includeantruntime="false">
+        <javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-classes-core}" debug="true" encoding="UTF-8" includeantruntime="false">
             <src path="${result-src-core}"/>
         </javac>
     </target>
@@ -413,7 +413,7 @@
         <echo>Compiling src (Server and client side JUnit tests)</echo>
     	<!-- Compile server and client side JUnit tests -->
         <mkdir dir="${result-classes-junit}" />
-        <javac source="1.5" target="1.5" classpathref="compile.classpath" destdir="${result-classes-junit}" debug="true" encoding="UTF-8" includeantruntime="false">
+        <javac source="1.5" target="1.5" classpathref="compile.classpath.server-side-tests" destdir="${result-classes-junit}" debug="true" encoding="UTF-8" includeantruntime="false">
         	<classpath path="${result-classes-core}"></classpath>
             <src path="${result-src-junit}"/>
         </javac>
@@ -421,7 +421,7 @@
         <echo>Compiling src (TestBench tests)</echo>
     	<!-- Compile TestBench tests -->
         <mkdir dir="${result-classes-testbench}" />
-        <javac source="1.5" target="1.5" classpathref="compile.classpath" destdir="${result-classes-testbench}" debug="true" encoding="UTF-8" includeantruntime="false">
+        <javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-classes-testbench}" debug="true" encoding="UTF-8" includeantruntime="false">
         	<classpath path="${result-classes-junit}"></classpath>
         	<classpath path="${result-classes-core}"></classpath>
             <src path="${result-src-testbench}"/>
@@ -486,7 +486,7 @@
     	<mkdir dir="${widgetsets-output-dir}"/>
         <java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
         	<classpath>
-        		   <path refid="client-side.compile.classpath" />
+        		   <path refid="compile.classpath.client-side" />
         		   <pathelement location="${result-path}/classes" />
         	       <pathelement location="${result-path}/src/core" />
             </classpath>            
@@ -510,14 +510,14 @@
     
     <target name="compile-widgetset-default">
         <antcall target="compile-widgetset">
-            <reference refid="client-side.compile.classpath" />
+            <reference refid="compile.classpath.client-side" />
             <param name="widgetset" value="com.vaadin.terminal.gwt.DefaultWidgetSet"/>
         </antcall>
     </target>
     
     <target name="compile-widgetset-portal-default" unless="compile.only.default-widgetset">
         <antcall target="compile-widgetset">
-            <reference refid="client-side.compile.classpath" />
+            <reference refid="compile.classpath.client-side" />
             <param name="widgetset" value="com.vaadin.portal.gwt.PortalDefaultWidgetSet"/>
         </antcall>
     </target>
@@ -652,7 +652,7 @@
     <target name="javadoc" depends="init, preprocess-src">
         <property name="javadoc.destdir" value="${output-dir}/WebContent/docs/api"/>
         
-        <javadoc destdir="${javadoc.destdir}" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="client-side.compile.classpath">
+        <javadoc destdir="${javadoc.destdir}" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath.client-side">
             <packageset dir="${result-src-core}"/>
             <doctitle>${javadoc.doctitle}</doctitle>
             <!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
@@ -927,7 +927,7 @@
                 <pathelement path="${result-classes-core-for-emma-junit}" />
                 <pathelement path="${result-classes-core}" />
                 <pathelement path="${result-classes-junit}" />
-            	<path refid="test.runtime.classpath"></path>
+            	<path refid="compile.classpath.server-side-tests"></path>
             </classpath>
         	<jvmarg value="-Demma.coverage.out.file=../${result-path}/unittests.ec" />
 
