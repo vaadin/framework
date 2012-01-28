@@ -52,3 +52,6 @@
 
 # /bin/
 /bin
+
+# Mac
+*.DS_Store
