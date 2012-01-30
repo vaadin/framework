@@ -5,11 +5,7 @@
 package com.vaadin.terminal.gwt.client;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -24,7 +20,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -65,30 +60,6 @@ public class Util {
         return el;
     }-*/;
 
-    private static final int LAZY_SIZE_CHANGE_TIMEOUT = 400;
-    private static Set<Widget> latelyChangedWidgets = new HashSet<Widget>();
-
-    private static Timer lazySizeChangeTimer = new Timer() {
-        private boolean lazySizeChangeTimerScheduled = false;
-
-        @Override
-        public void run() {
-            componentSizeUpdated(latelyChangedWidgets);
-            latelyChangedWidgets.clear();
-            lazySizeChangeTimerScheduled = false;
-        }
-
-        @Override
-        public void schedule(int delayMillis) {
-            if (lazySizeChangeTimerScheduled) {
-                cancel();
-            } else {
-                lazySizeChangeTimerScheduled = true;
-            }
-            super.schedule(delayMillis);
-        }
-    };
-
     /**
      * This helper method can be called if components size have been changed
      * outside rendering phase. It notifies components parent about the size
@@ -106,58 +77,40 @@ public class Util {
      *            run componentSizeUpdated lazyly
      */
     public static void notifyParentOfSizeChange(Widget widget, boolean lazy) {
-        if (lazy) {
-            latelyChangedWidgets.add(widget);
-            lazySizeChangeTimer.schedule(LAZY_SIZE_CHANGE_TIMEOUT);
-        } else {
-            Set<Widget> widgets = new HashSet<Widget>();
-            widgets.add(widget);
-            Util.componentSizeUpdated(widgets);
+        ApplicationConnection applicationConnection = findApplicationConnectionFor(widget);
+        if (applicationConnection != null) {
+            applicationConnection.doLayout(lazy);
         }
     }
 
-    /**
-     * Called when the size of one or more widgets have changed during
-     * rendering. Finds parent container and notifies them of the size change.
-     * 
-     * @param paintables
-     */
-    public static void componentSizeUpdated(Set<Widget> widgets) {
-        if (widgets.isEmpty()) {
-            return;
+    private static boolean findAppConnectionWarningDisplayed = false;
+
+    private static ApplicationConnection findApplicationConnectionFor(
+            Widget widget) {
+        if (!findAppConnectionWarningDisplayed) {
+            findAppConnectionWarningDisplayed = true;
+            VConsole.log("Warning: Using Util.findApplicationConnectionFor which should be eliminated once there is a better way to find the ApplicationConnection for a Paintable");
         }
 
-        Map<Container, Set<Widget>> childWidgets = new HashMap<Container, Set<Widget>>();
-
-        for (Widget widget : widgets) {
-            if (!widget.isAttached()) {
+        List<ApplicationConnection> runningApplications = ApplicationConfiguration
+                .getRunningApplications();
+        for (ApplicationConnection applicationConnection : runningApplications) {
+            VPaintableMap paintableMap = applicationConnection
+                    .getPaintableMap();
+            VPaintableWidget paintable = paintableMap.getPaintable(widget);
+            if (paintable == null) {
                 continue;
             }
-
-            // ApplicationConnection.getConsole().log(
-            // "Widget " + Util.getSimpleName(widget) + " size updated");
-            Widget parent = widget.getParent();
-            while (parent != null && !(parent instanceof Container)) {
-                parent = parent.getParent();
-            }
-            if (parent != null) {
-                Set<Widget> set = childWidgets.get(parent);
-                if (set == null) {
-                    set = new HashSet<Widget>();
-                    childWidgets.put((Container) parent, set);
+            String pid = paintableMap.getPid(paintable);
+            if (pid != null) {
+                VPaintable otherPaintable = paintableMap.getPaintable(pid);
+                if (otherPaintable == paintable) {
+                    return applicationConnection;
                 }
-                set.add(widget);
             }
         }
 
-        Set<Widget> parentChanges = new HashSet<Widget>();
-        for (Container parent : childWidgets.keySet()) {
-            if (!parent.requestLayout(childWidgets.get(parent))) {
-                parentChanges.add(parent.getWidgetForPaintable());
-            }
-        }
-
-        componentSizeUpdated(parentChanges);
+        return null;
     }
 
     public static float parseRelativeSize(String size) {
@@ -614,20 +567,7 @@ public class Util {
 
     public static void updateRelativeChildrenAndSendSizeUpdateEvent(
             ApplicationConnection client, HasWidgets container, Widget widget) {
-        /*
-         * Relative sized children must be updated first so the component has
-         * the correct outer dimensions when signaling a size change to the
-         * parent.
-         */
-        Iterator<Widget> childIterator = container.iterator();
-        while (childIterator.hasNext()) {
-            Widget w = childIterator.next();
-            client.handleComponentRelativeSize(w);
-        }
-
-        HashSet<Widget> widgets = new HashSet<Widget>();
-        widgets.add(widget);
-        Util.componentSizeUpdated(widgets);
+        notifyParentOfSizeChange(widget, false);
     }
 
     public static native int getRequiredWidth(

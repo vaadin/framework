@@ -12,11 +12,14 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -34,7 +37,6 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
-import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.ui.Field;
 import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
@@ -1000,6 +1002,8 @@ public class ApplicationConnection {
                 ArrayList<VPaintableWidget> updatedVPaintableWidgets = new ArrayList<VPaintableWidget>();
                 componentCaptionSizeChanges.clear();
 
+                Duration updateDuration = new Duration();
+
                 int length = changes.length();
                 for (int i = 0; i < length; i++) {
                     try {
@@ -1045,25 +1049,10 @@ public class ApplicationConnection {
                             json.getValueMap("dd"));
                 }
 
-                // Check which widgets' size has been updated
-                Set<Widget> sizeUpdatedWidgets = new HashSet<Widget>();
+                VConsole.log("updateFromUidl: "
+                        + updateDuration.elapsedMillis() + " ms");
 
-                sizeUpdatedWidgets.addAll(componentCaptionSizeChanges);
-
-                for (VPaintableWidget paintable : updatedVPaintableWidgets) {
-                    Widget widget = paintable.getWidgetForPaintable();
-                    Size oldSize = paintableMap.getOffsetSize(paintable);
-                    Size newSize = new Size(widget.getOffsetWidth(),
-                            widget.getOffsetHeight());
-
-                    if (oldSize == null || !oldSize.equals(newSize)) {
-                        sizeUpdatedWidgets.add(widget);
-                        paintableMap.setOffsetSize(paintable, newSize);
-                    }
-
-                }
-
-                Util.componentSizeUpdated(sizeUpdatedWidgets);
+                doLayout(false);
 
                 if (meta != null) {
                     if (meta.containsKey("appError")) {
@@ -1806,6 +1795,17 @@ public class ApplicationConnection {
 
         Widget component = paintableMap.getWidget(paintable);
 
+        Style style = component.getElement().getStyle();
+
+        // Dirty if either dimension changed between relative and non-relative
+        if (w.endsWith("%") != style.getWidth().endsWith("%")
+                || h.endsWith("%") != style.getHeight().endsWith("%")) {
+            MeasureManager.MeasuredSize measuredSize = getMeasuredSize(paintable);
+            if (measuredSize != null) {
+                measuredSize.setDirty(true);
+            }
+        }
+
         // Set defined sizes
         component.setHeight(h);
         component.setWidth(w);
@@ -1838,13 +1838,11 @@ public class ApplicationConnection {
      * development. Published to JavaScript.
      */
     public void forceLayout() {
-        Set<Widget> set = new HashSet<Widget>();
-        for (VPaintable paintable : paintableMap.getPaintables()) {
-            if (paintable instanceof VPaintableWidget) {
-                set.add(((VPaintableWidget) paintable).getWidgetForPaintable());
-            }
-        }
-        Util.componentSizeUpdated(set);
+        Duration duration = new Duration();
+
+        doLayout(false);
+
+        VConsole.log("forceLayout in " + duration.elapsedMillis() + " ms");
     }
 
     private void internalRunDescendentsLayout(HasWidgets container) {
@@ -2247,6 +2245,29 @@ public class ApplicationConnection {
     public boolean hasWidgetEventListeners(Widget widget, String eventIdentifier) {
         return hasEventListeners(getPaintableMap().getPaintable(widget),
                 eventIdentifier);
+    }
+
+    private boolean layoutScheduled = false;
+    private ScheduledCommand layoutCommand = new ScheduledCommand() {
+        public void execute() {
+            layoutScheduled = false;
+
+            MeasureManager.get().doLayout(ApplicationConnection.this);
+        }
+    };
+
+    public void doLayout(boolean lazy) {
+        if (!lazy) {
+            layoutCommand.execute();
+        } else if (!layoutScheduled) {
+            layoutScheduled = true;
+            Scheduler.get().scheduleDeferred(layoutCommand);
+        }
+    }
+
+    public MeasureManager.MeasuredSize getMeasuredSize(
+            VPaintableWidget paintable) {
+        return paintableMap.getMeasuredSize(paintable);
     }
 
 }

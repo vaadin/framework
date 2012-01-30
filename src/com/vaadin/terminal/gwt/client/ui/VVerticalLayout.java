@@ -3,12 +3,12 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-public class VVerticalLayout extends VOrderedLayout {
+public class VVerticalLayout extends VMeasuringOrderedLayout {
 
     public static final String CLASSNAME = "v-verticallayout";
 
     public VVerticalLayout() {
-        super(CLASSNAME, ORIENTATION_VERTICAL);
+        super(CLASSNAME, true);
     }
 
 }

@@ -3,6 +3,7 @@
  */
 package com.vaadin.terminal.gwt.client;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.Paintable;
+import com.vaadin.terminal.gwt.client.MeasureManager.MeasuredSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 
 public class VPaintableMap {
@@ -208,6 +210,21 @@ public class VPaintableMap {
 
     }
 
+    public VPaintableWidget[] getRegisteredPaintableWidgets() {
+        ArrayList<VPaintableWidget> result = new ArrayList<VPaintableWidget>();
+
+        for (VPaintable paintable : getPaintables()) {
+            if (paintable instanceof VPaintableWidget) {
+                VPaintableWidget paintableWidget = (VPaintableWidget) paintable;
+                if (!unregistryBag.contains(getPid(paintable))) {
+                    result.add(paintableWidget);
+                }
+            }
+        }
+
+        return result.toArray(new VPaintableWidget[result.size()]);
+    }
+
     void purgeUnregistryBag(boolean unregisterPaintables) {
         if (unregisterPaintables) {
             for (String pid : unregistryBag) {
@@ -373,6 +390,19 @@ public class VPaintableMap {
      */
     public boolean isPaintable(Widget w) {
         return getPid(w) != null;
+    }
+
+    /**
+     * FIXME: Should not be here
+     */
+    @Deprecated
+    public MeasuredSize getMeasuredSize(VPaintableWidget paintable) {
+        ComponentDetail componentDetail = getComponentDetail(paintable);
+        if (componentDetail == null) {
+            return null;
+        }
+
+        return componentDetail.getMeasuredSize();
     }
 
 }

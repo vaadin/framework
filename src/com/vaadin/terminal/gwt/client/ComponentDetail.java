@@ -6,11 +6,13 @@ package com.vaadin.terminal.gwt.client;
 import java.util.HashMap;
 
 import com.google.gwt.core.client.JsArrayString;
+import com.vaadin.terminal.gwt.client.MeasureManager.MeasuredSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 
 class ComponentDetail {
 
     private TooltipInfo tooltipInfo = new TooltipInfo();
+    private MeasureManager.MeasuredSize measuredSize = new MeasureManager.MeasuredSize();
 
     public ComponentDetail() {
 
@@ -107,5 +109,9 @@ class ComponentDetail {
             }
         }
         return false;
+    }
+
+    public MeasureManager.MeasuredSize getMeasuredSize() {
+        return measuredSize;
     }
 }
