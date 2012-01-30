@@ -22,8 +22,6 @@ import com.vaadin.terminal.gwt.client.VPaintableMap;
  * Currently, basic data types as well as Map, String[] and Object[] are
  * supported, where maps and Object[] can contain other supported data types.
  * 
- * TODO support bi-directional codec functionality
- * 
  * TODO extensible type support
  * 
  * @since 7.0
@@ -81,7 +79,6 @@ public class JsonEncoder {
             return combineTypeAndValue(VTYPE_ARRAY, jsonArray);
         } else if (value instanceof Map) {
             Map<String, Object> map = (Map<String, Object>) value;
-            // TODO implement; types for each element
             JSONObject jsonMap = new JSONObject();
             for (String mapKey : map.keySet()) {
                 // TODO handle object graph loops?

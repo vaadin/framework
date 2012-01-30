@@ -23,4 +23,14 @@ public interface PaintableIdMapper extends Serializable {
      * @return {@link Paintable} instance or null if none found
      */
     public Paintable getPaintable(String paintableId);
+
+    /**
+     * Get the paintable identifier corresponding to a {@link Paintable}
+     * instance.
+     * 
+     * @param paintable
+     *            {@link Paintable} for which to get the id
+     * @return paintable id or null if none found
+     */
+    public String getPaintableId(Paintable paintable);
 }

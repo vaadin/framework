@@ -79,9 +79,9 @@ import com.vaadin.ui.Root;
  * A server side component sends its state to the client in a paint request (see
  * {@link Paintable} and {@link PaintTarget} on the server side). The client
  * widget receives these paint requests as calls to
- * {@link com.vaadin.terminal.gwt.client.VPaintableWidget#updateFromUIDL()}. The client
- * component communicates back to the server by sending a list of variable
- * changes (see {@link ApplicationConnection#updateVariable()} and
+ * {@link com.vaadin.terminal.gwt.client.VPaintableWidget#updateFromUIDL()}. The
+ * client component communicates back to the server by sending a list of
+ * variable changes (see {@link ApplicationConnection#updateVariable()} and
  * {@link VariableOwner#changeVariables(Object, Map)}).
  * 
  * TODO Document better!
@@ -741,21 +741,7 @@ public abstract class AbstractCommunicationManager implements
     public void writeUidlResponce(boolean repaintAll,
             final PrintWriter outWriter, Root root, boolean analyzeLayouts)
             throws PaintException {
-        outWriter.print("\"changes\":[");
-
         ArrayList<Paintable> paintables = null;
-
-        List<InvalidLayout> invalidComponentRelativeSizes = null;
-
-        JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
-                !repaintAll);
-        OpenWindowCache windowCache = currentlyOpenWindowsInClient.get(Integer
-                .valueOf(root.getRootId()));
-        if (windowCache == null) {
-            windowCache = new OpenWindowCache();
-            currentlyOpenWindowsInClient.put(Integer.valueOf(root.getRootId()),
-                    windowCache);
-        }
 
         // Paints components
         if (repaintAll) {
@@ -772,7 +758,7 @@ public abstract class AbstractCommunicationManager implements
             /*
              * TODO figure out if we could move this beyond the painting phase,
              * "respond as fast as possible, then do the cleanup". Beware of
-             * painting the dirty detatched components.
+             * painting the dirty detached components.
              */
             for (Iterator<Paintable> it = paintableIdMap.keySet().iterator(); it
                     .hasNext();) {
@@ -792,8 +778,8 @@ public abstract class AbstractCommunicationManager implements
             }
             paintables = getDirtyVisibleComponents(root);
         }
-        if (paintables != null) {
 
+        if (paintables != null) {
             // We need to avoid painting children before parent.
             // This is ensured by ordering list by depth in component
             // tree
@@ -820,6 +806,23 @@ public abstract class AbstractCommunicationManager implements
                     return 0;
                 }
             });
+        }
+
+        outWriter.print("\"changes\":[");
+
+        List<InvalidLayout> invalidComponentRelativeSizes = null;
+
+        JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
+                !repaintAll);
+        OpenWindowCache windowCache = currentlyOpenWindowsInClient.get(Integer
+                .valueOf(root.getRootId()));
+        if (windowCache == null) {
+            windowCache = new OpenWindowCache();
+            currentlyOpenWindowsInClient.put(Integer.valueOf(root.getRootId()),
+                    windowCache);
+        }
+
+        if (paintables != null) {
 
             for (final Iterator<Paintable> i = paintables.iterator(); i
                     .hasNext();) {
@@ -1374,7 +1377,7 @@ public abstract class AbstractCommunicationManager implements
             JSONArray parametersJson = invocationJson.getJSONArray(3);
             Object[] parameters = new Object[parametersJson.length()];
             for (int j = 0; j < parametersJson.length(); ++j) {
-                parameters[j] = JsonDecoder.convertVariableValue(
+                parameters[j] = JsonCodec.convertVariableValue(
                         parametersJson.getJSONArray(j), this);
             }
             MethodInvocation invocation = new MethodInvocation(paintableId,

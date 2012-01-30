@@ -2,50 +2,49 @@
 @VaadinApache2LicenseForJavaFiles@
  */
 
-package com.vaadin.terminal.gwt.server;
+package com.vaadin.terminal.gwt.client.communication;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import com.vaadin.external.json.JSONArray;
-import com.vaadin.external.json.JSONException;
-import com.vaadin.external.json.JSONObject;
-import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
+import com.vaadin.terminal.gwt.client.VPaintable;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
 
 /**
- * Decoder for converting RPC parameters and other values from JSON in transfer
- * between the client and the server.
+ * Client side decoder for converting shared state and other values from JSON
+ * received from the server.
  * 
- * TODO support bi-directional codec functionality
+ * Currently, basic data types as well as Map, String[] and Object[] are
+ * supported, where maps and Object[] can contain other supported data types.
+ * 
+ * TODO extensible type support
  * 
  * @since 7.0
  */
-public class JsonDecoder implements Serializable {
-
+public class JsonDecoder {
     /**
      * Convert a JSON array with two elements (type and value) into a
-     * server-side type, recursively if necessary.
+     * client-side type, recursively if necessary.
      * 
      * @param value
      *            JSON array with two elements
      * @param idMapper
-     *            mapper from paintable ID to {@link Paintable} objects
+     *            mapper between paintable ID and {@link VPaintable} objects
      * @return converted value (does not contain JSON types)
-     * @throws JSONException
-     *             if the conversion fails
      */
     public static Object convertVariableValue(JSONArray value,
-            PaintableIdMapper idMapper) throws JSONException {
-        return convertVariableValue(value.getString(0).charAt(0), value.get(1),
-                idMapper);
+            VPaintableMap idMapper) {
+        return convertVariableValue(((JSONString) value.get(0)).stringValue()
+                .charAt(0), value.get(1), idMapper);
     }
 
     private static Object convertVariableValue(char variableType, Object value,
-            PaintableIdMapper idMapper) throws JSONException {
+            VPaintableMap idMapper) {
         Object val = null;
         // TODO type checks etc.
         switch (variableType) {
@@ -90,33 +89,32 @@ public class JsonDecoder implements Serializable {
         return val;
     }
 
-    private static Object convertMap(JSONObject jsonMap,
-            PaintableIdMapper idMapper) throws JSONException {
+    private static Object convertMap(JSONObject jsonMap, VPaintableMap idMapper) {
         HashMap<String, Object> map = new HashMap<String, Object>();
-        Iterator<String> it = jsonMap.keys();
+        Iterator<String> it = jsonMap.keySet().iterator();
         while (it.hasNext()) {
             String key = it.next();
             map.put(key,
-                    convertVariableValue(jsonMap.getJSONArray(key), idMapper));
+                    convertVariableValue((JSONArray) jsonMap.get(key), idMapper));
         }
         return map;
     }
 
-    private static String[] convertStringArray(JSONArray jsonArray)
-            throws JSONException {
-        List<String> tokens = new ArrayList<String>();
-        for (int i = 0; i < jsonArray.length(); ++i) {
-            tokens.add(jsonArray.getString(i));
+    private static String[] convertStringArray(JSONArray jsonArray) {
+        int size = jsonArray.size();
+        List<String> tokens = new ArrayList<String>(size);
+        for (int i = 0; i < size; ++i) {
+            tokens.add(String.valueOf(jsonArray.get(i)));
         }
         return tokens.toArray(new String[tokens.size()]);
     }
 
     private static Object convertArray(JSONArray jsonArray,
-            PaintableIdMapper idMapper) throws JSONException {
+            VPaintableMap idMapper) {
         List<Object> tokens = new ArrayList<Object>();
-        for (int i = 0; i < jsonArray.length(); ++i) {
+        for (int i = 0; i < jsonArray.size(); ++i) {
             // each entry always has two elements: type and value
-            JSONArray entryArray = jsonArray.getJSONArray(i);
+            JSONArray entryArray = (JSONArray) jsonArray.get(i);
             tokens.add(convertVariableValue(entryArray, idMapper));
         }
         return tokens.toArray(new Object[tokens.size()]);
