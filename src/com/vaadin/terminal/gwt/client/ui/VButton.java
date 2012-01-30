@@ -19,7 +19,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Accessibility;
 import com.google.gwt.user.client.ui.FocusWidget;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventId;
@@ -450,9 +449,4 @@ public class VButton extends FocusWidget implements ClickHandler, FocusHandler,
     public void onBlur(BlurEvent arg0) {
         client.updateVariable(paintableId, EventId.BLUR, "", true);
     }
-
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }
