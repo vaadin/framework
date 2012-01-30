@@ -16,16 +16,13 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
-        VPaintableWidget, Field, FocusHandler, BlurHandler {
+        Field, FocusHandler, BlurHandler {
 
     public static final String VARIABLE_STATE = "state";
 
@@ -37,12 +34,12 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
     ApplicationConnection client;
 
-    private Element errorIndicatorElement;
+    Element errorIndicatorElement;
 
-    private Icon icon;
+    Icon icon;
 
-    private HandlerRegistration focusHandlerRegistration;
-    private HandlerRegistration blurHandlerRegistration;
+    HandlerRegistration focusHandlerRegistration;
+    HandlerRegistration blurHandlerRegistration;
 
     public VCheckBox() {
         setStyleName(CLASSNAME);
@@ -71,61 +68,6 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
         }
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // Save details
-        this.client = client;
-        id = uidl.getId();
-
-        // Ensure correct implementation
-        if (client.updateComponent(this, uidl, false)) {
-            return;
-        }
-
-        focusHandlerRegistration = EventHelper.updateFocusHandler(this, client,
-                focusHandlerRegistration);
-        blurHandlerRegistration = EventHelper.updateBlurHandler(this, client,
-                blurHandlerRegistration);
-
-        if (uidl.hasAttribute("error")) {
-            if (errorIndicatorElement == null) {
-                errorIndicatorElement = DOM.createSpan();
-                errorIndicatorElement.setInnerHTML("&nbsp;");
-                DOM.setElementProperty(errorIndicatorElement, "className",
-                        "v-errorindicator");
-                DOM.appendChild(getElement(), errorIndicatorElement);
-                DOM.sinkEvents(errorIndicatorElement, VTooltip.TOOLTIP_EVENTS
-                        | Event.ONCLICK);
-            } else {
-                DOM.setStyleAttribute(errorIndicatorElement, "display", "");
-            }
-        } else if (errorIndicatorElement != null) {
-            DOM.setStyleAttribute(errorIndicatorElement, "display", "none");
-        }
-
-        if (uidl.hasAttribute("readonly")) {
-            setEnabled(false);
-        }
-
-        if (uidl.hasAttribute("icon")) {
-            if (icon == null) {
-                icon = new Icon(client);
-                DOM.insertChild(getElement(), icon.getElement(), 1);
-                icon.sinkEvents(VTooltip.TOOLTIP_EVENTS);
-                icon.sinkEvents(Event.ONCLICK);
-            }
-            icon.setUri(uidl.getStringAttribute("icon"));
-        } else if (icon != null) {
-            // detach icon
-            DOM.removeChild(getElement(), icon.getElement());
-            icon = null;
-        }
-
-        // Set text
-        setText(uidl.getStringAttribute("caption"));
-        setValue(uidl.getBooleanVariable(VARIABLE_STATE));
-        immediate = uidl.getBooleanAttribute("immediate");
-    }
-
     @Override
     public void onBrowserEvent(Event event) {
         if (icon != null && (event.getTypeInt() == Event.ONCLICK)
@@ -137,7 +79,7 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
             Util.notifyParentOfSizeChange(this, true);
         }
         if (client != null) {
-            client.handleTooltipEvent(event, this);
+            client.handleWidgetTooltipEvent(event, this);
         }
     }
 
