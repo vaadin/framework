@@ -5,7 +5,7 @@
 package com.vaadin.ui;
 
 import com.vaadin.data.Property;
-import com.vaadin.terminal.gwt.client.ui.VTextField;
+import com.vaadin.terminal.gwt.client.ui.VTextFieldPaintable;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
@@ -29,7 +29,7 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(value = VTextField.class, loadStyle = LoadStyle.EAGER)
+@ClientWidget(value = VTextFieldPaintable.class, loadStyle = LoadStyle.EAGER)
 public class TextField extends AbstractTextField {
 
     /**
