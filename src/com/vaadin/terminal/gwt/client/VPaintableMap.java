@@ -16,7 +16,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 
 public class VPaintableMap {
@@ -307,32 +306,8 @@ public class VPaintableMap {
      * @return
      */
     @Deprecated
-    public FloatSize getRelativeSize(VPaintableWidget paintable) {
-        return getComponentDetail(paintable).getRelativeSize();
-    }
-
-    /**
-     * FIXME: Should not be here
-     * 
-     * @param paintable
-     * @return
-     */
-    @Deprecated
     public void setOffsetSize(VPaintableWidget paintable, Size newSize) {
         getComponentDetail(paintable).setOffsetSize(newSize);
-    }
-
-    /**
-     * FIXME: Should not be here
-     * 
-     * @param paintable
-     * @return
-     */
-    @Deprecated
-    public void setRelativeSize(VPaintableWidget paintable,
-            FloatSize relativeSize) {
-        getComponentDetail(paintable).setRelativeSize(relativeSize);
-
     }
 
     private ComponentDetail getComponentDetail(VPaintableWidget paintable) {

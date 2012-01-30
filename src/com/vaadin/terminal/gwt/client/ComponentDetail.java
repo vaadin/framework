@@ -6,7 +6,6 @@ package com.vaadin.terminal.gwt.client;
 import java.util.HashMap;
 
 import com.google.gwt.core.client.JsArrayString;
-import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 
 class ComponentDetail {
@@ -44,24 +43,10 @@ class ComponentDetail {
         this.tooltipInfo = tooltipInfo;
     }
 
-    private FloatSize relativeSize;
     private Size offsetSize;
     private HashMap<Object, TooltipInfo> additionalTooltips;
 
     /**
-     * @return the relativeSize
-     */
-    FloatSize getRelativeSize() {
-        return relativeSize;
-    }
-
-    /**
-     * @param relativeSize
-     *            the relativeSize to set
-     */
-    void setRelativeSize(FloatSize relativeSize) {
-        this.relativeSize = relativeSize;
-    }
 
     /**
      * @return the offsetSize

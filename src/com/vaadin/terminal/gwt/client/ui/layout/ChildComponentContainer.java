@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -79,7 +80,6 @@ public class ChildComponentContainer extends Panel {
 
         widgetDIV = Document.get().createDivElement();
 
-        setFloat(widgetDIV, "left");
         setElement(containerDIV);
         containerDIV.getStyle().setProperty("height", "0");
         containerDIV.getStyle().setProperty("width", "0px");
@@ -131,6 +131,7 @@ public class ChildComponentContainer extends Panel {
             // Physical attach.
             widgetDIV.appendChild(widget.getElement());
             adopt(w);
+            w.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
         }
     }
 

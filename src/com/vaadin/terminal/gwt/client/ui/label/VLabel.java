@@ -4,6 +4,7 @@
 
 package com.vaadin.terminal.gwt.client.ui.label;
 
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -14,9 +15,6 @@ public class VLabel extends HTML {
 
     public static final String CLASSNAME = "v-label";
     private static final String CLASSNAME_UNDEFINED_WIDTH = "v-label-undef-w";
-
-    private int verticalPaddingBorder = 0;
-    private int horizontalPaddingBorder = 0;
 
     public VLabel() {
         super();
@@ -41,19 +39,14 @@ public class VLabel extends HTML {
     }
 
     @Override
-    public void setHeight(String height) {
-        verticalPaddingBorder = Util.setHeightExcludingPaddingAndBorder(this,
-                height, verticalPaddingBorder);
-    }
-
-    @Override
     public void setWidth(String width) {
-        horizontalPaddingBorder = Util.setWidthExcludingPaddingAndBorder(this,
-                width, horizontalPaddingBorder);
+        super.setWidth(width);
         if (width == null || width.equals("")) {
             setStyleName(getElement(), CLASSNAME_UNDEFINED_WIDTH, true);
+            getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
         } else {
             setStyleName(getElement(), CLASSNAME_UNDEFINED_WIDTH, false);
+            getElement().getStyle().clearDisplay();
         }
     }
 

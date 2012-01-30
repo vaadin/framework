@@ -520,8 +520,6 @@ public class VCustomLayout extends ComplexPanel implements VPaintableWidget,
     }-*/;
 
     public boolean requestLayout(Set<Widget> children) {
-        updateRelativeSizedComponents(true, true);
-
         if (width.equals("") || height.equals("")) {
             /* Automatically propagated upwards if the size can change */
             return false;
@@ -546,78 +544,6 @@ public class VCustomLayout extends ComplexPanel implements VPaintableWidget,
         if (event.getTypeInt() == Event.ONLOAD) {
             Util.notifyParentOfSizeChange(this, true);
             event.cancelBubble(true);
-        }
-    }
-
-    @Override
-    public void setHeight(String height) {
-        if (this.height.equals(height)) {
-            return;
-        }
-
-        boolean shrinking = true;
-        if (isLarger(height, this.height)) {
-            shrinking = false;
-        }
-
-        this.height = height;
-        super.setHeight(height);
-
-        /*
-         * If the height shrinks we must remove all components with relative
-         * height from the DOM, update their height when they do not affect the
-         * available space and finally restore them to the original state
-         */
-        if (shrinking) {
-            updateRelativeSizedComponents(false, true);
-        }
-    }
-
-    @Override
-    public void setWidth(String width) {
-        if (this.width.equals(width)) {
-            return;
-        }
-
-        boolean shrinking = true;
-        if (isLarger(width, this.width)) {
-            shrinking = false;
-        }
-
-        super.setWidth(width);
-        this.width = width;
-
-        /*
-         * If the width shrinks we must remove all components with relative
-         * width from the DOM, update their width when they do not affect the
-         * available space and finally restore them to the original state
-         */
-        if (shrinking) {
-            updateRelativeSizedComponents(true, false);
-        }
-    }
-
-    private void updateRelativeSizedComponents(boolean relativeWidth,
-            boolean relativeHeight) {
-
-        Set<Widget> relativeSizeWidgets = new HashSet<Widget>();
-
-        for (Widget widget : locationToWidget.values()) {
-            FloatSize relativeSize = client.getRelativeSize(widget);
-            if (relativeSize != null) {
-                if ((relativeWidth && (relativeSize.getWidth() >= 0.0f))
-                        || (relativeHeight && (relativeSize.getHeight() >= 0.0f))) {
-
-                    relativeSizeWidgets.add(widget);
-                    widget.getElement().getStyle()
-                            .setProperty("position", "absolute");
-                }
-            }
-        }
-
-        for (Widget widget : relativeSizeWidgets) {
-            client.handleComponentRelativeSize(widget);
-            widget.getElement().getStyle().setProperty("position", "");
         }
     }
 
