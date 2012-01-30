@@ -8,22 +8,17 @@ import java.util.Date;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.DateTimeService;
-import com.vaadin.terminal.gwt.client.LocaleNotLoadedException;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VDateField extends FlowPanel implements VPaintableWidget, Field {
+public class VDateField extends FlowPanel implements Field {
 
     public static final String CLASSNAME = "v-datefield";
 
-    private String id;
+    protected String paintableId;
 
-    private ApplicationConnection client;
+    protected ApplicationConnection client;
 
     protected boolean immediate;
 
@@ -65,7 +60,7 @@ public class VDateField extends FlowPanel implements VPaintableWidget, Field {
 
     protected DateTimeService dts;
 
-    private boolean showISOWeekNumbers = false;
+    protected boolean showISOWeekNumbers = false;
 
     public VDateField() {
         setStyleName(CLASSNAME);
@@ -77,80 +72,7 @@ public class VDateField extends FlowPanel implements VPaintableWidget, Field {
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (client != null) {
-            client.handleTooltipEvent(event, this);
-        }
-    }
-
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // Ensure correct implementation and let layout manage caption
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-
-        // Save details
-        this.client = client;
-        id = uidl.getId();
-        immediate = uidl.getBooleanAttribute("immediate");
-
-        readonly = uidl.getBooleanAttribute("readonly");
-        enabled = !uidl.getBooleanAttribute("disabled");
-
-        if (uidl.hasAttribute("locale")) {
-            final String locale = uidl.getStringAttribute("locale");
-            try {
-                dts.setLocale(locale);
-                currentLocale = locale;
-            } catch (final LocaleNotLoadedException e) {
-                currentLocale = dts.getLocale();
-                VConsole.error("Tried to use an unloaded locale \"" + locale
-                        + "\". Using default locale (" + currentLocale + ").");
-                VConsole.error(e);
-            }
-        }
-
-        // We show week numbers only if the week starts with Monday, as ISO 8601
-        // specifies
-        showISOWeekNumbers = uidl.getBooleanAttribute(WEEK_NUMBERS)
-                && dts.getFirstDayOfWeek() == 1;
-
-        int newResolution;
-        if (uidl.hasVariable("sec")) {
-            newResolution = RESOLUTION_SEC;
-        } else if (uidl.hasVariable("min")) {
-            newResolution = RESOLUTION_MIN;
-        } else if (uidl.hasVariable("hour")) {
-            newResolution = RESOLUTION_HOUR;
-        } else if (uidl.hasVariable("day")) {
-            newResolution = RESOLUTION_DAY;
-        } else if (uidl.hasVariable("month")) {
-            newResolution = RESOLUTION_MONTH;
-        } else {
-            newResolution = RESOLUTION_YEAR;
-        }
-
-        currentResolution = newResolution;
-
-        // Add stylename that indicates current resolution
-        addStyleName(CLASSNAME + "-" + resolutionToString(currentResolution));
-
-        final int year = uidl.getIntVariable("year");
-        final int month = (currentResolution >= RESOLUTION_MONTH) ? uidl
-                .getIntVariable("month") : -1;
-        final int day = (currentResolution >= RESOLUTION_DAY) ? uidl
-                .getIntVariable("day") : -1;
-        final int hour = (currentResolution >= RESOLUTION_HOUR) ? uidl
-                .getIntVariable("hour") : 0;
-        final int min = (currentResolution >= RESOLUTION_MIN) ? uidl
-                .getIntVariable("min") : 0;
-        final int sec = (currentResolution >= RESOLUTION_SEC) ? uidl
-                .getIntVariable("sec") : 0;
-
-        // Construct new date for this datefield (only if not null)
-        if (year > -1) {
-            setCurrentDate(new Date((long) getTime(year, month, day, hour, min,
-                    sec, 0)));
-        } else {
-            setCurrentDate(null);
+            client.handleWidgetTooltipEvent(event, this);
         }
     }
 
@@ -158,7 +80,7 @@ public class VDateField extends FlowPanel implements VPaintableWidget, Field {
      * We need this redundant native function because Java's Date object doesn't
      * have a setMilliseconds method.
      */
-    private static native double getTime(int y, int m, int d, int h, int mi,
+    protected static native double getTime(int y, int m, int d, int h, int mi,
             int s, int ms)
     /*-{
        try {
@@ -227,7 +149,7 @@ public class VDateField extends FlowPanel implements VPaintableWidget, Field {
     }
 
     public String getId() {
-        return id;
+        return paintableId;
     }
 
     public ApplicationConnection getClient() {
@@ -269,9 +191,5 @@ public class VDateField extends FlowPanel implements VPaintableWidget, Field {
      */
     protected void setDate(Date date) {
         this.date = date;
-    }
-
-    public Widget getWidgetForPaintable() {
-        return this;
     }
 }

@@ -7,20 +7,16 @@ package com.vaadin.terminal.gwt.client.ui;
 import java.util.Date;
 
 import com.google.gwt.event.dom.client.DomEvent;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.DateTimeService;
-import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusChangeListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.SubmitListener;
-import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.TimeChangeListener;
 
 /**
  * A client side implementation for InlineDateField
  */
 public class VDateFieldCalendar extends VDateField {
 
-    private final VCalendarPanel calendarPanel;
+    protected final VCalendarPanel calendarPanel;
 
     public VDateFieldCalendar() {
         super();
@@ -44,73 +40,11 @@ public class VDateFieldCalendar extends VDateField {
         });
     }
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        super.updateFromUIDL(uidl, client);
-        calendarPanel.setShowISOWeekNumbers(isShowISOWeekNumbers());
-        calendarPanel.setDateTimeService(getDateTimeService());
-        calendarPanel.setResolution(getCurrentResolution());
-        Date currentDate = getCurrentDate();
-        if (currentDate != null) {
-            calendarPanel.setDate(new Date(currentDate.getTime()));
-        } else {
-            calendarPanel.setDate(null);
-        }
-
-        if (currentResolution > RESOLUTION_DAY) {
-            calendarPanel.setTimeChangeListener(new TimeChangeListener() {
-                public void changed(int hour, int min, int sec, int msec) {
-                    Date d = getDate();
-                    if (d == null) {
-                        // date currently null, use the value from calendarPanel
-                        // (~ client time at the init of the widget)
-                        d = (Date) calendarPanel.getDate().clone();
-                    }
-                    d.setHours(hour);
-                    d.setMinutes(min);
-                    d.setSeconds(sec);
-                    DateTimeService.setMilliseconds(d, msec);
-
-                    // Always update time changes to the server
-                    calendarPanel.setDate(d);
-                    updateValueFromPanel();
-                }
-            });
-        }
-
-        if (currentResolution <= RESOLUTION_MONTH) {
-            calendarPanel.setFocusChangeListener(new FocusChangeListener() {
-                public void focusChanged(Date date) {
-                    Date date2 = new Date();
-                    if (calendarPanel.getDate() != null) {
-                        date2.setTime(calendarPanel.getDate().getTime());
-                    }
-                    /*
-                     * Update the value of calendarPanel
-                     */
-                    date2.setYear(date.getYear());
-                    date2.setMonth(date.getMonth());
-                    calendarPanel.setDate(date2);
-                    /*
-                     * Then update the value from panel to server
-                     */
-                    updateValueFromPanel();
-                }
-            });
-        } else {
-            calendarPanel.setFocusChangeListener(null);
-        }
-
-        // Update possible changes
-        calendarPanel.renderCalendar();
-    }
-
     /**
      * TODO refactor: almost same method as in VPopupCalendar.updateValue
      */
     @SuppressWarnings("deprecation")
-    private void updateValueFromPanel() {
+    protected void updateValueFromPanel() {
         Date date2 = calendarPanel.getDate();
         Date currentDate = getCurrentDate();
         if (currentDate == null || date2.getTime() != currentDate.getTime()) {
