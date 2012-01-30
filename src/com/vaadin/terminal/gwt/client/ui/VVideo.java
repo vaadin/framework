@@ -8,13 +8,9 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.VideoElement;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 
 public class VVideo extends VMediaBase {
-    public static final String ATTR_POSTER = "poster";
 
     private static String CLASSNAME = "v-video";
 
@@ -26,22 +22,6 @@ public class VVideo extends VMediaBase {
         setStyleName(CLASSNAME);
 
         updateDimensionsWhenMetadataLoaded(getElement());
-    }
-
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-        super.updateFromUIDL(uidl, client);
-        setPosterFromUIDL(uidl);
-    }
-
-    private void setPosterFromUIDL(UIDL uidl) {
-        if (uidl.hasAttribute(ATTR_POSTER)) {
-            video.setPoster(client.translateVaadinUri(uidl
-                    .getStringAttribute(ATTR_POSTER)));
-        }
     }
 
     /**
@@ -76,7 +56,8 @@ public class VVideo extends VMediaBase {
         return "Your browser does not support the <code>video</code> element.";
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
+    public void setPoster(String poster) {
+        video.setPoster(poster);
     }
+
 }
