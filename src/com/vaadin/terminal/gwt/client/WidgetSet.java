@@ -7,10 +7,8 @@ package com.vaadin.terminal.gwt.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.VFilterSelectPaintable;
-import com.vaadin.terminal.gwt.client.ui.VHorizontalSplitPanelPaintable;
 import com.vaadin.terminal.gwt.client.ui.VListSelectPaintable;
 import com.vaadin.terminal.gwt.client.ui.VUnknownComponentPaintable;
-import com.vaadin.terminal.gwt.client.ui.VVerticalSplitPanelPaintable;
 
 public class WidgetSet {
 
@@ -80,11 +78,7 @@ public class WidgetSet {
                     return VListSelectPaintable.class;
                 }
             }
-        } else if (widgetClass == VHorizontalSplitPanelPaintable.class
-                && uidl.hasAttribute("vertical")) {
-            return VVerticalSplitPanelPaintable.class;
         }
-
         return widgetClass;
 
     }
@@ -129,8 +123,6 @@ public class WidgetSet {
          */
         if (fullyqualifiedName.equals("com.vaadin.ui.Select")) {
             loadImplementation(VListSelectPaintable.class);
-        } else if (fullyqualifiedName.equals("com.vaadin.ui.SplitPanel")) {
-            loadImplementation(VVerticalSplitPanelPaintable.class);
         }
 
         return implementationByServerSideClassName;
