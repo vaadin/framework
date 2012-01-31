@@ -4,12 +4,11 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-public class VOptionGroupBasePaintable extends VAbstractPaintableWidget {
+public abstract class VOptionGroupBasePaintable extends
+        VAbstractPaintableWidget {
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
@@ -95,11 +94,6 @@ public class VOptionGroupBasePaintable extends VAbstractPaintableWidget {
                 uidl.hasAttribute("tabindex") ? uidl
                         .getIntAttribute("tabindex") : 0);
 
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VOptionGroupBase.class);
     }
 
     @Override
