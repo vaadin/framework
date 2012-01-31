@@ -177,7 +177,11 @@ public class OrderedLayoutCases extends AbstractTestRoot {
                         newLayout.setWidth(currentLayout.getWidth(),
                                 currentLayout.getWidthUnits());
 
+                        newLayout.setMargin(currentLayout.getMargin());
+                        newLayout.setSpacing(currentLayout.isSpacing());
+
                         getLayout().replaceComponent(currentLayout, newLayout);
+                        getLayout().setExpandRatio(newLayout, 1);
                         currentLayout = newLayout;
                     }
                 }, "Horizontal", "Vertical"));
