@@ -11,23 +11,19 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
 
 /**
  * Example code to implement Component that has something to drag.
  */
-public class VMyDragSource extends Composite implements VPaintableWidget,
-        MouseDownHandler, MouseMoveHandler, MouseOutHandler {
+public class VMyDragSource extends Composite implements MouseDownHandler,
+        MouseMoveHandler, MouseOutHandler {
 
     private boolean mouseDown;
     private MouseDownEvent mDownEvent;
-    @SuppressWarnings("unused")
-    private ApplicationConnection client;
 
+    @SuppressWarnings("unused")
     public VMyDragSource() {
         FlowPanel fp = new FlowPanel();
         initWidget(fp);
@@ -40,13 +36,6 @@ public class VMyDragSource extends Composite implements VPaintableWidget,
         html.addMouseMoveHandler(this);
         html.addMouseOutHandler(this);
 
-    }
-
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-        this.client = client;
     }
 
     /*
