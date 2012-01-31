@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderSpace;
@@ -34,7 +35,7 @@ import com.vaadin.terminal.gwt.client.VPaintableWidget;
  * @author Vaadin Ltd
  * 
  */
-public class VCustomLayout extends ComplexPanel implements
+public class VCustomLayout extends ComplexPanel implements Container,
         ContainerResizedListener {
 
     public static final String CLASSNAME = "v-customlayout";

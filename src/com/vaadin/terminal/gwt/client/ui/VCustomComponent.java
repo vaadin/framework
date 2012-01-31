@@ -9,10 +9,11 @@ import java.util.Set;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.Util;
 
-public class VCustomComponent extends SimplePanel {
+public class VCustomComponent extends SimplePanel implements Container {
 
     private static final String CLASSNAME = "v-customcomponent";
     private String height;

@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.VPaintableWidgetContainer;
 
 public abstract class VAbstractPaintableWidget implements VPaintableWidget {
 
@@ -83,7 +84,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         this.id = id;
     }
 
-    public VPaintableWidget getParentPaintable() {
+    public VPaintableWidgetContainer getParentPaintable() {
         // FIXME: Return VPaintableWidgetContainer
         // FIXME: Store hierarchy instead of doing lookup every time
 
@@ -93,7 +94,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         while (w != null) {
             w = w.getParent();
             if (paintableMap.isPaintable(w)) {
-                return paintableMap.getPaintable(w);
+                return (VPaintableWidgetContainer) paintableMap.getPaintable(w);
             }
         }
 

@@ -27,5 +27,5 @@ public interface VPaintableWidget extends VPaintable {
      * @return
      */
     // FIXME: Rename to getParent()
-    // public VPaintableWidget getParentPaintable();
+    public VPaintableWidgetContainer getParentPaintable();
 }

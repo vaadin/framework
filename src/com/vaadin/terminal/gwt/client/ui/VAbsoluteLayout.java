@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -25,7 +26,7 @@ import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
-public class VAbsoluteLayout extends ComplexPanel {
+public class VAbsoluteLayout extends ComplexPanel implements Container {
 
     /** Tag name for widget creation */
     public static final String TAGNAME = "absolutelayout";

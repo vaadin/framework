@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @deprecated To be removed before 7.0.0
  */
 @Deprecated
-public interface Container extends VPaintableWidget {
+public interface Container {
 
     /**
      * Replace child of this layout with another component.
@@ -35,23 +35,6 @@ public interface Container extends VPaintableWidget {
      * @return true iff component is a child of this layout.
      */
     boolean hasChildComponent(Widget component);
-
-    /**
-     * Update child components caption, description and error message.
-     * 
-     * <p>
-     * Each component is responsible for maintaining its caption, description
-     * and error message. In most cases components doesn't want to do that and
-     * those elements reside outside of the component. Because of this layouts
-     * must provide service for it's childen to show those elements for them.
-     * </p>
-     * 
-     * @param paintable
-     *            Child component for which service is requested.
-     * @param uidl
-     *            UIDL of the child component.
-     */
-    void updateCaption(VPaintableWidget paintable, UIDL uidl);
 
     /**
      * Called when a child components size has been updated in the rendering

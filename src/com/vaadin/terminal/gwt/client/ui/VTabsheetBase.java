@@ -12,10 +12,11 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
-abstract class VTabsheetBase extends ComplexPanel {
+abstract class VTabsheetBase extends ComplexPanel implements Container {
 
     String id;
     ApplicationConnection client;

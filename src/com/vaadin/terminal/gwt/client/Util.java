@@ -153,7 +153,7 @@ public class Util {
         Set<Widget> parentChanges = new HashSet<Widget>();
         for (Container parent : childWidgets.keySet()) {
             if (!parent.requestLayout(childWidgets.get(parent))) {
-                parentChanges.add(parent.getWidgetForPaintable());
+                parentChanges.add((Widget) parent);
             }
         }
 
@@ -738,7 +738,7 @@ public class Util {
      */
     public static VPaintableWidget getChildPaintableForElement(
             ApplicationConnection client, Container parent, Element element) {
-        Element rootElement = parent.getWidgetForPaintable().getElement();
+        Element rootElement = ((Widget) parent).getElement();
         while (element != null && element != rootElement) {
             VPaintableWidget paintable = VPaintableMap.get(client)
                     .getPaintable(element);
