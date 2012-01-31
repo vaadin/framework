@@ -15,7 +15,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VCheckBox;
 
-@ClientWidget(com.vaadin.terminal.gwt.client.ui.VCheckBox.class)
+@ClientWidget(com.vaadin.terminal.gwt.client.ui.VCheckBoxPaintable.class)
 public class CheckBox extends AbstractField<Boolean> {
     /**
      * Creates a new checkbox.
