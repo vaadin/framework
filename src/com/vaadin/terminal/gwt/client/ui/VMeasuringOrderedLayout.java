@@ -117,7 +117,8 @@ public class VMeasuringOrderedLayout extends ComplexPanel implements Container,
             // Remove the wrapper
             getElement().removeChild(wrapper);
 
-            client.unregisterPaintable((VPaintableWidget) widget);
+            client.unregisterPaintable(VPaintableMap.get(client).getPaintable(
+                    widget));
         }
 
         int bitMask = uidl.getIntAttribute("margins");
