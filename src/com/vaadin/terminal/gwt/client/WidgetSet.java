@@ -10,7 +10,7 @@ import com.vaadin.terminal.gwt.client.ui.VFilterSelectPaintable;
 import com.vaadin.terminal.gwt.client.ui.VListSelectPaintable;
 import com.vaadin.terminal.gwt.client.ui.VSplitPanelHorizontal;
 import com.vaadin.terminal.gwt.client.ui.VSplitPanelVertical;
-import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
+import com.vaadin.terminal.gwt.client.ui.VUnknownComponentPaintable;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VWindow;
 
@@ -50,10 +50,11 @@ public class WidgetSet {
 
         final Class<? extends VPaintableWidget> classType = resolveWidgetType(
                 uidl, conf);
-        if (classType == null || classType == VUnknownComponent.class) {
+        if (classType == null || classType == VUnknownComponentPaintable.class) {
             String serverSideName = conf
                     .getUnknownServerClassNameByEncodedTagName(uidl.getTag());
-            VUnknownComponent c = GWT.create(VUnknownComponent.class);
+            VUnknownComponentPaintable c = GWT
+                    .create(VUnknownComponentPaintable.class);
             c.setServerSideClassName(serverSideName);
             return c;
         } else if (VWindow.class == classType) {
@@ -121,7 +122,7 @@ public class WidgetSet {
     public Class<? extends VPaintableWidget> getImplementationByClassName(
             String fullyqualifiedName) {
         if (fullyqualifiedName == null) {
-            return VUnknownComponent.class;
+            return VUnknownComponentPaintable.class;
         }
         Class<? extends VPaintableWidget> implementationByServerSideClassName = widgetMap
                 .getImplementationByServerSideClassName(fullyqualifiedName);

@@ -18,6 +18,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
+import com.vaadin.terminal.gwt.client.ui.VUnknownComponentPaintable;
 
 public class ApplicationConfiguration implements EntryPoint {
 
@@ -381,13 +382,14 @@ public class ApplicationConfiguration implements EntryPoint {
         return useDebugIdInDom;
     }
 
-    public Class<? extends VPaintableWidget> getWidgetClassByEncodedTag(String tag) {
+    public Class<? extends VPaintableWidget> getWidgetClassByEncodedTag(
+            String tag) {
         try {
             int parseInt = Integer.parseInt(tag);
             return classes[parseInt];
         } catch (Exception e) {
             // component was not present in mappings
-            return VUnknownComponent.class;
+            return VUnknownComponentPaintable.class;
         }
     }
 
