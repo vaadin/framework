@@ -2405,7 +2405,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 }
                 break;
             case Event.ONCONTEXTMENU:
-                if (client.hasEventListeners(VScrollTable.this,
+                if (client.hasWidgetEventListeners(VScrollTable.this,
                         HEADER_CLICK_EVENT_ID)) {
                     // Prevent showing the browser's context menu when there is
                     // a right click listener.
