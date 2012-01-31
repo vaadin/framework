@@ -14,7 +14,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.VEmbedded;
+import com.vaadin.terminal.gwt.client.ui.VEmbeddedPaintable;
 
 /**
  * Component for embedding external objects.
@@ -25,10 +25,10 @@ import com.vaadin.terminal.gwt.client.ui.VEmbedded;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VEmbedded.class)
+@ClientWidget(VEmbeddedPaintable.class)
 public class Embedded extends AbstractComponent {
 
-    private static final String CLICK_EVENT = VEmbedded.CLICK_EVENT_IDENTIFIER;
+    private static final String CLICK_EVENT = VEmbeddedPaintable.CLICK_EVENT_IDENTIFIER;
 
     /**
      * General object type.
