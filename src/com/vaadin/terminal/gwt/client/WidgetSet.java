@@ -6,7 +6,7 @@ package com.vaadin.terminal.gwt.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
+import com.vaadin.terminal.gwt.client.ui.VFilterSelectPaintable;
 import com.vaadin.terminal.gwt.client.ui.VListSelect;
 import com.vaadin.terminal.gwt.client.ui.VSplitPanelHorizontal;
 import com.vaadin.terminal.gwt.client.ui.VSplitPanelVertical;
@@ -25,7 +25,8 @@ public class WidgetSet {
 
     /**
      * Create an uninitialized component that best matches given UIDL. The
-     * component must be a {@link Widget} that implements {@link VPaintableWidget}.
+     * component must be a {@link Widget} that implements
+     * {@link VPaintableWidget}.
      * 
      * @param uidl
      *            UIDL to be painted with returned component.
@@ -35,7 +36,8 @@ public class WidgetSet {
      * @return New uninitialized and unregistered component that can paint given
      *         UIDL.
      */
-    public VPaintableWidget createWidget(UIDL uidl, ApplicationConfiguration conf) {
+    public VPaintableWidget createWidget(UIDL uidl,
+            ApplicationConfiguration conf) {
         /*
          * Yes, this (including the generated code in WidgetMap) may look very
          * odd code, but due the nature of GWT, we cannot do this any cleaner.
@@ -46,8 +48,8 @@ public class WidgetSet {
          * TODO should try to get rid of these exceptions here
          */
 
-        final Class<? extends VPaintableWidget> classType = resolveWidgetType(uidl,
-                conf);
+        final Class<? extends VPaintableWidget> classType = resolveWidgetType(
+                uidl, conf);
         if (classType == null || classType == VUnknownComponent.class) {
             String serverSideName = conf
                     .getUnknownServerClassNameByEncodedTagName(uidl.getTag());
@@ -76,7 +78,7 @@ public class WidgetSet {
 
         if (widgetClass == VView.class && uidl.hasAttribute("sub")) {
             return VWindow.class;
-        } else if (widgetClass == VFilterSelect.class) {
+        } else if (widgetClass == VFilterSelectPaintable.class) {
             if (uidl.hasAttribute("type")) {
                 final String type = uidl.getStringAttribute("type").intern();
                 if ("legacy-multi" == type) {
