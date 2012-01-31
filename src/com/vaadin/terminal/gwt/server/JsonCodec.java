@@ -16,6 +16,7 @@ import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
+import com.vaadin.terminal.gwt.client.communication.SharedState;
 
 /**
  * Decoder for converting RPC parameters and other values from JSON in transfer
@@ -140,6 +141,11 @@ public class JsonCodec implements Serializable {
             // TODO as undefined type?
             return combineTypeAndValue(JsonEncoder.VTYPE_UNDEFINED,
                     JSONObject.NULL);
+        } else if (value instanceof SharedState) {
+            // TODO implement by encoding the bean
+            Map<String, Object> map = ((SharedState) value).getState();
+            return combineTypeAndValue(JsonEncoder.VTYPE_SHAREDSTATE,
+                    encodeMapContents(map, idMapper));
         } else if (value instanceof String[]) {
             String[] array = (String[]) value;
             JSONArray jsonArray = new JSONArray();
@@ -153,20 +159,11 @@ public class JsonCodec implements Serializable {
             return combineTypeAndValue(JsonEncoder.VTYPE_BOOLEAN, value);
         } else if (value instanceof Object[]) {
             Object[] array = (Object[]) value;
-            JSONArray jsonArray = new JSONArray();
-            for (int i = 0; i < array.length; ++i) {
-                // TODO handle object graph loops?
-                jsonArray.put(encode(array[i], idMapper));
-            }
+            JSONArray jsonArray = encodeArrayContents(array, idMapper);
             return combineTypeAndValue(JsonEncoder.VTYPE_ARRAY, jsonArray);
         } else if (value instanceof Map) {
             Map<String, Object> map = (Map<String, Object>) value;
-            JSONObject jsonMap = new JSONObject();
-            for (String mapKey : map.keySet()) {
-                // TODO handle object graph loops?
-                Object mapValue = map.get(mapKey);
-                jsonMap.put(mapKey, encode(mapValue, idMapper));
-            }
+            JSONObject jsonMap = encodeMapContents(map, idMapper);
             return combineTypeAndValue(JsonEncoder.VTYPE_MAP, jsonMap);
         } else if (value instanceof Paintable) {
             Paintable paintable = (Paintable) value;
@@ -176,6 +173,27 @@ public class JsonCodec implements Serializable {
             return combineTypeAndValue(getTransportType(value),
                     String.valueOf(value));
         }
+    }
+
+    private static JSONArray encodeArrayContents(Object[] array,
+            PaintableIdMapper idMapper) throws JSONException {
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < array.length; ++i) {
+            // TODO handle object graph loops?
+            jsonArray.put(encode(array[i], idMapper));
+        }
+        return jsonArray;
+    }
+
+    private static JSONObject encodeMapContents(Map<String, Object> map,
+            PaintableIdMapper idMapper) throws JSONException {
+        JSONObject jsonMap = new JSONObject();
+        for (String mapKey : map.keySet()) {
+            // TODO handle object graph loops?
+            Object mapValue = map.get(mapKey);
+            jsonMap.put(mapKey, encode(mapValue, idMapper));
+        }
+        return jsonMap;
     }
 
     private static JSONArray combineTypeAndValue(char type, Object value) {

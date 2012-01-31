@@ -29,6 +29,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Terminal;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
 import com.vaadin.terminal.gwt.server.RpcManager;
 import com.vaadin.terminal.gwt.server.RpcTarget;
@@ -162,6 +163,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * incoming RPC calls for that interface.
      */
     private Map<Class<?>, RpcManager> rpcManagerMap = new HashMap<Class<?>, RpcManager>();
+
+    /**
+     * Shared state object to be communicated from the server to the client when
+     * modified.
+     */
+    private ComponentState sharedState;
 
     /* Constructor */
 
@@ -851,6 +858,88 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void paintContent(PaintTarget target) throws PaintException {
 
+    }
+
+    /**
+     * Returns the shared state bean with information to be sent from the server
+     * to the client.
+     * 
+     * Subclasses should override this method and set any relevant fields of the
+     * state returned by super.getState().
+     * 
+     * @since 7.0
+     * 
+     * @return updated component shared state
+     */
+    public ComponentState getState() {
+        if (null == sharedState) {
+            sharedState = createState();
+        }
+        // basic state: caption, size, enabled, ...
+
+        if (!isVisible()) {
+            return null;
+        }
+
+        // TODO for now, this superclass always recreates the state from
+        // scratch, whereas subclasses should only modify it
+        Map<String, Object> state = new HashMap<String, Object>();
+
+        if (getHeight() >= 0
+                && (getHeightUnits() != Unit.PERCENTAGE || ComponentSizeValidator
+                        .parentCanDefineHeight(this))) {
+            state.put(ComponentState.STATE_HEIGHT, "" + getCSSHeight());
+        }
+
+        if (getWidth() >= 0
+                && (getWidthUnits() != Unit.PERCENTAGE || ComponentSizeValidator
+                        .parentCanDefineWidth(this))) {
+            state.put(ComponentState.STATE_WIDTH, "" + getCSSWidth());
+        }
+
+        if (styles != null && styles.size() > 0) {
+            state.put(ComponentState.STATE_STYLE, getStyle());
+        }
+        if (isReadOnly()) {
+            state.put(ComponentState.STATE_READONLY, true);
+        }
+
+        if (isImmediate()) {
+            state.put(ComponentState.STATE_IMMEDIATE, true);
+        }
+        if (!isEnabled()) {
+            state.put(ComponentState.STATE_DISABLED, true);
+        }
+        if (getCaption() != null) {
+            state.put(ComponentState.STATE_CAPTION, getCaption());
+        }
+        // TODO add icon (Resource)
+
+        if (getDescription() != null && getDescription().length() > 0) {
+            state.put(ComponentState.STATE_DESCRIPTION, getDescription());
+        }
+
+        sharedState.setState(state);
+
+        return sharedState;
+    }
+
+    /**
+     * Creates the shared state bean to be used in server to client
+     * communication.
+     * 
+     * Subclasses should implement this method and return a new instance of the
+     * correct state class.
+     * 
+     * All configuration of the values of the state should be performed in
+     * {@link #getState()}, not in {@link #createState()}.
+     * 
+     * @since 7.0
+     * 
+     * @return new shared state object
+     */
+    protected ComponentState createState() {
+        return new ComponentState();
     }
 
     /* Documentation copied from interface */

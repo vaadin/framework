@@ -63,6 +63,7 @@ import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
+import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.server.BootstrapHandler.BootstrapContext;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.ui.AbstractComponent;
@@ -808,6 +809,37 @@ public abstract class AbstractCommunicationManager implements
             });
         }
 
+        if (paintables != null) {
+            // paint shared state before changes - for now, send the complete
+            // state of all modified and new components
+
+            // TODO problem: some components will only be created and registered
+            // below in the paint phase
+
+            JSONObject sharedStates = new JSONObject();
+            for (final Iterator<Paintable> i = paintables.iterator(); i
+                    .hasNext();) {
+                final Paintable p = i.next();
+                String paintableId = getPaintableId(p);
+                SharedState state = p.getState();
+                if (null != state) {
+                    // encode and send shared state
+                    try {
+                        JSONArray stateJsonArray = JsonCodec
+                                .encode(state, this);
+                        sharedStates.put(paintableId, stateJsonArray);
+                    } catch (JSONException e) {
+                        throw new PaintException(
+                                "Failed to serialize shared state for paintable "
+                                        + paintableId + ": " + e.getMessage());
+                    }
+                }
+            }
+            outWriter.print("\"state\":");
+            outWriter.append(sharedStates.toString());
+            outWriter.print(", "); // close changes
+        }
+
         outWriter.print("\"changes\":[");
 
         List<InvalidLayout> invalidComponentRelativeSizes = null;
@@ -877,9 +909,9 @@ public abstract class AbstractCommunicationManager implements
         }
 
         paintTarget.close();
-        outWriter.print("]"); // close changes
+        outWriter.print("], "); // close changes
 
-        outWriter.print(", \"meta\" : {");
+        outWriter.print("\"meta\" : {");
         boolean metaOpen = false;
 
         if (repaintAll) {

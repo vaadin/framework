@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import com.vaadin.terminal.gwt.client.communication.SharedState;
+
 /**
  * Class for combining multiple error messages together.
  * 
@@ -129,6 +131,11 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
 
             target.endTag("error");
         }
+    }
+
+    public SharedState getState() {
+        // TODO implement: move relevant parts from paint() to getState()
+        return null;
     }
 
     /* Documented in super interface */

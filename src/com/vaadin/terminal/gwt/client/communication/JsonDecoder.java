@@ -37,13 +37,13 @@ public class JsonDecoder {
      *            mapper between paintable ID and {@link VPaintable} objects
      * @return converted value (does not contain JSON types)
      */
-    public static Object convertVariableValue(JSONArray value,
-            VPaintableMap idMapper) {
-        return convertVariableValue(((JSONString) value.get(0)).stringValue()
-                .charAt(0), value.get(1), idMapper);
+    public static Object convertValue(JSONArray value, VPaintableMap idMapper) {
+        return convertValue(
+                ((JSONString) value.get(0)).stringValue().charAt(0),
+                value.get(1), idMapper);
     }
 
-    private static Object convertVariableValue(char variableType, Object value,
+    private static Object convertValue(char variableType, Object value,
             VPaintableMap idMapper) {
         Object val = null;
         // TODO type checks etc.
@@ -84,6 +84,10 @@ public class JsonDecoder {
             // TODO handle properly
             val = idMapper.getPaintable(String.valueOf(value));
             break;
+        case JsonEncoder.VTYPE_SHAREDSTATE:
+            val = convertMap((JSONObject) value, idMapper);
+            // TODO convert to a SharedState instance
+            break;
         }
 
         return val;
@@ -94,8 +98,7 @@ public class JsonDecoder {
         Iterator<String> it = jsonMap.keySet().iterator();
         while (it.hasNext()) {
             String key = it.next();
-            map.put(key,
-                    convertVariableValue((JSONArray) jsonMap.get(key), idMapper));
+            map.put(key, convertValue((JSONArray) jsonMap.get(key), idMapper));
         }
         return map;
     }
@@ -115,7 +118,7 @@ public class JsonDecoder {
         for (int i = 0; i < jsonArray.size(); ++i) {
             // each entry always has two elements: type and value
             JSONArray entryArray = (JSONArray) jsonArray.get(i);
-            tokens.add(convertVariableValue(entryArray, idMapper));
+            tokens.add(convertValue(entryArray, idMapper));
         }
         return tokens.toArray(new Object[tokens.size()]);
     }

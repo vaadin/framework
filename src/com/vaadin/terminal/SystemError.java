@@ -7,6 +7,7 @@ package com.vaadin.terminal;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 
 /**
@@ -88,6 +89,11 @@ public class SystemError extends RuntimeException implements ErrorMessage {
 
         target.endTag("error");
 
+    }
+
+    public SharedState getState() {
+        // TODO implement: move relevant parts from paint() to getState()
+        return null;
     }
 
     /**

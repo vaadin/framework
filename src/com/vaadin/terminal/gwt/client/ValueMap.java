@@ -101,4 +101,9 @@ public final class ValueMap extends JavaScriptObject {
         return '' + this[name];
     }-*/;
 
+    native JavaScriptObject getJavaScriptObject(String name)
+    /*-{
+        return this[name];
+    }-*/;
+
 }

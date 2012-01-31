@@ -40,8 +40,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
+import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
+import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.ui.Field;
 import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
@@ -994,6 +996,31 @@ public class ApplicationConnection {
 
                 if (redirectTimer != null) {
                     redirectTimer.schedule(1000 * sessionExpirationInterval);
+                }
+
+                // TODO implement shared state handling
+
+                // map from paintable id to its shared state instance
+                Map<String, SharedState> sharedStates = new HashMap<String, SharedState>();
+
+                // TODO Cache shared state (if any) - components might not exist
+                // TODO cleanup later: keep only used states
+                ValueMap states = json.getValueMap("state");
+                JsArrayString keyArray = states.getKeyArray();
+                for (int i = 0; i < keyArray.length(); i++) {
+                    String paintableId = keyArray.get(i);
+                    // TODO handle as a ValueMap or similar object and native
+                    // JavaScript processing?
+                    JavaScriptObject value = states
+                            .getJavaScriptObject(paintableId);
+                    // TODO implement with shared state subclasses
+                    SharedState state = GWT.create(SharedState.class);
+                    Map<String, Object> stateMap = (Map<String, Object>) JsonDecoder
+                            .convertValue(new JSONArray(value),
+                                    getPaintableMap());
+                    state.setState(stateMap);
+                    // TODO cache state to temporary stateMap
+                    sharedStates.put(paintableId, state);
                 }
 
                 // Process changes

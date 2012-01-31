@@ -38,6 +38,8 @@ public class JsonEncoder {
     public static final char VTYPE_ARRAY = 'a';
     public static final char VTYPE_STRINGARRAY = 'c';
     public static final char VTYPE_MAP = 'm';
+    // TODO this will be replaced by the shared state class name
+    public static final char VTYPE_SHAREDSTATE = 't';
 
     // TODO is this needed?
     public static final char VTYPE_UNDEFINED = 'u';

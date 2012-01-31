@@ -9,6 +9,7 @@ import java.io.Serializable;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 
 /**
@@ -165,6 +166,11 @@ public interface Validator extends Serializable {
             }
 
             target.endTag("error");
+        }
+
+        public SharedState getState() {
+            // TODO implement: move relevant parts from paint() to getState()
+            return null;
         }
 
         /**

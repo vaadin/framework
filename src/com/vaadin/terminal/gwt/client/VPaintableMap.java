@@ -236,6 +236,7 @@ public class VPaintableMap {
                     idToComponentDetail.remove(pid);
                     idToPaintable.remove(pid);
                     paintableToId.remove(paintable);
+                    // TODO purge shared state for pid
                 }
                 /*
                  * else NOP : same component has been reattached to another
