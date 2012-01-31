@@ -14,25 +14,22 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.TextBox;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.LocaleNotLoadedException;
 import com.vaadin.terminal.gwt.client.LocaleService;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
-public class VTextualDate extends VDateField implements VPaintableWidget,
-        Field, ChangeHandler, ContainerResizedListener, Focusable, SubPartAware {
+public class VTextualDate extends VDateField implements Field, ChangeHandler,
+        ContainerResizedListener, Focusable, SubPartAware {
 
     private static final String PARSE_ERROR_CLASSNAME = CLASSNAME
             + "-parseerror";
 
-    private final TextBox text;
+    protected final TextBox text;
 
-    private String formatStr;
+    protected String formatStr;
 
     private String width;
 
@@ -40,11 +37,11 @@ public class VTextualDate extends VDateField implements VPaintableWidget,
 
     protected int fieldExtraWidth = -1;
 
-    private boolean lenient;
+    protected boolean lenient;
 
     private static final String CLASSNAME_PROMPT = "prompt";
-    private static final String ATTR_INPUTPROMPT = "prompt";
-    private String inputPrompt = "";
+    protected static final String ATTR_INPUTPROMPT = "prompt";
+    protected String inputPrompt = "";
     private boolean prompting = false;
 
     public VTextualDate() {
@@ -65,8 +62,8 @@ public class VTextualDate extends VDateField implements VPaintableWidget,
                     setPrompting(false);
                 }
                 if (getClient() != null
-                        && getClient().hasEventListeners(VTextualDate.this,
-                                EventId.FOCUS)) {
+                        && getClient().hasWidgetEventListeners(
+                                VTextualDate.this, EventId.FOCUS)) {
                     getClient()
                             .updateVariable(getId(), EventId.FOCUS, "", true);
                 }
@@ -83,44 +80,13 @@ public class VTextualDate extends VDateField implements VPaintableWidget,
                     text.setText(readonly ? "" : inputPrompt);
                 }
                 if (getClient() != null
-                        && getClient().hasEventListeners(VTextualDate.this,
-                                EventId.BLUR)) {
+                        && getClient().hasWidgetEventListeners(
+                                VTextualDate.this, EventId.BLUR)) {
                     getClient().updateVariable(getId(), EventId.BLUR, "", true);
                 }
             }
         });
         add(text);
-    }
-
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        int origRes = currentResolution;
-        String oldLocale = currentLocale;
-        super.updateFromUIDL(uidl, client);
-        if (origRes != currentResolution || oldLocale != currentLocale) {
-            // force recreating format string
-            formatStr = null;
-        }
-        if (uidl.hasAttribute("format")) {
-            formatStr = uidl.getStringAttribute("format");
-        }
-
-        inputPrompt = uidl.getStringAttribute(ATTR_INPUTPROMPT);
-
-        lenient = !uidl.getBooleanAttribute("strict");
-
-        buildDate();
-        // not a FocusWidget -> needs own tabindex handling
-        if (uidl.hasAttribute("tabindex")) {
-            text.setTabIndex(uidl.getIntAttribute("tabindex"));
-        }
-
-        if (readonly) {
-            text.addStyleDependentName("readonly");
-        } else {
-            text.removeStyleDependentName("readonly");
-        }
-
     }
 
     protected String getFormatString() {

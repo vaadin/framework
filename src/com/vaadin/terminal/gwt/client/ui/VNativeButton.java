@@ -15,7 +15,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventId;
@@ -144,9 +143,5 @@ public class VNativeButton extends Button implements ClickHandler,
             super.setEnabled(enabled);
             setStyleName(ApplicationConnection.DISABLED_CLASSNAME, !enabled);
         }
-    }
-
-    public Widget getWidgetForPaintable() {
-        return this;
     }
 }
