@@ -18,8 +18,11 @@ fi
 
 svn up
 
-msg=`svn log http://dev.vaadin.com/svn/versions/$FROM -r $REVISION --xml|grep "<msg>"|sed "s/<msg>//"|sed "s/<\/msg>//"`
-svn merge http://dev.vaadin.com/svn/versions/$FROM . -c $REVISION
+currentrepowithoutversion=`svn info|grep URL|sed "s/URL: //"|sed "s/\/[^\/]*$//"`
+sourceurl="$currentrepowithoutversion/$FROM"
+
+msg=`svn log $sourceurl -r $REVISION --xml|grep "<msg>"|sed "s/<msg>//"|sed "s/<\/msg>//"`
+svn merge $sourceurl . -c $REVISION
 msg="[merge from $FROM] $msg"
 if [ "$AUTOCOMMIT" = "autocommit" ]
 then
