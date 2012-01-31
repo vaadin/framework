@@ -375,7 +375,7 @@ public class ComponentLocator {
         } else if (w instanceof VWindow) {
             VWindow win = (VWindow) w;
             ArrayList<VWindow> subWindowList = client.getView()
-                    .getSubWindowList();
+                    .getWidgetForPaintable().getSubWindowList();
             int indexOfSubWindow = subWindowList.indexOf(win);
             return PARENTCHILD_SEPARATOR + "VWindow[" + indexOfSubWindow + "]";
         } else if (w instanceof RootPanel) {
@@ -435,7 +435,7 @@ public class ComponentLocator {
             if (part.equals(ROOT_ID)) {
                 w = RootPanel.get();
             } else if (part.equals("")) {
-                w = client.getView();
+                w = client.getView().getWidgetForPaintable();
             } else if (w == null) {
                 // Must be static pid (PID_S*)
                 w = ((VPaintableWidget) VPaintableMap.get(client).getPaintable(
@@ -465,7 +465,8 @@ public class ComponentLocator {
                  * compatibility
                  */
                 if (widgetClassName.equals("VWindow")) {
-                    iterator = client.getView().getSubWindowList().iterator();
+                    iterator = client.getView().getWidgetForPaintable()
+                            .getSubWindowList().iterator();
                 } else if (widgetClassName.equals("VContextMenu")) {
                     return client.getContextMenu();
                 } else {

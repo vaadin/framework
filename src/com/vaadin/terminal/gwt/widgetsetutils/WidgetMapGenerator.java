@@ -25,6 +25,7 @@ import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.VView;
+import com.vaadin.terminal.gwt.client.ui.VViewPaintable;
 import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 import com.vaadin.ui.Root;
@@ -384,7 +385,7 @@ public class WidgetMapGenerator extends Generator {
             Class<? extends Paintable> class1) {
         Class<? extends com.vaadin.terminal.gwt.client.VPaintableWidget> clientClass;
         if (Root.class == class1) {
-            clientClass = VView.class;
+            clientClass = VViewPaintable.class;
         } else {
             ClientWidget annotation = class1.getAnnotation(ClientWidget.class);
             clientClass = annotation.value();
