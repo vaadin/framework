@@ -18,7 +18,6 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderSpace;
@@ -35,8 +34,8 @@ import com.vaadin.terminal.gwt.client.VPaintableWidget;
  * @author Vaadin Ltd
  * 
  */
-public class VCustomLayout extends ComplexPanel implements VPaintableWidget,
-        Container, ContainerResizedListener {
+public class VCustomLayout extends ComplexPanel implements
+        ContainerResizedListener {
 
     public static final String CLASSNAME = "v-customlayout";
 
@@ -44,7 +43,7 @@ public class VCustomLayout extends ComplexPanel implements VPaintableWidget,
     private final HashMap<String, Element> locationToElement = new HashMap<String, Element>();
 
     /** Location-name to contained widget map */
-    private final HashMap<String, Widget> locationToWidget = new HashMap<String, Widget>();
+    final HashMap<String, Widget> locationToWidget = new HashMap<String, Widget>();
 
     /** Widget to captionwrapper map */
     private final HashMap<VPaintableWidget, VCaptionWrapper> paintableToCaptionWrapper = new HashMap<VPaintableWidget, VCaptionWrapper>();
@@ -53,12 +52,12 @@ public class VCustomLayout extends ComplexPanel implements VPaintableWidget,
     String currentTemplateName;
 
     /** Unexecuted scripts loaded from the template */
-    private String scripts = "";
+    String scripts = "";
 
     /** Paintable ID of this paintable */
-    private String pid;
+    String pid;
 
-    private ApplicationConnection client;
+    ApplicationConnection client;
 
     /** Has the template been loaded from contents passed in UIDL **/
     private boolean hasTemplateContents = false;
@@ -132,66 +131,8 @@ public class VCustomLayout extends ComplexPanel implements VPaintableWidget,
         locationToWidget.put(location, widget);
     }
 
-    /** Update the layout from UIDL */
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        this.client = client;
-        // ApplicationConnection manages generic component features
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-
-        pid = uidl.getId();
-        if (!hasTemplate()) {
-            // Update HTML template only once
-            initializeHTML(uidl, client);
-        }
-
-        // Evaluate scripts
-        eval(scripts);
-        scripts = null;
-
-        iLayout();
-        // TODO Check if this is needed
-        client.runDescendentsLayout(this);
-
-        Set<Widget> oldWidgets = new HashSet<Widget>();
-        oldWidgets.addAll(locationToWidget.values());
-
-        // For all contained widgets
-        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
-            final UIDL uidlForChild = (UIDL) i.next();
-            if (uidlForChild.getTag().equals("location")) {
-                final String location = uidlForChild.getStringAttribute("name");
-                UIDL childUIDL = uidlForChild.getChildUIDL(0);
-                final VPaintableWidget childPaintable = client
-                        .getPaintable(childUIDL);
-                Widget childWidget = childPaintable.getWidgetForPaintable();
-                try {
-                    setWidget(childWidget, location);
-                    childPaintable.updateFromUIDL(childUIDL, client);
-                } catch (final IllegalArgumentException e) {
-                    // If no location is found, this component is not visible
-                }
-                oldWidgets.remove(childWidget);
-            }
-        }
-        for (Iterator<Widget> iterator = oldWidgets.iterator(); iterator
-                .hasNext();) {
-            Widget oldWidget = iterator.next();
-            if (oldWidget.isAttached()) {
-                // slot of this widget is emptied, remove it
-                remove(oldWidget);
-            }
-        }
-
-        iLayout();
-        // TODO Check if this is needed
-        client.runDescendentsLayout(this);
-
-    }
-
     /** Initialize HTML-layout. */
-    private void initializeHTML(UIDL uidl, ApplicationConnection client) {
+    void initializeHTML(UIDL uidl, ApplicationConnection client) {
 
         final String newTemplateContents = uidl
                 .getStringAttribute("templateContents");
@@ -264,7 +205,7 @@ public class VCustomLayout extends ComplexPanel implements VPaintableWidget,
         return false;
     }-*/;
 
-    private boolean hasTemplate() {
+    boolean hasTemplate() {
         if (currentTemplateName == null && !hasTemplateContents) {
             return false;
         } else {
@@ -295,7 +236,7 @@ public class VCustomLayout extends ComplexPanel implements VPaintableWidget,
     }
 
     /** Evaluate given script in browser document */
-    private static native void eval(String script)
+    static native void eval(String script)
     /*-{
       try {
      	 if (script != null) 
