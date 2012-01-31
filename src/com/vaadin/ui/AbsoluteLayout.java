@@ -17,7 +17,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.gwt.client.EventId;
-import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout;
+import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayoutPaintable;
 
 /**
  * AbsoluteLayout is a layout implementation that mimics html absolute
@@ -25,7 +25,7 @@ import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout;
  * 
  */
 @SuppressWarnings("serial")
-@ClientWidget(VAbsoluteLayout.class)
+@ClientWidget(VAbsoluteLayoutPaintable.class)
 public class AbsoluteLayout extends AbstractLayout implements
         LayoutClickNotifier {
 

@@ -18,12 +18,13 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VOptionGroup;
+import com.vaadin.terminal.gwt.client.ui.VOptionGroupPaintable;
 
 /**
  * Configures select to be used as an option group.
  */
 @SuppressWarnings("serial")
-@ClientWidget(VOptionGroup.class)
+@ClientWidget(VOptionGroupPaintable.class)
 public class OptionGroup extends AbstractSelect implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 

@@ -4,7 +4,6 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -15,21 +14,16 @@ import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.TextBoxBase;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventId;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
-import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 
 /**
  * This class represents a basic text input field with one row.
@@ -37,9 +31,8 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutAct
  * @author Vaadin Ltd.
  * 
  */
-public class VTextField extends TextBoxBase implements VPaintableWidget, Field,
-        ChangeHandler, FocusHandler, BlurHandler, BeforeShortcutActionListener,
-        KeyDownHandler {
+public class VTextField extends TextBoxBase implements Field, ChangeHandler,
+        FocusHandler, BlurHandler, KeyDownHandler {
 
     public static final String VAR_CUR_TEXT = "curText";
 
@@ -53,11 +46,11 @@ public class VTextField extends TextBoxBase implements VPaintableWidget, Field,
      */
     public static final String CLASSNAME_FOCUS = "focus";
 
-    protected String id;
+    protected String paintableId;
 
     protected ApplicationConnection client;
 
-    private String valueBeforeEdit = null;
+    protected String valueBeforeEdit = null;
 
     /**
      * Set to false if a text change event has been sent since the last value
@@ -66,20 +59,20 @@ public class VTextField extends TextBoxBase implements VPaintableWidget, Field,
      */
     private boolean valueBeforeEditIsSynced = true;
 
-    private boolean immediate = false;
+    protected boolean immediate = false;
     private int extraHorizontalPixels = -1;
     private int extraVerticalPixels = -1;
     private int maxLength = -1;
 
     private static final String CLASSNAME_PROMPT = "prompt";
-    private static final String ATTR_INPUTPROMPT = "prompt";
+    protected static final String ATTR_INPUTPROMPT = "prompt";
     public static final String ATTR_TEXTCHANGE_TIMEOUT = "iet";
     public static final String VAR_CURSOR = "c";
     public static final String ATTR_TEXTCHANGE_EVENTMODE = "iem";
-    private static final String TEXTCHANGE_MODE_EAGER = "EAGER";
+    protected static final String TEXTCHANGE_MODE_EAGER = "EAGER";
     private static final String TEXTCHANGE_MODE_TIMEOUT = "TIMEOUT";
 
-    private String inputPrompt = null;
+    protected String inputPrompt = null;
     private boolean prompting = false;
     private int lastCursorPos = -1;
     private boolean wordwrap = true;
@@ -112,14 +105,14 @@ public class VTextField extends TextBoxBase implements VPaintableWidget, Field,
      * Eager polling for a change is bit dum and heavy operation, so I guess we
      * should first try to survive without.
      */
-    private static final int TEXTCHANGE_EVENTS = Event.ONPASTE
+    protected static final int TEXTCHANGE_EVENTS = Event.ONPASTE
             | Event.KEYEVENTS | Event.ONMOUSEUP;
 
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (client != null) {
-            client.handleTooltipEvent(event, this);
+            client.handleWidgetTooltipEvent(event, this);
         }
 
         if (listenTextChangeEvents
@@ -158,7 +151,7 @@ public class VTextField extends TextBoxBase implements VPaintableWidget, Field,
                 client.sendPendingVariableChanges();
             } else {
                 // Default case - just send an immediate text change message
-                client.updateVariable(id, VAR_CUR_TEXT, text, true);
+                client.updateVariable(paintableId, VAR_CUR_TEXT, text, true);
 
                 // Shouldn't investigate valueBeforeEdit to avoid duplicate text
                 // change events as the states are not in sync any more
@@ -180,9 +173,9 @@ public class VTextField extends TextBoxBase implements VPaintableWidget, Field,
         }
     };
     private boolean scheduled = false;
-    private boolean listenTextChangeEvents;
-    private String textChangeEventMode;
-    private int textChangeEventTimeout;
+    protected boolean listenTextChangeEvents;
+    protected String textChangeEventMode;
+    protected int textChangeEventTimeout;
 
     private void deferTextChangeEvent() {
         if (textChangeEventMode.equals(TEXTCHANGE_MODE_TIMEOUT) && scheduled) {
@@ -215,88 +208,7 @@ public class VTextField extends TextBoxBase implements VPaintableWidget, Field,
         super.setReadOnly(readOnly);
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        this.client = client;
-        id = uidl.getId();
-
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-
-        if (uidl.getBooleanAttribute("readonly")) {
-            setReadOnly(true);
-        } else {
-            setReadOnly(false);
-        }
-
-        inputPrompt = uidl.getStringAttribute(ATTR_INPUTPROMPT);
-
-        setMaxLength(uidl.hasAttribute("maxLength") ? uidl
-                .getIntAttribute("maxLength") : -1);
-
-        immediate = uidl.getBooleanAttribute("immediate");
-
-        listenTextChangeEvents = client.hasEventListeners(this, "ie");
-        if (listenTextChangeEvents) {
-            textChangeEventMode = uidl
-                    .getStringAttribute(ATTR_TEXTCHANGE_EVENTMODE);
-            if (textChangeEventMode.equals(TEXTCHANGE_MODE_EAGER)) {
-                textChangeEventTimeout = 1;
-            } else {
-                textChangeEventTimeout = uidl
-                        .getIntAttribute(ATTR_TEXTCHANGE_TIMEOUT);
-                if (textChangeEventTimeout < 1) {
-                    // Sanitize and allow lazy/timeout with timeout set to 0 to
-                    // work as eager
-                    textChangeEventTimeout = 1;
-                }
-            }
-            sinkEvents(TEXTCHANGE_EVENTS);
-            attachCutEventListener(getElement());
-        }
-
-        if (uidl.hasAttribute("cols")) {
-            setColumns(new Integer(uidl.getStringAttribute("cols")).intValue());
-        }
-
-        final String text = uidl.getStringVariable("text");
-
-        /*
-         * We skip the text content update if field has been repainted, but text
-         * has not been changed. Additional sanity check verifies there is no
-         * change in the que (in which case we count more on the server side
-         * value).
-         */
-        if (!(uidl.getBooleanAttribute(ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
-                && valueBeforeEdit != null && text.equals(valueBeforeEdit))) {
-            updateFieldContent(text);
-        }
-
-        if (uidl.hasAttribute("selpos")) {
-            final int pos = uidl.getIntAttribute("selpos");
-            final int length = uidl.getIntAttribute("sellen");
-            /*
-             * Gecko defers setting the text so we need to defer the selection.
-             */
-            Scheduler.get().scheduleDeferred(new Command() {
-                public void execute() {
-                    setSelectionRange(pos, length);
-                }
-            });
-        }
-
-        // Here for backward compatibility; to be moved to TextArea.
-        // Optimization: server does not send attribute for the default 'true'
-        // state.
-        if (uidl.hasAttribute("wordwrap")
-                && uidl.getBooleanAttribute("wordwrap") == false) {
-            setWordwrap(false);
-        } else {
-            setWordwrap(true);
-        }
-    }
-
-    private void updateFieldContent(final String text) {
+    protected void updateFieldContent(final String text) {
         setPrompting(inputPrompt != null && focusedTextField != this
                 && (text.equals("")));
 
@@ -350,7 +262,7 @@ public class VTextField extends TextBoxBase implements VPaintableWidget, Field,
         }
     }
 
-    private void setMaxLength(int newMaxLength) {
+    protected void setMaxLength(int newMaxLength) {
         if (newMaxLength >= 0) {
             maxLength = newMaxLength;
             if (getElement().getTagName().toLowerCase().equals("textarea")) {
@@ -386,20 +298,20 @@ public class VTextField extends TextBoxBase implements VPaintableWidget, Field,
      *            true if the field was blurred
      */
     public void valueChange(boolean blurred) {
-        if (client != null && id != null) {
+        if (client != null && paintableId != null) {
             boolean sendBlurEvent = false;
             boolean sendValueChange = false;
 
-            if (blurred && client.hasEventListeners(this, EventId.BLUR)) {
+            if (blurred && client.hasWidgetEventListeners(this, EventId.BLUR)) {
                 sendBlurEvent = true;
-                client.updateVariable(id, EventId.BLUR, "", false);
+                client.updateVariable(paintableId, EventId.BLUR, "", false);
             }
 
             String newText = getText();
             if (!prompting && newText != null
                     && !newText.equals(valueBeforeEdit)) {
                 sendValueChange = immediate;
-                client.updateVariable(id, "text", getText(), false);
+                client.updateVariable(paintableId, "text", getText(), false);
                 valueBeforeEdit = newText;
                 valueBeforeEditIsSynced = true;
             }
@@ -432,7 +344,7 @@ public class VTextField extends TextBoxBase implements VPaintableWidget, Field,
         if (Util.isAttachedAndDisplayed(this)) {
             int cursorPos = getCursorPos();
             if (lastCursorPos != cursorPos) {
-                client.updateVariable(id, VAR_CURSOR, cursorPos, false);
+                client.updateVariable(paintableId, VAR_CURSOR, cursorPos, false);
                 lastCursorPos = cursorPos;
                 return true;
             }
@@ -456,8 +368,8 @@ public class VTextField extends TextBoxBase implements VPaintableWidget, Field,
             setPrompting(false);
         }
         focusedTextField = this;
-        if (client.hasEventListeners(this, EventId.FOCUS)) {
-            client.updateVariable(id, EventId.FOCUS, "", true);
+        if (client.hasWidgetEventListeners(this, EventId.FOCUS)) {
+            client.updateVariable(paintableId, EventId.FOCUS, "", true);
         }
     }
 
@@ -568,10 +480,6 @@ public class VTextField extends TextBoxBase implements VPaintableWidget, Field,
         }
     }
 
-    public void onBeforeShortcutAction(Event e) {
-        valueChange(false);
-    }
-
     // Here for backward compatibility; to be moved to TextArea
     public void setWordwrap(boolean enabled) {
         if (enabled == wordwrap) {
@@ -600,9 +508,5 @@ public class VTextField extends TextBoxBase implements VPaintableWidget, Field,
         if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
             valueChange(false);
         }
-    }
-
-    public Widget getWidgetForPaintable() {
-        return this;
     }
 }

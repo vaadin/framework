@@ -24,7 +24,7 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.ui.VView;
+import com.vaadin.terminal.gwt.client.ui.VViewPaintable;
 import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 import com.vaadin.ui.Root;
@@ -258,7 +258,7 @@ public class WidgetMapGenerator extends Generator {
             if (widgetsWithInstantiator.contains(clientClass)) {
                 continue;
             }
-            if (clientClass == VView.class) {
+            if (clientClass == VViewPaintable.class) {
                 // VView's are not instantiated by widgetset
                 continue;
             }
@@ -374,7 +374,7 @@ public class WidgetMapGenerator extends Generator {
             sourceWriter.print("else ");
         }
         sourceWriter
-                .println("return com.vaadin.terminal.gwt.client.ui.VUnknownComponent.class;");
+                .println("return com.vaadin.terminal.gwt.client.ui.VUnknownComponentPaintable.class;");
         sourceWriter.outdent();
         sourceWriter.println("}");
 
@@ -384,7 +384,7 @@ public class WidgetMapGenerator extends Generator {
             Class<? extends Paintable> class1) {
         Class<? extends com.vaadin.terminal.gwt.client.VPaintableWidget> clientClass;
         if (Root.class == class1) {
-            clientClass = VView.class;
+            clientClass = VViewPaintable.class;
         } else {
             ClientWidget annotation = class1.getAnnotation(ClientWidget.class);
             clientClass = annotation.value();

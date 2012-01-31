@@ -91,7 +91,7 @@ public class VDebugConsole extends VOverlay implements Console {
                 for (ApplicationConnection a : ApplicationConfiguration
                         .getRunningApplications()) {
                     VPaintableWidget paintable = Util.getPaintableForElement(a,
-                            a.getView(), eventTarget);
+                            a.getView().getWidgetForPaintable(), eventTarget);
                     if (paintable == null) {
                         paintable = Util.getPaintableForElement(a,
                                 RootPanel.get(), eventTarget);
@@ -120,7 +120,7 @@ public class VDebugConsole extends VOverlay implements Console {
                 for (ApplicationConnection a : ApplicationConfiguration
                         .getRunningApplications()) {
                     VPaintableWidget paintable = Util.getPaintableForElement(a,
-                            a.getView(), eventTarget);
+                            a.getView().getWidgetForPaintable(), eventTarget);
                     if (paintable == null) {
                         paintable = Util.getPaintableForElement(a,
                                 RootPanel.get(), eventTarget);
@@ -534,8 +534,7 @@ public class VDebugConsole extends VOverlay implements Console {
             emphasisInUi.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {
                     if (paintable != null) {
-                        Element element2 = layout.getWidgetForPaintable()
-                                .getElement();
+                        Element element2 = ((Widget) layout).getElement();
                         Widget.setStyleName(element2, "invalidlayout",
                                 emphasisInUi.getValue());
                     }

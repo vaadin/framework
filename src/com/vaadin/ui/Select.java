@@ -23,7 +23,7 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
+import com.vaadin.terminal.gwt.client.ui.VFilterSelectPaintable;
 
 /**
  * <p>
@@ -44,7 +44,7 @@ import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VFilterSelect.class)
+@ClientWidget(VFilterSelectPaintable.class)
 public class Select extends AbstractSelect implements AbstractSelect.Filtering,
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 

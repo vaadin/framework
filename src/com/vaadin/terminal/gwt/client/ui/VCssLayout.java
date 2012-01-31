@@ -11,9 +11,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.DomEvent.Type;
-import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -22,7 +19,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -33,33 +29,17 @@ import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ValueMap;
 
-public class VCssLayout extends SimplePanel implements VPaintableWidget,
-        Container {
+public class VCssLayout extends SimplePanel implements Container {
     public static final String TAGNAME = "csslayout";
     public static final String CLASSNAME = "v-" + TAGNAME;
 
-    private FlowPane panel = new FlowPane();
+    FlowPane panel = new FlowPane();
 
-    private Element margin = DOM.createDiv();
-
-    private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
-            this, EventId.LAYOUT_CLICK) {
-
-        @Override
-        protected VPaintableWidget getChildComponent(Element element) {
-            return panel.getComponent(element);
-        }
-
-        @Override
-        protected <H extends EventHandler> HandlerRegistration registerHandler(
-                H handler, Type<H> type) {
-            return addDomHandler(handler, type);
-        }
-    };
+    Element margin = DOM.createDiv();
 
     private boolean hasHeight;
     private boolean hasWidth;
-    private boolean rendering;
+    boolean rendering;
 
     public VCssLayout() {
         super();
@@ -94,42 +74,12 @@ public class VCssLayout extends SimplePanel implements VPaintableWidget,
         }
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        rendering = true;
-
-        if (client.updateComponent(this, uidl, true)) {
-            rendering = false;
-            return;
-        }
-        clickEventHandler.handleEventHandlerRegistration(client);
-
-        final VMarginInfo margins = new VMarginInfo(
-                uidl.getIntAttribute("margins"));
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
-                margins.hasTop());
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT,
-                margins.hasRight());
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM,
-                margins.hasBottom());
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT,
-                margins.hasLeft());
-
-        setStyleName(margin, CLASSNAME + "-" + "spacing",
-                uidl.hasAttribute("spacing"));
-        panel.updateFromUIDL(uidl, client);
-        rendering = false;
-    }
-
     public boolean hasChildComponent(Widget component) {
         return panel.hasChildComponent(component);
     }
 
     public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
         panel.replaceChildComponent(oldComponent, newComponent);
-    }
-
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
-        panel.updateCaption(component, uidl);
     }
 
     public class FlowPane extends FlowPanel {
@@ -275,7 +225,7 @@ public class VCssLayout extends SimplePanel implements VPaintableWidget,
             }
         }
 
-        private VPaintableWidget getComponent(Element element) {
+        VPaintableWidget getComponent(Element element) {
             return Util
                     .getPaintableForElement(client, VCssLayout.this, element);
         }
@@ -346,5 +296,29 @@ public class VCssLayout extends SimplePanel implements VPaintableWidget,
 
     public Widget getWidgetForPaintable() {
         return this;
+    }
+
+    /**
+     * Sets CSS classes for margin and spacing based on the given parameters.
+     * 
+     * @param margins
+     *            A {@link VMarginInfo} object that provides info on
+     *            top/left/bottom/right margins
+     * @param spacing
+     *            true to enable spacing, false otherwise
+     */
+    protected void setMarginAndSpacingStyles(VMarginInfo margins,
+            boolean spacing) {
+        setStyleName(margin, VCssLayout.CLASSNAME + "-"
+                + StyleConstants.MARGIN_TOP, margins.hasTop());
+        setStyleName(margin, VCssLayout.CLASSNAME + "-"
+                + StyleConstants.MARGIN_RIGHT, margins.hasRight());
+        setStyleName(margin, VCssLayout.CLASSNAME + "-"
+                + StyleConstants.MARGIN_BOTTOM, margins.hasBottom());
+        setStyleName(margin, VCssLayout.CLASSNAME + "-"
+                + StyleConstants.MARGIN_LEFT, margins.hasLeft());
+
+        setStyleName(margin, VCssLayout.CLASSNAME + "-" + "spacing", spacing);
+
     }
 }

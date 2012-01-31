@@ -1517,6 +1517,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             size = Float.parseFloat(matcher.group(1));
             if (size < 0) {
                 size = -1;
+                unit = Unit.PIXELS;
             } else {
                 String symbol = matcher.group(3);
                 unit = Unit.getUnitFromSymbol(symbol);

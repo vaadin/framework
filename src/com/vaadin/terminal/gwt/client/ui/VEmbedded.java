@@ -8,188 +8,29 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.dom.client.ObjectElement;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.DomEvent.Type;
-import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VEmbedded extends HTML implements VPaintableWidget {
-    public static final String CLICK_EVENT_IDENTIFIER = "click";
+public class VEmbedded extends HTML {
+    public static String CLASSNAME = "v-embedded";
 
-    private static String CLASSNAME = "v-embedded";
+    protected String height;
+    protected String width;
+    protected Element browserElement;
 
-    private String height;
-    private String width;
-    private Element browserElement;
+    protected String type;
 
-    private String type;
-
-    private ApplicationConnection client;
-
-    private final ClickEventHandler clickEventHandler = new ClickEventHandler(
-            this, CLICK_EVENT_IDENTIFIER) {
-
-        @Override
-        protected <H extends EventHandler> HandlerRegistration registerHandler(
-                H handler, Type<H> type) {
-            return addDomHandler(handler, type);
-        }
-
-    };
+    protected ApplicationConnection client;
 
     public VEmbedded() {
         setStyleName(CLASSNAME);
-    }
-
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-        this.client = client;
-
-        boolean clearBrowserElement = true;
-
-        clickEventHandler.handleEventHandlerRegistration(client);
-
-        if (uidl.hasAttribute("type")) {
-            type = uidl.getStringAttribute("type");
-            if (type.equals("image")) {
-                addStyleName(CLASSNAME + "-image");
-                Element el = null;
-                boolean created = false;
-                NodeList<Node> nodes = getElement().getChildNodes();
-                if (nodes != null && nodes.getLength() == 1) {
-                    Node n = nodes.getItem(0);
-                    if (n.getNodeType() == Node.ELEMENT_NODE) {
-                        Element e = (Element) n;
-                        if (e.getTagName().equals("IMG")) {
-                            el = e;
-                        }
-                    }
-                }
-                if (el == null) {
-                    setHTML("");
-                    el = DOM.createImg();
-                    created = true;
-                    DOM.sinkEvents(el, Event.ONLOAD);
-                }
-
-                // Set attributes
-                Style style = el.getStyle();
-                String w = uidl.getStringAttribute("width");
-                if (w != null) {
-                    style.setProperty("width", w);
-                } else {
-                    style.setProperty("width", "");
-                }
-                String h = uidl.getStringAttribute("height");
-                if (h != null) {
-                    style.setProperty("height", h);
-                } else {
-                    style.setProperty("height", "");
-                }
-                DOM.setElementProperty(el, "src", getSrc(uidl, client));
-
-                if (created) {
-                    // insert in dom late
-                    getElement().appendChild(el);
-                }
-
-                /*
-                 * Sink tooltip events so tooltip is displayed when hovering the
-                 * image.
-                 */
-                sinkEvents(VTooltip.TOOLTIP_EVENTS);
-
-            } else if (type.equals("browser")) {
-                addStyleName(CLASSNAME + "-browser");
-                if (browserElement == null) {
-                    setHTML("<iframe width=\"100%\" height=\"100%\" frameborder=\"0\""
-                            + " allowTransparency=\"true\" src=\"\""
-                            + " name=\"" + uidl.getId() + "\"></iframe>");
-                    browserElement = DOM.getFirstChild(getElement());
-                }
-                DOM.setElementAttribute(browserElement, "src",
-                        getSrc(uidl, client));
-                clearBrowserElement = false;
-            } else {
-                VConsole.log("Unknown Embedded type '" + type + "'");
-            }
-        } else if (uidl.hasAttribute("mimetype")) {
-            final String mime = uidl.getStringAttribute("mimetype");
-            if (mime.equals("application/x-shockwave-flash")) {
-                // Handle embedding of Flash
-                addStyleName(CLASSNAME + "-flash");
-                setHTML(createFlashEmbed(uidl));
-
-            } else if (mime.equals("image/svg+xml")) {
-                addStyleName(CLASSNAME + "-svg");
-                String data;
-                Map<String, String> parameters = getParameters(uidl);
-                if (parameters.get("data") == null) {
-                    data = getSrc(uidl, client);
-                } else {
-                    data = "data:image/svg+xml," + parameters.get("data");
-                }
-                setHTML("");
-                ObjectElement obj = Document.get().createObjectElement();
-                obj.setType(mime);
-                obj.setData(data);
-                if (width != null) {
-                    obj.getStyle().setProperty("width", "100%");
-                }
-                if (height != null) {
-                    obj.getStyle().setProperty("height", "100%");
-                }
-                if (uidl.hasAttribute("classid")) {
-                    obj.setAttribute("classid",
-                            uidl.getStringAttribute("classid"));
-                }
-                if (uidl.hasAttribute("codebase")) {
-                    obj.setAttribute("codebase",
-                            uidl.getStringAttribute("codebase"));
-                }
-                if (uidl.hasAttribute("codetype")) {
-                    obj.setAttribute("codetype",
-                            uidl.getStringAttribute("codetype"));
-                }
-                if (uidl.hasAttribute("archive")) {
-                    obj.setAttribute("archive",
-                            uidl.getStringAttribute("archive"));
-                }
-                if (uidl.hasAttribute("standby")) {
-                    obj.setAttribute("standby",
-                            uidl.getStringAttribute("standby"));
-                }
-                getElement().appendChild(obj);
-
-            } else {
-                VConsole.log("Unknown Embedded mimetype '" + mime + "'");
-            }
-        } else {
-            VConsole.log("Unknown Embedded; no type or mimetype attribute");
-        }
-
-        if (clearBrowserElement) {
-            browserElement = null;
-        }
     }
 
     /**
@@ -200,7 +41,7 @@ public class VEmbedded extends HTML implements VPaintableWidget {
      *            The UIDL
      * @return Tags concatenated into a string
      */
-    private String createFlashEmbed(UIDL uidl) {
+    protected String createFlashEmbed(UIDL uidl) {
         /*
          * To ensure cross-browser compatibility we are using the twice-cooked
          * method to embed flash i.e. we add a OBJECT tag for IE ActiveX and
@@ -318,7 +159,7 @@ public class VEmbedded extends HTML implements VPaintableWidget {
      * @param uidl
      * @return
      */
-    private static Map<String, String> getParameters(UIDL uidl) {
+    protected static Map<String, String> getParameters(UIDL uidl) {
         Map<String, String> parameters = new HashMap<String, String>();
 
         Iterator<Object> childIterator = uidl.getChildIterator();
@@ -347,7 +188,7 @@ public class VEmbedded extends HTML implements VPaintableWidget {
      * @param client
      * @return
      */
-    private String getSrc(UIDL uidl, ApplicationConnection client) {
+    protected String getSrc(UIDL uidl, ApplicationConnection client) {
         String url = client.translateVaadinUri(uidl.getStringAttribute("src"));
         if (url == null) {
             return "";
@@ -412,7 +253,7 @@ public class VEmbedded extends HTML implements VPaintableWidget {
             Util.notifyParentOfSizeChange(this, true);
         }
 
-        client.handleTooltipEvent(event, this);
+        client.handleWidgetTooltipEvent(event, this);
     }
 
     /**
@@ -432,9 +273,4 @@ public class VEmbedded extends HTML implements VPaintableWidget {
                     Unit.PX);
         }
     }
-
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }

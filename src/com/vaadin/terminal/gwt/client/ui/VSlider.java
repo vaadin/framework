@@ -17,13 +17,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 
-public class VSlider extends SimpleFocusablePanel implements VPaintableWidget,
-        Field, ContainerResizedListener {
+public class VSlider extends SimpleFocusablePanel implements Field,
+        ContainerResizedListener {
 
     public static final String CLASSNAME = "v-slider";
 
@@ -37,16 +35,16 @@ public class VSlider extends SimpleFocusablePanel implements VPaintableWidget,
 
     String id;
 
-    private boolean immediate;
-    private boolean disabled;
-    private boolean readonly;
+    boolean immediate;
+    boolean disabled;
+    boolean readonly;
 
     private int acceleration = 1;
-    private double min;
-    private double max;
-    private int resolution;
-    private Double value;
-    private boolean vertical;
+    double min;
+    double max;
+    int resolution;
+    Double value;
+    boolean vertical;
 
     private final HTML feedback = new HTML("", false);
     private final VOverlay feedbackPopup = new VOverlay(true, false, true) {
@@ -113,57 +111,7 @@ public class VSlider extends SimpleFocusablePanel implements VPaintableWidget,
         feedbackPopup.setWidget(feedback);
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-
-        this.client = client;
-        id = uidl.getId();
-
-        // Ensure correct implementation
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-
-        immediate = uidl.getBooleanAttribute("immediate");
-        disabled = uidl.getBooleanAttribute("disabled");
-        readonly = uidl.getBooleanAttribute("readonly");
-
-        vertical = uidl.hasAttribute("vertical");
-
-        String style = "";
-        if (uidl.hasAttribute("style")) {
-            style = uidl.getStringAttribute("style");
-        }
-
-        if (vertical) {
-            addStyleName(CLASSNAME + "-vertical");
-        } else {
-            removeStyleName(CLASSNAME + "-vertical");
-        }
-
-        min = uidl.getDoubleAttribute("min");
-        max = uidl.getDoubleAttribute("max");
-        resolution = uidl.getIntAttribute("resolution");
-        value = new Double(uidl.getDoubleVariable("value"));
-
-        setFeedbackValue(value);
-
-        buildBase();
-
-        if (!vertical) {
-            // Draw handle with a delay to allow base to gain maximum width
-            Scheduler.get().scheduleDeferred(new Command() {
-                public void execute() {
-                    buildHandle();
-                    setValue(value, false);
-                }
-            });
-        } else {
-            buildHandle();
-            setValue(value, false);
-        }
-    }
-
-    private void setFeedbackValue(double value) {
+    void setFeedbackValue(double value) {
         String currentValue = "" + value;
         if (resolution == 0) {
             currentValue = "" + new Double(value).intValue();
@@ -186,7 +134,7 @@ public class VSlider extends SimpleFocusablePanel implements VPaintableWidget,
         }
     }
 
-    private void buildBase() {
+    void buildBase() {
         final String styleAttribute = vertical ? "height" : "width";
         final String domProperty = vertical ? "offsetHeight" : "offsetWidth";
 
@@ -220,7 +168,7 @@ public class VSlider extends SimpleFocusablePanel implements VPaintableWidget,
         // TODO attach listeners for focusing and arrow keys
     }
 
-    private void buildHandle() {
+    void buildHandle() {
         final String handleAttribute = vertical ? "marginTop" : "marginLeft";
 
         DOM.setStyleAttribute(handle, handleAttribute, "0");
@@ -230,7 +178,7 @@ public class VSlider extends SimpleFocusablePanel implements VPaintableWidget,
 
     }
 
-    private void setValue(Double value, boolean updateToServer) {
+    void setValue(Double value, boolean updateToServer) {
         if (value == null) {
             return;
         }

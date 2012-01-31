@@ -9,15 +9,8 @@ import java.util.Set;
 
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.DomEvent.Type;
-import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.EventId;
-import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -32,21 +25,18 @@ public class VOrderedLayout extends CellBasedLayout {
 
     public static final String CLASSNAME = "v-orderedlayout";
 
-    private int orientation;
-
-    // Can be removed once OrderedLayout is removed
-    private boolean allowOrientationUpdate = false;
+    int orientation;
 
     /**
      * Size of the layout excluding any margins.
      */
-    private Size activeLayoutSize = new Size(0, 0);
+    Size activeLayoutSize = new Size(0, 0);
 
-    private boolean isRendering = false;
+    boolean isRendering = false;
 
     private String width = "";
 
-    private boolean sizeHasChangedDuringRendering = false;
+    boolean sizeHasChangedDuringRendering = false;
 
     private ValueMap expandRatios;
 
@@ -56,24 +46,8 @@ public class VOrderedLayout extends CellBasedLayout {
 
     private ValueMap alignments;
 
-    private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
-            this, EventId.LAYOUT_CLICK) {
-
-        @Override
-        protected VPaintableWidget getChildComponent(Element element) {
-            return getComponent(element);
-        }
-
-        @Override
-        protected <H extends EventHandler> HandlerRegistration registerHandler(
-                H handler, Type<H> type) {
-            return addDomHandler(handler, type);
-        }
-    };
-
     public VOrderedLayout() {
         this(CLASSNAME, ORIENTATION_VERTICAL);
-        allowOrientationUpdate = true;
     }
 
     protected VOrderedLayout(String className, int orientation) {
@@ -87,195 +61,7 @@ public class VOrderedLayout extends CellBasedLayout {
         STYLENAME_MARGIN_LEFT = className + "-margin-left";
     }
 
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        isRendering = true;
-        super.updateFromUIDL(uidl, client);
-
-        // Only non-cached, visible UIDL:s can introduce changes
-        if (uidl.getBooleanAttribute("cached")
-                || uidl.getBooleanAttribute("invisible")) {
-            isRendering = false;
-            return;
-        }
-
-        clickEventHandler.handleEventHandlerRegistration(client);
-
-        if (allowOrientationUpdate) {
-            handleOrientationUpdate(uidl);
-        }
-
-        // IStopWatch w = new IStopWatch("OrderedLayout.updateFromUIDL");
-
-        ArrayList<Widget> uidlWidgets = new ArrayList<Widget>(
-                uidl.getChildCount());
-        ArrayList<ChildComponentContainer> relativeSizeComponents = new ArrayList<ChildComponentContainer>();
-        ArrayList<UIDL> relativeSizeComponentUIDL = new ArrayList<UIDL>();
-
-        int pos = 0;
-        for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
-            final UIDL childUIDL = (UIDL) it.next();
-            final VPaintableWidget childPaintable = client
-                    .getPaintable(childUIDL);
-            Widget widget = childPaintable.getWidgetForPaintable();
-
-            // Create container for component
-            ChildComponentContainer childComponentContainer = getComponentContainer(widget);
-
-            if (childComponentContainer == null) {
-                // This is a new component
-                childComponentContainer = createChildContainer(childPaintable);
-            } else {
-                /*
-                 * The widget may be null if the same paintable has been
-                 * rendered in a different component container while this has
-                 * been invisible. Ensure the childComponentContainer has the
-                 * widget attached. See e.g. #5372
-                 */
-                childComponentContainer.setPaintable(childPaintable);
-            }
-
-            addOrMoveChild(childComponentContainer, pos++);
-
-            /*
-             * Components which are to be expanded in the same orientation as
-             * the layout are rendered later when it is clear how much space
-             * they can use
-             */
-            if (!Util.isCached(childUIDL)) {
-                FloatSize relativeSize = Util.parseRelativeSize(childUIDL);
-                childComponentContainer.setRelativeSize(relativeSize);
-            }
-
-            if (childComponentContainer.isComponentRelativeSized(orientation)) {
-                relativeSizeComponents.add(childComponentContainer);
-                relativeSizeComponentUIDL.add(childUIDL);
-            } else {
-                if (isDynamicWidth()) {
-                    childComponentContainer.renderChild(childUIDL, client, -1);
-                } else {
-                    childComponentContainer.renderChild(childUIDL, client,
-                            activeLayoutSize.getWidth());
-                }
-                if (sizeHasChangedDuringRendering && Util.isCached(childUIDL)) {
-                    // notify cached relative sized component about size
-                    // chance
-                    client.handleComponentRelativeSize(childComponentContainer
-                            .getWidget());
-                }
-            }
-
-            uidlWidgets.add(widget);
-
-        }
-
-        // w.mark("Rendering of "
-        // + (uidlWidgets.size() - relativeSizeComponents.size())
-        // + " absolute size components done");
-
-        /*
-         * Remove any children after pos. These are the ones that previously
-         * were in the layout but have now been removed
-         */
-        removeChildrenAfter(pos);
-
-        // w.mark("Old children removed");
-
-        /* Fetch alignments and expand ratio from UIDL */
-        updateAlignmentsAndExpandRatios(uidl, uidlWidgets);
-        // w.mark("Alignments and expand ratios updated");
-
-        /* Fetch widget sizes from rendered components */
-        updateWidgetSizes();
-        // w.mark("Widget sizes updated");
-
-        recalculateLayout();
-        // w.mark("Layout size calculated (" + activeLayoutSize +
-        // ") offsetSize: "
-        // + getOffsetWidth() + "," + getOffsetHeight());
-
-        /* Render relative size components */
-        for (int i = 0; i < relativeSizeComponents.size(); i++) {
-            ChildComponentContainer childComponentContainer = relativeSizeComponents
-                    .get(i);
-            UIDL childUIDL = relativeSizeComponentUIDL.get(i);
-
-            if (isDynamicWidth()) {
-                childComponentContainer.renderChild(childUIDL, client, -1);
-            } else {
-                childComponentContainer.renderChild(childUIDL, client,
-                        activeLayoutSize.getWidth());
-            }
-
-            if (Util.isCached(childUIDL)) {
-                /*
-                 * We must update the size of the relative sized component if
-                 * the expand ratio or something else in the layout changes
-                 * which affects the size of a relative sized component
-                 */
-                client.handleComponentRelativeSize(childComponentContainer
-                        .getWidget());
-            }
-
-            // childComponentContainer.updateWidgetSize();
-        }
-
-        // w.mark("Rendering of " + (relativeSizeComponents.size())
-        // + " relative size components done");
-
-        /* Fetch widget sizes for relative size components */
-        for (ChildComponentContainer childComponentContainer : widgetToComponentContainer
-                .values()) {
-
-            /* Update widget size from DOM */
-            childComponentContainer.updateWidgetSize();
-        }
-
-        // w.mark("Widget sizes updated");
-
-        /*
-         * Components with relative size in main direction may affect the layout
-         * size in the other direction
-         */
-        if ((isHorizontal() && isDynamicHeight())
-                || (isVertical() && isDynamicWidth())) {
-            layoutSizeMightHaveChanged();
-        }
-        // w.mark("Layout dimensions updated");
-
-        /* Update component spacing */
-        updateContainerMargins();
-
-        /*
-         * Update component sizes for components with relative size in non-main
-         * direction
-         */
-        if (updateRelativeSizesInNonMainDirection()) {
-            // Sizes updated - might affect the other dimension so we need to
-            // recheck the widget sizes and recalculate layout dimensions
-            updateWidgetSizes();
-            layoutSizeMightHaveChanged();
-        }
-        calculateAlignments();
-        // w.mark("recalculateComponentSizesAndAlignments done");
-
-        setRootSize();
-
-        if (BrowserInfo.get().isIE()) {
-            /*
-             * This should fix the issue with padding not always taken into
-             * account for the containers leading to no spacing between
-             * elements.
-             */
-            root.getStyle().setProperty("zoom", "1");
-        }
-
-        // w.mark("runDescendentsLayout done");
-        isRendering = false;
-        sizeHasChangedDuringRendering = false;
-    }
-
-    private void layoutSizeMightHaveChanged() {
+    void layoutSizeMightHaveChanged() {
         Size oldSize = new Size(activeLayoutSize.getWidth(),
                 activeLayoutSize.getHeight());
         calculateLayoutDimensions();
@@ -288,7 +74,7 @@ public class VOrderedLayout extends CellBasedLayout {
         }
     }
 
-    private void updateWidgetSizes() {
+    void updateWidgetSizes() {
         for (ChildComponentContainer childComponentContainer : widgetToComponentContainer
                 .values()) {
 
@@ -299,7 +85,7 @@ public class VOrderedLayout extends CellBasedLayout {
         }
     }
 
-    private void recalculateLayout() {
+    void recalculateLayout() {
 
         /* Calculate space for relative size components */
         int spaceForExpansion = calculateLayoutDimensions();
@@ -340,30 +126,13 @@ public class VOrderedLayout extends CellBasedLayout {
 
     }
 
-    private void handleOrientationUpdate(UIDL uidl) {
-        int newOrientation = ORIENTATION_VERTICAL;
-        if ("horizontal".equals(uidl.getStringAttribute("orientation"))) {
-            newOrientation = ORIENTATION_HORIZONTAL;
-        }
-
-        if (orientation != newOrientation) {
-            orientation = newOrientation;
-
-            for (ChildComponentContainer childComponentContainer : widgetToComponentContainer
-                    .values()) {
-                childComponentContainer.setOrientation(orientation);
-            }
-        }
-
-    }
-
     /**
      * Updated components with relative height in horizontal layouts and
      * components with relative width in vertical layouts. This is only needed
      * if the height (horizontal layout) or width (vertical layout) has not been
      * specified.
      */
-    private boolean updateRelativeSizesInNonMainDirection() {
+    boolean updateRelativeSizesInNonMainDirection() {
         int updateDirection = 1 - orientation;
         if ((updateDirection == ORIENTATION_HORIZONTAL && !isDynamicWidth())
                 || (updateDirection == ORIENTATION_VERTICAL && !isDynamicHeight())) {
@@ -468,7 +237,7 @@ public class VOrderedLayout extends CellBasedLayout {
         return widgetWidth;
     }
 
-    private void calculateAlignments() {
+    void calculateAlignments() {
         int w = 0;
         int h = 0;
 
@@ -676,7 +445,7 @@ public class VOrderedLayout extends CellBasedLayout {
      * Updates the spacing between components. Needs to be done only when
      * components are added/removed.
      */
-    private void updateContainerMargins() {
+    void updateContainerMargins() {
         ChildComponentContainer firstChildComponent = getFirstChildComponentContainer();
         if (firstChildComponent != null) {
             firstChildComponent.setMarginLeft(0);
@@ -697,15 +466,15 @@ public class VOrderedLayout extends CellBasedLayout {
         }
     }
 
-    private boolean isHorizontal() {
+    boolean isHorizontal() {
         return orientation == ORIENTATION_HORIZONTAL;
     }
 
-    private boolean isVertical() {
+    boolean isVertical() {
         return orientation == ORIENTATION_VERTICAL;
     }
 
-    private ChildComponentContainer createChildContainer(VPaintableWidget child) {
+    ChildComponentContainer createChildContainer(VPaintableWidget child) {
 
         // Create a container DIV for the child
         ChildComponentContainer childComponent = new ChildComponentContainer(
@@ -783,7 +552,7 @@ public class VOrderedLayout extends CellBasedLayout {
         setRootSize();
     }
 
-    private void setRootSize() {
+    void setRootSize() {
         root.getStyle().setPropertyPx("width", activeLayoutSize.getWidth());
         root.getStyle().setPropertyPx("height", activeLayoutSize.getHeight());
     }
@@ -942,19 +711,6 @@ public class VOrderedLayout extends CellBasedLayout {
         }
     }
 
-    public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
-        Widget widget = paintable.getWidgetForPaintable();
-        ChildComponentContainer componentContainer = getComponentContainer(widget);
-        componentContainer.updateCaption(uidl, client);
-        if (!isRendering) {
-            /*
-             * This was a component-only update and the possible size change
-             * must be propagated to the layout
-             */
-            client.captionSizeUpdated(widget);
-        }
-    }
-
     /**
      * Returns the deepest nested child component which contains "element". The
      * child component is also returned if "element" is part of its caption.
@@ -965,7 +721,7 @@ public class VOrderedLayout extends CellBasedLayout {
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
      */
-    private VPaintableWidget getComponent(Element element) {
+    VPaintableWidget getComponent(Element element) {
         return Util.getPaintableForElement(client, this, element);
     }
 

@@ -24,7 +24,7 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
+import com.vaadin.terminal.gwt.client.ui.VUnknownComponentPaintable;
 import com.vaadin.terminal.gwt.client.ui.VWindow;
 
 public class VUIDLBrowser extends SimpleTree {
@@ -99,7 +99,7 @@ public class VUIDLBrowser extends SimpleTree {
                 String name) {
             Class<? extends VPaintableWidget> widgetClassByDecodedTag = conf
                     .getWidgetClassByEncodedTag(name);
-            if (widgetClassByDecodedTag == VUnknownComponent.class) {
+            if (widgetClassByDecodedTag == VUnknownComponentPaintable.class) {
                 return conf.getUnknownServerClassNameByEncodedTagName(name)
                         + "(NO CLIENT IMPLEMENTATION FOUND)";
             } else {

@@ -10,7 +10,7 @@ import java.util.Map;
 import com.vaadin.data.Property;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
+import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextAreaPaintable;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
@@ -20,7 +20,7 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * {@link RichTextArea} may produce unexpected results as formatting is counted
  * into length of field.
  */
-@ClientWidget(value = VRichTextArea.class, loadStyle = LoadStyle.LAZY)
+@ClientWidget(value = VRichTextAreaPaintable.class, loadStyle = LoadStyle.LAZY)
 public class RichTextArea extends AbstractField<String> {
 
     /**

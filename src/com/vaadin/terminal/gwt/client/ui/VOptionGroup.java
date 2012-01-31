@@ -4,7 +4,6 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -38,14 +37,14 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
     public static final String CLASSNAME = "v-select-optiongroup";
 
-    private final Panel panel;
+    protected final Panel panel;
 
     private final Map<CheckBox, String> optionsToKeys;
 
-    private boolean sendFocusEvents = false;
-    private boolean sendBlurEvents = false;
-    private List<HandlerRegistration> focusHandlers = null;
-    private List<HandlerRegistration> blurHandlers = null;
+    protected boolean sendFocusEvents = false;
+    protected boolean sendBlurEvents = false;
+    protected List<HandlerRegistration> focusHandlers = null;
+    protected List<HandlerRegistration> blurHandlers = null;
 
     private final LoadHandler iconLoadHandler = new LoadHandler() {
         public void onLoad(LoadEvent event) {
@@ -62,49 +61,12 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
      */
     private boolean blurOccured = false;
 
-    private boolean htmlContentAllowed = false;
+    protected boolean htmlContentAllowed = false;
 
     public VOptionGroup() {
         super(CLASSNAME);
         panel = (Panel) optionsContainer;
         optionsToKeys = new HashMap<CheckBox, String>();
-    }
-
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        htmlContentAllowed = uidl.hasAttribute(HTML_CONTENT_ALLOWED);
-
-        super.updateFromUIDL(uidl, client);
-
-        sendFocusEvents = client.hasEventListeners(this, EventId.FOCUS);
-        sendBlurEvents = client.hasEventListeners(this, EventId.BLUR);
-
-        if (focusHandlers != null) {
-            for (HandlerRegistration reg : focusHandlers) {
-                reg.removeHandler();
-            }
-            focusHandlers.clear();
-            focusHandlers = null;
-
-            for (HandlerRegistration reg : blurHandlers) {
-                reg.removeHandler();
-            }
-            blurHandlers.clear();
-            blurHandlers = null;
-        }
-
-        if (sendFocusEvents || sendBlurEvents) {
-            focusHandlers = new ArrayList<HandlerRegistration>();
-            blurHandlers = new ArrayList<HandlerRegistration>();
-
-            // add focus and blur handlers to checkboxes / radio buttons
-            for (Widget wid : panel) {
-                if (wid instanceof CheckBox) {
-                    focusHandlers.add(((CheckBox) wid).addFocusHandler(this));
-                    blurHandlers.add(((CheckBox) wid).addBlurHandler(this));
-                }
-            }
-        }
     }
 
     /*
@@ -133,7 +95,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
                 op = new VCheckBox();
                 op.setHTML(itemHtml);
             } else {
-                op = new RadioButton(id, itemHtml, true);
+                op = new RadioButton(paintableId, itemHtml, true);
                 op.setStyleName("v-radiobutton");
             }
 
@@ -174,7 +136,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
             } else {
                 selectedKeys.remove(key);
             }
-            client.updateVariable(id, "selected", getSelectedItems(),
+            client.updateVariable(paintableId, "selected", getSelectedItems(),
                     isImmediate());
         }
     }
@@ -200,7 +162,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
             // panel was blurred => fire the event to the server side if
             // requested by server side
             if (sendFocusEvents) {
-                client.updateVariable(id, EventId.FOCUS, "", true);
+                client.updateVariable(paintableId, EventId.FOCUS, "", true);
             }
         } else {
             // blur occured before this focus event
@@ -219,16 +181,12 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
                     // check whether blurOccured still is true and then send the
                     // event out to the server
                     if (blurOccured) {
-                        client.updateVariable(id, EventId.BLUR, "", true);
+                        client.updateVariable(paintableId, EventId.BLUR, "",
+                                true);
                         blurOccured = false;
                     }
                 }
             });
         }
     }
-
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }

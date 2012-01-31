@@ -50,6 +50,7 @@ import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
 import com.vaadin.terminal.gwt.client.ui.VView;
+import com.vaadin.terminal.gwt.client.ui.VViewPaintable;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 
@@ -144,7 +145,7 @@ public class ApplicationConnection {
     private Timer loadTimer3;
     private Element loadElement;
 
-    private final VView view;
+    private final VViewPaintable view;
 
     protected boolean applicationRunning = false;
 
@@ -831,7 +832,8 @@ public class ApplicationConnection {
         if (loadElement == null) {
             loadElement = DOM.createDiv();
             DOM.setStyleAttribute(loadElement, "position", "absolute");
-            DOM.appendChild(view.getElement(), loadElement);
+            DOM.appendChild(view.getWidgetForPaintable().getElement(),
+                    loadElement);
             VConsole.log("inserting load indicator");
         }
         DOM.setElementProperty(loadElement, "className", "v-loading-indicator");
@@ -972,7 +974,7 @@ public class ApplicationConnection {
                     meta = json.getValueMap("meta");
                     if (meta.containsKey("repaintAll")) {
                         repaintAll = true;
-                        view.clear();
+                        view.getWidgetForPaintable().clear();
                         getPaintableMap().clear();
                         if (meta.containsKey("invalidLayouts")) {
                             validatingLayouts = true;
@@ -1640,11 +1642,7 @@ public class ApplicationConnection {
             // Changed invisibile <-> visible
             if (wasVisible && manageCaption) {
                 // Must hide caption when component is hidden
-                final Container parent = Util.getLayout(component);
-                if (parent != null) {
-                    parent.updateCaption(paintable, uidl);
-                }
-
+                updateCaption(paintable, uidl);
             }
         }
 
@@ -1689,10 +1687,7 @@ public class ApplicationConnection {
 
         // Set captions
         if (manageCaption) {
-            final Container parent = Util.getLayout(component);
-            if (parent != null) {
-                parent.updateCaption(paintable, uidl);
-            }
+            updateCaption(paintable, uidl);
         }
 
         // add error classname to components w/ error
@@ -1702,13 +1697,6 @@ public class ApplicationConnection {
             tooltipInfo.setErrorUidl(null);
         }
 
-        // Set captions
-        if (manageCaption) {
-            final Container parent = Util.getLayout(component);
-            if (parent != null) {
-                parent.updateCaption(paintable, uidl);
-            }
-        }
         /*
          * updateComponentSize need to be after caption update so caption can be
          * taken into account
@@ -1717,6 +1705,12 @@ public class ApplicationConnection {
         updateComponentSize(paintable, uidl);
 
         return false;
+    }
+
+    @Deprecated
+    private void updateCaption(VPaintableWidget paintable, UIDL uidl) {
+        VPaintableWidgetContainer parent = paintable.getParentPaintable();
+        parent.updateCaption(paintable, uidl);
     }
 
     /**
@@ -1919,7 +1913,8 @@ public class ApplicationConnection {
         boolean horizontalScrollBar = false;
         boolean verticalScrollBar = false;
 
-        Container parentPaintable = Util.getLayout(widget);
+        VPaintableWidgetContainer parentPaintable = paintable
+                .getParentPaintable();
         RenderSpace renderSpace;
 
         // Parent-less components (like sub-windows) are relative to browser
@@ -1928,7 +1923,8 @@ public class ApplicationConnection {
             renderSpace = new RenderSpace(Window.getClientWidth(),
                     Window.getClientHeight());
         } else {
-            renderSpace = parentPaintable.getAllocatedSpace(widget);
+            renderSpace = ((Container) parentPaintable.getWidgetForPaintable())
+                    .getAllocatedSpace(widget);
         }
 
         if (relativeSize.getHeight() >= 0) {
@@ -2245,7 +2241,7 @@ public class ApplicationConnection {
         @Override
         public void run() {
             VConsole.log("Running re-layout of " + view.getClass().getName());
-            runDescendentsLayout(view);
+            runDescendentsLayout(view.getWidgetForPaintable());
             isPending = false;
         }
     };
@@ -2280,7 +2276,7 @@ public class ApplicationConnection {
      * 
      * @return the main view
      */
-    public VView getView() {
+    public VViewPaintable getView() {
         return view;
     }
 

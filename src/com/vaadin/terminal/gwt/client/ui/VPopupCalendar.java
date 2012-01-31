@@ -21,16 +21,10 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.DateTimeService;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusChangeListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.SubmitListener;
-import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.TimeChangeListener;
 
 /**
  * Represents a date selection component with a text field and a popup date
@@ -42,19 +36,19 @@ import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.TimeChangeListener;
  * <code>setCalendarPanel(VCalendarPanel panel)</code> method.
  * 
  */
-public class VPopupCalendar extends VTextualDate implements VPaintableWidget,
-        Field, ClickHandler, CloseHandler<PopupPanel>, SubPartAware {
+public class VPopupCalendar extends VTextualDate implements Field,
+        ClickHandler, CloseHandler<PopupPanel>, SubPartAware {
 
-    private static final String POPUP_PRIMARY_STYLE_NAME = VDateField.CLASSNAME
+    protected static final String POPUP_PRIMARY_STYLE_NAME = VDateField.CLASSNAME
             + "-popup";
 
-    private final Button calendarToggle;
+    protected final Button calendarToggle;
 
-    private VCalendarPanel calendar;
+    protected VCalendarPanel calendar;
 
-    private final VOverlay popup;
+    protected final VOverlay popup;
     private boolean open = false;
-    private boolean parsable = true;
+    protected boolean parsable = true;
 
     public VPopupCalendar() {
         super();
@@ -105,7 +99,7 @@ public class VPopupCalendar extends VTextualDate implements VPaintableWidget,
     }
 
     @SuppressWarnings("deprecation")
-    private void updateValue(Date newDate) {
+    protected void updateValue(Date newDate) {
         Date currentDate = getCurrentDate();
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) newDate.clone());
@@ -135,96 +129,6 @@ public class VPopupCalendar extends VTextualDate implements VPaintableWidget,
                 getClient().sendPendingVariableChanges();
             }
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.terminal.gwt.client.ui.VTextualDate#updateFromUIDL(com.vaadin
-     * .terminal.gwt.client.UIDL,
-     * com.vaadin.terminal.gwt.client.ApplicationConnection)
-     */
-    @Override
-    @SuppressWarnings("deprecation")
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        boolean lastReadOnlyState = readonly;
-        boolean lastEnabledState = isEnabled();
-
-        parsable = uidl.getBooleanAttribute("parsable");
-
-        super.updateFromUIDL(uidl, client);
-
-        String popupStyleNames = ApplicationConnection.getStyleName(
-                POPUP_PRIMARY_STYLE_NAME, uidl, false);
-        popupStyleNames += " " + VDateField.CLASSNAME + "-"
-                + resolutionToString(currentResolution);
-        popup.setStyleName(popupStyleNames);
-
-        calendar.setDateTimeService(getDateTimeService());
-        calendar.setShowISOWeekNumbers(isShowISOWeekNumbers());
-        if (calendar.getResolution() != currentResolution) {
-            calendar.setResolution(currentResolution);
-            if (calendar.getDate() != null) {
-                calendar.setDate((Date) getCurrentDate().clone());
-                // force re-render when changing resolution only
-                calendar.renderCalendar();
-            }
-        }
-        calendarToggle.setEnabled(enabled);
-
-        if (currentResolution <= RESOLUTION_MONTH) {
-            calendar.setFocusChangeListener(new FocusChangeListener() {
-                public void focusChanged(Date date) {
-                    updateValue(date);
-                    buildDate();
-                    Date date2 = calendar.getDate();
-                    date2.setYear(date.getYear());
-                    date2.setMonth(date.getMonth());
-                }
-            });
-        } else {
-            calendar.setFocusChangeListener(null);
-        }
-
-        if (currentResolution > RESOLUTION_DAY) {
-            calendar.setTimeChangeListener(new TimeChangeListener() {
-                public void changed(int hour, int min, int sec, int msec) {
-                    Date d = getDate();
-                    if (d == null) {
-                        // date currently null, use the value from calendarPanel
-                        // (~ client time at the init of the widget)
-                        d = (Date) calendar.getDate().clone();
-                    }
-                    d.setHours(hour);
-                    d.setMinutes(min);
-                    d.setSeconds(sec);
-                    DateTimeService.setMilliseconds(d, msec);
-
-                    // Always update time changes to the server
-                    updateValue(d);
-
-                    // Update text field
-                    buildDate();
-                }
-            });
-        }
-
-        if (readonly) {
-            calendarToggle.addStyleName(CLASSNAME + "-button-readonly");
-        } else {
-            calendarToggle.removeStyleName(CLASSNAME + "-button-readonly");
-        }
-
-        if (lastReadOnlyState != readonly || lastEnabledState != isEnabled()) {
-            // Enabled or readonly state changed. Differences in theming might
-            // affect the width (for instance if the popup button is hidden) so
-            // we have to recalculate the width (IF the width of the field is
-            // fixed)
-            updateWidth();
-        }
-
-        calendarToggle.setEnabled(true);
     }
 
     /*

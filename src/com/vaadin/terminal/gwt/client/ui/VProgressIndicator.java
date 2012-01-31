@@ -9,20 +9,18 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 
-public class VProgressIndicator extends Widget implements VPaintableWidget {
+public class VProgressIndicator extends Widget {
 
-    private static final String CLASSNAME = "v-progressindicator";
+    public static final String CLASSNAME = "v-progressindicator";
     Element wrapper = DOM.createDiv();
     Element indicator = DOM.createDiv();
-    private ApplicationConnection client;
-    private final Poller poller;
-    private boolean indeterminate = false;
+    protected ApplicationConnection client;
+    protected final Poller poller;
+    protected boolean indeterminate = false;
     private boolean pollerSuspendedDueDetach;
-    private int interval;
+    protected int interval;
 
     public VProgressIndicator() {
         setElement(DOM.createDiv());
@@ -32,38 +30,6 @@ public class VProgressIndicator extends Widget implements VPaintableWidget {
         indicator.setClassName(CLASSNAME + "-indicator");
         wrapper.setClassName(CLASSNAME + "-wrapper");
         poller = new Poller();
-    }
-
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        this.client = client;
-        if (!uidl.getBooleanAttribute("cached")) {
-            poller.cancel();
-        }
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-
-        indeterminate = uidl.getBooleanAttribute("indeterminate");
-
-        if (indeterminate) {
-            String basename = CLASSNAME + "-indeterminate";
-            VProgressIndicator.setStyleName(getElement(), basename, true);
-            VProgressIndicator.setStyleName(getElement(), basename
-                    + "-disabled", uidl.getBooleanAttribute("disabled"));
-        } else {
-            try {
-                final float f = Float.parseFloat(uidl
-                        .getStringAttribute("state"));
-                final int size = Math.round(100 * f);
-                DOM.setStyleAttribute(indicator, "width", size + "%");
-            } catch (final Exception e) {
-            }
-        }
-
-        if (!uidl.getBooleanAttribute("disabled")) {
-            interval = uidl.getIntAttribute("pollinginterval");
-            poller.scheduleRepeating(interval);
-        }
     }
 
     @Override
@@ -102,9 +68,4 @@ public class VProgressIndicator extends Widget implements VPaintableWidget {
         }
 
     }
-
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }

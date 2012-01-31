@@ -4,9 +4,9 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
-public class VSplitPanelHorizontal extends VSplitPanel {
+public class VSplitPanelHorizontal extends VAbstractSplitPanel {
 
     public VSplitPanelHorizontal() {
-        super(VSplitPanel.ORIENTATION_HORIZONTAL);
+        super(VAbstractSplitPanel.ORIENTATION_HORIZONTAL);
     }
 }

@@ -27,7 +27,7 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VDateField;
-import com.vaadin.terminal.gwt.client.ui.VPopupCalendar;
+import com.vaadin.terminal.gwt.client.ui.VPopupCalendarPaintable;
 
 /**
  * <p>
@@ -50,7 +50,7 @@ import com.vaadin.terminal.gwt.client.ui.VPopupCalendar;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VPopupCalendar.class)
+@ClientWidget(VPopupCalendarPaintable.class)
 public class DateField extends AbstractField<Date> implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 

@@ -54,7 +54,7 @@ public class VTabsheet extends VTabsheetBase {
 
     /**
      * Representation of a single "tab" shown in the TabBar
-     *
+     * 
      */
     private static class Tab extends SimplePanel {
         private static final String TD_CLASSNAME = CLASSNAME + "-tabitemcell";
@@ -206,9 +206,10 @@ public class VTabsheet extends VTabsheetBase {
                 if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
                     tooltipInfo.setErrorUidl(uidl.getErrors());
                 }
-                client.registerTooltip(getTabsheet(), getElement(), tooltipInfo);
+                client.registerWidgetTooltip(getTabsheet(), getElement(),
+                        tooltipInfo);
             } else {
-                client.registerTooltip(getTabsheet(), getElement(), null);
+                client.registerWidgetTooltip(getTabsheet(), getElement(), null);
             }
 
             boolean ret = super.updateCaption(uidl);
@@ -236,7 +237,7 @@ public class VTabsheet extends VTabsheetBase {
             if (event.getTypeInt() == Event.ONLOAD) {
                 getTabsheet().tabSizeMightHaveChanged(getTab());
             }
-            client.handleTooltipEvent(event, getTabsheet(), getElement());
+            client.handleWidgetTooltipEvent(event, getTabsheet(), getElement());
         }
 
         public Tab getTab() {
@@ -469,7 +470,7 @@ public class VTabsheet extends VTabsheetBase {
     // Can't use "style" as it's already in use
     public static final String TAB_STYLE_NAME = "tabstyle";
 
-    private final Element tabs; // tabbar and 'scroller' container
+    final Element tabs; // tabbar and 'scroller' container
     private final Element scroller; // tab-scroller element
     private final Element scrollerNext; // tab-scroller next button element
     private final Element scrollerPrev; // tab-scroller prev button element
@@ -480,15 +481,15 @@ public class VTabsheet extends VTabsheetBase {
     private int scrollerIndex = 0;
 
     private final TabBar tb = new TabBar(this);
-    private final VTabsheetPanel tp = new VTabsheetPanel();
+    final VTabsheetPanel tp = new VTabsheetPanel();
     private final Element contentNode, deco;
 
     private String height;
     private String width;
 
-    private boolean waitingForResponse;
+    boolean waitingForResponse;
 
-    private final RenderInformation renderInformation = new RenderInformation();
+    final RenderInformation renderInformation = new RenderInformation();
 
     /**
      * Previous visible widget is set invisible with CSS (not display: none, but
@@ -497,7 +498,7 @@ public class VTabsheet extends VTabsheetBase {
      */
     private Widget previousVisibleWidget;
 
-    private boolean rendering = false;
+    boolean rendering = false;
 
     private String currentStyle;
 
@@ -545,11 +546,11 @@ public class VTabsheet extends VTabsheetBase {
         client.updateVariable(id, "close", tabKeys.get(tabIndex), true);
     }
 
-    private boolean isDynamicWidth() {
+    boolean isDynamicWidth() {
         return width == null || width.equals("");
     }
 
-    private boolean isDynamicHeight() {
+    boolean isDynamicHeight() {
         return height == null || height.equals("");
     }
 
@@ -633,60 +634,7 @@ public class VTabsheet extends VTabsheetBase {
         return scrollerIndex > index;
     }
 
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        rendering = true;
-
-        if (!uidl.getBooleanAttribute("cached")) {
-            // Handle stylename changes before generics (might affect size
-            // calculations)
-            handleStyleNames(uidl);
-        }
-
-        super.updateFromUIDL(uidl, client);
-        if (cachedUpdate) {
-            rendering = false;
-            return;
-        }
-
-        // tabs; push or not
-        if (!isDynamicWidth()) {
-            // FIXME: This makes tab sheet tabs go to 1px width on every update
-            // and then back to original width
-            // update width later, in updateTabScroller();
-            DOM.setStyleAttribute(tabs, "width", "1px");
-            DOM.setStyleAttribute(tabs, "overflow", "hidden");
-        } else {
-            showAllTabs();
-            DOM.setStyleAttribute(tabs, "width", "");
-            DOM.setStyleAttribute(tabs, "overflow", "visible");
-            updateDynamicWidth();
-        }
-
-        if (!isDynamicHeight()) {
-            // Must update height after the styles have been set
-            updateContentNodeHeight();
-            updateOpenTabSize();
-        }
-
-        iLayout();
-
-        // Re run relative size update to ensure optimal scrollbars
-        // TODO isolate to situation that visible tab has undefined height
-        try {
-            client.handleComponentRelativeSize(tp.getWidget(tp
-                    .getVisibleWidget()));
-        } catch (Exception e) {
-            // Ignore, most likely empty tabsheet
-        }
-
-        renderInformation.updateSize(getElement());
-
-        waitingForResponse = false;
-        rendering = false;
-    }
-
-    private void handleStyleNames(UIDL uidl) {
+    void handleStyleNames(UIDL uidl) {
         // Add proper stylenames for all elements (easier to prevent unwanted
         // style inheritance)
         if (uidl.hasAttribute("style")) {
@@ -728,7 +676,7 @@ public class VTabsheet extends VTabsheetBase {
         }
     }
 
-    private void updateDynamicWidth() {
+    void updateDynamicWidth() {
         // Find width consumed by tabs
         TableCellElement spacerCell = ((TableElement) tb.getElement().cast())
                 .getRows().getItem(0).getCells().getItem(tb.getTabCount());
@@ -923,7 +871,7 @@ public class VTabsheet extends VTabsheetBase {
         }
     }
 
-    private void updateContentNodeHeight() {
+    void updateContentNodeHeight() {
         if (height != null && !"".equals(height)) {
             int contentHeight = getOffsetHeight();
             contentHeight -= DOM.getElementPropertyInt(deco, "offsetHeight");
@@ -990,7 +938,7 @@ public class VTabsheet extends VTabsheetBase {
      * position: absolute (to work around a firefox flickering bug) we must keep
      * this up-to-date by hand.
      */
-    private void updateOpenTabSize() {
+    void updateOpenTabSize() {
         /*
          * The overflow=auto element must have a height specified, otherwise it
          * will be just as high as the contents and no scrollbars will appear
@@ -1066,7 +1014,7 @@ public class VTabsheet extends VTabsheetBase {
 
     }
 
-    private void showAllTabs() {
+    void showAllTabs() {
         scrollerIndex = tb.getFirstVisibleTab();
         for (int i = 0; i < tb.getTabCount(); i++) {
             Tab t = tb.getTab(i);
@@ -1112,10 +1060,6 @@ public class VTabsheet extends VTabsheetBase {
 
     public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
         tp.replaceComponent(oldComponent, newComponent);
-    }
-
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
-        /* Tabsheet does not render its children's captions */
     }
 
     public boolean requestLayout(Set<Widget> children) {

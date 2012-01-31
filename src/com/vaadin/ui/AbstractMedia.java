@@ -12,7 +12,7 @@ import java.util.List;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.VMediaBase;
+import com.vaadin.terminal.gwt.client.ui.VMediaBasePaintable;
 
 /**
  * Abstract base class for the HTML5 media components.
@@ -203,25 +203,27 @@ public class AbstractMedia extends AbstractComponent {
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
-        target.addAttribute(VMediaBase.ATTR_CONTROLS, isShowControls());
+        target.addAttribute(VMediaBasePaintable.ATTR_CONTROLS, isShowControls());
         if (getAltText() != null) {
-            target.addAttribute(VMediaBase.ATTR_ALT_TEXT, getAltText());
+            target.addAttribute(VMediaBasePaintable.ATTR_ALT_TEXT, getAltText());
         }
-        target.addAttribute(VMediaBase.ATTR_HTML, isHtmlContentAllowed());
-        target.addAttribute(VMediaBase.ATTR_AUTOPLAY, isAutoplay());
+        target.addAttribute(VMediaBasePaintable.ATTR_HTML,
+                isHtmlContentAllowed());
+        target.addAttribute(VMediaBasePaintable.ATTR_AUTOPLAY, isAutoplay());
         for (Resource r : getSources()) {
-            target.startTag(VMediaBase.TAG_SOURCE);
-            target.addAttribute(VMediaBase.ATTR_RESOURCE, r);
-            target.addAttribute(VMediaBase.ATTR_RESOURCE_TYPE, r.getMIMEType());
-            target.endTag(VMediaBase.TAG_SOURCE);
+            target.startTag(VMediaBasePaintable.TAG_SOURCE);
+            target.addAttribute(VMediaBasePaintable.ATTR_RESOURCE, r);
+            target.addAttribute(VMediaBasePaintable.ATTR_RESOURCE_TYPE,
+                    r.getMIMEType());
+            target.endTag(VMediaBasePaintable.TAG_SOURCE);
         }
-        target.addAttribute(VMediaBase.ATTR_MUTED, isMuted());
+        target.addAttribute(VMediaBasePaintable.ATTR_MUTED, isMuted());
         if (play) {
-            target.addAttribute(VMediaBase.ATTR_PLAY, true);
+            target.addAttribute(VMediaBasePaintable.ATTR_PLAY, true);
             play = false;
         }
         if (pause) {
-            target.addAttribute(VMediaBase.ATTR_PAUSE, true);
+            target.addAttribute(VMediaBasePaintable.ATTR_PAUSE, true);
             pause = false;
         }
     }
