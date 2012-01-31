@@ -374,7 +374,7 @@ public class WidgetMapGenerator extends Generator {
             sourceWriter.print("else ");
         }
         sourceWriter
-                .println("return com.vaadin.terminal.gwt.client.ui.VUnknownComponent.class;");
+                .println("return com.vaadin.terminal.gwt.client.ui.VUnknownComponentPaintable.class;");
         sourceWriter.outdent();
         sourceWriter.println("}");
 
