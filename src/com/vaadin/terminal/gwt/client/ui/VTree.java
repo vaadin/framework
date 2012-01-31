@@ -40,10 +40,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
@@ -58,9 +58,9 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 /**
  * 
  */
-public class VTree extends FocusElementPanel implements VPaintableWidget,
-        VHasDropHandler, FocusHandler, BlurHandler, KeyPressHandler,
-        KeyDownHandler, SubPartAware, ActionOwner {
+public class VTree extends FocusElementPanel implements VHasDropHandler,
+        FocusHandler, BlurHandler, KeyPressHandler, KeyDownHandler,
+        SubPartAware, ActionOwner {
 
     public static final String CLASSNAME = "v-tree";
 
@@ -71,17 +71,17 @@ public class VTree extends FocusElementPanel implements VPaintableWidget,
 
     private static final int CHARCODE_SPACE = 32;
 
-    private final FlowPanel body = new FlowPanel();
+    final FlowPanel body = new FlowPanel();
 
-    private Set<String> selectedIds = new HashSet<String>();
-    private ApplicationConnection client;
-    private String paintableId;
-    private boolean selectable;
-    private boolean isMultiselect;
+    Set<String> selectedIds = new HashSet<String>();
+    ApplicationConnection client;
+    String paintableId;
+    boolean selectable;
+    boolean isMultiselect;
     private String currentMouseOverKey;
-    private TreeNode lastSelection;
-    private TreeNode focusedNode;
-    private int multiSelectMode = MULTISELECT_MODE_DEFAULT;
+    TreeNode lastSelection;
+    TreeNode focusedNode;
+    int multiSelectMode = MULTISELECT_MODE_DEFAULT;
 
     private final HashMap<String, TreeNode> keyToNode = new HashMap<String, TreeNode>();
 
@@ -91,23 +91,23 @@ public class VTree extends FocusElementPanel implements VPaintableWidget,
      */
     private final HashMap<String, String> actionMap = new HashMap<String, String>();
 
-    private boolean immediate;
+    boolean immediate;
 
-    private boolean isNullSelectionAllowed = true;
+    boolean isNullSelectionAllowed = true;
 
-    private boolean disabled = false;
+    boolean disabled = false;
 
-    private boolean readonly;
+    boolean readonly;
 
-    private boolean rendering;
+    boolean rendering;
 
     private VAbstractDropHandler dropHandler;
 
-    private int dragMode;
+    int dragMode;
 
     private boolean selectionHasChanged = false;
 
-    private String[] bodyActionKeys;
+    String[] bodyActionKeys;
 
     public VLazyExecutor iconLoaded = new VLazyExecutor(50,
             new ScheduledCommand() {
@@ -206,118 +206,12 @@ public class VTree extends FocusElementPanel implements VPaintableWidget,
         }
     }
 
-    private void updateActionMap(UIDL c) {
-        final Iterator<?> it = c.getChildIterator();
-        while (it.hasNext()) {
-            final UIDL action = (UIDL) it.next();
-            final String key = action.getStringAttribute("key");
-            final String caption = action.getStringAttribute("caption");
-            actionMap.put(key + "_c", caption);
-            if (action.hasAttribute("icon")) {
-                // TODO need some uri handling ??
-                actionMap.put(key + "_i", client.translateVaadinUri(action
-                        .getStringAttribute("icon")));
-            } else {
-                actionMap.remove(key + "_i");
-            }
-        }
-
-    }
-
     public String getActionCaption(String actionKey) {
         return actionMap.get(actionKey + "_c");
     }
 
     public String getActionIcon(String actionKey) {
         return actionMap.get(actionKey + "_i");
-    }
-
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // Ensure correct implementation and let container manage caption
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-
-        rendering = true;
-
-        this.client = client;
-
-        if (uidl.hasAttribute("partialUpdate")) {
-            handleUpdate(uidl);
-            rendering = false;
-            return;
-        }
-
-        paintableId = uidl.getId();
-
-        immediate = uidl.hasAttribute("immediate");
-
-        disabled = uidl.getBooleanAttribute("disabled");
-        readonly = uidl.getBooleanAttribute("readonly");
-
-        dragMode = uidl.hasAttribute("dragMode") ? uidl
-                .getIntAttribute("dragMode") : 0;
-
-        isNullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
-
-        if (uidl.hasAttribute("alb")) {
-            bodyActionKeys = uidl.getStringArrayAttribute("alb");
-        }
-
-        body.clear();
-        // clear out any references to nodes that no longer are attached
-        keyToNode.clear();
-        TreeNode childTree = null;
-        UIDL childUidl = null;
-        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
-            childUidl = (UIDL) i.next();
-            if ("actions".equals(childUidl.getTag())) {
-                updateActionMap(childUidl);
-                continue;
-            } else if ("-ac".equals(childUidl.getTag())) {
-                updateDropHandler(childUidl);
-                continue;
-            }
-            childTree = new TreeNode();
-            childTree.updateFromUIDL(childUidl, client);
-            body.add(childTree);
-            childTree.addStyleDependentName("root");
-            childTree.childNodeContainer.addStyleDependentName("root");
-        }
-        if (childTree != null && childUidl != null) {
-            boolean leaf = !childUidl.getTag().equals("node");
-            childTree.addStyleDependentName(leaf ? "leaf-last" : "last");
-            childTree.childNodeContainer.addStyleDependentName("last");
-        }
-        final String selectMode = uidl.getStringAttribute("selectmode");
-        selectable = !"none".equals(selectMode);
-        isMultiselect = "multi".equals(selectMode);
-
-        if (isMultiselect) {
-            multiSelectMode = uidl.getIntAttribute("multiselectmode");
-        }
-
-        selectedIds = uidl.getStringArrayVariableAsSet("selected");
-
-        // Update lastSelection and focusedNode to point to *actual* nodes again
-        // after the old ones have been cleared from the body. This fixes focus
-        // and keyboard navigation issues as described in #7057 and other
-        // tickets.
-        if (lastSelection != null) {
-            lastSelection = keyToNode.get(lastSelection.key);
-        }
-        if (focusedNode != null) {
-            setFocusedNode(keyToNode.get(focusedNode.key));
-        }
-
-        if (lastSelection == null && focusedNode == null
-                && !selectedIds.isEmpty()) {
-            setFocusedNode(keyToNode.get(selectedIds.iterator().next()));
-            focusedNode.setFocused(false);
-        }
-
-        rendering = false;
-
     }
 
     /**
@@ -366,7 +260,7 @@ public class VTree extends FocusElementPanel implements VPaintableWidget,
 
         drag.getDropDetails().put("itemIdOver", currentMouseOverKey);
         if (currentMouseOverKey != null) {
-            TreeNode treeNode = keyToNode.get(currentMouseOverKey);
+            TreeNode treeNode = getNodeByKey(currentMouseOverKey);
             VerticalDropLocation detail = treeNode.getDropDetail(drag
                     .getCurrentGwtEvent());
             Boolean overTreeNode = null;
@@ -388,7 +282,7 @@ public class VTree extends FocusElementPanel implements VPaintableWidget,
         return treeNode == null ? null : treeNode.key;
     }
 
-    private void updateDropHandler(UIDL childUidl) {
+    void updateDropHandler(UIDL childUidl) {
         if (dropHandler == null) {
             dropHandler = new VAbstractDropHandler() {
 
@@ -430,7 +324,7 @@ public class VTree extends FocusElementPanel implements VPaintableWidget,
                                             .getDropDetails().get("detail");
                                     if (curDetail == detail
                                             && newKey.equals(currentMouseOverKey)) {
-                                        keyToNode.get(newKey).emphasis(detail);
+                                        getNodeByKey(newKey).emphasis(detail);
                                     }
                                     /*
                                      * Else drag is already on a different
@@ -452,7 +346,7 @@ public class VTree extends FocusElementPanel implements VPaintableWidget,
 
                 private void cleanUp() {
                     if (currentMouseOverKey != null) {
-                        keyToNode.get(currentMouseOverKey).emphasis(null);
+                        getNodeByKey(currentMouseOverKey).emphasis(null);
                         currentMouseOverKey = null;
                     }
                 }
@@ -465,7 +359,7 @@ public class VTree extends FocusElementPanel implements VPaintableWidget,
 
                 @Override
                 public VPaintableWidget getPaintable() {
-                    return VTree.this;
+                    return VPaintableMap.get(client).getPaintable(VTree.this);
                 }
 
                 public ApplicationConnection getApplicationConnection() {
@@ -477,24 +371,12 @@ public class VTree extends FocusElementPanel implements VPaintableWidget,
         dropHandler.updateAcceptRules(childUidl);
     }
 
-    private void handleUpdate(UIDL uidl) {
-        final TreeNode rootNode = keyToNode.get(uidl
-                .getStringAttribute("rootKey"));
-        if (rootNode != null) {
-            if (!rootNode.getState()) {
-                // expanding node happened server side
-                rootNode.setState(true, false);
-            }
-            rootNode.renderChildNodes(uidl.getChildIterator());
-        }
-    }
-
     public void setSelected(TreeNode treeNode, boolean selected) {
         if (selected) {
             if (!isMultiselect) {
                 while (selectedIds.size() > 0) {
                     final String id = selectedIds.iterator().next();
-                    final TreeNode oldSelection = keyToNode.get(id);
+                    final TreeNode oldSelection = getNodeByKey(id);
                     if (oldSelection != null) {
                         // can be null if the node is not visible (parent
                         // collapsed)
@@ -563,15 +445,15 @@ public class VTree extends FocusElementPanel implements VPaintableWidget,
 
         public String key;
 
-        private String[] actionKeys = null;
+        String[] actionKeys = null;
 
-        private boolean childrenLoaded;
+        boolean childrenLoaded;
 
-        private Element nodeCaptionDiv;
+        Element nodeCaptionDiv;
 
         protected Element nodeCaptionSpan;
 
-        private FlowPanel childNodeContainer;
+        FlowPanel childNodeContainer;
 
         private boolean open;
 
@@ -760,14 +642,14 @@ public class VTree extends FocusElementPanel implements VPaintableWidget,
             }
 
             if (target == nodeCaptionSpan) {
-                client.handleTooltipEvent(event, VTree.this, key);
+                client.handleWidgetTooltipEvent(event, VTree.this, key);
             }
 
             final boolean inCaption = target == nodeCaptionSpan
                     || (icon != null && target == icon.getElement());
             if (inCaption
-                    && client
-                            .hasEventListeners(VTree.this, ITEM_CLICK_EVENT_ID)
+                    && client.hasWidgetEventListeners(VTree.this,
+                            ITEM_CLICK_EVENT_ID)
 
                     && (type == Event.ONDBLCLICK || type == Event.ONMOUSEUP)) {
                 fireClick(event);
@@ -828,7 +710,8 @@ public class VTree extends FocusElementPanel implements VPaintableWidget,
                     if (mouseDownEvent != null) {
                         // start actual drag on slight move when mouse is down
                         VTransferable t = new VTransferable();
-                        t.setDragSource(VTree.this);
+                        t.setDragSource(VPaintableMap.get(client).getPaintable(
+                                VTree.this));
                         t.setData("itemId", key);
                         VDragEvent drag = VDragAndDropManager.get().startDrag(
                                 t, mouseDownEvent, true);
@@ -944,71 +827,6 @@ public class VTree extends FocusElementPanel implements VPaintableWidget,
             setWidget(childNodeContainer);
         }
 
-        public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-            setText(uidl.getStringAttribute("caption"));
-            key = uidl.getStringAttribute("key");
-
-            keyToNode.put(key, this);
-
-            if (uidl.hasAttribute("al")) {
-                actionKeys = uidl.getStringArrayAttribute("al");
-            }
-
-            if (uidl.getTag().equals("node")) {
-                if (uidl.getChildCount() == 0) {
-                    childNodeContainer.setVisible(false);
-                } else {
-                    renderChildNodes(uidl.getChildIterator());
-                    childrenLoaded = true;
-                }
-            } else {
-                addStyleName(CLASSNAME + "-leaf");
-            }
-            if (uidl.hasAttribute("style")) {
-                addStyleName(CLASSNAME + "-" + uidl.getStringAttribute("style"));
-                Widget.setStyleName(nodeCaptionDiv, CLASSNAME + "-caption-"
-                        + uidl.getStringAttribute("style"), true);
-                childNodeContainer.addStyleName(CLASSNAME + "-children-"
-                        + uidl.getStringAttribute("style"));
-            }
-
-            String description = uidl.getStringAttribute("descr");
-            if (description != null && client != null) {
-                // Set tooltip
-                TooltipInfo info = new TooltipInfo(description);
-                client.registerTooltip(VTree.this, key, info);
-            } else {
-                // Remove possible previous tooltip
-                client.registerTooltip(VTree.this, key, null);
-            }
-
-            if (uidl.getBooleanAttribute("expanded") && !getState()) {
-                setState(true, false);
-            }
-
-            if (uidl.getBooleanAttribute("selected")) {
-                setSelected(true);
-                // ensure that identifier is in selectedIds array (this may be a
-                // partial update)
-                selectedIds.add(key);
-            }
-
-            if (uidl.hasAttribute("icon")) {
-                if (icon == null) {
-                    icon = new Icon(client);
-                    DOM.insertBefore(DOM.getFirstChild(nodeCaptionDiv),
-                            icon.getElement(), nodeCaptionSpan);
-                }
-                icon.setUri(uidl.getStringAttribute("icon"));
-            } else {
-                if (icon != null) {
-                    DOM.removeChild(DOM.getFirstChild(nodeCaptionDiv),
-                            icon.getElement());
-                    icon = null;
-                }
-            }
-        }
-
         public boolean isLeaf() {
             String[] styleNames = getStyleName().split(" ");
             for (String styleName : styleNames) {
@@ -1019,7 +837,7 @@ public class VTree extends FocusElementPanel implements VPaintableWidget,
             return false;
         }
 
-        private void setState(boolean state, boolean notifyServer) {
+        void setState(boolean state, boolean notifyServer) {
             if (open == state) {
                 return;
             }
@@ -1050,36 +868,12 @@ public class VTree extends FocusElementPanel implements VPaintableWidget,
             }
         }
 
-        private boolean getState() {
+        boolean getState() {
             return open;
         }
 
-        private void setText(String text) {
+        void setText(String text) {
             DOM.setInnerText(nodeCaptionSpan, text);
-        }
-
-        private void renderChildNodes(Iterator<?> i) {
-            childNodeContainer.clear();
-            childNodeContainer.setVisible(true);
-            while (i.hasNext()) {
-                final UIDL childUidl = (UIDL) i.next();
-                // actions are in bit weird place, don't mix them with children,
-                // but current node's actions
-                if ("actions".equals(childUidl.getTag())) {
-                    updateActionMap(childUidl);
-                    continue;
-                }
-                final TreeNode childTree = new TreeNode();
-                childTree.updateFromUIDL(childUidl, client);
-                childNodeContainer.add(childTree);
-                if (!i.hasNext()) {
-                    childTree
-                            .addStyleDependentName(childTree.isLeaf() ? "leaf-last"
-                                    : "last");
-                    childTree.childNodeContainer.addStyleDependentName("last");
-                }
-            }
-            childrenLoaded = true;
         }
 
         public boolean isChildrenLoaded() {
@@ -1229,6 +1023,34 @@ public class VTree extends FocusElementPanel implements VPaintableWidget,
          */
         public void scrollIntoView() {
             Util.scrollIntoViewVertically(nodeCaptionDiv);
+        }
+
+        public void setIcon(String iconUrl) {
+            if (iconUrl != null) {
+                // Add icon if not present
+                if (icon == null) {
+                    icon = new Icon(client);
+                    DOM.insertBefore(DOM.getFirstChild(nodeCaptionDiv),
+                            icon.getElement(), nodeCaptionSpan);
+                }
+                icon.setUri(iconUrl);
+            } else {
+                // Remove icon if present
+                if (icon != null) {
+                    DOM.removeChild(DOM.getFirstChild(nodeCaptionDiv),
+                            icon.getElement());
+                    icon = null;
+                }
+            }
+        }
+
+        public void setNodeStyleName(String styleName) {
+            addStyleName(TreeNode.CLASSNAME + "-" + styleName);
+            setStyleName(nodeCaptionDiv, TreeNode.CLASSNAME + "-caption-"
+                    + styleName, true);
+            childNodeContainer.addStyleName(TreeNode.CLASSNAME + "-children-"
+                    + styleName);
+
         }
 
     }
@@ -2243,7 +2065,22 @@ public class VTree extends FocusElementPanel implements VPaintableWidget,
         }
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
+    public void registerAction(String key, String caption, String iconUrl) {
+        actionMap.put(key + "_c", caption);
+        if (iconUrl != null) {
+            actionMap.put(key + "_i", iconUrl);
+        } else {
+            actionMap.remove(key + "_i");
+        }
+
     }
+
+    public void registerNode(TreeNode treeNode) {
+        keyToNode.put(treeNode.key, treeNode);
+    }
+
+    public void clearNodeToKeyMap() {
+        keyToNode.clear();
+    }
+
 }
