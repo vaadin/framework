@@ -4,7 +4,6 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,17 +12,12 @@ import java.util.Set;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.DomEvent.Type;
-import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -31,7 +25,7 @@ import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
-public class VAbsoluteLayout extends ComplexPanel implements Container {
+public class VAbsoluteLayout extends ComplexPanel {
 
     /** Tag name for widget creation */
     public static final String TAGNAME = "absolutelayout";
@@ -49,26 +43,11 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
 
     private Object previousStyleName;
 
-    private Map<String, AbsoluteWrapper> pidToComponentWrappper = new HashMap<String, AbsoluteWrapper>();
+    Map<String, AbsoluteWrapper> pidToComponentWrappper = new HashMap<String, AbsoluteWrapper>();
 
     protected ApplicationConnection client;
 
-    private boolean rendering;
-
-    private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
-            this, EventId.LAYOUT_CLICK) {
-
-        @Override
-        protected VPaintableWidget getChildComponent(Element element) {
-            return getComponent(element);
-        }
-
-        @Override
-        protected <H extends EventHandler> HandlerRegistration registerHandler(
-                H handler, Type<H> type) {
-            return addDomHandler(handler, type);
-        }
-    };
+    boolean rendering;
 
     public VAbsoluteLayout() {
         setElement(Document.get().createDivElement());
@@ -143,40 +122,7 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
         parent2.updateCaption(uidl);
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        rendering = true;
-        this.client = client;
-        // TODO margin handling
-        if (client.updateComponent(this, uidl, true)) {
-            rendering = false;
-            return;
-        }
-
-        clickEventHandler.handleEventHandlerRegistration(client);
-
-        HashSet<String> unrenderedPids = new HashSet<String>(
-                pidToComponentWrappper.keySet());
-
-        for (Iterator<Object> childIterator = uidl.getChildIterator(); childIterator
-                .hasNext();) {
-            UIDL cc = (UIDL) childIterator.next();
-            if (cc.getTag().equals("cc")) {
-                UIDL componentUIDL = cc.getChildUIDL(0);
-                unrenderedPids.remove(componentUIDL.getId());
-                getWrapper(client, componentUIDL).updateFromUIDL(cc);
-            }
-        }
-
-        for (String pid : unrenderedPids) {
-            AbsoluteWrapper absoluteWrapper = pidToComponentWrappper.get(pid);
-            pidToComponentWrappper.remove(pid);
-            absoluteWrapper.destroy();
-        }
-        rendering = false;
-    }
-
-    private AbsoluteWrapper getWrapper(ApplicationConnection client,
-            UIDL componentUIDL) {
+    AbsoluteWrapper getWrapper(ApplicationConnection client, UIDL componentUIDL) {
         AbsoluteWrapper wrapper = pidToComponentWrappper.get(componentUIDL
                 .getId());
         if (wrapper == null) {
@@ -364,7 +310,7 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
      */
-    private VPaintableWidget getComponent(Element element) {
+    VPaintableWidget getComponent(Element element) {
         return Util.getPaintableForElement(client, this, element);
     }
 
