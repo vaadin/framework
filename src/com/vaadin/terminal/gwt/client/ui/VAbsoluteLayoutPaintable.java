@@ -15,7 +15,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout.AbsoluteWrapper;
 
-public class VAbsoluteLayoutPaintable extends VAbstractPaintableWidget {
+public class VAbsoluteLayoutPaintable extends VAbstractPaintableWidgetContainer {
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this, EventId.LAYOUT_CLICK) {
@@ -64,6 +64,12 @@ public class VAbsoluteLayoutPaintable extends VAbstractPaintableWidget {
             absoluteWrapper.destroy();
         }
         getWidgetForPaintable().rendering = false;
+    }
+
+    public void updateCaption(VPaintableWidget component, UIDL uidl) {
+        AbsoluteWrapper parent2 = (AbsoluteWrapper) (component
+                .getWidgetForPaintable()).getParent();
+        parent2.updateCaption(uidl);
     }
 
     @Override

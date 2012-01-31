@@ -116,12 +116,6 @@ public class VAbsoluteLayout extends ComplexPanel {
         return true;
     }
 
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
-        AbsoluteWrapper parent2 = (AbsoluteWrapper) (component
-                .getWidgetForPaintable()).getParent();
-        parent2.updateCaption(uidl);
-    }
-
     AbsoluteWrapper getWrapper(ApplicationConnection client, UIDL componentUIDL) {
         AbsoluteWrapper wrapper = pidToComponentWrappper.get(componentUIDL
                 .getId());
