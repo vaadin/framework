@@ -547,7 +547,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     public void renderCalendar() {
         if (focusedDate == null) {
-            focusedDate = new Date();
+            Date now = new Date();
+            // focusedDate must have zero hours, mins, secs, millisecs
+            focusedDate = new Date(now.getYear(), now.getMonth(), now.getDate());
+            displayedMonth = new Date(now.getYear(), now.getMonth(), 1);
         }
 
         if (getResolution() <= VDateField.RESOLUTION_MONTH
