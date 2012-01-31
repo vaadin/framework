@@ -24,7 +24,6 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VViewPaintable;
 import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.ClientWidget.LoadStyle;
@@ -259,7 +258,7 @@ public class WidgetMapGenerator extends Generator {
             if (widgetsWithInstantiator.contains(clientClass)) {
                 continue;
             }
-            if (clientClass == VView.class) {
+            if (clientClass == VViewPaintable.class) {
                 // VView's are not instantiated by widgetset
                 continue;
             }

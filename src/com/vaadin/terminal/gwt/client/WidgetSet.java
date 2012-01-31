@@ -7,13 +7,10 @@ package com.vaadin.terminal.gwt.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.VFilterSelectPaintable;
+import com.vaadin.terminal.gwt.client.ui.VHorizontalSplitPanelPaintable;
 import com.vaadin.terminal.gwt.client.ui.VListSelectPaintable;
-import com.vaadin.terminal.gwt.client.ui.VSplitPanelHorizontal;
 import com.vaadin.terminal.gwt.client.ui.VUnknownComponentPaintable;
 import com.vaadin.terminal.gwt.client.ui.VVerticalSplitPanelPaintable;
-import com.vaadin.terminal.gwt.client.ui.VView;
-import com.vaadin.terminal.gwt.client.ui.VWindow;
-import com.vaadin.terminal.gwt.client.ui.VWindowPaintable;
 
 public class WidgetSet {
 
@@ -58,8 +55,6 @@ public class WidgetSet {
                     .create(VUnknownComponentPaintable.class);
             c.setServerSideClassName(serverSideName);
             return c;
-        } else if (VWindow.class == classType) {
-            return GWT.create(VWindow.class);
         } else {
             /*
              * let the auto generated code instantiate this type
@@ -78,16 +73,14 @@ public class WidgetSet {
 
         // add our historical quirks
 
-        if (widgetClass == VView.class && uidl.hasAttribute("sub")) {
-            return VWindowPaintable.class;
-        } else if (widgetClass == VFilterSelectPaintable.class) {
+        if (widgetClass == VFilterSelectPaintable.class) {
             if (uidl.hasAttribute("type")) {
                 final String type = uidl.getStringAttribute("type").intern();
                 if ("legacy-multi" == type) {
                     return VListSelectPaintable.class;
                 }
             }
-        } else if (widgetClass == VSplitPanelHorizontal.class
+        } else if (widgetClass == VHorizontalSplitPanelPaintable.class
                 && uidl.hasAttribute("vertical")) {
             return VVerticalSplitPanelPaintable.class;
         }
