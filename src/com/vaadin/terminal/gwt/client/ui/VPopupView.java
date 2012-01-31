@@ -29,7 +29,6 @@ import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.VTooltip;
@@ -40,13 +39,13 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
     public static final String CLASSNAME = "v-popupview";
 
     /** For server-client communication */
-    private String uidlId;
-    private ApplicationConnection client;
+    String uidlId;
+    ApplicationConnection client;
 
     /** This variable helps to communicate popup visibility to the server */
-    private boolean hostPopupVisible;
+    boolean hostPopupVisible;
 
-    private final CustomPopup popup;
+    final CustomPopup popup;
     private final Label loading = new Label();
 
     /**
@@ -82,61 +81,6 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
     }
 
     /**
-     * 
-     * 
-     * @see com.vaadin.terminal.gwt.client.VPaintableWidget#updateFromUIDL(com.vaadin.terminal.gwt.client.UIDL,
-     *      com.vaadin.terminal.gwt.client.ApplicationConnection)
-     */
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // This call should be made first. Ensure correct implementation,
-        // and don't let the containing layout manage caption.
-        if (client.updateComponent(this, uidl, false)) {
-            return;
-        }
-        // These are for future server connections
-        this.client = client;
-        uidlId = uidl.getId();
-
-        hostPopupVisible = uidl.getBooleanVariable("popupVisibility");
-
-        setHTML(uidl.getStringAttribute("html"));
-
-        if (uidl.hasAttribute("hideOnMouseOut")) {
-            popup.setHideOnMouseOut(uidl.getBooleanAttribute("hideOnMouseOut"));
-        }
-
-        // Render the popup if visible and show it.
-        if (hostPopupVisible) {
-            UIDL popupUIDL = uidl.getChildUIDL(0);
-
-            // showPopupOnTop(popup, hostReference);
-            preparePopup(popup);
-            popup.updateFromUIDL(popupUIDL, client);
-            if (uidl.hasAttribute("style")) {
-                final String[] styles = uidl.getStringAttribute("style").split(
-                        " ");
-                final StringBuffer styleBuf = new StringBuffer();
-                final String primaryName = popup.getStylePrimaryName();
-                styleBuf.append(primaryName);
-                for (int i = 0; i < styles.length; i++) {
-                    styleBuf.append(" ");
-                    styleBuf.append(primaryName);
-                    styleBuf.append("-");
-                    styleBuf.append(styles[i]);
-                }
-                popup.setStyleName(styleBuf.toString());
-            } else {
-                popup.setStyleName(popup.getStylePrimaryName());
-            }
-            showPopup(popup);
-
-            // The popup shouldn't be visible, try to hide it.
-        } else {
-            popup.hide();
-        }
-    }// updateFromUIDL
-
-    /**
      * Update popup visibility to server
      * 
      * @param visibility
@@ -149,7 +93,7 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
         }
     }
 
-    private void preparePopup(final CustomPopup popup) {
+    void preparePopup(final CustomPopup popup) {
         popup.setVisible(false);
         popup.show();
     }
@@ -231,8 +175,8 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
     protected class CustomPopup extends VOverlay {
 
         private VPaintableWidget popupComponentPaintable = null;
-        private Widget popupComponentWidget = null;
-        private VCaptionWrapper captionWrapper = null;
+        Widget popupComponentWidget = null;
+        VCaptionWrapper captionWrapper = null;
 
         private boolean hasHadMouseOver = false;
         private boolean hideOnMouseOut = true;
@@ -446,27 +390,11 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
         return true;
     }
 
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
-        if (VCaption.isNeeded(uidl)) {
-            if (popup.captionWrapper != null) {
-                popup.captionWrapper.updateCaption(uidl);
-            } else {
-                popup.captionWrapper = new VCaptionWrapper(component, client);
-                popup.setWidget(popup.captionWrapper);
-                popup.captionWrapper.updateCaption(uidl);
-            }
-        } else {
-            if (popup.captionWrapper != null) {
-                popup.setWidget(popup.popupComponentWidget);
-            }
-        }
-    }
-
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (client != null) {
-            client.handleTooltipEvent(event, this);
+            client.handleWidgetTooltipEvent(event, this);
         }
     }
 
