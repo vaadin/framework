@@ -21,12 +21,9 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
@@ -35,7 +32,7 @@ import com.vaadin.terminal.gwt.client.VTooltip;
  * events even though the upload component is already detached.
  * 
  */
-public class VUpload extends SimplePanel implements VPaintableWidget {
+public class VUpload extends SimplePanel {
 
     private final class MyFileUpload extends FileUpload {
         @Override
@@ -73,19 +70,19 @@ public class VUpload extends SimplePanel implements VPaintableWidget {
 
     ApplicationConnection client;
 
-    private String paintableId;
+    protected String paintableId;
 
     /**
      * Button that initiates uploading
      */
-    private final VButton submitButton;
+    protected final VButton submitButton;
 
     /**
      * When expecting big files, programmer may initiate some UI changes when
      * uploading the file starts. Bit after submitting file we'll visit the
      * server to check possible changes.
      */
-    private Timer t;
+    protected Timer t;
 
     /**
      * some browsers tries to send form twice if submit is called in button
@@ -100,11 +97,11 @@ public class VUpload extends SimplePanel implements VPaintableWidget {
 
     private Hidden maxfilesize = new Hidden();
 
-    private FormElement element;
+    protected FormElement element;
 
     private com.google.gwt.dom.client.Element synthesizedFrame;
 
-    private int nextUploadId;
+    protected int nextUploadId;
 
     public VUpload() {
         super(com.google.gwt.dom.client.Document.get().createFormElement());
@@ -137,7 +134,7 @@ public class VUpload extends SimplePanel implements VPaintableWidget {
     @Override
     public void onBrowserEvent(Event event) {
         if ((event.getTypeInt() & VTooltip.TOOLTIP_EVENTS) > 0) {
-            client.handleTooltipEvent(event, this);
+            client.handleWidgetTooltipEvent(event, this);
         }
         super.onBrowserEvent(event);
     }
@@ -147,43 +144,7 @@ public class VUpload extends SimplePanel implements VPaintableWidget {
       form.enctype = encoding;
     }-*/;
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-        if (uidl.hasAttribute("notStarted")) {
-            t.schedule(400);
-            return;
-        }
-        if (uidl.hasAttribute("forceSubmit")) {
-            submit();
-            return;
-        }
-        setImmediate(uidl.getBooleanAttribute("immediate"));
-        this.client = client;
-        paintableId = uidl.getId();
-        nextUploadId = uidl.getIntAttribute("nextid");
-        final String action = client.translateVaadinUri(uidl
-                .getStringVariable("action"));
-        element.setAction(action);
-        if (uidl.hasAttribute("buttoncaption")) {
-            submitButton.setText(uidl.getStringAttribute("buttoncaption"));
-            submitButton.setVisible(true);
-        } else {
-            submitButton.setVisible(false);
-        }
-        fu.setName(paintableId + "_file");
-
-        if (uidl.hasAttribute("disabled") || uidl.hasAttribute("readonly")) {
-            disableUpload();
-        } else if (!uidl.getBooleanAttribute("state")) {
-            // Enable the button only if an upload is not in progress
-            enableUpload();
-            ensureTargetFrame();
-        }
-    }
-
-    private void setImmediate(boolean booleanAttribute) {
+    protected void setImmediate(boolean booleanAttribute) {
         if (immediate != booleanAttribute) {
             immediate = booleanAttribute;
             if (immediate) {
@@ -277,7 +238,7 @@ public class VUpload extends SimplePanel implements VPaintableWidget {
         });
     }
 
-    private void submit() {
+    protected void submit() {
         if (fu.getFilename().length() == 0 || submitted || !enabled) {
             VConsole.log("Submit cancelled (disabled, no file or already submitted)");
             return;
@@ -315,15 +276,12 @@ public class VUpload extends SimplePanel implements VPaintableWidget {
         }
     }
 
-    private void ensureTargetFrame() {
+    protected void ensureTargetFrame() {
         if (synthesizedFrame == null) {
             // Attach a hidden IFrame to the form. This is the target iframe to
-            // which
-            // the form will be submitted. We have to create the iframe using
-            // innerHTML,
-            // because setting an iframe's 'name' property dynamically doesn't
-            // work on
-            // most browsers.
+            // which the form will be submitted. We have to create the iframe
+            // using innerHTML, because setting an iframe's 'name' property
+            // dynamically doesn't work on most browsers.
             DivElement dummy = Document.get().createDivElement();
             dummy.setInnerHTML("<iframe src=\"javascript:''\" name='"
                     + getFrameName()
@@ -354,9 +312,4 @@ public class VUpload extends SimplePanel implements VPaintableWidget {
             synthesizedFrame = null;
         }
     }
-
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }
