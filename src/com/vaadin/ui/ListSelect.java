@@ -9,14 +9,14 @@ import java.util.Collection;
 import com.vaadin.data.Container;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.VListSelect;
+import com.vaadin.terminal.gwt.client.ui.VListSelectPaintable;
 
 /**
  * This is a simple list select without, for instance, support for new items,
  * lazyloading, and other advanced features.
  */
 @SuppressWarnings("serial")
-@ClientWidget(VListSelect.class)
+@ClientWidget(VListSelectPaintable.class)
 public class ListSelect extends AbstractSelect {
 
     private int columns = 0;

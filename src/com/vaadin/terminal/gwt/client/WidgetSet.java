@@ -7,7 +7,7 @@ package com.vaadin.terminal.gwt.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.VFilterSelectPaintable;
-import com.vaadin.terminal.gwt.client.ui.VListSelect;
+import com.vaadin.terminal.gwt.client.ui.VListSelectPaintable;
 import com.vaadin.terminal.gwt.client.ui.VSplitPanelHorizontal;
 import com.vaadin.terminal.gwt.client.ui.VSplitPanelVertical;
 import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
@@ -82,7 +82,7 @@ public class WidgetSet {
             if (uidl.hasAttribute("type")) {
                 final String type = uidl.getStringAttribute("type").intern();
                 if ("legacy-multi" == type) {
-                    return VListSelect.class;
+                    return VListSelectPaintable.class;
                 }
             }
         } else if (widgetClass == VSplitPanelHorizontal.class
@@ -133,7 +133,7 @@ public class WidgetSet {
          * *actually* be VListSelect, when the annotation says VFilterSelect
          */
         if (fullyqualifiedName.equals("com.vaadin.ui.Select")) {
-            loadImplementation(VListSelect.class);
+            loadImplementation(VListSelectPaintable.class);
         } else if (fullyqualifiedName.equals("com.vaadin.ui.SplitPanel")) {
             loadImplementation(VSplitPanelVertical.class);
         }

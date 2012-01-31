@@ -12,7 +12,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
@@ -81,11 +80,11 @@ public class VListSelect extends VOptionGroupBase {
         } else {
             lastSelectedIndex = si;
             if (isMultiselect()) {
-                client.updateVariable(id, "selected", getSelectedItems(),
-                        isImmediate());
+                client.updateVariable(paintableId, "selected",
+                        getSelectedItems(), isImmediate());
             } else {
-                client.updateVariable(id, "selected", new String[] { ""
-                        + getSelectedItem() }, isImmediate());
+                client.updateVariable(paintableId, "selected",
+                        new String[] { "" + getSelectedItem() }, isImmediate());
             }
         }
     }
@@ -110,11 +109,6 @@ public class VListSelect extends VOptionGroupBase {
     public void focus() {
         select.setFocus(true);
     }
-
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }
 
 /**
@@ -123,7 +117,7 @@ public class VListSelect extends VOptionGroupBase {
  */
 class TooltipListBox extends ListBox {
     private ApplicationConnection client;
-    private VPaintableWidget pntbl;
+    private Widget widget;
 
     TooltipListBox(boolean isMultiselect) {
         super(isMultiselect);
@@ -134,15 +128,15 @@ class TooltipListBox extends ListBox {
         this.client = client;
     }
 
-    public void setSelect(VPaintableWidget s) {
-        pntbl = s;
+    public void setSelect(Widget widget) {
+        this.widget = widget;
     }
 
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (client != null) {
-            client.handleTooltipEvent(event, pntbl);
+            client.handleWidgetTooltipEvent(event, widget);
         }
     }
 

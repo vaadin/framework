@@ -27,7 +27,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 
@@ -157,18 +156,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         return selectionsCaption;
     }
 
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // Captions are updated before super call to ensure the widths are set
-        // correctly
-        if (!uidl.getBooleanAttribute("cached")) {
-            updateCaptions(uidl);
-        }
-
-        super.updateFromUIDL(uidl, client);
-    }
-
-    private void updateCaptions(UIDL uidl) {
+    protected void updateCaptions(UIDL uidl) {
         String leftCaption = (uidl.hasAttribute(ATTRIBUTE_LEFT_CAPTION) ? uidl
                 .getStringAttribute(ATTRIBUTE_LEFT_CAPTION) : null);
         String rightCaption = (uidl.hasAttribute(ATTRIBUTE_RIGHT_CAPTION) ? uidl
@@ -297,7 +285,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         Set<String> movedItems = moveSelectedItems(options, selections);
         selectedKeys.addAll(movedItems);
 
-        client.updateVariable(id, "selected",
+        client.updateVariable(paintableId, "selected",
                 selectedKeys.toArray(new String[selectedKeys.size()]),
                 isImmediate());
     }
@@ -306,7 +294,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         Set<String> movedItems = moveSelectedItems(selections, options);
         selectedKeys.removeAll(movedItems);
 
-        client.updateVariable(id, "selected",
+        client.updateVariable(paintableId, "selected",
                 selectedKeys.toArray(new String[selectedKeys.size()]),
                 isImmediate());
     }

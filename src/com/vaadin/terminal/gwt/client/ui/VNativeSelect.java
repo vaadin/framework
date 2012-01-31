@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 public class VNativeSelect extends VOptionGroupBase implements Field {
@@ -74,10 +73,10 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
     public void onChange(ChangeEvent event) {
 
         if (select.isMultipleSelect()) {
-            client.updateVariable(id, "selected", getSelectedItems(),
+            client.updateVariable(paintableId, "selected", getSelectedItems(),
                     isImmediate());
         } else {
-            client.updateVariable(id, "selected", new String[] { ""
+            client.updateVariable(paintableId, "selected", new String[] { ""
                     + getSelectedItem() }, isImmediate());
         }
         if (firstValueIsTemporaryNullItem) {
@@ -106,9 +105,5 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
 
     public void focus() {
         select.setFocus(true);
-    }
-
-    public Widget getWidgetForPaintable() {
-        return this;
     }
 }
