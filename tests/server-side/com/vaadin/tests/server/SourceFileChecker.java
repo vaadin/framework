@@ -29,7 +29,7 @@ public class SourceFileChecker extends TestCase {
             return baseDirectory;
         }
         // Run in the "build" directory by build, in the project root by Eclipse
-        for (File f : new File("..").listFiles()) {
+        for (File f : new File(".").listFiles()) {
             if (f.getName().equals("buildhelpers")) {
                 // We are in "build"
                 baseDirectory = "../";

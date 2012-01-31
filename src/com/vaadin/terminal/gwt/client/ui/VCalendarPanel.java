@@ -482,11 +482,11 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 tmp.getDate());
 
         final int startWeekDay = getDateTimeService().getStartWeekDay(
-                focusedDate);
-        final Date curr = (Date) focusedDate.clone();
+                displayedMonth);
+        final Date curr = (Date) displayedMonth.clone();
         // Start from the first day of the week that at least partially belongs
         // to the current month
-        curr.setDate(-startWeekDay);
+        curr.setDate(1 - startWeekDay);
 
         // No month has more than 6 weeks so 6 is a safe maximum for rows.
         for (int weekOfMonth = 1; weekOfMonth < 7; weekOfMonth++) {
@@ -509,7 +509,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
                         day.addStyleDependentName(CN_FOCUSED);
                     }
                 }
-                if (curr.getMonth() != focusedDate.getMonth()) {
+                if (curr.getMonth() != displayedMonth.getMonth()) {
                     day.addStyleDependentName(CN_OFFMONTH);
                 }
 
@@ -548,7 +548,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     public void renderCalendar() {
         if (focusedDate == null) {
-            focusedDate = new Date();
+            Date now = new Date();
+            // focusedDate must have zero hours, mins, secs, millisecs
+            focusedDate = new Date(now.getYear(), now.getMonth(), now.getDate());
+            displayedMonth = new Date(now.getYear(), now.getMonth(), 1);
         }
 
         if (getResolution() <= VDateField.RESOLUTION_MONTH

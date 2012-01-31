@@ -898,28 +898,4 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
         bringToFront();
     }
 
-    /**
-     * Notifies the child components and subwindows that the window is attached
-     * to the application.
-     */
-    @Override
-    public void attach() {
-        super.attach();
-        for (Window w : subwindows) {
-            w.attach();
-        }
-    }
-
-    /**
-     * Notifies the child components and subwindows that the window is detached
-     * from the application.
-     */
-    @Override
-    public void detach() {
-        super.detach();
-        for (Window w : subwindows) {
-            w.detach();
-        }
-    }
-
 }
