@@ -8,6 +8,10 @@ import java.util.Set;
 
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * @deprecated To be removed before 7.0.0
+ */
+@Deprecated
 public interface Container extends VPaintableWidget {
 
     /**

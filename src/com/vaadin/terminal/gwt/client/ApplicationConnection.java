@@ -39,6 +39,7 @@ import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.ui.Field;
 import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
+import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidgetContainer;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
@@ -1659,11 +1660,7 @@ public class ApplicationConnection {
             // Changed invisibile <-> visible
             if (wasVisible && manageCaption) {
                 // Must hide caption when component is hidden
-                final Container parent = Util.getLayout(component);
-                if (parent != null) {
-                    parent.updateCaption(paintable, uidl);
-                }
-
+                updateCaption(paintable, uidl);
             }
         }
 
@@ -1708,10 +1705,7 @@ public class ApplicationConnection {
 
         // Set captions
         if (manageCaption) {
-            final Container parent = Util.getLayout(component);
-            if (parent != null) {
-                parent.updateCaption(paintable, uidl);
-            }
+            updateCaption(paintable, uidl);
         }
 
         // add error classname to components w/ error
@@ -1721,13 +1715,6 @@ public class ApplicationConnection {
             tooltipInfo.setErrorUidl(null);
         }
 
-        // Set captions
-        if (manageCaption) {
-            final Container parent = Util.getLayout(component);
-            if (parent != null) {
-                parent.updateCaption(paintable, uidl);
-            }
-        }
         /*
          * updateComponentSize need to be after caption update so caption can be
          * taken into account
@@ -1736,6 +1723,25 @@ public class ApplicationConnection {
         updateComponentSize(paintable, uidl);
 
         return false;
+    }
+
+    @Deprecated
+    private void updateCaption(VPaintableWidget paintable, UIDL uidl) {
+        if (paintable instanceof VAbstractPaintableWidget) {
+            VPaintableWidget parent = ((VAbstractPaintableWidget) paintable)
+                    .getParentPaintable();
+            if (parent instanceof VAbstractPaintableWidgetContainer) {
+                ((VPaintableWidgetContainer) parent).updateCaption(paintable,
+                        uidl);
+                return;
+            }
+        }
+
+        // Old Container interface
+        // FIXME: Remove
+        Util.getLayout(paintable.getWidgetForPaintable()).updateCaption(
+                paintable, uidl);
+
     }
 
     /**
