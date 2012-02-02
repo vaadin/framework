@@ -980,7 +980,7 @@ public class VWindow extends VOverlay implements Container,
     }
 
     public boolean hasChildComponent(Widget component) {
-        if (component == layout) {
+        if (component == layout.getWidgetForPaintable()) {
             return true;
         } else {
             return false;
