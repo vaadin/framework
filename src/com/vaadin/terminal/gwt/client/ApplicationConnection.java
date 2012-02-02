@@ -39,11 +39,9 @@ import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.ui.Field;
 import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
-import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidgetContainer;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
-import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VViewPaintable;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
@@ -174,7 +172,7 @@ public class ApplicationConnection {
     private Set<VPaintableWidget> zeroHeightComponents = null;
 
     public ApplicationConnection() {
-        view = GWT.create(VView.class);
+        view = GWT.create(VViewPaintable.class);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
