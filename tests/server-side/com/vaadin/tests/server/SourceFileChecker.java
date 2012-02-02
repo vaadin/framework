@@ -88,7 +88,6 @@ public class SourceFileChecker extends TestCase {
     private void validateFiles(String directory, FileValidator validator,
             Set<String> ignore, String errorMessage, String ending) {
         File srcDir = new File(directory);
-        System.out.println(new File(".").getAbsolutePath());
         HashSet<String> missing = new HashSet<String>();
         validateFiles(directory, srcDir, missing, validator, ending, ignore);
         if (!missing.isEmpty()) {
