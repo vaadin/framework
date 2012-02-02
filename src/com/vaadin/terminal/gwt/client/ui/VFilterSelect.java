@@ -1013,6 +1013,20 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      *            The filter to apply to the components
      */
     public void filterOptions(int page, String filter) {
+        filterOptions(page, filter, true);
+    }
+
+    /**
+     * Filters the options at certain page using the given filter
+     * 
+     * @param page
+     *            The page to filter
+     * @param filter
+     *            The filter to apply to the options
+     * @param immediate
+     *            Whether to send the options request immediately
+     */
+    private void filterOptions(int page, String filter, boolean immediate) {
         if (filter.equals(lastFilter) && currentPage == page) {
             if (!suggestionPopup.isAttached()) {
                 suggestionPopup.showSuggestions(currentSuggestions,
@@ -1032,7 +1046,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
         waitingForFilteringResponse = true;
         client.updateVariable(paintableId, "filter", filter, false);
-        client.updateVariable(paintableId, "page", page, true);
+        client.updateVariable(paintableId, "page", page, immediate);
         lastFilter = filter;
         currentPage = page;
     }
@@ -1622,7 +1636,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             // ask suggestionPopup if it was just closed, we are using GWT
             // Popup's auto close feature
             if (!suggestionPopup.isJustClosed()) {
-                filterOptions(-1, "");
+                // If a focus event is not going to be sent, send the options
+                // request immediately; otherwise queue in the same burst as the
+                // focus event. Fixes #8321.
+                boolean immediate = focused
+                        || !client.hasEventListeners(this, EventId.FOCUS);
+                filterOptions(-1, "", immediate);
                 popupOpenerClicked = true;
                 lastFilter = "";
             }
