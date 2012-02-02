@@ -626,8 +626,15 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * Selects the previous year
      */
     private void focusPreviousYear(int years) {
+        int currentMonth = focusedDate.getMonth();
         focusedDate.setYear(focusedDate.getYear() - years);
-        displayedMonth.setYear(displayedMonth.getYear() - years);
+        /*
+         * If the focused date was a leap day (Feb 29), the new date becomes Mar
+         * 1 if the new year is not also a leap year. Set it to Feb 28 instead.
+         */
+        if (focusedDate.getMonth() != currentMonth) {
+            focusedDate.setDate(0);
+        }
         renderCalendar();
     }
 
@@ -635,8 +642,16 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * Selects the next year
      */
     private void focusNextYear(int years) {
+        int currentMonth = focusedDate.getMonth();
         focusedDate.setYear(focusedDate.getYear() + years);
         displayedMonth.setYear(displayedMonth.getYear() + years);
+        /*
+         * If the focused date was a leap day (Feb 29), the new date becomes Mar
+         * 1 if the new year is not also a leap year. Set it to Feb 28 instead.
+         */
+        if (focusedDate.getMonth() != currentMonth) {
+            focusedDate.setDate(0);
+        }
         renderCalendar();
     }
 
