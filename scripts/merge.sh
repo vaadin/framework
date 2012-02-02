@@ -28,6 +28,12 @@ sourceurl="$currentrepowithoutversion/$FROM"
 
 msg=`svn log $sourceurl -r $REVISION --xml|grep "<msg>"|sed "s/<msg>//"|sed "s/<\/msg>//"`
 svn merge $sourceurl . -c $REVISION
+if [ "$?" != "0" ]
+then
+	echo "Merge failed. Conflicts must be resolved manually!"
+	exit 3
+fi
+
 msg="[merge from $FROM] $msg"
 if [ "$AUTOCOMMIT" = "autocommit" ]
 then
