@@ -1137,8 +1137,4 @@ public class VTabsheet extends VTabsheetBase {
             tp.remove(index);
         }
     }
-
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
 }

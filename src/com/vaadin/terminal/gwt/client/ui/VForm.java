@@ -195,10 +195,6 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
         shortcutHandler.handleKeyboardEvent(Event.as(event.getNativeEvent()));
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
     @Override
     protected void add(Widget child, Element container) {
         // Overridden to allow VFormPaintable to call this. Should be removed

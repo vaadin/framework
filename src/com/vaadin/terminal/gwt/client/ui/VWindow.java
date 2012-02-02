@@ -1040,8 +1040,4 @@ public class VWindow extends VOverlay implements Container,
         contentPanel.focus();
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }

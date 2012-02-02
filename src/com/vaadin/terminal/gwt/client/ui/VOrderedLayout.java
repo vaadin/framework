@@ -725,8 +725,4 @@ public class VOrderedLayout extends CellBasedLayout {
         return Util.getPaintableForElement(client, this, element);
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }

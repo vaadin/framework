@@ -553,8 +553,4 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         getElement().focus();
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }

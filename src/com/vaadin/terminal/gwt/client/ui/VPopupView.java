@@ -424,8 +424,4 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
         };
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }// class VPopupView

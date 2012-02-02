@@ -730,7 +730,4 @@ public class VAbstractSplitPanel extends ComplexPanel implements Container,
         return enabled;
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
 }

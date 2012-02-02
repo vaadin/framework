@@ -432,8 +432,4 @@ public class VPanel extends SimplePanel implements Container,
         return shortcutHandler;
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }
