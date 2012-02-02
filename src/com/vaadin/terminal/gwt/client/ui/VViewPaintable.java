@@ -167,11 +167,13 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
                 }
             } else {
                 // subwindows
-                final VPaintableWidget w = client.getPaintable(childUidl);
-                if (getWidgetForPaintable().subWindows.contains(w)) {
-                    removedSubWindows.remove(w);
+                final VWindowPaintable w = (VWindowPaintable) client
+                        .getPaintable(childUidl);
+                VWindow windowWidget = w.getWidgetForPaintable();
+                if (getWidgetForPaintable().subWindows.contains(windowWidget)) {
+                    removedSubWindows.remove(windowWidget);
                 } else {
-                    getWidgetForPaintable().subWindows.add((VWindow) w);
+                    getWidgetForPaintable().subWindows.add(windowWidget);
                 }
                 w.updateFromUIDL(childUidl, client);
             }
