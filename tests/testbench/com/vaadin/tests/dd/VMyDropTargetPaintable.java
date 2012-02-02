@@ -1,3 +1,6 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
 package com.vaadin.tests.dd;
 
 import com.google.gwt.core.client.GWT;
