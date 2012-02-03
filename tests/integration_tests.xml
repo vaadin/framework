@@ -9,7 +9,7 @@
 	<fail unless="test.integration.antfile" message="test.integration.antfile must be set for integration tests to run" />
 
 	<!-- Test with these browsers -->
-	<property name="test_browsers" value="winxp-firefox9" />
+	<property name="test_browsers" value="winxp-firefox10" />
 
 	<!-- Path to key file. Default value -->
 	<property name="sshkey.file" value="id_dsa" />
