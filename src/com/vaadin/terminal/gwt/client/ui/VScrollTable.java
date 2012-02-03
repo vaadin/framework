@@ -2572,7 +2572,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                 if (!moved) {
                     // mouse event was a click to header -> sort column
-                    if (sortable) {
+                    if (sortable && Util.isTouchEventOrLeftMouseButton(event)) {
                         if (sortColumn.equals(cid)) {
                             // just toggle order
                             client.updateVariable(paintableId, "sortascending",
@@ -2610,7 +2610,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 break;
             case Event.ONTOUCHMOVE:
             case Event.ONMOUSEMOVE:
-                if (dragging) {
+                if (dragging && Util.isTouchEventOrLeftMouseButton(event)) {
                     if (event.getTypeInt() == Event.ONTOUCHMOVE) {
                         /*
                          * prevent using this event in e.g. scrolling
@@ -2656,6 +2656,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         private void onResizeEvent(Event event) {
             switch (DOM.eventGetType(event)) {
             case Event.ONMOUSEDOWN:
+                if (!Util.isTouchEventOrLeftMouseButton(event)) {
+                    return;
+                }
                 isResizing = true;
                 DOM.setCapture(getElement());
                 dragStartX = DOM.eventGetClientX(event);
@@ -2664,6 +2667,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 DOM.eventPreventDefault(event);
                 break;
             case Event.ONMOUSEUP:
+                if (!Util.isTouchEventOrLeftMouseButton(event)) {
+                    return;
+                }
                 isResizing = false;
                 DOM.releaseCapture(getElement());
                 tHead.disableAutoColumnWidthCalculation(this);
@@ -2678,6 +2684,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 fireColumnResizeEvent(cid, originalWidth, getColWidth(cid));
                 break;
             case Event.ONMOUSEMOVE:
+                if (!Util.isTouchEventOrLeftMouseButton(event)) {
+                    return;
+                }
                 if (isResizing) {
                     final int deltaX = DOM.eventGetClientX(event) - dragStartX;
                     if (deltaX == 0) {
