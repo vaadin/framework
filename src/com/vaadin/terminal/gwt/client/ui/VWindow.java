@@ -971,7 +971,7 @@ public class VWindow extends VOverlay implements Container,
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
-        if (child == layout) {
+        if (child == layout.getWidgetForPaintable()) {
             return renderSpace;
         } else {
             // Exception ??
