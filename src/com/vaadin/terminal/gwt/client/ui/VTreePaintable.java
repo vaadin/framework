@@ -218,7 +218,7 @@ public class VTreePaintable extends VAbstractPaintableWidget {
             }
             final TreeNode childTree = getWidgetForPaintable().new TreeNode();
             updateNodeFromUIDL(childTree, childUidl);
-            containerNode.add(childTree);
+            containerNode.childNodeContainer.add(childTree);
             if (!i.hasNext()) {
                 childTree
                         .addStyleDependentName(childTree.isLeaf() ? "leaf-last"
