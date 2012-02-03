@@ -103,7 +103,12 @@ public class SourceFileChecker extends TestCase {
         Assert.assertTrue("Directory " + directory + " does not exist",
                 directory.exists());
 
-        for (File f : directory.listFiles()) {
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new RuntimeException("Listing of directory "
+                    + directory.getPath() + " failed");
+        }
+        for (File f : files) {
             boolean ignoreThis = false;
             for (String ignore : ignores) {
                 if (new File(baseDirectory, ignore).equals(f)) {
