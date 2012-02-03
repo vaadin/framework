@@ -2338,7 +2338,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             DOM.appendChild(td, captionContainer);
 
-            DOM.sinkEvents(td, Event.MOUSEEVENTS | Event.TOUCHEVENTS);
+            DOM.sinkEvents(td, Event.MOUSEEVENTS | Event.ONDBLCLICK
+                    | Event.ONCONTEXTMENU | Event.TOUCHEVENTS);
 
             setElement(td);
 
@@ -2455,8 +2456,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         scrollBodyPanel.setFocus(true);
                     }
                     handleCaptionEvent(event);
-                    event.stopPropagation();
-                    event.preventDefault();
+                    boolean stopPropagation = true;
+                    if (event.getTypeInt() == Event.ONCONTEXTMENU
+                            && !client.hasEventListeners(VScrollTable.this,
+                                    HEADER_CLICK_EVENT_ID)) {
+                        // Prevent showing the browser's context menu only when
+                        // there is a header click listener.
+                        stopPropagation = false;
+                    }
+                    if (stopPropagation) {
+                        event.stopPropagation();
+                        event.preventDefault();
+                    }
                 }
             }
         }
@@ -2513,7 +2524,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             switch (DOM.eventGetType(event)) {
             case Event.ONTOUCHSTART:
             case Event.ONMOUSEDOWN:
-                if (columnReordering) {
+                if (columnReordering
+                        && Util.isTouchEventOrLeftMouseButton(event)) {
                     if (event.getTypeInt() == Event.ONTOUCHSTART) {
                         /*
                          * prevent using this event in e.g. scrolling
@@ -2532,7 +2544,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             case Event.ONMOUSEUP:
             case Event.ONTOUCHEND:
             case Event.ONTOUCHCANCEL:
-                if (columnReordering) {
+                if (columnReordering
+                        && Util.isTouchEventOrLeftMouseButton(event)) {
                     dragging = false;
                     DOM.releaseCapture(getElement());
                     if (moved) {
@@ -2590,14 +2603,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         event.stopPropagation();
                     }
                     break;
-                }
-                break;
-            case Event.ONCONTEXTMENU:
-                if (client.hasEventListeners(VScrollTable.this,
-                        HEADER_CLICK_EVENT_ID)) {
-                    // Prevent showing the browser's context menu when there is
-                    // a right click listener.
-                    event.preventDefault();
                 }
                 break;
             case Event.ONDBLCLICK:
@@ -3338,7 +3343,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             DOM.appendChild(td, captionContainer);
 
-            DOM.sinkEvents(td, Event.MOUSEEVENTS);
+            DOM.sinkEvents(td, Event.MOUSEEVENTS | Event.ONDBLCLICK
+                    | Event.ONCONTEXTMENU);
 
             setElement(td);
         }
@@ -3523,8 +3529,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
                     scrollBodyPanel.setFocus(true);
                 }
-                event.stopPropagation();
-                event.preventDefault();
+                boolean stopPropagation = true;
+                if (event.getTypeInt() == Event.ONCONTEXTMENU
+                        && !client.hasEventListeners(VScrollTable.this,
+                                FOOTER_CLICK_EVENT_ID)) {
+                    // Show browser context menu if a footer click listener is
+                    // not present
+                    stopPropagation = false;
+                }
+                if (stopPropagation) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                }
             }
         }
 
@@ -3535,7 +3551,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          *            The event to handle
          */
         protected void handleCaptionEvent(Event event) {
-            if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
+            if (event.getTypeInt() == Event.ONMOUSEUP
+                    || event.getTypeInt() == Event.ONDBLCLICK) {
                 fireFooterClickedEvent(event);
             }
         }
