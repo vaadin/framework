@@ -106,7 +106,7 @@ import com.vaadin.terminal.gwt.client.ui.label.VLabel;
  */
 public class VScrollTable extends FlowPanel implements HasWidgets,
         ScrollHandler, VHasDropHandler, FocusHandler, BlurHandler, Focusable,
-        ActionOwner {
+        ActionOwner, Container {
 
     public enum SelectMode {
         NONE(0), SINGLE(1), MULTI(2);
@@ -4321,8 +4321,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
         }
 
-        public class VScrollTableRow extends Panel implements ActionOwner,
-                Container {
+        public class VScrollTableRow extends Panel implements ActionOwner {
 
             private static final int TOUCHSCROLL_TIMEOUT = 70;
             private static final int DRAGMODE_MULTIROW = 2;
@@ -5279,29 +5278,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 return paintableId;
             }
 
-            public RenderSpace getAllocatedSpace(Widget child) {
-                int w = 0;
-                int i = getColIndexOf(child);
-                HeaderCell headerCell = tHead.getHeaderCell(i);
-                if (headerCell != null) {
-                    if (initializedAndAttached) {
-                        w = headerCell.getWidth();
-                    } else {
-                        // header offset width is not absolutely correct value,
-                        // but a best guess (expecting similar content in all
-                        // columns ->
-                        // if one component is relative width so are others)
-                        w = headerCell.getOffsetWidth() - getCellExtraWidth();
-                    }
-                }
-                return new RenderSpace(w, 0) {
-                    @Override
-                    public int getHeight() {
-                        return (int) getRowHeight();
-                    }
-                };
-            }
-
             private int getColIndexOf(Widget child) {
                 com.google.gwt.dom.client.Element widgetCell = child
                         .getElement().getParentElement().getParentElement();
@@ -5329,16 +5305,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 childWidgets.add(index, newComponent);
                 adopt(newComponent);
 
-            }
-
-            public boolean requestLayout(Set<Widget> children) {
-                // row size should never change and system wouldn't event
-                // survive as this is a kind of fake paitable
-                return true;
-            }
-
-            public void updateCaption(VPaintableWidget component, UIDL uidl) {
-                // NOP, not rendered
             }
 
             public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -6706,4 +6672,45 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         return this;
     }
 
+    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
+        VScrollTableRow row = (VScrollTableRow) oldComponent.getParent();
+        row.replaceChildComponent(oldComponent, newComponent);
+
+    }
+
+    public boolean hasChildComponent(Widget child) {
+        VScrollTableRow row = (VScrollTableRow) child.getParent();
+        return row.hasChildComponent(child);
+    }
+
+    public boolean requestLayout(Set<Widget> children) {
+        // row size should never change
+        return true;
+    }
+
+    public RenderSpace getAllocatedSpace(Widget child) {
+        // Called by widgets attached to a row
+        VScrollTableRow row = (VScrollTableRow) child.getParent();
+        int w = 0;
+        int i = row.getColIndexOf(child);
+        HeaderCell headerCell = tHead.getHeaderCell(i);
+        if (headerCell != null) {
+            if (initializedAndAttached) {
+                w = headerCell.getWidth();
+            } else {
+                // header offset width is not absolutely correct value,
+                // but a best guess (expecting similar content in all
+                // columns ->
+                // if one component is relative width so are others)
+                w = headerCell.getOffsetWidth()
+                        - scrollBody.getCellExtraWidth();
+            }
+        }
+        return new RenderSpace(w, 0) {
+            @Override
+            public int getHeight() {
+                return (int) scrollBody.getRowHeight();
+            }
+        };
+    }
 }
