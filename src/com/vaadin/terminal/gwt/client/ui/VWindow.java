@@ -643,7 +643,7 @@ public class VWindow extends VOverlay implements Container,
     }
 
     private void onResizeEvent(Event event) {
-        if (resizable) {
+        if (resizable && Util.isTouchEventOrLeftMouseButton(event)) {
             switch (event.getTypeInt()) {
             case Event.ONMOUSEDOWN:
             case Event.ONTOUCHSTART:
@@ -860,6 +860,10 @@ public class VWindow extends VOverlay implements Container,
     }
 
     private void onDragEvent(Event event) {
+        if (!Util.isTouchEventOrLeftMouseButton(event)) {
+            return;
+        }
+
         switch (DOM.eventGetType(event)) {
         case Event.ONTOUCHSTART:
             if (event.getTouches().length() > 1) {
