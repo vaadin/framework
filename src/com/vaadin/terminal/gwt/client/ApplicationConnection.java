@@ -173,6 +173,7 @@ public class ApplicationConnection {
 
     public ApplicationConnection() {
         view = GWT.create(VViewPaintable.class);
+        view.setConnection(this);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
