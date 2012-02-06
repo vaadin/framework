@@ -7,8 +7,6 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.FooterClickEvent;
@@ -96,10 +94,9 @@ public class HeaderFooterClickLeftRightMiddle extends TestBase {
         CheckBox sortEnabledCheckbox = new CheckBox("Sortable");
         sortEnabledCheckbox.setImmediate(true);
         sortEnabledCheckbox.setValue(!table.isSortDisabled());
-        sortEnabledCheckbox.addListener(new ClickListener() {
-
-            public void buttonClick(ClickEvent event) {
-                table.setSortDisabled(!event.getButton().booleanValue());
+        sortEnabledCheckbox.addListener(new ValueChangeListener() {
+            public void valueChange(ValueChangeEvent event) {
+                table.setSortDisabled(!(Boolean) event.getProperty().getValue());
             }
         });
 
