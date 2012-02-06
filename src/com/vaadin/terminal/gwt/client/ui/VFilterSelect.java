@@ -1422,7 +1422,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 // request immediately; otherwise queue in the same burst as the
                 // focus event. Fixes #8321.
                 boolean immediate = focused
-                        || !client.hasEventListeners(this, EventId.FOCUS);
+                        || !client.hasWidgetEventListeners(this, EventId.FOCUS);
                 filterOptions(-1, "", immediate);
                 popupOpenerClicked = true;
                 lastFilter = "";

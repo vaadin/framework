@@ -2270,8 +2270,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     handleCaptionEvent(event);
                     boolean stopPropagation = true;
                     if (event.getTypeInt() == Event.ONCONTEXTMENU
-                            && !client.hasEventListeners(VScrollTable.this,
-                                    HEADER_CLICK_EVENT_ID)) {
+                            && !client.hasWidgetEventListeners(
+                                    VScrollTable.this, HEADER_CLICK_EVENT_ID)) {
                         // Prevent showing the browser's context menu only when
                         // there is a header click listener.
                         stopPropagation = false;
@@ -3346,7 +3346,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 }
                 boolean stopPropagation = true;
                 if (event.getTypeInt() == Event.ONCONTEXTMENU
-                        && !client.hasEventListeners(VScrollTable.this,
+                        && !client.hasWidgetEventListeners(VScrollTable.this,
                                 FOOTER_CLICK_EVENT_ID)) {
                     // Show browser context menu if a footer click listener is
                     // not present
