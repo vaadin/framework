@@ -3,13 +3,16 @@ package com.vaadin.terminal.gwt.client;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ui.VMeasuringOrderedLayout;
 
 public class MeasureManager {
 
@@ -17,8 +20,8 @@ public class MeasureManager {
         private int width = -1;
         private int height = -1;
         private boolean isDirty = true;
-        private int captionWidth = 0;
-        private int captionHeight = 0;
+
+        private final Map<Element, int[]> dependencySizes = new HashMap<Element, int[]>();
 
         public int getHeight() {
             return height;
@@ -50,26 +53,32 @@ public class MeasureManager {
             this.isDirty = isDirty;
         }
 
-        public void setCaptionHeight(int captionHeight) {
-            if (captionHeight != this.captionHeight) {
+        public void registerDependency(Element element) {
+            if (!dependencySizes.containsKey(element)) {
+                dependencySizes.put(element, new int[] { -1, -1 });
                 isDirty = true;
             }
-            this.captionHeight = captionHeight;
         }
 
-        public void setCaptionWidth(int captionWidth) {
-            if (captionWidth != this.captionWidth) {
-                isDirty = true;
+        public void deRegisterDependency(Element element) {
+            dependencySizes.remove(element);
+        }
+
+        public int getDependencyWidth(Element e) {
+            return getDependencySize(e, 0);
+        }
+
+        public int getDependencyHeight(Element e) {
+            return getDependencySize(e, 1);
+        }
+
+        private int getDependencySize(Element e, int index) {
+            int[] sizes = dependencySizes.get(e);
+            if (sizes == null) {
+                return -1;
+            } else {
+                return sizes[index];
             }
-            this.captionWidth = captionWidth;
-        }
-
-        public int getCaptionHeight() {
-            return captionHeight;
-        }
-
-        public int getCaptionWidth() {
-            return captionWidth;
         }
     }
 
@@ -228,38 +237,36 @@ public class MeasureManager {
         FastStringSet changed = FastStringSet.create();
         for (VPaintableWidget paintableWidget : paintableWidgets) {
             Widget widget = paintableWidget.getWidgetForPaintable();
-            if (paintableWidget instanceof VMeasuringOrderedLayout) {
-                VMeasuringOrderedLayout hasCaptions = (VMeasuringOrderedLayout) paintableWidget;
-                Collection<VCaption> childCaptions = hasCaptions
-                        .getChildCaptions();
-                for (VCaption vCaption : childCaptions) {
-                    VPaintableWidget captionOwner = vCaption.getOwner();
-                    MeasureManager.MeasuredSize measuredSize = paintableMap
-                            .getMeasuredSize(captionOwner);
-
-                    int captionHeight = vCaption.getOffsetHeight();
-                    int captionWidth = vCaption.getOffsetWidth();
-                    if (captionHeight == 0 || captionWidth == 0) {
-                        // Empty caption is probably detached
-                        if (!Util.isAttachedAndDisplayed(vCaption)) {
-                            // Ignore if it is detached
-                            continue;
-                        }
-                    }
-                    measuredSize.setCaptionHeight(captionHeight);
-                    measuredSize.setCaptionWidth(captionWidth);
-                    if (measuredSize.isDirty()) {
-                        changed.add(paintableMap.getPid(captionOwner));
-                        measuredSize.setDirty(false);
-                    }
-                }
-            }
 
             MeasureManager.MeasuredSize measuredSize = paintableMap
                     .getMeasuredSize(paintableWidget);
 
             measuredSize.setWidth(widget.getOffsetWidth());
             measuredSize.setHeight(widget.getOffsetHeight());
+
+            boolean dirtyDependency = false;
+            for (Entry<Element, int[]> entry : measuredSize.dependencySizes
+                    .entrySet()) {
+                Element element = entry.getKey();
+                int[] sizes = entry.getValue();
+
+                int offsetWidth = element.getOffsetWidth();
+                if (offsetWidth != sizes[0]) {
+                    sizes[0] = offsetWidth;
+                    dirtyDependency = true;
+                }
+
+                int offsetHeight = element.getOffsetHeight();
+                if (offsetHeight != sizes[1]) {
+                    sizes[1] = offsetHeight;
+                    dirtyDependency = true;
+                }
+
+            }
+
+            if (dirtyDependency) {
+                measuredSize.setDirty(true);
+            }
 
             if (measuredSize.isDirty()) {
                 changed.add(paintableMap.getPid(paintableWidget));

@@ -196,6 +196,10 @@ public class VMeasuringOrderedLayout extends ComplexPanel implements Container,
                 // Adopt.
                 adopt(caption);
                 captions.put(component, caption);
+                MeasureManager.MeasuredSize measuredSize = client
+                        .getMeasuredSize(component);
+
+                measuredSize.registerDependency(caption.getElement());
             }
             caption.updateCaption(uidl);
         } else {
@@ -204,8 +208,7 @@ public class VMeasuringOrderedLayout extends ComplexPanel implements Container,
                 remove(removedCaption);
                 MeasureManager.MeasuredSize measuredSize = client
                         .getMeasuredSize(component);
-                measuredSize.setCaptionHeight(0);
-                measuredSize.setCaptionWidth(0);
+                measuredSize.deRegisterDependency(removedCaption.getElement());
             }
         }
 
@@ -453,22 +456,31 @@ public class VMeasuringOrderedLayout extends ComplexPanel implements Container,
     }
 
     private int getCaptionWidth(VPaintableWidget child) {
-        MeasureManager.MeasuredSize measuredSize = client
-                .getMeasuredSize(child);
-        return measuredSize.getCaptionWidth();
+        VCaption caption = captions.get(child);
+        if (caption == null) {
+            return 0;
+        } else {
+            MeasureManager.MeasuredSize measuredSize = client
+                    .getMeasuredSize(child);
+            return measuredSize.getDependencyWidth(caption.getElement());
+        }
     }
 
     private int getCaptionHeight(VPaintableWidget child) {
-        MeasureManager.MeasuredSize measuredSize = client
-                .getMeasuredSize(child);
-        int captionHeight = measuredSize.getCaptionHeight();
 
         VCaption caption = captions.get(child);
         if (caption != null) {
+            MeasureManager.MeasuredSize measuredSize = client
+                    .getMeasuredSize(child);
+            int captionHeight = measuredSize.getDependencyHeight(caption
+                    .getElement());
+
             caption.getElement().getStyle()
                     .setMarginTop(-captionHeight, Unit.PX);
+            return captionHeight;
+        } else {
+            return 0;
         }
-        return captionHeight;
     }
 
     private AlignmentInfo getAlignment(VPaintableWidget child) {
