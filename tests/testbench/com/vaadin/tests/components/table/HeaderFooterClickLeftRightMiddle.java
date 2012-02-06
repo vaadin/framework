@@ -33,10 +33,10 @@ public class HeaderFooterClickLeftRightMiddle extends TestBase {
         CheckBox immediateCheckbox = new CheckBox("Immediate");
         immediateCheckbox.setImmediate(true);
         immediateCheckbox.setValue(table.isImmediate());
-        immediateCheckbox.addListener(new ClickListener() {
+        immediateCheckbox.addListener(new ValueChangeListener() {
 
-            public void buttonClick(ClickEvent event) {
-                table.setImmediate(event.getButton().booleanValue());
+            public void valueChange(ValueChangeEvent event) {
+                table.setImmediate((Boolean) event.getProperty().getValue());
             }
         });
 
@@ -107,11 +107,11 @@ public class HeaderFooterClickLeftRightMiddle extends TestBase {
                 "Column reordering allowed");
         columnReorderingCheckbox.setImmediate(true);
         columnReorderingCheckbox.setValue(table.isColumnReorderingAllowed());
-        columnReorderingCheckbox.addListener(new ClickListener() {
+        columnReorderingCheckbox.addListener(new ValueChangeListener() {
 
-            public void buttonClick(ClickEvent event) {
-                table.setColumnReorderingAllowed(event.getButton()
-                        .booleanValue());
+            public void valueChange(ValueChangeEvent event) {
+                table.setColumnReorderingAllowed((Boolean) event.getProperty()
+                        .getValue());
             }
         });
 
