@@ -16,14 +16,14 @@ public class VTabsheetPaintable extends VTabsheetBasePaintable {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().rendering = true;
 
-        if (!uidl.getBooleanAttribute("cached")) {
+        if (isRealUpdate(uidl)) {
             // Handle stylename changes before generics (might affect size
             // calculations)
             getWidgetForPaintable().handleStyleNames(uidl);
         }
 
         super.updateFromUIDL(uidl, client);
-        if (getWidgetForPaintable().cachedUpdate) {
+        if (!isRealUpdate(uidl)) {
             getWidgetForPaintable().rendering = false;
             return;
         }

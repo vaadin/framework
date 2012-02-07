@@ -14,9 +14,11 @@ import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VDateFieldPaintable extends VAbstractPaintableWidget {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Ensure correct implementation and let layout manage caption
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
 

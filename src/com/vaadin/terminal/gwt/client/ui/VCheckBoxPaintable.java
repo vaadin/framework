@@ -14,13 +14,20 @@ import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VCheckBoxPaintable extends VAbstractPaintableWidget {
 
+    @Override
+    protected boolean delegateCaptionHandling() {
+        return false;
+    }
+
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Save details
         getWidgetForPaintable().client = client;
         getWidgetForPaintable().id = uidl.getId();
 
         // Ensure correct implementation
-        if (client.updateComponent(this, uidl, false)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
 

@@ -58,8 +58,7 @@ public abstract class VOrderedLayoutPaintable extends CellBasedLayoutPaintable {
         super.updateFromUIDL(uidl, client);
 
         // Only non-cached, visible UIDL:s can introduce changes
-        if (uidl.getBooleanAttribute("cached")
-                || uidl.getBooleanAttribute("invisible")) {
+        if (!isRealUpdate(uidl) || uidl.getBooleanAttribute("invisible")) {
             getWidgetForPaintable().isRendering = false;
             return;
         }
@@ -106,7 +105,7 @@ public abstract class VOrderedLayoutPaintable extends CellBasedLayoutPaintable {
              * the layout are rendered later when it is clear how much space
              * they can use
              */
-            if (!Util.isCached(childUIDL)) {
+            if (isRealUpdate(childUIDL)) {
                 FloatSize relativeSize = Util.parseRelativeSize(childUIDL);
                 childComponentContainer.setRelativeSize(relativeSize);
             }
@@ -125,7 +124,7 @@ public abstract class VOrderedLayoutPaintable extends CellBasedLayoutPaintable {
                                             .getWidth());
                 }
                 if (getWidgetForPaintable().sizeHasChangedDuringRendering
-                        && Util.isCached(childUIDL)) {
+                        && !isRealUpdate(childUIDL)) {
                     // notify cached relative sized component about size
                     // chance
                     client.handleComponentRelativeSize(childComponentContainer
@@ -176,7 +175,7 @@ public abstract class VOrderedLayoutPaintable extends CellBasedLayoutPaintable {
                         getWidgetForPaintable().activeLayoutSize.getWidth());
             }
 
-            if (Util.isCached(childUIDL)) {
+            if (!isRealUpdate(childUIDL)) {
                 /*
                  * We must update the size of the relative sized component if
                  * the expand ratio or something else in the layout changes

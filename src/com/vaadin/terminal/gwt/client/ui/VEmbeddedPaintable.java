@@ -28,8 +28,10 @@ public class VEmbeddedPaintable extends VAbstractPaintableWidget {
 
     public static final String CLICK_EVENT_IDENTIFIER = "click";
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
 

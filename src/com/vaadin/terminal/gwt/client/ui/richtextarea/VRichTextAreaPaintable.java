@@ -14,6 +14,7 @@ import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
 public class VRichTextAreaPaintable extends VAbstractPaintableWidget implements
         BeforeShortcutActionListener {
 
+    @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().client = client;
         getWidgetForPaintable().id = uidl.getId();
@@ -29,12 +30,13 @@ public class VRichTextAreaPaintable extends VAbstractPaintableWidget implements
                         .setHTML(getWidgetForPaintable().currentValue);
             }
         }
-        if (!uidl.hasAttribute("cached")) {
+        if (isRealUpdate(uidl)) {
             getWidgetForPaintable().setEnabled(
                     !uidl.getBooleanAttribute("disabled"));
         }
 
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
 

@@ -12,11 +12,13 @@ import com.vaadin.terminal.gwt.client.UIDL;
 
 public class VProgressIndicatorPaintable extends VAbstractPaintableWidget {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         // Ensure correct implementation,
         // but don't let container manage caption etc.
-        if (client.updateComponent(this, uidl, false)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
 

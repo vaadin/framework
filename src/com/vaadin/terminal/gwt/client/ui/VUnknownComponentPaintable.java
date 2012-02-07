@@ -12,8 +12,15 @@ import com.vaadin.terminal.gwt.client.VUIDLBrowser;
 
 public class VUnknownComponentPaintable extends VAbstractPaintableWidget {
 
+    @Override
+    protected boolean delegateCaptionHandling() {
+        return false;
+    }
+
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (client.updateComponent(this, uidl, false)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
         getWidgetForPaintable().setCaption(

@@ -35,11 +35,13 @@ public class VAbsoluteLayoutPaintable extends VAbstractPaintableWidgetContainer 
         }
     };
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().rendering = true;
         getWidgetForPaintable().client = client;
         // TODO margin handling
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             getWidgetForPaintable().rendering = false;
             return;
         }
