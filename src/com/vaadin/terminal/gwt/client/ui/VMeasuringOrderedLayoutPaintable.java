@@ -215,8 +215,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
     }
 
     private void layoutPrimaryDirection() {
-        Collection<VPaintableWidget> children = MeasureManager.getChildren(
-                this, getWidgetForPaintable().client);
+        Collection<VPaintableWidget> children = getChildren();
 
         // First pass - get total expand ratio and allocated size
         int totalAllocated = 0;
@@ -335,8 +334,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
     }
 
     private void layoutSecondaryDirection() {
-        Collection<VPaintableWidget> children = MeasureManager.getChildren(
-                this, getWidgetForPaintable().client);
+        Collection<VPaintableWidget> children = getChildren();
 
         int maxSize = 0;
         for (VPaintableWidget child : children) {

@@ -1,14 +1,11 @@
 package com.vaadin.terminal.gwt.client;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -81,32 +78,6 @@ public class MeasureManager {
     }
 
     private static MeasureManager instance = new MeasureManager();
-
-    public static Collection<VPaintableWidget> getChildren(
-            VPaintableWidgetContainer paintable, ApplicationConnection client) {
-        Widget widget = paintable.getWidgetForPaintable();
-        Collection<VPaintableWidget> children = new ArrayList<VPaintableWidget>();
-
-        addDescendantPaintables(widget, children, client);
-
-        return children;
-    }
-
-    private static void addDescendantPaintables(Widget widget,
-            Collection<VPaintableWidget> paintables,
-            ApplicationConnection client) {
-        if (widget instanceof HasWidgets) {
-            VPaintableMap paintableMap = client.getPaintableMap();
-            for (Widget child : (HasWidgets) widget) {
-                VPaintableWidget paintable = paintableMap.getPaintable(child);
-                if (paintable != null) {
-                    paintables.add(paintable);
-                } else {
-                    addDescendantPaintables(child, paintables, client);
-                }
-            }
-        }
-    }
 
     public void doLayout(ApplicationConnection client) {
         VPaintableMap paintableMap = client.getPaintableMap();
