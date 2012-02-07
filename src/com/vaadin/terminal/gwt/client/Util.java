@@ -126,26 +126,6 @@ public class Util {
         }
     }
 
-    /**
-     * Returns closest parent Widget in hierarchy that implements Container
-     * interface
-     * 
-     * @param component
-     * @return closest parent Container
-     */
-    public static Container getLayout(Widget component) {
-        Widget parent = component.getParent();
-        while (parent != null && !(parent instanceof Container)) {
-            parent = parent.getParent();
-        }
-        if (parent != null) {
-            assert ((Container) parent).hasChildComponent(component);
-
-            return (Container) parent;
-        }
-        return null;
-    }
-
     private static final Element escapeHtmlHelper = DOM.createDiv();
 
     /**
@@ -656,62 +636,13 @@ public class Util {
      }-*/;
 
     /**
-     * Locates the child component of <literal>parent</literal> which contains
-     * the element <literal>element</literal>. The child component is also
-     * returned if "element" is part of its caption. If
-     * <literal>element</literal> is not part of any child component, null is
-     * returned.
-     * 
-     * This method returns the immediate child of the parent that contains the
-     * element. See
-     * {@link #getPaintableForElement(ApplicationConnection, Container, Element)}
-     * for the deepest nested paintable of parent that contains the element.
-     * 
-     * @param client
-     *            A reference to ApplicationConnection
-     * @param parent
-     *            The widget that contains <literal>element</literal>.
-     * @param element
-     *            An element that is a sub element of the parent
-     * @return The VPaintableWidget which the element is a part of. Null if the
-     *         element does not belong to a child.
-     */
-    public static VPaintableWidget getChildPaintableForElement(
-            ApplicationConnection client, Container parent, Element element) {
-        Element rootElement = ((Widget) parent).getElement();
-        while (element != null && element != rootElement) {
-            VPaintableWidget paintable = VPaintableMap.get(client)
-                    .getPaintable(element);
-            if (paintable == null) {
-                String ownerPid = VCaption.getCaptionOwnerPid(element);
-                if (ownerPid != null) {
-                    paintable = (VPaintableWidget) VPaintableMap.get(client)
-                            .getPaintable(ownerPid);
-                }
-            }
-
-            if (paintable != null
-                    && parent.hasChildComponent(paintable
-                            .getWidgetForPaintable())) {
-                return paintable;
-            }
-
-            element = (Element) element.getParentElement();
-        }
-
-        return null;
-    }
-
-    /**
      * Locates the nested child component of <literal>parent</literal> which
      * contains the element <literal>element</literal>. The child component is
      * also returned if "element" is part of its caption. If
      * <literal>element</literal> is not part of any child component, null is
      * returned.
      * 
-     * This method returns the deepest nested VPaintableWidget. See
-     * {@link #getChildPaintableForElement(ApplicationConnection, Container, Element)}
-     * for the immediate child component of parent that contains the element.
+     * This method returns the deepest nested VPaintableWidget.
      * 
      * @param client
      *            A reference to ApplicationConnection

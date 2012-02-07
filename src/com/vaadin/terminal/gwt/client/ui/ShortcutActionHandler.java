@@ -17,7 +17,6 @@ import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
@@ -33,9 +32,8 @@ import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
 public class ShortcutActionHandler {
 
     /**
-     * An interface implemented by those users (most often {@link Container}s,
-     * but HasWidgets at least) of this helper class that want to support
-     * special components like {@link VRichTextArea} that don't properly
+     * An interface implemented by those users of this helper class that want to
+     * support special components like {@link VRichTextArea} that don't properly
      * propagate key down events. Those components can build support for
      * shortcut actions by traversing the closest
      * {@link ShortcutActionHandlerOwner} from the component hierarchy an
