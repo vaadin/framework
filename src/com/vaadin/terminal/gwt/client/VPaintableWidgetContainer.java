@@ -4,6 +4,8 @@
 
 package com.vaadin.terminal.gwt.client;
 
+import java.util.Collection;
+
 import com.google.gwt.user.client.ui.HasWidgets;
 
 /**
@@ -40,6 +42,6 @@ public interface VPaintableWidgetContainer extends VPaintableWidget {
      * @return A collection of children for this paintable. An empty collection
      *         if there are no children.
      */
-    // public Collection<VPaintableWidget> getChildren();
+    public Collection<VPaintableWidget> getChildren();
 
 }
