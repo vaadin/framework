@@ -180,8 +180,8 @@ public class MeasureManager {
         for (VPaintableWidget paintableWidget : paintableWidgets) {
             Widget widget = paintableWidget.getWidgetForPaintable();
 
-            MeasureManager.MeasuredSize measuredSize = paintableMap
-                    .getMeasuredSize(paintableWidget);
+            MeasureManager.MeasuredSize measuredSize = paintableWidget
+                    .getMeasuredSize();
 
             measuredSize.setWidth(widget.getOffsetWidth());
             measuredSize.setHeight(widget.getOffsetHeight());

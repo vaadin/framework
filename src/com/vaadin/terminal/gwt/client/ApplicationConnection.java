@@ -1789,7 +1789,8 @@ public class ApplicationConnection {
         // Dirty if either dimension changed between relative and non-relative
         if (w.endsWith("%") != style.getWidth().endsWith("%")
                 || h.endsWith("%") != style.getHeight().endsWith("%")) {
-            MeasureManager.MeasuredSize measuredSize = getMeasuredSize(paintable);
+            MeasureManager.MeasuredSize measuredSize = paintable
+                    .getMeasuredSize();
             if (measuredSize != null) {
                 measuredSize.setDirty(true);
             }
@@ -2252,10 +2253,4 @@ public class ApplicationConnection {
             Scheduler.get().scheduleDeferred(layoutCommand);
         }
     }
-
-    public MeasureManager.MeasuredSize getMeasuredSize(
-            VPaintableWidget paintable) {
-        return paintableMap.getMeasuredSize(paintable);
-    }
-
 }

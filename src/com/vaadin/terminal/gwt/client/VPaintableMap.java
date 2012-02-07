@@ -17,7 +17,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.gwt.client.MeasureManager.MeasuredSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 
 public class VPaintableMap {
@@ -390,19 +389,6 @@ public class VPaintableMap {
      */
     public boolean isPaintable(Widget w) {
         return getPid(w) != null;
-    }
-
-    /**
-     * FIXME: Should not be here
-     */
-    @Deprecated
-    public MeasuredSize getMeasuredSize(VPaintableWidget paintable) {
-        ComponentDetail componentDetail = getComponentDetail(paintable);
-        if (componentDetail == null) {
-            return null;
-        }
-
-        return componentDetail.getMeasuredSize();
     }
 
 }

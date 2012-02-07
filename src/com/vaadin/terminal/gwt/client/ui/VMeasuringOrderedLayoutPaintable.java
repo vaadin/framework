@@ -31,8 +31,8 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
                 getWidgetForPaintable().addCaption(caption, widget);
                 getWidgetForPaintable().captions.put(component, caption);
 
-                MeasureManager.MeasuredSize measuredSize = getWidgetForPaintable().client
-                        .getMeasuredSize(component);
+                MeasureManager.MeasuredSize measuredSize = component
+                        .getMeasuredSize();
 
                 measuredSize.registerDependency(caption.getElement());
             }
@@ -42,8 +42,8 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
                     .remove(component);
             if (removedCaption != null) {
                 getWidgetForPaintable().remove(removedCaption);
-                MeasureManager.MeasuredSize measuredSize = getWidgetForPaintable().client
-                        .getMeasuredSize(component);
+                MeasureManager.MeasuredSize measuredSize = component
+                        .getMeasuredSize();
                 measuredSize.deRegisterDependency(removedCaption.getElement());
             }
         }
@@ -82,7 +82,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
 
             if (!childUIDL.getBooleanAttribute("cached")) {
                 child.updateFromUIDL(childUIDL, client);
-                client.getMeasuredSize(child).setDirty(true);
+                child.getMeasuredSize().setDirty(true);
             }
             // TODO Update alignments and expand ratios
 
@@ -113,7 +113,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         getWidgetForPaintable().expandRatios = uidl
                 .getMapAttribute("expandRatios");
         getWidgetForPaintable().alignments = uidl.getMapAttribute("alignments");
-        client.getMeasuredSize(this).setDirty(true);
+        getMeasuredSize().setDirty(true);
     }
 
     private int getCaptionWidth(VPaintableWidget child) {
@@ -121,8 +121,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         if (caption == null) {
             return 0;
         } else {
-            MeasureManager.MeasuredSize measuredSize = getWidgetForPaintable().client
-                    .getMeasuredSize(child);
+            MeasureManager.MeasuredSize measuredSize = child.getMeasuredSize();
             return measuredSize.getDependencyWidth(caption.getElement());
         }
     }
@@ -131,8 +130,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
 
         VCaption caption = getWidgetForPaintable().captions.get(child);
         if (caption != null) {
-            MeasureManager.MeasuredSize measuredSize = getWidgetForPaintable().client
-                    .getMeasuredSize(child);
+            MeasureManager.MeasuredSize measuredSize = child.getMeasuredSize();
             int captionHeight = measuredSize.getDependencyHeight(caption
                     .getElement());
 
@@ -181,8 +179,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
 
     private int getMeasuredInDirection(VPaintableWidget paintable,
             boolean isVertical) {
-        MeasureManager.MeasuredSize measuredSize = getWidgetForPaintable().client
-                .getMeasuredSize(paintable);
+        MeasureManager.MeasuredSize measuredSize = paintable.getMeasuredSize();
         if (isVertical) {
             return measuredSize.getHeight();
         } else {

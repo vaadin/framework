@@ -5,6 +5,7 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.MeasureManager.MeasuredSize;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.VPaintableWidgetContainer;
@@ -15,6 +16,8 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     private ApplicationConnection connection;
     private String id;
     private VPaintableWidgetContainer parent;
+
+    private final MeasuredSize measuredSize = new MeasuredSize();
 
     /* State variables */
     private boolean enabled = true;
@@ -105,5 +108,9 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
                 return parent;
             }
         }
+    }
+
+    public MeasuredSize getMeasuredSize() {
+        return measuredSize;
     }
 }
