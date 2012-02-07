@@ -22,7 +22,6 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     private Widget widget;
     private ApplicationConnection connection;
     private String id;
-    private VPaintableWidgetContainer parent;
 
     /* State variables */
     private boolean enabled = true;
@@ -91,10 +90,6 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     }
 
     public VPaintableWidgetContainer getParent() {
-        if (parent != null) {
-            return parent;
-        }
-
         // FIXME: Hierarchy should be set by framework instead of looked up here
         VPaintableMap paintableMap = VPaintableMap.get(getConnection());
 
@@ -102,9 +97,8 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         while (w != null) {
             w = w.getParent();
             if (paintableMap.isPaintable(w)) {
-                parent = (VPaintableWidgetContainer) paintableMap
+                return (VPaintableWidgetContainer) paintableMap
                         .getPaintable(w);
-                return parent;
             }
         }
 
