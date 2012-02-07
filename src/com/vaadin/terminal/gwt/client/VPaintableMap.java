@@ -212,6 +212,7 @@ public class VPaintableMap {
     void purgeUnregistryBag(boolean unregisterPaintables) {
         if (unregisterPaintables) {
             for (String pid : unregistryBag) {
+                // TODO purge shared state for pid
                 VPaintable paintable = getPaintable(pid);
                 if (paintable == null) {
                     /*
@@ -236,7 +237,6 @@ public class VPaintableMap {
                     idToComponentDetail.remove(pid);
                     idToPaintable.remove(pid);
                     paintableToId.remove(paintable);
-                    // TODO purge shared state for pid
                 }
                 /*
                  * else NOP : same component has been reattached to another

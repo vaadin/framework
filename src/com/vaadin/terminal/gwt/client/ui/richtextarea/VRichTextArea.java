@@ -346,8 +346,4 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
         rta.setTabIndex(index);
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }

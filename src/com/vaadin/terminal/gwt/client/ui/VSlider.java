@@ -510,8 +510,4 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     protected int getNavigationRightKey() {
         return KeyCodes.KEY_RIGHT;
     }
-
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
 }

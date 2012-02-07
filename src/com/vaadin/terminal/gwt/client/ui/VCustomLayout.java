@@ -590,8 +590,4 @@ public class VCustomLayout extends ComplexPanel implements Container,
         return larger;
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }

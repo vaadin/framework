@@ -980,8 +980,4 @@ public class VGridLayout extends SimplePanel implements Container {
         return Util.getPaintableForElement(client, this, element);
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }

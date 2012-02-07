@@ -111,8 +111,4 @@ public class VCustomComponent extends SimplePanel implements Container {
         }
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }

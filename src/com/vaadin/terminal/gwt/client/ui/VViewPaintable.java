@@ -1,3 +1,6 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.HashSet;
@@ -30,7 +33,9 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
 
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().rendering = true;
-
+        // As VView is not created in the same way as all other paintables we
+        // have to set the id here
+        setId(uidl.getId());
         getWidgetForPaintable().id = uidl.getId();
         boolean firstPaint = getWidgetForPaintable().connection == null;
         getWidgetForPaintable().connection = client;
@@ -167,11 +172,13 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
                 }
             } else {
                 // subwindows
-                final VPaintableWidget w = client.getPaintable(childUidl);
-                if (getWidgetForPaintable().subWindows.contains(w)) {
-                    removedSubWindows.remove(w);
+                final VWindowPaintable w = (VWindowPaintable) client
+                        .getPaintable(childUidl);
+                VWindow windowWidget = w.getWidgetForPaintable();
+                if (getWidgetForPaintable().subWindows.contains(windowWidget)) {
+                    removedSubWindows.remove(windowWidget);
                 } else {
-                    getWidgetForPaintable().subWindows.add((VWindow) w);
+                    getWidgetForPaintable().subWindows.add(windowWidget);
                 }
                 w.updateFromUIDL(childUidl, client);
             }

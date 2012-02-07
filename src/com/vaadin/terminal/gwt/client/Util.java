@@ -1221,4 +1221,18 @@ public class Util {
           cur = cur.parentNode;
         }
      }-*/;
+
+    /**
+     * Checks if the given event is either a touch event or caused by the left
+     * mouse button
+     * 
+     * @param event
+     * @return true if the event is a touch event or caused by the left mouse
+     *         button, false otherwise
+     */
+    public static boolean isTouchEventOrLeftMouseButton(Event event) {
+        int eventType = event.getTypeInt();
+        boolean touchEvent = Util.isTouchEvent(event);
+        return touchEvent || event.getButton() == Event.BUTTON_LEFT;
+    }
 }

@@ -294,10 +294,6 @@ public class VCssLayout extends SimplePanel implements Container {
         return cssProperty;
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
     /**
      * Sets CSS classes for margin and spacing based on the given parameters.
      * 

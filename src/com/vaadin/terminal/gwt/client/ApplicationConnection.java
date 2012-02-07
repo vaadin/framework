@@ -45,11 +45,9 @@ import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.ui.Field;
-import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
-import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VViewPaintable;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
@@ -177,7 +175,8 @@ public class ApplicationConnection {
     private Set<VPaintableWidget> zeroHeightComponents = null;
 
     public ApplicationConnection() {
-        view = GWT.create(VView.class);
+        view = GWT.create(VViewPaintable.class);
+        view.setConnection(this);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
@@ -2079,10 +2078,9 @@ public class ApplicationConnection {
         if (!paintableMap.hasPaintable(pid)) {
             // Create and register a new paintable if no old was found
             VPaintableWidget p = widgetSet.createWidget(uidl, configuration);
-            if (p instanceof VAbstractPaintableWidget) {
-                ((VAbstractPaintableWidget) p).setConnection(this);
-                ((VAbstractPaintableWidget) p).init();
-            }
+            p.setConnection(this);
+            p.setId(pid);
+            p.init();
             paintableMap.registerPaintable(pid, p);
         }
         return (VPaintableWidget) paintableMap.getPaintable(pid);

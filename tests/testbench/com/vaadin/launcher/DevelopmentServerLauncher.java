@@ -64,7 +64,7 @@ public class DevelopmentServerLauncher {
         try {
             url = runServer(serverArgs, "Development Server Mode");
             // Start Browser
-            if (!serverArgs.containsKey("nogui") && url != null) {
+            if (serverArgs.containsKey("gui") && url != null) {
                 System.out.println("Starting Web Browser.");
 
                 // Open browser into application URL

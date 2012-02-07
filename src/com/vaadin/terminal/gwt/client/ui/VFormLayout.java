@@ -526,8 +526,4 @@ public class VFormLayout extends SimplePanel implements Container {
         }
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }

@@ -309,8 +309,4 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
         return Util.getPaintableForElement(client, this, element);
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
-
 }

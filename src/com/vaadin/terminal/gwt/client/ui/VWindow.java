@@ -643,7 +643,7 @@ public class VWindow extends VOverlay implements Container,
     }
 
     private void onResizeEvent(Event event) {
-        if (resizable) {
+        if (resizable && Util.isTouchEventOrLeftMouseButton(event)) {
             switch (event.getTypeInt()) {
             case Event.ONMOUSEDOWN:
             case Event.ONTOUCHSTART:
@@ -860,6 +860,10 @@ public class VWindow extends VOverlay implements Container,
     }
 
     private void onDragEvent(Event event) {
+        if (!Util.isTouchEventOrLeftMouseButton(event)) {
+            return;
+        }
+
         switch (DOM.eventGetType(event)) {
         case Event.ONTOUCHSTART:
             if (event.getTouches().length() > 1) {
@@ -971,7 +975,7 @@ public class VWindow extends VOverlay implements Container,
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
-        if (child == layout) {
+        if (child == layout.getWidgetForPaintable()) {
             return renderSpace;
         } else {
             // Exception ??
@@ -980,7 +984,7 @@ public class VWindow extends VOverlay implements Container,
     }
 
     public boolean hasChildComponent(Widget component) {
-        if (component == layout) {
+        if (component == layout.getWidgetForPaintable()) {
             return true;
         } else {
             return false;
@@ -1038,10 +1042,6 @@ public class VWindow extends VOverlay implements Container,
 
     public void focus() {
         contentPanel.focus();
-    }
-
-    public Widget getWidgetForPaintable() {
-        return this;
     }
 
 }
