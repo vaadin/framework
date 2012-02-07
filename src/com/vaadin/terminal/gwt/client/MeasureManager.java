@@ -77,8 +77,6 @@ public class MeasureManager {
         }
     }
 
-    private static MeasureManager instance = new MeasureManager();
-
     public void doLayout(ApplicationConnection client) {
         VPaintableMap paintableMap = client.getPaintableMap();
         VPaintableWidget[] paintableWidgets = paintableMap
@@ -219,13 +217,5 @@ public class MeasureManager {
         }
 
         return changed;
-    }
-
-    private MeasureManager() {
-        // Singleton constructor
-    }
-
-    public static MeasureManager get() {
-        return instance;
     }
 }

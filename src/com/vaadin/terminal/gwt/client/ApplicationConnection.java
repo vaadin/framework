@@ -169,6 +169,8 @@ public class ApplicationConnection {
 
     private Set<VPaintableWidget> zeroHeightComponents = null;
 
+    private final MeasureManager measureManager = new MeasureManager();
+
     public ApplicationConnection() {
         view = GWT.create(VViewPaintable.class);
         view.setConnection(this);
@@ -2238,7 +2240,7 @@ public class ApplicationConnection {
         public void execute() {
             layoutScheduled = false;
 
-            MeasureManager.get().doLayout(ApplicationConnection.this);
+            measureManager.doLayout(ApplicationConnection.this);
         }
     };
 
