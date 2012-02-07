@@ -13,7 +13,7 @@
 	<fail unless="test.integration.antfile" message="test.integration.antfile must be set for integration tests to run" />
 
 	<!-- Test with these browsers -->
-	<property name="test_browsers" value="winxp-firefox9" />
+	<property name="test_browsers" value="winxp-firefox10" />
 
 	<!-- Path to key file. Default value -->
 	<property name="sshkey.file" value="id_dsa" />
@@ -131,6 +131,7 @@
 
 	<target name="integration-test-jetty8">
 		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="300" />
 			<param name="target-server" value="jetty8" />
 		</antcall>
 	</target>
@@ -258,6 +259,7 @@
 			<param name="target-server" value="weblogic12" />
 		</antcall>
 	</target>
+
 
 	<target name="integration-test-weblogicPortal">
 		<fileset dir="integration-testscripts" id="html-test-files" includes="weblogic-portal/integration-test-WebLogic-Portal-10.3.2-portlet2.html" />

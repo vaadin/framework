@@ -38,7 +38,7 @@ public class CustomDDImplementation extends CustomComponent {
      * Check the @ClientWidget
      * 
      */
-    @ClientWidget(VMyDropTarget.class)
+    @ClientWidget(VMyDropTargetPaintable.class)
     class MyDropTarget extends AbstractComponent implements DropTarget {
         public DropHandler getDropHandler() {
             return new DropHandler() {
@@ -76,7 +76,7 @@ public class CustomDDImplementation extends CustomComponent {
      * operations that are controlled via server side api.
      * 
      */
-    @ClientWidget(VMyDragSource.class)
+    @ClientWidget(VMyDragSourcePaintable.class)
     public class MyDragSource extends AbstractComponent implements Component {
 
     }

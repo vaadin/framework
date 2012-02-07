@@ -223,29 +223,6 @@ public class VTreeTable extends VScrollTable {
                 }
             }
 
-            @Override
-            public RenderSpace getAllocatedSpace(Widget child) {
-                if (widgetInHierarchyColumn == child) {
-                    final int hierarchyAndIconWidth = getHierarchyAndIconWidth();
-                    final RenderSpace allocatedSpace = super
-                            .getAllocatedSpace(child);
-                    return new RenderSpace() {
-                        @Override
-                        public int getWidth() {
-                            return allocatedSpace.getWidth()
-                                    - hierarchyAndIconWidth;
-                        }
-
-                        @Override
-                        public int getHeight() {
-                            return allocatedSpace.getHeight();
-                        }
-
-                    };
-                }
-                return super.getAllocatedSpace(child);
-            }
-
             private int getHierarchyAndIconWidth() {
                 int consumedSpace = treeSpacer.getOffsetWidth();
                 if (treeSpacer.getParentElement().getChildCount() > 2) {
@@ -824,4 +801,27 @@ public class VTreeTable extends VScrollTable {
         int newTotalRows = uidl.getIntAttribute("totalrows");
         setTotalRows(newTotalRows);
     }
+
+    @Override
+    public RenderSpace getAllocatedSpace(Widget child) {
+        VTreeTableRow row = (VTreeTableRow) child.getParent();
+        if (row.widgetInHierarchyColumn == child) {
+            final int hierarchyAndIconWidth = row.getHierarchyAndIconWidth();
+            final RenderSpace allocatedSpace = super.getAllocatedSpace(child);
+            return new RenderSpace() {
+                @Override
+                public int getWidth() {
+                    return allocatedSpace.getWidth() - hierarchyAndIconWidth;
+                }
+
+                @Override
+                public int getHeight() {
+                    return allocatedSpace.getHeight();
+                }
+
+            };
+        }
+        return super.getAllocatedSpace(child);
+    }
+
 }

@@ -11,44 +11,41 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VLink extends HTML implements VPaintableWidget, ClickHandler {
+public class VLink extends HTML implements ClickHandler {
 
     public static final String CLASSNAME = "v-link";
 
-    private static final int BORDER_STYLE_DEFAULT = 0;
-    private static final int BORDER_STYLE_MINIMAL = 1;
-    private static final int BORDER_STYLE_NONE = 2;
+    protected static final int BORDER_STYLE_DEFAULT = 0;
+    protected static final int BORDER_STYLE_MINIMAL = 1;
+    protected static final int BORDER_STYLE_NONE = 2;
 
-    private String src;
+    protected String src;
 
-    private String target;
+    protected String target;
 
-    private int borderStyle = BORDER_STYLE_DEFAULT;
+    protected int borderStyle = BORDER_STYLE_DEFAULT;
 
-    private boolean enabled;
+    protected boolean enabled;
 
-    private boolean readonly;
+    protected boolean readonly;
 
-    private int targetWidth;
+    protected int targetWidth;
 
-    private int targetHeight;
+    protected int targetHeight;
 
-    private Element errorIndicatorElement;
+    protected Element errorIndicatorElement;
 
-    private final Element anchor = DOM.createAnchor();
+    protected final Element anchor = DOM.createAnchor();
 
-    private final Element captionElement = DOM.createSpan();
+    protected final Element captionElement = DOM.createSpan();
 
-    private Icon icon;
+    protected Icon icon;
 
-    private ApplicationConnection client;
+    protected ApplicationConnection client;
 
     public VLink() {
         super();
@@ -57,68 +54,6 @@ public class VLink extends HTML implements VPaintableWidget, ClickHandler {
         addClickHandler(this);
         sinkEvents(VTooltip.TOOLTIP_EVENTS);
         setStyleName(CLASSNAME);
-    }
-
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-
-        // Ensure correct implementation,
-        // but don't let container manage caption etc.
-        if (client.updateComponent(this, uidl, false)) {
-            return;
-        }
-
-        this.client = client;
-
-        enabled = uidl.hasAttribute("disabled") ? false : true;
-        readonly = uidl.hasAttribute("readonly") ? true : false;
-
-        if (uidl.hasAttribute("name")) {
-            target = uidl.getStringAttribute("name");
-            anchor.setAttribute("target", target);
-        }
-        if (uidl.hasAttribute("src")) {
-            src = client.translateVaadinUri(uidl.getStringAttribute("src"));
-            anchor.setAttribute("href", src);
-        }
-
-        if (uidl.hasAttribute("border")) {
-            if ("none".equals(uidl.getStringAttribute("border"))) {
-                borderStyle = BORDER_STYLE_NONE;
-            } else {
-                borderStyle = BORDER_STYLE_MINIMAL;
-            }
-        } else {
-            borderStyle = BORDER_STYLE_DEFAULT;
-        }
-
-        targetHeight = uidl.hasAttribute("targetHeight") ? uidl
-                .getIntAttribute("targetHeight") : -1;
-        targetWidth = uidl.hasAttribute("targetWidth") ? uidl
-                .getIntAttribute("targetWidth") : -1;
-
-        // Set link caption
-        captionElement.setInnerText(uidl.getStringAttribute("caption"));
-
-        // handle error
-        if (uidl.hasAttribute("error")) {
-            if (errorIndicatorElement == null) {
-                errorIndicatorElement = DOM.createDiv();
-                DOM.setElementProperty(errorIndicatorElement, "className",
-                        "v-errorindicator");
-            }
-            DOM.insertChild(getElement(), errorIndicatorElement, 0);
-        } else if (errorIndicatorElement != null) {
-            DOM.setStyleAttribute(errorIndicatorElement, "display", "none");
-        }
-
-        if (uidl.hasAttribute("icon")) {
-            if (icon == null) {
-                icon = new Icon(client);
-                anchor.insertBefore(icon.getElement(), captionElement);
-            }
-            icon.setUri(uidl.getStringAttribute("icon"));
-        }
-
     }
 
     public void onClick(ClickEvent event) {
@@ -168,7 +103,7 @@ public class VLink extends HTML implements VPaintableWidget, ClickHandler {
             Util.notifyParentOfSizeChange(this, true);
         }
         if (client != null) {
-            client.handleTooltipEvent(event, this);
+            client.handleWidgetTooltipEvent(event, this);
         }
         if (target == captionElement || target == anchor
                 || (icon != null && target == icon.getElement())) {
@@ -178,10 +113,6 @@ public class VLink extends HTML implements VPaintableWidget, ClickHandler {
             event.preventDefault();
         }
 
-    }
-
-    public Widget getWidgetForPaintable() {
-        return this;
     }
 
 }

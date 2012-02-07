@@ -3,6 +3,7 @@
  */
 package com.vaadin.terminal.gwt.client.ui.layout;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,7 +18,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
@@ -28,7 +28,7 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
 
     protected ApplicationConnection client = null;
 
-    protected DivElement root;
+    public DivElement root;
 
     public static final int ORIENTATION_VERTICAL = 0;
     public static final int ORIENTATION_HORIZONTAL = 1;
@@ -40,15 +40,15 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
     protected final Spacing spacingFromCSS = new Spacing(12, 12);
     protected final Spacing activeSpacing = new Spacing(0, 0);
 
-    private boolean dynamicWidth;
+    boolean dynamicWidth;
 
-    private boolean dynamicHeight;
+    boolean dynamicHeight;
 
     private final DivElement clearElement = Document.get().createDivElement();
 
     private String lastStyleName = "";
 
-    private boolean marginsNeedsRecalculation = false;
+    boolean marginsNeedsRecalculation = false;
 
     protected String STYLENAME_SPACING = "";
     protected String STYLENAME_MARGIN_TOP = "";
@@ -105,32 +105,6 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         return widgetToComponentContainer.containsKey(component);
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        this.client = client;
-
-        // Only non-cached UIDL:s can introduce changes
-        if (uidl.getBooleanAttribute("cached")) {
-            return;
-        }
-
-        /**
-         * Margin and spacind detection depends on classNames and must be set
-         * before setting size. Here just update the details from UIDL and from
-         * overridden setStyleName run actual margin detections.
-         */
-        updateMarginAndSpacingInfo(uidl);
-
-        /*
-         * This call should be made first. Ensure correct implementation, handle
-         * size etc.
-         */
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-
-        handleDynamicDimensions(uidl);
-    }
-
     @Override
     public void setStyleName(String styleName) {
         super.setStyleName(styleName);
@@ -159,27 +133,6 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         }
     }
 
-    private void handleDynamicDimensions(UIDL uidl) {
-        String w = uidl.hasAttribute("width") ? uidl
-                .getStringAttribute("width") : "";
-
-        String h = uidl.hasAttribute("height") ? uidl
-                .getStringAttribute("height") : "";
-
-        if (w.equals("")) {
-            dynamicWidth = true;
-        } else {
-            dynamicWidth = false;
-        }
-
-        if (h.equals("")) {
-            dynamicHeight = true;
-        } else {
-            dynamicHeight = false;
-        }
-
-    }
-
     @Override
     public void setHeight(String height) {
         super.setHeight(height);
@@ -195,7 +148,7 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         }
     }
 
-    protected void addOrMoveChild(ChildComponentContainer childComponent,
+    public void addOrMoveChild(ChildComponentContainer childComponent,
             int position) {
         if (childComponent.getParent() == this) {
             if (getWidgetIndex(childComponent) != position) {
@@ -235,31 +188,20 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
 
     }
 
-    protected ChildComponentContainer getComponentContainer(Widget child) {
+    public Collection<ChildComponentContainer> getComponentContainers() {
+        return widgetToComponentContainer.values();
+    }
+
+    public ChildComponentContainer getComponentContainer(Widget child) {
         return widgetToComponentContainer.get(child);
     }
 
-    protected boolean isDynamicWidth() {
+    public boolean isDynamicWidth() {
         return dynamicWidth;
     }
 
-    protected boolean isDynamicHeight() {
+    public boolean isDynamicHeight() {
         return dynamicHeight;
-    }
-
-    private void updateMarginAndSpacingInfo(UIDL uidl) {
-        if (!uidl.hasAttribute("invisible")) {
-            int bitMask = uidl.getIntAttribute("margins");
-            if (activeMarginsInfo.getBitMask() != bitMask) {
-                activeMarginsInfo = new VMarginInfo(bitMask);
-                marginsNeedsRecalculation = true;
-            }
-            boolean spacing = uidl.getBooleanAttribute("spacing");
-            if (spacing != spacingEnabled) {
-                marginsNeedsRecalculation = true;
-                spacingEnabled = spacing;
-            }
-        }
     }
 
     private static DivElement measurement;
@@ -342,7 +284,7 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         return (ChildComponentContainer) getChildren().get(0);
     }
 
-    protected void removeChildrenAfter(int pos) {
+    public void removeChildrenAfter(int pos) {
         // Remove all children after position "pos" but leave the clear element
         // in place
 

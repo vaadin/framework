@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 
 import com.vaadin.terminal.Sizeable.Unit;
 import com.vaadin.ui.AbstractOrderedLayout;
+import com.vaadin.ui.AbstractSplitPanel;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
@@ -26,7 +27,6 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.GridLayout.Area;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -449,7 +449,7 @@ public class ComponentSizeValidator implements Serializable {
                 }
             }
 
-            if (parent instanceof Panel || parent instanceof SplitPanel
+            if (parent instanceof Panel || parent instanceof AbstractSplitPanel
                     || parent instanceof TabSheet
                     || parent instanceof CustomComponent) {
                 // height undefined, we know how how component works and no
@@ -552,7 +552,7 @@ public class ComponentSizeValidator implements Serializable {
                  * the component width
                  */
                 return hasNonRelativeWidthComponent((Form) parent);
-            } else if (parent instanceof SplitPanel
+            } else if (parent instanceof AbstractSplitPanel
                     || parent instanceof TabSheet
                     || parent instanceof CustomComponent) {
                 // FIXME Could we use com.vaadin package name here and

@@ -38,13 +38,13 @@ public class VFormLayout extends SimplePanel implements Container {
 
     private final static String CLASSNAME = "v-formlayout";
 
-    private ApplicationConnection client;
-    private VFormLayoutTable table;
+    ApplicationConnection client;
+    VFormLayoutTable table;
 
     private String width = "";
     private String height = "";
 
-    private boolean rendering = false;
+    boolean rendering = false;
 
     public VFormLayout() {
         super();
@@ -279,21 +279,6 @@ public class VFormLayout extends SimplePanel implements Container {
         }
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        rendering = true;
-
-        this.client = client;
-
-        if (client.updateComponent(this, uidl, true)) {
-            rendering = false;
-            return;
-        }
-
-        table.updateFromUIDL(uidl, client);
-
-        rendering = false;
-    }
-
     public boolean isDynamicWidth() {
         return width.equals("");
     }
@@ -304,10 +289,6 @@ public class VFormLayout extends SimplePanel implements Container {
 
     public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
         table.replaceChildComponent(oldComponent, newComponent);
-    }
-
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
-        table.updateCaption(component, uidl);
     }
 
     public class Caption extends HTML {
@@ -543,10 +524,6 @@ public class VFormLayout extends SimplePanel implements Container {
                         this);
             }
         }
-    }
-
-    public Widget getWidgetForPaintable() {
-        return this;
     }
 
 }

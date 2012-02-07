@@ -4,10 +4,8 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArrayString;
@@ -28,7 +26,6 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VPaintable;
@@ -97,7 +94,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         super.onBrowserEvent(event);
 
         if (client != null) {
-            client.handleTooltipEvent(event, this);
+            client.handleWidgetTooltipEvent(event, this);
         }
     }
 
@@ -111,7 +108,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     private boolean startDrag(NativeEvent event) {
         if (dragStartMode == WRAPPER || dragStartMode == COMPONENT) {
             VTransferable transferable = new VTransferable();
-            transferable.setDragSource(VDragAndDropWrapper.this);
+            transferable.setDragSource(VPaintableMap.get(client).getPaintable(
+                    VDragAndDropWrapper.this));
 
             VPaintableWidget paintable = Util.findPaintable(client,
                     (Element) event.getEventTarget().cast());
@@ -140,57 +138,14 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
     protected int dragStartMode;
 
-    private ApplicationConnection client;
-    private VAbstractDropHandler dropHandler;
+    ApplicationConnection client;
+    VAbstractDropHandler dropHandler;
     private VDragEvent vaadinDragEvent;
 
-    private int filecounter = 0;
-    private Map<String, String> fileIdToReceiver;
-    private ValueMap html5DataFlavors;
+    int filecounter = 0;
+    Map<String, String> fileIdToReceiver;
+    ValueMap html5DataFlavors;
     private Element dragStartElement;
-
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        this.client = client;
-        super.updateFromUIDL(uidl, client);
-        if (!uidl.hasAttribute("cached") && !uidl.hasAttribute("hidden")) {
-            UIDL acceptCrit = uidl.getChildByTagName("-ac");
-            if (acceptCrit == null) {
-                dropHandler = null;
-            } else {
-                if (dropHandler == null) {
-                    dropHandler = new CustomDropHandler();
-                }
-                dropHandler.updateAcceptRules(acceptCrit);
-            }
-
-            Set<String> variableNames = uidl.getVariableNames();
-            for (String fileId : variableNames) {
-                if (fileId.startsWith("rec-")) {
-                    String receiverUrl = uidl.getStringVariable(fileId);
-                    fileId = fileId.substring(4);
-                    if (fileIdToReceiver == null) {
-                        fileIdToReceiver = new HashMap<String, String>();
-                    }
-                    if ("".equals(receiverUrl)) {
-                        Integer id = Integer.parseInt(fileId);
-                        int indexOf = fileIds.indexOf(id);
-                        if (indexOf != -1) {
-                            files.remove(indexOf);
-                            fileIds.remove(indexOf);
-                        }
-                    } else {
-                        fileIdToReceiver.put(fileId, receiverUrl);
-                    }
-                }
-            }
-            startNextUpload();
-
-            dragStartMode = uidl.getIntAttribute(DRAG_START_MODE);
-            initDragStartMode();
-            html5DataFlavors = uidl.getMapAttribute(HTML5_DATA_FLAVORS);
-        }
-    }
 
     protected void initDragStartMode() {
         Element div = getElement();
@@ -231,7 +186,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     };
     private Timer dragleavetimer;
 
-    private void startNextUpload() {
+    void startNextUpload() {
         Scheduler.get().scheduleDeferred(new Command() {
 
             public void execute() {
@@ -287,7 +242,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             }
             if (VDragAndDropManager.get().getCurrentDropHandler() != getDropHandler()) {
                 VTransferable transferable = new VTransferable();
-                transferable.setDragSource(this);
+                transferable.setDragSource(VPaintableMap.get(client)
+                        .getPaintable(this));
 
                 vaadinDragEvent = VDragAndDropManager.get().startDrag(
                         transferable, event, false);
@@ -455,8 +411,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
      * @param fileId
      * @param data
      */
-    private List<Integer> fileIds = new ArrayList<Integer>();
-    private List<VHtml5File> files = new ArrayList<VHtml5File>();
+    List<Integer> fileIds = new ArrayList<Integer>();
+    List<VHtml5File> files = new ArrayList<VHtml5File>();
 
     private void queueFilePost(final int fileId, final VHtml5File file) {
         fileIds.add(fileId);
@@ -544,7 +500,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         @Override
         public VPaintableWidget getPaintable() {
-            return VDragAndDropWrapper.this;
+            return VPaintableMap.get(client).getPaintable(
+                    VDragAndDropWrapper.this);
         }
 
         public ApplicationConnection getApplicationConnection() {

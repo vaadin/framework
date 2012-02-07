@@ -6,13 +6,9 @@ package com.vaadin.terminal.gwt.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
-import com.vaadin.terminal.gwt.client.ui.VListSelect;
-import com.vaadin.terminal.gwt.client.ui.VSplitPanelHorizontal;
-import com.vaadin.terminal.gwt.client.ui.VSplitPanelVertical;
-import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
-import com.vaadin.terminal.gwt.client.ui.VView;
-import com.vaadin.terminal.gwt.client.ui.VWindow;
+import com.vaadin.terminal.gwt.client.ui.VFilterSelectPaintable;
+import com.vaadin.terminal.gwt.client.ui.VListSelectPaintable;
+import com.vaadin.terminal.gwt.client.ui.VUnknownComponentPaintable;
 
 public class WidgetSet {
 
@@ -25,7 +21,8 @@ public class WidgetSet {
 
     /**
      * Create an uninitialized component that best matches given UIDL. The
-     * component must be a {@link Widget} that implements {@link VPaintableWidget}.
+     * component must be a {@link Widget} that implements
+     * {@link VPaintableWidget}.
      * 
      * @param uidl
      *            UIDL to be painted with returned component.
@@ -35,7 +32,8 @@ public class WidgetSet {
      * @return New uninitialized and unregistered component that can paint given
      *         UIDL.
      */
-    public VPaintableWidget createWidget(UIDL uidl, ApplicationConfiguration conf) {
+    public VPaintableWidget createWidget(UIDL uidl,
+            ApplicationConfiguration conf) {
         /*
          * Yes, this (including the generated code in WidgetMap) may look very
          * odd code, but due the nature of GWT, we cannot do this any cleaner.
@@ -46,16 +44,15 @@ public class WidgetSet {
          * TODO should try to get rid of these exceptions here
          */
 
-        final Class<? extends VPaintableWidget> classType = resolveWidgetType(uidl,
-                conf);
-        if (classType == null || classType == VUnknownComponent.class) {
+        final Class<? extends VPaintableWidget> classType = resolveWidgetType(
+                uidl, conf);
+        if (classType == null || classType == VUnknownComponentPaintable.class) {
             String serverSideName = conf
                     .getUnknownServerClassNameByEncodedTagName(uidl.getTag());
-            VUnknownComponent c = GWT.create(VUnknownComponent.class);
+            VUnknownComponentPaintable c = GWT
+                    .create(VUnknownComponentPaintable.class);
             c.setServerSideClassName(serverSideName);
             return c;
-        } else if (VWindow.class == classType) {
-            return GWT.create(VWindow.class);
         } else {
             /*
              * let the auto generated code instantiate this type
@@ -74,20 +71,14 @@ public class WidgetSet {
 
         // add our historical quirks
 
-        if (widgetClass == VView.class && uidl.hasAttribute("sub")) {
-            return VWindow.class;
-        } else if (widgetClass == VFilterSelect.class) {
+        if (widgetClass == VFilterSelectPaintable.class) {
             if (uidl.hasAttribute("type")) {
                 final String type = uidl.getStringAttribute("type").intern();
                 if ("legacy-multi" == type) {
-                    return VListSelect.class;
+                    return VListSelectPaintable.class;
                 }
             }
-        } else if (widgetClass == VSplitPanelHorizontal.class
-                && uidl.hasAttribute("vertical")) {
-            return VSplitPanelVertical.class;
         }
-
         return widgetClass;
 
     }
@@ -119,7 +110,7 @@ public class WidgetSet {
     public Class<? extends VPaintableWidget> getImplementationByClassName(
             String fullyqualifiedName) {
         if (fullyqualifiedName == null) {
-            return VUnknownComponent.class;
+            return VUnknownComponentPaintable.class;
         }
         Class<? extends VPaintableWidget> implementationByServerSideClassName = widgetMap
                 .getImplementationByServerSideClassName(fullyqualifiedName);
@@ -131,9 +122,7 @@ public class WidgetSet {
          * *actually* be VListSelect, when the annotation says VFilterSelect
          */
         if (fullyqualifiedName.equals("com.vaadin.ui.Select")) {
-            loadImplementation(VListSelect.class);
-        } else if (fullyqualifiedName.equals("com.vaadin.ui.SplitPanel")) {
-            loadImplementation(VSplitPanelVertical.class);
+            loadImplementation(VListSelectPaintable.class);
         }
 
         return implementationByServerSideClassName;

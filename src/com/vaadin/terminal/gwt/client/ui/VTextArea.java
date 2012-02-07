@@ -9,8 +9,6 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.UIDL;
 
 /**
  * This class represents a multiline textfield (textarea).
@@ -27,20 +25,6 @@ public class VTextArea extends VTextField {
     public VTextArea() {
         super(DOM.createTextArea());
         setStyleName(CLASSNAME);
-    }
-
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // Call parent renderer explicitly
-        super.updateFromUIDL(uidl, client);
-
-        if (uidl.hasAttribute("rows")) {
-            setRows(uidl.getIntAttribute("rows"));
-        }
-
-        if (getMaxLength() >= 0) {
-            sinkEvents(Event.ONKEYUP);
-        }
     }
 
     public void setRows(int rows) {

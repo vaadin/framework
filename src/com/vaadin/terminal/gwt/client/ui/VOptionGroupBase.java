@@ -19,35 +19,34 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Focusable;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-abstract class VOptionGroupBase extends Composite implements VPaintableWidget,
-        Field, ClickHandler, ChangeHandler, KeyPressHandler, Focusable {
+abstract class VOptionGroupBase extends Composite implements Field,
+        ClickHandler, ChangeHandler, KeyPressHandler, Focusable {
 
     public static final String CLASSNAME_OPTION = "v-select-option";
 
     protected ApplicationConnection client;
 
-    protected String id;
+    protected String paintableId;
 
     protected Set<String> selectedKeys;
 
-    private boolean immediate;
+    protected boolean immediate;
 
-    private boolean multiselect;
+    protected boolean multiselect;
 
-    private boolean disabled;
+    protected boolean disabled;
 
-    private boolean readonly;
+    protected boolean readonly;
 
-    private int cols = 0;
+    protected int cols = 0;
 
-    private int rows = 0;
+    protected int rows = 0;
 
-    private boolean nullSelectionAllowed = true;
+    protected boolean nullSelectionAllowed = true;
 
-    private boolean nullSelectionItemAvailable = false;
+    protected boolean nullSelectionItemAvailable = false;
 
     /**
      * Widget holding the different options (e.g. ListBox or Panel for radio
@@ -58,11 +57,11 @@ abstract class VOptionGroupBase extends Composite implements VPaintableWidget,
     /**
      * Panel containing the component
      */
-    private final Panel container;
+    protected final Panel container;
 
-    private VTextField newItemField;
+    protected VTextField newItemField;
 
-    private VNativeButton newItemButton;
+    protected VNativeButton newItemButton;
 
     public VOptionGroupBase(String classname) {
         container = new FlowPanel();
@@ -122,84 +121,23 @@ abstract class VOptionGroupBase extends Composite implements VPaintableWidget,
         return rows;
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        this.client = client;
-        id = uidl.getId();
-
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-
-        selectedKeys = uidl.getStringArrayVariableAsSet("selected");
-
-        readonly = uidl.getBooleanAttribute("readonly");
-        disabled = uidl.getBooleanAttribute("disabled");
-        multiselect = "multi".equals(uidl.getStringAttribute("selectmode"));
-        immediate = uidl.getBooleanAttribute("immediate");
-        nullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
-        nullSelectionItemAvailable = uidl.getBooleanAttribute("nullselectitem");
-
-        if (uidl.hasAttribute("cols")) {
-            cols = uidl.getIntAttribute("cols");
-        }
-        if (uidl.hasAttribute("rows")) {
-            rows = uidl.getIntAttribute("rows");
-        }
-
-        final UIDL ops = uidl.getChildUIDL(0);
-
-        if (getColumns() > 0) {
-            container.setWidth(getColumns() + "em");
-            if (container != optionsContainer) {
-                optionsContainer.setWidth("100%");
-            }
-        }
-
-        buildOptions(ops);
-
-        if (uidl.getBooleanAttribute("allownewitem")) {
-            if (newItemField == null) {
-                newItemButton = new VNativeButton();
-                newItemButton.setText("+");
-                newItemButton.addClickHandler(this);
-                newItemField = new VTextField();
-                newItemField.addKeyPressHandler(this);
-            }
-            newItemField.setEnabled(!disabled && !readonly);
-            newItemButton.setEnabled(!disabled && !readonly);
-
-            if (newItemField == null || newItemField.getParent() != container) {
-                container.add(newItemField);
-                container.add(newItemButton);
-                final int w = container.getOffsetWidth()
-                        - newItemButton.getOffsetWidth();
-                newItemField.setWidth(Math.max(w, 0) + "px");
-            }
-        } else if (newItemField != null) {
-            container.remove(newItemField);
-            container.remove(newItemButton);
-        }
-
-        setTabIndex(uidl.hasAttribute("tabindex") ? uidl
-                .getIntAttribute("tabindex") : 0);
-
-    }
-
     abstract protected void setTabIndex(int tabIndex);
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == newItemButton
                 && !newItemField.getText().equals("")) {
-            client.updateVariable(id, "newitem", newItemField.getText(), true);
+            client.updateVariable(paintableId, "newitem",
+                    newItemField.getText(), true);
             newItemField.setText("");
         }
     }
 
     public void onChange(ChangeEvent event) {
         if (multiselect) {
-            client.updateVariable(id, "selected", getSelectedItems(), immediate);
+            client.updateVariable(paintableId, "selected", getSelectedItems(),
+                    immediate);
         } else {
-            client.updateVariable(id, "selected", new String[] { ""
+            client.updateVariable(paintableId, "selected", new String[] { ""
                     + getSelectedItem() }, immediate);
         }
     }

@@ -23,7 +23,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.gwt.client.ui.VView;
-import com.vaadin.terminal.gwt.client.ui.VWindow;
+import com.vaadin.terminal.gwt.client.ui.VWindowPaintable;
 
 /**
  * A component that represents an application (browser native) window or a sub
@@ -71,7 +71,7 @@ import com.vaadin.terminal.gwt.client.ui.VWindow;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VWindow.class)
+@ClientWidget(VWindowPaintable.class)
 public class Window extends Panel implements FocusNotifier, BlurNotifier {
 
     /**

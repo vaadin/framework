@@ -106,7 +106,7 @@ import com.vaadin.terminal.gwt.client.ui.label.VLabel;
  */
 public class VScrollTable extends FlowPanel implements HasWidgets,
         ScrollHandler, VHasDropHandler, FocusHandler, BlurHandler, Focusable,
-        ActionOwner {
+        ActionOwner, Container {
 
     public enum SelectMode {
         NONE(0), SINGLE(1), MULTI(2);
@@ -2150,7 +2150,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             DOM.appendChild(td, captionContainer);
 
-            DOM.sinkEvents(td, Event.MOUSEEVENTS | Event.TOUCHEVENTS);
+            DOM.sinkEvents(td, Event.MOUSEEVENTS | Event.ONDBLCLICK
+                    | Event.ONCONTEXTMENU | Event.TOUCHEVENTS);
 
             setElement(td);
 
@@ -2267,8 +2268,18 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         scrollBodyPanel.setFocus(true);
                     }
                     handleCaptionEvent(event);
-                    event.stopPropagation();
-                    event.preventDefault();
+                    boolean stopPropagation = true;
+                    if (event.getTypeInt() == Event.ONCONTEXTMENU
+                            && !client.hasWidgetEventListeners(
+                                    VScrollTable.this, HEADER_CLICK_EVENT_ID)) {
+                        // Prevent showing the browser's context menu only when
+                        // there is a header click listener.
+                        stopPropagation = false;
+                    }
+                    if (stopPropagation) {
+                        event.stopPropagation();
+                        event.preventDefault();
+                    }
                 }
             }
         }
@@ -2325,7 +2336,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             switch (DOM.eventGetType(event)) {
             case Event.ONTOUCHSTART:
             case Event.ONMOUSEDOWN:
-                if (columnReordering) {
+                if (columnReordering
+                        && Util.isTouchEventOrLeftMouseButton(event)) {
                     if (event.getTypeInt() == Event.ONTOUCHSTART) {
                         /*
                          * prevent using this event in e.g. scrolling
@@ -2344,7 +2356,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             case Event.ONMOUSEUP:
             case Event.ONTOUCHEND:
             case Event.ONTOUCHCANCEL:
-                if (columnReordering) {
+                if (columnReordering
+                        && Util.isTouchEventOrLeftMouseButton(event)) {
                     dragging = false;
                     DOM.releaseCapture(getElement());
                     if (moved) {
@@ -2371,7 +2384,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                 if (!moved) {
                     // mouse event was a click to header -> sort column
-                    if (sortable) {
+                    if (sortable && Util.isTouchEventOrLeftMouseButton(event)) {
                         if (sortColumn.equals(cid)) {
                             // just toggle order
                             client.updateVariable(paintableId, "sortascending",
@@ -2404,9 +2417,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     break;
                 }
                 break;
+            case Event.ONDBLCLICK:
+                fireHeaderClickedEvent(event);
+                break;
             case Event.ONTOUCHMOVE:
             case Event.ONMOUSEMOVE:
-                if (dragging) {
+                if (dragging && Util.isTouchEventOrLeftMouseButton(event)) {
                     if (event.getTypeInt() == Event.ONTOUCHMOVE) {
                         /*
                          * prevent using this event in e.g. scrolling
@@ -2452,6 +2468,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         private void onResizeEvent(Event event) {
             switch (DOM.eventGetType(event)) {
             case Event.ONMOUSEDOWN:
+                if (!Util.isTouchEventOrLeftMouseButton(event)) {
+                    return;
+                }
                 isResizing = true;
                 DOM.setCapture(getElement());
                 dragStartX = DOM.eventGetClientX(event);
@@ -2460,6 +2479,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 DOM.eventPreventDefault(event);
                 break;
             case Event.ONMOUSEUP:
+                if (!Util.isTouchEventOrLeftMouseButton(event)) {
+                    return;
+                }
                 isResizing = false;
                 DOM.releaseCapture(getElement());
                 tHead.disableAutoColumnWidthCalculation(this);
@@ -2474,6 +2496,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 fireColumnResizeEvent(cid, originalWidth, getColWidth(cid));
                 break;
             case Event.ONMOUSEMOVE:
+                if (!Util.isTouchEventOrLeftMouseButton(event)) {
+                    return;
+                }
                 if (isResizing) {
                     final int deltaX = DOM.eventGetClientX(event) - dragStartX;
                     if (deltaX == 0) {
@@ -3133,7 +3158,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             DOM.appendChild(td, captionContainer);
 
-            DOM.sinkEvents(td, Event.MOUSEEVENTS);
+            DOM.sinkEvents(td, Event.MOUSEEVENTS | Event.ONDBLCLICK
+                    | Event.ONCONTEXTMENU);
 
             setElement(td);
         }
@@ -3318,8 +3344,18 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
                     scrollBodyPanel.setFocus(true);
                 }
-                event.stopPropagation();
-                event.preventDefault();
+                boolean stopPropagation = true;
+                if (event.getTypeInt() == Event.ONCONTEXTMENU
+                        && !client.hasWidgetEventListeners(VScrollTable.this,
+                                FOOTER_CLICK_EVENT_ID)) {
+                    // Show browser context menu if a footer click listener is
+                    // not present
+                    stopPropagation = false;
+                }
+                if (stopPropagation) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                }
             }
         }
 
@@ -3330,7 +3366,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          *            The event to handle
          */
         protected void handleCaptionEvent(Event event) {
-            if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
+            if (event.getTypeInt() == Event.ONMOUSEUP
+                    || event.getTypeInt() == Event.ONDBLCLICK) {
                 fireFooterClickedEvent(event);
             }
         }
@@ -4310,8 +4347,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
         }
 
-        public class VScrollTableRow extends Panel implements ActionOwner,
-                Container {
+        public class VScrollTableRow extends Panel implements ActionOwner {
 
             private static final int TOUCHSCROLL_TIMEOUT = 70;
             private static final int DRAGMODE_MULTIROW = 2;
@@ -4540,6 +4576,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                                 .get(client).getPaintable(uidl.getId());
                         paintable.updateFromUIDL(uidl, client);
                     }
+                    pendingComponentPaints.clear();
                 }
             }
 
@@ -5267,29 +5304,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 return paintableId;
             }
 
-            public RenderSpace getAllocatedSpace(Widget child) {
-                int w = 0;
-                int i = getColIndexOf(child);
-                HeaderCell headerCell = tHead.getHeaderCell(i);
-                if (headerCell != null) {
-                    if (initializedAndAttached) {
-                        w = headerCell.getWidth();
-                    } else {
-                        // header offset width is not absolutely correct value,
-                        // but a best guess (expecting similar content in all
-                        // columns ->
-                        // if one component is relative width so are others)
-                        w = headerCell.getOffsetWidth() - getCellExtraWidth();
-                    }
-                }
-                return new RenderSpace(w, 0) {
-                    @Override
-                    public int getHeight() {
-                        return (int) getRowHeight();
-                    }
-                };
-            }
-
             private int getColIndexOf(Widget child) {
                 com.google.gwt.dom.client.Element widgetCell = child
                         .getElement().getParentElement().getParentElement();
@@ -5317,16 +5331,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 childWidgets.add(index, newComponent);
                 adopt(newComponent);
 
-            }
-
-            public boolean requestLayout(Set<Widget> children) {
-                // row size should never change and system wouldn't event
-                // survive as this is a kind of fake paitable
-                return true;
-            }
-
-            public void updateCaption(VPaintableWidget component, UIDL uidl) {
-                // NOP, not rendered
             }
 
             public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -6694,4 +6698,45 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         return this;
     }
 
+    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
+        VScrollTableRow row = (VScrollTableRow) oldComponent.getParent();
+        row.replaceChildComponent(oldComponent, newComponent);
+
+    }
+
+    public boolean hasChildComponent(Widget child) {
+        VScrollTableRow row = (VScrollTableRow) child.getParent();
+        return row.hasChildComponent(child);
+    }
+
+    public boolean requestLayout(Set<Widget> children) {
+        // row size should never change
+        return true;
+    }
+
+    public RenderSpace getAllocatedSpace(Widget child) {
+        // Called by widgets attached to a row
+        VScrollTableRow row = (VScrollTableRow) child.getParent();
+        int w = 0;
+        int i = row.getColIndexOf(child);
+        HeaderCell headerCell = tHead.getHeaderCell(i);
+        if (headerCell != null) {
+            if (initializedAndAttached) {
+                w = headerCell.getWidth();
+            } else {
+                // header offset width is not absolutely correct value,
+                // but a best guess (expecting similar content in all
+                // columns ->
+                // if one component is relative width so are others)
+                w = headerCell.getOffsetWidth()
+                        - scrollBody.getCellExtraWidth();
+            }
+        }
+        return new RenderSpace(w, 0) {
+            @Override
+            public int getHeight() {
+                return (int) scrollBody.getRowHeight();
+            }
+        };
+    }
 }

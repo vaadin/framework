@@ -17,7 +17,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -27,12 +26,10 @@ import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.ui.Field;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
-import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
 /**
@@ -41,9 +38,8 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHan
  * @author Vaadin Ltd.
  * 
  */
-public class VRichTextArea extends Composite implements VPaintableWidget, Field,
-        ChangeHandler, BlurHandler, KeyPressHandler, KeyDownHandler,
-        BeforeShortcutActionListener, Focusable {
+public class VRichTextArea extends Composite implements Field, ChangeHandler,
+        BlurHandler, KeyPressHandler, KeyDownHandler, Focusable {
 
     /**
      * The input node CSS classname.
@@ -54,13 +50,13 @@ public class VRichTextArea extends Composite implements VPaintableWidget, Field,
 
     protected ApplicationConnection client;
 
-    private boolean immediate = false;
+    boolean immediate = false;
 
-    private RichTextArea rta;
+    RichTextArea rta;
 
     private VRichTextToolbar formatter;
 
-    private HTML html = new HTML();
+    HTML html = new HTML();
 
     private final FlowPanel fp = new FlowPanel();
 
@@ -69,15 +65,15 @@ public class VRichTextArea extends Composite implements VPaintableWidget, Field,
     private int extraHorizontalPixels = -1;
     private int extraVerticalPixels = -1;
 
-    private int maxLength = -1;
+    int maxLength = -1;
 
     private int toolbarNaturalWidth = 500;
 
-    private HandlerRegistration keyPressHandler;
+    HandlerRegistration keyPressHandler;
 
     private ShortcutActionHandlerOwner hasShortcutActionHandler;
 
-    private String currentValue = "";
+    String currentValue = "";
 
     private boolean readOnly = false;
 
@@ -127,48 +123,7 @@ public class VRichTextArea extends Composite implements VPaintableWidget, Field,
         }
     }
 
-    public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
-        this.client = client;
-        id = uidl.getId();
-
-        if (uidl.hasVariable("text")) {
-            currentValue = uidl.getStringVariable("text");
-            if (rta.isAttached()) {
-                rta.setHTML(currentValue);
-            } else {
-                html.setHTML(currentValue);
-            }
-        }
-        if (!uidl.hasAttribute("cached")) {
-            setEnabled(!uidl.getBooleanAttribute("disabled"));
-        }
-
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-
-        setReadOnly(uidl.getBooleanAttribute("readonly"));
-        immediate = uidl.getBooleanAttribute("immediate");
-        int newMaxLength = uidl.hasAttribute("maxLength") ? uidl
-                .getIntAttribute("maxLength") : -1;
-        if (newMaxLength >= 0) {
-            if (maxLength == -1) {
-                keyPressHandler = rta.addKeyPressHandler(this);
-            }
-            maxLength = newMaxLength;
-        } else if (maxLength != -1) {
-            getElement().setAttribute("maxlength", "");
-            maxLength = -1;
-            keyPressHandler.removeHandler();
-        }
-
-        if (uidl.hasAttribute("selectAll")) {
-            selectAll();
-        }
-
-    }
-
-    private void selectAll() {
+    void selectAll() {
         /*
          * There is a timing issue if trying to select all immediately on first
          * render. Simple deferred command is not enough. Using Timer with
@@ -190,7 +145,7 @@ public class VRichTextArea extends Composite implements VPaintableWidget, Field,
         }.schedule(320);
     }
 
-    private void setReadOnly(boolean b) {
+    void setReadOnly(boolean b) {
         if (isReadOnly() != b) {
             swapEditableArea();
             readOnly = b;
@@ -346,7 +301,8 @@ public class VRichTextArea extends Composite implements VPaintableWidget, Field,
         if (shortcutHandler != null) {
             shortcutHandler
                     .handleKeyboardEvent(com.google.gwt.user.client.Event
-                            .as(event.getNativeEvent()), this);
+                            .as(event.getNativeEvent()),
+                            VPaintableMap.get(client).getPaintable(this));
         }
     }
 
@@ -362,10 +318,6 @@ public class VRichTextArea extends Composite implements VPaintableWidget, Field,
             hasShortcutActionHandler = (ShortcutActionHandlerOwner) parent;
         }
         return hasShortcutActionHandler;
-    }
-
-    public void onBeforeShortcutAction(Event e) {
-        synchronizeContentToServer();
     }
 
     public int getTabIndex() {
@@ -392,10 +344,6 @@ public class VRichTextArea extends Composite implements VPaintableWidget, Field,
 
     public void setTabIndex(int index) {
         rta.setTabIndex(index);
-    }
-
-    public Widget getWidgetForPaintable() {
-        return this;
     }
 
 }

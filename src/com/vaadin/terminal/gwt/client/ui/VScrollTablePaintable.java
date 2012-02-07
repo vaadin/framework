@@ -12,8 +12,9 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
-public class VScrollTablePaintable extends VAbstractPaintableWidget {
+public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer {
 
     /*
      * (non-Javadoc)
@@ -251,4 +252,9 @@ public class VScrollTablePaintable extends VAbstractPaintableWidget {
     public VScrollTable getWidgetForPaintable() {
         return (VScrollTable) super.getWidgetForPaintable();
     }
+
+    public void updateCaption(VPaintableWidget component, UIDL uidl) {
+        // NOP, not rendered
+    }
+
 }

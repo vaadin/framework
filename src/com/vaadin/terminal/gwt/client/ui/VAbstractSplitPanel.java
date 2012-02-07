@@ -6,9 +6,7 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Set;
 
-import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
-import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.dom.client.TouchCancelEvent;
 import com.google.gwt.event.dom.client.TouchCancelHandler;
 import com.google.gwt.event.dom.client.TouchEndEvent;
@@ -17,8 +15,6 @@ import com.google.gwt.event.dom.client.TouchMoveEvent;
 import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
-import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -30,60 +26,15 @@ import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
-public class VSplitPanel extends ComplexPanel implements Container,
+public class VAbstractSplitPanel extends ComplexPanel implements Container,
         ContainerResizedListener {
 
     private boolean enabled = false;
 
     public static final String CLASSNAME = "v-splitpanel";
-
-    public static final String SPLITTER_CLICK_EVENT_IDENTIFIER = "sp_click";
-
-    private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
-            SPLITTER_CLICK_EVENT_IDENTIFIER) {
-
-        @Override
-        protected <H extends EventHandler> HandlerRegistration registerHandler(
-                H handler, Type<H> type) {
-            if ((Event.getEventsSunk(splitter) & Event.getTypeInt(type
-                    .getName())) != 0) {
-                // If we are already sinking the event for the splitter we do
-                // not want to additionally sink it for the root element
-                return addHandler(handler, type);
-            } else {
-                return addDomHandler(handler, type);
-            }
-        }
-
-        @Override
-        public void onContextMenu(
-                com.google.gwt.event.dom.client.ContextMenuEvent event) {
-            Element target = event.getNativeEvent().getEventTarget().cast();
-            if (splitter.isOrHasChild(target)) {
-                super.onContextMenu(event);
-            }
-        };
-
-        @Override
-        protected void fireClick(NativeEvent event) {
-            Element target = event.getEventTarget().cast();
-            if (splitter.isOrHasChild(target)) {
-                super.fireClick(event);
-            }
-        }
-
-        @Override
-        protected Element getRelativeToElement() {
-            return null;
-        }
-
-    };
 
     public static final int ORIENTATION_HORIZONTAL = 0;
 
@@ -93,9 +44,9 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     private int orientation = ORIENTATION_HORIZONTAL;
 
-    private Widget firstChild;
+    Widget firstChild;
 
-    private Widget secondChild;
+    Widget secondChild;
 
     private final Element wrapper = DOM.createDiv();
 
@@ -103,7 +54,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     private final Element secondContainer = DOM.createDiv();
 
-    private final Element splitter = DOM.createDiv();
+    final Element splitter = DOM.createDiv();
 
     private boolean resizing;
 
@@ -121,11 +72,11 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     private boolean positionReversed = false;
 
-    private String[] componentStyleNames;
+    String[] componentStyleNames;
 
     private Element draggingCurtain;
 
-    private ApplicationConnection client;
+    ApplicationConnection client;
 
     private String width = "";
 
@@ -136,14 +87,14 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     RenderInformation renderInformation = new RenderInformation();
 
-    private String id;
+    String id;
 
-    private boolean immediate;
+    boolean immediate;
 
-    private boolean rendering = false;
+    boolean rendering = false;
 
     /* The current position of the split handle in either percentages or pixels */
-    private String position;
+    String position;
 
     protected Element scrolledContainer;
 
@@ -151,11 +102,11 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     private TouchScrollDelegate touchScrollDelegate;
 
-    public VSplitPanel() {
+    public VAbstractSplitPanel() {
         this(ORIENTATION_HORIZONTAL);
     }
 
-    public VSplitPanel(int orientation) {
+    public VAbstractSplitPanel(int orientation) {
         setElement(DOM.createDiv());
         switch (orientation) {
         case ORIENTATION_HORIZONTAL:
@@ -255,69 +206,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
                 + "-second-container");
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        this.client = client;
-        id = uidl.getId();
-        rendering = true;
-
-        immediate = uidl.hasAttribute("immediate");
-
-        if (client.updateComponent(this, uidl, true)) {
-            rendering = false;
-            return;
-        }
-        setEnabled(!uidl.getBooleanAttribute("disabled"));
-
-        clickEventHandler.handleEventHandlerRegistration(client);
-        if (uidl.hasAttribute("style")) {
-            componentStyleNames = uidl.getStringAttribute("style").split(" ");
-        } else {
-            componentStyleNames = new String[0];
-        }
-
-        setLocked(uidl.getBooleanAttribute("locked"));
-
-        setPositionReversed(uidl.getBooleanAttribute("reversed"));
-
-        setStylenames();
-
-        position = uidl.getStringAttribute("position");
-        setSplitPosition(position);
-
-        final VPaintableWidget newFirstChildPaintable = client
-                .getPaintable(uidl.getChildUIDL(0));
-        final VPaintableWidget newSecondChildPaintable = client
-                .getPaintable(uidl.getChildUIDL(1));
-        Widget newFirstChild = newFirstChildPaintable.getWidgetForPaintable();
-        Widget newSecondChild = newSecondChildPaintable.getWidgetForPaintable();
-
-        if (firstChild != newFirstChild) {
-            if (firstChild != null) {
-                client.unregisterPaintable(VPaintableMap.get(client)
-                        .getPaintable(firstChild));
-            }
-            setFirstWidget(newFirstChild);
-        }
-        if (secondChild != newSecondChild) {
-            if (secondChild != null) {
-                client.unregisterPaintable(VPaintableMap.get(client)
-                        .getPaintable(secondChild));
-            }
-            setSecondWidget(newSecondChild);
-        }
-        newFirstChildPaintable.updateFromUIDL(uidl.getChildUIDL(0), client);
-        newSecondChildPaintable.updateFromUIDL(uidl.getChildUIDL(1), client);
-
-        renderInformation.updateSize(getElement());
-
-        // This is needed at least for cases like #3458 to take
-        // appearing/disappearing scrollbars into account.
-        client.runDescendentsLayout(this);
-
-        rendering = false;
-
-    }
-
     @Override
     public boolean remove(Widget w) {
         boolean removed = super.remove(w);
@@ -331,7 +219,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
         return removed;
     }
 
-    private void setLocked(boolean newValue) {
+    void setLocked(boolean newValue) {
         if (locked != newValue) {
             locked = newValue;
             splitterSize = -1;
@@ -339,7 +227,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
         }
     }
 
-    private void setPositionReversed(boolean reversed) {
+    void setPositionReversed(boolean reversed) {
         if (positionReversed != reversed) {
             if (orientation == ORIENTATION_HORIZONTAL) {
                 DOM.setStyleAttribute(splitter, "right", "");
@@ -353,7 +241,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
         }
     }
 
-    private void setSplitPosition(String pos) {
+    void setSplitPosition(String pos) {
         if (pos == null) {
             return;
         }
@@ -473,7 +361,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     }
 
-    private void setFirstWidget(Widget w) {
+    void setFirstWidget(Widget w) {
         if (firstChild != null) {
             firstChild.removeFromParent();
         }
@@ -481,7 +369,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
         firstChild = w;
     }
 
-    private void setSecondWidget(Widget w) {
+    void setSecondWidget(Widget w) {
         if (secondChild != null) {
             secondChild.removeFromParent();
         }
@@ -791,10 +679,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     }
 
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
-        // TODO Implement caption handling
-    }
-
     /**
      * Updates the new split position back to server.
      */
@@ -810,7 +694,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
         client.updateVariable(id, "position", pos, immediate);
     }
 
-    private void setStylenames() {
+    void setStylenames() {
         final String splitterSuffix = (orientation == ORIENTATION_HORIZONTAL ? "-hsplitter"
                 : "-vsplitter");
         final String firstContainerSuffix = "-first-container";
@@ -846,7 +730,4 @@ public class VSplitPanel extends ComplexPanel implements Container,
         return enabled;
     }
 
-    public Widget getWidgetForPaintable() {
-        return this;
-    }
 }

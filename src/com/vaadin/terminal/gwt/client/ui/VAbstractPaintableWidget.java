@@ -5,15 +5,19 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.VPaintableWidgetContainer;
 
 public abstract class VAbstractPaintableWidget implements VPaintableWidget {
 
     private Widget widget;
     private ApplicationConnection connection;
-
+    private String id;
+    private VPaintableWidgetContainer parent;
+    
     /* State variables */
-    // private boolean enabled = true;
+    private boolean enabled = true;
 
     /**
      * Default constructor
@@ -69,7 +73,34 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         this.connection = connection;
     }
 
-    // public boolean isEnabled() {
-    // return enabled;
-    // }
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public VPaintableWidgetContainer getParent() {
+        if (parent != null)
+            return parent;
+        
+        // FIXME: Hierarchy should be set by framework instead of looked up here
+        VPaintableMap paintableMap = VPaintableMap.get(getConnection());
+
+        Widget w = getWidgetForPaintable();
+        while (w != null) {
+            w = w.getParent();
+            if (paintableMap.isPaintable(w)) {
+                parent = (VPaintableWidgetContainer) paintableMap.getPaintable(w);
+                return parent;
+            }
+        }
+
+        return null;
+    }
 }

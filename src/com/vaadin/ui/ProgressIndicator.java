@@ -8,7 +8,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.VProgressIndicator;
+import com.vaadin.terminal.gwt.client.ui.VProgressIndicatorPaintable;
 
 /**
  * <code>ProgressIndicator</code> is component that shows user state of a
@@ -25,7 +25,7 @@ import com.vaadin.terminal.gwt.client.ui.VProgressIndicator;
  * @since 4
  */
 @SuppressWarnings("serial")
-@ClientWidget(VProgressIndicator.class)
+@ClientWidget(VProgressIndicatorPaintable.class)
 public class ProgressIndicator extends AbstractField<Number> implements
         Property.Viewer, Property.ValueChangeListener {
 

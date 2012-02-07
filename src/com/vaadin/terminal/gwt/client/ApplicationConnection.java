@@ -38,11 +38,10 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
 import com.vaadin.terminal.gwt.client.ui.Field;
-import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
-import com.vaadin.terminal.gwt.client.ui.VView;
+import com.vaadin.terminal.gwt.client.ui.VViewPaintable;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 
@@ -140,7 +139,7 @@ public class ApplicationConnection {
     private Timer loadTimer3;
     private Element loadElement;
 
-    private final VView view;
+    private final VViewPaintable view;
 
     protected boolean applicationRunning = false;
 
@@ -171,7 +170,8 @@ public class ApplicationConnection {
     private Set<VPaintableWidget> zeroHeightComponents = null;
 
     public ApplicationConnection() {
-        view = GWT.create(VView.class);
+        view = GWT.create(VViewPaintable.class);
+        view.setConnection(this);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
@@ -829,7 +829,8 @@ public class ApplicationConnection {
         if (loadElement == null) {
             loadElement = DOM.createDiv();
             DOM.setStyleAttribute(loadElement, "position", "absolute");
-            DOM.appendChild(view.getElement(), loadElement);
+            DOM.appendChild(view.getWidgetForPaintable().getElement(),
+                    loadElement);
             VConsole.log("inserting load indicator");
         }
         DOM.setElementProperty(loadElement, "className", "v-loading-indicator");
@@ -970,7 +971,7 @@ public class ApplicationConnection {
                     meta = json.getValueMap("meta");
                     if (meta.containsKey("repaintAll")) {
                         repaintAll = true;
-                        view.clear();
+                        view.getWidgetForPaintable().clear();
                         getPaintableMap().clear();
                         if (meta.containsKey("invalidLayouts")) {
                             validatingLayouts = true;
@@ -1643,11 +1644,7 @@ public class ApplicationConnection {
             // Changed invisibile <-> visible
             if (wasVisible && manageCaption) {
                 // Must hide caption when component is hidden
-                final Container parent = Util.getLayout(component);
-                if (parent != null) {
-                    parent.updateCaption(paintable, uidl);
-                }
-
+                paintable.getParent().updateCaption(paintable, uidl);
             }
         }
 
@@ -1692,10 +1689,7 @@ public class ApplicationConnection {
 
         // Set captions
         if (manageCaption) {
-            final Container parent = Util.getLayout(component);
-            if (parent != null) {
-                parent.updateCaption(paintable, uidl);
-            }
+            paintable.getParent().updateCaption(paintable, uidl);
         }
 
         // add error classname to components w/ error
@@ -1705,13 +1699,6 @@ public class ApplicationConnection {
             tooltipInfo.setErrorUidl(null);
         }
 
-        // Set captions
-        if (manageCaption) {
-            final Container parent = Util.getLayout(component);
-            if (parent != null) {
-                parent.updateCaption(paintable, uidl);
-            }
-        }
         /*
          * updateComponentSize need to be after caption update so caption can be
          * taken into account
@@ -1915,10 +1902,9 @@ public class ApplicationConnection {
         if (!paintableMap.hasPaintable(pid)) {
             // Create and register a new paintable if no old was found
             VPaintableWidget p = widgetSet.createWidget(uidl, configuration);
-            if (p instanceof VAbstractPaintableWidget) {
-                ((VAbstractPaintableWidget) p).setConnection(this);
-                ((VAbstractPaintableWidget) p).init();
-            }
+            p.setConnection(this);
+            p.setId(pid);
+            p.init();
             paintableMap.registerPaintable(pid, p);
         }
         return (VPaintableWidget) paintableMap.getPaintable(pid);
@@ -2077,7 +2063,7 @@ public class ApplicationConnection {
         @Override
         public void run() {
             VConsole.log("Running re-layout of " + view.getClass().getName());
-            runDescendentsLayout(view);
+            runDescendentsLayout(view.getWidgetForPaintable());
             isPending = false;
         }
     };
@@ -2112,7 +2098,7 @@ public class ApplicationConnection {
      * 
      * @return the main view
      */
-    public VView getView() {
+    public VViewPaintable getView() {
         return view;
     }
 

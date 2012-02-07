@@ -8,11 +8,8 @@ import java.util.Set;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
-import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -33,28 +30,27 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHan
 public class VPanel extends SimplePanel implements Container,
         ShortcutActionHandlerOwner, Focusable {
 
-    public static final String CLICK_EVENT_IDENTIFIER = "click";
     public static final String CLASSNAME = "v-panel";
 
     ApplicationConnection client;
 
     String id;
 
-    private final Element captionNode = DOM.createDiv();
+    final Element captionNode = DOM.createDiv();
 
     private final Element captionText = DOM.createSpan();
 
     private Icon icon;
 
-    private final Element bottomDecoration = DOM.createDiv();
+    final Element bottomDecoration = DOM.createDiv();
 
-    private final Element contentNode = DOM.createDiv();
+    final Element contentNode = DOM.createDiv();
 
     private Element errorIndicatorElement;
 
     private String height;
 
-    private VPaintableWidget layout;
+    VPaintableWidget layout;
 
     ShortcutActionHandler shortcutHandler;
 
@@ -62,9 +58,9 @@ public class VPanel extends SimplePanel implements Container,
 
     private Element geckoCaptionMeter;
 
-    private int scrollTop;
+    int scrollTop;
 
-    private int scrollLeft;
+    int scrollLeft;
 
     private RenderInformation renderInformation = new RenderInformation();
 
@@ -76,21 +72,12 @@ public class VPanel extends SimplePanel implements Container,
 
     private int captionMarginLeft = -1;
 
-    private boolean rendering;
+    boolean rendering;
 
     private int contentMarginLeft = -1;
 
     private String previousStyleName;
 
-    private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
-            CLICK_EVENT_IDENTIFIER) {
-
-        @Override
-        protected <H extends EventHandler> HandlerRegistration registerHandler(
-                H handler, Type<H> type) {
-            return addDomHandler(handler, type);
-        }
-    };
     private TouchScrollDelegate touchScrollDelegate;
 
     public VPanel() {
@@ -157,127 +144,8 @@ public class VPanel extends SimplePanel implements Container,
         return contentNode;
     }
 
-    private void setCaption(String text) {
+    void setCaption(String text) {
         DOM.setInnerHTML(captionText, text);
-    }
-
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        rendering = true;
-        if (!uidl.hasAttribute("cached")) {
-
-            // Handle caption displaying and style names, prior generics.
-            // Affects size
-            // calculations
-
-            // Restore default stylenames
-            contentNode.setClassName(CLASSNAME + "-content");
-            bottomDecoration.setClassName(CLASSNAME + "-deco");
-            captionNode.setClassName(CLASSNAME + "-caption");
-            boolean hasCaption = false;
-            if (uidl.hasAttribute("caption")
-                    && !uidl.getStringAttribute("caption").equals("")) {
-                setCaption(uidl.getStringAttribute("caption"));
-                hasCaption = true;
-            } else {
-                setCaption("");
-                captionNode.setClassName(CLASSNAME + "-nocaption");
-            }
-
-            // Add proper stylenames for all elements. This way we can prevent
-            // unwanted CSS selector inheritance.
-            if (uidl.hasAttribute("style")) {
-                final String[] styles = uidl.getStringAttribute("style").split(
-                        " ");
-                final String captionBaseClass = CLASSNAME
-                        + (hasCaption ? "-caption" : "-nocaption");
-                final String contentBaseClass = CLASSNAME + "-content";
-                final String decoBaseClass = CLASSNAME + "-deco";
-                String captionClass = captionBaseClass;
-                String contentClass = contentBaseClass;
-                String decoClass = decoBaseClass;
-                for (int i = 0; i < styles.length; i++) {
-                    captionClass += " " + captionBaseClass + "-" + styles[i];
-                    contentClass += " " + contentBaseClass + "-" + styles[i];
-                    decoClass += " " + decoBaseClass + "-" + styles[i];
-                }
-                captionNode.setClassName(captionClass);
-                contentNode.setClassName(contentClass);
-                bottomDecoration.setClassName(decoClass);
-
-            }
-        }
-        // Ensure correct implementation
-        if (client.updateComponent(this, uidl, false)) {
-            rendering = false;
-            return;
-        }
-
-        clickEventHandler.handleEventHandlerRegistration(client);
-
-        this.client = client;
-        id = uidl.getId();
-
-        setIconUri(uidl, client);
-
-        handleError(uidl);
-
-        // Render content
-        final UIDL layoutUidl = uidl.getChildUIDL(0);
-        final VPaintableWidget newLayout = client.getPaintable(layoutUidl);
-        if (newLayout != layout) {
-            if (layout != null) {
-                client.unregisterPaintable(layout);
-            }
-            setWidget(newLayout.getWidgetForPaintable());
-            layout = newLayout;
-        }
-        layout.updateFromUIDL(layoutUidl, client);
-
-        // We may have actions attached to this panel
-        if (uidl.getChildCount() > 1) {
-            final int cnt = uidl.getChildCount();
-            for (int i = 1; i < cnt; i++) {
-                UIDL childUidl = uidl.getChildUIDL(i);
-                if (childUidl.getTag().equals("actions")) {
-                    if (shortcutHandler == null) {
-                        shortcutHandler = new ShortcutActionHandler(id, client);
-                    }
-                    shortcutHandler.updateActionMap(childUidl);
-                }
-            }
-        }
-
-        if (uidl.hasVariable("scrollTop")
-                && uidl.getIntVariable("scrollTop") != scrollTop) {
-            scrollTop = uidl.getIntVariable("scrollTop");
-            contentNode.setScrollTop(scrollTop);
-            // re-read the actual scrollTop in case invalid value was set
-            // (scrollTop != 0 when no scrollbar exists, other values would be
-            // caught by scroll listener), see #3784
-            scrollTop = contentNode.getScrollTop();
-        }
-
-        if (uidl.hasVariable("scrollLeft")
-                && uidl.getIntVariable("scrollLeft") != scrollLeft) {
-            scrollLeft = uidl.getIntVariable("scrollLeft");
-            contentNode.setScrollLeft(scrollLeft);
-            // re-read the actual scrollTop in case invalid value was set
-            // (scrollTop != 0 when no scrollbar exists, other values would be
-            // caught by scroll listener), see #3784
-            scrollLeft = contentNode.getScrollLeft();
-        }
-
-        // Must be run after scrollTop is set as Webkit overflow fix re-sets the
-        // scrollTop
-        runHacks(false);
-
-        // And apply tab index
-        if (uidl.hasVariable("tabindex")) {
-            contentNode.setTabIndex(uidl.getIntVariable("tabindex"));
-        }
-
-        rendering = false;
-
     }
 
     @Override
@@ -289,7 +157,7 @@ public class VPanel extends SimplePanel implements Container,
         }
     }
 
-    private void handleError(UIDL uidl) {
+    void handleError(UIDL uidl) {
         if (uidl.hasAttribute("error")) {
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createSpan();
@@ -305,7 +173,7 @@ public class VPanel extends SimplePanel implements Container,
         }
     }
 
-    private void setIconUri(UIDL uidl, ApplicationConnection client) {
+    void setIconUri(UIDL uidl, ApplicationConnection client) {
         final String iconUri = uidl.hasAttribute("icon") ? uidl
                 .getStringAttribute("icon") : null;
         if (iconUri == null) {
@@ -394,7 +262,7 @@ public class VPanel extends SimplePanel implements Container,
             }
         } else if (captionNode.isOrHasChild(target)) {
             if (client != null) {
-                client.handleTooltipEvent(event, this);
+                client.handleWidgetTooltipEvent(event, this);
             }
         }
     }
@@ -554,10 +422,6 @@ public class VPanel extends SimplePanel implements Container,
         return !renderInformation.updateSize(getElement());
     }
 
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
-        // NOP: layouts caption, errors etc not rendered in Panel
-    }
-
     @Override
     protected void onAttach() {
         super.onAttach();
@@ -566,10 +430,6 @@ public class VPanel extends SimplePanel implements Container,
 
     public ShortcutActionHandler getShortcutActionHandler() {
         return shortcutHandler;
-    }
-
-    public Widget getWidgetForPaintable() {
-        return this;
     }
 
 }

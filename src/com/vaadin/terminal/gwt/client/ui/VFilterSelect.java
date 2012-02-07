@@ -42,12 +42,10 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
@@ -59,9 +57,8 @@ import com.vaadin.terminal.gwt.client.VTooltip;
  * TODO needs major refactoring (to be extensible etc)
  */
 @SuppressWarnings("deprecation")
-public class VFilterSelect extends Composite implements VPaintableWidget, Field,
-        KeyDownHandler, KeyUpHandler, ClickHandler, FocusHandler, BlurHandler,
-        Focusable {
+public class VFilterSelect extends Composite implements Field, KeyDownHandler,
+        KeyUpHandler, ClickHandler, FocusHandler, BlurHandler, Focusable {
 
     /**
      * Represents a suggestion in the suggestion popup box
@@ -153,7 +150,7 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
 
         private static final String Z_INDEX = "30000";
 
-        private final SuggestionMenu menu;
+        protected final SuggestionMenu menu;
 
         private final Element up = DOM.createDiv();
         private final Element down = DOM.createDiv();
@@ -776,7 +773,7 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
             return keyboardSelectedItem;
         }
 
-        private void setKeyboardSelectedItem(MenuItem firstItem) {
+        protected void setKeyboardSelectedItem(MenuItem firstItem) {
             keyboardSelectedItem = firstItem;
         }
 
@@ -803,7 +800,7 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
     /**
      * The text box where the filter is written
      */
-    private final TextBox tb = new TextBox() {
+    protected final TextBox tb = new TextBox() {
         /*
          * (non-Javadoc)
          * 
@@ -815,7 +812,7 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             if (client != null) {
-                client.handleTooltipEvent(event, VFilterSelect.this);
+                client.handleWidgetTooltipEvent(event, VFilterSelect.this);
             }
         }
 
@@ -830,7 +827,7 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
         };
     };
 
-    private final SuggestionPopup suggestionPopup = new SuggestionPopup();
+    protected final SuggestionPopup suggestionPopup = new SuggestionPopup();
 
     /**
      * Used when measuring the width of the popup
@@ -848,7 +845,7 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             if (client != null) {
-                client.handleTooltipEvent(event, VFilterSelect.this);
+                client.handleWidgetTooltipEvent(event, VFilterSelect.this);
             }
 
             /*
@@ -861,73 +858,73 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
 
     private final Image selectedItemIcon = new Image();
 
-    private ApplicationConnection client;
+    protected ApplicationConnection client;
 
-    private String paintableId;
+    protected String paintableId;
 
-    private int currentPage;
+    protected int currentPage;
 
     /**
      * A collection of available suggestions (options) as received from the
      * server.
      */
-    private final List<FilterSelectSuggestion> currentSuggestions = new ArrayList<FilterSelectSuggestion>();
+    protected final List<FilterSelectSuggestion> currentSuggestions = new ArrayList<FilterSelectSuggestion>();
 
-    private boolean immediate;
+    protected boolean immediate;
 
-    private String selectedOptionKey;
+    protected String selectedOptionKey;
 
-    private boolean waitingForFilteringResponse = false;
-    private boolean updateSelectionWhenReponseIsReceived = false;
+    protected boolean waitingForFilteringResponse = false;
+    protected boolean updateSelectionWhenReponseIsReceived = false;
     private boolean tabPressedWhenPopupOpen = false;
-    private boolean initDone = false;
+    protected boolean initDone = false;
 
-    private String lastFilter = "";
+    protected String lastFilter = "";
 
-    private enum Select {
+    protected enum Select {
         NONE, FIRST, LAST
     };
 
-    private Select selectPopupItemWhenResponseIsReceived = Select.NONE;
+    protected Select selectPopupItemWhenResponseIsReceived = Select.NONE;
 
     /**
      * The current suggestion selected from the dropdown. This is one of the
      * values in currentSuggestions except when filtering, in this case
      * currentSuggestion might not be in currentSuggestions.
      */
-    private FilterSelectSuggestion currentSuggestion;
+    protected FilterSelectSuggestion currentSuggestion;
 
-    private int totalMatches;
-    private boolean allowNewItem;
-    private boolean nullSelectionAllowed;
-    private boolean nullSelectItem;
-    private boolean enabled;
-    private boolean readonly;
+    protected int totalMatches;
+    protected boolean allowNewItem;
+    protected boolean nullSelectionAllowed;
+    protected boolean nullSelectItem;
+    protected boolean enabled;
+    protected boolean readonly;
 
-    private int filteringmode = FILTERINGMODE_OFF;
+    protected int filteringmode = FILTERINGMODE_OFF;
 
     // shown in unfocused empty field, disappears on focus (e.g "Search here")
     private static final String CLASSNAME_PROMPT = "prompt";
-    private static final String ATTR_INPUTPROMPT = "prompt";
+    protected static final String ATTR_INPUTPROMPT = "prompt";
     public static final String ATTR_NO_TEXT_INPUT = "noInput";
-    private String inputPrompt = "";
-    private boolean prompting = false;
+    protected String inputPrompt = "";
+    protected boolean prompting = false;
 
     // Set true when popupopened has been clicked. Cleared on each UIDL-update.
     // This handles the special case where are not filtering yet and the
     // selected value has changed on the server-side. See #2119
-    private boolean popupOpenerClicked;
+    protected boolean popupOpenerClicked;
     private String width = null;
     private int textboxPadding = -1;
     private int componentPadding = -1;
-    private int suggestionPopupMinWidth = 0;
+    protected int suggestionPopupMinWidth = 0;
     private int popupWidth = -1;
     /*
      * Stores the last new item string to avoid double submissions. Cleared on
      * uidl updates
      */
-    private String lastNewItemString;
-    private boolean focused = false;
+    protected String lastNewItemString;
+    protected boolean focused = false;
     private int horizPaddingAndBorder = 2;
 
     /**
@@ -1006,6 +1003,20 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
      *            The filter to apply to the components
      */
     public void filterOptions(int page, String filter) {
+        filterOptions(page, filter, true);
+    }
+
+    /**
+     * Filters the options at certain page using the given filter
+     * 
+     * @param page
+     *            The page to filter
+     * @param filter
+     *            The filter to apply to the options
+     * @param immediate
+     *            Whether to send the options request immediately
+     */
+    private void filterOptions(int page, String filter, boolean immediate) {
         if (filter.equals(lastFilter) && currentPage == page) {
             if (!suggestionPopup.isAttached()) {
                 suggestionPopup.showSuggestions(currentSuggestions,
@@ -1025,209 +1036,16 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
 
         waitingForFilteringResponse = true;
         client.updateVariable(paintableId, "filter", filter, false);
-        client.updateVariable(paintableId, "page", page, true);
+        client.updateVariable(paintableId, "page", page, immediate);
         lastFilter = filter;
         currentPage = page;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.terminal
-     * .gwt.client.UIDL, com.vaadin.terminal.gwt.client.ApplicationConnection)
-     */
-    @SuppressWarnings("deprecation")
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        paintableId = uidl.getId();
-        this.client = client;
-
-        readonly = uidl.hasAttribute("readonly");
-        enabled = !uidl.hasAttribute("disabled");
-
-        tb.setEnabled(enabled);
-        updateReadOnly();
-
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-
-        // Inverse logic here to make the default case (text input enabled)
-        // work without additional UIDL messages
-        boolean noTextInput = uidl.hasAttribute(ATTR_NO_TEXT_INPUT)
-                && uidl.getBooleanAttribute(ATTR_NO_TEXT_INPUT);
-        setTextInputEnabled(!noTextInput);
-
-        // not a FocusWidget -> needs own tabindex handling
-        if (uidl.hasAttribute("tabindex")) {
-            tb.setTabIndex(uidl.getIntAttribute("tabindex"));
-        }
-
-        if (uidl.hasAttribute("filteringmode")) {
-            filteringmode = uidl.getIntAttribute("filteringmode");
-        }
-
-        immediate = uidl.hasAttribute("immediate");
-
-        nullSelectionAllowed = uidl.hasAttribute("nullselect");
-
-        nullSelectItem = uidl.hasAttribute("nullselectitem")
-                && uidl.getBooleanAttribute("nullselectitem");
-
-        currentPage = uidl.getIntVariable("page");
-
-        if (uidl.hasAttribute("pagelength")) {
-            pageLength = uidl.getIntAttribute("pagelength");
-        }
-
-        if (uidl.hasAttribute(ATTR_INPUTPROMPT)) {
-            // input prompt changed from server
-            inputPrompt = uidl.getStringAttribute(ATTR_INPUTPROMPT);
-        } else {
-            inputPrompt = "";
-        }
-
-        suggestionPopup.updateStyleNames(uidl);
-
-        allowNewItem = uidl.hasAttribute("allownewitem");
-        lastNewItemString = null;
-
-        currentSuggestions.clear();
-        if (!waitingForFilteringResponse) {
-            /*
-             * Clear the current suggestions as the server response always
-             * includes the new ones. Exception is when filtering, then we need
-             * to retain the value if the user does not select any of the
-             * options matching the filter.
-             */
-            currentSuggestion = null;
-            /*
-             * Also ensure no old items in menu. Unless cleared the old values
-             * may cause odd effects on blur events. Suggestions in menu might
-             * not necessary exist in select at all anymore.
-             */
-            suggestionPopup.menu.clearItems();
-
-        }
-
-        final UIDL options = uidl.getChildUIDL(0);
-        if (uidl.hasAttribute("totalMatches")) {
-            totalMatches = uidl.getIntAttribute("totalMatches");
-        } else {
-            totalMatches = 0;
-        }
-
-        // used only to calculate minimum popup width
-        String captions = Util.escapeHTML(inputPrompt);
-
-        for (final Iterator<?> i = options.getChildIterator(); i.hasNext();) {
-            final UIDL optionUidl = (UIDL) i.next();
-            final FilterSelectSuggestion suggestion = new FilterSelectSuggestion(
-                    optionUidl);
-            currentSuggestions.add(suggestion);
-            if (optionUidl.hasAttribute("selected")) {
-                if (!waitingForFilteringResponse || popupOpenerClicked) {
-                    String newSelectedOptionKey = Integer.toString(suggestion
-                            .getOptionKey());
-                    if (!newSelectedOptionKey.equals(selectedOptionKey)
-                            || suggestion.getReplacementString().equals(
-                                    tb.getText())) {
-                        // Update text field if we've got a new selection
-                        // Also update if we've got the same text to retain old
-                        // text selection behavior
-                        setPromptingOff(suggestion.getReplacementString());
-                        selectedOptionKey = newSelectedOptionKey;
-                    }
-                }
-                currentSuggestion = suggestion;
-                setSelectedItemIcon(suggestion.getIconUri());
-            }
-
-            // Collect captions so we can calculate minimum width for textarea
-            if (captions.length() > 0) {
-                captions += "|";
-            }
-            captions += Util.escapeHTML(suggestion.getReplacementString());
-        }
-
-        if ((!waitingForFilteringResponse || popupOpenerClicked)
-                && uidl.hasVariable("selected")
-                && uidl.getStringArrayVariable("selected").length == 0) {
-            // select nulled
-            if (!waitingForFilteringResponse || !popupOpenerClicked) {
-                if (!focused) {
-                    /*
-                     * client.updateComponent overwrites all styles so we must
-                     * ALWAYS set the prompting style at this point, even though
-                     * we think it has been set already...
-                     */
-                    prompting = false;
-                    setPromptingOn();
-                } else {
-                    // we have focus in field, prompting can't be set on,
-                    // instead just clear the input
-                    tb.setValue("");
-                }
-            }
-            selectedOptionKey = null;
-        }
-
-        if (waitingForFilteringResponse
-                && lastFilter.toLowerCase().equals(
-                        uidl.getStringVariable("filter"))) {
-            suggestionPopup.showSuggestions(currentSuggestions, currentPage,
-                    totalMatches);
-            waitingForFilteringResponse = false;
-            if (!popupOpenerClicked
-                    && selectPopupItemWhenResponseIsReceived != Select.NONE) {
-                // we're paging w/ arrows
-                if (selectPopupItemWhenResponseIsReceived == Select.LAST) {
-                    suggestionPopup.menu.selectLastItem();
-                } else {
-                    suggestionPopup.menu.selectFirstItem();
-                }
-
-                // This is used for paging so we update the keyboard selection
-                // variable as well.
-                MenuItem activeMenuItem = suggestionPopup.menu
-                        .getSelectedItem();
-                suggestionPopup.menu.setKeyboardSelectedItem(activeMenuItem);
-
-                // Update text field to contain the correct text
-                setTextboxText(activeMenuItem.getText());
-                tb.setSelectionRange(lastFilter.length(), activeMenuItem
-                        .getText().length() - lastFilter.length());
-
-                selectPopupItemWhenResponseIsReceived = Select.NONE; // reset
-            }
-            if (updateSelectionWhenReponseIsReceived) {
-                suggestionPopup.menu.doPostFilterSelectedItemAction();
-            }
-        }
-
-        // Calculate minumum textarea width
-        suggestionPopupMinWidth = minWidth(captions);
-
-        popupOpenerClicked = false;
-
-        if (!initDone) {
-            updateRootWidth();
-        }
-
-        // Focus dependent style names are lost during the update, so we add
-        // them here back again
-        if (focused) {
-            addStyleDependentName("focus");
-        }
-
-        initDone = true;
-    }
-
-    private void updateReadOnly() {
+    protected void updateReadOnly() {
         tb.setReadOnly(readonly || !textInputEnabled);
     }
 
-    private void setTextInputEnabled(boolean textInputEnabled) {
+    protected void setTextInputEnabled(boolean textInputEnabled) {
         // Always update styles as they might have been overwritten
         if (textInputEnabled) {
             removeStyleDependentName(STYLE_NO_INPUT);
@@ -1249,7 +1067,7 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
      * @param text
      *            the text to set in the text box
      */
-    private void setTextboxText(final String text) {
+    protected void setTextboxText(final String text) {
         tb.setText(text);
     }
 
@@ -1273,7 +1091,7 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
      * Turns prompting on. When prompting is turned on a command prompt is shown
      * in the text box if nothing has been entered.
      */
-    private void setPromptingOn() {
+    protected void setPromptingOn() {
         if (!prompting) {
             prompting = true;
             addStyleDependentName(CLASSNAME_PROMPT);
@@ -1288,7 +1106,7 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
      * @param text
      *            The text the text box should contain.
      */
-    private void setPromptingOff(String text) {
+    protected void setPromptingOff(String text) {
         setTextboxText(text);
         if (prompting) {
             prompting = false;
@@ -1338,7 +1156,7 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
      * @param iconUri
      *            The URI of the icon
      */
-    private void setSelectedItemIcon(String iconUri) {
+    protected void setSelectedItemIcon(String iconUri) {
         if (iconUri == null || iconUri == "") {
             panel.remove(selectedItemIcon);
             updateRootWidth();
@@ -1600,7 +1418,12 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
             // ask suggestionPopup if it was just closed, we are using GWT
             // Popup's auto close feature
             if (!suggestionPopup.isJustClosed()) {
-                filterOptions(-1, "");
+                // If a focus event is not going to be sent, send the options
+                // request immediately; otherwise queue in the same burst as the
+                // focus event. Fixes #8321.
+                boolean immediate = focused
+                        || !client.hasWidgetEventListeners(this, EventId.FOCUS);
+                filterOptions(-1, "", immediate);
                 popupOpenerClicked = true;
                 lastFilter = "";
             }
@@ -1613,7 +1436,7 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
     /**
      * Calculate minimum width for FilterSelect textarea
      */
-    private native int minWidth(String captions)
+    protected native int minWidth(String captions)
     /*-{
         if(!captions || captions.length <= 0)
                 return 0;
@@ -1665,7 +1488,7 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
         }
         addStyleDependentName("focus");
 
-        if (client.hasEventListeners(this, EventId.FOCUS)) {
+        if (client.hasWidgetEventListeners(this, EventId.FOCUS)) {
             client.updateVariable(paintableId, EventId.FOCUS, "", true);
         }
     }
@@ -1730,7 +1553,7 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
         }
         removeStyleDependentName("focus");
 
-        if (client.hasEventListeners(this, EventId.BLUR)) {
+        if (client.hasWidgetEventListeners(this, EventId.BLUR)) {
             client.updateVariable(paintableId, EventId.BLUR, "", true);
         }
     }
@@ -1784,7 +1607,7 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
      * Calculates the width of the select if the select has undefined width.
      * Should be called when the width changes or when the icon changes.
      */
-    private void updateRootWidth() {
+    protected void updateRootWidth() {
         if (width == null) {
             /*
              * When the width is not specified we must specify width for root
@@ -1933,9 +1756,5 @@ public class VFilterSelect extends Composite implements VPaintableWidget, Field,
     protected void onDetach() {
         super.onDetach();
         suggestionPopup.hide();
-    }
-
-    public Widget getWidgetForPaintable() {
-        return this;
     }
 }

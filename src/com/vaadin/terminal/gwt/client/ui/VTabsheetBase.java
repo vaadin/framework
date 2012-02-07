@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 abstract class VTabsheetBase extends ComplexPanel implements Container {
@@ -32,81 +31,6 @@ abstract class VTabsheetBase extends ComplexPanel implements Container {
     public VTabsheetBase(String classname) {
         setElement(DOM.createDiv());
         setStyleName(classname);
-    }
-
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        this.client = client;
-
-        // Ensure correct implementation
-        cachedUpdate = client.updateComponent(this, uidl, true);
-        if (cachedUpdate) {
-            return;
-        }
-
-        // Update member references
-        id = uidl.getId();
-        disabled = uidl.hasAttribute("disabled");
-
-        // Render content
-        final UIDL tabs = uidl.getChildUIDL(0);
-
-        // Paintables in the TabSheet before update
-        ArrayList<Widget> oldWidgets = new ArrayList<Widget>();
-        for (Iterator<Widget> iterator = getWidgetIterator(); iterator
-                .hasNext();) {
-            oldWidgets.add(iterator.next());
-        }
-
-        // Clear previous values
-        tabKeys.clear();
-        disabledTabKeys.clear();
-
-        int index = 0;
-        for (final Iterator<Object> it = tabs.getChildIterator(); it.hasNext();) {
-            final UIDL tab = (UIDL) it.next();
-            final String key = tab.getStringAttribute("key");
-            final boolean selected = tab.getBooleanAttribute("selected");
-            final boolean hidden = tab.getBooleanAttribute("hidden");
-
-            if (tab.getBooleanAttribute("disabled")) {
-                disabledTabKeys.add(key);
-            }
-
-            tabKeys.add(key);
-
-            if (selected) {
-                activeTabIndex = index;
-            }
-            renderTab(tab, index, selected, hidden);
-            index++;
-        }
-
-        int tabCount = getTabCount();
-        while (tabCount-- > index) {
-            removeTab(index);
-        }
-
-        for (int i = 0; i < getTabCount(); i++) {
-            VPaintableWidget p = getTab(i);
-            // During the initial rendering the paintable might be null (this is
-            // weird...)
-            if (p != null) {
-                oldWidgets.remove(p.getWidgetForPaintable());
-            }
-        }
-
-        // Perform unregister for any paintables removed during update
-        for (Iterator<Widget> iterator = oldWidgets.iterator(); iterator
-                .hasNext();) {
-            Widget oldWidget = iterator.next();
-            VPaintableWidget oldPaintable = VPaintableMap.get(client)
-                    .getPaintable(oldWidget);
-            if (oldWidget.isAttached()) {
-                oldWidget.removeFromParent();
-            }
-            VPaintableMap.get(client).unregisterPaintable(oldPaintable);
-        }
-
     }
 
     /**

@@ -14,7 +14,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
@@ -99,10 +98,6 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
     public void onBlur(BlurEvent arg0) {
         client.updateVariable(id, EventId.BLUR, "", true);
-    }
-
-    public Widget getWidgetForPaintable() {
-        return this;
     }
 
 }

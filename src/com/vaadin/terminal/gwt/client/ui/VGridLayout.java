@@ -14,16 +14,12 @@ import java.util.Set;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.event.dom.client.DomEvent.Type;
-import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -33,59 +29,43 @@ import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.layout.CellBasedLayout;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
-public class VGridLayout extends SimplePanel implements VPaintableWidget,
-        Container {
+public class VGridLayout extends SimplePanel implements Container {
 
     public static final String CLASSNAME = "v-gridlayout";
 
     private DivElement margin = Document.get().createDivElement();
 
-    private final AbsolutePanel canvas = new AbsolutePanel();
+    final AbsolutePanel canvas = new AbsolutePanel();
 
-    private ApplicationConnection client;
+    ApplicationConnection client;
 
     protected HashMap<Widget, ChildComponentContainer> widgetToComponentContainer = new HashMap<Widget, ChildComponentContainer>();
 
-    private HashMap<Widget, Cell> widgetToCell = new HashMap<Widget, Cell>();
+    HashMap<Widget, Cell> widgetToCell = new HashMap<Widget, Cell>();
 
     private int spacingPixelsHorizontal;
     private int spacingPixelsVertical;
 
-    private int[] columnWidths;
-    private int[] rowHeights;
+    int[] columnWidths;
+    int[] rowHeights;
 
     private String height;
 
     private String width;
 
-    private int[] colExpandRatioArray;
+    int[] colExpandRatioArray;
 
-    private int[] rowExpandRatioArray;
+    int[] rowExpandRatioArray;
 
-    private int[] minColumnWidths;
+    int[] minColumnWidths;
 
     private int[] minRowHeights;
 
-    private boolean rendering;
+    boolean rendering;
 
-    private HashMap<Widget, ChildComponentContainer> nonRenderedWidgets;
+    HashMap<Widget, ChildComponentContainer> nonRenderedWidgets;
 
-    private boolean sizeChangedDuringRendering = false;
-
-    private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
-            this, EventId.LAYOUT_CLICK) {
-
-        @Override
-        protected VPaintableWidget getChildComponent(Element element) {
-            return getComponent(element);
-        }
-
-        @Override
-        protected <H extends EventHandler> HandlerRegistration registerHandler(
-                H handler, Type<H> type) {
-            return addDomHandler(handler, type);
-        }
-    };
+    boolean sizeChangedDuringRendering = false;
 
     public VGridLayout() {
         super();
@@ -135,126 +115,7 @@ public class VGridLayout extends SimplePanel implements VPaintableWidget,
         return spacingPixelsVertical;
     }
 
-    @SuppressWarnings("unchecked")
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        rendering = true;
-        this.client = client;
-
-        if (client.updateComponent(this, uidl, true)) {
-            rendering = false;
-            return;
-        }
-        clickEventHandler.handleEventHandlerRegistration(client);
-
-        canvas.setWidth("0px");
-
-        handleMargins(uidl);
-        detectSpacing(uidl);
-
-        int cols = uidl.getIntAttribute("w");
-        int rows = uidl.getIntAttribute("h");
-
-        columnWidths = new int[cols];
-        rowHeights = new int[rows];
-
-        if (cells == null) {
-            cells = new Cell[cols][rows];
-        } else if (cells.length != cols || cells[0].length != rows) {
-            Cell[][] newCells = new Cell[cols][rows];
-            for (int i = 0; i < cells.length; i++) {
-                for (int j = 0; j < cells[i].length; j++) {
-                    if (i < cols && j < rows) {
-                        newCells[i][j] = cells[i][j];
-                    }
-                }
-            }
-            cells = newCells;
-        }
-
-        nonRenderedWidgets = (HashMap<Widget, ChildComponentContainer>) widgetToComponentContainer
-                .clone();
-
-        final int[] alignments = uidl.getIntArrayAttribute("alignments");
-        int alignmentIndex = 0;
-
-        LinkedList<Cell> pendingCells = new LinkedList<Cell>();
-
-        LinkedList<Cell> relativeHeighted = new LinkedList<Cell>();
-
-        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
-            final UIDL r = (UIDL) i.next();
-            if ("gr".equals(r.getTag())) {
-                for (final Iterator<?> j = r.getChildIterator(); j.hasNext();) {
-                    final UIDL c = (UIDL) j.next();
-                    if ("gc".equals(c.getTag())) {
-                        Cell cell = getCell(c);
-                        if (cell.hasContent()) {
-                            boolean rendered = cell.renderIfNoRelativeWidth();
-                            cell.alignment = alignments[alignmentIndex++];
-                            if (!rendered) {
-                                pendingCells.add(cell);
-                            }
-
-                            if (cell.colspan > 1) {
-                                storeColSpannedCell(cell);
-                            } else if (rendered) {
-                                // strore non-colspanned widths to columnWidth
-                                // array
-                                if (columnWidths[cell.col] < cell.getWidth()) {
-                                    columnWidths[cell.col] = cell.getWidth();
-                                }
-                            }
-                            if (cell.hasRelativeHeight()) {
-                                relativeHeighted.add(cell);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        colExpandRatioArray = uidl.getIntArrayAttribute("colExpand");
-        rowExpandRatioArray = uidl.getIntArrayAttribute("rowExpand");
-        distributeColSpanWidths();
-
-        minColumnWidths = cloneArray(columnWidths);
-        expandColumns();
-
-        renderRemainingComponentsWithNoRelativeHeight(pendingCells);
-
-        detectRowHeights();
-
-        expandRows();
-
-        renderRemainingComponents(pendingCells);
-
-        for (Cell cell : relativeHeighted) {
-            // rendering done above so cell.cc should not be null
-            Widget widget2 = cell.cc.getWidget();
-            client.handleComponentRelativeSize(widget2);
-            cell.cc.updateWidgetSize();
-        }
-
-        layoutCells();
-
-        // clean non rendered components
-        for (Widget w : nonRenderedWidgets.keySet()) {
-            ChildComponentContainer childComponentContainer = widgetToComponentContainer
-                    .get(w);
-            widgetToCell.remove(w);
-            widgetToComponentContainer.remove(w);
-            childComponentContainer.removeFromParent();
-            VPaintableMap paintableMap = VPaintableMap.get(client);
-            paintableMap.unregisterPaintable(paintableMap.getPaintable(w));
-        }
-        nonRenderedWidgets = null;
-
-        rendering = false;
-        sizeChangedDuringRendering = false;
-
-    }
-
-    private static int[] cloneArray(int[] toBeCloned) {
+    static int[] cloneArray(int[] toBeCloned) {
         int[] clone = new int[toBeCloned.length];
         for (int i = 0; i < clone.length; i++) {
             clone[i] = toBeCloned[i] * 1;
@@ -262,7 +123,7 @@ public class VGridLayout extends SimplePanel implements VPaintableWidget,
         return clone;
     }
 
-    private void expandRows() {
+    void expandRows() {
         if (!"".equals(height)) {
             int usedSpace = minRowHeights[0];
             for (int i = 1; i < minRowHeights.length; i++) {
@@ -401,7 +262,7 @@ public class VGridLayout extends SimplePanel implements VPaintableWidget,
         }
     }
 
-    private void expandColumns() {
+    void expandColumns() {
         if (!"".equals(width)) {
             int usedSpace = minColumnWidths[0];
             for (int i = 1; i < minColumnWidths.length; i++) {
@@ -428,7 +289,7 @@ public class VGridLayout extends SimplePanel implements VPaintableWidget,
         }
     }
 
-    private void layoutCells() {
+    void layoutCells() {
         int x = 0;
         int y = 0;
         for (int i = 0; i < cells.length; i++) {
@@ -470,13 +331,13 @@ public class VGridLayout extends SimplePanel implements VPaintableWidget,
         return "".equals(width);
     }
 
-    private void renderRemainingComponents(LinkedList<Cell> pendingCells) {
+    void renderRemainingComponents(LinkedList<Cell> pendingCells) {
         for (Cell cell : pendingCells) {
             cell.render();
         }
     }
 
-    private void detectRowHeights() {
+    void detectRowHeights() {
 
         // collect min rowheight from non-rowspanned cells
         for (int i = 0; i < cells.length; i++) {
@@ -531,7 +392,7 @@ public class VGridLayout extends SimplePanel implements VPaintableWidget,
         l.cells.add(cell);
     }
 
-    private void renderRemainingComponentsWithNoRelativeHeight(
+    void renderRemainingComponentsWithNoRelativeHeight(
             LinkedList<Cell> pendingCells) {
 
         for (Iterator<Cell> iterator = pendingCells.iterator(); iterator
@@ -549,7 +410,7 @@ public class VGridLayout extends SimplePanel implements VPaintableWidget,
      * Iterates colspanned cells, ensures cols have enough space to accommodate
      * them
      */
-    private void distributeColSpanWidths() {
+    void distributeColSpanWidths() {
         for (SpanList list : colSpans) {
             for (Cell cell : list.cells) {
                 // cells with relative content may return non 0 here if on
@@ -643,7 +504,7 @@ public class VGridLayout extends SimplePanel implements VPaintableWidget,
         }
     }
 
-    private void storeColSpannedCell(Cell cell) {
+    void storeColSpannedCell(Cell cell) {
         SpanList l = null;
         for (SpanList list : colSpans) {
             if (list.span < cell.colspan) {
@@ -666,7 +527,7 @@ public class VGridLayout extends SimplePanel implements VPaintableWidget,
         l.cells.add(cell);
     }
 
-    private void detectSpacing(UIDL uidl) {
+    void detectSpacing(UIDL uidl) {
         DivElement spacingmeter = Document.get().createDivElement();
         spacingmeter.setClassName(CLASSNAME + "-" + "spacing-"
                 + (uidl.getBooleanAttribute("spacing") ? "on" : "off"));
@@ -678,7 +539,7 @@ public class VGridLayout extends SimplePanel implements VPaintableWidget,
         canvas.getElement().removeChild(spacingmeter);
     }
 
-    private void handleMargins(UIDL uidl) {
+    void handleMargins(UIDL uidl) {
         final VMarginInfo margins = new VMarginInfo(
                 uidl.getIntAttribute("margins"));
 
@@ -717,23 +578,6 @@ public class VGridLayout extends SimplePanel implements VPaintableWidget,
         widgetToComponentContainer.put(newComponent, componentContainer);
 
         widgetToCell.put(newComponent, widgetToCell.get(oldComponent));
-    }
-
-    public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
-        Widget widget = paintable.getWidgetForPaintable();
-        ChildComponentContainer cc = widgetToComponentContainer.get(widget);
-        if (cc != null) {
-            cc.updateCaption(uidl, client);
-        }
-        if (!rendering) {
-            // ensure rel size details are updated
-            widgetToCell.get(widget).updateRelSizeStatus(uidl);
-            /*
-             * This was a component-only update and the possible size change
-             * must be propagated to the layout
-             */
-            client.captionSizeUpdated(widget);
-        }
     }
 
     public boolean requestLayout(final Set<Widget> changedChildren) {
@@ -895,12 +739,12 @@ public class VGridLayout extends SimplePanel implements VPaintableWidget,
         return cell.getAllocatedSpace();
     }
 
-    private Cell[][] cells;
+    Cell[][] cells;
 
     /**
      * Private helper class.
      */
-    private class Cell {
+    class Cell {
         private boolean relHeight = false;
         private boolean relWidth = false;
         private boolean widthCanAffectHeight = false;
@@ -1109,7 +953,7 @@ public class VGridLayout extends SimplePanel implements VPaintableWidget,
         }
     }
 
-    private Cell getCell(UIDL c) {
+    Cell getCell(UIDL c) {
         int row = c.getIntAttribute("y");
         int col = c.getIntAttribute("x");
         Cell cell = cells[col][row];
@@ -1132,12 +976,8 @@ public class VGridLayout extends SimplePanel implements VPaintableWidget,
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
      */
-    private VPaintableWidget getComponent(Element element) {
+    VPaintableWidget getComponent(Element element) {
         return Util.getPaintableForElement(client, this, element);
-    }
-
-    public Widget getWidgetForPaintable() {
-        return this;
     }
 
 }

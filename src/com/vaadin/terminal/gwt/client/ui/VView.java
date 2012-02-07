@@ -5,8 +5,6 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -17,12 +15,10 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -30,7 +26,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -56,15 +51,15 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
     public static final String NOTIFICATION_HTML_CONTENT_NOT_ALLOWED = "useplain";
 
-    private String theme;
+    String theme;
 
-    private VPaintableWidget layout;
+    VPaintableWidget layout;
 
-    private final LinkedHashSet<VWindow> subWindows = new LinkedHashSet<VWindow>();
+    final LinkedHashSet<VWindow> subWindows = new LinkedHashSet<VWindow>();
 
-    private String id;
+    String id;
 
-    private ShortcutActionHandler actionHandler;
+    ShortcutActionHandler actionHandler;
 
     /** stored width for IE resize optimization */
     private int width;
@@ -72,7 +67,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
     /** stored height for IE resize optimization */
     private int height;
 
-    private ApplicationConnection connection;
+    ApplicationConnection connection;
 
     /** Identifies the click event */
     public static final String CLICK_EVENT_ID = "click";
@@ -85,17 +80,17 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      */
     private Timer resizeTimer;
 
-    private int scrollTop;
+    int scrollTop;
 
-    private int scrollLeft;
+    int scrollLeft;
 
-    private boolean rendering;
+    boolean rendering;
 
-    private boolean scrollable;
+    boolean scrollable;
 
-    private boolean immediate;
+    boolean immediate;
 
-    private boolean resizeLazy = false;
+    boolean resizeLazy = false;
 
     /**
      * Attribute name for the lazy resize setting .
@@ -106,7 +101,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      * Reference to the parent frame/iframe. Null if there is no parent (i)frame
      * or if the application and parent frame are in different domains.
      */
-    private Element parentFrame;
+    Element parentFrame;
 
     private HandlerRegistration historyHandlerRegistration;
 
@@ -114,7 +109,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      * The current URI fragment, used to avoid sending updates if nothing has
      * changed.
      */
-    private String currentFragment;
+    String currentFragment;
 
     /**
      * Listener for URI fragment changes. Notifies the server of the new value
@@ -130,16 +125,6 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                 connection.updateVariable(id, FRAGMENT_VARIABLE, newFragment,
                         true);
             }
-        }
-    };
-
-    private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
-            VPanel.CLICK_EVENT_IDENTIFIER) {
-
-        @Override
-        protected <H extends EventHandler> HandlerRegistration registerHandler(
-                H handler, Type<H> type) {
-            return addDomHandler(handler, type);
         }
     };
 
@@ -212,7 +197,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
     /**
      * Used to reload host page on theme changes.
      */
-    private static native void reloadHostPage()
+    static native void reloadHostPage()
     /*-{
          $wnd.location.reload();
      }-*/;
@@ -223,7 +208,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      * @param script
      *            Script to be executed.
      */
-    private static native void eval(String script)
+    static native void eval(String script)
     /*-{
       try {
          if (script == null) return;
@@ -242,229 +227,6 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
     public boolean isEmbedded() {
         return !getElement().getOwnerDocument().getBody().getClassName()
                 .contains(ApplicationConnection.GENERATED_BODY_CLASSNAME);
-    }
-
-    public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
-        rendering = true;
-
-        id = uidl.getId();
-        boolean firstPaint = connection == null;
-        connection = client;
-
-        immediate = uidl.hasAttribute("immediate");
-        resizeLazy = uidl.hasAttribute(RESIZE_LAZY);
-        String newTheme = uidl.getStringAttribute("theme");
-        if (theme != null && !newTheme.equals(theme)) {
-            // Complete page refresh is needed due css can affect layout
-            // calculations etc
-            reloadHostPage();
-        } else {
-            theme = newTheme;
-        }
-        if (uidl.hasAttribute("style")) {
-            setStyleName(getStylePrimaryName() + " "
-                    + uidl.getStringAttribute("style"));
-        }
-
-        clickEventHandler.handleEventHandlerRegistration(client);
-
-        if (!isEmbedded() && uidl.hasAttribute("caption")) {
-            // only change window title if we're in charge of the whole page
-            com.google.gwt.user.client.Window.setTitle(uidl
-                    .getStringAttribute("caption"));
-        }
-
-        // Process children
-        int childIndex = 0;
-
-        // Open URL:s
-        boolean isClosed = false; // was this window closed?
-        while (childIndex < uidl.getChildCount()
-                && "open".equals(uidl.getChildUIDL(childIndex).getTag())) {
-            final UIDL open = uidl.getChildUIDL(childIndex);
-            final String url = client.translateVaadinUri(open
-                    .getStringAttribute("src"));
-            final String target = open.getStringAttribute("name");
-            if (target == null) {
-                // source will be opened to this browser window, but we may have
-                // to finish rendering this window in case this is a download
-                // (and window stays open).
-                Scheduler.get().scheduleDeferred(new Command() {
-                    public void execute() {
-                        goTo(url);
-                    }
-                });
-            } else if ("_self".equals(target)) {
-                // This window is closing (for sure). Only other opens are
-                // relevant in this change. See #3558, #2144
-                isClosed = true;
-                goTo(url);
-            } else {
-                String options;
-                if (open.hasAttribute("border")) {
-                    if (open.getStringAttribute("border").equals("minimal")) {
-                        options = "menubar=yes,location=no,status=no";
-                    } else {
-                        options = "menubar=no,location=no,status=no";
-                    }
-
-                } else {
-                    options = "resizable=yes,menubar=yes,toolbar=yes,directories=yes,location=yes,scrollbars=yes,status=yes";
-                }
-
-                if (open.hasAttribute("width")) {
-                    int w = open.getIntAttribute("width");
-                    options += ",width=" + w;
-                }
-                if (open.hasAttribute("height")) {
-                    int h = open.getIntAttribute("height");
-                    options += ",height=" + h;
-                }
-
-                Window.open(url, target, options);
-            }
-            childIndex++;
-        }
-        if (isClosed) {
-            // don't render the content, something else will be opened to this
-            // browser view
-            rendering = false;
-            return;
-        }
-
-        // Draw this application level window
-        UIDL childUidl = uidl.getChildUIDL(childIndex);
-        final VPaintableWidget lo = client.getPaintable(childUidl);
-
-        if (layout != null) {
-            if (layout != lo) {
-                // remove old
-                client.unregisterPaintable(layout);
-                // add new
-                setWidget(lo.getWidgetForPaintable());
-                layout = lo;
-            }
-        } else {
-            setWidget(lo.getWidgetForPaintable());
-            layout = lo;
-        }
-
-        layout.updateFromUIDL(childUidl, client);
-        if (!childUidl.getBooleanAttribute("cached")) {
-            updateParentFrameSize();
-        }
-
-        // Save currently open subwindows to track which will need to be closed
-        final HashSet<VWindow> removedSubWindows = new HashSet<VWindow>(
-                subWindows);
-
-        // Handle other UIDL children
-        while ((childUidl = uidl.getChildUIDL(++childIndex)) != null) {
-            String tag = childUidl.getTag().intern();
-            if (tag == "actions") {
-                if (actionHandler == null) {
-                    actionHandler = new ShortcutActionHandler(id, client);
-                }
-                actionHandler.updateActionMap(childUidl);
-            } else if (tag == "execJS") {
-                String script = childUidl.getStringAttribute("script");
-                eval(script);
-            } else if (tag == "notifications") {
-                for (final Iterator<?> it = childUidl.getChildIterator(); it
-                        .hasNext();) {
-                    final UIDL notification = (UIDL) it.next();
-                    VNotification.showNotification(client, notification);
-                }
-            } else {
-                // subwindows
-                final VPaintableWidget w = client.getPaintable(childUidl);
-                if (subWindows.contains(w)) {
-                    removedSubWindows.remove(w);
-                } else {
-                    subWindows.add((VWindow) w);
-                }
-                w.updateFromUIDL(childUidl, client);
-            }
-        }
-
-        // Close old windows which where not in UIDL anymore
-        for (final Iterator<VWindow> rem = removedSubWindows.iterator(); rem
-                .hasNext();) {
-            final VWindow w = rem.next();
-            client.unregisterPaintable(w);
-            subWindows.remove(w);
-            w.hide();
-        }
-
-        if (uidl.hasAttribute("focused")) {
-            // set focused component when render phase is finished
-            Scheduler.get().scheduleDeferred(new Command() {
-                public void execute() {
-                    VPaintableWidget paintable = (VPaintableWidget) uidl
-                            .getPaintableAttribute("focused", connection);
-
-                    final Widget toBeFocused = paintable
-                            .getWidgetForPaintable();
-                    /*
-                     * Two types of Widgets can be focused, either implementing
-                     * GWT HasFocus of a thinner Vaadin specific Focusable
-                     * interface.
-                     */
-                    if (toBeFocused instanceof com.google.gwt.user.client.ui.Focusable) {
-                        final com.google.gwt.user.client.ui.Focusable toBeFocusedWidget = (com.google.gwt.user.client.ui.Focusable) toBeFocused;
-                        toBeFocusedWidget.setFocus(true);
-                    } else if (toBeFocused instanceof Focusable) {
-                        ((Focusable) toBeFocused).focus();
-                    } else {
-                        VConsole.log("Could not focus component");
-                    }
-                }
-            });
-        }
-
-        // Add window listeners on first paint, to prevent premature
-        // variablechanges
-        if (firstPaint) {
-            Window.addWindowClosingHandler(this);
-            Window.addResizeHandler(this);
-        }
-
-        onResize();
-
-        // finally set scroll position from UIDL
-        if (uidl.hasVariable("scrollTop")) {
-            scrollable = true;
-            scrollTop = uidl.getIntVariable("scrollTop");
-            DOM.setElementPropertyInt(getElement(), "scrollTop", scrollTop);
-            scrollLeft = uidl.getIntVariable("scrollLeft");
-            DOM.setElementPropertyInt(getElement(), "scrollLeft", scrollLeft);
-        } else {
-            scrollable = false;
-        }
-
-        // Safari workaround must be run after scrollTop is updated as it sets
-        // scrollTop using a deferred command.
-        if (BrowserInfo.get().isSafari()) {
-            Util.runWebkitOverflowAutoFix(getElement());
-        }
-
-        scrollIntoView(uidl);
-
-        if (uidl.hasAttribute(FRAGMENT_VARIABLE)) {
-            currentFragment = uidl.getStringAttribute(FRAGMENT_VARIABLE);
-            if (!currentFragment.equals(History.getToken())) {
-                History.newItem(currentFragment, true);
-            }
-        } else {
-            // Initial request for which the server doesn't yet have a fragment
-            // (and haven't shown any interest in getting one)
-            currentFragment = History.getToken();
-
-            // Include current fragment in the next request
-            client.updateVariable(id, FRAGMENT_VARIABLE, currentFragment, false);
-        }
-
-        rendering = false;
     }
 
     /**
@@ -530,7 +292,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
     /**
      * Called when a resize event is received.
      */
-    private void onResize() {
+    void onResize() {
         /*
          * IE (pre IE9 at least) will give us some false resize events due to
          * problems with scrollbars. Firefox 3 might also produce some extra
@@ -742,7 +504,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
     }
 
-    private void updateParentFrameSize() {
+    void updateParentFrameSize() {
         if (parentFrame == null) {
             return;
         }
@@ -754,7 +516,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         parentFrame.getStyle().setPropertyPx("height", childHeight);
     }
 
-    private static native Element getParentFrame()
+    static native Element getParentFrame()
     /*-{
         try {
             var frameElement = $wnd.frameElement;
@@ -768,10 +530,6 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         }
         return null;
     }-*/;
-
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
-        // NOP Subwindows never draw caption for their first child (layout)
-    }
 
     /**
      * Return an iterator for current subwindows. This method is meant for
@@ -787,52 +545,12 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         return windows;
     }
 
-    public void init(String rootPanelId,
-            ApplicationConnection applicationConnection) {
-        DOM.sinkEvents(getElement(), Event.ONKEYDOWN | Event.ONSCROLL);
-
-        // iview is focused when created so element needs tabIndex
-        // 1 due 0 is at the end of natural tabbing order
-        DOM.setElementProperty(getElement(), "tabIndex", "1");
-
-        RootPanel root = RootPanel.get(rootPanelId);
-
-        // Remove the v-app-loading or any splash screen added inside the div by
-        // the user
-        root.getElement().setInnerHTML("");
-        // For backwards compatibility with static index pages only.
-        // No longer added by AbstractApplicationServlet/Portlet
-        root.removeStyleName("v-app-loading");
-
-        String themeUri = applicationConnection.getConfiguration()
-                .getThemeUri();
-        String themeName = themeUri.substring(themeUri.lastIndexOf('/'));
-        themeName = themeName.replaceAll("[^a-zA-Z0-9]", "");
-        root.addStyleName("v-theme-" + themeName);
-
-        root.add(this);
-
-        if (applicationConnection.getConfiguration().isStandalone()) {
-            // set focus to iview element by default to listen possible keyboard
-            // shortcuts. For embedded applications this is unacceptable as we
-            // don't want to steal focus from the main page nor we don't want
-            // side-effects from focusing (scrollIntoView).
-            getElement().focus();
-        }
-
-        parentFrame = getParentFrame();
-    }
-
     public ShortcutActionHandler getShortcutActionHandler() {
         return actionHandler;
     }
 
     public void focus() {
         getElement().focus();
-    }
-
-    public Widget getWidgetForPaintable() {
-        return this;
     }
 
 }

@@ -45,6 +45,7 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VTree;
+import com.vaadin.terminal.gwt.client.ui.VTreePaintable;
 import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
 import com.vaadin.terminal.gwt.client.ui.dd.VTargetInSubtree;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
@@ -60,7 +61,7 @@ import com.vaadin.tools.ReflectTools;
  * @since 3.0
  */
 @SuppressWarnings({ "serial", "deprecation" })
-@ClientWidget(VTree.class)
+@ClientWidget(VTreePaintable.class)
 public class Tree extends AbstractSelect implements Container.Hierarchical,
         Action.Container, ItemClickSource, ItemClickNotifier, DragSource,
         DropTarget {

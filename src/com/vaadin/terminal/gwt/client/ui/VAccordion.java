@@ -15,7 +15,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
@@ -36,55 +35,20 @@ public class VAccordion extends VTabsheetBase implements
 
     private String width = "";
 
-    private HashMap<StackItem, UIDL> lazyUpdateMap = new HashMap<StackItem, UIDL>();
+    HashMap<StackItem, UIDL> lazyUpdateMap = new HashMap<StackItem, UIDL>();
 
     private RenderSpace renderSpace = new RenderSpace(0, 0, true);
 
-    private StackItem openTab = null;
+    StackItem openTab = null;
 
-    private boolean rendering = false;
+    boolean rendering = false;
 
-    private int selectedUIDLItemIndex = -1;
+    int selectedUIDLItemIndex = -1;
 
-    private RenderInformation renderInformation = new RenderInformation();
+    RenderInformation renderInformation = new RenderInformation();
 
     public VAccordion() {
         super(CLASSNAME);
-    }
-
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        rendering = true;
-        selectedUIDLItemIndex = -1;
-        super.updateFromUIDL(uidl, client);
-        /*
-         * Render content after all tabs have been created and we know how large
-         * the content area is
-         */
-        if (selectedUIDLItemIndex >= 0) {
-            StackItem selectedItem = getStackItem(selectedUIDLItemIndex);
-            UIDL selectedTabUIDL = lazyUpdateMap.remove(selectedItem);
-            open(selectedUIDLItemIndex);
-
-            selectedItem.setContent(selectedTabUIDL);
-        } else if (!uidl.getBooleanAttribute("cached") && openTab != null) {
-            close(openTab);
-        }
-
-        iLayout();
-        // finally render possible hidden tabs
-        if (lazyUpdateMap.size() > 0) {
-            for (Iterator iterator = lazyUpdateMap.keySet().iterator(); iterator
-                    .hasNext();) {
-                StackItem item = (StackItem) iterator.next();
-                item.setContent(lazyUpdateMap.get(item));
-            }
-            lazyUpdateMap.clear();
-        }
-
-        renderInformation.updateSize(getElement());
-
-        rendering = false;
     }
 
     @Override
@@ -182,7 +146,7 @@ public class VAccordion extends VTabsheetBase implements
         return item;
     }
 
-    private void open(int itemIndex) {
+    void open(int itemIndex) {
         StackItem item = (StackItem) getWidget(itemIndex);
         boolean alreadyOpen = false;
         if (openTab != null) {
@@ -205,7 +169,7 @@ public class VAccordion extends VTabsheetBase implements
         updateOpenTabSize();
     }
 
-    private void close(StackItem item) {
+    void close(StackItem item) {
         if (!item.isOpen()) {
             return;
         }
@@ -581,10 +545,6 @@ public class VAccordion extends VTabsheetBase implements
         }
     }
 
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
-        /* Accordion does not render its children's captions */
-    }
-
     public boolean requestLayout(Set<Widget> children) {
         if (!isDynamicHeight() && !isDynamicWidth()) {
             /*
@@ -646,12 +606,8 @@ public class VAccordion extends VTabsheetBase implements
         return null;
     }
 
-    private StackItem getStackItem(int index) {
+    StackItem getStackItem(int index) {
         return (StackItem) getWidget(index);
-    }
-
-    public Widget getWidgetForPaintable() {
-        return this;
     }
 
 }

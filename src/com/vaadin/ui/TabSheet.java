@@ -20,6 +20,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.VTabsheet;
+import com.vaadin.terminal.gwt.client.ui.VTabsheetPaintable;
 import com.vaadin.terminal.gwt.server.CommunicationManager;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.Runo;
@@ -53,8 +54,7 @@ import com.vaadin.ui.themes.Runo;
  * @VERSION@
  * @since 3.0
  */
-@SuppressWarnings("serial")
-@ClientWidget(VTabsheet.class)
+@ClientWidget(VTabsheetPaintable.class)
 public class TabSheet extends AbstractComponentContainer {
 
     /**

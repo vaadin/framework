@@ -13,21 +13,17 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
-import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -38,10 +34,8 @@ import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
 /**
@@ -51,7 +45,7 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHan
  */
 public class VWindow extends VOverlay implements Container,
         ShortcutActionHandlerOwner, ScrollHandler, KeyDownHandler,
-        FocusHandler, BlurHandler, BeforeShortcutActionListener, Focusable {
+        FocusHandler, BlurHandler, Focusable {
 
     /**
      * Minimum allowed height of a window. This refers to the content area, not
@@ -88,9 +82,9 @@ public class VWindow extends VOverlay implements Container,
 
     public static final int Z_INDEX = 10000;
 
-    private VPaintableWidget layout;
+    VPaintableWidget layout;
 
-    private Element contents;
+    Element contents;
 
     private Element header;
 
@@ -98,7 +92,7 @@ public class VWindow extends VOverlay implements Container,
 
     private Element resizeBox;
 
-    private final FocusableScrollPanel contentPanel = new FocusableScrollPanel();
+    final FocusableScrollPanel contentPanel = new FocusableScrollPanel();
 
     private boolean dragging;
 
@@ -116,11 +110,11 @@ public class VWindow extends VOverlay implements Container,
 
     private int origH;
 
-    private Element closeBox;
+    Element closeBox;
 
     protected ApplicationConnection client;
 
-    private String id;
+    String id;
 
     ShortcutActionHandler shortcutHandler;
 
@@ -130,13 +124,13 @@ public class VWindow extends VOverlay implements Container,
     /** Last known positiony read from UIDL or updated to application connection */
     private int uidlPositionY = -1;
 
-    private boolean vaadinModality = false;
+    boolean vaadinModality = false;
 
-    private boolean resizable = true;
+    boolean resizable = true;
 
     private boolean draggable = true;
 
-    private boolean resizeLazy = false;
+    boolean resizeLazy = false;
 
     private Element modalityCurtain;
     private Element draggingCurtain;
@@ -163,23 +157,13 @@ public class VWindow extends VOverlay implements Container,
 
     private String height;
 
-    private boolean immediate;
+    boolean immediate;
 
     private Element wrapper, wrapper2;
 
-    private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
-            VPanel.CLICK_EVENT_IDENTIFIER) {
+    boolean visibilityChangesDisabled;
 
-        @Override
-        protected <H extends EventHandler> HandlerRegistration registerHandler(
-                H handler, Type<H> type) {
-            return addDomHandler(handler, type);
-        }
-    };
-
-    private boolean visibilityChangesDisabled;
-
-    private int bringToFrontSequence = -1;
+    int bringToFrontSequence = -1;
 
     private VLazyExecutor delayedContentsSizeUpdater = new VLazyExecutor(200,
             new ScheduledCommand() {
@@ -284,230 +268,12 @@ public class VWindow extends VOverlay implements Container,
 
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        id = uidl.getId();
-        this.client = client;
-
-        // Workaround needed for Testing Tools (GWT generates window DOM
-        // slightly different in different browsers).
-        DOM.setElementProperty(closeBox, "id", id + "_window_close");
-
-        if (uidl.hasAttribute("invisible")) {
-            hide();
-            return;
-        }
-
-        if (!uidl.hasAttribute("cached")) {
-            if (uidl.getBooleanAttribute("modal") != vaadinModality) {
-                setVaadinModality(!vaadinModality);
-            }
-            if (!isAttached()) {
-                setVisible(false); // hide until possible centering
-                show();
-            }
-            if (uidl.getBooleanAttribute("resizable") != resizable) {
-                setResizable(!resizable);
-            }
-            resizeLazy = uidl.hasAttribute(VView.RESIZE_LAZY);
-
-            setDraggable(!uidl.hasAttribute("fixedposition"));
-
-            // Caption must be set before required header size is measured. If
-            // the caption attribute is missing the caption should be cleared.
-            setCaption(uidl.getStringAttribute("caption"),
-                    uidl.getStringAttribute("icon"));
-        }
-
-        visibilityChangesDisabled = true;
-        if (client.updateComponent(this, uidl, false)) {
-            return;
-        }
-        visibilityChangesDisabled = false;
-
-        clickEventHandler.handleEventHandlerRegistration(client);
-
-        immediate = uidl.hasAttribute("immediate");
-
-        setClosable(!uidl.getBooleanAttribute("readonly"));
-
-        // Initialize the position form UIDL
-        int positionx = uidl.getIntVariable("positionx");
-        int positiony = uidl.getIntVariable("positiony");
-        if (positionx >= 0 || positiony >= 0) {
-            if (positionx < 0) {
-                positionx = 0;
-            }
-            if (positiony < 0) {
-                positiony = 0;
-            }
-            setPopupPosition(positionx, positiony);
-        }
-
-        boolean showingUrl = false;
-        int childIndex = 0;
-        UIDL childUidl = uidl.getChildUIDL(childIndex++);
-        while ("open".equals(childUidl.getTag())) {
-            // TODO multiple opens with the same target will in practice just
-            // open the last one - should we fix that somehow?
-            final String parsedUri = client.translateVaadinUri(childUidl
-                    .getStringAttribute("src"));
-            if (!childUidl.hasAttribute("name")) {
-                final Frame frame = new Frame();
-                DOM.setStyleAttribute(frame.getElement(), "width", "100%");
-                DOM.setStyleAttribute(frame.getElement(), "height", "100%");
-                DOM.setStyleAttribute(frame.getElement(), "border", "0px");
-                frame.setUrl(parsedUri);
-                contentPanel.setWidget(frame);
-                showingUrl = true;
-            } else {
-                final String target = childUidl.getStringAttribute("name");
-                Window.open(parsedUri, target, "");
-            }
-            childUidl = uidl.getChildUIDL(childIndex++);
-        }
-
-        final VPaintableWidget lo = client.getPaintable(childUidl);
-        if (layout != null) {
-            if (layout != lo) {
-                // remove old
-                client.unregisterPaintable(layout);
-                contentPanel.remove(layout.getWidgetForPaintable());
-                // add new
-                if (!showingUrl) {
-                    contentPanel.setWidget(lo.getWidgetForPaintable());
-                }
-                layout = lo;
-            }
-        } else if (!showingUrl) {
-            contentPanel.setWidget(lo.getWidgetForPaintable());
-            layout = lo;
-        }
-
-        dynamicWidth = !uidl.hasAttribute("width");
-        dynamicHeight = !uidl.hasAttribute("height");
-
-        layoutRelativeWidth = uidl.hasAttribute("layoutRelativeWidth");
-        layoutRelativeHeight = uidl.hasAttribute("layoutRelativeHeight");
-
-        if (dynamicWidth && layoutRelativeWidth) {
-            /*
-             * Relative layout width, fix window width before rendering (width
-             * according to caption)
-             */
-            setNaturalWidth();
-        }
-
-        layout.updateFromUIDL(childUidl, client);
-        if (!dynamicHeight && layoutRelativeWidth) {
-            /*
-             * Relative layout width, and fixed height. Must update the size to
-             * be able to take scrollbars into account (layout gets narrower
-             * space if it is higher than the window) -> only vertical scrollbar
-             */
-            client.runDescendentsLayout(this);
-        }
-
-        /*
-         * No explicit width is set and the layout does not have relative width
-         * so fix the size according to the layout.
-         */
-        if (dynamicWidth && !layoutRelativeWidth) {
-            setNaturalWidth();
-        }
-
-        if (dynamicHeight && layoutRelativeHeight) {
-            // Prevent resizing until height has been fixed
-            resizable = false;
-        }
-
-        // we may have actions and notifications
-        if (uidl.getChildCount() > 1) {
-            final int cnt = uidl.getChildCount();
-            for (int i = 1; i < cnt; i++) {
-                childUidl = uidl.getChildUIDL(i);
-                if (childUidl.getTag().equals("actions")) {
-                    if (shortcutHandler == null) {
-                        shortcutHandler = new ShortcutActionHandler(id, client);
-                    }
-                    shortcutHandler.updateActionMap(childUidl);
-                }
-            }
-
-        }
-
-        // setting scrollposition must happen after children is rendered
-        contentPanel.setScrollPosition(uidl.getIntVariable("scrollTop"));
-        contentPanel.setHorizontalScrollPosition(uidl
-                .getIntVariable("scrollLeft"));
-
-        // Center this window on screen if requested
-        // This has to be here because we might not know the content size before
-        // everything is painted into the window
-        if (uidl.getBooleanAttribute("center")) {
-            // mark as centered - this is unset on move/resize
-            centered = true;
-            center();
-        } else {
-            // don't try to center the window anymore
-            centered = false;
-        }
-        updateShadowSizeAndPosition();
-        setVisible(true);
-
-        boolean sizeReduced = false;
-        // ensure window is not larger than browser window
-        if (getOffsetWidth() > Window.getClientWidth()) {
-            setWidth(Window.getClientWidth() + "px");
-            sizeReduced = true;
-        }
-        if (getOffsetHeight() > Window.getClientHeight()) {
-            setHeight(Window.getClientHeight() + "px");
-            sizeReduced = true;
-        }
-
-        if (dynamicHeight && layoutRelativeHeight) {
-            /*
-             * Window height is undefined, layout is 100% high so the layout
-             * should define the initial window height but on resize the layout
-             * should be as high as the window. We fix the height to deal with
-             * this.
-             */
-
-            int h = contents.getOffsetHeight() + getExtraHeight();
-            int w = getElement().getOffsetWidth();
-
-            client.updateVariable(id, "height", h, false);
-            client.updateVariable(id, "width", w, true);
-        }
-
-        if (sizeReduced) {
-            // If we changed the size we need to update the size of the child
-            // component if it is relative (#3407)
-            client.runDescendentsLayout(this);
-        }
-
-        Util.runWebkitOverflowAutoFix(contentPanel.getElement());
-
-        client.getView().scrollIntoView(uidl);
-
-        if (uidl.hasAttribute("bringToFront")) {
-            /*
-             * Focus as a side-efect. Will be overridden by
-             * ApplicationConnection if another component was focused by the
-             * server side.
-             */
-            contentPanel.focus();
-            bringToFrontSequence = uidl.getIntAttribute("bringToFront");
-            deferOrdering();
-        }
-    }
-
     /**
      * Calling this method will defer ordering algorithm, to order windows based
      * on servers bringToFront and modality instructions. Non changed windows
      * will be left intact.
      */
-    private static void deferOrdering() {
+    static void deferOrdering() {
         if (!orderingDefered) {
             orderingDefered = true;
             Scheduler.get().scheduleFinally(new Command() {
@@ -562,7 +328,7 @@ public class VWindow extends VOverlay implements Container,
         }
     }
 
-    private void setDraggable(boolean draggable) {
+    void setDraggable(boolean draggable) {
         if (this.draggable == draggable) {
             return;
         }
@@ -573,7 +339,7 @@ public class VWindow extends VOverlay implements Container,
     }
 
     private void setCursorProperties() {
-        if (!this.draggable) {
+        if (!draggable) {
             header.getStyle().setProperty("cursor", "default");
             footer.getStyle().setProperty("cursor", "default");
         } else {
@@ -582,7 +348,7 @@ public class VWindow extends VOverlay implements Container,
         }
     }
 
-    private void setNaturalWidth() {
+    void setNaturalWidth() {
         /*
          * Use max(layout width, window width) i.e layout content width or
          * caption width. We remove the previous set width so the width is
@@ -676,7 +442,7 @@ public class VWindow extends VOverlay implements Container,
         super.hide();
     }
 
-    private void setVaadinModality(boolean modality) {
+    void setVaadinModality(boolean modality) {
         vaadinModality = modality;
         if (vaadinModality) {
             if (isAttached()) {
@@ -767,7 +533,7 @@ public class VWindow extends VOverlay implements Container,
         return curtain;
     }
 
-    private void setResizable(boolean resizability) {
+    void setResizable(boolean resizability) {
         resizable = resizability;
         if (resizability) {
             DOM.setElementProperty(footer, "className", CLASSNAME + "-footer");
@@ -832,7 +598,7 @@ public class VWindow extends VOverlay implements Container,
 
         if (client != null && header.isOrHasChild(target)) {
             // Handle window caption tooltips
-            client.handleTooltipEvent(event, this);
+            client.handleWidgetTooltipEvent(event, this);
         }
 
         if (resizing || resizeBox == target) {
@@ -877,7 +643,7 @@ public class VWindow extends VOverlay implements Container,
     }
 
     private void onResizeEvent(Event event) {
-        if (resizable) {
+        if (resizable && Util.isTouchEventOrLeftMouseButton(event)) {
             switch (event.getTypeInt()) {
             case Event.ONMOUSEDOWN:
             case Event.ONTOUCHSTART:
@@ -1088,12 +854,16 @@ public class VWindow extends VOverlay implements Container,
 
     private int extraH = 0;
 
-    private int getExtraHeight() {
+    int getExtraHeight() {
         extraH = header.getOffsetHeight() + footer.getOffsetHeight();
         return extraH;
     }
 
     private void onDragEvent(Event event) {
+        if (!Util.isTouchEventOrLeftMouseButton(event)) {
+            return;
+        }
+
         switch (DOM.eventGetType(event)) {
         case Event.ONTOUCHSTART:
             if (event.getTouches().length() > 1) {
@@ -1205,7 +975,7 @@ public class VWindow extends VOverlay implements Container,
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
-        if (child == layout) {
+        if (child == layout.getWidgetForPaintable()) {
             return renderSpace;
         } else {
             // Exception ??
@@ -1214,7 +984,7 @@ public class VWindow extends VOverlay implements Container,
     }
 
     public boolean hasChildComponent(Widget component) {
-        if (component == layout) {
+        if (component == layout.getWidgetForPaintable()) {
             return true;
         } else {
             return false;
@@ -1238,10 +1008,6 @@ public class VWindow extends VOverlay implements Container,
         return true;
     }
 
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
-        // NOP, window has own caption, layout captio not rendered
-    }
-
     public ShortcutActionHandler getShortcutActionHandler() {
         return shortcutHandler;
     }
@@ -1263,28 +1029,19 @@ public class VWindow extends VOverlay implements Container,
     }
 
     public void onBlur(BlurEvent event) {
-        if (client.hasEventListeners(this, EventId.BLUR)) {
+        if (client.hasWidgetEventListeners(this, EventId.BLUR)) {
             client.updateVariable(id, EventId.BLUR, "", true);
         }
     }
 
     public void onFocus(FocusEvent event) {
-        if (client.hasEventListeners(this, EventId.FOCUS)) {
+        if (client.hasWidgetEventListeners(this, EventId.FOCUS)) {
             client.updateVariable(id, EventId.FOCUS, "", true);
         }
     }
 
-    public void onBeforeShortcutAction(Event e) {
-        // NOP, nothing to update just avoid workaround ( causes excess
-        // blur/focus )
-    }
-
     public void focus() {
         contentPanel.focus();
-    }
-
-    public Widget getWidgetForPaintable() {
-        return this;
     }
 
 }
