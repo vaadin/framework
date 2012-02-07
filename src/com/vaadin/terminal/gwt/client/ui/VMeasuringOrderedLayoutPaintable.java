@@ -31,10 +31,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
                 getWidgetForPaintable().addCaption(caption, widget);
                 getWidgetForPaintable().captions.put(component, caption);
 
-                MeasureManager.MeasuredSize measuredSize = component
-                        .getMeasuredSize();
-
-                measuredSize.registerDependency(caption.getElement());
+                getMeasuredSize().registerDependency(caption.getElement());
             }
             caption.updateCaption(uidl);
         } else {
@@ -42,9 +39,8 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
                     .remove(component);
             if (removedCaption != null) {
                 getWidgetForPaintable().remove(removedCaption);
-                MeasureManager.MeasuredSize measuredSize = component
-                        .getMeasuredSize();
-                measuredSize.deRegisterDependency(removedCaption.getElement());
+                getMeasuredSize().deRegisterDependency(
+                        removedCaption.getElement());
             }
         }
     }
@@ -121,18 +117,15 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         if (caption == null) {
             return 0;
         } else {
-            MeasureManager.MeasuredSize measuredSize = child.getMeasuredSize();
-            return measuredSize.getDependencyWidth(caption.getElement());
+            return getMeasuredSize().getDependencyWidth(caption.getElement());
         }
     }
 
     private int getCaptionHeight(VPaintableWidget child) {
-
         VCaption caption = getWidgetForPaintable().captions.get(child);
         if (caption != null) {
-            MeasureManager.MeasuredSize measuredSize = child.getMeasuredSize();
-            int captionHeight = measuredSize.getDependencyHeight(caption
-                    .getElement());
+            int captionHeight = getMeasuredSize().getDependencyHeight(
+                    caption.getElement());
 
             caption.getElement().getStyle()
                     .setMarginTop(-captionHeight, Unit.PX);
