@@ -38,7 +38,6 @@ import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.ui.Field;
-import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
@@ -2098,10 +2097,9 @@ public class ApplicationConnection {
         if (!paintableMap.hasPaintable(pid)) {
             // Create and register a new paintable if no old was found
             VPaintableWidget p = widgetSet.createWidget(uidl, configuration);
-            if (p instanceof VAbstractPaintableWidget) {
-                ((VAbstractPaintableWidget) p).setConnection(this);
-                ((VAbstractPaintableWidget) p).init();
-            }
+            p.setConnection(this);
+            p.setId(pid);
+            p.init();
             paintableMap.registerPaintable(pid, p);
         }
         return (VPaintableWidget) paintableMap.getPaintable(pid);

@@ -33,7 +33,9 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
 
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().rendering = true;
-
+        // As VView is not created in the same way as all other paintables we
+        // have to set the id here
+        setId(uidl.getId());
         getWidgetForPaintable().id = uidl.getId();
         boolean firstPaint = getWidgetForPaintable().connection == null;
         getWidgetForPaintable().connection = client;
