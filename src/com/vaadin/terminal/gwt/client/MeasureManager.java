@@ -2,9 +2,7 @@ package com.vaadin.terminal.gwt.client;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -85,10 +83,7 @@ public class MeasureManager {
     private static MeasureManager instance = new MeasureManager();
 
     public static Collection<VPaintableWidget> getChildren(
-            VPaintableWidget paintable, ApplicationConnection client) {
-        if (!(paintable instanceof Container)) {
-            return Collections.emptySet();
-        }
+            VPaintableWidgetContainer paintable, ApplicationConnection client) {
         Widget widget = paintable.getWidgetForPaintable();
         Collection<VPaintableWidget> children = new ArrayList<VPaintableWidget>();
 
@@ -110,23 +105,6 @@ public class MeasureManager {
                     addDescendantPaintables(child, paintables, client);
                 }
             }
-        }
-    }
-
-    private static VPaintableWidget getParentPaintable(
-            VPaintableWidget paintable, VPaintableMap paintableMap) {
-        Widget widget = paintable.getWidgetForPaintable();
-        while (true) {
-            widget = widget.getParent();
-            if (widget == null) {
-                return null;
-            }
-            VPaintableWidget parentPaintable = paintableMap
-                    .getPaintable(widget);
-            if (parentPaintable != null) {
-                return parentPaintable;
-            }
-            // Else continue with the parent
         }
     }
 
@@ -162,9 +140,8 @@ public class MeasureManager {
             for (int i = 0; i < changed.length(); i++) {
                 VPaintableWidget paintable = (VPaintableWidget) paintableMap
                         .getPaintable(changed.get(i));
-                VPaintableWidget parentPaintable = getParentPaintable(
-                        paintable, paintableMap);
-                if (parentPaintable instanceof Container) {
+                VPaintableWidget parentPaintable = paintable.getParent();
+                if (parentPaintable instanceof CalculatingLayout) {
                     affectedContainers
                             .add(paintableMap.getPid(parentPaintable));
                 }
@@ -181,6 +158,10 @@ public class MeasureManager {
                         // TODO Do nothing here if parent instanceof
                         // ProvidesRepaint?
                         ((RequiresResize) widget).onResize();
+                    } else if (paintable instanceof CalculatingLayout) {
+                        CalculatingLayout calculating = (CalculatingLayout) paintable;
+                        calculating.updateHorizontalSizes();
+                        calculating.updateVerticalSizes();
                     }
                 }
             }
@@ -189,19 +170,11 @@ public class MeasureManager {
             for (int i = 0; i < affectedPids.length(); i++) {
                 // Find all changed children
                 String containerPid = affectedPids.get(i);
-                VPaintableWidget container = (VPaintableWidget) paintableMap
+                CalculatingLayout container = (CalculatingLayout) paintableMap
                         .getPaintable(containerPid);
-                Collection<VPaintableWidget> children = getChildren(container,
-                        client);
-                HashSet<Widget> changedChildren = new HashSet<Widget>();
 
-                for (VPaintableWidget child : children) {
-                    if (changedSet.contains(paintableMap.getPid(child))) {
-                        changedChildren.add(child.getWidgetForPaintable());
-                    }
-                }
-
-                ((Container) container).requestLayout(changedChildren);
+                container.updateHorizontalSizes();
+                container.updateVerticalSizes();
             }
 
             long layoutEnd = System.currentTimeMillis();
