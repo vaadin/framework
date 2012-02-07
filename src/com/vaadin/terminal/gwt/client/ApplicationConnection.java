@@ -1660,7 +1660,7 @@ public class ApplicationConnection {
             // Changed invisibile <-> visible
             if (wasVisible && manageCaption) {
                 // Must hide caption when component is hidden
-                updateCaption(paintable, uidl);
+                paintable.getParent().updateCaption(paintable, uidl);
             }
         }
 
@@ -1705,7 +1705,7 @@ public class ApplicationConnection {
 
         // Set captions
         if (manageCaption) {
-            updateCaption(paintable, uidl);
+            paintable.getParent().updateCaption(paintable, uidl);
         }
 
         // add error classname to components w/ error
@@ -1723,12 +1723,6 @@ public class ApplicationConnection {
         updateComponentSize(paintable, uidl);
 
         return false;
-    }
-
-    @Deprecated
-    private void updateCaption(VPaintableWidget paintable, UIDL uidl) {
-        VPaintableWidgetContainer parent = paintable.getParentPaintable();
-        parent.updateCaption(paintable, uidl);
     }
 
     /**
@@ -1931,8 +1925,7 @@ public class ApplicationConnection {
         boolean horizontalScrollBar = false;
         boolean verticalScrollBar = false;
 
-        VPaintableWidgetContainer parentPaintable = paintable
-                .getParentPaintable();
+        VPaintableWidgetContainer parentPaintable = paintable.getParent();
         RenderSpace renderSpace;
 
         // Parent-less components (like sub-windows) are relative to browser
