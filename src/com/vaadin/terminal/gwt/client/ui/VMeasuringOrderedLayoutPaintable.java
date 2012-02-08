@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.CalculatingLayout;
 import com.vaadin.terminal.gwt.client.MeasureManager;
+import com.vaadin.terminal.gwt.client.MeasureManager.MeasuredSize;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
@@ -18,6 +19,11 @@ import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 public abstract class VMeasuringOrderedLayoutPaintable extends
         VAbstractPaintableWidgetContainer implements CalculatingLayout {
+
+    public VMeasuringOrderedLayoutPaintable() {
+        getMeasuredSize().registerDependency(
+                getWidgetForPaintable().spacingMeasureElement);
+    }
 
     public void updateCaption(VPaintableWidget component, UIDL uidl) {
         if (VCaption.isNeeded(uidl)) {
@@ -60,9 +66,6 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
             return;
         }
 
-        long start = System.currentTimeMillis();
-        // long childTime = 0;
-
         HashSet<Widget> previousChildren = new HashSet<Widget>();
         for (Widget child : getWidgetForPaintable()) {
             if (!(child instanceof VCaption)) {
@@ -103,12 +106,12 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         }
 
         int bitMask = uidl.getIntAttribute("margins");
-        if (getWidgetForPaintable().activeMarginsInfo == null
-                || getWidgetForPaintable().activeMarginsInfo.getBitMask() != bitMask) {
-            getWidgetForPaintable().activeMarginsInfo = new VMarginInfo(bitMask);
-        }
+        getWidgetForPaintable()
+                .updateMarginStyleNames(new VMarginInfo(bitMask));
 
-        getWidgetForPaintable().spacing = uidl.getBooleanAttribute("spacing");
+        getWidgetForPaintable().updateSpacingStyleName(
+                uidl.getBooleanAttribute("spacing"));
+
         getWidgetForPaintable().expandRatios = uidl
                 .getMapAttribute("expandRatios");
         getWidgetForPaintable().alignments = uidl.getMapAttribute("alignments");
@@ -120,14 +123,15 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         if (caption == null) {
             return 0;
         } else {
-            return getMeasuredSize().getDependencyWidth(caption.getElement());
+            return getMeasuredSize().getDependencyOuterWidth(
+                    caption.getElement());
         }
     }
 
     private int getCaptionHeight(VPaintableWidget child) {
         VCaption caption = getWidgetForPaintable().captions.get(child);
         if (caption != null) {
-            int captionHeight = getMeasuredSize().getDependencyHeight(
+            int captionHeight = getMeasuredSize().getDependencyOuterHeight(
                     caption.getElement());
 
             caption.getElement().getStyle()
@@ -138,20 +142,23 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         }
     }
 
-    private static boolean isRelativeInDirection(Widget widget,
+    private static boolean isRelativeInDirection(VPaintableWidget paintable,
             boolean isVertical) {
-        String dimension = getDimensionInDirection(widget, isVertical);
-        return dimension != null && dimension.endsWith("%");
+        if (isVertical) {
+            return paintable.isRelativeHeight();
+        } else {
+            return paintable.isRelativeWidth();
+        }
     }
 
-    private static String getDimensionInDirection(Widget widget,
-            boolean vertical) {
-        com.google.gwt.user.client.Element element = widget.getElement();
-        Style style = element.getStyle();
-        if (vertical) {
-            return style.getHeight();
+    private int getSizeForInnerSize(int size, boolean isVertical) {
+        MeasuredSize measuredSize = getMeasuredSize();
+        if (isVertical) {
+            return size + measuredSize.getBorderHeight()
+                    + measuredSize.getPaddingHeight();
         } else {
-            return style.getWidth();
+            return size + measuredSize.getBorderWidth()
+                    + measuredSize.getPaddingWidth();
         }
     }
 
@@ -163,23 +170,30 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         return isVertical ? "top" : "left";
     }
 
-    private static String getMinPropertyName(boolean isVertical) {
-        return isVertical ? "minHeight" : "minWidth";
-    }
-
-    private static boolean isUndefinedInDirection(Widget widget,
+    private static boolean isUndefinedInDirection(VPaintableWidget paintable,
             boolean isVertical) {
-        String dimension = getDimensionInDirection(widget, isVertical);
-        return dimension == null || dimension.length() == 0;
+        if (isVertical) {
+            return paintable.isUndefinedHeight();
+        } else {
+            return paintable.isUndefinedWidth();
+        }
     }
 
-    private int getMeasuredInDirection(VPaintableWidget paintable,
+    private static int getOuterSizeInDirection(VPaintableWidget paintable,
             boolean isVertical) {
         MeasureManager.MeasuredSize measuredSize = paintable.getMeasuredSize();
         if (isVertical) {
-            return measuredSize.getHeight();
+            return measuredSize.getOuterHeight();
         } else {
-            return measuredSize.getWidth();
+            return measuredSize.getOuterWidth();
+        }
+    }
+
+    private int getInnerSizeInDirection(boolean isVertical) {
+        if (isVertical) {
+            return getMeasuredSize().getInnerHeight();
+        } else {
+            return getMeasuredSize().getInnerWidth();
         }
     }
 
@@ -227,39 +241,40 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
                 captionAllocation = 0;
             }
 
-            if (!isRelativeInDirection(widget,
+            if (!isRelativeInDirection(child,
                     getWidgetForPaintable().isVertical)) {
-                totalAllocated += getMeasuredInDirection(child,
-                        getWidgetForPaintable().isVertical) + captionAllocation;
+                int childSize = getOuterSizeInDirection(child,
+                        getWidgetForPaintable().isVertical);
+                if (getWidgetForPaintable().isVertical) {
+                    childSize += captionAllocation;
+                } else {
+                    childSize = Math.max(childSize, getCaptionWidth(child));
+                }
+                totalAllocated += childSize;
             }
         }
-        int startMargin = getWidgetForPaintable().getStartMarginInDirection(
-                getWidgetForPaintable().isVertical);
-        int totalMargins = startMargin
-                + getWidgetForPaintable().getEndMarginInDirection(
-                        getWidgetForPaintable().isVertical);
 
-        totalAllocated += totalMargins
-                + (getWidgetForPaintable().getSpacingInDirection(
-                        getWidgetForPaintable().isVertical) * (children.size() - 1));
+        totalAllocated += getSpacingInDirection(getWidgetForPaintable().isVertical)
+                * (children.size() - 1);
 
         Style ownStyle = getWidgetForPaintable().getElement().getStyle();
         double ownSize;
-        if (isUndefinedInDirection(getWidgetForPaintable(),
-                getWidgetForPaintable().isVertical)) {
+        if (isUndefinedInDirection(this, getWidgetForPaintable().isVertical)) {
             ownSize = totalAllocated;
-            ownStyle.setProperty(
-                    getMinPropertyName(getWidgetForPaintable().isVertical),
-                    totalAllocated, Unit.PX);
+            ownStyle.setPropertyPx(
+                    getSizeProperty(getWidgetForPaintable().isVertical),
+                    getSizeForInnerSize(totalAllocated,
+                            getWidgetForPaintable().isVertical));
         } else {
-            ownSize = getMeasuredInDirection(this,
-                    getWidgetForPaintable().isVertical);
-            ownStyle.clearProperty(getMinPropertyName(getWidgetForPaintable().isVertical));
+            ownSize = getInnerSizeInDirection(getWidgetForPaintable().isVertical);
+            ownStyle.setProperty(
+                    getSizeProperty(getWidgetForPaintable().isVertical),
+                    getDefinedSize(getWidgetForPaintable().isVertical));
         }
 
         double unallocatedSpace = Math.max(0, ownSize - totalAllocated);
 
-        double currentLocation = startMargin;
+        double currentLocation = getStartPadding(getWidgetForPaintable().isVertical);
         for (VPaintableWidget child : children) {
             Widget widget = child.getWidgetForPaintable();
             Element wrapper = getWidgetForPaintable().getWrapper(widget);
@@ -275,10 +290,10 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
 
             double extraPixels = unallocatedSpace * childExpandRatio;
 
-            boolean relative = isRelativeInDirection(widget,
+            boolean relative = isRelativeInDirection(child,
                     getWidgetForPaintable().isVertical);
 
-            double size = getMeasuredInDirection(child,
+            double size = getOuterSizeInDirection(child,
                     getWidgetForPaintable().isVertical);
             int captionHeight = getCaptionHeight(child);
 
@@ -321,8 +336,17 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
                     startPosition, Unit.PX);
 
             currentLocation += allocatedSpace
-                    + getWidgetForPaintable().getSpacingInDirection(
-                            getWidgetForPaintable().isVertical);
+                    + getSpacingInDirection(getWidgetForPaintable().isVertical);
+        }
+    }
+
+    private int getSpacingInDirection(boolean isVertical) {
+        if (isVertical) {
+            return getMeasuredSize().getDependencyOuterHeight(
+                    getWidgetForPaintable().spacingMeasureElement);
+        } else {
+            return getMeasuredSize().getDependencyOuterWidth(
+                    getWidgetForPaintable().spacingMeasureElement);
         }
     }
 
@@ -342,34 +366,30 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
                 captionAllocation = 0;
             }
 
-            if (!isRelativeInDirection(widget,
+            if (!isRelativeInDirection(child,
                     !getWidgetForPaintable().isVertical)) {
-                int childSize = getMeasuredInDirection(child,
+                int childSize = getOuterSizeInDirection(child,
                         !getWidgetForPaintable().isVertical)
                         + captionAllocation;
                 maxSize = Math.max(maxSize, childSize);
             }
         }
 
-        int startMargin = getWidgetForPaintable().getStartMarginInDirection(
-                !getWidgetForPaintable().isVertical);
-        int totalMargins = startMargin
-                + getWidgetForPaintable().getEndMarginInDirection(
-                        !getWidgetForPaintable().isVertical);
-
         double availableSpace;
         Style ownStyle = getWidgetForPaintable().getElement().getStyle();
 
-        if (isUndefinedInDirection(getWidgetForPaintable(),
-                !getWidgetForPaintable().isVertical)) {
-            ownStyle.setProperty(
-                    getMinPropertyName(!getWidgetForPaintable().isVertical),
-                    maxSize + totalMargins, Unit.PX);
+        if (isUndefinedInDirection(this, !getWidgetForPaintable().isVertical)) {
+            ownStyle.setPropertyPx(
+                    getSizeProperty(!getWidgetForPaintable().isVertical),
+                    getSizeForInnerSize(maxSize,
+                            !getWidgetForPaintable().isVertical));
+
             availableSpace = maxSize;
         } else {
-            ownStyle.clearProperty(getMinPropertyName(!getWidgetForPaintable().isVertical));
-            availableSpace = getMeasuredInDirection(this,
-                    !getWidgetForPaintable().isVertical) - totalMargins;
+            ownStyle.setProperty(
+                    getSizeProperty(!getWidgetForPaintable().isVertical),
+                    getDefinedSize(!getWidgetForPaintable().isVertical));
+            availableSpace = getInnerSizeInDirection(!getWidgetForPaintable().isVertical);
         }
 
         for (VPaintableWidget child : children) {
@@ -377,12 +397,12 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
             Element wrapper = getWidgetForPaintable().getWrapper(widget);
             Style wrapperStyle = wrapper.getStyle();
 
-            boolean relative = isRelativeInDirection(widget,
+            boolean relative = isRelativeInDirection(child,
                     !getWidgetForPaintable().isVertical);
 
             int captionHeight = getCaptionHeight(child);
 
-            double allocatedSize = getMeasuredInDirection(child,
+            double allocatedSize = getOuterSizeInDirection(child,
                     !getWidgetForPaintable().isVertical);
             if (!getWidgetForPaintable().isVertical) {
                 allocatedSize += captionHeight;
@@ -393,7 +413,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
             int alignment = getAlignmentInDirection(getWidgetForPaintable()
                     .getAlignment(child), !getWidgetForPaintable().isVertical);
 
-            double startPosition = startMargin;
+            double startPosition = getStartPadding(getWidgetForPaintable().isVertical);
             if (alignment == 0) {
                 startPosition += (availableSpace - allocatedSize) / 2;
                 // Centered
@@ -416,6 +436,22 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
                 wrapperStyle
                         .clearProperty(getSizeProperty(!getWidgetForPaintable().isVertical));
             }
+        }
+    }
+
+    private String getDefinedSize(boolean isVertical) {
+        if (isVertical) {
+            return getDefinedHeight();
+        } else {
+            return getDefinedWidth();
+        }
+    }
+
+    private int getStartPadding(boolean isVertical) {
+        if (isVertical) {
+            return getMeasuredSize().getPaddingTop();
+        } else {
+            return getMeasuredSize().getPaddingLeft();
         }
     }
 
