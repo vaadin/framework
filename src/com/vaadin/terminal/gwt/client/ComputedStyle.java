@@ -4,7 +4,7 @@
 package com.vaadin.terminal.gwt.client;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.user.client.Element;
+import com.google.gwt.dom.client.Element;
 
 public class ComputedStyle {
 
