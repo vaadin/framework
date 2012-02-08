@@ -1886,7 +1886,8 @@ public class ApplicationConnection {
         final String pid = uidl.getId();
         if (!paintableMap.hasPaintable(pid)) {
             // Create and register a new paintable if no old was found
-            VPaintableWidget p = widgetSet.createWidget(uidl, configuration);
+            VPaintableWidget p = widgetSet.createWidget(uidl.getTag(),
+                    configuration);
             p.setConnection(this);
             p.setId(pid);
             p.init();

@@ -34,34 +34,22 @@ public class ComboBox extends Select {
     private boolean textInputAllowed = true;
 
     public ComboBox() {
-        setMultiSelect(false);
         setNewItemsAllowed(false);
     }
 
     public ComboBox(String caption, Collection<?> options) {
         super(caption, options);
-        setMultiSelect(false);
         setNewItemsAllowed(false);
     }
 
     public ComboBox(String caption, Container dataSource) {
         super(caption, dataSource);
-        setMultiSelect(false);
         setNewItemsAllowed(false);
     }
 
     public ComboBox(String caption) {
         super(caption);
-        setMultiSelect(false);
         setNewItemsAllowed(false);
-    }
-
-    @Override
-    public void setMultiSelect(boolean multiSelect) {
-        if (multiSelect && !isMultiSelect()) {
-            throw new UnsupportedOperationException("Multiselect not supported");
-        }
-        super.setMultiSelect(multiSelect);
     }
 
     /**

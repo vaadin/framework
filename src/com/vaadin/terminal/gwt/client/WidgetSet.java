@@ -6,8 +6,6 @@ package com.vaadin.terminal.gwt.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ui.VFilterSelectPaintable;
-import com.vaadin.terminal.gwt.client.ui.VListSelectPaintable;
 import com.vaadin.terminal.gwt.client.ui.VUnknownComponentPaintable;
 
 public class WidgetSet {
@@ -24,15 +22,15 @@ public class WidgetSet {
      * component must be a {@link Widget} that implements
      * {@link VPaintableWidget}.
      * 
-     * @param uidl
-     *            UIDL to be painted with returned component.
+     * @param tag
+     *            component type tag for the component to create
      * @param client
      *            the application connection that whishes to instantiate widget
      * 
      * @return New uninitialized and unregistered component that can paint given
      *         UIDL.
      */
-    public VPaintableWidget createWidget(UIDL uidl,
+    public VPaintableWidget createWidget(String tag,
             ApplicationConfiguration conf) {
         /*
          * Yes, this (including the generated code in WidgetMap) may look very
@@ -40,15 +38,14 @@ public class WidgetSet {
          * Luckily this is mostly written by WidgetSetGenerator, here are just
          * some hacks. Extra instantiation code is needed if client side widget
          * has no "native" counterpart on client side.
-         * 
-         * TODO should try to get rid of these exceptions here
          */
 
-        final Class<? extends VPaintableWidget> classType = resolveWidgetType(
-                uidl, conf);
+        Class<? extends VPaintableWidget> classType = resolveWidgetType(tag,
+                conf);
+
         if (classType == null || classType == VUnknownComponentPaintable.class) {
             String serverSideName = conf
-                    .getUnknownServerClassNameByEncodedTagName(uidl.getTag());
+                    .getUnknownServerClassNameByEncodedTagName(tag);
             VUnknownComponentPaintable c = GWT
                     .create(VUnknownComponentPaintable.class);
             c.setServerSideClassName(serverSideName);
@@ -62,40 +59,13 @@ public class WidgetSet {
 
     }
 
-    protected Class<? extends VPaintableWidget> resolveWidgetType(UIDL uidl,
+    protected Class<? extends VPaintableWidget> resolveWidgetType(String tag,
             ApplicationConfiguration conf) {
-        final String tag = uidl.getTag();
-
         Class<? extends VPaintableWidget> widgetClass = conf
                 .getWidgetClassByEncodedTag(tag);
 
-        // add our historical quirks
-
-        if (widgetClass == VFilterSelectPaintable.class) {
-            if (uidl.hasAttribute("type")) {
-                final String type = uidl.getStringAttribute("type").intern();
-                if ("legacy-multi" == type) {
-                    return VListSelectPaintable.class;
-                }
-            }
-        }
         return widgetClass;
 
-    }
-
-    /**
-     * Test if the given component implementation conforms to UIDL.
-     * 
-     * @param currentWidget
-     *            Current implementation of the component
-     * @param uidl
-     *            UIDL to test against
-     * @return true iff createWidget would return a new component of the same
-     *         class than currentWidget
-     */
-    public boolean isCorrectImplementation(Widget currentWidget, UIDL uidl,
-            ApplicationConfiguration conf) {
-        return currentWidget.getClass() == resolveWidgetType(uidl, conf);
     }
 
     /**
@@ -114,16 +84,6 @@ public class WidgetSet {
         }
         Class<? extends VPaintableWidget> implementationByServerSideClassName = widgetMap
                 .getImplementationByServerSideClassName(fullyqualifiedName);
-
-        /*
-         * Also ensure that our historical quirks have their instantiators
-         * loaded. Without these, legacy code will throw NPEs when e.g. a Select
-         * is in multiselect mode, causing the clientside implementation to
-         * *actually* be VListSelect, when the annotation says VFilterSelect
-         */
-        if (fullyqualifiedName.equals("com.vaadin.ui.Select")) {
-            loadImplementation(VListSelectPaintable.class);
-        }
 
         return implementationByServerSideClassName;
 

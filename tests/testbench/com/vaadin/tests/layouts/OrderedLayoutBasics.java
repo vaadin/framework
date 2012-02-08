@@ -16,8 +16,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Select;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -116,13 +116,13 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
 
-        Select s = new Select("100% high select");
+        ListSelect s = new ListSelect("100% high select");
         s.setMultiSelect(true);
         s.setHeight("100%");
         s.setWidth("");
         ol.addComponent(s);
 
-        s = new Select("200 px high select");
+        s = new ListSelect("200 px high select");
         s.setMultiSelect(true);
         s.setHeight("200px");
         s.setWidth("");
@@ -172,7 +172,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(l);
         ol.setComponentAlignment(l, Alignment.BOTTOM_LEFT);
 
-        Select s = new Select("100% high select, should fit into layout");
+        ListSelect s = new ListSelect(
+                "100% high select, should fit into layout");
         s.setMultiSelect(true);
         s.setHeight("100%");
         s.setWidth("");
@@ -182,7 +183,7 @@ public class OrderedLayoutBasics extends TestBase {
 
         ol.addComponent(s);
 
-        s = new Select("200 px high select, should be partly outside");
+        s = new ListSelect("200 px high select, should be partly outside");
         s.setMultiSelect(true);
         s.setHeight("200px");
         s.setWidth("");
@@ -224,7 +225,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(l);
         ol.setComponentAlignment(l, Alignment.BOTTOM_LEFT);
 
-        Select s = new Select("100% high select, should fit into layout");
+        ListSelect s = new ListSelect(
+                "100% high select, should fit into layout");
         s.setMultiSelect(true);
         s.setHeight("100%");
         s.setWidth("100%");
@@ -234,7 +236,8 @@ public class OrderedLayoutBasics extends TestBase {
 
         ol.addComponent(s);
 
-        s = new Select("200 px high select, should make the layout 200px high");
+        s = new ListSelect(
+                "200 px high select, should make the layout 200px high");
         s.setMultiSelect(true);
         s.setHeight("200px");
         s.setWidth("100%");
@@ -277,7 +280,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(l);
         ol.setComponentAlignment(l, Alignment.BOTTOM_LEFT);
 
-        Select s = new Select("100% high select, should fit into layout");
+        ListSelect s = new ListSelect(
+                "100% high select, should fit into layout");
         s.setMultiSelect(true);
         s.setHeight("100%");
         s.setWidth("100%");
@@ -287,7 +291,8 @@ public class OrderedLayoutBasics extends TestBase {
 
         ol.addComponent(s);
 
-        s = new Select("200 px high select, should make the layout 200px high");
+        s = new ListSelect(
+                "200 px high select, should make the layout 200px high");
         s.setMultiSelect(true);
         s.setHeight("200px");
         s.setWidth("100%");

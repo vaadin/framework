@@ -976,9 +976,12 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     /**
-     * Sets the multiselect mode. Setting multiselect mode false may loose
+     * Sets the multiselect mode. Setting multiselect mode false may lose
      * selection information: if selected items set contains one or more
      * selected items, only one of the selected items is kept as selected.
+     * 
+     * Subclasses of AbstractSelect can choose not to support changing the
+     * multiselect mode, and may throw {@link UnsupportedOperationException}.
      * 
      * @param multiSelect
      *            the New value of property multiSelect.

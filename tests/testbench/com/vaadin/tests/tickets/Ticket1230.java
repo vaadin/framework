@@ -127,7 +127,6 @@ public class Ticket1230 extends Application.LegacyApplication {
     @SuppressWarnings("deprecation")
     private Select createSelect() {
         Select select = new Select();
-        select.setMultiSelect(false);
         select.addContainerProperty(PROPERTY_ID, String.class, "");
         select.setItemCaptionPropertyId(PROPERTY_ID);
 
