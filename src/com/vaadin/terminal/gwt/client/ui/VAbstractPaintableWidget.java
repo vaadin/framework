@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.MeasureManager;
 import com.vaadin.terminal.gwt.client.MeasureManager.MeasuredSize;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -24,11 +25,14 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     private ApplicationConnection connection;
     private String id;
 
-    private final MeasuredSize measuredSize = new MeasuredSize();
+    private final MeasuredSize measuredSize = new MeasuredSize(this);
 
     /* State variables */
     private boolean enabled = true;
     private boolean visible = true;
+
+    private String definedWidth = "";
+    private String definedHeight = "";
 
     /**
      * Default constructor
@@ -183,7 +187,56 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
          * taken into account
          */
 
-        getConnection().updateComponentSize(this, uidl);
+        updateComponentSize(uidl);
+    }
+
+    private void updateComponentSize(UIDL uidl) {
+        String w = uidl.hasAttribute("width") ? uidl
+                .getStringAttribute("width") : "";
+
+        String h = uidl.hasAttribute("height") ? uidl
+                .getStringAttribute("height") : "";
+
+        // Dirty if either dimension changed between relative and non-relative
+        MeasureManager.MeasuredSize measuredSize = getMeasuredSize();
+        if (!measuredSize.isDirty()
+                && (w.endsWith("%") != definedWidth.endsWith("%") || h
+                        .endsWith("%") != definedHeight.endsWith("%"))) {
+            measuredSize.setDirty(true);
+        }
+
+        definedWidth = w;
+        definedHeight = h;
+
+        // Set defined sizes
+        Widget component = getWidgetForPaintable();
+
+        component.setHeight(h);
+        component.setWidth(w);
+    }
+
+    public boolean isRelativeHeight() {
+        return definedHeight.endsWith("%");
+    }
+
+    public boolean isRelativeWidth() {
+        return definedWidth.endsWith("%");
+    }
+
+    public boolean isUndefinedHeight() {
+        return definedHeight.length() == 0;
+    }
+
+    public boolean isUndefinedWidth() {
+        return definedWidth.length() == 0;
+    }
+
+    public String getDefinedHeight() {
+        return definedHeight;
+    }
+
+    public String getDefinedWidth() {
+        return definedWidth;
     }
 
     /**

@@ -31,4 +31,58 @@ public interface VPaintableWidget extends VPaintable {
     public VPaintableWidgetContainer getParent();
 
     public MeasuredSize getMeasuredSize();
+
+    /**
+     * Returns <code>true</code> if the width of this paintable is currently
+     * undefined. If the width is undefined, the actual width of the paintable
+     * is defined by its contents.
+     * 
+     * @return <code>true</code> if the width is undefined, else
+     *         <code>false</code>
+     */
+    public boolean isUndefinedWidth();
+
+    /**
+     * Returns <code>true</code> if the height of this paintable is currently
+     * undefined. If the height is undefined, the actual height of the paintable
+     * is defined by its contents.
+     * 
+     * @return <code>true</code> if the height is undefined, else
+     *         <code>false</code>
+     */
+    public boolean isUndefinedHeight();
+
+    /**
+     * Returns <code>true</code> if the width of this paintable is currently
+     * relative. If the width is relative, the actual width of the paintable is
+     * a percentage of the size allocated to it by its parent.
+     * 
+     * @return <code>true</code> if the width is undefined, else
+     *         <code>false</code>
+     */
+    public boolean isRelativeWidth();
+
+    /**
+     * Returns <code>true</code> if the height of this paintable is currently
+     * relative. If the height is relative, the actual height of the paintable
+     * is a percentage of the size allocated to it by its parent.
+     * 
+     * @return <code>true</code> if the width is undefined, else
+     *         <code>false</code>
+     */
+    public boolean isRelativeHeight();
+
+    /**
+     * Gets the width of this paintable as defined on the server.
+     * 
+     * @return the server side width definition
+     */
+    public String getDefinedWidth();
+
+    /**
+     * Gets the height of this paintable as defined on the server.
+     * 
+     * @return the server side height definition
+     */
+    public String getDefinedHeight();
 }
