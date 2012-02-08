@@ -94,15 +94,15 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         VPaintableMap paintableMap = VPaintableMap.get(getConnection());
 
         Widget w = getWidgetForPaintable();
-        while (w != null) {
+        while (true) {
             w = w.getParent();
+            if (w == null) {
+                return null;
+            }
             if (paintableMap.isPaintable(w)) {
-                return (VPaintableWidgetContainer) paintableMap
-                        .getPaintable(w);
+                return (VPaintableWidgetContainer) paintableMap.getPaintable(w);
             }
         }
-
-        return null;
     }
 
     protected static boolean isRealUpdate(UIDL uidl) {
