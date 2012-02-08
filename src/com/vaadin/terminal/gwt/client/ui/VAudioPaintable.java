@@ -15,10 +15,10 @@ public class VAudioPaintable extends VMediaBasePaintable {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
-        super.updateFromUIDL(uidl, client);
         Style style = getWidgetForPaintable().getElement().getStyle();
 
         // Make sure that the controls are not clipped if visible.

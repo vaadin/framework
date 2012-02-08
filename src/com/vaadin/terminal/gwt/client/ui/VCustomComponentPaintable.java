@@ -15,9 +15,11 @@ import com.vaadin.terminal.gwt.client.VPaintableWidget;
 public class VCustomComponentPaintable extends
         VAbstractPaintableWidgetContainer {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, final ApplicationConnection client) {
         getWidgetForPaintable().rendering = true;
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             getWidgetForPaintable().rendering = false;
             return;
         }

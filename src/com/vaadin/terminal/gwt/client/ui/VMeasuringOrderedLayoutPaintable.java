@@ -50,10 +50,13 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         return (VMeasuringOrderedLayout) super.getWidgetForPaintable();
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().client = client;
         getWidgetForPaintable().id = uidl.getId();
-        if (client.updateComponent(this, uidl, true)) {
+
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
 

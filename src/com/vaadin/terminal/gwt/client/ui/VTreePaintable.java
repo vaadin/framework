@@ -14,9 +14,11 @@ import com.vaadin.terminal.gwt.client.ui.VTree.TreeNode;
 
 public class VTreePaintable extends VAbstractPaintableWidget {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Ensure correct implementation and let container manage caption
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
 

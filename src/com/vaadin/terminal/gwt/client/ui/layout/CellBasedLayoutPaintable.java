@@ -11,11 +11,12 @@ import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
 public abstract class CellBasedLayoutPaintable extends
         VAbstractPaintableWidgetContainer {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().client = client;
 
         // Only non-cached UIDL:s can introduce changes
-        if (uidl.getBooleanAttribute("cached")) {
+        if (isCachedUpdate(uidl)) {
             return;
         }
 
@@ -30,9 +31,7 @@ public abstract class CellBasedLayoutPaintable extends
          * This call should be made first. Ensure correct implementation, handle
          * size etc.
          */
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
+        super.updateFromUIDL(uidl, client);
 
         handleDynamicDimensions(uidl);
     }

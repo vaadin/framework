@@ -15,13 +15,13 @@ import com.vaadin.terminal.gwt.client.VPaintableWidget;
 public abstract class VTabsheetBasePaintable extends
         VAbstractPaintableWidgetContainer {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().client = client;
 
         // Ensure correct implementation
-        getWidgetForPaintable().cachedUpdate = client.updateComponent(this,
-                uidl, true);
-        if (getWidgetForPaintable().cachedUpdate) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
 

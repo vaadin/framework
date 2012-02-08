@@ -34,7 +34,7 @@ public class VPopupCalendarPaintable extends VTextualDatePaintable {
 
         super.updateFromUIDL(uidl, client);
 
-        String popupStyleNames = ApplicationConnection.getStyleName(
+        String popupStyleNames = getStyleNameFromUIDL(
                 VPopupCalendar.POPUP_PRIMARY_STYLE_NAME, uidl, false);
         popupStyleNames += " "
                 + VDateField.CLASSNAME

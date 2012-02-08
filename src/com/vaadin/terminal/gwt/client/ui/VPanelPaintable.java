@@ -26,13 +26,18 @@ public class VPanelPaintable extends VAbstractPaintableWidgetContainer {
         }
     };
 
+    @Override
+    protected boolean delegateCaptionHandling() {
+        return false;
+    };
+
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().rendering = true;
-        if (!uidl.hasAttribute("cached")) {
+        if (isRealUpdate(uidl)) {
 
             // Handle caption displaying and style names, prior generics.
-            // Affects size
-            // calculations
+            // Affects size calculations
 
             // Restore default stylenames
             getWidgetForPaintable().contentNode.setClassName(VPanel.CLASSNAME
@@ -78,7 +83,9 @@ public class VPanelPaintable extends VAbstractPaintableWidgetContainer {
             }
         }
         // Ensure correct implementation
-        if (client.updateComponent(this, uidl, false)) {
+        super.updateFromUIDL(uidl, client);
+
+        if (!isRealUpdate(uidl)) {
             getWidgetForPaintable().rendering = false;
             return;
         }

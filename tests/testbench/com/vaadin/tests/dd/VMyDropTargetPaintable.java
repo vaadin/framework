@@ -11,8 +11,10 @@ import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
 
 public class VMyDropTargetPaintable extends VAbstractPaintableWidget {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
         getWidgetForPaintable().client = client;

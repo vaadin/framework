@@ -33,6 +33,12 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
         }
     };
 
+    @Override
+    protected boolean delegateCaptionHandling() {
+        return false;
+    };
+
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().id = uidl.getId();
         getWidgetForPaintable().client = client;
@@ -47,7 +53,7 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
             return;
         }
 
-        if (!uidl.hasAttribute("cached")) {
+        if (isRealUpdate(uidl)) {
             if (uidl.getBooleanAttribute("modal") != getWidgetForPaintable().vaadinModality) {
                 getWidgetForPaintable().setVaadinModality(
                         !getWidgetForPaintable().vaadinModality);
@@ -75,7 +81,8 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
         }
 
         getWidgetForPaintable().visibilityChangesDisabled = true;
-        if (client.updateComponent(this, uidl, false)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
         getWidgetForPaintable().visibilityChangesDisabled = false;

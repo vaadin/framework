@@ -26,7 +26,6 @@ abstract class VTabsheetBase extends ComplexPanel implements Container {
     protected boolean disabled;
     protected boolean readonly;
     protected Set<String> disabledTabKeys = new HashSet<String>();
-    protected boolean cachedUpdate = false;
 
     public VTabsheetBase(String classname) {
         setElement(DOM.createDiv());

@@ -31,10 +31,12 @@ public class VCssLayoutPaintable extends VAbstractPaintableWidgetContainer {
         }
     };
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().rendering = true;
 
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             getWidgetForPaintable().rendering = false;
             return;
         }

@@ -16,10 +16,12 @@ import com.vaadin.terminal.gwt.client.VPaintableWidget;
 public class VCustomLayoutPaintable extends VAbstractPaintableWidgetContainer {
 
     /** Update the layout from UIDL */
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().client = client;
         // ApplicationConnection manages generic component features
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
 

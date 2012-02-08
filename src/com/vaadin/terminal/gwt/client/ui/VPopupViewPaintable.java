@@ -13,16 +13,23 @@ import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 public class VPopupViewPaintable extends VAbstractPaintableWidgetContainer {
 
+    @Override
+    protected boolean delegateCaptionHandling() {
+        return false;
+    }
+
     /**
      * 
      * 
      * @see com.vaadin.terminal.gwt.client.VPaintableWidget#updateFromUIDL(com.vaadin.terminal.gwt.client.UIDL,
      *      com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // This call should be made first. Ensure correct implementation,
         // and don't let the containing layout manage caption.
-        if (client.updateComponent(this, uidl, false)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
         // These are for future server connections

@@ -31,6 +31,7 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
 
     private static final String CLICK_EVENT_IDENTIFIER = VPanelPaintable.CLICK_EVENT_IDENTIFIER;
 
+    @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().rendering = true;
         // As VView is not created in the same way as all other paintables we
@@ -143,7 +144,7 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
         }
 
         getWidgetForPaintable().layout.updateFromUIDL(childUidl, client);
-        if (!childUidl.getBooleanAttribute("cached")) {
+        if (isRealUpdate(childUidl)) {
             getWidgetForPaintable().updateParentFrameSize();
         }
 

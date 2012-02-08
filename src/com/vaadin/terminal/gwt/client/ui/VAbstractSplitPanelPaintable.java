@@ -64,6 +64,7 @@ public abstract class VAbstractSplitPanelPaintable extends
 
     };
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().client = client;
         getWidgetForPaintable().id = uidl.getId();
@@ -71,7 +72,8 @@ public abstract class VAbstractSplitPanelPaintable extends
 
         getWidgetForPaintable().immediate = uidl.hasAttribute("immediate");
 
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             getWidgetForPaintable().rendering = false;
             return;
         }

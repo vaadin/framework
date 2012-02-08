@@ -32,7 +32,7 @@ public class VAccordionPaintable extends VTabsheetBasePaintable {
                     getWidgetForPaintable().selectedUIDLItemIndex);
 
             selectedItem.setContent(selectedTabUIDL);
-        } else if (!uidl.getBooleanAttribute("cached")
+        } else if (isRealUpdate(uidl)
                 && getWidgetForPaintable().openTab != null) {
             getWidgetForPaintable().close(getWidgetForPaintable().openTab);
         }
