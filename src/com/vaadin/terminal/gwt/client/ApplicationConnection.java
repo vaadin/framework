@@ -19,7 +19,6 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -1572,38 +1571,6 @@ public class ApplicationConnection {
         return result.toString();
     }
 
-    public void updateComponentSize(VPaintableWidget paintable, UIDL uidl) {
-        String w = uidl.hasAttribute("width") ? uidl
-                .getStringAttribute("width") : "";
-
-        String h = uidl.hasAttribute("height") ? uidl
-                .getStringAttribute("height") : "";
-
-        Widget component = paintableMap.getWidget(paintable);
-
-        Style style = component.getElement().getStyle();
-
-        // Dirty if either dimension changed between relative and non-relative
-        if (w.endsWith("%") != style.getWidth().endsWith("%")
-                || h.endsWith("%") != style.getHeight().endsWith("%")) {
-            MeasureManager.MeasuredSize measuredSize = paintable
-                    .getMeasuredSize();
-            if (measuredSize != null) {
-                measuredSize.setDirty(true);
-            }
-        }
-
-        // Set defined sizes
-        component.setHeight(h);
-        component.setWidth(w);
-    }
-
-    /**
-     * Traverses recursively child widgets until ContainerResizedListener child
-     * widget is found. They will delegate it further if needed.
-     * 
-     * @param container
-     */
     private boolean runningLayout = false;
 
     /**
