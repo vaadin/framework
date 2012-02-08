@@ -17,7 +17,7 @@ public class VDragAndDropWrapperPaintable extends VCustomComponentPaintable {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().client = client;
         super.updateFromUIDL(uidl, client);
-        if (!uidl.hasAttribute("cached") && !uidl.hasAttribute("hidden")) {
+        if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {
             UIDL acceptCrit = uidl.getChildByTagName("-ac");
             if (acceptCrit == null) {
                 getWidgetForPaintable().dropHandler = null;

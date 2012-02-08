@@ -12,11 +12,18 @@ import com.vaadin.terminal.gwt.client.UIDL;
 
 public class VLinkPaintable extends VAbstractPaintableWidget {
 
+    @Override
+    protected boolean delegateCaptionHandling() {
+        return false;
+    }
+
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         // Ensure correct implementation,
         // but don't let container manage caption etc.
-        if (client.updateComponent(this, uidl, false)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
 

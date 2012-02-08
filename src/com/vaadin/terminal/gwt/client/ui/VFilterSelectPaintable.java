@@ -21,6 +21,7 @@ public class VFilterSelectPaintable extends VAbstractPaintableWidget {
      * com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.terminal
      * .gwt.client.UIDL, com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
+    @Override
     @SuppressWarnings("deprecation")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Save details
@@ -33,7 +34,8 @@ public class VFilterSelectPaintable extends VAbstractPaintableWidget {
         getWidgetForPaintable().tb.setEnabled(getWidgetForPaintable().enabled);
         getWidgetForPaintable().updateReadOnly();
 
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
 

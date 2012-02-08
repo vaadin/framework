@@ -22,10 +22,12 @@ public class VMenuBarPaintable extends VAbstractPaintableWidget {
      * This method is called when the page is loaded for the first time, and
      * every time UI changes in the component are received from the server.
      */
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // This call should be made first. Ensure correct implementation,
         // and let the containing layout manage caption, etc.
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
 

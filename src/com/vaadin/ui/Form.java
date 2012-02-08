@@ -861,13 +861,16 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * match. Null values are not supported.
      * </p>
      * 
+     * Note: since Vaadin 7.0, returns an {@link AbstractSelect} instead of a
+     * {@link Select}.
+     * 
      * @param propertyId
      *            the id of the property.
      * @param values
      * @param descriptions
      * @return the select property generated
      */
-    public Select replaceWithSelect(Object propertyId, Object[] values,
+    public AbstractSelect replaceWithSelect(Object propertyId, Object[] values,
             Object[] descriptions) {
 
         // Checks the parameters
@@ -927,10 +930,8 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         }
 
         // Creates the new field matching to old field parameters
-        final Select newField = new Select();
-        if (isMultiselect) {
-            newField.setMultiSelect(true);
-        }
+        final AbstractSelect newField = isMultiselect ? new ListSelect()
+                : new Select();
         newField.setCaption(oldField.getCaption());
         newField.setReadOnly(oldField.isReadOnly());
         newField.setReadThrough(oldField.isReadThrough());

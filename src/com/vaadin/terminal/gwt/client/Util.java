@@ -596,6 +596,7 @@ public class Util {
 
     }
 
+    @Deprecated
     public static boolean isCached(UIDL uidl) {
         return uidl.getBooleanAttribute("cached");
     }

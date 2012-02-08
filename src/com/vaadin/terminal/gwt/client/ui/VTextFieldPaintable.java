@@ -16,12 +16,14 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutAct
 public class VTextFieldPaintable extends VAbstractPaintableWidget implements
         BeforeShortcutActionListener {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Save details
         getWidgetForPaintable().client = client;
         getWidgetForPaintable().paintableId = uidl.getId();
 
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
 

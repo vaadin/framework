@@ -21,8 +21,10 @@ public abstract class VMediaBasePaintable extends VAbstractPaintableWidget {
     public static final String ATTR_HTML = "html";
     public static final String ATTR_ALT_TEXT = "alt";
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
 

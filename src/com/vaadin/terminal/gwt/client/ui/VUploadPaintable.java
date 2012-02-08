@@ -11,8 +11,10 @@ import com.vaadin.terminal.gwt.client.UIDL;
 
 public class VUploadPaintable extends VAbstractPaintableWidget {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
         if (uidl.hasAttribute("notStarted")) {

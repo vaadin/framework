@@ -15,7 +15,7 @@ public class VTwinColSelectPaintable extends VOptionGroupBasePaintable {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Captions are updated before super call to ensure the widths are set
         // correctly
-        if (!uidl.getBooleanAttribute("cached")) {
+        if (isRealUpdate(uidl)) {
             getWidgetForPaintable().updateCaptions(uidl);
         }
 

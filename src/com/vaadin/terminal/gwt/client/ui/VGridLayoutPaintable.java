@@ -37,12 +37,14 @@ public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer {
         }
     };
 
+    @Override
     @SuppressWarnings("unchecked")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().rendering = true;
         getWidgetForPaintable().client = client;
 
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             getWidgetForPaintable().rendering = false;
             return;
         }

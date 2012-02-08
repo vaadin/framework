@@ -10,13 +10,15 @@ import com.vaadin.terminal.gwt.client.UIDL;
 public abstract class VOptionGroupBasePaintable extends
         VAbstractPaintableWidget {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         // Save details
         getWidgetForPaintable().client = client;
         getWidgetForPaintable().paintableId = uidl.getId();
 
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
 

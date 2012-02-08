@@ -23,6 +23,7 @@ public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer {
      * com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.terminal
      * .gwt.client.UIDL, com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().rendering = true;
 
@@ -48,7 +49,8 @@ public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer {
         getWidgetForPaintable().tFoot
                 .setVisible(getWidgetForPaintable().showColFooters);
 
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             getWidgetForPaintable().rendering = false;
             return;
         }

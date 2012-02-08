@@ -12,13 +12,15 @@ import com.vaadin.terminal.gwt.client.UIDL;
 
 public class VSliderPaintable extends VAbstractPaintableWidget {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         getWidgetForPaintable().client = client;
         getWidgetForPaintable().id = uidl.getId();
 
         // Ensure correct implementation
-        if (client.updateComponent(this, uidl, true)) {
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
             return;
         }
 
