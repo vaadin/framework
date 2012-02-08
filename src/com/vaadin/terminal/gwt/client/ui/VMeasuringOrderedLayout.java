@@ -15,9 +15,7 @@ import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ValueMap;
 
@@ -26,10 +24,6 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
     public static final String CLASSNAME = "v-orderedlayout";
 
     final boolean isVertical;
-
-    ApplicationConnection client;
-
-    String id;
 
     ValueMap expandRatios;
 
@@ -62,24 +56,6 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
 
     private void add(Widget widget, DivElement wrapper) {
         add(widget, (com.google.gwt.user.client.Element) wrapper.cast());
-    }
-
-    AlignmentInfo getAlignment(VPaintableWidget child) {
-        String pid = VPaintableMap.get(client).getPid(child);
-        if (alignments.containsKey(pid)) {
-            return new AlignmentInfo(alignments.getInt(pid));
-        } else {
-            return AlignmentInfo.TOP_LEFT;
-        }
-    }
-
-    double getExpandRatio(VPaintableWidget child) {
-        String pid = VPaintableMap.get(client).getPid(child);
-        if (expandRatios.containsKey(pid)) {
-            return expandRatios.getRawNumber(pid);
-        } else {
-            return 0;
-        }
     }
 
     void addChildWidget(Widget widget) {

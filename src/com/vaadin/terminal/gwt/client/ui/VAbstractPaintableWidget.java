@@ -8,8 +8,7 @@ import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.MeasureManager;
-import com.vaadin.terminal.gwt.client.MeasureManager.MeasuredSize;
+import com.vaadin.terminal.gwt.client.MeasuredSize;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
@@ -198,7 +197,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
                 .getStringAttribute("height") : "";
 
         // Dirty if either dimension changed between relative and non-relative
-        MeasureManager.MeasuredSize measuredSize = getMeasuredSize();
+        MeasuredSize measuredSize = getMeasuredSize();
         if (!measuredSize.isDirty()
                 && (w.endsWith("%") != definedWidth.endsWith("%") || h
                         .endsWith("%") != definedHeight.endsWith("%"))) {

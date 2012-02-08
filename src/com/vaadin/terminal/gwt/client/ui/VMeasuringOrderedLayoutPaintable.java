@@ -10,8 +10,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.CalculatingLayout;
-import com.vaadin.terminal.gwt.client.MeasureManager;
-import com.vaadin.terminal.gwt.client.MeasureManager.MeasuredSize;
+import com.vaadin.terminal.gwt.client.MeasuredSize;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
@@ -29,8 +28,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         if (VCaption.isNeeded(uidl)) {
             VCaption caption = getWidgetForPaintable().captions.get(component);
             if (caption == null) {
-                caption = new VCaption(component,
-                        getWidgetForPaintable().client);
+                caption = new VCaption(component, getConnection());
 
                 Widget widget = component.getWidgetForPaintable();
 
@@ -58,20 +56,14 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().client = client;
-        getWidgetForPaintable().id = uidl.getId();
-
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }
 
-        HashSet<Widget> previousChildren = new HashSet<Widget>();
-        for (Widget child : getWidgetForPaintable()) {
-            if (!(child instanceof VCaption)) {
-                previousChildren.add(child);
-            }
-        }
+        HashSet<VPaintableWidget> previousChildren = new HashSet<VPaintableWidget>(
+                getChildren());
+
         // TODO Support reordering elements!
         for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL childUIDL = (UIDL) it.next();
@@ -88,11 +80,12 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
             }
             // TODO Update alignments and expand ratios
 
-            previousChildren.remove(widget);
+            previousChildren.remove(child);
         }
 
-        for (Widget widget : previousChildren) {
-            Element wrapper = getWidgetForPaintable().getWrapper(widget);
+        for (VPaintableWidget child : previousChildren) {
+            Widget widget = child.getWidgetForPaintable();
+            Element wrapper = VMeasuringOrderedLayout.getWrapper(widget);
             VCaption caption = getWidgetForPaintable().captions.remove(widget);
             if (caption != null) {
                 getWidgetForPaintable().remove(caption);
@@ -101,8 +94,8 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
             // Remove the wrapper
             getWidgetForPaintable().getElement().removeChild(wrapper);
 
-            client.unregisterPaintable(VPaintableMap.get(client).getPaintable(
-                    widget));
+            VPaintableMap vPaintableMap = VPaintableMap.get(client);
+            vPaintableMap.unregisterPaintable(child);
         }
 
         int bitMask = uidl.getIntAttribute("margins");
@@ -181,7 +174,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
 
     private static int getOuterSizeInDirection(VPaintableWidget paintable,
             boolean isVertical) {
-        MeasureManager.MeasuredSize measuredSize = paintable.getMeasuredSize();
+        MeasuredSize measuredSize = paintable.getMeasuredSize();
         if (isVertical) {
             return measuredSize.getOuterHeight();
         } else {
@@ -230,12 +223,13 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         for (VPaintableWidget child : children) {
             Widget widget = child.getWidgetForPaintable();
 
-            totalExpand += getWidgetForPaintable().getExpandRatio(child);
+            totalExpand += getExpandRatio(child);
 
             int captionAllocation;
             if (getWidgetForPaintable().isVertical) {
                 captionAllocation = getCaptionHeight(child);
-                getWidgetForPaintable().getWrapper(widget).getStyle()
+                getWidgetForPaintable();
+                VMeasuringOrderedLayout.getWrapper(widget).getStyle()
                         .setPaddingTop(captionAllocation, Unit.PX);
             } else {
                 captionAllocation = 0;
@@ -277,15 +271,15 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         double currentLocation = getStartPadding(getWidgetForPaintable().isVertical);
         for (VPaintableWidget child : children) {
             Widget widget = child.getWidgetForPaintable();
-            Element wrapper = getWidgetForPaintable().getWrapper(widget);
+            getWidgetForPaintable();
+            Element wrapper = VMeasuringOrderedLayout.getWrapper(widget);
             Style wrapperStyle = wrapper.getStyle();
 
             double childExpandRatio;
             if (totalExpand == 0) {
                 childExpandRatio = 1d / children.size();
             } else {
-                childExpandRatio = getWidgetForPaintable()
-                        .getExpandRatio(child) / totalExpand;
+                childExpandRatio = getExpandRatio(child) / totalExpand;
             }
 
             double extraPixels = unallocatedSpace * childExpandRatio;
@@ -308,8 +302,8 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
                 allocatedSpace += size;
             }
 
-            int alignment = getAlignmentInDirection(getWidgetForPaintable()
-                    .getAlignment(child), getWidgetForPaintable().isVertical);
+            int alignment = getAlignmentInDirection(getAlignment(child),
+                    getWidgetForPaintable().isVertical);
 
             if (relative) {
                 double captionReservation = getWidgetForPaintable().isVertical ? captionHeight
@@ -360,7 +354,8 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
             int captionAllocation;
             if (!getWidgetForPaintable().isVertical) {
                 captionAllocation = getCaptionHeight(child);
-                getWidgetForPaintable().getWrapper(widget).getStyle()
+                getWidgetForPaintable();
+                VMeasuringOrderedLayout.getWrapper(widget).getStyle()
                         .setPaddingTop(captionAllocation, Unit.PX);
             } else {
                 captionAllocation = 0;
@@ -394,7 +389,8 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
 
         for (VPaintableWidget child : children) {
             Widget widget = child.getWidgetForPaintable();
-            Element wrapper = getWidgetForPaintable().getWrapper(widget);
+            getWidgetForPaintable();
+            Element wrapper = VMeasuringOrderedLayout.getWrapper(widget);
             Style wrapperStyle = wrapper.getStyle();
 
             boolean relative = isRelativeInDirection(child,
@@ -410,8 +406,8 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
                 allocatedSize = Math.max(allocatedSize, getCaptionWidth(child));
             }
 
-            int alignment = getAlignmentInDirection(getWidgetForPaintable()
-                    .getAlignment(child), !getWidgetForPaintable().isVertical);
+            int alignment = getAlignmentInDirection(getAlignment(child),
+                    !getWidgetForPaintable().isVertical);
 
             double startPosition = getStartPadding(getWidgetForPaintable().isVertical);
             if (alignment == 0) {
@@ -468,6 +464,25 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
             layoutPrimaryDirection();
         } else {
             layoutSecondaryDirection();
+        }
+    }
+
+    AlignmentInfo getAlignment(VPaintableWidget child) {
+        String pid = child.getId();
+        if (getWidgetForPaintable().alignments.containsKey(pid)) {
+            return new AlignmentInfo(
+                    getWidgetForPaintable().alignments.getInt(pid));
+        } else {
+            return AlignmentInfo.TOP_LEFT;
+        }
+    }
+
+    double getExpandRatio(VPaintableWidget child) {
+        String pid = child.getId();
+        if (getWidgetForPaintable().expandRatios.containsKey(pid)) {
+            return getWidgetForPaintable().expandRatios.getRawNumber(pid);
+        } else {
+            return 0;
         }
     }
 }

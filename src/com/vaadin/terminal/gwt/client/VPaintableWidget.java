@@ -5,7 +5,6 @@
 package com.vaadin.terminal.gwt.client;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.MeasureManager.MeasuredSize;
 
 /**
  * An interface used by client-side widgets or paintable parts to receive
