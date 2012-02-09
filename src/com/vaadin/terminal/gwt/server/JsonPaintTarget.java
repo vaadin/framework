@@ -64,6 +64,10 @@ public class JsonPaintTarget implements PaintTarget {
 
     private final Stack<JsonTag> openJsonTags;
 
+    // these match each other element-wise
+    private final Stack<Paintable> openPaintables;
+    private final Stack<String> openPaintableTags;
+
     private final PrintWriter uidlBuffer;
 
     private boolean closed = false;
@@ -89,9 +93,8 @@ public class JsonPaintTarget implements PaintTarget {
     private final Collection<Class<? extends Paintable>> usedPaintableTypes = new LinkedList<Class<? extends Paintable>>();
 
     /**
-     * Creates a new XMLPrintWriter, without automatic line flushing.
+     * Creates a new JsonPaintTarget.
      * 
-     * @param variableMap
      * @param manager
      * @param outWriter
      *            A character-output stream.
@@ -113,6 +116,10 @@ public class JsonPaintTarget implements PaintTarget {
         // Initialize tag-writing
         mOpenTags = new Stack<String>();
         openJsonTags = new Stack<JsonTag>();
+
+        openPaintables = new Stack<Paintable>();
+        openPaintableTags = new Stack<String>();
+
         cacheEnabled = cachingRequired;
     }
 
@@ -673,7 +680,7 @@ public class JsonPaintTarget implements PaintTarget {
      * @see com.vaadin.terminal.PaintTarget#startTag(com.vaadin.terminal
      * .Paintable, java.lang.String)
      */
-    public boolean startTag(Paintable paintable, String tagName)
+    public boolean startPaintable(Paintable paintable, String tagName)
             throws PaintException {
         startTag(tagName, true);
         final boolean isPreviouslyPainted = manager.hasPaintableId(paintable)
@@ -682,7 +689,19 @@ public class JsonPaintTarget implements PaintTarget {
         final String id = manager.getPaintableId(paintable);
         paintable.addListener(manager);
         addAttribute("id", id);
+
+        // TODO if to queue if already painting a paintable
+        // if (openPaintables.isEmpty()) {
+        openPaintables.push(paintable);
+        openPaintableTags.push(tagName);
+
         paintedComponents.add(paintable);
+        // } else {
+        // // notify manager: add to paint queue instead of painting now
+        // manager.queuePaintable(paintable);
+        // // TODO return suitable value to defer painting and close tag if a
+        // // paintable tag is already open
+        // }
 
         if (paintable instanceof CustomLayout) {
             customLayoutArgumentsOpen = true;
@@ -691,10 +710,17 @@ public class JsonPaintTarget implements PaintTarget {
         return cacheEnabled && isPreviouslyPainted;
     }
 
-    @Deprecated
-    public void paintReference(Paintable paintable, String referenceName)
-            throws PaintException {
-        addAttribute(referenceName, paintable);
+    public void endPaintable(Paintable paintable) throws PaintException {
+        Paintable openPaintable = openPaintables.peek();
+        if (paintable != openPaintable) {
+            throw new PaintException("Invalid UIDL: closing wrong paintable: '"
+                    + getPaintIdentifier(paintable) + "' expected: '"
+                    + getPaintIdentifier(openPaintable) + "'.");
+        }
+        // remove paintable from the stack
+        openPaintables.pop();
+        String openTag = openPaintableTags.pop();
+        endTag(openTag);
     }
 
     public String getPaintIdentifier(Paintable paintable) throws PaintException {

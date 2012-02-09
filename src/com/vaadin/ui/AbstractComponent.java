@@ -753,7 +753,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void paint(PaintTarget target) throws PaintException {
         final String tag = target.getTag(this);
-        if (!target.startTag(this, tag) || repaintRequestListenersNotified) {
+        if (!target.startPaintable(this, tag)
+                || repaintRequestListenersNotified) {
 
             // Paint the contents of the component
 
@@ -813,7 +814,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             // Contents have not changed, only cached presentation can be used
             target.addAttribute("cached", true);
         }
-        target.endTag(tag);
+        target.endPaintable(this);
 
         repaintRequestListenersNotified = false;
     }

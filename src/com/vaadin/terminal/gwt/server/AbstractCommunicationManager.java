@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -141,7 +142,12 @@ public abstract class AbstractCommunicationManager implements
 
     private static final String GET_PARAM_ANALYZE_LAYOUTS = "analyzeLayouts";
 
+    // TODO combine with paint queue?
     private final ArrayList<Paintable> dirtyPaintables = new ArrayList<Paintable>();
+
+    // queue used during painting to keep track of what still needs to be
+    // painted
+    private LinkedList<Paintable> paintQueue = new LinkedList<Paintable>();
 
     private final HashMap<Paintable, String> paintableIdMap = new HashMap<Paintable, String>();
 
@@ -739,6 +745,11 @@ public abstract class AbstractCommunicationManager implements
         return seckey;
     }
 
+    // for internal use by JsonPaintTarget
+    public void queuePaintable(Paintable paintable) {
+        paintQueue.push(paintable);
+    }
+
     public void writeUidlResponce(boolean repaintAll,
             final PrintWriter outWriter, Root root, boolean analyzeLayouts)
             throws PaintException {
@@ -777,6 +788,7 @@ public abstract class AbstractCommunicationManager implements
                     dirtyPaintables.remove(p);
                 }
             }
+            // TODO second list/stack for those whose state needs to be sent?
             paintables = getDirtyVisibleComponents(root);
         }
 
@@ -809,37 +821,6 @@ public abstract class AbstractCommunicationManager implements
             });
         }
 
-        if (paintables != null) {
-            // paint shared state before changes - for now, send the complete
-            // state of all modified and new components
-
-            // TODO problem: some components will only be created and registered
-            // below in the paint phase
-
-            JSONObject sharedStates = new JSONObject();
-            for (final Iterator<Paintable> i = paintables.iterator(); i
-                    .hasNext();) {
-                final Paintable p = i.next();
-                String paintableId = getPaintableId(p);
-                SharedState state = p.getState();
-                if (null != state) {
-                    // encode and send shared state
-                    try {
-                        JSONArray stateJsonArray = JsonCodec
-                                .encode(state, this);
-                        sharedStates.put(paintableId, stateJsonArray);
-                    } catch (JSONException e) {
-                        throw new PaintException(
-                                "Failed to serialize shared state for paintable "
-                                        + paintableId + ": " + e.getMessage());
-                    }
-                }
-            }
-            outWriter.print("\"state\":");
-            outWriter.append(sharedStates.toString());
-            outWriter.print(", "); // close changes
-        }
-
         outWriter.print("\"changes\":[");
 
         List<InvalidLayout> invalidComponentRelativeSizes = null;
@@ -856,9 +837,12 @@ public abstract class AbstractCommunicationManager implements
 
         if (paintables != null) {
 
-            for (final Iterator<Paintable> i = paintables.iterator(); i
-                    .hasNext();) {
-                final Paintable p = i.next();
+            // clear and rebuild paint queue
+            paintQueue.clear();
+            paintQueue.addAll(paintables);
+
+            while (!paintQueue.isEmpty()) {
+                final Paintable p = paintQueue.pop();
 
                 // // TODO CLEAN
                 // if (p instanceof Root) {
@@ -867,13 +851,6 @@ public abstract class AbstractCommunicationManager implements
                 // r.setTerminal(application.getRoot().getTerminal());
                 // }
                 // }
-                /*
-                 * This does not seem to happen in tk5, but remember this case:
-                 * else if (p instanceof Component) { if (((Component)
-                 * p).getParent() == null || ((Component) p).getApplication() ==
-                 * null) { // Component requested repaint, but is no // longer
-                 * attached: skip paintablePainted(p); continue; } }
-                 */
 
                 // TODO we may still get changes that have been
                 // rendered already (changes with only cached flag)
@@ -883,6 +860,8 @@ public abstract class AbstractCommunicationManager implements
                     final String pid = getPaintableId(p);
                     paintTarget.addAttribute("pid", pid);
 
+                    // TODO this should paint subcomponents as references and
+                    // defer painting their contents to another top-level change
                     p.paint(paintTarget);
 
                     paintTarget.endTag("change");
@@ -910,6 +889,46 @@ public abstract class AbstractCommunicationManager implements
 
         paintTarget.close();
         outWriter.print("], "); // close changes
+
+        if (paintables != null) {
+            // paint shared state
+
+            // for now, send the complete state of all modified and new
+            // components
+
+            // Ideally, all this would be sent before "changes", but that causes
+            // complications with legacy components that create sub-components
+            // in their paint phase. Nevertheless, this will be processed on the
+            // client after component creation but before legacy UIDL
+            // processing.
+
+            JSONObject sharedStates = new JSONObject();
+            Stack<Paintable> paintablesWithModifiedState = new Stack<Paintable>();
+            paintablesWithModifiedState.addAll(paintables);
+            // TODO add all sub-components that were painted
+            while (!paintablesWithModifiedState.empty()) {
+                final Paintable p = paintablesWithModifiedState.pop();
+                String paintableId = getPaintableId(p);
+                SharedState state = p.getState();
+                if (null != state) {
+                    // encode and send shared state
+                    try {
+                        JSONArray stateJsonArray = JsonCodec
+                                .encode(state, this);
+                        sharedStates.put(paintableId, stateJsonArray);
+                    } catch (JSONException e) {
+                        throw new PaintException(
+                                "Failed to serialize shared state for paintable "
+                                        + paintableId + ": " + e.getMessage());
+                    }
+                }
+            }
+            outWriter.print("\"state\":");
+            outWriter.append(sharedStates.toString());
+            outWriter.print(", "); // close changes
+        }
+
+        // TODO send server to client RPC calls in call order here
 
         outWriter.print("\"meta\" : {");
         boolean metaOpen = false;
