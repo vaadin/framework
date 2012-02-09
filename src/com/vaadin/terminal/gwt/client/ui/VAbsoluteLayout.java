@@ -4,10 +4,7 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
@@ -18,15 +15,13 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
-public class VAbsoluteLayout extends ComplexPanel implements Container {
+public class VAbsoluteLayout extends ComplexPanel {
 
     /** Tag name for widget creation */
     public static final String TAGNAME = "absolutelayout";
@@ -38,17 +33,11 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
 
     protected final Element canvas = DOM.createDiv();
 
-    // private int excessPixelsHorizontal;
-    //
-    // private int excessPixelsVertical;
-
     private Object previousStyleName;
 
     Map<String, AbsoluteWrapper> pidToComponentWrappper = new HashMap<String, AbsoluteWrapper>();
 
     protected ApplicationConnection client;
-
-    boolean rendering;
 
     public VAbsoluteLayout() {
         setElement(Document.get().createDivElement());
@@ -58,63 +47,6 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
         canvas.getStyle().setProperty("overflow", "hidden");
         marginElement.appendChild(canvas);
         getElement().appendChild(marginElement);
-    }
-
-    public RenderSpace getAllocatedSpace(Widget child) {
-        // TODO needs some special handling for components with only on edge
-        // horizontally or vertically defined
-        AbsoluteWrapper wrapper = (AbsoluteWrapper) child.getParent();
-        int w;
-        if (wrapper.left != null && wrapper.right != null) {
-            w = wrapper.getOffsetWidth();
-        } else if (wrapper.right != null) {
-            // left == null
-            // available width == right edge == offsetleft + width
-            w = wrapper.getOffsetWidth() + wrapper.getElement().getOffsetLeft();
-        } else {
-            // left != null && right == null || left == null &&
-            // right == null
-            // available width == canvas width - offset left
-            w = canvas.getOffsetWidth() - wrapper.getElement().getOffsetLeft();
-        }
-        int h;
-        if (wrapper.top != null && wrapper.bottom != null) {
-            h = wrapper.getOffsetHeight();
-        } else if (wrapper.bottom != null) {
-            // top not defined, available space 0... bottom of wrapper
-            h = wrapper.getElement().getOffsetTop() + wrapper.getOffsetHeight();
-        } else {
-            // top defined or both undefined, available space == canvas - top
-            h = canvas.getOffsetHeight() - wrapper.getElement().getOffsetTop();
-        }
-
-        return new RenderSpace(w, h);
-    }
-
-    public boolean hasChildComponent(Widget component) {
-        for (Iterator<Entry<String, AbsoluteWrapper>> iterator = pidToComponentWrappper
-                .entrySet().iterator(); iterator.hasNext();) {
-            if (iterator.next().getValue().paintable == component) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        for (Widget wrapper : getChildren()) {
-            AbsoluteWrapper w = (AbsoluteWrapper) wrapper;
-            if (w.getWidget() == oldComponent) {
-                w.setWidget(newComponent);
-                return;
-            }
-        }
-    }
-
-    public boolean requestLayout(Set<Widget> children) {
-        // component inside an absolute panel never affects parent nor the
-        // layout
-        return true;
     }
 
     AbsoluteWrapper getWrapper(ApplicationConnection client, UIDL componentUIDL) {
@@ -135,34 +67,11 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
     }
 
     @Override
-    public void setStyleName(String style) {
-        super.setStyleName(style);
-        if (previousStyleName == null || !previousStyleName.equals(style)) {
-            // excessPixelsHorizontal = -1;
-            // excessPixelsVertical = -1;
-        }
-    }
-
-    @Override
     public void setWidth(String width) {
         super.setWidth(width);
         // TODO do this so that canvas gets the sized properly (the area
         // inside marginals)
         canvas.getStyle().setProperty("width", width);
-
-        if (!rendering) {
-            relayoutRelativeChildren();
-        }
-    }
-
-    private void relayoutRelativeChildren() {
-        for (Widget widget : getChildren()) {
-            if (widget instanceof AbsoluteWrapper) {
-                AbsoluteWrapper w = (AbsoluteWrapper) widget;
-                client.handleComponentRelativeSize(w.getWidget());
-                w.updateCaptionPosition();
-            }
-        }
     }
 
     @Override
@@ -171,18 +80,14 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
         // TODO do this so that canvas gets the sized properly (the area
         // inside marginals)
         canvas.getStyle().setProperty("height", height);
-
-        if (!rendering) {
-            relayoutRelativeChildren();
-        }
     }
 
     public class AbsoluteWrapper extends SimplePanel {
         private String css;
-        private String left;
-        private String top;
-        private String right;
-        private String bottom;
+        String left;
+        String top;
+        String right;
+        String bottom;
         private String zIndex;
 
         private VPaintableWidget paintable;
@@ -284,7 +189,7 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
             updateCaptionPosition();
         }
 
-        private void updateCaptionPosition() {
+        void updateCaptionPosition() {
             if (caption != null) {
                 Style style = caption.getElement().getStyle();
                 style.setProperty("position", "absolute");
