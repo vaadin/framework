@@ -1,6 +1,12 @@
 .v-csslayout {
 	overflow: hidden;
 }
+.v-csslayout-margin, .v-csslayout-container {
+	height: 100%;
+	width: 100%;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
 .v-csslayout-margin-top {
 	padding-top: 12px;	
 }
