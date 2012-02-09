@@ -63,7 +63,7 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
     }
 
     void updateSpacingStyleName(boolean spacingEnabled) {
-        String styleName = getStyleName();
+        String styleName = getStylePrimaryName();
         if (spacingEnabled) {
             spacingMeasureElement.addClassName(styleName + "-spacing-on");
             spacingMeasureElement.removeClassName(styleName + "-spacing-off");
