@@ -3,33 +3,20 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.ValueMap;
+import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
 public class VMeasuringOrderedLayout extends ComplexPanel {
 
-    public static final String CLASSNAME = "v-orderedlayout";
-
     final boolean isVertical;
-
-    ValueMap expandRatios;
-
-    ValueMap alignments;
-
-    Map<VPaintableWidget, VCaption> captions = new HashMap<VPaintableWidget, VCaption>();
 
     final DivElement spacingMeasureElement;
 
@@ -50,60 +37,159 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
         this.isVertical = isVertical;
     }
 
-    static Element getWrapper(Widget widget) {
-        return widget.getElement().getParentElement();
-    }
+    public void addSlot(VLayoutSlot layoutSlot) {
+        Widget widget = layoutSlot.getWidget();
+        Element wrapperElement = layoutSlot.getWrapperElement();
 
-    private void add(Widget widget, DivElement wrapper) {
-        add(widget, (com.google.gwt.user.client.Element) wrapper.cast());
-    }
+        getElement().appendChild(wrapperElement);
+        add(widget, wrapperElement);
 
-    void addChildWidget(Widget widget) {
-        DivElement wrapper = Document.get().createDivElement();
-        wrapper.getStyle().setPosition(Position.ABSOLUTE);
-        getElement().appendChild(wrapper);
-        add(widget, wrapper);
-        widget.getElement().getStyle()
-                .setProperty("MozBoxSizing", "border-box");
-        widget.getElement().getStyle().setProperty("boxSizing", "border-box");
-    }
-
-    void addCaption(VCaption caption, Widget widget) {
-        Element wrapper = getWrapper(widget);
-
-        // Logical attach.
-        getChildren().add(caption);
-
-        // Physical attach.
-        DOM.insertBefore((com.google.gwt.user.client.Element) wrapper.cast(),
-                caption.getElement(), widget.getElement());
-
-        // Adopt.
-        adopt(caption);
+        widget.setLayoutData(layoutSlot);
     }
 
     private void togglePrefixedStyleName(String name, boolean enabled) {
         if (enabled) {
-            addStyleName(CLASSNAME + name);
+            addStyleDependentName(name);
         } else {
-            removeStyleName(CLASSNAME + name);
+            removeStyleDependentName(name);
         }
     }
 
     void updateMarginStyleNames(VMarginInfo marginInfo) {
-        togglePrefixedStyleName("-margin-top", marginInfo.hasTop());
-        togglePrefixedStyleName("-margin-right", marginInfo.hasRight());
-        togglePrefixedStyleName("-margin-bottom", marginInfo.hasBottom());
-        togglePrefixedStyleName("-margin-left", marginInfo.hasLeft());
+        togglePrefixedStyleName("margin-top", marginInfo.hasTop());
+        togglePrefixedStyleName("margin-right", marginInfo.hasRight());
+        togglePrefixedStyleName("margin-bottom", marginInfo.hasBottom());
+        togglePrefixedStyleName("margin-left", marginInfo.hasLeft());
     }
 
     void updateSpacingStyleName(boolean spacingEnabled) {
+        String styleName = getStyleName();
         if (spacingEnabled) {
-            spacingMeasureElement.addClassName(CLASSNAME + "-spacing-on");
-            spacingMeasureElement.removeClassName(CLASSNAME + "-spacing-off");
+            spacingMeasureElement.addClassName(styleName + "-spacing-on");
+            spacingMeasureElement.removeClassName(styleName + "-spacing-off");
         } else {
-            spacingMeasureElement.removeClassName(CLASSNAME + "-spacing-on");
-            spacingMeasureElement.addClassName(CLASSNAME + "-spacing-off");
+            spacingMeasureElement.removeClassName(styleName + "-spacing-on");
+            spacingMeasureElement.addClassName(styleName + "-spacing-off");
         }
+    }
+
+    public void removeSlot(VLayoutSlot slot) {
+        VCaption caption = slot.getCaption();
+        if (caption != null) {
+            remove(caption);
+        }
+
+        remove(slot.getWidget());
+        getElement().removeChild(slot.getWrapperElement());
+    }
+
+    public VLayoutSlot getSlotForChild(Widget widget) {
+        return (VLayoutSlot) widget.getLayoutData();
+    }
+
+    public void setCaption(Widget child, VCaption caption) {
+        VLayoutSlot slot = getSlotForChild(child);
+
+        if (caption != null) {
+            // Logical attach.
+            getChildren().add(caption);
+        }
+
+        // Physical attach if not null, also removes old caption
+        slot.setCaption(caption);
+
+        if (caption != null) {
+            // Adopt.
+            adopt(caption);
+        }
+    }
+
+    public int layoutPrimaryDirection(int spacingSize, int allocatedSize,
+            int startPadding) {
+        int actuallyAllocated = 0;
+        double totalExpand = 0;
+
+        int childCount = 0;
+        for (Widget child : this) {
+            if (child instanceof VCaption) {
+                continue;
+            }
+            childCount++;
+
+            VLayoutSlot slot = getSlotForChild(child);
+            totalExpand += slot.getExpandRatio();
+
+            if (!slot.isRelativeInDirection(isVertical)) {
+                actuallyAllocated += slot.getUsedSizeInDirection(isVertical);
+            }
+        }
+
+        actuallyAllocated += spacingSize * (childCount - 1);
+
+        if (allocatedSize == -1) {
+            allocatedSize = actuallyAllocated;
+        }
+
+        double unallocatedSpace = Math
+                .max(0, allocatedSize - actuallyAllocated);
+
+        double currentLocation = startPadding;
+
+        for (Widget child : this) {
+            if (child instanceof VCaption) {
+                continue;
+            }
+
+            VLayoutSlot slot = getSlotForChild(child);
+
+            double childExpandRatio;
+            if (totalExpand == 0) {
+                childExpandRatio = 1d / childCount;
+            } else {
+                childExpandRatio = slot.getExpandRatio() / totalExpand;
+            }
+
+            double extraPixels = unallocatedSpace * childExpandRatio;
+            double allocatedSpace = extraPixels;
+            if (!slot.isRelativeInDirection(isVertical)) {
+                allocatedSpace += slot.getUsedSizeInDirection(isVertical);
+            }
+
+            slot.positionInDirection(currentLocation, allocatedSpace,
+                    isVertical);
+            currentLocation += allocatedSpace + spacingSize;
+        }
+
+        return allocatedSize;
+    }
+
+    public int layoutSecondaryDirection(int allocatedSize, int startPadding) {
+        int maxSize = 0;
+        for (Widget child : this) {
+            if (child instanceof VCaption) {
+                continue;
+            }
+
+            VLayoutSlot slot = getSlotForChild(child);
+            if (!slot.isRelativeInDirection(!isVertical)) {
+                maxSize = Math.max(maxSize,
+                        slot.getUsedSizeInDirection(!isVertical));
+            }
+        }
+
+        if (allocatedSize == -1) {
+            allocatedSize = maxSize;
+        }
+
+        for (Widget child : this) {
+            if (child instanceof VCaption) {
+                continue;
+            }
+
+            VLayoutSlot slot = getSlotForChild(child);
+            slot.positionInDirection(startPadding, allocatedSize, !isVertical);
+        }
+
+        return allocatedSize;
     }
 }
