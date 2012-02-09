@@ -6,15 +6,9 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -27,12 +21,9 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Focusable;
-import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
@@ -42,7 +33,7 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHan
 /**
  *
  */
-public class VView extends SimplePanel implements Container, ResizeHandler,
+public class VView extends SimplePanel implements ResizeHandler,
         Window.ClosingHandler, ShortcutActionHandlerOwner, Focusable {
 
     public static final String FRAGMENT_VARIABLE = "fragment";
@@ -96,12 +87,6 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      * Attribute name for the lazy resize setting .
      */
     public static final String RESIZE_LAZY = "rL";
-
-    /**
-     * Reference to the parent frame/iframe. Null if there is no parent (i)frame
-     * or if the application and parent frame are in different domains.
-     */
-    Element parentFrame;
 
     private HandlerRegistration historyHandlerRegistration;
 
@@ -183,10 +168,11 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         }
         if (changed) {
             VConsole.log("Running layout functions due to window resize");
-            connection.runDescendentsLayout(VView.this);
             Util.runWebkitOverflowAutoFix(getElement());
 
             sendClientResized();
+
+            connection.doLayout(false);
         }
     }
 
@@ -336,134 +322,6 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         VTextField.flushChangesFromFocusedTextField();
     }
 
-    private final RenderSpace myRenderSpace = new RenderSpace() {
-        private int excessHeight = -1;
-        private int excessWidth = -1;
-
-        @Override
-        public int getHeight() {
-            return getElement().getOffsetHeight() - getExcessHeight();
-        }
-
-        private int getExcessHeight() {
-            if (excessHeight < 0) {
-                detectExcessSize();
-            }
-            return excessHeight;
-        }
-
-        private void detectExcessSize() {
-            // TODO define that iview cannot be themed and decorations should
-            // get to parent element, then get rid of this expensive and error
-            // prone function
-            final String overflow = getElement().getStyle().getProperty(
-                    "overflow");
-            getElement().getStyle().setProperty("overflow", "hidden");
-            if (BrowserInfo.get().isIE()
-                    && getElement().getPropertyInt("clientWidth") == 0) {
-                // can't detect possibly themed border/padding width in some
-                // situations (with some layout configurations), use empty div
-                // to measure width properly
-                DivElement div = Document.get().createDivElement();
-                div.setInnerHTML("&nbsp;");
-                div.getStyle().setProperty("overflow", "hidden");
-                div.getStyle().setProperty("height", "1px");
-                getElement().appendChild(div);
-                excessWidth = getElement().getOffsetWidth()
-                        - div.getOffsetWidth();
-                getElement().removeChild(div);
-            } else {
-                excessWidth = getElement().getOffsetWidth()
-                        - getElement().getPropertyInt("clientWidth");
-            }
-            excessHeight = getElement().getOffsetHeight()
-                    - getElement().getPropertyInt("clientHeight");
-
-            getElement().getStyle().setProperty("overflow", overflow);
-        }
-
-        @Override
-        public int getWidth() {
-            if (connection.getConfiguration().isStandalone()) {
-                return getElement().getOffsetWidth() - getExcessWidth();
-            }
-
-            // If not running standalone, there might be multiple Vaadin apps
-            // that won't shrink with the browser window as the components have
-            // calculated widths (#3125)
-
-            // Find all Vaadin applications on the page
-            ArrayList<String> vaadinApps = new ArrayList<String>();
-            loadAppIdListFromDOM(vaadinApps);
-
-            // Store original styles here so they can be restored
-            ArrayList<String> originalDisplays = new ArrayList<String>(
-                    vaadinApps.size());
-
-            String ownAppId = connection.getConfiguration().getRootPanelId();
-
-            // Hiding elements causes browser to forget scroll position -> must
-            // save values and restore when the elements are visible again #7976
-            int originalScrollTop = Window.getScrollTop();
-            int originalScrollLeft = Window.getScrollLeft();
-
-            // Set display: none for all Vaadin apps
-            for (int i = 0; i < vaadinApps.size(); i++) {
-                String appId = vaadinApps.get(i);
-                Element targetElement;
-                if (appId.equals(ownAppId)) {
-                    // Only hide the contents of current application
-                    targetElement = layout.getWidgetForPaintable().getElement();
-                } else {
-                    // Hide everything for other applications
-                    targetElement = Document.get().getElementById(appId);
-                }
-                Style layoutStyle = targetElement.getStyle();
-
-                originalDisplays.add(i, layoutStyle.getDisplay());
-                layoutStyle.setDisplay(Display.NONE);
-            }
-
-            int w = getElement().getOffsetWidth() - getExcessWidth();
-
-            // Then restore the old display style before returning
-            for (int i = 0; i < vaadinApps.size(); i++) {
-                String appId = vaadinApps.get(i);
-                Element targetElement;
-                if (appId.equals(ownAppId)) {
-                    targetElement = layout.getWidgetForPaintable().getElement();
-                } else {
-                    targetElement = Document.get().getElementById(appId);
-                }
-                Style layoutStyle = targetElement.getStyle();
-                String originalDisplay = originalDisplays.get(i);
-
-                if (originalDisplay.length() == 0) {
-                    layoutStyle.clearDisplay();
-                } else {
-                    layoutStyle.setProperty("display", originalDisplay);
-                }
-            }
-
-            // Scroll back to original location
-            Window.scrollTo(originalScrollLeft, originalScrollTop);
-
-            return w;
-        }
-
-        private int getExcessWidth() {
-            if (excessWidth < 0) {
-                detectExcessSize();
-            }
-            return excessWidth;
-        }
-
-        @Override
-        public int getScrollbarSize() {
-            return Util.getNativeScrollbarSize();
-        }
-    };
-
     private native static void loadAppIdListFromDOM(ArrayList<String> list)
     /*-{
          var j;
@@ -471,65 +329,6 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             list.@java.util.Collection::add(Ljava/lang/Object;)(j);
          }
      }-*/;
-
-    public RenderSpace getAllocatedSpace(Widget child) {
-        return myRenderSpace;
-    }
-
-    public boolean hasChildComponent(Widget component) {
-        return (component != null && component == layout);
-    }
-
-    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        // TODO This is untested as no layouts require this
-        if (oldComponent != layout) {
-            return;
-        }
-
-        setWidget(newComponent);
-        layout = (VPaintableWidget) newComponent;
-    }
-
-    public boolean requestLayout(Set<Widget> children) {
-        /*
-         * Can never propagate further and we do not want need to re-layout the
-         * layout which has caused this request.
-         */
-        updateParentFrameSize();
-
-        // layout size change may affect its available space (scrollbars)
-        connection.handleComponentRelativeSize(layout.getWidgetForPaintable());
-
-        return true;
-
-    }
-
-    void updateParentFrameSize() {
-        if (parentFrame == null) {
-            return;
-        }
-
-        int childHeight = Util.getRequiredHeight(getWidget().getElement());
-        int childWidth = Util.getRequiredWidth(getWidget().getElement());
-
-        parentFrame.getStyle().setPropertyPx("width", childWidth);
-        parentFrame.getStyle().setPropertyPx("height", childHeight);
-    }
-
-    static native Element getParentFrame()
-    /*-{
-        try {
-            var frameElement = $wnd.frameElement;
-            if (frameElement == null) {
-                return null;
-            }
-            if (frameElement.getAttribute("autoResize") == "true") {
-                return frameElement;
-            }
-        } catch (e) {
-        }
-        return null;
-    }-*/;
 
     /**
      * Return an iterator for current subwindows. This method is meant for
