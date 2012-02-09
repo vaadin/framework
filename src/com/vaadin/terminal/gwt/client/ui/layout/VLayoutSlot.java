@@ -24,11 +24,6 @@ public abstract class VLayoutSlot {
         this.widget = widget;
 
         wrapper.getStyle().setPosition(Position.ABSOLUTE);
-
-        // TODO set box sizing in CSS
-        Style widgetStyle = widget.getElement().getStyle();
-        widgetStyle.setProperty("MozBoxSizing", "border-box");
-        widgetStyle.setProperty("boxSizing", "border-box");
     }
 
     public VCaption getCaption() {

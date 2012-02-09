@@ -318,6 +318,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
 
         StringBuffer styleBuf = new StringBuffer();
         styleBuf.append(primaryStyleName);
+        styleBuf.append(" v-paintable");
 
         // first disabling and read-only status
         if (!enabled) {
