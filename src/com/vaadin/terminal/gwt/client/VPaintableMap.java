@@ -22,7 +22,6 @@ import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 public class VPaintableMap {
 
     private Map<String, VPaintable> idToPaintable = new HashMap<String, VPaintable>();
-    private Map<VPaintable, String> paintableToId = new HashMap<VPaintable, String>();
 
     public static VPaintableMap get(ApplicationConnection applicationConnection) {
         return applicationConnection.getPaintableMap();
@@ -81,7 +80,6 @@ public class VPaintableMap {
      */
     public void clear() {
         idToPaintable.clear();
-        paintableToId.clear();
         idToComponentDetail.clear();
     }
 
@@ -99,7 +97,6 @@ public class VPaintableMap {
         ComponentDetail componentDetail = GWT.create(ComponentDetail.class);
         idToComponentDetail.put(pid, componentDetail);
         idToPaintable.put(pid, paintable);
-        paintableToId.put(paintable, pid);
         if (paintable instanceof VPaintableWidget) {
             VPaintableWidget pw = (VPaintableWidget) paintable;
             setPid(pw.getWidgetForPaintable().getElement(), pid);
@@ -122,12 +119,14 @@ public class VPaintableMap {
      *            the paintable who's id is needed
      * @return the id for the given paintable or null if the paintable could not
      *         be found
+     * @deprecated use {@link VPaintable#getId()} instead
      */
+    @Deprecated
     public String getPid(VPaintable paintable) {
         if (paintable == null) {
             return null;
         }
-        return paintableToId.get(paintable);
+        return paintable.getId();
     }
 
     @Deprecated
@@ -235,7 +234,6 @@ public class VPaintableMap {
                     // clean reference to paintable
                     idToComponentDetail.remove(pid);
                     idToPaintable.remove(pid);
-                    paintableToId.remove(paintable);
                 }
                 /*
                  * else NOP : same component has been reattached to another
@@ -360,7 +358,7 @@ public class VPaintableMap {
     }
 
     public Collection<? extends VPaintable> getPaintables() {
-        return Collections.unmodifiableCollection(paintableToId.keySet());
+        return Collections.unmodifiableCollection(idToPaintable.values());
     }
 
     /**
