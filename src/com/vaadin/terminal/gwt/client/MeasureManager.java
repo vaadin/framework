@@ -1,8 +1,8 @@
 package com.vaadin.terminal.gwt.client;
 
 import com.google.gwt.core.client.JsArrayString;
-import com.google.gwt.user.client.ui.RequiresResize;
-import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.ui.LayoutPhaseListener;
+import com.vaadin.terminal.gwt.client.ui.ResizeRequired;
 
 public class MeasureManager {
 
@@ -10,6 +10,12 @@ public class MeasureManager {
         VPaintableMap paintableMap = client.getPaintableMap();
         VPaintableWidget[] paintableWidgets = paintableMap
                 .getRegisteredPaintableWidgets();
+
+        for (VPaintableWidget vPaintableWidget : paintableWidgets) {
+            if (vPaintableWidget instanceof LayoutPhaseListener) {
+                ((LayoutPhaseListener) vPaintableWidget).beforeLayout();
+            }
+        }
 
         int passes = 0;
         long start = System.currentTimeMillis();
@@ -49,15 +55,12 @@ public class MeasureManager {
                 VPaintableWidget paintable = (VPaintableWidget) paintableMap
                         .getPaintable(pid);
                 if (!affectedContainers.contains(pid)) {
-                    Widget widget = paintable.getWidgetForPaintable();
-                    if (widget instanceof RequiresResize) {
-                        // TODO Do nothing here if parent instanceof
-                        // ProvidesRepaint?
-                        ((RequiresResize) widget).onResize();
-                    } else if (paintable instanceof CalculatingLayout) {
+                    if (paintable instanceof CalculatingLayout) {
                         CalculatingLayout calculating = (CalculatingLayout) paintable;
                         calculating.updateHorizontalSizes();
                         calculating.updateVerticalSizes();
+                    } else if (paintable instanceof ResizeRequired) {
+                        ((ResizeRequired) paintable).onResize();
                     }
                 }
             }
@@ -96,6 +99,13 @@ public class MeasureManager {
             }
             VConsole.log(b.toString());
         }
+
+        for (VPaintableWidget vPaintableWidget : paintableWidgets) {
+            if (vPaintableWidget instanceof LayoutPhaseListener) {
+                ((LayoutPhaseListener) vPaintableWidget).afterLayout();
+            }
+        }
+
         long end = System.currentTimeMillis();
         VConsole.log("Total layout time: " + (end - start) + "ms");
     }
