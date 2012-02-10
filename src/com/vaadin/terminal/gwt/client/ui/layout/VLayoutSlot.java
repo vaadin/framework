@@ -59,9 +59,11 @@ public abstract class VLayoutSlot {
         Style style = wrapper.getStyle();
 
         if (isRelativeWidth()) {
-            style.setWidth(allocatedSpace, Unit.PX);
+            style.setPropertyPx("width", (int) allocatedSpace);
+            style.clearProperty("minWidth");
         } else {
-            style.setWidth(getUsedWidth(), Unit.PX);
+            style.clearProperty("width");
+            style.setPropertyPx("minWidth", getCaptionWidth());
         }
 
         VCaption caption = getCaption();
