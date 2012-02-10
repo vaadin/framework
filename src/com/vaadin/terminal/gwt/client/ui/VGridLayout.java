@@ -19,16 +19,14 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
-public class VGridLayout extends SimplePanel implements Container {
+public class VGridLayout extends SimplePanel {
 
     public static final String CLASSNAME = "v-gridlayout";
 
@@ -48,9 +46,13 @@ public class VGridLayout extends SimplePanel implements Container {
     int[] columnWidths;
     int[] rowHeights;
 
-    private String height;
+    private int height;
 
-    private String width;
+    private int width;
+
+    private boolean undefinedWidth;
+
+    private boolean undefinedHeight;
 
     int[] colExpandRatioArray;
 
@@ -123,7 +125,7 @@ public class VGridLayout extends SimplePanel implements Container {
     }
 
     void expandRows() {
-        if (!"".equals(height)) {
+        if (!isUndefinedHeight()) {
             int usedSpace = minRowHeights[0];
             for (int i = 1; i < minRowHeights.length; i++) {
                 usedSpace += spacingPixelsVertical + minRowHeights[i];
@@ -148,10 +150,9 @@ public class VGridLayout extends SimplePanel implements Container {
         }
     }
 
-    @Override
-    public void setHeight(String height) {
-        super.setHeight(height);
-        if (!height.equals(this.height)) {
+    void updateHeight(int height, boolean undefinedHeight) {
+        if (height != this.height || this.undefinedHeight != undefinedHeight) {
+            this.undefinedHeight = undefinedHeight;
             this.height = height;
             if (rendering) {
                 sizeChangedDuringRendering = true;
@@ -165,10 +166,9 @@ public class VGridLayout extends SimplePanel implements Container {
         }
     }
 
-    @Override
-    public void setWidth(String width) {
-        super.setWidth(width);
-        if (!width.equals(this.width)) {
+    void updateWidth(int width, boolean undefinedWidth) {
+        if (width != this.width || undefinedWidth != this.undefinedWidth) {
+            this.undefinedWidth = undefinedWidth;
             this.width = width;
             if (rendering) {
                 sizeChangedDuringRendering = true;
@@ -254,7 +254,7 @@ public class VGridLayout extends SimplePanel implements Container {
                 for (Widget w : widgetToCell.keySet()) {
                     client.handleComponentRelativeSize(w);
                 }
-                if (heightChanged && "".equals(height)) {
+                if (heightChanged && isUndefinedHeight()) {
                     Util.notifyParentOfSizeChange(this, false);
                 }
             }
@@ -262,7 +262,7 @@ public class VGridLayout extends SimplePanel implements Container {
     }
 
     void expandColumns() {
-        if (!"".equals(width)) {
+        if (!isUndefinedWidth()) {
             int usedSpace = minColumnWidths[0];
             for (int i = 1; i < minColumnWidths.length; i++) {
                 usedSpace += spacingPixelsHorizontal + minColumnWidths[i];
@@ -323,11 +323,11 @@ public class VGridLayout extends SimplePanel implements Container {
     }
 
     private boolean isUndefinedHeight() {
-        return "".equals(height);
+        return undefinedHeight;
     }
 
     private boolean isUndefinedWidth() {
-        return "".equals(width);
+        return undefinedWidth;
     }
 
     void renderRemainingComponents(LinkedList<Cell> pendingCells) {
@@ -561,31 +561,13 @@ public class VGridLayout extends SimplePanel implements Container {
                 - canvas.getOffsetHeight();
     }
 
-    public boolean hasChildComponent(Widget component) {
-        return widgetToCell.containsKey(component);
-    }
-
-    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        ChildComponentContainer componentContainer = widgetToComponentContainer
-                .remove(oldComponent);
-        if (componentContainer == null) {
-            return;
-        }
-
-        componentContainer.setPaintable(VPaintableMap.get(client).getPaintable(
-                newComponent));
-        widgetToComponentContainer.put(newComponent, componentContainer);
-
-        widgetToCell.put(newComponent, widgetToCell.get(oldComponent));
-    }
-
     public boolean requestLayout(final Set<Widget> changedChildren) {
         boolean needsLayout = false;
         boolean reDistributeColSpanWidths = false;
         boolean reDistributeRowSpanHeights = false;
         int offsetHeight = canvas.getOffsetHeight();
         int offsetWidth = canvas.getOffsetWidth();
-        if ("".equals(width) || "".equals(height)) {
+        if (isUndefinedWidth() || isUndefinedHeight()) {
             needsLayout = true;
         }
         ArrayList<Integer> dirtyColumns = new ArrayList<Integer>();
@@ -730,12 +712,6 @@ public class VGridLayout extends SimplePanel implements Container {
         } else {
             return true;
         }
-    }
-
-    public RenderSpace getAllocatedSpace(Widget child) {
-        Cell cell = widgetToCell.get(child);
-        assert cell != null;
-        return cell.getAllocatedSpace();
     }
 
     Cell[][] cells;

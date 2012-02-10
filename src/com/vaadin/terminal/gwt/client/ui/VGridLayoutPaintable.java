@@ -3,7 +3,9 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -14,6 +16,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.CalculatingLayout;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
@@ -21,7 +24,8 @@ import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout.Cell;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
-public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer {
+public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer
+        implements CalculatingLayout {
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this, EventId.LAYOUT_CLICK) {
 
@@ -38,7 +42,6 @@ public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer {
     };
 
     @Override
-    @SuppressWarnings("unchecked")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().rendering = true;
         getWidgetForPaintable().client = client;
@@ -195,4 +198,25 @@ public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer {
         return GWT.create(VGridLayout.class);
     }
 
+    public void updateVerticalSizes() {
+        int innerHeight = getMeasuredSize().getInnerHeight();
+        getWidgetForPaintable().updateHeight(innerHeight, isUndefinedHeight());
+        layoutAllChildren();
+    }
+
+    private void layoutAllChildren() {
+        HashSet<Widget> childWidgets = new HashSet<Widget>();
+        Collection<VPaintableWidget> children = getChildren();
+        for (VPaintableWidget vPaintableWidget : children) {
+            childWidgets.add(vPaintableWidget.getWidgetForPaintable());
+        }
+        getWidgetForPaintable().requestLayout(childWidgets);
+    }
+
+    public void updateHorizontalSizes() {
+        int innerWidth = getMeasuredSize().getInnerWidth();
+        getWidgetForPaintable().updateWidth(innerWidth, isUndefinedWidth());
+
+        layoutAllChildren();
+    }
 }
