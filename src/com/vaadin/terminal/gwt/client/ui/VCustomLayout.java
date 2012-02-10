@@ -5,9 +5,7 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.NodeList;
@@ -18,10 +16,6 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.ContainerResizedListener;
-import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
-import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
@@ -35,8 +29,7 @@ import com.vaadin.terminal.gwt.client.VPaintableWidget;
  * @author Vaadin Ltd
  * 
  */
-public class VCustomLayout extends ComplexPanel implements Container,
-        ContainerResizedListener {
+public class VCustomLayout extends ComplexPanel {
 
     public static final String CLASSNAME = "v-customlayout";
 
@@ -68,8 +61,6 @@ public class VCustomLayout extends ComplexPanel implements Container,
     private String height = "";
 
     private String width = "";
-
-    private HashMap<String, FloatSize> locationToExtraSize = new HashMap<String, FloatSize>();
 
     public VCustomLayout() {
         setElement(DOM.createDiv());
@@ -221,12 +212,6 @@ public class VCustomLayout extends ComplexPanel implements Container,
         if (!"".equals(location)) {
             locationToElement.put(location, elem);
             elem.setInnerHTML("");
-            int x = Util.measureHorizontalPaddingAndBorder(elem, 0);
-            int y = Util.measureVerticalPaddingAndBorder(elem, 0);
-
-            FloatSize fs = new FloatSize(x, y);
-
-            locationToExtraSize.put(location, fs);
 
         } else {
             final int len = DOM.getChildCount(elem);
@@ -314,20 +299,6 @@ public class VCustomLayout extends ComplexPanel implements Container,
         return res;
     }
 
-    /** Replace child components */
-    public void replaceChildComponent(Widget from, Widget to) {
-        final String location = getLocation(from);
-        if (location == null) {
-            throw new IllegalArgumentException();
-        }
-        setWidget(to, location);
-    }
-
-    /** Does this layout contain given child */
-    public boolean hasChildComponent(Widget component) {
-        return locationToWidget.containsValue(component);
-    }
-
     /** Update caption for given widget */
     public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
         VCaptionWrapper wrapper = paintableToCaptionWrapper.get(paintable);
@@ -398,10 +369,6 @@ public class VCustomLayout extends ComplexPanel implements Container,
         paintableToCaptionWrapper.clear();
     }
 
-    public void iLayout() {
-        iLayoutJS(DOM.getFirstChild(getElement()));
-    }
-
     /**
      * This method is published to JS side with the same name into first DOM
      * node of custom layout. This way if one implements some resizeable
@@ -447,7 +414,7 @@ public class VCustomLayout extends ComplexPanel implements Container,
      * @return true if layout function exists and was run successfully, else
      *         false.
      */
-    private native boolean iLayoutJS(Element el)
+    native boolean iLayoutJS(Element el)
     /*-{
     	if(el && el.iLayoutJS) {
     		try {
@@ -461,25 +428,6 @@ public class VCustomLayout extends ComplexPanel implements Container,
     	}
     }-*/;
 
-    public boolean requestLayout(Set<Widget> children) {
-        if (width.equals("") || height.equals("")) {
-            /* Automatically propagated upwards if the size can change */
-            return false;
-        }
-
-        return true;
-    }
-
-    public RenderSpace getAllocatedSpace(Widget child) {
-        com.google.gwt.dom.client.Element pe = child.getElement()
-                .getParentElement();
-
-        FloatSize extra = locationToExtraSize.get(getLocation(child));
-        return new RenderSpace(pe.getOffsetWidth() - (int) extra.getWidth(),
-                pe.getOffsetHeight() - (int) extra.getHeight(),
-                Util.mayHaveScrollBars(pe));
-    }
-
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
@@ -487,33 +435,6 @@ public class VCustomLayout extends ComplexPanel implements Container,
             Util.notifyParentOfSizeChange(this, true);
             event.cancelBubble(true);
         }
-    }
-
-    /**
-     * Compares newSize with currentSize and returns true if it is clear that
-     * newSize is larger than currentSize. Returns false if newSize is smaller
-     * or if it is unclear which one is smaller.
-     * 
-     * @param newSize
-     * @param currentSize
-     * @return
-     */
-    private boolean isLarger(String newSize, String currentSize) {
-        if (newSize.equals("") || currentSize.equals("")) {
-            return false;
-        }
-
-        if (!newSize.endsWith("px") || !currentSize.endsWith("px")) {
-            return false;
-        }
-
-        int newSizePx = Integer.parseInt(newSize.substring(0,
-                newSize.length() - 2));
-        int currentSizePx = Integer.parseInt(currentSize.substring(0,
-                currentSize.length() - 2));
-
-        boolean larger = newSizePx > currentSizePx;
-        return larger;
     }
 
 }
