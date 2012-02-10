@@ -856,12 +856,13 @@ public abstract class AbstractCommunicationManager implements
                 // rendered already (changes with only cached flag)
                 if (paintTarget.needsToBePainted(p)) {
                     paintTarget.startTag("change");
-                    paintTarget.addAttribute("format", "uidl");
                     final String pid = getPaintableId(p);
                     paintTarget.addAttribute("pid", pid);
 
-                    // TODO this should paint subcomponents as references and
-                    // defer painting their contents to another top-level change
+                    // paints subcomponents as references (via
+                    // JsonPaintTarget.startPaintable()) and defers painting
+                    // their contents to another top-level change (via
+                    // queuePaintable())
                     p.paint(paintTarget);
 
                     paintTarget.endTag("change");

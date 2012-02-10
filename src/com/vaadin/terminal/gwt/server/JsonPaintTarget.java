@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -90,6 +91,8 @@ public class JsonPaintTarget implements PaintTarget {
 
     private Collection<Paintable> identifiersCreatedDueRefPaint;
 
+    private Collection<Paintable> deferredPaintables;
+
     private final Collection<Class<? extends Paintable>> usedPaintableTypes = new LinkedList<Class<? extends Paintable>>();
 
     /**
@@ -119,6 +122,8 @@ public class JsonPaintTarget implements PaintTarget {
 
         openPaintables = new Stack<Paintable>();
         openPaintableTags = new Stack<String>();
+
+        deferredPaintables = new ArrayList<Paintable>();
 
         cacheEnabled = cachingRequired;
     }
@@ -677,37 +682,46 @@ public class JsonPaintTarget implements PaintTarget {
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.PaintTarget#startTag(com.vaadin.terminal
+     * @see com.vaadin.terminal.PaintTarget#startPaintable(com.vaadin.terminal
      * .Paintable, java.lang.String)
      */
-    public boolean startPaintable(Paintable paintable, String tagName)
+    public PaintStatus startPaintable(Paintable paintable, String tagName)
             throws PaintException {
         startTag(tagName, true);
         final boolean isPreviouslyPainted = manager.hasPaintableId(paintable)
                 && (identifiersCreatedDueRefPaint == null || !identifiersCreatedDueRefPaint
-                        .contains(paintable));
+                        .contains(paintable))
+                && !deferredPaintables.contains(paintable);
         final String id = manager.getPaintableId(paintable);
         paintable.addListener(manager);
         addAttribute("id", id);
 
-        // TODO if to queue if already painting a paintable
-        // if (openPaintables.isEmpty()) {
+        // queue for painting later if already painting a paintable
+        boolean topLevelPaintableTag = openPaintables.isEmpty();
+
         openPaintables.push(paintable);
         openPaintableTags.push(tagName);
 
-        paintedComponents.add(paintable);
-        // } else {
-        // // notify manager: add to paint queue instead of painting now
-        // manager.queuePaintable(paintable);
-        // // TODO return suitable value to defer painting and close tag if a
-        // // paintable tag is already open
-        // }
+        if (cacheEnabled && isPreviouslyPainted) {
+            // cached (unmodified) paintable, paint the it now
+            paintedComponents.add(paintable);
+            deferredPaintables.remove(paintable);
+            return PaintStatus.CACHED;
+        } else if (!topLevelPaintableTag) {
+            // notify manager: add to paint queue instead of painting now
+            manager.queuePaintable(paintable);
+            deferredPaintables.add(paintable);
+            return PaintStatus.DEFER;
+        } else {
+            // not a nested paintable, paint the it now
+            paintedComponents.add(paintable);
+            deferredPaintables.remove(paintable);
 
-        if (paintable instanceof CustomLayout) {
-            customLayoutArgumentsOpen = true;
+            if (paintable instanceof CustomLayout) {
+                customLayoutArgumentsOpen = true;
+            }
+            return PaintStatus.PAINTING;
         }
-
-        return cacheEnabled && isPreviouslyPainted;
     }
 
     public void endPaintable(Paintable paintable) throws PaintException {

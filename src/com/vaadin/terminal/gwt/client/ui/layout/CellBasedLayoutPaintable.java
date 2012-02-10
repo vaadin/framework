@@ -15,17 +15,14 @@ public abstract class CellBasedLayoutPaintable extends
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().client = client;
 
-        // Only non-cached UIDL:s can introduce changes
-        if (isCachedUpdate(uidl)) {
-            return;
+        if (isRealUpdate(uidl)) {
+            /**
+             * Margin and spacing detection depends on classNames and must be
+             * set before setting size. Here just update the details from UIDL
+             * and from overridden setStyleName run actual margin detections.
+             */
+            updateMarginAndSpacingInfo(uidl);
         }
-
-        /**
-         * Margin and spacind detection depends on classNames and must be set
-         * before setting size. Here just update the details from UIDL and from
-         * overridden setStyleName run actual margin detections.
-         */
-        updateMarginAndSpacingInfo(uidl);
 
         /*
          * This call should be made first. Ensure correct implementation, handle
@@ -33,7 +30,9 @@ public abstract class CellBasedLayoutPaintable extends
          */
         super.updateFromUIDL(uidl, client);
 
-        handleDynamicDimensions(uidl);
+        if (isRealUpdate(uidl)) {
+            handleDynamicDimensions(uidl);
+        }
     }
 
     private void handleDynamicDimensions(UIDL uidl) {
@@ -58,18 +57,15 @@ public abstract class CellBasedLayoutPaintable extends
     }
 
     void updateMarginAndSpacingInfo(UIDL uidl) {
-        if (!uidl.hasAttribute("invisible")) {
-            int bitMask = uidl.getIntAttribute("margins");
-            if (getWidgetForPaintable().activeMarginsInfo.getBitMask() != bitMask) {
-                getWidgetForPaintable().activeMarginsInfo = new VMarginInfo(
-                        bitMask);
-                getWidgetForPaintable().marginsNeedsRecalculation = true;
-            }
-            boolean spacing = uidl.getBooleanAttribute("spacing");
-            if (spacing != getWidgetForPaintable().spacingEnabled) {
-                getWidgetForPaintable().marginsNeedsRecalculation = true;
-                getWidgetForPaintable().spacingEnabled = spacing;
-            }
+        int bitMask = uidl.getIntAttribute("margins");
+        if (getWidgetForPaintable().activeMarginsInfo.getBitMask() != bitMask) {
+            getWidgetForPaintable().activeMarginsInfo = new VMarginInfo(bitMask);
+            getWidgetForPaintable().marginsNeedsRecalculation = true;
+        }
+        boolean spacing = uidl.getBooleanAttribute("spacing");
+        if (spacing != getWidgetForPaintable().spacingEnabled) {
+            getWidgetForPaintable().marginsNeedsRecalculation = true;
+            getWidgetForPaintable().spacingEnabled = spacing;
         }
     }
 

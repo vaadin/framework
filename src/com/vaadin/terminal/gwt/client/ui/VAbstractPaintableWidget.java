@@ -106,7 +106,8 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     }
 
     protected static boolean isRealUpdate(UIDL uidl) {
-        return !isCachedUpdate(uidl) && !uidl.getBooleanAttribute("invisible");
+        return !isCachedUpdate(uidl) && !uidl.getBooleanAttribute("invisible")
+                && !uidl.hasAttribute("deferred");
     }
 
     protected static boolean isCachedUpdate(UIDL uidl) {

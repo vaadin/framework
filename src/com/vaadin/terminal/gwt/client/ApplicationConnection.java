@@ -1865,6 +1865,8 @@ public class ApplicationConnection {
      */
     public VPaintableWidget getPaintable(UIDL uidl) {
         final String pid = uidl.getId();
+        // the actual content UIDL may be deferred, but it always contains
+        // enough information to create a paintable instance
         if (!paintableMap.hasPaintable(pid)) {
             // Create and register a new paintable if no old was found
             VPaintableWidget p = widgetSet.createWidget(uidl.getTag(),

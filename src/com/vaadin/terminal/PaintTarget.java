@@ -37,6 +37,31 @@ public interface PaintTarget extends Serializable {
             throws PaintException;
 
     /**
+     * Result of starting to paint a Paintable (
+     * {@link PaintTarget#startPaintable(Paintable, String)}).
+     * 
+     * @since 7.0
+     */
+    public enum PaintStatus {
+        /**
+         * Painting started, addVariable() and addAttribute() etc. methods may
+         * be called.
+         */
+        PAINTING,
+        /**
+         * Paintable is cached on the client side and unmodified - only an
+         * indication of that should be painted.
+         */
+        CACHED,
+        /**
+         * A previously unpainted or painted {@link Paintable} has been queued
+         * be created/update later in a separate change in the same set of
+         * changes.
+         */
+        DEFER
+    };
+
+    /**
      * Prints element start tag of a paintable section. Starts a paintable
      * section using the given tag. The PaintTarget may implement a caching
      * scheme, that checks the paintable has actually changed or can a cached
@@ -52,21 +77,22 @@ public interface PaintTarget extends Serializable {
      * </p>
      * <p>
      * Each paintable being painted should be closed by a matching
-     * {@link #endPaintable(Paintable)}.
+     * {@link #endPaintable(Paintable)} regardless of the {@link PaintStatus}
+     * returned.
      * </p>
      * 
      * @param paintable
      *            the paintable to start.
      * @param tag
      *            the name of the start tag.
-     * @return <code>true</code> if paintable found in cache, <code>false</code>
-     *         otherwise.
+     * @return {@link PaintStatus} - ready to paint, already cached on the
+     *         client or defer painting to another change
      * @throws PaintException
      *             if the paint operation failed.
      * @see #startTag(String)
      * @since 7.0 (previously using startTag(Paintable, String))
      */
-    public boolean startPaintable(Paintable paintable, String tag)
+    public PaintStatus startPaintable(Paintable paintable, String tag)
             throws PaintException;
 
     /**

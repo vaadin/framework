@@ -27,6 +27,7 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.PaintTarget.PaintStatus;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.gwt.client.ComponentState;
@@ -753,9 +754,16 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void paint(PaintTarget target) throws PaintException {
         final String tag = target.getTag(this);
-        if (!target.startPaintable(this, tag)
-                || repaintRequestListenersNotified) {
-
+        final PaintStatus status = target.startPaintable(this, tag);
+        if (PaintStatus.DEFER == status) {
+            // nothing to do but flag as deferred and close the paintable tag
+            // paint() will be called again later to paint the contents
+            target.addAttribute("deferred", true);
+        } else if (PaintStatus.CACHED == status
+                && !repaintRequestListenersNotified) {
+            // Contents have not changed, only cached presentation can be used
+            target.addAttribute("cached", true);
+        } else {
             // Paint the contents of the component
 
             // Only paint content of visible components.
@@ -809,10 +817,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             } else {
                 target.addAttribute("invisible", true);
             }
-        } else {
-
-            // Contents have not changed, only cached presentation can be used
-            target.addAttribute("cached", true);
         }
         target.endPaintable(this);
 
