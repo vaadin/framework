@@ -26,7 +26,6 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.ui.layout.CellBasedLayout;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
 public class VGridLayout extends SimplePanel implements Container {
@@ -860,7 +859,7 @@ public class VGridLayout extends SimplePanel implements Container {
                 } else {
                     // A new component
                     cc = new ChildComponentContainer(paintable,
-                            CellBasedLayout.ORIENTATION_VERTICAL);
+                            ChildComponentContainer.ORIENTATION_VERTICAL);
                     widgetToComponentContainer.put(w, cc);
                     cc.setWidth("");
                     canvas.add(cc, 0, 0);

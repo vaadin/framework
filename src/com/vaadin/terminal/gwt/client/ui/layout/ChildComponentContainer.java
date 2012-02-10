@@ -25,6 +25,9 @@ import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
 
 public class ChildComponentContainer extends Panel {
 
+    public static final int ORIENTATION_VERTICAL = 0;
+    public static final int ORIENTATION_HORIZONTAL = 1;
+
     /**
      * Size of the container DIV excluding any margins and also excluding the
      * expansion amount (containerExpansion)
@@ -152,7 +155,7 @@ public class ChildComponentContainer extends Panel {
     }
 
     public void setOrientation(int orientation) {
-        if (orientation == CellBasedLayout.ORIENTATION_HORIZONTAL) {
+        if (orientation == ORIENTATION_HORIZONTAL) {
             setFloat(getElement(), "left");
         } else {
             setFloat(getElement(), "");
@@ -618,7 +621,7 @@ public class ChildComponentContainer extends Panel {
      */
     public boolean widgetHasSizeSpecified(int orientation) {
         String size;
-        if (orientation == CellBasedLayout.ORIENTATION_HORIZONTAL) {
+        if (orientation == ORIENTATION_HORIZONTAL) {
             size = widget.getElement().getStyle().getProperty("width");
         } else {
             size = widget.getElement().getStyle().getProperty("height");
@@ -630,7 +633,7 @@ public class ChildComponentContainer extends Panel {
         if (relativeSize == null) {
             return false;
         }
-        if (orientation == CellBasedLayout.ORIENTATION_HORIZONTAL) {
+        if (orientation == ORIENTATION_HORIZONTAL) {
             return relativeSize.getWidth() >= 0;
         } else {
             return relativeSize.getHeight() >= 0;
@@ -666,7 +669,7 @@ public class ChildComponentContainer extends Panel {
     public int expand(int orientation, int spaceForExpansion) {
         int expansionAmount = (int) (spaceForExpansion * expandRatio);
 
-        if (orientation == CellBasedLayout.ORIENTATION_HORIZONTAL) {
+        if (orientation == ORIENTATION_HORIZONTAL) {
             // HORIZONTAL
             containerExpansion.setWidth(expansionAmount);
         } else {
@@ -678,7 +681,7 @@ public class ChildComponentContainer extends Panel {
     }
 
     public void expandExtra(int orientation, int extra) {
-        if (orientation == CellBasedLayout.ORIENTATION_HORIZONTAL) {
+        if (orientation == ORIENTATION_HORIZONTAL) {
             // HORIZONTAL
             containerExpansion.setWidth(containerExpansion.getWidth() + extra);
         } else {
