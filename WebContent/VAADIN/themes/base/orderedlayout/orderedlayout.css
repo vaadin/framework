@@ -1,3 +1,10 @@
+.v-orderedlayout,
+.v-horizontallayout,
+.v-verticallayout {
+	overflow: hidden;
+	position: relative;
+}
+
 .v-orderedlayout-margin-top,
 .v-horizontallayout-margin-top,
 .v-verticallayout-margin-top {

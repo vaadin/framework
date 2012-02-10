@@ -6,7 +6,6 @@ package com.vaadin.terminal.gwt.client.ui;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -23,10 +22,6 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
     protected VMeasuringOrderedLayout(String className, boolean isVertical) {
         DivElement element = Document.get().createDivElement();
         setElement(element);
-        // TODO These should actually be defined in css
-        Style style = element.getStyle();
-        style.setOverflow(Overflow.HIDDEN);
-        style.setPosition(Position.RELATIVE);
 
         spacingMeasureElement = Document.get().createDivElement();
         Style spacingStyle = spacingMeasureElement.getStyle();
