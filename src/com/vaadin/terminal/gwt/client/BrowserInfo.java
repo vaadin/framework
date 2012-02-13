@@ -66,12 +66,22 @@ public class BrowserInfo {
                 browserDetails.setIEMode(documentMode);
             }
         }
-        touchDevice = detectTouchDevice();
+        
+        if (browserDetails.isChrome()) {
+        	touchDevice = detectChromeTouchDevice();
+        } else {
+        	touchDevice = detectTouchDevice();
+        }
     }
 
     private native boolean detectTouchDevice()
     /*-{
         try { document.createEvent("TouchEvent");return true;} catch(e){return false;};
+    }-*/;
+    
+    private native boolean detectChromeTouchDevice()
+    /*-{
+        return ("ontouchstart" in window);
     }-*/;
 
     private native int getIEDocumentMode()
