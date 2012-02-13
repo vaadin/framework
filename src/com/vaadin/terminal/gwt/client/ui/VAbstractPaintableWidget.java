@@ -196,12 +196,20 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         String h = uidl.hasAttribute("height") ? uidl
                 .getStringAttribute("height") : "";
 
-        // Dirty if either dimension changed between relative and non-relative
-        MeasuredSize measuredSize = getMeasuredSize();
-        if (!measuredSize.isDirty()
-                && (w.endsWith("%") != definedWidth.endsWith("%") || h
-                        .endsWith("%") != definedHeight.endsWith("%"))) {
-            measuredSize.setDirty(true);
+        // Parent should be updated if either dimension changed between relative
+        // and non-relative
+        if (w.endsWith("%") != definedWidth.endsWith("%")) {
+            VPaintableWidgetContainer parent = getParent();
+            if (parent != null) {
+                parent.getMeasuredSize().setWidthNeedsUpdate();
+            }
+        }
+
+        if (h.endsWith("%") != definedHeight.endsWith("%")) {
+            VPaintableWidgetContainer parent = getParent();
+            if (parent != null) {
+                parent.getMeasuredSize().setHeightNeedsUpdate();
+            }
         }
 
         definedWidth = w;

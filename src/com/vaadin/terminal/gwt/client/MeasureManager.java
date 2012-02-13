@@ -1,5 +1,6 @@
 package com.vaadin.terminal.gwt.client;
 
+import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.JsArrayString;
 import com.vaadin.terminal.gwt.client.ui.LayoutPhaseListener;
 import com.vaadin.terminal.gwt.client.ui.ResizeRequired;
@@ -18,76 +19,88 @@ public class MeasureManager {
         }
 
         int passes = 0;
-        long start = System.currentTimeMillis();
+        Duration totalDuration = new Duration();
+
         while (true) {
-            long passStart = System.currentTimeMillis();
+            Duration passDuration = new Duration();
             passes++;
-            long measureStart = System.currentTimeMillis();
-            FastStringSet changedSet = findChangedWidgets(paintableWidgets);
-            JsArrayString changed = changedSet.dump();
-            long measureEnd = System.currentTimeMillis();
+            measureWidgets(paintableWidgets);
 
-            VConsole.log("Measure in " + (measureEnd - measureStart) + " ms");
+            FastStringSet needsHeightUpdate = FastStringSet.create();
+            FastStringSet needsWidthUpdate = FastStringSet.create();
 
-            if (changed.length() == 0) {
-                VConsole.log("No more changes in pass " + passes);
-                break;
-            }
+            for (VPaintableWidget paintable : paintableWidgets) {
+                MeasuredSize measuredSize = paintable.getMeasuredSize();
+                boolean notifiableType = isNotifiableType(paintable);
 
-            if (passes > 100) {
-                VConsole.log("Aborting layout");
-                break;
-            }
+                VPaintableWidgetContainer parent = paintable.getParent();
+                boolean parentNotifiable = parent != null
+                        && isNotifiableType(parent);
 
-            FastStringSet affectedContainers = FastStringSet.create();
-            for (int i = 0; i < changed.length(); i++) {
-                VPaintableWidget paintable = (VPaintableWidget) paintableMap
-                        .getPaintable(changed.get(i));
-                VPaintableWidget parentPaintable = paintable.getParent();
-                if (parentPaintable instanceof CalculatingLayout) {
-                    affectedContainers.add(parentPaintable.getId());
-                }
-            }
-
-            long layoutStart = System.currentTimeMillis();
-            for (int i = 0; i < changed.length(); i++) {
-                String pid = changed.get(i);
-                VPaintableWidget paintable = (VPaintableWidget) paintableMap
-                        .getPaintable(pid);
-                if (!affectedContainers.contains(pid)) {
-                    if (paintable instanceof CalculatingLayout) {
-                        CalculatingLayout calculating = (CalculatingLayout) paintable;
-                        calculating.updateHorizontalSizes();
-                        calculating.updateVerticalSizes();
-                    } else if (paintable instanceof ResizeRequired) {
-                        ((ResizeRequired) paintable).onResize();
+                if (measuredSize.isHeightNeedsUpdate()) {
+                    if (notifiableType) {
+                        needsHeightUpdate.add(paintable.getId());
+                    }
+                    if (!paintable.isRelativeHeight() && parentNotifiable) {
+                        needsHeightUpdate.add(parent.getId());
                     }
                 }
+                if (measuredSize.isWidthNeedsUpdate()) {
+                    if (notifiableType) {
+                        needsWidthUpdate.add(paintable.getId());
+                    }
+                    if (!paintable.isRelativeWidth() && parentNotifiable) {
+                        needsWidthUpdate.add(parent.getId());
+                    }
+                }
+                measuredSize.clearDirtyState();
             }
 
-            JsArrayString affectedPids = affectedContainers.dump();
-            for (int i = 0; i < affectedPids.length(); i++) {
-                // Find all changed children
-                String containerPid = affectedPids.get(i);
-                CalculatingLayout container = (CalculatingLayout) paintableMap
-                        .getPaintable(containerPid);
+            int measureTime = passDuration.elapsedMillis();
+            VConsole.log("Measure in " + measureTime + " ms");
 
-                container.updateHorizontalSizes();
-                container.updateVerticalSizes();
+            FastStringSet updatedSet = FastStringSet.create();
+
+            JsArrayString needsHeightUpdateArray = needsHeightUpdate.dump();
+            for (int i = 0; i < needsHeightUpdateArray.length(); i++) {
+                String pid = needsHeightUpdateArray.get(i);
+
+                VPaintableWidget paintable = (VPaintableWidget) paintableMap
+                        .getPaintable(pid);
+                if (paintable instanceof CalculatingLayout) {
+                    CalculatingLayout cl = (CalculatingLayout) paintable;
+                    cl.updateVerticalSizes();
+
+                } else if (paintable instanceof ResizeRequired) {
+                    ResizeRequired rr = (ResizeRequired) paintable;
+                    rr.onResize();
+                    needsWidthUpdate.remove(pid);
+                }
+                updatedSet.add(pid);
             }
 
-            long layoutEnd = System.currentTimeMillis();
-            VConsole.log(affectedPids.length()
-                    + " requestLayout invocations in "
-                    + (layoutEnd - layoutStart) + "ms");
+            JsArrayString needsWidthUpdateArray = needsWidthUpdate.dump();
+            for (int i = 0; i < needsWidthUpdateArray.length(); i++) {
+                String pid = needsWidthUpdateArray.get(i);
 
-            long passEnd = System.currentTimeMillis();
+                VPaintable paintable = paintableMap.getPaintable(pid);
+                if (paintable instanceof CalculatingLayout) {
+                    CalculatingLayout cl = (CalculatingLayout) paintable;
+                    cl.updateHorizontalSizes();
+                }
+                updatedSet.add(pid);
+            }
+
+            JsArrayString changed = updatedSet.dump();
+            VConsole.log(changed.length() + " requestLayout invocations in "
+                    + (passDuration.elapsedMillis() - measureTime) + "ms");
+
             StringBuilder b = new StringBuilder();
             b.append(changed.length());
             b.append(" changed widgets in pass ");
             b.append(passes);
             b.append(" in ");
-            b.append((passEnd - passStart));
+            b.append(passDuration.elapsedMillis());
             b.append(" ms: ");
             if (changed.length() < 10) {
                 for (int i = 0; i < changed.length(); i++) {
@@ -98,6 +111,16 @@ public class MeasureManager {
                 }
             }
             VConsole.log(b.toString());
+
+            if (changed.length() == 0) {
+                VConsole.log("No more changes in pass " + passes);
+                break;
+            }
+
+            if (passes > 100) {
+                VConsole.log("Aborting layout");
+                break;
+            }
         }
 
         for (VPaintableWidget vPaintableWidget : paintableWidgets) {
@@ -106,23 +129,20 @@ public class MeasureManager {
             }
         }
 
-        long end = System.currentTimeMillis();
-        VConsole.log("Total layout time: " + (end - start) + "ms");
+        VConsole.log("Total layout time: " + totalDuration.elapsedMillis()
+                + "ms");
     }
 
-    private FastStringSet findChangedWidgets(VPaintableWidget[] paintableWidgets) {
+    private void measureWidgets(VPaintableWidget[] paintableWidgets) {
 
-        FastStringSet changed = FastStringSet.create();
         for (VPaintableWidget paintableWidget : paintableWidgets) {
             MeasuredSize measuredSize = paintableWidget.getMeasuredSize();
             measuredSize.measure();
-
-            if (measuredSize.isDirty()) {
-                changed.add(paintableWidget.getId());
-                measuredSize.setDirty(false);
-            }
         }
+    }
 
-        return changed;
+    private static boolean isNotifiableType(VPaintableWidget paintable) {
+        return paintable instanceof ResizeRequired
+                || paintable instanceof CalculatingLayout;
     }
 }

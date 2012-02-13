@@ -1,6 +1,5 @@
 package com.vaadin.terminal.gwt.client;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,7 +17,8 @@ public final class MeasuredSize {
 
     private final VPaintableWidget paintable;
 
-    private boolean isDirty = true;
+    private boolean heightChanged = true;
+    private boolean widthChanged = true;
 
     private final Map<Element, int[]> dependencySizes = new HashMap<Element, int[]>();
 
@@ -54,30 +54,21 @@ public final class MeasuredSize {
 
     public void setOuterHeight(int height) {
         if (this.height != height) {
-            isDirty = true;
+            heightChanged = true;
             this.height = height;
         }
     }
 
     public void setOuterWidth(int width) {
         if (this.width != width) {
-            isDirty = true;
+            widthChanged = true;
             this.width = width;
         }
-    }
-
-    public boolean isDirty() {
-        return isDirty;
-    }
-
-    public void setDirty(boolean isDirty) {
-        this.isDirty = isDirty;
     }
 
     public void registerDependency(Element element) {
         if (!dependencySizes.containsKey(element)) {
             dependencySizes.put(element, new int[] { -1, -1 });
-            isDirty = true;
         }
     }
 
@@ -175,28 +166,35 @@ public final class MeasuredSize {
     }
 
     void measure() {
-        boolean changed = isDirty;
-
         Widget widget = paintable.getWidgetForPaintable();
         ComputedStyle computedStyle = new ComputedStyle(widget.getElement());
 
         int[] paddings = computedStyle.getPadding();
-        if (!changed && !Arrays.equals(this.paddings, paddings)) {
-            changed = true;
-            this.paddings = paddings;
+        if (!heightChanged && hasHeightChanged(this.paddings, paddings)) {
+            heightChanged = true;
         }
+        if (!widthChanged && hasWidthChanged(this.paddings, paddings)) {
+            widthChanged = true;
+        }
+        this.paddings = paddings;
 
         int[] margins = computedStyle.getMargin();
-        if (!changed && !Arrays.equals(this.margins, margins)) {
-            changed = true;
-            this.margins = margins;
+        if (!heightChanged && hasHeightChanged(this.margins, margins)) {
+            heightChanged = true;
         }
+        if (!widthChanged && hasWidthChanged(this.margins, margins)) {
+            widthChanged = true;
+        }
+        this.margins = margins;
 
         int[] borders = computedStyle.getBorder();
-        if (!changed && !Arrays.equals(this.borders, borders)) {
-            changed = true;
-            this.borders = borders;
+        if (!heightChanged && hasHeightChanged(this.borders, borders)) {
+            heightChanged = true;
         }
+        if (!widthChanged && hasWidthChanged(this.borders, borders)) {
+            widthChanged = true;
+        }
+        this.borders = borders;
 
         int offsetHeight = widget.getOffsetHeight();
         int marginHeight = sumHeights(margins);
@@ -219,7 +217,7 @@ public final class MeasuredSize {
                 // + " width changed from " + sizes[0] + " to "
                 // + elementWidth);
                 sizes[0] = elementWidth;
-                changed = true;
+                widthChanged = true;
             }
 
             int elementHeight = element.getOffsetHeight();
@@ -231,13 +229,37 @@ public final class MeasuredSize {
                 // + " height changed from " + sizes[1] + " to "
                 // + elementHeight);
                 sizes[1] = elementHeight;
-                changed = true;
+                heightChanged = true;
             }
             // i++;
         }
+    }
 
-        if (changed) {
-            setDirty(true);
-        }
+    void clearDirtyState() {
+        heightChanged = widthChanged = false;
+    }
+
+    public boolean isHeightNeedsUpdate() {
+        return heightChanged;
+    }
+
+    public boolean isWidthNeedsUpdate() {
+        return widthChanged;
+    }
+
+    private static boolean hasWidthChanged(int[] sizes1, int[] sizes2) {
+        return sizes1[1] != sizes2[1] || sizes1[3] != sizes2[3];
+    }
+
+    private static boolean hasHeightChanged(int[] sizes1, int[] sizes2) {
+        return sizes1[0] != sizes2[0] || sizes1[2] != sizes2[2];
+    }
+
+    public void setWidthNeedsUpdate() {
+        widthChanged = true;
+    }
+
+    public void setHeightNeedsUpdate() {
+        heightChanged = true;
     }
 }

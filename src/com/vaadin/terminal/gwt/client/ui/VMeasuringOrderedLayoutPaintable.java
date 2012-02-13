@@ -96,7 +96,6 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
 
             if (!childUIDL.getBooleanAttribute("cached")) {
                 child.updateFromUIDL(childUIDL, client);
-                child.getMeasuredSize().setDirty(true);
             }
 
             previousChildren.remove(child);
@@ -115,7 +114,8 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
 
         layout.updateSpacingStyleName(uidl.getBooleanAttribute("spacing"));
 
-        getMeasuredSize().setDirty(true);
+        getMeasuredSize().setHeightNeedsUpdate();
+        getMeasuredSize().setWidthNeedsUpdate();
     }
 
     private int getSizeForInnerSize(int size, boolean isVertical) {

@@ -34,6 +34,11 @@ public final class FastStringSet extends JavaScriptObject {
         return array;
     }-*/;
 
+    public native void remove(String string)
+    /*-{
+        delete this[string];
+    }-*/;
+
     public static FastStringSet create() {
         return JavaScriptObject.createObject().cast();
     }
