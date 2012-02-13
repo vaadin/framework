@@ -20,7 +20,7 @@
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	margin: 0;
-	height: 15px;
+	height: 23px;
 	line-height: normal;
 }
 .v-textarea,
@@ -34,6 +34,7 @@
 .v-app textarea.v-textarea,
 .v-window textarea.v-textarea  {
 	padding: 3px 3px 4px;
+	height: 24px;
 }
 .v-app .v-textfield-focus,
 .v-window .v-textfield-focus,
