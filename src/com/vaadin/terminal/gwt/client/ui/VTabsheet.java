@@ -480,7 +480,9 @@ public class VTabsheet extends VTabsheetBase {
 
     private final TabBar tb = new TabBar(this);
     final VTabsheetPanel tp = new VTabsheetPanel();
-    private final Element contentNode, deco;
+    final Element contentNode;
+
+    private final Element deco;
 
     boolean waitingForResponse;
 
