@@ -15,33 +15,22 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.RenderInformation;
-import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
-public class VAccordion extends VTabsheetBase implements
-        ContainerResizedListener {
+public class VAccordion extends VTabsheetBase {
 
     public static final String CLASSNAME = "v-accordion";
 
     private Set<Widget> widgets = new HashSet<Widget>();
 
-    private String height;
-
-    private String width = "";
-
     HashMap<StackItem, UIDL> lazyUpdateMap = new HashMap<StackItem, UIDL>();
 
-    private RenderSpace renderSpace = new RenderSpace(0, 0, true);
-
     StackItem openTab = null;
-
-    boolean rendering = false;
 
     int selectedUIDLItemIndex = -1;
 
@@ -202,58 +191,19 @@ public class VAccordion extends VTabsheetBase implements
         }
     }
 
-    @Override
-    public void setWidth(String width) {
-        if (this.width.equals(width)) {
-            return;
-        }
-
-        Util.setWidthExcludingPaddingAndBorder(this, width, 2);
-        this.width = width;
-        if (!rendering) {
-            updateOpenTabSize();
-
-            if (isDynamicHeight()) {
-                Util.updateRelativeChildrenAndSendSizeUpdateEvent(client,
-                        openTab, this);
-                updateOpenTabSize();
-            }
-
-            if (isDynamicHeight()) {
-                openTab.setHeightFromWidget();
-            }
-            iLayout();
-        }
-    }
-
-    @Override
-    public void setHeight(String height) {
-        Util.setHeightExcludingPaddingAndBorder(this, height, 2);
-        this.height = height;
-
-        if (!rendering) {
-            updateOpenTabSize();
-        }
-
-    }
-
     /**
      * Sets the size of the open tab
      */
-    private void updateOpenTabSize() {
+    void updateOpenTabSize() {
         if (openTab == null) {
-            renderSpace.setHeight(0);
-            renderSpace.setWidth(0);
             return;
         }
 
         // WIDTH
         if (!isDynamicWidth()) {
-            int w = getOffsetWidth();
-            openTab.setWidth(w);
-            renderSpace.setWidth(w);
+            openTab.setWidth("100%");
         } else {
-            renderSpace.setWidth(0);
+            openTab.setWidth(null);
         }
 
         // HEIGHT
@@ -277,10 +227,8 @@ public class VAccordion extends VTabsheetBase implements
                 spaceForOpenItem = 0;
             }
 
-            renderSpace.setHeight(spaceForOpenItem);
             openTab.setHeight(spaceForOpenItem);
         } else {
-            renderSpace.setHeight(0);
             openTab.setHeightFromWidget();
 
         }
@@ -512,77 +460,22 @@ public class VAccordion extends VTabsheetBase implements
         clear();
     }
 
-    public boolean isDynamicHeight() {
-        return height == null || height.equals("");
+    boolean isDynamicWidth() {
+        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(
+                this);
+        return paintable.isUndefinedWidth();
     }
 
-    public boolean isDynamicWidth() {
-        return width == null || width.equals("");
+    boolean isDynamicHeight() {
+        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(
+                this);
+        return paintable.isUndefinedHeight();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     protected Iterator<Widget> getWidgetIterator() {
         return widgets.iterator();
-    }
-
-    public boolean hasChildComponent(Widget component) {
-        for (Widget w : widgets) {
-            if (w == component) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        for (Widget w : getChildren()) {
-            StackItem item = (StackItem) w;
-            if (item.getChildWidget() == oldComponent) {
-                item.replaceWidget(newComponent);
-                return;
-            }
-        }
-    }
-
-    public boolean requestLayout(Set<Widget> children) {
-        if (!isDynamicHeight() && !isDynamicWidth()) {
-            /*
-             * If the height and width has been specified for this container the
-             * child components cannot make the size of the layout change
-             */
-            // layout size change may affect its available space (scrollbars)
-            for (Widget widget : children) {
-                client.handleComponentRelativeSize(widget);
-            }
-
-            return true;
-        }
-
-        updateOpenTabSize();
-
-        if (renderInformation.updateSize(getElement())) {
-            /*
-             * Size has changed so we let the child components know about the
-             * new size.
-             */
-            iLayout();
-            // TODO Check if this is needed
-            client.runDescendentsLayout(this);
-
-            return false;
-        } else {
-            /*
-             * Size has not changed so we do not need to propagate the event
-             * further
-             */
-            return true;
-        }
-
-    }
-
-    public RenderSpace getAllocatedSpace(Widget child) {
-        return renderSpace;
     }
 
     @Override

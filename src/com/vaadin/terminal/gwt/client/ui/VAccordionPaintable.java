@@ -12,11 +12,11 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.VAccordion.StackItem;
 
-public class VAccordionPaintable extends VTabsheetBasePaintable {
+public class VAccordionPaintable extends VTabsheetBasePaintable implements
+        ResizeRequired {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().rendering = true;
         getWidgetForPaintable().selectedUIDLItemIndex = -1;
         super.updateFromUIDL(uidl, client);
         /*
@@ -50,8 +50,6 @@ public class VAccordionPaintable extends VTabsheetBasePaintable {
 
         getWidgetForPaintable().renderInformation
                 .updateSize(getWidgetForPaintable().getElement());
-
-        getWidgetForPaintable().rendering = false;
     }
 
     @Override
@@ -66,6 +64,18 @@ public class VAccordionPaintable extends VTabsheetBasePaintable {
 
     public void updateCaption(VPaintableWidget component, UIDL uidl) {
         /* Accordion does not render its children's captions */
+    }
+
+    public void onResize() {
+        VAccordion accordion = getWidgetForPaintable();
+
+        accordion.updateOpenTabSize();
+
+        if (isUndefinedHeight()) {
+            accordion.openTab.setHeightFromWidget();
+        }
+        accordion.iLayout();
+
     }
 
 }

@@ -10,11 +10,11 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
-public class VTabsheetPaintable extends VTabsheetBasePaintable {
+public class VTabsheetPaintable extends VTabsheetBasePaintable implements
+        ResizeRequired {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().rendering = true;
 
         if (isRealUpdate(uidl)) {
             // Handle stylename changes before generics (might affect size
@@ -24,12 +24,11 @@ public class VTabsheetPaintable extends VTabsheetBasePaintable {
 
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
-            getWidgetForPaintable().rendering = false;
             return;
         }
 
         // tabs; push or not
-        if (!getWidgetForPaintable().isDynamicWidth()) {
+        if (!isUndefinedWidth()) {
             // FIXME: This makes tab sheet tabs go to 1px width on every update
             // and then back to original width
             // update width later, in updateTabScroller();
@@ -44,7 +43,7 @@ public class VTabsheetPaintable extends VTabsheetBasePaintable {
             getWidgetForPaintable().updateDynamicWidth();
         }
 
-        if (!getWidgetForPaintable().isDynamicHeight()) {
+        if (!isUndefinedHeight()) {
             // Must update height after the styles have been set
             getWidgetForPaintable().updateContentNodeHeight();
             getWidgetForPaintable().updateOpenTabSize();
@@ -61,11 +60,7 @@ public class VTabsheetPaintable extends VTabsheetBasePaintable {
             // Ignore, most likely empty tabsheet
         }
 
-        getWidgetForPaintable().renderInformation
-                .updateSize(getWidgetForPaintable().getElement());
-
         getWidgetForPaintable().waitingForResponse = false;
-        getWidgetForPaintable().rendering = false;
     }
 
     @Override
@@ -80,6 +75,28 @@ public class VTabsheetPaintable extends VTabsheetBasePaintable {
 
     public void updateCaption(VPaintableWidget component, UIDL uidl) {
         /* Tabsheet does not render its children's captions */
+    }
+
+    public void onResize() {
+        VTabsheet tabsheet = getWidgetForPaintable();
+
+        tabsheet.updateContentNodeHeight();
+
+        if (isUndefinedWidth()) {
+            tabsheet.contentNode.getStyle().setProperty("width", "");
+        } else {
+            int contentWidth = tabsheet.getOffsetWidth()
+                    - tabsheet.getContentAreaBorderWidth();
+            if (contentWidth < 0) {
+                contentWidth = 0;
+            }
+            tabsheet.contentNode.getStyle().setProperty("width",
+                    contentWidth + "px");
+        }
+
+        tabsheet.updateOpenTabSize();
+        tabsheet.iLayout();
+
     }
 
 }
