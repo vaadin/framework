@@ -61,6 +61,23 @@ public class MeasureManager {
 
             FastStringSet updatedSet = FastStringSet.create();
 
+            JsArrayString needsWidthUpdateArray = needsWidthUpdate.dump();
+
+            for (int i = 0; i < needsWidthUpdateArray.length(); i++) {
+                String pid = needsWidthUpdateArray.get(i);
+
+                VPaintable paintable = paintableMap.getPaintable(pid);
+                if (paintable instanceof CalculatingLayout) {
+                    CalculatingLayout cl = (CalculatingLayout) paintable;
+                    cl.updateHorizontalSizes();
+                } else if (paintable instanceof ResizeRequired) {
+                    ResizeRequired rr = (ResizeRequired) paintable;
+                    rr.onResize();
+                    needsHeightUpdate.remove(pid);
+                }
+                updatedSet.add(pid);
+            }
+
             JsArrayString needsHeightUpdateArray = needsHeightUpdate.dump();
             for (int i = 0; i < needsHeightUpdateArray.length(); i++) {
                 String pid = needsHeightUpdateArray.get(i);
@@ -70,23 +87,6 @@ public class MeasureManager {
                 if (paintable instanceof CalculatingLayout) {
                     CalculatingLayout cl = (CalculatingLayout) paintable;
                     cl.updateVerticalSizes();
-
-                } else if (paintable instanceof ResizeRequired) {
-                    ResizeRequired rr = (ResizeRequired) paintable;
-                    rr.onResize();
-                    needsWidthUpdate.remove(pid);
-                }
-                updatedSet.add(pid);
-            }
-
-            JsArrayString needsWidthUpdateArray = needsWidthUpdate.dump();
-            for (int i = 0; i < needsWidthUpdateArray.length(); i++) {
-                String pid = needsWidthUpdateArray.get(i);
-
-                VPaintable paintable = paintableMap.getPaintable(pid);
-                if (paintable instanceof CalculatingLayout) {
-                    CalculatingLayout cl = (CalculatingLayout) paintable;
-                    cl.updateHorizontalSizes();
                 } else if (paintable instanceof ResizeRequired) {
                     ResizeRequired rr = (ResizeRequired) paintable;
                     rr.onResize();
