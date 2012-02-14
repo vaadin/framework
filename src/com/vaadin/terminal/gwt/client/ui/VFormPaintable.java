@@ -4,14 +4,23 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.MeasuredSize;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
-public class VFormPaintable extends VAbstractPaintableWidgetContainer {
+public class VFormPaintable extends VAbstractPaintableWidgetContainer implements
+        ResizeRequired {
+
+    public VFormPaintable() {
+        VForm form = getWidgetForPaintable();
+        MeasuredSize measuredSize = getMeasuredSize();
+        measuredSize.registerDependency(form.footerContainer);
+    }
 
     @Override
     protected boolean delegateCaptionHandling() {
@@ -20,13 +29,11 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().rendering = true;
         getWidgetForPaintable().client = client;
         getWidgetForPaintable().id = uidl.getId();
 
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
-            getWidgetForPaintable().rendering = false;
             return;
         }
 
@@ -83,8 +90,6 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer {
             }
         }
 
-        getWidgetForPaintable().updateSize();
-
         // first render footer so it will be easier to handle relative height of
         // main layout
         if (uidl.getChildCount() > 1
@@ -106,15 +111,11 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer {
             }
             getWidgetForPaintable().footer = newFooterWidget;
             newFooter.updateFromUIDL(uidl.getChildUIDL(1), client);
-            // needed for the main layout to know the space it has available
-            getWidgetForPaintable().updateSize();
         } else {
             if (getWidgetForPaintable().footer != null) {
                 getWidgetForPaintable().remove(getWidgetForPaintable().footer);
                 client.unregisterPaintable(VPaintableMap.get(getConnection())
                         .getPaintable(getWidgetForPaintable().footer));
-                // needed for the main layout to know the space it has available
-                getWidgetForPaintable().updateSize();
             }
         }
 
@@ -139,7 +140,6 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer {
 
         // also recalculates size of the footer if undefined size form - see
         // #3710
-        getWidgetForPaintable().updateSize();
         client.runDescendentsLayout(getWidgetForPaintable());
 
         // We may have actions attached
@@ -161,8 +161,6 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer {
             getWidgetForPaintable().shortcutHandler = null;
             getWidgetForPaintable().keyDownRegistration = null;
         }
-
-        getWidgetForPaintable().rendering = false;
     }
 
     public void updateCaption(VPaintableWidget component, UIDL uidl) {
@@ -178,6 +176,16 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer {
     @Override
     protected Widget createWidget() {
         return GWT.create(VForm.class);
+    }
+
+    public void onResize() {
+        MeasuredSize measuredSize = getMeasuredSize();
+        VForm form = getWidgetForPaintable();
+
+        int footerHeight = measuredSize
+                .getDependencyOuterHeight(form.footerContainer);
+        form.fieldContainer.getStyle().setPaddingBottom(footerHeight, Unit.PX);
+        form.footerContainer.getStyle().setMarginTop(-footerHeight, Unit.PX);
     }
 
 }

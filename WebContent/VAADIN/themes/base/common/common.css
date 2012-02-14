@@ -90,7 +90,14 @@ div.v-app-loading {
 	border: none;
 	padding: 0;
 	margin: 0;
+	height: 100%;
 }
+.v-form-content {
+	height: 100%;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+
 /* Field modified */ /* Disabled by default
 .v-modified,
 .v-richtextarea.v-modified iframe.gwt-RichTextArea,
