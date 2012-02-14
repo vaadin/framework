@@ -1216,7 +1216,6 @@ public class Util {
      *         button, false otherwise
      */
     public static boolean isTouchEventOrLeftMouseButton(Event event) {
-        int eventType = event.getTypeInt();
         boolean touchEvent = Util.isTouchEvent(event);
         return touchEvent || event.getButton() == Event.BUTTON_LEFT;
     }

@@ -50,6 +50,13 @@
 		</any>
 	</replace-with>
 
+	<!-- Fall through to this rule for everything but IE -->
+	<replace-with
+		class="com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper">
+		<when-type-is
+			class="com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper" />
+	</replace-with>
+
     <replace-with
         class="com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapperIE">
         <when-type-is
